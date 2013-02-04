@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
-#include "xcbutils.h"
 // Qt
 #include <QtCore/QTimer>
 #include <QtCore/QVector>
@@ -439,7 +438,6 @@ WindowBasedEdge::WindowBasedEdge(ScreenEdges *parent)
 
 WindowBasedEdge::~WindowBasedEdge()
 {
-    destroyWindow();
 }
 
 void WindowBasedEdge::activate()
@@ -451,12 +449,13 @@ void WindowBasedEdge::activate()
 
 void WindowBasedEdge::deactivate()
 {
-    destroyWindow();
+    m_window.reset();
+    m_approachWindow.reset();
 }
 
 void WindowBasedEdge::createWindow()
 {
-    if (m_window != XCB_WINDOW_NONE) {
+    if (m_window.isValid()) {
         return;
     }
     const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
@@ -464,8 +463,8 @@ void WindowBasedEdge::createWindow()
         true,
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
     };
-    m_window = Xcb::createInputWindow(geometry(), mask, values);
-    xcb_map_window(connection(), m_window);
+    m_window.create(geometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
+    m_window.map();
     // Set XdndAware on the windows, so that DND enter events are received (#86998)
     xcb_atom_t version = 4; // XDND version
     xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, m_window,
@@ -474,7 +473,7 @@ void WindowBasedEdge::createWindow()
 
 void WindowBasedEdge::createApproachWindow()
 {
-    if (m_approachWindow != XCB_WINDOW_NONE) {
+    if (m_approachWindow.isValid()) {
         return;
     }
     if (!approachGeometry().isValid()) {
@@ -485,32 +484,19 @@ void WindowBasedEdge::createApproachWindow()
         true,
         XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
     };
-    const QRect geo = approachGeometry();
-    m_approachWindow = Xcb::createInputWindow(geo, mask, values);
-    xcb_map_window(connection(), m_approachWindow);
-}
-
-void WindowBasedEdge::destroyWindow()
-{
-    if (m_window != XCB_WINDOW_NONE) {
-        xcb_destroy_window(connection(), m_window);
-        m_window = XCB_WINDOW_NONE;
-    }
-    if (m_approachWindow != XCB_WINDOW_NONE) {
-        xcb_destroy_window(connection(), m_approachWindow);
-        m_approachWindow = XCB_WINDOW_NONE;
-    }
+    m_approachWindow.create(approachGeometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
+    m_approachWindow.map();
 }
 
 void WindowBasedEdge::doGeometryUpdate()
 {
-    Xcb::moveResizeWindow(m_window, geometry());
-    Xcb::moveResizeWindow(m_approachWindow, approachGeometry());
+    m_window.setGeometry(geometry());
+    m_approachWindow.setGeometry(approachGeometry());
 }
 
 void WindowBasedEdge::doStartApproaching()
 {
-    xcb_unmap_window(connection(), m_approachWindow);
+    m_approachWindow.unmap();
     connect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), SLOT(updateApproaching(QPoint)));
     edges()->startMousePolling();
 }
@@ -519,9 +505,7 @@ void WindowBasedEdge::doStopApproaching()
 {
     disconnect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), this, SLOT(updateApproaching(QPoint)));
     edges()->stopMousePolling();
-    if (m_approachWindow != XCB_WINDOW_NONE) {
-        xcb_map_window(connection(), m_approachWindow);
-    }
+    m_approachWindow.map();
 }
 
 void WindowBasedEdge::doUpdateBlocking()
@@ -530,11 +514,11 @@ void WindowBasedEdge::doUpdateBlocking()
         return;
     }
     if (isBlocked()) {
-        xcb_unmap_window(connection(), m_window);
-        xcb_unmap_window(connection(), m_approachWindow);
+        m_window.unmap();
+        m_approachWindow.unmap();
     } else {
-        xcb_map_window(connection(), m_window);
-        xcb_map_window(connection(), m_approachWindow);
+        m_window.map();
+        m_approachWindow.map();
     }
 }
 

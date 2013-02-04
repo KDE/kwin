@@ -305,6 +305,10 @@ public:
      **/
     void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     /**
+     * Frees the existing window and starts to manage the new @p window.
+     **/
+    void reset(xcb_window_t window = XCB_WINDOW_NONE);
+    /**
      * @returns @c true if a window is managed, @c false otherwise.
      **/
     bool isValid() const;
@@ -396,6 +400,13 @@ xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass, uint3
                       geometry.x(), geometry.y(), geometry.width(), geometry.height(),
                       0, windowClass, XCB_COPY_FROM_PARENT, mask, values);
     return w;
+}
+
+inline
+void Window::reset(xcb_window_t window)
+{
+    destroy();
+    m_window = window;
 }
 
 inline

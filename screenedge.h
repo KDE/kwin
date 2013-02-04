@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCREENEDGE_H
 // KWin
 #include "kwinglobals.h"
+#include "xcbutils.h"
 // KDE includes
 #include <KDE/KConfig>
 // Qt
@@ -132,11 +133,10 @@ protected:
     virtual void doUpdateBlocking();
 
 private:
-    void destroyWindow();
     void createWindow();
     void createApproachWindow();
-    xcb_window_t m_window;
-    xcb_window_t m_approachWindow;
+    Xcb::Window m_window;
+    Xcb::Window m_approachWindow;
 };
 
 /**
