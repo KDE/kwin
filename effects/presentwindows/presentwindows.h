@@ -224,6 +224,7 @@ public slots:
 private slots:
     void closeWindow();
     void elevateCloseWindow();
+    void screenCountChanged();
 
 protected:
     // Window rearranging
