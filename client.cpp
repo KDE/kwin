@@ -141,7 +141,7 @@ Client::Client(Workspace* ws)
 #ifdef KWIN_BUILD_KAPPMENU
     , m_menuAvailable(false)
 #endif
-    , input_window(None)
+    , m_decoInputExtent()
 {
     // TODO: Do all as initialization
 #ifdef HAVE_XSYNC
@@ -385,10 +385,7 @@ void Client::updateInputWindow()
     }
 
     if (region.isEmpty()) {
-        if (input_window) {
-            XDestroyWindow(display(), input_window);
-            input_window = None;
-        }
+        m_decoInputExtent.reset();
         return;
     }
 
@@ -401,23 +398,25 @@ void Client::updateInputWindow()
     // Move the region to input window coordinates
     region.translate(-input_offset);
 
-    if (!input_window) {
-        XSetWindowAttributes attr;
-        attr.event_mask = EnterWindowMask | LeaveWindowMask |
-                          ButtonPressMask | ButtonReleaseMask | PointerMotionMask;
-        attr.override_redirect = True;
-
-        input_window = XCreateWindow(display(), rootWindow(), bounds.x(), bounds.y(),
-                                     bounds.width(), bounds.height(), 0, 0,
-                                     InputOnly, 0, CWEventMask | CWOverrideRedirect, &attr);
+    if (!m_decoInputExtent.isValid()) {
+        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
+        const uint32_t values[] = {true,
+            XCB_EVENT_MASK_ENTER_WINDOW   |
+            XCB_EVENT_MASK_LEAVE_WINDOW   |
+            XCB_EVENT_MASK_BUTTON_PRESS   |
+            XCB_EVENT_MASK_BUTTON_RELEASE |
+            XCB_EVENT_MASK_POINTER_MOTION
+        };
+        m_decoInputExtent.create(bounds, XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
         if (mapping_state == Mapped)
-            XMapWindow(display(), inputId());
+            m_decoInputExtent.map();
     } else {
-        XMoveResizeWindow(display(), input_window, bounds.x(), bounds.y(),
-                          bounds.width(), bounds.height());
+        m_decoInputExtent.setGeometry(bounds);
     }
 
-    XShapeCombineRegion(display(), input_window, ShapeInput, 0, 0, region.handle(), ShapeSet);
+    const QVector<xcb_rectangle_t> rects = Xcb::regionToRects(region);
+    xcb_shape_rectangles(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_CLIP_ORDERING_UNSORTED,
+                         m_decoInputExtent, 0, 0, rects.count(), rects.constData());
 }
 
 void Client::updateDecoration(bool check_workspace_pos, bool force)
@@ -484,10 +483,7 @@ void Client::destroyDecoration()
             emit geometryShapeChanged(this, oldgeom);
         }
     }
-    if (inputId()) {
-        XDestroyWindow(display(), input_window);
-        input_window = None;
-    }
+    m_decoInputExtent.reset();
 }
 
 bool Client::checkBorderSizes(bool also_resize)
@@ -1147,8 +1143,7 @@ void Client::internalShow(allowed_t)
     if (old == Unmapped || old == Withdrawn)
         map(Allowed);
     if (old == Kept) {
-        if (inputId())
-            XMapWindow(display(), inputId());
+        m_decoInputExtent.map();
         updateHiddenPreview();
     }
     if (Compositor::isCreated()) {
@@ -1182,8 +1177,7 @@ void Client::internalKeep(allowed_t)
     mapping_state = Kept;
     if (old == Unmapped || old == Withdrawn)
         map(Allowed);
-    if (inputId())
-        XUnmapWindow(display(), inputId());
+    m_decoInputExtent.unmap();
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
@@ -1210,8 +1204,7 @@ void Client::map(allowed_t)
     if (!isShade()) {
         XMapWindow(display(), wrapper);
         XMapWindow(display(), client);
-        if (inputId())
-            XMapWindow(display(), inputId());
+        m_decoInputExtent.map();
         exportMappingState(NormalState);
     } else
         exportMappingState(IconicState);
@@ -1232,8 +1225,7 @@ void Client::unmap(allowed_t)
     XUnmapWindow(display(), frameId());
     XUnmapWindow(display(), wrapper);
     XUnmapWindow(display(), client);
-    if (inputId())
-        XUnmapWindow(display(), inputId());
+    m_decoInputExtent.unmap();
     XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
     if (decoration != NULL)
         decoration->widget()->hide(); // Not really necessary, but let it know the state
@@ -2268,7 +2260,7 @@ void Client::updateCursor()
     if (decoration != NULL)
         decoration->widget()->setCursor(cursor);
     XDefineCursor(display(), frameId(), cursor.handle());
-    if (inputId())
+    if (m_decoInputExtent.isValid())
         XDefineCursor(display(), inputId(), cursor.handle());
     if (moveResizeMode)   // XDefineCursor doesn't change cursor if there's pointer grab active
         XChangeActivePointerGrab(display(),

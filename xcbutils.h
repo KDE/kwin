@@ -318,6 +318,8 @@ public:
      **/
     void setGeometry(const QRect &geometry);
     void setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
+    void move(const QPoint &pos);
+    void move(uint32_t x, uint32_t y);
     void map();
     void unmap();
     /**
@@ -427,6 +429,23 @@ void Window::setGeometry(uint32_t x, uint32_t y, uint32_t width, uint32_t height
 }
 
 inline
+void Window::move(const QPoint &pos)
+{
+    move(pos.x(), pos.y());
+}
+
+inline
+void Window::move(uint32_t x, uint32_t y)
+{
+    if (!isValid()) {
+        return;
+    }
+    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+    const uint32_t values[] = { x, y };
+    xcb_configure_window(connection(), m_window, mask, values);
+}
+
+inline
 void Window::map()
 {
     if (!isValid()) {
@@ -528,6 +547,26 @@ static inline int defaultDepth()
         }
     }
     return depth;
+}
+
+static inline xcb_rectangle_t fromQt(const QRect &rect)
+{
+    xcb_rectangle_t rectangle;
+    rectangle.x = rect.x();
+    rectangle.y = rect.y();
+    rectangle.width  = rect.width();
+    rectangle.height = rect.height();
+    return rectangle;
+}
+
+static inline QVector<xcb_rectangle_t> regionToRects(const QRegion &region)
+{
+    const QVector<QRect> regionRects = region.rects();
+    QVector<xcb_rectangle_t> rects(regionRects.count());
+    for (int i=0; i<regionRects.count(); ++i) {
+        rects[i] = Xcb::fromQt(regionRects.at(i));
+    }
+    return rects;
 }
 
 } // namespace X11

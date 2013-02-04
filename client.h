@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "toplevel.h"
 #include "tabgroup.h"
+#include "xcbutils.h"
 
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
@@ -284,7 +285,7 @@ public:
     explicit Client(Workspace* ws);
     Window wrapperId() const;
     Window decorationId() const;
-    Window inputId() const { return input_window; }
+    xcb_window_t inputId() const { return m_decoInputExtent; }
 
     const Client* transientFor() const;
     Client* transientFor();
@@ -995,7 +996,7 @@ private:
 #ifdef KWIN_BUILD_KAPPMENU
     bool m_menuAvailable;
 #endif
-    Window input_window;
+    Xcb::Window m_decoInputExtent;
     QPoint input_offset;
 };
 

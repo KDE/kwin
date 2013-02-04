@@ -1892,10 +1892,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         }
 
         // Unconditionally move the input window: it won't affect rendering
-        if (inputId()) {
-            const QPoint pos = QPoint(x, y) + inputPos();
-            XMoveWindow(display(), inputId(), pos.x(), pos.y());
-        }
+        m_decoInputExtent.move(QPoint(x, y) + inputPos());
     }
     updateWindowRules(Rules::Position|Rules::Size);
 
