@@ -27,18 +27,10 @@
 #include <QStyle>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QResizeEvent>
 #include <QVector>
 #include <kicon.h>
 
-#include <X11/Xlib.h>
-#include <X11/extensions/shape.h>
-
 #include <kdecorationfactory.h>
-#include <kdecoration_plugins_p.h>
-#include <QX11Info>
-#include <kwindowsystem.h>
-#include <QTextDocument>
 
 KDecorationPreview::KDecorationPreview(QWidget* parent)
     :   QWidget(parent)
@@ -50,14 +42,7 @@ KDecorationPreview::KDecorationPreview(QWidget* parent)
 
     deco[Active] = deco[Inactive] = NULL;
 
-    no_preview = new QLabel(i18n("No preview available.\n"
-                                 "Most probably there\n"
-                                 "was a problem loading the plugin."), this);
-
-    no_preview->setAlignment(Qt::AlignCenter);
-
     setMinimumSize(100, 100);
-    no_preview->resize(size());
 }
 
 KDecorationPreview::~KDecorationPreview()
@@ -77,22 +62,14 @@ bool KDecorationPreview::recreateDecoration(KDecorationPlugins* plugins)
         deco[i]->init();
     }
 
+    m_activeMask = QRegion();
+    m_inactiveMask = QRegion();
+
     if (deco[Active] == NULL || deco[Inactive] == NULL) {
         return false;
     }
 
-    positionPreviews();
-    //deco[Inactive]->widget()->show();
-    //deco[Active]->widget()->show();
-
-    //deco[Inactive]->widget()->render( this, deco[Inactive]->widget()->mapToParent( QPoint(0,0) ) );
-
     return true;
-}
-
-void KDecorationPreview::enablePreview()
-{
-    no_preview->hide();
 }
 
 void KDecorationPreview::disablePreview()
@@ -100,7 +77,6 @@ void KDecorationPreview::disablePreview()
     delete deco[Active];
     delete deco[Inactive];
     deco[Active] = deco[Inactive] = NULL;
-    no_preview->show();
 }
 
 KDecorationFactory *KDecorationPreview::factory() const
@@ -108,58 +84,15 @@ KDecorationFactory *KDecorationPreview::factory() const
     return deco[Active] ? deco[Active]->factory() : 0;
 }
 
-void KDecorationPreview::paintEvent(QPaintEvent* e)
+QPixmap KDecorationPreview::preview()
 {
-    Q_UNUSED(e);
-    QPainter painter(this);
-    QPoint delta = mapTo(window(), QPoint(0, 0));
-
-    if (deco[Inactive]) {
-        QWidget *w = deco[Inactive]->widget();
-        w->render(&painter, delta + w->mapToParent(QPoint(0, 0)));
-    }
-    if (deco[Active]) {
-        QWidget *w = deco[Active]->widget();
-        w->render(&painter, delta + w->mapToParent(QPoint(0, 0)));
-    }
-}
-
-QPixmap KDecorationPreview::preview(QTextDocument* document, QWidget* widget)
-{
-    Q_UNUSED(document);
-    Q_UNUSED(widget);
     QPixmap pixmap(size());
     pixmap.fill(Qt::transparent);
+    if (!deco[Active] || !deco[Inactive])
+        return pixmap;
 
-    if (deco[Inactive]) {
-        QWidget *w = deco[Inactive]->widget();
-        w->render(&pixmap, w->mapToParent(QPoint(0, 0)));
-    }
-    if (deco[Active]) {
-        QWidget *w = deco[Active]->widget();
-        w->render(&pixmap, w->mapToParent(QPoint(0, 0)));
-    }
-    return pixmap;
-}
-
-void KDecorationPreview::resizeEvent(QResizeEvent* e)
-{
-    QWidget::resizeEvent(e);
-    positionPreviews();
-}
-
-void KDecorationPreview::positionPreviews()
-{
     int titleBarHeight, leftBorder, rightBorder, xoffset,
         dummy1, dummy2, dummy3;
-    QRect geometry;
-    QSize size;
-
-    no_preview->resize(this->size());
-
-    if (!deco[Active] || !deco[Inactive])
-        return;
-
     // don't have more than one reference to the same dummy variable in one borders() call.
     deco[Active]->borders(dummy1, dummy2, titleBarHeight, dummy3);
     deco[Inactive]->borders(leftBorder, rightBorder, dummy1, dummy2);
@@ -167,57 +100,43 @@ void KDecorationPreview::positionPreviews()
     titleBarHeight = qMin(int(titleBarHeight * .9), 30);
     xoffset = qMin(qMax(10, QApplication::isRightToLeft()
                         ? leftBorder : rightBorder), 30);
+    QPainter p;
+    p.begin(&pixmap);
 
-    // Resize the active window
-    size = QSize(width() - xoffset, height() - titleBarHeight)
-           .expandedTo(deco[Active]->minimumSize());
-    geometry = QRect(QPoint(0, titleBarHeight), size);
-    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(deco[Active])) {
-        int padLeft, padRight, padTop, padBottom;
-        unstable->padding(padLeft, padRight, padTop, padBottom);
-        geometry.adjust(-padLeft, -padTop, padRight, padBottom);
-    }
-    geometry.adjust(10, 10, -10, -10);
-    deco[Active]->widget()->setGeometry(QStyle::visualRect(this->layoutDirection(), this->rect(), geometry));
-
-    // Resize the inactive window
-    size = QSize(width() - xoffset, height() - titleBarHeight)
-           .expandedTo(deco[Inactive]->minimumSize());
-    geometry = QRect(QPoint(xoffset, 0), size);
-    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(deco[Inactive])) {
-        int padLeft, padRight, padTop, padBottom;
-        unstable->padding(padLeft, padRight, padTop, padBottom);
-        geometry.adjust(-padLeft, -padTop, padRight, padBottom);
-    }
-    geometry.adjust(10, 10, -10, -10);
-    deco[Inactive]->widget()->setGeometry(QStyle::visualRect(this->layoutDirection(), this->rect(), geometry));
+    const QSize size(width() - xoffset - 20, height() - titleBarHeight - 20);
+    render(&p, deco[Inactive], size, QPoint(10 + xoffset, 10), m_inactiveMask);
+    render(&p, deco[Active], size, QPoint(10, 10 + titleBarHeight), m_activeMask);
+    p.end();
+    return pixmap;
 }
 
-void KDecorationPreview::setPreviewMask(const QRegion& reg, int mode, bool active)
+void KDecorationPreview::render(QPainter *painter, KDecoration *decoration, const QSize &recommendedSize, const QPoint &offset, const QRegion &mask) const
 {
-    QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
-
-    // FRAME duped from client.cpp
-    if (mode == Unsorted) {
-        XShapeCombineRegion(QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
-                            reg.handle(), ShapeSet);
-    } else {
-        QVector< QRect > rects = reg.rects();
-        XRectangle* xrects = new XRectangle[ rects.count()];
-        for (int i = 0;
-                i < rects.count();
-                ++i) {
-            xrects[ i ].x = rects[ i ].x();
-            xrects[ i ].y = rects[ i ].y();
-            xrects[ i ].width = rects[ i ].width();
-            xrects[ i ].height = rects[ i ].height();
+    QWidget *w = decoration->widget();
+    QSize size = QSize(recommendedSize)
+        .expandedTo(decoration->minimumSize());
+    int padLeft, padRight, padTop, padBottom;
+    padLeft = padRight = padTop = padBottom = 0;
+    bool useMask = true;
+    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(decoration)) {
+        unstable->padding(padLeft, padRight, padTop, padBottom);
+        size.setWidth(size.width() + padLeft + padRight);
+        size.setHeight(size.height() + padTop + padBottom);
+        if (padLeft || padRight || padTop || padBottom) {
+            useMask = false;
         }
-        XShapeCombineRectangles(QX11Info::display(), widget->winId(), ShapeBounding, 0, 0,
-                                xrects, rects.count(), ShapeSet, mode);
-        delete[] xrects;
     }
-    if (active)
-        mask = reg; // keep shape of the active window for unobscuredRegion()
+    decoration->resize(size);
+
+    // why an if-else block instead of (useMask ? mask : QRegion())?
+    // For what reason ever it completely breaks if the mask is copied.
+    if (useMask) {
+        w->render(painter, offset + QPoint(-padLeft, - padTop), mask,
+                  QWidget::DrawWindowBackground | QWidget::DrawChildren | QWidget::IgnoreMask);
+    } else {
+        w->render(painter, offset + QPoint(-padLeft, - padTop), QRegion(),
+                  QWidget::DrawWindowBackground | QWidget::DrawChildren | QWidget::IgnoreMask);
+    }
 }
 
 QRect KDecorationPreview::windowGeometry(bool active) const
@@ -232,9 +151,6 @@ void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorati
     if (plugin->factory()->reset(KDecorationDefines::SettingBorder)) {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-    } else {
-        // handles the update, only update position...
-        positionPreviews();
     }
 }
 
@@ -245,26 +161,21 @@ void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, bool customE
     if (plugin->factory()->reset(KDecorationDefines::SettingButtons)) {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-    } else {
-        // handles the update, only update position...
-        positionPreviews();
     }
 }
 
 QRegion KDecorationPreview::unobscuredRegion(bool active, const QRegion& r) const
 {
-    if (active)   // this one is not obscured
-        return r;
-    else {
-        // copied from KWin core's code
-        QRegion ret = r;
-        QRegion r2 = mask;
-        if (r2.isEmpty())
-            r2 = QRegion(windowGeometry(true));
-        r2.translate(windowGeometry(true).x() - windowGeometry(false).x(),
-                     windowGeometry(true).y() - windowGeometry(false).y());
-        ret -= r2;
-        return ret;
+    Q_UNUSED(active)
+    return r;
+}
+
+void KDecorationPreview::setMask(const QRegion &region, bool active)
+{
+    if (active) {
+        m_activeMask = region;
+    } else {
+        m_inactiveMask = region;
     }
 }
 
@@ -400,7 +311,8 @@ void KDecorationPreviewBridge::performWindowOperation(WindowOperation)
 
 void KDecorationPreviewBridge::setMask(const QRegion& reg, int mode)
 {
-    preview->setPreviewMask(reg, mode, active);
+    Q_UNUSED(mode)
+    preview->setMask(reg, active);
 }
 
 bool KDecorationPreviewBridge::isPreview() const
@@ -479,7 +391,7 @@ void KDecorationPreviewBridge::grabXServer(bool)
 
 bool KDecorationPreviewBridge::compositingActive() const
 {
-    return KWindowSystem::compositingActive();
+    return true;
 }
 
 QRect KDecorationPreviewBridge::transparentRect() const

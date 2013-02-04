@@ -21,19 +21,13 @@
 #define KWINDECORATION_PREVIEW_H
 
 #include <QWidget>
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QLabel>
-#include <QResizeEvent>
 #include <kdecoration.h>
 #include <kdecorationbridge.h>
 #include <kdecoration_plugins_p.h>
 
-class QLabel;
-class QTextDocument;
-
 class KDecorationPreviewBridge;
 class KDecorationPreviewOptions;
+class QMouseEvent;
 
 class KDecorationPreview
     : public QWidget
@@ -48,25 +42,21 @@ public:
     explicit KDecorationPreview(QWidget* parent = NULL);
     virtual ~KDecorationPreview();
     bool recreateDecoration(KDecorationPlugins* plugin);
-    void enablePreview();
     void disablePreview();
     KDecorationFactory *factory() const;
-    void setPreviewMask(const QRegion&, int, bool);
     QRegion unobscuredRegion(bool, const QRegion&) const;
     QRect windowGeometry(bool) const;
     void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
     void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
-    QPixmap preview(QTextDocument* document, QWidget* widget);
-protected:
-    virtual void paintEvent(QPaintEvent*);
-    virtual void resizeEvent(QResizeEvent*);
+    QPixmap preview();
+    void setMask(const QRegion &region, bool active);
 private:
-    void positionPreviews();
+    void render(QPainter *painter, KDecoration *decoration, const QSize &recommendedSize, const QPoint &offset, const QRegion &mask) const;
     KDecorationPreviewOptions* options;
     KDecorationPreviewBridge* bridge[NumWindows];
     KDecoration* deco[NumWindows];
-    QLabel* no_preview;
-    QRegion mask;
+    QRegion m_activeMask;
+    QRegion m_inactiveMask;
 };
 
 class KDecorationPreviewBridge

@@ -140,7 +140,6 @@ private:
     QString m_leftButtons;
     QString m_rightButtons;
     KSharedConfigPtr m_config;
-    QWidget* m_renderWidget;
     int m_nextPreviewIndex;
     int m_firstUpdateIndex;
     int m_lastUpdateIndex;

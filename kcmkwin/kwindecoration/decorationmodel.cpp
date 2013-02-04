@@ -61,7 +61,6 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     , m_customButtons(false)
     , m_leftButtons(QString())
     , m_rightButtons(QString())
-    , m_renderWidget(new QWidget(0))
 {
     QHash<int, QByteArray> roleNames;
     roleNames[Qt::DisplayRole] = "display";
@@ -80,7 +79,6 @@ DecorationModel::~DecorationModel()
 {
     delete m_preview;
     delete m_plugins;
-    delete m_renderWidget;
 }
 
 void DecorationModel::reload()
@@ -360,24 +358,6 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
 
     switch(data.type) {
     case DecorationModelData::NativeDecoration: {
-        //Use a QTextDocument to layout the text
-        QTextDocument document;
-
-        QString html = QString("<strong>%1</strong>").arg(data.name);
-
-        if (!data.author.isEmpty()) {
-            QString authorCaption = i18nc("Caption to decoration preview, %1 author name",
-                                        "by %1", data.author);
-
-            html += QString("<br /><span style=\"font-size: %1pt;\">%2</span>")
-                    .arg(KGlobalSettings::smallestReadableFont().pointSize())
-                    .arg(authorCaption);
-        }
-
-        QColor color = QApplication::palette().brush(QPalette::Text).color();
-        html = QString("<div style=\"color: %1\" align=\"center\">%2</div>").arg(color.name()).arg(html);
-
-        document.setHtml(html);
         bool enabled = false;
         bool loaded;
         // m_preview->deco management is not required
@@ -385,7 +365,6 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
         // or the deco does not load and destroyPreviousPlugin() is not called
         if ((loaded = m_plugins->loadPlugin(data.libraryName)) && m_preview->recreateDecoration(m_plugins)) {
             enabled = true;
-            m_preview->enablePreview();
         } else {
             m_preview->disablePreview();
         }
@@ -395,7 +374,7 @@ void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& s
             m_preview->resize(size);
             m_preview->setTempButtons(m_plugins, m_customButtons, m_leftButtons, m_rightButtons);
             m_preview->setTempBorderSize(m_plugins, data.borderSize);
-            data.preview = m_preview->preview(&document, m_renderWidget);
+            data.preview = m_preview->preview();
         } else {
             m_decorations.removeAt(index.row());
         }
