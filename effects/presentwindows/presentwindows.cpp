@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 #include <assert.h>
 #include <limits.h>
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QTimer>
 #include <QVector2D>
 #include <QVector4D>
@@ -102,6 +104,8 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+
+    connect (qApp->desktop(), SIGNAL(screenCountChanged(int)), SLOT(screenCountChanged()));
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
@@ -1540,19 +1544,7 @@ void PresentWindowsEffect::setActive(bool active)
         m_hasKeyboardGrab = effects->grabKeyboard(this);
         effects->setActiveFullScreenEffect(this);
 
-        m_gridSizes.clear();
-        for (int i = 0; i < effects->numScreens(); ++i) {
-            m_gridSizes.append(GridSize());
-            if (m_dragToClose) {
-                const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
-                EffectFrame *frame = effects->effectFrame(EffectFrameNone, false);
-                KIcon icon("user-trash");
-                frame->setIcon(icon.pixmap(QSize(128, 128)));
-                frame->setPosition(QPoint(screenRect.x() + screenRect.width(), screenRect.y()));
-                frame->setAlignment(Qt::AlignRight | Qt::AlignTop);
-                m_dropTargets.append(frame);
-            }
-        }
+        screenCountChanged();
 
         rearrangeWindows();
         setHighlightedWindow(effects->activeWindow());
@@ -1928,6 +1920,29 @@ void PresentWindowsEffect::globalShortcutChangedClass(const QKeySequence& seq)
 bool PresentWindowsEffect::isActive() const
 {
     return m_activated || m_motionManager.managingWindows();
+}
+
+void PresentWindowsEffect::screenCountChanged()
+{
+    if (!isActive())
+        return;
+    while (!m_dropTargets.empty()) {
+        delete m_dropTargets.takeFirst();
+    }
+    m_gridSizes.clear();
+    for (int i = 0; i < effects->numScreens(); ++i) {
+        m_gridSizes.append(GridSize());
+        if (m_dragToClose) {
+            const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
+            EffectFrame *frame = effects->effectFrame(EffectFrameNone, false);
+            KIcon icon("user-trash");
+            frame->setIcon(icon.pixmap(QSize(128, 128)));
+            frame->setPosition(QPoint(screenRect.x() + screenRect.width(), screenRect.y()));
+            frame->setAlignment(Qt::AlignRight | Qt::AlignTop);
+            m_dropTargets.append(frame);
+        }
+    }
+    rearrangeWindows();
 }
 
 /************************************************
