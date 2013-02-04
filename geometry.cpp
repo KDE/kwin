@@ -1807,7 +1807,7 @@ bool Client::isMaximizable() const
         // isMovable() and isResizable() may be false for maximized windows
         // with moving/resizing maximized windows disabled
         TemporaryAssign< MaximizeMode > tmp(max_mode, MaximizeRestore);
-        if (!isMovable() || !isResizable() || isToolbar())  // SELI isToolbar() ?
+        if (!isResizable() || isToolbar())  // SELI isToolbar() ?
             return false;
     }
     if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore && rules()->checkMaximize(MaximizeFull) != MaximizeRestore)
@@ -2111,7 +2111,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         // isMovable() and isResizable() may be false for maximized windows
         // with moving/resizing maximized windows disabled
         TemporaryAssign< MaximizeMode > tmp(max_mode, MaximizeRestore);
-        if (!isMovable() || !isResizable() || isToolbar())  // SELI isToolbar() ?
+        if (!isResizable() || isToolbar())  // SELI isToolbar() ?
             return;
     }
 
@@ -2230,8 +2230,10 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                                   adjustedSize(QSize(geom_restore.width(), clientArea.height()), SizemodeFixedH)), geom_mode);
             }
         } else {
-            setGeometry(QRect(QPoint(x(), clientArea.top()),
-                              adjustedSize(QSize(width(), clientArea.height()), SizemodeFixedH)), geom_mode);
+            QRect r(x(), clientArea.top(), width(), clientArea.height());
+            r.setTopLeft(rules()->checkPosition(r.topLeft()));
+            r.setSize(adjustedSize(r.size(), SizemodeFixedH));
+            setGeometry(r, geom_mode);
         }
         info->setState(NET::MaxVert, NET::Max);
         break;
@@ -2248,8 +2250,10 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                                   adjustedSize(QSize(clientArea.width(), geom_restore.height()), SizemodeFixedW)), geom_mode);
             }
         } else {
-            setGeometry(QRect(QPoint(clientArea.left(), y()),
-                              adjustedSize(QSize(clientArea.width(), height()), SizemodeFixedW)), geom_mode);
+            QRect r(clientArea.left(), y(), clientArea.width(), height());
+            r.setTopLeft(rules()->checkPosition(r.topLeft()));
+            r.setSize(adjustedSize(r.size(), SizemodeFixedW));
+            setGeometry(r, geom_mode);
         }
         info->setState(NET::MaxHoriz, NET::Max);
         break;
@@ -2292,13 +2296,15 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     }
 
     case MaximizeFull: {
-        QSize adjSize = adjustedSize(clientArea.size(), SizemodeMax);
-        QRect r = QRect(clientArea.topLeft(), adjSize);
+        QRect r(clientArea);
+        r.setTopLeft(rules()->checkPosition(r.topLeft()));
+        r.setSize(adjustedSize(r.size(), SizemodeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width())
                 r.moveLeft(QCursor::pos().x() - r.width()/2);
             else
                 r.moveCenter(clientArea.center());
+            r.moveTopLeft(rules()->checkPosition(r.topLeft()));
         }
         setGeometry(r, geom_mode);
         info->setState(NET::Max, NET::Max);
