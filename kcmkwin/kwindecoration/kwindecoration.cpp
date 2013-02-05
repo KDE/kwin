@@ -174,7 +174,9 @@ void KWinDecorationModule::init()
 
 int KWinDecorationModule::itemWidth() const
 {
-    return m_ui->decorationList->rootObject()->property("width").toInt();
+    const int width = m_ui->decorationList->rootObject()->property("width").toInt();
+    const int sliderWidth = m_ui->decorationList->verticalScrollBar()->width();
+    return width - sliderWidth;
 }
 
 // This is the selection handler setting
