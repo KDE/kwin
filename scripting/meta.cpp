@@ -110,6 +110,20 @@ void Client::fromScriptValue(const QScriptValue &value, KWin::Client* &client)
     client = qobject_cast<KWin::Client*>(value.toQObject());
 }
 
+QScriptValue Toplevel::toScriptValue(QScriptEngine *eng, const KToplevelRef &client)
+{
+    return eng->newQObject(client, QScriptEngine::QtOwnership,
+                           QScriptEngine::ExcludeChildObjects |
+                           QScriptEngine::ExcludeDeleteLater |
+                           QScriptEngine::PreferExistingWrapperObject |
+                           QScriptEngine::AutoCreateDynamicProperties);
+}
+
+void Toplevel::fromScriptValue(const QScriptValue &value, KToplevelRef &client)
+{
+    client = qobject_cast<KWin::Toplevel*>(value.toQObject());
+}
+
 // Other helper functions
 void KWin::MetaScripting::registration(QScriptEngine* eng)
 {
@@ -117,6 +131,7 @@ void KWin::MetaScripting::registration(QScriptEngine* eng)
     qScriptRegisterMetaType<QSize>(eng, Size::toScriptValue, Size::fromScriptValue);
     qScriptRegisterMetaType<QRect>(eng, Rect::toScriptValue, Rect::fromScriptValue);
     qScriptRegisterMetaType<KClientRef>(eng, Client::toScriptValue, Client::fromScriptValue);
+    qScriptRegisterMetaType<KToplevelRef>(eng, Toplevel::toScriptValue, Toplevel::fromScriptValue);
 
     qScriptRegisterSequenceMetaType<QStringList>(eng);
     qScriptRegisterSequenceMetaType< QList<KWin::Client*> >(eng);

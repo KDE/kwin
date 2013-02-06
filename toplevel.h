@@ -661,5 +661,6 @@ KWIN_COMPARE_PREDICATE(WindowMatchPredicate, Toplevel, Window, cl->window() == v
 KWIN_COMPARE_PREDICATE(FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value);
 
 } // namespace
+Q_DECLARE_METATYPE(KWin::Toplevel*)
 
 #endif
