@@ -1915,7 +1915,6 @@ void PresentWindowsEffect::screenCountChanged()
 {
     if (!isActive())
         return;
-    delete m_closeView;
     while (!m_dropTargets.empty()) {
         delete m_dropTargets.takeFirst();
     }
