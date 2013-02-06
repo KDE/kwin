@@ -3,7 +3,8 @@ kde4_no_enable_final(kwineffects)
 
 macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
-    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES} ${XCB_XCB_LIBRARIES} ${X11_XCB_LIBRARIES})
+    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES} ${XCB_XCB_LIBRARIES} ${X11_XCB_LIBRARIES}
+    ${XCB_XFIXES_LIBRARIES})
 endmacro( KWIN4_ADD_EFFECT_BACKEND )
 
 # Adds effect plugin with given name. Sources are given after the name

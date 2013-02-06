@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 
 #include <X11/extensions/Xcomposite.h>
+#include <xcb/xfixes.h>
 
 #include <kxerrorhandler.h>
 
@@ -181,17 +182,18 @@ void SceneXrender::present(int mask, QRegion damage)
 {
     if (mask & PAINT_SCREEN_REGION) {
         // Use the damage region as the clip region for the root window
-        XserverRegion front_region = toXserverRegion(damage);
-        XFixesSetPictureClipRegion(display(), front, 0, 0, front_region);
-        XFixesDestroyRegion(display(), front_region);
+        XFixesRegion frontRegion(damage);
+        xcb_xfixes_set_picture_clip_region(connection(), front, frontRegion, 0, 0);
         // copy composed buffer to the root window
-        XFixesSetPictureClipRegion(display(), buffer, 0, 0, None);
-        XRenderComposite(display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
-        XFixesSetPictureClipRegion(display(), front, 0, 0, None);
+        xcb_xfixes_set_picture_clip_region(connection(), buffer, XCB_XFIXES_REGION_NONE, 0, 0);
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer, XCB_RENDER_PICTURE_NONE,
+                             front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+        xcb_xfixes_set_picture_clip_region(connection(), front, XCB_XFIXES_REGION_NONE, 0, 0);
         XSync(display(), false);
     } else {
         // copy composed buffer to the root window
-        XRenderComposite(display(), PictOpSrc, buffer, None, front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer, XCB_RENDER_PICTURE_NONE,
+                             front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
         XSync(display(), false);
     }
 }

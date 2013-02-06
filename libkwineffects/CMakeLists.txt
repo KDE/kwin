@@ -16,6 +16,10 @@ target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}
     ${X11_Xrandr_LIB}
     ${X11_Xdamage_LIB}
     ${X11_Xfixes_LIB}
+    ${XCB_XCB_LIBRARIES}
+    ${X11_XCB_LIBRARIES}
+    ${XCB_XFIXES_LIBRARIES}
+    ${XCB_RENDER_LIBRARIES}
 )
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)

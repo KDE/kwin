@@ -25,23 +25,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QSharedData>
 #include <QtGui/QColor>
+#include <QVector>
 #include <ksharedptr.h>
 
 #include <kwinglobals.h>
 
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/Xrender.h>
+#include <xcb/xfixes.h>
 
 /** @addtogroup kwineffects */
 /** @{ */
 
 namespace KWin
 {
-
-/**
- * Convert QRegion to XserverRegion.
- */
-KWIN_EXPORT XserverRegion toXserverRegion(QRegion region);
 /**
  * draws a round box on the renderscene
  */
@@ -82,6 +79,17 @@ private:
     KSharedPtr< XRenderPictureData > d;
 };
 
+class KWIN_EXPORT XFixesRegion
+{
+public:
+    explicit XFixesRegion(const QRegion &region);
+    virtual ~XFixesRegion();
+
+    operator xcb_xfixes_region_t();
+private:
+    xcb_xfixes_region_t m_region;
+};
+
 inline
 XRenderPictureData::XRenderPictureData(Picture pic)
     : picture(pic)
@@ -111,6 +119,38 @@ inline
 XRenderPicture::operator Picture()
 {
     return d->value();
+}
+
+inline
+XFixesRegion::XFixesRegion(const QRegion &region)
+{
+    m_region = xcb_generate_id(connection());
+    QVector< QRect > rects = region.rects();
+    QVector< xcb_rectangle_t > xrects(rects.count());
+    for (int i = 0;
+            i < rects.count();
+            ++i) {
+        const QRect &rect = rects.at(i);
+        xcb_rectangle_t xrect;
+        xrect.x = rect.x();
+        xrect.y = rect.y();
+        xrect.width = rect.width();
+        xrect.height = rect.height();
+        xrects[i] = xrect;
+    }
+    xcb_xfixes_create_region(connection(), m_region, xrects.count(), xrects.constData());
+}
+
+inline
+XFixesRegion::~XFixesRegion()
+{
+    xcb_xfixes_destroy_region(connection(), m_region);
+}
+
+inline
+XFixesRegion::operator xcb_xfixes_region_t()
+{
+    return m_region;
 }
 
 /**
