@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 
 #include <QtGui/QPainter>
+#include <QtCore/qmath.h>
 
 namespace KWin
 {
@@ -93,6 +94,7 @@ SceneXrender::~SceneXrender()
         m_overlayWindow->destroy();
         return;
     }
+    SceneXrender::EffectFrame::cleanup();
     XRenderFreePicture(display(), front);
     XRenderFreePicture(display(), buffer);
     buffer = None;
@@ -727,6 +729,8 @@ void SceneXrender::screenGeometryChanged(const QSize &size)
 // SceneXrender::EffectFrame
 //****************************************
 
+XRenderPicture *SceneXrender::EffectFrame::s_effectFrameCircle = NULL;
+
 SceneXrender::EffectFrame::EffectFrame(EffectFrameImpl* frame)
     : Scene::EffectFrame(frame)
 {
@@ -742,6 +746,12 @@ SceneXrender::EffectFrame::~EffectFrame()
     delete m_textPicture;
     delete m_iconPicture;
     delete m_selectionPicture;
+}
+
+void SceneXrender::EffectFrame::cleanup()
+{
+    delete s_effectFrameCircle;
+    s_effectFrameCircle = NULL;
 }
 
 void SceneXrender::EffectFrame::free()
@@ -792,10 +802,9 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
     }
 
     // Render the actual frame
-    if (m_effectFrame->style() == EffectFrameUnstyled)
-        xRenderRoundBox(effects->xrenderBufferPicture(), m_effectFrame->geometry().adjusted(-5, -5, 5, 5),
-                        5, QColor(0, 0, 0, int(opacity * frameOpacity * 255)));
-    else if (m_effectFrame->style() == EffectFrameStyled) {
+    if (m_effectFrame->style() == EffectFrameUnstyled) {
+        renderUnstyled(effects->xrenderBufferPicture(), m_effectFrame->geometry(), opacity * frameOpacity);
+    } else if (m_effectFrame->style() == EffectFrameStyled) {
         if (!m_picture) { // Lazy creation
             updatePicture();
         }
@@ -842,6 +851,95 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
                          0, 0, 0, 0, m_effectFrame->geometry().x(), m_effectFrame->geometry().y(),
                          m_effectFrame->geometry().width(), m_effectFrame->geometry().height());
     }
+}
+
+void SceneXrender::EffectFrame::renderUnstyled(xcb_render_picture_t pict, const QRect &rect, qreal opacity)
+{
+    const int roundness = 5;
+    const QRect area = rect.adjusted(-roundness, -roundness, roundness, roundness);
+    xcb_rectangle_t rects[3];
+    // center
+    rects[0].x = area.left();
+    rects[0].y = area.top() + roundness;
+    rects[0].width = area.width();
+    rects[0].height = area.height() - roundness * 2;
+    // top
+    rects[1].x = area.left() + roundness;
+    rects[1].y = area.top();
+    rects[1].width = area.width() - roundness * 2;
+    rects[1].height = roundness;
+    // bottom
+    rects[2].x = area.left() + roundness;
+    rects[2].y = area.top() + area.height() - roundness;
+    rects[2].width = area.width() - roundness * 2;
+    rects[2].height = roundness;
+    xcb_render_color_t color = {0, 0, 0, uint16_t(opacity * 0xffff)};
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, pict, color, 3, rects);
+
+    if (!s_effectFrameCircle) {
+        // create the circle
+        const int diameter = roundness * 2;
+        xcb_pixmap_t pix = xcb_generate_id(connection());
+        xcb_create_pixmap(connection(), 32, pix, rootWindow(), diameter, diameter);
+        s_effectFrameCircle = new XRenderPicture(pix, 32);
+        xcb_free_pixmap(connection(), pix);
+
+        // clear it with transparent
+        xcb_rectangle_t xrect = {0, 0, diameter, diameter};
+        xcb_render_color_t tranparent = {0, 0, 0, 0};
+        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_effectFrameCircle, tranparent, 1, &xrect);
+
+        static int num_segments = 80;
+        static qreal theta = 2 * M_PI / qreal(num_segments);
+        static qreal c = qCos(theta); //precalculate the sine and cosine
+        static qreal s = qSin(theta);
+        qreal t;
+
+        qreal x = roundness;//we start at angle = 0
+        qreal y = 0;
+        #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+        QVector<xcb_render_pointfix_t> points;
+        xcb_render_pointfix_t point;
+        point.x = DOUBLE_TO_FIXED(roundness);
+        point.y = DOUBLE_TO_FIXED(roundness);
+        points << point;
+        for (int ii = 0; ii <= num_segments; ++ii) {
+            point.x = DOUBLE_TO_FIXED(x + roundness);
+            point.y = DOUBLE_TO_FIXED(y + roundness);
+            points << point;
+            //apply the rotation matrix
+            t = x;
+            x = c * x - s * y;
+            y = s * t + c * y;
+        }
+        XRenderPicture fill = xRenderFill(Qt::black);
+        xcb_render_tri_fan(connection(), XCB_RENDER_PICT_OP_OVER, fill, *s_effectFrameCircle,
+                        0, 0, 0, points.count(), points.constData());
+        #undef DOUBLE_TO_FIXED
+    }
+    // TODO: merge alpha mask with SceneXrender::Window::alphaMask
+    // alpha mask
+    xcb_pixmap_t pix = xcb_generate_id(connection());
+    xcb_create_pixmap(connection(), 8, pix, rootWindow(), 1, 1);
+    XRenderPicture alphaMask(pix, 8);
+    xcb_free_pixmap(connection(), pix);
+    const uint32_t values[] = {true};
+    xcb_render_change_picture(connection(), alphaMask, XCB_RENDER_CP_REPEAT, values);
+    color.alpha = int(opacity * 0xffff);
+    xcb_rectangle_t xrect = {0, 0, 1, 1};
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, alphaMask, color, 1, &xrect);
+
+    // TODO: replace by lambda
+#define RENDER_CIRCLE(srcX, srcY, destX, destY) \
+xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *s_effectFrameCircle, alphaMask, \
+                     pict, srcX, srcY, 0, 0, destX, destY, roundness, roundness)
+
+    RENDER_CIRCLE(0, 0, area.left(), area.top());
+    RENDER_CIRCLE(0, roundness, area.left(), area.top() + area.height() - roundness);
+    RENDER_CIRCLE(roundness, 0, area.left() + area.width() - roundness, area.top());
+    RENDER_CIRCLE(roundness, roundness,
+                  area.left() + area.width() - roundness, area.top() + area.height() - roundness);
+#undef RENDER_CIRCLE
 }
 
 void SceneXrender::EffectFrame::updatePicture()

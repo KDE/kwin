@@ -40,10 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 /**
- * draws a round box on the renderscene
- */
-KWIN_EXPORT void xRenderRoundBox(Picture pict, const QRect &rect, int round, const QColor &c);
-/**
  * dumps a QColor into a XRenderColor
  */
 KWIN_EXPORT XRenderColor preMultiply(const QColor &c, float opacity = 1.0);

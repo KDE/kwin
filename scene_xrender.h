@@ -113,15 +113,18 @@ public:
     virtual void crossFadeIcon();
     virtual void crossFadeText();
     virtual void render(QRegion region, double opacity, double frameOpacity);
+    static void cleanup();
 
 private:
     void updatePicture();
     void updateTextPicture();
+    void renderUnstyled(xcb_render_picture_t pict, const QRect &rect, qreal opacity);
 
     XRenderPicture* m_picture;
     XRenderPicture* m_textPicture;
     XRenderPicture* m_iconPicture;
     XRenderPicture* m_selectionPicture;
+    static XRenderPicture* s_effectFrameCircle;
 };
 
 inline
