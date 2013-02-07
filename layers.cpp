@@ -150,27 +150,24 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
  */
 void Workspace::propagateClients(bool propagate_new_clients)
 {
-    Window *cl; // MW we should not assume WId and Window to be compatible
-    // when passig pointers around.
-
     // restack the windows according to the stacking order
-    // 1 - supportWindow, 1 - topmenu_space, 8 - electric borders
-    QVector<Window*> newWindowStack;
+    // supportWindow > electric borders > clients > hidden clients
+    QVector<xcb_window_t> newWindowStack;
+
     // Stack all windows under the support window. The support window is
     // not used for anything (besides the NETWM property), and it's not shown,
     // but it was lowered after kwin startup. Stacking all clients below
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
-    newWindowStack << (Window*)supportWindow->winId();
+    newWindowStack << supportWindow->winId();
+
 #ifdef KWIN_BUILD_SCREENEDGES
-    QVectorIterator<xcb_window_t> it(ScreenEdges::self()->windows());
-    while (it.hasNext()) {
-        if ((Window)it.next() != None) {
-            newWindowStack << (Window*)&it;
-        }
-    }
+    newWindowStack << ScreenEdges::self()->windows();
 #endif
-    for (int i = stacking_order.size() - 1; i >= 0; i--) {
+
+    newWindowStack.reserve(newWindowStack.size() + 2*stacking_order.size()); // *2 for inputWindow
+
+    for (int i = stacking_order.size() - 1; i >= 0; --i) {
         Client *client = qobject_cast<Client*>(stacking_order.at(i));
         if (!client || client->hiddenPreview()) {
             continue;
@@ -178,26 +175,27 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
         if (client->inputId())
             // Stack the input window above the frame
-            newWindowStack << (Window*)client->inputId();
+            newWindowStack << client->inputId();
 
-        newWindowStack << (Window*)client->frameId();
+        newWindowStack << client->frameId();
     }
 
     // when having hidden previews, stack hidden windows below everything else
     // (as far as pure X stacking order is concerned), in order to avoid having
     // these windows that should be unmapped to interfere with other windows
-    for (int i = stacking_order.size() - 1; i >= 0; i--) {
+    for (int i = stacking_order.size() - 1; i >= 0; --i) {
         Client *client = qobject_cast<Client*>(stacking_order.at(i));
         if (!client || !client->hiddenPreview())
             continue;
-        newWindowStack << (Window*)client->frameId();
+        newWindowStack << client->frameId();
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(newWindowStack.at(0) == (Window*)supportWindow->winId());
-    XRestackWindows(display(), (Window*)newWindowStack.data(), newWindowStack.count());
+    assert(newWindowStack.at(0) == supportWindow->winId());
+    Xcb::restackWindows(newWindowStack);
 
     int pos = 0;
+    Window *cl(NULL);
     if (propagate_new_clients) {
         cl = new Window[ desktops.count() + clients.count()];
         // TODO this is still not completely in the map order
