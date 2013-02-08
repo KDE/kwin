@@ -146,6 +146,9 @@ void InvertEffect::toggleScreenInversion()
 
 void InvertEffect::toggleWindow()
 {
+    if (!effects->activeWindow()) {
+        return;
+    }
     if (!m_windows.contains(effects->activeWindow()))
         m_windows.append(effects->activeWindow());
     else
