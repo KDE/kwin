@@ -39,8 +39,11 @@ LanczosFilter::LanczosFilter(QObject* parent)
     : QObject(parent)
     , m_offscreenTex(0)
     , m_offscreenTarget(0)
-    , m_shader(0)
     , m_inited(false)
+    , m_shader(0)
+    , m_uTexUnit(0)
+    , m_uOffsets(0)
+    , m_uKernel(0)
 {
 }
 
@@ -62,23 +65,30 @@ void LanczosFilter::init()
 
     if (!force && options->glSmoothScale() != 2)
         return; // disabled by config
+    if (effects->compositingType() != OpenGL2Compositing || !GLRenderTarget::supported())
+        return;
 
-    // The lanczos filter is reported to be broken with the Intel driver prior SandyBridge
     GLPlatform *gl = GLPlatform::instance();
-    if (!force && gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
-        return;
-    // Broken on IvyBridge with Mesa 9.1 - BUG 313613
-    if (!force && gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1))
-        return;
-    // With fglrx the ARB Shader crashes KWin (see Bug #270818 and #286795)
-    if (!force && gl->driver() == Driver_Catalyst && effects->compositingType() == OpenGL1Compositing) {
-        return;
+    if (!force) {
+        // The lanczos filter is reported to be broken with the Intel driver prior SandyBridge
+        if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
+            return;
+        // Broken on IvyBridge with Mesa 9.1 - BUG 313613
+        if (gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1))
+            return;
+        // also radeon before R600 has trouble
+        if (gl->isRadeon() && gl->chipClass() < R600)
+            return;
     }
-
-    m_shader = new LanczosShader(this);
-    if (!m_shader->init()) {
-        delete m_shader;
-        m_shader = 0;
+    m_shader.reset(ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl"));
+    if (m_shader->isValid()) {
+        ShaderBinder binder(m_shader.data());
+        m_uTexUnit    = m_shader->uniformLocation("texUnit");
+        m_uKernel     = m_shader->uniformLocation("kernel");
+        m_uOffsets    = m_shader->uniformLocation("offsets");
+    } else {
+        kDebug(1212) << "Shader is not valid";
+        m_shader.reset();
     }
 }
 
@@ -119,7 +129,7 @@ static float lanczos(float x, float a)
     return sinc(x) * sinc(x / a);
 }
 
-void LanczosShader::createKernel(float delta, int *size)
+void LanczosFilter::createKernel(float delta, int *size)
 {
     const float a = 2.0;
 
@@ -150,7 +160,7 @@ void LanczosShader::createKernel(float delta, int *size)
     *size = kernelSize;
 }
 
-void LanczosShader::createOffsets(int count, float width, Qt::Orientation direction)
+void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direction)
 {
     memset(m_offsets, 0, 16 * sizeof(QVector2D));
     for (int i = 0; i < count; i++) {
@@ -161,7 +171,7 @@ void LanczosShader::createOffsets(int count, float width, Qt::Orientation direct
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (effects->isOpenGLCompositing() && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
+    if (effects->compositingType() == OpenGL2Compositing && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
             KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
         if (!m_inited)
             init();
@@ -206,27 +216,21 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     if (hardwareClipping) {
                         glEnable(GL_SCISSOR_TEST);
                     }
-                    if (effects->compositingType() == OpenGL2Compositing) {
-                        glEnable(GL_BLEND);
-                        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                    glEnable(GL_BLEND);
+                    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                        const qreal rgb = data.brightness() * data.opacity();
-                        const qreal a = data.opacity();
+                    const qreal rgb = data.brightness() * data.opacity();
+                    const qreal a = data.opacity();
 
-                        ShaderBinder binder(ShaderManager::SimpleShader);
-                        GLShader *shader = binder.shader();
-                        shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-                        shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-                        shader->setUniform(GLShader::Saturation, data.saturation());
+                    ShaderBinder binder(ShaderManager::SimpleShader);
+                    GLShader *shader = binder.shader();
+                    shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+                    shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
+                    shader->setUniform(GLShader::Saturation, data.saturation());
 
-                        cachedTexture->render(region, textureRect, hardwareClipping);
+                    cachedTexture->render(region, textureRect, hardwareClipping);
 
-                        glDisable(GL_BLEND);
-                    } else {
-                        prepareRenderStates(cachedTexture, data.opacity(), data.brightness(), data.saturation());
-                        cachedTexture->render(region, textureRect, hardwareClipping);
-                        restoreRenderStates(cachedTexture, data.opacity(), data.brightness(), data.saturation());
-                    }
+                    glDisable(GL_BLEND);
                     if (hardwareClipping) {
                         glDisable(GL_SCISSOR_TEST);
                     }
@@ -269,11 +273,11 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             // Set up the shader for horizontal scaling
             float dx = sw / float(tw);
             int kernelSize;
-            m_shader->createKernel(dx, &kernelSize);
-            m_shader->createOffsets(kernelSize, sw, Qt::Horizontal);
+            createKernel(dx, &kernelSize);
+            createOffsets(kernelSize, sw, Qt::Horizontal);
 
-            m_shader->bind();
-            m_shader->setUniforms();
+            ShaderManager::instance()->pushShader(m_shader.data());
+            setUniforms();
 
             // Draw the window back into the FBO, this time scaled horizontally
             glClear(GL_COLOR_BUFFER_BIT);
@@ -307,9 +311,9 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
             // Set up the shader for vertical scaling
             float dy = sh / float(th);
-            m_shader->createKernel(dy, &kernelSize);
-            m_shader->createOffsets(kernelSize, m_offscreenTex->height(), Qt::Vertical);
-            m_shader->setUniforms();
+            createKernel(dy, &kernelSize);
+            createOffsets(kernelSize, m_offscreenTex->height(), Qt::Vertical);
+            setUniforms();
 
             // Now draw the horizontally scaled window in the FBO at the right
             // coordinates on the screen, while scaling it vertically and blending it.
@@ -328,7 +332,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
 
             tex2.unbind();
             tex2.discard();
-            m_shader->unbind();
+            ShaderManager::instance()->popShader();
 
             // create cache texture
             GLTexture *cache = new GLTexture(tw, th);
@@ -342,27 +346,21 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             if (hardwareClipping) {
                 glEnable(GL_SCISSOR_TEST);
             }
-            if (effects->compositingType() == OpenGL2Compositing) {
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-                const qreal rgb = data.brightness() * data.opacity();
-                const qreal a = data.opacity();
+            const qreal rgb = data.brightness() * data.opacity();
+            const qreal a = data.opacity();
 
-                ShaderBinder binder(ShaderManager::SimpleShader);
-                GLShader *shader = binder.shader();
-                shader->setUniform(GLShader::Offset, QVector2D(0, 0));
-                shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-                shader->setUniform(GLShader::Saturation, data.saturation());
+            ShaderBinder binder(ShaderManager::SimpleShader);
+            GLShader *shader = binder.shader();
+            shader->setUniform(GLShader::Offset, QVector2D(0, 0));
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
+            shader->setUniform(GLShader::Saturation, data.saturation());
 
-                cache->render(region, textureRect, hardwareClipping);
+            cache->render(region, textureRect, hardwareClipping);
 
-                glDisable(GL_BLEND);
-            } else {
-                prepareRenderStates(cache, data.opacity(), data.brightness(), data.saturation());
-                cache->render(region, textureRect, hardwareClipping);
-                restoreRenderStates(cache, data.opacity(), data.brightness(), data.saturation());
-            }
+            glDisable(GL_BLEND);
             if (hardwareClipping) {
                 glDisable(GL_SCISSOR_TEST);
             }
@@ -399,310 +397,11 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
     }
 }
 
-void LanczosFilter::prepareRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
+void LanczosFilter::setUniforms()
 {
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(tex)
-    Q_UNUSED(opacity)
-    Q_UNUSED(brightness)
-    Q_UNUSED(saturation)
-#else
-    const bool alpha = true;
-    // setup blending of transparent windows
-    glPushAttrib(GL_ENABLE_BIT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    if (saturation != 1.0 && tex->saturationSupported()) {
-        // First we need to get the color from [0; 1] range to [0.5; 1] range
-        glActiveTexture(GL_TEXTURE0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-        const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant);
-        tex->bind();
-
-        // Then we take dot product of the result of previous pass and
-        //  saturation_constant. This gives us completely unsaturated
-        //  (greyscale) image
-        // Note that both operands have to be in range [0.5; 1] since opengl
-        //  automatically substracts 0.5 from them
-        glActiveTexture(GL_TEXTURE1);
-        float saturation_constant[] = { 0.5 + 0.5 * 0.30, 0.5 + 0.5 * 0.59, 0.5 + 0.5 * 0.11,
-                                        static_cast<float>(saturation) };
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant);
-        tex->bind();
-
-        // Finally we need to interpolate between the original image and the
-        //  greyscale image to get wanted level of saturation
-        glActiveTexture(GL_TEXTURE2);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant);
-        // Also replace alpha by primary color's alpha here
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-        // And make primary color contain the wanted opacity
-        glColor4f(opacity, opacity, opacity, opacity);
-        tex->bind();
-
-        if (alpha || brightness != 1.0f) {
-            glActiveTexture(GL_TEXTURE3);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            // The color has to be multiplied by both opacity and brightness
-            float opacityByBrightness = opacity * brightness;
-            glColor4f(opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity);
-            if (alpha) {
-                // Multiply original texture's alpha by our opacity
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-            } else {
-                // Alpha will be taken from previous stage
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-            }
-            tex->bind();
-        }
-
-        glActiveTexture(GL_TEXTURE0);
-    } else if (opacity != 1.0 || brightness != 1.0) {
-        // the window is additionally configured to have its opacity adjusted,
-        // do it
-        float opacityByBrightness = opacity * brightness;
-        if (alpha) {
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            glColor4f(opacityByBrightness, opacityByBrightness, opacityByBrightness,
-                      opacity);
-        } else {
-            // Multiply color by brightness and replace alpha by opacity
-            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness,
-                                 static_cast<float>(opacity) };
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
-            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant);
-        }
-    }
-#endif
-}
-
-void LanczosFilter::restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation)
-{
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(tex)
-    Q_UNUSED(opacity)
-    Q_UNUSED(brightness)
-    Q_UNUSED(saturation)
-#else
-    if (opacity != 1.0 || saturation != 1.0 || brightness != 1.0f) {
-        if (saturation != 1.0 && tex->saturationSupported()) {
-            glActiveTexture(GL_TEXTURE3);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE2);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE1);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE0);
-        }
-    }
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glColor4f(0, 0, 0, 0);
-
-    glPopAttrib();  // ENABLE_BIT
-#endif
-}
-
-/************************************************
-* LanczosShader
-************************************************/
-LanczosShader::LanczosShader(QObject* parent)
-    : QObject(parent)
-    , m_shader(0)
-    , m_uTexUnit(0)
-    , m_uOffsets(0)
-    , m_uKernel(0)
-    , m_arbProgram(0)
-{
-}
-
-LanczosShader::~LanczosShader()
-{
-    delete m_shader;
-#ifdef KWIN_HAVE_OPENGL_1
-    if (m_arbProgram) {
-        glDeleteProgramsARB(1, &m_arbProgram);
-        m_arbProgram = 0;
-    }
-#endif
-}
-
-void LanczosShader::bind()
-{
-    if (m_shader)
-        ShaderManager::instance()->pushShader(m_shader);
-#ifdef KWIN_HAVE_OPENGL_1
-    else {
-        glEnable(GL_FRAGMENT_PROGRAM_ARB);
-        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
-    }
-#endif
-}
-
-void LanczosShader::unbind()
-{
-    if (m_shader)
-        ShaderManager::instance()->popShader();
-#ifdef KWIN_HAVE_OPENGL_1
-    else {
-        int boundObject;
-        glGetProgramivARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_BINDING_ARB, &boundObject);
-        if (boundObject == (int)m_arbProgram) {
-            glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
-            glDisable(GL_FRAGMENT_PROGRAM_ARB);
-        }
-    }
-#endif
-}
-
-void LanczosShader::setUniforms()
-{
-    if (m_shader) {
-        glUniform1i(m_uTexUnit, 0);
-        glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
-        glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
-    }
-#ifdef KWIN_HAVE_OPENGL_1
-    else {
-        for (int i = 0; i < 16; ++i) {
-            glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, i, m_offsets[i].x(), m_offsets[i].y(), 0, 0);
-        }
-        for (int i = 0; i < 16; ++i) {
-            glProgramLocalParameter4fARB(GL_FRAGMENT_PROGRAM_ARB, i + 16, m_kernel[i].x(), m_kernel[i].y(), m_kernel[i].z(), m_kernel[i].w());
-        }
-    }
-#endif
-}
-
-bool LanczosShader::init()
-{
-    GLPlatform *gl = GLPlatform::instance();
-    if (gl->supports(GLSL) &&
-            effects->compositingType() == OpenGL2Compositing &&
-            GLRenderTarget::supported() &&
-            !(gl->isRadeon() && gl->chipClass() < R600)) {
-        m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/lanczos-fragment.glsl");
-        if (m_shader->isValid()) {
-            ShaderBinder binder(m_shader);
-            m_uTexUnit    = m_shader->uniformLocation("texUnit");
-            m_uKernel     = m_shader->uniformLocation("kernel");
-            m_uOffsets    = m_shader->uniformLocation("offsets");
-            return true;
-        } else {
-            kDebug(1212) << "Shader is not valid";
-            m_shader = 0;
-            // try ARB shader
-        }
-    }
-
-#ifndef KWIN_HAVE_OPENGL_1
-    // no ARB shader in GLES
-    return false;
-#else
-    // try to create an ARB Shader
-    if (!hasGLExtension("GL_ARB_fragment_program"))
-        return false;
-
-    // We allow Lanczos for SandyBridge or later, but only GLSL shaders are supported, see BUG 301729
-    if (gl->isIntel())
-        return false;
-
-    QByteArray text;
-    QTextStream stream(&text);
-
-    // Note: This program uses 31 temporaries, 61 ALU instructions, 31 texture
-    //       fetches, 3 texture indirections and 93 instructions.
-    //       The R300 limitations are 32, 64, 32, 4 and 96 respectively.
-    stream << "!!ARBfp1.0\n";
-    stream << "TEMP sum;\n";
-
-    // Declare 30 temporaries for holding texcoords and TEX results
-    for (int i = 0; i < 30; i++)
-        stream << "TEMP temp" << i << ";\n";
-
-    // Compute the texture coordinates
-    for (int i = 0, j = 0; i < 30 / 2; i++) {
-        stream << "ADD temp" << j++ << ", fragment.texcoord, program.local[" << i + 1 << "];\n";
-        stream << "SUB temp" << j++ << ", fragment.texcoord, program.local[" << i + 1 << "];\n";
-    }
-
-    // Sample the texture coordinates
-    stream << "TEX sum, fragment.texcoord, texture[0], 2D;\n";
-    for (int i = 0; i < 30; i++)
-        stream << "TEX temp" << i << ", temp" << i << ", texture[0], 2D;\n";
-
-    // Process the results
-    stream << "MUL sum, sum, program.local[16];\n"; // sum = sum * kernel[0]
-    for (int i = 0, j = 0; i < 30 / 2; i++) {
-        stream << "MAD sum, temp" << j++ << ", program.local[" << (17 + i) << "], sum;\n";
-        stream << "MAD sum, temp" << j++ << ", program.local[" << (17 + i) << "], sum;\n";
-    }
-
-    stream << "MOV result.color, sum;\n";
-    stream << "END\n";
-    stream.flush();
-
-    glEnable(GL_FRAGMENT_PROGRAM_ARB);
-    glGenProgramsARB(1, &m_arbProgram);
-    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, m_arbProgram);
-    glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, text.length(), text.constData());
-
-    if (glGetError()) {
-        const char *error = (const char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
-        kError() << "Failed to compile fragment program:" << error;
-        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
-        glDeleteProgramsARB(1, &m_arbProgram);
-        glDisable(GL_FRAGMENT_PROGRAM_ARB);
-        m_arbProgram = 0;
-        return false;
-    }
-
-    glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, 0);
-    glDisable(GL_FRAGMENT_PROGRAM_ARB);
-    kDebug(1212) << "ARB Shader compiled, id: " << m_arbProgram;
-    return true;
-#endif
+    glUniform1i(m_uTexUnit, 0);
+    glUniform2fv(m_uOffsets, 16, (const GLfloat*)m_offsets);
+    glUniform4fv(m_uKernel, 16, (const GLfloat*)m_kernel);
 }
 
 } // namespace

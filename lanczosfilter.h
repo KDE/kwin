@@ -38,7 +38,6 @@ class WindowPaintData;
 class GLTexture;
 class GLRenderTarget;
 class GLShader;
-class LanczosShader;
 
 class LanczosFilter
     : public QObject
@@ -55,39 +54,20 @@ protected:
 private:
     void init();
     void updateOffscreenSurfaces();
-    void prepareRenderStates(GLTexture* tex, double opacity, double brightness, double saturation);
-    void restoreRenderStates(GLTexture* tex, double opacity, double brightness, double saturation);
-    GLTexture *m_offscreenTex;
-    GLRenderTarget *m_offscreenTarget;
-    LanczosShader *m_shader;
-    QBasicTimer m_timer;
-    bool m_inited;
-};
-
-class LanczosShader
-    : public QObject
-{
-    Q_OBJECT
-
-public:
-    explicit LanczosShader(QObject* parent = 0);
-    virtual ~LanczosShader();
-    bool init();
-    void bind();
-    void unbind();
     void setUniforms();
 
     void createKernel(float delta, int *kernelSize);
     void createOffsets(int count, float width, Qt::Orientation direction);
-
-private:
-    GLShader *m_shader;
+    GLTexture *m_offscreenTex;
+    GLRenderTarget *m_offscreenTarget;
+    QBasicTimer m_timer;
+    bool m_inited;
+    QScopedPointer<GLShader> m_shader;
     int m_uTexUnit;
     int m_uOffsets;
     int m_uKernel;
     QVector2D m_offsets[16];
     QVector4D m_kernel[16];
-    uint m_arbProgram; // TODO: GLuint
 };
 
 } // namespace
