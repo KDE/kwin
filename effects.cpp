@@ -1187,7 +1187,7 @@ void EffectsHandlerImpl::destroyInputWindow(xcb_window_t w)
         if (pos.second == w) {
             xcb_unmap_window(connection(), w);
 #ifdef KWIN_BUILD_SCREENEDGES
-            ScreenEdges::self()->raisePanelProxies();
+            Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
 #endif
             return;
         }

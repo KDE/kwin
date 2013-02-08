@@ -199,6 +199,10 @@ public:
 
     Outline* outline();
 
+#ifdef KWIN_BUILD_SCREENEDGES
+    void stackScreenEdgesUnderOverrideRedirect();
+#endif
+
 public:
     QPoint cascadeOffset(const Client *c) const;
 
