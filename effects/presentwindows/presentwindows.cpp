@@ -670,11 +670,6 @@ void PresentWindowsEffect::mouseActionWindow(WindowMouseAction& action)
                 m_highlightedWindow->minimize();
         }
         break;
-    case WindowCloseAction:
-        if (m_highlightedWindow) {
-            m_highlightedWindow->closeWindow();
-        }
-        break;
     default:
         break;
     }

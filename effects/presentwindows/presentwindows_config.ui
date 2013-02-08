@@ -161,11 +161,6 @@
           <string>(Un-)Minimize window</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>Close window</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="1" column="0">
@@ -210,11 +205,6 @@
           <string>(Un-)Minimize window</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>Close window</string>
-         </property>
-        </item>
        </widget>
       </item>
       <item row="2" column="0">
@@ -257,11 +247,6 @@
         <item>
          <property name="text">
           <string>(Un-)Minimize window</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Close window</string>
          </property>
         </item>
        </widget>
