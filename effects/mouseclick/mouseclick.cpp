@@ -26,7 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <kwinxrenderutils.h>
-#include <QPainter>
+#include <xcb/xcb.h>
+#include <xcb/render.h>
 #endif
 
 #include <KDE/KAction>
@@ -40,10 +41,6 @@ namespace KWin
 
 KWIN_EFFECT(mouseclick, MouseClickEffect)
 KWIN_EFFECT_SUPPORTED(mouseclick, MouseClickEffect::supported())
-
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-static QPixmap s_XrBuffer;
-#endif
 
 MouseClickEffect::MouseClickEffect()
 {
@@ -64,10 +61,6 @@ MouseClickEffect::MouseClickEffect()
 
 MouseClickEffect::~MouseClickEffect()
 {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (!s_XrBuffer.isNull())
-        XFreePixmap(display(), s_XrBuffer.handle());
-#endif
     if (m_enabled)
         effects->stopMousePolling();
     foreach (const MouseEvent* click, m_clicks) {
@@ -316,29 +309,55 @@ void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, flo
 void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, float r)
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    const int bufferSize = qRound(1.41421356*(2*m_ringMaxSize + m_lineWidth)) | 1;
-    if (bufferSize < 0) // should not happen, but we neither want to leak XPixmaps
+    if (r <= m_lineWidth)
         return;
-    if (s_XrBuffer.size() != QSize(bufferSize, bufferSize)) {
-        if (!s_XrBuffer.isNull()) {
-            XFreePixmap(display(), s_XrBuffer.handle());
-        }
-        Pixmap xpix = XCreatePixmap(display(), rootWindow(), bufferSize, bufferSize, 32);
-        s_XrBuffer = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
+
+    int num_segments = r+8;
+    float theta = 2.0 * 3.1415926 / num_segments;
+    float cos = cosf(theta); //precalculate the sine and cosine
+    float sin = sinf(theta);
+    float x[2] = {r, r-m_lineWidth};
+    float y[2] = {0, 0};
+
+#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+    QVector<xcb_render_pointfix_t> strip;
+    strip.reserve(2*num_segments+2);
+
+    xcb_render_pointfix_t point;
+    point.x = DOUBLE_TO_FIXED(x[1]+cx);
+    point.y = DOUBLE_TO_FIXED(y[1]+cy);
+    strip << point;
+
+    for (int i = 0; i < num_segments; ++i) {
+        //apply the rotation matrix
+        const float h[2] = {x[0], x[1]};
+        x[0] = cos * x[0] - sin * y[0];
+        x[1] = cos * x[1] - sin * y[1];
+        y[0] = sin * h[0] + cos * y[0];
+        y[1] = sin * h[1] + cos * y[1];
+
+        point.x = DOUBLE_TO_FIXED(x[0]+cx);
+        point.y = DOUBLE_TO_FIXED(y[0]+cy);
+        strip << point;
+
+        point.x = DOUBLE_TO_FIXED(x[1]+cx);
+        point.y = DOUBLE_TO_FIXED(y[1]+cy);
+        strip << point;
     }
-    s_XrBuffer.fill(Qt::transparent);
-    QRect rct(s_XrBuffer.rect());
-    QPainter p(&s_XrBuffer);
-    p.setBrush(Qt::NoBrush);
-    p.setPen(QPen(color, m_lineWidth));
-    p.setRenderHint(QPainter::Antialiasing);
-    const int ir = qRound(r);
-    p.drawEllipse(rct.center(), ir, ir);
-    p.end();
-    rct.moveCenter(QPoint(qRound(cx), qRound(cy)));
-    XRenderComposite( display(), PictOpOver,
-                      s_XrBuffer.x11PictureHandle(), 0, effects->xrenderBufferPicture(),
-                      0, 0, 0, 0, rct.x(), rct.y(), rct.width(), rct.height() );
+
+    const float h = x[0];
+    x[0] = cos * x[0] - sin * y[0];
+    y[0] = sin * h    + cos * y[0];
+
+    point.x = DOUBLE_TO_FIXED(x[0]+cx);
+    point.y = DOUBLE_TO_FIXED(y[0]+cy);
+    strip << point;
+
+    XRenderPicture fill = xRenderFill(color);
+    xcb_render_tri_strip(connection(), XCB_RENDER_PICT_OP_OVER,
+                          fill, effects->xrenderBufferPicture(), 0,
+                          0, 0, strip.count(), strip.constData());
+#undef DOUBLE_TO_FIXED
 #endif
 }
 
