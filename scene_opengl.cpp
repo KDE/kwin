@@ -506,6 +506,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 
 SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     : SceneOpenGL(Workspace::self(), backend)
+    , m_lanczosFilter(NULL)
     , m_colorCorrection(new ColorCorrection(this))
 {
     if (!init_ok) {
@@ -587,15 +588,22 @@ void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region
 void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
     if (mask & PAINT_WINDOW_LANCZOS) {
-        if (m_lanczosFilter.isNull()) {
+        if (!m_lanczosFilter) {
             m_lanczosFilter = new LanczosFilter(this);
             // recreate the lanczos filter when the screen gets resized
-            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), m_lanczosFilter.data(), SLOT(deleteLater()));
-            connect(QApplication::desktop(), SIGNAL(resized(int)), m_lanczosFilter.data(), SLOT(deleteLater()));
+            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(resetLanczosFilter()));
+            connect(QApplication::desktop(), SIGNAL(resized(int)), SLOT(resetLanczosFilter()));
         }
-        m_lanczosFilter.data()->performPaint(w, mask, region, data);
+        m_lanczosFilter->performPaint(w, mask, region, data);
     } else
         w->sceneWindow()->performPaint(mask, region, data);
+}
+
+void SceneOpenGL2::resetLanczosFilter()
+{
+    // TODO: Qt5 - replace by a lambda slot
+    delete m_lanczosFilter;
+    m_lanczosFilter = NULL;
 }
 
 ColorCorrection *SceneOpenGL2::colorCorrection()

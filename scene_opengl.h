@@ -108,12 +108,13 @@ protected:
 
 private Q_SLOTS:
     void slotColorCorrectedChanged();
+    void resetLanczosFilter();
 
 private:
     void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
 
 private:
-    QWeakPointer<LanczosFilter> m_lanczosFilter;
+    LanczosFilter *m_lanczosFilter;
     ColorCorrection *m_colorCorrection;
 };
 
