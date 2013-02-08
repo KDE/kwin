@@ -207,6 +207,7 @@ public:
     Outline* outline();
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdge* screenEdge();
+    void stackScreenEdgesUnderOverrideRedirect();
 #endif
 
     //-------------------------------------------------

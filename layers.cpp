@@ -140,6 +140,29 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     }
 }
 
+#ifdef KWIN_BUILD_SCREENEDGES
+/*!
+ * Some fullscreen effects have to raise the screenedge on top of an input window, thus all windows
+ * this function puts them back where they belong for regular use and is some cheap variant of
+ * the regular propagateClients function in that it completely ignores managed clients and everything
+ * else and also does not update the NETWM property.
+ * Called from Effects::destroyInputWindow so far.
+ */
+void Workspace::stackScreenEdgesUnderOverrideRedirect()
+{
+    QVector<Window> stack;
+    stack << supportWindow->winId();
+    QVector<Window> edges(m_screenEdge.windows());
+    stack.reserve(edges.count() + 1);
+    for (QVector<Window>::const_iterator it = edges.constBegin(), end = edges.constEnd(); it != end; ++it) {
+        if (*it != None) {
+            stack << *it;
+        }
+    }
+    XRestackWindows(display(), stack.data(), stack.count());
+}
+#endif
+
 /*!
   Propagates the managed clients to the world.
   Called ONLY from updateStackingOrder().
