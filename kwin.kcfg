@@ -165,19 +165,19 @@
         <entry name="ElectricBorders" type="Int">
             <default>0</default>
         </entry>
-        <entry name="ElectricBordersDelay" type="Int">
+        <entry name="ElectricBorderDelay" type="Int">
             <default>150</default>
         </entry>
-        <entry name="ElectricBordersCooldown" type="Int">
+        <entry name="ElectricBorderCooldown" type="Int">
             <default>350</default>
         </entry>
-        <entry name="ElectricBordersPushbackPixels" type="Int">
+        <entry name="ElectricBorderPushbackPixels" type="Int">
             <default>1</default>
         </entry>
-        <entry name="ElectricBordersMaximize" type="Bool">
+        <entry name="ElectricBorderMaximize" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="ElectricBordersTiling" type="Bool">
+        <entry name="ElectricBorderTiling" type="Bool">
             <default>true</default>
         </entry>
         <entry name="ElectricBorderCornerRatio" type="Double">
