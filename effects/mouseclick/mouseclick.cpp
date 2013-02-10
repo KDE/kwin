@@ -166,12 +166,16 @@ void MouseClickEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
                                         Qt::MouseButtons buttons, Qt::MouseButtons oldButtons,
                                         Qt::KeyboardModifiers, Qt::KeyboardModifiers)
 {
+    if (buttons == oldButtons)
+        return;
+
     MouseEvent* m = NULL;
     for (int i = 0; i < BUTTON_COUNT; ++i) {
         MouseButton* b = m_buttons[i];
         if (isPressed(b->m_button, buttons, oldButtons)) {
             m = new MouseEvent(i, pos, 0, createEffectFrame(pos, b->m_labelDown), true);
-        } else if (isReleased(b->m_button, buttons, oldButtons) && b->m_time > m_ringLife) {
+        } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
+            // we might miss a press, thus also check !b->m_isPressed, bug #314762
             m = new MouseEvent(i, pos, 0, createEffectFrame(pos, b->m_labelUp), false);
         }
         b->setPressed(b->m_button & buttons);
