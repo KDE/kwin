@@ -58,8 +58,8 @@ MouseClickEffect::MouseClickEffect()
     reconfigure(ReconfigureAll);
 
     m_buttons[0] = new MouseButton(i18n("Left"), Qt::LeftButton);
-    m_buttons[1] = new MouseButton(i18n("Right"), Qt::RightButton);
-    m_buttons[2] = new MouseButton(i18n("Middle"), Qt::MiddleButton);
+    m_buttons[1] = new MouseButton(i18n("Middle"), Qt::MiddleButton);
+    m_buttons[2] = new MouseButton(i18n("Right"), Qt::RightButton);
 }
 
 MouseClickEffect::~MouseClickEffect()
