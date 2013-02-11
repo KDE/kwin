@@ -184,13 +184,13 @@ KWIN_EXPORT bool xRenderOffscreen();
 /**
  * The offscreen buffer as set by the renderer because of setXRenderWindowOffscreen(true)
  */
-KWIN_EXPORT QPixmap *xRenderOffscreenTarget();
+KWIN_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
 
 /**
  * NOTICE: HANDS OFF!!!
  * scene_setXRenderWindowOffscreenTarget() is ONLY to be used by the renderer - DO NOT TOUCH!
  */
-KWIN_EXPORT void scene_setXRenderOffscreenTarget(QPixmap *pix);
+KWIN_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
 /**
  * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
  */

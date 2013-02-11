@@ -94,6 +94,7 @@ SceneXrender::~SceneXrender()
         m_overlayWindow->destroy();
         return;
     }
+    SceneXrender::Window::cleanup();
     SceneXrender::EffectFrame::cleanup();
     XRenderFreePicture(display(), front);
     XRenderFreePicture(display(), buffer);
@@ -276,7 +277,7 @@ void SceneXrender::windowAdded(Toplevel* c)
 // SceneXrender::Window
 //****************************************
 
-QPixmap *SceneXrender::Window::temp_pixmap = 0;
+XRenderPicture *SceneXrender::Window::s_tempPicture = 0;
 QRect SceneXrender::Window::temp_visibleRect;
 
 SceneXrender::Window::Window(Toplevel* c)
@@ -293,6 +294,12 @@ SceneXrender::Window::~Window()
     discardPicture();
     discardAlpha();
     discardShape();
+}
+
+void SceneXrender::Window::cleanup()
+{
+    delete s_tempPicture;
+    s_tempPicture = NULL;
 }
 
 // Create XRender picture for the pixmap with the window contents.
@@ -406,21 +413,22 @@ QPoint SceneXrender::Window::mapToScreen(int mask, const WindowPaintData &data, 
 
 void SceneXrender::Window::prepareTempPixmap()
 {
+    const QSize oldSize = temp_visibleRect.size();
     temp_visibleRect = toplevel->visibleRect().translated(-toplevel->pos());
-
-    if (temp_pixmap && Extensions::nonNativePixmaps())
-        XFreePixmap(display(), temp_pixmap->handle());   // The picture owns the pixmap now
-    if (!temp_pixmap)
-        temp_pixmap = new QPixmap(temp_visibleRect.size());
-    else if (temp_pixmap->width() < temp_visibleRect.width() || temp_pixmap->height() < temp_visibleRect.height()) {
-        *temp_pixmap = QPixmap(temp_visibleRect.size());
+    if (s_tempPicture && (oldSize.width() < temp_visibleRect.width() || oldSize.height() < temp_visibleRect.height())) {
+        delete s_tempPicture;
+        s_tempPicture = NULL;
         scene_setXRenderOffscreenTarget(0); // invalidate, better crash than cause weird results for developers
     }
-    if (Extensions::nonNativePixmaps()) {
-        Pixmap pix = XCreatePixmap(display(), rootWindow(), temp_pixmap->width(), temp_pixmap->height(), DefaultDepth(display(), DefaultScreen(display())));
-        *temp_pixmap = QPixmap::fromX11Pixmap(pix);
+    if (!s_tempPicture) {
+        xcb_pixmap_t pix = xcb_generate_id(connection());
+        xcb_create_pixmap(connection(), 32, pix, rootWindow(), temp_visibleRect.width(), temp_visibleRect.height());
+        s_tempPicture = new XRenderPicture(pix, 32);
+        xcb_free_pixmap(connection(), pix);
     }
-    temp_pixmap->fill(Qt::transparent);
+    const xcb_render_color_t transparent = {0, 0, 0, 0};
+    const xcb_rectangle_t rect = {0, 0, uint16_t(temp_visibleRect.width()), uint16_t(temp_visibleRect.height())};
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_tempPicture, transparent, 1, &rect);
 }
 
 // paint the window
@@ -543,7 +551,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
             renderTarget = *scene_xRenderOffscreenTarget();
         } else {
             prepareTempPixmap();
-            renderTarget = temp_pixmap->x11PictureHandle();
+            renderTarget = *s_tempPicture;
         }
     } else {
         XRenderSetPictureTransform(display(), pic, &xform);
@@ -699,11 +707,11 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         }
         if (blitInTempPixmap) {
             const QRect r = mapToScreen(mask, data, temp_visibleRect);
-            XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &xform);
-            XRenderSetPictureFilter(display(), temp_pixmap->x11PictureHandle(), const_cast<char*>("good"), NULL, 0);
-            XRenderComposite(display(), PictOpOver, temp_pixmap->x11PictureHandle(), None, buffer,
+            XRenderSetPictureTransform(display(), *s_tempPicture, &xform);
+            XRenderSetPictureFilter(display(), *s_tempPicture, const_cast<char*>("good"), NULL, 0);
+            XRenderComposite(display(), PictOpOver, *s_tempPicture, None, buffer,
                              0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
-            XRenderSetPictureTransform(display(), temp_pixmap->x11PictureHandle(), &identity);
+            XRenderSetPictureTransform(display(), *s_tempPicture, &identity);
         }
     }
     if (scaled && !blitInTempPixmap) {
@@ -716,7 +724,7 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         }
     }
     if (xRenderOffscreen())
-        scene_setXRenderOffscreenTarget(temp_pixmap);
+        scene_setXRenderOffscreenTarget(*s_tempPicture);
 }
 
 void SceneXrender::screenGeometryChanged(const QSize &size)

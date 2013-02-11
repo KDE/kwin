@@ -132,8 +132,16 @@ void ScreenShotEffect::postPaintScreen()
             if (effects->compositingType() == XRenderCompositing) {
                 setXRenderOffscreen(true);
                 effects->drawWindow(m_scheduledScreenshot, mask, QRegion(0, 0, width, height), d);
-                if (xRenderOffscreenTarget())
-                    img = xRenderOffscreenTarget()->toImage().copy(0, 0, width, height);
+                if (xRenderOffscreenTarget()) {
+                    xcb_pixmap_t xpix = xcb_generate_id(connection());
+                    xcb_create_pixmap(connection(), 32, xpix, rootWindow(), width, height);
+                    // TODO: Qt5 - convert from xpixmap to QImage without a QPixmap
+                    QPixmap pixmap = QPixmap::fromX11Pixmap(xpix);
+                    xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, xRenderOffscreenTarget(),
+                                         XCB_RENDER_PICTURE_NONE, pixmap.x11PictureHandle(), 0, 0, 0, 0, 0, 0, width, height);
+                    img = pixmap.toImage().copy(0, 0, width, height);
+                    xcb_free_pixmap(connection(), xpix);
+                }
                 setXRenderOffscreen(false);
             }
 #endif

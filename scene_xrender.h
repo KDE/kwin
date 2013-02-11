@@ -84,6 +84,7 @@ public:
     void discardAlpha();
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
+    static void cleanup();
 private:
     Picture picture();
     Picture alphaMask(double opacity);
@@ -95,8 +96,8 @@ private:
     Picture alpha;
     double alpha_cached_opacity;
     QRegion transformed_shape;
-    static QPixmap *temp_pixmap;
     static QRect temp_visibleRect;
+    static XRenderPicture *s_tempPicture;
 };
 
 class SceneXrender::EffectFrame

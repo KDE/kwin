@@ -132,11 +132,11 @@ XRenderPicture::XRenderPicture(Pixmap pix, int depth)
 {
 }
 
-static QPixmap *s_offscreenTarget = 0;
+static xcb_render_picture_t s_offscreenTarget = XCB_RENDER_PICTURE_NONE;
 static QStack<XRenderPicture*> s_scene_offscreenTargetStack;
 static int s_renderOffscreen = 0;
 
-void scene_setXRenderOffscreenTarget(QPixmap *pix)
+void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix)
 {
     s_offscreenTarget = pix;
 }
@@ -176,7 +176,7 @@ bool xRenderOffscreen()
     return s_renderOffscreen;
 }
 
-QPixmap *xRenderOffscreenTarget()
+xcb_render_picture_t xRenderOffscreenTarget()
 {
     return s_offscreenTarget;
 }
