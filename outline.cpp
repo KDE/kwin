@@ -96,17 +96,7 @@ void Outline::showWithX()
         m_initialized   = true;
     }
 
-    int screen = QX11Info::appScreen();
-    int defaultDepth = 0;
-    // TODO: move into xcbutils or maybe kwinglobals
-    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection()));
-            it.rem;
-            --screen, xcb_screen_next(&it)) {
-        if (screen == 0) {
-            defaultDepth = it.data->root_depth;
-            break;
-        }
-    }
+    const int defaultDepth = Xcb::defaultDepth();
 
 // left/right parts are between top/bottom, they don't reach as far as the corners
     const uint16_t verticalWidth = 5;
