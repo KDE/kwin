@@ -72,42 +72,34 @@ XRenderPicture xRenderBlendPicture(double opacity)
     return _blendPicture;
 }
 
-// XRenderFind(Standard)Format() is a roundtrip, so cache the results
-static XRenderPictFormat* renderformats[ 33 ];
-
 static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 {
     if (pix == XCB_PIXMAP_NONE)
         return XCB_RENDER_PICTURE_NONE;
-    if (renderformats[ depth ] == NULL) {
-        switch(depth) {
-        case 1:
-            renderformats[ 1 ] = XRenderFindStandardFormat(display(), PictStandardA1);
-            break;
-        case 8:
-            renderformats[ 8 ] = XRenderFindStandardFormat(display(), PictStandardA8);
-            break;
-        case 24:
-            renderformats[ 24 ] = XRenderFindStandardFormat(display(), PictStandardRGB24);
-            break;
-        case 32:
-            renderformats[ 32 ] = XRenderFindStandardFormat(display(), PictStandardARGB32);
-            break;
-        default: {
-            XRenderPictFormat req;
-            long mask = PictFormatType | PictFormatDepth;
-            req.type = PictTypeDirect;
-            req.depth = depth;
-            renderformats[ depth ] = XRenderFindFormat(display(), mask, &req, 0);
-            break;
+    static QHash<int, xcb_render_pictformat_t> s_renderFormats;
+    if (!s_renderFormats.contains(depth)) {
+        xcb_render_query_pict_formats_reply_t *formats = xcb_render_query_pict_formats_reply(connection(), xcb_render_query_pict_formats_unchecked(connection()), NULL);
+        if (!formats) {
+            return XCB_RENDER_PICTURE_NONE;
         }
+        for (xcb_render_pictforminfo_iterator_t it = xcb_render_query_pict_formats_formats_iterator(formats);
+                it.rem;
+                xcb_render_pictforminfo_next(&it)) {
+            if (it.data->depth == depth) {
+                s_renderFormats.insert(depth, it.data->id);
+                break;
+            }
         }
-        if (renderformats[ depth ] == NULL) {
-            kWarning(1212) << "Could not find XRender format for depth" << depth;
-            return None;
-        }
+        free(formats);
     }
-    return XRenderCreatePicture(display(), pix, renderformats[ depth ], 0, NULL);
+    QHash<int, xcb_render_pictformat_t>::const_iterator it = s_renderFormats.constFind(depth);
+    if (it == s_renderFormats.constEnd()) {
+        kWarning(1212) << "Could not find XRender format for depth" << depth;
+        return XCB_RENDER_PICTURE_NONE;
+    }
+    xcb_render_picture_t pic = xcb_generate_id(connection());
+    xcb_render_create_picture(connection(), pic, pix, it.value(), 0, NULL);
+    return pic;
 }
 
 XRenderPicture::XRenderPicture(QPixmap pix)
