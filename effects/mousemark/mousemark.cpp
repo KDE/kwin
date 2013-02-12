@@ -148,8 +148,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if ( effects->compositingType() == XRenderCompositing) {
-        XRenderColor xc = preMultiply(color);
-        xcb_render_color_t c = {xc.red, xc.green, xc.blue, xc.alpha};
+        xcb_render_color_t c = preMultiply(color);
         for (int i = 0; i < marks.count(); ++i) {
             const int n = marks[i].count() - 1;
             if (n > 0) {

@@ -12,10 +12,8 @@ set(kwin_EFFECTSLIB_SRCS
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects ${KDE4_KDEUI_LIBS} ${QT_QTGUI_LIBRARY}
     ${X11_LIBRARIES}
-    ${X11_Xrender_LIB}
     ${X11_Xrandr_LIB}
     ${X11_Xdamage_LIB}
-    ${X11_Xfixes_LIB}
     ${XCB_XCB_LIBRARIES}
     ${X11_XCB_LIBRARIES}
     ${XCB_XFIXES_LIBRARIES}

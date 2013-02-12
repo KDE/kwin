@@ -24,15 +24,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 
 #include <QtCore/QSharedData>
-#include <QtGui/QColor>
 #include <QVector>
 #include <ksharedptr.h>
 
 #include <kwinglobals.h>
 
-#include <X11/extensions/Xfixes.h>
+// TODO: remove, currently only included to not break builds of effects
 #include <X11/extensions/Xrender.h>
 #include <xcb/xfixes.h>
+
+class QColor;
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -40,9 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 /**
- * dumps a QColor into a XRenderColor
+ * dumps a QColor into a xcb_render_color_t
  */
-KWIN_EXPORT XRenderColor preMultiply(const QColor &c, float opacity = 1.0);
+KWIN_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
 
 /** @internal */
 class KWIN_EXPORT XRenderPictureData
@@ -158,7 +159,7 @@ KWIN_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
 /**
  * Creates a 1x1 Picture filled with c
  */
-KWIN_EXPORT XRenderPicture xRenderFill(const XRenderColor *c);
+KWIN_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
 KWIN_EXPORT XRenderPicture xRenderFill(const QColor &c);
 
 /**

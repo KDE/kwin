@@ -29,9 +29,9 @@ namespace KWin
 {
 
 // adapted from Qt, because this really sucks ;)
-XRenderColor preMultiply(const QColor &c, float opacity)
+xcb_render_color_t preMultiply(const QColor &c, float opacity)
 {
-    XRenderColor color;
+    xcb_render_color_t color;
     const uint A = c.alpha() * opacity,
                R = c.red(),
                G = c.green(),
@@ -43,33 +43,38 @@ XRenderColor preMultiply(const QColor &c, float opacity)
     return color;
 }
 
-XRenderPicture xRenderFill(const XRenderColor *xc)
+XRenderPicture xRenderFill(const xcb_render_color_t &c)
 {
-    Pixmap pixmap = XCreatePixmap(display(), rootWindow(), 1, 1, 32);
-    XRenderPictureAttributes pa; pa.repeat = True;
+    xcb_pixmap_t pixmap = xcb_generate_id(connection());
+    xcb_create_pixmap(connection(), 32, pixmap, rootWindow(), 1, 1);
     XRenderPicture fill(pixmap, 32);
-    XFreePixmap(display(), pixmap);
-    XRenderChangePicture(display(), fill, CPRepeat, &pa);
-    XRenderFillRectangle(display(), PictOpSrc, fill, xc, 0, 0, 1, 1);
+    xcb_free_pixmap(connection(), pixmap);
+
+    uint32_t values[] = {true};
+    xcb_render_change_picture(connection(), fill, XCB_RENDER_CP_REPEAT, values);
+
+    xcb_rectangle_t rect = {0, 0, 1, 1};
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, fill, c, 1, &rect);
     return fill;
 }
 
 XRenderPicture xRenderFill(const QColor &c)
 {
-    XRenderColor xc = preMultiply(c);
-    return xRenderFill(&xc);
+    return xRenderFill(preMultiply(c));
 }
 
-static XRenderPicture _blendPicture(X::None);
-static XRenderColor _blendColor;
 XRenderPicture xRenderBlendPicture(double opacity)
 {
-    _blendColor.alpha = ushort(opacity * 0xffff);
-    if (_blendPicture == X::None)
-        _blendPicture = xRenderFill(&_blendColor);
-    else
-        XRenderFillRectangle(display(), PictOpSrc, _blendPicture, &_blendColor, 0, 0, 1, 1);
-    return _blendPicture;
+    static XRenderPicture s_blendPicture(XCB_RENDER_PICTURE_NONE);
+    static xcb_render_color_t s_blendColor = {0, 0, 0, 0};
+    s_blendColor.alpha = uint16_t(opacity * 0xffff);
+    if (s_blendPicture == XCB_RENDER_PICTURE_NONE) {
+        s_blendPicture = xRenderFill(s_blendColor);
+    } else {
+        xcb_rectangle_t rect = {0, 0, 1, 1};
+        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, s_blendPicture, s_blendColor, 1, &rect);
+    }
+    return s_blendPicture;
 }
 
 static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)

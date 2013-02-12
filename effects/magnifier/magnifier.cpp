@@ -225,10 +225,8 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
                 { int16_t(area.x()), int16_t(area.bottom()-FRAME_WIDTH), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
                 { int16_t(area.x()), int16_t(area.y()), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)}
             };
-            // TODO: remove XRenderColor
-            const XRenderColor xc = preMultiply(QColor(0,0,0,255));
-            const xcb_render_color_t c = {xc.red, xc.green, xc.blue, xc.alpha};
-            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, 4, rects);
+            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(),
+                                       preMultiply(QColor(0,0,0,255)), 4, rects);
 #endif
         }
     }

@@ -697,13 +697,21 @@ XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAl
         if (data.brightness() != 1.0) {
             // fake brightness change by overlaying black
             const float alpha = (1 - data.brightness()) * data.opacity();
-            XRenderColor col = preMultiply(data.brightness() < 1.0 ? QColor(0,0,0,255*alpha) : QColor(255,255,255,-alpha*255));
+            xcb_rectangle_t rect;
             if (blitInTempPixmap) {
-                XRenderFillRectangle(display(), PictOpOver, renderTarget, &col,
-                                     -temp_visibleRect.left(), -temp_visibleRect.top(), width(), height());
+                rect.x = -temp_visibleRect.left();
+                rect.y = -temp_visibleRect.top();
+                rect.width = width();
+                rect.height = height();
             } else {
-                XRenderFillRectangle(display(), PictOpOver, renderTarget, &col, wr.x(), wr.y(), wr.width(), wr.height());
+                rect.x = wr.x();
+                rect.y = wr.y();
+                rect.width = wr.width();
+                rect.height = wr.height();
             }
+            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, renderTarget,
+                                       preMultiply(data.brightness() < 1.0 ? QColor(0,0,0,255*alpha) : QColor(255,255,255,-alpha*255)),
+                                       1, &rect);
         }
         if (blitInTempPixmap) {
             const QRect r = mapToScreen(mask, data, temp_visibleRect);
