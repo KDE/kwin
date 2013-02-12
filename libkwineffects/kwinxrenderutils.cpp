@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QStack>
 #include <QPixmap>
-#include <QPainter>
 #include <kdebug.h>
 
 namespace KWin
@@ -113,18 +112,23 @@ static Picture createPicture(Pixmap pix, int depth)
 
 XRenderPicture::XRenderPicture(QPixmap pix)
 {
-    if (Extensions::nonNativePixmaps()) {
-        Pixmap xPix = XCreatePixmap(display(), rootWindow(), pix.width(), pix.height(), pix.depth());
-        QPixmap tempPix = QPixmap::fromX11Pixmap(xPix, QPixmap::ExplicitlyShared);
-        tempPix.fill(Qt::transparent);
-        QPainter p(&tempPix);
-        p.drawPixmap(QPoint(0, 0), pix);
-        p.end();
-        d = new XRenderPictureData(createPicture(tempPix.handle(), tempPix.depth()));
-        XFreePixmap(display(), xPix);
-    } else {
+    if (!Extensions::nonNativePixmaps()) {
         d = new XRenderPictureData(createPicture(pix.handle(), pix.depth()));
+        return;
     }
+    QImage img(pix.toImage());
+    const int depth = img.depth();
+    xcb_pixmap_t xpix = xcb_generate_id(connection());
+    xcb_create_pixmap(connection(), depth, xpix, rootWindow(), img.width(), img.height());
+
+    xcb_gcontext_t cid = xcb_generate_id(connection());
+    xcb_create_gc(connection(), cid, xpix, 0, NULL);
+    xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
+                  0, 0, 0, depth, img.byteCount(), img.constBits());
+    xcb_free_gc(connection(), cid);
+
+    d = new XRenderPictureData(createPicture(xpix, depth));
+    xcb_free_pixmap(connection(), xpix);
 }
 
 XRenderPicture::XRenderPicture(Pixmap pix, int depth)
