@@ -178,6 +178,21 @@ public:
     }
 };
 
+inline xcb_get_input_focus_cookie_t get_input_focus(xcb_connection_t *c, xcb_window_t) {
+    return xcb_get_input_focus(c);
+}
+class CurrentInput : public Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>
+{
+public:
+    CurrentInput() : Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>() {}
+
+    inline xcb_window_t window() {
+        if (isNull())
+            return XCB_WINDOW_NONE;
+        return (*this)->focus;
+    }
+};
+
 class ExtensionData
 {
 public:

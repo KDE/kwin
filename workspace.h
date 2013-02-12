@@ -223,6 +223,7 @@ public:
     int activeScreen() const;
     int numScreens() const;
     void checkActiveScreen(const Client* c);
+    bool isOnCurrentHead();
     void setActiveScreenMouse(const QPoint& mousepos);
     QRect screenGeometry(int screen) const;
     int screenNumber(const QPoint& pos) const;

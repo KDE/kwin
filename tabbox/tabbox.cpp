@@ -912,8 +912,9 @@ static bool areModKeysDepressed(const KShortcut& cut)
 
 void TabBox::navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode)
 {
-    if (isGrabbed())
+    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
+    }
     if (!options->focusPolicyIsReasonable()) {
         //ungrabXKeyboard(); // need that because of accelerator raw mode
         // CDE style raise / lower
@@ -931,75 +932,49 @@ void TabBox::navigatingThroughWindows(bool forward, const KShortcut& shortcut, T
 
 void TabBox::slotWalkThroughWindows()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(true, m_cutWalkThroughWindows, TabBoxWindowsMode);
 }
 
 void TabBox::slotWalkBackThroughWindows()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(false, m_cutWalkThroughWindowsReverse, TabBoxWindowsMode);
 }
 
 void TabBox::slotWalkThroughWindowsAlternative()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(true, m_cutWalkThroughWindowsAlternative, TabBoxWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkBackThroughWindowsAlternative()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(false, m_cutWalkThroughWindowsAlternativeReverse, TabBoxWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkThroughCurrentAppWindows()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(true, m_cutWalkThroughCurrentAppWindows, TabBoxCurrentAppWindowsMode);
 }
 
 void TabBox::slotWalkBackThroughCurrentAppWindows()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsReverse, TabBoxCurrentAppWindowsMode);
 }
 
 void TabBox::slotWalkThroughCurrentAppWindowsAlternative()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(true, m_cutWalkThroughCurrentAppWindowsAlternative, TabBoxCurrentAppWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkBackThroughCurrentAppWindowsAlternative()
 {
-    if (!m_ready){
-        return;
-    }
     navigatingThroughWindows(false, m_cutWalkThroughCurrentAppWindowsAlternativeReverse, TabBoxCurrentAppWindowsAlternativeMode);
 }
 
 void TabBox::slotWalkThroughDesktops()
 {
-    if (!m_ready){
+    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
     }
-    if (isGrabbed())
-        return;
     if (areModKeysDepressed(m_cutWalkThroughDesktops)) {
         if (startWalkThroughDesktops())
             walkThroughDesktops(true);
@@ -1010,11 +985,9 @@ void TabBox::slotWalkThroughDesktops()
 
 void TabBox::slotWalkBackThroughDesktops()
 {
-    if (!m_ready){
+    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
     }
-    if (isGrabbed())
-        return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopsReverse)) {
         if (startWalkThroughDesktops())
             walkThroughDesktops(false);
@@ -1025,11 +998,9 @@ void TabBox::slotWalkBackThroughDesktops()
 
 void TabBox::slotWalkThroughDesktopList()
 {
-    if (!m_ready){
+    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
     }
-    if (isGrabbed())
-        return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopList)) {
         if (startWalkThroughDesktopList())
             walkThroughDesktops(true);
@@ -1040,11 +1011,9 @@ void TabBox::slotWalkThroughDesktopList()
 
 void TabBox::slotWalkBackThroughDesktopList()
 {
-    if (!m_ready){
+    if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
     }
-    if (isGrabbed())
-        return;
     if (areModKeysDepressed(m_cutWalkThroughDesktopListReverse)) {
         if (startWalkThroughDesktopList())
             walkThroughDesktops(false);

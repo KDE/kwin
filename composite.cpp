@@ -146,6 +146,8 @@ void Compositor::setup()
     }
 }
 
+extern int screen_number; // main.cpp
+
 void Compositor::slotCompositingOptionsInitialized()
 {
     char selection_name[ 100 ];
@@ -163,14 +165,15 @@ void Compositor::slotCompositingOptionsInitialized()
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
         KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
-        if (unsafeConfig.readEntry("OpenGLIsUnsafe", false))
+        const QString openGLIsUnsafe = "OpenGLIsUnsafe" + QString::number(screen_number);
+        if (unsafeConfig.readEntry(openGLIsUnsafe, false))
             kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
-            unsafeConfig.writeEntry("OpenGLIsUnsafe", true);
+            unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
 #ifndef KWIN_HAVE_OPENGLES
             if (!CompositingPrefs::hasGlx()) {
-                unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
+                unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
                 kDebug(1212) << "No glx extensions available";
                 break;
@@ -180,7 +183,7 @@ void Compositor::slotCompositingOptionsInitialized()
             m_scene = SceneOpenGL::createScene();
 
             // TODO: Add 30 second delay to protect against screen freezes as well
-            unsafeConfig.writeEntry("OpenGLIsUnsafe", false);
+            unsafeConfig.writeEntry(openGLIsUnsafe, false);
             unsafeConfig.sync();
 
             if (m_scene && !m_scene->initFailed())

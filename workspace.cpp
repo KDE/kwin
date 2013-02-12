@@ -1607,6 +1607,34 @@ void Workspace::checkActiveScreen(const Client* c)
 }
 
 /**
+ * checks whether the X Window with the input focus is on our X11 screen
+ * if the window cannot be determined or inspected, resturn depends on whether there's actually
+ * more than one screen
+ *
+ * this is NOT in any way related to XRandR multiscreen
+ *
+ */
+extern bool is_multihead; // main.cpp
+bool Workspace::isOnCurrentHead()
+{
+    if (!is_multihead) {
+        return true;
+    }
+
+    Xcb::CurrentInput currentInput;
+    if (currentInput.window() == XCB_WINDOW_NONE) {
+        return !is_multihead;
+    }
+
+    Xcb::WindowGeometry geometry(currentInput.window());
+    if (geometry.isNull()) { // should not happen
+        return !is_multihead;
+    }
+
+    return rootWindow() == geometry->root;
+}
+
+/**
  * Called e.g. when a user clicks on a window, set active screen to be the screen
  * where the click occurred
  */
