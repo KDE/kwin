@@ -66,7 +66,8 @@ private:
     float m_angleBase;
     GLTexture* m_texture[2];
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    QPixmap *m_pixmap[2];
+    QSize m_size[2];
+    XRenderPicture *m_picture[2];
 #endif
     KAction* m_action;
     Qt::KeyboardModifiers m_modifiers;

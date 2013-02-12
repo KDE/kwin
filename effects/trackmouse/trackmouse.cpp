@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kwinglutils.h>
+#include <kwinxrenderutils.h>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -38,7 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocale>
 
 #include <math.h>
-#include <X11/extensions/Xrender.h>
 
 #include <kdebug.h>
 
@@ -53,7 +53,7 @@ TrackMouseEffect::TrackMouseEffect()
 {
     m_texture[0] = m_texture[1] = 0;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    m_pixmap[0] = m_pixmap[1] = 0;
+    m_picture[0] = m_picture[1] = 0;
     if ( effects->compositingType() == XRenderCompositing)
         m_angleBase = 1.57079632679489661923; // Pi/2
 #endif
@@ -78,7 +78,7 @@ TrackMouseEffect::~TrackMouseEffect()
     for (int i = 0; i < 2; ++i) {
         delete m_texture[i]; m_texture[i] = 0;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        delete m_pixmap[i]; m_pixmap[i] = 0;
+        delete m_picture[i]; m_picture[i] = 0;
 #endif
     }
 }
@@ -157,23 +157,27 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         }
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if ( effects->compositingType() == XRenderCompositing && m_pixmap[0] && m_pixmap[1]) {
+    if ( effects->compositingType() == XRenderCompositing && m_picture[0] && m_picture[1]) {
         float sine = sin(m_angle);
         const float cosine = cos(m_angle);
         for (int i = 0; i < 2; ++i) {
             if (i) sine = -sine;
-            const float dx = m_pixmap[i]->width()/2.0;
-            const float dy = m_pixmap[i]->height()/2.0;
-            XTransform xform = {{
-                { XDoubleToFixed( cosine ), XDoubleToFixed( -sine ), XDoubleToFixed( dx - cosine*dx + sine*dy ) },
-                { XDoubleToFixed( sine ), XDoubleToFixed( cosine ), XDoubleToFixed( dy - sine*dx - cosine*dy ) },
-                { XDoubleToFixed( 0.0 ), XDoubleToFixed( 0.0 ), XDoubleToFixed( 1.0 ) }
-            }};
-            XRenderSetPictureTransform(display(), m_pixmap[i]->x11PictureHandle(), &xform );
-            XRenderSetPictureFilter( display(), m_pixmap[i]->x11PictureHandle(), FilterBilinear, 0, 0 );
-            XRenderComposite(display(), PictOpOver, m_pixmap[i]->x11PictureHandle(), 0,
-                             effects->xrenderBufferPicture(), 0, 0, 0, 0,
-                             m_lastRect[i].x(), m_lastRect[i].y(), m_lastRect[i].width(), m_lastRect[i].height());
+            const float dx = m_size[i].width()/2.0;
+            const float dy = m_size[i].height()/2.0;
+            const xcb_render_picture_t picture = *m_picture[i];
+#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+            xcb_render_transform_t xform = {
+                DOUBLE_TO_FIXED( cosine ), DOUBLE_TO_FIXED( -sine ), DOUBLE_TO_FIXED( dx - cosine*dx + sine*dy ),
+                DOUBLE_TO_FIXED( sine ), DOUBLE_TO_FIXED( cosine ), DOUBLE_TO_FIXED( dy - sine*dx - cosine*dy ),
+                DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 1.0 )
+            };
+#undef DOUBLE_TO_FIXED
+            xcb_render_set_picture_transform(connection(), picture, xform);
+            xcb_render_set_picture_filter(connection(), picture, 8, "bilinear", 0, NULL);
+            const QRect &rect = m_lastRect[i];
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
+                                 effects->xrenderBufferPicture(), 0, 0, 0, 0,
+                                 rect.x(), rect.y(), rect.width(), rect.height());
         }
     }
 #endif
@@ -190,9 +194,9 @@ void TrackMouseEffect::postPaintScreen()
 bool TrackMouseEffect::init()
 {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (!(m_texture[0] || m_pixmap[0])) {
+    if (!(m_texture[0] || m_picture[0])) {
         loadTexture();
-        if (!(m_texture[0] || m_pixmap[0]))
+        if (!(m_texture[0] || m_picture[0]))
             return false;
     }
 #else
@@ -254,8 +258,10 @@ void TrackMouseEffect::loadTexture()
         }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if ( effects->compositingType() == XRenderCompositing) {
-            m_pixmap[i] = new QPixmap(f[i]);
-            m_lastRect[i].setSize(m_pixmap[i]->size());
+            QPixmap pixmap(f[i]);
+            m_picture[i] = new XRenderPicture(pixmap);
+            m_size[i] = pixmap.size();
+            m_lastRect[i].setSize(pixmap.size());
         }
 #endif
     }
