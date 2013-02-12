@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Screen Edge
+Name[cs]=Hrana obrazovky
 Name[de]=Bildschirmkante
 Name[es]=Borde de la pantalla
 Name[fi]=Näytön reuna
+Name[ia]=Margines de schermo
 Name[nl]=Schermrand
 Name[pt]=Extremo do Ecrã
 Name[pt_BR]=Borda da tela
@@ -18,6 +20,7 @@ Comment=Highlights a screen edge when approaching
 Comment[de]=Bildschirmkante bei Annäherung hervorheben
 Comment[es]=Resalta el borde de la pantalla al aproximarse a él
 Comment[fi]=Korostaa näytön reunaa sitä lähestyttäessä
+Comment[ia]=Evidentia un margine de schermo quando on approxima se
 Comment[nl]=Accentueert een schermrand bij nadering
 Comment[pt]=Realça um extremo do ecrã ao aproximar-se
 Comment[pt_BR]=Destaca a borda da tela quando se aproxima
