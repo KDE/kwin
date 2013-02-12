@@ -75,10 +75,10 @@ XRenderPicture xRenderBlendPicture(double opacity)
 // XRenderFind(Standard)Format() is a roundtrip, so cache the results
 static XRenderPictFormat* renderformats[ 33 ];
 
-static Picture createPicture(Pixmap pix, int depth)
+static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 {
-    if (pix == None)
-        return None;
+    if (pix == XCB_PIXMAP_NONE)
+        return XCB_RENDER_PICTURE_NONE;
     if (renderformats[ depth ] == NULL) {
         switch(depth) {
         case 1:
@@ -131,7 +131,7 @@ XRenderPicture::XRenderPicture(QPixmap pix)
     xcb_free_pixmap(connection(), xpix);
 }
 
-XRenderPicture::XRenderPicture(Pixmap pix, int depth)
+XRenderPicture::XRenderPicture(xcb_pixmap_t pix, int depth)
     : d(new XRenderPictureData(createPicture(pix, depth)))
 {
 }

@@ -49,11 +49,11 @@ class KWIN_EXPORT XRenderPictureData
     : public QSharedData
 {
 public:
-    explicit XRenderPictureData(Picture pic = None);
+    explicit XRenderPictureData(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
     ~XRenderPictureData();
-    Picture value();
+    xcb_render_picture_t value();
 private:
-    Picture picture;
+    xcb_render_picture_t picture;
     Q_DISABLE_COPY(XRenderPictureData)
 };
 
@@ -67,11 +67,11 @@ private:
 class KWIN_EXPORT XRenderPicture
 {
 public:
-    explicit XRenderPicture(Picture pic = None);
+    explicit XRenderPicture(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
     // TODO: Qt5 - replace QPixmap by QImage to make it more obvious that it uses PutImage
     explicit XRenderPicture(QPixmap pix);
-    XRenderPicture(Pixmap pix, int depth);
-    operator Picture();
+    XRenderPicture(xcb_pixmap_t pix, int depth);
+    operator xcb_render_picture_t();
 private:
     KSharedPtr< XRenderPictureData > d;
 };
@@ -88,7 +88,7 @@ private:
 };
 
 inline
-XRenderPictureData::XRenderPictureData(Picture pic)
+XRenderPictureData::XRenderPictureData(xcb_render_picture_t pic)
     : picture(pic)
 {
 }
@@ -96,24 +96,24 @@ XRenderPictureData::XRenderPictureData(Picture pic)
 inline
 XRenderPictureData::~XRenderPictureData()
 {
-    if (picture != None)
-        XRenderFreePicture(display(), picture);
+    if (picture != XCB_RENDER_PICTURE_NONE)
+        xcb_render_free_picture(connection(), picture);
 }
 
 inline
-Picture XRenderPictureData::value()
+xcb_render_picture_t XRenderPictureData::value()
 {
     return picture;
 }
 
 inline
-XRenderPicture::XRenderPicture(Picture pic)
+XRenderPicture::XRenderPicture(xcb_render_picture_t pic)
     : d(new XRenderPictureData(pic))
 {
 }
 
 inline
-XRenderPicture::operator Picture()
+XRenderPicture::operator xcb_render_picture_t()
 {
     return d->value();
 }
