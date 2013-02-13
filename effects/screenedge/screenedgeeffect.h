@@ -44,8 +44,11 @@ private Q_SLOTS:
     void cleanup();
 private:
     Glow *createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    GLTexture *createCornerGlow(ElectricBorder border);
-    GLTexture *createEdgeGlow(ElectricBorder border, const QSize &size);
+    template <typename T>
+    T *createCornerGlow(ElectricBorder border);
+    template <typename T>
+    T *createEdgeGlow(ElectricBorder border, const QSize &size);
+    QSize cornerGlowSize(ElectricBorder border) const;
     Plasma::Svg *m_glow;
     QHash<ElectricBorder, Glow*> m_borders;
     QTimer *m_cleanupTimer;
@@ -55,8 +58,11 @@ class Glow
 {
 public:
     QScopedPointer<GLTexture> texture;
+    QScopedPointer<XRenderPicture> picture;
     qreal strength;
     QRect geometry;
+    QSize pictureSize;
+    ElectricBorder border;
 };
 
 }

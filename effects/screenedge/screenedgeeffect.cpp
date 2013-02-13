@@ -21,11 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglutils.h>
 #include <kwingltexture.h>
+#include <kwinxrenderutils.h>
 // KDE
 #include <Plasma/Svg>
 // Qt
 #include <QTimer>
 #include <QPainter>
+// xcb
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+#include <xcb/render.h>
+#endif
 
 namespace KWin {
 
@@ -101,6 +106,33 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
             }
             texture->unbind();
             glDisable(GL_BLEND);
+        } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+            const QRect &rect = (*it)->geometry;
+            const QSize &size = (*it)->pictureSize;
+            int x = rect.x();
+            int y = rect.y();
+            int width = rect.width();
+            int height = rect.height();
+            switch ((*it)->border) {
+                case ElectricTopRight:
+                    x = rect.x() + rect.width() - size.width();
+                    break;
+                case ElectricBottomRight:
+                    x = rect.x() + rect.width() - size.width();
+                    y = rect.y() + rect.height() - size.height();
+                    break;
+                case ElectricBottomLeft:
+                    y = rect.y() + rect.height() - size.height();
+                    break;
+                default:
+                    // nothing
+                    break;
+            }
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *(*it)->picture.data(),
+                                 xRenderBlendPicture(opacity), effects->xrenderBufferPicture(),
+                                 0, 0, 0, 0, x, y, width, height);
+#endif
         }
     }
 }
@@ -116,7 +148,13 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
             (*it)->geometry = geometry;
             effects->addRepaint((*it)->geometry);
             if (border == ElectricLeft || border == ElectricRight || border == ElectricTop || border == ElectricBottom) {
-                (*it)->texture.reset(createEdgeGlow(border, geometry.size()));
+                if (effects->isOpenGLCompositing()) {
+                    (*it)->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
+                } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+                    (*it)->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
+#endif
+                }
             }
         }
         if (factor == 0.0) {
@@ -137,41 +175,74 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
 Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QRect &geometry)
 {
     Glow *glow = new Glow();
+    glow->border = border;
     glow->strength = factor;
     glow->geometry = geometry;
 
     // render the glow image
-    if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
-        glow->texture.reset(createCornerGlow(border));
-    } else {
-        glow->texture.reset(createEdgeGlow(border, geometry.size()));
+    if (effects->isOpenGLCompositing()) {
+        if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
+            glow->texture.reset(createCornerGlow<GLTexture>(border));
+        } else {
+            glow->texture.reset(createEdgeGlow<GLTexture>(border, geometry.size()));
+        }
+        if (!glow->texture.isNull()) {
+            glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        }
+    } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+        if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
+            glow->pictureSize = cornerGlowSize(border);
+            glow->picture.reset(createCornerGlow<XRenderPicture>(border));
+        } else {
+            glow->pictureSize = geometry.size();
+            glow->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
+        }
+#endif
     }
-    if (glow->texture.isNull()) {
+    if (glow->texture.isNull() && glow->picture.isNull()) {
         delete glow;
         return NULL;
     }
-    glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
 
     return glow;
 }
 
-GLTexture *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
+template <typename T>
+T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
     switch (border) {
     case ElectricTopLeft:
-        return new GLTexture(m_glow->pixmap("bottomright"));
+        return new T(m_glow->pixmap("bottomright"));
     case ElectricTopRight:
-        return  new GLTexture(m_glow->pixmap("bottomleft"));
+        return  new T(m_glow->pixmap("bottomleft"));
     case ElectricBottomRight:
-        return new GLTexture(m_glow->pixmap("topleft"));
+        return new T(m_glow->pixmap("topleft"));
     case ElectricBottomLeft:
-        return new GLTexture(m_glow->pixmap("topright"));
+        return new T(m_glow->pixmap("topright"));
     default:
         return NULL;
     }
 }
 
-GLTexture *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
+QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border) const
+{
+    switch (border) {
+    case ElectricTopLeft:
+        return m_glow->elementSize("bottomright");
+    case ElectricTopRight:
+        return  m_glow->elementSize("bottomleft");
+    case ElectricBottomRight:
+        return m_glow->elementSize("topleft");
+    case ElectricBottomLeft:
+        return m_glow->elementSize("topright");
+    default:
+        return QSize();
+    }
+}
+
+template <typename T>
+T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
 {
     QPoint pixmapPosition(0, 0);
     QPixmap l, r, c;
@@ -201,7 +272,7 @@ GLTexture *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &
     default:
         return NULL;
     }
-    QImage image(size, QImage::Format_ARGB32);
+    QPixmap image(size);
     image.fill(Qt::transparent);
     QPainter p;
     p.begin(&image);
@@ -215,7 +286,7 @@ GLTexture *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &
         p.drawPixmap(QPoint(pixmapPosition.x(), size.height() - r.height()), r);
     }
     p.end();
-    return new GLTexture(image);
+    return new T(image);
 }
 
 bool ScreenEdgeEffect::isActive() const
