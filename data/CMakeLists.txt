@@ -46,11 +46,22 @@ target_link_libraries( kwin_update_settings_410 ${KDE4_KDECORE_LIBS} )
 
 install( TARGETS kwin_update_settings_410 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 
+########### next target ###############
+set( kwin_update_settings_411_SRCS update_kwin_411.cpp )
+
+kde4_add_executable( kwin_update_settings_411 ${kwin_update_settings_411_SRCS} )
+
+target_link_libraries( kwin_update_settings_411 ${KDE4_KDECORE_LIBS} )
+
+install( TARGETS kwin_update_settings_411 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
+
 ########### install files ###############
 
 install( FILES fsp_workarounds_1.kwinrules  DESTINATION  ${DATA_INSTALL_DIR}/kwin/default_rules )
 install( FILES pop.wav  DESTINATION  ${SOUND_INSTALL_DIR} )
-install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd kwin_update_410.upd kwin_translate_activity_rule.upd DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
+install( FILES kwin_fsp_workarounds_1.upd kwin_update_tabbox_settings.upd kwin_remove_effects.upd kwin_update_tabbox_qml_settings.upd kwin_remove_delay_focus.upd kwin_update_49.upd kwin_update_410.upd kwin_translate_activity_rule.upd
+               kwin_update_411.upd
+         DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 install( PROGRAMS kwin_remove_delay_focus.sh kwin_translate_activity_rule.sh DESTINATION  ${KCONF_UPDATE_INSTALL_DIR} )
 install( FILES stripTitle.js  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 

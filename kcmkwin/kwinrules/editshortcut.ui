@@ -14,7 +14,7 @@
     <widget class="QLabel" name="textLabel2" >
      <property name="text" >
       <string>A single shortcut can be easily assigned or cleared using the two buttons. Only shortcuts with modifiers can be used.&lt;p>
-It is possible to have several possible shortcuts, and the first available shortcut will be used. The shortcuts are specified using space-separated shortcut sets. One set is specified as &lt;i>base&lt;/i>+(&lt;i>list&lt;/i>), where base are modifiers and list is a list of keys.&lt;br>
+It is possible to have several possible shortcuts, and the first available shortcut will be used. The shortcuts are specified using shortcut sets separated by &quot; - &quot;. One set is specified as &lt;i>base&lt;/i>+(&lt;i>list&lt;/i>), where base are modifiers and list is a list of keys.&lt;br>
 For example "&lt;b>Shift+Alt+(123) Shift+Ctrl+(ABC)&lt;/b>" will first try &lt;b>Shift+Alt+1&lt;/b>, then others with &lt;b>Shift+Ctrl+C&lt;/b> as the last one.</string>
      </property>
      <property name="textFormat" >

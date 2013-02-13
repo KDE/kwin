@@ -1795,8 +1795,8 @@ void Client::setShortcut(const QString& _cut)
         return setShortcutInternal(KShortcut());
 // Format:
 // base+(abcdef)<space>base+(abcdef)
-// E.g. Alt+Ctrl+(ABCDEF) Win+X,Win+(ABCDEF)
-    if (!cut.contains('(') && !cut.contains(')') && !cut.contains(' ')) {
+// E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
+    if (!cut.contains('(') && !cut.contains(')') && !cut.contains(" - ")) {
         if (workspace()->shortcutAvailable(KShortcut(cut), this))
             setShortcutInternal(KShortcut(cut));
         else
@@ -1804,7 +1804,7 @@ void Client::setShortcut(const QString& _cut)
         return;
     }
     QList< KShortcut > keys;
-    QStringList groups = cut.split(' ');
+    QStringList groups = cut.split(" - ");
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it) {
