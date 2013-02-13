@@ -84,7 +84,6 @@ private:
     void restoreMatrix();
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
-    QPixmap m_lastScreenshot;
 };
 
 } // namespace
