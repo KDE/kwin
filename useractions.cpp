@@ -1861,7 +1861,12 @@ void Client::delayedSetShortcut()
 
 bool Workspace::shortcutAvailable(const KShortcut& cut, Client* ignore) const
 {
-    // TODO check global shortcuts etc.
+
+    Q_FOREACH (const QKeySequence &seq, cut.toList()) {
+        if (!KGlobalAccel::getGlobalShortcutsByKey(seq).isEmpty()) {
+            return false;
+        }
+    }
     for (ClientList::ConstIterator it = clients.constBegin();
             it != clients.constEnd();
             ++it) {
