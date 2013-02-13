@@ -32,16 +32,25 @@ Item {
     property int centerLeftMargin: shadow.margins.left
     property alias maskImagePath: shadow.imagePath
 
+    PlasmaCore.FrameSvg {
+        id: themeInfo
+        imagePath: plasmaThemeVariant + "dialogs/background"
+        // NOTICE: the following plasmaThemeVariant access causes necessary re-evaluation!
+        property bool hasNewShadows: plasmaThemeVariant != "reEvaluateMe" && hasElementPrefix("shadow")
+    }
+
     PlasmaCore.FrameSvgItem {
         id: shadow
-        imagePath: (compositing ? "translucent" : "opaque") + "/dialogs/background"
-        prefix: "shadow"
+        prefix: themeInfo.hasNewShadows ? "shadow" : ""
+
+        imagePath: plasmaThemeVariant + "dialogs/background"
         anchors.fill: parent
+        visible: true
 
         PlasmaCore.FrameSvgItem {
             id: background
             imagePath: shadow.imagePath
-            visible: false
+            visible: themeInfo.hasNewShadows
             anchors {
                 fill: parent
                 leftMargin: shadow.margins.left

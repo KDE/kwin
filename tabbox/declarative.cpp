@@ -102,17 +102,20 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     return icon;
 }
 
-static bool compositing()
+// WARNING: this code exists to cover a bug in Qt which prevents plasma from detecting the state change
+// of the compositor through KWindowSystem.
+// once plasma uses (again) a KSelectionWatcher or Qt is fixed in this regard, the code can go.
+static QString plasmaThemeVariant()
 {
 #ifndef TABBOX_KCM
     if (!Workspace::self()->compositing() || !effects) {
-        return false;
+        return Plasma::Theme::defaultTheme()->currentThemeHasImage("opaque/dialogs/background") ? QLatin1String("opaque/") : QLatin1String("");
     }
-    if (!static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur)) {
-        return false;
+    if (static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur)) {
+        return Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background") ? QLatin1String("translucent/") : QLatin1String("");
     }
 #endif
-    return Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background");
+    return QLatin1String("");
 }
 
 DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
@@ -145,7 +148,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     kdeclarative.setupBindings();
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
-    rootContext()->setContextProperty("compositing", compositing());
+    rootContext()->setContextProperty("plasmaThemeVariant", plasmaThemeVariant());
     if (m_mode == TabBoxConfig::ClientTabBox) {
         rootContext()->setContextProperty("clientModel", model);
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
@@ -188,8 +191,10 @@ void DeclarativeView::showEvent(QShowEvent *event)
         item->setProperty("currentIndex", tabBox->first().row());
         connect(item, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
     }
-    rootContext()->setContextProperty("compositing", compositing());
+    rootContext()->setContextProperty("plasmaThemeVariant", plasmaThemeVariant());
     slotUpdateGeometry();
+    QResizeEvent re(size(), size()); // to set mask and blurring.
+    resizeEvent(&re);
     QGraphicsView::showEvent(event);
 }
 
@@ -210,11 +215,15 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
             m_frame->setImagePath(maskImagePath);
             m_frame->resizeFrame(QSizeF(maskWidth, maskHeight));
             QRegion mask = m_frame->mask().translated(maskLeftMargin, maskTopMargin);
-            if (compositing()) {
-                // blur background
-                Plasma::WindowEffects::enableBlurBehind(winId(), true, mask);
+#ifndef TABBOX_KCM
+            // notice: this covers an issue with plasma detecting the compositing state. see plasmaThemeVariant()
+            if (Workspace::self()->compositing() && effects) {
+                // blur background?!
+                Plasma::WindowEffects::enableBlurBehind(winId(), static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur), mask);
                 clearMask();
-            } else {
+            } else
+#endif
+            {
                 // do not trim to mask with compositing enabled, otherwise shadows are cropped
                 setMask(mask);
             }
