@@ -1819,6 +1819,12 @@ void Client::setShortcut(const QString& _cut)
                 if (!c.isEmpty())
                     keys.append(c);
             }
+        } else {
+            // regexp doesn't match, so it should be a normal shortcut
+            KShortcut c(*it);
+            if (!c.isEmpty()) {
+                keys.append(c);
+            }
         }
     }
     for (QList< KShortcut >::ConstIterator it = keys.constBegin();
