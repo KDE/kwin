@@ -138,7 +138,11 @@ KWIN_EXPORT Display* display()
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {
-    return XGetXCBConnection(display());
+    static xcb_connection_t *s_con = NULL;
+    if (!s_con) {
+        s_con = XGetXCBConnection(display());
+    }
+    return s_con;
 }
 
 inline
