@@ -142,7 +142,7 @@ Item {
         function calculateMaxRowWidth() {
             var width = 0;
             var textElement = Qt.createQmlObject(
-                'import Qt 4.7;'
+                'import QtQuick 1.0;'
                 + 'Text {\n'
                 + '     text: "' + itemCaption(compactTabBox.longestCaption, true) + '"\n'
                 + '     font.bold: true\n'
@@ -159,7 +159,7 @@ Item {
         **/
         function calcRowHeight() {
             var textElement = Qt.createQmlObject(
-                'import Qt 4.7;'
+                'import QtQuick 1.0;'
                 + 'Text {\n'
                 + '     text: "Some Text"\n'
                 + '     font.bold: true\n'

@@ -158,7 +158,7 @@ Item {
         function calculateMaxRowWidth() {
             var width = 0;
             var textElement = Qt.createQmlObject(
-                'import Qt 4.7;'
+                'import QtQuick 1.0;'
                 + 'Text {\n'
                 + '     text: "' + itemCaption(informativeTabBox.longestCaption, true) + '"\n'
                 + '     font.bold: true\n'
@@ -167,7 +167,7 @@ Item {
                 listView, "calculateMaxRowWidth");
             width = Math.max(textElement.width, width);
             textElement.destroy();
-            return width + 32 + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.right;Margin
+            return width + 32 + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.rightMargin;
         }
         /**
         * Calculates the height of one row based on the text height and icon size.
@@ -175,7 +175,7 @@ Item {
         **/
         function calcRowHeight() {
             var textElement = Qt.createQmlObject(
-                'import Qt 4.7;'
+                'import QtQuick 1.0;'
                 + 'Text {\n'
                 + '     text: "Some Text"\n'
                 + '     font.bold: true\n'
