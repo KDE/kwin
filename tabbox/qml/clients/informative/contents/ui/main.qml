@@ -167,7 +167,7 @@ Item {
                 listView, "calculateMaxRowWidth");
             width = Math.max(textElement.width, width);
             textElement.destroy();
-            return width + 32 + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.right;Margin
+            return width + 32 + hoverItem.margins.right + hoverItem.margins.left + background.leftMargin + background.rightMargin;
         }
         /**
         * Calculates the height of one row based on the text height and icon size.
