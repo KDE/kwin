@@ -40,9 +40,9 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
     Q_PROPERTY(KWin::Client *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
-    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize)
-    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth)
-    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight)
+    Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
+    Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
+    Q_PROPERTY(int desktopGridHeight READ desktopGridHeight NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int workspaceWidth READ workspaceWidth)
     Q_PROPERTY(int workspaceHeight READ workspaceHeight)
     Q_PROPERTY(QSize workspaceSize READ workspaceSize)
@@ -90,6 +90,12 @@ signals:
      * @param oldNumberOfDesktops The previous number of desktops.
      **/
     void numberDesktopsChanged(uint oldNumberOfDesktops);
+    /**
+     * Signal emitted whenever the layout of virtual desktops changed.
+     * That is desktopGrid(Size/Width/Height) will have new values.
+     * @since 4.11
+     **/
+    void desktopLayoutChanged();
     /**
      * The demands attention state for Client @p c changed to @p set.
      * @param c The Client for which demands attention changed
