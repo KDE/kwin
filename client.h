@@ -651,6 +651,9 @@ public:
     }
 #endif
 
+    template <typename T>
+    void print(T &stream) const;
+
 public slots:
     void closeWindow();
     void updateCaption();
@@ -1275,6 +1278,13 @@ inline void Client::removeRule(Rules* rule)
 inline bool Client::hiddenPreview() const
 {
     return mapping_state == Kept;
+}
+
+template <typename T>
+inline void Client::print(T &stream) const
+{
+    stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
+           << resourceName() << ";Caption:" << caption() << "\'";
 }
 
 KWIN_COMPARE_PREDICATE(WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value);

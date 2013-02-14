@@ -2350,8 +2350,7 @@ void Client::cancelAutoRaise()
 
 void Client::debug(QDebug& stream) const
 {
-    stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
-           << resourceName() << ";Caption:" << caption() << "\'";
+    print<QDebug>(stream);
 }
 
 QPixmap* kwin_get_menu_pix_hack()

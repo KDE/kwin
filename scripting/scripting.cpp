@@ -57,11 +57,17 @@ QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
     QString result;
+    QTextStream stream(&result);
     for (int i = 0; i < context->argumentCount(); ++i) {
         if (i > 0) {
-            result.append(" ");
+            stream << " ";
         }
-        result.append(context->argument(i).toString());
+        QScriptValue argument = context->argument(i);
+        if (KWin::Client *client = qscriptvalue_cast<KWin::Client*>(argument)) {
+            client->print<QTextStream>(stream);
+        } else {
+            stream << argument.toString();
+        }
     }
     script->printMessage(result);
 
