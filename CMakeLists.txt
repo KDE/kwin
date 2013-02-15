@@ -87,6 +87,10 @@ add_subdirectory( effects )
 add_subdirectory( scripts )
 add_subdirectory( tabbox )
 
+if(KWIN_BUILD_SCRIPTING)
+    add_subdirectory(scripting)
+endif()
+
 ########### next target ###############
 
 set(kwin_KDEINIT_SRCS
