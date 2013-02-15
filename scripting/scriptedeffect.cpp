@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "../screenedge.h"
+#include <Plasma/ConfigLoader>
 #endif
 // KDE
 #include <KDE/KConfigGroup>
@@ -270,6 +271,7 @@ ScriptedEffect::ScriptedEffect()
     : AnimationEffect()
     , m_engine(new QScriptEngine(this))
     , m_scriptFile(QString())
+    , m_config(NULL)
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
 }
@@ -287,6 +289,15 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     }
     m_effectName = effectName;
     m_scriptFile = pathToScript;
+
+    // does the effect contain an KConfigXT file?
+    const QString kconfigXTFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/effects/" + m_effectName + "/contents/config/main.xml");
+    if (!kconfigXTFile.isNull()) {
+        KConfigGroup cg = effects->effectConfig(m_effectName);
+        QFile xmlFile(kconfigXTFile);
+        m_config = new Plasma::ConfigLoader(&cg, &xmlFile, this);
+        m_config->readConfig();
+    }
 
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
@@ -386,6 +397,9 @@ bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRol
 void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 {
     AnimationEffect::reconfigure(flags);
+    if (m_config) {
+        m_config->readConfig();
+    }
     emit configChanged();
 }
 
@@ -408,8 +422,10 @@ bool ScriptedEffect::borderActivated(ElectricBorder edge)
 
 QVariant ScriptedEffect::readConfig(const QString &key, const QVariant defaultValue)
 {
-    KConfigGroup cg = effects->effectConfig(m_effectName);
-    return cg.readEntry(key, defaultValue);
+    if (!m_config) {
+        return defaultValue;
+    }
+    return m_config->property(key);
 }
 
 AnimationData::AnimationData (QObject* parent)
