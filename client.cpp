@@ -638,8 +638,8 @@ void Client::updateFrameExtents()
 /**
  * Resizes the decoration, and makes sure the decoration widget gets resize event
  * even if the size hasn't changed. This is needed to make sure the decoration
- * re-layouts (e.g. when options()->moveResizeMaximizedWindows() changes,
- * the decoration may turn on/off some borders, but the actual size
+ * re-layouts (e.g. when maximization state changes,
+ * the decoration may alter some borders, but the actual size
  * of the decoration stays the same).
  */
 void Client::resizeDecoration(const QSize& s)
@@ -2423,6 +2423,16 @@ QRect Client::decorationRect() const
     } else {
         return QRect(0, 0, width(), height());
     }
+}
+
+KDecorationDefines::Position Client::titlebarPosition()
+{
+    Position titlePos = PositionCenter; // PositionTop is returned by the default implementation
+                                        // this will hint errors in the metaobject usage ;-)
+    if (decoration)
+        QMetaObject::invokeMethod(decoration, "titlebarPosition", Qt::DirectConnection,
+                                            Q_RETURN_ARG(KDecorationDefines::Position, titlePos));
+    return titlePos;
 }
 
 void Client::updateFirstInTabBox()

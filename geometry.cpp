@@ -379,7 +379,12 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
     //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
     //CT adapted for kwin on 25Nov1999
     //aleXXX 02Nov2000 added second snapping mode
-    if (options->windowSnapZone() || options->borderSnapZone() || options->centerSnapZone()) {
+    int borderSnapZone = options->borderSnapZone();
+    if (c->maximizeMode() != MaximizeRestore)
+        borderSnapZone = qMax(borderSnapZone + 2, clientArea(ScreenArea, c).height() / 16);
+
+    if (options->windowSnapZone() || borderSnapZone || options->centerSnapZone()) {
+
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
         const QRect maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
@@ -394,6 +399,19 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         const int rx(cx + cw);
         const int ry(cy + ch);               //these don't change
 
+        // only enforce large snap while we're on a corresponding border
+        if (c->maximizeMode() != MaximizeRestore) {
+            QRect geo = c->geometry();
+            if (c->maximizeMode() & MaximizeVertical && geo.y() != maxRect.top() && geo.bottom() != maxRect.bottom()) {
+                borderSnapZone = options->borderSnapZone();
+            }
+            if (c->maximizeMode() & MaximizeHorizontal && geo.x() != maxRect.left() && geo.right() != maxRect.right()) {
+                borderSnapZone = options->borderSnapZone();
+            }
+            if (!(borderSnapZone || options->windowSnapZone() || options->centerSnapZone())) // ma have changed
+                return pos;
+        }
+
         int nx(cx), ny(cy);                         //buffers
         int deltaX(xmax);
         int deltaY(ymax);   //minimum distance to other clients
@@ -401,24 +419,39 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
         // border snap
-        int snap = options->borderSnapZone() * snapAdjust; //snap trigger
+        int snap = borderSnapZone * snapAdjust; //snap trigger
         if (snap) {
+            const QPoint cp = c->clientPos();
+            const QSize cs = c->geometry().size() - c->clientSize();
+            int padding[4] = { cp.x(), cs.width() - cp.x(), cp.y(), cs.height() - cp.y() };
+
+            // snap to titlebar
+            Position titlePos = c->titlebarPosition();
+            if (titlePos == PositionLeft)
+                padding[0] = 0;
+            if (titlePos == PositionRight)
+                padding[1] = 0;
+            if (titlePos == PositionTop)
+                padding[2] = 0;
+            if (titlePos == PositionBottom)
+                padding[3] = 0;
+
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snap)) {
-                deltaX = xmin - cx;
-                nx = xmin;
+                deltaX = xmin - (cx - padding[0]);
+                nx = xmin - padding[0];
             }
             if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snap) && (qAbs(xmax - rx) < deltaX)) {
-                deltaX = rx - xmax;
-                nx = xmax - cw;
+                deltaX = rx + padding[1] - xmax;
+                nx = xmax - cw + padding[1];
             }
 
             if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snap)) {
-                deltaY = ymin - cy;
-                ny = ymin;
+                deltaY = ymin - (cy - padding[2]);
+                ny = ymin - padding[2];
             }
             if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snap) && (qAbs(ymax - ry) < deltaY)) {
-                deltaY = ry - ymax;
-                ny = ymax - ch;
+                deltaY = ry + padding[3] - ymax;
+                ny = ymax - ch + padding[3];
             }
         }
 
@@ -500,7 +533,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 deltaY = diffY;
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
-            } else if (options->borderSnapZone()) {
+            } else if (borderSnapZone) {
                 // Enhance border snap
                 if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
                     // Snap to vertical center on screen edge
@@ -1205,7 +1238,6 @@ void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
 QSize Client::adjustedSize(const QSize& frame, Sizemode mode) const
 {
     // first, get the window size for the given frame size s
-
     QSize wsize(frame.width() - (border_left + border_right),
                 frame.height() - (border_top + border_bottom));
     if (wsize.isEmpty())
@@ -1762,8 +1794,6 @@ bool Client::isMovable() const
         return false;
     if (isSpecialWindow() && !isSplash() && !isToolbar())  // allow moving of splashscreens :)
         return false;
-    if (maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows())
-        return false;
     if (rules()->checkPosition(invalidPoint) != invalidPoint)     // forced position
         return false;
     return true;
@@ -1792,8 +1822,6 @@ bool Client::isResizable() const
         return false;
     if (isSpecialWindow() || isSplash() || isToolbar())
         return false;
-    if (maximizeMode() == MaximizeFull && !options->moveResizeMaximizedWindows())
-        return isMove();  // for quick tiling - maxmode will be unset if we tile
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
 
@@ -2201,11 +2229,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             Notify::raise(Notify::UnMaximize);
     }
 
-    ForceGeometry_t geom_mode = NormalGeometrySet;
-    if (decoration != NULL) { // decorations may turn off some borders when maximized
-        if (checkBorderSizes(false))    // only query, don't resize
-            geom_mode = ForceGeometrySet;
-    }
+    const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
 
     // Conditional quick tiling exit points
     if (quick_tile_mode != QuickTileNone) {
@@ -2553,17 +2577,7 @@ bool Client::startMoveResize()
     // the top of the screen. When the setting is disabled then doing so is confusing.
     bool fakeMove = false;
     if (!isFullScreen()) { // xinerama move across screens -> window is FS, everything else is secondary and untouched
-        if (maximizeMode() != MaximizeRestore &&
-            (maximizeMode() != MaximizeFull || options->moveResizeMaximizedWindows())) {
-            // allow moveResize, but unset maximization state in resize case
-            if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-                if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
-                    geom_restore = geometry(); // "restore" to current geometry
-                    setMaximize(false, false);
-                }
-            } else if (quick_tile_mode != QuickTileNone) // no longer now - we move, resize is handled below
-                setQuickTileMode(QuickTileNone); // otherwise we mess every second tile, bug #303937
-        } else if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
+        if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
                    (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
             // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
             const QRect before = geometry();
@@ -2572,6 +2586,15 @@ bool Client::startMoveResize()
             moveOffset = QPoint(double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
                                 double(moveOffset.y()) / double(before.height()) * double(geom_restore.height()));
             fakeMove = true;
+        } else if (maximizeMode() != MaximizeRestore) {
+            // allow moveResize, but unset maximization state in resize case
+            if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
+                if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
+                    geom_restore = geometry(); // "restore" to current geometry
+                    setMaximize(false, false);
+                }
+            } else if (quick_tile_mode != QuickTileNone) // no longer now - we move, resize is handled below
+                setQuickTileMode(QuickTileNone); // otherwise we mess every second tile, bug #303937
         }
     }
 
@@ -3069,7 +3092,7 @@ void Client::setElectricBorderMode(QuickTileMode mode)
     electricMode = mode;
 }
 
-QuickTileMode Client::electricBorderMode() const
+Client::QuickTileMode Client::electricBorderMode() const
 {
     return electricMode;
 }
@@ -3145,10 +3168,13 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         setMaximize(false, false);
 
-        // Temporary, so the maximize code doesn't get all confused
-        quick_tile_mode = QuickTileNone;
-        if (mode != QuickTileNone)
-            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : cursorPos(), desktop()));
+        if (mode != QuickTileNone) {
+            quick_tile_mode = mode;
+            // decorations may turn off some borders when tiled
+            const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
+            quick_tile_mode = QuickTileNone; // Temporary, so the maximize code doesn't get all confused
+            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : cursorPos(), desktop()), geom_mode);
+        }
         // Store the mode change
         quick_tile_mode = mode;
 
@@ -3164,7 +3190,9 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // Untiling, so just restore geometry, and we're done.
         if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
             geom_restore = geometry();
-        setGeometry(geom_restore);
+        // decorations may turn off some borders when tiled
+        const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
+        setGeometry(geom_restore, geom_mode);
         checkWorkspacePosition(); // Just in case it's a different screen
         return;
     } else {
@@ -3213,10 +3241,14 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
             geom_restore = geometry();
         }
 
-        // Temporary, so the maximize code doesn't get all confused
-        quick_tile_mode = QuickTileNone;
-        if (mode != QuickTileNone)
-            setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()));
+        if (mode != QuickTileNone) {
+            quick_tile_mode = mode;
+            // decorations may turn off some borders when tiled
+            const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
+            // Temporary, so the maximize code doesn't get all confused
+            quick_tile_mode = QuickTileNone;
+            setGeometry(electricBorderMaximizeGeometry(whichScreen, desktop()), geom_mode);
+        }
 
         // Store the mode change
         quick_tile_mode = mode;

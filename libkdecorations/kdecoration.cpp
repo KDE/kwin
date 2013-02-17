@@ -136,6 +136,11 @@ KDecoration::MaximizeMode KDecoration::maximizeMode() const
     return bridge_->maximizeMode();
 }
 
+KDecoration::QuickTileMode KDecoration::quickTileMode() const
+{
+    return bridge_->quickTileMode();
+}
+
 bool KDecoration::isMinimizable() const
 {
     return bridge_->isMinimizable();
@@ -520,6 +525,11 @@ QRegion KDecoration::region(KDecorationDefines::Region)
     return QRegion();
 }
 
+KDecorationDefines::Position KDecoration::titlebarPosition()
+{
+    return PositionTop;
+}
+
 QString KDecorationDefines::tabDragMimeType()
 {
     return "text/ClientGroupItem";
@@ -612,7 +622,8 @@ KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize(KDecorati
 
 bool KDecorationOptions::moveResizeMaximizedWindows() const
 {
-    return d->move_resize_maximized_windows;
+    // TODO KF5: remove function with API break
+    return false;
 }
 
 KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(Qt::MouseButtons button) const

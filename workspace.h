@@ -971,6 +971,7 @@ inline bool Workspace::decorationSupportsBlurBehind() const
     return mgr->factory()->supports(AbilityUsesBlurBehind);
 }
 
+
 } // namespace
 
 #endif

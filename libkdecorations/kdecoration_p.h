@@ -50,7 +50,6 @@ public:
     bool custom_button_positions;
     bool show_tooltips;
     BorderSize border_size, cached_border_size;
-    bool move_resize_maximized_windows;
     WindowOperation opMaxButtonRightClick;
     WindowOperation opMaxButtonMiddleClick;
     WindowOperation opMaxButtonLeftClick;

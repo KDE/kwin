@@ -615,6 +615,8 @@ public:
 
     bool decorationHasAlpha() const;
 
+    Position titlebarPosition();
+
     enum CoordinateMode {
         DecorationRelative, // Relative to the top left corner of the decoration
         WindowRelative      // Relative to the top left corner of the window
@@ -1156,9 +1158,9 @@ inline Client::MaximizeMode Client::maximizeMode() const
     return max_mode;
 }
 
-inline KWin::QuickTileMode Client::quickTileMode() const
+inline Client::QuickTileMode Client::quickTileMode() const
 {
-    return (KWin::QuickTileMode)quick_tile_mode;
+    return (Client::QuickTileMode)quick_tile_mode;
 }
 
 inline bool Client::skipTaskbar(bool from_outside) const

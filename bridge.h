@@ -36,6 +36,7 @@ public:
     virtual bool isCloseable() const;
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
+    virtual QuickTileMode quickTileMode() const;
     virtual bool isMinimizable() const;
     virtual bool providesContextHelp() const;
     virtual int desktop() const;

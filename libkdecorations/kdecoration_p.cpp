@@ -38,7 +38,6 @@ KDecorationOptionsPrivate::KDecorationOptionsPrivate()
     , show_tooltips(true)
     , border_size(BorderNormal)
     , cached_border_size(BordersCount)   // invalid
-    , move_resize_maximized_windows(true)
     , opMaxButtonRightClick(MaximizeOp)
     , opMaxButtonMiddleClick(VMaximizeOp)
     , opMaxButtonLeftClick(HMaximizeOp)
@@ -192,12 +191,6 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
     if (old_border_size != border_size)
         changed |= SettingBorder;
     cached_border_size = BordersCount; // invalid
-
-    KConfigGroup windowsConfig(config, "Windows");
-    bool old_move_resize_maximized_windows = move_resize_maximized_windows;
-    move_resize_maximized_windows = windowsConfig.readEntry("MoveResizeMaximizedWindows", false);
-    if (old_move_resize_maximized_windows != move_resize_maximized_windows)
-        changed |= SettingBorder;
 
 // destroy cached values
     int i;

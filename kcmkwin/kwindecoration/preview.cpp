@@ -214,6 +214,11 @@ KDecoration::MaximizeMode KDecorationPreviewBridge::maximizeMode() const
     return KDecoration::MaximizeRestore;
 }
 
+KDecoration::QuickTileMode KDecorationPreviewBridge::quickTileMode() const
+{
+    return KDecoration::QuickTileNone;
+}
+
 bool KDecorationPreviewBridge::isMinimizable() const
 {
     return true;

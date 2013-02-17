@@ -84,19 +84,6 @@ enum ElectricBorder {
     ElectricNone
 };
 
-enum QuickTileFlag {
-    QuickTileNone = 0,
-    QuickTileLeft = 1,
-    QuickTileRight = 1<<1,
-    QuickTileTop = 1<<2,
-    QuickTileBottom = 1<<3,
-    QuickTileHorizontal = QuickTileLeft|QuickTileRight,
-    QuickTileVertical = QuickTileTop|QuickTileBottom,
-    QuickTileMaximize = QuickTileLeft|QuickTileRight|QuickTileTop|QuickTileBottom
-};
-
-Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
-
 // TODO: Hardcoding is bad, need to add some way of registering global actions to these.
 // When designing the new system we must keep in mind that we have conditional actions
 // such as "only when moving windows" desktop switching that the current global action
@@ -210,7 +197,5 @@ private:
 };
 
 } // namespace
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::QuickTileMode)
 
 #endif
