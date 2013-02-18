@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include <kwinxrenderutils.h>
 #include <kdebug.h>
 #include <QPaintEngine>
 #include <qevent.h>
@@ -37,25 +38,30 @@ DEALINGS IN THE SOFTWARE.
 namespace KWin
 {
 
+PaintRedirector *PaintRedirector::create(Client *c, QWidget *widget)
+{
+    if (effects->isOpenGLCompositing()) {
+        return new OpenGLPaintRedirector(c, widget);
+    } else {
+        if (!Extensions::nonNativePixmaps()) {
+            return new NativeXRenderPaintRedirector(c, widget);
+        }
+        return new RasterXRenderPaintRedirector(c, widget);
+    }
+}
+
 PaintRedirector::PaintRedirector(Client *c, QWidget* w)
     : QObject(w)
     , widget(w)
     , recursionCheck(false)
     , m_client(c)
-    , m_responsibleForPixmap(!effects->isOpenGLCompositing())
     , m_requiresRepaint(false)
 {
     added(w);
-    resizePixmaps();
 }
 
 PaintRedirector::~PaintRedirector()
 {
-    if (m_responsibleForPixmap) {
-        for (int i=0; i<PixmapCount; ++i) {
-            XFreePixmap(display(), m_pixmaps[i].handle());
-        }
-    }
 }
 
 void PaintRedirector::reparent(Deleted *d)
@@ -176,34 +182,35 @@ void PaintRedirector::ensurePixmapsPainted()
         return;
 
     QPixmap p = performPendingPaint();
+    preparePaint(p);
 
     QRect rects[PixmapCount];
     m_client->layoutDecorationRects(rects[LeftPixmap], rects[TopPixmap], rects[RightPixmap], rects[BottomPixmap], Client::DecorationRelative);
 
     for (int i=0; i<PixmapCount; ++i) {
-        repaintPixmap(m_pixmaps[i], rects[i], p, pending);
+        repaintPixmap(DecorationPixmap(i), rects[i], p, pending);
     }
 
     pending = QRegion();
     scheduled = QRegion();
 
-    XSync(display(), false);
+    xcb_flush(connection());
 }
 
-void PaintRedirector::repaintPixmap(QPixmap &pix, const QRect &r, const QPixmap &src, QRegion reg)
+void PaintRedirector::preparePaint(const QPixmap &pending)
+{
+    Q_UNUSED(pending)
+}
+
+void PaintRedirector::repaintPixmap(DecorationPixmap border, const QRect &r, const QPixmap &src, QRegion reg)
 {
     if (!r.isValid())
         return;
-    QRect b = reg.boundingRect();
+    const QRect b = reg.boundingRect();
     reg &= r;
     if (reg.isEmpty())
         return;
-    QPainter pt(&pix);
-    pt.translate(-r.topLeft());
-    pt.setCompositionMode(QPainter::CompositionMode_Source);
-    pt.setClipRegion(reg);
-    pt.drawPixmap(b.topLeft(), src);
-    pt.end();
+    paint(border, r, b, src, reg);
 }
 
 void PaintRedirector::resizePixmaps()
@@ -212,30 +219,157 @@ void PaintRedirector::resizePixmaps()
     m_client->layoutDecorationRects(rects[LeftPixmap], rects[TopPixmap], rects[RightPixmap], rects[BottomPixmap], Client::DecorationRelative);
 
     for (int i=0; i<PixmapCount; ++i) {
-        if (m_pixmaps[i].size() == rects[i].size()) {
-            // size unchanged, no need to recreate, but repaint
-            m_pixmaps[i].fill(Qt::transparent);
-            continue;
-        }
-        if (!m_responsibleForPixmap) {
-            m_pixmaps[i] = QPixmap(rects[i].size());
-        } else {
-            if (!m_pixmaps[i].isNull() && m_pixmaps[i].paintEngine()->type() == QPaintEngine::X11) {
-                XFreePixmap(display(), m_pixmaps[i].handle());
-            }
-            Pixmap xpix = XCreatePixmap(QX11Info::display(), rootWindow(),
-                                        rects[i].size().width(), rects[i].height(),
-                                        32);
-            m_pixmaps[i] = QPixmap::fromX11Pixmap(xpix, QPixmap::ExplicitlyShared);
-        }
-        // Make sure the pixmaps are created with alpha channels
-        m_pixmaps[i].fill(Qt::transparent);
+        resize(DecorationPixmap(i), rects[i].size());
     }
 
     // repaint
     if (widget) {
         widget->update();
     }
+}
+
+const QPixmap *PaintRedirector::pixmap(PaintRedirector::DecorationPixmap border) const
+{
+    Q_UNUSED(border)
+    return NULL;
+}
+
+xcb_render_picture_t PaintRedirector::picture(PaintRedirector::DecorationPixmap border) const
+{
+    Q_UNUSED(border)
+    return XCB_RENDER_PICTURE_NONE;
+}
+
+OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
+    : PaintRedirector(c, widget)
+{
+    resizePixmaps();
+}
+
+OpenGLPaintRedirector::~OpenGLPaintRedirector()
+{
+}
+
+const QPixmap *OpenGLPaintRedirector::pixmap(PaintRedirector::DecorationPixmap border) const
+{
+    return &m_pixmaps[border];
+}
+
+void OpenGLPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
+{
+    if (m_pixmaps[border].size() != size) {
+        m_pixmaps[border] = QPixmap(size);
+    }
+    m_pixmaps[border].fill(Qt::transparent);
+}
+
+void OpenGLPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+{
+    QPainter pt(&m_pixmaps[border]);
+    pt.translate(-r.topLeft());
+    pt.setCompositionMode(QPainter::CompositionMode_Source);
+    pt.setClipRegion(reg);
+    pt.drawPixmap(b.topLeft(), src);
+    pt.end();
+}
+
+RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, QWidget *widget)
+    : PaintRedirector(c, widget)
+    , m_gc(0)
+{
+    for (int i=0; i<PixmapCount; ++i) {
+        m_pixmaps[i] = XCB_PIXMAP_NONE;
+        m_pictures[i] = NULL;
+    }
+    resizePixmaps();
+}
+
+RasterXRenderPaintRedirector::~RasterXRenderPaintRedirector()
+{
+    for (int i=0; i<PixmapCount; ++i) {
+        if (m_pixmaps[i] != XCB_PIXMAP_NONE) {
+            xcb_free_pixmap(connection(), m_pixmaps[i]);
+        }
+        delete m_pictures[i];
+    }
+    if (m_gc != 0) {
+        xcb_free_gc(connection(), m_gc);
+    }
+}
+
+xcb_render_picture_t RasterXRenderPaintRedirector::picture(PaintRedirector::DecorationPixmap border) const
+{
+    return *m_pictures[border];
+}
+
+void RasterXRenderPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
+{
+    if (m_sizes[border] != size) {
+        if (m_pixmaps[border] != XCB_PIXMAP_NONE) {
+            xcb_free_pixmap(connection(), m_pixmaps[border]);
+        }
+        m_pixmaps[border] = xcb_generate_id(connection());
+        xcb_create_pixmap(connection(), 32, m_pixmaps[border], rootWindow(), size.width(), size.height());
+        delete m_pictures[border];
+        m_pictures[border] = new XRenderPicture(m_pixmaps[border], 32);
+    }
+    // fill transparent
+    xcb_rectangle_t rect = {0, 0, uint16_t(size.width()), uint16_t(size.height())};
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *m_pictures[border], preMultiply(Qt::transparent), 1, &rect);
+}
+
+void RasterXRenderPaintRedirector::preparePaint(const QPixmap &pending)
+{
+    m_tempImage = pending.toImage();
+}
+
+void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+{
+    Q_UNUSED(src)
+    // clip the sub area
+    const QRect bounding = reg.boundingRect();
+    const QPoint offset = bounding.topLeft() - r.topLeft();
+    if (m_gc == 0) {
+        m_gc = xcb_generate_id(connection());
+        xcb_create_gc(connection(), m_gc, m_pixmaps[border], 0, NULL);
+    }
+
+    const QImage img(m_tempImage.copy(QRect(bounding.topLeft() - b.topLeft(), bounding.size())));
+    xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, m_pixmaps[border], m_gc,
+                  img.width(), img.height(), offset.x(), offset.y(), 0, 32, img.byteCount(), img.constBits());
+}
+
+NativeXRenderPaintRedirector::NativeXRenderPaintRedirector(Client *c, QWidget *widget)
+    : PaintRedirector(c, widget)
+{
+    resizePixmaps();
+}
+
+NativeXRenderPaintRedirector::~NativeXRenderPaintRedirector()
+{
+}
+
+xcb_render_picture_t NativeXRenderPaintRedirector::picture(PaintRedirector::DecorationPixmap border) const
+{
+    return m_pixmaps[border].x11PictureHandle();
+}
+
+void NativeXRenderPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
+{
+    if (m_pixmaps[border].size() != size) {
+        m_pixmaps[border] = QPixmap(size);
+    }
+    m_pixmaps[border].fill(Qt::transparent);
+}
+
+void NativeXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+{
+    QPainter pt(&m_pixmaps[border]);
+    pt.translate(-r.topLeft());
+    pt.setCompositionMode(QPainter::CompositionMode_Source);
+    pt.setClipRegion(reg);
+    pt.drawPixmap(b.topLeft(), src);
+    pt.end();
 }
 
 } // namespace

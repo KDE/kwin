@@ -1116,10 +1116,10 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
 
     t->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
 
-    const QPixmap *left   = redirector->leftDecoPixmap();
-    const QPixmap *top    = redirector->topDecoPixmap();
-    const QPixmap *right  = redirector->rightDecoPixmap();
-    const QPixmap *bottom = redirector->bottomDecoPixmap();
+    const QPixmap *left   = redirector->leftDecoPixmap<const QPixmap*>();
+    const QPixmap *top    = redirector->topDecoPixmap<const QPixmap*>();
+    const QPixmap *right  = redirector->rightDecoPixmap<const QPixmap*>();
+    const QPixmap *bottom = redirector->bottomDecoPixmap<const QPixmap*>();
 
     WindowQuadList topList, leftList, rightList, bottomList;
 

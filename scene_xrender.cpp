@@ -581,10 +581,10 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
 
     //BEGIN deco preparations
     bool noBorder = true;
-    const QPixmap *left = NULL;
-    const QPixmap *top = NULL;
-    const QPixmap *right = NULL;
-    const QPixmap *bottom = NULL;
+    xcb_render_picture_t left   = XCB_RENDER_PICTURE_NONE;
+    xcb_render_picture_t top    = XCB_RENDER_PICTURE_NONE;
+    xcb_render_picture_t right  = XCB_RENDER_PICTURE_NONE;
+    xcb_render_picture_t bottom = XCB_RENDER_PICTURE_NONE;
     PaintRedirector *redirector = NULL;
     QRect dtr, dlr, drr, dbr;
     if (client || deleted) {
@@ -600,10 +600,10 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         }
         if (redirector) {
             redirector->ensurePixmapsPainted();
-            left   = redirector->leftDecoPixmap();
-            top    = redirector->topDecoPixmap();
-            right  = redirector->rightDecoPixmap();
-            bottom = redirector->bottomDecoPixmap();
+            left   = redirector->leftDecoPixmap<xcb_render_picture_t>();
+            top    = redirector->topDecoPixmap<xcb_render_picture_t>();
+            right  = redirector->rightDecoPixmap<xcb_render_picture_t>();
+            bottom = redirector->bottomDecoPixmap<xcb_render_picture_t>();
         }
         if (!noBorder) {
             MAP_RECT_TO_TARGET(dtr);
@@ -677,7 +677,7 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
         }
 
 #define RENDER_DECO_PART(_PART_, _RECT_) \
-XRenderComposite(display(), PictOpOver, _PART_->x11PictureHandle(), decorationAlpha, renderTarget,\
+XRenderComposite(display(), PictOpOver, _PART_, decorationAlpha, renderTarget,\
                  0, 0, 0, 0, _RECT_.x(), _RECT_.y(), _RECT_.width(), _RECT_.height())
 
         if (client || deleted) {

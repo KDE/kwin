@@ -452,7 +452,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         move(calculateGravitation(false));
         plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
         if (Compositor::compositing()) {
-            paintRedirector = new PaintRedirector(this, decoration->widget());
+            paintRedirector = PaintRedirector::create(this, decoration->widget());
             discardWindowPixmap();
         }
         emit geometryShapeChanged(this, oldgeom);

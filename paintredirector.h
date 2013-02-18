@@ -30,12 +30,16 @@ DEALINGS IN THE SOFTWARE.
 #include <qtimer.h>
 #include <qwidget.h>
 #include <qbasictimer.h>
+// xcb
+#include <xcb/render.h>
 
 namespace KWin
 {
+
 // forward declarations
 class Client;
 class Deleted;
+class XRenderPicture;
 
 // This class redirects all painting of a given widget (including its children)
 // into a paint device (QPixmap).
@@ -51,7 +55,6 @@ public:
         LeftPixmap,
         PixmapCount
     };
-    PaintRedirector(Client *c, QWidget* widget);
     virtual ~PaintRedirector();
     QPixmap performPendingPaint();
     virtual bool eventFilter(QObject* o, QEvent* e);
@@ -66,18 +69,14 @@ public:
     }
     void resizePixmaps();
 
-    const QPixmap *topDecoPixmap() const {
-        return &m_pixmaps[TopPixmap];
-    }
-    const QPixmap *leftDecoPixmap() const {
-        return &m_pixmaps[LeftPixmap];
-    }
-    const QPixmap *bottomDecoPixmap() const {
-        return &m_pixmaps[BottomPixmap];
-    }
-    const QPixmap *rightDecoPixmap() const {
-        return &m_pixmaps[RightPixmap];
-    }
+    template <typename T>
+    T topDecoPixmap() const;
+    template <typename T>
+    T leftDecoPixmap() const;
+    template <typename T>
+    T bottomDecoPixmap() const;
+    template <typename T>
+    T rightDecoPixmap() const;
 
     /**
      * Used by Deleted::copyToDeleted() to move the PaintRedirector to the Deleted.
@@ -85,16 +84,24 @@ public:
      * is created.
      **/
     void reparent(Deleted *d);
+    static PaintRedirector *create(Client *c, QWidget* widget);
 
 public slots:
     void ensurePixmapsPainted();
+protected:
+    PaintRedirector(Client *c, QWidget* widget);
+    virtual const QPixmap *pixmap(DecorationPixmap border) const;
+    virtual xcb_render_picture_t picture(DecorationPixmap border) const;
+    virtual void resize(DecorationPixmap border, const QSize &size) = 0;
+    virtual void preparePaint(const QPixmap &pending);
+    virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QPixmap& src, const QRegion &reg) = 0;
 private:
     void added(QWidget* widget);
     void removed(QWidget* widget);
     bool isToolTip(QWidget* widget) const;
     void timerEvent(QTimerEvent* event);
 
-    void repaintPixmap(QPixmap& pix, const QRect& r, const QPixmap& src, QRegion reg);
+    void repaintPixmap(DecorationPixmap border, const QRect& r, const QPixmap& src, QRegion reg);
     QWidget* widget;
     QRegion pending;
     QRegion scheduled;
@@ -103,11 +110,115 @@ private:
     QBasicTimer cleanupTimer;
 
     Client *m_client;
-    // we (instead of Qt) initialize the Pixmaps, and have to free them
-    bool m_responsibleForPixmap;
     bool m_requiresRepaint;
+};
+
+class OpenGLPaintRedirector : public PaintRedirector
+{
+    Q_OBJECT
+public:
+    OpenGLPaintRedirector(Client *c, QWidget *widget);
+    virtual ~OpenGLPaintRedirector();
+
+protected:
+    virtual const QPixmap *pixmap(DecorationPixmap border) const;
+    virtual void resize(DecorationPixmap border, const QSize &size);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+
+private:
     QPixmap m_pixmaps[PixmapCount];
 };
+
+class NativeXRenderPaintRedirector : public PaintRedirector
+{
+    Q_OBJECT
+public:
+    NativeXRenderPaintRedirector(Client *c, QWidget *widget);
+    virtual ~NativeXRenderPaintRedirector();
+
+protected:
+    virtual xcb_render_picture_t picture(DecorationPixmap border) const;
+    virtual void resize(DecorationPixmap border, const QSize &size);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+private:
+    QPixmap m_pixmaps[PixmapCount];
+};
+
+class RasterXRenderPaintRedirector : public PaintRedirector
+{
+    Q_OBJECT
+public:
+    RasterXRenderPaintRedirector(Client *c, QWidget *widget);
+    virtual ~RasterXRenderPaintRedirector();
+
+protected:
+    virtual xcb_render_picture_t picture(DecorationPixmap border) const;
+    virtual void resize(DecorationPixmap border, const QSize &size);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+    virtual void preparePaint(const QPixmap &pending);
+private:
+    QSize m_sizes[PixmapCount];
+    xcb_pixmap_t m_pixmaps[PixmapCount];
+    xcb_gcontext_t m_gc;
+    XRenderPicture* m_pictures[PixmapCount];
+    QImage m_tempImage;
+};
+
+template <>
+inline
+const QPixmap *PaintRedirector::bottomDecoPixmap() const
+{
+    return pixmap(BottomPixmap);
+}
+
+template <>
+inline
+const QPixmap *PaintRedirector::leftDecoPixmap() const
+{
+    return pixmap(LeftPixmap);
+}
+
+template <>
+inline
+const QPixmap *PaintRedirector::rightDecoPixmap() const
+{
+    return pixmap(RightPixmap);
+}
+
+template <>
+inline
+const QPixmap *PaintRedirector::topDecoPixmap() const
+{
+    return pixmap(TopPixmap);
+}
+
+template <>
+inline
+xcb_render_picture_t PaintRedirector::bottomDecoPixmap() const
+{
+    return picture(BottomPixmap);
+}
+
+template <>
+inline
+xcb_render_picture_t PaintRedirector::leftDecoPixmap() const
+{
+    return picture(LeftPixmap);
+}
+
+template <>
+inline
+xcb_render_picture_t PaintRedirector::rightDecoPixmap() const
+{
+    return picture(RightPixmap);
+}
+
+template <>
+inline
+xcb_render_picture_t PaintRedirector::topDecoPixmap() const
+{
+    return picture(TopPixmap);
+}
 
 } // namespace
 
