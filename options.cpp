@@ -161,6 +161,7 @@ Options::Options(QObject *parent)
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , m_glLegacy(Options::defaultGlLegacy())
+    , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -768,6 +769,24 @@ void Options::setGlLegacy(bool glLegacy)
     emit glLegacyChanged();
 }
 
+void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
+{
+    if (glPreferBufferSwap == 'a') {
+        // buffer cpying is very fast with the nvidia blob
+        // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
+        // see http://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
+        if (GLPlatform::instance()->driver() == Driver_NVidia)
+            glPreferBufferSwap = CopyFrontBuffer;
+        else
+            glPreferBufferSwap = ExtendDamage;
+    }
+    if (m_glPreferBufferSwap == (GlSwapStrategy)glPreferBufferSwap) {
+        return;
+    }
+    m_glPreferBufferSwap = (GlSwapStrategy)glPreferBufferSwap;
+    emit glPreferBufferSwapChanged();
+}
+
 void Options::reparseConfiguration()
 {
     KGlobal::config()->reparseConfiguration();
@@ -956,6 +975,16 @@ void Options::reloadCompositingSettings(bool force)
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
     setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
+
+    char c = 0;
+    if (isGlVSync()) { // buffer swap enforcement makes little sense without
+        const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
+        if (!s.isEmpty())
+            c = s.at(0).toAscii();
+        if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
+            c = 0;
+    }
+    setGlPreferBufferSwap(c);
 
     setColorCorrected(config.readEntry("GLColorCorrection", Options::defaultColorCorrected()));
 

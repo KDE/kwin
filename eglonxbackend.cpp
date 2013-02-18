@@ -194,12 +194,13 @@ bool EglOnXBackend::initBufferConfigs()
 
 void EglOnXBackend::present()
 {
-    if (lastMask() & Scene::PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV) {
-        const QRect damageRect = lastDamage().boundingRect();
-
-        eglPostSubBufferNV(dpy, surface, damageRect.left(), displayHeight() - damageRect.bottom() - 1, damageRect.width(), damageRect.height());
-    } else {
+    const bool swap = (options->glPreferBufferSwap() && options->glPreferBufferSwap() != Options::ExtendDamage) ||
+                      !(lastMask() & Scene::PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV);
+    if (swap) {
         eglSwapBuffers(dpy, surface);
+    } else {
+        const QRect damageRect = lastDamage().boundingRect();
+        eglPostSubBufferNV(dpy, surface, damageRect.left(), displayHeight() - damageRect.bottom() - 1, damageRect.width(), damageRect.height());
     }
 
     eglWaitGL();

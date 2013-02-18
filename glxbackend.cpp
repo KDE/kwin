@@ -115,7 +115,7 @@ void GlxBackend::init()
                     // However mesa/dri will return a range error (6) because deactivating the
                     // swapinterval (as of today) seems completely unsupported
                     setHasWaitSync(true);
-                    setSwapInterval(0);
+                    setSwapInterval(1);
                 }
                 else
                     qWarning() << "NO VSYNC! glXWaitVideoSync(1,0,&uint) isn't 0 but" << glXWaitVideoSync(1, 0, &sync);
@@ -473,77 +473,80 @@ void GlxBackend::waitSync()
 
 void GlxBackend::present()
 {
+    QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const bool fullRepaint = (lastDamage() == displayRegion);
+
     if (isDoubleBuffer()) {
-        if (lastMask() & Scene::PAINT_SCREEN_REGION) {
-            waitSync();
-            if (glXCopySubBuffer) {
-                foreach (const QRect & r, lastDamage().rects()) {
-                    // convert to OpenGL coordinates
-                    int y = displayHeight() - r.y() - r.height();
-                    glXCopySubBuffer(display(), glxbuffer, r.x(), y, r.width(), r.height());
-                }
-            } else {
-                // if a shader is bound or the texture unit is enabled, copy pixels results in a black screen
-                // therefore unbind the shader and restore after copying the pixels
-                GLint shader = 0;
-                if (ShaderManager::instance()->isShaderBound()) {
-                    glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-                    glUseProgram(0);
-                }
-                bool reenableTexUnit = false;
-                if (glIsEnabled(GL_TEXTURE_2D)) {
-                    glDisable(GL_TEXTURE_2D);
-                    reenableTexUnit = true;
-                }
-                // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
-                glEnable(GL_SCISSOR_TEST);
-                glDrawBuffer(GL_FRONT);
-                int xpos = 0;
-                int ypos = 0;
-                foreach (const QRect & r, lastDamage().rects()) {
-                    // convert to OpenGL coordinates
-                    int y = displayHeight() - r.y() - r.height();
-                    // Move raster position relatively using glBitmap() rather
-                    // than using glRasterPos2f() - the latter causes drawing
-                    // artefacts at the bottom screen edge with some gfx cards
-//                    glRasterPos2f( r.x(), r.y() + r.height());
-                    glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL);
-                    xpos = r.x();
-                    ypos = y;
-                    glScissor(r.x(), y, r.width(), r.height());
-                    glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
-                }
-                glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
-                glDrawBuffer(GL_BACK);
-                glDisable(GL_SCISSOR_TEST);
-                if (reenableTexUnit) {
-                    glEnable(GL_TEXTURE_2D);
-                }
-                // rebind previously bound shader
-                if (ShaderManager::instance()->isShaderBound()) {
-                    glUseProgram(shader);
-                }
-            }
-        } else {
+
+        if (fullRepaint) {
             if (haveSwapInterval) {
-                setSwapInterval(options->isGlVSync() ? 1 : 0);
                 glXSwapBuffers(display(), glxbuffer);
-                setSwapInterval(0);
-                startRenderTimer(); // this is important so we don't assume to be loosing frames in the compositor timing calculation
+                startRenderTimer();
             } else {
-                waitSync();
+                waitSync(); // calls startRenderTimer();
                 glXSwapBuffers(display(), glxbuffer);
+            }
+        } else if (glXCopySubBuffer) {
+            waitSync();
+            foreach (const QRect & r, lastDamage().rects()) {
+                // convert to OpenGL coordinates
+                int y = displayHeight() - r.y() - r.height();
+                glXCopySubBuffer(display(), glxbuffer, r.x(), y, r.width(), r.height());
+            }
+        } else { // Copy Pixels
+            // if a shader is bound or the texture unit is enabled, copy pixels results in a black screen
+            // therefore unbind the shader and restore after copying the pixels
+            GLint shader = 0;
+            if (ShaderManager::instance()->isShaderBound()) {
+                glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+                glUseProgram(0);
+            }
+            bool reenableTexUnit = false;
+            if (glIsEnabled(GL_TEXTURE_2D)) {
+                glDisable(GL_TEXTURE_2D);
+                reenableTexUnit = true;
+            }
+            // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
+            glEnable(GL_SCISSOR_TEST);
+            glDrawBuffer(GL_FRONT);
+            waitSync();
+            int xpos = 0;
+            int ypos = 0;
+            foreach (const QRect & r, lastDamage().rects()) {
+                // convert to OpenGL coordinates
+                int y = displayHeight() - r.y() - r.height();
+                // Move raster position relatively using glBitmap() rather
+                // than using glRasterPos2f() - the latter causes drawing
+                // artefacts at the bottom screen edge with some gfx cards
+//                    glRasterPos2f( r.x(), r.y() + r.height());
+                glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL);
+                xpos = r.x();
+                ypos = y;
+                glScissor(r.x(), y, r.width(), r.height());
+                glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
+            }
+            glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
+            glDrawBuffer(GL_BACK);
+            glDisable(GL_SCISSOR_TEST);
+            if (reenableTexUnit) {
+                glEnable(GL_TEXTURE_2D);
+            }
+            // rebind previously bound shader
+            if (ShaderManager::instance()->isShaderBound()) {
+                glUseProgram(shader);
             }
         }
+
         glXWaitGL();
     } else {
         glXWaitGL();
-        if (lastMask() & Scene::PAINT_SCREEN_REGION)
+        if (!fullRepaint)
             foreach (const QRect & r, lastDamage().rects())
                 XCopyArea(display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
         else
             XCopyArea(display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0);
     }
+    setLastDamage(QRegion());
     XFlush(display());
 }
 

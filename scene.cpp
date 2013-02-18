@@ -103,8 +103,9 @@ Scene::~Scene()
 // returns mask and possibly modified region
 void Scene::paintScreen(int* mask, QRegion* region)
 {
-    *mask = (*region == QRegion(0, 0, displayWidth(), displayHeight()))
-            ? 0 : PAINT_SCREEN_REGION;
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    *mask = (*region == displayRegion) ? 0 : PAINT_SCREEN_REGION;
+
     updateTimeDiff();
     // preparation step
     static_cast<EffectsHandlerImpl*>(effects)->startPaint();
@@ -124,10 +125,10 @@ void Scene::paintScreen(int* mask, QRegion* region)
         *region = infiniteRegion();
     } else if (*mask & PAINT_SCREEN_REGION) {
         // make sure not to go outside visible screen
-        *region &= QRegion(0, 0, displayWidth(), displayHeight());
+        *region &= displayRegion;
     } else {
         // whole screen, not transformed, force region to be full
-        *region = QRegion(0, 0, displayWidth(), displayHeight());
+        *region = displayRegion;
     }
     painted_region = *region;
     if (*mask & PAINT_SCREEN_BACKGROUND_FIRST) {
@@ -141,7 +142,7 @@ void Scene::paintScreen(int* mask, QRegion* region)
     effects->postPaintScreen();
     *region |= painted_region;
     // make sure not to go outside of the screen area
-    *region &= QRegion(0, 0, displayWidth(), displayHeight());
+    *region &= displayRegion;
     // make sure all clipping is restored
     Q_ASSERT(!PaintClipper::clip());
 }
@@ -236,6 +237,7 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
     QList< QPair< Window*, Phase2Data > > phase2data;
 
     QRegion dirtyArea = region;
+    bool opaqueFullscreen(false);
     for (int i = 0;  // do prePaintWindow bottom to top
             i < stacking_order.count();
             ++i) {
@@ -254,10 +256,12 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         topw->resetRepaints();
 
         // Clip out the decoration for opaque windows; the decoration is drawn in the second pass
+        opaqueFullscreen = false; // TODO: do we care about unmanged windows here (maybe input windows?)
         if (w->isOpaque()) {
             Client *c = NULL;
             if (topw->isClient()) {
                 c = static_cast<Client*>(topw);
+                opaqueFullscreen = c->isFullScreen();
             }
             // the window is fully opaque
             if (c && c->decorationHasAlpha()) {
@@ -297,13 +301,24 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         w->suspendUnredirect(data.mask & PAINT_WINDOW_TRANSLUCENT);
     }
 
-    // This is the occlusion culling pass
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+
+    bool fullRepaint(dirtyArea == displayRegion); // spare some expensive region operations
+    if (!fullRepaint) {
+        extendPaintRegion(dirtyArea, opaqueFullscreen);
+        fullRepaint = (dirtyArea == displayRegion);
+    }
+
     QRegion allclips, upperTranslucentDamage;
+    // This is the occlusion culling pass
     for (int i = phase2data.count() - 1; i >= 0; --i) {
         QPair< Window*, Phase2Data > *entry = &phase2data[i];
         Phase2Data *data = &entry->second;
 
-        data->region |= upperTranslucentDamage;
+        if (fullRepaint)
+            data->region = displayRegion;
+        else
+            data->region |= upperTranslucentDamage;
 
         // subtract the parts which will possibly been drawn as part of
         // a higher opaque window
@@ -315,8 +330,9 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
             // clip away the opaque regions for all windows below this one
             allclips |= data->clip;
             // extend the translucent damage for windows below this by remaining (translucent) regions
-            upperTranslucentDamage |= data->region - data->clip;
-        } else {
+            if (!fullRepaint)
+                upperTranslucentDamage |= data->region - data->clip;
+        } else if (!fullRepaint) {
             upperTranslucentDamage |= data->region;
         }
     }
@@ -338,7 +354,10 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
         paintWindow(data->window, data->mask, data->region, data->quads);
     }
-    painted_region |= paintedArea;
+    if (fullRepaint)
+        painted_region = displayRegion;
+    else
+        painted_region |= paintedArea;
 }
 
 void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads)
@@ -450,6 +469,12 @@ void Scene::finalPaintWindow(EffectWindowImpl* w, int mask, QRegion region, Wind
 void Scene::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
     w->sceneWindow()->performPaint(mask, region, data);
+}
+
+void Scene::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
+{
+    Q_UNUSED(region);
+    Q_UNUSED(opaqueFullscreen);
 }
 
 bool Scene::waitSyncAvailable() const

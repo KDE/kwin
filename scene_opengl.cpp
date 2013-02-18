@@ -98,7 +98,8 @@ void OpenGLBackend::setFailed(const QString &reason)
 
 void OpenGLBackend::idle()
 {
-    present();
+    if (hasPendingFlush())
+        present();
 }
 
 /************************************************
@@ -269,7 +270,52 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint1");
 #endif
+
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     paintScreen(&mask, &damage);   // call generic implementation
+#ifndef KWIN_HAVE_OPENGLES
+    // copy dirty parts from front to backbuffer
+    if (options->glPreferBufferSwap() == Options::CopyFrontBuffer && damage != displayRegion) {
+        GLint shader = 0;
+        if (ShaderManager::instance()->isShaderBound()) {
+            glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+            glUseProgram(0);
+        }
+        bool reenableTexUnit = false;
+        if (glIsEnabled(GL_TEXTURE_2D)) {
+            glDisable(GL_TEXTURE_2D);
+            reenableTexUnit = true;
+        }
+        // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
+        glEnable(GL_SCISSOR_TEST);
+        glReadBuffer(GL_FRONT);
+
+        int xpos = 0;
+        int ypos = 0;
+        const QRegion dirty = displayRegion - damage;
+        foreach (const QRect &r, dirty.rects()) {
+            // convert to OpenGL coordinates
+            int y = displayHeight() - r.y() - r.height();
+            glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL); // not glRasterPos2f, see glxbackend.cpp
+            xpos = r.x();
+            ypos = y;
+            glScissor(r.x(), y, r.width(), r.height());
+            glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
+        }
+
+        glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL); // move position back to 0,0
+        glReadBuffer(GL_BACK);
+        glDisable(GL_SCISSOR_TEST);
+        if (reenableTexUnit) {
+            glEnable(GL_TEXTURE_2D);
+        }
+        // rebind previously bound shader
+        if (ShaderManager::instance()->isShaderBound()) {
+            glUseProgram(shader);
+        }
+        damage = displayRegion;
+    }
+#endif
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint2");
 #endif
@@ -326,6 +372,35 @@ void SceneOpenGL::paintBackground(QRegion region)
         verts << r.x() + r.width() << r.y();
     }
     doPaintBackground(verts);
+}
+
+void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
+{
+#ifndef KWIN_HAVE_OPENGLES
+    if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
+        const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+        uint damagedPixels = 0;
+        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*displayWidth()*displayHeight();
+        // 16:9 is 75% of 4:3 and 2.55:1 is 49.01% of 5:4
+        // (5:4 is the most square format and 2.55:1 is Cinemascope55 - the widest ever shot
+        // movie aspect - two times ;-) It's a Fox format, though, so maybe we want to restrict
+        // to 2.20:1 - Panavision - which has actually been used for interesting movies ...)
+        // would be 57% of 5/4
+        foreach (const QRect &r, region.rects()) {
+//                 damagedPixels += r.width() * r.height(); // combined window damage test
+            damagedPixels = r.width() * r.height(); // experimental single window damage testing
+            if (damagedPixels > fullRepaintLimit) {
+                region = displayRegion;
+                return;
+            }
+        }
+    } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
+        region = QRegion(0, 0, displayWidth(), displayHeight());
+    }
+#else
+    Q_UNUSED(region);
+    Q_UNUSED(opaqueFullscreen);
+#endif
 }
 
 void SceneOpenGL::windowAdded(Toplevel* c)

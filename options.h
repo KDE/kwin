@@ -42,6 +42,7 @@ class Options : public QObject, public KDecorationOptions
 {
     Q_OBJECT
     Q_ENUMS(FocusPolicy)
+    Q_ENUMS(GlSwapStrategy)
     Q_ENUMS(MouseCommand)
     Q_ENUMS(MouseWheelCommand)
 
@@ -187,6 +188,7 @@ class Options : public QObject, public KDecorationOptions
      * Whether legacy OpenGL should be used or OpenGL (ES) 2
      **/
     Q_PROPERTY(bool glLegacy READ isGlLegacy WRITE setGlLegacy NOTIFY glLegacyChanged)
+    Q_PROPERTY(char glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
 public:
 
     explicit Options(QObject *parent = NULL);
@@ -549,6 +551,11 @@ public:
         return m_glLegacy;
     }
 
+    enum GlSwapStrategy { NoSwapEncourage = 0, CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
+    GlSwapStrategy glPreferBufferSwap() const {
+        return m_glPreferBufferSwap;
+    }
+
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
@@ -610,6 +617,7 @@ public:
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
     void setGlLegacy(bool glLegacy);
+    void setGlPreferBufferSwap(char glPreferBufferSwap);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick() {
@@ -717,6 +725,9 @@ public:
     static bool defaultGlLegacy() {
         return false;
     }
+    static GlSwapStrategy defaultGlPreferBufferSwap() {
+        return AutoSwapStrategy;
+    }
     static int defaultAnimationSpeed() {
         return 3;
     }
@@ -797,6 +808,7 @@ Q_SIGNALS:
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
     void glLegacyChanged();
+    void glPreferBufferSwapChanged();
 
 public Q_SLOTS:
     void setColorCorrected(bool colorCorrected = false);
@@ -847,6 +859,7 @@ private:
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
     bool m_glLegacy;
+    GlSwapStrategy m_glPreferBufferSwap;
 
     WindowOperation OpTitlebarDblClick;
 

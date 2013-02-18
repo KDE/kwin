@@ -68,6 +68,7 @@ public:
 protected:
     SceneOpenGL(Workspace* ws, OpenGLBackend *backend);
     virtual void paintBackground(QRegion region);
+    virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
 
     virtual void doPaintBackground(const QVector<float> &vertices) = 0;

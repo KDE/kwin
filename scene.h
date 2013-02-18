@@ -125,6 +125,9 @@ protected:
     virtual void paintWindow(Window* w, int mask, QRegion region, WindowQuadList quads);
     // called after all effects had their drawWindow() called
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    // let the scene decide whether it's better to paint more of the screen, eg. in order to allow a buffer swap
+    // the default is NOOP
+    virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
     // compute time since the last repaint
     void updateTimeDiff();
     // saved data for 2nd pass of optimized screen painting
