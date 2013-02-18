@@ -48,7 +48,7 @@ Decoration {
         case DecorationOptions.BorderNoSides:
             borders.setBorders(4);
             borders.setSideBorders(1);
-            extendedBorder.setSideBorders(3);
+            extendedBorders.setSideBorders(3);
             break;
         case DecorationOptions.BorderNone:
             borders.setBorders(1);
