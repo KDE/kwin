@@ -94,6 +94,7 @@ set(kwin_KDEINIT_SRCS
    dbusinterface.cpp
    client.cpp 
    client_machine.cpp
+   cursor.cpp
    tabgroup.cpp
    focuschain.cpp
    placement.cpp 

@@ -52,6 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox.h"
 #endif
 #include "atoms.h"
+#include "cursor.h"
 #include "placement.h"
 #include "notifications.h"
 #include "outline.h"
@@ -158,6 +159,9 @@ Workspace::Workspace(bool restore)
     // first initialize the extensions
     Extensions::init();
     Xcb::Extensions::self();
+
+    // start the cursor support
+    Cursor::create(this);
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
@@ -1828,60 +1832,6 @@ void Workspace::slotBlockShortcuts(int data)
             ++it)
         (*it)->updateMouseGrab();
 }
-
-// Optimized version of QCursor::pos() that tries to avoid X roundtrips
-// by updating the value only when the X timestamp changes.
-static QPoint last_cursor_pos;
-static int last_buttons = 0;
-static Time last_cursor_timestamp = CurrentTime;
-static QTimer* last_cursor_timer;
-
-QPoint Workspace::cursorPos() const
-{
-    if (last_cursor_timestamp == CurrentTime ||
-            last_cursor_timestamp != QX11Info::appTime()) {
-        last_cursor_timestamp = QX11Info::appTime();
-        Window root;
-        Window child;
-        int root_x, root_y, win_x, win_y;
-        uint state;
-        XQueryPointer(display(), rootWindow(), &root, &child,
-                      &root_x, &root_y, &win_x, &win_y, &state);
-        last_cursor_pos = QPoint(root_x, root_y);
-        last_buttons = state;
-        if (last_cursor_timer == NULL) {
-            Workspace* ws = const_cast<Workspace*>(this);
-            last_cursor_timer = new QTimer(ws);
-            last_cursor_timer->setSingleShot(true);
-            connect(last_cursor_timer, SIGNAL(timeout()), ws, SLOT(resetCursorPosTime()));
-        }
-        last_cursor_timer->start(0);
-    }
-    return last_cursor_pos;
-}
-
-/**
- * Because of QTimer's and the impossibility to get events for all mouse
- * movements (at least I haven't figured out how) the position needs
- * to be also refetched after each return to the event loop.
- */
-void Workspace::resetCursorPosTime()
-{
-    last_cursor_timestamp = CurrentTime;
-}
-
-void Workspace::checkCursorPos()
-{
-    QPoint last = last_cursor_pos;
-    int lastb = last_buttons;
-    cursorPos(); // Update if needed
-    if (last != last_cursor_pos || lastb != last_buttons) {
-        emit mouseChanged(last_cursor_pos, last,
-            x11ToQtMouseButtons(last_buttons), x11ToQtMouseButtons(lastb),
-            x11ToQtKeyboardModifiers(last_buttons), x11ToQtKeyboardModifiers(lastb));
-    }
-}
-
 
 Outline* Workspace::outline()
 {

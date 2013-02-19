@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effectsadaptor.h"
 #include "deleted.h"
 #include "client.h"
+#include "cursor.h"
 #include "group.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
@@ -205,7 +206,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , keyboard_grab_effect(NULL)
     , fullscreen_effect(0)
     , next_window_quad_type(EFFECT_QUAD_TYPE_START)
-    , mouse_poll_ref_count(0)
     , m_compositor(compositor)
     , m_scene(scene)
     , m_screenLockerWatcher(new ScreenLockerWatcher(this))
@@ -225,7 +225,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
     connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
     connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
-    connect(ws, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+    connect(Cursor::self(), SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
     connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
@@ -675,17 +675,12 @@ void* EffectsHandlerImpl::getProxy(QString name)
 
 void EffectsHandlerImpl::startMousePolling()
 {
-    if (!mouse_poll_ref_count)   // Start timer if required
-        m_compositor->startMousePolling();
-    mouse_poll_ref_count++;
+    Cursor::self()->startMousePolling();
 }
 
 void EffectsHandlerImpl::stopMousePolling()
 {
-    assert(mouse_poll_ref_count);
-    mouse_poll_ref_count--;
-    if (!mouse_poll_ref_count)   // Stop timer if required
-        m_compositor->stopMousePolling();
+    Cursor::self()->stopMousePolling();
 }
 
 bool EffectsHandlerImpl::hasKeyboardGrab() const
@@ -1161,7 +1156,7 @@ xcb_window_t EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int 
         const uint32_t values[] = {
             true,
             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION,
-            static_cast<uint32_t>(cursor.handle())
+            Cursor::x11Cursor(cursor.shape())
         };
         xcb_create_window(connection(), 0, win, rootWindow(), x, y, w, h, 0, XCB_WINDOW_CLASS_INPUT_ONLY,
                           XCB_COPY_FROM_PARENT, mask, values);
@@ -1276,7 +1271,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
 
 QPoint EffectsHandlerImpl::cursorPos() const
 {
-    return Workspace::self()->cursorPos();
+    return Cursor::pos();
 }
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)

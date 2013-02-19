@@ -227,7 +227,6 @@ protected:
     QMultiMap< int, EffectPair > effect_order;
     QHash< long, int > registered_atoms;
     int next_window_quad_type;
-    int mouse_poll_ref_count;
 
 private Q_SLOTS:
     void slotEffectsQueried();

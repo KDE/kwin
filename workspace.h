@@ -379,8 +379,6 @@ public:
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcuts(bool disable);
     void disableGlobalShortcutsForClient(bool disable);
-    QPoint cursorPos() const;
-    void checkCursorPos();
 
     void sessionSaveStarted();
     void sessionSaveDone();
@@ -505,7 +503,6 @@ private slots:
     void slotMenuHidden(qulonglong wid);
     void slotClearMenus();
 #endif
-    void resetCursorPosTime();
     void updateCurrentActivity(const QString &new_activity);
     void slotActivityRemoved(const QString &activity);
     void slotActivityAdded(const QString &activity);
@@ -534,9 +531,6 @@ signals:
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
-    void mouseChanged(const QPoint& pos, const QPoint& oldpos,
-                      Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
-                      Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     void propertyNotify(long a);
     void configChanged();
     void reinitializeCompositing();

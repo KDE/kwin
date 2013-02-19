@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobal.h>
 #include <X11/extensions/shape.h>
 
+#include "cursor.h"
 #include "notifications.h"
 #include <QX11Info>
 #include "rules.h"
@@ -656,7 +657,7 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
         0,                                // back_pixmap
         0,                                // border_pixel
         static_cast<uint32_t>(attr.colormap),                    // colormap
-        static_cast<uint32_t>(QCursor(Qt::ArrowCursor).handle()) // cursor
+        Cursor::x11Cursor(Qt::ArrowCursor)
     };
 
     const uint32_t cw_mask = XCB_CW_BACK_PIXMAP | XCB_CW_BORDER_PIXEL |

@@ -90,7 +90,6 @@ Compositor::Compositor(QObject* workspace)
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
-    connect(&mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
@@ -286,7 +285,6 @@ void Compositor::finish()
     delete m_scene;
     m_scene = NULL;
     compositeTimer.stop();
-    mousePollingTimer.stop();
     repaints_region = QRegion();
     for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
             it != Workspace::self()->clientList().constEnd();
@@ -583,11 +581,6 @@ void Compositor::performCompositing()
     scheduleRepaint();
 }
 
-void Compositor::performMousePoll()
-{
-    Workspace::self()->checkCursorPos();
-}
-
 bool Compositor::windowRepaintsPending() const
 {
     foreach (Toplevel * c, Workspace::self()->clientList())
@@ -647,16 +640,6 @@ void Compositor::setCompositeTimer()
         // "0" would be sufficient, but the compositor isn't the WMs only task
         m_nextFrameDelay = padding = (padding > fpsInterval) ? 1 : ((fpsInterval - padding) >> 10);
     compositeTimer.start(qMin(padding, 250u), this); // force 4fps minimum
-}
-
-void Compositor::startMousePolling()
-{
-    mousePollingTimer.start(20);   // 50Hz. TODO: How often do we really need to poll?
-}
-
-void Compositor::stopMousePolling()
-{
-    mousePollingTimer.stop();
 }
 
 bool Compositor::isActive()

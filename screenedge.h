@@ -282,8 +282,6 @@ public:
     ElectricBorderAction actionBottom() const;
     ElectricBorderAction actionBottomLeft() const;
     ElectricBorderAction actionLeft() const;
-    void startMousePolling();
-    void stopMousePolling();
 
     /**
      * Singleton getter for this manager.
@@ -317,11 +315,7 @@ Q_SIGNALS:
      * @c 0.0 meaning far away from the border, @c 1.0 in trigger distance.
      **/
     void approaching(ElectricBorder border, qreal factor, const QRect &geometry);
-    void mousePollingTimerEvent(QPoint cursorPos);
     void checkBlocking();
-
-private Q_SLOTS:
-    void performMousePoll();
 
 private:
     enum { ElectricDisabled = 0, ElectricMoveOnly = 1, ElectricAlways = 2 };
@@ -353,8 +347,6 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
-    int m_mousePolling;
-    QTimer *m_mousePollingTimer;
 
     static ScreenEdges *s_self;
 };

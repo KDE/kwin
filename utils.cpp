@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 
 #include "atoms.h"
+#include "cursor.h"
 #include "notifications.h"
 #include "workspace.h"
 
@@ -325,7 +326,7 @@ void ungrabXKeyboard()
 
 QPoint cursorPos()
 {
-    return Workspace::self()->cursorPos();
+    return Cursor::self()->pos();
 }
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states

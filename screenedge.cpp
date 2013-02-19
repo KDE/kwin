@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "atoms.h"
 #include "client.h"
+#include "cursor.h"
 #include "effects.h"
 #include "utils.h"
 #include "workspace.h"
@@ -255,7 +256,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     }
     vds->setCurrent(desktop);
     if (vds->current() != oldDesktop) {
-        QCursor::setPos(pos);
+        Cursor::setPos(pos);
     }
 }
 
@@ -276,7 +277,7 @@ void Edge::pushCursorBack(const QPoint &cursorPos)
     if (isBottom()) {
         y -= distance.height();
     }
-    QCursor::setPos(x, y);
+    Cursor::setPos(x, y);
 }
 
 void Edge::setGeometry(const QRect &geometry)
@@ -503,14 +504,16 @@ void WindowBasedEdge::doGeometryUpdate()
 void WindowBasedEdge::doStartApproaching()
 {
     m_approachWindow.unmap();
-    connect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), SLOT(updateApproaching(QPoint)));
-    edges()->startMousePolling();
+    Cursor *cursor = Cursor::self();
+    connect(cursor, SIGNAL(posChanged(QPoint)), SLOT(updateApproaching(QPoint)));
+    cursor->startMousePolling();
 }
 
 void WindowBasedEdge::doStopApproaching()
 {
-    disconnect(edges(), SIGNAL(mousePollingTimerEvent(QPoint)), this, SLOT(updateApproaching(QPoint)));
-    edges()->stopMousePolling();
+    Cursor *cursor = Cursor::self();
+    disconnect(cursor, SIGNAL(posChanged(QPoint)), this, SLOT(updateApproaching(QPoint)));
+    cursor->stopMousePolling();
     m_approachWindow.map();
 }
 
@@ -555,10 +558,7 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionBottom(ElectricActionNone)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
-    , m_mousePolling(0)
-    , m_mousePollingTimer(new QTimer(this))
 {
-    connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(performMousePoll()));
 }
 
 ScreenEdges::~ScreenEdges()
@@ -1045,28 +1045,6 @@ bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
 void ScreenEdges::ensureOnTop()
 {
     Xcb::restackWindowsWithRaise(windows());
-}
-
-void ScreenEdges::startMousePolling()
-{
-    m_mousePolling++;
-    if (m_mousePolling == 1) {
-        m_mousePollingTimer->start(100);   // TODO: How often do we really need to poll?
-    }
-}
-
-void ScreenEdges::stopMousePolling()
-{
-    m_mousePolling--;
-    if (m_mousePolling == 0) {
-        m_mousePollingTimer->stop();
-    }
-}
-
-void ScreenEdges::performMousePoll()
-{
-    Workspace::self()->checkCursorPos();
-    emit mousePollingTimerEvent(Workspace::self()->cursorPos());
 }
 
 QVector< xcb_window_t > ScreenEdges::windows() const

@@ -74,9 +74,6 @@ public:
     void addRepaint(const QRect& r);
     void addRepaint(const QRegion& r);
     void addRepaint(int x, int y, int w, int h);
-    // Mouse polling
-    void startMousePolling();
-    void stopMousePolling();
     /**
      * Whether the Compositor is active. That is a Scene is present and the Compositor is
      * not shutting down itself.
@@ -281,7 +278,6 @@ private Q_SLOTS:
     void restart();
     void fallbackToXRenderCompositing();
     void performCompositing();
-    void performMousePoll();
     void delayedCheckUnredirect();
     void slotConfigChanged();
     void releaseCompositorSelection();
@@ -309,7 +305,6 @@ private:
     uint vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
     QElapsedTimer nextPaintReference;
-    QTimer mousePollingTimer;
     QRegion repaints_region;
 
     QTimer unredirectTimer;
