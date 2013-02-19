@@ -1190,6 +1190,11 @@ void EffectsHandlerImpl::destroyInputWindow(xcb_window_t w)
     abort();
 }
 
+void EffectsHandlerImpl::defineCursor(xcb_window_t w, Qt::CursorShape shape)
+{
+    Xcb::defineCursor(w, Cursor::x11Cursor(shape));
+}
+
 bool EffectsHandlerImpl::checkInputWindowEvent(XEvent* e)
 {
     if (e->type != ButtonPress && e->type != ButtonRelease && e->type != MotionNotify)

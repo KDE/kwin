@@ -559,7 +559,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
                     m_highlightedDropTarget = NULL;
                 }
                 effects->addRepaintFull();
-                XDefineCursor(display(), m_input, QCursor(Qt::PointingHandCursor).handle());
+                effects->defineCursor(m_input, Qt::PointingHandCursor);
                 return;
             }
             if (hovering) {
@@ -598,7 +598,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
         }
-        XDefineCursor(display(), m_input, QCursor(Qt::PointingHandCursor).handle());
+        effects->defineCursor(m_input, Qt::PointingHandCursor);
     } else if (e->type() == QEvent::MouseButtonPress && me->button() == Qt::LeftButton && hovering && m_dragToClose) {
         m_dragStart = me->pos();
         m_dragWindow = m_highlightedWindow;
@@ -610,7 +610,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     if (e->type() == QEvent::MouseMove && m_dragWindow) {
         if ((me->pos() - m_dragStart).manhattanLength() > KGlobalSettings::dndEventDelay() && !m_dragInProgress) {
             m_dragInProgress = true;
-            XDefineCursor(display(), m_input, QCursor(Qt::ForbiddenCursor).handle());
+            effects->defineCursor(m_input, Qt::ForbiddenCursor);
         }
         if (!m_dragInProgress) {
             return;
@@ -628,13 +628,13 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
             KIcon icon("user-trash");
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Active));
-            XDefineCursor(display(), m_input, QCursor(Qt::DragMoveCursor).handle());
+            effects->defineCursor(m_input, Qt::DragMoveCursor);
         } else if (!target && m_highlightedDropTarget) {
             KIcon icon("user-trash");
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
-            XDefineCursor(display(), m_input, QCursor(Qt::ForbiddenCursor).handle());
+            effects->defineCursor(m_input, Qt::ForbiddenCursor);
         }
     }
 }

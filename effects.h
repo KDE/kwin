@@ -140,6 +140,7 @@ public:
     virtual xcb_window_t createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor);
     using EffectsHandler::createInputWindow;
     virtual void destroyInputWindow(xcb_window_t w);
+    virtual void defineCursor(xcb_window_t w, Qt::CursorShape shape);
     virtual bool checkInputWindowEvent(XEvent* e);
     virtual void checkInputWindowStacking();
 

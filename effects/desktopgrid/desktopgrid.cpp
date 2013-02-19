@@ -521,7 +521,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
                     }
                     m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
                 }
-                XDefineCursor(display(), input, QCursor(Qt::ClosedHandCursor).handle());
+                effects->defineCursor(input, Qt::ClosedHandCursor);
             }
             wasWindowMove = true;
             if (windowMove->isMovable() && !isUsingPresentWindows()) {
@@ -539,7 +539,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
         } else if ((me->buttons() & Qt::LeftButton) && !wasDesktopMove &&
                   (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay()) {
             wasDesktopMove = true;
-            XDefineCursor(display(), input, QCursor(Qt::ClosedHandCursor).handle());
+            effects->defineCursor(input, Qt::ClosedHandCursor);
         }
         if (d != highlightedDesktop) { // Highlight desktop
             if ((me->buttons() & Qt::LeftButton) && isValidMove && !wasWindowMove && d <= effects->numberOfDesktops()) {
@@ -673,9 +673,9 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
             }
             effects->setElevatedWindow(windowMove, false);
             windowMove = NULL;
-            XDefineCursor(display(), input, QCursor(Qt::PointingHandCursor).handle());
+            effects->defineCursor(input, Qt::PointingHandCursor);
         } else if (wasDesktopMove)
-            XDefineCursor(display(), input, QCursor(Qt::PointingHandCursor).handle());
+            effects->defineCursor(input, Qt::PointingHandCursor);
         wasWindowMove = false;
         wasDesktopMove = false;
     }

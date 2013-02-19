@@ -1982,10 +1982,10 @@ void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::M
         }
     }
     if (!oldbuttons.testFlag(Qt::LeftButton) && buttons.testFlag(Qt::LeftButton)) {
-        XDefineCursor(display(), input, QCursor(Qt::ClosedHandCursor).handle());
+        effects->defineCursor(input, Qt::ClosedHandCursor);
     }
     if (oldbuttons.testFlag(Qt::LeftButton) && !buttons.testFlag(Qt::LeftButton)) {
-        XDefineCursor(display(), input, QCursor(Qt::OpenHandCursor).handle());
+        effects->defineCursor(input, Qt::OpenHandCursor);
         if (closeOnMouseRelease)
             setActive(false);
     }

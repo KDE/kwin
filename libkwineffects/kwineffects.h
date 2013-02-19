@@ -638,6 +638,7 @@ public:
     xcb_window_t createInputWindow(Effect* e, const QRect& r, const QCursor& cursor);
     virtual xcb_window_t createFullScreenInputWindow(Effect* e, const QCursor& cursor);
     virtual void destroyInputWindow(xcb_window_t w) = 0;
+    virtual void defineCursor(xcb_window_t w, Qt::CursorShape shape) = 0;
     virtual QPoint cursorPos() const = 0;
     virtual bool grabKeyboard(Effect* effect) = 0;
     virtual void ungrabKeyboard() = 0;
