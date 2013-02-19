@@ -34,6 +34,9 @@ namespace Xcb {
 
 typedef xcb_window_t WindowId;
 
+// forward declaration of methods
+static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
+
 template <typename Reply,
     typename Cookie,
     Reply *(*replyFunc)(xcb_connection_t*, Cookie, xcb_generic_error_t**),
@@ -344,6 +347,7 @@ public:
      **/
     void clear();
     void setBackgroundPixmap(xcb_pixmap_t pixmap);
+    void defineCursor(xcb_cursor_t cursor);
     operator xcb_window_t() const;
 private:
     Window(const Window &other);
@@ -516,6 +520,12 @@ void Window::setBackgroundPixmap(xcb_pixmap_t pixmap)
     xcb_change_window_attributes(connection(), m_window, XCB_CW_BACK_PIXMAP, values);
 }
 
+inline
+void Window::defineCursor(xcb_cursor_t cursor)
+{
+    Xcb::defineCursor(m_window, cursor);
+}
+
 // helper functions
 static inline void moveResizeWindow(WindowId window, const QRect &geometry)
 {
@@ -601,6 +611,11 @@ static inline QVector<xcb_rectangle_t> regionToRects(const QRegion &region)
         rects[i] = Xcb::fromQt(regionRects.at(i));
     }
     return rects;
+}
+
+static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
+{
+    xcb_change_window_attributes(connection(), window, XCB_CW_CURSOR, &cursor);
 }
 
 } // namespace X11

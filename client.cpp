@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bridge.h"
 #include "client_machine.h"
 #include "composite.h"
+#include "cursor.h"
 #include "group.h"
 #include "focuschain.h"
 #include "workspace.h"
@@ -109,6 +110,7 @@ Client::Client(Workspace* ws)
     , shade_below(NULL)
     , skip_switcher(false)
     , blocks_compositing(false)
+    , m_cursor(Qt::ArrowCursor)
     , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
@@ -2233,7 +2235,7 @@ void Client::updateCursor()
     Position m = mode;
     if (!isResizable() || isShade())
         m = PositionCenter;
-    QCursor c;
+    Qt::CursorShape c = Qt::ArrowCursor;
     switch(m) {
     case PositionTopLeft:
     case PositionBottomRight:
@@ -2258,18 +2260,20 @@ void Client::updateCursor()
             c = Qt::ArrowCursor;
         break;
     }
-    if (c.handle() == cursor.handle())
+    if (c == m_cursor)
         return;
-    cursor = c;
+    m_cursor = c;
     if (decoration != NULL)
-        decoration->widget()->setCursor(cursor);
-    XDefineCursor(display(), frameId(), cursor.handle());
+        decoration->widget()->setCursor(m_cursor);
+    xcb_cursor_t nativeCursor = Cursor::x11Cursor(m_cursor);
+    Xcb::defineCursor(frameId(), nativeCursor);
     if (m_decoInputExtent.isValid())
-        XDefineCursor(display(), inputId(), cursor.handle());
-    if (moveResizeMode)   // XDefineCursor doesn't change cursor if there's pointer grab active
-        XChangeActivePointerGrab(display(),
-                                 ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-                                 cursor.handle(), xTime());
+        m_decoInputExtent.defineCursor(nativeCursor);
+    if (moveResizeMode) {
+        // changing window attributes doesn't change cursor if there's pointer grab active
+        xcb_change_active_pointer_grab(connection(), nativeCursor, xTime(),
+            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW);
+    }
 }
 
 void Client::updateCompositeBlocking(bool readProperty)

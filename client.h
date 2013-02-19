@@ -923,7 +923,7 @@ private:
     QPixmap miniicon_pix;
     QPixmap bigicon_pix;
     QPixmap hugeicon_pix;
-    QCursor cursor;
+    Qt::CursorShape m_cursor;
     // DON'T reorder - Saved to config files !!!
     enum FullScreenMode {
         FullScreenNone,

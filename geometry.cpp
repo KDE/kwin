@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "composite.h"
+#include "cursor.h"
 #include "workspace.h"
 
 #include <kapplication.h>
@@ -2531,7 +2532,7 @@ bool Client::startMoveResize()
     XMapRaised(display(), move_resize_grab_window);
     if (XGrabPointer(display(), move_resize_grab_window, False,
                     ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-                    GrabModeAsync, GrabModeAsync, move_resize_grab_window, cursor.handle(), xTime()) == Success)
+                    GrabModeAsync, GrabModeAsync, move_resize_grab_window, Cursor::x11Cursor(m_cursor), xTime()) == Success)
         has_grab = true;
     if (grabXKeyboard(frameId()))
         has_grab = move_resize_has_keyboard_grab = true;
