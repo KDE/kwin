@@ -54,8 +54,8 @@ Item {
 
         mainItem: Item {
             id: dialogItem
-            width: childrenRect.width
-            height: childrenRect.height
+            width: root.showGrid ? view.itemWidth * view.columns : textElement.width
+            height: root.showGrid ? view.itemHeight * view.rows + textElement.height : textElement.height
             Plasma.Label {
                 id: textElement
                 anchors.top: root.showGrid ? parent.top : undefined
@@ -64,11 +64,19 @@ Item {
             }
             Grid {
                 id: view
-                property int itemWidth: root.screenWidth * 0.1
-                property int itemHeight: root.screenHeight * 0.1
-                anchors.top: textElement.bottom
+                columns: 1
+                rows: 1
+                property int itemWidth: root.screenWidth * Math.min(0.8/columns, 0.1)
+                property int itemHeight: Math.min(itemWidth * (root.screenHeight / root.screenWidth), root.screenHeight * Math.min(0.8/rows, 0.1))
+                anchors {
+                    top: textElement.bottom
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
                 visible: root.showGrid
                 Repeater {
+                    id: repeater
                     model: workspace.desktops
                     Item {
                         width: view.itemWidth
@@ -243,10 +251,6 @@ Item {
                 Component.onCompleted: {
                     columns = workspace.desktopGridWidth;
                     rows = workspace.desktopGridHeight;
-                    if (!root.showGrid) {
-                        width = 0;
-                        height = 0;
-                    }
                 }
             }
         }
@@ -265,6 +269,7 @@ Item {
             if (root.currentDesktop == workspace.currentDesktop - 1) {
                 return;
             }
+            dialog.visible = true;
             root.previousDesktop = root.currentDesktop;
             timer.stop();
             root.currentDesktop = workspace.currentDesktop - 1;
@@ -277,20 +282,15 @@ Item {
                 // non dependable properties might have changed
                 view.columns = workspace.desktopGridWidth;
                 view.rows = workspace.desktopGridHeight;
-                view.width = workspace.desktopGridWidth * view.itemWidth;
-                view.height = workspace.desktopGridHeight * view.itemHeight;
-            } else {
-                view.width = 0;
-                view.height = 0;
-                dialogItem.width = textElement.width;
-                dialogItem.height = textElement.height;
             }
             // position might have changed
             dialog.x = screen.x + screen.width/2 - dialogItem.width/2;
             dialog.y = screen.y + screen.height/2 - dialogItem.height/2;
             // start the hide timer
             timer.start();
-            dialog.visible = true;
+        }
+        onNumberDesktopsChanged: {
+            repeater.model = workspace.desktops;
         }
     }
     Connections {
