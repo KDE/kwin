@@ -118,7 +118,9 @@ int ClientModel::columnCount(const QModelIndex& parent) const
 
 int ClientModel::rowCount(const QModelIndex& parent) const
 {
-    Q_UNUSED(parent)
+    if (parent.isValid()) {
+        return 0;
+    }
     return m_clientList.count();
 }
 
@@ -130,11 +132,13 @@ QModelIndex ClientModel::parent(const QModelIndex& child) const
 
 QModelIndex ClientModel::index(int row, int column, const QModelIndex& parent) const
 {
-    Q_UNUSED(parent)
-    int index = row * columnCount() + column;
+    if (row < 0 || column != 0 || parent.isValid()) {
+        return QModelIndex();
+    }
+    int index = row * columnCount();
     if (index >= m_clientList.count() && !m_clientList.isEmpty())
         return QModelIndex();
-    return createIndex(row, column);
+    return createIndex(row, 0);
 }
 
 QModelIndex ClientModel::index(QWeakPointer<TabBoxClient> client) const
