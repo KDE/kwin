@@ -30,10 +30,10 @@ SlideBackEffect::SlideBackEffect()
     m_tabboxActive = 0;
     m_justMapped = m_upmostWindow = NULL;
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(slotWindowAdded(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(stackingOrderChanged()), SLOT(slotStackingOrderChanged()));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowUnminimized(KWin::EffectWindow*)), SLOT(slotWindowUnminimized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxAdded(int)), SLOT(slotTabBoxAdded()));
+    connect(effects, SIGNAL(stackingOrderChanged()), SLOT(slotStackingOrderChanged()));
     connect(effects, SIGNAL(tabBoxClosed()), SLOT(slotTabBoxClosed()));
 }
 
@@ -63,7 +63,7 @@ void SlideBackEffect::slotStackingOrderChanged()
 
     if (m_upmostWindow == m_justMapped ) // a window was added, got on top, stacking changed. Nothing impressive
         m_justMapped = 0;
-    else if (m_upmostWindow != usableOldStackingOrder.last())
+    else if (!usableOldStackingOrder.isEmpty() && m_upmostWindow != usableOldStackingOrder.last())
         windowRaised(m_upmostWindow);
 
     oldStackingOrder = newStackingOrder;
