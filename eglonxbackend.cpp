@@ -118,8 +118,13 @@ bool EglOnXBackend::initRenderingContext()
     eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
 
     if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
-        kError(1212) << "query surface failed";
-        return false;
+        EGLint error = eglGetError();
+        if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
+            kError(1212) << "query surface failed";
+            return false;
+        } else {
+            surfaceHasSubPost = EGL_FALSE;
+        }
     }
 
     const EGLint context_attribs[] = {
