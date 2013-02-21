@@ -116,9 +116,9 @@ private:
     QPoint prevPoint;
     QTime lastMouseEvent;
     QTime lastFocusEvent;
-    GLTexture* texture;
+    QScopedPointer<GLTexture> texture;
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    XRenderPicture* xrenderPicture;
+    QScopedPointer<XRenderPicture> xrenderPicture;
 #endif
     int imageWidth;
     int imageHeight;

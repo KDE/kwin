@@ -23,11 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "zoomconfig.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QtDebug>
-#include <QtGui/QX11Info>
 #include <QtGui/QApplication>
 #include <QtGui/QStyle>
 #include <QtGui/QVector2D>
@@ -37,14 +32,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstandardaction.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KLocale>
+#include <KDE/KDebug>
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
+#include <xcb/xfixes.h>
 
-#include <X11/extensions/Xfixes.h>
 #include <X11/Xcursor/Xcursor.h>
 
 namespace KWin
@@ -63,10 +59,6 @@ ZoomEffect::ZoomEffect()
     , followFocus(true)
     , mousePointer(MousePointerScale)
     , focusDelay(350)   // in milliseconds
-    , texture(0)
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    , xrenderPicture(0)
-#endif
     , imageWidth(0)
     , imageHeight(0)
     , isMouseHidden(false)
@@ -138,13 +130,10 @@ void ZoomEffect::showCursor()
 {
     if (isMouseHidden) {
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
-        Display* display = QX11Info::display();
-        XFixesShowCursor(display, DefaultRootWindow(display));
-        delete texture;
-        texture = 0;
+        xcb_xfixes_show_cursor(connection(), rootWindow());
+        texture.reset();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-        delete xrenderPicture;
-        xrenderPicture = 0;
+        xrenderPicture.reset();
 #endif
         isMouseHidden = false;
     }
@@ -159,10 +148,10 @@ void ZoomEffect::hideCursor()
         recreateTexture();
         bool shouldHide = false;
         if (effects->isOpenGLCompositing()) {
-            shouldHide = (texture != NULL);
+            shouldHide = !texture.isNull();
         } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            shouldHide = (xrenderPicture != NULL);
+            shouldHide = !xrenderPicture.isNull();
 #endif
         }
         if (shouldHide) {
@@ -195,15 +184,15 @@ void ZoomEffect::recreateTexture()
         imageHeight = ximg->height;
         QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
         if (effects->isOpenGLCompositing())
-            texture = new GLTexture(img);
+            texture.reset(new GLTexture(img));
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
-            xrenderPicture = new XRenderPicture(QPixmap::fromImage(img));
+            xrenderPicture.reset(new XRenderPicture(QPixmap::fromImage(img)));
 #endif
         XcursorImageDestroy(ximg);
     }
     else {
-        qDebug() << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
+        kDebug(1212) << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
         mouseTracking = MouseTrackingProportional;
     }
 }
@@ -341,7 +330,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             w *= zoom;
             h *= zoom;
         }
-        QPoint p = QCursor::pos();
+        const QPoint p = effects->cursorPos();
         QRect rect(p.x() * zoom + data.xTranslation(), p.y() * zoom + data.yTranslation(), w, h);
 
         if (texture) {
@@ -398,7 +387,7 @@ void ZoomEffect::zoomIn(double to)
         effects->startMousePolling();
     }
     if (mouseTracking == MouseTrackingDisabled)
-        prevPoint = QCursor::pos();
+        prevPoint = effects->cursorPos();
     effects->addRepaintFull();
 }
 
@@ -414,7 +403,7 @@ void ZoomEffect::zoomOut()
         }
     }
     if (mouseTracking == MouseTrackingDisabled)
-        prevPoint = QCursor::pos();
+        prevPoint = effects->cursorPos();
     effects->addRepaintFull();
 }
 
@@ -486,7 +475,6 @@ void ZoomEffect::moveMouseToFocus()
 
 void ZoomEffect::moveMouseToCenter()
 {
-    //QRect r = effects->clientArea(KWin::ScreenArea, effects->activeScreen(), effects->currentDesktop());
     QRect r(0, 0, displayWidth(), displayHeight());
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
