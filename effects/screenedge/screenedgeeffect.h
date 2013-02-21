@@ -58,10 +58,12 @@ class Glow
 {
 public:
     QScopedPointer<GLTexture> texture;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     QScopedPointer<XRenderPicture> picture;
+    QSize pictureSize;
+#endif
     qreal strength;
     QRect geometry;
-    QSize pictureSize;
     ElectricBorder border;
 };
 

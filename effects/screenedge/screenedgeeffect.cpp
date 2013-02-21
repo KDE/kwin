@@ -189,6 +189,10 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
         if (!glow->texture.isNull()) {
             glow->texture->setWrapMode(GL_CLAMP_TO_EDGE);
         }
+        if (glow->texture.isNull()) {
+            delete glow;
+            return NULL;
+        }
     } else if (effects->compositingType() == XRenderCompositing) {
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
@@ -198,11 +202,11 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
             glow->pictureSize = geometry.size();
             glow->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
         }
+        if (glow->picture.isNull()) {
+            delete glow;
+            return NULL;
+        }
 #endif
-    }
-    if (glow->texture.isNull() && glow->picture.isNull()) {
-        delete glow;
-        return NULL;
     }
 
     return glow;

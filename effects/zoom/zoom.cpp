@@ -64,7 +64,9 @@ ZoomEffect::ZoomEffect()
     , mousePointer(MousePointerScale)
     , focusDelay(350)   // in milliseconds
     , texture(0)
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     , xrenderPicture(0)
+#endif
     , imageWidth(0)
     , imageHeight(0)
     , isMouseHidden(false)
@@ -140,8 +142,10 @@ void ZoomEffect::showCursor()
         XFixesShowCursor(display, DefaultRootWindow(display));
         delete texture;
         texture = 0;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
         delete xrenderPicture;
         xrenderPicture = 0;
+#endif
         isMouseHidden = false;
     }
 }
@@ -153,9 +157,16 @@ void ZoomEffect::hideCursor()
     if (!isMouseHidden) {
         // try to load the cursor-theme into a OpenGL texture and if successful then hide the mouse-pointer
         recreateTexture();
-        if (texture || xrenderPicture) {
-            Display* display = QX11Info::display();
-            XFixesHideCursor(display, DefaultRootWindow(display));
+        bool shouldHide = false;
+        if (effects->isOpenGLCompositing()) {
+            shouldHide = (texture != NULL);
+        } else if (effects->compositingType() == XRenderCompositing) {
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
+            shouldHide = (xrenderPicture != NULL);
+#endif
+        }
+        if (shouldHide) {
+            xcb_xfixes_hide_cursor(connection(), rootWindow());
             isMouseHidden = true;
         }
     }

@@ -362,6 +362,11 @@ void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, flo
                           fill, effects->xrenderBufferPicture(), 0,
                           0, 0, strip.count(), strip.constData());
 #undef DOUBLE_TO_FIXED
+#else
+    Q_UNUSED(color)
+    Q_UNUSED(cx)
+    Q_UNUSED(cy)
+    Q_UNUSED(r)
 #endif
 }
 

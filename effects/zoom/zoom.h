@@ -117,7 +117,9 @@ private:
     QTime lastMouseEvent;
     QTime lastFocusEvent;
     GLTexture* texture;
+#ifdef KWIN_HAVE_XRENDER_COMPOSITING
     XRenderPicture* xrenderPicture;
+#endif
     int imageWidth;
     int imageHeight;
     bool isMouseHidden;
