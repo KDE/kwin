@@ -137,8 +137,9 @@ namespace Oxygen
 
         setChanged( false );
 
-        if( _expertMode )
-        { _animationConfigWidget->save(); }
+        if( _expertMode ) _animationConfigWidget->save();
+        else _configuration->setAnimationsEnabled( ui.animationsEnabled->isChecked() );
+
 
     }
 
