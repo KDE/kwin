@@ -1594,12 +1594,15 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
     switch (kwopt) {
     case CloseButtonCorner:
         return Workspace::self()->decorationCloseButtonCorner();
+#ifdef KWIN_BUILD_SCREENEDGES
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();
     case SwitchDesktopOnScreenEdgeMovingWindows:
         return ScreenEdges::self()->isDesktopSwitchingMovingClients();
+#endif
+    default:
+        return QVariant(); // an invalid one
     }
-    return QVariant(); // an invalid one
 }
 
 void EffectsHandlerImpl::slotShowOutline(const QRect& geometry)
