@@ -40,6 +40,7 @@ namespace KWin
 class Client;
 class Deleted;
 class XRenderPicture;
+class GLTexture;
 
 // This class redirects all painting of a given widget (including its children)
 // into a paint device (QPixmap).
@@ -90,8 +91,8 @@ public slots:
     void ensurePixmapsPainted();
 protected:
     PaintRedirector(Client *c, QWidget* widget);
-    virtual const QPixmap *pixmap(DecorationPixmap border) const;
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
+    virtual GLTexture *texture(DecorationPixmap border) const;
     virtual void resize(DecorationPixmap border, const QSize &size) = 0;
     virtual void preparePaint(const QPixmap &pending);
     virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QPixmap& src, const QRegion &reg) = 0;
@@ -121,12 +122,14 @@ public:
     virtual ~OpenGLPaintRedirector();
 
 protected:
-    virtual const QPixmap *pixmap(DecorationPixmap border) const;
     virtual void resize(DecorationPixmap border, const QSize &size);
     virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+    virtual GLTexture *texture(DecorationPixmap border) const;
+    virtual void preparePaint(const QPixmap &pending);
 
 private:
-    QPixmap m_pixmaps[PixmapCount];
+    QImage m_tempImage;
+    GLTexture* m_textures[PixmapCount];
 };
 
 class NativeXRenderPaintRedirector : public PaintRedirector
@@ -166,30 +169,30 @@ private:
 
 template <>
 inline
-const QPixmap *PaintRedirector::bottomDecoPixmap() const
+GLTexture *PaintRedirector::bottomDecoPixmap() const
 {
-    return pixmap(BottomPixmap);
+    return texture(BottomPixmap);
 }
 
 template <>
 inline
-const QPixmap *PaintRedirector::leftDecoPixmap() const
+GLTexture *PaintRedirector::leftDecoPixmap() const
 {
-    return pixmap(LeftPixmap);
+    return texture(LeftPixmap);
 }
 
 template <>
 inline
-const QPixmap *PaintRedirector::rightDecoPixmap() const
+GLTexture *PaintRedirector::rightDecoPixmap() const
 {
-    return pixmap(RightPixmap);
+    return texture(RightPixmap);
 }
 
 template <>
 inline
-const QPixmap *PaintRedirector::topDecoPixmap() const
+GLTexture *PaintRedirector::topDecoPixmap() const
 {
-    return pixmap(TopPixmap);
+    return texture(TopPixmap);
 }
 
 template <>

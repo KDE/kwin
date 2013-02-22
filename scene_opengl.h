@@ -216,9 +216,9 @@ protected:
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    void paintDecoration(const QPixmap* decoration, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool updateDeco, bool hardwareClipping);
+    void paintDecoration(GLTexture *decorationTexture, TextureType decorationType, const QRegion& region, const QRect& rect, const WindowPaintData& data, const WindowQuadList& quads, bool hardwareClipping);
     void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
-    void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const;
+    void makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, GLTexture *tex) const;
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
     /**
      * @brief Called from performPaint once it is determined whether the window will be painted.
@@ -275,10 +275,6 @@ private:
     template<class T>
     void paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping);
     Texture *texture;
-    Texture *topTexture;
-    Texture *leftTexture;
-    Texture *rightTexture;
-    Texture *bottomTexture;
 };
 
 class SceneOpenGL2Window : public SceneOpenGL::Window

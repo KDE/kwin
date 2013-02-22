@@ -218,6 +218,52 @@ bool GLTexture::load(const QImage& image, GLenum target)
     return true;
 }
 
+void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
+{
+    if (image.isNull() || isNull())
+        return;
+
+    Q_D(GLTexture);
+#ifdef KWIN_HAVE_OPENGLES
+    static bool s_supportsUnpack = hasGLExtension("GL_EXT_unpack_subimage");
+#else
+    static bool s_supportsUnpack = true;
+#endif
+
+    int width = image.width();
+    int height = image.height();
+    QImage tmpImage;
+    if (!src.isNull()) {
+        if (s_supportsUnpack) {
+            glPixelStorei(GL_UNPACK_ROW_LENGTH, image.width());
+            glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
+            glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
+        } else {
+            tmpImage = image.copy(src);
+        }
+        width = src.width();
+        height = src.height();
+    }
+    const QImage &img = d->convertToGLFormat(tmpImage.isNull() ? image : tmpImage);
+
+    bind();
+#ifdef KWIN_HAVE_OPENGLES
+    // format and internal format have to match in ES, GL_RGBA8 and GL_BGRA are not available
+    // see http://www.khronos.org/opengles/sdk/docs/man/xhtml/glTexImage2D.xml
+    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+#else
+    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height, GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+#endif
+    checkGLError("update texture");
+    unbind();
+    setDirty();
+    if (!src.isNull() && s_supportsUnpack) {
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+    }
+}
+
 bool GLTexture::load(const QPixmap& pixmap, GLenum target)
 {
     if (pixmap.isNull())
@@ -459,8 +505,10 @@ QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
                 q++;
             }
         }
-    } else {
+    } else if (img.format() != QImage::Format_ARGB32_Premultiplied) {
         res = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    } else {
+        return img;
     }
 #endif
     return res;

@@ -900,20 +900,12 @@ SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
     , m_scene(NULL)
     , texture(NULL)
-    , topTexture(NULL)
-    , leftTexture(NULL)
-    , rightTexture(NULL)
-    , bottomTexture(NULL)
 {
 }
 
 SceneOpenGL::Window::~Window()
 {
     delete texture;
-    delete topTexture;
-    delete leftTexture;
-    delete rightTexture;
-    delete bottomTexture;
 }
 
 // Bind the window pixmap to an OpenGL texture.
@@ -949,21 +941,6 @@ void SceneOpenGL::Window::discardTexture()
 {
     if (texture) {
         texture->discard();
-    }
-    if (!Extensions::nonNativePixmaps()) {
-        // only discard if the deco pixmaps use TFP
-        if (topTexture) {
-            topTexture->discard();
-        }
-        if (leftTexture) {
-            leftTexture->discard();
-        }
-        if (rightTexture) {
-            rightTexture->discard();
-        }
-        if (bottomTexture) {
-            bottomTexture->discard();
-        }
     }
 }
 
@@ -1112,14 +1089,8 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
     }
     WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
     QRect topRect, leftRect, rightRect, bottomRect;
-    const bool updateDeco = redirector->requiresRepaint();
 
     t->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
-
-    const QPixmap *left   = redirector->leftDecoPixmap<const QPixmap*>();
-    const QPixmap *top    = redirector->topDecoPixmap<const QPixmap*>();
-    const QPixmap *right  = redirector->rightDecoPixmap<const QPixmap*>();
-    const QPixmap *bottom = redirector->bottomDecoPixmap<const QPixmap*>();
 
     WindowQuadList topList, leftList, rightList, bottomList;
 
@@ -1143,57 +1114,25 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
     }
 
     redirector->ensurePixmapsPainted();
-    paintDecoration(top, DecorationTop, region, topRect, data, topList, updateDeco, hardwareClipping);
-    paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, updateDeco, hardwareClipping);
-    paintDecoration(right, DecorationRight, region, rightRect, data, rightList, updateDeco, hardwareClipping);
-    paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, updateDeco, hardwareClipping);
+    GLTexture *left = redirector->leftDecoPixmap<GLTexture*>();
+    GLTexture *top = redirector->topDecoPixmap<GLTexture*>();
+    GLTexture *right = redirector->rightDecoPixmap<GLTexture*>();
+    GLTexture *bottom = redirector->bottomDecoPixmap<GLTexture*>();
+    paintDecoration(top, DecorationTop, region, topRect, data, topList, hardwareClipping);
+    paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, hardwareClipping);
+    paintDecoration(right, DecorationRight, region, rightRect, data, rightList, hardwareClipping);
+    paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, hardwareClipping);
 
     redirector->markAsRepainted();
 }
 
 
-void SceneOpenGL::Window::paintDecoration(const QPixmap* decoration, TextureType decorationType,
+void SceneOpenGL::Window::paintDecoration(GLTexture *decorationTexture, TextureType decorationType,
                                           const QRegion& region, const QRect& rect, const WindowPaintData& data,
-                                          const WindowQuadList& quads, bool updateDeco, bool hardwareClipping)
+                                          const WindowQuadList& quads, bool hardwareClipping)
 {
-    SceneOpenGL::Texture* decorationTexture;
-    switch(decorationType) {
-    case DecorationTop:
-        if (!topTexture) {
-            topTexture = m_scene->createTexture();
-        }
-        decorationTexture = topTexture;
-        break;
-    case DecorationLeft:
-        if (!leftTexture) {
-            leftTexture = m_scene->createTexture();
-        }
-        decorationTexture = leftTexture;
-        break;
-    case DecorationRight:
-        if (!rightTexture) {
-            rightTexture = m_scene->createTexture();
-        }
-        decorationTexture = rightTexture;
-        break;
-    case DecorationBottom:
-        if (!bottomTexture) {
-            bottomTexture = m_scene->createTexture();
-        }
-        decorationTexture = bottomTexture;
-        break;
-    default:
+    if (!decorationTexture) {
         return;
-    }
-    if (decoration->isNull() || !decorationTexture) {
-        return;
-    }
-    if (decorationTexture->isNull() || updateDeco) {
-        bool success = decorationTexture->load(*decoration);
-        if (!success) {
-            kDebug(1212) << "Failed to bind decoartion";
-            return;
-        }
     }
 
     // We have to update the texture although we do not paint anything.
@@ -1262,7 +1201,7 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
 #endif
 }
 
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, Texture *tex) const
+void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList& quads, const QRect &rect, GLTexture *tex) const
 {
     QVector<float> vertices;
     QVector<float> texcoords;
@@ -1350,21 +1289,37 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
 GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType type)
 {
     GLTexture *tex = NULL;
+    PaintRedirector *redirector = NULL;
+    if (type != Content && type != Shadow) {
+        if (toplevel->isClient()) {
+            redirector = static_cast<Client*>(toplevel)->decorationPaintRedirector();
+        } else if (toplevel->isDeleted()) {
+            redirector = static_cast<Deleted*>(toplevel)->decorationPaintRedirector();
+        }
+    }
     switch(type) {
     case Content:
         tex = texture;
         break;
     case DecorationTop:
-        tex = topTexture;
+        if (redirector) {
+            tex = redirector->topDecoPixmap<GLTexture*>();
+        }
         break;
     case DecorationLeft:
-        tex = leftTexture;
+        if (redirector) {
+            tex = redirector->leftDecoPixmap<GLTexture*>();
+        }
         break;
     case DecorationRight:
-        tex = rightTexture;
+        if (redirector) {
+            tex = redirector->rightDecoPixmap<GLTexture*>();
+        }
         break;
     case DecorationBottom:
-        tex = bottomTexture;
+        if (redirector) {
+            tex = redirector->bottomDecoPixmap<GLTexture*>();
+        }
         break;
     case Shadow:
         tex = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();

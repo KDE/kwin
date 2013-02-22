@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 #include <kdebug.h>
 #include <QPaintEngine>
@@ -228,7 +229,7 @@ void PaintRedirector::resizePixmaps()
     }
 }
 
-const QPixmap *PaintRedirector::pixmap(PaintRedirector::DecorationPixmap border) const
+GLTexture *PaintRedirector::texture(PaintRedirector::DecorationPixmap border) const
 {
     Q_UNUSED(border)
     return NULL;
@@ -243,34 +244,45 @@ xcb_render_picture_t PaintRedirector::picture(PaintRedirector::DecorationPixmap 
 OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
     : PaintRedirector(c, widget)
 {
+    for (int i=0; i<PixmapCount; ++i) {
+        m_textures[i] = NULL;
+    }
     resizePixmaps();
 }
 
 OpenGLPaintRedirector::~OpenGLPaintRedirector()
 {
+    for (int i=0; i<PixmapCount; ++i) {
+        delete m_textures[i];
+    }
 }
 
-const QPixmap *OpenGLPaintRedirector::pixmap(PaintRedirector::DecorationPixmap border) const
+GLTexture *OpenGLPaintRedirector::texture(PaintRedirector::DecorationPixmap border) const
 {
-    return &m_pixmaps[border];
+    return m_textures[border];
 }
 
 void OpenGLPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
 {
-    if (m_pixmaps[border].size() != size) {
-        m_pixmaps[border] = QPixmap(size);
+    if (!m_textures[border] || m_textures[border]->size() != size) {
+        delete m_textures[border];
+        m_textures[border] = new GLTexture(size.width(), size.height());
+        m_textures[border]->setYInverted(true);
     }
-    m_pixmaps[border].fill(Qt::transparent);
+}
+
+void OpenGLPaintRedirector::preparePaint(const QPixmap &pending)
+{
+    m_tempImage = pending.toImage();
 }
 
 void OpenGLPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
 {
-    QPainter pt(&m_pixmaps[border]);
-    pt.translate(-r.topLeft());
-    pt.setCompositionMode(QPainter::CompositionMode_Source);
-    pt.setClipRegion(reg);
-    pt.drawPixmap(b.topLeft(), src);
-    pt.end();
+    Q_UNUSED(src)
+    // clip the sub area
+    const QRect bounding = reg.boundingRect();
+
+    m_textures[border]->update(m_tempImage, bounding.topLeft() - r.topLeft(), QRect(bounding.topLeft() - b.topLeft(), bounding.size()));
 }
 
 RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, QWidget *widget)
