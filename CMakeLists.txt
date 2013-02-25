@@ -189,26 +189,74 @@ qt4_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-set(kwinLibs ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${QT_QTDECLARATIVE_LIBRARY} ${KDECLARATIVE_LIBRARIES} kdecorations kwineffects ${X11_LIBRARIES} ${X11_Xcursor_LIB} ${X11_Xrandr_LIB} ${X11_Xdamage_LIB} ${X11_Xrender_LIB} ${X11_Xfixes_LIB} ${XCB_XCB_LIBRARIES} ${X11_XCB_LIBRARIES} ${XCB_XFIXES_LIBRARIES} ${XCB_DAMAGE_LIBRARIES} ${XCB_COMPOSITE_LIBRARIES} ${XCB_SHAPE_LIBRARIES} ${XCB_SYNC_LIBRARIES} ${XCB_RENDER_LIBRARIES} ${XCB_RANDR_LIBRARIES} ${XCB_KEYSYMS_LIBRARIES})
+########### target link libraries ###############
+
+set(kwin_OWN_LIBS
+    kdecorations
+    kwineffects
+)
+
+set(kwin_QT_LIBS
+    ${QT_QTDECLARATIVE_LIBRARY}
+)
+
+set(kwin_KDE_LIBS
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_PLASMA_LIBS}
+    ${KDECLARATIVE_LIBRARIES}
+)
+
+set(kwin_XLIB_LIBS
+    ${X11_LIBRARIES}
+    ${X11_Xcursor_LIB}
+    ${X11_Xrandr_LIB}
+    ${X11_Xdamage_LIB}
+    ${X11_Xrender_LIB}
+    ${X11_Xfixes_LIB}
+)
+
+set(kwin_XCB_LIBS
+    ${XCB_XCB_LIBRARIES}
+    ${X11_XCB_LIBRARIES}
+    ${XCB_XFIXES_LIBRARIES}
+    ${XCB_DAMAGE_LIBRARIES}
+    ${XCB_COMPOSITE_LIBRARIES}
+    ${XCB_SHAPE_LIBRARIES}
+    ${XCB_SYNC_LIBRARIES}
+    ${XCB_RENDER_LIBRARIES}
+    ${XCB_RANDR_LIBRARIES}
+    ${XCB_KEYSYMS_LIBRARIES}
+)
+
+set(kwin_OPENGL_LIBS )
 
 find_library(XF86VM_LIBRARY Xxf86vm)
 if (XF86VM_LIBRARY)
-    set(kwinLibs ${kwinLibs} ${XF86VM_LIBRARY})
+    set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${XF86VM_LIBRARY})
 else(XF86VM_LIBRARY)
     add_definitions(-DKWIN_NO_XF86VM)
 endif()
 
 if(KWIN_BUILD_SCRIPTING)
-    set(kwinLibs ${kwinLibs} ${QT_QTSCRIPT_LIBRARY})
+    set(kwin_QT_LIBS ${kwin_QT_LIBS} ${QT_QTSCRIPT_LIBRARY})
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
-    set(kwinLibs ${kwinLibs} ${KACTIVITIES_LIBRARY})
+    set(kwin_KDE_LIBS ${kwin_KDE_LIBS} ${KACTIVITIES_LIBRARY})
 endif()
 
 if(OPENGL_EGL_FOUND)
-    set(kwinLibs ${kwinLibs} ${OPENGLES_EGL_LIBRARY})
+    set(kwin_OPENGL_LIBS ${kwin_OPENGL_LIBS} ${OPENGLES_EGL_LIBRARY})
 endif()
+
+set(kwinLibs
+    ${kwin_OWN_LIBS}
+    ${kwin_QT_LIBS}
+    ${kwin_KDE_LIBS}
+    ${kwin_XLIB_LIBS}
+    ${kwin_XCB_LIBS}
+    ${kwin_OPENGL_LIBS}
+)
 
 kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 

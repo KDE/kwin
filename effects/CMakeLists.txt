@@ -1,10 +1,42 @@
 # the factory macros cause errors
 kde4_no_enable_final(kwineffects)
 
+set(kwin_effect_OWN_LIBS
+    kwineffects
+)
+
+set(kwin_effect_KDE_LIBS
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_PLASMA_LIBS}
+)
+
+set(kwin_effect_XLIB_LIBS
+    ${X11_LIBRARIES}
+    ${X11_Xcursor_LIB}
+    ${X11_Xfixes_LIB}
+)
+
+set(kwin_effect_XCB_LIBS
+    ${XCB_XCB_LIBRARIES}
+    ${X11_XCB_LIBRARIES}
+    ${XCB_IMAGE_LIBRARIES}
+    ${XCB_XFIXES_LIBRARIES}
+)
+
+if( KWIN_HAVE_XRENDER_COMPOSITING )
+    set(kwin_effect_XLIB_LIBS ${kwin_effect_XLIB_LIBS} ${X11_Xrender_LIB})
+    set(kwin_effect_XCB_LIBS ${kwin_effect_XCB_LIBS} ${XCB_RENDER_LIBRARIES})
+endif()
+
+if(OPENGL_FOUND)
+    set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
+elseif(OPENGLES_FOUND)
+    set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglesutils)
+endif()
+
 macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
-    target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES} ${XCB_XCB_LIBRARIES} ${XCB_IMAGE_LIBRARIES} ${X11_XCB_LIBRARIES}
-    ${XCB_XFIXES_LIBRARIES})
+    target_link_libraries( ${name} ${kwin_effect_OWN_LIBS} ${kwin_effect_KDE_LIBS} ${kwin_effect_XLIB_LIBS} ${kwin_effect_XCB_LIBS})
 endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
@@ -13,12 +45,10 @@ macro( KWIN4_ADD_EFFECT name )
         # OpenGL or neither OpenGL nor OpenGL ES - default set
         KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
         if(OPENGL_FOUND)
-            target_link_libraries(kwin4_effect_${name} kwinglutils)
             if( KWIN_BUILD_OPENGL_1_COMPOSITING )
                 set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
             endif()
         elseif(OPENGLES_FOUND)
-            target_link_libraries(kwin4_effect_${name} kwinglesutils)
             set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
         endif()
         set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
@@ -29,7 +59,6 @@ macro( KWIN4_ADD_EFFECT name )
     if(OPENGLES_FOUND)
         KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_gles_${name} ${ARGN})
         # OpenGL ES gets into a different library
-        target_link_libraries(kwin4_effect_gles_${name} kwinglesutils)
         set_target_properties(kwin4_effect_gles_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
         set_target_properties(kwin4_effect_gles_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_gles_${name})
         install( TARGETS kwin4_effect_gles_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
@@ -55,18 +84,6 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endif()
     target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
-endmacro()
-
-macro( KWIN4_EFFECT_LINK_XRENDER name )
-    if( KWIN_HAVE_XRENDER_COMPOSITING )
-        target_link_libraries( kwin4_effect_${name} ${X11_Xrender_LIB} ${XCB_RENDER_LIBRARIES})
-
-        # if building for OpenGL and OpenGL ES we have two targets
-        # TODO: if building for OpenGL ES we should not build XRender support
-        if(OPENGLES_FOUND)
-            target_link_libraries( kwin4_effect_gles_${name} ${X11_Xrender_LIB} ${XCB_RENDER_LIBRARIES})
-        endif()
-    endif()
 endmacro()
 
 # Install the KWin/Effect service type
@@ -153,4 +170,3 @@ KWIN4_ADD_EFFECT( builtins ${kwin4_effect_builtins_sources} )
 if( NOT KWIN_MOBILE_EFFECTS )
     KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
 endif()
-KWIN4_EFFECT_LINK_XRENDER( builtins )
