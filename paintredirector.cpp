@@ -72,25 +72,25 @@ void PaintRedirector::reparent(Deleted *d)
     m_client = NULL;
 }
 
-QPixmap PaintRedirector::performPendingPaint()
+void PaintRedirector::performPendingPaint()
 {
     if (!widget) {
-        return QPixmap();
+        return;
     }
     //qDebug() << "### performing paint, pending:" << pending.boundingRect();
     const QSize size = pending.boundingRect().size();
-    if (scratch.width() < size.width() || scratch.height() < size.height()) {
+    QPaintDevice *scratch = this->scratch();
+    if (scratch->width() < size.width() || scratch->height() < size.height()) {
         int w = (size.width() + 128) & ~128;
         int h = (size.height() + 128) & ~128;
-        scratch = QPixmap(qMax(scratch.width(), w), qMax(scratch.height(), h));
+        scratch = recreateScratch(QSize(qMax(scratch->width(), w), qMax(scratch->height(), h)));
     }
-    scratch.fill(Qt::transparent);
+    fillScratch(Qt::transparent);
     recursionCheck = true;
     // do not use DrawWindowBackground, it's ok to be transparent
-    widget->render(&scratch, QPoint(), pending.boundingRect(), QWidget::DrawChildren);
+    widget->render(scratch, QPoint(), pending.boundingRect(), QWidget::DrawChildren);
     recursionCheck = false;
     cleanupTimer.start(2000, this);
-    return scratch;
 }
 
 bool PaintRedirector::isToolTip(QWidget *object) const
@@ -173,7 +173,7 @@ void PaintRedirector::timerEvent(QTimerEvent* event)
 {
     if (event->timerId() == cleanupTimer.timerId()) {
         cleanupTimer.stop();
-        scratch = QPixmap();
+        discardScratch();
     }
 }
 
@@ -182,14 +182,13 @@ void PaintRedirector::ensurePixmapsPainted()
     if (pending.isEmpty() || !m_client)
         return;
 
-    QPixmap p = performPendingPaint();
-    preparePaint(p);
+    performPendingPaint();
 
     QRect rects[PixmapCount];
     m_client->layoutDecorationRects(rects[LeftPixmap], rects[TopPixmap], rects[RightPixmap], rects[BottomPixmap], Client::DecorationRelative);
 
     for (int i=0; i<PixmapCount; ++i) {
-        repaintPixmap(DecorationPixmap(i), rects[i], p, pending);
+        repaintPixmap(DecorationPixmap(i), rects[i], pending);
     }
 
     pending = QRegion();
@@ -203,7 +202,7 @@ void PaintRedirector::preparePaint(const QPixmap &pending)
     Q_UNUSED(pending)
 }
 
-void PaintRedirector::repaintPixmap(DecorationPixmap border, const QRect &r, const QPixmap &src, QRegion reg)
+void PaintRedirector::repaintPixmap(DecorationPixmap border, const QRect &r, QRegion reg)
 {
     if (!r.isValid())
         return;
@@ -211,7 +210,7 @@ void PaintRedirector::repaintPixmap(DecorationPixmap border, const QRect &r, con
     reg &= r;
     if (reg.isEmpty())
         return;
-    paint(border, r, b, src, reg);
+    paint(border, r, b, reg);
 }
 
 void PaintRedirector::resizePixmaps()
@@ -241,8 +240,38 @@ xcb_render_picture_t PaintRedirector::picture(PaintRedirector::DecorationPixmap 
     return XCB_RENDER_PICTURE_NONE;
 }
 
-OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
+ImageBasedPaintRedirector::ImageBasedPaintRedirector(Client *c, QWidget *widget)
     : PaintRedirector(c, widget)
+{
+}
+
+ImageBasedPaintRedirector::~ImageBasedPaintRedirector()
+{
+}
+
+QPaintDevice *ImageBasedPaintRedirector::recreateScratch(const QSize &size)
+{
+    m_scratchImage = QImage(size, QImage::Format_ARGB32_Premultiplied);
+    return &m_scratchImage;
+}
+
+QPaintDevice *ImageBasedPaintRedirector::scratch()
+{
+    return &m_scratchImage;
+}
+
+void ImageBasedPaintRedirector::fillScratch(Qt::GlobalColor color)
+{
+    m_scratchImage.fill(color);
+}
+
+void ImageBasedPaintRedirector::discardScratch()
+{
+    m_scratchImage = QImage();
+}
+
+OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
+    : ImageBasedPaintRedirector(c, widget)
 {
     for (int i=0; i<PixmapCount; ++i) {
         m_textures[i] = NULL;
@@ -276,17 +305,16 @@ void OpenGLPaintRedirector::preparePaint(const QPixmap &pending)
     m_tempImage = pending.toImage();
 }
 
-void OpenGLPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+void OpenGLPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
 {
-    Q_UNUSED(src)
     // clip the sub area
     const QRect bounding = reg.boundingRect();
 
-    m_textures[border]->update(m_tempImage, bounding.topLeft() - r.topLeft(), QRect(bounding.topLeft() - b.topLeft(), bounding.size()));
+    m_textures[border]->update(scratchImage(), bounding.topLeft() - r.topLeft(), QRect(bounding.topLeft() - b.topLeft(), bounding.size()));
 }
 
 RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, QWidget *widget)
-    : PaintRedirector(c, widget)
+    : ImageBasedPaintRedirector(c, widget)
     , m_gc(0)
 {
     for (int i=0; i<PixmapCount; ++i) {
@@ -335,9 +363,8 @@ void RasterXRenderPaintRedirector::preparePaint(const QPixmap &pending)
     m_tempImage = pending.toImage();
 }
 
-void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
 {
-    Q_UNUSED(src)
     // clip the sub area
     const QRect bounding = reg.boundingRect();
     const QPoint offset = bounding.topLeft() - r.topLeft();
@@ -346,7 +373,7 @@ void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap borde
         xcb_create_gc(connection(), m_gc, m_pixmaps[border], 0, NULL);
     }
 
-    const QImage img(m_tempImage.copy(QRect(bounding.topLeft() - b.topLeft(), bounding.size())));
+    const QImage img(scratchImage().copy(QRect(bounding.topLeft() - b.topLeft(), bounding.size())));
     xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, m_pixmaps[border], m_gc,
                   img.width(), img.height(), offset.x(), offset.y(), 0, 32, img.byteCount(), img.constBits());
 }
@@ -374,14 +401,35 @@ void NativeXRenderPaintRedirector::resize(PaintRedirector::DecorationPixmap bord
     m_pixmaps[border].fill(Qt::transparent);
 }
 
-void NativeXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg)
+void NativeXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
 {
     QPainter pt(&m_pixmaps[border]);
     pt.translate(-r.topLeft());
     pt.setCompositionMode(QPainter::CompositionMode_Source);
     pt.setClipRegion(reg);
-    pt.drawPixmap(b.topLeft(), src);
+    pt.drawPixmap(b.topLeft(), m_scratch);
     pt.end();
+}
+
+void NativeXRenderPaintRedirector::fillScratch(Qt::GlobalColor color)
+{
+    m_scratch.fill(color);
+}
+
+QPaintDevice *NativeXRenderPaintRedirector::recreateScratch(const QSize &size)
+{
+    m_scratch = QPixmap(size);
+    return &m_scratch;
+}
+
+QPaintDevice *NativeXRenderPaintRedirector::scratch()
+{
+    return &m_scratch;
+}
+
+void NativeXRenderPaintRedirector::discardScratch()
+{
+    m_scratch = QPixmap();
 }
 
 } // namespace

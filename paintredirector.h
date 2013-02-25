@@ -57,7 +57,6 @@ public:
         PixmapCount
     };
     virtual ~PaintRedirector();
-    QPixmap performPendingPaint();
     virtual bool eventFilter(QObject* o, QEvent* e);
     QRegion pendingRegion() const;
     QRegion scheduledRepaintRegion();
@@ -95,18 +94,22 @@ protected:
     virtual GLTexture *texture(DecorationPixmap border) const;
     virtual void resize(DecorationPixmap border, const QSize &size) = 0;
     virtual void preparePaint(const QPixmap &pending);
-    virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QPixmap& src, const QRegion &reg) = 0;
+    virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QRegion &reg) = 0;
+    virtual QPaintDevice *scratch() = 0;
+    virtual QPaintDevice *recreateScratch(const QSize &size) = 0;
+    virtual void fillScratch(Qt::GlobalColor color) = 0;
+    virtual void discardScratch() = 0;
 private:
     void added(QWidget* widget);
     void removed(QWidget* widget);
     bool isToolTip(QWidget* widget) const;
     void timerEvent(QTimerEvent* event);
 
-    void repaintPixmap(DecorationPixmap border, const QRect& r, const QPixmap& src, QRegion reg);
+    void performPendingPaint();
+    void repaintPixmap(DecorationPixmap border, const QRect& r, QRegion reg);
     QWidget* widget;
     QRegion pending;
     QRegion scheduled;
-    QPixmap scratch;
     bool recursionCheck;
     QBasicTimer cleanupTimer;
 
@@ -114,7 +117,23 @@ private:
     bool m_requiresRepaint;
 };
 
-class OpenGLPaintRedirector : public PaintRedirector
+class ImageBasedPaintRedirector : public PaintRedirector
+{
+    Q_OBJECT
+public:
+    virtual ~ImageBasedPaintRedirector();
+protected:
+    ImageBasedPaintRedirector(Client *c, QWidget *widget);
+    virtual QPaintDevice *recreateScratch(const QSize &size);
+    virtual QPaintDevice *scratch();
+    virtual void fillScratch(Qt::GlobalColor color);
+    virtual void discardScratch();
+    const QImage &scratchImage() const;
+private:
+    QImage m_scratchImage;
+};
+
+class OpenGLPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT
 public:
@@ -123,7 +142,7 @@ public:
 
 protected:
     virtual void resize(DecorationPixmap border, const QSize &size);
-    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg);
     virtual GLTexture *texture(DecorationPixmap border) const;
     virtual void preparePaint(const QPixmap &pending);
 
@@ -142,12 +161,17 @@ public:
 protected:
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
     virtual void resize(DecorationPixmap border, const QSize &size);
-    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg);
+    virtual void fillScratch(Qt::GlobalColor color);
+    virtual QPaintDevice *recreateScratch(const QSize &size);
+    virtual QPaintDevice *scratch();
+    virtual void discardScratch();
 private:
     QPixmap m_pixmaps[PixmapCount];
+    QPixmap m_scratch;
 };
 
-class RasterXRenderPaintRedirector : public PaintRedirector
+class RasterXRenderPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT
 public:
@@ -157,7 +181,7 @@ public:
 protected:
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
     virtual void resize(DecorationPixmap border, const QSize &size);
-    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QPixmap &src, const QRegion &reg);
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg);
     virtual void preparePaint(const QPixmap &pending);
 private:
     QSize m_sizes[PixmapCount];
@@ -221,6 +245,12 @@ inline
 xcb_render_picture_t PaintRedirector::topDecoPixmap() const
 {
     return picture(TopPixmap);
+}
+
+inline
+const QImage &ImageBasedPaintRedirector::scratchImage() const
+{
+    return m_scratchImage;
 }
 
 } // namespace
