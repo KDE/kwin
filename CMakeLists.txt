@@ -14,7 +14,7 @@ OPTION(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatic
 OPTION(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON)
 if(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
    OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
-else(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
+else()
    OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
 endif()
 
@@ -233,7 +233,7 @@ set(kwin_OPENGL_LIBS )
 find_library(XF86VM_LIBRARY Xxf86vm)
 if (XF86VM_LIBRARY)
     set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${XF86VM_LIBRARY})
-else(XF86VM_LIBRARY)
+else()
     add_definitions(-DKWIN_NO_XF86VM)
 endif()
 
