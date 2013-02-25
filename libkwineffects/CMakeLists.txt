@@ -48,7 +48,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     target_link_libraries(${name} LINK_INTERFACE_LIBRARIES ${ARGN})
 
     install(TARGETS ${name} EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-endmacro( KWIN4_ADD_GLUTILS_BACKEND )
+endmacro()
 
 if(OPENGLES_FOUND)
     KWIN4_ADD_GLUTILS_BACKEND(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})

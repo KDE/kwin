@@ -5,7 +5,7 @@ macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
     target_link_libraries( ${name} kwineffects ${KDE4_KDEUI_LIBS} ${KDE4_PLASMA_LIBS} ${X11_Xfixes_LIB} ${X11_Xcursor_LIB} ${X11_LIBRARIES} ${XCB_XCB_LIBRARIES} ${XCB_IMAGE_LIBRARIES} ${X11_XCB_LIBRARIES}
     ${XCB_XFIXES_LIBRARIES})
-endmacro( KWIN4_ADD_EFFECT_BACKEND )
+endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
@@ -34,7 +34,7 @@ macro( KWIN4_ADD_EFFECT name )
         set_target_properties(kwin4_effect_gles_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_gles_${name})
         install( TARGETS kwin4_effect_gles_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
     endif()
-endmacro( KWIN4_ADD_EFFECT )
+endmacro()
 
 macro( KWIN4_ADD_EFFECT_CONFIG name )
     set( kwin4_effect_ui ) # Initially empty
@@ -46,7 +46,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         else( file MATCHES \\.ui )
             set( kwin4_effect_src ${kwin4_effect_src} ${file} )
         endif()
-    endforeach( file )
+    endforeach()
 
     kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
     kde4_add_plugin( kcm_kwin4_effect_${name} ${kwin4_effect_src} )
@@ -55,7 +55,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endif()
     target_link_libraries( kcm_kwin4_effect_${name} kwineffects ${KDE4_KIO_LIBS} ${KDE4_KDEUI_LIBS} )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
-endmacro( KWIN4_ADD_EFFECT_CONFIG )
+endmacro()
 
 macro( KWIN4_EFFECT_LINK_XRENDER name )
     if( KWIN_HAVE_XRENDER_COMPOSITING )
@@ -67,7 +67,7 @@ macro( KWIN4_EFFECT_LINK_XRENDER name )
             target_link_libraries( kwin4_effect_gles_${name} ${X11_Xrender_LIB} ${XCB_RENDER_LIBRARIES})
         endif()
     endif()
-endmacro( KWIN4_EFFECT_LINK_XRENDER )
+endmacro()
 
 # Install the KWin/Effect service type
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
