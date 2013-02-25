@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglobals.h>
 
-// TODO: remove, currently only included to not break builds of effects
-#include <X11/extensions/Xrender.h>
 #include <xcb/xfixes.h>
 
 class QColor;
