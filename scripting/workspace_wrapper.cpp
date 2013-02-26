@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../outline.h"
 #include "../virtualdesktops.h"
 
-#include <QtGui/QDesktopWidget>
+#include <QDesktopWidget>
 
 namespace KWin {
 

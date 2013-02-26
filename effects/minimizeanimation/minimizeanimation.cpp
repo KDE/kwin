@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "minimizeanimation.h"
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 #include <QtGui/QVector2D>
 
 namespace KWin

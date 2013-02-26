@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/qdeclarative.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QGraphicsObject>
+#include <QDesktopWidget>
+#include <QGraphicsObject>
 #include <QtGui/QResizeEvent>
 #include <QX11Info>
 

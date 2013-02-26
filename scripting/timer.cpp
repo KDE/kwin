@@ -20,7 +20,7 @@
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptContext>
 #include <QtScript/QScriptable>
-#include <QtCore/QTimer>
+#include <QTimer>
 
 Q_DECLARE_METATYPE(QTimer*)
 

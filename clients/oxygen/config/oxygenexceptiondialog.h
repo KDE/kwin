@@ -31,8 +31,8 @@
 #include <KDialog>
 #include <KLineEdit>
 #include <KComboBox>
-#include <QtGui/QCheckBox>
-#include <QtCore/QMap>
+#include <QCheckBox>
+#include <QMap>
 
 namespace Oxygen
 {

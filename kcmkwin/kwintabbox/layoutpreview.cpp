@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/qdeclarative.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
-#include <QtGui/QGraphicsObject>
+#include <QGraphicsObject>
 #include <kdeclarative.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>

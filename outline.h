@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_OUTLINE_H
 #define KWIN_OUTLINE_H
 #include "xcbutils.h"
-#include <QtCore/QRect>
-#include <QtCore/QVector>
+#include <QRect>
+#include <QVector>
 
 namespace KWin {
 

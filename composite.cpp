@@ -41,8 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h>
 
-#include <QtCore/QtConcurrentRun>
-#include <QtCore/QFutureWatcher>
+#include <QtConcurrentRun>
+#include <QFutureWatcher>
 #include <QMenu>
 #include <QTimerEvent>
 #include <QDateTime>

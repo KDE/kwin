@@ -32,7 +32,7 @@
 #include "oxygendecohelper.h"
 #include "oxygenshadowcache.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <kdecorationfactory.h>
 #include <kdeversion.h>
 

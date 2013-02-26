@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
-#include <QtGui/QDesktopWidget>
+#include <QDesktopWidget>
 #include <QPainter>
 #include <QVarLengthArray>
 #include <QX11Info>

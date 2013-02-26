@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KDebug>
 #include <KDE/KTemporaryFile>
 #include <QtDBus/QDBusConnection>
-#include <QtCore/QVarLengthArray>
+#include <QVarLengthArray>
 #include <QtGui/QPainter>
 #include <QMatrix4x4>
 #include <xcb/xcb_image.h>

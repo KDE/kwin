@@ -37,7 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 
 #include <QtGui/QPainter>
-#include <QtCore/qmath.h>
+#include <qmath.h>
 
 namespace KWin
 {

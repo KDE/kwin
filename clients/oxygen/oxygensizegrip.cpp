@@ -32,7 +32,7 @@
 #include <cassert>
 #include <QtGui/QPainter>
 #include <QtGui/QPolygon>
-#include <QtCore/QTimer>
+#include <QTimer>
 
 #include <QtGui/QX11Info>
 #include <X11/Xlib.h>

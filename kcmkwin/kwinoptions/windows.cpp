@@ -30,7 +30,7 @@
 #include <KComboBox>
 #include <QHBoxLayout>
 #include <QFormLayout>
-#include <QtGui/QDesktopWidget>
+#include <QDesktopWidget>
 #include <QtDBus/QtDBus>
 
 #include <KButtonGroup>

@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_THUMBNAILITEM_H
 #define KWIN_THUMBNAILITEM_H
 
-#include <QtCore/QWeakPointer>
+#include <QWeakPointer>
 #include <QtDeclarative/QDeclarativeItem>
 
 namespace KWin

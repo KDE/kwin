@@ -37,9 +37,9 @@
 #include "oxygentitleanimationdata.h"
 
 #include <kcommondecoration.h>
-#include <QtCore/QBasicTimer>
-#include <QtCore/QTextStream>
-#include <QtCore/QTimerEvent>
+#include <QBasicTimer>
+#include <QTextStream>
+#include <QTimerEvent>
 
 #include <X11/Xdefs.h>
 

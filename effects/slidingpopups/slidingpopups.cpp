@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <KDE/KConfigGroup>
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 
 namespace KWin
 {

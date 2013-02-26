@@ -25,7 +25,7 @@
 #ifndef KCOMMONDECORATION_H
 #define KCOMMONDECORATION_H
 
-#include <QtGui/QAbstractButton>
+#include <QAbstractButton>
 #include "kdecoration.h"
 
 /** @addtogroup kdecoration */

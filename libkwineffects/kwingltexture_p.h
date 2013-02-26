@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 #include "kwinglobals.h"
 
-#include <QtCore/QSize>
-#include <QtCore/QSharedData>
+#include <QSize>
+#include <QSharedData>
 #include <QImage>
 
 namespace KWin

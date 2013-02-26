@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwingltexture.h"
 
 // Qt
-#include <QtCore/QSize>
-#include <QtCore/QStack>
+#include <QSize>
+#include <QStack>
 
 /** @addtogroup kwineffects */
 /** @{ */

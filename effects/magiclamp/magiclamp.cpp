@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 #include <QtDebug>
 
 namespace KWin

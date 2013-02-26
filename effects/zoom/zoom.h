@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_ZOOM_H
 
 #include <kwineffects.h>
-#include <QtCore/QTime>
-#include <QtCore/QTimeLine>
+#include <QTime>
+#include <QTimeLine>
 
 namespace KWin
 {

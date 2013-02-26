@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KDebug>
 #include <KDE/KStandardDirs>
 // Qt
-#include <QtCore/QFile>
+#include <QFile>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
 

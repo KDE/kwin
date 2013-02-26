@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 
 #include <QFile>
-#include <QtCore/QFutureWatcher>
-#include <QtCore/QtConcurrentRun>
+#include <QFutureWatcher>
+#include <QtConcurrentRun>
 #include <QDBusServiceWatcher>
 #include <QDBusPendingCallWatcher>
 

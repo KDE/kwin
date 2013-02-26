@@ -23,7 +23,7 @@
 
 // #include "libaurorae_export.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <kdecoration.h>
 
 class KConfig;

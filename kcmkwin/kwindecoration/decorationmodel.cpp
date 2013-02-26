@@ -22,11 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kdecorationfactory.h>
 // Qt
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtGui/QApplication>
+#include <QDir>
+#include <QFileInfo>
+#include <QApplication>
 #include <QtGui/QPainter>
-#include <QtGui/QStyle>
+#include <QStyle>
 #include <QtGui/QTextDocument>
 // KDE
 #include <KConfigGroup>

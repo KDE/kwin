@@ -32,7 +32,7 @@ DEALINGS IN THE SOFTWARE.
 
 // This private header is used by KWin core.
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <ksharedconfig.h>
 
 #include "kdecoration.h"

@@ -21,7 +21,7 @@
 #include "auroraetheme.h"
 #include "themeconfig.h"
 // Qt
-#include <QtCore/QHash>
+#include <QHash>
 // KDE
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>

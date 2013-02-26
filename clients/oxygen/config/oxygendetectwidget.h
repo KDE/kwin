@@ -34,10 +34,10 @@
 #include "ui_oxygendetectwidget.h"
 
 #include <KDialog>
-#include <QtCore/QEvent>
-#include <QtCore/QByteArray>
-#include <QtGui/QCheckBox>
-#include <QtGui/QLabel>
+#include <QEvent>
+#include <QByteArray>
+#include <QCheckBox>
+#include <QLabel>
 
 #include <kwindowsystem.h>
 

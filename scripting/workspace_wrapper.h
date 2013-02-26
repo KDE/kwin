@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
 #define KWIN_SCRIPTING_WORKSPACE_WRAPPER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSize>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QSize>
+#include <QStringList>
 #include <QRect>
 #include <kwinglobals.h>
 

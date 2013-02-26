@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SHADOW_H
 #define KWIN_SHADOW_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QtGui/QPixmap>
 #include <kwineffects.h>
 #include <qvarlengtharray.h>

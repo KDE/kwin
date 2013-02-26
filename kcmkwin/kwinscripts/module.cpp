@@ -20,7 +20,7 @@
 #include "module.h"
 #include "ui_module.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusPendingCall>

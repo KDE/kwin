@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_COMPOSITE_H
 #define KWIN_COMPOSITE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QElapsedTimer>
-#include <QtCore/QTimer>
-#include <QtCore/QBasicTimer>
+#include <QObject>
+#include <QElapsedTimer>
+#include <QTimer>
+#include <QBasicTimer>
 #include <QRegion>
 
 class KSelectionOwner;

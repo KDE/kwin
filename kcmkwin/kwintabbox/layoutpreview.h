@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_LAYOUTPREVIEW_H
 #define KWIN_TABBOX_LAYOUTPREVIEW_H
 
-#include <QtCore/QAbstractListModel>
+#include <QAbstractListModel>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/QDeclarativeImageProvider>
 

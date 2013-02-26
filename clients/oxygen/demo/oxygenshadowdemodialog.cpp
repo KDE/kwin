@@ -27,7 +27,7 @@
 #include "oxygenshadowdemodialog.h"
 #include "oxygenshadowdemodialog.moc"
 
-#include <QtGui/QDialogButtonBox>
+#include <QDialogButtonBox>
 #include <QtDBus/QDBusConnection>
 
 #include <KPushButton>

@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QWhatsThis>
 #include <QApplication>
-#include <QtGui/QDesktopWidget>
+#include <QDesktopWidget>
 
 #include <kkeyserver.h>
 

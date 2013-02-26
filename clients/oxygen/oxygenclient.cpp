@@ -39,12 +39,12 @@
 #include <KDebug>
 #include <KStyle>
 
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
+#include <QApplication>
+#include <QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
 #include <QtGui/QX11Info>
-#include <QtCore/QObjectList>
+#include <QObjectList>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>

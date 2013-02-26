@@ -30,7 +30,7 @@ DEALINGS IN THE SOFTWARE.
 //
 
 #include "kdecoration.h"
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KConfig;
 

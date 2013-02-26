@@ -26,15 +26,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kwinglobals.h>
 
-#include <QtCore/QPair>
-#include <QtCore/QSet>
-#include <QtCore/QRect>
+#include <QPair>
+#include <QSet>
+#include <QRect>
 #include <QtGui/QRegion>
 
-#include <QtCore/QVector>
-#include <QtCore/QList>
-#include <QtCore/QHash>
-#include <QtCore/QStack>
+#include <QVector>
+#include <QList>
+#include <QHash>
+#include <QStack>
 
 #include <KDE/KPluginFactory>
 #include <KDE/KShortcutsEditor>

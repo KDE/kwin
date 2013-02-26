@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 #define KDECORATIONBRIDGE_H
 
 #include "kdecoration.h"
-#include <QtGui/QWidget>
+#include <QWidget>
 
 /** @addtogroup kdecoration */
 /** @{ */

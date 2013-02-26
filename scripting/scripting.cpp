@@ -39,14 +39,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusPendingCallWatcher>
-#include <QtCore/QFutureWatcher>
-#include <QtCore/QSettings>
-#include <QtCore/QtConcurrentRun>
+#include <QFutureWatcher>
+#include <QSettings>
+#include <QtConcurrentRun>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/qdeclarative.h>
-#include <QtGui/QMenu>
+#include <QMenu>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 

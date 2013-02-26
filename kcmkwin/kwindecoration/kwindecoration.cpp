@@ -40,9 +40,9 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeView>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QGraphicsObject>
-#include <QtGui/QScrollBar>
+#include <QSortFilterProxyModel>
+#include <QGraphicsObject>
+#include <QScrollBar>
 #include <QUiLoader>
 // KDE
 #include <KAboutData>

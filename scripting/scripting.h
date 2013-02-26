@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 #include <kservice.h>
 
-#include <QtCore/QFile>
-#include <QtCore/QHash>
-#include <QtCore/QStringList>
+#include <QFile>
+#include <QHash>
+#include <QStringList>
 #include <QtScript/QScriptEngineAgent>
 
 class QAction;

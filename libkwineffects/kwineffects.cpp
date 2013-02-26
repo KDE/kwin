@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 #include <QVariant>
 #include <QList>
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "glideconfig.h"
 
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 
 // Effect is based on fade effect by Philip Falkner
 

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QEasingCurve>
 #include <QElapsedTimer>
-#include <QtCore/qmath.h>
+#include <qmath.h>
 #include <kwineffects.h>
 
 

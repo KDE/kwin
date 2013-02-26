@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DBUS_INTERFACE_H
 #define KWIN_DBUS_INTERFACE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QtDBus/QtDBus>
 class QByteArray;
 template<class T> class QList;

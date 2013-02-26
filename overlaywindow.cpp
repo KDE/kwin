@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "assert.h"
 
-#include <QtCore/QVector>
+#include <QVector>
 
 #include <xcb/composite.h>
 #include <xcb/shape.h>

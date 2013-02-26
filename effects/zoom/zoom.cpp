@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "zoomconfig.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QStyle>
+#include <QApplication>
+#include <QStyle>
 #include <QtGui/QVector2D>
 #include <QtDBus/QDBusConnection>
 #include <kaction.h>

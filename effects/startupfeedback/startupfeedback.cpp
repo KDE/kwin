@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "startupfeedback.h"
 // Qt
-#include <QtCore/QSize>
+#include <QSize>
 #include <QtGui/QPainter>
 // KDE
 #include <KDE/KConfigGroup>

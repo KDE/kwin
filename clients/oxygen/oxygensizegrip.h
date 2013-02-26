@@ -27,7 +27,7 @@
 // IN THE SOFTWARE.
 //////////////////////////////////////////////////////////////////////////////
 
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QMouseEvent>
 

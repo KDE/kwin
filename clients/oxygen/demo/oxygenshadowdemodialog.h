@@ -32,7 +32,7 @@
 #include "oxygenshadowcache.h"
 
 #include <KDialog>
-#include <QtGui/QCheckBox>
+#include <QCheckBox>
 
 namespace Oxygen
 {

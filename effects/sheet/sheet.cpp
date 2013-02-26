@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "sheet.h"
 
 #include <kconfiggroup.h>
-#include <QtCore/QTimeLine>
+#include <QTimeLine>
 #include <QGraphicsRotation>
 #include <QVector3D>
 

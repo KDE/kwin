@@ -28,9 +28,9 @@
 
 #include <kdeversion.h>
 
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QGroupBox>
 #include <KLocale>
 #include <KTabWidget>
 

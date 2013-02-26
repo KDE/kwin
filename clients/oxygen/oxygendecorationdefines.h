@@ -27,8 +27,8 @@
 
 #include "oxygenconfiguration.h"
 
-#include <QtCore/QSharedPointer>
-#include <QtCore/QList>
+#include <QSharedPointer>
+#include <QList>
 
 namespace Oxygen
 {

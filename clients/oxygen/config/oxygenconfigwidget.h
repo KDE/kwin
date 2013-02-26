@@ -31,9 +31,9 @@
 #include "../oxygendecorationdefines.h"
 
 #include <KComboBox>
-#include <QtGui/QWidget>
-#include <QtGui/QCheckBox>
-#include <QtCore/QVector>
+#include <QWidget>
+#include <QCheckBox>
+#include <QVector>
 
 namespace Oxygen
 {

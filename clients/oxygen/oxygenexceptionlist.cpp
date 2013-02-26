@@ -27,7 +27,7 @@
 #include "oxygenexceptionlist.h"
 #include "oxygenutil.h"
 
-#include <QtCore/QTextStream>
+#include <QTextStream>
 
 namespace Oxygen
 {

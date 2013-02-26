@@ -38,9 +38,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "virtualdesktops.h"
 // Qt
-#include <QtCore/QTimer>
-#include <QtCore/QVector>
-#include <QtCore/QTextStream>
+#include <QTimer>
+#include <QVector>
+#include <QTextStream>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
 #include <QDesktopWidget>

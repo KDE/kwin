@@ -35,7 +35,7 @@
 #include "oxygenutil.h"
 #include "../oxygenexceptionlist.h"
 
-#include <QtCore/QTextStream>
+#include <QTextStream>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 

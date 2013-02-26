@@ -35,8 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE includes
 #include <KDE/KConfig>
 // Qt
-#include <QtCore/QObject>
-#include <QtCore/QVector>
+#include <QObject>
+#include <QVector>
 #include <QDateTime>
 
 namespace KWin {
