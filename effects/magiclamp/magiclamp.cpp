@@ -125,7 +125,7 @@ void MagicLampEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Win
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid()) {
             QRect extG = geo.adjusted(mShadowOffset[0], mShadowOffset[1], mShadowOffset[2], mShadowOffset[3]);
-            QPoint pt = QCursor::pos();
+            QPoint pt = cursorPos();
             // focussing inside the window is no good, leads to ugly artefacts, find nearest border
             if (extG.contains(pt)) {
                 const int d[2][2] = { {pt.x() - extG.x(), extG.right()  - pt.x()},

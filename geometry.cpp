@@ -2302,7 +2302,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         r.setSize(adjustedSize(r.size(), SizemodeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
             if (isElectricBorderMaximizing() && r.width() < clientArea.width())
-                r.moveLeft(QCursor::pos().x() - r.width()/2);
+                r.moveLeft(Cursor::pos().x() - r.width()/2);
             else
                 r.moveCenter(clientArea.center());
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
@@ -2362,7 +2362,7 @@ void Client::setFullScreen(bool set, bool user)
     setShade(ShadeNone);
     bool was_fs = isFullScreen();
     if (was_fs)
-        workspace()->updateFocusMousePosition(QCursor::pos());
+        workspace()->updateFocusMousePosition(Cursor::pos());
     else
         geom_fs_restore = geometry();
     fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
@@ -2588,7 +2588,7 @@ bool Client::startMoveResize()
         ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
 #endif
     if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
-        handleMoveResize(QCursor::pos().x(), QCursor::pos().y(), QCursor::pos().x(), QCursor::pos().y());
+        handleMoveResize(Cursor::pos().x(), Cursor::pos().y(), Cursor::pos().x(), Cursor::pos().y());
     return true;
 }
 

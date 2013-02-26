@@ -490,8 +490,9 @@ void AuroraeClient::titleMouseMoved(int button, int buttons)
 
 void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, widget()->mapFromGlobal(QCursor::pos()),
-                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    const QPoint cursor = QCursor::pos();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, widget()->mapFromGlobal(cursor),
+                                         cursor, button, buttons, Qt::NoModifier);
     processMousePressEvent(event);
     delete event;
     event = 0;
@@ -499,8 +500,9 @@ void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons button
 
 void AuroraeClient::titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, widget()->mapFromGlobal(QCursor::pos()),
-                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    const QPoint cursor = QCursor::pos();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, widget()->mapFromGlobal(cursor),
+                                         cursor, button, buttons, Qt::NoModifier);
     QApplication::sendEvent(widget(), event);
     delete event;
     event = 0;
@@ -508,8 +510,9 @@ void AuroraeClient::titleReleased(Qt::MouseButton button, Qt::MouseButtons butto
 
 void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, widget()->mapFromGlobal(QCursor::pos()),
-                                         QCursor::pos(), button, buttons, Qt::NoModifier);
+    const QPoint cursor = QCursor::pos();
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, widget()->mapFromGlobal(cursor),
+                                         cursor, button, buttons, Qt::NoModifier);
     QApplication::sendEvent(widget(), event);
     delete event;
     event = 0;

@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "killwindow.h"
+#include "cursor.h"
 #include "workspace.h"
 // Qt
 #include <QCursor>
@@ -164,7 +165,7 @@ void KillWindow::handleKeyPress(xcb_keycode_t keycode, uint16_t state)
         mx /= 10;
         my /= 10;
     }
-    QCursor::setPos(cursorPos() + QPoint(mx, my));
+    Cursor::setPos(Cursor::pos() + QPoint(mx, my));
     if (returnPressed) {
         performKill();
     }

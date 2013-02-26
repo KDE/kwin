@@ -1892,7 +1892,7 @@ bool Client::untab(const QRect &toGeometry, bool clientRemoved)
             }
             if (keepSize && changedSize) {
                 geom_restore = geometry(); // checkWorkspacePosition() invokes it
-                QPoint cpoint = QCursor::pos();
+                QPoint cpoint = Cursor::pos();
                 QPoint point = cpoint;
                 point.setX((point.x() - toGeometry.x()) * geom_restore.width() / toGeometry.width());
                 point.setY((point.y() - toGeometry.y()) * geom_restore.height() / toGeometry.height());

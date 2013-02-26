@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "client.h"
+#include "cursor.h"
 #include "focuschain.h"
 #include "workspace.h"
 
@@ -417,7 +418,7 @@ Client *Workspace::clientUnderMouse(int screen) const
                 client->isOnCurrentActivity() && client->isOnScreen(screen)))
             continue;
 
-        if (client->geometry().contains(QCursor::pos())) {
+        if (client->geometry().contains(Cursor::pos())) {
             return client;
         }
     }

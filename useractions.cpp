@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //////////////////////////////////////////////////////////////////////////////
 
 #include "useractions.h"
+#include "cursor.h"
 #include "client.h"
 #include "workspace.h"
 #include "effects.h"
@@ -932,9 +933,9 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
     if (!c)
         return;
     if (op == Options::MoveOp || op == Options::UnrestrictedMoveOp)
-        QCursor::setPos(c->geometry().center());
+        Cursor::setPos(c->geometry().center());
     if (op == Options::ResizeOp || op == Options::UnrestrictedResizeOp)
-        QCursor::setPos(c->geometry().bottomRight());
+        Cursor::setPos(c->geometry().bottomRight());
     switch(op) {
     case Options::MoveOp:
         c->performMouseCommand(Options::MouseMove, cursorPos());

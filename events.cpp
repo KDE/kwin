@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-X11.h>
 
 #include "client.h"
+#include "cursor.h"
 #include "focuschain.h"
 #include "workspace.h"
 #include "atoms.h"
@@ -1524,11 +1525,11 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
         updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
-        QCursor::setPos(geometry().center());
+        Cursor::setPos(geometry().center());
         performMouseCommand(Options::MouseUnrestrictedMove, geometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
-        QCursor::setPos(geometry().bottomRight());
+        Cursor::setPos(geometry().bottomRight());
         performMouseCommand(Options::MouseUnrestrictedResize, geometry().bottomRight());
     }
 }
@@ -1571,7 +1572,7 @@ void Client::keyPressEvent(uint key_code)
     default:
         return;
     }
-    QCursor::setPos(pos);
+    Cursor::setPos(pos);
 }
 
 #ifdef HAVE_XSYNC
@@ -1609,7 +1610,7 @@ bool Unmanaged::windowEvent(XEvent* e)
     }
     switch(e->type) {
     case UnmapNotify:
-        workspace()->updateFocusMousePosition(QCursor::pos());
+        workspace()->updateFocusMousePosition(Cursor::pos());
         unmapNotifyEvent(&e->xunmap);
         break;
     case MapNotify:

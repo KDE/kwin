@@ -1193,7 +1193,7 @@ Client *Workspace::findClientToActivateOnDesktop(uint desktop)
                 client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
                 continue;
 
-            if (client->geometry().contains(QCursor::pos())) {
+            if (client->geometry().contains(Cursor::pos())) {
                 if (!client->isDesktop())
                     return client;
             break; // unconditional break  - we do not pass the focus to some client below an unusable one
