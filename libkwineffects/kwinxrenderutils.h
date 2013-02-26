@@ -21,17 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_XRENDERUTILS_H
 #define KWIN_XRENDERUTILS_H
 
-#include <kwinconfig.h>
-
-#include <QtCore/QSharedData>
-#include <QVector>
-#include <ksharedptr.h>
-
+// KWin
 #include <kwinglobals.h>
-
+// KDE
+#include <KDE/KSharedPtr>
+// Qt
+#include <QRegion>
+#include <QVector>
+// XCB
 #include <xcb/xfixes.h>
 
 class QColor;
+class QPixmap;
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -68,7 +69,7 @@ class KWIN_EXPORT XRenderPicture
 public:
     explicit XRenderPicture(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
     // TODO: Qt5 - replace QPixmap by QImage to make it more obvious that it uses PutImage
-    explicit XRenderPicture(QPixmap pix);
+    explicit XRenderPicture(const QPixmap &pix);
     XRenderPicture(xcb_pixmap_t pix, int depth);
     operator xcb_render_picture_t();
 private:

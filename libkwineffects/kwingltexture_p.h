@@ -28,9 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QSize>
 #include <QtCore/QSharedData>
+#include <QImage>
 
 namespace KWin
 {
+// forward declarations
+class GLVertexBuffer;
 
 class KWIN_EXPORT GLTexturePrivate
     : public QSharedData

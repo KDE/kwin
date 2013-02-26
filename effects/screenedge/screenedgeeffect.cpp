@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QTimer>
 #include <QPainter>
+#include <QVector4D>
 // xcb
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 #include <xcb/render.h>

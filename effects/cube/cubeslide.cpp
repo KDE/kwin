@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cubeslideconfig.h"
 
 #include <kwinconfig.h>
+#include <QVector3D>
 
 #include <math.h>
 

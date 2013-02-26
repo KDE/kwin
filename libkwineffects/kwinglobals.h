@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_LIB_KWINGLOBALS_H
 
 #include <QtGui/QX11Info>
-#include <QtCore/QPoint>
-#include <QtGui/QRegion>
 
 #include <kdemacros.h>
 

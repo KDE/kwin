@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QPair>
 #include <QtCore/QSet>
 #include <QtCore/QRect>
-#include <QtGui/QGraphicsRotation>
 #include <QtGui/QRegion>
 
 #include <QtCore/QVector>
@@ -48,6 +47,7 @@ class KLibrary;
 class KConfigGroup;
 class KActionCollection;
 class QFont;
+class QGraphicsScale;
 class QKeyEvent;
 class QVector2D;
 

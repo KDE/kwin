@@ -22,16 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLUTILS_H
 #define KWIN_GLUTILS_H
 
-#include <kwinglutils_funcs.h>
-
-#include <QtGui/QPixmap>
-
-#include <QtGui/QImage>
-#include <QtCore/QSize>
-#include <QtCore/QSharedData>
-#include <QtCore/QStack>
-
+// kwin
+#include "kwinglutils_funcs.h"
 #include "kwingltexture.h"
+
+// Qt
+#include <QtCore/QSize>
+#include <QtCore/QStack>
 
 /** @addtogroup kwineffects */
 /** @{ */
@@ -47,8 +44,6 @@ template< class K, class V > class QHash;
 namespace KWin
 {
 
-
-class GLTexture;
 class GLVertexBuffer;
 class GLVertexBufferPrivate;
 

@@ -55,6 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
+#include <QGraphicsScale>
 #include <QDesktopWidget>
 #include <QStringList>
 #include <QVector2D>

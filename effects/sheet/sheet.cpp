@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include <QtCore/QTimeLine>
+#include <QGraphicsRotation>
+#include <QVector3D>
 
 // Effect is based on fade effect by Philip Falkner
 

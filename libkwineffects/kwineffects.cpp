@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QVector2D>
+#include <QGraphicsRotation>
+#include <QGraphicsScale>
 
 #include <kdebug.h>
 #include <ksharedconfig.h>

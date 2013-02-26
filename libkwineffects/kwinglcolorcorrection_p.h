@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COLOR_CORRECTION_P_H_
 
 #include "kwinglcolorcorrection.h"
+#include "kwinglutils_funcs.h"
 
 #include <QDBusAbstractInterface>
 #include <QDBusMetaType>

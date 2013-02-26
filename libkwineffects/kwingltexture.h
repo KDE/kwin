@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglobals.h"
 
 #include <QtCore/QSize>
+#include <QRegion>
 #include <QSharedPointer>
 #include <QExplicitlySharedDataPointer>
 

@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QVarLengthArray>
 #include <QtGui/QPainter>
+#include <QMatrix4x4>
 #include <xcb/xcb_image.h>
 
 namespace KWin

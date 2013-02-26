@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QDateTime>
 #include <QTimer>
+#include <QVector3D>
 
 namespace KWin {
 
