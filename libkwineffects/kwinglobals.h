@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 #include <X11/Xlib-xcb.h>
 #include <fixx11h.h>
+#include <xcb/xcb.h>
 
 #include <kwinconfig.h>
 
@@ -146,27 +147,47 @@ KWIN_EXPORT xcb_connection_t *connection()
 }
 
 inline
-KWIN_EXPORT Window rootWindow()
+KWIN_EXPORT xcb_window_t rootWindow()
 {
     return QX11Info::appRootWindow();
 }
 
 inline
-KWIN_EXPORT Window xTime()
+KWIN_EXPORT xcb_timestamp_t xTime()
 {
     return QX11Info::appTime();
 }
 
 inline
+KWIN_EXPORT xcb_screen_t *defaultScreen()
+{
+    static xcb_screen_t *s_screen = NULL;
+    if (s_screen) {
+        return s_screen;
+    }
+    int screen = QX11Info::appScreen();
+    for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection()));
+            it.rem;
+            --screen, xcb_screen_next(&it)) {
+        if (screen == 0) {
+            s_screen = it.data;
+        }
+    }
+    return s_screen;
+}
+
+inline
 KWIN_EXPORT int displayWidth()
 {
-    return XDisplayWidth(display(), DefaultScreen(display()));
+    xcb_screen_t *screen = defaultScreen();
+    return screen ? screen->width_in_pixels : 0;
 }
 
 inline
 KWIN_EXPORT int displayHeight()
 {
-    return XDisplayHeight(display(), DefaultScreen(display()));
+    xcb_screen_t *screen = defaultScreen();
+    return screen ? screen->height_in_pixels : 0;
 }
 
 /** @internal */
