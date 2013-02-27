@@ -70,6 +70,7 @@ public:
     static bool sNPOTTextureSupported;
     static bool sFramebufferObjectSupported;
     static bool sSaturationSupported;
+    static bool sTextureFormatBGRA;
 private:
     Q_DISABLE_COPY(GLTexturePrivate)
 };
