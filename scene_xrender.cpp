@@ -226,15 +226,11 @@ void SceneXrender::windowGeometryShapeChanged(KWin::Toplevel* c)
     Window* w = windows[ c ];
     w->discardPicture();
     w->discardShape();
-    w->discardAlpha();
 }
 
 void SceneXrender::windowOpacityChanged(KWin::Toplevel* c)
 {
-    if (!windows.contains(c))    // this is ok, alpha is created on demand
-        return;
-    Window* w = windows[ c ];
-    w->discardAlpha();
+    Q_UNUSED(c)
 }
 
 void SceneXrender::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
@@ -265,7 +261,6 @@ void SceneXrender::windowAdded(Toplevel* c)
 {
     assert(!windows.contains(c));
     windows[ c ] = new Window(c);
-    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     c->effectWindow()->setSceneWindow(windows[ c ]);
@@ -284,7 +279,6 @@ SceneXrender::Window::Window(Toplevel* c)
     : Scene::Window(c)
     , _picture(None)
     , format(XRenderFindVisualFormat(display(), c->visual()))
-    , alpha(None)
     , alpha_cached_opacity(0.0)
 {
 }
@@ -292,7 +286,6 @@ SceneXrender::Window::Window(Toplevel* c)
 SceneXrender::Window::~Window()
 {
     discardPicture();
-    discardAlpha();
     discardShape();
 }
 
@@ -326,39 +319,6 @@ void SceneXrender::Window::discardPicture()
     if (_picture != None)
         XRenderFreePicture(display(), _picture);
     _picture = None;
-}
-
-void SceneXrender::Window::discardAlpha()
-{
-    if (alpha != None)
-        XRenderFreePicture(display(), alpha);
-    alpha = None;
-}
-
-// Create XRender picture for the alpha mask.
-Picture SceneXrender::Window::alphaMask(double opacity)
-{
-    if (isOpaque() && qFuzzyCompare(opacity, 1.0))
-        return None;
-
-    bool created = false;
-    if (alpha == None) {
-        // Create a 1x1 8bpp pixmap containing the given opacity in the alpha channel.
-        Pixmap pixmap = XCreatePixmap(display(), rootWindow(), 1, 1, 8);
-        XRenderPictFormat* format = XRenderFindStandardFormat(display(), PictStandardA8);
-        XRenderPictureAttributes pa;
-        pa.repeat = True;
-        alpha = XRenderCreatePicture(display(), pixmap, format, CPRepeat, &pa);
-        XFreePixmap(display(), pixmap);
-        created = true;
-    }
-    if (created || !qFuzzyCompare(alpha_cached_opacity + 1.0, opacity + 1.0)) {
-        XRenderColor col;
-        col.alpha = int(opacity * 0xffff);
-        XRenderFillRectangle(display(), PictOpSrc, alpha, &col, 0, 0, 1, 1);
-        alpha_cached_opacity = opacity;
-    }
-    return alpha;
 }
 
 // Maps window coordinates to screen coordinates
@@ -656,7 +616,10 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
 
         //shadow
         if (wantShadow) {
-            Picture shadowAlpha = opaque ? None : alphaMask(data.opacity());
+            xcb_render_picture_t shadowAlpha = XCB_RENDER_PICTURE_NONE;
+            if (!opaque) {
+                shadowAlpha = xRenderBlendPicture(data.opacity());
+            }
             RENDER_SHADOW_TILE(TopLeft, stlr);
             RENDER_SHADOW_TILE(Top, str);
             RENDER_SHADOW_TILE(TopRight, strr);
@@ -670,7 +633,10 @@ XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRend
 
         // Paint the window contents
         if (!(client && client->isShade())) {
-            Picture clientAlpha = opaque ? None : alphaMask(data.opacity());
+            xcb_render_picture_t clientAlpha = XCB_RENDER_PICTURE_NONE;
+            if (!opaque) {
+                clientAlpha = xRenderBlendPicture(data.opacity());
+            }
             XRenderComposite(display(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
             if (!opaque)
                 transformed_shape = QRegion();
@@ -682,7 +648,7 @@ XRenderComposite(display(), PictOpOver, _PART_, decorationAlpha, renderTarget,\
 
         if (client || deleted) {
             if (!noBorder) {
-                Picture decorationAlpha = alphaMask(data.opacity() * data.decorationOpacity());
+                xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity() * data.decorationOpacity());
                 RENDER_DECO_PART(top, dtr);
                 RENDER_DECO_PART(left, dlr);
                 RENDER_DECO_PART(right, drr);

@@ -81,19 +81,16 @@ public:
     virtual ~Window();
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     void discardPicture();
-    void discardAlpha();
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
 private:
     Picture picture();
-    Picture alphaMask(double opacity);
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
     void prepareTempPixmap();
     Picture _picture;
     XRenderPictFormat* format;
-    Picture alpha;
     double alpha_cached_opacity;
     QRegion transformed_shape;
     static QRect temp_visibleRect;
