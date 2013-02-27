@@ -611,7 +611,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     for (PaintClipper::Iterator iterator; !iterator.isDone(); iterator.next()) {
 
 #define RENDER_SHADOW_TILE(_TILE_, _RECT_) \
-XRenderComposite(display(), PictOpOver, m_xrenderShadow->shadowPixmap(SceneXRenderShadow::ShadowElement##_TILE_).x11PictureHandle(), \
+xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->picture(SceneXRenderShadow::ShadowElement##_TILE_), \
                  shadowAlpha, renderTarget, 0, 0, 0, 0, _RECT_.x(), _RECT_.y(), _RECT_.width(), _RECT_.height())
 
         //shadow
@@ -976,10 +976,16 @@ void SceneXrender::EffectFrame::updateTextPicture()
 SceneXRenderShadow::SceneXRenderShadow(Toplevel *toplevel)
     :Shadow(toplevel)
 {
+    for (int i=0; i<ShadowElementsCount; ++i) {
+        m_pictures[i] = NULL;
+    }
 }
 
 SceneXRenderShadow::~SceneXRenderShadow()
 {
+    for (int i=0; i<ShadowElementsCount; ++i) {
+        delete m_pictures[i];
+    }
 }
 
 void SceneXRenderShadow::layoutShadowRects(QRect& top, QRect& topRight,
@@ -1022,13 +1028,25 @@ void SceneXRenderShadow::buildQuads()
 
     QRect stlr, str, strr, srr, sbrr, sbr, sblr, slr;
     layoutShadowRects(str, strr, srr, sbrr, sbr, sblr, slr, stlr);
+}
 
-    XRenderPictureAttributes attr;
-    attr.repeat = True;
-    for (int i = 0; i < ShadowElementsCount; ++i) {
-        XRenderChangePicture(display(), shadowPixmap((Shadow::ShadowElements)i).x11PictureHandle(), CPRepeat, &attr);
+bool SceneXRenderShadow::prepareBackend()
+{
+    const uint32_t values[] = {XCB_RENDER_REPEAT_NORMAL};
+    for (int i=0; i<ShadowElementsCount; ++i) {
+        delete m_pictures[i];
+        m_pictures[i] = new XRenderPicture(shadowPixmap(ShadowElements(i)));
+        xcb_render_change_picture(connection(), *m_pictures[i], XCB_RENDER_CP_REPEAT, values);
     }
+    return true;
+}
 
+xcb_render_picture_t SceneXRenderShadow::picture(Shadow::ShadowElements element) const
+{
+    if (!m_pictures[element]) {
+        return XCB_RENDER_PICTURE_NONE;
+    }
+    return *m_pictures[element];
 }
 
 } // namespace

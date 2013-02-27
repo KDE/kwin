@@ -172,12 +172,13 @@ public:
                            QRect& right, QRect& bottomRight,
                            QRect& bottom, QRect& bottomLeft,
                            QRect& Left, QRect& topLeft);
+    xcb_render_picture_t picture(ShadowElements element) const;
 
 protected:
     virtual void buildQuads();
-    virtual bool prepareBackend() {
-        return true;
-    };
+    virtual bool prepareBackend();
+private:
+    XRenderPicture* m_pictures[ShadowElementsCount];
 };
 
 } // namespace
