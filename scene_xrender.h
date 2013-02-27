@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xfixes.h>
 
 namespace KWin
 {
@@ -48,7 +46,7 @@ public:
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
-    Picture bufferPicture();
+    xcb_render_picture_t bufferPicture();
     virtual OverlayWindow *overlayWindow() {
         return m_overlayWindow;
     }
@@ -63,9 +61,9 @@ private:
     void createBuffer();
     void present(int mask, QRegion damage);
     void initXRender(bool createOverlay);
-    XRenderPictFormat* format;
-    Picture front;
-    static Picture buffer;
+    xcb_render_pictformat_t format;
+    xcb_render_picture_t front;
+    static xcb_render_picture_t buffer;
     static ScreenPaintData screen_paint;
     class Window;
     QHash< Toplevel*, Window* > windows;
@@ -85,12 +83,13 @@ public:
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
 private:
-    Picture picture();
+    xcb_render_picture_t picture();
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
     void prepareTempPixmap();
-    Picture _picture;
-    XRenderPictFormat* format;
+    void setPictureFilter(xcb_render_picture_t pic, ImageFilterType filter);
+    xcb_render_picture_t _picture;
+    xcb_render_pictformat_t format;
     double alpha_cached_opacity;
     QRegion transformed_shape;
     static QRect temp_visibleRect;
@@ -126,7 +125,7 @@ private:
 };
 
 inline
-Picture SceneXrender::bufferPicture()
+xcb_render_picture_t SceneXrender::bufferPicture()
 {
     return buffer;
 }
