@@ -794,8 +794,9 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
             qreal left, top, right, bottom;
             m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
             QRect geom = m_effectFrame->geometry().adjusted(-left, -top, right, bottom);
-            XRenderComposite(display(), PictOpOver, *m_picture, None, effects->xrenderBufferPicture(),
-                                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_picture,
+                                 XCB_RENDER_PICTURE_NONE, effects->xrenderBufferPicture(),
+                                 0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
         }
     }
     if (!m_effectFrame->selection().isNull()) {
@@ -806,8 +807,9 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         }
         if (m_selectionPicture) {
             const QRect geom = m_effectFrame->selection();
-            XRenderComposite(display(), PictOpOver, *m_selectionPicture, None, effects->xrenderBufferPicture(),
-                                0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_selectionPicture,
+                                 XCB_RENDER_PICTURE_NONE, effects->xrenderBufferPicture(),
+                                 0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
         }
     }
 
@@ -820,8 +822,9 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         if (!m_iconPicture)   // lazy creation
             m_iconPicture = new XRenderPicture(m_effectFrame->icon());
         QRect geom = QRect(topLeft, m_effectFrame->iconSize());
-        XRenderComposite(display(), PictOpOver, *m_iconPicture, fill, effects->xrenderBufferPicture(),
-                         0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_iconPicture, fill,
+                             effects->xrenderBufferPicture(),
+                             0, 0, 0, 0, geom.x(), geom.y(), geom.width(), geom.height());
     }
 
     // Render text
@@ -829,7 +832,7 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         if (!m_textPicture) { // Lazy creation
             updateTextPicture();
         }
-        XRenderComposite(display(), PictOpOver, *m_textPicture, fill, effects->xrenderBufferPicture(),
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_textPicture, fill, effects->xrenderBufferPicture(),
                          0, 0, 0, 0, m_effectFrame->geometry().x(), m_effectFrame->geometry().y(),
                          m_effectFrame->geometry().width(), m_effectFrame->geometry().height());
     }
