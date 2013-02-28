@@ -67,6 +67,9 @@ void LanczosFilter::init()
     GLPlatform *gl = GLPlatform::instance();
     if (!force && gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
         return;
+    // Broken on IvyBridge with Mesa 9.1 - BUG 313613
+    if (!force && gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1))
+        return;
     // With fglrx the ARB Shader crashes KWin (see Bug #270818 and #286795)
     if (!force && gl->driver() == Driver_Catalyst && effects->compositingType() == OpenGL1Compositing) {
         return;
