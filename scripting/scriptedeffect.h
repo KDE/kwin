@@ -131,7 +131,9 @@ public:
     }
 
 public Q_SLOTS:
-    void animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = NULL, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     virtual bool borderActivated(ElectricBorder border);
 
 Q_SIGNALS:

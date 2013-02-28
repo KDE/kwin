@@ -50,8 +50,8 @@
         </sectiondef>
         <sectiondef kind="public-func">
             <memberdef kind="function">
-                <type>Q_SCRIPTABLE void</type>
-                <definition>void KWin::ScriptedEffect::animate</definition>
+                <type>Q_SCRIPTABLE QList&lt;quint64&gt;</type>
+                <definition>QList&lt;quint64&gt; KWin::ScriptedEffect::animate</definition>
                 <argsstring>(settings)</argsstring>
                 <name>animate</name>
                 <read></read>
@@ -79,7 +79,29 @@ supports the following attributes:
     ]
 }
 &lt;/syntaxhighlight&gt;
-At least one animation needs to be specified either with the top-level properties or in the animations list.
+At least one animation or attribute setter (see below) needs to be specified either with the top-level properties or in the animations list.
+                </detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE QList&lt;quint64&gt;</type>
+                <definition>QList&lt;quint64&gt; KWin::ScriptedEffect::set</definition>
+                <argsstring>(settings)</argsstring>
+                <name>set</name>
+                <read></read>
+                <detaileddescription>
+Like animate, just that the manipulation does not implicitly end with the animation. You have to explicitly cancel it.
+Until then, the manipulated attribute will remain at animation target value.
+                </detaileddescription>
+            </memberdef>
+            <memberdef kind="function">
+                <type>Q_SCRIPTABLE bool</type>
+                <definition>bool KWin::ScriptedEffect::cancel</definition>
+                <argsstring>(QList&lt;quint64&gt;)</argsstring>
+                <name>cancel</name>
+                <read></read>
+                <detaileddescription>
+Cancel one or more present animations caused and returned by KWin::ScriptedEffect::animate or KWin::ScriptedEffect::set.
+For convenience you can pass a single quint64 as well.
                 </detaileddescription>
             </memberdef>
             <memberdef kind="function">
