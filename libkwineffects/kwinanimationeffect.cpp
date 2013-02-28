@@ -74,7 +74,7 @@ bool AnimationEffect::isActive() const
 #define RELATIVE_XY(_FIELD_) const bool relative[2] = { static_cast<bool>(metaData(Relative##_FIELD_##X, meta)), \
                                                         static_cast<bool>(metaData(Relative##_FIELD_##Y, meta)) }
 
-void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from )
+quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int ms, FPx2 to, QEasingCurve curve, int delay, FPx2 from, bool keepAtTarget )
 {
     const bool waitAtSource = from.isValid();
     if (a < NonFloatBase) {
@@ -179,7 +179,8 @@ void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, 
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
-    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource));
+    it->first.append(AniData(a, meta, ms, to, curve, delay, from, waitAtSource, keepAtTarget));
+    quint64 ret_id = quint64(&it->first.last());
     it->second = QRect();
 
     d->m_animationsTouched = true;
@@ -192,6 +193,29 @@ void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, 
     else {
         triggerRepaint();
     }
+    return ret_id;
+}
+
+bool AnimationEffect::cancel(quint64 animationId)
+{
+    Q_D(AnimationEffect);
+    for (AniMap::iterator entry = d->m_animations.begin(), mapEnd = d->m_animations.end(); entry != mapEnd; ++entry) {
+        for (QList<AniData>::iterator anim = entry->first.begin(), animEnd = entry->first.end(); anim != animEnd; ++anim) {
+            if (quint64(&(*anim)) == animationId) {
+                entry->first.erase(anim); // remove the animation
+                if (entry->first.isEmpty()) { // no other animations on the window, release it.
+                    const int i = d->m_zombies.indexOf(entry.key());
+                    if ( i > -1 ) {
+                        d->m_zombies.removeAt( i );
+                        entry.key()->unrefWindow();
+                    }
+                    d->m_animations.erase(entry);
+                }
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
@@ -221,7 +245,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 anim->addTime(time);
             }
 
-            if (anim->time < anim->duration) {
+            if (anim->time < anim->duration || anim->keepAtTarget) {
 //                 if (anim->attribute != Brightness && anim->attribute != Saturation && anim->attribute != Opacity)
 //                     transformed = true;
                 d->m_animated = true;
@@ -540,14 +564,18 @@ float AnimationEffect::interpolated( const AniData &a, int i ) const
 {
     if (a.startTime > clock())
         return a.from[i];
-    return a.from[i] + a.curve.valueForProgress( ((float)a.time)/a.duration )*(a.to[i] - a.from[i]);
+    if (a.time < a.duration)
+        return a.from[i] + a.curve.valueForProgress( ((float)a.time)/a.duration )*(a.to[i] - a.from[i]);
+    return a.to[i]; // we're done and "waiting" at the target value
 }
 
 float AnimationEffect::progress( const AniData &a ) const
 {
     if (a.startTime > clock())
         return 0.0;
-    return a.curve.valueForProgress( ((float)a.time)/a.duration );
+    if (a.time < a.duration)
+        return a.curve.valueForProgress( ((float)a.time)/a.duration );
+    return 1.0; // we're done and "waiting" at the target value
 }
 
 

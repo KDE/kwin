@@ -31,7 +31,7 @@ class AniData {
 public:
     AniData();
     AniData(AnimationEffect::Attribute a, int meta, int ms, const FPx2 &to,
-            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource );
+            QEasingCurve curve, int delay, const FPx2 &from, bool waitAtSource, bool keepAtTarget = false);
     AniData(const AniData &other);
     explicit AniData(const QString &str);
     inline void addTime(int t) { time += t; }
@@ -48,7 +48,7 @@ public:
     uint meta;
     qint64 startTime;
     NET::WindowTypeMask windowType;
-    bool waitAtSource;
+    bool waitAtSource, keepAtTarget;
 };
 
 } // namespace
