@@ -136,7 +136,7 @@ WRAP(bool, stopActivity, const QString &)
 
 void DBusInterface::doNotManage(const QString &name)
 {
-    Workspace::self()->doNotManage(name);
+    Q_UNUSED(name)
 }
 
 void DBusInterface::showWindowMenuAt(qlonglong winId, int x, int y)

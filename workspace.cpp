@@ -969,29 +969,6 @@ void Workspace::slotReconfigure()
 }
 
 /**
- * Avoids managing a window with title \a title
- */
-void Workspace::doNotManage(const QString& title)
-{
-    doNotManageList.append(title);
-}
-
-/**
- * Hack for java applets
- */
-bool Workspace::isNotManaged(const QString& title)
-{
-    for (QStringList::Iterator it = doNotManageList.begin(); it != doNotManageList.end(); ++it) {
-        QRegExp r((*it));
-        if (r.indexIn(title) != -1) {
-            doNotManageList.erase(it);
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
  * During virt. desktop switching, desktop areas covered by windows that are
  * going to be hidden are first obscured by new windows with no background
  * ( i.e. transparent ) placed right below the windows. These invisible windows

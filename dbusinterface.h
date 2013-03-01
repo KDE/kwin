@@ -65,6 +65,9 @@ public Q_SLOTS: // METHODS
     void circulateDesktopApplications();
     int currentDesktop();
     QList<int> decorationSupportedColors();
+    /**
+     * @deprecated
+     **/
     void doNotManage(const QString &name);
     Q_NOREPLY void killWindow();
     void nextDesktop();

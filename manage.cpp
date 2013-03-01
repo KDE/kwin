@@ -462,13 +462,6 @@ bool Client::manage(Window w, bool isMapped)
     if (init_minimize)
         minimize(true);   // No animation
 
-
-    // SELI TODO: This seems to be mainly for kstart and ksystraycmd
-    // probably should be replaced by something better
-    bool doNotShow = false;
-    if (workspace()->isNotManaged(caption()))
-        doNotShow = true;
-
     // Other settings from the previous session
     if (session) {
         // Session restored windows are not considered to be new windows WRT rules,
@@ -541,7 +534,7 @@ bool Client::manage(Window w, bool isMapped)
     else
         ready_for_painting = true; // set to true in case compositing is turned on later. bug #160393
 
-    if (isShown(true) && !doNotShow) {
+    if (isShown(true)) {
         if (isDialog())
             Notify::raise(Notify::TransNew);
         if (isNormalWindow())
@@ -597,10 +590,8 @@ bool Client::manage(Window w, bool isMapped)
             } else if (!session && !isSpecialWindow())
                 demandAttention();
         }
-    } else if (!doNotShow) // if ( !isShown( true ) && !doNotShow )
+    } else
         updateVisibility();
-    else // doNotShow
-        hideClient(true);   // SELI HACK !!!
     assert(mapping_state != Withdrawn);
     m_managed = true;
     blockGeometryUpdates(false);

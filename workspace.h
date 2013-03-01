@@ -332,7 +332,6 @@ public:
     bool decorationSupportsBlurBehind() const;
 
     // D-Bus interface
-    void doNotManage(const QString&);
     /**
      * @deprecated
      * @todo: remove KDE5
@@ -348,8 +347,6 @@ public:
     void setShowingDesktop(bool showing);
     void resetShowingDesktop(bool keep_hidden);
     bool showingDesktop() const;
-
-    bool isNotManaged(const QString& title);    // TODO: Setter or getter?
 
     void sendPingToWindow(Window w, Time timestamp);   // Called from Client::pingWindow()
     void sendTakeActivity(Client* c, Time timestamp, long flags);   // Called from Client::takeActivity()
@@ -669,9 +666,6 @@ private:
 
     RootInfo* rootInfo;
     QWidget* supportWindow;
-
-    // Swallowing
-    QStringList doNotManageList;
 
     // Colormap handling
     Colormap default_colormap;
