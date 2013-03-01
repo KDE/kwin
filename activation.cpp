@@ -453,7 +453,7 @@ bool Workspace::activateNextClient(Client* c)
     Client* get_focus = NULL;
 
     // precedence on keeping the current tabgroup active. to the user that's the same window
-    if (c && c->tabGroup()) {
+    if (c && c->tabGroup() && c->isShown(false)) {
         if (c == c->tabGroup()->current())
             c->tabGroup()->activateNext();
         get_focus = c->tabGroup()->current();
