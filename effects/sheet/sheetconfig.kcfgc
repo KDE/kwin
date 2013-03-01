@@ -1,0 +1,5 @@
+File=sheet.kcfg
+ClassName=SheetConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true

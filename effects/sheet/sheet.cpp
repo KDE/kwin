@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "sheet.h"
+#include "sheetconfig.h"
 
-#include <kconfiggroup.h>
 #include <QTimeLine>
 #include <QGraphicsRotation>
 #include <QVector3D>
@@ -51,8 +51,8 @@ bool SheetEffect::supported()
 
 void SheetEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("Sheet");
-    duration = animationTime(conf, "AnimationTime", 500);
+    SheetConfig::self()->readConfig();
+    duration = animationTime(SheetConfig::animationTime() != 0 ? SheetConfig::animationTime() : 500);
 }
 
 void SheetEffect::prePaintScreen(ScreenPrePaintData& data, int time)
