@@ -149,7 +149,7 @@ void FocusChain::insertClientIntoChain(Client *client, QList< Client * >& chain)
         return;
     }
     if (m_activeClient && m_activeClient != client &&
-            chain.last() == m_activeClient) {
+            !chain.empty() && chain.last() == m_activeClient) {
         // Add it after the active client
         chain.insert(chain.size() - 1, client);
     } else {
