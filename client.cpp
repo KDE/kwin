@@ -1519,7 +1519,10 @@ void Client::setOnActivity(const QString &activity, bool enable)
 /**
  * set exactly which activities this client is on
  */
+<<<<<<< HEAD
 // cloned from kactivities/src/lib/core/consumer.cpp
+=======
+>>>>>>> Map NULL_UUID activity to ALL activities
 #define NULL_UUID "00000000-0000-0000-0000-000000000000"
 void Client::setOnActivities(QStringList newActivitiesList)
 {
@@ -2384,6 +2387,7 @@ void Client::checkActivities()
     }
 
     newActivitiesList = QString(prop).split(',');
+
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.
 
