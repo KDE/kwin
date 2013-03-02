@@ -1518,11 +1518,15 @@ void Client::setOnActivity(const QString &activity, bool enable)
 /**
  * set exactly which activities this client is on
  */
+#define NULL_UUID "00000000-0000-0000-0000-000000000000"
 void Client::setOnActivities(QStringList newActivitiesList)
 {
     QString joinedActivitiesList = newActivitiesList.join(",");
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
     newActivitiesList = joinedActivitiesList.split(',', QString::SkipEmptyParts);
+
+    if (newActivitiesList.contains(NULL_UUID))
+        newActivitiesList.clear(); // turn into "all"
 
     QStringList allActivities = workspace()->activityList();
     if ( newActivitiesList.isEmpty() ||
@@ -2380,6 +2384,12 @@ void Client::checkActivities()
     }
 
     newActivitiesList = QString(prop).split(',');
+
+    if (newActivitiesList.contains(NULL_UUID)) {
+        setOnAllActivities(true);
+        return;
+    }
+
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.
 
