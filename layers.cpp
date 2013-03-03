@@ -216,7 +216,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
 
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(newWindowStack.at(0) == (Window*)supportWindow->winId());
+    assert(newWindowStack.at(0) == supportWindow->winId());
     XRestackWindows(display(), (Window*)newWindowStack.data(), newWindowStack.count());
 
     int pos = 0;
