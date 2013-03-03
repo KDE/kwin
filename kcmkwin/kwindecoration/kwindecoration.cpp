@@ -364,6 +364,8 @@ void KWinDecorationModule::slotGHNSClicked()
                 if (proxyIndex.isValid())
                     m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
             }
+            m_lastPreviewWidth = 0;
+            updatePreviews();
         }
     }
     delete downloadDialog;
