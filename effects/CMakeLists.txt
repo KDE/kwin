@@ -11,7 +11,7 @@ set(kwin_effect_KDE_LIBS
 )
 
 set(kwin_effect_XLIB_LIBS
-    ${X11_LIBRARIES}
+    ${X11_X11_LIB}
     ${X11_Xcursor_LIB}
 )
 

@@ -18,7 +18,8 @@ set(kwineffects_KDE_LIBS
 )
 
 set(kwineffects_XLIB_LIBS
-    ${X11_LIBRARIES}
+    ${X11_X11_LIB}
+    ${X11_Xext_LIB}
     ${X11_Xrandr_LIB}
     ${X11_Xdamage_LIB}
 )

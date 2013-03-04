@@ -207,7 +207,10 @@ set(kwin_KDE_LIBS
 )
 
 set(kwin_XLIB_LIBS
-    ${X11_LIBRARIES}
+    ${X11_X11_LIB}
+    ${X11_Xext_LIB}
+    ${X11_ICE_LIB}
+    ${X11_SM_LIB}
     ${X11_Xcursor_LIB}
     ${X11_Xrandr_LIB}
     ${X11_Xdamage_LIB}
