@@ -66,7 +66,7 @@ void GenericScriptedConfig::createUi()
     const QString kconfigXTFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + '/' + typeName() + '/' + m_packageName + "/contents/config/main.xml");
     const QString uiPath = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + '/' + typeName() + '/' + m_packageName + "/contents/ui/config.ui");
     if (kconfigXTFile.isEmpty() || uiPath.isEmpty()) {
-        layout->addWidget(new QLabel(i18nc("Error message", "Plugin doesn't provide configuration file in expected location")));
+        layout->addWidget(new QLabel(i18nc("Error message", "Plugin does not provide configuration file in expected location")));
         return;
     }
     QFile xmlFile(kconfigXTFile);
