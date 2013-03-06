@@ -149,6 +149,7 @@ if(KWIN_BUILD_SCRIPTING)
         scripting/scriptedeffect.cpp
         scripting/scriptingutils.cpp
         scripting/timer.cpp
+        scripting/scripting_model.cpp
     )
 endif()
 

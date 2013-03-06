@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
+#include "scripting_model.h"
 #include "../client.h"
 #include "../thumbnailitem.h"
 #include "../options.h"
@@ -560,6 +561,11 @@ void KWin::DeclarativeScript::run()
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
     qmlRegisterType<ThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
+    qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 0, 1, "ClientModel");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 0, 1, "ClientModelByScreen");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 0, 1, "ClientModelByScreenAndDesktop");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 0, 1, "ClientFilterModel");
     qmlRegisterType<KWin::Client>();
 
     m_view->rootContext()->setContextProperty("options", options);
