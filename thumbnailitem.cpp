@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "workspace.h"
+#include "composite.h"
 // Qt
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -40,15 +41,24 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     , m_parentWindow(0)
 {
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
-    if (effects) {
-        connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
-        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
-    }
+    Q_ASSERT(Compositor::isCreated());
+    connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingToggled()));
+    compositingToggled();
     QTimer::singleShot(0, this, SLOT(init()));
 }
 
 ThumbnailItem::~ThumbnailItem()
 {
+}
+
+void ThumbnailItem::compositingToggled()
+{
+    m_parent.clear();
+    if (effects) {
+        connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), SLOT(effectWindowAdded()));
+        connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), SLOT(repaint(KWin::EffectWindow*)));
+        effectWindowAdded();
+    }
 }
 
 void ThumbnailItem::init()
