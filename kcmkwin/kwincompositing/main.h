@@ -78,6 +78,7 @@ public slots:
 
 private slots:
     void confirmReInit() { showConfirmDialog(true); }
+    void glSwapStrategyChanged(int idx);
     void rearmGlSupport();
     void suggestGraphicsSystem();
     void toogleSmoothScaleUi(int compositingType);
