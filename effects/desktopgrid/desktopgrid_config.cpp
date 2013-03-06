@@ -90,6 +90,7 @@ DesktopGridEffectConfig::~DesktopGridEffectConfig()
 
 void DesktopGridEffectConfig::save()
 {
+    m_ui->shortcutEditor->save();
     DesktopGridConfig::setDesktopNameAlignment(m_ui->desktopNameAlignmentCombo->itemData(m_ui->desktopNameAlignmentCombo->currentIndex()).toInt());
     KCModule::save();
 
