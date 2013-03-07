@@ -255,7 +255,7 @@ void MagnifierEffect::zoomIn()
         effects->startMousePolling();
     }
     if (!m_texture) {
-        m_texture = new GLTexture(magnifier_size);
+        m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
         m_texture->setYInverted(false);
         m_fbo = new GLRenderTarget(*m_texture);
     }
@@ -293,7 +293,7 @@ void MagnifierEffect::toggle()
             effects->startMousePolling();
         }
         if (!m_texture) {
-            m_texture = new GLTexture(magnifier_size);
+            m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
             m_texture->setYInverted(false);
             m_fbo = new GLRenderTarget(*m_texture);
         }
