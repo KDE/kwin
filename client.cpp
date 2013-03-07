@@ -59,7 +59,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <X11/extensions/shape.h>
-#include <QX11Info>
 
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
@@ -2280,7 +2279,7 @@ void Client::updateCompositeBlocking(bool readProperty)
 {
     if (readProperty) {
         const unsigned long properties[2] = {0, NET::WM2BlockCompositing};
-        NETWinInfo2 i(QX11Info::display(), window(), rootWindow(), properties, 2);
+        NETWinInfo2 i(display(), window(), rootWindow(), properties, 2);
         setBlockingCompositing(i.isBlockingCompositing());
     }
     else
