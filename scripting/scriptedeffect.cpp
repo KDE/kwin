@@ -24,12 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "../screenedge.h"
-#include <Plasma/ConfigLoader>
 #endif
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
 #include <KDE/KStandardDirs>
+#include <Plasma/ConfigLoader>
 // Qt
 #include <QFile>
 #include <QtScript/QScriptEngine>
