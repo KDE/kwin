@@ -47,7 +47,7 @@
 // KDE
 #include <KAboutData>
 #include <KDialog>
-#include <KLocale>
+#include <KDE/KLocalizedString>
 #include <KMessageBox>
 #include <KNS3/DownloadDialog>
 #include <KDE/KStandardDirs>

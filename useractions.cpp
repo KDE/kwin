@@ -59,7 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kglobalsettings.h>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <kglobalaccel.h>
 #include <kapplication.h>

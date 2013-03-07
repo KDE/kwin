@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kwinconfig.h>
 #include <kdebug.h>
 

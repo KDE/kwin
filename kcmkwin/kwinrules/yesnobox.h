@@ -23,7 +23,7 @@
 #include <QHBoxLayout>
 #include <QRadioButton>
 
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 
 class YesNoBox : public QWidget {
     Q_OBJECT

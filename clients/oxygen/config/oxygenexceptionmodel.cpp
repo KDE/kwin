@@ -24,7 +24,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenexceptionmodel.h"
-#include <KLocale>
+#include <KLocalizedString>
 namespace Oxygen
 {
 

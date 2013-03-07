@@ -40,7 +40,7 @@
 #include <QMimeData>
 #include <QScrollBar>
 
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kglobalsettings.h>
 
 #ifdef KWIN_BUILD_KAPPMENU

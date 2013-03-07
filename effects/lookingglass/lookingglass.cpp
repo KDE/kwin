@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kactioncollection.h>
 #include <kaction.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KDE/KGlobal>
 #include <KDE/KStandardDirs>

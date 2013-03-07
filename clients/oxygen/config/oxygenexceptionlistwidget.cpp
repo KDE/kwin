@@ -28,7 +28,7 @@
 #include "oxygenexceptiondialog.h"
 
 #include <QPointer>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 //__________________________________________________________

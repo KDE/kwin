@@ -35,7 +35,6 @@
 #include <QLayout>
 #include <QGroupBox>
 #include <QtGui/QMouseEvent>
-#include <KLocale>
 
 #include <QtGui/QX11Info>
 #include <X11/Xlib.h>

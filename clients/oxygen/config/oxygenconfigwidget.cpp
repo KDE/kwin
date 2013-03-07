@@ -31,7 +31,7 @@
 #include <QLabel>
 #include <QLayout>
 #include <QGroupBox>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KTabWidget>
 
 namespace Oxygen

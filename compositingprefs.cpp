@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kxerrorhandler.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kdeversion.h>
 #include <ksharedconfig.h>
 #include <kstandarddirs.h>

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFont>
 #include <QMatrix4x4>
 #include <QMouseEvent>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kapplication.h>
 #include <kcolorscheme.h>
 #include <kglobal.h>

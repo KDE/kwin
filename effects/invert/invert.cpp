@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 #include <kactioncollection.h>
 #include <kaction.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KStandardDirs>
 

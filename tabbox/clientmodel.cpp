@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
 #include <QTextStream>
-// KDE
-#include <KLocale>
 // other
 #include <math.h>
 

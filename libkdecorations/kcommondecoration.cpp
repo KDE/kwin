@@ -37,7 +37,7 @@
 
 #include <kapplication.h>
 #include "kdecorationfactory.h"
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 
 #include "kcommondecoration.moc"
 

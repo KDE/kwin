@@ -34,7 +34,7 @@
 #include <cassert>
 #include <cmath>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KColorUtils>
 #include <KDebug>
 #include <KStyle>

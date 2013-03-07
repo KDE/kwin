@@ -48,7 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 #include <kicontheme.h>
 #include <kiconeffect.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <QBitmap>
 #include <QLabel>

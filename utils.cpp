@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kxerrorhandler.h>
 #include <X11/Xatom.h>
+#include <KDE/KLocalizedString>
 
 #ifndef KCMRULES
 #include <QLabel>
@@ -36,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <kdebug.h>
 #include <kglobalaccel.h>
-#include <klocale.h>
 #include <kshortcut.h>
 #include <kkeyserver.h>
 #include <KPushButton>

@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config-kwin.h"
 
 #include <kglobal.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <stdlib.h>
 #include <QPixmap>
 

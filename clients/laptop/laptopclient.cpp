@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QBitmap>
 #include <QPainter>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 
 namespace Laptop {
 

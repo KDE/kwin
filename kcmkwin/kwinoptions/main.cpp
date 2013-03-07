@@ -27,7 +27,7 @@
 
 #include <kapplication.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <kaboutdata.h>
 #include <kdialog.h>

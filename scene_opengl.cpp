@@ -62,7 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector4D>
 #include <QMatrix4x4>
 
-#include <KLocale>
+#include <KDE/KLocalizedString>
 #include <KProcess>
 
 namespace KWin

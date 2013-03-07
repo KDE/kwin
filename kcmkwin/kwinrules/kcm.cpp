@@ -22,7 +22,7 @@
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <QtDBus/QtDBus>

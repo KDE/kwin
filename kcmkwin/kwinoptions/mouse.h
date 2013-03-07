@@ -26,7 +26,7 @@ class KConfig;
 
 #include <kcmodule.h>
 #include <KComboBox>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 
 #include "ui_actions.h"
 #include "ui_mouse.h"

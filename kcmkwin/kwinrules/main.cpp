@@ -19,7 +19,7 @@
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kwindowsystem.h>
 #include <QtDBus/QtDBus>
 #include <X11/Xlib.h>

@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <kstartupinfo.h>
 #include <kstringhandler.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 
 #include "notifications.h"
 #include "atoms.h"

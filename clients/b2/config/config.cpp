@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGridLayout>
 #include <QSpacerItem>
 #include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <kvbox.h>
 
 

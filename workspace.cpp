@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <klocale.h>
 #include <QDesktopWidget>
 #include <QRegExp>
 #include <QPainter>
