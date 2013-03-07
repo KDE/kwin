@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "klibrary.h"
 #include "kdesktopfile.h"
 #include "kconfiggroup.h"
+#include <KDE/KGlobal>
 #include "kstandarddirs.h"
 #include <kservice.h>
 #include <kservicetypetrader.h>

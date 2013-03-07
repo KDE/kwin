@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kwinconfig.h>
 #include <kdebug.h>
+#include <KDE/KGlobal>
 
 #include <QColor>
 #include <QRect>

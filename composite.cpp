@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 
 #include <xcb/composite.h>

@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // include KDE
 #include <KDE/KDebug>
+#include <KDE/KGlobal>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
 #include <KDE/KServiceTypeTrader>

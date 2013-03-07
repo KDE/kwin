@@ -3,4 +3,4 @@ ClassName=CubeConfig
 NameSpace=KWin
 Singleton=true
 Mutators=true
-IncludeFiles=kcolorscheme.h,KDE/KStandardDirs
+IncludeFiles=kcolorscheme.h,KDE/KStandardDirs,KDE/KGlobal

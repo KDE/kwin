@@ -61,6 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kiconloader.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
+#include <KDE/KGlobal>
 #include <kglobalaccel.h>
 #include <kapplication.h>
 #include <QRegExp>

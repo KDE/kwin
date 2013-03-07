@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstandarddirs.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
+#include <KDE/KGlobal>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
 #include <kdeclarative.h>

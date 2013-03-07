@@ -32,6 +32,7 @@ DEALINGS IN THE SOFTWARE.
 #include <klibrary.h>
 #include <kconfiggroup.h>
 #include <KDE/KLocalizedString>
+#include <KDE/KGlobal>
 #include <assert.h>
 
 #include <QDir>
