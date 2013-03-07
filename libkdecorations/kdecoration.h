@@ -25,14 +25,14 @@ DEALINGS IN THE SOFTWARE.
 #ifndef KDECORATION_H
 #define KDECORATION_H
 
+#include <kwinglobals.h>
+
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QObject>
 #include <QtGui/QIcon>
 #include <netwm_def.h>
 #include <QtGui/QMouseEvent>
-
-#define KWIN_EXPORT KDE_EXPORT
 
 #define KWIN_DECORATION_API_VERSION 1
 
