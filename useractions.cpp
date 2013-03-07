@@ -58,6 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSlider>
 
 #include <kglobalsettings.h>
+#include <KDE/KIcon>
 #include <kiconloader.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>

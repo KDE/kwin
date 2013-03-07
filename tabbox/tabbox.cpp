@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDE/KAction>
 #include <KDebug>
+#include <KDE/KIcon>
 #include <KDE/KGlobal>
 #include <KLocalizedString>
 #include <kkeyserver.h>
