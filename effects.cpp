@@ -49,15 +49,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusServiceWatcher>
 #include <QDBusPendingCallWatcher>
 
-#include "kdebug.h"
-#include "klibrary.h"
-#include "kdesktopfile.h"
-#include "kconfiggroup.h"
+#include <KDE/KDebug>
+#include <KDE/KLibrary>
+#include <KDE/KDesktopFile>
+#include <KDE/KConfigGroup>
 #include <KDE/KGlobal>
-#include "kstandarddirs.h"
-#include <kservice.h>
-#include <kservicetypetrader.h>
-#include <kplugininfo.h>
+#include <KDE/KStandardDirs>
+#include <KDE/KService>
+#include <KDE/KServiceTypeTrader>
+#include <KDE/KPluginInfo>
 #include <Plasma/Theme>
 
 #include <assert.h>
