@@ -79,7 +79,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 #include <X11/cursorfont.h>
-#include <QX11Info>
 #include <stdio.h>
 #include <kglobalsettings.h>
 #include <kwindowsystem.h>
@@ -168,8 +167,7 @@ Workspace::Workspace(bool restore)
     options->loadConfig();
     options->loadCompositingConfig(false);
     mgr = new PluginMgr;
-    QX11Info info;
-    default_colormap = DefaultColormap(display(), info.screen());
+    default_colormap = DefaultColormap(display(), screen_number);
     installed_colormap = default_colormap;
 
     connect(&temporaryRulesMessages, SIGNAL(gotMessage(QString)),
@@ -375,8 +373,7 @@ void Workspace::init()
     if (hasDecorationPlugin() && mgr->factory()->supports(AbilityExtendIntoClientArea))
         protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
-    QX11Info info;
-    rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, info.screen());
+    rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, screen_number);
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
