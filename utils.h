@@ -39,7 +39,6 @@ class QLabel;
 #include <netwm_def.h>
 #include <kkeysequencewidget.h>
 #include <limits.h>
-#include <QX11Info>
 #include <kdialog.h>
 
 #include <kwinglobals.h>

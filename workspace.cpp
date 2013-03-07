@@ -104,7 +104,7 @@ Workspace::Workspace(bool restore)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
-    , temporaryRulesMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL, false)
+    , temporaryRulesMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL)
     , rules_updates_disabled(false)
     , active_client(0)
     , last_active_client(0)
