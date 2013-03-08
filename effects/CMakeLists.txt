@@ -1,6 +1,3 @@
-# the factory macros cause errors
-kde4_no_enable_final(kwineffects)
-
 set(kwin_effect_OWN_LIBS
     kwineffects
 )
