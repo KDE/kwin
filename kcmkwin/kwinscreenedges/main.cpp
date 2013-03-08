@@ -216,16 +216,9 @@ void KWinScreenEdgesConfig::monitorInit()
         monitorAddItem(services.first()->name() + " - " + i18n("Cylinder"));
         monitorAddItem(services.first()->name() + " - " + i18n("Sphere"));
     }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_flipswitch'");
-    if (services.isEmpty()) {
-        // adding empty strings in case the effect is not found
-        // TODO: after string freeze add a info that the effect is missing
-        monitorAddItem(QString());
-        monitorAddItem(QString());
-    } else {
-        monitorAddItem(services.first()->name() + " - " + i18n("All Desktops"));
-        monitorAddItem(services.first()->name() + " - " + i18n("Current Desktop"));
-    }
+
+    monitorAddItem(i18n("Toggle window switching"));
+    monitorAddItem(i18n("Toggle alternative window switching"));
 
     monitorShowEvent();
 }
@@ -308,21 +301,21 @@ void KWinScreenEdgesConfig::monitorLoad()
         monitorChangeEdge(ElectricBorder(i), int(Sphere));
     }
 
-    // Flip Switch
-    KConfigGroup flipSwitchConfig(m_config, "Effect-FlipSwitch");
+    // TabBox
+    KConfigGroup tabBoxConfig(m_config, "TabBox");
     list.clear();
-    // FlipSwitch BorderActivateAll
+    // TabBox
     list.append(int(ElectricNone));
-    list = flipSwitchConfig.readEntry("BorderActivateAll", list);
+    list = tabBoxConfig.readEntry("BorderActivate", list);
     foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(FlipSwitchAll));
+        monitorChangeEdge(ElectricBorder(i), int(TabBox));
     }
-    // FlipSwitch BorderActivate
+    // Alternative TabBox
     list.clear();
     list.append(int(ElectricNone));
-    list = flipSwitchConfig.readEntry("BorderActivate", list);
+    list = tabBoxConfig.readEntry("BorderAlternativeActivate", list);
     foreach (int i, list) {
-        monitorChangeEdge(ElectricBorder(i), int(FlipSwitchCurrent));
+        monitorChangeEdge(ElectricBorder(i), int(TabBoxAlternative));
     }
 }
 
@@ -389,12 +382,12 @@ void KWinScreenEdgesConfig::monitorSave()
     cubeConfig.writeEntry("BorderActivateSphere",
                           monitorCheckEffectHasEdge(int(Sphere)));
 
-    // Flip Switch
-    KConfigGroup flipSwitchConfig(m_config, "Effect-FlipSwitch");
-    flipSwitchConfig.writeEntry("BorderActivateAll",
-                                monitorCheckEffectHasEdge(int(FlipSwitchAll)));
-    flipSwitchConfig.writeEntry("BorderActivate",
-                                monitorCheckEffectHasEdge(int(FlipSwitchCurrent)));
+    // TabBox
+    KConfigGroup tabBoxConfig(m_config, "TabBox");
+    tabBoxConfig.writeEntry("BorderActivate",
+                                monitorCheckEffectHasEdge(int(TabBox)));
+    tabBoxConfig.writeEntry("BorderAlternativeActivate",
+                                monitorCheckEffectHasEdge(int(TabBoxAlternative)));
 }
 
 void KWinScreenEdgesConfig::monitorDefaults()
@@ -429,11 +422,6 @@ void KWinScreenEdgesConfig::monitorShowEvent()
         monitorItemSetEnabled(int(Cube), enabled);
         monitorItemSetEnabled(int(Cylinder), enabled);
         monitorItemSetEnabled(int(Sphere), enabled);
-
-        // Flip Switch
-        enabled = effectEnabled("flipswitch", config);
-        monitorItemSetEnabled(int(FlipSwitchAll), enabled);
-        monitorItemSetEnabled(int(FlipSwitchCurrent), enabled);
     } else { // Compositing disabled
         monitorItemSetEnabled(int(PresentWindowsCurrent), false);
         monitorItemSetEnabled(int(PresentWindowsAll), false);
@@ -441,9 +429,13 @@ void KWinScreenEdgesConfig::monitorShowEvent()
         monitorItemSetEnabled(int(Cube), false);
         monitorItemSetEnabled(int(Cylinder), false);
         monitorItemSetEnabled(int(Sphere), false);
-        monitorItemSetEnabled(int(FlipSwitchAll), false);
-        monitorItemSetEnabled(int(FlipSwitchCurrent), false);
     }
+    // tabbox, depends on reasonable focus policy.
+    KConfigGroup config2(m_config, "Windows");
+    QString focusPolicy = config2.readEntry("FocusPolicy", QString());
+    bool reasonable = focusPolicy != "FocusStrictlyUnderMouse" && focusPolicy != "FocusUnderMouse";
+    monitorItemSetEnabled(int(TabBox), reasonable);
+    monitorItemSetEnabled(int(TabBoxAlternative), reasonable);
 }
 
 void KWinScreenEdgesConfig::monitorChangeEdge(ElectricBorder border, int index)

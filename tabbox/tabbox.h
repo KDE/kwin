@@ -235,6 +235,8 @@ public slots:
 
     void handlerReady();
 
+    bool toggle(ElectricBorder eb);
+
 signals:
     void tabBoxAdded(int);
     Q_SCRIPTABLE void tabBoxClosed();
@@ -297,6 +299,7 @@ private:
     KShortcut m_cutWalkThroughCurrentAppWindowsAlternative, m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
     bool m_forcedGlobalMouseGrab;
     bool m_ready; // indicates whether the config is completely loaded
+    QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;
 
     static TabBox *s_self;
 };

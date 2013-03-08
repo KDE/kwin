@@ -69,8 +69,8 @@ private:
         Cube,
         Cylinder,
         Sphere,
-        FlipSwitchAll,
-        FlipSwitchCurrent
+        TabBox,
+        TabBoxAlternative
     };
 
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;

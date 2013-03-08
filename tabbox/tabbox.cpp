@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "focuschain.h"
+#include "screenedge.h"
 #include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -743,6 +744,26 @@ void TabBox::reconfigure()
 
     m_delayShow = config.readEntry<bool>("ShowDelay", true);
     m_delayShowTime = config.readEntry<int>("DelayTime", 90);
+
+    QList<ElectricBorder> *borders = &m_borderActivate;
+    QString borderConfig = "BorderActivate";
+    for (int i = 0; i < 2; ++i) {
+        foreach (ElectricBorder border, *borders) {
+            ScreenEdges::self()->unreserve(border, this);
+        }
+        borders->clear();
+        QStringList list = config.readEntry(borderConfig, QStringList());
+        foreach (const QString &s, list) {
+            bool ok;
+            const int i = s.toInt(&ok);
+            if (!ok)
+                continue;
+            borders->append(ElectricBorder(i));
+            ScreenEdges::self()->reserve(ElectricBorder(i), this, "toggle");
+        }
+        borders = &m_borderAlternativeActivate;
+        borderConfig = "BorderAlternativeActivate";
+    }
 }
 
 void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
@@ -1122,6 +1143,27 @@ void TabBox::modalActionsSwitch(bool enabled)
     foreach (KActionCollection * collection, collections)
     foreach (QAction * action, collection->actions())
     action->setEnabled(enabled);
+}
+
+bool TabBox::toggle(ElectricBorder eb)
+{
+    if (!options->focusPolicyIsReasonable())
+        return false; // not supported.
+    if (isDisplayed()) {
+        ungrabXKeyboard();
+        accept();
+        return true;
+    }
+    if (!grabXKeyboard())
+        return false;
+    m_noModifierGrab = m_tabGrab = true;
+    if (m_borderAlternativeActivate.contains(eb))
+        setMode(TabBoxWindowsAlternativeMode);
+    else
+        setMode(TabBoxWindowsMode);
+    reset();
+    show();
+    return true;
 }
 
 void TabBox::open(bool modal, const QString &layout)

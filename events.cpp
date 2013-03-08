@@ -259,11 +259,20 @@ bool Workspace::workspaceEvent(XEvent * e)
     case MotionNotify:
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
+#ifdef KWIN_BUILD_SCREENEDGES
+            ScreenEdges::self()->check(QPoint(e->xbutton.x_root, e->xbutton.y_root), QDateTime::fromMSecsSinceEpoch(xTime()), true);
+#endif
             return TabBox::TabBox::self()->handleMouseEvent(e);
         }
 #endif
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e)) {
             return true;
+        }
+#ifdef KWIN_BUILD_SCREENEDGES
+        if (QWidget::mouseGrabber()) {
+            ScreenEdges::self()->check(QPoint(e->xbutton.x_root, e->xbutton.y_root), QDateTime::fromMSecsSinceEpoch(xTime()), true);
+        }
+#endif
         break;
     case KeyPress: {
         was_user_interaction = true;

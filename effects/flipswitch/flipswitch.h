@@ -42,7 +42,6 @@ class FlipSwitchEffect
     Q_PROPERTY(qreal xPosition READ xPosition)
     Q_PROPERTY(qreal yPosition READ yPosition)
     Q_PROPERTY(bool windowTitle READ isWindowTitle)
-    // TODO: electric borders
 public:
     FlipSwitchEffect();
     ~FlipSwitchEffect();
@@ -53,7 +52,6 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual void windowInputMouseEvent(Window w, QEvent* e);
     virtual bool isActive() const;
@@ -137,8 +135,6 @@ private:
     EffectWindowList m_flipOrderedWindows;
     QHash< const EffectWindow*, ItemInfo* > m_windows;
     // options
-    QList<ElectricBorder> m_borderActivate;
-    QList<ElectricBorder> m_borderActivateAll;
     bool m_tabbox;
     bool m_tabboxAlternative;
     float m_angle;

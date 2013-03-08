@@ -91,22 +91,6 @@ bool FlipSwitchEffect::supported()
 void FlipSwitchEffect::reconfigure(ReconfigureFlags)
 {
     FlipSwitchConfig::self()->readConfig();
-    foreach (ElectricBorder border, m_borderActivate) {
-        effects->unreserveElectricBorder(border, this);
-    }
-    foreach (ElectricBorder border, m_borderActivateAll) {
-        effects->unreserveElectricBorder(border, this);
-    }
-    m_borderActivate.clear();
-    m_borderActivateAll.clear();
-    foreach (int i, FlipSwitchConfig::borderActivate()) {
-        m_borderActivate.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i), this);
-    }
-    foreach (int i, FlipSwitchConfig::borderActivateAll()) {
-        m_borderActivateAll.append(ElectricBorder(i));
-        effects->reserveElectricBorder(ElectricBorder(i), this);
-    }
     m_tabbox = FlipSwitchConfig::tabBox();
     m_tabboxAlternative = FlipSwitchConfig::tabBoxAlternative();
     const int duration = animationTime<FlipSwitchConfig>(200);
@@ -714,19 +698,6 @@ void FlipSwitchEffect::toggleActiveCurrent()
     } else {
         setActive(true, CurrentDesktopMode);
     }
-}
-
-bool FlipSwitchEffect::borderActivated(ElectricBorder border)
-{
-    if (!m_borderActivate.contains(border) && !m_borderActivateAll.contains(border))
-        return false;
-    if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
-        return true;
-    if (m_borderActivate.contains(border))
-        toggleActiveCurrent();
-    else
-        toggleActiveAllDesktops();
-    return true;
 }
 
 //*************************************************************
