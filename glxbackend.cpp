@@ -473,10 +473,9 @@ void GlxBackend::waitSync()
 
 void GlxBackend::present()
 {
-    QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-    const bool fullRepaint = (lastDamage() == displayRegion);
-
     if (isDoubleBuffer()) {
+        const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+        const bool fullRepaint = (lastDamage() == displayRegion);
 
         if (fullRepaint) {
             if (haveSwapInterval) {
@@ -540,11 +539,8 @@ void GlxBackend::present()
         glXWaitGL();
     } else {
         glXWaitGL();
-        if (!fullRepaint)
-            foreach (const QRect & r, lastDamage().rects())
-                XCopyArea(display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
-        else
-            XCopyArea(display(), buffer, rootWindow(), gcroot, 0, 0, displayWidth(), displayHeight(), 0, 0);
+        foreach (const QRect & r, lastDamage().rects())
+            XCopyArea(display(), buffer, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
     }
     setLastDamage(QRegion());
     XFlush(display());
@@ -584,10 +580,9 @@ void GlxBackend::prepareRenderingFrame()
     glXWaitX();
 }
 
-void GlxBackend::endRenderingFrame(int mask, const QRegion &damage)
+void GlxBackend::endRenderingFrame(const QRegion &damage)
 {
     setLastDamage(damage);
-    setLastMask(mask);
     glFlush();
 
     if (overlayWindow()->window())  // show the window only after the first pass,

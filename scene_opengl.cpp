@@ -79,7 +79,6 @@ OpenGLBackend::OpenGLBackend()
     , m_directRendering(false)
     , m_doubleBuffer(false)
     , m_failed(false)
-    , m_lastMask(0)
 {
 }
 
@@ -321,7 +320,7 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint2");
 #endif
 
-    m_backend->endRenderingFrame(mask, damage);
+    m_backend->endRenderingFrame(damage);
 
     // do cleanup
     stacking_order.clear();

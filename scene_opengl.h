@@ -408,10 +408,9 @@ public:
     /**
      * @brief Backend specific code to handle the end of rendering a frame.
      *
-     * @param mask The rendering mask of this frame
      * @param damage The actual updated region in this frame
      **/
-    virtual void endRenderingFrame(int mask, const QRegion &damage) = 0;
+    virtual void endRenderingFrame(const QRegion &damage) = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
@@ -533,15 +532,6 @@ protected:
         m_lastDamage = damage;
     }
     /**
-     * @return int Rendering mask of previously rendered frame
-     **/
-    int lastMask() const {
-        return m_lastMask;
-    }
-    void setLastMask(int mask) {
-        m_lastMask = mask;
-    }
-    /**
      * @brief Starts the timer for how long it takes to render the frame.
      *
      * @see renderTime
@@ -575,10 +565,6 @@ private:
      * @brief Damaged region of previously rendered frame.
      **/
     QRegion m_lastDamage;
-    /**
-     * @brief Rendering mask of previously rendered frame.
-     **/
-    int m_lastMask;
     /**
      * @brief Timer to measure how long a frame renders.
      **/

@@ -194,9 +194,9 @@ bool EglOnXBackend::initBufferConfigs()
 
 void EglOnXBackend::present()
 {
-    const bool swap = (options->glPreferBufferSwap() && options->glPreferBufferSwap() != Options::ExtendDamage) ||
-                      !(lastMask() & Scene::PAINT_SCREEN_REGION && surfaceHasSubPost && eglPostSubBufferNV);
-    if (swap) {
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const bool fullRepaint = (lastDamage() == displayRegion);
+    if (fullRepaint || !(surfaceHasSubPost && eglPostSubBufferNV)) {
         eglSwapBuffers(dpy, surface);
     } else {
         const QRect damageRect = lastDamage().boundingRect();
@@ -226,10 +226,9 @@ void EglOnXBackend::prepareRenderingFrame()
     startRenderTimer();
 }
 
-void EglOnXBackend::endRenderingFrame(int mask, const QRegion &damage)
+void EglOnXBackend::endRenderingFrame(const QRegion &damage)
 {
     setLastDamage(damage);
-    setLastMask(mask);
     glFlush();
 
     if (overlayWindow()->window())  // show the window only after the first pass,

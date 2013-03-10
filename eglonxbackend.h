@@ -35,7 +35,7 @@ public:
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
     virtual void prepareRenderingFrame();
-    virtual void endRenderingFrame(int mask, const QRegion &damage);
+    virtual void endRenderingFrame(const QRegion &damage);
 
 protected:
     virtual void present();
