@@ -60,13 +60,13 @@ private:
     void setSwapInterval(int interval);
 
     GC gcroot;
-    Drawable buffer;
-    GLXFBConfig fbcbuffer_db;
-    GLXFBConfig fbcbuffer_nondb;
+    Drawable drawable;
+    GLXFBConfig fbconfig_db;
+    GLXFBConfig fbconfig_nondb;
     FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
-    GLXFBConfig fbcbuffer;
-    GLXDrawable glxbuffer;
-    GLXContext ctxbuffer;
+    GLXFBConfig fbconfig;
+    GLXDrawable glxDrawable;
+    GLXContext ctx;
     bool haveSwapInterval;
     friend class GlxTexture;
 };
