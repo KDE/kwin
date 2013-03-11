@@ -25,38 +25,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kshortcut.h>
 #include <QObject>
+#include <QDeclarativeView>
 #include <QTimeLine>
-#include <QGraphicsView>
-
-namespace Plasma
-{
-class PushButton;
-class FrameSvg;
-}
 
 namespace KWin
 {
 
 class PresentWindowsEffectProxy;
 
-class DesktopButtonsView : public QGraphicsView
+class DesktopButtonsView : public QDeclarativeView
 {
     Q_OBJECT
 public:
-    explicit DesktopButtonsView(QWidget* parent = 0);
+    explicit DesktopButtonsView(QWidget *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void setAddDesktopEnabled(bool enable);
     void setRemoveDesktopEnabled(bool enable);
-    virtual void drawBackground(QPainter* painter, const QRectF& rect);
-
 Q_SIGNALS:
     void addDesktop();
     void removeDesktop();
-
-private:
-    Plasma::PushButton* m_addDesktopButton;
-    Plasma::PushButton* m_removeDesktopButton;
-    Plasma::FrameSvg* m_frame;
 };
 
 class DesktopGridEffect

@@ -12,6 +12,10 @@ kde4_add_kcfg_files(kwin4_effect_builtins_sources desktopgrid/desktopgridconfig.
 install( FILES
     desktopgrid/desktopgrid.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+install( FILES
+    desktopgrid/main.qml
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/
+)
 
 #######################################
 # Config

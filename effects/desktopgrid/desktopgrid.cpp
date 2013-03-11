@@ -32,17 +32,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kdebug.h>
 #include <KDE/KLocalizedString>
+#include <KDE/KStandardDirs>
+#include <kdeclarative.h>
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
 #include <kglobalsettings.h>
-#include <QtGui/QPainter>
-#include <QGraphicsLinearLayout>
 #include <QtGui/QVector2D>
-#include <Plasma/FrameSvg>
-#include <Plasma/PushButton>
-#include <Plasma/Theme>
-#include <Plasma/WindowEffects>
+#include <QDeclarativeEngine>
+#include <QDeclarativeContext>
+#include <QGraphicsObject>
 
 namespace KWin
 {
@@ -1383,58 +1382,34 @@ bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 /************************************************
 * DesktopButtonView
 ************************************************/
-DesktopButtonsView::DesktopButtonsView(QWidget* parent)
-    : QGraphicsView(parent)
+DesktopButtonsView::DesktopButtonsView(QWidget *parent)
+    : QDeclarativeView(parent)
 {
     setWindowFlags(Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
-    setFrameShape(QFrame::NoFrame);
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    // setup the scene
-    QGraphicsScene* scene = new QGraphicsScene(this);
-    m_addDesktopButton = new Plasma::PushButton();
-    m_addDesktopButton->setIcon(KIcon("list-add"));
-    m_removeDesktopButton = new Plasma::PushButton();
-    m_removeDesktopButton->setIcon(KIcon("list-remove"));
-    scene->addItem(m_addDesktopButton);
-    scene->addItem(m_removeDesktopButton);
-    connect(m_addDesktopButton, SIGNAL(clicked()), SIGNAL(addDesktop()));
-    connect(m_removeDesktopButton, SIGNAL(clicked()), SIGNAL(removeDesktop()));
-
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    layout->addItem(m_addDesktopButton);
-    layout->addItem(m_removeDesktopButton);
-
-    QGraphicsWidget *form = new QGraphicsWidget;
-    form->setLayout(layout);
-    form->setGeometry(0, 0, 64 * 2, 64);
-    scene->addItem(form);
-
-    m_frame = new Plasma::FrameSvg(this);
-    if (Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background")) {
-        m_frame->setImagePath("translucent/dialogs/background");
-    } else {
-        m_frame->setImagePath("dialogs/background");
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        engine()->addImportPath(importPath);
     }
-    m_frame->setCacheAllRenderedFrames(true);
-    m_frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-    qreal left, top, right, bottom;
-    m_frame->getMargins(left, top, right, bottom);
-    qreal width = form->size().width() + left + right;
-    qreal height = form->size().height() + top + bottom;
-    m_frame->resizeFrame(QSizeF(width, height));
-    Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame->mask());
-    form->setPos(left, top);
-    scene->setSceneRect(QRectF(QPointF(0, 0), QSizeF(width, height)));
-    setScene(scene);
+    KDeclarative kdeclarative;
+    kdeclarative.setDeclarativeEngine(engine());
+    kdeclarative.initialize();
+    kdeclarative.setupBindings();
+
+    rootContext()->setContextProperty("add", QVariant(true));
+    rootContext()->setContextProperty("remove", QVariant(true));
+    setSource(QUrl(KStandardDirs::locate("data", QLatin1String("kwin/effects/desktopgrid/main.qml"))));
+    if (QObject *item = rootObject()->findChild<QObject*>("addButton")) {
+        connect(item, SIGNAL(clicked()), SIGNAL(addDesktop()));
+    }
+    if (QObject *item = rootObject()->findChild<QObject*>("removeButton")) {
+        connect(item, SIGNAL(clicked()), SIGNAL(removeDesktop()));
+    }
 }
 
-void DesktopButtonsView::windowInputMouseEvent(QMouseEvent* e)
+void DesktopButtonsView::windowInputMouseEvent(QMouseEvent *e)
 {
     if (e->type() == QEvent::MouseMove) {
         mouseMoveEvent(e);
@@ -1449,19 +1424,12 @@ void DesktopButtonsView::windowInputMouseEvent(QMouseEvent* e)
 
 void DesktopButtonsView::setAddDesktopEnabled(bool enable)
 {
-    m_addDesktopButton->setEnabled(enable);
+    rootContext()->setContextProperty("add", QVariant(enable));
 }
 
 void DesktopButtonsView::setRemoveDesktopEnabled(bool enable)
 {
-    m_removeDesktopButton->setEnabled(enable);
-}
-
-void DesktopButtonsView::drawBackground(QPainter* painter, const QRectF& rect)
-{
-    Q_UNUSED(rect)
-    painter->setRenderHint(QPainter::Antialiasing);
-    m_frame->paintFrame(painter);
+    rootContext()->setContextProperty("remove", QVariant(enable));
 }
 
 } // namespace

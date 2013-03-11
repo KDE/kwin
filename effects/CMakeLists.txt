@@ -8,6 +8,11 @@ set(kwin_effect_OWN_LIBS
 set(kwin_effect_KDE_LIBS
     ${KDE4_KDEUI_LIBS}
     ${KDE4_PLASMA_LIBS}
+    ${KDECLARATIVE_LIBRARIES}
+)
+
+set(kwin_effect_QT_LIBS
+    ${QT_QTDECLARATIVE_LIBRARY}
 )
 
 set(kwin_effect_XLIB_LIBS
@@ -34,7 +39,7 @@ endif()
 
 macro( KWIN4_ADD_EFFECT_BACKEND name )
     kde4_add_plugin( ${name} ${ARGN} )
-    target_link_libraries( ${name} ${kwin_effect_OWN_LIBS} ${kwin_effect_KDE_LIBS} ${kwin_effect_XLIB_LIBS} ${kwin_effect_XCB_LIBS})
+    target_link_libraries( ${name} ${kwin_effect_OWN_LIBS} ${kwin_effect_KDE_LIBS} ${kwin_effect_QT_LIBS} ${kwin_effect_XLIB_LIBS} ${kwin_effect_XCB_LIBS})
 endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name

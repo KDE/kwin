@@ -26,25 +26,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <KDE/KIcon>
 #include <KDE/KLocalizedString>
+#include <KDE/KStandardDirs>
 #include <kdebug.h>
 #include <kglobalsettings.h>
+#include <kdeclarative.h>
 
 #include <kwinglutils.h>
 
 #include <QMouseEvent>
-#include <QtGui/QPainter>
-#include <QGraphicsLinearLayout>
-#include <Plasma/FrameSvg>
-#include <Plasma/PushButton>
-#include <Plasma/Theme>
-#include <Plasma/WindowEffects>
 #include <netwm_def.h>
 
 #include <math.h>
 #include <assert.h>
 #include <limits.h>
 #include <QApplication>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
 #include <QDesktopWidget>
+#include <QGraphicsObject>
 #include <QTimer>
 #include <QVector2D>
 #include <QVector4D>
@@ -1927,51 +1926,29 @@ void PresentWindowsEffect::screenCountChanged()
 /************************************************
 * CloseWindowView
 ************************************************/
-CloseWindowView::CloseWindowView(QWidget* parent)
-    : QGraphicsView(parent)
+CloseWindowView::CloseWindowView(QWidget *parent)
+    : QDeclarativeView(parent)
     , m_armTimer(new QTimer(this))
 {
     setWindowFlags(Qt::X11BypassWindowManagerHint);
     setAttribute(Qt::WA_TranslucentBackground);
-    setFrameShape(QFrame::NoFrame);
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    // setup the scene
-    QGraphicsScene* scene = new QGraphicsScene(this);
-    m_closeButton = new Plasma::PushButton();
-    m_closeButton->setIcon(KIcon("window-close"));
-    scene->addItem(m_closeButton);
-    connect(m_closeButton, SIGNAL(clicked()), SIGNAL(close()));
-
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout;
-    layout->addItem(m_closeButton);
-
-    QGraphicsWidget *form = new QGraphicsWidget;
-    form->setLayout(layout);
-    form->setGeometry(0, 0, 32, 32);
-    scene->addItem(form);
-
-    m_frame = new Plasma::FrameSvg(this);
-    if (Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background")) {
-        m_frame->setImagePath("translucent/dialogs/background");
-    } else {
-        m_frame->setImagePath("dialogs/background");
+    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+        engine()->addImportPath(importPath);
     }
-    m_frame->setCacheAllRenderedFrames(true);
-    m_frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
-    qreal left, top, right, bottom;
-    m_frame->getMargins(left, top, right, bottom);
-    qreal width = form->size().width() + left + right;
-    qreal height = form->size().height() + top + bottom;
-    m_frame->resizeFrame(QSizeF(width, height));
-    Plasma::WindowEffects::enableBlurBehind(winId(), true, m_frame->mask());
-    form->setPos(left, top);
-    scene->setSceneRect(QRectF(QPointF(0, 0), QSizeF(width, height)));
-    setScene(scene);
+    KDeclarative kdeclarative;
+    kdeclarative.setDeclarativeEngine(engine());
+    kdeclarative.initialize();
+    kdeclarative.setupBindings();
+
+    rootContext()->setContextProperty("armed", QVariant(false));
+
+    setSource(QUrl(KStandardDirs::locate("data", QLatin1String("kwin/effects/presentwindows/main.qml"))));
+    if (QObject *item = rootObject()->findChild<QObject*>("closeButton")) {
+        connect(item, SIGNAL(clicked()), SIGNAL(close()));
+    }
 
     // setup the timer - attempt to prevent accidental clicks
     m_armTimer->setSingleShot(true);
@@ -1979,9 +1956,9 @@ CloseWindowView::CloseWindowView(QWidget* parent)
     connect(m_armTimer, SIGNAL(timeout()), SLOT(arm()));
 }
 
-void CloseWindowView::windowInputMouseEvent(QMouseEvent* e)
+void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 {
-    if (!isEnabled())
+    if (m_armTimer->isActive())
         return;
     if (e->type() == QEvent::MouseMove) {
         mouseMoveEvent(e);
@@ -1994,24 +1971,16 @@ void CloseWindowView::windowInputMouseEvent(QMouseEvent* e)
     }
 }
 
-void CloseWindowView::drawBackground(QPainter* painter, const QRectF& rect)
-{
-    Q_UNUSED(rect)
-    painter->setRenderHint(QPainter::Antialiasing);
-    m_frame->paintFrame(painter);
-}
-
 void CloseWindowView::arm()
 {
-    setEnabled(true);
+    rootContext()->setContextProperty("armed", QVariant(true));
 }
 
 void CloseWindowView::disarm()
 {
-    setEnabled(false);
+    rootContext()->setContextProperty("armed", QVariant(false));
     m_armTimer->start();
 }
-
 
 } // namespace
 
