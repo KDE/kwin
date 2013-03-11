@@ -177,15 +177,23 @@ KWIN_EXPORT xcb_screen_t *defaultScreen()
 inline
 KWIN_EXPORT int displayWidth()
 {
+#if 0
     xcb_screen_t *screen = defaultScreen();
     return screen ? screen->width_in_pixels : 0;
+#else
+    return XDisplayWidth(display(), DefaultScreen(display()));
+#endif
 }
 
 inline
 KWIN_EXPORT int displayHeight()
 {
+#if 0
     xcb_screen_t *screen = defaultScreen();
     return screen ? screen->height_in_pixels : 0;
+#else
+    return XDisplayHeight(display(), DefaultScreen(display()));
+#endif
 }
 
 /** @internal */
