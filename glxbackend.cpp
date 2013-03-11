@@ -61,7 +61,7 @@ GlxBackend::~GlxBackend()
     if (ctx)
         glXDestroyContext(display(), ctx);
     if (overlayWindow()->window()) {
-        if (hasGLXVersion(1, 3) && glxDrawable)
+        if (glxDrawable)
             glXDestroyWindow(display(), glxDrawable);
         if (drawable)
             XDestroyWindow(display(), drawable);
@@ -181,10 +181,7 @@ bool GlxBackend::initBuffer()
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
         drawable = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),
                                  0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
-        if (hasGLXVersion(1, 3))
-            glxDrawable = glXCreateWindow(display(), fbconfig, drawable, NULL);
-        else
-            glxDrawable = drawable;
+        glxDrawable = glXCreateWindow(display(), fbconfig, drawable, NULL);
         overlayWindow()->setup(drawable);
         setDoubleBuffer(true);
         XFree(visual);
