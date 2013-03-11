@@ -138,34 +138,22 @@ void GlxBackend::init()
 
 bool GlxBackend::initRenderingContext()
 {
-    bool direct_rendering = options->isGlDirect();
-    KXErrorHandler errs1;
-    ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL,
-                              direct_rendering ? GL_TRUE : GL_FALSE);
-    bool failed = (ctx == NULL || !glXMakeCurrent(display(), glxDrawable, ctx));
-    if (errs1.error(true))    // always check for error( having it all in one if () could skip
-        failed = true;       // it due to evaluation short-circuiting
-    if (failed) {
-        if (!direct_rendering) {
-            kDebug(1212).nospace() << "Couldn't initialize rendering context ("
-                                   << KXErrorHandler::errorMessage(errs1.errorEvent()) << ")";
-            return false;
-        }
-        glXMakeCurrent(display(), None, NULL);
-        if (ctx != NULL)
-            glXDestroyContext(display(), ctx);
-        direct_rendering = false; // try again
-        KXErrorHandler errs2;
-        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, GL_FALSE);
-        bool failed = (ctx == NULL || !glXMakeCurrent(display(), glxDrawable, ctx));
-        if (errs2.error(true))
-            failed = true;
-        if (failed) {
-            kDebug(1212).nospace() << "Couldn't initialize rendering context ("
-                                   << KXErrorHandler::errorMessage(errs2.errorEvent()) << ")";
-            return false;
-        }
+    bool direct = options->isGlDirect();
+
+    ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
+
+    if (!ctx) {
+        kDebug(1212) << "Failed to create an OpenGL context.";
+        return false;
     }
+
+    if (!glXMakeCurrent(display(), glxDrawable, ctx)) {
+        kDebug(1212) << "Failed to make the OpenGL context current.";
+        glXDestroyContext(display(), ctx);
+        ctx = 0;
+        return false;
+    }
+
     return true;
 }
 
