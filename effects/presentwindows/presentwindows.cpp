@@ -64,6 +64,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_highlightedWindow(NULL)
     , m_filterFrame(NULL)
     , m_closeView(NULL)
+    , m_closeWindow(NULL)
     , m_dragInProgress(false)
     , m_dragWindow(NULL)
     , m_highlightedDropTarget(NULL)
@@ -217,7 +218,7 @@ void PresentWindowsEffect::postPaintScreen()
 {
     if (m_motionManager.areWindowsMoving())
         effects->addRepaintFull();
-    else if (!m_activated && m_motionManager.managingWindows()) {
+    else if (!m_activated && m_motionManager.managingWindows() && !m_closeWindow) {
         // We have finished moving them back, stop processing
         m_motionManager.unmanageAll();
 
@@ -261,7 +262,7 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
 {
     // TODO: We should also check to see if any windows are fading just in case fading takes longer
     //       than moving the windows when the effect is deactivated.
-    if (m_activated || m_motionManager.areWindowsMoving()) {
+    if (m_activated || m_motionManager.areWindowsMoving() || m_closeWindow) {
         DataHash::iterator winData = m_windowData.find(w);
         if (winData == m_windowData.end()) {
             effects->prePaintWindow(w, data, time);
@@ -306,6 +307,9 @@ void PresentWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &d
                 // we have to keep the window in the list to prevent flickering
                 winData->referenced = false;
                 w->unrefWindow();
+                if (w == m_closeWindow) {
+                    m_closeWindow = NULL;
+                }
             } else
                 w->enablePainting(EffectWindow::PAINT_DISABLED_BY_DELETE);
         }
@@ -437,6 +441,15 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
         rearrangeWindows();
     }
     if (m_closeView && w == effects->findWindow(m_closeView->winId())) {
+        if (m_closeWindow != w) {
+            DataHash::iterator winDataIt = m_windowData.find(m_closeWindow);
+            if (winDataIt != m_windowData.end()) {
+                if (winDataIt->referenced) {
+                    m_closeWindow->unrefWindow();
+                }
+                m_windowData.erase(winDataIt);
+            }
+        }
         winData->visible = true;
         winData->highlight = 1.0;
         m_closeWindow = w;
@@ -452,13 +465,14 @@ void PresentWindowsEffect::slotWindowClosed(EffectWindow *w)
     if (winData == m_windowData.end())
         return;
     winData->deleted = true;
-    winData->referenced = true;
-    w->refWindow();
+    if (!winData->referenced) {
+        winData->referenced = true;
+        w->refWindow();
+    }
     if (m_highlightedWindow == w)
         setHighlightedWindow(findFirstWindow());
     if (m_closeWindow == w) {
-        m_closeWindow = 0;
-        return; // don't rearrange
+        return; // don't rearrange, get's nulled when unref'd
     }
     rearrangeWindows();
 
