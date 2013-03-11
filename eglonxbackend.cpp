@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "options.h"
 #include "overlaywindow.h"
+#include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
 
@@ -176,7 +177,11 @@ bool EglOnXBackend::initBufferConfigs()
         return false;
     }
 
-    EGLint visualId = XVisualIDFromVisual((Visual*)QX11Info::appVisual());
+    Xcb::WindowAttributes attribs(rootWindow());
+    if (!attribs) {
+        kError(1212) << "Failed to get window attributes of root window";
+        return false;
+    }
 
     config = configs[0];
     for (int i = 0; i < count; i++) {
@@ -184,7 +189,7 @@ bool EglOnXBackend::initBufferConfigs()
         if (eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
             kError(1212) << "egl get config attrib failed";
         }
-        if (visualId == val) {
+        if (uint32_t(val) == attribs->visual) {
             config = configs[i];
             break;
         }
@@ -204,7 +209,7 @@ void EglOnXBackend::present()
     }
 
     eglWaitGL();
-    XFlush(display());
+    xcb_flush(connection());
 }
 
 void EglOnXBackend::screenGeometryChanged(const QSize &size)
