@@ -35,8 +35,6 @@ EglOnXBackend::EglOnXBackend()
     init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
-    // Egl is always double buffered
-    setDoubleBuffer(true);
 }
 
 EglOnXBackend::~EglOnXBackend()

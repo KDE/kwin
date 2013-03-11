@@ -40,12 +40,9 @@ namespace KWin
 {
 GlxBackend::GlxBackend()
     : OpenGLBackend()
-    , gcroot(None)
-    , drawable(None)
-    , fbconfig_db(NULL)
-    , fbconfig_nondb(NULL)
+    , window(None)
     , fbconfig(NULL)
-    , glxDrawable(None)
+    , glxWindow(None)
     , ctx(None)
     , haveSwapInterval(false)
 {
@@ -58,22 +55,17 @@ GlxBackend::~GlxBackend()
     // do cleanup after initBuffer()
     cleanupGL();
     glXMakeCurrent(display(), None, NULL);
+
     if (ctx)
         glXDestroyContext(display(), ctx);
-    if (overlayWindow()->window()) {
-        if (glxDrawable)
-            glXDestroyWindow(display(), glxDrawable);
-        if (drawable)
-            XDestroyWindow(display(), drawable);
-        overlayWindow()->destroy();
-    } else {
-        if (glxDrawable)
-            glXDestroyPixmap(display(), glxDrawable);
-        if (gcroot)
-            XFreeGC(display(), gcroot);
-        if (drawable)
-            XFreePixmap(display(), drawable);
-    }
+
+    if (glxWindow)
+        glXDestroyWindow(display(), glxWindow);
+
+    if (window)
+        XDestroyWindow(display(), window);
+
+    overlayWindow()->destroy();
     checkGLError("Cleanup");
 }
 
@@ -131,8 +123,10 @@ void GlxBackend::init()
         // and the GLPlatform has not been initialized at the moment when initGLX() is called.
         glXQueryDrawable = NULL;
     }
+
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
-    kDebug(1212) << "DB:" << isDoubleBuffer() << ", Direct:" << isDirectRendering() << endl;
+
+    kDebug(1212) << "Direct rendering:" << isDirectRendering() << endl;
 }
 
 
@@ -147,7 +141,7 @@ bool GlxBackend::initRenderingContext()
         return false;
     }
 
-    if (!glXMakeCurrent(display(), glxDrawable, ctx)) {
+    if (!glXMakeCurrent(display(), glxWindow, ctx)) {
         kDebug(1212) << "Failed to make the OpenGL context current.";
         glXDestroyContext(display(), ctx);
         ctx = 0;
@@ -162,45 +156,33 @@ bool GlxBackend::initBuffer()
     if (!initFbConfig())
         return false;
 
-    if (fbconfig_db != NULL && overlayWindow()->create()) {
-        // we have overlay, try to create double-buffered window in it
-        fbconfig = fbconfig_db;
+    if (overlayWindow()->create()) {
+        // Try to create double-buffered window in the overlay
         XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
-        drawable = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),
-                                 0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
-        glxDrawable = glXCreateWindow(display(), fbconfig, drawable, NULL);
-        overlayWindow()->setup(drawable);
-        setDoubleBuffer(true);
-        XFree(visual);
-    } else if (fbconfig_nondb != NULL) {
-        // cannot get any double-buffered drawable, will double-buffer using a pixmap
-        fbconfig = fbconfig_nondb;
-        XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
-        XGCValues gcattr;
-        gcattr.subwindow_mode = IncludeInferiors;
-        gcroot = XCreateGC(display(), rootWindow(), GCSubwindowMode, &gcattr);
-        drawable = XCreatePixmap(display(), rootWindow(), displayWidth(), displayHeight(),
-                                 visual->depth);
-        glxDrawable = glXCreatePixmap(display(), fbconfig, drawable, NULL);
-        setDoubleBuffer(false);
+        window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),
+                               0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
+        glxWindow = glXCreateWindow(display(), fbconfig, window, NULL);
+        overlayWindow()->setup(window);
         XFree(visual);
     } else {
-        kError(1212) << "Couldn't create output buffer (failed to create overlay window?) !";
-        return false; // error
+        kError(1212) << "Failed to create overlay window";
+        return false;
     }
+
     int vis_buffer;
     glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, &vis_buffer);
     XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig(display(), fbconfig);
     kDebug(1212) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number(vis_buffer, 16);
     XFree(visinfo_buffer);
+
     return true;
 }
 
 bool GlxBackend::initFbConfig()
 {
-    int attribs[] = {
+    const int attribs[] = {
         GLX_RENDER_TYPE,    GLX_RGBA_TYPE,
         GLX_RED_SIZE,       1,
         GLX_GREEN_SIZE,     1,
@@ -213,28 +195,16 @@ bool GlxBackend::initFbConfig()
         0
     };
 
-    fbconfig_db = NULL;
-    fbconfig_nondb = NULL;
-
     // Try to find a double buffered configuration
     int count = 0;
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count > 0) {
-        fbconfig_db = configs[0];
+        fbconfig = configs[0];
         XFree(configs);
     }
 
-    // Try to find a single buffered configuration
-    attribs[18] = false;
-    configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
-
-    if (count > 0) {
-        fbconfig_nondb = configs[0];
-        XFree(configs);
-    }
-
-    if (fbconfig_db == NULL && fbconfig_nondb == NULL) {
+    if (fbconfig == NULL) {
         kError(1212) << "Failed to find a usable framebuffer configuration";
         return false;
     }
@@ -363,7 +333,7 @@ bool GlxBackend::initDrawableConfigs()
 void GlxBackend::setSwapInterval(int interval)
 {
     if (glXSwapIntervalEXT)
-        glXSwapIntervalEXT(display(), glxDrawable, interval);
+        glXSwapIntervalEXT(display(), glxWindow, interval);
     else if (glXSwapIntervalMESA)
         glXSwapIntervalMESA(interval);
     else if (glXSwapIntervalSGI)
@@ -409,99 +379,83 @@ void GlxBackend::waitSync()
 
 void GlxBackend::present()
 {
-    if (isDoubleBuffer()) {
-        const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-        const bool fullRepaint = (lastDamage() == displayRegion);
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const bool fullRepaint = (lastDamage() == displayRegion);
 
-        if (fullRepaint) {
-            if (haveSwapInterval) {
-                glXSwapBuffers(display(), glxDrawable);
-                startRenderTimer();
-            } else {
-                waitSync(); // calls startRenderTimer();
-                glXSwapBuffers(display(), glxDrawable);
-            }
-        } else if (glXCopySubBuffer) {
-            waitSync();
-            foreach (const QRect & r, lastDamage().rects()) {
-                // convert to OpenGL coordinates
-                int y = displayHeight() - r.y() - r.height();
-                glXCopySubBuffer(display(), glxDrawable, r.x(), y, r.width(), r.height());
-            }
-        } else { // Copy Pixels
-            // if a shader is bound or the texture unit is enabled, copy pixels results in a black screen
-            // therefore unbind the shader and restore after copying the pixels
-            GLint shader = 0;
-            if (ShaderManager::instance()->isShaderBound()) {
-                glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-                glUseProgram(0);
-            }
-            bool reenableTexUnit = false;
-            if (glIsEnabled(GL_TEXTURE_2D)) {
-                glDisable(GL_TEXTURE_2D);
-                reenableTexUnit = true;
-            }
-            // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
-            glEnable(GL_SCISSOR_TEST);
-            glDrawBuffer(GL_FRONT);
-            waitSync();
-            int xpos = 0;
-            int ypos = 0;
-            foreach (const QRect & r, lastDamage().rects()) {
-                // convert to OpenGL coordinates
-                int y = displayHeight() - r.y() - r.height();
-                // Move raster position relatively using glBitmap() rather
-                // than using glRasterPos2f() - the latter causes drawing
-                // artefacts at the bottom screen edge with some gfx cards
-//                    glRasterPos2f( r.x(), r.y() + r.height());
-                glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL);
-                xpos = r.x();
-                ypos = y;
-                glScissor(r.x(), y, r.width(), r.height());
-                glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
-            }
-            glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
-            glDrawBuffer(GL_BACK);
-            glDisable(GL_SCISSOR_TEST);
-            if (reenableTexUnit) {
-                glEnable(GL_TEXTURE_2D);
-            }
-            // rebind previously bound shader
-            if (ShaderManager::instance()->isShaderBound()) {
-                glUseProgram(shader);
-            }
+    if (fullRepaint) {
+        if (haveSwapInterval) {
+            glXSwapBuffers(display(), glxWindow);
+            startRenderTimer();
+        } else {
+            waitSync(); // calls startRenderTimer();
+            glXSwapBuffers(display(), glxWindow);
         }
-
-        glXWaitGL();
-    } else {
-        glXWaitGL();
-        foreach (const QRect & r, lastDamage().rects())
-            XCopyArea(display(), drawable, rootWindow(), gcroot, r.x(), r.y(), r.width(), r.height(), r.x(), r.y());
+    } else if (glXCopySubBuffer) {
+        waitSync();
+        foreach (const QRect & r, lastDamage().rects()) {
+            // convert to OpenGL coordinates
+            int y = displayHeight() - r.y() - r.height();
+            glXCopySubBuffer(display(), glxWindow, r.x(), y, r.width(), r.height());
+         }
+    } else { // Copy Pixels
+        // if a shader is bound or the texture unit is enabled, copy pixels results in a black screen
+        // therefore unbind the shader and restore after copying the pixels
+        GLint shader = 0;
+        if (ShaderManager::instance()->isShaderBound()) {
+            glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+            glUseProgram(0);
+        }
+        bool reenableTexUnit = false;
+        if (glIsEnabled(GL_TEXTURE_2D)) {
+            glDisable(GL_TEXTURE_2D);
+            reenableTexUnit = true;
+        }
+        // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
+        glEnable(GL_SCISSOR_TEST);
+        glDrawBuffer(GL_FRONT);
+        waitSync();
+        int xpos = 0;
+        int ypos = 0;
+        foreach (const QRect & r, lastDamage().rects()) {
+            // convert to OpenGL coordinates
+            int y = displayHeight() - r.y() - r.height();
+            // Move raster position relatively using glBitmap() rather
+            // than using glRasterPos2f() - the latter causes drawing
+            // artefacts at the bottom screen edge with some gfx cards
+            //glRasterPos2f( r.x(), r.y() + r.height());
+            glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL);
+            xpos = r.x();
+            ypos = y;
+            glScissor(r.x(), y, r.width(), r.height());
+            glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
+        }
+        glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL);   // move position back to 0,0
+        glDrawBuffer(GL_BACK);
+        glDisable(GL_SCISSOR_TEST);
+        if (reenableTexUnit) {
+            glEnable(GL_TEXTURE_2D);
+        }
+        // rebind previously bound shader
+        if (ShaderManager::instance()->isShaderBound()) {
+            glUseProgram(shader);
+        }
     }
+
+    glXWaitGL();
     setLastDamage(QRegion());
     XFlush(display());
 }
 
 void GlxBackend::screenGeometryChanged(const QSize &size)
 {
-    if (overlayWindow()->window() == None) {
-        glXMakeCurrent(display(), None, NULL);
-        glXDestroyPixmap(display(), glxDrawable);
-        XFreePixmap(display(), drawable);
-        XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
-        drawable = XCreatePixmap(display(), rootWindow(), size.width(), size.height(), visual->depth);
-        XFree(visual);
-        glxDrawable = glXCreatePixmap(display(), fbconfig, drawable, NULL);
-        glXMakeCurrent(display(), glxDrawable, ctx);
-        // TODO: there seems some bug, some clients become black until an eg. un/remap - could be a general pixmap buffer issue, though
-    } else {
-        glXMakeCurrent(display(), None, NULL); // deactivate context ////
-        XMoveResizeWindow(display(), drawable, 0,0, size.width(), size.height());
-        overlayWindow()->setup(drawable);
-        XSync(display(), false);  // ensure X11 stuff has applied ////
-        glXMakeCurrent(display(), glxDrawable, ctx); // reactivate context ////
-        glViewport(0,0, size.width(), size.height()); // adjust viewport last - should btw. be superfluous on the Pixmap buffer - iirc glXCreatePixmap sets the context anyway. ////
-    }
+    glXMakeCurrent(display(), None, NULL);
+
+    XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());
+    overlayWindow()->setup(window);
+    XSync(display(), false);
+
+    glXMakeCurrent(display(), glxWindow, ctx);
+    glViewport(0, 0, size.width(), size.height());
 }
 
 SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Texture *texture)

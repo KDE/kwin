@@ -466,14 +466,6 @@ public:
     bool isDirectRendering() const {
         return m_directRendering;
     }
-    /**
-     * @brief Whether the backend used double buffering.
-     *
-     * @return bool @c true if double buffered, @c false otherwise
-     **/
-    bool isDoubleBuffer() const {
-        return m_doubleBuffer;
-    }
 protected:
     /**
      * @brief Backend specific flushing of frame to screen.
@@ -511,18 +503,6 @@ protected:
         m_directRendering = direct;
     }
     /**
-     * @brief Sets whether the OpenGL context uses double buffering.
-     *
-     * Should be called by the concrete subclass once it is determined whether the OpenGL context
-     * uses double buffering.
-     * If the subclass does not call this method, the backend defaults to @c false.
-     *
-     * @param doubleBuffer @c true if double buffering, @c false otherwise
-     **/
-    void setDoubleBuffer(bool doubleBuffer) {
-        m_doubleBuffer = doubleBuffer;
-    }
-    /**
      * @return const QRegion& Damage of previously rendered frame
      **/
     const QRegion &lastDamage() const {
@@ -553,10 +533,6 @@ private:
      * @brief Whether direct rendering is used, defaults to @c false.
      **/
     bool m_directRendering;
-    /**
-     * @brief Whether double bufferering is available, defaults to @c false.
-     **/
-    bool m_doubleBuffer;
     /**
      * @brief Whether the initialization failed, of course default to @c false.
      **/

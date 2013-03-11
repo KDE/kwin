@@ -77,7 +77,6 @@ OpenGLBackend::OpenGLBackend()
     : m_overlayWindow(new OverlayWindow()) // TODO: maybe create only if needed?
     , m_waitSync(false)
     , m_directRendering(false)
-    , m_doubleBuffer(false)
     , m_failed(false)
 {
 }
@@ -134,8 +133,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
         return;
     }
 #ifndef KWIN_HAVE_OPENGLES
-    if (m_backend->isDoubleBuffer())
-        glDrawBuffer(GL_BACK);
+    glDrawBuffer(GL_BACK);
 #endif
 
     debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;

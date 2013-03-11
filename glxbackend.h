@@ -59,13 +59,10 @@ private:
     bool initFbConfig();
     void setSwapInterval(int interval);
 
-    GC gcroot;
-    Drawable drawable;
-    GLXFBConfig fbconfig_db;
-    GLXFBConfig fbconfig_nondb;
+    Window window;
     FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
     GLXFBConfig fbconfig;
-    GLXDrawable glxDrawable;
+    GLXWindow glxWindow;
     GLXContext ctx;
     bool haveSwapInterval;
     friend class GlxTexture;
