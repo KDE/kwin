@@ -363,6 +363,18 @@ extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 #define EGL_POST_SUB_BUFFER_SUPPORTED_NV 0x30BE
 #endif
 
+#ifndef GL_UNPACK_ROW_LENGTH
+#define GL_UNPACK_ROW_LENGTH 0x0CF2
+#endif
+
+#ifndef GL_UNPACK_SKIP_ROWS
+#define GL_UNPACK_SKIP_ROWS 0x0CF3
+#endif
+
+#ifndef GL_UNPACK_SKIP_PIXELS
+#define GL_UNPACK_SKIP_PIXELS 0x0CF4
+#endif
+
 namespace KWin
 {
 
