@@ -171,8 +171,9 @@ bool GlxBackend::initRenderingContext()
 
 bool GlxBackend::initBuffer()
 {
-    if (!initBufferConfigs())
+    if (!initFbConfig())
         return false;
+
     if (fbconfig_db != NULL && overlayWindow()->create()) {
         // we have overlay, try to create double-buffered window in it
         fbconfig = fbconfig_db;
@@ -209,101 +210,47 @@ bool GlxBackend::initBuffer()
     return true;
 }
 
-bool GlxBackend::initBufferConfigs()
+bool GlxBackend::initFbConfig()
 {
-    int cnt;
-    GLXFBConfig *fbconfigs = glXGetFBConfigs(display(), DefaultScreen(display()), &cnt);
+    int attribs[] = {
+        GLX_RENDER_TYPE,    GLX_RGBA_TYPE,
+        GLX_RED_SIZE,       1,
+        GLX_GREEN_SIZE,     1,
+        GLX_BLUE_SIZE,      1,
+        GLX_ALPHA_SIZE,     0,
+        GLX_DEPTH_SIZE,     0,
+        GLX_STENCIL_SIZE,   0,
+        GLX_CONFIG_CAVEAT,  GLX_NONE,
+        GLX_DOUBLEBUFFER,   true,
+        0
+    };
+
     fbconfig_db = NULL;
     fbconfig_nondb = NULL;
 
-    for (int i = 0; i < 2; i++) {
-        int back, stencil, depth, caveat, msaa_buffers, msaa_samples, alpha;
-        back = i > 0 ? INT_MAX : 1;
-        stencil = INT_MAX;
-        depth = INT_MAX;
-        caveat = INT_MAX;
-        msaa_buffers = INT_MAX;
-        msaa_samples = INT_MAX;
-        alpha = 0;
+    // Try to find a double buffered configuration
+    int count = 0;
+    GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
-        for (int j = 0; j < cnt; j++) {
-            XVisualInfo *vi;
-            int visual_depth;
-            vi = glXGetVisualFromFBConfig(display(), fbconfigs[ j ]);
-            if (vi == NULL)
-                continue;
-            visual_depth = vi->depth;
-            XFree(vi);
-            if (visual_depth != DefaultDepth(display(), DefaultScreen(display())))
-                continue;
-            int value;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_ALPHA_SIZE, &alpha);
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_BUFFER_SIZE, &value);
-            if (value != visual_depth && (value - alpha) != visual_depth)
-                continue;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_RENDER_TYPE, &value);
-            if (!(value & GLX_RGBA_BIT))
-                continue;
-            int back_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_DOUBLEBUFFER, &back_value);
-            if (i > 0) {
-                if (back_value > back)
-                    continue;
-            } else {
-                if (back_value < back)
-                    continue;
-            }
-            int stencil_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_STENCIL_SIZE, &stencil_value);
-            if (stencil_value > stencil)
-                continue;
-            int depth_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_DEPTH_SIZE, &depth_value);
-            if (depth_value > depth)
-                continue;
-            int caveat_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[ j ],
-                                 GLX_CONFIG_CAVEAT, &caveat_value);
-            if (caveat_value > caveat)
-                continue;
-
-            int msaa_buffers_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[j], GLX_SAMPLE_BUFFERS,
-                                 &msaa_buffers_value);
-            if (msaa_buffers_value > msaa_buffers)
-                continue;
-
-            int msaa_samples_value;
-            glXGetFBConfigAttrib(display(), fbconfigs[j], GLX_SAMPLES,
-                                 &msaa_samples_value);
-            if (msaa_samples_value > msaa_samples)
-                continue;
-
-            back = back_value;
-            stencil = stencil_value;
-            depth = depth_value;
-            caveat = caveat_value;
-            msaa_buffers = msaa_buffers_value;
-            msaa_samples = msaa_samples_value;
-
-            if (i > 0)
-                fbconfig_nondb = fbconfigs[ j ];
-            else
-                fbconfig_db = fbconfigs[ j ];
-        }
+    if (count > 0) {
+        fbconfig_db = configs[0];
+        XFree(configs);
     }
-    if (cnt)
-        XFree(fbconfigs);
+
+    // Try to find a single buffered configuration
+    attribs[18] = false;
+    configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
+
+    if (count > 0) {
+        fbconfig_nondb = configs[0];
+        XFree(configs);
+    }
+
     if (fbconfig_db == NULL && fbconfig_nondb == NULL) {
-        kError(1212) << "Couldn't find framebuffer configuration for buffer!";
+        kError(1212) << "Failed to find a usable framebuffer configuration";
         return false;
     }
+
     return true;
 }
 

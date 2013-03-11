@@ -56,7 +56,7 @@ private:
     bool initDrawableConfigs();
     void waitSync();
     bool initRenderingContext();
-    bool initBufferConfigs();
+    bool initFbConfig();
     void setSwapInterval(int interval);
 
     GC gcroot;
