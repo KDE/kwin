@@ -87,6 +87,7 @@ void MagnifierEffect::destroyPixmap()
     m_picture.reset();
     if (m_pixmap != XCB_PIXMAP_NONE) {
         xcb_free_pixmap(connection(), m_pixmap);
+        m_pixmap = XCB_PIXMAP_NONE;
     }
 #endif
 }
