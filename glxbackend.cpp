@@ -304,13 +304,6 @@ bool GlxBackend::initBufferConfigs()
         kError(1212) << "Couldn't find framebuffer configuration for buffer!";
         return false;
     }
-    for (int i = 0; i <= 32; i++) {
-        if (fbcdrawableinfo[ i ].fbconfig == NULL)
-            continue;
-        int vis_drawable = 0;
-        glXGetFBConfigAttrib(display(), fbcdrawableinfo[ i ].fbconfig, GLX_VISUAL_ID, &vis_drawable);
-        kDebug(1212) << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
-    }
     return true;
 }
 
@@ -418,6 +411,17 @@ bool GlxBackend::initDrawableConfigs()
         kError(1212) << "Couldn't find framebuffer configuration for depth 32 (no ARGB GLX visual)!";
         return false;
     }
+
+    for (int i = 0; i <= 32; i++) {
+        if (fbcdrawableinfo[i].fbconfig == NULL)
+            continue;
+
+        int vis_drawable = 0;
+        glXGetFBConfigAttrib(display(), fbcdrawableinfo[i].fbconfig, GLX_VISUAL_ID, &vis_drawable);
+
+        kDebug(1212) << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
+    }
+
     return true;
 }
 
