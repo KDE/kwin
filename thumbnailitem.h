@@ -60,6 +60,7 @@ private Q_SLOTS:
     void init();
     void effectWindowAdded();
     void repaint(KWin::EffectWindow* w);
+    void compositingToggled();
 private:
     void findParentEffectWindow();
     qulonglong m_wId;
