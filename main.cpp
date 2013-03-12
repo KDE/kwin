@@ -486,7 +486,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     aboutData.addAuthor(ki18n("Cristian Tibirna"), KLocalizedString(), "tibirna@kde.org");
     aboutData.addAuthor(ki18n("Daniel M. Duley"), KLocalizedString(), "mosfet@kde.org");
     aboutData.addAuthor(ki18n("Luboš Luňák"), KLocalizedString(), "l.lunak@kde.org");
-    aboutData.addAuthor(ki18n("Martin Gräßlin"), ki18n("Maintainer"), "kde@martin-graesslin.com");
+    aboutData.addAuthor(ki18n("Martin Gräßlin"), ki18n("Maintainer"), "mgraesslin@kde.org");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 

@@ -229,7 +229,7 @@ private:
  * the shaders which have been bound. When a shader is unbound the previously bound shader
  * will be rebound.
  *
- * @author Martin Gräßlin <kde@martin-graesslin.com>
+ * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.7
  **/
 class KWIN_EXPORT ShaderManager
@@ -576,7 +576,7 @@ private:
  * If VBOs are not supported on the used OpenGL profile this class falls back to legacy
  * rendering using client arrays. Therefore this class should always be used for rendering geometries.
  *
- * @author Martin Gräßlin <kde@martin-graesslin.com>
+ * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.6
  */
 class KWIN_EXPORT GLVertexBuffer

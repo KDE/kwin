@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * It defines the pure virtual classes TabBoxHandler and TabBoxClient.
 * The classes have to be implemented in KWin Core.
 *
-* @author Martin Gräßlin <kde@martin-graesslin.com>
+* @author Martin Gräßlin <mgraesslin@kde.org>
 * @since 4.4
 */
 
@@ -88,7 +88,7 @@ typedef QList< QWeakPointer< TabBoxClient > > TabBoxClientList;
 * This class is a wrapper around KWin Workspace. It is used for accessing the
 * required core methods from inside TabBox and has to be implemented in KWin core.
 *
-* @author Martin Gräßlin <kde@martin-graesslin.com>
+* @author Martin Gräßlin <mgraesslin@kde.org>
 * @since 4.4
 */
 class TabBoxHandler : public QObject
@@ -375,7 +375,7 @@ private:
 * This class is a wrapper around a KWin Client. It is used for accessing the
 * required client methods from inside TabBox and has to be implemented in KWin core.
 *
-* @author Martin Gräßlin <kde@martin-graesslin.com>
+* @author Martin Gräßlin <mgraesslin@kde.org>
 * @since 4.4
 */
 class TabBoxClient

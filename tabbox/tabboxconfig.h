@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2009 Martin Gräßlin <kde@martin-graesslin.com>
+Copyright (C) 2009 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * @file
 * This file defines the class TabBoxConfig.
 *
-* @author Martin Gräßlin <kde@martin-graesslin.com>
+* @author Martin Gräßlin <mgraesslin@kde.org>
 * @since 4.4
 */
 
@@ -45,7 +45,7 @@ class TabBoxConfigPrivate;
 * Config sets and by setting a new config in the TabBoxHandler the behaviour
 * of the TabBox is changed immediately.
 *
-* @author Martin Gräßlin <kde@martin-graesslin.com>
+* @author Martin Gräßlin <mgraesslin@kde.org>
 * @since 4.4
 */
 class TabBoxConfig

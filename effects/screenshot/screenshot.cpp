@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
- Copyright (C) 2010 Martin Gräßlin <kde@martin-graesslin.com>
+ Copyright (C) 2010 Martin Gräßlin <mgraesslin@kde.org>
  Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies)
 
 This program is free software; you can redistribute it and/or modify

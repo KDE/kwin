@@ -4,7 +4,7 @@
     Copyright (c) 2001
         Karol Szwed <gallium@kde.org>
         http://gallium.n3.net/
-    Copyright 2009, 2010 Martin Gräßlin <kde@martin-graesslin.com>
+    Copyright 2009, 2010 Martin Gräßlin <mgraesslin@kde.org>
 
     Supports new kwin configuration plugins, and titlebar button position
     modification via dnd interface.
