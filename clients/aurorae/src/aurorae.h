@@ -110,6 +110,7 @@ class AuroraeClient : public KDecorationUnstable
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(qulonglong windowId READ windowId CONSTANT)
     Q_PROPERTY(int doubleClickInterval READ doubleClickInterval)
+    Q_PROPERTY(bool animationsSupported READ animationsSupported CONSTANT)
     // TODO: window tabs - they suck for dynamic features
 public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
@@ -131,6 +132,8 @@ public:
     virtual void reset(long unsigned int changed);
     bool isMaximized() const;
     int doubleClickInterval() const;
+
+    bool animationsSupported() const;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 

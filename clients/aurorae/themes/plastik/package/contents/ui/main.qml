@@ -59,7 +59,10 @@ Decoration {
         }
         root.animateButtons = decoration.readConfig("animateButtons", true);
         root.titleShadow = decoration.readConfig("titleShadow", true);
-        root.animationDuration = 150;
+        if (decoration.animationsSupported) {
+            root.animationDuration = 150;
+            root.animateButtons = false;
+        }
     }
     ColorHelper {
         id: colorHelper

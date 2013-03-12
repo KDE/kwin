@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QtGui/QGraphicsView>
+#include <QPaintEngine>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -574,6 +575,18 @@ void AuroraeClient::slotAlphaChanged()
         // by default all Aurorae themes use the alpha channel
         setAlphaEnabled(true);
     }
+}
+
+bool AuroraeClient::animationsSupported() const
+{
+    if (!compositingActive()) {
+        return false;
+    }
+    QPixmap pix(1,1);
+    QPainter p(&pix);
+    const bool raster = p.paintEngine()->type() == QPaintEngine::Raster;
+    p.end();
+    return raster;
 }
 
 } // namespace Aurorae
