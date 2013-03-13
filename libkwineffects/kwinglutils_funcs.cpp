@@ -410,8 +410,14 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glProgramLocalParameter4fARB = NULL;
         glGetProgramivARB = NULL;
     }
-    if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
+
+    if (hasGLVersion(1, 5)) {
         // see http://www.opengl.org/registry/specs/ARB/vertex_buffer_object.txt
+        GL_RESOLVE(glGenBuffers);
+        GL_RESOLVE(glDeleteBuffers);
+        GL_RESOLVE(glBindBuffer);
+        GL_RESOLVE(glBufferData);
+    } else if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
         GL_RESOLVE_WITH_EXT(glGenBuffers, glGenBuffersARB);
         GL_RESOLVE_WITH_EXT(glDeleteBuffers, glDeleteBuffersARB);
         GL_RESOLVE_WITH_EXT(glBindBuffer, glBindBufferARB);

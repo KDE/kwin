@@ -1421,7 +1421,7 @@ void GLVertexBuffer::initStatic()
 #ifdef KWIN_HAVE_OPENGLES
     GLVertexBufferPrivate::supported = true;
 #else
-    GLVertexBufferPrivate::supported = hasGLExtension("GL_ARB_vertex_buffer_object");
+    GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension("GL_ARB_vertex_buffer_object");
 #endif
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
 }
