@@ -326,8 +326,35 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glBlitFramebuffer = NULL;
     }
 
-    if (hasGLExtension("GL_ARB_shader_objects")) {
+    if (hasGLVersion(2, 0)) {
         // see http://www.opengl.org/registry/specs/ARB/shader_objects.txt
+        GL_RESOLVE(glCreateShader);
+        GL_RESOLVE(glShaderSource);
+        GL_RESOLVE(glCompileShader);
+        GL_RESOLVE(glDeleteShader);
+        GL_RESOLVE(glCreateProgram);
+        GL_RESOLVE(glAttachShader);
+        GL_RESOLVE(glLinkProgram);
+        GL_RESOLVE(glUseProgram);
+        GL_RESOLVE(glDeleteProgram);
+        GL_RESOLVE(glGetShaderInfoLog);
+        GL_RESOLVE(glGetProgramInfoLog);
+        GL_RESOLVE(glGetProgramiv);
+        GL_RESOLVE(glGetShaderiv);
+        GL_RESOLVE(glUniform1f);
+        GL_RESOLVE(glUniform2f);
+        GL_RESOLVE(glUniform3f);
+        GL_RESOLVE(glUniform4f);
+        GL_RESOLVE(glUniform1i);
+        GL_RESOLVE(glUniform1fv);
+        GL_RESOLVE(glUniform2fv);
+        GL_RESOLVE(glUniform3fv);
+        GL_RESOLVE(glUniform4fv);
+        GL_RESOLVE(glUniformMatrix4fv);
+        GL_RESOLVE(glValidateProgram);
+        GL_RESOLVE(glGetUniformLocation);
+        GL_RESOLVE(glGetUniformfv);
+    } else if (hasGLExtension("GL_ARB_shader_objects")) {
         GL_RESOLVE_WITH_EXT(glCreateShader, glCreateShaderObjectARB);
         GL_RESOLVE_WITH_EXT(glShaderSource, glShaderSourceARB);
         GL_RESOLVE_WITH_EXT(glCompileShader, glCompileShaderARB);
@@ -382,8 +409,16 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGetUniformLocation = NULL;
         glGetUniformfv = NULL;
     }
-    if (hasGLExtension("GL_ARB_vertex_shader")) {
+
+    if (hasGLVersion(2, 0)) {
         // see http://www.opengl.org/registry/specs/ARB/vertex_shader.txt
+        GL_RESOLVE(glVertexAttrib1f);
+        GL_RESOLVE(glBindAttribLocation);
+        GL_RESOLVE(glGetAttribLocation);
+        GL_RESOLVE(glEnableVertexAttribArray);
+        GL_RESOLVE(glDisableVertexAttribArray);
+        GL_RESOLVE(glVertexAttribPointer);
+    } else if (hasGLExtension("GL_ARB_vertex_shader")) {
         GL_RESOLVE_WITH_EXT(glVertexAttrib1f, glVertexAttrib1fARB);
         GL_RESOLVE_WITH_EXT(glBindAttribLocation, glBindAttribLocationARB);
         GL_RESOLVE_WITH_EXT(glGetAttribLocation, glGetAttribLocationARB);
@@ -398,6 +433,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glDisableVertexAttribArray = NULL;
         glVertexAttribPointer = NULL;
     }
+
     if (hasGLExtension("GL_ARB_fragment_program") && hasGLExtension("GL_ARB_vertex_program")) {
         // see http://www.opengl.org/registry/specs/ARB/fragment_program.txt
         GL_RESOLVE(glProgramStringARB);
