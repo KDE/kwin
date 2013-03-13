@@ -229,7 +229,11 @@ void eglResolveFunctions()
 void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 {
 #ifndef KWIN_HAVE_OPENGLES
-    if (hasGLExtension("GL_ARB_multitexture")) {
+    if (hasGLVersion(1, 3)) {
+        GL_RESOLVE(glActiveTexture);
+        // Get number of texture units
+        glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
+    } else if (hasGLExtension("GL_ARB_multitexture")) {
         GL_RESOLVE_WITH_EXT(glActiveTexture, glActiveTextureARB);
         // Get number of texture units
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
