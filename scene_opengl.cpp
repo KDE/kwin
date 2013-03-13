@@ -258,39 +258,13 @@ bool SceneOpenGL::initFailed() const
 #ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::copyPixels(const QRegion &region)
 {
-    GLint shader = 0;
-    if (ShaderManager::instance()->isShaderBound()) {
-        glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-        glUseProgram(0);
-    }
-    bool reenableTexUnit = false;
-    if (glIsEnabled(GL_TEXTURE_2D)) {
-        glDisable(GL_TEXTURE_2D);
-        reenableTexUnit = true;
-    }
-    // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
-    glEnable(GL_SCISSOR_TEST);
-
-    int xpos = 0;
-    int ypos = 0;
     foreach (const QRect &r, region.rects()) {
-        // convert to OpenGL coordinates
-        int y = displayHeight() - r.y() - r.height();
-        glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL); // not glRasterPos2f, see glxbackend.cpp
-        xpos = r.x();
-        ypos = y;
-        glScissor(r.x(), y, r.width(), r.height());
-        glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
-    }
+        const int x0 = r.x();
+        const int y0 = displayHeight() - r.y() - r.height();
+        const int x1 = r.x() + r.width();
+        const int y1 = displayHeight() - r.y();
 
-    glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL); // move position back to 0,0
-    glDisable(GL_SCISSOR_TEST);
-    if (reenableTexUnit) {
-        glEnable(GL_TEXTURE_2D);
-    }
-    // rebind previously bound shader
-    if (ShaderManager::instance()->isShaderBound()) {
-        glUseProgram(shader);
+        glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     }
 }
 #endif
