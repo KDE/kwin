@@ -27,6 +27,16 @@ class QMatrix4x4;
 namespace KWin
 {
 
+struct KernelValue
+{
+    KernelValue() {}
+    KernelValue(float x, float g) : x(x), g(g) {}
+    bool operator < (const KernelValue &other) const { return x < other.x; }
+
+    float x;
+    float g;
+};
+
 class BlurShader
 {
 public:
@@ -61,7 +71,7 @@ public:
 
 protected:
     float gaussian(float x, float sigma) const;
-    QVector<float> gaussianKernel() const;
+    QList<KernelValue> gaussianKernel() const;
     void setIsValid(bool value) {
         mValid = value;
     }
