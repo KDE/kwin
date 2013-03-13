@@ -349,6 +349,17 @@ extern KWIN_EXPORT glDisableVertexAttribArray_func glDisableVertexAttribArray;
 typedef void (*glVertexAttribPointer_func)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
 extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 
+// GL_ARB_vertex_array_object
+typedef void (*glBindVertexArray_func)(GLuint array);
+typedef void (*glDeleteVertexArrays_func)(GLsizei n, const GLuint *arrays);
+typedef void (*glGenVertexArrays_func)(GLsizei n, GLuint *arrays);
+typedef GLboolean (*glIsVertexArray_func)(GLuint array);
+
+extern KWIN_EXPORT glBindVertexArray_func    glBindVertexArray;
+extern KWIN_EXPORT glDeleteVertexArrays_func glDeleteVertexArrays;
+extern KWIN_EXPORT glGenVertexArrays_func    glGenVertexArrays;
+extern KWIN_EXPORT glIsVertexArray_func      glIsVertexArray;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES

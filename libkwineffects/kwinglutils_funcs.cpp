@@ -139,6 +139,12 @@ glDisableVertexAttribArray_func glDisableVertexAttribArray;
 glVertexAttribPointer_func glVertexAttribPointer;
 
 
+// GL_ARB_vertex_array_object
+glBindVertexArray_func    glBindVertexArray;
+glDeleteVertexArrays_func glDeleteVertexArrays;
+glGenVertexArrays_func    glGenVertexArrays;
+glIsVertexArray_func      glIsVertexArray;
+
 static glXFuncPtr getProcAddress(const char* name)
 {
     glXFuncPtr ret = NULL;
@@ -467,6 +473,19 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glDeleteBuffers = NULL;
         glBindBuffer = NULL;
         glBufferData = NULL;
+    }
+
+    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_vertex_array_object")) {
+        // see http://www.opengl.org/registry/specs/ARB/vertex_array_object.txt
+        GL_RESOLVE(glBindVertexArray);
+        GL_RESOLVE(glDeleteVertexArrays);
+        GL_RESOLVE(glGenVertexArrays);
+        GL_RESOLVE(glIsVertexArray);
+    } else {
+        glBindVertexArray    = NULL;
+        glDeleteVertexArrays = NULL;
+        glGenVertexArrays    = NULL;
+        glIsVertexArray      = NULL;
     }
 #endif
 
