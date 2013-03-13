@@ -126,6 +126,7 @@ private:
 private:
     LanczosFilter *m_lanczosFilter;
     ColorCorrection *m_colorCorrection;
+    GLuint vao;
 };
 
 #ifdef KWIN_HAVE_OPENGL_1

@@ -617,7 +617,18 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
         init_ok = false;
         return; // error
     }
+
     kDebug(1212) << "OpenGL 2 compositing successfully initialized";
+
+#ifndef KWIN_HAVE_OPENGLES
+    // It is not legal to not have a vertex array object bound in a core context
+    if (hasGLExtension("GL_ARB_vertex_array_object")) {
+        glGenVertexArrays(1, &vao);
+        glBindVertexArray(vao);
+    }
+#endif
+
+    init_ok = true;
 }
 
 SceneOpenGL2::~SceneOpenGL2()
