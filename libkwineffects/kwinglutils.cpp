@@ -940,8 +940,8 @@ void GLRenderTarget::initStatic()
     sSupported = true;
     s_blitSupported = false;
 #else
-    sSupported = hasGLExtension("GL_EXT_framebuffer_object") && glFramebufferTexture2D;
-    s_blitSupported = hasGLExtension("GL_EXT_framebuffer_blit");
+    sSupported = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension("GL_EXT_framebuffer_object");
+    s_blitSupported = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension("GL_EXT_framebuffer_blit");
 #endif
 }
 

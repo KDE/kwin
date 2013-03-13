@@ -242,7 +242,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glTextureUnitsCount = 0;
     }
 
-    if (hasGLExtension("GL_ARB_framebuffer_object")) {
+    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object")) {
         // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
         GL_RESOLVE(glIsRenderbuffer);
         GL_RESOLVE(glBindRenderbuffer);
@@ -316,7 +316,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGenerateMipmap = NULL;
     }
 
-    if (hasGLExtension("GL_ARB_framebuffer_object")) {
+    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object")) {
         // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
         GL_RESOLVE(glBlitFramebuffer);
     } else if (hasGLExtension("GL_EXT_framebuffer_blit")) {
