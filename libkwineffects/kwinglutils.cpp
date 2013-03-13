@@ -788,6 +788,11 @@ void ShaderManager::popShader()
     }
 }
 
+void ShaderManager::bindFragDataLocations(GLShader *shader)
+{
+    shader->bindFragDataLocation("fragColor", 0);
+}
+
 GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
 {
     const char *vertexFile[] = {
@@ -796,7 +801,9 @@ GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fr
         "scene-color-vertex.glsl"
     };
 
-    GLShader *shader = new GLShader(m_shaderDir + vertexFile[vertex], fragmentFile);
+    GLShader *shader = new GLShader(m_shaderDir + vertexFile[vertex], fragmentFile, GLShader::ExplicitLinking);
+    bindFragDataLocations(shader);
+    shader->link();
 
     if (shader->isValid()) {
         pushShader(shader);
@@ -816,7 +823,9 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
         "scene-color-fragment.glsl"
     };
 
-    GLShader *shader = new GLShader(vertexFile, m_shaderDir + fragmentFile[fragment]);
+    GLShader *shader = new GLShader(vertexFile, m_shaderDir + fragmentFile[fragment], GLShader::ExplicitLinking);
+    bindFragDataLocations(shader);
+    shader->link();
 
     if (shader->isValid()) {
         pushShader(shader);
@@ -829,8 +838,10 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
 
 GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
-    GLShader *shader = new GLShader();
+    GLShader *shader = new GLShader(GLShader::ExplicitLinking);
     shader->load(vertexSource, fragmentSource);
+    bindFragDataLocations(shader);
+    shader->link();
     return shader;
 }
 
@@ -859,7 +870,10 @@ void ShaderManager::initShaders()
     m_valid = true;
 
     for (int i = 0; i < 3; i++) {
-        m_shader[i] = new GLShader(m_shaderDir + vertexFile[i], m_shaderDir + fragmentFile[i]);
+        m_shader[i] = new GLShader(m_shaderDir + vertexFile[i], m_shaderDir + fragmentFile[i],
+                                   GLShader::ExplicitLinking);
+        bindFragDataLocations(m_shader[i]);
+        m_shader[i]->link();
 
         if (!m_shader[i]->isValid()) {
             m_valid = false;

@@ -390,6 +390,7 @@ private:
 
     void initShaders();
     void resetShader(ShaderType type);
+    void bindFragDataLocations(GLShader *shader);
 
     QStack<GLShader*> m_boundShaders;
     GLShader *m_shader[3];
