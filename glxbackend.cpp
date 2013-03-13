@@ -138,8 +138,23 @@ bool GlxBackend::initRenderingContext()
 
     // Use glXCreateContextAttribsARB() when it's available
     if (glXCreateContextAttribsARB) {
-        int attribs[] = { 0 };
-        ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs);
+        const int attribs_31_core[] = {
+            GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+            GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+            GLX_CONTEXT_FLAGS_ARB,         GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+            0
+        };
+
+        const int attribs_legacy[] = {
+            0
+        };
+
+        // Try to create a 3.1 context first
+        if (options->glCoreProfile())
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core);
+
+        if (!ctx)
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy);
     }
 
     if (!ctx)
