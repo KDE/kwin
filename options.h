@@ -183,6 +183,7 @@ class Options : public QObject, public KDecorationOptions
      * Whether legacy OpenGL should be used or OpenGL (ES) 2
      **/
     Q_PROPERTY(bool glLegacy READ isGlLegacy WRITE setGlLegacy NOTIFY glLegacyChanged)
+    Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(char glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
 public:
 
@@ -538,6 +539,9 @@ public:
     bool isGlLegacy() const {
         return m_glLegacy;
     }
+    bool glCoreProfile() const {
+        return m_glCoreProfile;
+    }
 
     enum GlSwapStrategy { NoSwapEncourage = 0, CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
     GlSwapStrategy glPreferBufferSwap() const {
@@ -603,6 +607,7 @@ public:
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
     void setGlLegacy(bool glLegacy);
+    void setGLCoreProfile(bool glCoreProfile);
     void setGlPreferBufferSwap(char glPreferBufferSwap);
 
     // default values
@@ -708,6 +713,9 @@ public:
     static bool defaultGlLegacy() {
         return false;
     }
+    static bool defaultGLCoreProfile() {
+        return false;
+    }
     static GlSwapStrategy defaultGlPreferBufferSwap() {
         return AutoSwapStrategy;
     }
@@ -789,6 +797,7 @@ Q_SIGNALS:
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
     void glLegacyChanged();
+    void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
 
 public Q_SLOTS:
@@ -838,6 +847,7 @@ private:
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
     bool m_glLegacy;
+    bool m_glCoreProfile;
     GlSwapStrategy m_glPreferBufferSwap;
 
     WindowOperation OpTitlebarDblClick;

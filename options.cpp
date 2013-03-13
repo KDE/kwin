@@ -157,6 +157,7 @@ Options::Options(QObject *parent)
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , m_glLegacy(Options::defaultGlLegacy())
+    , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
@@ -747,6 +748,15 @@ void Options::setGlLegacy(bool glLegacy)
     emit glLegacyChanged();
 }
 
+void Options::setGLCoreProfile(bool value)
+{
+    if (m_glCoreProfile == value) {
+        return;
+    }
+    m_glCoreProfile = value;
+    emit glCoreProfileChanged();
+}
+
 void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 {
     if (glPreferBufferSwap == 'a') {
@@ -951,6 +961,7 @@ void Options::reloadCompositingSettings(bool force)
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
     setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
+    setGLCoreProfile(config.readEntry("GLCore", Options::defaultGLCoreProfile()));
 
     char c = 0;
     const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
