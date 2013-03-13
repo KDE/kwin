@@ -791,9 +791,9 @@ void ShaderManager::popShader()
 GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
 {
     const char *vertexFile[] = {
-        ":/resources/scene-vertex.glsl",
-        ":/resources/scene-generic-vertex.glsl",
-        ":/resources/scene-color-vertex.glsl"
+        ":/resources/shaders/1.10/scene-vertex.glsl",
+        ":/resources/shaders/1.10/scene-generic-vertex.glsl",
+        ":/resources/shaders/1.10/scene-color-vertex.glsl"
     };
 
     GLShader *shader = new GLShader(vertexFile[vertex], fragmentFile);
@@ -811,9 +811,9 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
 {
     // The Simple and Generic shaders use same fragment shader
     const char *fragmentFile[] = {
-        ":/resources/scene-fragment.glsl",
-        ":/resources/scene-fragment.glsl",
-        ":/resources/scene-color-fragment.glsl"
+        ":/resources/shaders/1.10/scene-fragment.glsl",
+        ":/resources/shaders/1.10/scene-fragment.glsl",
+        ":/resources/shaders/1.10/scene-color-fragment.glsl"
     };
 
     GLShader *shader = new GLShader(vertexFile, fragmentFile[fragment]);
@@ -837,15 +837,15 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 void ShaderManager::initShaders()
 {
     const char *vertexFile[] = {
-        ":/resources/scene-vertex.glsl",
-        ":/resources/scene-generic-vertex.glsl",
-        ":/resources/scene-color-vertex.glsl",
+        ":/resources/shaders/1.10/scene-vertex.glsl",
+        ":/resources/shaders/1.10/scene-generic-vertex.glsl",
+        ":/resources/shaders/1.10/scene-color-vertex.glsl",
     };
 
     const char *fragmentFile[] = {
-        ":/resources/scene-fragment.glsl",
-        ":/resources/scene-fragment.glsl",
-        ":/resources/scene-color-fragment.glsl",
+        ":/resources/shaders/1.10/scene-fragment.glsl",
+        ":/resources/shaders/1.10/scene-fragment.glsl",
+        ":/resources/shaders/1.10/scene-color-fragment.glsl",
     };
 
     // Be optimistic
