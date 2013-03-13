@@ -247,19 +247,34 @@ void GLSLBlurShader::init()
         offsets << vec4;
     }
 
+#ifdef KWIN_HAVE_OPENGLES
+    const bool glsl_140 = false;
+#else
+    const bool glsl_140 = GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40);
+#endif
+
     QByteArray vertexSource;
     QByteArray fragmentSource;
+
+    const QByteArray attribute   = glsl_140 ? "in"                : "attribute";
+    const QByteArray varying_in  = glsl_140 ? "noperspective in"  : "varying";
+    const QByteArray varying_out = glsl_140 ? "noperspective out" : "varying";
+    const QByteArray texture2D   = glsl_140 ? "texture"           : "texture2D";
+    const QByteArray fragColor   = glsl_140 ? "fragColor"         : "gl_FragColor";
 
     // Vertex shader
     // ===================================================================
     QTextStream stream(&vertexSource);
 
+    if (glsl_140)
+        stream << "#version 140\n\n";
+
     stream << "uniform mat4 u_modelViewProjectionMatrix;\n";
     stream << "uniform mat4 u_textureMatrix;\n";
     stream << "uniform vec2 pixelSize;\n\n";
-    stream << "attribute vec4 vertex;\n";
-    stream << "attribute vec4 texCoord;\n\n";
-    stream << "varying vec4 samplePos[" << std::ceil(size / 2.0) << "];\n";
+    stream << attribute << " vec4 vertex;\n";
+    stream << attribute << " vec4 texCoord;\n\n";
+    stream << varying_out << " vec4 samplePos[" << std::ceil(size / 2.0) << "];\n";
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
@@ -279,19 +294,26 @@ void GLSLBlurShader::init()
     // ===================================================================
     QTextStream stream2(&fragmentSource);
 
+    if (glsl_140)
+        stream2 << "#version 140\n\n";
+
     stream2 << "uniform sampler2D texUnit;\n";
-    stream2 << "varying vec4 samplePos[" << std::ceil(size / 2.0) << "];\n\n";
+    stream2 << varying_in << " vec4 samplePos[" << std::ceil(size / 2.0) << "];\n\n";
 
     for (int i = 0; i <= center; i++)
         stream2 << "const float kernel" << i << " = " << kernel[i].g << ";\n";
     stream2 << "\n";
+
+    if (glsl_140)
+        stream2 << "out vec4 fragColor;\n\n";
+
     stream2 << "void main(void)\n";
     stream2 << "{\n";
-    stream2 << "    vec4 sum = texture2D(texUnit, samplePos[0].st) * kernel0;\n";
+    stream2 << "    vec4 sum = " << texture2D << "(texUnit, samplePos[0].st) * kernel0;\n";
     for (int i = 1, j = -center + 1; i < size; i++, j++)
-        stream2 << "    sum = sum + texture2D(texUnit, samplePos[" << i / 2
+        stream2 << "    sum = sum + " << texture2D << "(texUnit, samplePos[" << i / 2
                 << ((i % 2) ? "].pq)" : "].st)") << " * kernel" << center - qAbs(j) << ";\n";
-    stream2 << "    gl_FragColor = sum;\n";
+    stream2 << "    " << fragColor << " = sum;\n";
     stream2 << "}\n";
     stream2.flush();
 
