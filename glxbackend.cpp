@@ -132,12 +132,18 @@ void GlxBackend::init()
     kDebug(1212) << "Direct rendering:" << isDirectRendering() << endl;
 }
 
-
 bool GlxBackend::initRenderingContext()
 {
     bool direct = options->isGlDirect();
 
-    ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
+    // Use glXCreateContextAttribsARB() when it's available
+    if (glXCreateContextAttribsARB) {
+        int attribs[] = { 0 };
+        ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs);
+    }
+
+    if (!ctx)
+        ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
 
     if (!ctx) {
         kDebug(1212) << "Failed to create an OpenGL context.";
