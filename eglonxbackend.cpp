@@ -122,9 +122,11 @@ bool EglOnXBackend::initRenderingContext()
     dpy = eglGetDisplay(display());
     if (dpy == EGL_NO_DISPLAY)
         return false;
+
     EGLint major, minor;
     if (eglInitialize(dpy, &major, &minor) == EGL_FALSE)
         return false;
+
 #ifdef KWIN_HAVE_OPENGLES
     eglBindAPI(EGL_OPENGL_ES_API);
 #else
@@ -133,13 +135,16 @@ bool EglOnXBackend::initRenderingContext()
         return false;
     }
 #endif
+
     initBufferConfigs();
+
     if (!overlayWindow()->create()) {
         kError(1212) << "Could not get overlay window";
         return false;
     } else {
         overlayWindow()->setup(None);
     }
+
     surface = eglCreateWindowSurface(dpy, config, overlayWindow()->window(), 0);
 
     const EGLint context_attribs[] = {
@@ -150,20 +155,25 @@ bool EglOnXBackend::initRenderingContext()
     };
 
     ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs);
+
     if (ctx == EGL_NO_CONTEXT) {
         kError(1212) << "Create Context failed";
         return false;
     }
+
     if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE) {
         kError(1212) << "Make Context Current failed";
         return false;
     }
+
     kDebug(1212) << "EGL version: " << major << "." << minor;
+
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
         kWarning(1212) << "Error occurred while creating context " << error;
         return false;
     }
+
     return true;
 }
 
