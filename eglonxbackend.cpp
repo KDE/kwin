@@ -32,6 +32,7 @@ namespace KWin
 
 EglOnXBackend::EglOnXBackend()
     : OpenGLBackend()
+    , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
 {
     init();
@@ -147,14 +148,35 @@ bool EglOnXBackend::initRenderingContext()
 
     surface = eglCreateWindowSurface(dpy, config, overlayWindow()->window(), 0);
 
-    const EGLint context_attribs[] = {
 #ifdef KWIN_HAVE_OPENGLES
+    const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
-#endif
         EGL_NONE
     };
 
     ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs);
+#else
+    const EGLint context_attribs_31_core[] = {
+        EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+        EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+        EGL_CONTEXT_FLAGS_KHR,         EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+        EGL_NONE
+    };
+
+    const EGLint context_attribs_legacy[] = {
+        EGL_NONE
+    };
+
+    const QByteArray eglExtensions = eglQueryString(dpy, EGL_EXTENSIONS);
+    const QList<QByteArray> extensions = eglExtensions.split(' ');
+
+    // Try to create a 3.1 core context
+    if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
+        ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs_31_core);
+
+    if (ctx == EGL_NO_CONTEXT)
+        ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs_legacy);
+#endif
 
     if (ctx == EGL_NO_CONTEXT) {
         kError(1212) << "Create Context failed";
