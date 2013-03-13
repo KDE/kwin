@@ -69,6 +69,9 @@ glXSwapIntervalMESA_func glXSwapIntervalMESA;
 glXSwapIntervalEXT_func glXSwapIntervalEXT;
 glXSwapIntervalSGI_func glXSwapIntervalSGI;
 
+// GLX_ARB_create_context
+glXCreateContextAttribsARB_func glXCreateContextAttribsARB;
+
 // glActiveTexture
 glActiveTexture_func glActiveTexture;
 // framebuffer_object extension functions
@@ -184,6 +187,11 @@ void glxResolveFunctions()
         glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
     else
         glXSwapIntervalMESA = NULL;
+
+    if (hasGLExtension("GLX_ARB_create_context"))
+        glXCreateContextAttribsARB = (glXCreateContextAttribsARB_func) getProcAddress("glXCreateContextAttribsARB");
+    else
+        glXCreateContextAttribsARB = NULL;
 }
 #endif
 

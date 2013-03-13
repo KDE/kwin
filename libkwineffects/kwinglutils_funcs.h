@@ -214,6 +214,13 @@ extern KWIN_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
 extern KWIN_EXPORT glXSwapIntervalEXT_func glXSwapIntervalEXT;
 extern KWIN_EXPORT glXSwapIntervalSGI_func glXSwapIntervalSGI;
 
+// GLX_ARB_create_context
+typedef GLXContext (*glXCreateContextAttribsARB_func)(Display *dpy, GLXFBConfig config,
+                                                      GLXContext share_context, Bool direct,
+                                                      const int *attrib_list);
+
+extern KWIN_EXPORT glXCreateContextAttribsARB_func glXCreateContextAttribsARB;
+
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
 extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
