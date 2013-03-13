@@ -396,6 +396,7 @@ private:
     bool m_inited;
     bool m_valid;
     bool m_debug;
+    QByteArray m_shaderDir;
     static ShaderManager *s_shaderManager;
 };
 

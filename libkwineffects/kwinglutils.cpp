@@ -791,12 +791,12 @@ void ShaderManager::popShader()
 GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fragmentFile)
 {
     const char *vertexFile[] = {
-        ":/resources/shaders/1.10/scene-vertex.glsl",
-        ":/resources/shaders/1.10/scene-generic-vertex.glsl",
-        ":/resources/shaders/1.10/scene-color-vertex.glsl"
+        "scene-vertex.glsl",
+        "scene-generic-vertex.glsl",
+        "scene-color-vertex.glsl"
     };
 
-    GLShader *shader = new GLShader(vertexFile[vertex], fragmentFile);
+    GLShader *shader = new GLShader(m_shaderDir + vertexFile[vertex], fragmentFile);
 
     if (shader->isValid()) {
         pushShader(shader);
@@ -811,12 +811,12 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
 {
     // The Simple and Generic shaders use same fragment shader
     const char *fragmentFile[] = {
-        ":/resources/shaders/1.10/scene-fragment.glsl",
-        ":/resources/shaders/1.10/scene-fragment.glsl",
-        ":/resources/shaders/1.10/scene-color-fragment.glsl"
+        "scene-fragment.glsl",
+        "scene-fragment.glsl",
+        "scene-color-fragment.glsl"
     };
 
-    GLShader *shader = new GLShader(vertexFile, fragmentFile[fragment]);
+    GLShader *shader = new GLShader(vertexFile, m_shaderDir + fragmentFile[fragment]);
 
     if (shader->isValid()) {
         pushShader(shader);
@@ -837,22 +837,29 @@ GLShader *ShaderManager::loadShaderFromCode(const QByteArray &vertexSource, cons
 void ShaderManager::initShaders()
 {
     const char *vertexFile[] = {
-        ":/resources/shaders/1.10/scene-vertex.glsl",
-        ":/resources/shaders/1.10/scene-generic-vertex.glsl",
-        ":/resources/shaders/1.10/scene-color-vertex.glsl",
+        "scene-vertex.glsl",
+        "scene-generic-vertex.glsl",
+        "scene-color-vertex.glsl",
     };
 
     const char *fragmentFile[] = {
-        ":/resources/shaders/1.10/scene-fragment.glsl",
-        ":/resources/shaders/1.10/scene-fragment.glsl",
-        ":/resources/shaders/1.10/scene-color-fragment.glsl",
+        "scene-fragment.glsl",
+        "scene-fragment.glsl",
+        "scene-color-fragment.glsl",
     };
+
+#ifndef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        m_shaderDir = ":/resources/shaders/1.40/";
+    else
+#endif
+        m_shaderDir = ":/resources/shaders/1.10/";
 
     // Be optimistic
     m_valid = true;
 
     for (int i = 0; i < 3; i++) {
-        m_shader[i] = new GLShader(vertexFile[i], fragmentFile[i]);
+        m_shader[i] = new GLShader(m_shaderDir + vertexFile[i], m_shaderDir + fragmentFile[i]);
 
         if (!m_shader[i]->isValid()) {
             m_valid = false;

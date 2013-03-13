@@ -84,7 +84,10 @@ void LanczosFilter::init()
         if (gl->isRadeon() && gl->chipClass() < R600)
             return;
     }
-    m_shader.reset(ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, ":/resources/shaders/1.10/lanczos-fragment.glsl"));
+    m_shader.reset(ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader,
+                                                                 gl->glslVersion() >= kVersionNumber(1, 40) ?
+                                                                 ":/resources/shaders/1.40/lanczos-fragment.glsl" :
+                                                                 ":/resources/shaders/1.10/lanczos-fragment.glsl"));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader.data());
         m_uTexUnit    = m_shader->uniformLocation("texUnit");
