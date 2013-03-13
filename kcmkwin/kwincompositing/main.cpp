@@ -129,8 +129,11 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     // For future use
     (void) I18N_NOOP("Use GLSL shaders");
 
-#define OPENGL_INDEX 0
-#define XRENDER_INDEX 1
+#define OPENGL31_INDEX 0
+#define OPENGL20_INDEX 1
+#define OPENGL12_INDEX 2
+#define XRENDER_INDEX  3
+
 #ifndef KWIN_HAVE_XRENDER_COMPOSITING
     ui.compositingType->removeItem(XRENDER_INDEX);
 #define XRENDER_INDEX -1
@@ -173,7 +176,6 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
 
     connect(ui.glSwapStrategy, SIGNAL(currentIndexChanged(int)), this, SLOT(glSwapStrategyChanged(int)));
     connect(ui.glSwapStrategy, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(ui.glShaders, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(ui.glColorCorrection, SIGNAL(toggled(bool)), this, SLOT(changed()));
     connect(m_showDetailedErrors, SIGNAL(triggered(bool)), SLOT(showDetailedEffectLoadingInformation()));
     connect(m_dontShowAgain, SIGNAL(triggered(bool)), SLOT(blockFutureWarnings()));
@@ -376,10 +378,10 @@ void KWinCompositingConfig::suggestGraphicsSystem()
 
 void KWinCompositingConfig::toogleSmoothScaleUi(int compositingType)
 {
-    ui.glScaleFilter->setVisible(compositingType == OPENGL_INDEX);
+    ui.glScaleFilter->setVisible(compositingType != XRENDER_INDEX);
     ui.xrScaleFilter->setVisible(compositingType == XRENDER_INDEX);
     ui.scaleMethodLabel->setBuddy(compositingType == XRENDER_INDEX ? ui.xrScaleFilter : ui.glScaleFilter);
-    ui.glGroup->setEnabled(compositingType == OPENGL_INDEX);
+    ui.glGroup->setEnabled(compositingType != XRENDER_INDEX);
 }
 
 void KWinCompositingConfig::toggleEffectShortcutChanged(const QKeySequence &seq)
@@ -408,7 +410,18 @@ void KWinCompositingConfig::loadAdvancedTab()
 {
     KConfigGroup config(mKWinConfig, "Compositing");
     QString backend = config.readEntry("Backend", "OpenGL");
-    ui.compositingType->setCurrentIndex((backend == "XRender") ? XRENDER_INDEX : 0);
+    if (backend == "OpenGL") {
+        int index = OPENGL20_INDEX;
+
+        if (config.readEntry<bool>("GLLegacy", false))
+            index = OPENGL12_INDEX;
+        else if (config.readEntry<bool>("GCCore", false))
+            index = OPENGL31_INDEX;
+
+        ui.compositingType->setCurrentIndex(index);
+    } else if (backend == "XRender") {
+        ui.compositingType->setCurrentIndex(XRENDER_INDEX);
+    }
 
     originalGraphicsSystem = config.readEntry("GraphicsSystem", QString());
     if (originalGraphicsSystem.isEmpty()) { // detect system default
@@ -436,7 +449,6 @@ void KWinCompositingConfig::loadAdvancedTab()
     if (swapStrategy < 0)
         swapStrategy = ui.glSwapStrategy->findData("n");
     ui.glSwapStrategy->setCurrentIndex(swapStrategy);
-    ui.glShaders->setChecked(!config.readEntry<bool>("GLLegacy", false));
     ui.glColorCorrection->setChecked(config.readEntry("GLColorCorrection", false));
 
     toogleSmoothScaleUi(ui.compositingType->currentIndex());
@@ -547,10 +559,40 @@ bool KWinCompositingConfig::saveAdvancedTab()
     KConfigGroup config(mKWinConfig, "Compositing");
     QString graphicsSystem = (ui.graphicsSystem->currentIndex() == 0) ? "native" : "raster";
 
-    if (config.readEntry("Backend", "OpenGL")
-            != ((ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender")
-            || ((config.readEntry("GLPreferBufferSwap", "a") == "n") xor (ui.glSwapStrategy->itemData(ui.glSwapStrategy->currentIndex()) == "n"))
-            || config.readEntry<bool>("GLLegacy", false) == ui.glShaders->isChecked()) {
+    QString backend;
+    bool glLegacy;
+    bool glCore;
+
+    switch (ui.compositingType->currentIndex()) {
+    case OPENGL12_INDEX:
+        backend  = "OpenGL";
+        glLegacy = true;
+        glCore   = false;
+        break;
+
+    case OPENGL20_INDEX:
+        backend  = "OpenGL";
+        glLegacy = false;
+        glCore   = false;
+        break;
+
+    case OPENGL31_INDEX:
+        backend  = "OpenGL";
+        glLegacy = false;
+        glCore   = true;
+        break;
+
+    case XRENDER_INDEX:
+        backend  = "XRender";
+        glLegacy = false;
+        glCore   = false;
+        break;
+    }
+
+    if (config.readEntry("Backend", "OpenGL")     != backend ||
+        config.readEntry<bool>("GLLegacy", false) != glLegacy ||
+        config.readEntry<bool>("GLCore", false)   != glCore ||
+        ((config.readEntry("GLPreferBufferSwap", "a") == "n") xor (ui.glSwapStrategy->itemData(ui.glSwapStrategy->currentIndex()) == "n"))) {
         m_showConfirmDialog = true;
         advancedChanged = true;
     } else if (config.readEntry("HiddenPreviews", 5) != hps[ ui.windowThumbnails->currentIndex()]
@@ -561,7 +603,13 @@ bool KWinCompositingConfig::saveAdvancedTab()
         advancedChanged = true;
     }
 
-    config.writeEntry("Backend", (ui.compositingType->currentIndex() == OPENGL_INDEX) ? "OpenGL" : "XRender");
+    config.writeEntry("Backend",  backend);
+
+    if (backend == "OpenGL") {
+        config.writeEntry("GLLegacy", glLegacy);
+        config.writeEntry("GLCore",   glCore);
+    }
+
     config.writeEntry("GraphicsSystem", graphicsSystem);
     config.writeEntry("HiddenPreviews", hps[ ui.windowThumbnails->currentIndex()]);
     config.writeEntry("UnredirectFullscreen", ui.unredirectFullscreen->isChecked());
@@ -570,7 +618,6 @@ bool KWinCompositingConfig::saveAdvancedTab()
     config.writeEntry("GLTextureFilter", ui.glScaleFilter->currentIndex());
 
     config.writeEntry("GLPreferBufferSwap", ui.glSwapStrategy->itemData(ui.glSwapStrategy->currentIndex()).toString());
-    config.writeEntry("GLLegacy", !ui.glShaders->isChecked());
     config.writeEntry("GLColorCorrection", ui.glColorCorrection->isChecked());
 
     return advancedChanged;
@@ -579,7 +626,7 @@ bool KWinCompositingConfig::saveAdvancedTab()
 void KWinCompositingConfig::save()
 {
     OrgKdeKWinInterface kwin("org.kde.KWin", "/KWin", QDBusConnection::sessionBus());
-    if (ui.compositingType->currentIndex() == OPENGL_INDEX &&
+    if (ui.compositingType->currentIndex() != XRENDER_INDEX &&
         kwin.openGLIsBroken() && !ui.rearmGlSupport->isVisible())
     {
         KConfigGroup config(mKWinConfig, "Compositing");
@@ -834,13 +881,12 @@ void KWinCompositingConfig::defaults()
 
     ui.effectSelector->defaults();
 
-    ui.compositingType->setCurrentIndex(0);
+    ui.compositingType->setCurrentIndex(OPENGL20_INDEX);
     ui.windowThumbnails->setCurrentIndex(1);
     ui.unredirectFullscreen->setChecked(false);
     ui.xrScaleFilter->setCurrentIndex(0);
     ui.glScaleFilter->setCurrentIndex(2);
     ui.glSwapStrategy->setCurrentIndex(ui.glSwapStrategy->findData("a"));
-    ui.glShaders->setChecked(true);
     ui.glColorCorrection->setChecked(false);
 }
 
