@@ -102,11 +102,31 @@ void initGL(OpenGLPlatformInterface platformInterface)
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
     while (glversioninfo.count() < 3)
         glversioninfo << "0";
+
 #ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
-#endif
+
     // Get list of supported OpenGL extensions
-    glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
+    if (hasGLVersion(3, 0)) {
+        PFNGLGETSTRINGIPROC glGetStringi;
+
+#ifdef KWIN_HAVE_EGL
+        if (platformInterface == EglPlatformInterface)
+            glGetStringi = (PFNGLGETSTRINGIPROC) eglGetProcAddress("glGetStringi");
+        else
+#endif
+            glGetStringi = (PFNGLGETSTRINGIPROC) glXGetProcAddress((const GLubyte *) "glGetStringi");
+
+        int count;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+
+        for (int i = 0; i < count; i++) {
+            const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
+            glExtensions << QString(name);
+        }
+    } else
+#endif
+        glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
     glResolveFunctions(platformInterface);

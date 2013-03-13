@@ -525,14 +525,36 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     m_renderer     = (const char*)glGetString(GL_RENDERER);
     m_version      = (const char*)glGetString(GL_VERSION);
 
-    const QByteArray extensions = (const char*)glGetString(GL_EXTENSIONS);
-    m_extensions = QSet<QByteArray>::fromList(extensions.split(' '));
-
     // Parse the OpenGL version
     const QList<QByteArray> versionTokens = m_version.split(' ');
     if (versionTokens.count() > 0) {
         const QByteArray version = QByteArray(m_version);
         m_glVersion = parseVersionString(version);
+    }
+
+#ifndef KWIN_HAVE_OPENGLES
+    if (m_glVersion >= kVersionNumber(3, 0)) {
+        PFNGLGETSTRINGIPROC glGetStringi;
+
+#ifdef KWIN_HAVE_EGL
+        if (platformInterface == EglPlatformInterface)
+            glGetStringi = (PFNGLGETSTRINGIPROC) eglGetProcAddress("glGetStringi");
+        else
+#endif
+            glGetStringi = (PFNGLGETSTRINGIPROC) glXGetProcAddress((const GLubyte *) "glGetStringi");
+
+        int count;
+        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
+
+        for (int i = 0; i < count; i++) {
+            const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
+            m_extensions.insert(name);
+        }
+    } else
+#endif
+    {
+        const QByteArray extensions = (const char *) glGetString(GL_EXTENSIONS);
+        m_extensions = QSet<QByteArray>::fromList(extensions.split(' '));
     }
 
     // Parse the Mesa version
