@@ -2324,6 +2324,10 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
         }
         setGeometry(r, geom_mode);
+        if (options->electricBorderMaximize() && r.top() == clientArea.top())
+            quick_tile_mode = QuickTileMaximize;
+        else
+            quick_tile_mode = QuickTileNone;
         info->setState(NET::Max, NET::Max);
         break;
     }
@@ -2556,29 +2560,10 @@ bool Client::startMoveResize()
     moveResizeMode = true;
     workspace()->setClientIsMoving(this);
 
-    // If we have quick maximization enabled then it's safe to automatically restore windows
-    // when starting a move as the user can undo their action by moving the window back to
-    // the top of the screen. When the setting is disabled then doing so is confusing.
-    bool fakeMove = false;
-    if (!isFullScreen()) { // xinerama move across screens -> window is FS, everything else is secondary and untouched
-        if ((maximizeMode() == MaximizeFull && options->electricBorderMaximize()) ||
-                   (quick_tile_mode != QuickTileNone && isMovable() && mode == PositionCenter)) {
-            // Exit quick tile mode when the user attempts to move a tiled window, cannot use isMove() yet
-            const QRect before = geometry();
-            setQuickTileMode(QuickTileNone);
-            // Move the window so it's under the cursor
-            moveOffset = QPoint(double(moveOffset.x()) / double(before.width()) * double(geom_restore.width()),
-                                double(moveOffset.y()) / double(before.height()) * double(geom_restore.height()));
-            fakeMove = true;
-        } else if (maximizeMode() != MaximizeRestore) {
-            // allow moveResize, but unset maximization state in resize case
-            if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
-                if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
-                    geom_restore = geometry(); // "restore" to current geometry
-                    setMaximize(false, false);
-                }
-            } else if (quick_tile_mode != QuickTileNone) // no longer now - we move, resize is handled below
-                setQuickTileMode(QuickTileNone); // otherwise we mess every second tile, bug #303937
+    if (mode != PositionCenter) { // means "isResize()" but moveResizeMode = true is set below
+        if (maximizeMode() == MaximizeFull) { // partial is cond. reset in finishMoveResize
+            geom_restore = geometry(); // "restore" to current geometry
+            setMaximize(false, false);
         }
     }
 
@@ -2596,8 +2581,6 @@ bool Client::startMoveResize()
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
 #endif
-    if (fakeMove) // fix geom_restore position - it HAS to happen at the end, ie. when all moving is set up. inline call will lock focus!!
-        handleMoveResize(Cursor::pos().x(), Cursor::pos().y(), Cursor::pos().x(), Cursor::pos().y());
     return true;
 }
 
@@ -3132,6 +3115,12 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         else
         {
             setMaximize(true, true);
+            QRect clientArea = workspace()->clientArea(MaximizeArea, this);
+            if (geometry().top() != clientArea.top()) {
+                QRect r(geometry());
+                r.moveTop(clientArea.top());
+                setGeometry(r);
+            }
             quick_tile_mode = QuickTileMaximize;
         }
         return;
