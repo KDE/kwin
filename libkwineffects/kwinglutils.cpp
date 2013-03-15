@@ -1212,6 +1212,72 @@ void GLRenderTarget::attachTexture(const GLTexture& target)
     popRenderTarget();
 }
 
+
+// ------------------------------------------------------------------
+
+
+class BitRef
+{
+public:
+    BitRef(uint32_t &bitfield, int bit) : m_bitfield(bitfield), m_mask(1 << bit) {}
+
+    void operator = (bool val) {
+        if (val)
+            m_bitfield |= m_mask;
+        else
+            m_bitfield &= ~m_mask;
+    }
+
+    operator bool () const { return m_bitfield & m_mask; }
+
+private:
+    uint32_t &m_bitfield;
+    int const m_mask;
+};
+
+
+// ------------------------------------------------------------------
+
+
+class Bitfield
+{
+public:
+    Bitfield() : m_bitfield(0) {}
+    Bitfield(uint32_t bits) : m_bitfield(bits) {}
+
+    void set(int i) { m_bitfield |= (1 << i); }
+    void clear(int i) { m_bitfield &= ~(1 << i); }
+
+    BitRef operator [] (int i) { return BitRef(m_bitfield, i); }
+    operator uint32_t () const { return m_bitfield; }
+
+private:
+    uint32_t m_bitfield;
+};
+
+
+// ------------------------------------------------------------------
+
+
+class BitfieldIterator
+{
+public:
+    BitfieldIterator(uint32_t bitfield) : m_bitfield(bitfield) {}
+
+    bool hasNext() const { return m_bitfield != 0; }
+
+    int next() {
+        const int bit = ffs(m_bitfield) - 1;
+        m_bitfield ^= (1 << bit);
+        return bit;
+    }
+
+private:
+    uint32_t m_bitfield;
+};
+
+
+
 //*********************************
 // GLVertexBufferPrivate
 //*********************************
