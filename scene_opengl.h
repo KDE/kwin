@@ -225,10 +225,8 @@ protected:
     Window(Toplevel* c);
     enum TextureType {
         Content,
-        DecorationTop,
-        DecorationLeft,
-        DecorationRight,
-        DecorationBottom,
+        DecorationLeftRight,
+        DecorationTopBottom,
         Shadow
     };
 

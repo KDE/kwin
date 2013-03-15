@@ -139,19 +139,24 @@ private:
 class OpenGLPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT
+
+    enum Texture { LeftRight = 0, TopBottom, TextureCount };
+
 public:
     OpenGLPaintRedirector(Client *c, QWidget *widget);
     virtual ~OpenGLPaintRedirector();
 
+    GLTexture *leftRightTexture() const { return m_textures[LeftRight]; }
+    GLTexture *topBottomTexture() const { return m_textures[TopBottom]; }
+
 protected:
-    virtual void resize(DecorationPixmap border, const QSize &size);
-    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg);
-    virtual GLTexture *texture(DecorationPixmap border) const;
+    virtual void resizePixmaps(const QRect *rects);
+    virtual void updatePixmaps(const QRect *rects, const QRegion &region);
     virtual void preparePaint(const QPixmap &pending);
 
 private:
     QImage m_tempImage;
-    GLTexture* m_textures[PixmapCount];
+    GLTexture *m_textures[2];
 };
 
 class NativeXRenderPaintRedirector : public PaintRedirector

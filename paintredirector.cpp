@@ -300,33 +300,46 @@ void ImageBasedPaintRedirector::discardScratch()
     m_scratchImage = QImage();
 }
 
+
+
+// ------------------------------------------------------------------
+
+
+
 OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
     : ImageBasedPaintRedirector(c, widget)
 {
-    for (int i=0; i<PixmapCount; ++i) {
+    for (int i = 0; i < TextureCount; ++i)
         m_textures[i] = NULL;
-    }
-    resizePixmaps();
+
+    PaintRedirector::resizePixmaps();
 }
 
 OpenGLPaintRedirector::~OpenGLPaintRedirector()
 {
-    for (int i=0; i<PixmapCount; ++i) {
+    for (int i = 0; i < TextureCount; ++i)
         delete m_textures[i];
-    }
 }
 
-GLTexture *OpenGLPaintRedirector::texture(PaintRedirector::DecorationPixmap border) const
+void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
 {
-    return m_textures[border];
-}
+    QSize size[2];
+    size[LeftRight] = QSize(rects[LeftPixmap].width() + rects[RightPixmap].width(),
+                            qMax(rects[LeftPixmap].height(), rects[RightPixmap].height()));
+    size[TopBottom] = QSize(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()),
+                            rects[TopPixmap].height() + rects[BottomPixmap].height());
 
-void OpenGLPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
-{
-    if (!m_textures[border] || m_textures[border]->size() != size) {
-        delete m_textures[border];
-        m_textures[border] = new GLTexture(size.width(), size.height());
-        m_textures[border]->setYInverted(true);
+    for (int i = 0; i < 2; i++) {
+        if (m_textures[i] && m_textures[i]->size() == size[i])
+            continue;
+
+        delete m_textures[i];
+        m_textures[i] = NULL;
+
+        if (!size[i].isEmpty()) {
+            m_textures[i] = new GLTexture(size[i].width(), size[i].height());
+            m_textures[i]->setYInverted(true);
+        }
     }
 }
 
@@ -335,13 +348,37 @@ void OpenGLPaintRedirector::preparePaint(const QPixmap &pending)
     m_tempImage = pending.toImage();
 }
 
-void OpenGLPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
+void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &region)
 {
-    // clip the sub area
-    const QRect bounding = reg.boundingRect();
+    const QImage &image = scratchImage();
+    const QRect bounding = region.boundingRect();
 
-    m_textures[border]->update(scratchImage(), bounding.topLeft() - r.topLeft(), QRect(bounding.topLeft() - b.topLeft(), bounding.size()));
+    const int leftWidth = rects[LeftPixmap].width();
+    const int topHeight = rects[TopPixmap].height();
+
+    // Top, Right, Bottom, Left
+    GLTexture *textures[4] = { m_textures[TopBottom], m_textures[LeftRight], m_textures[TopBottom], m_textures[LeftRight] };
+    QPoint offsets[4] = { QPoint(0, 0), QPoint(leftWidth, 0), QPoint(0, topHeight), QPoint(0, 0) };
+
+    for (int i = 0; i < 4; i++) {
+        const QRect dirty = (region & rects[i]).boundingRect();
+        if (!textures[i] || dirty.isEmpty())
+            continue;
+
+        const QPoint dst = dirty.topLeft() - rects[i].topLeft() + offsets[i];
+        const QRect src(dirty.topLeft() - bounding.topLeft(), dirty.size());
+
+        textures[i]->update(image, dst, src);
+    }
 }
+
+
+
+
+// ------------------------------------------------------------------
+
+
+
 
 RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, QWidget *widget)
     : ImageBasedPaintRedirector(c, widget)
