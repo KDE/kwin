@@ -1154,75 +1154,58 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
     if (t->noBorder() || !redirector) {
         return;
     }
-    WindowQuadList decoration = data.quads.select(WindowQuadDecoration);
-    QRect topRect, leftRect, rightRect, bottomRect;
 
-    t->layoutDecorationRects(leftRect, topRect, rightRect, bottomRect, Client::WindowRelative);
+    WindowQuadList quads[4];
+    GLTexture *textures[4];
+    QRect rect[4];
 
-    WindowQuadList topList, leftList, rightList, bottomList;
+    t->layoutDecorationRects(rect[0], rect[1], rect[2], rect[3], Client::WindowRelative);
 
-    foreach (const WindowQuad & quad, decoration) {
-        if (topRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-            topList.append(quad);
-            continue;
-        }
-        if (bottomRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-            bottomList.append(quad);
-            continue;
-        }
-        if (leftRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-            leftList.append(quad);
-            continue;
-        }
-        if (rightRect.contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
-            rightList.append(quad);
-            continue;
+    // Split the quads into four lists
+    foreach (const WindowQuad &quad, data.quads.select(WindowQuadDecoration)) {
+        for (int i = 0; i < 4; i++) {
+            if (rect[i].contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
+                quads[i].append(quad);
+            }
         }
     }
 
     redirector->ensurePixmapsPainted();
-    GLTexture *left = redirector->leftDecoPixmap<GLTexture*>();
-    GLTexture *top = redirector->topDecoPixmap<GLTexture*>();
-    GLTexture *right = redirector->rightDecoPixmap<GLTexture*>();
-    GLTexture *bottom = redirector->bottomDecoPixmap<GLTexture*>();
-    paintDecoration(top, DecorationTop, region, topRect, data, topList, hardwareClipping);
-    paintDecoration(left, DecorationLeft, region, leftRect, data, leftList, hardwareClipping);
-    paintDecoration(right, DecorationRight, region, rightRect, data, rightList, hardwareClipping);
-    paintDecoration(bottom, DecorationBottom, region, bottomRect, data, bottomList, hardwareClipping);
+    textures[0] = redirector->leftDecoPixmap<GLTexture*>();
+    textures[1] = redirector->topDecoPixmap<GLTexture*>();
+    textures[2] = redirector->rightDecoPixmap<GLTexture*>();
+    textures[3] = redirector->bottomDecoPixmap<GLTexture*>();
+
+    TextureType type[] = { DecorationLeft, DecorationTop, DecorationRight, DecorationBottom };
+    for (int i = 0; i < 4; i++)
+        paintDecoration(textures[i], type[i], region, rect[i], data, quads[i], hardwareClipping);
 
     redirector->markAsRepainted();
 }
 
 
-void SceneOpenGL::Window::paintDecoration(GLTexture *decorationTexture, TextureType decorationType,
+void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType decorationType,
                                           const QRegion& region, const QRect& rect, const WindowPaintData& data,
                                           const WindowQuadList& quads, bool hardwareClipping)
 {
-    if (!decorationTexture) {
-        return;
-    }
-
-    // We have to update the texture although we do not paint anything.
-    // This is especially needed if we draw the opaque part of the window
-    // and the decoration in two different passes (as we in Scene::paintSimpleWindow do).
-    // Otherwise we run into the situation that in the first pass there are some
-    // pending decoration repaints but we don't paint the decoration and in the
-    // second pass it's the other way around.
-    if (quads.isEmpty())
+    if (!texture || quads.isEmpty())
         return;
 
     if (filter == ImageFilterGood)
-        decorationTexture->setFilter(GL_LINEAR);
+        texture->setFilter(GL_LINEAR);
     else
-        decorationTexture->setFilter(GL_NEAREST);
-    decorationTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-    decorationTexture->bind();
+        texture->setFilter(GL_NEAREST);
+
+    texture->setWrapMode(GL_CLAMP_TO_EDGE);
+    texture->bind();
 
     prepareStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    makeDecorationArrays(quads, rect, decorationTexture);
+    makeDecorationArrays(quads, rect, texture);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
     restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
-    decorationTexture->unbind();
+
+    texture->unbind();
+
 #ifndef KWIN_HAVE_OPENGLES
     if (m_scene && m_scene->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -1330,6 +1313,7 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
 {
     GLTexture *tex = NULL;
     PaintRedirector *redirector = NULL;
+
     if (type != Content && type != Shadow) {
         if (toplevel->isClient()) {
             redirector = static_cast<Client*>(toplevel)->decorationPaintRedirector();
@@ -1337,30 +1321,28 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
             redirector = static_cast<Deleted*>(toplevel)->decorationPaintRedirector();
         }
     }
+
     switch(type) {
     case Content:
         tex = texture;
         break;
+
     case DecorationTop:
-        if (redirector) {
-            tex = redirector->topDecoPixmap<GLTexture*>();
-        }
+        tex = redirector ? redirector->topDecoPixmap<GLTexture*>() : 0;
         break;
+
     case DecorationLeft:
-        if (redirector) {
-            tex = redirector->leftDecoPixmap<GLTexture*>();
-        }
+        tex = redirector ? redirector->leftDecoPixmap<GLTexture*>() : 0;
         break;
+
     case DecorationRight:
-        if (redirector) {
-            tex = redirector->rightDecoPixmap<GLTexture*>();
-        }
+        tex = redirector ? redirector->rightDecoPixmap<GLTexture*>() : 0;
         break;
+
     case DecorationBottom:
-        if (redirector) {
-            tex = redirector->bottomDecoPixmap<GLTexture*>();
-        }
+        tex = redirector ? redirector->bottomDecoPixmap<GLTexture*>() : 0;
         break;
+
     case Shadow:
         tex = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
     }
