@@ -305,10 +305,6 @@ public:
         return m_userActionsMenu;
     }
 
-#ifdef KWIN_BUILD_KAPPMENU
-    void showApplicationMenu(const QPoint &, const WId);
-#endif
-
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
     void updateOnAllActivitiesOfTransients(Client*);
@@ -497,12 +493,6 @@ private slots:
     void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
-#ifdef KWIN_BUILD_KAPPMENU
-    void slotShowRequest(qulonglong wid);
-    void slotMenuAvailable(qulonglong wid);
-    void slotMenuHidden(qulonglong wid);
-    void slotClearMenus();
-#endif
     void updateCurrentActivity(const QString &new_activity);
     void slotActivityRemoved(const QString &activity);
     void slotActivityAdded(const QString &activity);
@@ -713,11 +703,6 @@ private:
     Window null_focus_window;
     bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
-
-#ifdef KWIN_BUILD_KAPPMENU
-    //used for menu available before window is mapped
-    QList<WId> m_windowsMenu;
-#endif
 
     Scripting *m_scripting;
 

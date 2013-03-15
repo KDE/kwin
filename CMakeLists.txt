@@ -172,6 +172,13 @@ if(KWIN_BUILD_SCREENEDGES)
     )
 endif()
 
+if(KWIN_BUILD_KAPPMENU)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        appmenu.cpp
+    )
+endif()
+
 if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()

@@ -57,6 +57,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#ifdef KWIN_BUILD_KAPPMENU
+#include "appmenu.h"
+#endif
 
 #include <X11/extensions/shape.h>
 
@@ -2460,7 +2463,7 @@ void Client::setAppMenuUnavailable()
 
 void Client::showApplicationMenu(const QPoint &p)
 {
-    workspace()->showApplicationMenu(p, window());
+    ApplicationMenu::self()->showApplicationMenu(p, window());
 }
 #endif
 

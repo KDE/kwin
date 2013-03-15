@@ -74,6 +74,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
 #endif
+#ifdef KWIN_BUILD_KAPPMENU
+#include "appmenu.h"
+#endif
 
 #include <X11/extensions/shape.h>
 #include <X11/keysym.h>
@@ -89,12 +92,6 @@ namespace KWin
 
 extern int screen_number;
 extern bool is_multihead;
-
-#ifdef KWIN_BUILD_KAPPMENU
-static const char *KDED_SERVICE = "org.kde.kded";
-static const char *KDED_APPMENU_PATH = "/modules/appmenu";
-static const char *KDED_INTERFACE = "org.kde.kded";
-#endif
 
 Workspace* Workspace::_self = 0;
 
@@ -142,15 +139,7 @@ Workspace::Workspace(bool restore)
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
 
 #ifdef KWIN_BUILD_KAPPMENU
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "showRequest",
-                 this, SLOT(slotShowRequest(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "menuAvailable",
-                 this, SLOT(slotMenuAvailable(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "menuHidden",
-                 this, SLOT(slotMenuHidden(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, "clearMenus",
-                 this, SLOT(slotClearMenus()));
+    ApplicationMenu::create(this);
 #endif
 
     _self = this;
@@ -647,7 +636,7 @@ void Workspace::addClient(Client* c, allowed_t)
         tab_box->reset(true);
 #endif
 #ifdef KWIN_BUILD_KAPPMENU
-        if (m_windowsMenu.removeOne(c->window()))
+        if (ApplicationMenu::self()->hasMenu(c->window()))
             c->setAppMenuAvailable();
 #endif
 }
@@ -878,34 +867,7 @@ void Workspace::slotReloadConfig()
 {
     reconfigure();
 }
-#ifdef KWIN_BUILD_KAPPMENU
-void Workspace::slotShowRequest(qulonglong wid)
-{
-    if (Client *c = findClient(WindowMatchPredicate(wid)))
-        c->emitShowRequest();
-}
 
-void Workspace::slotMenuAvailable(qulonglong wid)
-{
-    if (Client *c = findClient(WindowMatchPredicate(wid)))
-        c->setAppMenuAvailable();
-    else
-        m_windowsMenu.append(wid);
-}
-
-void Workspace::slotMenuHidden(qulonglong wid)
-{
-    if (Client *c = findClient(WindowMatchPredicate(wid)))
-        c->emitMenuHidden();
-}
-
-void Workspace::slotClearMenus()
-{
-    foreach (Client *c, clients) {
-       c->setAppMenuUnavailable();
-    }
-}
-#endif
 void Workspace::reconfigure()
 {
     reconfigureTimer.start(200);
