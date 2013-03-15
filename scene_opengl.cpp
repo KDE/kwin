@@ -1162,7 +1162,10 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
     t->layoutDecorationRects(rect[0], rect[1], rect[2], rect[3], Client::WindowRelative);
 
     // Split the quads into four lists
-    foreach (const WindowQuad &quad, data.quads.select(WindowQuadDecoration)) {
+    foreach (const WindowQuad &quad, data.quads) {
+        if (quad.type() != WindowQuadDecoration)
+            continue;
+
         for (int i = 0; i < 4; i++) {
             if (rect[i].contains(QPoint(quad.originalLeft(), quad.originalTop()))) {
                 quads[i].append(quad);
