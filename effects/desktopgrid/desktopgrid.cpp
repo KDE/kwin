@@ -189,7 +189,7 @@ void DesktopGridEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
         QRect geo = m_windowMoveGeometry.translated(diff);
         WindowPaintData d(windowMove);
         d *= QVector2D((qreal)geo.width() / (qreal)windowMove->width(), (qreal)geo.height() / (qreal)windowMove->height());
-        d += QPoint(qRound(geo.left() - windowMove->x()), qRound(geo.top() - windowMove->y()));
+        d += QPoint(geo.left() - windowMove->x(), geo.top() - windowMove->y());
         effects->drawWindow(windowMove, PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_LANCZOS, infiniteRegion(), d);
     }
 
