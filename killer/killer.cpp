@@ -25,6 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kmessagebox.h>
+#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <kauth.h>
 #include <kdebug.h>
