@@ -1408,8 +1408,6 @@ void GLVertexBufferPrivate::bindArrays()
                                  (const GLvoid *) (baseAddress + attrib[index].offset));
             glEnableVertexAttribArray(index);
         }
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
 #ifndef KWIN_HAVE_OPENGLES
     } else {
         if (GLVertexBufferPrivate::supported)
@@ -1429,9 +1427,6 @@ void GLVertexBufferPrivate::bindArrays()
 
         if (useColor)
             glColor4f(color.x(), color.y(), color.z(), color.w());
-
-        if (GLVertexBufferPrivate::supported)
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 #endif
 }
@@ -1548,7 +1543,6 @@ void GLVertexBuffer::unmap()
 {
     if (GLVertexBufferPrivate::hasMapBufferRange) {
         glUnmapBuffer(GL_ARRAY_BUFFER);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         d->baseAddress = d->nextOffset;
         d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
@@ -1556,7 +1550,6 @@ void GLVertexBuffer::unmap()
         if (GLVertexBufferPrivate::supported) {
             // Upload the data from local memory to the buffer object
             glBufferData(GL_ARRAY_BUFFER, d->mappedSize, d->dataStore.data(), d->usage);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
             // Free the local memory buffer if it's unlikely to be used again
             if (d->usage == GL_STATIC_DRAW)
