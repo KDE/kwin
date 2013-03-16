@@ -233,6 +233,7 @@ public:
     Shadow* shadow();
 protected:
     WindowQuadList makeQuads(WindowQuadType type, const QRegion& reg) const;
+    WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
     Toplevel* toplevel;
     ImageFilterType filter;
     Shadow *m_shadow;

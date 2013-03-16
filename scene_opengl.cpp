@@ -1181,15 +1181,15 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
 
     TextureType type[] = { DecorationLeft, DecorationTop, DecorationRight, DecorationBottom };
     for (int i = 0; i < 4; i++)
-        paintDecoration(textures[i], type[i], region, rect[i], data, quads[i], hardwareClipping);
+        paintDecoration(textures[i], type[i], region, data, quads[i], hardwareClipping);
 
     redirector->markAsRepainted();
 }
 
 
-void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType decorationType,
-                                          const QRegion& region, const QRect& rect, const WindowPaintData& data,
-                                          const WindowQuadList& quads, bool hardwareClipping)
+void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
+                                          const QRegion &region, const WindowPaintData &data,
+                                          const WindowQuadList &quads, bool hardwareClipping)
 {
     if (!texture || quads.isEmpty())
         return;
@@ -1202,10 +1202,10 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType decora
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
 
-    prepareStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    makeDecorationArrays(quads, rect, texture);
+    prepareStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
+    makeDecorationArrays(quads, texture);
     GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
-    restoreStates(decorationType, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
+    restoreStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
 
     texture->unbind();
 
@@ -1266,10 +1266,9 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
 #endif
 }
 
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, const QRect &rect, GLTexture *texture) const
+void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, GLTexture *texture) const
 {
-    QMatrix4x4 matrix = texture->matrix(UnnormalizedCoordinates);
-    matrix.translate(-rect.x(), -rect.y());
+    const QMatrix4x4 matrix = texture->matrix(UnnormalizedCoordinates);
 
     // Since we know that the texture matrix just scales and translates
     // we can use this information to optimize the transformation

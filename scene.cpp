@@ -717,16 +717,16 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         QRegion decoration = (client && decorationPlugin()->hasAlpha() ?
                               QRegion(client->decorationRect()) : shape()) - center;
         ret = makeQuads(WindowQuadContents, contents);
+
+        QRect rects[4];
+        client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3], Client::WindowRelative);
+
         if (!client || !(center.isEmpty() || client->isShade()))
-            ret += makeQuads(WindowQuadDecoration, decoration);
+            ret += makeDecorationQuads(rects, decoration);
         else {
-            // this is a shaded client, we have to create four decoartion quads
-            QRect left, top, right, bottom;
-            client->layoutDecorationRects(left, top, right, bottom, Client::WindowRelative);
-            ret += makeQuads(WindowQuadDecoration, top);
-            ret += makeQuads(WindowQuadDecoration, bottom);
-            ret += makeQuads(WindowQuadDecoration, left);
-            ret += makeQuads(WindowQuadDecoration, right);
+            // this is a shaded client, we have to create four decoration quads
+            const QRect bounding = rects[0] | rects[1] | rects[2] | rects[3];
+            ret += makeDecorationQuads(rects, bounding);
         }
     }
     if (m_shadow) {
@@ -735,6 +735,37 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
     effects->buildQuads(toplevel->effectWindow(), ret);
     cached_quad_list = new WindowQuadList(ret);
     return ret;
+}
+
+WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QRegion &region) const
+{
+    WindowQuadList list;
+
+    for (int i = 0; i < 4; i++) {
+        foreach (const QRect &r, (region & rects[i]).rects()) {
+            if (!r.isValid())
+                continue;
+
+            const int x0 = r.x();
+            const int y0 = r.y();
+            const int x1 = r.x() + r.width();
+            const int y1 = r.y() + r.height();
+
+            const int u0 = x0 - rects[i].x();
+            const int v0 = y0 - rects[i].y();
+            const int u1 = x1 - rects[i].x();
+            const int v1 = y1 - rects[i].y();
+
+            WindowQuad quad(WindowQuadDecoration);
+            quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
+            quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
+            quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
+            quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+            list.append(quad);
+        }
+    }
+
+    return list;
 }
 
 WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg) const
