@@ -1673,17 +1673,21 @@ public:
 class KWIN_EXPORT WindowVertex
 {
 public:
-    double x() const;
-    double y() const;
+    WindowVertex();
+    WindowVertex(double x, double y, double tx, double ty);
+
+    double x() const { return px; }
+    double y() const { return py; }
+    double u() const { return tx; }
+    double v() const { return ty; }
+    double originalX() const { return ox; }
+    double originalY() const { return oy; }
+    double textureX() const { return tx; }
+    double textureY() const { return ty; }
     void move(double x, double y);
     void setX(double x);
     void setY(double y);
-    double originalX() const;
-    double originalY() const;
-    double textureX() const;
-    double textureY() const;
-    WindowVertex();
-    WindowVertex(double x, double y, double tx, double ty);
+
 private:
     friend class WindowQuad;
     friend class WindowQuadList;
@@ -2595,42 +2599,6 @@ inline
 WindowVertex::WindowVertex(double _x, double _y, double _tx, double _ty)
     : px(_x), py(_y), ox(_x), oy(_y), tx(_tx), ty(_ty)
 {
-}
-
-inline
-double WindowVertex::x() const
-{
-    return px;
-}
-
-inline
-double WindowVertex::y() const
-{
-    return py;
-}
-
-inline
-double WindowVertex::originalX() const
-{
-    return ox;
-}
-
-inline
-double WindowVertex::originalY() const
-{
-    return oy;
-}
-
-inline
-double WindowVertex::textureX() const
-{
-    return tx;
-}
-
-inline
-double WindowVertex::textureY() const
-{
-    return ty;
 }
 
 inline
