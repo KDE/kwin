@@ -187,9 +187,7 @@ void PaintRedirector::ensurePixmapsPainted()
     QRect rects[PixmapCount];
     m_client->layoutDecorationRects(rects[LeftPixmap], rects[TopPixmap], rects[RightPixmap], rects[BottomPixmap], Client::DecorationRelative);
 
-    for (int i=0; i<PixmapCount; ++i) {
-        repaintPixmap(DecorationPixmap(i), rects[i], pending);
-    }
+    updatePixmaps(rects, pending);
 
     pending = QRegion();
     scheduled = QRegion();
@@ -197,20 +195,25 @@ void PaintRedirector::ensurePixmapsPainted()
     xcb_flush(connection());
 }
 
+void PaintRedirector::updatePixmaps(const QRect *rects, const QRegion &region)
+{
+    for (int i = 0; i < PixmapCount; ++i) {
+        if (!rects[i].isValid())
+            continue;
+
+        const QRect bounding = region.boundingRect();
+        const QRegion reg = region & rects[i];
+
+        if (reg.isEmpty())
+            continue;
+
+        paint(DecorationPixmap(i), rects[i], bounding, reg);
+    }
+}
+
 void PaintRedirector::preparePaint(const QPixmap &pending)
 {
     Q_UNUSED(pending)
-}
-
-void PaintRedirector::repaintPixmap(DecorationPixmap border, const QRect &r, QRegion reg)
-{
-    if (!r.isValid())
-        return;
-    const QRect b = reg.boundingRect();
-    reg &= r;
-    if (reg.isEmpty())
-        return;
-    paint(border, r, b, reg);
 }
 
 void PaintRedirector::resizePixmaps()
@@ -218,13 +221,18 @@ void PaintRedirector::resizePixmaps()
     QRect rects[PixmapCount];
     m_client->layoutDecorationRects(rects[LeftPixmap], rects[TopPixmap], rects[RightPixmap], rects[BottomPixmap], Client::DecorationRelative);
 
-    for (int i=0; i<PixmapCount; ++i) {
-        resize(DecorationPixmap(i), rects[i].size());
-    }
+    resizePixmaps(rects);
 
     // repaint
     if (widget) {
         widget->update();
+    }
+}
+
+void PaintRedirector::resizePixmaps(const QRect *rects)
+{
+    for (int i = 0; i < PixmapCount; ++i) {
+        resize(DecorationPixmap(i), rects[i].size());
     }
 }
 
@@ -239,6 +247,28 @@ xcb_render_picture_t PaintRedirector::picture(PaintRedirector::DecorationPixmap 
     Q_UNUSED(border)
     return XCB_RENDER_PICTURE_NONE;
 }
+
+void PaintRedirector::resize(DecorationPixmap border, const QSize &size)
+{
+    Q_UNUSED(border)
+    Q_UNUSED(size)
+}
+
+void PaintRedirector::paint(DecorationPixmap border, const QRect& r, const QRect &b, const QRegion &reg)
+{
+    Q_UNUSED(border)
+    Q_UNUSED(r)
+    Q_UNUSED(b)
+    Q_UNUSED(reg)
+}
+
+
+
+
+// ------------------------------------------------------------------
+
+
+
 
 ImageBasedPaintRedirector::ImageBasedPaintRedirector(Client *c, QWidget *widget)
     : PaintRedirector(c, widget)

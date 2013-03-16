@@ -92,13 +92,16 @@ protected:
     PaintRedirector(Client *c, QWidget* widget);
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
     virtual GLTexture *texture(DecorationPixmap border) const;
-    virtual void resize(DecorationPixmap border, const QSize &size) = 0;
+    virtual void resizePixmaps(const QRect *rects);
+    virtual void resize(DecorationPixmap border, const QSize &size);
     virtual void preparePaint(const QPixmap &pending);
-    virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QRegion &reg) = 0;
+    virtual void updatePixmaps(const QRect *rects, const QRegion &region);
+    virtual void paint(DecorationPixmap border, const QRect& r, const QRect &b, const QRegion &reg);
     virtual QPaintDevice *scratch() = 0;
     virtual QPaintDevice *recreateScratch(const QSize &size) = 0;
     virtual void fillScratch(Qt::GlobalColor color) = 0;
     virtual void discardScratch() = 0;
+
 private:
     void added(QWidget* widget);
     void removed(QWidget* widget);
