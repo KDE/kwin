@@ -748,6 +748,13 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
         QPoint(-rects[3].x(),                    -rects[3].y() + rects[1].height())  // Bottom
     };
 
+    const WindowQuadType types[4] = {
+        WindowQuadDecorationLeftRight, // Left
+        WindowQuadDecorationTopBottom, // Top
+        WindowQuadDecorationLeftRight, // Right
+        WindowQuadDecorationTopBottom  // Bottom
+    };
+
     for (int i = 0; i < 4; i++) {
         foreach (const QRect &r, (region & rects[i]).rects()) {
             if (!r.isValid())
@@ -763,7 +770,7 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
             const int u1 = x1 + offsets[i].x();
             const int v1 = y1 + offsets[i].y();
 
-            WindowQuad quad(WindowQuadDecoration);
+            WindowQuad quad(types[i]);
             quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
             quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
             quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right

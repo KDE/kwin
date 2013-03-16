@@ -1156,24 +1156,26 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
     }
 
     WindowQuadList quads[2]; // left-right, top-bottom
-    GLTexture *textures[2];
-
-    QRect rect[4];
-    t->layoutDecorationRects(rect[0], rect[1], rect[2], rect[3], Client::WindowRelative);
 
     // Split the quads into two lists
     foreach (const WindowQuad &quad, data.quads) {
-        if (quad.type() != WindowQuadDecoration)
+        switch (quad.type()) {
+        case WindowQuadDecorationLeftRight:
+            quads[0].append(quad);
             continue;
 
-        for (int i = 0; i < 4; i++) {
-            if (rect[i].contains(QPoint(quad.originalLeft(), quad.originalTop())))
-                quads[i % 2].append(quad);
+        case WindowQuadDecorationTopBottom:
+            quads[1].append(quad);
+            continue;
+
+        default:
+            continue;
         }
     }
 
     redirector->ensurePixmapsPainted();
 
+    GLTexture *textures[2];
     textures[0] = redirector->leftRightTexture();
     textures[1] = redirector->topBottomTexture();
 
