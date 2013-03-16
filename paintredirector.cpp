@@ -72,6 +72,11 @@ void PaintRedirector::reparent(Deleted *d)
     m_client = NULL;
 }
 
+static int align(int value, int align)
+{
+    return (value + align - 1) & ~(align - 1);
+}
+
 void PaintRedirector::performPendingPaint()
 {
     if (!widget) {
@@ -81,8 +86,8 @@ void PaintRedirector::performPendingPaint()
     const QSize size = pending.boundingRect().size();
     QPaintDevice *scratch = this->scratch();
     if (scratch->width() < size.width() || scratch->height() < size.height()) {
-        int w = (size.width() + 128) & ~128;
-        int h = (size.height() + 128) & ~128;
+        int w = align(size.width(), 128);
+        int h = align(size.height(), 128);
         scratch = recreateScratch(QSize(qMax(scratch->width(), w), qMax(scratch->height(), h)));
     }
     fillScratch(Qt::transparent);
@@ -325,8 +330,8 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
 {
     QSize size[2];
     size[LeftRight] = QSize(rects[LeftPixmap].width() + rects[RightPixmap].width(),
-                            qMax(rects[LeftPixmap].height(), rects[RightPixmap].height()));
-    size[TopBottom] = QSize(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()),
+                            align(qMax(rects[LeftPixmap].height(), rects[RightPixmap].height()), 128));
+    size[TopBottom] = QSize(align(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()), 128),
                             rects[TopPixmap].height() + rects[BottomPixmap].height());
 
     for (int i = 0; i < 2; i++) {
