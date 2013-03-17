@@ -290,7 +290,7 @@ private:
     OpenGLPaintRedirector *paintRedirector() const;
     bool getDecorationTextures(GLTexture **textures) const;
     void paintDecorations(const WindowPaintData &data, const QRegion &region);
-    Texture *texture;
+    Texture *m_texture;
 };
 
 class SceneOpenGL2Window : public SceneOpenGL::Window

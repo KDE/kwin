@@ -960,25 +960,25 @@ SceneOpenGL::TexturePrivate::~TexturePrivate()
 SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
     , m_scene(NULL)
-    , texture(NULL)
+    , m_texture(NULL)
 {
 }
 
 SceneOpenGL::Window::~Window()
 {
-    delete texture;
+    delete m_texture;
 }
 
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
-    if (!texture) {
-        texture = m_scene->createTexture();
+    if (!m_texture) {
+        m_texture = m_scene->createTexture();
     }
-    if (!texture->isNull()) {
+    if (!m_texture->isNull()) {
         if (!toplevel->damage().isEmpty()) {
             // mipmaps need to be updated
-            texture->setDirty();
+            m_texture->setDirty();
             toplevel->resetDamage();
         }
         return true;
@@ -988,21 +988,21 @@ bool SceneOpenGL::Window::bindTexture()
     if (pix == None)
         return false;
 
-    bool success = texture->load(pix, toplevel->size(), toplevel->depth(),
-                                toplevel->damage());
+    bool success = m_texture->load(pix, toplevel->size(), toplevel->depth(),
+                                   toplevel->damage());
 
     if (success)
         toplevel->resetDamage();
     else
         kDebug(1212) << "Failed to bind window";
+
     return success;
 }
 
 void SceneOpenGL::Window::discardTexture()
 {
-    if (texture) {
-        texture->discard();
-    }
+    if (m_texture)
+        m_texture->discard();
 }
 
 // This call is used in SceneOpenGL::windowGeometryShapeChanged(),
@@ -1013,20 +1013,20 @@ void SceneOpenGL::Window::discardTexture()
 // discard the texture only if size changes.
 void SceneOpenGL::Window::checkTextureSize()
 {
-    if (!texture) {
+    if (!m_texture)
         return;
-    }
-    if (texture->size() != size())
+
+    if (m_texture->size() != size())
         discardTexture();
 }
 
 // when the window's composite pixmap is discarded, undo binding it to the texture
 void SceneOpenGL::Window::pixmapDiscarded()
 {
-    if (!texture) {
+    if (!m_texture)
         return;
-    }
-    texture->discard();
+
+    m_texture->discard();
 }
 
 QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
@@ -1098,7 +1098,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     else
         filter = ImageFilterFast;
 
-    texture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+    m_texture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
 
     beginRenderWindow(mask, data);
 
@@ -1125,15 +1125,15 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     // paint the content
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
-        texture->bind();
+        m_texture->bind();
         prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
-        renderQuads(mask, region, contentQuads, texture, false);
+        renderQuads(mask, region, contentQuads, m_texture, false);
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
-        texture->unbind();
+        m_texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (m_scene && m_scene->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, texture, false);
+            renderQuads(mask, region, contentQuads, m_texture, false);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
@@ -1326,7 +1326,7 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
 
     switch(type) {
     case Content:
-        tex = texture;
+        tex = m_texture;
         break;
 
     case DecorationLeftRight:
