@@ -1053,11 +1053,10 @@ QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &
     return matrix;
 }
 
-// paint the window
-void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData data)
+bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data)
 {
     if (region.isEmpty())
-        return;
+        return false;
 
     m_hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
     if (region != infiniteRegion() && !m_hardwareClipping) {
@@ -1084,7 +1083,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     }
 
     if (!bindTexture()) {
-        return;
+        return false;
     }
 
     if (m_hardwareClipping) {
@@ -1100,8 +1099,6 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     m_texture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
 
-    beginRenderWindow(mask, data);
-
     const GLVertexAttrib attribs[] = {
         { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
         { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
@@ -1111,39 +1108,14 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     vbo->reset();
     vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
 
-    // shadow
-    if (m_shadow) {
-        paintShadow(region, data);
-    }
-    // decorations
-    if (toplevel->isClient()) {
-        paintDecorations<Client>(data, region);
-    } else if (toplevel->isDeleted()) {
-        paintDecorations<Deleted>(data, region);
-    }
+    return true;
+}
 
-    // paint the content
-    WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
-    if (!contentQuads.empty()) {
-        m_texture->bind();
-        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
-        renderQuads(mask, region, contentQuads, m_texture, false);
-        restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
-        m_texture->unbind();
-#ifndef KWIN_HAVE_OPENGLES
-        if (m_scene && m_scene->debug()) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, m_texture, false);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
-#endif
-    }
-
+void SceneOpenGL::Window::endRenderWindow()
+{
     if (m_hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
     }
-
-    endRenderWindow(data);
 }
 
 
@@ -1357,11 +1329,31 @@ SceneOpenGL2Window::~SceneOpenGL2Window()
 {
 }
 
-void SceneOpenGL2Window::beginRenderWindow(int mask, const WindowPaintData &data)
+QVector4D SceneOpenGL2Window::modulate(float opacity, float brightness) const
 {
+    const float a = opacity;
+    const float rgb = opacity * brightness;
+
+    return QVector4D(rgb, rgb, rgb, a);
+}
+
+void SceneOpenGL2Window::setBlendEnabled(bool enabled)
+{
+    if (enabled && !m_blendingEnabled)
+        glEnable(GL_BLEND);
+    else if (!enabled && m_blendingEnabled)
+        glDisable(GL_BLEND);
+
+    m_blendingEnabled = enabled;
+}
+
+void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
+{
+    if (!beginRenderWindow(mask, region, data))
+        return;
+
     GLShader *shader = data.shader;
     if (!shader) {
-        // set the shader for uniform initialising in paint decoration
         if ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)) {
             shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
         } else {
@@ -1370,14 +1362,111 @@ void SceneOpenGL2Window::beginRenderWindow(int mask, const WindowPaintData &data
         }
     }
 
-    shader->setUniform(GLShader::WindowTransformation, transformation(mask, data));
-}
+    static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->setupForOutput(data.screen());
 
-void SceneOpenGL2Window::endRenderWindow(const WindowPaintData &data)
-{
-    if (!data.shader) {
-        ShaderManager::instance()->popShader();
+    shader->setUniform(GLShader::WindowTransformation, transformation(mask, data));
+    shader->setUniform(GLShader::Saturation, data.saturation());
+
+    const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
+                           && options->glSmoothScale() != 0 ? GL_LINEAR : GL_NEAREST;
+
+    WindowQuadList contentQuads;
+    WindowQuadList shadowQuads;
+    WindowQuadList decoQuads[2];
+
+    // Split the quads into separate lists for each type
+    foreach (const WindowQuad &quad, data.quads) {
+        switch (quad.type()) {
+        case WindowQuadDecorationLeftRight:
+            decoQuads[0].append(quad);
+            continue;
+
+        case WindowQuadDecorationTopBottom:
+            decoQuads[1].append(quad);
+            continue;
+
+        case WindowQuadContents:
+            contentQuads.append(quad);
+            continue;
+
+        case WindowQuadShadowTopLeft:
+        case WindowQuadShadowTop:
+        case WindowQuadShadowTopRight:
+        case WindowQuadShadowLeft:
+        case WindowQuadShadowRight:
+        case WindowQuadShadowBottomLeft:
+        case WindowQuadShadowBottom:
+        case WindowQuadShadowBottomRight:
+            shadowQuads.append(quad);
+            continue;
+
+        default:
+            continue;
+        }
     }
+
+    // Make sure the blend function is set up correctly in case we will be doing blending
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+
+    // Shadow
+    // -----------
+    if (m_shadow && !shadowQuads.isEmpty()) {
+        if (GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture()) {
+            setBlendEnabled(true);
+
+            shader->setUniform(GLShader::ModulationConstant,
+                    modulate(data.opacity() * data.decorationOpacity(), data.brightness()));
+
+            texture->setFilter(filter);
+            texture->setWrapMode(GL_CLAMP_TO_EDGE);
+            texture->bind();
+
+            renderQuads(0, region, shadowQuads, texture, true);
+        }
+    }
+
+
+    // Decorations
+    // -----------
+    GLTexture *textures[2];
+
+    if (!(decoQuads[0].isEmpty() && decoQuads[1].isEmpty()) && getDecorationTextures(textures)) {
+        setBlendEnabled(true);
+
+        shader->setUniform(GLShader::ModulationConstant,
+                modulate(data.opacity() * data.decorationOpacity(), data.brightness()));
+
+        for (int i = 0; i < 2; i++) {
+            if (!textures[i] || decoQuads[i].isEmpty())
+                continue;
+
+            textures[i]->setFilter(filter);
+            textures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
+            textures[i]->bind();
+
+            renderQuads(0, region, decoQuads[i], textures[i], false);
+        }
+    }
+
+
+    // Content
+    // ---------
+    if (!contentQuads.isEmpty()) {
+        setBlendEnabled(!isOpaque() || data.opacity() < 1.0);
+
+        shader->setUniform(GLShader::ModulationConstant, modulate(data.opacity(), data.brightness()));
+
+        m_texture->bind();
+        renderQuads(mask, region, contentQuads, m_texture, false);
+    }
+
+    setBlendEnabled(false);
+
+    if (!data.shader)
+        ShaderManager::instance()->popShader();
+
+    endRenderWindow();
 }
 
 void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)
@@ -1444,15 +1533,42 @@ SceneOpenGL1Window::~SceneOpenGL1Window()
 {
 }
 
-void SceneOpenGL1Window::beginRenderWindow(int mask, const WindowPaintData &data)
+// paint the window
+void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
-    pushMatrix(transformation(mask, data));
-}
+    if (!beginRenderWindow(mask, region, data))
+        return;
 
-void SceneOpenGL1Window::endRenderWindow(const WindowPaintData &data)
-{
-    Q_UNUSED(data)
+    pushMatrix(transformation(mask, data));
+
+    // shadow
+    if (m_shadow) {
+        paintShadow(region, data);
+    }
+    // decorations
+    paintDecorations(data, region);
+
+    // paint the content
+    WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
+    if (!contentQuads.empty()) {
+        m_texture->bind();
+        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
+        renderQuads(mask, region, contentQuads, m_texture, false);
+        restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
+        m_texture->unbind();
+
+#ifndef KWIN_HAVE_OPENGLES
+        if (m_scene && m_scene->debug()) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            renderQuads(mask, region, contentQuads, m_texture, false);
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+#endif
+    }
+
     popMatrix();
+
+    endRenderWindow();
 }
 
 void SceneOpenGL1Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)

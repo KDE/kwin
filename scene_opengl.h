@@ -33,6 +33,7 @@ namespace KWin
 class ColorCorrection;
 class LanczosFilter;
 class OpenGLBackend;
+class OpenGLPaintRedirector;
 
 class SceneOpenGL
     : public Scene
@@ -214,7 +215,9 @@ class SceneOpenGL::Window
 {
 public:
     virtual ~Window();
-    virtual void performPaint(int mask, QRegion region, WindowPaintData data);
+    bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
+    virtual void performPaint(int mask, QRegion region, WindowPaintData data) = 0;
+    void endRenderWindow();
     virtual void pixmapDiscarded();
     bool bindTexture();
     void discardTexture();
@@ -233,28 +236,10 @@ protected:
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
+    bool getDecorationTextures(GLTexture **textures) const;
     void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
     void paintShadow(const QRegion &region, const WindowPaintData &data);
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
-    /**
-     * @brief Called from performPaint once it is determined whether the window will be painted.
-     * This method has to be implemented by the concrete sub class to perform operations for setting
-     * up the OpenGL state (e.g. pushing a matrix).
-     *
-     * @param mask The mask which is used to render the Window
-     * @param data The WindowPaintData for this frame
-     * @see performPaint
-     * @see endRenderWindow
-     **/
-    virtual void beginRenderWindow(int mask, const WindowPaintData &data) = 0;
-    /**
-     * @brief Called from performPaint once the window and decoration has been rendered.
-     * This method has to be implemented by the concrete sub class to perform operations for resetting
-     * the OpenGL state after rendering this window (e.g. pop matrix).
-     *
-     * @param data The WindowPaintData with which this window got rendered
-     **/
-    virtual void endRenderWindow(const WindowPaintData &data) = 0;
     /**
      * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
      *
@@ -284,15 +269,15 @@ protected:
      **/
     GLTexture *textureForType(TextureType type);
 
+    void paintDecorations(const WindowPaintData &data, const QRegion &region);
+
 protected:
     SceneOpenGL *m_scene;
     bool m_hardwareClipping;
+    Texture *m_texture;
 
 private:
     OpenGLPaintRedirector *paintRedirector() const;
-    bool getDecorationTextures(GLTexture **textures) const;
-    void paintDecorations(const WindowPaintData &data, const QRegion &region);
-    Texture *m_texture;
 };
 
 class SceneOpenGL2Window : public SceneOpenGL::Window
@@ -302,8 +287,9 @@ public:
     virtual ~SceneOpenGL2Window();
 
 protected:
-    virtual void beginRenderWindow(int mask, const WindowPaintData &data);
-    virtual void endRenderWindow(const WindowPaintData &data);
+    QVector4D modulate(float opacity, float brightness) const;
+    void setBlendEnabled(bool enabled);
+    virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 
@@ -322,8 +308,7 @@ public:
     virtual ~SceneOpenGL1Window();
 
 protected:
-    virtual void beginRenderWindow(int mask, const WindowPaintData &data);
-    virtual void endRenderWindow(const WindowPaintData &data);
+    virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 };
