@@ -1146,14 +1146,48 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     endRenderWindow(data);
 }
 
-template<class T>
+
+OpenGLPaintRedirector *SceneOpenGL::Window::paintRedirector() const
+{
+    if (toplevel->isClient()) {
+        Client *client = static_cast<Client *>(toplevel);
+        if (client->noBorder())
+            return 0;
+
+        return static_cast<OpenGLPaintRedirector *>(client->decorationPaintRedirector());
+    }
+
+    if (toplevel->isDeleted()) {
+        Deleted *deleted = static_cast<Deleted *>(toplevel);
+        if (deleted->noBorder())
+            return 0;
+
+        return static_cast<OpenGLPaintRedirector *>(deleted->decorationPaintRedirector());
+    }
+
+    return 0;
+}
+
+bool SceneOpenGL::Window::getDecorationTextures(GLTexture **textures) const
+{
+    OpenGLPaintRedirector *redirector = paintRedirector();
+    if (!redirector)
+        return false;
+
+    redirector->ensurePixmapsPainted();
+
+    textures[0] = redirector->leftRightTexture();
+    textures[1] = redirector->topBottomTexture();
+
+    redirector->markAsRepainted();
+    return true;
+}
+
 void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
 {
-    T* t = static_cast<T*>(toplevel);
-    OpenGLPaintRedirector *redirector = static_cast<OpenGLPaintRedirector*>(t->decorationPaintRedirector());
-    if (t->noBorder() || !redirector) {
+    GLTexture *textures[2];
+    if (!getDecorationTextures(textures))
         return;
-    }
 
     WindowQuadList quads[2]; // left-right, top-bottom
 
@@ -1173,19 +1207,10 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
         }
     }
 
-    redirector->ensurePixmapsPainted();
-
-    GLTexture *textures[2];
-    textures[0] = redirector->leftRightTexture();
-    textures[1] = redirector->topBottomTexture();
-
     TextureType type[] = { DecorationLeftRight, DecorationTopBottom };
     for (int i = 0; i < 2; i++)
         paintDecoration(textures[i], type[i], region, data, quads[i]);
-
-    redirector->markAsRepainted();
 }
-
 
 void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
                                           const QRegion &region, const WindowPaintData &data,

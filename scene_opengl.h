@@ -287,7 +287,8 @@ protected:
     bool m_hardwareClipping;
 
 private:
-    template<class T>
+    OpenGLPaintRedirector *paintRedirector() const;
+    bool getDecorationTextures(GLTexture **textures) const;
     void paintDecorations(const WindowPaintData &data, const QRegion &region);
     Texture *texture;
 };
