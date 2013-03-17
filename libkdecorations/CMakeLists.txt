@@ -24,5 +24,4 @@ install( FILES
     kdecoration.h
     kdecorationfactory.h
     kcommondecoration.h
-    kdecorationbridge.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )

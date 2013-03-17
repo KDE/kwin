@@ -658,4 +658,13 @@ void KDecorationOptions::setTitleButtonsRight(const QString& b)
     d->title_buttons_right = b;
 }
 
+extern "C" {
+
+int decoration_bridge_version()
+{
+    return KWIN_DECORATION_BRIDGE_API_VERSION;
+}
+
+}
+
 #include "kdecoration.moc"

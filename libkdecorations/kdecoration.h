@@ -47,6 +47,11 @@ DEALINGS IN THE SOFTWARE.
         KWIN_EXPORT int decoration_version() { return KWIN_DECORATION_API_VERSION; } \
     }
 
+#define KWIN_DECORATION_BRIDGE_API_VERSION 1
+extern "C" {
+    int decoration_bridge_version();
+}
+
 class KConfig;
 
 /** @defgroup kdecoration KWin decorations library */

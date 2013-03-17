@@ -28,18 +28,12 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration.h"
 #include <QWidget>
 
-/** @addtogroup kdecoration */
-/** @{ */
-
 /**
  * @short Bridge class for communicating between decorations and KWin core.
  *
  * This class allows communication between decorations and KWin core while allowing
  * to keep binary compatibility. Decorations do not need to use it directly at all.
  */
-// This class is supposed to keep binary compatibility, just like KDecoration.
-// Extending should be done the same way, i.e. inheriting KDecorationBridge2 from it
-// and adding new functionality there.
 class KDecorationBridge : public KDecorationDefines
 {
 public:
@@ -91,7 +85,7 @@ public:
     virtual void grabXServer(bool grab) = 0;
 };
 
-class KWIN_EXPORT KDecorationBridgeUnstable
+class KDecorationBridgeUnstable
     : public KDecorationBridge
 {
 public:
@@ -116,7 +110,5 @@ public:
     virtual void untab(long id, const QRect& newGeom) = 0;
     virtual WindowOperation buttonToWindowOperation(Qt::MouseButtons button) = 0;
 };
-
-/** @} */
 
 #endif
