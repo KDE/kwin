@@ -1059,8 +1059,8 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (region.isEmpty())
         return;
 
-    bool hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
-    if (region != infiniteRegion() && !hardwareClipping) {
+    m_hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
+    if (region != infiniteRegion() && !m_hardwareClipping) {
         WindowQuadList quads;
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
@@ -1087,7 +1087,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         return;
     }
 
-    if (hardwareClipping) {
+    if (m_hardwareClipping) {
         glEnable(GL_SCISSOR_TEST);
     }
 
@@ -1113,13 +1113,13 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 
     // shadow
     if (m_shadow) {
-        paintShadow(region, data, hardwareClipping);
+        paintShadow(region, data);
     }
     // decorations
     if (toplevel->isClient()) {
-        paintDecorations<Client>(data, region, hardwareClipping);
+        paintDecorations<Client>(data, region);
     } else if (toplevel->isDeleted()) {
-        paintDecorations<Deleted>(data, region, hardwareClipping);
+        paintDecorations<Deleted>(data, region);
     }
 
     // paint the content
@@ -1127,19 +1127,19 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
     if (!contentQuads.empty()) {
         texture->bind();
         prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
-        renderQuads(mask, region, contentQuads, texture, false, hardwareClipping);
+        renderQuads(mask, region, contentQuads, texture, false);
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
         texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
         if (m_scene && m_scene->debug) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, texture, false, hardwareClipping);
+            renderQuads(mask, region, contentQuads, texture, false);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
     }
 
-    if (hardwareClipping) {
+    if (m_hardwareClipping) {
         glDisable(GL_SCISSOR_TEST);
     }
 
@@ -1147,7 +1147,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
 }
 
 template<class T>
-void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping)
+void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
 {
     T* t = static_cast<T*>(toplevel);
     OpenGLPaintRedirector *redirector = static_cast<OpenGLPaintRedirector*>(t->decorationPaintRedirector());
@@ -1181,7 +1181,7 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
 
     TextureType type[] = { DecorationLeftRight, DecorationTopBottom };
     for (int i = 0; i < 2; i++)
-        paintDecoration(textures[i], type[i], region, data, quads[i], hardwareClipping);
+        paintDecoration(textures[i], type[i], region, data, quads[i]);
 
     redirector->markAsRepainted();
 }
@@ -1189,7 +1189,7 @@ void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QR
 
 void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
                                           const QRegion &region, const WindowPaintData &data,
-                                          const WindowQuadList &quads, bool hardwareClipping)
+                                          const WindowQuadList &quads)
 {
     if (!texture || quads.isEmpty())
         return;
@@ -1203,7 +1203,7 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
     texture->bind();
 
     prepareStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, false, hardwareClipping);
+    renderQuads(0, region, quads, texture, false);
     restoreStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
 
     texture->unbind();
@@ -1211,13 +1211,13 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
 #ifndef KWIN_HAVE_OPENGLES
     if (m_scene && m_scene->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
+        GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, m_hardwareClipping);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 #endif
 }
 
-void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping)
+void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data)
 {
     WindowQuadList quads;
 
@@ -1253,20 +1253,20 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
     texture->bind();
     prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, true, hardwareClipping);
+    renderQuads(0, region, quads, texture, true);
     restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation());
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
     if (m_scene && m_scene->debug) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(0, region, quads, texture, true, hardwareClipping);
+        renderQuads(0, region, quads, texture, true);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 #endif
 }
 
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
-                                      GLTexture *tex, bool normalized, bool hardwareClipping)
+                                      GLTexture *tex, bool normalized)
 {
     if (quads.isEmpty())
         return;
@@ -1281,7 +1281,7 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     quads.makeInterleavedArrays(map, matrix);
     vbo->unmap();
 
-    vbo->render(region, GL_TRIANGLES, hardwareClipping);
+    vbo->render(region, GL_TRIANGLES, m_hardwareClipping);
 }
 
 GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType type)

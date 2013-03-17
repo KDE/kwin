@@ -231,9 +231,9 @@ protected:
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads, bool hardwareClipping);
-    void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
-    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
+    void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
+    void paintShadow(const QRegion &region, const WindowPaintData &data);
+    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
     /**
      * @brief Called from performPaint once it is determined whether the window will be painted.
      * This method has to be implemented by the concrete sub class to perform operations for setting
@@ -284,10 +284,11 @@ protected:
 
 protected:
     SceneOpenGL *m_scene;
+    bool m_hardwareClipping;
 
 private:
     template<class T>
-    void paintDecorations(const WindowPaintData &data, const QRegion &region, bool hardwareClipping);
+    void paintDecorations(const WindowPaintData &data, const QRegion &region);
     Texture *texture;
 };
 
