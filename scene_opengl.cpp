@@ -141,7 +141,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     glDrawBuffer(GL_BACK);
 #endif
 
-    debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+    m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -1131,7 +1131,7 @@ void SceneOpenGL::Window::performPaint(int mask, QRegion region, WindowPaintData
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
         m_texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
-        if (m_scene && m_scene->debug) {
+        if (m_scene && m_scene->debug()) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             renderQuads(mask, region, contentQuads, m_texture, false);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1234,7 +1234,7 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
     texture->unbind();
 
 #ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug) {
+    if (m_scene && m_scene->debug()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, m_hardwareClipping);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1282,7 +1282,7 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
     restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation());
     texture->unbind();
 #ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug) {
+    if (m_scene && m_scene->debug()) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         renderQuads(0, region, quads, texture, true);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

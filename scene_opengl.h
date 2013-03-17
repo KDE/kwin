@@ -56,6 +56,8 @@ public:
 
     void idle();
 
+    bool debug() const { return m_debug; }
+
     /**
      * @brief Factory method to create a backend specific texture.
      *
@@ -98,7 +100,7 @@ private:
     bool viewportLimitsMatched(const QSize &size) const;
 private:
     QHash< Toplevel*, Window* > windows;
-    bool debug;
+    bool m_debug;
     OpenGLBackend *m_backend;
 };
 
