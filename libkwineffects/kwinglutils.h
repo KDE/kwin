@@ -708,6 +708,21 @@ public:
     void unmap();
 
     /**
+     * Binds the vertex arrays to the context.
+     */
+    void bindArrays();
+
+    /**
+     * Disables the vertex arrays.
+     */
+    void unbindArrays();
+
+    /**
+     * Draws count vertices beginning with first.
+     */
+    void draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
+
+    /**
      * Renders the vertex data in given @a primitiveMode.
      * Please refer to OpenGL documentation of glDrawArrays or glDrawElements for allowed
      * values for @a primitiveMode. Best is to use GL_TRIANGLES or similar to be future

@@ -1600,18 +1600,31 @@ void GLVertexBuffer::render(GLenum primitiveMode)
 void GLVertexBuffer::render(const QRegion& region, GLenum primitiveMode, bool hardwareClipping)
 {
     d->bindArrays();
+    draw(region, primitiveMode, 0, d->vertexCount, hardwareClipping);
+    d->unbindArrays();
+}
 
+void GLVertexBuffer::bindArrays()
+{
+    d->bindArrays();
+}
+
+void GLVertexBuffer::unbindArrays()
+{
+    d->unbindArrays();
+}
+
+void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
+{
     if (!hardwareClipping) {
-        glDrawArrays(primitiveMode, 0, d->vertexCount);
+        glDrawArrays(primitiveMode, first, count);
     } else {
         // Clip using scissoring
         foreach (const QRect &r, region.rects()) {
             glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-            glDrawArrays(primitiveMode, 0, d->vertexCount);
+            glDrawArrays(primitiveMode, first, count);
         }
     }
-
-    d->unbindArrays();
 }
 
 bool GLVertexBuffer::isSupported()
