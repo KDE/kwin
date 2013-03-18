@@ -311,11 +311,19 @@ void ImageBasedPaintRedirector::discardScratch()
 
 
 
+unsigned int OpenGLPaintRedirector::s_count = 0;
+unsigned int OpenGLPaintRedirector::s_fbo = 0;
+
 OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
     : ImageBasedPaintRedirector(c, widget)
 {
+    s_count++;
+
     for (int i = 0; i < TextureCount; ++i)
         m_textures[i] = NULL;
+
+    if (!s_fbo && GLRenderTarget::supported())
+        glGenFramebuffers(1, &s_fbo);
 
     PaintRedirector::resizePixmaps();
 }
@@ -324,6 +332,12 @@ OpenGLPaintRedirector::~OpenGLPaintRedirector()
 {
     for (int i = 0; i < TextureCount; ++i)
         delete m_textures[i];
+
+    // Delete the FBO if this is the last OpenGLPaintRedirector
+    if (--s_count == 0 && s_fbo) {
+        glDeleteFramebuffers(1, &s_fbo);
+        s_fbo = 0;
+    }
 }
 
 void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
@@ -334,6 +348,8 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
     size[TopBottom] = QSize(align(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()), 128),
                             rects[TopPixmap].height() + rects[BottomPixmap].height());
 
+    bool fbo_bound = false;
+
     for (int i = 0; i < 2; i++) {
         if (m_textures[i] && m_textures[i]->size() == size[i])
             continue;
@@ -341,11 +357,28 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
         delete m_textures[i];
         m_textures[i] = NULL;
 
-        if (!size[i].isEmpty()) {
-            m_textures[i] = new GLTexture(size[i].width(), size[i].height());
-            m_textures[i]->setYInverted(true);
+        if (size[i].isEmpty())
+            continue;
+
+        m_textures[i] = new GLTexture(size[i].width(), size[i].height());
+        m_textures[i]->setYInverted(true);
+        m_textures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
+
+        if (s_fbo) {
+            // Clear the texture
+            if (!fbo_bound) {
+                glBindFramebuffer(GL_FRAMEBUFFER, s_fbo);
+                glClearColor(0, 0, 0, 0);
+                fbo_bound = true;
+            }
+
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_textures[i]->texture(), 0);
+            glClear(GL_COLOR_BUFFER_BIT);
         }
     }
+
+    if (fbo_bound)
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void OpenGLPaintRedirector::preparePaint(const QPixmap &pending)
