@@ -216,6 +216,8 @@ bool AnimationEffect::cancel(quint64 animationId)
                     }
                     d->m_animations.erase(entry);
                 }
+                if (d->m_animations.isEmpty())
+                    disconnectGeometryChanges();
                 return true;
             }
         }
