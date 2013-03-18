@@ -58,10 +58,6 @@ void AnimationEffect::init()
      * and has pot. started an animation so we have the window in our hash :) */
     connect ( effects,  SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(_windowClosed(KWin::EffectWindow*)) );
     connect ( effects,  SIGNAL(windowDeleted(KWin::EffectWindow*)), SLOT(_windowDeleted(KWin::EffectWindow*)) );
-    connect ( effects,  SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*, const QRect&)),
-                        SLOT(_expandedGeometryChanged(KWin::EffectWindow*, const QRect&)) );
-    connect ( effects,  SIGNAL(windowPaddingChanged(KWin::EffectWindow*, const QRect&)),
-                        SLOT(_expandedGeometryChanged(KWin::EffectWindow*, const QRect&)) );
 }
 
 bool AnimationEffect::isActive() const
@@ -176,6 +172,14 @@ void AnimationEffect::animate( EffectWindow *w, Attribute a, uint meta, int ms, 
     }
 
     Q_D(AnimationEffect);
+    if (d->m_animations.isEmpty()) {
+        connect (effects,   SIGNAL(windowGeometryShapeChanged(  KWin::EffectWindow*, const QRect&)),
+                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+        connect (effects,   SIGNAL(windowStepUserMovedResized(  KWin::EffectWindow*, const QRect&)),
+                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+        connect (effects,   SIGNAL(windowPaddingChanged(        KWin::EffectWindow*, const QRect&)),
+                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+    }
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
         it = d->m_animations.insert(w, QPair<QList<AniData>, QRect>(QList<AniData>(), QRect()));
@@ -267,17 +271,14 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
         }
     }
 
-    // NOTICE PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS and thus now no flag should be required
-    // ... unless we start to get glitches ;-)
-//     if ( transformed )
-//         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS_WITHOUT_FULL_REPAINTS; //PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-
     // janitorial...
-    if ( !(d->m_animations.count() || d->m_zombies.isEmpty()) )
-    {
-        foreach ( EffectWindow *w, d->m_zombies )
-            w->unrefWindow();
-        d->m_zombies.clear();
+    if (d->m_animations.isEmpty()) {
+        disconnectGeometryChanges();
+        if (!d->m_zombies.isEmpty()) { // this is actually not supposed to happen
+            foreach (EffectWindow *w, d->m_zombies)
+                w->unrefWindow();
+            d->m_zombies.clear();
+        }
     }
 
     effects->prePaintScreen(data, time);
@@ -363,6 +364,16 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
         }
         quads = filtered;
     }
+}
+
+void AnimationEffect::disconnectGeometryChanges()
+{
+    disconnect (effects,SIGNAL(windowGeometryShapeChanged(  KWin::EffectWindow*, const QRect&)),
+                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+    disconnect (effects,SIGNAL(windowStepUserMovedResized(  KWin::EffectWindow*, const QRect&)),
+                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+    disconnect (effects,SIGNAL(windowPaddingChanged(        KWin::EffectWindow*, const QRect&)),
+                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
 }
 
 
@@ -755,7 +766,6 @@ region_creation:
 
 void AnimationEffect::_expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old)
 {
-    Q_UNUSED(old)
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
     if (entry != d->m_animations.constEnd()) {

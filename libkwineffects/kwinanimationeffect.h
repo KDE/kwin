@@ -174,6 +174,7 @@ private:
     void clipWindow(const EffectWindow *, const AniData &, WindowQuadList &) const;
     float interpolated( const AniData&, int i = 0 ) const;
     float progress( const AniData& ) const;
+    void disconnectGeometryChanges();
     void updateLayerRepaints();
 private Q_SLOTS:
     void init();
