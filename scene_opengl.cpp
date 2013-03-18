@@ -1347,6 +1347,36 @@ void SceneOpenGL2Window::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
+void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data)
+{
+    if (!quads[ShadowLeaf].isEmpty()) {
+        nodes[ShadowLeaf].texture = static_cast<SceneOpenGLShadow *>(m_shadow)->shadowTexture();
+        nodes[ShadowLeaf].opacity = data.opacity();
+        nodes[ShadowLeaf].hasAlpha = true;
+        nodes[ShadowLeaf].coordinateType = NormalizedCoordinates;
+    }
+
+    if (!quads[LeftRightLeaf].isEmpty() || !quads[TopBottomLeaf].isEmpty()) {
+        GLTexture *textures[2];
+        getDecorationTextures(textures);
+
+        nodes[LeftRightLeaf].texture = textures[0];
+        nodes[LeftRightLeaf].opacity = data.opacity() * data.decorationOpacity();
+        nodes[LeftRightLeaf].hasAlpha = true;
+        nodes[LeftRightLeaf].coordinateType = UnnormalizedCoordinates;
+
+        nodes[TopBottomLeaf].texture = textures[1];
+        nodes[TopBottomLeaf].opacity = data.opacity() * data.decorationOpacity();
+        nodes[TopBottomLeaf].hasAlpha = true;
+        nodes[TopBottomLeaf].coordinateType = UnnormalizedCoordinates;
+    }
+
+    nodes[ContentLeaf].texture = m_texture;
+    nodes[ContentLeaf].hasAlpha = !isOpaque();
+    nodes[ContentLeaf].opacity = data.opacity();
+    nodes[ContentLeaf].coordinateType = UnnormalizedCoordinates;
+}
+
 void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!beginRenderWindow(mask, region, data))
@@ -1370,23 +1400,21 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
                            && options->glSmoothScale() != 0 ? GL_LINEAR : GL_NEAREST;
 
-    WindowQuadList contentQuads;
-    WindowQuadList shadowQuads;
-    WindowQuadList decoQuads[2];
+    WindowQuadList quads[4];
 
     // Split the quads into separate lists for each type
     foreach (const WindowQuad &quad, data.quads) {
         switch (quad.type()) {
         case WindowQuadDecorationLeftRight:
-            decoQuads[0].append(quad);
+            quads[LeftRightLeaf].append(quad);
             continue;
 
         case WindowQuadDecorationTopBottom:
-            decoQuads[1].append(quad);
+            quads[TopBottomLeaf].append(quad);
             continue;
 
         case WindowQuadContents:
-            contentQuads.append(quad);
+            quads[ContentLeaf].append(quad);
             continue;
 
         case WindowQuadShadowTopLeft:
@@ -1397,7 +1425,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         case WindowQuadShadowBottomLeft:
         case WindowQuadShadowBottom:
         case WindowQuadShadowBottomRight:
-            shadowQuads.append(quad);
+            quads[ShadowLeaf].append(quad);
             continue;
 
         default:
@@ -1405,61 +1433,55 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         }
     }
 
+    size_t size = 6 * (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count()) * sizeof(GLVertex2D);
+
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    GLVertex2D *map = (GLVertex2D *) vbo->map(size);
+
+    LeafNode nodes[4];
+    setupLeafNodes(nodes, quads, data);
+
+    for (int i = 0, v = 0; i < 4; i++) {
+        if (quads[i].isEmpty() || !nodes[i].texture)
+            continue;
+
+        nodes[i].firstVertex = v;
+        nodes[i].vertexCount = quads[i].count() * 6;
+
+        const QMatrix4x4 matrix = nodes[i].texture->matrix(nodes[i].coordinateType);
+
+        quads[i].makeInterleavedArrays(&map[v], matrix);
+        v += quads[i].count() * 6;
+    }
+
+    vbo->unmap();
+    vbo->bindArrays();
+
     // Make sure the blend function is set up correctly in case we will be doing blending
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
+    float opacity = -1.0;
 
-    // Shadow
-    // -----------
-    if (m_shadow && !shadowQuads.isEmpty()) {
-        if (GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture()) {
-            setBlendEnabled(true);
+    for (int i = 0; i < 4; i++) {
+        if (nodes[i].vertexCount == 0)
+            continue;
 
+        setBlendEnabled(nodes[i].hasAlpha || nodes[i].opacity < 1.0);
+
+        if (opacity != nodes[i].opacity) {
             shader->setUniform(GLShader::ModulationConstant,
-                    modulate(data.opacity() * data.decorationOpacity(), data.brightness()));
-
-            texture->setFilter(filter);
-            texture->setWrapMode(GL_CLAMP_TO_EDGE);
-            texture->bind();
-
-            renderQuads(0, region, shadowQuads, texture, true);
+                               modulate(nodes[i].opacity, data.brightness()));
+            opacity = nodes[i].opacity;
         }
+
+        nodes[i].texture->setFilter(filter);
+        nodes[i].texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        nodes[i].texture->bind();
+
+        vbo->draw(region, GL_TRIANGLES, nodes[i].firstVertex, nodes[i].vertexCount, m_hardwareClipping);
     }
 
-
-    // Decorations
-    // -----------
-    GLTexture *textures[2];
-
-    if (!(decoQuads[0].isEmpty() && decoQuads[1].isEmpty()) && getDecorationTextures(textures)) {
-        setBlendEnabled(true);
-
-        shader->setUniform(GLShader::ModulationConstant,
-                modulate(data.opacity() * data.decorationOpacity(), data.brightness()));
-
-        for (int i = 0; i < 2; i++) {
-            if (!textures[i] || decoQuads[i].isEmpty())
-                continue;
-
-            textures[i]->setFilter(filter);
-            textures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
-            textures[i]->bind();
-
-            renderQuads(0, region, decoQuads[i], textures[i], false);
-        }
-    }
-
-
-    // Content
-    // ---------
-    if (!contentQuads.isEmpty()) {
-        setBlendEnabled(!isOpaque() || data.opacity() < 1.0);
-
-        shader->setUniform(GLShader::ModulationConstant, modulate(data.opacity(), data.brightness()));
-
-        m_texture->bind();
-        renderQuads(mask, region, contentQuads, m_texture, false);
-    }
+    vbo->unbindArrays();
 
     setBlendEnabled(false);
 

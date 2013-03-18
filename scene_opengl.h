@@ -283,12 +283,35 @@ private:
 class SceneOpenGL2Window : public SceneOpenGL::Window
 {
 public:
+    enum Leaf { ShadowLeaf = 0, LeftRightLeaf, TopBottomLeaf, ContentLeaf };
+
+    struct LeafNode
+    {
+        LeafNode()
+            : texture(0),
+              firstVertex(0),
+              vertexCount(0),
+              opacity(1.0),
+              hasAlpha(false),
+              coordinateType(UnnormalizedCoordinates)
+        {
+        }
+
+        GLTexture *texture;
+        int firstVertex;
+        int vertexCount;
+        float opacity;
+        bool hasAlpha;
+        TextureCoordinateType coordinateType;
+    };
+
     explicit SceneOpenGL2Window(Toplevel *c);
     virtual ~SceneOpenGL2Window();
 
 protected:
     QVector4D modulate(float opacity, float brightness) const;
     void setBlendEnabled(bool enabled);
+    void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
