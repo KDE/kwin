@@ -1577,6 +1577,15 @@ int Workspace::screenNumber(const QPoint& pos) const
 void Workspace::sendClientToScreen(Client* c, int screen)
 {
     screen = c->rules()->checkScreen(screen);
+    if (c->isActive()) {
+        active_screen = screen;
+        // might impact the layer of a fullscreen window
+        foreach (Client *cc, clientList()) {
+            if (cc->isFullScreen() && cc->screen() == screen) {
+                updateClientLayer(cc);
+            }
+        }
+    }
     if (c->screen() == screen)   // Don't use isOnScreen(), that's true even when only partially
         return;
     GeometryUpdatesBlocker blocker(c);
@@ -1602,8 +1611,6 @@ void Workspace::sendClientToScreen(Client* c, int screen)
             it != transients_stacking_order.constEnd();
             ++it)
         sendClientToScreen(*it, screen);
-    if (c->isActive())
-        active_screen = screen;
 }
 
 void Workspace::killWindowId(Window window_to_kill)

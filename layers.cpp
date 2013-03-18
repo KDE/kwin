@@ -868,22 +868,11 @@ bool Client::isActiveFullScreen() const
     if (!isFullScreen())
         return false;
 
-//     const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
-//     if (!ac)
-//         return false;
-// not needed, for xinerama  -> && ( ac == this || this->group() == ac->group())
-
-    // only raise fullscreen above docks if it's the topmost window in unconstrained stacking order,
-    // i.e. the window set to be topmost by the user (also includes transients of the fullscreen window)
-    const Client* top = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), screen(), true, false);
-    if (!top)
-        return false;
-
-    // check whether we ...
-    if (top == this)
-        return true;
-    // ... or one of our transients is topmost
-    return rec_checkTransientOnTop(transients_list, top);
+    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    // according to NETWM spec implementation notes suggests
+    // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
+    // we'll also take the screen into account
+    return ac && (ac == this || this->group() == ac->group() || ac->screen() != screen());
 }
 
 } // namespace
