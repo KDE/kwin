@@ -982,6 +982,7 @@ void Client::setShade(ShadeMode mode)
         XUnmapWindow(display(), wrapper);
         XUnmapWindow(display(), client);
         XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
+        exportMappingState(IconicState);
         plainResize(s);
         shade_geometry_change = false;
         if (was_shade_mode == ShadeHover) {
@@ -1017,6 +1018,7 @@ void Client::setShade(ShadeMode mode)
         }
         XMapWindow(display(), wrapperId());
         XMapWindow(display(), window());
+        exportMappingState(NormalState);
         if (isActive())
             workspace()->requestFocus(this);
     }
