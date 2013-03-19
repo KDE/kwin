@@ -48,6 +48,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xfixes.h>
 #endif
 
+#if defined(__GNUC__)
+#  define KWIN_ALIGN(n) __attribute((aligned(n)))
+#  if defined(__SSE2__)
+#    define HAVE_SSE2
+#  endif
+#elif defined(__INTEL_COMPILER)
+#  define KWIN_ALIGN(n) __declspec(align(n))
+#  define HAVE_SSE2
+#else
+#  define KWIN_ALIGN(n)
+#endif
+
+#ifdef HAVE_SSE2
+#  include <emmintrin.h>
+#endif
+
+
 namespace KWin
 {
 
@@ -1055,26 +1072,64 @@ void WindowQuadList::makeInterleavedArrays(GLVertex2D *vertices, const QMatrix4x
 
     GLVertex2D *vertex = vertices;
 
-    for (int i = 0; i < count(); i++) {
-        const WindowQuad &quad = at(i);
-        GLVertex2D v[4]; // Four unique vertices / quad
+#ifdef HAVE_SSE2
+    if (!(intptr_t(vertex) & 0xf)) {
+        for (int i = 0; i < count(); i++) {
+            const WindowQuad &quad = at(i);
+            KWIN_ALIGN(16) GLVertex2D v[4];
 
-        for (int j = 0; j < 4; j++) {
-            const WindowVertex &wv = quad[j];
+            for (int j = 0; j < 4; j++) {
+                const WindowVertex &wv = quad[j];
 
-            v[j].position = QVector2D(wv.x(), wv.y());
-            v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+                v[j].position = QVector2D(wv.x(), wv.y());
+                v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+            }
+
+            const __m128i *srcP = (const __m128i *) &v;
+            __m128i *dstP = (__m128i *) vertex;
+
+            __m128i src[4];
+            src[0] = _mm_load_si128(&srcP[0]); // Top-left
+            src[1] = _mm_load_si128(&srcP[1]); // Top-right
+            src[2] = _mm_load_si128(&srcP[2]); // Bottom-right
+            src[3] = _mm_load_si128(&srcP[3]); // Bottom-left
+
+            // First triangle
+            _mm_stream_si128(&dstP[0], src[1]); // Top-right
+            _mm_stream_si128(&dstP[1], src[0]); // Top-left
+            _mm_stream_si128(&dstP[2], src[3]); // Bottom-left
+
+            // Second triangle
+            _mm_stream_si128(&dstP[3], src[3]); // Bottom-left
+            _mm_stream_si128(&dstP[4], src[2]); // Bottom-right
+            _mm_stream_si128(&dstP[5], src[1]); // Top-right
+
+            vertex += 6;
         }
+    } else
+#endif
+    {
+        for (int i = 0; i < count(); i++) {
+            const WindowQuad &quad = at(i);
+            GLVertex2D v[4]; // Four unique vertices / quad
 
-        // First triangle
-        *(vertex++) = v[1]; // Top-right
-        *(vertex++) = v[0]; // Top-left
-        *(vertex++) = v[3]; // Bottom-left
+            for (int j = 0; j < 4; j++) {
+                const WindowVertex &wv = quad[j];
 
-        // Second triangle
-        *(vertex++) = v[3]; // Bottom-left
-        *(vertex++) = v[2]; // Bottom-right
-        *(vertex++) = v[1]; // Top-right
+                v[j].position = QVector2D(wv.x(), wv.y());
+                v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+            }
+
+            // First triangle
+            *(vertex++) = v[1]; // Top-right
+            *(vertex++) = v[0]; // Top-left
+            *(vertex++) = v[3]; // Bottom-left
+
+            // Second triangle
+            *(vertex++) = v[3]; // Bottom-left
+            *(vertex++) = v[2]; // Bottom-right
+            *(vertex++) = v[1]; // Top-right
+        }
     }
 }
 
