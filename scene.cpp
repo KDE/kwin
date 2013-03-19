@@ -385,6 +385,8 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
         EffectWindowImpl *thumb = it.value().data();
         WindowPaintData thumbData(thumb);
         thumbData.setOpacity(data.opacity());
+        thumbData.setBrightness(data.brightness() * item->brightness());
+        thumbData.setSaturation(data.saturation() * item->saturation());
 
         const QRect visualThumbRect(thumb->expandedGeometry());
 

@@ -39,6 +39,8 @@ ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     , m_clip(true)
     , m_parent(QWeakPointer<EffectWindowImpl>())
     , m_parentWindow(0)
+    , m_brightness(1.0)
+    , m_saturation(1.0)
 {
     setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
     Q_ASSERT(Compositor::isCreated());
@@ -150,6 +152,26 @@ void ThumbnailItem::repaint(KWin::EffectWindow *w)
     if (static_cast<KWin::EffectWindowImpl*>(w)->window()->window() == m_wId) {
         update();
     }
+}
+
+void ThumbnailItem::setBrightness(qreal brightness)
+{
+    if (qFuzzyCompare(brightness, m_brightness)) {
+        return;
+    }
+    m_brightness = brightness;
+    update();
+    emit brightnessChanged();
+}
+
+void ThumbnailItem::setSaturation(qreal saturation)
+{
+    if (qFuzzyCompare(saturation, m_saturation)) {
+        return;
+    }
+    m_saturation = saturation;
+    update();
+    emit saturationChanged();
 }
 
 } // namespace KWin

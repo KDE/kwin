@@ -36,6 +36,8 @@ class ThumbnailItem : public QDeclarativeItem
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(bool clip READ isClip WRITE setClip NOTIFY clipChanged SCRIPTABLE true)
     Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
+    Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
+    Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
 public:
     explicit ThumbnailItem(QDeclarativeItem *parent = 0);
     virtual ~ThumbnailItem();
@@ -53,9 +55,18 @@ public:
         return m_parentWindow;
     }
     void setParentWindow(qulonglong parentWindow);
+    qreal brightness() const;
+    qreal saturation() const;
+
+public Q_SLOTS:
+    void setBrightness(qreal brightness);
+    void setSaturation(qreal saturation);
+
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clipChanged(bool clipped);
+    void brightnessChanged();
+    void saturationChanged();
 private Q_SLOTS:
     void init();
     void effectWindowAdded();
@@ -67,7 +78,21 @@ private:
     bool m_clip;
     QWeakPointer<EffectWindowImpl> m_parent;
     qulonglong m_parentWindow;
+    qreal m_brightness;
+    qreal m_saturation;
 };
+
+inline
+qreal ThumbnailItem::brightness() const
+{
+    return m_brightness;
+}
+
+inline
+qreal ThumbnailItem::saturation() const
+{
+    return m_saturation;
+}
 
 } // KWin
 
