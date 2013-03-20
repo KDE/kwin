@@ -199,11 +199,18 @@ public:
         IntUniformCount
     };
 
+    enum ColorUniform {
+        Color,
+        ColorUniformCount
+    };
+
     bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
     bool setUniform(Vec2Uniform uniform,   const QVector2D &value);
     bool setUniform(Vec4Uniform uniform,   const QVector4D &value);
     bool setUniform(FloatUniform uniform,  float value);
     bool setUniform(IntUniform uniform,    int value);
+    bool setUniform(ColorUniform uniform,  const QVector4D &value);
+    bool setUniform(ColorUniform uniform,  const QColor &value);
 
 protected:
     GLShader(unsigned int flags = NoFlags);
@@ -225,6 +232,7 @@ private:
     int mVec4Location[Vec4UniformCount];
     int mFloatLocation[FloatUniformCount];
     int mIntLocation[IntUniformCount];
+    int mColorLocation[ColorUniformCount];
 
     static bool sColorCorrect;
 

@@ -493,6 +493,8 @@ void GLShader::resolveLocations()
 
     mFloatLocation[Saturation]    = uniformLocation("saturation");
 
+    mColorLocation[Color] = uniformLocation("geometryColor");
+
     mLocationsResolved = true;
 }
 
@@ -530,6 +532,18 @@ bool GLShader::setUniform(GLShader::IntUniform uniform, int value)
 {
     resolveLocations();
     return setUniform(mIntLocation[uniform], value);
+}
+
+bool GLShader::setUniform(GLShader::ColorUniform uniform, const QVector4D &value)
+{
+    resolveLocations();
+    return setUniform(mColorLocation[uniform], value);
+}
+
+bool GLShader::setUniform(GLShader::ColorUniform uniform, const QColor &value)
+{
+    resolveLocations();
+    return setUniform(mColorLocation[uniform], value);
 }
 
 bool GLShader::setUniform(const char *name, float value)
@@ -1252,7 +1266,7 @@ public:
     QByteArray dataStore;
     bool useColor;
     bool useTexCoords;
-    QColor color;
+    QVector4D color;
     size_t bufferSize;
     intptr_t nextOffset;
     intptr_t vertexAddress;
@@ -1309,11 +1323,9 @@ void GLVertexBufferPrivate::bindArrays()
 #ifndef KWIN_HAVE_OPENGLES
     if (ShaderManager::instance()->isShaderBound()) {
 #endif
-        GLShader *shader = ShaderManager::instance()->getBoundShader();
-
         if (useColor) {
-            // FIXME Store the uniform location in the shader so we don't have to look it up every time.
-            shader->setUniform("geometryColor", color);
+            GLShader *shader = ShaderManager::instance()->getBoundShader();
+            shader->setUniform(GLShader::Color, color);
         }
 
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -1343,7 +1355,7 @@ void GLVertexBufferPrivate::bindArrays()
         }
 
         if (useColor)
-            glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+            glColor4f(color.x(), color.y(), color.z(), color.w());
 
         if (GLVertexBufferPrivate::supported)
             glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -1508,13 +1520,13 @@ void GLVertexBuffer::setUseColor(bool enable)
 void GLVertexBuffer::setColor(const QColor& color, bool enable)
 {
     d->useColor = enable;
-    d->color = color;
+    d->color = QVector4D(color.redF(), color.greenF(), color.blueF(), color.alphaF());
 }
 
 void GLVertexBuffer::reset()
 {
     d->useColor       = false;
-    d->color          = QColor(0, 0, 0, 255);
+    d->color          = QVector4D(0, 0, 0, 1);
     d->vertexCount    = 0;
     d->dimension      = 2;
     d->useTexCoords   = true;
