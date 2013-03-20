@@ -807,9 +807,9 @@ void Client::keepInArea(QRect area, bool partial)
         if (area.width() < width() || area.height() < height())
             resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
     }
-    if (geometry().right() > area.right() && width() < area.width())
+    if (geometry().right() > area.right() && width() <= area.width())
         move(area.right() - width() + 1, y());
-    if (geometry().bottom() > area.bottom() && height() < area.height())
+    if (geometry().bottom() > area.bottom() && height() <= area.height())
         move(x(), area.bottom() - height() + 1);
     if (!area.contains(geometry().topLeft())) {
         int tx = x();
