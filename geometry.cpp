@@ -82,6 +82,9 @@ void Workspace::desktopResized()
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
     }
+
+    //Update the shape of the overlay window to fix redrawing of unredirected windows. bug#305781
+    m_compositor->checkUnredirect(true);
 }
 
 void Workspace::saveOldScreenSizes()
