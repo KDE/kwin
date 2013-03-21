@@ -259,6 +259,9 @@ bool GlxBackend::initDrawableConfigs()
             if (buffer_size != depth && (buffer_size - alpha_size) != depth)
                 continue;
 
+            if (depth == 32 && alpha_size != 8)
+                continue;
+
             XVisualInfo *vi = glXGetVisualFromFBConfig(display(), configs[j]);
             if (vi == NULL)
                 continue;
