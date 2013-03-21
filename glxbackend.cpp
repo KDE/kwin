@@ -183,7 +183,7 @@ bool GlxBackend::initBuffer()
 bool GlxBackend::initFbConfig()
 {
     const int attribs[] = {
-        GLX_RENDER_TYPE,    GLX_RGBA_TYPE,
+        GLX_RENDER_TYPE,    GLX_RGBA_BIT,
         GLX_RED_SIZE,       1,
         GLX_GREEN_SIZE,     1,
         GLX_BLUE_SIZE,      1,
