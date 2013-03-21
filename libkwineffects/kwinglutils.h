@@ -773,12 +773,23 @@ public:
      * @internal
      */
     static void initStatic();
+
+    /**
+     * @internal
+     */
+    static void cleanup();
+
     /**
      * Returns true if VBOs are supported, it is save to use this class even if VBOs are not
      * supported.
      * @returns true if vertex buffer objects are supported
      */
     static bool isSupported();
+
+    /**
+     * Returns true if indexed quad mode is supported, and false otherwise.
+     */
+    static bool supportsIndexedQuads();
 
     /**
      * @return A shared VBO for streaming data

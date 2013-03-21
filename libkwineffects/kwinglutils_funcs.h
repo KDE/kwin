@@ -34,6 +34,8 @@ void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 
 }
 
+#define GL_QUADS_KWIN 0x0007
+
 #ifndef KWIN_HAVE_OPENGLES
 
 #include <GL/gl.h>
