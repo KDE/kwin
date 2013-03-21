@@ -208,7 +208,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
                     }
                     if (effects->compositingType() == OpenGL2Compositing) {
                         glEnable(GL_BLEND);
-                        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
                         const qreal rgb = data.brightness() * data.opacity();
                         const qreal a = data.opacity();
@@ -344,7 +344,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             }
             if (effects->compositingType() == OpenGL2Compositing) {
                 glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+                glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
                 const qreal rgb = data.brightness() * data.opacity();
                 const qreal a = data.opacity();
