@@ -1271,14 +1271,25 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     const QMatrix4x4 matrix = tex->matrix(normalized ? NormalizedCoordinates : UnnormalizedCoordinates);
 
     // Render geometry
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setVertexCount(quads.count() * 6);
+    GLenum primitiveType;
+    int primcount;
 
-    GLVertex2D *map = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
-    quads.makeInterleavedArrays(GL_TRIANGLES, map, matrix);
+    if (GLVertexBuffer::supportsIndexedQuads()) {
+        primitiveType = GL_QUADS_KWIN;
+        primcount = quads.count() * 4;
+    } else {
+        primitiveType = GL_TRIANGLES;
+        primcount = quads.count() * 6;
+    }
+
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->setVertexCount(primcount);
+
+    GLVertex2D *map = (GLVertex2D *) vbo->map(primcount * sizeof(GLVertex2D));
+    quads.makeInterleavedArrays(primitiveType, map, matrix);
     vbo->unmap();
 
-    vbo->render(region, GL_TRIANGLES, m_hardwareClipping);
+    vbo->render(region, primitiveType, m_hardwareClipping);
 }
 
 GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType type)
@@ -1433,7 +1444,12 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         }
     }
 
-    size_t size = 6 * (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count()) * sizeof(GLVertex2D);
+    const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
+    const GLenum primitiveType = indexedQuads ? GL_QUADS_KWIN : GL_TRIANGLES;
+    const int verticesPerQuad = indexedQuads ? 4 : 6;
+
+    const size_t size = verticesPerQuad *
+        (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count()) * sizeof(GLVertex2D);
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     GLVertex2D *map = (GLVertex2D *) vbo->map(size);
@@ -1446,12 +1462,12 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
             continue;
 
         nodes[i].firstVertex = v;
-        nodes[i].vertexCount = quads[i].count() * 6;
+        nodes[i].vertexCount = quads[i].count() * verticesPerQuad;
 
         const QMatrix4x4 matrix = nodes[i].texture->matrix(nodes[i].coordinateType);
 
-        quads[i].makeInterleavedArrays(GL_TRIANGLES, &map[v], matrix);
-        v += quads[i].count() * 6;
+        quads[i].makeInterleavedArrays(primitiveType, &map[v], matrix);
+        v += quads[i].count() * verticesPerQuad;
     }
 
     vbo->unmap();
@@ -1478,7 +1494,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         nodes[i].texture->setWrapMode(GL_CLAMP_TO_EDGE);
         nodes[i].texture->bind();
 
-        vbo->draw(region, GL_TRIANGLES, nodes[i].firstVertex, nodes[i].vertexCount, m_hardwareClipping);
+        vbo->draw(region, primitiveType, nodes[i].firstVertex, nodes[i].vertexCount, m_hardwareClipping);
     }
 
     vbo->unbindArrays();
