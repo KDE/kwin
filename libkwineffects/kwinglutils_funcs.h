@@ -453,6 +453,13 @@ extern KWIN_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
 extern KWIN_EXPORT glReadnPixels_func            glReadnPixels;
 extern KWIN_EXPORT glGetnUniformfv_func          glGetnUniformfv;
 
+// GL_ARB_draw_elements_base_vertex
+typedef void (*glDrawElementsBaseVertex_func)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLint basevertex);
+typedef void (*glDrawElementsInstancedBaseVertex_func)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instancecount, GLint basevertex);
+
+extern KWIN_EXPORT glDrawElementsBaseVertex_func glDrawElementsBaseVertex;
+extern KWIN_EXPORT glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES

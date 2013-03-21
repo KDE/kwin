@@ -198,6 +198,10 @@ glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
 glReadnPixels_func            glReadnPixels;
 glGetnUniformfv_func          glGetnUniformfv;
 
+// GL_ARB_draw_elements_base_vertex
+glDrawElementsBaseVertex_func          glDrawElementsBaseVertex;
+glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
+
 
 static glXFuncPtr getProcAddress(const char* name)
 {
@@ -693,6 +697,15 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
         glReadnPixels            = KWin::ReadnPixels;
         glGetnUniformfv          = KWin::GetnUniformfv;
+    }
+
+    if (hasGLVersion(3, 2) || hasGLExtension("GL_ARB_draw_elements_base_vertex")) {
+        // See http://www.opengl.org/registry/specs/ARB/draw_elements_base_vertex.txt
+        GL_RESOLVE(glDrawElementsBaseVertex);
+        GL_RESOLVE(glDrawElementsInstancedBaseVertex);
+    } else {
+        glDrawElementsBaseVertex          = NULL;
+        glDrawElementsInstancedBaseVertex = NULL;
     }
 
 #else
