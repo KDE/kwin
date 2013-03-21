@@ -57,10 +57,15 @@ BlurEffect::BlurEffect()
     } else {
         net_wm_blur_region = 0;
     }
+
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
     connect(effects, SIGNAL(screenGeometryChanged(QSize)), this, SLOT(slotScreenGeometryChanged()));
+
+    // Fetch the blur regions for all windows
+    foreach (EffectWindow *window, effects->stackingOrder())
+        updateBlurRegion(window);
 }
 
 BlurEffect::~BlurEffect()

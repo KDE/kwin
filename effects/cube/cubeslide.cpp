@@ -99,12 +99,12 @@ void CubeSlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         if (dontSlidePanels) {
             foreach (EffectWindow * w, panels) {
                 WindowPaintData wData(w);
-                effects->paintWindow(w, 0, QRegion(w->x(), w->y(), w->width(), w->height()), wData);
+                effects->paintWindow(w, 0, infiniteRegion(), wData);
             }
         }
         foreach (EffectWindow * w, stickyWindows) {
             WindowPaintData wData(w);
-            effects->paintWindow(w, 0, QRegion(w->x(), w->y(), w->width(), w->height()), wData);
+            effects->paintWindow(w, 0, infiniteRegion(), wData);
         }
     } else
         effects->paintScreen(mask, region, data);
