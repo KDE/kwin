@@ -202,6 +202,9 @@ glGetnUniformfv_func          glGetnUniformfv;
 glDrawElementsBaseVertex_func          glDrawElementsBaseVertex;
 glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
 
+// GL_ARB_copy_buffer
+glCopyBufferSubData_func glCopyBufferSubData;
+
 
 static glXFuncPtr getProcAddress(const char* name)
 {
@@ -706,6 +709,13 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
     } else {
         glDrawElementsBaseVertex          = NULL;
         glDrawElementsInstancedBaseVertex = NULL;
+    }
+
+    if (hasGLVersion(3, 1) || hasGLExtension("GL_ARB_copy_buffer")) {
+        // See http://www.opengl.org/registry/specs/ARB/copy_buffer.txt
+        GL_RESOLVE(glCopyBufferSubData);
+    } else {
+        glCopyBufferSubData = NULL;
     }
 
 #else

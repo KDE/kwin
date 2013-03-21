@@ -460,6 +460,12 @@ typedef void (*glDrawElementsInstancedBaseVertex_func)(GLenum mode, GLsizei coun
 extern KWIN_EXPORT glDrawElementsBaseVertex_func glDrawElementsBaseVertex;
 extern KWIN_EXPORT glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
 
+// GL_ARB_copy_buffer
+typedef void (*glCopyBufferSubData_func)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset,
+                                         GLintptr writeOffset, GLsizeiptr size);
+
+extern KWIN_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES
