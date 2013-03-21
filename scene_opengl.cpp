@@ -1275,7 +1275,7 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     vbo->setVertexCount(quads.count() * 6);
 
     GLVertex2D *map = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
-    quads.makeInterleavedArrays(map, matrix);
+    quads.makeInterleavedArrays(GL_TRIANGLES, map, matrix);
     vbo->unmap();
 
     vbo->render(region, GL_TRIANGLES, m_hardwareClipping);
@@ -1450,7 +1450,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 
         const QMatrix4x4 matrix = nodes[i].texture->matrix(nodes[i].coordinateType);
 
-        quads[i].makeInterleavedArrays(&map[v], matrix);
+        quads[i].makeInterleavedArrays(GL_TRIANGLES, &map[v], matrix);
         v += quads[i].count() * 6;
     }
 

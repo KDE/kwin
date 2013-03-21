@@ -1063,7 +1063,15 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     return ret;
 }
 
-void WindowQuadList::makeInterleavedArrays(GLVertex2D *vertices, const QMatrix4x4 &textureMatrix) const
+#ifndef GL_TRIANGLES
+#  define GL_TRIANGLES      0x0004
+#endif
+
+#ifndef GL_QUADS
+#  define GL_QUADS          0x0007
+#endif
+
+void WindowQuadList::makeInterleavedArrays(unsigned int type, GLVertex2D *vertices, const QMatrix4x4 &textureMatrix) const
 {
     // Since we know that the texture matrix just scales and translates
     // we can use this information to optimize the transformation
@@ -1072,64 +1080,117 @@ void WindowQuadList::makeInterleavedArrays(GLVertex2D *vertices, const QMatrix4x
 
     GLVertex2D *vertex = vertices;
 
-#ifdef HAVE_SSE2
-    if (!(intptr_t(vertex) & 0xf)) {
-        for (int i = 0; i < count(); i++) {
-            const WindowQuad &quad = at(i);
-            KWIN_ALIGN(16) GLVertex2D v[4];
+    assert(type == GL_QUADS || type == GL_TRIANGLES);
 
-            for (int j = 0; j < 4; j++) {
-                const WindowVertex &wv = quad[j];
-
-                v[j].position = QVector2D(wv.x(), wv.y());
-                v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
-            }
-
-            const __m128i *srcP = (const __m128i *) &v;
-            __m128i *dstP = (__m128i *) vertex;
-
-            __m128i src[4];
-            src[0] = _mm_load_si128(&srcP[0]); // Top-left
-            src[1] = _mm_load_si128(&srcP[1]); // Top-right
-            src[2] = _mm_load_si128(&srcP[2]); // Bottom-right
-            src[3] = _mm_load_si128(&srcP[3]); // Bottom-left
-
-            // First triangle
-            _mm_stream_si128(&dstP[0], src[1]); // Top-right
-            _mm_stream_si128(&dstP[1], src[0]); // Top-left
-            _mm_stream_si128(&dstP[2], src[3]); // Bottom-left
-
-            // Second triangle
-            _mm_stream_si128(&dstP[3], src[3]); // Bottom-left
-            _mm_stream_si128(&dstP[4], src[2]); // Bottom-right
-            _mm_stream_si128(&dstP[5], src[1]); // Top-right
-
-            vertex += 6;
-        }
-    } else
-#endif
+    switch (type)
     {
-        for (int i = 0; i < count(); i++) {
-            const WindowQuad &quad = at(i);
-            GLVertex2D v[4]; // Four unique vertices / quad
+    case GL_QUADS:
+#ifdef HAVE_SSE2
+        if (!(intptr_t(vertex) & 0xf)) {
+            for (int i = 0; i < count(); i++) {
+                const WindowQuad &quad = at(i);
+                KWIN_ALIGN(16) GLVertex2D v[4];
 
-            for (int j = 0; j < 4; j++) {
-                const WindowVertex &wv = quad[j];
+                for (int j = 0; j < 4; j++) {
+                    const WindowVertex &wv = quad[j];
 
-                v[j].position = QVector2D(wv.x(), wv.y());
-                v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+                    v[j].position = QVector2D(wv.x(), wv.y());
+                    v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+                }
+
+                const __m128i *srcP = (const __m128i *) &v;
+                __m128i *dstP = (__m128i *) vertex;
+
+                _mm_stream_si128(&dstP[0], _mm_load_si128(&srcP[0])); // Top-left
+                _mm_stream_si128(&dstP[1], _mm_load_si128(&srcP[1])); // Top-right
+                _mm_stream_si128(&dstP[2], _mm_load_si128(&srcP[2])); // Bottom-right
+                _mm_stream_si128(&dstP[3], _mm_load_si128(&srcP[3])); // Bottom-left
+
+                vertex += 4;
             }
+        } else
+#endif // HAVE_SSE2
+        {
+            for (int i = 0; i < count(); i++) {
+                const WindowQuad &quad = at(i);
 
-            // First triangle
-            *(vertex++) = v[1]; // Top-right
-            *(vertex++) = v[0]; // Top-left
-            *(vertex++) = v[3]; // Bottom-left
+                for (int j = 0; j < 4; j++) {
+                    const WindowVertex &wv = quad[j];
 
-            // Second triangle
-            *(vertex++) = v[3]; // Bottom-left
-            *(vertex++) = v[2]; // Bottom-right
-            *(vertex++) = v[1]; // Top-right
+                    GLVertex2D v;
+                    v.position = QVector2D(wv.x(), wv.y());
+                    v.texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+
+                    *(vertex++) = v;
+                }
+            }
         }
+        break;
+
+    case GL_TRIANGLES:
+#ifdef HAVE_SSE2
+        if (!(intptr_t(vertex) & 0xf)) {
+            for (int i = 0; i < count(); i++) {
+                const WindowQuad &quad = at(i);
+                KWIN_ALIGN(16) GLVertex2D v[4];
+
+                for (int j = 0; j < 4; j++) {
+                    const WindowVertex &wv = quad[j];
+
+                    v[j].position = QVector2D(wv.x(), wv.y());
+                    v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+                }
+
+                const __m128i *srcP = (const __m128i *) &v;
+                __m128i *dstP = (__m128i *) vertex;
+
+                __m128i src[4];
+                src[0] = _mm_load_si128(&srcP[0]); // Top-left
+                src[1] = _mm_load_si128(&srcP[1]); // Top-right
+                src[2] = _mm_load_si128(&srcP[2]); // Bottom-right
+                src[3] = _mm_load_si128(&srcP[3]); // Bottom-left
+
+                // First triangle
+                _mm_stream_si128(&dstP[0], src[1]); // Top-right
+                _mm_stream_si128(&dstP[1], src[0]); // Top-left
+                _mm_stream_si128(&dstP[2], src[3]); // Bottom-left
+
+                // Second triangle
+                _mm_stream_si128(&dstP[3], src[3]); // Bottom-left
+                _mm_stream_si128(&dstP[4], src[2]); // Bottom-right
+                _mm_stream_si128(&dstP[5], src[1]); // Top-right
+
+                vertex += 6;
+            }
+        } else
+#endif // HAVE_SSE2
+        {
+            for (int i = 0; i < count(); i++) {
+                const WindowQuad &quad = at(i);
+                GLVertex2D v[4]; // Four unique vertices / quad
+
+                for (int j = 0; j < 4; j++) {
+                    const WindowVertex &wv = quad[j];
+
+                    v[j].position = QVector2D(wv.x(), wv.y());
+                    v[j].texcoord = QVector2D(wv.u(), wv.v()) * coeff + offset;
+                }
+
+                // First triangle
+                *(vertex++) = v[1]; // Top-right
+                *(vertex++) = v[0]; // Top-left
+                *(vertex++) = v[3]; // Bottom-left
+
+                // Second triangle
+                *(vertex++) = v[3]; // Bottom-left
+                *(vertex++) = v[2]; // Bottom-right
+                *(vertex++) = v[1]; // Top-right
+            }
+        }
+        break;
+
+    default:
+        break;
     }
 }
 
