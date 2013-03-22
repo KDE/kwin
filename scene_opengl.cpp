@@ -254,6 +254,46 @@ bool SceneOpenGL::initFailed() const
     return !init_ok;
 }
 
+#ifndef KWIN_HAVE_OPENGLES
+void SceneOpenGL::copyPixels(const QRegion &region)
+{
+    GLint shader = 0;
+    if (ShaderManager::instance()->isShaderBound()) {
+        glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+        glUseProgram(0);
+    }
+    bool reenableTexUnit = false;
+    if (glIsEnabled(GL_TEXTURE_2D)) {
+        glDisable(GL_TEXTURE_2D);
+        reenableTexUnit = true;
+    }
+    // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
+    glEnable(GL_SCISSOR_TEST);
+
+    int xpos = 0;
+    int ypos = 0;
+    foreach (const QRect &r, region.rects()) {
+        // convert to OpenGL coordinates
+        int y = displayHeight() - r.y() - r.height();
+        glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL); // not glRasterPos2f, see glxbackend.cpp
+        xpos = r.x();
+        ypos = y;
+        glScissor(r.x(), y, r.width(), r.height());
+        glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
+    }
+
+    glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL); // move position back to 0,0
+    glDisable(GL_SCISSOR_TEST);
+    if (reenableTexUnit) {
+        glEnable(GL_TEXTURE_2D);
+    }
+    // rebind previously bound shader
+    if (ShaderManager::instance()->isShaderBound()) {
+        glUseProgram(shader);
+    }
+}
+#endif
+
 int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -269,48 +309,14 @@ int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint1");
 #endif
 
-    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     paintScreen(&mask, &damage);   // call generic implementation
 #ifndef KWIN_HAVE_OPENGLES
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     // copy dirty parts from front to backbuffer
     if (options->glPreferBufferSwap() == Options::CopyFrontBuffer && damage != displayRegion) {
-        GLint shader = 0;
-        if (ShaderManager::instance()->isShaderBound()) {
-            glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-            glUseProgram(0);
-        }
-        bool reenableTexUnit = false;
-        if (glIsEnabled(GL_TEXTURE_2D)) {
-            glDisable(GL_TEXTURE_2D);
-            reenableTexUnit = true;
-        }
-        // no idea why glScissor() is used, but Compiz has it and it doesn't seem to hurt
-        glEnable(GL_SCISSOR_TEST);
         glReadBuffer(GL_FRONT);
-
-        int xpos = 0;
-        int ypos = 0;
-        const QRegion dirty = displayRegion - damage;
-        foreach (const QRect &r, dirty.rects()) {
-            // convert to OpenGL coordinates
-            int y = displayHeight() - r.y() - r.height();
-            glBitmap(0, 0, 0, 0, r.x() - xpos, y - ypos, NULL); // not glRasterPos2f, see glxbackend.cpp
-            xpos = r.x();
-            ypos = y;
-            glScissor(r.x(), y, r.width(), r.height());
-            glCopyPixels(r.x(), y, r.width(), r.height(), GL_COLOR);
-        }
-
-        glBitmap(0, 0, 0, 0, -xpos, -ypos, NULL); // move position back to 0,0
+        copyPixels(displayRegion - damage);
         glReadBuffer(GL_BACK);
-        glDisable(GL_SCISSOR_TEST);
-        if (reenableTexUnit) {
-            glEnable(GL_TEXTURE_2D);
-        }
-        // rebind previously bound shader
-        if (ShaderManager::instance()->isShaderBound()) {
-            glUseProgram(shader);
-        }
         damage = displayRegion;
     }
 #endif

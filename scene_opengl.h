@@ -63,6 +63,13 @@ public:
     Texture *createTexture();
     Texture *createTexture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
 
+#ifndef KWIN_HAVE_OPENGLES
+    /**
+     * Copy a region of pixels from the current read to the current draw buffer
+     */
+    static void copyPixels(const QRegion &region);
+#endif
+
     static SceneOpenGL *createScene();
 
 protected:
