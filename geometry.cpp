@@ -1069,155 +1069,153 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         return;
     }
 
-    if (!isShade()) { // TODO
-        // this can be true only if this window was mapped before KWin
-        // was started - in such case, don't adjust position to workarea,
-        // because the window already had its position, and if a window
-        // with a strut altering the workarea would be managed in initialization
-        // after this one, this window would be moved
-        if (workspace()->initializing())
-            return;
+    // this can be true only if this window was mapped before KWin
+    // was started - in such case, don't adjust position to workarea,
+    // because the window already had its position, and if a window
+    // with a strut altering the workarea would be managed in initialization
+    // after this one, this window would be moved
+    if (workspace()->initializing())
+        return;
 
-        // If the window was touching an edge before but not now move it so it is again.
-        // Old and new maximums have different starting values so windows on the screen
-        // edge will move when a new strut is placed on the edge.
-        QRect oldScreenArea;
-        QRect oldGeomTall;
-        QRect oldGeomWide;
-        if( workspace()->inUpdateClientArea()) {
-            // we need to find the screen area as it was before the change
-            oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
-            oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), workspace()->oldDisplayHeight());   // Full screen height
-            oldGeomWide = QRect(0, oldGeometry.y(), workspace()->oldDisplayWidth(), oldGeometry.height());   // Full screen width
-            int distance = INT_MAX;
-            foreach(const QRect &r, workspace()->previousScreenSizes()) {
-                int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
-                if( d < distance ) {
-                    distance = d;
-                    oldScreenArea = r;
-                }
-            }
-        } else {
-            oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
-            oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displayHeight());   // Full screen height
-            oldGeomWide = QRect(0, oldGeometry.y(), displayWidth(), oldGeometry.height());   // Full screen width
-        }
-        int oldTopMax = oldScreenArea.y();
-        int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
-        int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
-        int oldLeftMax = oldScreenArea.x();
-        const QRect screenArea = workspace()->clientArea(ScreenArea, this);
-        int topMax = screenArea.y();
-        int rightMax = screenArea.x() + screenArea.width();
-        int bottomMax = screenArea.y() + screenArea.height();
-        int leftMax = screenArea.x();
-        QRect newGeom = geom_restore; // geometry();
-        const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
-        const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
-        // Get the max strut point for each side where the window is (E.g. Highest point for
-        // the bottom struts bounded by the window's left and right sides).
-        if( workspace()->inUpdateClientArea()) {
-            // These 4 compute old bounds when the restricted areas themselves changed (Workspace::updateClientArea())
-            foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
-                QRect rect = r & oldGeomTall;
-                if (!rect.isEmpty())
-                    oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
-            }
-            foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaRight).rects()) {
-                QRect rect = r & oldGeomWide;
-                if (!rect.isEmpty())
-                    oldRightMax = qMin(oldRightMax, rect.x());
-            }
-            foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaBottom).rects()) {
-                QRect rect = r & oldGeomTall;
-                if (!rect.isEmpty())
-                    oldBottomMax = qMin(oldBottomMax, rect.y());
-            }
-            foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaLeft).rects()) {
-                QRect rect = r & oldGeomWide;
-                if (!rect.isEmpty())
-                    oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
-            }
-        } else {
-            // These 4 compute old bounds when e.g. active desktop or screen changes
-            foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
-                QRect rect = r & oldGeomTall;
-                if (!rect.isEmpty())
-                    oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
-            }
-            foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaRight).rects()) {
-                QRect rect = r & oldGeomWide;
-                if (!rect.isEmpty())
-                    oldRightMax = qMin(oldRightMax, rect.x());
-            }
-            foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaBottom).rects()) {
-                QRect rect = r & oldGeomTall;
-                if (!rect.isEmpty())
-                    oldBottomMax = qMin(oldBottomMax, rect.y());
-            }
-            foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaLeft).rects()) {
-                QRect rect = r & oldGeomWide;
-                if (!rect.isEmpty())
-                    oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
+    // If the window was touching an edge before but not now move it so it is again.
+    // Old and new maximums have different starting values so windows on the screen
+    // edge will move when a new strut is placed on the edge.
+    QRect oldScreenArea;
+    QRect oldGeomTall;
+    QRect oldGeomWide;
+    if( workspace()->inUpdateClientArea()) {
+        // we need to find the screen area as it was before the change
+        oldScreenArea = QRect( 0, 0, workspace()->oldDisplayWidth(), workspace()->oldDisplayHeight());
+        oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), workspace()->oldDisplayHeight());   // Full screen height
+        oldGeomWide = QRect(0, oldGeometry.y(), workspace()->oldDisplayWidth(), oldGeometry.height());   // Full screen width
+        int distance = INT_MAX;
+        foreach(const QRect &r, workspace()->previousScreenSizes()) {
+            int d = r.contains( oldGeometry.center()) ? 0 : ( r.center() - oldGeometry.center()).manhattanLength();
+            if( d < distance ) {
+                distance = d;
+                oldScreenArea = r;
             }
         }
-        // These 4 compute new bounds
-        foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaTop).rects()) {
-            QRect rect = r & newGeomTall;
-            if (!rect.isEmpty())
-                topMax = qMax(topMax, rect.y() + rect.height());
-        }
-        foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaRight).rects()) {
-            QRect rect = r & newGeomWide;
-            if (!rect.isEmpty())
-                rightMax = qMin(rightMax, rect.x());
-        }
-        foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaBottom).rects()) {
-            QRect rect = r & newGeomTall;
-            if (!rect.isEmpty())
-                bottomMax = qMin(bottomMax, rect.y());
-        }
-        foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaLeft).rects()) {
-            QRect rect = r & newGeomWide;
-            if (!rect.isEmpty())
-                leftMax = qMax(leftMax, rect.x() + rect.width());
-        }
-
-        // Check if the sides were inside or touching but are no longer
-        if ((oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
-            || (oldGeometry.y() == oldTopMax && newGeom.y() != topMax)) {
-            // Top was inside or touching before but isn't anymore
-            newGeom.moveTop(qMax(topMax, screenArea.y()));
-        }
-        if ((oldGeometry.y() + oldGeometry.height() <= oldBottomMax && newGeom.y() + newGeom.height() > bottomMax)
-            || (oldGeometry.y() + oldGeometry.height() == oldBottomMax && newGeom.y() + newGeom.height() != bottomMax)) {
-            // Bottom was inside or touching before but isn't anymore
-            newGeom.moveBottom(qMin(bottomMax - 1, screenArea.bottom()));
-            // If the other side was inside make sure it still is afterwards (shrink appropriately)
-            if (oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
-                newGeom.setTop(qMax(topMax, screenArea.y()));
-        }
-        if ((oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
-            || (oldGeometry.x() == oldLeftMax && newGeom.x() != leftMax)) {
-            // Left was inside or touching before but isn't anymore
-            newGeom.moveLeft(qMax(leftMax, screenArea.x()));
-        }
-        if ((oldGeometry.x() + oldGeometry.width() <= oldRightMax && newGeom.x() + newGeom.width() > rightMax)
-            || (oldGeometry.x() + oldGeometry.width() == oldRightMax && newGeom.x() + newGeom.width() != rightMax)) {
-            // Right was inside or touching before but isn't anymore
-            newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
-            // If the other side was inside make sure it still is afterwards (shrink appropriately)
-            if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
-                newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
-        }
-
-        checkOffscreenPosition(&newGeom, screenArea);
-        // Obey size hints. TODO: We really should make sure it stays in the right place
-        newGeom.setSize(adjustedSize(newGeom.size()));
-
-        if (newGeom != geometry())
-            setGeometry(newGeom);
+    } else {
+        oldScreenArea = workspace()->clientArea(ScreenArea, oldGeometry.center(), oldDesktop);
+        oldGeomTall = QRect(oldGeometry.x(), 0, oldGeometry.width(), displayHeight());   // Full screen height
+        oldGeomWide = QRect(0, oldGeometry.y(), displayWidth(), oldGeometry.height());   // Full screen width
     }
+    int oldTopMax = oldScreenArea.y();
+    int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
+    int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
+    int oldLeftMax = oldScreenArea.x();
+    const QRect screenArea = workspace()->clientArea(ScreenArea, this);
+    int topMax = screenArea.y();
+    int rightMax = screenArea.x() + screenArea.width();
+    int bottomMax = screenArea.y() + screenArea.height();
+    int leftMax = screenArea.x();
+    QRect newGeom = geom_restore; // geometry();
+    const QRect newGeomTall = QRect(newGeom.x(), 0, newGeom.width(), displayHeight());   // Full screen height
+    const QRect newGeomWide = QRect(0, newGeom.y(), displayWidth(), newGeom.height());   // Full screen width
+    // Get the max strut point for each side where the window is (E.g. Highest point for
+    // the bottom struts bounded by the window's left and right sides).
+    if( workspace()->inUpdateClientArea()) {
+        // These 4 compute old bounds when the restricted areas themselves changed (Workspace::updateClientArea())
+        foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
+            QRect rect = r & oldGeomTall;
+            if (!rect.isEmpty())
+                oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
+        }
+        foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaRight).rects()) {
+            QRect rect = r & oldGeomWide;
+            if (!rect.isEmpty())
+                oldRightMax = qMin(oldRightMax, rect.x());
+        }
+        foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaBottom).rects()) {
+            QRect rect = r & oldGeomTall;
+            if (!rect.isEmpty())
+                oldBottomMax = qMin(oldBottomMax, rect.y());
+        }
+        foreach (const QRect & r, workspace()->previousRestrictedMoveArea(oldDesktop, StrutAreaLeft).rects()) {
+            QRect rect = r & oldGeomWide;
+            if (!rect.isEmpty())
+                oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
+        }
+    } else {
+        // These 4 compute old bounds when e.g. active desktop or screen changes
+        foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaTop).rects()) {
+            QRect rect = r & oldGeomTall;
+            if (!rect.isEmpty())
+                oldTopMax = qMax(oldTopMax, rect.y() + rect.height());
+        }
+        foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaRight).rects()) {
+            QRect rect = r & oldGeomWide;
+            if (!rect.isEmpty())
+                oldRightMax = qMin(oldRightMax, rect.x());
+        }
+        foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaBottom).rects()) {
+            QRect rect = r & oldGeomTall;
+            if (!rect.isEmpty())
+                oldBottomMax = qMin(oldBottomMax, rect.y());
+        }
+        foreach (const QRect & r, workspace()->restrictedMoveArea(oldDesktop, StrutAreaLeft).rects()) {
+            QRect rect = r & oldGeomWide;
+            if (!rect.isEmpty())
+                oldLeftMax = qMax(oldLeftMax, rect.x() + rect.width());
+        }
+    }
+    // These 4 compute new bounds
+    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaTop).rects()) {
+        QRect rect = r & newGeomTall;
+        if (!rect.isEmpty())
+            topMax = qMax(topMax, rect.y() + rect.height());
+    }
+    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaRight).rects()) {
+        QRect rect = r & newGeomWide;
+        if (!rect.isEmpty())
+            rightMax = qMin(rightMax, rect.x());
+    }
+    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaBottom).rects()) {
+        QRect rect = r & newGeomTall;
+        if (!rect.isEmpty())
+            bottomMax = qMin(bottomMax, rect.y());
+    }
+    foreach (const QRect & r, workspace()->restrictedMoveArea(desktop(), StrutAreaLeft).rects()) {
+        QRect rect = r & newGeomWide;
+        if (!rect.isEmpty())
+            leftMax = qMax(leftMax, rect.x() + rect.width());
+    }
+
+    // Check if the sides were inside or touching but are no longer
+    if ((oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
+        || (oldGeometry.y() == oldTopMax && newGeom.y() != topMax)) {
+        // Top was inside or touching before but isn't anymore
+        newGeom.moveTop(qMax(topMax, screenArea.y()));
+    }
+    if ((oldGeometry.y() + oldGeometry.height() <= oldBottomMax && newGeom.y() + newGeom.height() > bottomMax)
+        || (oldGeometry.y() + oldGeometry.height() == oldBottomMax && newGeom.y() + newGeom.height() != bottomMax)) {
+        // Bottom was inside or touching before but isn't anymore
+        newGeom.moveBottom(qMin(bottomMax - 1, screenArea.bottom()));
+        // If the other side was inside make sure it still is afterwards (shrink appropriately)
+        if (oldGeometry.y() >= oldTopMax && newGeom.y() < topMax)
+            newGeom.setTop(qMax(topMax, screenArea.y()));
+    }
+    if ((oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
+        || (oldGeometry.x() == oldLeftMax && newGeom.x() != leftMax)) {
+        // Left was inside or touching before but isn't anymore
+        newGeom.moveLeft(qMax(leftMax, screenArea.x()));
+    }
+    if ((oldGeometry.x() + oldGeometry.width() <= oldRightMax && newGeom.x() + newGeom.width() > rightMax)
+        || (oldGeometry.x() + oldGeometry.width() == oldRightMax && newGeom.x() + newGeom.width() != rightMax)) {
+        // Right was inside or touching before but isn't anymore
+        newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
+        // If the other side was inside make sure it still is afterwards (shrink appropriately)
+        if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
+            newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
+    }
+
+    checkOffscreenPosition(&newGeom, screenArea);
+    // Obey size hints. TODO: We really should make sure it stays in the right place
+    newGeom.setSize(adjustedSize(newGeom.size()));
+
+    if (newGeom != geometry())
+        setGeometry(newGeom);
 }
 
 void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
