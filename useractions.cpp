@@ -552,6 +552,8 @@ void UserActionsMenu::rebuildTabGroupPopup()
             continue;
         m_addTabsMenu->addAction(shortCaption((*i)->caption()))->setData(QVariant::fromValue(*i));
     }
+    if (m_addTabsMenu->actions().isEmpty())
+        m_addTabsMenu->addAction(i18nc("There's no window available to be attached as tab to this one", "None available"))->setEnabled(false);
 }
 
 void UserActionsMenu::initTabbingPopups()
