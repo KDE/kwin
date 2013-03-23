@@ -1207,7 +1207,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
         newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
         // If the other side was inside make sure it still is afterwards (shrink appropriately)
         if (oldGeometry.x() >= oldLeftMax && newGeom.x() < leftMax)
-            newGeom.moveRight(qMin(rightMax - 1, screenArea.right()));
+            newGeom.setLeft(qMax(leftMax, screenArea.x()));
     }
 
     checkOffscreenPosition(&newGeom, screenArea);
