@@ -52,8 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/xf86vmode.h>
 #endif
 #include <fixx11h.h>
+#include <QCheckBox>
 #include <QPushButton>
-#include <QSlider>
 
 #include <kglobalsettings.h>
 #include <kiconloader.h>
@@ -164,9 +164,14 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
     Workspace *ws = Workspace::self();
     int x = pos.left();
     int y = pos.bottom();
-    if (y == pos.top())
+    if (y == pos.top()) {
+        m_client.data()->blockActivityUpdates(true);
         m_menu->exec(QPoint(x, y));
+        if (!m_client.isNull())
+            m_client.data()->blockActivityUpdates(false);
+    }
     else {
+        m_client.data()->blockActivityUpdates(true);
         QRect area = ws->clientArea(ScreenArea, QPoint(x, y), ws->currentDesktop());
         menuAboutToShow(); // needed for sizeHint() to be correct :-/
         int popupHeight = m_menu->sizeHint().height();
@@ -174,6 +179,8 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
             m_menu->exec(QPoint(x, y));
         else
             m_menu->exec(QPoint(x, pos.top() - popupHeight));
+        if (!m_client.isNull())
+            m_client.data()->blockActivityUpdates(true);
     }
 }
 
@@ -718,13 +725,22 @@ void UserActionsMenu::activityPopupAboutToShow()
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
-        action = m_activityMenu->addAction(KIcon(activity.icon()), name);
+        QWidgetAction *action = new QWidgetAction(m_activityMenu);
+        QCheckBox *box = new QCheckBox(name, m_activityMenu);
+        action->setDefaultWidget(box);
+        const QString icon = activity.icon();
+        if (!icon.isEmpty())
+            box->setIcon(KIcon(icon));
+        box->setBackgroundRole(m_activityMenu->backgroundRole());
+        box->setForegroundRole(m_activityMenu->foregroundRole());
+        box->setPalette(m_activityMenu->palette());
+        connect (box, SIGNAL(clicked(bool)), action, SIGNAL(triggered(bool)));
+        m_activityMenu->addAction(action);
         action->setData(id);
-        action->setCheckable(true);
 
         if (!m_client.isNull() &&
                 !m_client.data()->isOnAllActivities() && m_client.data()->isOnActivity(id))
-            action->setChecked(true);
+            box->setChecked(true);
     }
 #endif
 }
@@ -799,6 +815,9 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
     }
 
     Workspace::self()->toggleClientOnActivity(m_client.data(), activity, false);
+    if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
+        m_activityMenu->actions().at(0)->setChecked(m_client.data()->isOnAllActivities());
+    }
 }
 
 //****************************************

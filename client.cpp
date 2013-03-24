@@ -97,6 +97,8 @@ Client::Client(Workspace* ws)
     , wrapper(None)
     , decoration(NULL)
     , bridge(new Bridge(this))
+    , m_activityUpdatesBlocked(false)
+    , m_blockedActivityUpdatesRequireTransients(false)
     , move_resize_grab_window(None)
     , move_resize_has_keyboard_grab(false)
     , m_managed(false)
@@ -1548,15 +1550,28 @@ void Client::setOnActivities(QStringList newActivitiesList)
     updateActivities(false);
 }
 
+void Client::blockActivityUpdates(bool b)
+{
+    if (b) {
+        ++m_activityUpdatesBlocked;
+    } else {
+        Q_ASSERT(m_activityUpdatesBlocked);
+        --m_activityUpdatesBlocked;
+        if (!m_activityUpdatesBlocked)
+            updateActivities(m_blockedActivityUpdatesRequireTransients);
+    }
+}
+
 /**
  * update after activities changed
  */
 void Client::updateActivities(bool includeTransients)
 {
-    /* FIXME do I need this?
-    if ( decoration != NULL )
-        decoration->desktopChange();
-        */
+    if (m_activityUpdatesBlocked) {
+        m_blockedActivityUpdatesRequireTransients |= includeTransients;
+        return;
+    }
+    m_blockedActivityUpdatesRequireTransients = false; // reset
     if (includeTransients)
         workspace()->updateOnAllActivitiesOfTransients(this);
     workspace()->updateFocusChains(this, Workspace::FocusChainMakeFirst);
