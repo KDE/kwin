@@ -229,21 +229,36 @@ QRegion BlurEffect::blurRegion(const EffectWindow *w) const
 void BlurEffect::drawRegion(const QRegion &region)
 {
     const int vertexCount = region.rectCount() * 6;
-    if (vertices.size() < vertexCount)
-        vertices.resize(vertexCount);
-
-    int i = 0;
-    foreach (const QRect & r, region.rects()) {
-        vertices[i++] = QVector2D(r.x() + r.width(), r.y());
-        vertices[i++] = QVector2D(r.x(),             r.y());
-        vertices[i++] = QVector2D(r.x(),             r.y() + r.height());
-        vertices[i++] = QVector2D(r.x(),             r.y() + r.height());
-        vertices[i++] = QVector2D(r.x() + r.width(), r.y() + r.height());
-        vertices[i++] = QVector2D(r.x() + r.width(), r.y());
-    }
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setData(vertexCount, 2, (float*)vertices.constData(), (float*)vertices.constData());
+
+    QVector2D *map = (QVector2D *) vbo->map(vertexCount * sizeof(QVector2D));
+
+    foreach (const QRect &r, region.rects()) {
+        const QVector2D topLeft(r.x(), r.y());
+        const QVector2D topRight(r.x() + r.width(), r.y());
+        const QVector2D bottomLeft(r.x(), r.y() + r.height());
+        const QVector2D bottomRight(r.x() + r.width(), r.y() + r.height());
+
+        // First triangle
+        *(map++) = topRight;
+        *(map++) = topLeft;
+        *(map++) = bottomLeft;
+
+        // Second triangle
+        *(map++) = bottomLeft;
+        *(map++) = bottomRight;
+        *(map++) = topRight;
+    }
+
+    vbo->unmap();
+
+    const GLVertexAttrib layout[] = {
+        { VA_Position, 2, GL_FLOAT, 0 },
+        { VA_TexCoord, 2, GL_FLOAT, 0 }
+    };
+
+    vbo->setVertexCount(vertexCount);
+    vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
     vbo->render(GL_TRIANGLES);
 }
 
