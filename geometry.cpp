@@ -1604,6 +1604,9 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
 
 void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
+    if (rules()->checkIgnoreGeometry(false))
+        return; // user said: "FU!"
+
     // "maximized" is a user setting -> we do not allow the client to resize itself
     // away from this & against the users explicit wish
     kDebug(1212) << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<

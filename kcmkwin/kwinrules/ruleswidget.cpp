@@ -111,7 +111,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     // workarounds tab
     SETUP(fsplevel, force);
     SETUP(type, force);
-    SETUP(ignoreposition, force);
+    SETUP(ignoregeometry, set);
     SETUP(minsize, force);
     SETUP(maxsize, force);
     SETUP(strictgeometry, force);
@@ -186,7 +186,7 @@ void RulesWidget::updateEnableshortcut()
 // workarounds tab
 UPDATE_ENABLE_SLOT(fsplevel)
 UPDATE_ENABLE_SLOT(type)
-UPDATE_ENABLE_SLOT(ignoreposition)
+UPDATE_ENABLE_SLOT(ignoregeometry)
 UPDATE_ENABLE_SLOT(minsize)
 UPDATE_ENABLE_SLOT(maxsize)
 UPDATE_ENABLE_SLOT(strictgeometry)
@@ -454,7 +454,7 @@ void RulesWidget::setRules(Rules* rules)
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
     COMBOBOX_FORCE_RULE(type, typeToCombo);
-    CHECKBOX_FORCE_RULE(ignoreposition,);
+    CHECKBOX_SET_RULE(ignoregeometry,);
     LINEEDIT_FORCE_RULE(minsize, sizeToStr);
     LINEEDIT_FORCE_RULE(maxsize, sizeToStr);
     CHECKBOX_FORCE_RULE(strictgeometry,);
@@ -551,7 +551,7 @@ Rules* RulesWidget::rules() const
     LINEEDIT_SET_RULE(shortcut,);
     COMBOBOX_FORCE_RULE(fsplevel,);
     COMBOBOX_FORCE_RULE(type, comboToType);
-    CHECKBOX_FORCE_RULE(ignoreposition,);
+    CHECKBOX_SET_RULE(ignoregeometry,);
     LINEEDIT_FORCE_RULE(minsize, strToSize);
     LINEEDIT_FORCE_RULE(maxsize, strToSize);
     CHECKBOX_FORCE_RULE(strictgeometry,);
@@ -671,7 +671,7 @@ void RulesWidget::prefillUnusedValues(const KWindowInfo& info)
     //LINEEDIT_PREFILL( shortcut, );
     //COMBOBOX_PREFILL( fsplevel, );
     COMBOBOX_PREFILL(type, typeToCombo, info.windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK));
-    //CHECKBOX_PREFILL( ignoreposition, );
+    //CHECKBOX_PREFILL( ignoregeometry, );
     LINEEDIT_PREFILL(minsize, sizeToStr, info.frameGeometry().size());
     LINEEDIT_PREFILL(maxsize, sizeToStr, info.frameGeometry().size());
     //CHECKBOX_PREFILL( strictgeometry, );

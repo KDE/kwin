@@ -14,7 +14,7 @@
    <item row="0" column="1">
     <widget class="QTabWidget" name="tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="TabPage1">
       <attribute name="title">
@@ -1114,7 +1114,7 @@
         </widget>
        </item>
        <item row="16" column="1" colspan="2">
-        <widget class="QCheckBox" name="enable_ignoreposition">
+        <widget class="QCheckBox" name="enable_ignoregeometry">
          <property name="toolTip">
           <string>Windows can ask to appear in a certain position.
 By default this overrides the placement strategy
@@ -1127,7 +1127,7 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="16" column="3">
-        <widget class="KComboBox" name="rule_ignoreposition">
+        <widget class="KComboBox" name="rule_ignoregeometry">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1138,7 +1138,22 @@ to unconditionally popup in the middle of your screen.</string>
          </item>
          <item>
           <property name="text">
+           <string>Apply Initially</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Remember</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
            <string>Force</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Apply Now</string>
           </property>
          </item>
          <item>
@@ -1149,7 +1164,7 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="16" column="4">
-        <widget class="YesNoBox" name="ignoreposition" native="true">
+        <widget class="YesNoBox" name="ignoregeometry" native="true">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2518,8 +2533,8 @@ but this may sometimes fail or superact.
   <tabstop>enable_placement</tabstop>
   <tabstop>rule_placement</tabstop>
   <tabstop>placement</tabstop>
-  <tabstop>enable_ignoreposition</tabstop>
-  <tabstop>rule_ignoreposition</tabstop>
+  <tabstop>enable_ignoregeometry</tabstop>
+  <tabstop>rule_ignoregeometry</tabstop>
   <tabstop>enable_minsize</tabstop>
   <tabstop>rule_minsize</tabstop>
   <tabstop>minsize</tabstop>

@@ -82,7 +82,7 @@ private slots:
     // workarounds tab
     void updateEnablefsplevel();
     void updateEnabletype();
-    void updateEnableignoreposition();
+    void updateEnableignoregeometry();
     void updateEnableminsize();
     void updateEnablemaxsize();
     void updateEnablestrictgeometry();

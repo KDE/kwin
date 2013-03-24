@@ -281,7 +281,7 @@ bool Client::manage(Window w, bool isMapped)
         ; // Force using placement policy
     else
         usePosition = true;
-    if (!rules()->checkIgnoreGeometry(!usePosition)) {
+    if (!rules()->checkIgnoreGeometry(!usePosition, true)) {
         if (((xSizeHint.flags & PPosition)) ||
                 (xSizeHint.flags & USPosition)) {
             placementDone = true;

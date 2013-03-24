@@ -52,7 +52,7 @@ Rules::Rules()
     , maxsizerule(UnusedForceRule)
     , opacityactiverule(UnusedForceRule)
     , opacityinactiverule(UnusedForceRule)
-    , ignorepositionrule(UnusedForceRule)
+    , ignoregeometryrule(UnusedSetRule)
     , desktoprule(UnusedSetRule)
     , screenrule(UnusedSetRule)
     , activityrule(UnusedSetRule)
@@ -158,7 +158,7 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     READ_FORCE_RULE(opacityinactive, , 0);
     if (opacityinactive < 0 || opacityinactive > 100)
         opacityinactive = 100;
-    READ_FORCE_RULE(ignoreposition, , false);
+    READ_SET_RULE(ignoregeometry, , false);
     READ_SET_RULE(desktop, , 0);
     READ_SET_RULE(screen, , 0);
     READ_SET_RULE(activity, , QString());
@@ -248,7 +248,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_FORCE_RULE(maxsize,);
     WRITE_FORCE_RULE(opacityactive,);
     WRITE_FORCE_RULE(opacityinactive,);
-    WRITE_FORCE_RULE(ignoreposition,);
+    WRITE_SET_RULE(ignoregeometry,);
     WRITE_SET_RULE(desktop,);
     WRITE_SET_RULE(screen,);
     WRITE_SET_RULE(activity,);
@@ -290,7 +290,7 @@ bool Rules::isEmpty() const
            && maxsizerule == UnusedForceRule
            && opacityactiverule == UnusedForceRule
            && opacityinactiverule == UnusedForceRule
-           && ignorepositionrule == UnusedForceRule
+           && ignoregeometryrule == UnusedSetRule
            && desktoprule == UnusedSetRule
            && screenrule == UnusedSetRule
            && activityrule == UnusedSetRule
@@ -582,13 +582,7 @@ APPLY_FORCE_RULE(minsize, MinSize, QSize)
 APPLY_FORCE_RULE(maxsize, MaxSize, QSize)
 APPLY_FORCE_RULE(opacityactive, OpacityActive, int)
 APPLY_FORCE_RULE(opacityinactive, OpacityInactive, int)
-APPLY_FORCE_RULE(ignoreposition, IgnorePosition, bool)
-
-// the cfg. entry needs to stay named the say for backwards compatibility
-bool Rules::applyIgnoreGeometry(bool& ignore) const
-{
-    return applyIgnorePosition(ignore);
-}
+APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
 APPLY_RULE(desktop, Desktop, int)
 APPLY_RULE(screen, Screen, int)
@@ -680,7 +674,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_FORCE_RULE(maxsize);
     DISCARD_USED_FORCE_RULE(opacityactive);
     DISCARD_USED_FORCE_RULE(opacityinactive);
-    DISCARD_USED_FORCE_RULE(ignoreposition);
+    DISCARD_USED_SET_RULE(ignoregeometry);
     DISCARD_USED_SET_RULE(desktop);
     DISCARD_USED_SET_RULE(screen);
     DISCARD_USED_SET_RULE(activity);
@@ -790,12 +784,7 @@ CHECK_FORCE_RULE(MinSize, QSize)
 CHECK_FORCE_RULE(MaxSize, QSize)
 CHECK_FORCE_RULE(OpacityActive, int)
 CHECK_FORCE_RULE(OpacityInactive, int)
-CHECK_FORCE_RULE(IgnorePosition, bool)
-
-bool WindowRules::checkIgnoreGeometry(bool ignore) const
-{
-    return checkIgnorePosition(ignore);
-}
+CHECK_RULE(IgnoreGeometry, bool)
 
 CHECK_RULE(Desktop, int)
 CHECK_RULE(Activity, QString)
@@ -867,7 +856,7 @@ void Client::applyWindowRules()
     if (geom != orig_geom)
         setGeometry(geom);
     // MinSize, MaxSize handled by Geometry
-    // IgnorePosition
+    // IgnoreGeometry
     setDesktop(desktop());
     workspace()->sendClientToScreen(this, screen());
     setOnActivities(activities());
