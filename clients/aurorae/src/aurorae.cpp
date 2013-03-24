@@ -159,11 +159,8 @@ bool AuroraeFactory::reset(unsigned long changed)
     const QString themeName = group.readEntry("ThemeName", "example-deco");
     const KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
     const KConfigGroup themeGroup(&conf, themeName);
-    if (themeName != m_theme->themeName()) {
-        delete m_engine;
-        m_engine = new QDeclarativeEngine(this);
-        delete m_component;
-        m_component = new QDeclarativeComponent(m_engine, this);
+    if (themeName != m_themeName) {
+        m_engine->clearComponentCache();
         init();
         // recreate all decorations
         return true;

@@ -364,6 +364,7 @@ public:
     void setOnAllActivities(bool set);
     void setOnActivities(QStringList newActivitiesList);
     void updateActivities(bool includeTransients);
+    void blockActivityUpdates(bool b = true);
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
     bool isShown(bool shaded_is_shown) const;
@@ -848,6 +849,8 @@ private:
     Bridge* bridge;
     int desk;
     QStringList activityList;
+    int m_activityUpdatesBlocked;
+    bool m_blockedActivityUpdatesRequireTransients;
     bool buttonDown;
     bool moveResizeMode;
     Window move_resize_grab_window;
