@@ -236,6 +236,8 @@ static const char s_ccVars[] =
     "uniform sampler3D u_ccLookupTexture;\n";
 static const char s_ccAlteration[] =
     "gl_FragColor.rgb = texture3D(u_ccLookupTexture, gl_FragColor.rgb / gl_FragColor.a).rgb * gl_FragColor.a;\n";
+static const char s_ccAlteration_140[] =
+    "fragColor.rgb = texture(u_ccLookupTexture, fragColor.rgb / fragColor.a).rgb * fragColor.a;\n";
 
 
 /*
@@ -546,7 +548,10 @@ QByteArray ColorCorrection::prepareFragmentShader(const QByteArray &sourceCode)
      * the color correction code at the end of the main function.
      * Need to handle return "jumps" inside the main function.
      */
-    mainFunc.insert(mainFunc.size() - 1, s_ccAlteration);
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        mainFunc.insert(mainFunc.size() - 1, s_ccAlteration_140);
+    else
+        mainFunc.insert(mainFunc.size() - 1, s_ccAlteration);
     mainFunc.insert(0, s_ccVars);
 
     // Search for return statements inside the main function
