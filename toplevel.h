@@ -150,7 +150,7 @@ class Toplevel
      * See http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     Q_PROPERTY(int windowType READ windowType)
-    Q_PROPERTY(QStringList activities READ activities)
+    Q_PROPERTY(QStringList activities READ activities NOTIFY activitiesChanged)
     /**
      * Whether this Toplevel is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
@@ -322,6 +322,7 @@ signals:
      * schedule a repaint of the scene.
      **/
     void needsRepaint();
+    void activitiesChanged(KWin::Toplevel* toplevel);
 
 protected:
     virtual ~Toplevel();
