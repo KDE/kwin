@@ -139,7 +139,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     ui.glSwapStrategy->addItem(i18n("None"), "n");
     ui.glSwapStrategy->setItemData(0, i18n("The painting is not synchronized with the screen."), Qt::ToolTipRole);
     ui.glSwapStrategy->addItem(i18n("Automatic"), "a");
-    ui.glSwapStrategy->setItemData(1, i18n("Tries to re-use older buffers and if that is not possible,\npicks a stragtegy matching your hardware."), Qt::ToolTipRole);
+    ui.glSwapStrategy->setItemData(1, i18n("Tries to re-use older buffers and if that is not possible,\npicks a strategy matching your hardware."), Qt::ToolTipRole);
     ui.glSwapStrategy->addItem(i18n("Only when Cheap"), "e");
     ui.glSwapStrategy->setItemData(2, i18n("When major regions of the screen are updated,\nthe entire screen will be repainted.\nCan cause tearing with small updates."), Qt::ToolTipRole);
     ui.glSwapStrategy->addItem(i18n("Full scene repaints"), "p");
