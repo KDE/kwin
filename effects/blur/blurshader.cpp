@@ -178,23 +178,24 @@ void GLSLBlurShader::setPixelDistance(float val)
         pixelSize.setX(val);
     else
         pixelSize.setY(val);
-    shader->setUniform("pixelSize", pixelSize);
+
+    shader->setUniform(pixelSizeLocation, pixelSize);
 }
 
 void GLSLBlurShader::setTextureMatrix(const QMatrix4x4 &matrix)
 {
-    if (!isValid()) {
+    if (!isValid())
         return;
-    }
-    shader->setUniform("u_textureMatrix", matrix);
+
+    shader->setUniform(textureMatrixLocation, matrix);
 }
 
 void GLSLBlurShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
 {
-    if (!isValid()) {
+    if (!isValid())
         return;
-    }
-    shader->setUniform("u_modelViewProjectionMatrix", matrix);
+
+    shader->setUniform(mvpMatrixLocation, matrix);
 }
 
 void GLSLBlurShader::bind()
@@ -269,8 +270,8 @@ void GLSLBlurShader::init()
     if (glsl_140)
         stream << "#version 140\n\n";
 
-    stream << "uniform mat4 u_modelViewProjectionMatrix;\n";
-    stream << "uniform mat4 u_textureMatrix;\n";
+    stream << "uniform mat4 modelViewProjectionMatrix;\n";
+    stream << "uniform mat4 textureMatrix;\n";
     stream << "uniform vec2 pixelSize;\n\n";
     stream << attribute << " vec4 vertex;\n";
     stream << attribute << " vec4 texCoord;\n\n";
@@ -278,7 +279,7 @@ void GLSLBlurShader::init()
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    vec4 center = vec4(u_textureMatrix * texCoord).stst;\n";
+    stream << "    vec4 center = vec4(textureMatrix * texCoord).stst;\n";
     stream << "    vec4 ps = pixelSize.stst;\n\n";
     for (int i = 0; i < offsets.size(); i++) {
         stream << "    samplePos[" << i << "] = center + ps * vec4("
@@ -286,7 +287,7 @@ void GLSLBlurShader::init()
                << offsets[i].z() << ", " << offsets[i].w() << ");\n";
     }
     stream << "\n";
-    stream << "    gl_Position = u_modelViewProjectionMatrix * vertex;\n";
+    stream << "    gl_Position = modelViewProjectionMatrix * vertex;\n";
     stream << "}\n";
     stream.flush();
 
@@ -319,12 +320,15 @@ void GLSLBlurShader::init()
 
     shader = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentSource);
     if (shader->isValid()) {
+        pixelSizeLocation     = shader->uniformLocation("pixelSize");
+        textureMatrixLocation = shader->uniformLocation("textureMatrix");
+        mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
+
         QMatrix4x4 modelViewProjection;
         modelViewProjection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
         ShaderManager::instance()->pushShader(shader);
-        shader->setUniform("texUnit", 0);
-        shader->setUniform("u_textureMatrix", QMatrix4x4());
-        shader->setUniform("u_modelViewProjectionMatrix", modelViewProjection);
+        shader->setUniform(textureMatrixLocation, QMatrix4x4());
+        shader->setUniform(mvpMatrixLocation, modelViewProjection);
         ShaderManager::instance()->popShader();
     }
 

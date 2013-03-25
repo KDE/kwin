@@ -111,6 +111,9 @@ protected:
 
 private:
     GLShader *shader;
+    int mvpMatrixLocation;
+    int textureMatrixLocation;
+    int pixelSizeLocation;
 };
 
 
