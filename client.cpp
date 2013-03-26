@@ -219,6 +219,8 @@ Client::Client(Workspace* ws)
     connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
     connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
     connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
+    connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SLOT(removeCheckScreenConnection()));
+    connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SLOT(setupCheckScreenConnection()));
 
     connect(clientMachine(), SIGNAL(localhostChanged()), SLOT(updateCaption()));
     connect(options, SIGNAL(condensedTitleChanged()), SLOT(updateCaption()));

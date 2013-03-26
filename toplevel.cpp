@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "xcbutils.h"
 
+#include <QDesktopWidget>
+
 namespace KWin
 {
 
@@ -49,8 +51,12 @@ Toplevel::Toplevel(Workspace* ws)
     , unredirect(false)
     , unredirectSuspend(false)
     , m_damageReplyPending(false)
+    , m_screen(0)
 {
     connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
+    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(checkScreen()));
+    connect(QApplication::desktop(), SIGNAL(resized(int)), SLOT(checkScreen()));
+    setupCheckScreenConnection();
 }
 
 Toplevel::~Toplevel()
@@ -140,6 +146,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     wmClientLeaderWin = c->wmClientLeader();
     window_role = c->windowRole();
     opaque_region = c->opaqueRegion();
+    m_screen = c->m_screen;
     // this needs to be done already here, otherwise 'c' could very likely
     // call discardWindowPixmap() in something called during cleanup
     c->window_pix = None;
@@ -324,14 +331,38 @@ void Toplevel::deleteEffectWindow()
     effect_window = NULL;
 }
 
+void Toplevel::checkScreen()
+{
+    if (Workspace::self()->numScreens() == 1) {
+        if (m_screen != 0) {
+            m_screen = 0;
+            emit screenChanged();
+        }
+        return;
+    }
+    const int s = Workspace::self()->screenNumber(geometry().center());
+    if (s != m_screen) {
+        m_screen = s;
+        emit screenChanged();
+    }
+}
+
+void Toplevel::setupCheckScreenConnection()
+{
+    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(checkScreen()));
+    connect(this, SIGNAL(geometryChanged()), SLOT(checkScreen()));
+    checkScreen();
+}
+
+void Toplevel::removeCheckScreenConnection()
+{
+    disconnect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(checkScreen()));
+    disconnect(this, SIGNAL(geometryChanged()), this, SLOT(checkScreen()));
+}
+
 int Toplevel::screen() const
 {
-    int s = workspace()->screenNumber(geometry().center());
-    if (s < 0) {
-        kDebug(1212) << "Invalid screen: Center" << geometry().center() << ", screen" << s;
-        return 0;
-    }
-    return s;
+    return m_screen;
 }
 
 bool Toplevel::isOnScreen(int screen) const

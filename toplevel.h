@@ -57,7 +57,7 @@ class Toplevel
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity NOTIFY opacityChanged)
     Q_PROPERTY(QPoint pos READ pos)
-    Q_PROPERTY(int screen READ screen)
+    Q_PROPERTY(int screen READ screen NOTIFY screenChanged)
     Q_PROPERTY(QSize size READ size)
     Q_PROPERTY(int width READ width)
     Q_PROPERTY(qulonglong windowId READ window CONSTANT)
@@ -326,6 +326,21 @@ signals:
      **/
     void needsRepaint();
     void activitiesChanged(KWin::Toplevel* toplevel);
+    /**
+     * Emitted whenever the Toplevel's screen changes. This can happen either in consequence to
+     * a screen being removed/added or if the Toplevel's geometry changes.
+     * @since 4.11
+     **/
+    void screenChanged();
+
+protected Q_SLOTS:
+    /**
+     * Checks whether the screen number for this Toplevel changed and updates if needed.
+     * Any method changing the geometry of the Toplevel should call this method.
+     **/
+    void checkScreen();
+    void setupCheckScreenConnection();
+    void removeCheckScreenConnection();
 
 protected:
     virtual ~Toplevel();
@@ -394,6 +409,7 @@ private:
     bool m_damageReplyPending;
     QRegion opaque_region;
     xcb_xfixes_fetch_region_cookie_t m_regionCookie;
+    int m_screen;
     // when adding new data members, check also copyToDeleted()
 };
 
