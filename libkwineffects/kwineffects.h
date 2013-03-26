@@ -1757,7 +1757,6 @@ private:
 class KWIN_EXPORT WindowQuad
 {
 public:
-    explicit WindowQuad();
     explicit WindowQuad(WindowQuadType type, int id = -1);
     WindowQuad makeSubQuad(double x1, double y1, double x2, double y2) const;
     WindowVertex& operator[](int index);
@@ -1784,7 +1783,7 @@ private:
 };
 
 class KWIN_EXPORT WindowQuadList
-    : public QVector<WindowQuad>
+    : public QList< WindowQuad >
 {
 public:
     WindowQuadList splitAtX(double x) const;
@@ -2692,13 +2691,6 @@ void WindowVertex::setY(double y)
 /***************************************************************
  WindowQuad
 ***************************************************************/
-
-inline
-WindowQuad::WindowQuad()
-    : quadType(WindowQuadError)
-    , quadID(-1)
-{
-}
 
 inline
 WindowQuad::WindowQuad(WindowQuadType t, int id)
