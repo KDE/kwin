@@ -398,6 +398,10 @@ void GlxBackend::present()
         SceneOpenGL::copyPixels(lastDamage());
         glDrawBuffer(GL_BACK);
     }
+
+    glXWaitGL();
+    setLastDamage(QRegion());
+    XFlush(display());
 }
 
 void GlxBackend::screenGeometryChanged(const QSize &size)
