@@ -36,6 +36,7 @@ namespace KWin
 ThumbnailItem::ThumbnailItem(QDeclarativeItem* parent)
     : QDeclarativeItem(parent)
     , m_wId(0)
+    , m_client(NULL)
     , m_clip(true)
     , m_parent(QWeakPointer<EffectWindowImpl>())
     , m_parentWindow(0)
@@ -108,8 +109,31 @@ void ThumbnailItem::findParentEffectWindow()
 
 void ThumbnailItem::setWId(qulonglong wId)
 {
+    if (m_wId == wId) {
+        return;
+    }
     m_wId = wId;
+    if (m_wId != 0) {
+        setClient(Workspace::self()->findClient(WindowMatchPredicate(m_wId)));
+    } else if (m_client) {
+        m_client = NULL;
+        emit clientChanged();
+    }
     emit wIdChanged(wId);
+}
+
+void ThumbnailItem::setClient(Client *client)
+{
+    if (m_client == client) {
+        return;
+    }
+    m_client = client;
+    if (m_client) {
+        setWId(m_client->window());
+    } else {
+        setWId(0);
+    }
+    emit clientChanged();
 }
 
 void ThumbnailItem::setClip(bool clip)

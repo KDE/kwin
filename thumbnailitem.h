@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class Client;
 class EffectWindow;
 class EffectWindowImpl;
 
@@ -38,6 +39,7 @@ class ThumbnailItem : public QDeclarativeItem
     Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
     Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
+    Q_PROPERTY(KWin::Client *client READ client WRITE setClient NOTIFY clientChanged)
 public:
     explicit ThumbnailItem(QDeclarativeItem *parent = 0);
     virtual ~ThumbnailItem();
@@ -57,6 +59,8 @@ public:
     void setParentWindow(qulonglong parentWindow);
     qreal brightness() const;
     qreal saturation() const;
+    Client *client() const;
+    void setClient(Client *client);
 
 public Q_SLOTS:
     void setBrightness(qreal brightness);
@@ -67,6 +71,7 @@ Q_SIGNALS:
     void clipChanged(bool clipped);
     void brightnessChanged();
     void saturationChanged();
+    void clientChanged();
 private Q_SLOTS:
     void init();
     void effectWindowAdded();
@@ -75,6 +80,7 @@ private Q_SLOTS:
 private:
     void findParentEffectWindow();
     qulonglong m_wId;
+    Client *m_client;
     bool m_clip;
     QWeakPointer<EffectWindowImpl> m_parent;
     qulonglong m_parentWindow;
@@ -92,6 +98,12 @@ inline
 qreal ThumbnailItem::saturation() const
 {
     return m_saturation;
+}
+
+inline
+Client *ThumbnailItem::client() const
+{
+    return m_client;
 }
 
 } // KWin
