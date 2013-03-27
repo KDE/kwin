@@ -30,9 +30,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QtScript/QScriptEngineAgent>
 
+class QDeclarativeComponent;
+class QDeclarativeEngine;
 class QAction;
-class QDeclarativeView;
 class QDBusPendingCallWatcher;
+class QGraphicsScene;
 class QMenu;
 class QMutex;
 class QScriptEngine;
@@ -275,8 +277,13 @@ public:
 public Q_SLOTS:
     Q_SCRIPTABLE void run();
 
+private Q_SLOTS:
+    void createComponent();
+
 private:
-    QScopedPointer<QDeclarativeView> m_view;
+    QDeclarativeEngine *m_engine;
+    QDeclarativeComponent *m_component;
+    QGraphicsScene *m_scene;
 };
 
 /**

@@ -529,7 +529,9 @@ void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
-    , m_view(new QDeclarativeView())
+    , m_engine(new QDeclarativeEngine(this))
+    , m_component(new QDeclarativeComponent(m_engine, this))
+    , m_scene(new QGraphicsScene(this))
 {
 }
 
@@ -542,21 +544,14 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-    m_view->setAttribute(Qt::WA_TranslucentBackground);
-    m_view->setWindowFlags(Qt::X11BypassWindowManagerHint);
-    m_view->setResizeMode(QDeclarativeView::SizeViewToRootObject);
-    QPalette pal = m_view->palette();
-    pal.setColor(m_view->backgroundRole(), Qt::transparent);
-    m_view->setPalette(pal);
-
 
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_view->engine()->addImportPath(importPath);
+        m_engine->addImportPath(importPath);
     }
 
     // add read config
     KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(m_view->engine());
+    kdeclarative.setDeclarativeEngine(m_engine);
     kdeclarative.initialize();
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
@@ -568,9 +563,23 @@ void KWin::DeclarativeScript::run()
     qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 0, 1, "ClientFilterModel");
     qmlRegisterType<KWin::Client>();
 
-    m_view->rootContext()->setContextProperty("options", options);
+    m_engine->rootContext()->setContextProperty("options", options);
 
-    m_view->setSource(QUrl::fromLocalFile(scriptFile().fileName()));
+    m_component->loadUrl(QUrl::fromLocalFile(scriptFile().fileName()));
+    if (m_component->isLoading()) {
+        connect(m_component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), SLOT(createComponent()));
+    } else {
+        createComponent();
+    }
+}
+
+void KWin::DeclarativeScript::createComponent()
+{
+    if (m_component->isError()) {
+        kDebug(1212) << "Component failed to load: " << m_component->errors();
+    } else {
+        m_scene->addItem(qobject_cast<QDeclarativeItem*>(m_component->create()));
+    }
     setRunning(true);
 }
 
