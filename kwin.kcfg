@@ -235,9 +235,6 @@
         <entry name="Enabled" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="GLVSync" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="GLTextureFilter" type="Int">
             <default>2</default>
             <min>-1</min>

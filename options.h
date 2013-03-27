@@ -170,7 +170,6 @@ class Options : public QObject, public KDecorationOptions
      * -1 = auto
      **/
     Q_PROPERTY(int glSmoothScale READ glSmoothScale WRITE setGlSmoothScale NOTIFY glSmoothScaleChanged)
-    Q_PROPERTY(bool glVSync READ isGlVSync WRITE setGlVSync NOTIFY glVSyncChanged)
     Q_PROPERTY(bool colorCorrected READ isColorCorrected WRITE setColorCorrected NOTIFY colorCorrectedChanged)
     Q_PROPERTY(bool xrenderSmoothScale READ isXrenderSmoothScale WRITE setXrenderSmoothScale NOTIFY xrenderSmoothScaleChanged)
     Q_PROPERTY(uint maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
@@ -517,9 +516,6 @@ public:
     int glSmoothScale() const {
         return m_glSmoothScale;
     }
-    bool isGlVSync() const {
-        return m_glVSync;
-    }
     bool isColorCorrected() const {
         return m_colorCorrected;
     }
@@ -608,7 +604,6 @@ public:
     void setHiddenPreviews(int hiddenPreviews);
     void setUnredirectFullscreen(bool unredirectFullscreen);
     void setGlSmoothScale(int glSmoothScale);
-    void setGlVSync(bool glVSync);
     void setXrenderSmoothScale(bool xrenderSmoothScale);
     void setMaxFpsInterval(uint maxFpsInterval);
     void setRefreshRate(uint refreshRate);
@@ -691,9 +686,6 @@ public:
     }
     static int defaultGlSmoothScale() {
         return 2;
-    }
-    static bool defaultGlVSync() {
-        return true;
     }
     static bool defaultColorCorrected() {
         return false;
@@ -798,7 +790,6 @@ Q_SIGNALS:
     void hiddenPreviewsChanged();
     void unredirectFullscreenChanged();
     void glSmoothScaleChanged();
-    void glVSyncChanged();
     void colorCorrectedChanged();
     void xrenderSmoothScaleChanged();
     void maxFpsIntervalChanged();
@@ -848,7 +839,6 @@ private:
     HiddenPreviews m_hiddenPreviews;
     bool m_unredirectFullscreen;
     int m_glSmoothScale;
-    bool m_glVSync;
     bool m_colorCorrected;
     bool m_xrenderSmoothScale;
     uint m_maxFpsInterval;

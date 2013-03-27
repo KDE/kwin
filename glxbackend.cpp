@@ -96,7 +96,8 @@ void GlxBackend::init()
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported
     haveSwapInterval = glXSwapIntervalMESA || glXSwapIntervalEXT || glXSwapIntervalSGI;
-    if (options->isGlVSync()) {
+    const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
+    if (wantSync) {
         if (glXGetVideoSync && haveSwapInterval && glXIsDirect(display(), ctx)) {
             unsigned int sync;
             if (glXGetVideoSync(&sync) == 0) {
@@ -108,14 +109,16 @@ void GlxBackend::init()
                     // swapinterval (as of today) seems completely unsupported
                     setHasWaitSync(true);
                     setSwapInterval(1);
-                }
-                else
+                } else
                     qWarning() << "NO VSYNC! glXWaitVideoSync(1,0,&uint) isn't 0 but" << glXWaitVideoSync(1, 0, &sync);
             } else
                 qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync(&sync);
         } else
             qWarning() << "NO VSYNC! glXGetVideoSync, haveSwapInterval, glXIsDirect" <<
                         bool(glXGetVideoSync) << haveSwapInterval << glXIsDirect(display(), ctx);
+    } else {
+        // disable v-sync (if possible)
+        setSwapInterval(0);
     }
     if (glPlatform->isVirtualBox()) {
         // VirtualBox does not support glxQueryDrawable

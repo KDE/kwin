@@ -151,7 +151,6 @@ Options::Options(QObject *parent)
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
     , m_unredirectFullscreen(Options::defaultUnredirectFullscreen())
     , m_glSmoothScale(Options::defaultGlSmoothScale())
-    , m_glVSync(Options::defaultGlVSync())
     , m_colorCorrected(Options::defaultColorCorrected())
     , m_xrenderSmoothScale(Options::defaultXrenderSmoothScale())
     , m_maxFpsInterval(Options::defaultMaxFpsInterval())
@@ -679,15 +678,6 @@ void Options::setGlSmoothScale(int glSmoothScale)
     emit glSmoothScaleChanged();
 }
 
-void Options::setGlVSync(bool glVSync)
-{
-    if (m_glVSync == glVSync) {
-        return;
-    }
-    m_glVSync = glVSync;
-    emit glVSyncChanged();
-}
-
 void Options::setColorCorrected(bool colorCorrected)
 {
     if (m_colorCorrected == colorCorrected) {
@@ -968,7 +958,6 @@ void Options::reloadCompositingSettings(bool force)
     KConfigGroup config(_config, "Compositing");
 
     setGlDirect(prefs.enableDirectRendering());
-    setGlVSync(config.readEntry("GLVSync", Options::defaultGlVSync()));
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));
     setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
     if (!isGlStrictBindingFollowsDriver()) {
@@ -977,13 +966,11 @@ void Options::reloadCompositingSettings(bool force)
     setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
 
     char c = 0;
-    if (isGlVSync()) { // buffer swap enforcement makes little sense without
-        const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
-        if (!s.isEmpty())
-            c = s.at(0).toAscii();
-        if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
-            c = 0;
-    }
+    const QString s = config.readEntry("GLPreferBufferSwap", QString(Options::defaultGlPreferBufferSwap()));
+    if (!s.isEmpty())
+        c = s.at(0).toAscii();
+    if (c != 'a' && c != 'c' && c != 'p' && c != 'e')
+        c = 0;
     setGlPreferBufferSwap(c);
 
     setColorCorrected(config.readEntry("GLColorCorrection", Options::defaultColorCorrected()));
