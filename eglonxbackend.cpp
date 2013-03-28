@@ -258,6 +258,9 @@ bool EglOnXBackend::initBufferConfigs()
 
 void EglOnXBackend::present()
 {
+    if (lastDamage().isEmpty())
+        return;
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -301,16 +304,18 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
 
 void EglOnXBackend::prepareRenderingFrame()
 {
-    if (!lastDamage().isEmpty())
-        present();
-    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+    present();
     startRenderTimer();
+    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 }
 
 void EglOnXBackend::endRenderingFrame(const QRegion &damage)
 {
     setLastDamage(damage);
     glFlush();
+    if (!blocksForRetrace()) {
+        present(); // this sets lastDamage emtpy and prevents execution from prepareRenderingFrame()
+    }
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long

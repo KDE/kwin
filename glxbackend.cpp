@@ -407,11 +407,13 @@ void GlxBackend::waitSync()
         glXWaitVideoSync(1, 0, &sync);
 #endif
     }
-    startRenderTimer(); // yes, the framerate shall be constant anyway.
 }
 
 void GlxBackend::present()
 {
+    if (lastDamage().isEmpty())
+        return;
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -422,7 +424,6 @@ void GlxBackend::present()
                 m_swapProfiler.begin();
             }
             glXSwapBuffers(display(), glxWindow);
-            startRenderTimer();
             if (gs_tripleBufferNeedsDetection) {
                 glXWaitGL();
                 if (char result = m_swapProfiler.end()) {
@@ -431,7 +432,7 @@ void GlxBackend::present()
                 }
             }
         } else {
-            waitSync(); // calls startRenderTimer();
+            waitSync();
             glXSwapBuffers(display(), glxWindow);
         }
     } else if (glXCopySubBuffer) {
@@ -472,8 +473,8 @@ SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Textu
 
 void GlxBackend::prepareRenderingFrame()
 {
-    if (!lastDamage().isEmpty())
-        present();
+    present();
+    startRenderTimer();
     glXWaitX();
 }
 
@@ -481,6 +482,9 @@ void GlxBackend::endRenderingFrame(const QRegion &damage)
 {
     setLastDamage(damage);
     glFlush();
+    if (!blocksForRetrace()) {
+        present(); // this sets lastDamage emtpy and prevents execution from prepareRenderingFrame()
+    }
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
