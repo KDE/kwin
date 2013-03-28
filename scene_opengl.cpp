@@ -76,7 +76,8 @@ extern int currentRefreshRate();
 //****************************************
 OpenGLBackend::OpenGLBackend()
     : m_overlayWindow(new OverlayWindow()) // TODO: maybe create only if needed?
-    , m_waitSync(false)
+    , m_syncsToVBlank(false)
+    , m_blocksForRetrace(false)
     , m_directRendering(false)
     , m_failed(false)
 {
@@ -239,9 +240,14 @@ OverlayWindow *SceneOpenGL::overlayWindow()
     return m_backend->overlayWindow();
 }
 
-bool SceneOpenGL::waitSyncAvailable() const
+bool SceneOpenGL::syncsToVBlank() const
 {
-    return m_backend->waitSyncAvailable();
+    return m_backend->syncsToVBlank();
+}
+
+bool SceneOpenGL::blocksForRetrace() const
+{
+    return m_backend->blocksForRetrace();
 }
 
 void SceneOpenGL::idle()
@@ -2218,6 +2224,36 @@ bool SceneOpenGLShadow::prepareBackend()
     m_texture = new GLTexture(image);
 
     return true;
+}
+
+SwapProfiler::SwapProfiler()
+{
+    init();
+}
+
+void SwapProfiler::init()
+{
+    m_time = 2 * 1000*1000; // we start with a long time mean of 2ms ...
+    m_counter = 0;
+}
+
+void SwapProfiler::begin()
+{
+    m_timer.start();
+}
+
+char SwapProfiler::end()
+{
+    // .. and blend in actual values.
+    // this way we prevent extremes from killing our long time mean
+    m_time = (10*m_time + m_timer.nsecsElapsed())/11;
+    if (++m_counter > 500) {
+        const bool blocks = m_time > 1000 * 1000; // 1ms, i get ~250µs and ~7ms w/o triple buffering...
+        kDebug(1212) << "Triple buffering detection:" << QString(blocks ? "NOT available" : "Available") <<
+                        " - Mean block time:" << m_time/(1000.0*1000.0) << "ms";
+        return blocks ? 'd' : 't';
+    }
+    return 0;
 }
 
 } // namespace

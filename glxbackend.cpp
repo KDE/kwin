@@ -69,6 +69,9 @@ GlxBackend::~GlxBackend()
     checkGLError("Cleanup");
 }
 
+static bool gs_tripleBufferUndetected = true;
+static bool gs_tripleBufferNeedsDetection = false;
+
 void GlxBackend::init()
 {
     initGLX();
@@ -96,26 +99,32 @@ void GlxBackend::init()
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported
     haveSwapInterval = glXSwapIntervalMESA || glXSwapIntervalEXT || glXSwapIntervalSGI;
+    setSyncsToVBlank(false);
+    setBlocksForRetrace(false);
+    haveWaitSync = false;
+    gs_tripleBufferNeedsDetection = false;
+    m_swapProfiler.init();
     const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
-    if (wantSync) {
-        if (glXGetVideoSync && haveSwapInterval && glXIsDirect(display(), ctx)) {
+    if (wantSync && glXIsDirect(display(), ctx)) {
+        if (haveSwapInterval) { // glXSwapInterval is preferred being more reliable
+            setSwapInterval(1);
+            setSyncsToVBlank(true);
+            const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
+            if (!tripleBuffer.isEmpty()) {
+                setBlocksForRetrace(qstrcmp(tripleBuffer, "0") == 0);
+                gs_tripleBufferUndetected = false;
+            }
+            gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
+        } else if (glXGetVideoSync) {
             unsigned int sync;
-            if (glXGetVideoSync(&sync) == 0) {
-                if (glXWaitVideoSync(1, 0, &sync) == 0) {
-                    // NOTICE at this time we should actually check whether we can successfully
-                    // deactivate the swapInterval "glXSwapInterval(0) == 0"
-                    // (because we don't actually want it active unless we explicitly run a glXSwapBuffers)
-                    // However mesa/dri will return a range error (6) because deactivating the
-                    // swapinterval (as of today) seems completely unsupported
-                    setHasWaitSync(true);
-                    setSwapInterval(1);
-                } else
-                    qWarning() << "NO VSYNC! glXWaitVideoSync(1,0,&uint) isn't 0 but" << glXWaitVideoSync(1, 0, &sync);
+            if (glXGetVideoSync(&sync) == 0 && glXWaitVideoSync(1, 0, &sync) == 0) {
+                setSyncsToVBlank(true);
+                setBlocksForRetrace(true);
+                haveWaitSync = true;
             } else
-                qWarning() << "NO VSYNC! glXGetVideoSync(&uint) isn't 0 but" << glXGetVideoSync(&sync);
+                qWarning() << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
         } else
-            qWarning() << "NO VSYNC! glXGetVideoSync, haveSwapInterval, glXIsDirect" <<
-                        bool(glXGetVideoSync) << haveSwapInterval << glXIsDirect(display(), ctx);
+            qWarning() << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
     } else {
         // disable v-sync (if possible)
         setSwapInterval(0);
@@ -364,7 +373,7 @@ void GlxBackend::setSwapInterval(int interval)
 void GlxBackend::waitSync()
 {
     // NOTE that vsync has no effect with indirect rendering
-    if (waitSyncAvailable()) {
+    if (haveWaitSync) {
 #if VSYNC_DEBUG
         startRenderTimer();
 #endif
@@ -403,8 +412,19 @@ void GlxBackend::present()
 
     if (fullRepaint) {
         if (haveSwapInterval) {
+            if (gs_tripleBufferNeedsDetection) {
+                glXWaitGL();
+                m_swapProfiler.begin();
+            }
             glXSwapBuffers(display(), glxWindow);
             startRenderTimer();
+            if (gs_tripleBufferNeedsDetection) {
+                glXWaitGL();
+                if (char result = m_swapProfiler.end()) {
+                    gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
+                    setBlocksForRetrace(result == 'd');
+                }
+            }
         } else {
             waitSync(); // calls startRenderTimer();
             glXSwapBuffers(display(), glxWindow);

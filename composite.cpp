@@ -235,7 +235,7 @@ void Compositor::slotCompositingOptionsInitialized()
     }
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = (options->maxFpsInterval() << 10);
-    if (m_scene->waitSyncAvailable()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
+    if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
         vBlankInterval = (1000 << 10) / m_xrrRefreshRate;
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
@@ -648,7 +648,7 @@ void Compositor::setCompositeTimer()
 
     uint padding = m_timeSinceLastVBlank << 10;
 
-    if (m_scene->waitSyncAvailable()) {
+    if (m_scene->blocksForRetrace()) {
 
         // TODO: make vBlankTime dynamic?!
         // It's required because glXWaitVideoSync will *likely* block a full frame if one enters

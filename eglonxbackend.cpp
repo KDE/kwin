@@ -53,6 +53,9 @@ EglOnXBackend::~EglOnXBackend()
     }
 }
 
+static bool gs_tripleBufferUndetected = true;
+static bool gs_tripleBufferNeedsDetection = false;
+
 void EglOnXBackend::init()
 {
     if (!initRenderingContext()) {
@@ -88,6 +91,10 @@ void EglOnXBackend::init()
             }
         }
     }
+    setSyncsToVBlank(false);
+    setBlocksForRetrace(false);
+    gs_tripleBufferNeedsDetection = false;
+    m_swapProfiler.init();
     if (surfaceHasSubPost) {
         kDebug(1212) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
@@ -98,7 +105,13 @@ void EglOnXBackend::init()
             if (val >= 1) {
                 if (eglSwapInterval(dpy, 1)) {
                     kDebug(1212) << "Enabled v-sync";
-                    setHasWaitSync(true);
+                    setSyncsToVBlank(true);
+                    const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
+                    if (!tripleBuffer.isEmpty()) {
+                        setBlocksForRetrace(qstrcmp(tripleBuffer, "0") == 0);
+                        gs_tripleBufferUndetected = false;
+                    }
+                    gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
                 }
             } else {
                 kWarning(1212) << "Cannot enable v-sync as max. swap interval is" << val;
@@ -249,8 +262,19 @@ void EglOnXBackend::present()
     const bool fullRepaint = (lastDamage() == displayRegion);
 
     if (fullRepaint || !surfaceHasSubPost) {
+        if (gs_tripleBufferNeedsDetection) {
+            eglWaitGL();
+            m_swapProfiler.begin();
+        }
         // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
         eglSwapBuffers(dpy, surface);
+        if (gs_tripleBufferNeedsDetection) {
+            eglWaitGL();
+            if (char result = m_swapProfiler.end()) {
+                gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
+                setBlocksForRetrace(result == 'd');
+            }
+        }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
         foreach (const QRect & r, lastDamage().rects()) {

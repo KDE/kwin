@@ -51,7 +51,8 @@ public:
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
     virtual OverlayWindow *overlayWindow();
-    virtual bool waitSyncAvailable() const;
+    virtual bool blocksForRetrace() const;
+    virtual bool syncsToVBlank() const;
 
     void idle();
 
@@ -383,6 +384,27 @@ private:
 };
 
 /**
+ * @short Profiler to detect whether we have triple buffering
+ * The strategy is to start setBlocksForRetrace(false) but assume blocking and have the system prove that assumption wrong
+ **/
+class SwapProfiler
+{
+public:
+    SwapProfiler();
+    void init();
+    void begin();
+    /**
+     * @return char being 'd' for double, 't' for triple (or more - but non-blocking) buffering and
+     * 0 (NOT '0') otherwise, so you can act on "if (char result = SwapProfiler::end()) { fooBar(); }
+     **/
+    char end();
+private:
+    QElapsedTimer m_timer;
+    qint64  m_time;
+    int m_counter;
+};
+
+/**
  * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
  *
  * The OpenGLBackend is an abstract base class used by the SceneOpenGL to abstract away the differences
@@ -462,8 +484,17 @@ public:
      *
      * @return bool @c true if VSync support is available, @c false otherwise
      **/
-    bool waitSyncAvailable() const {
-        return m_waitSync;
+    bool syncsToVBlank() const {
+        return m_syncsToVBlank;
+    }
+    /**
+     * @brief Whether VSync blocks execution until the screen is in the retrace
+     *
+     * Case for waitVideoSync and non triple buffering buffer swaps
+     *
+     **/
+    bool blocksForRetrace() const {
+        return m_blocksForRetrace;
     }
     /**
      * @brief Whether the backend uses direct rendering.
@@ -497,8 +528,18 @@ protected:
      * If the subclass does not call this method, the backend defaults to @c false.
      * @param enabled @c true if VSync support available, @c false otherwise.
      **/
-    void setHasWaitSync(bool enabled) {
-        m_waitSync = enabled;
+    void setSyncsToVBlank(bool enabled) {
+        m_syncsToVBlank = enabled;
+    }
+    /**
+     * @brief Sets whether the VSync iplementation blocks
+     *
+     * Should be called by the concrete subclass once it is determined how VSync works.
+     * If the subclass does not call this method, the backend defaults to @c false.
+     * @param enabled @c true if VSync blocks, @c false otherwise.
+     **/
+    void setBlocksForRetrace(bool enabled) {
+        m_blocksForRetrace = enabled;
     }
     /**
      * @brief Sets whether the OpenGL context is direct.
@@ -530,15 +571,21 @@ protected:
         m_renderTimer.start();
     }
 
+    SwapProfiler m_swapProfiler;
+
 private:
     /**
      * @brief The OverlayWindow used by this Backend.
      **/
     OverlayWindow *m_overlayWindow;
     /**
-     * @brief Whether VSync is available, defaults to @c false.
+     * @brief Whether VSync is available and used, defaults to @c false.
      **/
-    bool m_waitSync;
+    bool m_syncsToVBlank;
+    /**
+     * @brief Whether present() will block execution until the next vertical retrace @c false.
+     **/
+    bool m_blocksForRetrace;
     /**
      * @brief Whether direct rendering is used, defaults to @c false.
      **/

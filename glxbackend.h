@@ -64,7 +64,7 @@ private:
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
-    bool haveSwapInterval;
+    bool haveSwapInterval, haveWaitSync;
     friend class GlxTexture;
 };
 
