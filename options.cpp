@@ -685,7 +685,7 @@ void Options::setXrenderSmoothScale(bool xrenderSmoothScale)
     emit xrenderSmoothScaleChanged();
 }
 
-void Options::setMaxFpsInterval(uint maxFpsInterval)
+void Options::setMaxFpsInterval(qint64 maxFpsInterval)
 {
     if (m_maxFpsInterval == maxFpsInterval) {
         return;
@@ -703,7 +703,7 @@ void Options::setRefreshRate(uint refreshRate)
     emit refreshRateChanged();
 }
 
-void Options::setVBlankTime(uint vBlankTime)
+void Options::setVBlankTime(qint64 vBlankTime)
 {
     if (m_vBlankTime == vBlankTime) {
         return;
@@ -839,9 +839,9 @@ unsigned long Options::loadConfig()
 
     // TODO: should they be moved into reloadCompositingSettings?
     config = KConfigGroup(_config, "Compositing");
-    setMaxFpsInterval(qRound(1000.0 / config.readEntry("MaxFPS", Options::defaultMaxFps())));
+    setMaxFpsInterval(1 * 1000 * 1000 * 1000 / config.readEntry("MaxFPS", Options::defaultMaxFps()));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
-    setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()));
+    setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()) * 1000); // config in micro, value in nano resolution
 
     return changed;
 }

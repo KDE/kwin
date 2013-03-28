@@ -296,7 +296,7 @@ private:
     QTimer m_releaseSelectionTimer;
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
-    uint vBlankInterval, fpsInterval;
+    qint64 vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
     QElapsedTimer nextPaintReference;
     QRegion repaints_region;
@@ -306,7 +306,8 @@ private:
     QTimer compositeResetTimer; // for compressing composite resets
     bool m_finishing; // finish() sets this variable while shutting down
     bool m_starting; // start() sets this variable while starting
-    int m_timeSinceLastVBlank, m_nextFrameDelay;
+    qint64 m_timeSinceLastVBlank;
+    int m_nextFrameDelay;
     Scene *m_scene;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)

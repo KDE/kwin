@@ -275,7 +275,7 @@ void SceneOpenGL::copyPixels(const QRegion &region)
 }
 #endif
 
-int SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
+qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
     foreach (Toplevel * c, toplevels) {
@@ -753,7 +753,7 @@ SceneOpenGL1::~SceneOpenGL1()
 {
 }
 
-int SceneOpenGL1::paint(QRegion damage, ToplevelList windows)
+qint64 SceneOpenGL1::paint(QRegion damage, ToplevelList windows)
 {
     if (m_resetModelViewProjectionMatrix) {
         // reset model view projection matrix if required

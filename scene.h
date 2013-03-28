@@ -60,7 +60,7 @@ public:
     // The entry point for the main part of the painting pass.
     // returns the time since the last vblank signal - if there's one
     // ie. "what of this frame is lost to painting"
-    virtual int paint(QRegion damage, ToplevelList windows) = 0;
+    virtual qint64 paint(QRegion damage, ToplevelList windows) = 0;
 
     // Notification function - KWin core informs about changes.
     // Used to mainly discard cached data.

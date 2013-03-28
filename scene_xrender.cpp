@@ -175,7 +175,7 @@ void SceneXrender::createBuffer()
 }
 
 // the entry point for painting
-int SceneXrender::paint(QRegion damage, ToplevelList toplevels)
+qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
 {
     QElapsedTimer renderTimer;
     renderTimer.start();
@@ -195,7 +195,7 @@ int SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     // do cleanup
     stacking_order.clear();
 
-    return renderTimer.elapsed();
+    return renderTimer.nsecsElapsed();
 }
 
 void SceneXrender::present(int mask, QRegion damage)

@@ -46,7 +46,7 @@ public:
     virtual ~SceneOpenGL();
     virtual bool initFailed() const;
     virtual bool hasPendingFlush() const;
-    virtual int paint(QRegion damage, ToplevelList windows);
+    virtual qint64 paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual void screenGeometryChanged(const QSize &size);
@@ -137,7 +137,7 @@ public:
     explicit SceneOpenGL1(OpenGLBackend *backend);
     virtual ~SceneOpenGL1();
     virtual void screenGeometryChanged(const QSize &size);
-    virtual int paint(QRegion damage, ToplevelList windows);
+    virtual qint64 paint(QRegion damage, ToplevelList windows);
     virtual CompositingType compositingType() const {
         return OpenGL1Compositing;
     }
@@ -428,7 +428,7 @@ public:
      * @see startRenderTimer
      **/
     qint64 renderTime() {
-        return m_renderTimer.elapsed();
+        return m_renderTimer.nsecsElapsed();
     }
     virtual void screenGeometryChanged(const QSize &size) = 0;
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) = 0;

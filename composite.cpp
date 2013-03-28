@@ -75,6 +75,9 @@ void CompositorSelectionOwner::looseOwnership()
 
 KWIN_SINGLETON_FACTORY_VARIABLE(Compositor, s_compositor)
 
+static inline qint64 milliToNano(int milli) { return milli * 1000 * 1000; }
+static inline qint64 nanoToMilli(int nano) { return nano / (1000*1000); }
+
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)
     , m_suspended(options->isUseCompositing() ? NoReasonSuspend : UserSuspend)
@@ -234,13 +237,13 @@ void Compositor::slotCompositingOptionsInitialized()
         return;
     }
     m_xrrRefreshRate = KWin::currentRefreshRate();
-    fpsInterval = (options->maxFpsInterval() << 10);
+    fpsInterval = options->maxFpsInterval();
     if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate
-        vBlankInterval = (1000 << 10) / m_xrrRefreshRate;
+        vBlankInterval = milliToNano(1000) / m_xrrRefreshRate;
         fpsInterval = qMax((fpsInterval / vBlankInterval) * vBlankInterval, vBlankInterval);
     } else
-        vBlankInterval = 1 << 10; // no sync - DO NOT set "0", would cause div-by-zero segfaults.
-    m_timeSinceLastVBlank = fpsInterval - 1; // means "start now" - we don't have even a slight idea when the first vsync will occur
+        vBlankInterval = milliToNano(1); // no sync - DO NOT set "0", would cause div-by-zero segfaults.
+    m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now" - we don't have even a slight idea when the first vsync will occur
     scheduleRepaint();
     xcb_composite_redirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
     new EffectsHandlerImpl(this, m_scene);   // sets also the 'effects' pointer
@@ -646,7 +649,7 @@ void Compositor::setCompositeTimer()
     if (!hasScene())  // should not really happen, but there may be e.g. some damage events still pending
         return;
 
-    uint padding = m_timeSinceLastVBlank << 10;
+    uint waitTime = 1;
 
     if (m_scene->blocksForRetrace()) {
 
@@ -656,6 +659,7 @@ void Compositor::setCompositeTimer()
         // Now, my ooold 19" CRT can do such retrace so that 2ms are entirely sufficient,
         // while another ooold 15" TFT requires about 6ms
 
+        qint64 padding = m_timeSinceLastVBlank;
         if (padding > fpsInterval) {
             // we're at low repaints or spent more time in painting than the user wanted to wait for that frame
             padding = vBlankInterval - (padding%vBlankInterval); // -> align to next vblank
@@ -665,19 +669,19 @@ void Compositor::setCompositeTimer()
         }
 
         if (padding < options->vBlankTime()) { // we'll likely miss this frame
-            m_nextFrameDelay = (padding + vBlankInterval) >> 10;
-            padding = (padding + vBlankInterval - options->vBlankTime()) >> 10; // so we add one
+            m_nextFrameDelay = nanoToMilli(padding + vBlankInterval);
+            waitTime = nanoToMilli(padding + vBlankInterval - options->vBlankTime()); // so we add one
 //             qDebug() << "WE LOST A FRAME";
         } else {
-            m_nextFrameDelay = padding >> 10;
-            padding = (padding - options->vBlankTime()) >> 10;
+            m_nextFrameDelay = nanoToMilli(padding);
+            waitTime = nanoToMilli(padding - options->vBlankTime());
         }
     }
     else // w/o vsync we just jump to the next demanded tick
         // the "1" will ensure we don't block out the eventloop - the system's just not faster
         // "0" would be sufficient, but the compositor isn't the WMs only task
-        m_nextFrameDelay = padding = (padding > fpsInterval) ? 1 : ((fpsInterval - padding) >> 10);
-    compositeTimer.start(qMin(padding, 250u), this); // force 4fps minimum
+        m_nextFrameDelay = waitTime = (m_timeSinceLastVBlank > fpsInterval) ? 1 : nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
+    compositeTimer.start(qMin(waitTime, 250u), this); // force 4fps minimum
 }
 
 bool Compositor::isActive()
