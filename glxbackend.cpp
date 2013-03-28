@@ -436,7 +436,6 @@ void GlxBackend::present()
             glXSwapBuffers(display(), glxWindow);
         }
     } else if (glXCopySubBuffer) {
-        waitSync();
         foreach (const QRect & r, lastDamage().rects()) {
             // convert to OpenGL coordinates
             int y = displayHeight() - r.y() - r.height();
@@ -444,7 +443,6 @@ void GlxBackend::present()
         }
     } else { // Copy Pixels (horribly slow on Mesa)
         glDrawBuffer(GL_FRONT);
-        waitSync();
         SceneOpenGL::copyPixels(lastDamage());
         glDrawBuffer(GL_BACK);
     }
