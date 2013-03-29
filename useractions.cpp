@@ -1297,7 +1297,7 @@ static bool screenSwitchImpossible()
     if (!options->isActiveMouseScreen())
         return false;
     QStringList args;
-    args << "--passivepopup" << i18n("The window manager is confgured to consider the screen with the mouse on it as active one.\n"
+    args << "--passivepopup" << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
                                      "Therefore it is not possible to switch to a screen explicitly.") << "20";
     KProcess::startDetached("kdialog", args);
     return true;
