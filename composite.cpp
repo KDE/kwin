@@ -1065,19 +1065,25 @@ bool Toplevel::updateUnredirectedState()
     assert(compositing());
     bool should = shouldUnredirect() && !unredirectSuspend && !shape() && !hasAlpha() && opacity() == 1.0 &&
                   !static_cast<EffectsHandlerImpl*>(effects)->activeFullScreenEffect();
-    if (should && !unredirect) {
-        unredirect = true;
+    if (should == unredirect)
+        return false;
+    static QElapsedTimer lastUnredirect;
+    static const qint64 msecRedirectInterval = 100;
+    if (!lastUnredirect.hasExpired(msecRedirectInterval)) {
+        QTimer::singleShot(msecRedirectInterval, Compositor::self(), SLOT(checkUnredirect()));
+        return false;
+    }
+    lastUnredirect.start();
+    unredirect = should;
+    if (unredirect) {
         kDebug(1212) << "Unredirecting:" << this;
         xcb_composite_unredirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
-        return true;
-    } else if (!should && unredirect) {
-        unredirect = false;
+    } else {
         kDebug(1212) << "Redirecting:" << this;
         xcb_composite_redirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
         discardWindowPixmap();
-        return true;
     }
-    return false;
+    return true;
 }
 
 void Toplevel::suspendUnredirect(bool suspend)
