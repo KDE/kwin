@@ -1574,6 +1574,7 @@ void Client::updateActivities(bool includeTransients)
         m_blockedActivityUpdatesRequireTransients |= includeTransients;
         return;
     }
+    emit activitiesChanged(this);
     m_blockedActivityUpdatesRequireTransients = false; // reset
     if (includeTransients)
         workspace()->updateOnAllActivitiesOfTransients(this);
