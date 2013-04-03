@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
+#include "screens.h"
 #include "effects.h"
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
@@ -68,7 +69,7 @@ extern bool is_multihead;
 void Workspace::desktopResized()
 {
     QRect geom;
-    for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
+    for (int i = 0; i < screens()->count(); i++) {
         //do NOT use - QApplication::desktop()->screenGeometry(i) there could be a virtual geometry
         // see bug #302783
         geom |= QApplication::desktop()->screen(i)->geometry();
@@ -99,9 +100,9 @@ void Workspace::saveOldScreenSizes()
     olddisplaysize = QSize( displayWidth(), displayHeight());
     oldscreensizes.clear();
     for( int i = 0;
-         i < numScreens();
+         i < screens()->count();
          ++i )
-        oldscreensizes.append( screenGeometry( i ));
+        oldscreensizes.append( screens()->geometry( i ));
 }
 
 /*!
@@ -118,7 +119,8 @@ void Workspace::saveOldScreenSizes()
 
 void Workspace::updateClientArea(bool force)
 {
-    int nscreens = QApplication::desktop()->screenCount();
+    const Screens *s = Screens::self();
+    int nscreens = s->count();
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
     kDebug(1212) << "screens: " << nscreens << "desktops: " << numberOfDesktops;
     QVector< QRect > new_wareas(numberOfDesktops + 1);
@@ -126,13 +128,13 @@ void Workspace::updateClientArea(bool force)
     QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
     QVector< QRect > screens(nscreens);
     QRect desktopArea;
-    for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
-        desktopArea |= QApplication::desktop()->screenGeometry(i);
+    for (int i = 0; i < nscreens; i++) {
+        desktopArea |= s->geometry(i);
     }
     for (int iS = 0;
             iS < nscreens;
             iS ++) {
-        screens [iS] = QApplication::desktop()->screenGeometry(iS);
+        screens [iS] = s->geometry(iS);
     }
     for (int i = 1;
             i <= numberOfDesktops;
@@ -266,7 +268,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     if (desktop == NETWinInfo::OnAllDesktops || desktop == 0)
         desktop = VirtualDesktopManager::self()->current();
     if (screen == -1)
-        screen = activeScreen();
+        screen = screens()->current();
 
     QRect sarea, warea;
 
@@ -274,15 +276,15 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
         sarea = (!screenarea.isEmpty()
                    && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
                   ? screenarea[ desktop ][ screen_number ]
-                  : QApplication::desktop()->screenGeometry(screen_number);
+                  : screens()->geometry(screen_number);
         warea = workarea[ desktop ].isNull()
-                ? QApplication::desktop()->screenGeometry(screen_number)
+                ? screens()->geometry(screen_number)
                 : workarea[ desktop ];
     } else {
         sarea = (!screenarea.isEmpty()
                 && screen < screenarea[ desktop ].size()) // screens may be missing during KWin initialization or screen config changes
                 ? screenarea[ desktop ][ screen ]
-                : QApplication::desktop()->screenGeometry(screen);
+                : screens()->geometry(screen);
         warea = workarea[ desktop ].isNull()
                 ? QRect(0, 0, displayWidth(), displayHeight())
                 : workarea[ desktop ];
@@ -297,9 +299,9 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
     case MovementArea:
     case ScreenArea:
         if (is_multihead)
-            return QApplication::desktop()->screenGeometry(screen_number);
+            return screens()->geometry(screen_number);
         else
-            return QApplication::desktop()->screenGeometry(screen);
+            return screens()->geometry(screen);
     case WorkArea:
         if (is_multihead)
             return sarea;
@@ -314,8 +316,7 @@ QRect Workspace::clientArea(clientAreaOption opt, int screen, int desktop) const
 
 QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {
-    int screen = QApplication::desktop()->screenNumber(p);
-    return clientArea(opt, screen, desktop);
+    return clientArea(opt, screens()->number(p), desktop);
 }
 
 QRect Workspace::clientArea(clientAreaOption opt, const Client* c) const
@@ -1029,9 +1030,8 @@ bool Client::hasOffscreenXineramaStrut() const
     region += strutRect(StrutAreaLeft);
 
     // Remove all visible areas so that only the invisible remain
-    int numScreens = QApplication::desktop()->screenCount();
-    for (int i = 0; i < numScreens; i ++)
-        region -= QApplication::desktop()->screenGeometry(i);
+    for (int i = 0; i < screens()->count(); i ++)
+        region -= screens()->geometry(i);
 
     // If there's anything left then we have an offscreen strut
     return !region.isEmpty();
@@ -1651,7 +1651,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
             nh = rh;
         QSize ns = sizeForClientSize(QSize(nw, nh));     // enforces size if needed
         new_pos = rules()->checkPosition(new_pos);
-        int newScreen = workspace()->screenNumber(QRect(new_pos, ns).center());
+        int newScreen = screens()->number(QRect(new_pos, ns).center());
         if (newScreen != rules()->checkScreen(newScreen))
             return; // not allowed by rule
 
@@ -1931,7 +1931,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
 
     // keep track of old maximize mode
     // to detect changes
-    workspace()->checkActiveScreen(this);
+    screens()->setCurrent(this);
     workspace()->updateStackingOrder();
 
     // need to regenerate decoration pixmaps when either
@@ -2004,7 +2004,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 
     sendSyntheticConfigureNotify();
     updateWindowRules(Rules::Position|Rules::Size);
-    workspace()->checkActiveScreen(this);
+    screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     discardWindowPixmap();
     emit geometryShapeChanged(this, geom_before_block);
@@ -2048,7 +2048,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     XMoveWindow(display(), frameId(), x, y);
     sendSyntheticConfigureNotify();
     updateWindowRules(Rules::Position);
-    workspace()->checkActiveScreen(this);
+    screens()->setCurrent(this);
     workspace()->updateStackingOrder();
     if (Compositor::isCreated()) {
         // TODO: move out of geometry.cpp, is this really needed here?
@@ -2438,7 +2438,7 @@ void Client::setFullScreen(bool set, bool user)
 
 void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
-    int nscreens = QApplication::desktop()->screenCount();
+    int nscreens = screens()->count();
 
 //    kDebug( 1212 ) << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
 //                   << " left: " << topology.left << " right: " << topology.right
@@ -2466,10 +2466,10 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
 {
     QRect top, bottom, left, right, total;
 
-    top = QApplication::desktop()->screenGeometry(requestedTopology.top);
-    bottom = QApplication::desktop()->screenGeometry(requestedTopology.bottom);
-    left = QApplication::desktop()->screenGeometry(requestedTopology.left);
-    right = QApplication::desktop()->screenGeometry(requestedTopology.right);
+    top = screens()->geometry(requestedTopology.top);
+    bottom = screens()->geometry(requestedTopology.bottom);
+    left = screens()->geometry(requestedTopology.left);
+    right = screens()->geometry(requestedTopology.right);
     total = top.united(bottom.united(left.united(right)));
 
 //    kDebug( 1212 ) << "top: " << top << " bottom: " << bottom
@@ -2958,7 +2958,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         assert(mode == PositionCenter);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
             // Special moving of maximized windows on Xinerama screens
-            int screen = workspace()->screenNumber(globalPos);
+            int screen = screens()->number(globalPos);
             if (isFullScreen())
                 moveResizeGeom = workspace()->clientArea(FullScreenArea, screen, 0);
             else {
@@ -3003,7 +3003,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     // by moving the window slightly downwards, but it won't stuck)
                     // see bug #274466
                     // and bug #301805 for why we can't just match the titlearea against the screen
-                    if (QApplication::desktop()->screenCount() > 1) { // optimization
+                    if (screens()->count() > 1) { // optimization
                         // TODO: could be useful on partial screen struts (half-width panels etc.)
                         int newTitleTop = -1;
                         foreach (const QRect &r, strut.rects()) {
@@ -3205,12 +3205,12 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise ignore the request to prevent corrupting geom_restore.
         if (quick_tile_mode == mode) {
-            const int numScreens = QApplication::desktop()->screenCount();
+            const int numScreens = screens()->count();
             const int curScreen = screen();
             int nextScreen = curScreen;
             QVarLengthArray<QRect> screens(numScreens);
             for (int i = 0; i < numScreens; ++i)   // Cache
-                screens[i] = QApplication::desktop()->screenGeometry(i);
+                screens[i] = Screens::self()->geometry(i);
             for (int i = 0; i < numScreens; ++i) {
                 if (i == curScreen)
                     continue;

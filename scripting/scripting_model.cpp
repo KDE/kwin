@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scripting_model.h"
 #include "activities.h"
 #include "client.h"
-// Qt
-#include <QDesktopWidget>
+#include "screens.h"
 
 #include <KDE/KDebug>
 
@@ -327,7 +326,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
 #endif
     }
     case ClientModel::ScreenRestriction:
-        for (int i=0; i<Workspace::self()->numScreens(); ++i) {
+        for (int i=0; i<screens()->count(); ++i) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
                 continue;
@@ -401,7 +400,7 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     , m_childRestrictions(childRestrictions)
 {
     connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), SLOT(desktopCountChanged(uint,uint)));
-    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(screenCountChanged(int)));
+    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(screenCountChanged(int,int)));
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::self();
     connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
@@ -444,13 +443,12 @@ void ForkLevel::desktopCountChanged(uint previousCount, uint newCount)
     }
 }
 
-void ForkLevel::screenCountChanged(int newCount)
+void ForkLevel::screenCountChanged(int previousCount, int newCount)
 {
     if (restriction() != ClientModel::ClientModel::ClientModel::ScreenRestriction) {
         return;
     }
-    const int previousCount = m_children.count();
-    if (newCount == previousCount) {
+    if (newCount == previousCount || previousCount != count()) {
         return;
     }
 

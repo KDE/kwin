@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "group.h"
 #include "rules.h"
+#include "screens.h"
 #include "useractions.h"
 #include <QX11Info>
 
@@ -378,8 +379,8 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         return;
     }
     c->takeActivity(flags, handled, Allowed);
-    if (!c->isOnScreen(active_screen))
-        active_screen = c->screen();
+    if (!c->isOnActiveScreen())
+        screens()->setCurrent(c->screen());
 }
 
 void Workspace::handleTakeActivity(Client* c, Time /*timestamp*/, int flags)
@@ -465,7 +466,7 @@ bool Workspace::activateNextClient(Client* c)
     }
 
     if (!get_focus && options->isNextFocusPrefersMouse()) {
-        get_focus = clientUnderMouse(c ? c->screen() : activeScreen());
+        get_focus = clientUnderMouse(c ? c->screen() : screens()->current());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
             // should rather not happen, but it cannot get the focus. rest of usability is tested above
             get_focus = NULL;
@@ -498,7 +499,7 @@ bool Workspace::activateNextClient(Client* c)
 
 void Workspace::setCurrentScreen(int new_screen)
 {
-    if (new_screen < 0 || new_screen >= numScreens())
+    if (new_screen < 0 || new_screen >= screens()->count())
         return;
     if (!options->focusPolicyIsReasonable())
         return;
@@ -509,7 +510,7 @@ void Workspace::setCurrentScreen(int new_screen)
         get_focus = findDesktop(true, desktop);
     if (get_focus != NULL && get_focus != mostRecentlyActivatedClient())
         requestFocus(get_focus);
-    active_screen = new_screen;
+    screens()->setCurrent(new_screen);
 }
 
 void Workspace::gotFocusIn(const Client* c)

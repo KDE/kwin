@@ -189,13 +189,7 @@ private:
     // Unsorted
 
 public:
-    int activeScreen() const;
-    int numScreens() const;
-    void checkActiveScreen(const Client* c);
     bool isOnCurrentHead();
-    void setActiveScreenMouse(const QPoint& mousepos);
-    QRect screenGeometry(int screen) const;
-    int screenNumber(const QPoint& pos) const;
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
@@ -409,7 +403,6 @@ public slots:
 
 private slots:
     void desktopResized();
-    void screenChangeTimeout();
     void slotUpdateToolWindows();
     void delayFocus();
     void gotTemporaryRulesMessage(const QString&);
@@ -503,7 +496,6 @@ private:
     QList<Rules*> rules;
     KXMessages temporaryRulesMessages;
     QTimer rulesUpdatedTimer;
-    QTimer screenChangedTimer;
     bool rules_updates_disabled;
     static const char* windowTypeToTxt(NET::WindowType type);
     static NET::WindowType txtToWindowType(const char* txt);
@@ -514,7 +506,6 @@ private:
     Client* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     Client* movingClient;
     Client* pending_take_activity;
-    int active_screen;
 
     // Delay(ed) window focus timer and client
     QTimer* delayFocusTimer;

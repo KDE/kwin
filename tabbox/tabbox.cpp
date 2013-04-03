@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "focuschain.h"
+#include "screens.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 // Qt
@@ -87,7 +88,7 @@ TabBoxHandlerImpl::~TabBoxHandlerImpl()
 
 int TabBoxHandlerImpl::activeScreen() const
 {
-    return Workspace::self()->activeScreen();
+    return screens()->current();
 }
 
 int TabBoxHandlerImpl::currentDesktop() const
@@ -235,15 +236,14 @@ bool TabBoxHandlerImpl::checkMinimized(TabBoxClient* client) const
 bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
 {
     Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
-    Workspace* workspace = Workspace::self();
 
     switch (config().clientMultiScreenMode()) {
     case TabBoxConfig::IgnoreMultiScreen:
         return true;
     case TabBoxConfig::ExcludeCurrentScreenClients:
-        return current->screen() != workspace->activeScreen();
+        return current->screen() != screens()->current();
     default:       // TabBoxConfig::OnlyCurrentScreenClients
-        return current->screen() == workspace->activeScreen();
+        return current->screen() == screens()->current();
     }
 }
 
@@ -317,7 +317,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
     foreach (Toplevel *toplevel, Workspace::self()->stackingOrder()) {
         Client *client = qobject_cast<Client*>(toplevel);
-        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == Workspace::self()->activeScreen()) {
+        if (client && client->isDesktop() && client->isOnCurrentDesktop() && client->screen() == screens()->current()) {
             return client->tabBoxClient();
         }
     }

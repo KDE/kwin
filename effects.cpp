@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scriptedeffect.h"
 #endif
+#include "screens.h"
 #include "thumbnailitem.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -1079,17 +1080,17 @@ void EffectsHandlerImpl::addRepaint(int x, int y, int w, int h)
 
 int EffectsHandlerImpl::activeScreen() const
 {
-    return Workspace::self()->activeScreen();
+    return screens()->current();
 }
 
 int EffectsHandlerImpl::numScreens() const
 {
-    return Workspace::self()->numScreens();
+    return screens()->count();
 }
 
 int EffectsHandlerImpl::screenNumber(const QPoint& pos) const
 {
-    return Workspace::self()->screenNumber(pos);
+    return screens()->number(pos);
 }
 
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, int screen, int desktop) const

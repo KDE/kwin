@@ -29,10 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "client_machine.h"
 #include "effects.h"
+#include "screens.h"
 #include "shadow.h"
 #include "xcbutils.h"
-
-#include <QDesktopWidget>
 
 namespace KWin
 {
@@ -57,8 +56,7 @@ Toplevel::Toplevel(Workspace* ws)
     , m_screen(0)
 {
     connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
-    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(checkScreen()));
-    connect(QApplication::desktop(), SIGNAL(resized(int)), SLOT(checkScreen()));
+    connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
     setupCheckScreenConnection();
 }
 
@@ -336,14 +334,14 @@ void Toplevel::deleteEffectWindow()
 
 void Toplevel::checkScreen()
 {
-    if (Workspace::self()->numScreens() == 1) {
+    if (screens()->count() == 1) {
         if (m_screen != 0) {
             m_screen = 0;
             emit screenChanged();
         }
         return;
     }
-    const int s = Workspace::self()->screenNumber(geometry().center());
+    const int s = screens()->number(geometry().center());
     if (s != m_screen) {
         m_screen = s;
         emit screenChanged();
@@ -370,7 +368,12 @@ int Toplevel::screen() const
 
 bool Toplevel::isOnScreen(int screen) const
 {
-    return workspace()->screenGeometry(screen).intersects(geometry());
+    return screens()->geometry(screen).intersects(geometry());
+}
+
+bool Toplevel::isOnActiveScreen() const
+{
+    return isOnScreen(screens()->current());
 }
 
 void Toplevel::getShadow()

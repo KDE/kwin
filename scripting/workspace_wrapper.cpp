@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "../client.h"
 #include "../outline.h"
+#include "../screens.h"
 #include "../virtualdesktops.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "../activities.h"
@@ -85,8 +86,6 @@ rettype WorkspaceWrapper::getterName( ) const { \
 }
 GETTER(KWin::Client*, activeClient)
 GETTER(QList< KWin::Client* >, clientList)
-GETTER(int, activeScreen)
-GETTER(int, numScreens)
 
 #undef GETTER
 
@@ -284,6 +283,16 @@ int WorkspaceWrapper::workspaceHeight() const
 int WorkspaceWrapper::workspaceWidth() const
 {
     return desktopGridWidth() * displayWidth();
+}
+
+int WorkspaceWrapper::numScreens() const
+{
+    return screens()->count();
+}
+
+int WorkspaceWrapper::activeScreen() const
+{
+    return screens()->current();
 }
 
 } // KWin

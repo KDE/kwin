@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lanczosfilter.h"
 #include "overlaywindow.h"
 #include "paintredirector.h"
+#include "screens.h"
 
 #include <math.h>
 
@@ -56,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QGraphicsScale>
-#include <QDesktopWidget>
 #include <QStringList>
 #include <QVector2D>
 #include <QVector4D>
@@ -650,11 +650,11 @@ void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region
 {
     if (m_colorCorrection->isEnabled()) {
         // Split the painting for separate screens
-        int numScreens = Workspace::self()->numScreens();
+        const int numScreens = screens()->count();
         for (int screen = 0; screen < numScreens; ++ screen) {
             QRegion regionForScreen(region);
             if (numScreens > 1)
-                regionForScreen = region.intersected(Workspace::self()->screenGeometry(screen));
+                regionForScreen = region.intersected(screens()->geometry(screen));
 
             data.setScreen(screen);
             performPaintWindow(w, mask, regionForScreen, data);
@@ -670,8 +670,7 @@ void SceneOpenGL2::performPaintWindow(EffectWindowImpl* w, int mask, QRegion reg
         if (!m_lanczosFilter) {
             m_lanczosFilter = new LanczosFilter(this);
             // recreate the lanczos filter when the screen gets resized
-            connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(resetLanczosFilter()));
-            connect(QApplication::desktop(), SIGNAL(resized(int)), SLOT(resetLanczosFilter()));
+            connect(screens(), SIGNAL(changed()), SLOT(resetLanczosFilter()));
         }
         m_lanczosFilter->performPaint(w, mask, region, data);
     } else

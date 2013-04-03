@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ktoolinvocation.h>
 
 #ifndef KCMRULES
-#include <QDesktopWidget>
 #include "client.h"
 #include "client_machine.h"
+#include "screens.h"
 #include "workspace.h"
 #endif
 
@@ -808,7 +808,7 @@ int WindowRules::checkScreen(int screen, bool init) const
         if ( (*it)->applyScreen( ret, init ))
             break;
     }
-    if (ret >= QApplication::desktop()->screenCount())
+    if (ret >= Screens::self()->count())
         ret = screen;
     return ret;
 }

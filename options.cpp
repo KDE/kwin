@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobalsettings.h>
 #include <klocale.h>
 
-#include <QDesktopWidget>
-
 #include "client.h"
 #include "compositingprefs.h"
 #include "settings.h"
@@ -130,7 +128,6 @@ Options::Options(QObject *parent)
     , m_shadeHover(false)
     , m_shadeHoverInterval(0)
     , m_separateScreenFocus(false)
-    , m_activeMouseScreen(false)
     , m_placement(Placement::NoPlacement)
     , m_borderSnapZone(0)
     , m_windowSnapZone(0)
@@ -295,15 +292,6 @@ void Options::setSeparateScreenFocus(bool separateScreenFocus)
     }
     m_separateScreenFocus = separateScreenFocus;
     emit separateScreenFocusChanged(m_separateScreenFocus);
-}
-
-void Options::setActiveMouseScreen(bool activeMouseScreen)
-{
-    if (m_activeMouseScreen == activeMouseScreen) {
-        return;
-    }
-    m_activeMouseScreen = activeMouseScreen;
-    emit activeMouseScreenChanged();
 }
 
 void Options::setPlacement(int placement)
@@ -855,7 +843,6 @@ void Options::syncFromKcfgc()
     setFocusPolicy(m_settings->focusPolicy());
     setNextFocusPrefersMouse(m_settings->nextFocusPrefersMouse());
     setSeparateScreenFocus(m_settings->separateScreenFocus());
-    setActiveMouseScreen(m_settings->activeMouseScreen());
     setRollOverDesktops(m_settings->rollOverDesktops());
     setLegacyFullscreenSupport(m_settings->legacyFullscreenSupport());
     setFocusStealingPreventionLevel(m_settings->focusStealingPreventionLevel());

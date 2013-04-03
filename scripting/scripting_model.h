@@ -192,7 +192,7 @@ public:
     virtual Client *clientForId(quint32 child) const;
 private Q_SLOTS:
     void desktopCountChanged(uint previousCount, uint newCount);
-    void screenCountChanged(int newCount);
+    void screenCountChanged(int previousCount, int newCount);
     void activityAdded(const QString &id);
     void activityRemoved(const QString &id);
 private:

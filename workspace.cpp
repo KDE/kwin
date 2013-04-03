@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <QDesktopWidget>
 #include <QRegExp>
 #include <QPainter>
 #include <QBitmap>
@@ -65,6 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
+#include "screens.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
@@ -114,7 +114,6 @@ Workspace::Workspace(bool restore)
     , most_recently_raised(0)
     , movingClient(0)
     , pending_take_activity(NULL)
-    , active_screen(0)
     , delayfocus_client(0)
     , force_restacking(false)
     , x_stacking_dirty(true)
@@ -152,6 +151,10 @@ Workspace::Workspace(bool restore)
 
     // start the cursor support
     Cursor::create(this);
+
+    // get screen support
+    Screens *screens = Screens::create(this);
+    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
 
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::create(this);
@@ -234,23 +237,14 @@ Workspace::Workspace(bool restore)
     initShortcuts();
 
     init();
-
-    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), &screenChangedTimer, SLOT(start()));
-    connect(QApplication::desktop(), SIGNAL(resized(int)), &screenChangedTimer, SLOT(start()));
-
-    connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
-    screenChangedTimer.setSingleShot(true);
-    screenChangedTimer.setInterval(100);
-}
-
-void Workspace::screenChangeTimeout()
-{
-    kDebug() << "It is time to call desktopResized";
-    desktopResized();
 }
 
 void Workspace::init()
 {
+    Screens *screens = Screens::self();
+    screens->setConfig(KGlobal::config());
+    screens->reconfigure();
+    connect(options, SIGNAL(configChanged()), screens, SLOT(reconfigure()));
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges *screenEdges = ScreenEdges::self();
     screenEdges->setConfig(KGlobal::config());
@@ -463,8 +457,8 @@ void Workspace::init()
         rootInfo->setDesktopViewport(VirtualDesktopManager::self()->count(), *viewports);
         delete[] viewports;
         QRect geom;
-        for (int i = 0; i < QApplication::desktop()->screenCount(); i++) {
-            geom |= QApplication::desktop()->screenGeometry(i);
+        for (int i = 0; i < screens->count(); i++) {
+            geom |= screens->geometry(i);
         }
         NETSize desktop_geometry;
         desktop_geometry.width = geom.width();
@@ -1126,7 +1120,7 @@ Client *Workspace::findClientToActivateOnDesktop(uint desktop)
             }
 
             if (!(client->isShown(false) && client->isOnDesktop(desktop) &&
-                client->isOnCurrentActivity() && client->isOnScreen(activeScreen())))
+                client->isOnCurrentActivity() && client->isOnActiveScreen()))
                 continue;
 
             if (client->geometry().contains(Cursor::pos())) {
@@ -1305,33 +1299,6 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
     updateClientArea();
 }
 
-int Workspace::numScreens() const
-{
-    return QApplication::desktop()->screenCount();
-}
-
-int Workspace::activeScreen() const
-{
-    if (!options->isActiveMouseScreen()) {
-        if (activeClient() != NULL && !activeClient()->isOnScreen(active_screen))
-            return activeClient()->screen();
-        return active_screen;
-    }
-    return QApplication::desktop()->screenNumber(cursorPos());
-}
-
-/**
- * Check whether a client moved completely out of what's considered the active screen,
- * if yes, set a new active screen.
- */
-void Workspace::checkActiveScreen(const Client* c)
-{
-    if (!c->isActive())
-        return;
-    if (!c->isOnScreen(active_screen))
-        active_screen = c->screen();
-}
-
 /**
  * checks whether the X Window with the input focus is on our X11 screen
  * if the window cannot be determined or inspected, resturn depends on whether there's actually
@@ -1360,30 +1327,11 @@ bool Workspace::isOnCurrentHead()
     return rootWindow() == geometry->root;
 }
 
-/**
- * Called e.g. when a user clicks on a window, set active screen to be the screen
- * where the click occurred
- */
-void Workspace::setActiveScreenMouse(const QPoint& mousepos)
-{
-    active_screen = QApplication::desktop()->screenNumber(mousepos);
-}
-
-QRect Workspace::screenGeometry(int screen) const
-{
-    return QApplication::desktop()->screenGeometry(screen);
-}
-
-int Workspace::screenNumber(const QPoint& pos) const
-{
-    return QApplication::desktop()->screenNumber(pos);
-}
-
 void Workspace::sendClientToScreen(Client* c, int screen)
 {
     screen = c->rules()->checkScreen(screen);
     if (c->isActive()) {
-        active_screen = screen;
+        screens()->setCurrent(screen);
         // might impact the layer of a fullscreen window
         foreach (Client *cc, clientList()) {
             if (cc->isFullScreen() && cc->screen() == screen) {
@@ -1654,9 +1602,9 @@ QString Workspace::supportInformation() const
     } else {
         support.append("no\n");
     }
-    support.append(QString("Number of Screens: %1\n").arg(QApplication::desktop()->screenCount()));
-    for (int i=0; i<QApplication::desktop()->screenCount(); ++i) {
-        const QRect geo = QApplication::desktop()->screenGeometry(i);
+    support.append(QString("Number of Screens: %1\n").arg(screens()->count()));
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect geo = screens()->geometry(i);
         support.append(QString("Screen %1 Geometry: %2,%3,%4x%5\n")
                               .arg(i)
                               .arg(geo.x())

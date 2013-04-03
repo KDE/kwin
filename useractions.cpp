@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations.h"
 #include "workspace.h"
 #include "effects.h"
+#include "screens.h"
 #include "virtualdesktops.h"
 
 #ifdef KWIN_BUILD_SCRIPTING
@@ -408,7 +409,6 @@ void UserActionsMenu::menuAboutToShow()
 {
     if (m_client.isNull() || !m_menu)
         return;
-    Workspace *ws = Workspace::self();
 
     if (VirtualDesktopManager::self()->count() == 1) {
         delete m_desktopMenu;
@@ -416,7 +416,7 @@ void UserActionsMenu::menuAboutToShow()
     } else {
         initDesktopPopup();
     }
-    if (ws->numScreens() == 1 || (!m_client.data()->isMovable() && !m_client.data()->isMovableAcrossScreens())) {
+    if (screens()->count() == 1 || (!m_client.data()->isMovable() && !m_client.data()->isMovableAcrossScreens())) {
         delete m_screenMenu;
         m_screenMenu = NULL;
     } else {
@@ -688,7 +688,7 @@ void UserActionsMenu::screenPopupAboutToShow()
     m_screenMenu->clear();
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
-    for (int i = 0; i<Workspace::self()->numScreens(); ++i) {
+    for (int i = 0; i<screens()->count(); ++i) {
         // TODO: retrieve the screen name?
         // assumption: there are not more than 9 screens attached.
         QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to",
@@ -796,12 +796,11 @@ void UserActionsMenu::slotSendToScreen(QAction *action)
     if (m_client.isNull()) {
         return;
     }
-    Workspace *ws = Workspace::self();
-    if (screen >= ws->numScreens()) {
+    if (screen >= screens()->count()) {
         return;
     }
 
-    ws->sendClientToScreen(m_client.data(), screen);
+    Workspace::self()->sendClientToScreen(m_client.data(), screen);
 }
 
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
@@ -1126,37 +1125,37 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
             }
         }
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled && replay);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         replay = replay || mustReplay;
         break;
     }
     case Options::MouseActivateAndLower:
         workspace()->requestFocus(this);
         workspace()->lowerClient(this);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         replay = replay || !rules()->checkAcceptFocus(input);
         break;
     case Options::MouseActivate:
         replay = isActive(); // for clickraise mode
         workspace()->takeActivity(this, ActivityFocus, handled && replay);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         replay = replay || !rules()->checkAcceptFocus(input);
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         replay = true;
         break;
     case Options::MouseActivateAndPassClick:
         workspace()->takeActivity(this, ActivityFocus, handled);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         replay = true;
         break;
     case Options::MouseActivateRaiseAndMove:
     case Options::MouseActivateRaiseAndUnrestrictedMove:
         workspace()->raiseClient(this);
         workspace()->requestFocus(this);
-        workspace()->setActiveScreenMouse(globalPos);
+        screens()->setCurrent(globalPos);
         // fallthrough
     case Options::MouseMove:
     case Options::MouseUnrestrictedMove: {
@@ -1298,7 +1297,7 @@ void Workspace::slotWindowToDesktop()
 
 static bool screenSwitchImpossible()
 {
-    if (!options->isActiveMouseScreen())
+    if (!screens()->isCurrentFollowsMouse())
         return false;
     QStringList args;
     args << "--passivepopup" << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
@@ -1320,7 +1319,7 @@ void Workspace::slotSwitchToNextScreen()
 {
     if (screenSwitchImpossible())
         return;
-    setCurrentScreen((activeScreen() + 1) % numScreens());
+    setCurrentScreen((screens()->current() + 1) % screens()->count());
 }
 
 void Workspace::slotWindowToScreen()
@@ -1329,7 +1328,7 @@ void Workspace::slotWindowToScreen()
         const int i = senderValue(sender());
         if (i < 0)
             return;
-        if (i >= 0 && i <= numScreens()) {
+        if (i >= 0 && i <= screens()->count()) {
             sendClientToScreen(active_client, i);
         }
     }
@@ -1338,7 +1337,7 @@ void Workspace::slotWindowToScreen()
 void Workspace::slotWindowToNextScreen()
 {
     if (USABLE_ACTIVE_CLIENT)
-        sendClientToScreen(active_client, (active_client->screen() + 1) % numScreens());
+        sendClientToScreen(active_client, (active_client->screen() + 1) % screens()->count());
 }
 
 /*!

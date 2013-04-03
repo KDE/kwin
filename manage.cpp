@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"
+#include "screens.h"
 #include "xcbutils.h"
 
 namespace KWin
@@ -238,9 +239,9 @@ bool Client::manage(Window w, bool isMapped)
     if (isMapped || session)
         area = workspace()->clientArea(FullArea, geom.center(), desktop());
     else {
-        int screen = asn_data.xinerama() == -1 ? workspace()->activeScreen() : asn_data.xinerama();
+        int screen = asn_data.xinerama() == -1 ? screens()->current() : asn_data.xinerama();
         screen = rules()->checkScreen(screen, !isMapped);
-        area = workspace()->clientArea(PlacementArea, workspace()->screenGeometry(screen).center(), desktop());
+        area = workspace()->clientArea(PlacementArea, screens()->geometry(screen).center(), desktop());
     }
 
     if (int type = checkFullScreenHack(geom)) {

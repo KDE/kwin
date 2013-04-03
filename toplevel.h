@@ -180,6 +180,7 @@ public:
     int width() const;
     int height() const;
     bool isOnScreen(int screen) const;   // true if it's at least partially there
+    bool isOnActiveScreen() const;
     int screen() const; // the screen where the center is
     virtual QPoint clientPos() const = 0; // inside of geometry()
     virtual QSize clientSize() const = 0;

@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "effects.h"
+#include "screens.h"
 #include "utils.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
@@ -43,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
-#include <QDesktopWidget>
 
 namespace KWin {
 
@@ -676,8 +676,7 @@ void ScreenEdges::updateLayout()
 
 static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 {
-    const QDesktopWidget *desktop = QApplication::desktop();
-    if (desktop->screenCount() == 1) {
+    if (screens()->count() == 1) {
         return true;
     }
     if (screen.x() == fullArea.x()) {
@@ -685,8 +684,8 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also on the left in case of a vertical layout with a second screen
     // more to the left. In that case no screen ends left of screen's x coord
-    for (int i=0; i<desktop->screenCount(); ++i) {
-        const QRect otherGeo = desktop->screenGeometry(i);
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect otherGeo = screens()->geometry(i);
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -702,8 +701,7 @@ static bool isLeftScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 {
-    const QDesktopWidget *desktop = QApplication::desktop();
-    if (desktop->screenCount() == 1) {
+    if (screens()->count() == 1) {
         return true;
     }
     if (screen.x() + screen.width() == fullArea.x() + fullArea.width()) {
@@ -711,8 +709,8 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also on the right in case of a vertical layout with a second screen
     // more to the right. In that case no screen starts right of this screen
-    for (int i=0; i<desktop->screenCount(); ++i) {
-        const QRect otherGeo = desktop->screenGeometry(i);
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect otherGeo = screens()->geometry(i);
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -728,8 +726,7 @@ static bool isRightScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 {
-    const QDesktopWidget *desktop = QApplication::desktop();
-    if (desktop->screenCount() == 1) {
+    if (screens()->count() == 1) {
         return true;
     }
     if (screen.y() == fullArea.y()) {
@@ -737,8 +734,8 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also top most in case of a horizontal layout with a second screen
     // more to the top. In that case no screen ends above screen's y coord
-    for (int i=0; i<desktop->screenCount(); ++i) {
-        const QRect otherGeo = desktop->screenGeometry(i);
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect otherGeo = screens()->geometry(i);
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -754,8 +751,7 @@ static bool isTopScreen(const QRect &screen, const QRect &fullArea)
 
 static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
 {
-    const QDesktopWidget *desktop = QApplication::desktop();
-    if (desktop->screenCount() == 1) {
+    if (screens()->count() == 1) {
         return true;
     }
     if (screen.y() + screen.height() == fullArea.y() + fullArea.height()) {
@@ -763,8 +759,8 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
     }
     // the screen is also bottom most in case of a horizontal layout with a second screen
     // more below. In that case no screen starts below screen's y coord + height
-    for (int i=0; i<desktop->screenCount(); ++i) {
-        const QRect otherGeo = desktop->screenGeometry(i);
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect otherGeo = screens()->geometry(i);
         if (otherGeo == screen) {
             // that's our screen to test
             continue;
@@ -783,9 +779,8 @@ void ScreenEdges::recreateEdges()
     QList<WindowBasedEdge*> oldEdges(m_edges);
     m_edges.clear();
     const QRect fullArea(0, 0, displayWidth(), displayHeight());
-    const QDesktopWidget *desktop = QApplication::desktop();
-    for (int i=0; i<desktop->screenCount(); ++i) {
-        const QRect screen = desktop->screenGeometry(i);
+    for (int i=0; i<screens()->count(); ++i) {
+        const QRect screen = screens()->geometry(i);
         if (isLeftScreen(screen, fullArea)) {
             // left most screen
             createVerticalEdge(ElectricLeft, screen, fullArea);

@@ -45,11 +45,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
+#include "screens.h"
 #include "xcbutils.h"
 
 #include <QWhatsThis>
-#include <QApplication>
-#include <QDesktopWidget>
 
 #include <kkeyserver.h>
 
@@ -1348,9 +1347,9 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
 
     QuickTileMode mode = QuickTileNone;
-    for (int i=0; i<QApplication::desktop()->screenCount(); ++i) {
+    for (int i=0; i<screens()->count(); ++i) {
 
-        const QRect &area = QApplication::desktop()->screenGeometry(i);
+        const QRect &area = screens()->geometry(i);
         if (!area.contains(QPoint(xroot, yroot)))
             continue;
 

@@ -77,10 +77,6 @@ class Options : public QObject, public KDecorationOptions
      * whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      **/
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
-    /**
-     * whether active Xinerama screen is the one with mouse (or with the active window)
-     **/
-    Q_PROPERTY(bool activeMouseScreen READ isActiveMouseScreen WRITE setActiveMouseScreen NOTIFY activeMouseScreenChanged)
     Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY configChanged)
     /**
@@ -280,10 +276,6 @@ public:
     // whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
     bool isSeparateScreenFocus() const {
         return m_separateScreenFocus;
-    }
-    // whether active Xinerama screen is the one with mouse (or with the active window)
-    bool isActiveMouseScreen() const {
-        return m_activeMouseScreen;
     }
 
     Placement::Policy placement() const {
@@ -562,7 +554,6 @@ public:
     void setShadeHover(bool shadeHover);
     void setShadeHoverInterval(int shadeHoverInterval);
     void setSeparateScreenFocus(bool separateScreenFocus);
-    void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(int placement);
     void setBorderSnapZone(int borderSnapZone);
     void setWindowSnapZone(int windowSnapZone);
@@ -748,7 +739,6 @@ Q_SIGNALS:
     void shadeHoverChanged();
     void shadeHoverIntervalChanged();
     void separateScreenFocusChanged(bool);
-    void activeMouseScreenChanged();
     void placementChanged();
     void borderSnapZoneChanged();
     void windowSnapZoneChanged();
@@ -817,7 +807,6 @@ private:
     bool m_shadeHover;
     int m_shadeHoverInterval;
     bool m_separateScreenFocus;
-    bool m_activeMouseScreen;
     Placement::Policy m_placement;
     int m_borderSnapZone;
     int m_windowSnapZone;
