@@ -453,7 +453,7 @@ void UserActionsMenu::menuAboutToShow()
     m_scriptsMenu = NULL;
     // ask scripts whether they want to add entries for the given Client
     m_scriptsMenu = new QMenu(m_menu);
-    QList<QAction*> scriptActions = ws->scripting()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
+    QList<QAction*> scriptActions = Scripting::self()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
         m_scriptsMenu->setFont(KGlobalSettings::menuFont());
         m_scriptsMenu->addActions(scriptActions);

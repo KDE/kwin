@@ -287,6 +287,7 @@ class Scripting : public QObject
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 private:
+    explicit Scripting(QObject *parent);
     QStringList scriptList;
     QList<KWin::AbstractScript*> scripts;
     /**
@@ -298,7 +299,6 @@ private:
     void runScripts();
 
 public:
-    explicit Scripting(QObject *parent = NULL);
     ~Scripting();
     Q_SCRIPTABLE Q_INVOKABLE int loadScript(const QString &filePath, const QString &pluginName = QString());
     Q_SCRIPTABLE Q_INVOKABLE int loadDeclarativeScript(const QString &filePath, const QString &pluginName = QString());
@@ -314,6 +314,9 @@ public:
      **/
     QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
 
+    static Scripting *self();
+    static Scripting *create(QObject *parent);
+
 public Q_SLOTS:
     void scriptDestroyed(QObject *object);
     Q_SCRIPTABLE void start();
@@ -323,7 +326,14 @@ private Q_SLOTS:
 
 private:
     LoadScriptList queryScriptsToLoad();
+    static Scripting *s_self;
 };
+
+inline
+Scripting *Scripting::self()
+{
+    return s_self;
+}
 
 }
 #endif

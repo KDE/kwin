@@ -136,7 +136,6 @@ Workspace::Workspace(bool restore)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
     , forced_global_mouse_grab(false)
-    , m_scripting(NULL)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
@@ -492,7 +491,7 @@ void Workspace::init()
 
 
 #ifdef KWIN_BUILD_SCRIPTING
-    m_scripting = new Scripting(this);
+    Scripting::create(this);
 #endif
 
     // SELI TODO: This won't work with unreasonable focus policies,

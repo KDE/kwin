@@ -574,6 +574,15 @@ void KWin::DeclarativeScript::run()
     setRunning(true);
 }
 
+KWin::Scripting *KWin::Scripting::s_self = NULL;
+
+KWin::Scripting *KWin::Scripting::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+    s_self = new Scripting(parent);
+    return s_self;
+}
+
 KWin::Scripting::Scripting(QObject *parent)
     : QObject(parent)
     , m_scriptsLock(new QMutex(QMutex::Recursive))
@@ -735,6 +744,7 @@ KWin::Scripting::~Scripting()
 {
     QDBusConnection::sessionBus().unregisterObject("/Scripting");
     QDBusConnection::sessionBus().unregisterService("org.kde.kwin.Scripting");
+    s_self = NULL;
 }
 
 QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)

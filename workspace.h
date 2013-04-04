@@ -69,7 +69,6 @@ class Outline;
 class RootInfo;
 class PluginMgr;
 class Rules;
-class Scripting;
 class UserActionsMenu;
 class WindowRules;
 class Compositor;
@@ -242,12 +241,6 @@ public:
     KActionCollection* clientKeys() const {
         return client_keys;
     }
-
-#ifdef KWIN_BUILD_SCRIPTING
-    Scripting *scripting() {
-        return m_scripting;
-    }
-#endif
 
     /**
      * Returns the list of clients sorted in stacking order, with topmost client
@@ -651,8 +644,6 @@ private:
     Window null_focus_window;
     bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
-
-    Scripting *m_scripting;
 
     QScopedPointer<KillWindow> m_windowKiller;
 
