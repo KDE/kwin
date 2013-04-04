@@ -427,13 +427,13 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
 
             // snap to titlebar
             Position titlePos = c->titlebarPosition();
-            if (titlePos == PositionLeft)
+            if (titlePos == PositionLeft || (c->maximizeMode() & MaximizeHorizontal))
                 padding[0] = 0;
-            if (titlePos == PositionRight)
+            if (titlePos == PositionRight || (c->maximizeMode() & MaximizeHorizontal))
                 padding[1] = 0;
-            if (titlePos == PositionTop)
+            if (titlePos == PositionTop || (c->maximizeMode() & MaximizeVertical))
                 padding[2] = 0;
-            if (titlePos == PositionBottom)
+            if (titlePos == PositionBottom || (c->maximizeMode() & MaximizeVertical))
                 padding[3] = 0;
 
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snap)) {
