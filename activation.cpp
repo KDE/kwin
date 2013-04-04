@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "focuschain.h"
 #include "workspace.h"
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 
 #include <fixx11h.h>
 #include <kxerrorhandler.h>
@@ -294,7 +297,7 @@ void Workspace::activateClient(Client* c, bool force)
     if (!c->isOnCurrentActivity()) {
         ++block_focus;
         //DBUS!
-        activityController_.setCurrentActivity(c->activities().first());   //first isn't necessarily best, but it's easiest
+        Activities::self()->setCurrent(c->activities().first()); //first isn't necessarily best, but it's easiest
         --block_focus;
     }
 #endif

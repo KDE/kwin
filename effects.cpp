@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 
 #include "effectsadaptor.h"
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "deleted.h"
 #include "client.h"
 #include "cursor.h"
@@ -229,9 +232,12 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(Cursor::self(), SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
-    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
-    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
-    connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+#ifdef KWIN_BUILD_ACTIVITIES
+    Activities *activities = Activities::self();
+    connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
+    connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
+    connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+#endif
     connect(ws, SIGNAL(stackingOrderChanged()), SIGNAL(stackingOrderChanged()));
 #ifdef KWIN_BUILD_TABBOX
     connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
@@ -824,7 +830,11 @@ void EffectsHandlerImpl::setShowingDesktop(bool showing)
 
 QString EffectsHandlerImpl::currentActivity() const
 {
-    return Workspace::self()->currentActivity();
+#ifdef KWIN_BUILD_ACTIVITIES
+    return Activities::self()->current();
+#else
+    return QString();
+#endif
 }
 
 int EffectsHandlerImpl::currentDesktop() const

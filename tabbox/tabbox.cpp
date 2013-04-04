@@ -29,6 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/tabboxconfig.h"
 #include "tabbox/desktopchain.h"
 // kwin
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "client.h"
 #include "effects.h"
 #include "focuschain.h"
@@ -73,7 +76,9 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(vds, SIGNAL(countChanged(uint,uint)), m_desktopFocusChain, SLOT(resize(uint,uint)));
     connect(vds, SIGNAL(currentChanged(uint,uint)), m_desktopFocusChain, SLOT(addDesktop(uint,uint)));
-    connect(Workspace::self(), SIGNAL(currentActivityChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+#ifdef KWIN_BUILD_ACTIVITIES
+    connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+#endif
 }
 
 TabBoxHandlerImpl::~TabBoxHandlerImpl()

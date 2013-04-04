@@ -180,6 +180,13 @@ if(KWIN_BUILD_KAPPMENU)
     )
 endif()
 
+if(KWIN_BUILD_ACTIVITIES)
+    set(
+        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
+        activities.cpp
+    )
+endif()
+
 if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()

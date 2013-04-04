@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scripting_model.h"
+#include "activities.h"
 #include "client.h"
 // Qt
 #include <QDesktopWidget>
@@ -311,7 +312,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
     switch (restriction) {
     case ClientModel::ActivityRestriction: {
 #ifdef KWIN_BUILD_ACTIVITIES
-        const QStringList &activities = Workspace::self()->activityList();
+        const QStringList &activities = Activities::self()->all();
         for (QStringList::const_iterator it = activities.begin(); it != activities.end(); ++it) {
             AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
             if (!childLevel) {
@@ -402,8 +403,9 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), SLOT(desktopCountChanged(uint,uint)));
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SLOT(screenCountChanged(int)));
 #ifdef KWIN_BUILD_ACTIVITIES
-    connect(Workspace::self(), SIGNAL(activityAdded(QString)), SLOT(activityAdded(QString)));
-    connect(Workspace::self(), SIGNAL(activityRemoved(QString)), SLOT(activityRemoved(QString)));
+    Activities *activities = Activities::self();
+    connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
+    connect(activities, SIGNAL(removed(QString)), SLOT(activityRemoved(QString)));
 #endif
 }
 

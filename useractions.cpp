@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
 #include <KActivities/Info>
 #endif
 
@@ -421,7 +422,7 @@ void UserActionsMenu::menuAboutToShow()
         initScreenPopup();
     }
 #ifdef KWIN_BUILD_ACTIVITIES
-    ws->updateActivityList(true, false, this, "showHideActivityMenu");
+    Activities::self()->update(true, false, this, "showHideActivityMenu");
 #endif
 
     m_resizeOperation->setEnabled(m_client.data()->isResizable());
@@ -471,7 +472,7 @@ void UserActionsMenu::menuAboutToShow()
 void UserActionsMenu::showHideActivityMenu()
 {
 #ifdef KWIN_BUILD_ACTIVITIES
-    const QStringList &openActivities_ = Workspace::self()->openActivities();
+    const QStringList &openActivities_ = Activities::self()->running();
     kDebug() << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
@@ -715,7 +716,7 @@ void UserActionsMenu::activityPopupAboutToShow()
         action->setChecked(true);
     m_activityMenu->addSeparator();
 
-    foreach (const QString &id, Workspace::self()->openActivities()) {
+    foreach (const QString &id, Activities::self()->running()) {
         KActivities::Info activity(id);
         QString name = activity.name();
         name.replace('&', "&&");
@@ -804,6 +805,7 @@ void UserActionsMenu::slotSendToScreen(QAction *action)
 
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
 {
+#ifdef KWIN_BUILD_ACTIVITIES
     QString activity = action->data().toString();
     if (m_client.isNull())
         return;
@@ -813,10 +815,11 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         return;
     }
 
-    Workspace::self()->toggleClientOnActivity(m_client.data(), activity, false);
+    Activities::self()->toggleClientOnActivity(m_client.data(), activity, false);
     if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
         m_activityMenu->actions().at(0)->setChecked(m_client.data()->isOnAllActivities());
     }
+#endif
 }
 
 //****************************************

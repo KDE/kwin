@@ -23,6 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../client.h"
 #include "../outline.h"
 #include "../virtualdesktops.h"
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "../activities.h"
+#endif
 
 #include <QDesktopWidget>
 
@@ -41,11 +44,14 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
     connect(vds, SIGNAL(layoutChanged(int,int)), SIGNAL(desktopLayoutChanged()));
     connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
-    connect(ws, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
-    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activitiesChanged(QString)));
-    connect(ws, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
-    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activitiesChanged(QString)));
-    connect(ws, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
+#ifdef KWIN_BUILD_ACTIVITIES
+    KWin::Activities *activities = KWin::Activities::self();
+    connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+    connect(activities, SIGNAL(added(QString)), SIGNAL(activitiesChanged(QString)));
+    connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
+    connect(activities, SIGNAL(removed(QString)), SIGNAL(activitiesChanged(QString)));
+    connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
+#endif
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SIGNAL(numberScreensChanged(int)));
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
     foreach (KWin::Client *client, ws->clientList()) {
@@ -81,10 +87,26 @@ GETTER(KWin::Client*, activeClient)
 GETTER(QList< KWin::Client* >, clientList)
 GETTER(int, activeScreen)
 GETTER(int, numScreens)
-GETTER(QString, currentActivity)
-GETTER(QStringList, activityList)
 
 #undef GETTER
+
+QString WorkspaceWrapper::currentActivity() const
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    return Activities::self()->current();
+#else
+    return QString();
+#endif
+}
+
+QStringList WorkspaceWrapper::activityList() const
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    return Activities::self()->all();
+#else
+    return QStringList();
+#endif
+}
 
 #define SLOTWRAPPER( name ) \
 void WorkspaceWrapper::name( ) { \

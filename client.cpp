@@ -40,6 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <signal.h>
 
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "bridge.h"
 #include "client_machine.h"
 #include "composite.h"
@@ -1511,17 +1514,22 @@ void Client::setDesktop(int desktop)
  */
 void Client::setOnActivity(const QString &activity, bool enable)
 {
+#ifdef KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList = activities();
     if (newActivitiesList.contains(activity) == enable)   //nothing to do
         return;
     if (enable) {
-        QStringList allActivities = workspace()->activityList();
+        QStringList allActivities = Activities::self()->all();
         if (!allActivities.contains(activity))   //bogus ID
             return;
         newActivitiesList.append(activity);
     } else
         newActivitiesList.removeOne(activity);
     setOnActivities(newActivitiesList);
+#else
+    Q_UNUSED(activity)
+    Q_UNUSED(enable)
+#endif
 }
 
 /**
@@ -1531,11 +1539,12 @@ void Client::setOnActivity(const QString &activity, bool enable)
 #define NULL_UUID "00000000-0000-0000-0000-000000000000"
 void Client::setOnActivities(QStringList newActivitiesList)
 {
+#ifdef KWIN_BUILD_ACTIVITIES
     QString joinedActivitiesList = newActivitiesList.join(",");
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
     newActivitiesList = joinedActivitiesList.split(',', QString::SkipEmptyParts);
 
-    QStringList allActivities = workspace()->activityList();
+    QStringList allActivities = Activities::self()->all();
     if ( newActivitiesList.isEmpty() ||
         (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count()) ||
         (newActivitiesList.count() == 1 && newActivitiesList.at(0) == NULL_UUID)) {
@@ -1553,6 +1562,9 @@ void Client::setOnActivities(QStringList newActivitiesList)
     }
 
     updateActivities(false);
+#else
+    Q_UNUSED(newActivitiesList)
+#endif
 }
 
 void Client::blockActivityUpdates(bool b)
@@ -1635,14 +1647,16 @@ void Client::setOnAllDesktops(bool b)
  */
 void Client::setOnAllActivities(bool on)
 {
+#ifdef KWIN_BUILD_ACTIVITIES
     if (on == isOnAllActivities())
         return;
     if (on) {
         setOnActivities(QStringList());
 
     } else {
-        setOnActivity(Workspace::self()->currentActivity(), true);
+        setOnActivity(Activities::self()->current(), true);
     }
+#endif
 }
 
 /**
@@ -2382,6 +2396,7 @@ QPixmap* kwin_get_menu_pix_hack()
 
 void Client::checkActivities()
 {
+#ifdef KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList;
     QByteArray prop = getStringProperty(window(), atoms->activities);
     activitiesDefined = !prop.isEmpty();
@@ -2408,7 +2423,7 @@ void Client::checkActivities()
         return; //expected change, it's ok.
 
     //otherwise, somebody else changed it. we need to validate before reacting
-    QStringList allActivities = workspace()->activityList();
+    QStringList allActivities = Activities::self()->all();
     if (allActivities.isEmpty()) {
         kDebug() << "no activities!?!?";
         //don't touch anything, there's probably something bad going on and we don't wanna make it worse
@@ -2421,6 +2436,7 @@ void Client::checkActivities()
         }
     }
     setOnActivities(newActivitiesList);
+#endif
 }
 
 #undef NULL_UUID

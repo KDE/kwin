@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kxerrorhandler.h>
 
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "atoms.h"
 #include "client.h"
 #include "client_machine.h"
@@ -462,6 +465,15 @@ bool Toplevel::isClient() const
 bool Toplevel::isDeleted() const
 {
     return false;
+}
+
+bool Toplevel::isOnCurrentActivity() const
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    return isOnActivity(Activities::self()->current());
+#else
+    return true;
+#endif
 }
 
 } // namespace

@@ -34,9 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // need to include utils.h before we use the ifdefs
 #include "utils.h"
-#ifdef KWIN_BUILD_ACTIVITIES
-#include <KActivities/Controller>
-#endif
 
 #include "plugins.h"
 #include "kdecoration.h"
@@ -208,12 +205,6 @@ public:
     QPoint cascadeOffset(const Client *c) const;
 
 private:
-    QString activity_;
-    QStringList allActivities_, openActivities_;
-#ifdef KWIN_BUILD_ACTIVITIES
-    KActivities::Controller activityController_;
-#endif
-
     Outline* m_outline;
     Compositor *m_compositor;
 
@@ -228,18 +219,6 @@ public:
     void setActiveScreenMouse(const QPoint& mousepos);
     QRect screenGeometry(int screen) const;
     int screenNumber(const QPoint& pos) const;
-    QString currentActivity() const {
-        return activity_;
-    }
-    QStringList activityList() const {
-        return allActivities_;
-    }
-    const QStringList &openActivities() const {
-        return openActivities_;
-    }
-#ifdef KWIN_BUILD_ACTIVITIES
-    void updateActivityList(bool running, bool updateCurrent, QObject *target = NULL, QString slot = QString());
-#endif
     // True when performing Workspace::updateClientArea().
     // The calls below are valid only in that case.
     bool inUpdateClientArea() const;
@@ -282,7 +261,6 @@ public:
                                bool only_normal = true) const;
     Client* findDesktop(bool topmost, int desktop) const;
     void sendClientToDesktop(Client* c, int desktop, bool dont_activate);
-    void toggleClientOnActivity(Client* c, const QString &activity, bool dont_activate);
     void windowToPreviousDesktop(Client* c);
     void windowToNextDesktop(Client* c);
     void sendClientToScreen(Client* c, int screen);
@@ -314,6 +292,7 @@ public:
     void storeSession(KConfig* config, SMSavePhase phase);
     void storeClient(KConfigGroup &cg, int num, Client *c);
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
+    void loadSubSessionInfo(const QString &name);
 
     SessionInfo* takeSessionInfo(Client*);
     WindowRules findWindowRules(const Client*, bool);
@@ -337,8 +316,6 @@ public:
      **/
     QList<int> decorationSupportedColors() const;
     bool waitForCompositingSetup();
-    bool stopActivity(const QString &id);
-    bool startActivity(const QString &id);
     QString supportInformation() const;
 
     void setCurrentScreen(int new_screen);
@@ -490,10 +467,6 @@ private slots:
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
-    void slotActivityRemoved(const QString &activity);
-    void slotActivityAdded(const QString &activity);
-    void reallyStopActivity(const QString &id);   //dbus deadlocks suck
-    void handleActivityReply();
     // virtual desktop handling
     void moveClientsFromRemovedDesktops();
     void slotDesktopCountChanged(uint previousCount, uint newCount);
@@ -520,23 +493,6 @@ signals:
     void propertyNotify(long a);
     void configChanged();
     void reinitializeCompositing();
-    /**
-     * This signal is emitted when the global
-     * activity is changed
-     * @param id id of the new current activity
-     */
-    void currentActivityChanged(const QString &id);
-    /**
-     * This signal is emitted when a new activity is added
-     * @param id id of the new activity
-     */
-    void activityAdded(const QString &id);
-    /**
-     * This signal is emitted when the activity
-     * is removed
-     * @param id id of the removed activity
-     */
-    void activityRemoved(const QString &id);
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
      * or lowered
@@ -588,7 +544,6 @@ private:
 
     void loadSessionInfo();
     void addSessionInfo(KConfigGroup &cg);
-    void loadSubSessionInfo(const QString &name);
 
     void loadWindowRules();
     void editWindowRules(Client* c, bool whole_app);

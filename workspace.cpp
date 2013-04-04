@@ -74,6 +74,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
 #endif
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #ifdef KWIN_BUILD_KAPPMENU
 #include "appmenu.h"
 #endif
@@ -150,6 +153,11 @@ Workspace::Workspace(bool restore)
 
     // start the cursor support
     Cursor::create(this);
+
+#ifdef KWIN_BUILD_ACTIVITIES
+    Activities *activities = Activities::create(this);
+    connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
+#endif
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
@@ -230,15 +238,6 @@ Workspace::Workspace(bool restore)
 
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), &screenChangedTimer, SLOT(start()));
     connect(QApplication::desktop(), SIGNAL(resized(int)), &screenChangedTimer, SLOT(start()));
-
-#ifdef KWIN_BUILD_ACTIVITIES
-    connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SLOT(updateCurrentActivity(QString)));
-    connect(&activityController_, SIGNAL(activityRemoved(QString)), SLOT(slotActivityRemoved(QString)));
-    connect(&activityController_, SIGNAL(activityRemoved(QString)), SIGNAL(activityRemoved(QString)));
-    connect(&activityController_, SIGNAL(activityAdded(QString)), SLOT(slotActivityAdded(QString)));
-    connect(&activityController_, SIGNAL(activityAdded(QString)), SIGNAL(activityAdded(QString)));
-    connect(&activityController_, SIGNAL(currentActivityChanged(QString)), SIGNAL(currentActivityChanged(QString)));
-#endif
 
     connect(&screenChangedTimer, SIGNAL(timeout()), SLOT(screenChangeTimeout()));
     screenChangedTimer.setSingleShot(true);
@@ -393,7 +392,7 @@ void Workspace::init()
     if (!VirtualDesktopManager::self()->setCurrent(initial_desktop))
         VirtualDesktopManager::self()->setCurrent(1);
 #ifdef KWIN_BUILD_ACTIVITIES
-    updateActivityList(false, true);
+    Activities::self()->update(false, true);
 #endif
 
     reconfigureTimer.setSingleShot(true);
@@ -1139,80 +1138,6 @@ Client *Workspace::findClientToActivateOnDesktop(uint desktop)
     return FocusChain::self()->getForActivation(desktop);
 }
 
-#ifdef KWIN_BUILD_ACTIVITIES
-
-//BEGIN threaded activity list fetching
-typedef QPair<QStringList*, QStringList> AssignedList;
-typedef QPair<QString, QStringList> CurrentAndList;
-
-static AssignedList
-fetchActivityList(KActivities::Controller *controller, QStringList *target, bool running) // could be member function, but actually it's much simpler this way
-{
-    return AssignedList(target, running ? controller->listActivities(KActivities::Info::Running) :
-                                          controller->listActivities());
-}
-
-static CurrentAndList
-fetchActivityListAndCurrent(KActivities::Controller *controller)
-{
-    QStringList l   = controller->listActivities();
-    QString c       = controller->currentActivity();
-    return CurrentAndList(c, l);
-}
-
-void Workspace::updateActivityList(bool running, bool updateCurrent, QObject *target, QString slot)
-{
-    if (updateCurrent) {
-        QFutureWatcher<CurrentAndList>* watcher = new QFutureWatcher<CurrentAndList>;
-        connect( watcher, SIGNAL(finished()), SLOT(handleActivityReply()) );
-        if (!slot.isEmpty()) {
-            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
-            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
-        }
-        watcher->setFuture(QtConcurrent::run(fetchActivityListAndCurrent, &activityController_ ));
-    } else {
-        QFutureWatcher<AssignedList>* watcher = new QFutureWatcher<AssignedList>;
-        connect(watcher, SIGNAL(finished()), SLOT(handleActivityReply()));
-        if (!slot.isEmpty()) {
-            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
-            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
-        }
-        QStringList *target = running ? &openActivities_ : &allActivities_;
-        watcher->setFuture(QtConcurrent::run(fetchActivityList, &activityController_, target, running));
-    }
-}
-
-void Workspace::handleActivityReply()
-{
-    QObject *watcherObject = 0;
-    if (QFutureWatcher<AssignedList>* watcher = dynamic_cast< QFutureWatcher<AssignedList>* >(sender())) {
-        *(watcher->result().first) = watcher->result().second; // cool trick, ehh? :-)
-        watcherObject = watcher;
-    }
-
-    if (!watcherObject) {
-        if (QFutureWatcher<CurrentAndList>* watcher = dynamic_cast< QFutureWatcher<CurrentAndList>* >(sender())) {
-            allActivities_ = watcher->result().second;
-            updateCurrentActivity(watcher->result().first);
-            emit currentActivityChanged(currentActivity());
-            watcherObject = watcher;
-        }
-    }
-
-    if (watcherObject) {
-        QString slot = watcherObject->property("activityControllerCallback").toString();
-        QObject *target = static_cast<QObject*>(watcherObject->property("activityControllerCallbackTarget").value<void*>());
-        watcherObject->deleteLater(); // has done it's job
-        if (!slot.isEmpty())
-            QMetaObject::invokeMethod(target, slot.toAscii().data(), Qt::DirectConnection);
-    }
-}
-//END threaded activity list fetching
-
-#else // make gcc happy - stupd moc cannot handle preproc defs so we MUST define
-void Workspace::handleActivityReply() {}
-#endif // KWIN_BUILD_ACTIVITIES
-
 /**
  * Updates the current activity when it changes
  * do *not* call this directly; it does not set the activity.
@@ -1222,60 +1147,57 @@ void Workspace::handleActivityReply() {}
 
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
-
+#ifdef KWIN_BUILD_ACTIVITIES
     //closeActivePopup();
     ++block_focus;
     // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
     StackingUpdatesBlocker blocker(this);
 
-    if (new_activity != activity_) {
-        ++block_showing_desktop; //FIXME should I be using that?
-        // Optimized Desktop switching: unmapping done from back to front
-        // mapping done from front to back => less exposure events
-        //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
+    ++block_showing_desktop; //FIXME should I be using that?
+    // Optimized Desktop switching: unmapping done from back to front
+    // mapping done from front to back => less exposure events
+    //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
 
-        ObscuringWindows obs_wins;
+    ObscuringWindows obs_wins;
 
-        QString old_activity = activity_;
-        activity_ = new_activity;
+    const QString &old_activity = Activities::self()->previous();
 
-        for (ToplevelList::ConstIterator it = stacking_order.constBegin();
-                it != stacking_order.constEnd();
-                ++it) {
-            Client *c = qobject_cast<Client*>(*it);
-            if (!c) {
-                continue;
-            }
-            if (!c->isOnActivity(new_activity) && c != movingClient && c->isOnCurrentDesktop()) {
-                if (c->isShown(true) && c->isOnActivity(old_activity) && !compositing())
-                    obs_wins.create(c);
-                c->updateVisibility();
-            }
+    for (ToplevelList::ConstIterator it = stacking_order.constBegin();
+            it != stacking_order.constEnd();
+            ++it) {
+        Client *c = qobject_cast<Client*>(*it);
+        if (!c) {
+            continue;
         }
-
-        // Now propagate the change, after hiding, before showing
-        //rootInfo->setCurrentDesktop( currentDesktop() );
-
-        /* TODO someday enable dragging windows to other activities
-        if ( movingClient && !movingClient->isOnDesktop( new_desktop ))
-            {
-            movingClient->setDesktop( new_desktop );
-            */
-
-        for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
-            Client *c = qobject_cast<Client*>(stacking_order.at(i));
-            if (!c) {
-                continue;
-            }
-            if (c->isOnActivity(new_activity))
-                c->updateVisibility();
+        if (!c->isOnActivity(new_activity) && c != movingClient && c->isOnCurrentDesktop()) {
+            if (c->isShown(true) && c->isOnActivity(old_activity) && !compositing())
+                obs_wins.create(c);
+            c->updateVisibility();
         }
-
-        --block_showing_desktop;
-        //FIXME not sure if I should do this either
-        if (showingDesktop())   // Do this only after desktop change to avoid flicker
-            resetShowingDesktop(false);
     }
+
+    // Now propagate the change, after hiding, before showing
+    //rootInfo->setCurrentDesktop( currentDesktop() );
+
+    /* TODO someday enable dragging windows to other activities
+    if ( movingClient && !movingClient->isOnDesktop( new_desktop ))
+        {
+        movingClient->setDesktop( new_desktop );
+        */
+
+    for (int i = stacking_order.size() - 1; i >= 0 ; --i) {
+        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        if (!c) {
+            continue;
+        }
+        if (c->isOnActivity(new_activity))
+            c->updateVisibility();
+    }
+
+    --block_showing_desktop;
+    //FIXME not sure if I should do this either
+    if (showingDesktop())   // Do this only after desktop change to avoid flicker
+        resetShowingDesktop(false);
 
     // Restore the focus on this desktop
     --block_focus;
@@ -1311,29 +1233,9 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     //    static_cast<EffectsHandlerImpl*>( effects )->desktopChanged( old_desktop );
     if (compositing() && m_compositor)
         m_compositor->addRepaintFull();
-
-}
-
-/**
- * updates clients when an activity is destroyed.
- * this ensures that a client does not get 'lost' if the only activity it's on is removed.
- */
-void Workspace::slotActivityRemoved(const QString &activity)
-{
-    allActivities_.removeOne(activity);
-    foreach (Toplevel * toplevel, stacking_order) {
-        if (Client *client = qobject_cast<Client*>(toplevel)) {
-            client->setOnActivity(activity, false);
-        }
-    }
-    //toss out any session data for it
-    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + activity);
-    cg.deleteGroup();
-}
-
-void Workspace::slotActivityAdded(const QString &activity)
-{
-    allActivities_ << activity;
+#else
+    Q_UNUSED(new_activity)
+#endif
 }
 
 void Workspace::moveClientsFromRemovedDesktops()
@@ -1399,43 +1301,6 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
             it != transients_stacking_order.constEnd();
             ++it)
         sendClientToDesktop(*it, desk, dont_activate);
-    updateClientArea();
-}
-
-/**
- * Adds/removes client \a c to/from \a activity.
- *
- * Takes care of transients as well.
- */
-void Workspace::toggleClientOnActivity(Client* c, const QString &activity, bool dont_activate)
-{
-    //int old_desktop = c->desktop();
-    bool was_on_activity = c->isOnActivity(activity);
-    bool was_on_all = c->isOnAllActivities();
-    //note: all activities === no activities
-    bool enable = was_on_all || !was_on_activity;
-    c->setOnActivity(activity, enable);
-    if (c->isOnActivity(activity) == was_on_activity && c->isOnAllActivities() == was_on_all)   // No change
-        return;
-
-    if (c->isOnCurrentActivity()) {
-        if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&
-                !was_on_activity && // for stickyness changes
-                //FIXME not sure if the line above refers to the correct activity
-                !dont_activate)
-            requestFocus(c);
-        else
-            restackClientUnderActive(c);
-    } else
-        raiseClient(c);
-
-    //notifyWindowDesktopChanged( c, old_desktop );
-
-    ClientList transients_stacking_order = ensureStackingOrder(c->transients());
-    for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
-            it != transients_stacking_order.constEnd();
-            ++it)
-        toggleClientOnActivity(*it, activity, dont_activate);
     updateClientArea();
 }
 

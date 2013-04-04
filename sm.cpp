@@ -30,8 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
-#include <QDBusInterface>
-#include <QDBusPendingCall>
 #include <QSocketNotifier>
 #include <QSessionManager>
 #include <kdebug.h>
@@ -184,81 +182,6 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
     //cg.writeEntry( "desktop", currentDesktop());
 }
 
-bool Workspace::stopActivity(const QString &id)
-{
-    if (sessionSaving()) {
-        return false; //ksmserver doesn't queue requests (yet)
-        //FIXME what about session *loading*?
-    }
-
-    //ugly hack to avoid dbus deadlocks
-#ifdef KWIN_BUILD_ACTIVITIES
-    updateActivityList(true, false);
-#endif
-    QMetaObject::invokeMethod(this, "reallyStopActivity", Qt::QueuedConnection, Q_ARG(QString, id));
-    //then lie and assume it worked.
-    return true;
-}
-
-void Workspace::reallyStopActivity(const QString &id)
-{
-    if (sessionSaving())
-        return; //ksmserver doesn't queue requests (yet)
-
-    kDebug() << id;
-
-    QSet<QByteArray> saveSessionIds;
-    QSet<QByteArray> dontCloseSessionIds;
-    for (ClientList::const_iterator it = clients.constBegin(); it != clients.constEnd(); ++it) {
-        const Client* c = (*it);
-        const QByteArray sessionId = c->sessionId();
-        if (sessionId.isEmpty()) {
-            continue; //TODO support old wm_command apps too?
-        }
-
-        //kDebug() << sessionId;
-
-        //if it's on the activity that's closing, it needs saving
-        //but if a process is on some other open activity, I don't wanna close it yet
-        //this is, of course, complicated by a process having many windows.
-        if (c->isOnAllActivities()) {
-            dontCloseSessionIds << sessionId;
-            continue;
-        }
-
-        const QStringList activities = c->activities();
-        foreach (const QString & activityId, activities) {
-            if (activityId == id) {
-                saveSessionIds << sessionId;
-            } else if (openActivities_.contains(activityId)) {
-                dontCloseSessionIds << sessionId;
-            }
-        }
-    }
-
-    storeSubSession(id, saveSessionIds);
-
-    QStringList saveAndClose;
-    QStringList saveOnly;
-    foreach (const QByteArray & sessionId, saveSessionIds) {
-        if (dontCloseSessionIds.contains(sessionId)) {
-            saveOnly << sessionId;
-        } else {
-            saveAndClose << sessionId;
-        }
-    }
-
-    kDebug() << "saveActivity" << id << saveAndClose << saveOnly;
-
-    //pass off to ksmserver
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
-    if (ksmserver.isValid()) {
-        ksmserver.asyncCall("saveSubSession", id, saveAndClose, saveOnly);
-    } else {
-        kDebug() << "couldn't get ksmserver interface";
-    }
-}
-
 /*!
   Loads the session information from the config file.
 
@@ -316,28 +239,6 @@ void Workspace::loadSubSessionInfo(const QString &name)
 {
     KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + name);
     addSessionInfo(cg);
-}
-
-bool Workspace::startActivity(const QString &id)
-{
-    if (sessionSaving()) {
-        return false; //ksmserver doesn't queue requests (yet)
-    }
-
-    if (!allActivities_.contains(id)) {
-        return false; //bogus id
-    }
-
-    loadSubSessionInfo(id);
-
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
-    if (ksmserver.isValid()) {
-        ksmserver.asyncCall("restoreSubSession", id);
-    } else {
-        kDebug() << "couldn't get ksmserver interface";
-        return false;
-    }
-    return true;
 }
 
 /*!

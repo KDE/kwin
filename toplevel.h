@@ -635,11 +635,6 @@ inline bool Toplevel::isOnCurrentDesktop() const
     return isOnDesktop(VirtualDesktopManager::self()->current());
 }
 
-inline bool Toplevel::isOnCurrentActivity() const
-{
-    return isOnActivity(Workspace::self()->currentActivity());
-}
-
 inline QByteArray Toplevel::resourceName() const
 {
     return resource_name; // it is always lowercase

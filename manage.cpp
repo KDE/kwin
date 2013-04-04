@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobal.h>
 #include <X11/extensions/shape.h>
 
+#ifdef KWIN_BUILD_ACTIVITIES
+#include "activities.h"
+#endif
 #include "cursor.h"
 #include "notifications.h"
 #include <QX11Info>
@@ -196,6 +199,7 @@ bool Client::manage(Window w, bool isMapped)
             desk = info->desktop(); // Window had the initial desktop property, force it
         if (desktop() == 0 && asn_valid && asn_data.desktop() != 0)
             desk = asn_data.desktop();
+#ifdef KWIN_BUILD_ACTIVITIES
         if (!isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
@@ -204,8 +208,9 @@ bool Client::manage(Window w, bool isMapped)
             //with a public API for setting windows to be on all activities.
             //something like KWindowSystem::setOnAllActivities or
             //KActivityConsumer::setOnAllActivities
-            setOnActivity(Workspace::self()->currentActivity(), true);
+            setOnActivity(Activities::self()->current(), true);
         }
+#endif
     }
 
     if (desk == 0)   // Assume window wants to be visible on the current desktop
