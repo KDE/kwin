@@ -258,8 +258,8 @@ bool Workspace::workspaceEvent(XEvent * e)
         // fallthrough
     case MotionNotify:
 #ifdef KWIN_BUILD_TABBOX
-        if (tabBox()->isGrabbed()) {
-            return tab_box->handleMouseEvent(e);
+        if (TabBox::TabBox::self()->isGrabbed()) {
+            return TabBox::TabBox::self()->handleMouseEvent(e);
         }
 #endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
@@ -275,8 +275,8 @@ bool Workspace::workspaceEvent(XEvent * e)
             return true;
         }
 #ifdef KWIN_BUILD_TABBOX
-        if (tabBox()->isGrabbed()) {
-            tabBox()->keyPress(keyQt);
+        if (TabBox::TabBox::self()->isGrabbed()) {
+            TabBox::TabBox::self()->keyPress(keyQt);
             return true;
         }
 #endif
@@ -285,8 +285,8 @@ bool Workspace::workspaceEvent(XEvent * e)
     case KeyRelease:
         was_user_interaction = true;
 #ifdef KWIN_BUILD_TABBOX
-        if (tabBox()->isGrabbed()) {
-            tabBox()->keyRelease(e->xkey);
+        if (TabBox::TabBox::self()->isGrabbed()) {
+            TabBox::TabBox::self()->keyRelease(e->xkey);
             return true;
         }
 #endif

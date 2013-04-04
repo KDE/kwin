@@ -240,10 +240,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 #endif
     connect(ws, SIGNAL(stackingOrderChanged()), SIGNAL(stackingOrderChanged()));
 #ifdef KWIN_BUILD_TABBOX
-    connect(ws->tabBox(), SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
-    connect(ws->tabBox(), SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
-    connect(ws->tabBox(), SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
-    connect(ws->tabBox(), SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    connect(tabBox, SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
+    connect(tabBox, SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
+    connect(tabBox, SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
+    connect(tabBox, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
     connect(ScreenEdges::self(), SIGNAL(approaching(ElectricBorder,qreal,QRect)), SIGNAL(screenEdgeApproaching(ElectricBorder,qreal,QRect)));
@@ -979,10 +980,7 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 {
 #ifdef KWIN_BUILD_TABBOX
     if (Client* c = dynamic_cast< Client* >(static_cast< EffectWindowImpl* >(w)->window())) {
-
-        if (Workspace::self()->hasTabBox()) {
-            Workspace::self()->tabBox()->setCurrentClient(c);
-        }
+        TabBox::TabBox::self()->setCurrentClient(c);
     }
 #else
     Q_UNUSED(w)
@@ -992,9 +990,7 @@ void EffectsHandlerImpl::setTabBoxWindow(EffectWindow* w)
 void EffectsHandlerImpl::setTabBoxDesktop(int desktop)
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        Workspace::self()->tabBox()->setCurrentDesktop(desktop);
-    }
+    TabBox::TabBox::self()->setCurrentDesktop(desktop);
 #else
     Q_UNUSED(desktop)
 #endif
@@ -1005,11 +1001,7 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 #ifdef KWIN_BUILD_TABBOX
     EffectWindowList ret;
     ClientList clients;
-    if (Workspace::self()->hasTabBox()) {
-        clients = Workspace::self()->tabBox()->currentClientList();
-    } else {
-        clients = ClientList();
-    }
+    clients = TabBox::TabBox::self()->currentClientList();
     foreach (Client * c, clients)
     ret.append(c->effectWindow());
     return ret;
@@ -1021,36 +1013,28 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 void EffectsHandlerImpl::refTabBox()
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        Workspace::self()->tabBox()->reference();
-    }
+    TabBox::TabBox::self()->reference();
 #endif
 }
 
 void EffectsHandlerImpl::unrefTabBox()
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        Workspace::self()->tabBox()->unreference();
-    }
+    TabBox::TabBox::self()->unreference();
 #endif
 }
 
 void EffectsHandlerImpl::closeTabBox()
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        Workspace::self()->tabBox()->close();
-    }
+    TabBox::TabBox::self()->close();
 #endif
 }
 
 QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        return Workspace::self()->tabBox()->currentDesktopList();
-    }
+    return TabBox::TabBox::self()->currentDesktopList();
 #endif
     return QList< int >();
 }
@@ -1058,9 +1042,7 @@ QList< int > EffectsHandlerImpl::currentTabBoxDesktopList() const
 int EffectsHandlerImpl::currentTabBoxDesktop() const
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        return Workspace::self()->tabBox()->currentDesktop();
-    }
+    return TabBox::TabBox::self()->currentDesktop();
 #endif
     return -1;
 }
@@ -1068,10 +1050,8 @@ int EffectsHandlerImpl::currentTabBoxDesktop() const
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Workspace::self()->hasTabBox()) {
-        if (Client* c = Workspace::self()->tabBox()->currentClient())
+    if (Client* c = TabBox::TabBox::self()->currentClient())
         return c->effectWindow();
-    }
 #endif
     return NULL;
 }

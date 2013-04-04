@@ -57,13 +57,6 @@ class KStartupInfoData;
 namespace KWin
 {
 
-#ifdef KWIN_BUILD_TABBOX
-namespace TabBox
-{
-class TabBox;
-}
-#endif
-
 class Client;
 class Outline;
 class RootInfo;
@@ -225,12 +218,6 @@ public:
     QVector< QRect > previousScreenSizes() const;
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
-
-    // Tab box
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox *tabBox() const;
-#endif
-    bool hasTabBox() const;
 
     KActionCollection* actionCollection() const {
         return keys;
@@ -588,10 +575,6 @@ private:
     int session_desktop;
 
     int block_focus;
-
-#ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox* tab_box;
-#endif
 
     /**
      * Holds the menu containing the user actions which is shown

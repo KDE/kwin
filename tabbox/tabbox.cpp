@@ -422,6 +422,15 @@ bool TabBoxClientImpl::isFirstInTabBox() const
 /*********************************************************
 * TabBox
 *********************************************************/
+TabBox *TabBox::s_self = NULL;
+
+TabBox *TabBox::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+    s_self = new TabBox(parent);
+    return s_self;
+}
+
 TabBox::TabBox(QObject *parent)
     : QObject(parent)
     , m_displayRefcount(0)
@@ -482,6 +491,7 @@ TabBox::TabBox(QObject *parent)
 TabBox::~TabBox()
 {
     QDBusConnection::sessionBus().unregisterObject("/TabBox");
+    s_self = NULL;
 }
 
 void TabBox::handlerReady()

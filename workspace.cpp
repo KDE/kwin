@@ -120,9 +120,6 @@ Workspace::Workspace(bool restore)
     , was_user_interaction(false)
     , session_saving(false)
     , block_focus(0)
-#ifdef KWIN_BUILD_TABBOX
-    , tab_box(0)
-#endif
     , m_userActionsMenu(new UserActionsMenu(this))
     , keys(0)
     , client_keys(NULL)
@@ -204,7 +201,7 @@ Workspace::Workspace(bool restore)
 
 #ifdef KWIN_BUILD_TABBOX
     // need to create the tabbox before compositing scene is setup
-    tab_box = new TabBox::TabBox(this);
+    TabBox::TabBox::create(this);
 #endif
 
     m_compositor = Compositor::createCompositor(this);
@@ -630,8 +627,8 @@ void Workspace::addClient(Client* c, allowed_t)
         updateToolWindows(true);
     checkNonExistentClients();
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isDisplayed())
-        tab_box->reset(true);
+    if (TabBox::TabBox::self()->isDisplayed())
+        TabBox::TabBox::self()->reset(true);
 #endif
 #ifdef KWIN_BUILD_KAPPMENU
         if (ApplicationMenu::self()->hasMenu(c->window()))
@@ -673,8 +670,9 @@ void Workspace::removeClient(Client* c, allowed_t)
         Notify::raise(Notify::Delete);
 
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isDisplayed() && tabBox()->currentClient() == c)
-        tab_box->nextPrev(true);
+    TabBox::TabBox *tabBox = TabBox::TabBox::self();
+    if (tabBox->isDisplayed() && tabBox->currentClient() == c)
+        tabBox->nextPrev(true);
 #endif
 
     Q_ASSERT(clients.contains(c) || desktops.contains(c));
@@ -706,8 +704,8 @@ void Workspace::removeClient(Client* c, allowed_t)
     }
 
 #ifdef KWIN_BUILD_TABBOX
-    if (tabBox()->isDisplayed())
-        tab_box->reset(true);
+    if (tabBox->isDisplayed())
+        tabBox->reset(true);
 #endif
 
     updateClientArea();
@@ -1644,22 +1642,6 @@ Outline* Workspace::outline()
 {
     return m_outline;
 }
-
-bool Workspace::hasTabBox() const
-{
-#ifdef KWIN_BUILD_TABBOX
-    return (tab_box != NULL);
-#else
-    return false;
-#endif
-}
-
-#ifdef KWIN_BUILD_TABBOX
-TabBox::TabBox* Workspace::tabBox() const
-{
-    return tab_box;
-}
-#endif
 
 QString Workspace::supportInformation() const
 {
