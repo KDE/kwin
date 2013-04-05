@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_COMPOSITE_H
 #define KWIN_COMPOSITE_H
-
+// KWin
+#include <kwinglobals.h>
+// Qt
 #include <QObject>
 #include <QElapsedTimer>
 #include <QTimer>
@@ -114,32 +116,6 @@ public:
         return m_scene;
     }
 
-    /**
-     * @brief Factory Method to create the Compositor singleton.
-     *
-     * This method is mainly used by Workspace to create the Compositor Singleton as a child
-     * of the Workspace.
-     *
-     * To actually access the Compositor instance use @link self.
-     *
-     * @param parent The parent object
-     * @return :Compositor* Created Compositor if not already created
-     * @warning This method is not Thread safe.
-     * @see self
-     **/
-    static Compositor *createCompositor(QObject *parent);
-    /**
-     * @brief Singleton getter for the Compositor object.
-     *
-     * Ensure that the Compositor has been created through createCompositor prior to access
-     * this method.
-     *
-     * @return :Compositor* The Compositor instance
-     * @see createCompositor
-     **/
-    static Compositor *self() {
-        return s_compositor;
-    }
     /**
      * @brief Checks whether the Compositor has already been created by the Workspace.
      *
@@ -283,7 +259,6 @@ private Q_SLOTS:
     void releaseCompositorSelection();
 
 private:
-    Compositor(QObject *workspace);
     void setCompositeTimer();
     bool windowRepaintsPending() const;
 
@@ -315,7 +290,7 @@ private:
     int m_timeSinceLastVBlank, m_nextFrameDelay;
     Scene *m_scene;
 
-    static Compositor *s_compositor;
+    KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };
 }
 

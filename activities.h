@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_ACTIVITIES_H
 #define KWIN_ACTIVITIES_H
 
+#include <kwinglobals.h>
+
 #include <QObject>
 #include <QStringList>
 
@@ -54,8 +56,6 @@ public:
     const QString &current() const;
     const QString &previous() const;
 
-    static Activities *self();
-    static Activities *create(QObject *parent);
     static QString nullUuid();
 
 Q_SIGNALS:
@@ -85,21 +85,14 @@ private Q_SLOTS:
     void handleReply();
 
 private:
-    explicit Activities(QObject *parent);
     QStringList m_running;
     QStringList m_all;
     QString m_current;
     QString m_previous;
     KActivities::Controller *m_controller;
 
-    static Activities *s_self;
+    KWIN_SINGLETON(Activities)
 };
-
-inline
-Activities *Activities::self()
-{
-    return s_self;
-}
 
 inline
 const QStringList &Activities::all() const

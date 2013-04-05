@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_CURSOR_H
 #define KWIN_CURSOR_H
+// kwin
+#include <kwinglobals.h>
 // Qt
 #include <QHash>
 #include <QObject>
@@ -70,14 +72,8 @@ public:
      **/
     static void setPos(const QPoint &pos);
     static void setPos(int x, int y);
-    static Cursor *self();
     static xcb_cursor_t x11Cursor(Qt::CursorShape shape);
 
-    /**
-     * @internal
-     * Factory method
-     **/
-    static Cursor *create(QObject *parent);
 Q_SIGNALS:
     void posChanged(QPoint pos);
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
@@ -85,7 +81,6 @@ Q_SIGNALS:
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 protected:
-    Cursor(QObject *parent);
     /**
      * Called from @link x11Cursor to actually retrieve the X11 cursor. Base implementation returns
      * a null cursor, an implementing subclass should implement this method if it can provide X11
@@ -128,7 +123,7 @@ private:
     QPoint m_pos;
     int m_mousePollingCounter;
 
-    static Cursor *s_self;
+    KWIN_SINGLETON(Cursor)
 };
 
 class X11Cursor : public Cursor
@@ -162,11 +157,6 @@ private:
     QTimer *m_mousePollingTimer;
     friend class Cursor;
 };
-
-inline Cursor *Cursor::self()
-{
-    return s_self;
-}
 
 inline const QPoint &Cursor::currentPos() const
 {

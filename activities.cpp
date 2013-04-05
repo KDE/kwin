@@ -34,14 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-Activities *Activities::s_self = NULL;
 
-Activities *Activities::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new Activities(parent);
-    return s_self;
-}
+KWIN_SINGLETON_FACTORY(Activities)
 
 Activities::Activities(QObject *parent)
     : QObject(parent)

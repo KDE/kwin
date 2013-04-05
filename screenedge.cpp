@@ -534,14 +534,7 @@ void WindowBasedEdge::doUpdateBlocking()
 /**********************************************************
  * ScreenEdges
  *********************************************************/
-ScreenEdges *ScreenEdges::s_self = NULL;
-
-ScreenEdges *ScreenEdges::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new ScreenEdges(parent);
-    return s_self;
-}
+KWIN_SINGLETON_FACTORY(ScreenEdges)
 
 ScreenEdges::ScreenEdges(QObject *parent)
     : QObject(parent)

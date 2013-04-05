@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Cursor *Cursor::s_self = NULL;
+KWIN_SINGLETON_FACTORY_FACTORED(Cursor, X11Cursor)
 
 Cursor::Cursor(QObject *parent)
     : QObject(parent)
@@ -42,13 +42,6 @@ Cursor::Cursor(QObject *parent)
 Cursor::~Cursor()
 {
     s_self = NULL;
-}
-
-Cursor *Cursor::create(QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new X11Cursor(parent);
-    return s_self;
 }
 
 QPoint Cursor::pos()

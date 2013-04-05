@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_APPLICATIONMENU_H
 #define KWIN_APPLICATIONMENU_H
+// KWin
+#include <kwinglobals.h>
 // Qt
 #include <QObject>
 // xcb
@@ -41,9 +43,6 @@ public:
     bool hasMenu(xcb_window_t window);
     void showApplicationMenu(const QPoint &pos, const xcb_window_t window);
 
-    static ApplicationMenu *self();
-    static ApplicationMenu *create(QObject *parent);
-
 private Q_SLOTS:
     void slotShowRequest(qulonglong wid);
     void slotMenuAvailable(qulonglong wid);
@@ -51,17 +50,10 @@ private Q_SLOTS:
     void slotClearMenus();
 
 private:
-    ApplicationMenu(QObject *parent);
     QList<xcb_window_t> m_windowsMenu;
 
-    static ApplicationMenu *s_self;
+    KWIN_SINGLETON(ApplicationMenu)
 };
-
-inline
-ApplicationMenu *ApplicationMenu::self()
-{
-    return s_self;
-}
 
 }
 

@@ -204,7 +204,7 @@ Workspace::Workspace(bool restore)
     TabBox::TabBox::create(this);
 #endif
 
-    m_compositor = Compositor::createCompositor(this);
+    m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
     connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
 

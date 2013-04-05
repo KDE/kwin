@@ -86,7 +86,7 @@ QPoint VirtualDesktopGrid::gridCoords(uint id) const
     return QPoint(-1, -1);
 }
 
-VirtualDesktopManager *VirtualDesktopManager::s_manager = NULL;
+KWIN_SINGLETON_FACTORY_VARIABLE(VirtualDesktopManager, s_manager)
 
 VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
     : QObject(parent)
@@ -100,13 +100,6 @@ VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
 VirtualDesktopManager::~VirtualDesktopManager()
 {
     s_manager = NULL;
-}
-
-VirtualDesktopManager *VirtualDesktopManager::create(QObject *parent)
-{
-    Q_ASSERT(!s_manager);
-    s_manager = new VirtualDesktopManager(parent);
-    return s_manager;
 }
 
 QString VirtualDesktopManager::name(uint desktop) const

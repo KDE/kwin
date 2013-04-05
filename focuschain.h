@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_FOCUS_CHAIN_H
 #define KWIN_FOCUS_CHAIN_H
+// KWin
+#include <kwinglobals.h>
+// Qt
 #include <QObject>
 #include <QHash>
 
@@ -161,22 +164,6 @@ public:
      **/
     Client *firstMostRecentlyUsed() const;
 
-    /**
-     * @brief Singleton getter for this FocusChain.
-     * If called before the Singleton is created the method returns a @c null pointer. Be sure
-     * to call @link create first.
-     *
-     * @return :FocusChain* Singleton pointer
-     * @see create
-     **/
-    static FocusChain *self();
-    /**
-     * @brief Creates this FocusChain and sets the singleton pointer.
-     *
-     * @param parent The parent for this FocusChain.
-     * @return :FocusChain* The created FocusChain
-     **/
-    static FocusChain *create(QObject *parent);
 public slots:
     /**
      * @brief Resizes the per virtual desktop focus chains from @p previousSize to @p newSize.
@@ -201,7 +188,6 @@ public slots:
     bool isUsableFocusCandidate(Client *c, Client *prev) const;
 
 private:
-    explicit FocusChain(QObject *parent = 0);
     /**
      * @brief Makes @p client the first Client in the given focus @p chain.
      *
@@ -234,14 +220,8 @@ private:
     Client *m_activeClient;
     uint m_currentDesktop;
 
-    static FocusChain *s_manager;
+    KWIN_SINGLETON_VARIABLE(FocusChain, s_manager)
 };
-
-inline
-FocusChain *FocusChain::self()
-{
-    return s_manager;
-}
 
 inline
 bool FocusChain::contains(Client *client) const

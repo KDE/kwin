@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-FocusChain *FocusChain::s_manager = NULL;
+KWIN_SINGLETON_FACTORY_VARIABLE(FocusChain, s_manager)
 
 FocusChain::FocusChain(QObject *parent)
     : QObject(parent)
@@ -31,13 +31,6 @@ FocusChain::FocusChain(QObject *parent)
     , m_activeClient(NULL)
     , m_currentDesktop(0)
 {
-}
-
-FocusChain *FocusChain::create(QObject *parent)
-{
-    Q_ASSERT(!s_manager);
-    s_manager = new FocusChain(parent);
-    return s_manager;
 }
 
 FocusChain::~FocusChain()

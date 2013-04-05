@@ -60,15 +60,9 @@ Q_DECLARE_METATYPE(KWin::Compositor::SuspendReason)
 namespace KWin
 {
 
-Compositor *Compositor::s_compositor = NULL;
 extern int currentRefreshRate();
 
-Compositor *Compositor::createCompositor(QObject *parent)
-{
-    Q_ASSERT(!s_compositor);
-    s_compositor = new Compositor(parent);
-    return s_compositor;
-}
+KWIN_SINGLETON_FACTORY_VARIABLE(Compositor, s_compositor)
 
 Compositor::Compositor(QObject* workspace)
     : QObject(workspace)

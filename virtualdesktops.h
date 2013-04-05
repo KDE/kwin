@@ -19,7 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_VIRTUAL_DESKTOPS_H
 #define KWIN_VIRTUAL_DESKTOPS_H
-
+// KWin
+#include <kwinglobals.h>
 // Qt includes
 #include <QObject>
 #include <QPoint>
@@ -180,19 +181,6 @@ public:
     void initShortcuts(KActionCollection *keys);
 
     /**
-     * Singleton getter for this manager.
-     *
-     * Does not create a new instance. If the manager has not been created yet a @c null pointer
-     * is returned.
-     * @see create
-     **/
-    static VirtualDesktopManager *self();
-    /**
-     * Factory method to create the VirtualDesktopManager.
-     * @see self
-     **/
-    static VirtualDesktopManager *create(QObject *parent = NULL);
-    /**
      * @returns The maximum number of desktops that KWin supports.
      */
     static uint maximum();
@@ -312,7 +300,6 @@ private slots:
     void slotDown();
 
 private:
-    explicit VirtualDesktopManager(QObject *parent = 0);
     /**
      * This method is called when the number of desktops is updated in a way that desktops
      * are removed. At the time when this method is invoked the count property is already
@@ -374,7 +361,7 @@ private:
     NETRootInfo *m_rootInfo;
     KSharedConfig::Ptr m_config;
 
-    static VirtualDesktopManager *s_manager;
+    KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };
 
 /**
@@ -528,13 +515,6 @@ uint VirtualDesktopGrid::at(QPoint coords) const
         return 0;
     }
     return m_grid[index];
-}
-
-inline
-VirtualDesktopManager *VirtualDesktopManager::self()
-{
-    Q_ASSERT(s_manager);
-    return s_manager;
 }
 
 inline

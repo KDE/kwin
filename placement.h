@@ -22,10 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_PLACEMENT_H
 #define KWIN_PLACEMENT_H
-
+// KWin
+#include <kwinglobals.h>
+// Qt
 #include <QPoint>
 #include <QRect>
 #include <QList>
+
+class QObject;
 
 namespace KWin
 {
@@ -83,19 +87,7 @@ public:
     static Policy policyFromString(const QString& policy, bool no_special);
     static const char* policyToString(Policy policy);
 
-    /**
-     * Singleton getter for this Placement object once the Placement has been created.
-     * @see create
-     **/
-    static Placement *self();
-    /**
-     * Creates the Placement singleton.
-     **/
-    static Placement *create(Workspace *ws);
-
 private:
-    explicit Placement(Workspace* w);
-
     void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(Client* c, QRect& area, Policy next = Unknown);
     void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown);
@@ -111,14 +103,8 @@ private:
     QList<DesktopCascadingInfo> cci;
 
     Workspace* m_WorkspacePtr;
-    static Placement *s_self;
+    KWIN_SINGLETON(Placement)
 };
-
-inline
-Placement *Placement::self()
-{
-    return s_self;
-}
 
 } // namespace
 
