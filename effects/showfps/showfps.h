@@ -99,6 +99,7 @@ private:
     QColor textColor;
     QRect fpsTextRect;
     int textAlign;
+    QScopedPointer<EffectFrame> m_noBenchmark;
 };
 
 } // namespace

@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/render.h>
 #endif
 
+#include <KDE/KLocalizedString>
 #include <math.h>
 #include <QPainter>
 #include <QVector2D>
@@ -47,6 +48,7 @@ ShowFpsEffect::ShowFpsEffect()
     : paints_pos(0)
     , frames_pos(0)
     , fpsText(0)
+    , m_noBenchmark(effects->effectFrame(EffectFrameUnstyled, false))
 {
     for (int i = 0;
             i < NUM_PAINTS;
@@ -58,6 +60,8 @@ ShowFpsEffect::ShowFpsEffect()
             i < MAX_FPS;
             ++i)
         frames[ i ] = 0;
+    m_noBenchmark->setAlignment(Qt::AlignTop | Qt::AlignRight);
+    m_noBenchmark->setText(i18n("This effect is not a benchmark"));
     reconfigure(ReconfigureAll);
 }
 
@@ -76,6 +80,7 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
     else if (y < 0)
         y = displayHeight() - MAX_TIME - y;
     fps_rect = QRect(x, y, FPS_WIDTH + 2 * NUM_PAINTS, MAX_TIME);
+    m_noBenchmark->setPosition(fps_rect.bottomRight() + QPoint(-6, 6));
 
     int textPosition = ShowFpsConfig::textPosition();
     textFont = ShowFpsConfig::textFont();
@@ -164,6 +169,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         XSync(display(), False);   // make sure all rendering is done
     }
 #endif
+    m_noBenchmark->render(infiniteRegion(), 1.0, alpha);
 }
 
 void ShowFpsEffect::paintGL(int fps)
