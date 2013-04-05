@@ -235,7 +235,17 @@ Client *FocusChain::nextForDesktop(Client *reference, uint desktop) const
 void FocusChain::makeFirstInChain(Client *client, QList< Client * >& chain)
 {
     chain.removeAll(client);
-    chain.append(client);
+    if (client->isMinimized()) { // add it before the first minimized ...
+        for (int i = chain.count()-1; i >= 0; --i) {
+            if (chain.at(i)->isMinimized()) {
+                chain.insert(i+1, client);
+                return;
+            }
+        }
+        chain.prepend(client); // ... or at end of chain
+    } else {
+        chain.append(client);
+    }
 }
 
 void FocusChain::makeLastInChain(Client *client, QList< Client * >& chain)

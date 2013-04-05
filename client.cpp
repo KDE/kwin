@@ -880,7 +880,7 @@ void Client::minimize(bool avoid_animation)
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
     updateWindowRules(Rules::Minimize);
-    FocusChain::self()->update(this, FocusChain::MakeLast);
+    FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
     // TODO: merge signal with s_minimized
     emit clientMinimized(this, !avoid_animation);
 

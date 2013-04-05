@@ -52,7 +52,8 @@ public:
     enum Change {
         MakeFirst,
         MakeLast,
-        Update
+        Update,
+        MakeFirstMinimized = MakeFirst
     };
     virtual ~FocusChain();
     /**
