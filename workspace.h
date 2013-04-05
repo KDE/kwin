@@ -307,7 +307,6 @@ public:
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
-    void updateOnAllActivitiesOfTransients(Client*);
     void checkTransients(Window w);
 
     void performWindowOperation(Client* c, WindowOperation op);

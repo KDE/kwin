@@ -1578,8 +1578,6 @@ void Client::updateActivities(bool includeTransients)
     }
     emit activitiesChanged(this);
     m_blockedActivityUpdatesRequireTransients = false; // reset
-    if (includeTransients)
-        workspace()->updateOnAllActivitiesOfTransients(this);
     FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
     updateWindowRules(Rules::Activity);
@@ -1644,7 +1642,6 @@ void Client::setOnAllActivities(bool on)
 
     } else {
         setOnActivity(Workspace::self()->currentActivity(), true);
-        workspace()->updateOnAllActivitiesOfTransients(this);
     }
 }
 
