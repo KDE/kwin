@@ -159,7 +159,7 @@ Workspace::Workspace(bool restore)
     reparseConfigFuture.waitForFinished();
     options->loadConfig();
     options->loadCompositingConfig(false);
-    mgr = new DecorationPlugin;
+    mgr = DecorationPlugin::create(this);
     default_colormap = DefaultColormap(display(), screen_number);
     installed_colormap = default_colormap;
 
@@ -534,7 +534,7 @@ Workspace::~Workspace()
 
     delete rootInfo;
     delete supportWindow;
-    delete mgr;
+    delete DecorationManager::self();
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;

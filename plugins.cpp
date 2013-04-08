@@ -30,7 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-DecorationPlugin::DecorationPlugin()
+KWIN_SINGLETON_FACTORY(DecorationPlugin)
+
+DecorationPlugin::DecorationPlugin(QObject *)
     : KDecorationPlugins(KGlobal::config())
     , m_noDecoration(false)
 {
@@ -43,6 +45,11 @@ DecorationPlugin::DecorationPlugin()
 #else
     setNoDecoration(true);
 #endif
+}
+
+DecorationPlugin::~DecorationPlugin()
+{
+    s_self = NULL;
 }
 
 void DecorationPlugin::error(const QString &error_msg)

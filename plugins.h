@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_PLUGINS_H
 
 #include <kdecoration_plugins_p.h>
+#include <kwinglobals.h>
 
 namespace KWin
 {
@@ -31,7 +32,7 @@ class DecorationPlugin
     : public KDecorationPlugins
 {
 public:
-    DecorationPlugin();
+    virtual ~DecorationPlugin();
     virtual bool provides(Requirement);
     /**
      * @returns @c true if there is no decoration plugin.
@@ -42,6 +43,7 @@ protected:
 private:
     void setNoDecoration(bool noDecoration);
     bool m_noDecoration;
+    KWIN_SINGLETON(DecorationPlugin)
 };
 
 } // namespace
