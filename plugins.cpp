@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-PluginMgr::PluginMgr()
+DecorationPlugin::DecorationPlugin()
     : KDecorationPlugins(KGlobal::config())
     , m_noDecoration(false)
 {
@@ -45,24 +45,24 @@ PluginMgr::PluginMgr()
 #endif
 }
 
-void PluginMgr::error(const QString &error_msg)
+void DecorationPlugin::error(const QString &error_msg)
 {
     qWarning("%s", QString(i18n("KWin: ") + error_msg).toLocal8Bit().data());
 
     setNoDecoration(true);
 }
 
-bool PluginMgr::provides(Requirement)
+bool DecorationPlugin::provides(Requirement)
 {
     return false;
 }
 
-void PluginMgr::setNoDecoration(bool noDecoration)
+void DecorationPlugin::setNoDecoration(bool noDecoration)
 {
     m_noDecoration = noDecoration;
 }
 
-bool PluginMgr::hasNoDecoration() const
+bool DecorationPlugin::hasNoDecoration() const
 {
     return m_noDecoration;
 }

@@ -159,7 +159,7 @@ Workspace::Workspace(bool restore)
     reparseConfigFuture.waitForFinished();
     options->loadConfig();
     options->loadCompositingConfig(false);
-    mgr = new PluginMgr;
+    mgr = new DecorationPlugin;
     default_colormap = DefaultColormap(display(), screen_number);
     installed_colormap = default_colormap;
 

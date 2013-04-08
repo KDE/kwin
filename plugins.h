@@ -27,11 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class PluginMgr
+class DecorationPlugin
     : public KDecorationPlugins
 {
 public:
-    PluginMgr();
+    DecorationPlugin();
     virtual bool provides(Requirement);
     /**
      * @returns @c true if there is no decoration plugin.

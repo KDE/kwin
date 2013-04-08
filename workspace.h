@@ -60,7 +60,7 @@ namespace KWin
 class Client;
 class Outline;
 class RootInfo;
-class PluginMgr;
+class DecorationPlugin;
 class Rules;
 class UserActionsMenu;
 class WindowRules;
@@ -592,7 +592,7 @@ private:
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 
-    PluginMgr* mgr;
+    DecorationPlugin* mgr;
 
     RootInfo* rootInfo;
     QWidget* supportWindow;
