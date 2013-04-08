@@ -38,6 +38,21 @@ public:
      * @returns @c true if there is no decoration plugin.
      **/
     bool hasNoDecoration() const;
+
+    bool hasShadows() const;
+    bool hasAlpha() const;
+    bool supportsAnnounceAlpha() const;
+    bool supportsTabbing() const;
+    bool supportsFrameOverlap() const;
+    bool supportsBlurBehind() const;
+    Qt::Corner closeButtonCorner();
+
+    // D-Bus interface
+    /**
+     * @deprecated
+     * @todo: remove KDE5
+     **/
+    QList<int> supportedColors() const;
 protected:
     virtual void error(const QString& error_msg);
 private:
@@ -45,6 +60,10 @@ private:
     bool m_noDecoration;
     KWIN_SINGLETON(DecorationPlugin)
 };
+
+inline DecorationPlugin *decorationPlugin() {
+    return DecorationPlugin::self();
+}
 
 } // namespace
 

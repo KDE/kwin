@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "cursor.h"
+#include "decorations.h"
 #include "focuschain.h"
 #include "workspace.h"
 #include "atoms.h"
@@ -1302,7 +1303,7 @@ bool Client::buttonReleaseEvent(Window w, int /*button*/, int state, int x, int 
             // mouse position is still relative to old Client position, adjust it
             QPoint mousepos(x_root - x + padding_left, y_root - y + padding_top);
             mode = mousePosition(mousepos);
-        } else if (workspace()->decorationSupportsTabbing())
+        } else if (decorationPlugin()->supportsTabbing())
             return false;
         updateCursor();
     }

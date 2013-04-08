@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "decorations.h"
 #include "config-kwin.h"
+#include <kdecorationfactory.h>
 
 #include <kglobal.h>
 #include <KDE/KLocalizedString>
@@ -72,6 +73,76 @@ void DecorationPlugin::setNoDecoration(bool noDecoration)
 bool DecorationPlugin::hasNoDecoration() const
 {
     return m_noDecoration;
+}
+
+bool DecorationPlugin::hasShadows() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityProvidesShadow);
+}
+
+bool DecorationPlugin::hasAlpha() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityUsesAlphaChannel);
+}
+
+bool DecorationPlugin::supportsAnnounceAlpha() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityAnnounceAlphaChannel);
+}
+
+bool DecorationPlugin::supportsTabbing() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityTabbing);
+}
+
+bool DecorationPlugin::supportsFrameOverlap() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityExtendIntoClientArea);
+}
+
+bool DecorationPlugin::supportsBlurBehind() const
+{
+    if (hasNoDecoration()) {
+        return false;
+    }
+    return factory()->supports(AbilityUsesBlurBehind);
+}
+
+Qt::Corner DecorationPlugin::closeButtonCorner()
+{
+    if (hasNoDecoration()) {
+        return Qt::TopRightCorner;
+    }
+    return factory()->closeButtonCorner();
+}
+
+QList< int > DecorationPlugin::supportedColors() const
+{
+    QList<int> ret;
+    if (hasNoDecoration()) {
+        return ret;
+    }
+    for (Ability ab = ABILITYCOLOR_FIRST;
+            ab < ABILITYCOLOR_END;
+            ab = static_cast<Ability>(ab + 1))
+        if (factory()->supports(ab))
+            ret << ab;
+    return ret;
 }
 
 } // namespace

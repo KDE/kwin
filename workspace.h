@@ -35,9 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // need to include utils.h before we use the ifdefs
 #include "utils.h"
 
-#include "decorations.h"
 #include "kdecoration.h"
-#include "kdecorationfactory.h"
 #include "sm.h"
 #include "killwindow.h"
 
@@ -60,7 +58,6 @@ namespace KWin
 class Client;
 class Outline;
 class RootInfo;
-class DecorationPlugin;
 class Rules;
 class UserActionsMenu;
 class WindowRules;
@@ -79,9 +76,6 @@ public:
 
     bool workspaceEvent(XEvent*);
     bool workspaceEvent(QEvent*);
-
-    KDecoration* createDecoration(KDecorationBridge* bridge);
-    bool hasDecorationPlugin() const;
 
     bool hasClient(const Client*);
 
@@ -281,20 +275,7 @@ public:
     void disableRulesUpdates(bool disable);
     bool rulesUpdatesDisabled() const;
 
-    bool hasDecorationShadows() const;
-    Qt::Corner decorationCloseButtonCorner();
-    bool decorationHasAlpha() const;
-    bool decorationSupportsAnnounceAlpha() const;
-    bool decorationSupportsTabbing() const; // Returns true if the decoration supports tabs.
-    bool decorationSupportsFrameOverlap() const;
-    bool decorationSupportsBlurBehind() const;
-
     // D-Bus interface
-    /**
-     * @deprecated
-     * @todo: remove KDE5
-     **/
-    QList<int> decorationSupportedColors() const;
     bool waitForCompositingSetup();
     QString supportInformation() const;
 
@@ -592,8 +573,6 @@ private:
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 
-    DecorationPlugin* mgr;
-
     RootInfo* rootInfo;
     QWidget* supportWindow;
 
@@ -834,71 +813,6 @@ inline bool Workspace::hasClient(const Client* c)
 {
     return findClient(ClientMatchPredicate(c));
 }
-
-inline bool Workspace::hasDecorationPlugin() const
-{
-    if (!mgr) {
-        return false;
-    }
-    return !mgr->hasNoDecoration();
-}
-
-inline bool Workspace::hasDecorationShadows() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityProvidesShadow);
-}
-
-inline Qt::Corner Workspace::decorationCloseButtonCorner()
-{
-    if (!hasDecorationPlugin()) {
-        return Qt::TopRightCorner;
-    }
-    return mgr->factory()->closeButtonCorner();
-}
-
-inline bool Workspace::decorationHasAlpha() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityUsesAlphaChannel);
-}
-
-inline bool Workspace::decorationSupportsAnnounceAlpha() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityAnnounceAlphaChannel);
-}
-
-inline bool Workspace::decorationSupportsTabbing() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityTabbing);
-}
-
-inline bool Workspace::decorationSupportsFrameOverlap() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityExtendIntoClientArea);
-}
-
-inline bool Workspace::decorationSupportsBlurBehind() const
-{
-    if (!hasDecorationPlugin()) {
-        return false;
-    }
-    return mgr->factory()->supports(AbilityUsesBlurBehind);
-}
-
 
 } // namespace
 

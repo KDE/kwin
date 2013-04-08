@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // TODO: remove together with deprecated methods
 #include "client.h"
 #include "composite.h"
+#include "decorations.h"
 #include "effects.h"
 #include "kwinadaptor.h"
 #include "workspace.h"
@@ -119,7 +120,6 @@ rettype DBusInterface::name( ) \
     return Workspace::self()->name(); \
 }
 
-WRAP(QList<int>, decorationSupportedColors)
 WRAP(QString, supportInformation)
 WRAP(bool, waitForCompositingSetup)
 
@@ -243,6 +243,11 @@ void DBusInterface::nextDesktop()
 void DBusInterface::previousDesktop()
 {
     VirtualDesktopManager::self()->moveTo<DesktopPrevious>();
+}
+
+QList< int > DBusInterface::decorationSupportedColors()
+{
+    return decorationPlugin()->supportedColors();
 }
 
 } // namespace

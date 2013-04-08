@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "decorations.h"
 #include "deleted.h"
 #include "client.h"
 #include "cursor.h"
@@ -452,17 +453,17 @@ void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
 {
-    return Workspace::self()->hasDecorationShadows();
+    return decorationPlugin()->hasShadows();
 }
 
 bool EffectsHandlerImpl::decorationsHaveAlpha() const
 {
-    return Workspace::self()->decorationHasAlpha();
+    return decorationPlugin()->hasAlpha();
 }
 
 bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 {
-    return Workspace::self()->decorationSupportsBlurBehind();
+    return decorationPlugin()->supportsBlurBehind();
 }
 
 // start another painting pass
@@ -1584,7 +1585,7 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 {
     switch (kwopt) {
     case CloseButtonCorner:
-        return Workspace::self()->decorationCloseButtonCorner();
+        return decorationPlugin()->closeButtonCorner();
 #ifdef KWIN_BUILD_SCREENEDGES
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();

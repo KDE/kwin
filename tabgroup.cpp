@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 
 #include "client.h"
+#include "decorations.h"
 #include "effects.h"
 
 namespace KWin
@@ -62,7 +63,7 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
 {
     Q_ASSERT(!c->tabGroup());
 
-    if (!c->workspace()->decorationSupportsTabbing() || contains(c) || !contains(other))
+    if (!decorationPlugin()->supportsTabbing() || contains(c) || !contains(other))
         return false;
 
     // Tabbed windows MUST have a decoration

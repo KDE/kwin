@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "toplevel.h"
 #include "client.h"
+#include "decorations.h"
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
@@ -469,7 +470,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     Deleted *deleted = dynamic_cast<Deleted*>(toplevel);
     const QRect decorationRect = toplevel->decorationRect();
     if (((client && !client->noBorder()) || (deleted && !deleted->noBorder())) &&
-                                                        Workspace::self()->decorationHasAlpha()) {
+                                                        decorationPlugin()->hasAlpha()) {
         // decorated client
         transformed_shape = decorationRect;
         if (toplevel->shape()) {

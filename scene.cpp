@@ -74,6 +74,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGraphicsView>
 
 #include "client.h"
+#include "decorations.h"
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
@@ -624,7 +625,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         Client *client = dynamic_cast<Client*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = (client && Workspace::self()->decorationHasAlpha() ?
+        QRegion decoration = (client && decorationPlugin()->hasAlpha() ?
                               QRegion(client->decorationRect()) : shape()) - center;
         ret = makeQuads(WindowQuadContents, contents);
         if (!client || !(center.isEmpty() || client->isShade()))

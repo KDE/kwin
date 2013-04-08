@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "cursor.h"
 #include "client.h"
+#include "decorations.h"
 #include "workspace.h"
 #include "effects.h"
 #include "virtualdesktops.h"
@@ -357,7 +358,7 @@ void UserActionsMenu::init()
     m_menu->addSeparator();
 
     // Actions for window tabbing
-    if (Workspace::self()->decorationSupportsTabbing()) {
+    if (decorationPlugin()->supportsTabbing()) {
         m_removeFromTabGroup = m_menu->addAction(i18n("&Untab"));
         kaction = qobject_cast<KAction*>(keys->action("Untab"));
         if (kaction != 0)
@@ -440,7 +441,7 @@ void UserActionsMenu::menuAboutToShow()
     m_minimizeOperation->setEnabled(m_client.data()->isMinimizable());
     m_closeOperation->setEnabled(m_client.data()->isCloseable());
 
-    if (ws->decorationSupportsTabbing()) {
+    if (decorationPlugin()->supportsTabbing()) {
         initTabbingPopups();
     } else {
         delete m_addTabsMenu;

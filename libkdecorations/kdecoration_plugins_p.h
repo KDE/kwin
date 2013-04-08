@@ -55,6 +55,7 @@ public:
     bool loadPlugin(QString name);
     void destroyPreviousPlugin();
     KDecorationFactory* factory();
+    const KDecorationFactory* factory() const;
     KDecoration* createDecoration(KDecorationBridge*);
     QString currentPlugin();
     bool reset(unsigned long changed);   // returns true if decorations need to be recreated

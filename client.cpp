@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client_machine.h"
 #include "composite.h"
 #include "cursor.h"
+#include "decorations.h"
 #include "group.h"
 #include "focuschain.h"
 #include "workspace.h"
@@ -442,7 +443,11 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     if (!noBorder()) {
         setMask(QRegion());  // Reset shape mask
-        decoration = workspace()->createDecoration(bridge);
+        if (decorationPlugin()->hasNoDecoration()) {
+            decoration = NULL;
+        } else {
+            decoration = decorationPlugin()->createDecoration(bridge);
+        }
 #ifdef KWIN_BUILD_KAPPMENU
         connect(this, SIGNAL(showRequest()), decoration, SIGNAL(showRequest()));
         connect(this, SIGNAL(appMenuAvailable()), decoration, SIGNAL(appMenuAvailable()));
@@ -551,7 +556,7 @@ void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect 
     NETStrut strut = info->frameOverlap();
 
     // Ignore the overlap strut when compositing is disabled
-    if (!compositing() || !Workspace::self()->decorationSupportsFrameOverlap())
+    if (!compositing() || !decorationPlugin()->supportsFrameOverlap())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1) {
         top = QRect(r.x(), r.y(), r.width(), r.height() / 3);
@@ -584,7 +589,7 @@ QRect Client::transparentRect() const
 
     NETStrut strut = info->frameOverlap();
     // Ignore the strut when compositing is disabled or the decoration doesn't support it
-    if (!compositing() || !Workspace::self()->decorationSupportsFrameOverlap())
+    if (!compositing() || !decorationPlugin()->supportsFrameOverlap())
         strut.left = strut.top = strut.right = strut.bottom = 0;
     else if (strut.left == -1 && strut.top == -1 && strut.right == -1 && strut.bottom == -1)
         return QRect();
@@ -669,7 +674,7 @@ void Client::resizeDecoration(const QSize& s)
 
 bool Client::noBorder() const
 {
-    return !workspace()->hasDecorationPlugin() || noborder || isFullScreen();
+    return decorationPlugin()->hasNoDecoration() || noborder || isFullScreen();
 }
 
 bool Client::userCanSetNoBorder() const
@@ -2527,11 +2532,11 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
 
 bool Client::decorationHasAlpha() const
 {
-    if (!decoration || !workspace()->decorationHasAlpha()) {
+    if (!decoration || !decorationPlugin()->hasAlpha()) {
         // either no decoration or decoration has alpha disabled
         return false;
     }
-    if (workspace()->decorationSupportsAnnounceAlpha()) {
+    if (decorationPlugin()->supportsAnnounceAlpha()) {
         return decoration->isAlphaEnabled();
     } else {
         // decoration has alpha enabled and does not support alpha announcement

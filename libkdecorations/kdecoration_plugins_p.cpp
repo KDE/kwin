@@ -92,6 +92,11 @@ KDecorationFactory* KDecorationPlugins::factory()
     return fact;
 }
 
+const KDecorationFactory *KDecorationPlugins::factory() const
+{
+    return fact;
+}
+
 // convenience
 KDecoration* KDecorationPlugins::createDecoration(KDecorationBridge* bridge)
 {

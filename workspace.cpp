@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "composite.h"
+#include "decorations.h"
 #include "focuschain.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -66,6 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
+#include <kdecorationfactory.h>
 #include <kwinglplatform.h>
 #include <kwinglutils.h>
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -159,7 +161,7 @@ Workspace::Workspace(bool restore)
     reparseConfigFuture.waitForFinished();
     options->loadConfig();
     options->loadCompositingConfig(false);
-    mgr = DecorationPlugin::create(this);
+    DecorationPlugin::create(this);
     default_colormap = DefaultColormap(display(), screen_number);
     installed_colormap = default_colormap;
 
@@ -354,7 +356,8 @@ void Workspace::init()
         ,
     };
 
-    if (hasDecorationPlugin() && mgr->factory()->supports(AbilityExtendIntoClientArea))
+    DecorationPlugin *deco = DecorationPlugin::self();
+    if (!deco->hasNoDecoration() && deco->factory()->supports(AbilityExtendIntoClientArea))
         protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
     rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, screen_number);
@@ -534,7 +537,7 @@ Workspace::~Workspace()
 
     delete rootInfo;
     delete supportWindow;
-    delete DecorationManager::self();
+    delete decorationPlugin();
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;
@@ -913,7 +916,8 @@ void Workspace::slotReconfigure()
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
-    if (hasDecorationPlugin() && mgr->reset(changed)) {
+    DecorationPlugin *deco = DecorationPlugin::self();
+    if (!deco->hasNoDecoration() && deco->reset(changed)) {
         // Decorations need to be recreated
 
         // This actually seems to make things worse now
@@ -925,11 +929,11 @@ void Workspace::slotReconfigure()
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
             (*it)->updateDecoration(true, true);
         // If the new decoration doesn't supports tabs then ungroup clients
-        if (!decorationSupportsTabbing()) {
+        if (!decorationPlugin()->supportsTabbing()) {
             foreach (Client * c, clients)
                 c->untab();
         }
-        mgr->destroyPreviousPlugin();
+        deco->destroyPreviousPlugin();
     } else {
         forEachClient(CheckBorderSizesProcedure());
         foreach (Client * c, clients)
@@ -957,8 +961,8 @@ void Workspace::slotReconfigure()
         }
     }
 
-    if (hasDecorationPlugin()) {
-        rootInfo->setSupported(NET::WM2FrameOverlap, mgr->factory()->supports(AbilityExtendIntoClientArea));
+    if (!deco->hasNoDecoration()) {
+        rootInfo->setSupported(NET::WM2FrameOverlap, deco->factory()->supports(AbilityExtendIntoClientArea));
     } else {
         rootInfo->setSupported(NET::WM2FrameOverlap, false);
     }
@@ -1476,33 +1480,6 @@ void Workspace::cancelDelayFocus()
     delayFocusTimer = 0;
 }
 
-KDecoration* Workspace::createDecoration(KDecorationBridge* bridge)
-{
-    if (!hasDecorationPlugin()) {
-        return NULL;
-    }
-    return mgr->createDecoration(bridge);
-}
-
-/**
- * Returns a list of all colors (KDecorationDefines::ColorType) the current
- * decoration supports
- */
-QList<int> Workspace::decorationSupportedColors() const
-{
-    QList<int> ret;
-    if (!hasDecorationPlugin()) {
-        return ret;
-    }
-    KDecorationFactory* factory = mgr->factory();
-    for (Ability ab = ABILITYCOLOR_FIRST;
-            ab < ABILITYCOLOR_END;
-            ab = static_cast<Ability>(ab + 1))
-        if (factory->supports(ab))
-            ret << ab;
-    return ret;
-}
-
 bool Workspace::checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data)
 {
     return startup->checkStartup(w, id, data) == KStartupInfo::Match;
@@ -1837,9 +1814,9 @@ QString Workspace::supportInformation() const
 void Workspace::slotCompositingToggled()
 {
     // notify decorations that composition state has changed
-    if (hasDecorationPlugin()) {
-        KDecorationFactory* factory = mgr->factory();
-        factory->reset(SettingCompositing);
+    DecorationPlugin *deco = DecorationPlugin::self();
+    if (!deco->hasNoDecoration()) {
+        deco->factory()->reset(SettingCompositing);
     }
 }
 
