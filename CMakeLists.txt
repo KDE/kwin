@@ -108,7 +108,7 @@ set(kwin_KDEINIT_SRCS
    main.cpp 
    options.cpp 
    outline.cpp
-   plugins.cpp 
+   decorations.cpp
    events.cpp 
    killwindow.cpp 
    geometrytip.cpp 

@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // need to include utils.h before we use the ifdefs
 #include "utils.h"
 
-#include "plugins.h"
+#include "decorations.h"
 #include "kdecoration.h"
 #include "kdecorationfactory.h"
 #include "sm.h"
