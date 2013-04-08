@@ -97,10 +97,14 @@ void DBusInterface::name() \
     Workspace::self()->name();\
 }
 
-WRAP(killWindow)
 WRAP(reconfigure)
 
 #undef WRAP
+
+void DBusInterface::killWindow()
+{
+    Workspace::self()->slotKillWindow();
+}
 
 #define WRAP(name) \
 void DBusInterface::name() \

@@ -97,10 +97,6 @@ public:
      */
     void killWindowId(Window window);
 
-    void killWindow() {
-        slotKillWindow();
-    }
-
     bool initializing() const;
 
     /**
