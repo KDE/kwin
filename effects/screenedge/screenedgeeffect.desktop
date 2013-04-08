@@ -2,6 +2,7 @@
 Name=Screen Edge
 Name[cs]=Hrana obrazovky
 Name[de]=Bildschirmkante
+Name[el]=Άκρο οθόνης
 Name[es]=Borde de la pantalla
 Name[fi]=Näytön reuna
 Name[fr]=Bord de l'écran
@@ -26,6 +27,7 @@ Name[zh_TW]=螢幕邊緣
 Icon=preferences-system-windows-effect-screenedge
 Comment=Highlights a screen edge when approaching
 Comment[de]=Bildschirmkante bei Annäherung hervorheben
+Comment[el]=Εμφανίζει τονισμένο το άκρο της οθόνης όταν το πλησιάζετε
 Comment[es]=Resalta el borde de la pantalla al aproximarse a él
 Comment[fi]=Korostaa näytön reunaa sitä lähestyttäessä
 Comment[fr]=Mettre en valeur le bord de l'écran à l'approche
