@@ -666,13 +666,6 @@ bool Client::windowEvent(XEvent* e)
     case ClientMessage:
         clientMessageEvent(&e->xclient);
         break;
-    case ColormapChangeMask:
-        if (e->xany.window == window()) {
-            cmap = e->xcolormap.colormap;
-            if (isActive())
-                workspace()->updateColormap();
-        }
-        break;
     default:
         if (e->xany.window == window()) {
             if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
