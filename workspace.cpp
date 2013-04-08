@@ -1418,32 +1418,6 @@ void Workspace::sendClientToScreen(Client* c, int screen)
         sendClientToScreen(*it, screen);
 }
 
-void Workspace::killWindowId(Window window_to_kill)
-{
-    if (window_to_kill == None)
-        return;
-    Window window = window_to_kill;
-    Client* client = NULL;
-    for (;;) {
-        client = findClient(FrameIdMatchPredicate(window));
-        if (client != NULL)
-            break; // Found the client
-        Window parent, root;
-        Window* children;
-        unsigned int children_count;
-        XQueryTree(display(), window, &root, &parent, &children, &children_count);
-        if (children != NULL)
-            XFree(children);
-        if (window == root)   // We didn't find the client, probably an override-redirect window
-            break;
-        window = parent; // Go up
-    }
-    if (client != NULL)
-        client->killWindow();
-    else
-        XKillClient(display(), window_to_kill);
-}
-
 void Workspace::sendPingToWindow(Window window, Time timestamp)
 {
     rootInfo->sendPing(window, timestamp);

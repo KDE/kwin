@@ -92,11 +92,6 @@ public:
 
     QRegion restrictedMoveArea(int desktop, StrutAreas areas = StrutAreaAll) const;
 
-    /**
-     * @internal
-     */
-    void killWindowId(Window window);
-
     bool initializing() const;
 
     /**

@@ -20,6 +20,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "killwindow.h"
+#include "client.h"
 #include "cursor.h"
 #include "workspace.h"
 // Qt
@@ -135,7 +136,7 @@ void KillWindow::handleButtonRelease(xcb_button_t button, xcb_window_t window)
         return;
     }
     if (button == XCB_BUTTON_INDEX_1 || button == XCB_BUTTON_INDEX_2) {
-        Workspace::self()->killWindowId(window);
+        killWindowId(window);
         release();
         return;
     }
@@ -180,7 +181,7 @@ void KillWindow::performKill()
     xcb_connection_t *c = connection();
     ScopedCPointer<xcb_query_pointer_reply_t> pointer(xcb_query_pointer_reply(c, xcb_query_pointer_unchecked(c, rootWindow()), NULL));
     if (!pointer.isNull() && pointer->child != XCB_WINDOW_NONE) {
-            Workspace::self()->killWindowId(pointer->child);
+        killWindowId(pointer->child);
     }
 }
 
@@ -190,6 +191,30 @@ void KillWindow::release()
     xcb_ungrab_pointer(connection(), XCB_TIME_CURRENT_TIME);
     ungrabXServer();
     m_active = false;
+}
+
+void KillWindow::killWindowId(xcb_window_t window_to_kill)
+{
+    if (window_to_kill == XCB_WINDOW_NONE)
+        return;
+    xcb_window_t window = window_to_kill;
+    Client* client = NULL;
+    while (true) {
+        client = Workspace::self()->findClient(FrameIdMatchPredicate(window));
+        if (client) {
+            break; // Found the client
+        }
+        Xcb::Tree tree(window);
+        if (window == tree->root) {
+            // We didn't find the client, probably an override-redirect window
+            break;
+        }
+        window = tree->parent;  // Go up
+    }
+    if (client)
+        client->killWindow();
+    else
+        xcb_kill_client(connection(), window_to_kill);
 }
 
 } // namespace

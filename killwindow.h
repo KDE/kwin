@@ -52,6 +52,7 @@ private:
     void performKill();
     void handleKeyPress(xcb_keycode_t keycode, uint16_t state);
     void handleButtonRelease(xcb_button_t button, xcb_window_t window);
+    void killWindowId(xcb_window_t window_to_kill);
     bool m_active;
 };
 
