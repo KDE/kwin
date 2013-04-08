@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kdecoration.h"
 #include "sm.h"
-#include "killwindow.h"
 
 #include <X11/Xlib.h>
 
@@ -56,6 +55,7 @@ namespace KWin
 {
 
 class Client;
+class KillWindow;
 class Outline;
 class RootInfo;
 class Rules;

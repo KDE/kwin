@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "atoms.h"
 #include "cursor.h"
+#include "killwindow.h"
 #include "placement.h"
 #include "notifications.h"
 #include "outline.h"
