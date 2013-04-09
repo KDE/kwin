@@ -323,11 +323,13 @@ bool GlxBackend::initDrawableConfigs()
     GLXFBConfig *fbconfigs = glXGetFBConfigs(display(), DefaultScreen(display()), &cnt);
 
     for (int i = 0; i <= 32; i++) {
-        int back, stencil, depth, caveat, alpha, mipmap, rgba;
+        int back, stencil, depth, caveat, alpha, mipmap, msaa_buffers, msaa_samples, rgba;
         back = INT_MAX;
         stencil = INT_MAX;
         depth = INT_MAX;
         caveat = INT_MAX;
+        msaa_buffers = INT_MAX;
+        msaa_samples = INT_MAX;
         mipmap = 0;
         rgba = 0;
         fbcdrawableinfo[ i ].fbconfig = NULL;
@@ -395,12 +397,27 @@ bool GlxBackend::initDrawableConfigs()
                                  GLX_CONFIG_CAVEAT, &caveat_value);
             if (caveat_value > caveat)
                 continue;
+
+            int msaa_buffers_value;
+            glXGetFBConfigAttrib(display(), fbconfigs[j], GLX_SAMPLE_BUFFERS,
+                                 &msaa_buffers_value);
+            if (msaa_buffers_value > msaa_buffers)
+                continue;
+
+            int msaa_samples_value;
+            glXGetFBConfigAttrib(display(), fbconfigs[j], GLX_SAMPLES,
+                                 &msaa_samples_value);
+            if (msaa_samples_value > msaa_samples)
+                continue;
+
             // ok, config passed all tests, it's the best one so far
             fbcdrawableinfo[ i ].fbconfig = fbconfigs[ j ];
             caveat = caveat_value;
             back = back_value;
             stencil = stencil_value;
             depth = depth_value;
+            msaa_buffers = msaa_buffers_value;
+            msaa_samples = msaa_samples_value;
             mipmap = 0;
             glXGetFBConfigAttrib(display(), fbconfigs[ j ],
                                  GLX_BIND_TO_TEXTURE_TARGETS_EXT, &value);
