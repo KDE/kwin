@@ -29,8 +29,9 @@ namespace KWin
 {
 
 class DecorationPlugin
-    : public KDecorationPlugins
+    : public QObject, public KDecorationPlugins
 {
+    Q_OBJECT
 public:
     virtual ~DecorationPlugin();
     virtual bool provides(Requirement);
@@ -53,6 +54,9 @@ public:
      * @todo: remove KDE5
      **/
     QList<int> supportedColors() const;
+
+public Q_SLOTS:
+    void resetCompositing();
 protected:
     virtual void error(const QString& error_msg);
 private:

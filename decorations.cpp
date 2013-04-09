@@ -33,8 +33,9 @@ namespace KWin
 
 KWIN_SINGLETON_FACTORY(DecorationPlugin)
 
-DecorationPlugin::DecorationPlugin(QObject *)
-    : KDecorationPlugins(KGlobal::config())
+DecorationPlugin::DecorationPlugin(QObject *parent)
+    : QObject(parent)
+    , KDecorationPlugins(KGlobal::config())
     , m_disabled(false)
 {
     defaultPlugin = "kwin3_oxygen";
@@ -143,6 +144,14 @@ QList< int > DecorationPlugin::supportedColors() const
         if (factory()->supports(ab))
             ret << ab;
     return ret;
+}
+
+void DecorationPlugin::resetCompositing()
+{
+    if (m_disabled) {
+        return;
+    }
+    factory()->reset(SettingCompositing);
 }
 
 } // namespace

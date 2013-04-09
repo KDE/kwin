@@ -402,7 +402,6 @@ public slots:
 
     void reconfigure();
     void slotReconfigure();
-    void slotCompositingToggled();
 
     void slotKillWindow();
 

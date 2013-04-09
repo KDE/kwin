@@ -208,7 +208,7 @@ Workspace::Workspace(bool restore)
 
     m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
-    connect(m_compositor, SIGNAL(compositingToggled(bool)), SLOT(slotCompositingToggled()));
+    connect(m_compositor, SIGNAL(compositingToggled(bool)), decorationPlugin(), SLOT(resetCompositing()));
 
     new DBusInterface(this);
 
@@ -537,7 +537,6 @@ Workspace::~Workspace()
 
     delete rootInfo;
     delete supportWindow;
-    delete decorationPlugin();
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;
@@ -1809,15 +1808,6 @@ QString Workspace::supportInformation() const
         support.append("Compositing is not active\n");
     }
     return support;
-}
-
-void Workspace::slotCompositingToggled()
-{
-    // notify decorations that composition state has changed
-    DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->isDisabled()) {
-        deco->factory()->reset(SettingCompositing);
-    }
 }
 
 void Workspace::slotToggleCompositing()
