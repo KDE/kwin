@@ -37,7 +37,7 @@ public:
     /**
      * @returns @c true if there is no decoration plugin.
      **/
-    bool hasNoDecoration() const;
+    bool isDisabled() const;
 
     bool hasShadows() const;
     bool hasAlpha() const;
@@ -56,8 +56,8 @@ public:
 protected:
     virtual void error(const QString& error_msg);
 private:
-    void setNoDecoration(bool noDecoration);
-    bool m_noDecoration;
+    void setDisabled(bool noDecoration);
+    bool m_disabled;
     KWIN_SINGLETON(DecorationPlugin)
 };
 

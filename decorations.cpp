@@ -35,7 +35,7 @@ KWIN_SINGLETON_FACTORY(DecorationPlugin)
 
 DecorationPlugin::DecorationPlugin(QObject *)
     : KDecorationPlugins(KGlobal::config())
-    , m_noDecoration(false)
+    , m_disabled(false)
 {
     defaultPlugin = "kwin3_oxygen";
 #ifndef KWIN_BUILD_OXYGEN
@@ -44,7 +44,7 @@ DecorationPlugin::DecorationPlugin(QObject *)
 #ifdef KWIN_BUILD_DECORATIONS
     loadPlugin("");   // load the plugin specified in cfg file
 #else
-    setNoDecoration(true);
+    setDisabled(true);
 #endif
 }
 
@@ -57,7 +57,7 @@ void DecorationPlugin::error(const QString &error_msg)
 {
     qWarning("%s", QString(i18n("KWin: ") + error_msg).toLocal8Bit().data());
 
-    setNoDecoration(true);
+    setDisabled(true);
 }
 
 bool DecorationPlugin::provides(Requirement)
@@ -65,19 +65,19 @@ bool DecorationPlugin::provides(Requirement)
     return false;
 }
 
-void DecorationPlugin::setNoDecoration(bool noDecoration)
+void DecorationPlugin::setDisabled(bool disabled)
 {
-    m_noDecoration = noDecoration;
+    m_disabled = disabled;
 }
 
-bool DecorationPlugin::hasNoDecoration() const
+bool DecorationPlugin::isDisabled() const
 {
-    return m_noDecoration;
+    return m_disabled;
 }
 
 bool DecorationPlugin::hasShadows() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityProvidesShadow);
@@ -85,7 +85,7 @@ bool DecorationPlugin::hasShadows() const
 
 bool DecorationPlugin::hasAlpha() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityUsesAlphaChannel);
@@ -93,7 +93,7 @@ bool DecorationPlugin::hasAlpha() const
 
 bool DecorationPlugin::supportsAnnounceAlpha() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityAnnounceAlphaChannel);
@@ -101,7 +101,7 @@ bool DecorationPlugin::supportsAnnounceAlpha() const
 
 bool DecorationPlugin::supportsTabbing() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityTabbing);
@@ -109,7 +109,7 @@ bool DecorationPlugin::supportsTabbing() const
 
 bool DecorationPlugin::supportsFrameOverlap() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityExtendIntoClientArea);
@@ -117,7 +117,7 @@ bool DecorationPlugin::supportsFrameOverlap() const
 
 bool DecorationPlugin::supportsBlurBehind() const
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return false;
     }
     return factory()->supports(AbilityUsesBlurBehind);
@@ -125,7 +125,7 @@ bool DecorationPlugin::supportsBlurBehind() const
 
 Qt::Corner DecorationPlugin::closeButtonCorner()
 {
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return Qt::TopRightCorner;
     }
     return factory()->closeButtonCorner();
@@ -134,7 +134,7 @@ Qt::Corner DecorationPlugin::closeButtonCorner()
 QList< int > DecorationPlugin::supportedColors() const
 {
     QList<int> ret;
-    if (hasNoDecoration()) {
+    if (m_disabled) {
         return ret;
     }
     for (Ability ab = ABILITYCOLOR_FIRST;

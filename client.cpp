@@ -443,7 +443,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     if (!noBorder()) {
         setMask(QRegion());  // Reset shape mask
-        if (decorationPlugin()->hasNoDecoration()) {
+        if (decorationPlugin()->isDisabled()) {
             decoration = NULL;
         } else {
             decoration = decorationPlugin()->createDecoration(bridge);
@@ -674,7 +674,7 @@ void Client::resizeDecoration(const QSize& s)
 
 bool Client::noBorder() const
 {
-    return decorationPlugin()->hasNoDecoration() || noborder || isFullScreen();
+    return decorationPlugin()->isDisabled() || noborder || isFullScreen();
 }
 
 bool Client::userCanSetNoBorder() const

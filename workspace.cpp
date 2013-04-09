@@ -357,7 +357,7 @@ void Workspace::init()
     };
 
     DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->hasNoDecoration() && deco->factory()->supports(AbilityExtendIntoClientArea))
+    if (!deco->isDisabled() && deco->factory()->supports(AbilityExtendIntoClientArea))
         protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
     rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, screen_number);
@@ -917,7 +917,7 @@ void Workspace::slotReconfigure()
     updateToolWindows(true);
 
     DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->hasNoDecoration() && deco->reset(changed)) {
+    if (!deco->isDisabled() && deco->reset(changed)) {
         // Decorations need to be recreated
 
         // This actually seems to make things worse now
@@ -961,7 +961,7 @@ void Workspace::slotReconfigure()
         }
     }
 
-    if (!deco->hasNoDecoration()) {
+    if (!deco->isDisabled()) {
         rootInfo->setSupported(NET::WM2FrameOverlap, deco->factory()->supports(AbilityExtendIntoClientArea));
     } else {
         rootInfo->setSupported(NET::WM2FrameOverlap, false);
@@ -1815,7 +1815,7 @@ void Workspace::slotCompositingToggled()
 {
     // notify decorations that composition state has changed
     DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->hasNoDecoration()) {
+    if (!deco->isDisabled()) {
         deco->factory()->reset(SettingCompositing);
     }
 }
