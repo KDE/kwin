@@ -157,6 +157,8 @@ void KWinDecorationModule::init()
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
+    connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_ui->decorationList->rootObject(), SLOT(returnToBounds()), Qt::QueuedConnection);
+    connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), SLOT(updateScrollbarRange()), Qt::QueuedConnection);
     connect(m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
 
     m_ui->decorationList->disconnect(m_ui->decorationList->verticalScrollBar());
@@ -527,8 +529,10 @@ void KWinDecorationModule::updatePreviewWidth()
 void KWinDecorationModule::updateScrollbarRange()
 {
     m_ui->decorationList->verticalScrollBar()->blockSignals(true);
+    const bool atMinimum = m_ui->decorationList->rootObject()->property("atYBeginning").toBool();
     const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
-    m_ui->decorationList->verticalScrollBar()->setRange(0, h - m_ui->decorationList->height());
+    const int y = atMinimum ? m_ui->decorationList->rootObject()->property("contentY").toInt() : 0;
+    m_ui->decorationList->verticalScrollBar()->setRange(y, y + h - m_ui->decorationList->height());
     m_ui->decorationList->verticalScrollBar()->setPageStep(m_ui->decorationList->verticalScrollBar()->maximum()/m_model->rowCount());
     m_ui->decorationList->verticalScrollBar()->blockSignals(false);
 }
