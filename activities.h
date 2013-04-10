@@ -56,6 +56,7 @@ public:
 
     static Activities *self();
     static Activities *create(QObject *parent);
+    static QString nullUuid();
 
 Q_SIGNALS:
     /**
@@ -122,6 +123,13 @@ inline
 const QStringList &Activities::running() const
 {
     return m_running;
+}
+
+inline
+QString Activities::nullUuid()
+{
+    // cloned from kactivities/src/lib/core/consumer.cpp
+    return QString("00000000-0000-0000-0000-000000000000");
 }
 
 }
