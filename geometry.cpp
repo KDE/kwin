@@ -377,17 +377,24 @@ int Workspace::oldDisplayHeight() const
  */
 QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted, double snapAdjust)
 {
-    //CT 16mar98, 27May98 - magics: BorderSnapZone, WindowSnapZone
-    //CT adapted for kwin on 25Nov1999
-    //aleXXX 02Nov2000 added second snapping mode
-    int borderSnapZone = options->borderSnapZone();
-    if (c->maximizeMode() != MaximizeRestore)
-        borderSnapZone = qMax(borderSnapZone + 2, clientArea(ScreenArea, c).height() / 16);
+    QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
+    QRect maxRect;
+    if (c->maximizeMode() != MaximizeRestore) {
+        maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
+        QRect geo = c->geometry();
+        if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
+            borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
+        }
+        if (c->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
+            borderSnapZone.setHeight(qMax(borderSnapZone.height() + 2, maxRect.height() / 16));
+        }
+    }
 
-    if (options->windowSnapZone() || borderSnapZone || options->centerSnapZone()) {
+    if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
-        const QRect maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
+        if (maxRect.isNull())
+            maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();
@@ -400,19 +407,6 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         const int rx(cx + cw);
         const int ry(cy + ch);               //these don't change
 
-        // only enforce large snap while we're on a corresponding border
-        if (c->maximizeMode() != MaximizeRestore) {
-            QRect geo = c->geometry();
-            if (c->maximizeMode() & MaximizeVertical && geo.y() != maxRect.top() && geo.bottom() != maxRect.bottom()) {
-                borderSnapZone = options->borderSnapZone();
-            }
-            if (c->maximizeMode() & MaximizeHorizontal && geo.x() != maxRect.left() && geo.right() != maxRect.right()) {
-                borderSnapZone = options->borderSnapZone();
-            }
-            if (!(borderSnapZone || options->windowSnapZone() || options->centerSnapZone())) // ma have changed
-                return pos;
-        }
-
         int nx(cx), ny(cy);                         //buffers
         int deltaX(xmax);
         int deltaY(ymax);   //minimum distance to other clients
@@ -420,8 +414,9 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         int lx, ly, lrx, lry; //coords and size for the comparison client, l
 
         // border snap
-        int snap = borderSnapZone * snapAdjust; //snap trigger
-        if (snap) {
+        const int snapX = borderSnapZone.width() * snapAdjust; //snap trigger
+        const int snapY = borderSnapZone.height() * snapAdjust;
+        if (snapX || snapY) {
             const QPoint cp = c->clientPos();
             const QSize cs = c->geometry().size() - c->clientSize();
             int padding[4] = { cp.x(), cs.width() - cp.x(), cp.y(), cs.height() - cp.y() };
@@ -437,27 +432,27 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
             if (titlePos == PositionBottom || (c->maximizeMode() & MaximizeVertical))
                 padding[3] = 0;
 
-            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snap)) {
+            if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
                 deltaX = xmin - (cx - padding[0]);
                 nx = xmin - padding[0];
             }
-            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snap) && (qAbs(xmax - rx) < deltaX)) {
+            if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
                 deltaX = rx + padding[1] - xmax;
                 nx = xmax - cw + padding[1];
             }
 
-            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snap)) {
+            if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
                 deltaY = ymin - (cy - padding[2]);
                 ny = ymin - padding[2];
             }
-            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snap) && (qAbs(ymax - ry) < deltaY)) {
+            if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
                 deltaY = ry + padding[3] - ymax;
                 ny = ymax - ch + padding[3];
             }
         }
 
         // windows snap
-        snap = options->windowSnapZone() * snapAdjust;
+        int snap = options->windowSnapZone() * snapAdjust;
         if (snap) {
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
@@ -534,7 +529,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 deltaY = diffY;
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
-            } else if (borderSnapZone) {
+            } else if (options->borderSnapZone()) {
                 // Enhance border snap
                 if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
                     // Snap to vertical center on screen edge
