@@ -97,12 +97,7 @@ public:
         return m_xrrRefreshRate;
     }
     void setCompositeResetTimer(int msecs);
-    // returns the _estimated_ delay to the next screen update
-    // good for having a rough idea to calculate transformations, bad to rely on.
-    // might happen few ms earlier, might be an entire frame to short. This is NOT deterministic.
-    int nextFrameDelay() const {
-        return m_nextFrameDelay;
-    }
+
     bool hasScene() const {
         return m_scene != NULL;
     }
@@ -307,7 +302,6 @@ private:
     bool m_finishing; // finish() sets this variable while shutting down
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
-    int m_nextFrameDelay;
     Scene *m_scene;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)

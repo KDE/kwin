@@ -368,15 +368,10 @@ void GlxBackend::setSwapInterval(int interval)
         glXSwapIntervalSGI(interval);
 }
 
-#define VSYNC_DEBUG 0
-
 void GlxBackend::waitSync()
 {
     // NOTE that vsync has no effect with indirect rendering
     if (haveWaitSync) {
-#if VSYNC_DEBUG
-        startRenderTimer();
-#endif
         uint sync;
 #if 0
         // TODO: why precisely is this important?
@@ -387,23 +382,9 @@ void GlxBackend::waitSync()
 #else
         glXWaitVideoSync(1, 0, &sync);
 #endif
-#if VSYNC_DEBUG
-        static int waitTime = 0, waitCounter = 0, doubleSyncCounter = 0;
-        if (renderTime() > 11)
-            ++doubleSyncCounter;
-        waitTime += renderTime();
-        ++waitCounter;
-        if (waitCounter > 99)
-        {
-            qDebug() << "mean vsync wait time:" << float((float)waitTime / (float)waitCounter) << doubleSyncCounter << "/100";
-            doubleSyncCounter = waitTime = waitCounter = 0;
-        }
-#endif
     }
     startRenderTimer(); // yes, the framerate shall be constant anyway.
 }
-
-#undef VSYNC_DEBUG
 
 void GlxBackend::present()
 {

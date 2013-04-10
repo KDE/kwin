@@ -162,10 +162,7 @@ void Scene::updateTimeDiff()
         last_time.start();
     } else
 
-    // the extra wspace->nextFrameDelay() basically means that we lie to the effect about the passed
-    // time - as a result the (animated) effect will run up to a frame shorter but in return stick
-    // closer to the runtime from the trigger
-    time_diff = last_time.restart()/* + wspace->nextFrameDelay()*/;
+    time_diff = last_time.restart();
 
     if (time_diff < 0)   // check time rollback
         time_diff = 1;

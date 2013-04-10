@@ -88,7 +88,6 @@ Compositor::Compositor(QObject* workspace)
     , forceUnredirectCheck(false)
     , m_finishing(false)
     , m_timeSinceLastVBlank(0)
-    , m_nextFrameDelay(0)
     , m_scene(NULL)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
@@ -669,18 +668,15 @@ void Compositor::setCompositeTimer()
         }
 
         if (padding < options->vBlankTime()) { // we'll likely miss this frame
-            m_nextFrameDelay = nanoToMilli(padding + vBlankInterval);
             waitTime = nanoToMilli(padding + vBlankInterval - options->vBlankTime()); // so we add one
-//             qDebug() << "WE LOST A FRAME";
         } else {
-            m_nextFrameDelay = nanoToMilli(padding);
             waitTime = nanoToMilli(padding - options->vBlankTime());
         }
     }
     else // w/o vsync we just jump to the next demanded tick
         // the "1" will ensure we don't block out the eventloop - the system's just not faster
         // "0" would be sufficient, but the compositor isn't the WMs only task
-        m_nextFrameDelay = waitTime = (m_timeSinceLastVBlank > fpsInterval) ? 1 : nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
+        waitTime = (m_timeSinceLastVBlank > fpsInterval) ? 1 : nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
     compositeTimer.start(qMin(waitTime, 250u), this); // force 4fps minimum
 }
 
