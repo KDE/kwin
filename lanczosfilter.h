@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class EffectWindow;
 class EffectWindowImpl;
 class WindowPaintData;
 class GLTexture;
@@ -55,6 +56,7 @@ private:
     void init();
     void updateOffscreenSurfaces();
     void setUniforms();
+    void discardCacheTexture(EffectWindow *w);
 
     void createKernel(float delta, int *kernelSize);
     void createOffsets(int count, float width, Qt::Orientation direction);

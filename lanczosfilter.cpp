@@ -20,7 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "lanczosfilter.h"
+#include "client.h"
+#include "deleted.h"
 #include "effects.h"
+#include "unmanaged.h"
 #include "options.h"
 
 #include <kwinglutils.h>
@@ -388,15 +391,27 @@ void LanczosFilter::timerEvent(QTimerEvent *event)
         delete m_offscreenTex;
         m_offscreenTarget = 0;
         m_offscreenTex = 0;
-        foreach (EffectWindow * w, effects->stackingOrder()) {
-            QVariant cachedTextureVariant = w->data(LanczosCacheRole);
-            if (cachedTextureVariant.isValid()) {
-                GLTexture *cachedTexture = static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
-                delete cachedTexture;
-                cachedTexture = 0;
-                w->setData(LanczosCacheRole, QVariant());
-            }
+        foreach (Client *c, Workspace::self()->clientList()) {
+            discardCacheTexture(c->effectWindow());
         }
+        foreach (Client *c, Workspace::self()->desktopList()) {
+            discardCacheTexture(c->effectWindow());
+        }
+        foreach (Unmanaged *u, Workspace::self()->unmanagedList()) {
+            discardCacheTexture(u->effectWindow());
+        }
+        foreach (Deleted *d, Workspace::self()->deletedList()) {
+            discardCacheTexture(d->effectWindow());
+        }
+    }
+}
+
+void LanczosFilter::discardCacheTexture(EffectWindow *w)
+{
+    QVariant cachedTextureVariant = w->data(LanczosCacheRole);
+    if (cachedTextureVariant.isValid()) {
+        delete static_cast< GLTexture*>(cachedTextureVariant.value<void*>());
+        w->setData(LanczosCacheRole, QVariant());
     }
 }
 
