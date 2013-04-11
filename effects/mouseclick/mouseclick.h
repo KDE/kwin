@@ -139,7 +139,6 @@ public:
         return m_enabled;
     }
 
-    static bool supported();
 private slots:
     void toggleEnabled();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,

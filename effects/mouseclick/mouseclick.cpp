@@ -40,7 +40,6 @@ namespace KWin
 {
 
 KWIN_EFFECT(mouseclick, MouseClickEffect)
-KWIN_EFFECT_SUPPORTED(mouseclick, MouseClickEffect::supported())
 
 MouseClickEffect::MouseClickEffect()
 {
@@ -71,11 +70,6 @@ MouseClickEffect::~MouseClickEffect()
     for (int i = 0; i < BUTTON_COUNT; ++i) {
         delete m_buttons[i];
     }
-}
-
-bool MouseClickEffect::supported()
-{
-    return true;
 }
 
 void MouseClickEffect::reconfigure(ReconfigureFlags)
