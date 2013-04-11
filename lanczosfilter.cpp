@@ -65,7 +65,7 @@ void LanczosFilter::init()
 
     if (!force && options->glSmoothScale() != 2)
         return; // disabled by config
-    if (effects->compositingType() != OpenGL2Compositing || !GLRenderTarget::supported())
+    if (!GLRenderTarget::supported())
         return;
 
     GLPlatform *gl = GLPlatform::instance();
@@ -171,7 +171,7 @@ void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direct
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (effects->compositingType() == OpenGL2Compositing && (data.xScale() < 0.9 || data.yScale() < 0.9) &&
+    if ((data.xScale() < 0.9 || data.yScale() < 0.9) &&
             KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
         if (!m_inited)
             init();
