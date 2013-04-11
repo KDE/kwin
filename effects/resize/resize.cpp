@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include <xcb/render.h>
+#include "kwinxrenderutils.h"
 #endif
 
 #include <KColorScheme>
@@ -107,18 +107,14 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (effects->compositingType() == XRenderCompositing) {
-                xcb_render_color_t col;
-                col.alpha = int(alpha * 0xffff);
-                col.red = int(alpha * 0xffff * color.red() / 255);
-                col.green = int(alpha * 0xffff * color.green() / 255);
-                col.blue = int(alpha * 0xffff * color.blue() / 255);
                 QVector<xcb_rectangle_t> rects;
                 foreach (const QRect & r, paintRegion.rects()) {
                     xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
                     rects << rect;
                 }
                 xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER,
-                                           effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
+                                           effects->xrenderBufferPicture(), preMultiply(color, alpha),
+                                           rects.count(), rects.constData());
             }
 #endif
         }
