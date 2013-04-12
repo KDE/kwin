@@ -290,6 +290,10 @@ TabBoxClientList TabBoxHandlerImpl::stackingOrder() const
     return ret;
 }
 
+bool TabBoxHandlerImpl::isKWinCompositing() const {
+    return Workspace::self()->compositing();
+}
+
 void TabBoxHandlerImpl::raiseClient(TabBoxClient* c) const
 {
     Workspace::self()->raiseClient(static_cast<TabBoxClientImpl*>(c)->client());

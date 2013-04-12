@@ -144,7 +144,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         w = m_declarativeView;
     }
 
-    if (KWindowSystem::compositingActive()) {
+    if (q->isKWinCompositing()) {
         if (lastRaisedClient)
             q->elevateClient(lastRaisedClient, m_declarativeView ? m_declarativeView->winId() : 0, false);
         lastRaisedClient = currentClient;

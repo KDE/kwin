@@ -71,6 +71,9 @@ public:
     virtual QVector< xcb_window_t > outlineWindowIds() const {
         return QVector<xcb_window_t>();
     }
+    virtual bool isKWinCompositing() const {
+        return false;
+    }
     virtual void raiseClient(TabBox::TabBoxClient *c) const {
         Q_UNUSED(c)
     }

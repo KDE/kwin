@@ -52,6 +52,7 @@ public:
     virtual int currentDesktop() const;
     virtual QString desktopName(TabBoxClient* client) const;
     virtual QString desktopName(int desktop) const;
+    virtual bool isKWinCompositing() const;
     virtual QWeakPointer< TabBoxClient > nextClientFocusChain(TabBoxClient* client) const;
     virtual QWeakPointer< TabBoxClient > firstClientFocusChain() const;
     virtual bool isInFocusChain (TabBoxClient* client) const;
