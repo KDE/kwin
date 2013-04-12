@@ -88,12 +88,21 @@ void EglOnXBackend::init()
     if (surfaceHasSubPost) {
         kDebug(1212) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
-        // set swap interval appropriately
-        const bool wantSync = options->glPreferBufferSwap() != Options::NoSwapEncourage;
-        const EGLBoolean res = eglSwapInterval(dpy, wantSync ? 1 : 0);
-        if (res && wantSync) {
-            kDebug(1212) << "Enabled v-sync";
-            setHasWaitSync(true);
+        if (options->glPreferBufferSwap() != Options::NoSwapEncourage) {
+            // check if swap interval 1 is supported
+            EGLint val;
+            eglGetConfigAttrib(dpy, config, EGL_MAX_SWAP_INTERVAL, &val);
+            if (val >= 1) {
+                if (eglSwapInterval(dpy, 1)) {
+                    kDebug(1212) << "Enabled v-sync";
+                    setHasWaitSync(true);
+                }
+            } else {
+                kWarning(1212) << "Cannot enable v-sync as max. swap interval is" << val;
+            }
+        } else {
+            // disable v-sync
+            eglSwapInterval(dpy, 0);
         }
     } else {
         /* In the GLX backend, we fall back to using glCopyPixels if we have no extension providing support for partial screen updates.
