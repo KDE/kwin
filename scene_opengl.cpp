@@ -380,7 +380,6 @@ void SceneOpenGL::paintBackground(QRegion region)
 
 void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
 {
-#ifndef KWIN_HAVE_OPENGLES
     if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
         const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
         uint damagedPixels = 0;
@@ -401,10 +400,6 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
         region = QRegion(0, 0, displayWidth(), displayHeight());
     }
-#else
-    Q_UNUSED(region);
-    Q_UNUSED(opaqueFullscreen);
-#endif
 }
 
 void SceneOpenGL::windowAdded(Toplevel* c)
