@@ -43,17 +43,6 @@ class KButtonGroup;
 class KColorButton;
 class KIntNumInput;
 
-#define CLICK_TO_FOCUS     0
-#define FOCUS_FOLLOW_MOUSE 1
-
-#define TITLEBAR_PLAIN  0
-#define TITLEBAR_SHADED 1
-
-#define  CLICK_TO_FOCUS               0
-#define  FOCUS_FOLLOWS_MOUSE          1
-#define  FOCUS_UNDER_MOUSE            2
-#define  FOCUS_STRICTLY_UNDER_MOUSE   3
-
 
 class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
 {
@@ -99,6 +88,7 @@ private slots:
     void autoRaiseOnTog(bool);//CT 23Oct1998
     void delayFocusOnTog(bool);
     void updateActiveMouseScreen();
+    void updateMultiScreen();
     void changed() {
         emit KCModule::changed(true);
     }
