@@ -52,7 +52,6 @@
 #define KWIN_AUTORAISE             "AutoRaise"
 #define KWIN_DELAYFOCUS_INTERVAL   "DelayFocusInterval"
 #define KWIN_CLICKRAISE            "ClickRaise"
-#define KWIN_MOVE_RESIZE_MAXIMIZED "MoveResizeMaximizedWindows"
 #define KWIN_SHADEHOVER            "ShadeHover"
 #define KWIN_SHADEHOVER_INTERVAL   "ShadeHoverInterval"
 #define KWIN_FOCUS_STEALING        "FocusStealingPreventionLevel"
@@ -502,7 +501,6 @@ KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponen
 {
     // Any changes goes to slotChanged()
     connect(m_ui->geometryTipOn, SIGNAL(clicked()), SLOT(changed()));
-    connect(m_ui->moveResizeMaximized, SIGNAL(toggled(bool)), SLOT(changed()));
     connect(m_ui->borderSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->windowSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->centerSnap, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -519,11 +517,6 @@ void KMovingConfig::setGeometryTip(bool showGeometryTip)
 bool KMovingConfig::getGeometryTip()
 {
     return m_ui->geometryTipOn->isChecked();
-}
-
-void KMovingConfig::setMoveResizeMaximized(bool a)
-{
-    m_ui->moveResizeMaximized->setChecked(a);
 }
 
 void KMovingConfig::showEvent(QShowEvent *ev)
@@ -545,8 +538,6 @@ void KMovingConfig::load(void)
     bool showGeomTip = cg.readEntry(KWIN_GEOMETRY, false);
     setGeometryTip(showGeomTip);
 
-
-    setMoveResizeMaximized(cg.readEntry(KWIN_MOVE_RESIZE_MAXIMIZED, false));
 
     int v;
 
@@ -573,7 +564,6 @@ void KMovingConfig::save(void)
 {
     KConfigGroup cg(config, "Windows");
     cg.writeEntry(KWIN_GEOMETRY, getGeometryTip());
-    cg.writeEntry(KWIN_MOVE_RESIZE_MAXIMIZED, m_ui->moveResizeMaximized->isChecked());
 
 
     cg.writeEntry(KWM_BRDR_SNAP_ZONE, getBorderSnapZone());
@@ -596,7 +586,6 @@ void KMovingConfig::save(void)
 void KMovingConfig::defaults()
 {
     setGeometryTip(false);
-    setMoveResizeMaximized(false);
 
     //copied from kcontrol/konq/kwindesktop, aleXXX
     setWindowSnapZone(KWM_WNDW_SNAP_ZONE_DEFAULT);

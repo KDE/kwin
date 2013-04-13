@@ -149,7 +149,6 @@ private:
     bool getGeometryTip(void);   //KS
 
     void setGeometryTip(bool); //KS
-    void setMoveResizeMaximized(bool);
 
     KConfig *config;
     bool     standAlone;
