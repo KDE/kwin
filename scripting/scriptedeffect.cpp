@@ -188,6 +188,7 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
             if (value.isObject()) {
                 AnimationSettings s = animationSettingsFromObject(value);
                 const uint set = s.set | settings.at(0).set;
+                // Catch show stoppers (incompletable animation)
                 if (!(set & AnimationSettings::Type)) {
                     context->throwError(QScriptContext::TypeError, "Type property missing in animation options");
                     continue;
@@ -196,10 +197,14 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
                     context->throwError(QScriptContext::TypeError, "Duration property missing in animation options");
                     continue;
                 }
-                if (!s.set & AnimationSettings::Curve) {
+                // Complete local animations from global settings
+                if (!(s.set & AnimationSettings::Duration)) {
+                    s.duration = settings.at(0).duration;
+                }
+                if (!(s.set & AnimationSettings::Curve)) {
                     s.curve = settings.at(0).curve;
                 }
-                if (!s.set & AnimationSettings::Delay) {
+                if (!(s.set & AnimationSettings::Delay)) {
                     s.delay = settings.at(0).delay;
                 }
                 settings << s;
@@ -217,6 +222,8 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
             context->throwError(QScriptContext::TypeError, "Duration property missing in animation options");
             settings.clear();
         }
+    } else if (!(settings.at(0).set & AnimationSettings::Type)) { // invalid global
+        settings.removeAt(0); // -> get rid of it, only used to complete the others
     }
 
     return settings;
@@ -247,7 +254,6 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
                                     setting.curve,
                                     setting.delay));
     }
-
     return engine->newVariant(animIds);
 }
 
