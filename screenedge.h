@@ -106,7 +106,7 @@ private:
     QPoint m_triggeredPoint;
     QHash<QObject *, QByteArray> m_callBacks;
     bool m_approaching;
-    qreal m_lastApproachingFactor;
+    int m_lastApproachingFactor;
     bool m_blocked;
 };
 
@@ -216,6 +216,10 @@ public:
      * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
      */
     void check(const QPoint& pos, const QDateTime &now, bool forceNoPushBack = false);
+    /**
+     * The (dpi dependent) length, reserved for the active corners of each edge - 1/3"
+     */
+    int cornerOffset() const;
     /**
      * Mark the specified screen edge as reserved. This method is provided for external activation
      * like effects and scripts. When the effect/script does no longer need the edge it is supposed
@@ -333,6 +337,7 @@ private:
     ElectricBorderAction m_actionBottom;
     ElectricBorderAction m_actionBottomLeft;
     ElectricBorderAction m_actionLeft;
+    int m_cornerOffset;
 
     KWIN_SINGLETON(ScreenEdges)
 };
@@ -447,6 +452,10 @@ inline xcb_window_t WindowBasedEdge::approachWindow() const
 inline void ScreenEdges::setConfig(KSharedConfig::Ptr config)
 {
     m_config = config;
+}
+
+inline int ScreenEdges::cornerOffset() const {
+    return m_cornerOffset;
 }
 
 inline const QSize &ScreenEdges::cursorPushBackDistance() const

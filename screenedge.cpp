@@ -59,7 +59,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_action(ElectricActionNone)
     , m_reserved(0)
     , m_approaching(false)
-    , m_lastApproachingFactor(0.0)
+    , m_lastApproachingFactor(0)
     , m_blocked(false)
 {
 }
@@ -290,8 +290,7 @@ void Edge::setGeometry(const QRect &geometry)
     int y = m_geometry.y();
     int width = m_geometry.width();
     int height = m_geometry.height();
-    // TODO: better not hard coded value
-    const int size = 20;
+    const int size = m_edges->cornerOffset();
     if (isCorner()) {
         if (isRight()) {
             x = x - size +1;
@@ -365,7 +364,7 @@ void Edge::startApproaching()
     }
     m_approaching = true;
     doStartApproaching();
-    m_lastApproachingFactor = 0.0;
+    m_lastApproachingFactor = 0;
     emit approaching(border(), 0.0, m_approachGeometry);
 }
 
@@ -380,7 +379,7 @@ void Edge::stopApproaching()
     }
     m_approaching = false;
     doStopApproaching();
-    m_lastApproachingFactor = 0.0;
+    m_lastApproachingFactor = 0;
     emit approaching(border(), 0.0, m_approachGeometry);
 }
 
@@ -391,42 +390,42 @@ void Edge::doStopApproaching()
 void Edge::updateApproaching(const QPoint &point)
 {
     if (approachGeometry().contains(point)) {
-        qreal factor = 0.0;
+        int factor = 0;
+        const int edgeDistance = m_edges->cornerOffset();
         // manhattan length for our edge
-        const qreal cornerDistance = 40.0;
-        const qreal edgeDistance = 20.0;
+        const int cornerDistance = 2*edgeDistance;
         switch (border()) {
         case ElectricTopLeft:
-            factor = point.manhattanLength() / cornerDistance;
+            factor = (point.manhattanLength()<<8) / cornerDistance;
             break;
         case ElectricTopRight:
-            factor = (point - approachGeometry().topRight()).manhattanLength() / cornerDistance;
+            factor = ((point - approachGeometry().topRight()).manhattanLength()<<8) / cornerDistance;
             break;
         case ElectricBottomRight:
-            factor = (point - approachGeometry().bottomRight()).manhattanLength() / cornerDistance;
+            factor = ((point - approachGeometry().bottomRight()).manhattanLength()<<8) / cornerDistance;
             break;
         case ElectricBottomLeft:
-            factor = (point - approachGeometry().bottomLeft()).manhattanLength() / cornerDistance;
+            factor = ((point - approachGeometry().bottomLeft()).manhattanLength()<<8) / cornerDistance;
             break;
         case ElectricTop:
-            factor = qAbs(point.y() - approachGeometry().y()) / edgeDistance;
+            factor = (qAbs(point.y() - approachGeometry().y())<<8) / edgeDistance;
             break;
         case ElectricRight:
-            factor = qAbs(point.x() - approachGeometry().right()) / edgeDistance;
+            factor = (qAbs(point.x() - approachGeometry().right())<<8) / edgeDistance;
             break;
         case ElectricBottom:
-            factor = qAbs(point.y() - approachGeometry().bottom()) / edgeDistance;
+            factor = (qAbs(point.y() - approachGeometry().bottom())<<8) / edgeDistance;
             break;
         case ElectricLeft:
-            factor = qAbs(point.x() - approachGeometry().x()) / edgeDistance;
+            factor = (qAbs(point.x() - approachGeometry().x())<<8) / edgeDistance;
             break;
         default:
             break;
         }
-        factor = 1.0 - factor;
+        factor = 256 - factor;
         if (m_lastApproachingFactor != factor) {
             m_lastApproachingFactor = factor;
-            emit approaching(border(), m_lastApproachingFactor, m_approachGeometry);
+            emit approaching(border(), m_lastApproachingFactor/256.0f, m_approachGeometry);
         }
     } else {
         stopApproaching();
@@ -552,6 +551,8 @@ ScreenEdges::ScreenEdges(QObject *parent)
     , m_actionBottomLeft(ElectricActionNone)
     , m_actionLeft(ElectricActionNone)
 {
+    QWidget w;
+    m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;
 }
 
 ScreenEdges::~ScreenEdges()
@@ -829,15 +830,15 @@ void ScreenEdges::createVerticalEdge(ElectricBorder border, const QRect &screen,
     const int x = (border == ElectricLeft) ? screen.x() : screen.x() + screen.width() -1;
     if (isTopScreen(screen, fullArea)) {
         // also top most screen
-        height--;
-        y++;
+        height -= m_cornerOffset;
+        y += m_cornerOffset;
         // create top left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricTopLeft : ElectricTopRight;
         m_edges << createEdge(edge, x, screen.y(), 1, 1);
     }
     if (isBottomScreen(screen, fullArea)) {
         // also bottom most screen
-        height--;
+        height -= m_cornerOffset;
         // create bottom left/right edge
         const ElectricBorder edge = (border == ElectricLeft) ? ElectricBottomLeft : ElectricBottomRight;
         m_edges << createEdge(edge, x, screen.y() + screen.height() -1, 1, 1);
@@ -855,12 +856,12 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     int width = screen.width();
     if (isLeftScreen(screen, fullArea)) {
         // also left most - adjust only x and width
-        x++;
-        width--;
+        x += m_cornerOffset;
+        width -= m_cornerOffset;
     }
     if (isRightScreen(screen, fullArea)) {
         // also right most edge
-        width--;
+        width -= m_cornerOffset;
     }
     const int y = (border == ElectricTop) ? screen.y() : screen.y() + screen.height() - 1;
     m_edges << createEdge(border, x, y, width, 1);
