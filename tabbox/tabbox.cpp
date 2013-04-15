@@ -729,6 +729,9 @@ void TabBox::reconfigure()
     m_delayShow = config.readEntry<bool>("ShowDelay", true);
     m_delayShowTime = config.readEntry<int>("DelayTime", 90);
 
+    m_desktopConfig.setLayoutName(config.readEntry("DesktopLayout", "informative"));
+    m_desktopListConfig.setLayoutName(config.readEntry("DesktopListLayout", "informative"));
+
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = "BorderActivate";
     for (int i = 0; i < 2; ++i) {

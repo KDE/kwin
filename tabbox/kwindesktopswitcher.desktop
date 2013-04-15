@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KWin/DesktopSwitcher
+
+Comment=KWin Desktop Switcher Layout
+
+[PropertyDef::X-Plasma-API]
+Type=QString
+
+[PropertyDef::X-Plasma-MainScript]
+Type=QString
+
+[PropertyDef::X-KWin-Exclude-Listing]
+Type=bool
