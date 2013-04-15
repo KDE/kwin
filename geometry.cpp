@@ -2619,9 +2619,9 @@ void Client::finishMoveResize(bool cancel)
         }
         setGeometry(moveResizeGeom);
     }
-    const int newScreen = screen();
-    if (newScreen != moveResizeStartScreen) {
-        workspace()->sendClientToScreen(this, newScreen); // checks rule validity
+    checkScreen(); // needs to be done because clientFinishUserMovedResized has not yet re-activated online alignment
+    if (screen() != moveResizeStartScreen) {
+        workspace()->sendClientToScreen(this, screen()); // checks rule validity
         if (maximizeMode() != MaximizeRestore)
             checkWorkspacePosition();
     }
