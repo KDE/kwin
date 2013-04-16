@@ -730,7 +730,7 @@ bool RulesWidget::finalCheck()
 
 void RulesWidget::prepareWindowSpecific(WId window)
 {
-    tabs->setCurrentIndex(2);   // geometry tab, skip tabs for window identification
+    tabs->setCurrentIndex(1);   // geometry tab, skip tab for window identification
     KWindowInfo info(window, -1U, -1U);   // read everything
     prefillUnusedValues(info);
 }
