@@ -69,7 +69,7 @@ Name[zh_CN]=滑出
 Name[zh_TW]=往回滑動
 
 Type=Service
-Comment=Slide back windows losing focus
+Comment=Slide back windows when another window is raised
 Comment[ar]=يُزلق النوافذ التي فقدت التركيز للخلف
 Comment[ast]=Mover atrás una ventana non activa
 Comment[bg]=Обратно приплъзване на прозорците, които остават извън фокус
