@@ -34,6 +34,12 @@ namespace TabBox
 DesktopModel::DesktopModel(QObject* parent)
     : QAbstractItemModel(parent)
 {
+    QHash<int, QByteArray> roleNames;
+    roleNames.insert(Qt::DisplayRole, "display");
+    roleNames.insert(DesktopNameRole, "caption");
+    roleNames.insert(DesktopRole, "desktop");
+    roleNames.insert(ClientModelRole, "client");
+    setRoleNames(roleNames);
 }
 
 DesktopModel::~DesktopModel()
