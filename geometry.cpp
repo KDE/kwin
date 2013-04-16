@@ -2628,8 +2628,9 @@ void Client::finishMoveResize(bool cancel)
                                     moveResizeGeom.width() != initialMoveResizeGeom.width();
             const bool restoreV = maximizeMode() == MaximizeVertical &&
                                     moveResizeGeom.height() != initialMoveResizeGeom.height();
-            if (restoreH || restoreV) // NOT setMaximize(restoreH, restoreV); !
-                setMaximize(false, false);
+            if (restoreH || restoreV) {
+                changeMaximize(restoreV, restoreH, false);
+            }
         }
         setGeometry(moveResizeGeom);
     }
