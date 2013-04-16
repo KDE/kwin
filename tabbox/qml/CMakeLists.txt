@@ -11,6 +11,7 @@ install( DIRECTORY clients/thumbnails   DESTINATION ${DATA_INSTALL_DIR}/${KWIN_N
 install( DIRECTORY clients/window_strip DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 
 install( DIRECTORY desktops/informative DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox )
+install( DIRECTORY desktops/previews DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox )
 
 # service files
 install( FILES clients/big_icons/metadata.desktop    DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_big_icons.desktop )
@@ -23,6 +24,7 @@ install( FILES clients/thumbnails/metadata.desktop   DESTINATION ${SERVICES_INST
 install( FILES clients/window_strip/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_window_strip.desktop )
 
 install( FILES desktops/informative/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_informative.desktop )
+install( FILES desktops/previews/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_previews.desktop )
 
 install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
 install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
@@ -34,3 +36,4 @@ install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/text/contents/ui)
 
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/informative/contents/ui)
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/previews/contents/ui)
