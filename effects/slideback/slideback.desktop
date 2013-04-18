@@ -70,6 +70,13 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows when another window is raised
+Comment[nl]=Schuif vensters terug wanneer een ander venster omhoog komt
+Comment[pt]=Deslizar para trás as janelas quando for elevada outra janela
+Comment[pt_BR]=Desliza as janelas para trás quando outra for elevadaDesliza para trás as janelas que perdem o foco
+Comment[sk]=Zasunie okná pri zdvihnutí iného okna
+Comment[sv]=Låt fönster glida tillbaka när ett annat fönster höjs.
+Comment[uk]=Ковзання вікон на задній план під час підняття інших вікон
+Comment[x-test]=xxSlide back windows when another window is raisedxx
 Icon=preferences-system-windows-effect-slideback
 X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Michael Zanetti
