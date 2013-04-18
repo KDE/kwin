@@ -172,8 +172,18 @@ void DetectDialog::selectWindow()
     grabber->move(-1000, -1000);
     grabber->setModal(true);
     grabber->show();
-    grabber->grabMouse(Qt::CrossCursor);
-    grabber->installEventFilter(this);
+    // Qt uses QX11Info::appTime() to grab the pointer, what can silently fail (#318437) ...
+    XSync(QX11Info::display(), false);
+    if (XGrabPointer(QX11Info::display(), grabber->winId(), false, ButtonReleaseMask,
+                     GrabModeAsync, GrabModeAsync, None, QCursor(Qt::CrossCursor).handle(),
+                     CurrentTime) == Success) { // ...so we use the far more convincing CurrentTime
+        grabber->grabMouse(Qt::CrossCursor); // do anyway, so that Qt updates the mouseGrabber info
+        grabber->installEventFilter(this);
+    } else {
+        // ... and if we fail, cleanup, so we won't receive random events
+        delete grabber;
+        grabber = 0;
+    }
 }
 
 bool DetectDialog::eventFilter(QObject* o, QEvent* e)
