@@ -1340,8 +1340,6 @@ void Client::killWindow()
 
     if (isDialog())
         Notify::raise(Notify::TransDelete);
-    if (isNormalWindow())
-        Notify::raise(Notify::Delete);
     killProcess(false);
     XKillClient(display(), window());  // Always kill this client at the server
     destroyClient();

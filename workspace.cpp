@@ -663,8 +663,6 @@ void Workspace::removeClient(Client* c, allowed_t)
 
     if (c->isDialog())
         Notify::raise(Notify::TransDelete);
-    if (c->isNormalWindow())
-        Notify::raise(Notify::Delete);
 
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();

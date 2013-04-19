@@ -45,7 +45,6 @@ public:
         UnMaximize,
         OnAllDesktops,
         NotOnAllDesktops,
-        Delete,
         TransNew,
         TransDelete,
         ShadeUp,
