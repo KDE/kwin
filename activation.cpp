@@ -843,9 +843,6 @@ void Client::setActive(bool act)
     setOpacity(ruledOpacity / 100.0);
     workspace()->setActiveClient(act ? this : NULL, Allowed);
 
-    if (active)
-        Notify::raise(Notify::Activate);
-
     if (!active)
         cancelAutoRaise();
 
