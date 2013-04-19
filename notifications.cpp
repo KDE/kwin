@@ -41,18 +41,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case Activate:
         event = "activate";
         break;
-    case MoveStart:
-        event = "movestart";
-        break;
-    case MoveEnd:
-        event = "moveend";
-        break;
-    case ResizeStart:
-        event = "resizestart";
-        break;
-    case ResizeEnd:
-        event = "resizeend";
-        break;
     case DemandAttentionCurrent:
         event = "demandsattentioncurrent";
         break;

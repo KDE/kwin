@@ -38,10 +38,6 @@ public:
 
     enum Event {
         Activate,
-        MoveStart,
-        MoveEnd,
-        ResizeStart,
-        ResizeEnd,
         DemandAttentionCurrent,
         DemandAttentionOther,
         CompositingSuspendedDbus,

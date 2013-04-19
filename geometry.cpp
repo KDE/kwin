@@ -2596,7 +2596,6 @@ bool Client::startMoveResize()
     moveResizeStartScreen = screen();
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
-    Notify::raise(isResize() ? Notify::ResizeStart : Notify::MoveStart);
     emit clientStartUserMovedResized(this);
 #ifdef KWIN_BUILD_SCREENEDGES
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
@@ -2649,7 +2648,6 @@ void Client::finishMoveResize(bool cancel)
     }
 // FRAME    update();
 
-    Notify::raise(isResize() ? Notify::ResizeEnd : Notify::MoveEnd);
     emit clientFinishUserMovedResized(this);
 }
 
