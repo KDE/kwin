@@ -38,7 +38,6 @@ public:
 
     enum Event {
         Activate,
-        TransNew,
         TransDelete,
         MoveStart,
         MoveEnd,

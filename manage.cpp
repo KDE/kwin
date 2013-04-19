@@ -541,9 +541,6 @@ bool Client::manage(Window w, bool isMapped)
         ready_for_painting = true; // set to true in case compositing is turned on later. bug #160393
 
     if (isShown(true)) {
-        if (isDialog())
-            Notify::raise(Notify::TransNew);
-
         bool allow;
         if (session)
             allow = session->active &&
