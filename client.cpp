@@ -1321,9 +1321,6 @@ void Client::closeWindow()
 void Client::killWindow()
 {
     kDebug(1212) << "Client::killWindow():" << caption();
-
-    if (isDialog())
-        Notify::raise(Notify::TransDelete);
     killProcess(false);
     XKillClient(display(), window());  // Always kill this client at the server
     destroyClient();

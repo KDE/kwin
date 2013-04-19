@@ -661,9 +661,6 @@ void Workspace::removeClient(Client* c, allowed_t)
         clientShortcutUpdated(c);   // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
     }
 
-    if (c->isDialog())
-        Notify::raise(Notify::TransDelete);
-
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
     if (tabBox->isDisplayed() && tabBox->currentClient() == c)

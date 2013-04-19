@@ -41,9 +41,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case Activate:
         event = "activate";
         break;
-    case TransDelete:
-        event = "transdelete";
-        break;
     case MoveStart:
         event = "movestart";
         break;
