@@ -2414,11 +2414,6 @@ void Client::setFullScreen(bool set, bool user)
     if (was_fs != isFullScreen()) {
         emit clientFullScreenSet(this, set, user);
         emit fullScreenChanged();
-        if (isFullScreen()) {
-            Notify::raise(Notify::FullScreen);
-        } else {
-            Notify::raise(Notify::UnFullScreen);
-        }
     }
 }
 

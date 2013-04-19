@@ -40,9 +40,7 @@ public:
         Activate,
         DemandAttentionCurrent,
         DemandAttentionOther,
-        CompositingSuspendedDbus,
-        FullScreen,
-        UnFullScreen
+        CompositingSuspendedDbus
     };
 
     static bool raise(Event, const QString& message = QString(), Client* c = NULL);
