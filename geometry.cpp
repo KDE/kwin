@@ -2218,14 +2218,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         changeMaximizeRecursion = false;
     }
 
-    if (!adjust) {
-        if ((vertical && !(old_mode & MaximizeVertical))
-                || (horizontal && !(old_mode & MaximizeHorizontal)))
-            Notify::raise(Notify::Maximize);
-        else
-            Notify::raise(Notify::UnMaximize);
-    }
-
     const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
 
     // Conditional quick tiling exit points

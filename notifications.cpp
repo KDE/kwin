@@ -41,12 +41,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case Activate:
         event = "activate";
         break;
-    case Maximize:
-        event = "maximize";
-        break;
-    case UnMaximize:
-        event = "unmaximize";
-        break;
     case OnAllDesktops:
         event = "on_all_desktops";
         break;

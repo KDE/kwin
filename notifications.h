@@ -38,8 +38,6 @@ public:
 
     enum Event {
         Activate,
-        Maximize,
-        UnMaximize,
         OnAllDesktops,
         NotOnAllDesktops,
         TransNew,
