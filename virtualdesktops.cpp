@@ -19,8 +19,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualdesktops.h"
-// KWin
-#include "notifications.h"
 // KDE
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
@@ -243,7 +241,6 @@ bool VirtualDesktopManager::setCurrent(uint newDesktop)
         return false;
     }
     const uint oldDesktop = m_current;
-    Notify::raise((Notify::Event)(Notify::DesktopChange + newDesktop));
     // change the desktop
     m_current = newDesktop;
     emit currentChanged(oldDesktop, newDesktop);

@@ -108,9 +108,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
         event = "unfullscreen";
         break;
     default:
-        if ((e > DesktopChange) && (e <= DesktopChange + 20)) {
-            event = QString("desktop%1").arg(e - DesktopChange);
-        }
         break;
     }
     if (event.isNull())

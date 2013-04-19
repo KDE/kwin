@@ -18,8 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../virtualdesktops.h"
-// for mocking
-#include "../notifications.h"
 // KDE
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
@@ -31,13 +29,6 @@ namespace KWin {
 
 int screen_number = 0;
 
-bool Notify::raise(Event e, const QString& message, Client* c)
-{
-    Q_UNUSED(e)
-    Q_UNUSED(message)
-    Q_UNUSED(c)
-    return false;
-}
 }
 
 Q_DECLARE_METATYPE(Qt::Orientation)

@@ -59,8 +59,7 @@ public:
         DemandAttentionOther,
         CompositingSuspendedDbus,
         FullScreen,
-        UnFullScreen,
-        DesktopChange = 100
+        UnFullScreen
     };
 
     static bool raise(Event, const QString& message = QString(), Client* c = NULL);
