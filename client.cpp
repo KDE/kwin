@@ -1461,8 +1461,6 @@ void Client::setDesktop(int desktop)
     info->setDesktop(desktop);
     if ((was_desk == NET::OnAllDesktops) != (desktop == NET::OnAllDesktops)) {
         // onAllDesktops changed
-        if (isShown(true))
-            Notify::raise(isOnAllDesktops() ? Notify::OnAllDesktops : Notify::NotOnAllDesktops);
         workspace()->updateOnAllDesktopsOfTransients(this);
     }
     if (decoration != NULL)

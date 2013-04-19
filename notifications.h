@@ -38,8 +38,6 @@ public:
 
     enum Event {
         Activate,
-        OnAllDesktops,
-        NotOnAllDesktops,
         TransNew,
         TransDelete,
         MoveStart,
