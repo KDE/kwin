@@ -38,7 +38,6 @@ public:
 
     enum Event {
         Activate,
-        Close,
         Minimize,
         UnMinimize,
         Maximize,

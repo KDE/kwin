@@ -41,9 +41,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case Activate:
         event = "activate";
         break;
-    case Close:
-        event = "close";
-        break;
     case Minimize:
         event = "minimize";
         break;

@@ -1318,7 +1318,6 @@ void Client::closeWindow()
     updateUserTime();
 
     if (Pdeletewindow) {
-        Notify::raise(Notify::Close);
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window);
         pingWindow();
     } else // Client will not react on wm_delete_window. We have not choice
@@ -1333,10 +1332,6 @@ void Client::closeWindow()
 void Client::killWindow()
 {
     kDebug(1212) << "Client::killWindow():" << caption();
-
-    // Not sure if we need an Notify::Kill or not.. until then, use
-    // Notify::Close
-    Notify::raise(Notify::Close);
 
     if (isDialog())
         Notify::raise(Notify::TransDelete);
