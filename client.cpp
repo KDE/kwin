@@ -974,14 +974,6 @@ void Client::setShade(ShadeMode mode)
         return; // No real change in shaded state
     }
 
-    if (shade_mode == ShadeNormal) {
-        if (isShown(true) && isOnCurrentDesktop())
-            Notify::raise(Notify::ShadeUp);
-    } else if (shade_mode == ShadeNone) {
-        if (isShown(true) && isOnCurrentDesktop())
-            Notify::raise(Notify::ShadeDown);
-    }
-
     assert(decoration != NULL);   // noborder windows can't be shaded
     GeometryUpdatesBlocker blocker(this);
 

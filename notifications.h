@@ -46,8 +46,6 @@ public:
         NotOnAllDesktops,
         TransNew,
         TransDelete,
-        ShadeUp,
-        ShadeDown,
         MoveStart,
         MoveEnd,
         ResizeStart,

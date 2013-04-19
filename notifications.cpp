@@ -65,12 +65,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case TransDelete:
         event = "transdelete";
         break;
-    case ShadeUp:
-        event = "shadeup";
-        break;
-    case ShadeDown:
-        event = "shadedown";
-        break;
     case MoveStart:
         event = "movestart";
         break;
