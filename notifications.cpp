@@ -62,9 +62,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     case NotOnAllDesktops:
         event = "not_on_all_desktops";
         break;
-    case New:
-        event = "new";
-        break;
     case Delete:
         event = "delete";
         break;

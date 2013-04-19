@@ -543,8 +543,6 @@ bool Client::manage(Window w, bool isMapped)
     if (isShown(true)) {
         if (isDialog())
             Notify::raise(Notify::TransNew);
-        if (isNormalWindow())
-            Notify::raise(Notify::New);
 
         bool allow;
         if (session)
