@@ -875,8 +875,6 @@ void Client::minimize(bool avoid_animation)
     if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
         info->setState(0, NET::Shaded);
 
-    Notify::raise(Notify::Minimize);
-
     minimized = true;
 
     updateVisibility();
