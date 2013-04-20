@@ -70,10 +70,15 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows when another window is raised
+Comment[es]=Desliza las ventanas atrás cuando una ventana pasa a primer plano
 Comment[nl]=Schuif vensters terug wanneer een ander venster omhoog komt
 Comment[pt]=Deslizar para trás as janelas quando for elevada outra janela
 Comment[pt_BR]=Desliza as janelas para trás quando outra for elevadaDesliza para trás as janelas que perdem o foco
 Comment[sk]=Zasunie okná pri zdvihnutí iného okna
+Comment[sr]=Клиза уназад прозоре када се подигне други прозор
+Comment[sr@ijekavian]=Клиза уназад прозоре када се подигне други прозор
+Comment[sr@ijekavianlatin]=Kliza unazad prozore kada se podigne drugi prozor
+Comment[sr@latin]=Kliza unazad prozore kada se podigne drugi prozor
 Comment[sv]=Låt fönster glida tillbaka när ett annat fönster höjs.
 Comment[uk]=Ковзання вікон на задній план під час підняття інших вікон
 Comment[x-test]=xxSlide back windows when another window is raisedxx
