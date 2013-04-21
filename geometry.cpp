@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwindowsystem.h>
 
 #include "placement.h"
-#include "notifications.h"
 #include "geometrytip.h"
 #include "rules.h"
 #include "screens.h"

@@ -52,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "workspace.h"
 #include "atoms.h"
-#include "notifications.h"
 #include "rules.h"
 #include "shadow.h"
 #include "deleted.h"

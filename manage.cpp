@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "cursor.h"
-#include "notifications.h"
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"

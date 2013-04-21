@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "atoms.h"
 #include "cursor.h"
-#include "notifications.h"
 #include "workspace.h"
 
 #endif
@@ -286,7 +285,6 @@ void ungrabXServer()
     if (--server_grab_count == 0) {
         XUngrabServer(display());
         XFlush(display());
-        Notify::sendPendingEvents();
     }
 }
 

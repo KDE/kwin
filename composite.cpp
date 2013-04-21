@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
+#include <KDE/KNotification>
 
 #include <xcb/composite.h>
 #include <xcb/damage.h>
