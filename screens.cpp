@@ -36,10 +36,11 @@ Screens::Screens(QObject *parent)
     , m_count(0)
     , m_current(0)
     , m_currentFollowsMouse(false)
-    , m_changedTimer(new QTimer(this))
+    , m_changedTimer(new ScreenCountTimer(this))
 {
     m_changedTimer->setSingleShot(true);
     m_changedTimer->setInterval(100);
+    connect(m_changedTimer, SIGNAL(timeout()), SLOT(updateCount()));
     connect(m_changedTimer, SIGNAL(timeout()), SIGNAL(changed()));
 
     Settings settings;
@@ -115,19 +116,26 @@ int Screens::current() const
     return m_current;
 }
 
-void Screens::startChangedTimer()
+ScreenCountTimer::ScreenCountTimer(QObject * parent) : QTimer(parent)
 {
-    m_changedTimer->start();
+}
+
+void ScreenCountTimer::finish()
+{
+    if (isActive()) {
+        stop();
+        Screens::self()->updateCount();
+        QMetaObject::invokeMethod(Screens::self(), "changed", Qt::QueuedConnection);
+    }
 }
 
 DesktopWidgetScreens::DesktopWidgetScreens(QObject *parent)
     : Screens(parent)
     , m_desktop(QApplication::desktop())
 {
-    connect(m_desktop, SIGNAL(screenCountChanged(int)), SLOT(setCount(int)));
     connect(m_desktop, SIGNAL(screenCountChanged(int)), SLOT(startChangedTimer()));
     connect(m_desktop, SIGNAL(resized(int)), SLOT(startChangedTimer()));
-    setCount(m_desktop->screenCount());
+    updateCount();
 }
 
 DesktopWidgetScreens::~DesktopWidgetScreens()
@@ -136,12 +144,19 @@ DesktopWidgetScreens::~DesktopWidgetScreens()
 
 QRect DesktopWidgetScreens::geometry(int screen) const
 {
+    finishChangedTimer();
     return m_desktop->screenGeometry(screen);
 }
 
 int DesktopWidgetScreens::number(const QPoint &pos) const
 {
+    finishChangedTimer();
     return m_desktop->screenNumber(pos);
+}
+
+void DesktopWidgetScreens::updateCount()
+{
+    setCount(m_desktop->screenCount());
 }
 
 } // namespace

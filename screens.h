@@ -27,13 +27,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt includes
 #include <QObject>
 #include <QRect>
+#include <QTimer>
 
 class QDesktopWidget;
-class QTimer;
 
 namespace KWin
 {
 class Client;
+
+class ScreenCountTimer : public QTimer {
+    public:
+        ScreenCountTimer(QObject * parent = 0);
+        /**
+         * if isActive, stop AND emit timeout()
+         */
+        void finish();
+};
 
 class Screens : public QObject
 {
@@ -76,15 +85,20 @@ Q_SIGNALS:
      **/
     void changed();
 
+protected:
+    void finishChangedTimer() const;
+
 protected Q_SLOTS:
+    friend class ScreenCountTimer;
     void setCount(int count);
     void startChangedTimer();
+    virtual void updateCount() = 0;
 
 private:
     int m_count;
     int m_current;
     bool m_currentFollowsMouse;
-    QTimer *m_changedTimer;
+    ScreenCountTimer *m_changedTimer;
     KSharedConfig::Ptr m_config;
 
     KWIN_SINGLETON(Screens)
@@ -98,6 +112,8 @@ public:
     virtual ~DesktopWidgetScreens();
     virtual QRect geometry(int screen) const;
     virtual int number(const QPoint &pos) const;
+protected Q_SLOTS:
+    void updateCount();
 
 private:
     QDesktopWidget *m_desktop;
@@ -116,9 +132,21 @@ int Screens::count() const
 }
 
 inline
+void Screens::finishChangedTimer() const
+{
+    const_cast<ScreenCountTimer*>(m_changedTimer)->finish();
+}
+
+inline
 bool Screens::isCurrentFollowsMouse() const
 {
     return m_currentFollowsMouse;
+}
+
+inline
+void Screens::startChangedTimer()
+{
+    m_changedTimer->start();
 }
 
 inline
