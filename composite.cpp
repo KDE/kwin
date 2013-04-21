@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
-#include "notifications.h"
 #include "xcbutils.h"
 
 #include <stdio.h>
@@ -392,7 +391,7 @@ void Compositor::toggleCompositing()
             // display notification only if there is the shortcut
             message = i18n("Desktop effects have been suspended by another application.<br/>"
                            "You can resume using the '%1' shortcut.", shortcut);
-            Notify::raise(Notify::CompositingSuspendedDbus, message);
+            KNotification::event("compositingsuspendeddbus", message);
         }
     }
 }
