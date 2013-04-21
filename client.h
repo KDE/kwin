@@ -712,7 +712,6 @@ private slots:
     void performMoveResize();
     void removeSyncSupport();
     void pingTimeout();
-    void demandAttentionKNotify();
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication
@@ -982,7 +981,6 @@ private:
     friend struct FetchNameInternalPredicate;
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
-    QTimer* demandAttentionKNotifyTimer;
     PaintRedirector* paintRedirector;
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox;

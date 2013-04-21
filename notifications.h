@@ -37,8 +37,6 @@ class Notify
 public:
 
     enum Event {
-        DemandAttentionCurrent,
-        DemandAttentionOther,
         CompositingSuspendedDbus
     };
 

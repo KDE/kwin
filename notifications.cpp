@@ -38,12 +38,6 @@ bool Notify::raise(Event e, const QString& message, Client* c)
     QString event;
     KNotification::NotificationFlags flags = KNotification::CloseOnTimeout;
     switch(e) {
-    case DemandAttentionCurrent:
-        event = "demandsattentioncurrent";
-        break;
-    case DemandAttentionOther:
-        event = "demandsattentionother";
-        break;
     case CompositingSuspendedDbus:
         event = "compositingsuspendeddbus";
         break;
