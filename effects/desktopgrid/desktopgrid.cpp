@@ -462,7 +462,7 @@ void DesktopGridEffect::slotWindowGeometryShapeChanged(EffectWindow* w, const QR
     }
 }
 
-void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
+void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
 {
     if ((e->type() != QEvent::MouseMove
             && e->type() != QEvent::MouseButtonPress
@@ -521,7 +521,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
                     }
                     m_proxy->calculateWindowTransformations(manager.managedWindows(), windowMove->screen(), manager);
                 }
-                effects->defineCursor(input, Qt::ClosedHandCursor);
+                effects->defineCursor(Qt::ClosedHandCursor);
             }
             wasWindowMove = true;
             if (windowMove->isMovable() && !isUsingPresentWindows()) {
@@ -539,7 +539,7 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
         } else if ((me->buttons() & Qt::LeftButton) && !wasDesktopMove &&
                   (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay()) {
             wasDesktopMove = true;
-            effects->defineCursor(input, Qt::ClosedHandCursor);
+            effects->defineCursor(Qt::ClosedHandCursor);
         }
         if (d != highlightedDesktop) { // Highlight desktop
             if ((me->buttons() & Qt::LeftButton) && isValidMove && !wasWindowMove && d <= effects->numberOfDesktops()) {
@@ -673,9 +673,9 @@ void DesktopGridEffect::windowInputMouseEvent(Window, QEvent* e)
             }
             effects->setElevatedWindow(windowMove, false);
             windowMove = NULL;
-            effects->defineCursor(input, Qt::PointingHandCursor);
+            effects->defineCursor(Qt::PointingHandCursor);
         } else if (wasDesktopMove)
-            effects->defineCursor(input, Qt::PointingHandCursor);
+            effects->defineCursor(Qt::PointingHandCursor);
         wasWindowMove = false;
         wasDesktopMove = false;
     }
@@ -1061,8 +1061,7 @@ void DesktopGridEffect::setActive(bool active)
 void DesktopGridEffect::setup()
 {
     keyboardGrab = effects->grabKeyboard(this);
-    input = effects->createInputWindow(this, 0, 0, displayWidth(), displayHeight(),
-                                       Qt::PointingHandCursor);
+    effects->startMouseInterception(this, Qt::PointingHandCursor);
     effects->setActiveFullScreenEffect(this);
     setHighlightedDesktop(effects->currentDesktop());
 
@@ -1193,7 +1192,7 @@ void DesktopGridEffect::finish()
     if (keyboardGrab)
         effects->ungrabKeyboard();
     keyboardGrab = false;
-    effects->destroyInputWindow(input);
+    effects->stopMouseInterception(this);
     effects->setActiveFullScreenEffect(0);
     if (isUsingPresentWindows()) {
         while (!m_managers.isEmpty()) {

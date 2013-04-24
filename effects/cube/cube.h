@@ -66,7 +66,7 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool borderActivated(ElectricBorder border);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowInputMouseEvent(QEvent* e);
     virtual bool isActive() const;
 
     // proxy functions
@@ -179,7 +179,6 @@ private:
     QList<ElectricBorder> borderActivateCylinder;
     QList<ElectricBorder> borderActivateSphere;
     int painting_desktop;
-    Window input;
     int frontDesktop;
     float cubeOpacity;
     bool opacityDesktopOnly;

@@ -270,9 +270,6 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
         ungrabKeyboard();
     foreach (const EffectPair & ep, loaded_effects)
     unloadEffect(ep.first);
-    foreach (const InputWindowPair & pos, input_windows) {
-        xcb_destroy_window(connection(), pos.second);
-    }
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
@@ -689,6 +686,50 @@ void EffectsHandlerImpl::grabbedKeyboardEvent(QKeyEvent* e)
         keyboard_grab_effect->grabbedKeyboardEvent(e);
 }
 
+void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape shape)
+{
+    if (m_grabbedMouseEffects.contains(effect)) {
+        return;
+    }
+    m_grabbedMouseEffects.append(effect);
+    if (m_grabbedMouseEffects.size() != 1) {
+        return;
+    }
+    // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
+    // The mouse grab is implemented by using a full screen input only window
+    if (!m_mouseInterceptionWindow.isValid()) {
+        const QRect geo(0, 0, displayWidth(), displayHeight());
+        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK | XCB_CW_CURSOR;
+        const uint32_t values[] = {
+            true,
+            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION,
+            Cursor::x11Cursor(shape)
+        };
+        m_mouseInterceptionWindow.reset(Xcb::createInputWindow(geo, mask, values));
+    }
+    m_mouseInterceptionWindow.map();
+    m_mouseInterceptionWindow.raise();
+    // Raise electric border windows above the input windows
+    // so they can still be triggered.
+#ifdef KWIN_BUILD_SCREENEDGES
+    ScreenEdges::self()->ensureOnTop();
+#endif
+}
+
+void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
+{
+    if (!m_grabbedMouseEffects.contains(effect)) {
+        return;
+    }
+    m_grabbedMouseEffects.removeAll(effect);
+    if (m_grabbedMouseEffects.isEmpty()) {
+        m_mouseInterceptionWindow.unmap();
+#ifdef KWIN_BUILD_SCREENEDGES
+        Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
+#endif
+    }
+}
+
 void* EffectsHandlerImpl::getProxy(QString name)
 {
     // All effects start with "kwin4_effect_", prepend it to the name
@@ -719,6 +760,9 @@ bool EffectsHandlerImpl::hasKeyboardGrab() const
 void EffectsHandlerImpl::desktopResized(const QSize &size)
 {
     m_scene->screenGeometryChanged(size);
+    if (m_mouseInterceptionWindow.isValid()) {
+        m_mouseInterceptionWindow.setGeometry(QRect(0, 0, size.width(), size.height()));
+    }
     emit screenGeometryChanged(size);
 }
 
@@ -1130,158 +1174,65 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int 
     return Workspace::self()->clientArea(opt, p, desktop);
 }
 
-xcb_window_t EffectsHandlerImpl::createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor)
+void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
-    xcb_window_t win = XCB_WINDOW_NONE;
-    QList<InputWindowPair>::iterator it = input_windows.begin();
-    while (it != input_windows.end()) {
-        if (it->first != e) {
-            ++it;
-            continue;
-        }
-        Xcb::WindowAttributes attributes(it->second);
-        Xcb::WindowGeometry geometry(it->second);
-        if (!attributes) {
-            // this is some random junk that certainly should no be here
-            kDebug(1212) << "found input window that is NOT on the server, something is VERY broken here";
-            Q_ASSERT(false); // exit in debug mode - for releases we'll be a bit more graceful
-            it = input_windows.erase(it);
-            continue;
-        }
-        if (geometry.rect() == QRect(x, y, w, h)) {
-            win = it->second; // re-use
-            break;
-        } else if (attributes->map_state == XCB_MAP_STATE_UNMAPPED) {
-            // probably old one, likely no longer of interest
-            xcb_destroy_window(connection(), it->second);
-            it = input_windows.erase(it);
-            continue;
-        }
-        ++it;
+    if (!m_mouseInterceptionWindow.isValid()) {
+        return;
     }
-    if (win == XCB_WINDOW_NONE) {
-        win = xcb_generate_id(connection());
-        // TODO keeping on top?
-        // TODO enter/leave notify?
-        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK | XCB_CW_CURSOR;
-        const uint32_t values[] = {
-            true,
-            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION,
-            Cursor::x11Cursor(cursor.shape())
-        };
-        xcb_create_window(connection(), 0, win, rootWindow(), x, y, w, h, 0, XCB_WINDOW_CLASS_INPUT_ONLY,
-                          XCB_COPY_FROM_PARENT, mask, values);
-        input_windows.append(qMakePair(e, win));
-    }
-    xcb_map_window(connection(), win);
-    const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
-    xcb_configure_window(connection(), win, XCB_CONFIG_WINDOW_STACK_MODE, values);
-    // Raise electric border windows above the input windows
-    // so they can still be triggered.
-#ifdef KWIN_BUILD_SCREENEDGES
-    ScreenEdges::self()->ensureOnTop();
-#endif
-    if (input_windows.count() > 10) // that sounds like some leak - could still be correct, thoug - so NO ABORT HERE!
-        kDebug() << "** warning ** there are now " << input_windows.count() <<
-                    "input windows what's a bit much - please have a look and if this counts up, better report a bug";
-    return win;
-}
-
-void EffectsHandlerImpl::destroyInputWindow(xcb_window_t w)
-{
-    foreach (const InputWindowPair & pos, input_windows) {
-        if (pos.second == w) {
-            xcb_unmap_window(connection(), w);
-#ifdef KWIN_BUILD_SCREENEDGES
-            Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
-#endif
-            return;
-        }
-    }
-    abort();
-}
-
-void EffectsHandlerImpl::defineCursor(xcb_window_t w, Qt::CursorShape shape)
-{
-    Xcb::defineCursor(w, Cursor::x11Cursor(shape));
+    m_mouseInterceptionWindow.defineCursor(Cursor::x11Cursor(shape));
 }
 
 bool EffectsHandlerImpl::checkInputWindowEvent(XEvent* e)
 {
     if (e->type != ButtonPress && e->type != ButtonRelease && e->type != MotionNotify)
         return false;
-    foreach (const InputWindowPair & pos, input_windows) {
-        if (pos.second == e->xany.window) {
-            switch(e->type) {
-            case ButtonPress: {
-                XButtonEvent* e2 = &e->xbutton;
-                Qt::MouseButton button = x11ToQtMouseButton(e2->button);
-                Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) | button;
-                QMouseEvent ev(QEvent::MouseButtonPress,
-                               QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                               button, buttons, x11ToQtKeyboardModifiers(e2->state));
-                pos.first->windowInputMouseEvent(pos.second, &ev);
-                break; // --->
-            }
-            case ButtonRelease: {
-                XButtonEvent* e2 = &e->xbutton;
-                Qt::MouseButton button = x11ToQtMouseButton(e2->button);
-                Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) & ~button;
-                QMouseEvent ev(QEvent::MouseButtonRelease,
-                               QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                               button, buttons, x11ToQtKeyboardModifiers(e2->state));
-                pos.first->windowInputMouseEvent(pos.second, &ev);
-                break; // --->
-            }
-            case MotionNotify: {
-                XMotionEvent* e2 = &e->xmotion;
-                QMouseEvent ev(QEvent::MouseMove, QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                               Qt::NoButton, x11ToQtMouseButtons(e2->state), x11ToQtKeyboardModifiers(e2->state));
-                pos.first->windowInputMouseEvent(pos.second, &ev);
-                break; // --->
-            }
-            }
-            return true; // eat event
+    if (m_grabbedMouseEffects.isEmpty() || m_mouseInterceptionWindow != e->xany.window) {
+        return false;
+    }
+    foreach (Effect *effect, m_grabbedMouseEffects) {
+        switch(e->type) {
+        case ButtonPress: {
+            XButtonEvent* e2 = &e->xbutton;
+            Qt::MouseButton button = x11ToQtMouseButton(e2->button);
+            Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) | button;
+            QMouseEvent ev(QEvent::MouseButtonPress,
+                            QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
+                            button, buttons, x11ToQtKeyboardModifiers(e2->state));
+            effect->windowInputMouseEvent(&ev);
+            break; // --->
+        }
+        case ButtonRelease: {
+            XButtonEvent* e2 = &e->xbutton;
+            Qt::MouseButton button = x11ToQtMouseButton(e2->button);
+            Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) & ~button;
+            QMouseEvent ev(QEvent::MouseButtonRelease,
+                            QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
+                            button, buttons, x11ToQtKeyboardModifiers(e2->state));
+            effect->windowInputMouseEvent(&ev);
+            break; // --->
+        }
+        case MotionNotify: {
+            XMotionEvent* e2 = &e->xmotion;
+            QMouseEvent ev(QEvent::MouseMove, QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
+                            Qt::NoButton, x11ToQtMouseButtons(e2->state), x11ToQtKeyboardModifiers(e2->state));
+            effect->windowInputMouseEvent(&ev);
+            break; // --->
+        }
         }
     }
-    return false;
+    return true; // eat event
 }
 
 void EffectsHandlerImpl::checkInputWindowStacking()
 {
-    if (input_windows.count() == 0)
+    if (m_grabbedMouseEffects.isEmpty()) {
         return;
-    xcb_window_t* wins = new xcb_window_t[input_windows.count()];
-    QVector<Xcb::WindowAttributes> attributes(input_windows.count());
-    int pos = 0;
-    foreach (const InputWindowPair &it, input_windows) {
-        attributes[pos] = Xcb::WindowAttributes(it.second);
-        pos++;
     }
-    pos = 0;
-    for (QVector<Xcb::WindowAttributes>::iterator it = attributes.begin(); it != attributes.end(); ++it) {
-        if (*it && (*it)->map_state != XCB_MAP_STATE_UNMAPPED) {
-            wins[pos++] = (*it).window();
-        }
-    }
-    if (pos) {
-        const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
-        xcb_configure_window(connection(), wins[0], XCB_CONFIG_WINDOW_STACK_MODE, values);
-        for (int i=1; i<pos; ++i) {
-            const uint16_t mask = XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE;
-            const uint32_t stackingValues[] = {
-                wins[i-1],
-                XCB_STACK_MODE_BELOW
-            };
-            xcb_configure_window(connection(), wins[i], mask, stackingValues);
-        }
-    }
-    delete[] wins;
+    m_mouseInterceptionWindow.raise();
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
 #ifdef KWIN_BUILD_SCREENEDGES
-    if (pos)
-        ScreenEdges::self()->ensureOnTop();
+    ScreenEdges::self()->ensureOnTop();
 #endif
 }
 
@@ -1521,6 +1472,7 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
             if (activeFullScreenEffect() == it.value().second) {
                 setActiveFullScreenEffect(0);
             }
+            stopMouseInterception(it.value().second);
             // remove support properties for the effect
             const QList<QByteArray> properties = m_propertiesForEffects.keys();
             foreach (const QByteArray &property, properties) {

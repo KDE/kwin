@@ -469,7 +469,7 @@ void* Effect::proxy()
     return NULL;
 }
 
-void Effect::windowInputMouseEvent(Window, QEvent*)
+void Effect::windowInputMouseEvent(QEvent*)
 {
 }
 
@@ -601,16 +601,6 @@ EffectsHandler::~EffectsHandler()
 {
     // All effects should already be unloaded by Impl dtor
     assert(loaded_effects.count() == 0);
-}
-
-xcb_window_t EffectsHandler::createInputWindow(Effect* e, const QRect& r, const QCursor& cursor)
-{
-    return createInputWindow(e, r.x(), r.y(), r.width(), r.height(), cursor);
-}
-
-xcb_window_t EffectsHandler::createFullScreenInputWindow(Effect* e, const QCursor& cursor)
-{
-    return createInputWindow(e, 0, 0, displayWidth(), displayHeight(), cursor);
 }
 
 CompositingType EffectsHandler::compositingType() const

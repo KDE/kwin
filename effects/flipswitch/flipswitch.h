@@ -53,7 +53,7 @@ public:
     virtual void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
-    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowInputMouseEvent(QEvent* e);
     virtual bool isActive() const;
 
     static bool supported();
@@ -128,7 +128,6 @@ private:
     bool m_stop;
     bool m_animation;
     bool m_hasKeyboardGrab;
-    Window m_input;
     FlipSwitchMode m_mode;
     EffectFrame* m_captionFrame;
     QFont m_captionFont;

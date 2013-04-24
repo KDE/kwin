@@ -514,11 +514,8 @@ bool PresentWindowsEffect::borderActivated(ElectricBorder border)
     return true;
 }
 
-void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
+void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
 {
-    assert(w == m_input);
-    Q_UNUSED(w);
-
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
     if (m_closeView && m_closeView->geometry().contains(me->pos())) {
         if (!m_closeView->isVisible()) {
@@ -574,7 +571,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
                     m_highlightedDropTarget = NULL;
                 }
                 effects->addRepaintFull();
-                effects->defineCursor(m_input, Qt::PointingHandCursor);
+                effects->defineCursor(Qt::PointingHandCursor);
                 return;
             }
             if (hovering) {
@@ -613,7 +610,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
         }
-        effects->defineCursor(m_input, Qt::PointingHandCursor);
+        effects->defineCursor(Qt::PointingHandCursor);
     } else if (e->type() == QEvent::MouseButtonPress && me->button() == Qt::LeftButton && hovering && m_dragToClose) {
         m_dragStart = me->pos();
         m_dragWindow = m_highlightedWindow;
@@ -625,7 +622,7 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
     if (e->type() == QEvent::MouseMove && m_dragWindow) {
         if ((me->pos() - m_dragStart).manhattanLength() > KGlobalSettings::dndEventDelay() && !m_dragInProgress) {
             m_dragInProgress = true;
-            effects->defineCursor(m_input, Qt::ForbiddenCursor);
+            effects->defineCursor(Qt::ForbiddenCursor);
         }
         if (!m_dragInProgress) {
             return;
@@ -643,13 +640,13 @@ void PresentWindowsEffect::windowInputMouseEvent(Window w, QEvent *e)
             KIcon icon("user-trash");
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Active));
-            effects->defineCursor(m_input, Qt::DragMoveCursor);
+            effects->defineCursor(Qt::DragMoveCursor);
         } else if (!target && m_highlightedDropTarget) {
             KIcon icon("user-trash");
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
-            effects->defineCursor(m_input, Qt::ForbiddenCursor);
+            effects->defineCursor(Qt::ForbiddenCursor);
         }
     }
 }
@@ -1533,7 +1530,7 @@ void PresentWindowsEffect::setActive(bool active)
         }
 
         // Create temporary input window to catch mouse events
-        m_input = effects->createFullScreenInputWindow(this, Qt::PointingHandCursor);
+        effects->startMouseInterception(this, Qt::PointingHandCursor);
         m_hasKeyboardGrab = effects->grabKeyboard(this);
         effects->setActiveFullScreenEffect(this);
 
@@ -1576,7 +1573,7 @@ void PresentWindowsEffect::setActive(bool active)
         m_windowFilter.clear();
         m_selectedWindows.clear();
 
-        effects->destroyInputWindow(m_input);
+        effects->stopMouseInterception(this);
         if (m_hasKeyboardGrab)
             effects->ungrabKeyboard();
         m_hasKeyboardGrab = false;

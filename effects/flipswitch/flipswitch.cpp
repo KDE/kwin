@@ -614,16 +614,16 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         switch(m_mode) {
         case TabboxMode:
             m_selectedWindow = effects->currentTabBoxWindow();
-            m_input = effects->createFullScreenInputWindow(this, Qt::ArrowCursor);
+            effects->startMouseInterception(this, Qt::ArrowCursor);
             break;
         case CurrentDesktopMode:
             m_selectedWindow = effects->activeWindow();
-            m_input = effects->createFullScreenInputWindow(this, Qt::BlankCursor);
+            effects->startMouseInterception(this, Qt::BlankCursor);
             m_hasKeyboardGrab = effects->grabKeyboard(this);
             break;
         case AllDesktopsMode:
             m_selectedWindow = effects->activeWindow();
-            m_input = effects->createFullScreenInputWindow(this, Qt::BlankCursor);
+            effects->startMouseInterception(this, Qt::BlankCursor);
             m_hasKeyboardGrab = effects->grabKeyboard(this);
             break;
         }
@@ -661,7 +661,7 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
             }
         } else
             m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
-        effects->destroyInputWindow(m_input);
+        effects->stopMouseInterception(this);
         if (m_hasKeyboardGrab) {
             effects->ungrabKeyboard();
             m_hasKeyboardGrab = false;
@@ -962,10 +962,8 @@ void FlipSwitchEffect::updateCaption()
 // Mouse handling
 //*************************************************************
 
-void FlipSwitchEffect::windowInputMouseEvent(Window w, QEvent* e)
+void FlipSwitchEffect::windowInputMouseEvent(QEvent* e)
 {
-    assert(w == m_input);
-    Q_UNUSED(w);
     if (e->type() != QEvent::MouseButtonPress)
         return;
     // we don't want click events during animations

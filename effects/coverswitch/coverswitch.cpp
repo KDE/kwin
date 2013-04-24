@@ -527,7 +527,7 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                 (mode == TabBoxCurrentAppWindowsMode && primaryTabBox) ||
                 (mode == TabBoxCurrentAppWindowsAlternativeMode && secondaryTabBox))
                 && effects->currentTabBoxWindowList().count() > 0) {
-            input = effects->createFullScreenInputWindow(this, Qt::ArrowCursor);
+            effects->startMouseInterception(this, Qt::ArrowCursor);
             activeScreen = effects->activeScreen();
             if (!stop && !stopRequested) {
                 effects->refTabBox();
@@ -598,7 +598,7 @@ void CoverSwitchEffect::slotTabBoxClosed()
             effects->setActiveFullScreenEffect(0);
         mActivated = false;
         effects->unrefTabBox();
-        effects->destroyInputWindow(input);
+        effects->stopMouseInterception(this);
         effects->addRepaintFull();
     }
 }
@@ -891,10 +891,8 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
     }
 }
 
-void CoverSwitchEffect::windowInputMouseEvent(Window w, QEvent* e)
+void CoverSwitchEffect::windowInputMouseEvent(QEvent* e)
 {
-    assert(w == input);
-    Q_UNUSED(w);
     if (e->type() != QEvent::MouseButtonPress)
         return;
     // we don't want click events during animations
@@ -965,7 +963,7 @@ void CoverSwitchEffect::abort()
     // in this case the cleanup is already done (see bug 207554)
     if (mActivated) {
         effects->unrefTabBox();
-        effects->destroyInputWindow(input);
+        effects->stopMouseInterception(this);
     }
     effects->setActiveFullScreenEffect(0);
     mActivated = false;

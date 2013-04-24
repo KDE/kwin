@@ -1136,7 +1136,7 @@ void CubeEffect::postPaintScreen()
                 if (keyboard_grab)
                     effects->ungrabKeyboard();
                 keyboard_grab = false;
-                effects->destroyInputWindow(input);
+                effects->stopMouseInterception(this);
 
                 effects->setActiveFullScreenEffect(0);
 
@@ -1896,8 +1896,7 @@ void CubeEffect::setActive(bool active)
         activated = true;
         activeScreen = effects->activeScreen();
         keyboard_grab = effects->grabKeyboard(this);
-        input = effects->createInputWindow(this, 0, 0, displayWidth(), displayHeight(),
-                                           Qt::OpenHandCursor);
+        effects->startMouseInterception(this, Qt::OpenHandCursor);
         frontDesktop = effects->currentDesktop();
         zoom = 0.0;
         zOrderingFactor = zPosition / (effects->stackingOrder().count() - 1);
@@ -1983,10 +1982,10 @@ void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::M
         }
     }
     if (!oldbuttons.testFlag(Qt::LeftButton) && buttons.testFlag(Qt::LeftButton)) {
-        effects->defineCursor(input, Qt::ClosedHandCursor);
+        effects->defineCursor(Qt::ClosedHandCursor);
     }
     if (oldbuttons.testFlag(Qt::LeftButton) && !buttons.testFlag(Qt::LeftButton)) {
-        effects->defineCursor(input, Qt::OpenHandCursor);
+        effects->defineCursor(Qt::OpenHandCursor);
         if (closeOnMouseRelease)
             setActive(false);
     }
@@ -1996,10 +1995,8 @@ void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::M
     }
 }
 
-void CubeEffect::windowInputMouseEvent(Window w, QEvent* e)
+void CubeEffect::windowInputMouseEvent(QEvent* e)
 {
-    assert(w == input);
-    Q_UNUSED(w);
     QMouseEvent *mouse = dynamic_cast< QMouseEvent* >(e);
     if (mouse && mouse->type() == QEvent::MouseButtonRelease) {
         if (mouse->button() == Qt::XButton1) {

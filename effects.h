@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 
 #include "scene.h"
+#include "xcbutils.h"
 
 #include <QStack>
 #include <QHash>
@@ -38,7 +39,6 @@ class OrgFreedesktopScreenSaverInterface;
 
 namespace KWin
 {
-typedef QPair< Effect*, xcb_window_t > InputWindowPair;
 
 class AbstractThumbnailItem;
 class DesktopThumbnailItem;
@@ -110,6 +110,9 @@ public:
     virtual QPoint cursorPos() const;
     virtual bool grabKeyboard(Effect* effect);
     virtual void ungrabKeyboard();
+    // not performing XGrabPointer
+    virtual void startMouseInterception(Effect *effect, Qt::CursorShape shape);
+    virtual void stopMouseInterception(Effect *effect);
     virtual void* getProxy(QString name);
     virtual void startMousePolling();
     virtual void stopMousePolling();
@@ -143,10 +146,7 @@ public:
     virtual double animationTimeFactor() const;
     virtual WindowQuadType newWindowQuadType();
 
-    virtual xcb_window_t createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor);
-    using EffectsHandler::createInputWindow;
-    virtual void destroyInputWindow(xcb_window_t w);
-    virtual void defineCursor(xcb_window_t w, Qt::CursorShape shape);
+    virtual void defineCursor(Qt::CursorShape shape);
     virtual bool checkInputWindowEvent(XEvent* e);
     virtual void checkInputWindowStacking();
 
@@ -262,10 +262,11 @@ private:
     QHash<QByteArray, qulonglong> m_managedProperties;
     Compositor *m_compositor;
     Scene *m_scene;
-    QList< InputWindowPair > input_windows;
     ScreenLockerWatcher *m_screenLockerWatcher;
     bool m_desktopRendering;
     int m_currentRenderedDesktop;
+    Xcb::Window m_mouseInterceptionWindow;
+    QList<Effect*> m_grabbedMouseEffects;
 };
 
 class EffectWindowImpl : public EffectWindow

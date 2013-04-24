@@ -66,7 +66,7 @@ public:
     virtual void postPaintScreen();
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowInputMouseEvent(QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
     virtual bool borderActivated(ElectricBorder border);
     virtual bool isActive() const;
@@ -139,7 +139,6 @@ private:
     int paintingDesktop;
     int highlightedDesktop;
     int m_originalMovingDesktop;
-    Window input;
     bool keyboardGrab;
     bool wasWindowMove, wasDesktopMove, isValidMove;
     EffectWindow* windowMove;

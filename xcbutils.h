@@ -348,6 +348,7 @@ public:
     void move(uint32_t x, uint32_t y);
     void resize(const QSize &size);
     void resize(uint32_t width, uint32_t height);
+    void raise();
     void map();
     void unmap();
     /**
@@ -490,6 +491,13 @@ void Window::resize(uint32_t width, uint32_t height)
     const uint16_t mask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
     const uint32_t values[] = { width, height };
     xcb_configure_window(connection(), m_window, mask, values);
+}
+
+inline
+void Window::raise()
+{
+    const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+    xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
 
 inline

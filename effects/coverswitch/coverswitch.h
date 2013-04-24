@@ -57,7 +57,7 @@ public:
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     virtual void postPaintScreen();
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
-    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowInputMouseEvent(QEvent* e);
     virtual bool isActive() const;
 
     static bool supported();
@@ -131,7 +131,6 @@ private:
     bool startRequested;
     QTimeLine timeLine;
     QRect area;
-    Window input;
     float zPosition;
     float scaleFactor;
     enum Direction {

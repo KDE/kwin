@@ -109,7 +109,7 @@ public:
 
     // User interaction
     virtual bool borderActivated(ElectricBorder border);
-    virtual void windowInputMouseEvent(Window w, QEvent *e);
+    virtual void windowInputMouseEvent(QEvent *e);
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
     virtual bool isActive() const;
 
@@ -275,7 +275,6 @@ private:
     bool m_activated;
     bool m_ignoreMinimized;
     double m_decalOpacity;
-    Window m_input;
     bool m_hasKeyboardGrab;
     PresentWindowsMode m_mode;
     int m_desktop;

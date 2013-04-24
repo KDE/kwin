@@ -170,7 +170,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 
 #define KWIN_EFFECT_API_MAKE_VERSION( major, minor ) (( major ) << 8 | ( minor ))
 #define KWIN_EFFECT_API_VERSION_MAJOR 0
-#define KWIN_EFFECT_API_VERSION_MINOR 222
+#define KWIN_EFFECT_API_VERSION_MINOR 223
 #define KWIN_EFFECT_API_VERSION KWIN_EFFECT_API_MAKE_VERSION( \
         KWIN_EFFECT_API_VERSION_MAJOR, KWIN_EFFECT_API_VERSION_MINOR )
 
@@ -434,7 +434,7 @@ public:
      **/
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList);
 
-    virtual void windowInputMouseEvent(Window w, QEvent* e);
+    virtual void windowInputMouseEvent(QEvent* e);
     virtual void grabbedKeyboardEvent(QKeyEvent* e);
 
     /**
@@ -644,17 +644,35 @@ public:
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data) = 0;
     virtual void buildQuads(EffectWindow* w, WindowQuadList& quadList) = 0;
     virtual QVariant kwinOption(KWinOption kwopt) = 0;
-    // Functions for handling input - e.g. when an Expose-like effect is shown, an input window
-    // covering the whole screen is created and all mouse events will be intercepted by it.
-    // The effect's windowInputMouseEvent() will get called with such events.
-    virtual xcb_window_t createInputWindow(Effect* e, int x, int y, int w, int h, const QCursor& cursor) = 0;
-    xcb_window_t createInputWindow(Effect* e, const QRect& r, const QCursor& cursor);
-    virtual xcb_window_t createFullScreenInputWindow(Effect* e, const QCursor& cursor);
-    virtual void destroyInputWindow(xcb_window_t w) = 0;
-    virtual void defineCursor(xcb_window_t w, Qt::CursorShape shape) = 0;
+    /**
+     * Sets the cursor while the mouse is intercepted.
+     * @see startMouseInterception
+     * @since 4.11
+     **/
+    virtual void defineCursor(Qt::CursorShape shape) = 0;
     virtual QPoint cursorPos() const = 0;
     virtual bool grabKeyboard(Effect* effect) = 0;
     virtual void ungrabKeyboard() = 0;
+    /**
+     * Ensures that all mouse events are sent to the @p effect.
+     * No window will get the mouse events. Only fullscreen effects providing a custom user interface should
+     * be using this method. The input events are delivered to Effect::windowInputMouseEvent.
+     *
+     * NOTE: this method does not perform an X11 mouse grab. On X11 a fullscreen input window is raised above
+     * all other windows, but no grab is performed.
+     *
+     * @param shape Sets the cursor to be used while the mouse is intercepted
+     * @see stopMouseInterception
+     * @see Effect::windowInputMouseEvent
+     * @since 4.11
+     **/
+    virtual void startMouseInterception(Effect *effect, Qt::CursorShape shape) = 0;
+    /**
+     * Releases the hold mouse interception for @p effect
+     * @see startMouseInterception
+     * @since 4.11
+     **/
+    virtual void stopMouseInterception(Effect *effect) = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
