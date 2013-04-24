@@ -21,18 +21,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "outline.h"
 // KWin
-#include "effects.h"
+#include "composite.h"
 // KWin libs
 #include <kwinxrenderutils.h>
+// Plasma
+#include <Plasma/FrameSvg>
+// Qt
+#include <QPainter>
 // xcb
 #include <xcb/render.h>
 
 namespace KWin {
 
-Outline::Outline()
-    : m_initialized(false)
+Outline::Outline(QObject *parent)
+    : QObject(parent)
     , m_active(false)
 {
+    connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingChanged()));
 }
 
 Outline::~Outline()
@@ -42,11 +47,14 @@ Outline::~Outline()
 void Outline::show()
 {
     m_active = true;
-    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
-        static_cast<EffectsHandlerImpl*>(effects)->slotShowOutline(m_outlineGeometry);
-        return; // done by effect
+    if (m_visual.isNull()) {
+        createHelper();
     }
-    showWithX();
+    if (m_visual.isNull()) {
+        // something went wrong
+        return;
+    }
+    m_visual->show();
 }
 
 void Outline::hide()
@@ -55,11 +63,10 @@ void Outline::hide()
         return;
     }
     m_active = false;
-    if (effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Outline)) {
-        static_cast<EffectsHandlerImpl*>(effects)->slotHideOutline();
-        return; // done by effect
+    if (m_visual.isNull()) {
+        return;
     }
-    forEachWindow(&Xcb::Window::unmap);
+    m_visual->hide();
 }
 
 void Outline::show(const QRect& outlineGeometry)
@@ -73,7 +80,85 @@ void Outline::setGeometry(const QRect& outlineGeometry)
     m_outlineGeometry = outlineGeometry;
 }
 
-void Outline::showWithX()
+void Outline::createHelper()
+{
+    if (!m_visual.isNull()) {
+        return;
+    }
+    if (Compositor::compositing()) {
+        m_visual.reset(new CompositedOutlineVisual(this));
+    } else {
+        m_visual.reset(new NonCompositedOutlineVisual(this));
+    }
+}
+
+void Outline::compositingChanged()
+{
+    m_visual.reset();
+    if (m_active) {
+        show();
+    }
+}
+
+OutlineVisual::OutlineVisual(Outline *outline)
+    : m_outline(outline)
+{
+}
+
+OutlineVisual::~OutlineVisual()
+{
+}
+
+CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
+    : QWidget(NULL, Qt::X11BypassWindowManagerHint)
+    , OutlineVisual(outline)
+    , m_background(new Plasma::FrameSvg(this))
+{
+    setAttribute(Qt::WA_TranslucentBackground);
+    QPalette pal = palette();
+    pal.setColor(backgroundRole(), Qt::transparent);
+    setPalette(pal);
+    m_background->setImagePath("widgets/viewitem");
+    m_background->setElementPrefix("hover");
+    m_background->setCacheAllRenderedFrames(true);
+    m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
+}
+
+CompositedOutlineVisual::~CompositedOutlineVisual()
+{
+}
+
+void CompositedOutlineVisual::hide()
+{
+    QWidget::hide();
+}
+
+void CompositedOutlineVisual::show()
+{
+    const QRect &outlineGeometry = outline()->geometry();
+    m_background->resizeFrame(outlineGeometry.size());
+    setGeometry(outlineGeometry);
+    QWidget::show();
+}
+
+void CompositedOutlineVisual::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+    m_background->paintFrame(&painter);
+}
+
+NonCompositedOutlineVisual::NonCompositedOutlineVisual(Outline *outline)
+    : OutlineVisual(outline)
+    , m_initialized(false)
+{
+}
+
+NonCompositedOutlineVisual::~NonCompositedOutlineVisual()
+{
+}
+
+void NonCompositedOutlineVisual::show()
 {
     if (!m_initialized) {
         const QRect geo(0, 0, 1, 1);
@@ -88,15 +173,16 @@ void Outline::showWithX()
 
     const int defaultDepth = Xcb::defaultDepth();
 
-// left/right parts are between top/bottom, they don't reach as far as the corners
+    const QRect &outlineGeometry = outline()->geometry();
+    // left/right parts are between top/bottom, they don't reach as far as the corners
     const uint16_t verticalWidth = 5;
-    const uint16_t verticalHeight = m_outlineGeometry.height() - 10;
-    const uint16_t horizontalWidth = m_outlineGeometry.width();
+    const uint16_t verticalHeight = outlineGeometry.height() - 10;
+    const uint16_t horizontalWidth = outlineGeometry.width();
     const uint horizontalHeight = 5;
-    m_leftOutline.setGeometry(m_outlineGeometry.x(), m_outlineGeometry.y() + 5, verticalWidth, verticalHeight);
-    m_rightOutline.setGeometry(m_outlineGeometry.x() + m_outlineGeometry.width() - 5, m_outlineGeometry.y() + 5, verticalWidth, verticalHeight);
-    m_topOutline.setGeometry(m_outlineGeometry.x(), m_outlineGeometry.y(), horizontalWidth, horizontalHeight);
-    m_bottomOutline.setGeometry(m_outlineGeometry.x(), m_outlineGeometry.y() + m_outlineGeometry.height() - 5, horizontalWidth, horizontalHeight);
+    m_leftOutline.setGeometry(outlineGeometry.x(), outlineGeometry.y() + 5, verticalWidth, verticalHeight);
+    m_rightOutline.setGeometry(outlineGeometry.x() + outlineGeometry.width() - 5, outlineGeometry.y() + 5, verticalWidth, verticalHeight);
+    m_topOutline.setGeometry(outlineGeometry.x(), outlineGeometry.y(), horizontalWidth, horizontalHeight);
+    m_bottomOutline.setGeometry(outlineGeometry.x(), outlineGeometry.y() + outlineGeometry.height() - 5, horizontalWidth, horizontalHeight);
 
     const xcb_render_color_t white = {0xffff, 0xffff, 0xffff, 0xffff};
     QColor qGray(Qt::gray);
@@ -151,7 +237,7 @@ void Outline::showWithX()
     }
     {
         xcb_pixmap_t xpix = xcb_generate_id(connection());
-        xcb_create_pixmap(connection(), defaultDepth, xpix, rootWindow(), m_outlineGeometry.width(), 5);
+        xcb_create_pixmap(connection(), defaultDepth, xpix, rootWindow(), outlineGeometry.width(), 5);
         XRenderPicture pic(xpix, defaultDepth);
 
         xcb_rectangle_t rect = {0, 0, horizontalWidth, horizontalHeight};
@@ -174,6 +260,11 @@ void Outline::showWithX()
     }
     forEachWindow(&Xcb::Window::clear);
     forEachWindow(&Xcb::Window::map);
+}
+
+void NonCompositedOutlineVisual::hide()
+{
+    forEachWindow(&Xcb::Window::unmap);
 }
 
 } // namespace

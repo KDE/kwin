@@ -202,8 +202,6 @@ public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
     void slotTabAdded(EffectWindow* from, EffectWindow* to);
     void slotTabRemoved(EffectWindow* c, EffectWindow* newActiveWindow);
-    void slotShowOutline(const QRect &geometry);
-    void slotHideOutline();
 
     // slots for D-Bus interface
     Q_SCRIPTABLE void reconfigureEffect(const QString& name);

@@ -1135,22 +1135,6 @@ Q_SIGNALS:
      * @since 4.7
      */
     void propertyNotify(KWin::EffectWindow* w, long atom);
-    /**
-     * Requests to show an outline. An effect providing to show an outline should
-     * connect to the signal and render an outline.
-     * The outline should be shown till the signal is emitted again with a new
-     * geometry or the @link hideOutline signal is emitted.
-     * @param outline The geometry of the outline to render.
-     * @see hideOutline
-     * @since 4.7
-     **/
-    void showOutline(const QRect& outline);
-    /**
-     * Signal emitted when the outline should no longer be shown.
-     * @see showOutline
-     * @since 4.7
-     **/
-    void hideOutline();
 
     /**
      * Signal emitted after the screen geometry changed (e.g. add of a monitor).

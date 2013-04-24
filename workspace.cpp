@@ -231,7 +231,7 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
 
-    m_outline = new Outline();
+    m_outline = new Outline(this);
 
     initShortcuts();
 
@@ -523,7 +523,6 @@ Workspace::~Workspace()
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(true);
-    delete m_outline;
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
     writeWindowRules();

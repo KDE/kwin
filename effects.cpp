@@ -1616,16 +1616,6 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
     }
 }
 
-void EffectsHandlerImpl::slotShowOutline(const QRect& geometry)
-{
-    emit showOutline(geometry);
-}
-
-void EffectsHandlerImpl::slotHideOutline()
-{
-    emit hideOutline();
-}
-
 QString EffectsHandlerImpl::supportInformation(const QString &name) const
 {
     if (!isEffectLoaded(name)) {
