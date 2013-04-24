@@ -48,10 +48,6 @@ public:
     ~TabBoxHandlerPrivate();
 
     /**
-    * Updates the currently shown outline.
-    */
-    void updateOutline();
-    /**
     * Updates the current highlight window state
     */
     void updateHighlightWindows();
@@ -73,7 +69,6 @@ public:
     QModelIndex index;
     /**
     * Indicates if the tabbox is shown.
-    * Used to determine if the outline has to be updated, etc.
     */
     bool isShown;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
@@ -113,23 +108,6 @@ ClientModel* TabBoxHandlerPrivate::clientModel() const
 DesktopModel* TabBoxHandlerPrivate::desktopModel() const
 {
     return m_desktopModel;
-}
-
-void TabBoxHandlerPrivate::updateOutline()
-{
-    if (config.tabBoxMode() != TabBoxConfig::ClientTabBox)
-        return;
-//     if ( c == NULL || !m_isShown || !c->isShown( true ) || !c->isOnCurrentDesktop())
-    if (!isShown) {
-        q->hideOutline();
-        return;
-    }
-    const QVariant client = m_clientModel->data(index, ClientModel::ClientRole);
-    if (!client.isValid()) {
-        return;
-    }
-    TabBoxClient* c = static_cast< TabBoxClient* >(client.value<void *>());
-    q->showOutline(QRect(c->x(), c->y(), c->width(), c->height()));
 }
 
 void TabBoxHandlerPrivate::updateHighlightWindows()
@@ -185,13 +163,6 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         data.resize(1);
     }
     data[ 0 ] = currentClient ? currentClient->window() : 0L;
-    if (config.isShowOutline()) {
-        QVector<xcb_window_t> outlineWindows = q->outlineWindowIds();
-        data.resize(2+outlineWindows.size());
-        for (int i=0; i<outlineWindows.size(); ++i) {
-            data[2+i] = outlineWindows[i];
-        }
-    }
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
     XChangeProperty(dpy, wId, atom, atom, 32, PropModeReplace,
                     reinterpret_cast<unsigned char *>(data.data()), data.size());
@@ -244,10 +215,6 @@ void TabBoxHandler::show()
     d->isShown = true;
     d->lastRaisedClient = 0;
     d->lastRaisedClientSucc = 0;
-    // show the outline
-    if (d->config.isShowOutline()) {
-        d->updateOutline();
-    }
     if (d->config.isShowTabBox()) {
         if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
             // use declarative view
@@ -284,9 +251,6 @@ void TabBoxHandler::hide(bool abort)
     d->isShown = false;
     if (d->config.isHighlightWindows()) {
         d->endHighlightWindows(abort);
-    }
-    if (d->config.isShowOutline()) {
-        hideOutline();
     }
     if (d->m_declarativeView) {
         d->m_declarativeView->hide();
@@ -388,9 +352,6 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
     }
     d->index = index;
     if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
-        if (d->config.isShowOutline()) {
-            d->updateOutline();
-        }
         if (d->config.isHighlightWindows()) {
             d->updateHighlightWindows();
         }

@@ -73,16 +73,6 @@ void Outline::setGeometry(const QRect& outlineGeometry)
     m_outlineGeometry = outlineGeometry;
 }
 
-QVector< xcb_window_t > Outline::windowIds() const
-{
-    QVector<xcb_window_t> windows;
-    if (m_initialized) {
-        windows.reserve(4);
-        windows << m_leftOutline << m_topOutline << m_rightOutline << m_bottomOutline;
-    }
-    return windows;
-}
-
 void Outline::showWithX()
 {
     if (!m_initialized) {

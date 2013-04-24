@@ -59,12 +59,12 @@ namespace KWin
 * In order to use the TabBox the TabBoxConfig has to be set. This defines if the model for desktops or for
 * clients will be used. The model has to be initialized by calling TabBoxHandler::createModel(), as the
 * model is undefined when the TabBox is not active. The TabBox is activated by TabBoxHandler::show().
-* Depending on the current set TabBoxConfig it is possible that an additional outline is shown, the
+* Depending on the current set TabBoxConfig it is possible that the
 * highlight windows effect activated and that the view is not displayed at all. As already mentioned
 * the TabBox does not handle any updating of the selected item. This has to be done by invoking
 * TabBoxHandler::setCurrentIndex(). Nevertheless the TabBoxHandler provides methods to query for the
 * model index or the next or previous item, for a cursor position or for a given item (that is
-* TabBoxClient or desktop). By invoking TabBoxHandler::hide() the view, the optional outline and the
+* TabBoxClient or desktop). By invoking TabBoxHandler::hide() the view, the
 * optional highlight windows effect are removed. The model is invalidated immediately. So if it is
 * necessary to retrieve the last selected item this has to be done before calling the hide method.
 *
@@ -225,25 +225,22 @@ public:
     * Call this method to show the TabBoxView. Depending on current
     * configuration this method might not do anything.
     * If highlight windows effect is to be used it will be activated.
-    * If the outline has to be shown, it will be shown.
     * Highlight windows and outline are not shown if
     * TabBoxConfig::TabBoxMode is TabBoxConfig::DesktopTabBox.
     * @see TabBoxConfig::isShowTabBox
     * @see TabBoxConfig::isHighlightWindows
-    * @see TabBoxConfig::showOutline
     */
     void show();
     /**
     * Hides the TabBoxView if shown.
     * Deactivates highlight windows effect if active.
-    * Removes the outline if active.
     * @see show
     */
     void hide(bool abort = false);
 
     /**
     * Sets the current model index in the view and updates
-    * highlight windows and outline if active.
+    * highlight windows if active.
     * @param index The current Model index
     */
     void setCurrentIndex(const QModelIndex& index);
@@ -337,27 +334,6 @@ public:
     void setEmbeddedAlignment(Qt::Alignment alignment);
     Qt::Alignment embeddedAlignment() const;
     void resetEmbedded();
-
-protected:
-    /**
-     * Show the outline of the current selected window
-     * @param outline The geometry of the window the outline will be shown
-     * @since 4.7
-     **/
-    virtual void showOutline(const QRect &outline) = 0;
-
-    /**
-     * Hide previously shown outline
-     * @since 4.7
-     **/
-    virtual void hideOutline() = 0;
-
-    /**
-     * Return outline window ids
-     * @return The outline window ids given in the order left, top, right, bottom
-     * @since 4.7
-     **/
-    virtual QVector<xcb_window_t> outlineWindowIds() const = 0;
 
 signals:
     /**

@@ -148,13 +148,6 @@ public:
     */
     bool isHighlightWindows() const;
     /**
-    * @return If an outline of selected window should be shown
-    * This option does not apply for TabBoxMode DesktopTabBox.
-    * @see setShowOutline
-    * @see defaultShowOutline
-    */
-    bool isShowOutline() const;
-    /**
     * @return The current TabBoxMode
     * @see setTabBoxMode
     */
@@ -233,12 +226,6 @@ public:
     * @see isHighlightWindows
     */
     void setHighlightWindows(bool highlight);
-    /**
-    * @param show Show outline for current selected client.
-    * This option does not apply for TabBoxMode DesktopTabBox.
-    * @see isShowOutline
-    */
-    void setShowOutline(bool show);
     /**
     * @param mode The new TabBoxMode to be used.
     * @see tabBoxMode
@@ -321,9 +308,6 @@ public:
         return FocusChainSwitching;
     }
     static bool defaultShowTabBox() {
-        return true;
-    }
-    static bool defaultShowOutline() {
         return true;
     }
     static bool defaultHighlightWindow() {

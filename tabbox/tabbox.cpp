@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
-#include "outline.h"
 
 // specify externals before namespace
 
@@ -327,21 +326,6 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
         }
     }
     return QWeakPointer<TabBoxClient>();
-}
-
-void TabBoxHandlerImpl::showOutline(const QRect &outline)
-{
-    Workspace::self()->outline()->show(outline);
-}
-
-void TabBoxHandlerImpl::hideOutline()
-{
-    Workspace::self()->outline()->hide();
-}
-
-QVector< xcb_window_t > TabBoxHandlerImpl::outlineWindowIds() const
-{
-    return Workspace::self()->outline()->windowIds();
 }
 
 void TabBoxHandlerImpl::activateAndClose()
@@ -783,8 +767,6 @@ void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)
     tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
                                             config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
 
-    tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline",
-                                TabBoxConfig::defaultShowOutline()));
     tabBoxConfig.setShowTabBox(config.readEntry<bool>("ShowTabBox",
                                TabBoxConfig::defaultShowTabBox()));
     tabBoxConfig.setHighlightWindows(config.readEntry<bool>("HighlightWindows",

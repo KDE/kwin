@@ -42,7 +42,6 @@ void TestTabBoxHandler::testDontCrashUpdateOutlineNullClient()
     MockTabBoxHandler tabboxhandler;
     TabBox::TabBoxConfig config;
     config.setTabBoxMode(TabBox::TabBoxConfig::ClientTabBox);
-    config.setShowOutline(true);
     config.setShowTabBox(false);
     config.setHighlightWindows(false);
     tabboxhandler.setConfig(config);

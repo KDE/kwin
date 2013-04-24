@@ -111,7 +111,6 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
         ui[i]->ghns->setIcon(KIcon("get-hot-new-stuff"));
 
         connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
-        connect(ui[i]->showOutlineCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
         connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(changed()));
         connect(ui[i]->effectCombo, SIGNAL(currentIndexChanged(int)), SLOT(effectSelectionChanged(int)));
@@ -265,7 +264,6 @@ void KWinTabBoxConfig::loadConfig(const KConfigGroup& config, KWin::TabBox::TabB
     tabBoxConfig.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(
                                             config.readEntry<int>("SwitchingMode", TabBoxConfig::defaultSwitchingMode())));
 
-    tabBoxConfig.setShowOutline(config.readEntry<bool>("ShowOutline", TabBoxConfig::defaultShowOutline()));
     tabBoxConfig.setShowTabBox(config.readEntry<bool>("ShowTabBox", TabBoxConfig::defaultShowTabBox()));
     tabBoxConfig.setHighlightWindows(config.readEntry<bool>("HighlightWindows", TabBoxConfig::defaultHighlightWindow()));
 
@@ -285,7 +283,6 @@ void KWinTabBoxConfig::saveConfig(KConfigGroup& config, const KWin::TabBox::TabB
     config.writeEntry("LayoutName",         tabBoxConfig.layoutName());
 
     // check boxes
-    config.writeEntry("ShowOutline",      tabBoxConfig.isShowOutline());
     config.writeEntry("ShowTabBox",       tabBoxConfig.isShowTabBox());
     config.writeEntry("HighlightWindows", tabBoxConfig.isHighlightWindows());
 
@@ -365,7 +362,6 @@ void KWinTabBoxConfig::defaults()
         ui[i]->switchingModeCombo->setCurrentIndex(TabBoxConfig::defaultSwitchingMode());
 
         // checkboxes
-        ui[i]->showOutlineCheck->setChecked(TabBoxConfig::defaultShowOutline());
         ui[i]->showTabBox->setChecked(TabBoxConfig::defaultShowTabBox());
         ui[i]->highlightWindowCheck->setChecked(TabBoxConfig::defaultHighlightWindow());
         CONFIGURE(showDesktop, ShowDesktop, ==, ShowDesktopClient);
@@ -422,7 +418,6 @@ void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm* ui, const KWin::
     ui->switchingModeCombo->setCurrentIndex(config.clientSwitchingMode());
 
     // check boxes
-    ui->showOutlineCheck->setChecked(config.isShowOutline());
     ui->showTabBox->setChecked(config.isShowTabBox());
     ui->highlightWindowCheck->setChecked(config.isHighlightWindows());
     ui->effectCombo->setCurrentIndex(ui->effectCombo->findData(config.layoutName()));
@@ -452,7 +447,6 @@ void KWinTabBoxConfig::updateConfigFromUi(const KWin::KWinTabBoxConfigForm* ui, 
 
     config.setClientSwitchingMode(TabBoxConfig::ClientSwitchingMode(ui->switchingModeCombo->currentIndex()));
 
-    config.setShowOutline(ui->showOutlineCheck->isChecked());
     config.setShowTabBox(ui->showTabBox->isChecked());
     config.setHighlightWindows(ui->highlightWindowCheck->isChecked());
     if (ui->effectCombo->currentIndex() >= Layout) {
@@ -476,7 +470,6 @@ void KWinTabBoxConfig::effectSelectionChanged(int index)
     if (!ui->showTabBox->isChecked())
         return;
     ui->highlightWindowCheck->setEnabled(index >= Layout);
-    ui->showOutlineCheck->setEnabled(index >= Layout);
     if (m_layoutPreview && m_layoutPreview->isVisible()) {
         if (index < Layout)
             m_layoutPreview->hide();
@@ -489,7 +482,6 @@ void KWinTabBoxConfig::tabBoxToggled(bool on) {
     CHECK_CURRENT_TABBOX_UI
     on = !on || ui->effectCombo->currentIndex() >= Layout;
     ui->highlightWindowCheck->setEnabled(on);
-    ui->showOutlineCheck->setEnabled(on);
     emit changed();
 }
 

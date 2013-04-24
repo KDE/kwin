@@ -35,7 +35,6 @@ void TestTabBoxConfig::testDefaultCtor()
     TabBoxConfig config;
     QCOMPARE(config.isShowTabBox(), TabBoxConfig::defaultShowTabBox());
     QCOMPARE(config.isHighlightWindows(), TabBoxConfig::defaultHighlightWindow());
-    QCOMPARE(config.isShowOutline(), TabBoxConfig::defaultShowOutline());
     QCOMPARE(config.tabBoxMode(), TabBoxConfig::ClientTabBox);
     QCOMPARE(config.clientDesktopMode(), TabBoxConfig::defaultDesktopMode());
     QCOMPARE(config.clientActivitiesMode(), TabBoxConfig::defaultActivitiesMode());
@@ -54,7 +53,6 @@ void TestTabBoxConfig::testAssignmentOperator()
     // changing all values of the config object
     config.setShowTabBox(!TabBoxConfig::defaultShowTabBox());
     config.setHighlightWindows(!TabBoxConfig::defaultHighlightWindow());
-    config.setShowOutline(!TabBoxConfig::defaultShowOutline());
     config.setTabBoxMode(TabBoxConfig::DesktopTabBox);
     config.setClientDesktopMode(TabBoxConfig::AllDesktopsClients);
     config.setClientActivitiesMode(TabBoxConfig::AllActivitiesClients);
@@ -70,7 +68,6 @@ void TestTabBoxConfig::testAssignmentOperator()
     // verify the config2 values
     QCOMPARE(config2.isShowTabBox(), !TabBoxConfig::defaultShowTabBox());
     QCOMPARE(config2.isHighlightWindows(), !TabBoxConfig::defaultHighlightWindow());
-    QCOMPARE(config2.isShowOutline(), !TabBoxConfig::defaultShowOutline());
     QCOMPARE(config2.tabBoxMode(), TabBoxConfig::DesktopTabBox);
     QCOMPARE(config2.clientDesktopMode(), TabBoxConfig::AllDesktopsClients);
     QCOMPARE(config2.clientActivitiesMode(), TabBoxConfig::AllActivitiesClients);

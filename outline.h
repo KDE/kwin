@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_OUTLINE_H
 #include "xcbutils.h"
 #include <QRect>
-#include <QVector>
 
 namespace KWin {
 
@@ -72,11 +71,6 @@ public:
      */
     void hide();
 
-    /**
-     * Return outline window ids
-     * @return The window ids created to represent the outline
-     */
-    QVector<xcb_window_t> windowIds() const;
 private:
 
     /**
