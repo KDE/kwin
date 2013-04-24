@@ -302,6 +302,8 @@ public:
     const Scene::Window* sceneWindow() const; // internal
     Scene::Window* sceneWindow(); // internal
 
+    void elevate(bool elevate);
+
     void setData(int role, const QVariant &data);
     QVariant data(int role) const;
 

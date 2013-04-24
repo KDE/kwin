@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "screenedge.h"
 #include "screens.h"
+#include "unmanaged.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 // Qt
@@ -307,13 +308,10 @@ void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
 
 void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
 {
-    if (effects) {
-        const Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
-        if (EffectWindow *w = static_cast<EffectsHandlerImpl*>(effects)->findWindow(cl->window()))
-            static_cast<EffectsHandlerImpl*>(effects)->setElevatedWindow(w, b);
-        if (EffectWindow *w = static_cast<EffectsHandlerImpl*>(effects)->findWindow(tabbox))
-            static_cast<EffectsHandlerImpl*>(effects)->setElevatedWindow(w, b);
-    }
+    Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+    cl->elevate(b);
+    if (Unmanaged *w = Workspace::self()->findUnmanaged(WindowMatchPredicate(tabbox)))
+        w->elevate(b);
 }
 
 

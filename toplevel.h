@@ -259,6 +259,11 @@ public:
     void resetDamage(const QRect& r);
     EffectWindowImpl* effectWindow();
     const EffectWindowImpl* effectWindow() const;
+    /**
+     * Window will be temporarily painted as if being at the top of the stack.
+     * Only available if Compositor is active, if not active, this method is a no-op.
+     **/
+    void elevate(bool elevate);
 
     /**
      * @returns Whether the Toplevel has a Shadow or not

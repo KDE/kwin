@@ -479,6 +479,14 @@ bool Toplevel::isOnCurrentActivity() const
 #endif
 }
 
+void Toplevel::elevate(bool elevate)
+{
+    if (!effectWindow()) {
+        return;
+    }
+    effectWindow()->elevate(elevate);
+}
+
 } // namespace
 
 #include "toplevel.moc"

@@ -1797,6 +1797,11 @@ EffectWindow* effectWindow(Scene::Window* w)
     return ret;
 }
 
+void EffectWindowImpl::elevate(bool elevate)
+{
+    effects->setElevatedWindow(this, elevate);
+}
+
 void EffectWindowImpl::registerThumbnail(AbstractThumbnailItem *item)
 {
     if (WindowThumbnailItem *thumb = qobject_cast<WindowThumbnailItem*>(item)) {
