@@ -20,10 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_USERACTIONS_H
 #define KWIN_USERACTIONS_H
 
+// KDE
+#include <KDE/KDialog>
+// Qt
 #include <QObject>
 #include <QWeakPointer>
 
+class KKeySequenceWidget;
 class QAction;
+class QLabel;
 class QMenu;
 class QRect;
 
@@ -254,6 +259,27 @@ private:
      **/
     QWeakPointer<Client> m_client;
 };
+
+class ShortcutDialog
+    : public KDialog
+{
+    Q_OBJECT
+public:
+    explicit ShortcutDialog(const QKeySequence& cut);
+    virtual void accept();
+    QKeySequence shortcut() const;
+public Q_SLOTS:
+    void keySequenceChanged(const QKeySequence &seq);
+signals:
+    void dialogDone(bool ok);
+protected:
+    virtual void done(int r);
+private:
+    KKeySequenceWidget* widget;
+    QKeySequence _shortcut;
+    QLabel *warning;
+};
+
 } // namespace
 
 #endif //  KWIN_USERACTIONS_H

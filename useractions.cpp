@@ -49,6 +49,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActivities/Info>
 #endif
 
+#include <KDE/KKeySequenceWidget>
 #include <KDE/KProcess>
 #include <KDE/KToolInvocation>
 
@@ -66,9 +67,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <KDE/KGlobal>
+#include <KDE/KPushButton>
 #include <kglobalaccel.h>
 #include <kapplication.h>
 #include <QRegExp>
+#include <QLabel>
 #include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>
@@ -820,6 +823,102 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         m_activityMenu->actions().at(0)->setChecked(m_client.data()->isOnAllActivities());
     }
 #endif
+}
+
+//****************************************
+// ShortcutDialog
+//****************************************
+ShortcutDialog::ShortcutDialog(const QKeySequence& cut)
+    : _shortcut(cut)
+{
+    QWidget *vBoxContainer = new QWidget(this);
+    vBoxContainer->setLayout(new QVBoxLayout(vBoxContainer));
+    vBoxContainer->layout()->addWidget(widget = new KKeySequenceWidget(vBoxContainer));
+    vBoxContainer->layout()->addWidget(warning = new QLabel(vBoxContainer));
+    warning->hide();
+    widget->setKeySequence(cut);
+
+    // To not check for conflicting shortcuts. The widget would use a message
+    // box which brings down kwin.
+    widget->setCheckForConflictsAgainst(KKeySequenceWidget::None);
+    // It's a global shortcut so don't allow multikey shortcuts
+    widget->setMultiKeyShortcutsAllowed(false);
+
+    // Listen to changed shortcuts
+    connect(
+        widget, SIGNAL(keySequenceChanged(QKeySequence)),
+        SLOT(keySequenceChanged(QKeySequence)));
+
+    setMainWidget(vBoxContainer);
+    widget->setFocus();
+
+    // make it a popup, so that it has the grab
+    XSetWindowAttributes attrs;
+    attrs.override_redirect = True;
+    XChangeWindowAttributes(display(), winId(), CWOverrideRedirect, &attrs);
+    setWindowFlags(Qt::Popup);
+}
+
+void ShortcutDialog::accept()
+{
+    QKeySequence seq = shortcut();
+    if (!seq.isEmpty()) {
+        if (seq[0] == Qt::Key_Escape) {
+            reject();
+            return;
+        }
+        if (seq[0] == Qt::Key_Space
+        || (seq[0] & Qt::KeyboardModifierMask) == 0) {
+            // clear
+            widget->clearKeySequence();
+            KDialog::accept();
+            return;
+        }
+    }
+    KDialog::accept();
+}
+
+void ShortcutDialog::done(int r)
+{
+    KDialog::done(r);
+    emit dialogDone(r == Accepted);
+}
+
+void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
+{
+    activateWindow(); // where is the kbd focus lost? cause of popup state?
+    if (_shortcut == seq)
+        return; // don't try to update the same
+
+    if (seq.isEmpty()) { // clear
+        _shortcut = seq;
+        return;
+    }
+
+    // Check if the key sequence is used currently
+    QString sc = seq.toString();
+    // NOTICE - seq.toString() & the entries in "conflicting" randomly get invalidated after the next call (if no sc has been set & conflicting isn't empty?!)
+    QList<KGlobalShortcutInfo> conflicting = KGlobalAccel::getGlobalShortcutsByKey(seq);
+    if (!conflicting.isEmpty()) {
+        const KGlobalShortcutInfo &conflict = conflicting.at(0);
+        warning->setText(i18nc("'%1' is a keyboard shortcut like 'ctrl+w'",
+        "<b>%1</b> is already in use", sc));
+        warning->setToolTip(i18nc("keyboard shortcut '%1' is used by action '%2' in application '%3'",
+        "<b>%1</b> is used by %2 in %3", sc, conflict.friendlyName(), conflict.componentFriendlyName()));
+        warning->show();
+        widget->setKeySequence(shortcut());
+    } else if (seq != _shortcut) {
+        warning->hide();
+        if (KPushButton *ok = button(KDialog::Ok))
+            ok->setFocus();
+    }
+
+    _shortcut = seq;
+}
+
+QKeySequence ShortcutDialog::shortcut() const
+{
+    return _shortcut;
 }
 
 //****************************************

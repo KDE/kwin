@@ -29,20 +29,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kwinglobals.h>
 // KDE
-#include <KDE/KDialog>
 #include <KDE/NET>
 #include <KDE/KSelectionWatcher>
 // Qt
+#include <QPoint>
+#include <QRect>
 #include <QScopedPointer>
 // X
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 // system
 #include <limits.h>
-
-// forward declarations
-class KKeySequenceWidget;
-class QLabel;
 
 namespace KWin
 {
@@ -179,7 +176,7 @@ public:
     // property.  If it explicitly requests that decorations be shown
     // or hidden, 'got_noborder' is set to true and 'noborder' is set
     // appropriately.
-    static void readFlags(WId w, bool& got_noborder, bool& noborder,
+    static void readFlags(Window w, bool& got_noborder, bool& noborder,
                           bool& resize, bool& move, bool& minimize, bool& maximize,
                           bool& close);
     struct MwmHints {
@@ -244,7 +241,7 @@ public:
     ScopedCPointer(T *p = 0) : QScopedPointer<T, QScopedPointerPodDeleter>(p) {}
 };
 
-QByteArray getStringProperty(WId w, Atom prop, char separator = 0);
+QByteArray getStringProperty(Window w, Atom prop, char separator = 0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();
@@ -339,30 +336,6 @@ Qt::MouseButtons x11ToQtMouseButtons(int state);
 Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state);
 
 void checkNonExistentClients();
-
-#ifndef KCMRULES
-// Qt dialogs emit no signal when closed :(
-class ShortcutDialog
-    : public KDialog
-{
-    Q_OBJECT
-public:
-    explicit ShortcutDialog(const QKeySequence& cut);
-    virtual void accept();
-    QKeySequence shortcut() const;
-public Q_SLOTS:
-    void keySequenceChanged(const QKeySequence &seq);
-signals:
-    void dialogDone(bool ok);
-protected:
-    virtual void done(int r);
-private:
-    KKeySequenceWidget* widget;
-    QKeySequence _shortcut;
-    QLabel *warning;
-};
-
-#endif //KCMRULES
 
 } // namespace
 

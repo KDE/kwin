@@ -53,6 +53,7 @@ class Client;
 class KillWindow;
 class RootInfo;
 class Rules;
+class ShortcutDialog;
 class UserActionsMenu;
 class WindowRules;
 class Compositor;

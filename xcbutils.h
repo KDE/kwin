@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 
 #include <QRect>
+#include <QRegion>
+#include <QVector>
 
 #include <xcb/xcb.h>
 #include <xcb/composite.h>

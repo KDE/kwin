@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include <kwinglobals.h>
 #include <QRect>
+#include <QWidget>
 
 namespace Plasma {
 class FrameSvg;

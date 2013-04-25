@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/tabboxhandler.h"
 
 class KActionCollection;
+class KConfigGroup;
 class QKeyEvent;
 
 namespace KWin
