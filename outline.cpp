@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 // KWin libs
 #include <kwinxrenderutils.h>
+#include "workspace.h"
 // Plasma
 #include <Plasma/FrameSvg>
 // Qt
@@ -120,8 +121,7 @@ CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    m_background->setImagePath("widgets/viewitem");
-    m_background->setElementPrefix("hover");
+    m_background->setImagePath("widgets/translucentbackground");
     m_background->setCacheAllRenderedFrames(true);
     m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 }
@@ -140,6 +140,40 @@ void CompositedOutlineVisual::show()
     const QRect &outlineGeometry = outline()->geometry();
     m_background->resizeFrame(outlineGeometry.size());
     setGeometry(outlineGeometry);
+
+    // check which borders to enable
+    bool left, right, top, bottom;
+    left = right = top = bottom = false;
+    const QRect maximizedArea = Workspace::self()->clientArea(MaximizeArea, outlineGeometry.center(), 1);
+    if (outlineGeometry.x() == maximizedArea.x()) {
+        left = true;
+    }
+    if (outlineGeometry.y() == maximizedArea.y()) {
+        top = true;
+    }
+    if (outlineGeometry.right() == maximizedArea.right()) {
+        right = true;
+    }
+    if (outlineGeometry.bottom() == maximizedArea.bottom()) {
+        bottom = true;
+    }
+    Plasma::FrameSvg::EnabledBorders borders = Plasma::FrameSvg::AllBorders;
+    if (left) {
+        borders = borders & ~Plasma::FrameSvg::LeftBorder;
+    }
+    if (right) {
+        borders = borders & ~Plasma::FrameSvg::RightBorder;
+    }
+    if (top) {
+        borders = borders & ~Plasma::FrameSvg::TopBorder;
+    }
+    if (bottom) {
+        borders = borders & ~Plasma::FrameSvg::BottomBorder;
+    }
+    if (left && right && bottom && top) {
+        borders = Plasma::FrameSvg::AllBorders;
+    }
+    m_background->setEnabledBorders(borders);
     QWidget::show();
 }
 

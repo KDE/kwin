@@ -2631,6 +2631,7 @@ void Client::finishMoveResize(bool cancel)
         setQuickTileMode(electricMode);
         electricMaximizing = false;
         outline()->hide();
+        elevate(false);
     } else if (!cancel) {
         if (!(maximizeMode() & MaximizeHorizontal)) {
             geom_restore.setX(geometry().x());
@@ -3092,6 +3093,7 @@ void Client::setElectricBorderMaximizing(bool maximizing)
         outline()->show(electricBorderMaximizeGeometry(cursorPos(), desktop()));
     else
         outline()->hide();
+    elevate(maximizing);
 }
 
 QRect Client::electricBorderMaximizeGeometry(QPoint pos, int desktop)
