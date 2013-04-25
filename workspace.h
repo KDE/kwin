@@ -23,30 +23,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_WORKSPACE_H
 #define KWIN_WORKSPACE_H
 
+// kwin
+#include <kdecoration.h>
+#include "sm.h"
+#include "utils.h"
+// KDE
+#include <KDE/NETRootInfo>
+#include <KDE/KXMessages>
+// Qt
 #include <QTimer>
 #include <QVector>
-#include <kshortcut.h>
-#include <QCursor>
-#include <netwm.h>
-#include <kxmessages.h>
-#include <QElapsedTimer>
-#include <kmanagerselection.h>
-
-// need to include utils.h before we use the ifdefs
-#include "utils.h"
-
-#include "kdecoration.h"
-#include "sm.h"
-
+// X
 #include <X11/Xlib.h>
 
 // TODO: Cleanup the order of things in this .h file
 
-class QMenu;
-class QActionGroup;
 class QStringList;
 class KConfig;
 class KActionCollection;
+class KShortcut;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
