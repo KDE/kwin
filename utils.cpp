@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kxerrorhandler.h>
 #include <X11/Xatom.h>
 #include <KDE/KLocalizedString>
+#include <KDE/KKeySequenceWidget>
 
 #ifndef KCMRULES
 #include <QLabel>

@@ -22,29 +22,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_UTILS_H
 #define KWIN_UTILS_H
 
-class QLabel;
-
+// cmake stuff
 #include <config-X11.h>
 #include <config-kwin.h>
-
 #include <kwinconfig.h>
-
-#include <X11/Xlib.h>
-
-#include <fixx11h.h>
-
-#include <QWidget>
-#include <QScopedPointer>
-#include <kmanagerselection.h>
-#include <netwm_def.h>
-#include <kkeysequencewidget.h>
-#include <limits.h>
-#include <kdialog.h>
-
+// kwin
 #include <kwinglobals.h>
+// KDE
+#include <KDE/KDialog>
+#include <KDE/NET>
+#include <KDE/KSelectionWatcher>
+// Qt
+#include <QScopedPointer>
+// X
+#include <X11/Xlib.h>
+#include <fixx11h.h>
+// system
+#include <limits.h>
 
-// needed by the DBUS interface
-Q_DECLARE_METATYPE(QList<int>)
+// forward declarations
+class KKeySequenceWidget;
+class QLabel;
 
 namespace KWin
 {
