@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_OUTLINE_H
 #define KWIN_OUTLINE_H
 #include "xcbutils.h"
+#include <kwinglobals.h>
 #include <QRect>
 
 namespace Plasma {
@@ -44,7 +45,6 @@ class OutlineVisual;
 class Outline : public QObject {
     Q_OBJECT
 public:
-    Outline(QObject *parent);
     ~Outline();
 
     /**
@@ -87,6 +87,7 @@ private:
     QScopedPointer<OutlineVisual> m_visual;
     QRect m_outlineGeometry;
     bool m_active;
+    KWIN_SINGLETON(Outline)
 };
 
 class OutlineVisual
@@ -161,6 +162,12 @@ void NonCompositedOutlineVisual::forEachWindow(T method)
     (m_rightOutline.*method)();
     (m_bottomOutline.*method)();
     (m_leftOutline.*method)();
+}
+
+inline
+Outline *outline()
+{
+    return Outline::self();
 }
 
 }

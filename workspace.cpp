@@ -231,7 +231,7 @@ Workspace::Workspace(bool restore)
 
     client_keys = new KActionCollection(this);
 
-    m_outline = new Outline(this);
+    Outline::create(this);
 
     initShortcuts();
 
@@ -1528,11 +1528,6 @@ void Workspace::slotBlockShortcuts(int data)
             it != clients.constEnd();
             ++it)
         (*it)->updateMouseGrab();
-}
-
-Outline* Workspace::outline()
-{
-    return m_outline;
 }
 
 QString Workspace::supportInformation() const

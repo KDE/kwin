@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
+KWIN_SINGLETON_FACTORY(Outline)
+
 Outline::Outline(QObject *parent)
     : QObject(parent)
     , m_active(false)

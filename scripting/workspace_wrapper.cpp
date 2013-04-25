@@ -242,17 +242,17 @@ void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)
 {
-    Workspace::self()->outline()->show(geometry);
+    outline()->show(geometry);
 }
 
 void WorkspaceWrapper::showOutline(int x, int y, int width, int height)
 {
-    Workspace::self()->outline()->show(QRect(x, y, width, height));
+    outline()->show(QRect(x, y, width, height));
 }
 
 void WorkspaceWrapper::hideOutline()
 {
-    Workspace::self()->outline()->hide();
+    outline()->hide();
 }
 
 Client *WorkspaceWrapper::getClient(qulonglong windowId)

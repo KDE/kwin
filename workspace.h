@@ -56,7 +56,6 @@ namespace KWin
 
 class Client;
 class KillWindow;
-class Outline;
 class RootInfo;
 class Rules;
 class UserActionsMenu;
@@ -172,8 +171,6 @@ public:
         return deleted;
     }
 
-    Outline* outline();
-
 #ifdef KWIN_BUILD_SCREENEDGES
     void stackScreenEdgesUnderOverrideRedirect();
 #endif
@@ -182,7 +179,6 @@ public:
     QPoint cascadeOffset(const Client *c) const;
 
 private:
-    Outline* m_outline;
     Compositor *m_compositor;
 
     //-------------------------------------------------
