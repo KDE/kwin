@@ -92,7 +92,6 @@ typedef QList< Group* > GroupList;
 typedef QList< const Group* > ConstGroupList;
 
 extern Options* options;
-extern bool initting; // whether kwin is starting up
 
 enum Layer {
     UnknownLayer = -1,
