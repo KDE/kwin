@@ -183,7 +183,7 @@ Decoration {
             id: top
             property int topMargin: 1
             property real normalHeight: titleRow.normalHeight + topMargin + 1
-            property real maximizedHeight: titleRow.maximizedHeight
+            property real maximizedHeight: titleRow.maximizedHeight + 1
             height: decoration.maximized ? maximizedHeight : normalHeight
             anchors {
                 left: parent.left
@@ -236,8 +236,8 @@ Decoration {
             Item {
                 id: titleRow
                 property real captionHeight: caption.implicitHeight + 4
-                property int topMargin: 4
-                property int bottomMargin: 2
+                property int topMargin: 3
+                property int bottomMargin: 1
                 property real normalHeight: captionHeight + bottomMargin + topMargin
                 property real maximizedHeight: captionHeight + bottomMargin
                 anchors {
@@ -245,8 +245,8 @@ Decoration {
                     right: parent.right
                     top: parent.top
                     topMargin: decoration.maximized ? 0 : titleRow.topMargin
-                    leftMargin: decoration.maximized ? 0 : 6
-                    rightMargin: decoration.maximized ? 0 : 6
+                    leftMargin: decoration.maximized ? 0 : 3
+                    rightMargin: decoration.maximized ? 0 : 3
                     bottomMargin: titleRow.bottomMargin
                 }
                 ButtonGroup {
@@ -277,6 +277,7 @@ Decoration {
                         right: rightButtonGroup.left
                         rightMargin: 5
                         leftMargin: 5
+                        topMargin: 3
                     }
                     color: options.fontColor
                     Behavior on color {
@@ -311,20 +312,36 @@ Decoration {
             }
         }
 
-        Rectangle {
+        Item {
             id: innerBorder
-            anchors {
-                fill: parent
-                leftMargin: root.borders.left - 1
-                rightMargin: root.borders.right
-                topMargin: root.borders.top - 1
-                bottomMargin: root.borders.bottom
-            }
-            border {
-                width: 1
+            anchors.fill: parent
+
+            Rectangle {
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+                height: 1
+                y: top.height - 1
+                visible: decoration.maximized
                 color: colorHelper.shade(root.titleBarColor, ColorHelper.MidShade)
             }
-            color: root.titleBarColor
+
+            Rectangle {
+                anchors {
+                    fill: parent
+                    leftMargin: root.borders.left - 1
+                    rightMargin: root.borders.right
+                    topMargin: root.borders.top - 1
+                    bottomMargin: root.borders.bottom
+                }
+                border {
+                    width: 1
+                    color: colorHelper.shade(root.titleBarColor, ColorHelper.MidShade)
+                }
+                visible: !decoration.maximized
+                color: root.titleBarColor
+            }
         }
     }
 
