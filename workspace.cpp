@@ -18,60 +18,59 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
-//#define QT_CLEAN_NAMESPACE
-
+// own
 #include "workspace.h"
-
-#include <kstartupinfo.h>
-#include <kconfig.h>
-#include <kglobal.h>
-#include <kactioncollection.h>
-#include <kconfiggroup.h>
-#include <kcmdlineargs.h>
-#include <kdeversion.h>
-#include <QtConcurrentRun>
-
-#include "client.h"
-#include "composite.h"
-#include "decorations.h"
-#include "focuschain.h"
-#ifdef KWIN_BUILD_TABBOX
-#include "tabbox.h"
-#endif
-#include "atoms.h"
-#include "cursor.h"
-#include "killwindow.h"
-#include "placement.h"
-#include "outline.h"
-#include "group.h"
-#include "rules.h"
-#include "dbusinterface.h"
-#include "unmanaged.h"
-#include "deleted.h"
-#include "effects.h"
-#include "screens.h"
-#include "useractions.h"
-#include "virtualdesktops.h"
-#include "xcbutils.h"
+// kwin libs
 #include <kdecorationfactory.h>
 #include <kwinglplatform.h>
-#ifdef KWIN_BUILD_SCREENEDGES
-#include "screenedge.h"
-#endif
-#ifdef KWIN_BUILD_SCRIPTING
-#include "scripting/scripting.h"
-#endif
+// kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #ifdef KWIN_BUILD_KAPPMENU
 #include "appmenu.h"
 #endif
-
-#include <kglobalsettings.h>
-#include <kwindowsystem.h>
-#include <kwindowinfo.h>
+#include "atoms.h"
+#include "client.h"
+#include "composite.h"
+#include "cursor.h"
+#include "dbusinterface.h"
+#include "decorations.h"
+#include "deleted.h"
+#include "effects.h"
+#include "focuschain.h"
+#include "group.h"
+#include "killwindow.h"
+#include "outline.h"
+#include "placement.h"
+#include "rules.h"
+#ifdef KWIN_BUILD_SCREENEDGES
+#include "screenedge.h"
+#endif
+#include "screens.h"
+#ifdef KWIN_BUILD_SCRIPTING
+#include "scripting/scripting.h"
+#endif
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
+#include "unmanaged.h"
+#include "useractions.h"
+#include "virtualdesktops.h"
+#include "xcbutils.h"
+// KDE
+#include <kdeversion.h>
+#include <KDE/KActionCollection>
+#include <KDE/KCmdLineArgs>
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
+#include <KDE/KGlobal>
+#include <KDE/KGlobalSettings>
+#include <KDE/KStartupInfo>
+#include <KDE/KWindowInfo>
+#include <KDE/KWindowSystem>
+// Qt
+#include <QtConcurrentRun>
 
 namespace KWin
 {
