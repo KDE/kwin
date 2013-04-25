@@ -23,25 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 
-#include <kapplication.h>
 #include <kstartupinfo.h>
-#include <fixx11h.h>
 #include <kconfig.h>
 #include <kglobal.h>
-#include <QRegExp>
-#include <QPainter>
-#include <QBitmap>
-#include <QClipboard>
-#include <kmenubar.h>
-#include <kprocess.h>
-#include <kglobalaccel.h>
-#include <QToolButton>
 #include <kactioncollection.h>
-#include <kaction.h>
 #include <kconfiggroup.h>
 #include <kcmdlineargs.h>
 #include <kdeversion.h>
-#include <QtDBus/QtDBus>
 #include <QtConcurrentRun>
 
 #include "client.h"
@@ -62,14 +50,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
-#include "overlaywindow.h"
 #include "screens.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
 #include <kdecorationfactory.h>
 #include <kwinglplatform.h>
-#include <kwinglutils.h>
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
@@ -83,11 +69,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "appmenu.h"
 #endif
 
-#include <X11/extensions/shape.h>
-#include <X11/keysym.h>
-#include <X11/keysymdef.h>
-#include <X11/cursorfont.h>
-#include <stdio.h>
 #include <kglobalsettings.h>
 #include <kwindowsystem.h>
 #include <kwindowinfo.h>
