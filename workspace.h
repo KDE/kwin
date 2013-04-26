@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include "sm.h"
 #include "utils.h"
-// KDE
-#include <KDE/NETRootInfo>
 // Qt
 #include <QTimer>
 #include <QVector>
@@ -584,34 +582,6 @@ public:
 
 private:
     Workspace* ws;
-};
-
-/**
- * NET WM Protocol handler class
- */
-class RootInfo : public NETRootInfo
-{
-private:
-    typedef KWin::Client Client;  // Because of NET::Client
-
-public:
-    RootInfo(Workspace* ws, Display* dpy, Window w, const char* name, unsigned long pr[],
-             int pr_num, int scr = -1);
-
-protected:
-    virtual void changeNumberOfDesktops(int n);
-    virtual void changeCurrentDesktop(int d);
-    virtual void changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window);
-    virtual void closeWindow(Window w);
-    virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
-    virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height);
-    virtual void gotPing(Window w, Time timestamp);
-    virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
-    virtual void gotTakeActivity(Window w, Time timestamp, long flags);
-    virtual void changeShowingDesktop(bool showing);
-
-private:
-    Workspace* workspace;
 };
 
 //---------------------------------------------------------

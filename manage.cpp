@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"
+#include "netinfo.h"
 #include "screens.h"
 #include "workspace.h"
 #include "xcbutils.h"

@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "utils.h"
 #include "virtualdesktops.h"
+// KDE
+#include <KDE/NETWinInfo>
 // Qt
 #include <QObject>
 // xcb
@@ -33,8 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xfixes.h>
 // system
 #include <assert.h>
-
-class NETWinInfo2;
 
 namespace KWin
 {

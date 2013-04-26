@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
+#include "netinfo.h"
 #include "paintredirector.h"
 #include "shadow.h"
 

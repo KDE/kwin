@@ -101,6 +101,7 @@ set(kwin_KDEINIT_SRCS
    cursor.cpp
    tabgroup.cpp
    focuschain.cpp
+   netinfo.cpp
    placement.cpp 
    atoms.cpp 
    utils.cpp 

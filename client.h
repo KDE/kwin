@@ -1012,26 +1012,6 @@ private:
     Client* cl;
 };
 
-/**
- * NET WM Protocol handler class
- */
-class WinInfo : public NETWinInfo2
-{
-private:
-    typedef KWin::Client Client; // Because of NET::Client
-
-public:
-    WinInfo(Client* c, Display * display, Window window,
-            Window rwin, const unsigned long pr[], int pr_size);
-    virtual void changeDesktop(int desktop);
-    virtual void changeFullscreenMonitors(NETFullscreenMonitors topology);
-    virtual void changeState(unsigned long state, unsigned long mask);
-    void disable();
-
-private:
-    Client * m_client;
-};
-
 inline Window Client::wrapperId() const
 {
     return wrapper;

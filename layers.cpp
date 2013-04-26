@@ -79,6 +79,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "client.h"
 #include "focuschain.h"
+#include "netinfo.h"
 #include "workspace.h"
 #include "tabbox.h"
 #include "group.h"

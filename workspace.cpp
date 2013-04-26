@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "group.h"
 #include "killwindow.h"
+#include "netinfo.h"
 #include "outline.h"
 #include "placement.h"
 #include "rules.h"
@@ -329,7 +330,7 @@ void Workspace::init()
     if (!deco->isDisabled() && deco->factory()->supports(AbilityExtendIntoClientArea))
         protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
 
-    rootInfo = new RootInfo(this, display(), supportWindow->winId(), "KWin", protocols, 5, screen_number);
+    rootInfo = new RootInfo(supportWindow->winId(), "KWin", protocols, 5, screen_number);
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();

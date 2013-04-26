@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "focuschain.h"
+#include "netinfo.h"
 #include "workspace.h"
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
