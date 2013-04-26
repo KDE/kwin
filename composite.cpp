@@ -63,6 +63,16 @@ namespace KWin
 
 extern int currentRefreshRate();
 
+CompositorSelectionOwner::CompositorSelectionOwner(const char *selection) : KSelectionOwner(selection), owning(false)
+{
+    connect (this, SIGNAL(lostOwnership()), SLOT(looseOwnership()));
+}
+
+void CompositorSelectionOwner::looseOwnership()
+{
+    owning = false;
+}
+
 KWIN_SINGLETON_FACTORY_VARIABLE(Compositor, s_compositor)
 
 Compositor::Compositor(QObject* workspace)
@@ -148,11 +158,13 @@ void Compositor::slotCompositingOptionsInitialized()
     char selection_name[ 100 ];
     sprintf(selection_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
     if (!cm_selection) {
-        cm_selection = new KSelectionOwner(selection_name);
+        cm_selection = new CompositorSelectionOwner(selection_name);
         connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
     }
-    cm_selection->claim(true);   // force claiming
-
+    if (!cm_selection->owning) {
+        cm_selection->claim(true);   // force claiming
+        cm_selection->owning = true;
+    }
     switch(options->compositingMode()) {
     case OpenGLCompositing: {
         kDebug(1212) << "Initializing OpenGL compositing";
@@ -199,6 +211,7 @@ void Compositor::slotCompositingOptionsInitialized()
     default:
         kDebug(1212) << "No compositing enabled";
         m_starting = false;
+        cm_selection->owning = false;
         cm_selection->release();
         return;
     }
@@ -208,6 +221,7 @@ void Compositor::slotCompositingOptionsInitialized()
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
+        cm_selection->owning = false;
         cm_selection->release();
         return;
     }
@@ -316,6 +330,7 @@ void Compositor::releaseCompositorSelection()
         return;
     }
     kDebug(1212) << "Releasing compositor selection";
+    cm_selection->owning = false;
     cm_selection->release();
 }
 
