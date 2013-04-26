@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #include "client.h"
 #include "screens.h"
+#include "workspace.h"
 
 #include <KDE/KDebug>
 

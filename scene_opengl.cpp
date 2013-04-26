@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "paintredirector.h"
 #include "screens.h"
+#include "workspace.h"
 
 #include <math.h>
 

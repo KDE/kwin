@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include "composite.h"
+#include "workspace.h"
 
 namespace KWin
 {

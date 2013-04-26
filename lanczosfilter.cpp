@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "unmanaged.h"
 #include "options.h"
+#include "workspace.h"
 
 #include <kwinglutils.h>
 #include <kwinglplatform.h>

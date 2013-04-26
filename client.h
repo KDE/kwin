@@ -22,39 +22,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_CLIENT_H
 #define KWIN_CLIENT_H
 
-#include <config-X11.h>
-
-#include "config-kwin.h"
-
-#include <QFrame>
-#include <QPixmap>
-#include <netwm.h>
-#include <kdebug.h>
-#include <assert.h>
-#include <kshortcut.h>
-#include <X11/X.h>
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <fixx11h.h>
-
-#include "utils.h"
+// kwin
 #include "options.h"
-#include "workspace.h"
-#include "kdecoration.h"
 #include "rules.h"
-#include "toplevel.h"
 #include "tabgroup.h"
+#include "toplevel.h"
 #include "xcbutils.h"
-
+// KDE
+#include <KDE/KShortcut>
+#include <KDE/NETWinInfo>
+// Qt
+#include <QPixmap>
+// X
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
+#include <X11/Xutil.h>
+#include <fixx11h.h>
 
 // TODO: Cleanup the order of things in this .h file
 
-class QProcess;
 class QTimer;
 class KStartupInfoData;
+class KStartupInfoId;
 
 namespace KWin
 {
@@ -66,7 +56,6 @@ class TabBoxClientImpl;
 
 
 class Workspace;
-class Client;
 class Bridge;
 class PaintRedirector;
 
