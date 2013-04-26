@@ -487,6 +487,11 @@ void Toplevel::elevate(bool elevate)
     effectWindow()->elevate(elevate);
 }
 
+pid_t Toplevel::pid() const
+{
+    return info->pid();
+}
+
 } // namespace
 
 #include "toplevel.moc"

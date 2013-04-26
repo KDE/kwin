@@ -655,11 +655,6 @@ inline QByteArray Toplevel::windowRole() const
     return window_role;
 }
 
-inline pid_t Toplevel::pid() const
-{
-    return info->pid();
-}
-
 inline bool Toplevel::unredirected() const
 {
     return unredirect;
