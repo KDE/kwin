@@ -18,62 +18,49 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
+// own
 #include "client.h"
-
-#include <QApplication>
-#include <QPainter>
-#include <QDateTime>
-#include <QProcess>
-#include <QPaintEngine>
-
-#ifdef KWIN_BUILD_SCRIPTING
-#include <QScriptEngine>
-#include <QScriptProgram>
-#endif
-
-#include <unistd.h>
-#include <kstandarddirs.h>
-#include <QWhatsThis>
-#include <kwindowsystem.h>
-#include <kiconloader.h>
-#include <stdlib.h>
-#include <signal.h>
-
+// kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#ifdef KWIN_BUILD_KAPPMENU
+#include "appmenu.h"
+#endif
+#include "atoms.h"
 #include "bridge.h"
 #include "client_machine.h"
 #include "composite.h"
 #include "cursor.h"
 #include "decorations.h"
-#include "group.h"
-#include "focuschain.h"
-#include "workspace.h"
-#include "atoms.h"
-#include "rules.h"
-#include "shadow.h"
 #include "deleted.h"
+#include "focuschain.h"
+#include "group.h"
 #include "paintredirector.h"
-#include "xcbutils.h"
+#include "shadow.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
-#ifdef KWIN_BUILD_KAPPMENU
-#include "appmenu.h"
+#include "workspace.h"
+// KDE
+#include <KDE/KIconLoader>
+#include <KDE/KStandardDirs>
+#include <KDE/KWindowSystem>
+// Qt
+#include <QApplication>
+#include <QProcess>
+#ifdef KWIN_BUILD_SCRIPTING
+#include <QScriptEngine>
+#include <QScriptProgram>
 #endif
-
-#include <X11/extensions/shape.h>
-
+#include <QWhatsThis>
+// X
 #ifdef HAVE_XSYNC
 #include <X11/extensions/sync.h>
 #endif
-
-#ifdef HAVE_XRENDER
-#include <X11/extensions/Xrender.h>
-#endif
-
+// system
+#include <unistd.h>
+#include <signal.h>
 
 // Put all externs before the namespace statement to allow the linker
 // to resolve them properly
