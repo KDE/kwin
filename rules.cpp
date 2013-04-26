@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <fixx11h.h>
 #include <kconfig.h>
+#include <KDE/KXMessages>
 #include <QRegExp>
 #include <ktemporaryfile.h>
 #include <QFile>
@@ -736,7 +737,7 @@ void WindowRules::update(Client* c, int selection)
         if ((*it)->update(c, selection))    // no short-circuiting here
             updated = true;
     if (updated)
-        Workspace::self()->rulesUpdated();
+        RuleBook::self()->requestDiskStorage();
 }
 
 #define CHECK_RULE( rule, type ) \
@@ -840,7 +841,7 @@ CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 
 void Client::setupWindowRules(bool ignore_temporary)
 {
-    client_rules = workspace()->findWindowRules(this, ignore_temporary);
+    client_rules = RuleBook::self()->find(this, ignore_temporary);
     // check only after getting the rules, because there may be a rule forcing window type
 }
 
@@ -901,7 +902,7 @@ void Client::updateWindowRules(Rules::Types selection)
 {
     if (!isManaged())  // not fully setup yet
         return;
-    if (workspace()->rulesUpdatesDisabled())
+    if (RuleBook::self()->areUpdatesDisabled())
         return;
     client_rules.update(this, selection);
 }
@@ -913,12 +914,37 @@ void Client::finishWindowRules()
 }
 
 // Workspace
+KWIN_SINGLETON_FACTORY(RuleBook)
 
-WindowRules Workspace::findWindowRules(const Client* c, bool ignore_temporary)
+RuleBook::RuleBook(QObject *parent)
+    : QObject(parent)
+    , m_updateTimer(new QTimer(this))
+    , m_updatesDisabled(false)
+    , m_temporaryRulesMessages(new KXMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL))
+{
+    connect(m_temporaryRulesMessages.data(), SIGNAL(gotMessage(QString)), SLOT(temporaryRulesMessage(QString)));
+    connect(m_updateTimer, SIGNAL(timeout()), SLOT(save()));
+    m_updateTimer->setInterval(1000);
+    m_updateTimer->setSingleShot(true);
+}
+
+RuleBook::~RuleBook()
+{
+    save();
+    deleteAll();
+}
+
+void RuleBook::deleteAll()
+{
+    qDeleteAll(m_rules);
+    m_rules.clear();
+}
+
+WindowRules RuleBook::find(const Client* c, bool ignore_temporary)
 {
     QVector< Rules* > ret;
-    for (QList< Rules* >::Iterator it = rules.begin();
-            it != rules.end();
+    for (QList< Rules* >::Iterator it = m_rules.begin();
+            it != m_rules.end();
        ) {
         if (ignore_temporary && (*it)->isTemporary()) {
             ++it;
@@ -928,7 +954,7 @@ WindowRules Workspace::findWindowRules(const Client* c, bool ignore_temporary)
             Rules* rule = *it;
             kDebug(1212) << "Rule found:" << rule << ":" << c;
             if (rule->isTemporary())
-                it = rules.erase(it);
+                it = m_rules.erase(it);
             else
                 ++it;
             ret.append(rule);
@@ -939,9 +965,9 @@ WindowRules Workspace::findWindowRules(const Client* c, bool ignore_temporary)
     return WindowRules(ret);
 }
 
-void Workspace::editWindowRules(Client* c, bool whole_app)
+void RuleBook::edit(Client* c, bool whole_app)
 {
-    writeWindowRules();
+    save();
     QStringList args;
     args << "--wid" << QString::number(c->window());
     if (whole_app)
@@ -949,12 +975,9 @@ void Workspace::editWindowRules(Client* c, bool whole_app)
     KToolInvocation::kdeinitExec("kwin_rules_dialog", args);
 }
 
-void Workspace::loadWindowRules()
+void RuleBook::load()
 {
-    while (!rules.isEmpty()) {
-        delete rules.front();
-        rules.pop_front();
-    }
+    deleteAll();
     KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
     int count = cfg.group("General").readEntry("count", 0);
     for (int i = 1;
@@ -962,23 +985,23 @@ void Workspace::loadWindowRules()
             ++i) {
         KConfigGroup cg(&cfg, QString::number(i));
         Rules* rule = new Rules(cg);
-        rules.append(rule);
+        m_rules.append(rule);
     }
 }
 
-void Workspace::writeWindowRules()
+void RuleBook::save()
 {
-    rulesUpdatedTimer.stop();
+    m_updateTimer->stop();
     KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
     QStringList groups = cfg.groupList();
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it)
         cfg.deleteGroup(*it);
-    cfg.group("General").writeEntry("count", rules.count());
+    cfg.group("General").writeEntry("count", m_rules.count());
     int i = 1;
-    for (QList< Rules* >::ConstIterator it = rules.constBegin();
-            it != rules.constEnd();
+    for (QList< Rules* >::ConstIterator it = m_rules.constBegin();
+            it != m_rules.constEnd();
             ++it) {
         if ((*it)->isTemporary())
             continue;
@@ -988,29 +1011,31 @@ void Workspace::writeWindowRules()
     }
 }
 
-void Workspace::gotTemporaryRulesMessage(const QString& message)
+void RuleBook::temporaryRulesMessage(const QString& message)
 {
     bool was_temporary = false;
-    for (QList< Rules* >::ConstIterator it = rules.constBegin();
-            it != rules.constEnd();
+    for (QList< Rules* >::ConstIterator it = m_rules.constBegin();
+            it != m_rules.constEnd();
             ++it)
         if ((*it)->isTemporary())
             was_temporary = true;
     Rules* rule = new Rules(message, true);
-    rules.prepend(rule);   // highest priority first
+    m_rules.prepend(rule);   // highest priority first
     if (!was_temporary)
         QTimer::singleShot(60000, this, SLOT(cleanupTemporaryRules()));
 }
 
-void Workspace::cleanupTemporaryRules()
+void RuleBook::cleanupTemporaryRules()
 {
     bool has_temporary = false;
-    for (QList< Rules* >::Iterator it = rules.begin();
-            it != rules.end();
+    for (QList< Rules* >::Iterator it = m_rules.begin();
+            it != m_rules.end();
        ) {
-        if ((*it)->discardTemporary(false))
-            it = rules.erase(it);
-        else {
+        if ((*it)->discardTemporary(false)) {
+            Rules *rules = (*it);
+            it = m_rules.erase(it);
+            delete rules;
+        } else {
             if ((*it)->isTemporary())
                 has_temporary = true;
             ++it;
@@ -1020,11 +1045,11 @@ void Workspace::cleanupTemporaryRules()
         QTimer::singleShot(60000, this, SLOT(cleanupTemporaryRules()));
 }
 
-void Workspace::discardUsedWindowRules(Client* c, bool withdrawn)
+void RuleBook::discardUsed(Client* c, bool withdrawn)
 {
     bool updated = false;
-    for (QList< Rules* >::Iterator it = rules.begin();
-            it != rules.end();
+    for (QList< Rules* >::Iterator it = m_rules.begin();
+            it != m_rules.end();
        ) {
         if (c->rules()->contains(*it)) {
             updated = true;
@@ -1032,7 +1057,7 @@ void Workspace::discardUsedWindowRules(Client* c, bool withdrawn)
             if ((*it)->isEmpty()) {
                 c->removeRule(*it);
                 Rules* r = *it;
-                it = rules.erase(it);
+                it = m_rules.erase(it);
                 delete r;
                 continue;
             }
@@ -1040,20 +1065,19 @@ void Workspace::discardUsedWindowRules(Client* c, bool withdrawn)
         ++it;
     }
     if (updated)
-        rulesUpdated();
+        requestDiskStorage();
 }
 
-void Workspace::rulesUpdated()
+void RuleBook::requestDiskStorage()
 {
-    rulesUpdatedTimer.setSingleShot(true);
-    rulesUpdatedTimer.start(1000);
+    m_updateTimer->start();
 }
 
-void Workspace::disableRulesUpdates(bool disable)
+void RuleBook::setUpdatesDisabled(bool disable)
 {
-    rules_updates_disabled = disable;
+    m_updatesDisabled = disable;
     if (!disable) {
-        foreach (Client * c, clients)
+        foreach (Client * c, Workspace::self()->clientList())
             c->updateWindowRules(Rules::All);
     }
 }

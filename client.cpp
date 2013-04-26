@@ -262,7 +262,7 @@ void Client::releaseWindow(bool on_shutdown)
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing();
-    workspace()->discardUsedWindowRules(this, true);   // Remove ForceTemporarily rules
+    RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (moveResizeMode)
         leaveMoveResize();
@@ -330,7 +330,7 @@ void Client::destroyClient()
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
     finishCompositing();
-    workspace()->discardUsedWindowRules(this, true);   // Remove ForceTemporarily rules
+    RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (moveResizeMode)
         leaveMoveResize();

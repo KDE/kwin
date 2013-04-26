@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 // KDE
 #include <KDE/NETRootInfo>
-#include <KDE/KXMessages>
 // Qt
 #include <QTimer>
 #include <QVector>
@@ -52,10 +51,8 @@ namespace KWin
 class Client;
 class KillWindow;
 class RootInfo;
-class Rules;
 class ShortcutDialog;
 class UserActionsMenu;
-class WindowRules;
 class Compositor;
 
 class Workspace : public QObject, public KDecorationDefines
@@ -246,11 +243,6 @@ public:
     void loadSubSessionInfo(const QString &name);
 
     SessionInfo* takeSessionInfo(Client*);
-    WindowRules findWindowRules(const Client*, bool);
-    void rulesUpdated();
-    void discardUsedWindowRules(Client* c, bool withdraw);
-    void disableRulesUpdates(bool disable);
-    bool rulesUpdatesDisabled() const;
 
     // D-Bus interface
     bool waitForCompositingSetup();
@@ -397,9 +389,6 @@ private slots:
     void desktopResized();
     void slotUpdateToolWindows();
     void delayFocus();
-    void gotTemporaryRulesMessage(const QString&);
-    void cleanupTemporaryRules();
-    void writeWindowRules();
     void slotBlockShortcuts(int data);
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
@@ -481,14 +470,7 @@ private:
     void loadSessionInfo();
     void addSessionInfo(KConfigGroup &cg);
 
-    void loadWindowRules();
-    void editWindowRules(Client* c, bool whole_app);
-
     QList<SessionInfo*> session;
-    QList<Rules*> rules;
-    KXMessages temporaryRulesMessages;
-    QTimer rulesUpdatedTimer;
-    bool rules_updates_disabled;
     static const char* windowTypeToTxt(NET::WindowType type);
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
@@ -710,11 +692,6 @@ inline bool Workspace::showingDesktop() const
 inline bool Workspace::globalShortcutsDisabled() const
 {
     return global_shortcuts_disabled || global_shortcuts_disabled_for_client;
-}
-
-inline bool Workspace::rulesUpdatesDisabled() const
-{
-    return rules_updates_disabled;
 }
 
 inline void Workspace::forceRestacking()

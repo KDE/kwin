@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 
 class KConfig;
+class KXMessages;
 
 namespace KWin
 {
@@ -91,6 +92,7 @@ private:
     MaximizeMode checkMaximizeHoriz(MaximizeMode mode, bool init) const;
     QVector< Rules* > rules;
 };
+
 #endif
 
 class Rules
@@ -277,6 +279,39 @@ private:
 };
 
 #ifndef KCMRULES
+class RuleBook : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~RuleBook();
+    WindowRules find(const Client*, bool);
+    void discardUsed(Client* c, bool withdraw);
+    void setUpdatesDisabled(bool disable);
+    bool areUpdatesDisabled() const;
+    void load();
+    void edit(Client* c, bool whole_app);
+    void requestDiskStorage();
+private Q_SLOTS:
+    void temporaryRulesMessage(const QString&);
+    void cleanupTemporaryRules();
+    void save();
+
+private:
+    void deleteAll();
+    QTimer *m_updateTimer;
+    bool m_updatesDisabled;
+    QList<Rules*> m_rules;
+    QScopedPointer<KXMessages> m_temporaryRulesMessages;
+
+    KWIN_SINGLETON(RuleBook)
+};
+
+inline
+bool RuleBook::areUpdatesDisabled() const
+{
+    return m_updatesDisabled;
+}
+
 inline
 bool Rules::checkSetRule(SetRule rule, bool init)
 {

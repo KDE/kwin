@@ -86,8 +86,6 @@ Workspace::Workspace(bool restore)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
-    , temporaryRulesMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL)
-    , rules_updates_disabled(false)
     , active_client(0)
     , last_active_client(0)
     , most_recently_raised(0)
@@ -148,9 +146,6 @@ Workspace::Workspace(bool restore)
     default_colormap = DefaultColormap(display(), screen_number);
     installed_colormap = default_colormap;
 
-    connect(&temporaryRulesMessages, SIGNAL(gotMessage(QString)),
-            this, SLOT(gotTemporaryRulesMessage(QString)));
-    connect(&rulesUpdatedTimer, SIGNAL(timeout()), this, SLOT(writeWindowRules()));
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
     delayFocusTimer = 0;
@@ -158,7 +153,7 @@ Workspace::Workspace(bool restore)
     if (restore)
         loadSessionInfo();
 
-    loadWindowRules();
+    RuleBook::create(this)->load();
 
     // Call this before XSelectInput() on the root window
     startup = new KStartupInfo(
@@ -505,7 +500,7 @@ Workspace::~Workspace()
         (*it)->release(true);
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
-    writeWindowRules();
+    delete RuleBook::self();
     KGlobal::config()->sync();
 
     delete rootInfo;
@@ -513,10 +508,6 @@ Workspace::~Workspace()
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;
-    while (!rules.isEmpty()) {
-        delete rules.front();
-        rules.pop_front();
-    }
     foreach (SessionInfo * s, session)
     delete s;
     XDestroyWindow(display(), null_focus_window);
@@ -907,13 +898,13 @@ void Workspace::slotReconfigure()
             c->triggerDecorationRepaint();
     }
 
-    loadWindowRules();
+    RuleBook::self()->load();
     for (ClientList::Iterator it = clients.begin();
             it != clients.end();
             ++it) {
         (*it)->setupWindowRules(true);
         (*it)->applyWindowRules();
-        discardUsedWindowRules(*it, false);
+        RuleBook::self()->discardUsed(*it, false);
     }
 
     if (borderlessMaximizedWindows != options->borderlessMaximizedWindows() &&

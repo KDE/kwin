@@ -1111,10 +1111,10 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         c->performMouseCommand(Options::MouseShade, cursorPos());
         break;
     case Options::WindowRulesOp:
-        editWindowRules(c, false);
+        RuleBook::self()->edit(c, false);
         break;
     case Options::ApplicationRulesOp:
-        editWindowRules(c, true);
+        RuleBook::self()->edit(c, true);
         break;
     case Options::SetupWindowShortcutOp:
         setupWindowShortcut(c);

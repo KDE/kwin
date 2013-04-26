@@ -369,7 +369,7 @@ static void save_yourself(SmcConn conn_P, SmPointer ptr, int, Bool shutdown, int
     if (conn_P != session->connection())
         return;
     if (shutdown)
-        Workspace::self()->disableRulesUpdates(true);
+        RuleBook::self()->setUpdatesDisabled(true);
     SmcSaveYourselfDone(conn_P, True);
 }
 
@@ -395,7 +395,7 @@ static void shutdown_cancelled(SmcConn conn_P, SmPointer ptr)
     SessionSaveDoneHelper* session = reinterpret_cast< SessionSaveDoneHelper* >(ptr);
     if (conn_P != session->connection())
         return;
-    Workspace::self()->disableRulesUpdates(false);   // re-enable
+    RuleBook::self()->setUpdatesDisabled(false);   // re-enable
     // no need to differentiate between successful finish and cancel
     session->saveDone();
 }
