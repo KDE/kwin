@@ -541,10 +541,10 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
 #endif
     if (!c->manage(w, is_mapped)) {
-        Client::deleteClient(c, Allowed);
+        Client::deleteClient(c);
         return NULL;
     }
-    addClient(c, Allowed);
+    addClient(c);
     return c;
 }
 
@@ -554,16 +554,16 @@ Unmanaged* Workspace::createUnmanaged(Window w)
         return NULL;
     Unmanaged* c = new Unmanaged(this);
     if (!c->track(w)) {
-        Unmanaged::deleteUnmanaged(c, Allowed);
+        Unmanaged::deleteUnmanaged(c);
         return NULL;
     }
     connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
-    addUnmanaged(c, Allowed);
+    addUnmanaged(c);
     emit unmanagedAdded(c);
     return c;
 }
 
-void Workspace::addClient(Client* c, allowed_t)
+void Workspace::addClient(Client* c)
 {
     Group* grp = findGroup(c->window());
 
@@ -611,7 +611,7 @@ void Workspace::addClient(Client* c, allowed_t)
 #endif
 }
 
-void Workspace::addUnmanaged(Unmanaged* c, allowed_t)
+void Workspace::addUnmanaged(Unmanaged* c)
 {
     unmanaged.append(c);
     x_stacking_dirty = true;
@@ -620,7 +620,7 @@ void Workspace::addUnmanaged(Unmanaged* c, allowed_t)
 /**
  * Destroys the client \a c
  */
-void Workspace::removeClient(Client* c, allowed_t)
+void Workspace::removeClient(Client* c)
 {
     emit clientRemoved(c);
 
@@ -681,14 +681,14 @@ void Workspace::removeClient(Client* c, allowed_t)
     updateClientArea();
 }
 
-void Workspace::removeUnmanaged(Unmanaged* c, allowed_t)
+void Workspace::removeUnmanaged(Unmanaged* c)
 {
     assert(unmanaged.contains(c));
     unmanaged.removeAll(c);
     x_stacking_dirty = true;
 }
 
-void Workspace::addDeleted(Deleted* c, Toplevel *orig, allowed_t)
+void Workspace::addDeleted(Deleted* c, Toplevel *orig)
 {
     assert(!deleted.contains(c));
     deleted.append(c);
@@ -708,7 +708,7 @@ void Workspace::addDeleted(Deleted* c, Toplevel *orig, allowed_t)
     connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
 }
 
-void Workspace::removeDeleted(Deleted* c, allowed_t)
+void Workspace::removeDeleted(Deleted* c)
 {
     assert(deleted.contains(c));
     emit deletedRemoved(c);
@@ -1065,7 +1065,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
         c = findDesktop(true, desktop);
 
     if (c != active_client)
-        setActiveClient(NULL, Allowed);
+        setActiveClient(NULL);
 
     if (c)
         requestFocus(c);
@@ -1186,7 +1186,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         c = findDesktop(true, VirtualDesktopManager::self()->current());
 
     if (c != active_client)
-        setActiveClient(NULL, Allowed);
+        setActiveClient(NULL);
 
     if (c)
         requestFocus(c);

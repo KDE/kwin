@@ -292,7 +292,7 @@ void Compositor::finish()
     }
     // discard all Deleted windows (#152914)
     while (!Workspace::self()->deletedList().isEmpty())
-        Workspace::self()->deletedList().first()->discard(Allowed);
+        Workspace::self()->deletedList().first()->discard();
     m_finishing = false;
     emit compositingToggled(false);
 }

@@ -227,7 +227,7 @@ namespace KWin
   activeClient(). And of course, to propagate the active client to the
   world.
  */
-void Workspace::setActiveClient(Client* c, allowed_t)
+void Workspace::setActiveClient(Client* c)
 {
     if (active_client == c)
         return;
@@ -284,7 +284,7 @@ void Workspace::activateClient(Client* c, bool force)
 {
     if (c == NULL) {
         focusToNull();
-        setActiveClient(NULL, Allowed);
+        setActiveClient(NULL);
         return;
     }
     raiseClient(c);
@@ -377,7 +377,7 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         kWarning(1212) << "takeActivity: not shown" ;
         return;
     }
-    c->takeActivity(flags, handled, Allowed);
+    c->takeActivity(flags, handled);
     if (!c->isOnActiveScreen())
         screens()->setCurrent(c->screen());
 }
@@ -389,7 +389,7 @@ void Workspace::handleTakeActivity(Client* c, Time /*timestamp*/, int flags)
     if ((flags & ActivityRaise) != 0)
         raiseClient(c);
     if ((flags & ActivityFocus) != 0 && c->isShown(false))
-        c->takeFocus(Allowed);
+        c->takeFocus();
     pending_take_activity = NULL;
 }
 
@@ -439,7 +439,7 @@ bool Workspace::activateNextClient(Client* c)
 
     if (c != NULL) {
         if (c == active_client)
-            setActiveClient(NULL, Allowed);
+            setActiveClient(NULL);
         should_get_focus.removeAll(c);
     }
 
@@ -811,7 +811,7 @@ void Client::setActive(bool act)
                              ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
                              : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
     setOpacity(ruledOpacity / 100.0);
-    workspace()->setActiveClient(act ? this : NULL, Allowed);
+    workspace()->setActiveClient(act ? this : NULL);
 
     if (!active)
         cancelAutoRaise();

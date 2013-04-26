@@ -96,15 +96,15 @@ void Unmanaged::release(bool on_shutdown)
         XSelectInput(display(), window(), NoEventMask);
     }
     if (!on_shutdown) {
-        workspace()->removeUnmanaged(this, Allowed);
+        workspace()->removeUnmanaged(this);
         addWorkspaceRepaint(del->visibleRect());
         disownDataPassedToDeleted();
         del->unrefWindow();
     }
-    deleteUnmanaged(this, Allowed);
+    deleteUnmanaged(this);
 }
 
-void Unmanaged::deleteUnmanaged(Unmanaged* c, allowed_t)
+void Unmanaged::deleteUnmanaged(Unmanaged* c)
 {
     delete c;
 }

@@ -432,8 +432,8 @@ public:
     bool isMovableAcrossScreens() const;
     bool isCloseable() const; ///< May be closed by the user (May have a close button)
 
-    void takeActivity(int flags, bool handled, allowed_t);   // Takes ActivityFlags as arg (in utils.h)
-    void takeFocus(allowed_t);
+    void takeActivity(int flags, bool handled);   // Takes ActivityFlags as arg (in utils.h)
+    void takeFocus();
     bool isDemandingAttention() const {
         return demands_attention;
     }
@@ -521,7 +521,7 @@ public:
     bool hasUserTimeSupport() const;
 
     /// Does 'delete c;'
-    static void deleteClient(Client* c, allowed_t);
+    static void deleteClient(Client* c);
 
     static bool belongToSameApplication(const Client* c1, const Client* c2, bool active_hack = false);
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
@@ -822,11 +822,11 @@ private:
     void destroyDecoration();
     void updateFrameExtents();
 
-    void internalShow(allowed_t);
-    void internalHide(allowed_t);
-    void internalKeep(allowed_t);
-    void map(allowed_t);
-    void unmap(allowed_t);
+    void internalShow();
+    void internalHide();
+    void internalKeep();
+    void map();
+    void unmap();
     void updateHiddenPreview();
 
     void updateInputShape();

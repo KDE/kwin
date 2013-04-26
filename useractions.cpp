@@ -1010,7 +1010,7 @@ void Workspace::setupWindowShortcutDone(bool ok)
     client_keys_dialog = NULL;
     client_keys_client = NULL;
     if (active_client)
-        active_client->takeFocus(Allowed);
+        active_client->takeFocus();
 }
 
 void Workspace::clientShortcutUpdated(Client* c)

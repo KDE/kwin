@@ -255,7 +255,7 @@ Client::~Client()
 }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly
-void Client::deleteClient(Client* c, allowed_t)
+void Client::deleteClient(Client* c)
 {
     delete c;
 }
@@ -295,7 +295,7 @@ void Client::releaseWindow(bool on_shutdown)
     destroyDecoration();
     cleanGrouping();
     if (!on_shutdown) {
-        workspace()->removeClient(this, Allowed);
+        workspace()->removeClient(this);
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
         desk = 0;
@@ -326,7 +326,7 @@ void Client::releaseWindow(bool on_shutdown)
         del->unrefWindow();
     }
     checkNonExistentClients();
-    deleteClient(this, Allowed);
+    deleteClient(this);
     ungrabXServer();
 }
 
@@ -356,7 +356,7 @@ void Client::destroyClient()
     workspace()->clientHidden(this);
     destroyDecoration();
     cleanGrouping();
-    workspace()->removeClient(this, Allowed);
+    workspace()->removeClient(this);
     client = None; // invalidate
     XDestroyWindow(display(), wrapper);
     wrapper = None;
@@ -366,7 +366,7 @@ void Client::destroyClient()
     disownDataPassedToDeleted();
     del->unrefWindow();
     checkNonExistentClients();
-    deleteClient(this, Allowed);
+    deleteClient(this);
 }
 
 // DnD handling for input shaping is broken in the clients for all Qt versions before 4.8.3
@@ -1070,9 +1070,9 @@ void Client::updateVisibility()
         info->setState(NET::Hidden, NET::Hidden);
         setSkipTaskbar(true, false);   // Also hide from taskbar
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
-            internalKeep(Allowed);
+            internalKeep();
         else
-            internalHide(Allowed);
+            internalHide();
         return;
     }
     if (isCurrentTab())
@@ -1080,29 +1080,29 @@ void Client::updateVisibility()
     if (minimized) {
         info->setState(NET::Hidden, NET::Hidden);
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
-            internalKeep(Allowed);
+            internalKeep();
         else
-            internalHide(Allowed);
+            internalHide();
         return;
     }
     info->setState(0, NET::Hidden);
     if (!isOnCurrentDesktop()) {
         if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
-            internalKeep(Allowed);
+            internalKeep();
         else
-            internalHide(Allowed);
+            internalHide();
         return;
     }
     if (!isOnCurrentActivity()) {
         if (compositing() && options->hiddenPreviews() != HiddenPreviewsNever)
-            internalKeep(Allowed);
+            internalKeep();
         else
-            internalHide(Allowed);
+            internalHide();
         return;
     }
     if (isManaged())
         resetShowingDesktop(true);
-    internalShow(Allowed);
+    internalShow();
 }
 
 
@@ -1141,14 +1141,14 @@ void Client::exportMappingState(int s)
                     PropModeReplace, (unsigned char*)(data), 2);
 }
 
-void Client::internalShow(allowed_t)
+void Client::internalShow()
 {
     if (mapping_state == Mapped)
         return;
     MappingState old = mapping_state;
     mapping_state = Mapped;
     if (old == Unmapped || old == Withdrawn)
-        map(Allowed);
+        map();
     if (old == Kept) {
         m_decoInputExtent.map();
         updateHiddenPreview();
@@ -1158,14 +1158,14 @@ void Client::internalShow(allowed_t)
     }
 }
 
-void Client::internalHide(allowed_t)
+void Client::internalHide()
 {
     if (mapping_state == Unmapped)
         return;
     MappingState old = mapping_state;
     mapping_state = Unmapped;
     if (old == Mapped || old == Kept)
-        unmap(Allowed);
+        unmap();
     if (old == Kept)
         updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
@@ -1175,7 +1175,7 @@ void Client::internalHide(allowed_t)
     }
 }
 
-void Client::internalKeep(allowed_t)
+void Client::internalKeep()
 {
     assert(compositing());
     if (mapping_state == Kept)
@@ -1183,7 +1183,7 @@ void Client::internalKeep(allowed_t)
     MappingState old = mapping_state;
     mapping_state = Kept;
     if (old == Unmapped || old == Withdrawn)
-        map(Allowed);
+        map();
     m_decoInputExtent.unmap();
     updateHiddenPreview();
     addWorkspaceRepaint(visibleRect());
@@ -1198,7 +1198,7 @@ void Client::internalKeep(allowed_t)
  * not necessarily the client window itself (i.e. a shaded window is here
  * considered mapped, even though it is in IconicState).
  */
-void Client::map(allowed_t)
+void Client::map()
 {
     // XComposite invalidates backing pixmaps on unmap (minimize, different
     // virtual desktop, etc.).  We kept the last known good pixmap around
@@ -1220,7 +1220,7 @@ void Client::map(allowed_t)
 /**
  * Unmaps the client. Again, this is about the frame.
  */
-void Client::unmap(allowed_t)
+void Client::unmap()
 {
     // Here it may look like a race condition, as some other client might try to unmap
     // the window between these two XSelectInput() calls. However, they're supposed to
@@ -1641,11 +1641,11 @@ void Client::setOnAllActivities(bool on)
 /**
  * Performs activation and/or raising of the window
  */
-void Client::takeActivity(int flags, bool handled, allowed_t)
+void Client::takeActivity(int flags, bool handled)
 {
     if (!handled || !Ptakeactivity) {
         if (flags & ActivityFocus)
-            takeFocus(Allowed);
+            takeFocus();
         if (flags & ActivityRaise)
             workspace()->raiseClient(this);
         return;
@@ -1671,7 +1671,7 @@ void Client::takeActivity(int flags, bool handled, allowed_t)
 /**
  * Performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
  */
-void Client::takeFocus(allowed_t)
+void Client::takeFocus()
 {
 #ifndef NDEBUG
     static Time previous_focus_timestamp;
@@ -1962,12 +1962,12 @@ void Client::setClientShown(bool shown)
     if (options->isInactiveTabsSkipTaskbar())
         setSkipTaskbar(hidden, false); // TODO: Causes reshuffle of the taskbar
     if (shown) {
-        map(Allowed);
-        takeFocus(Allowed);
+        map();
+        takeFocus();
         autoRaise();
         FocusChain::self()->update(this, FocusChain::MakeFirst);
     } else {
-        unmap(Allowed);
+        unmap();
         // Don't move tabs to the end of the list when another tab get's activated
         if (isCurrentTab())
             FocusChain::self()->update(this, FocusChain::MakeLast);

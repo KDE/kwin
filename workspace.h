@@ -265,16 +265,16 @@ public:
     void sendPingToWindow(Window w, Time timestamp);   // Called from Client::pingWindow()
     void sendTakeActivity(Client* c, Time timestamp, long flags);   // Called from Client::takeActivity()
 
-    void removeClient(Client*, allowed_t);   // Only called from Client::destroyClient() or Client::releaseWindow()
-    void setActiveClient(Client*, allowed_t);
+    void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
+    void setActiveClient(Client*);
     Group* findGroup(Window leader) const;
-    void addGroup(Group* group, allowed_t);
-    void removeGroup(Group* group, allowed_t);
+    void addGroup(Group* group);
+    void removeGroup(Group* group);
     Group* findClientLeaderGroup(const Client* c) const;
 
-    void removeUnmanaged(Unmanaged*, allowed_t);   // Only called from Unmanaged::release()
-    void removeDeleted(Deleted*, allowed_t);
-    void addDeleted(Deleted*, Toplevel*, allowed_t);
+    void removeUnmanaged(Unmanaged*);   // Only called from Unmanaged::release()
+    void removeDeleted(Deleted*);
+    void addDeleted(Deleted*, Toplevel*);
 
     bool checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data);
 
@@ -460,9 +460,9 @@ private:
 
     /// This is the right way to create a new client
     Client* createClient(Window w, bool is_mapped);
-    void addClient(Client* c, allowed_t);
+    void addClient(Client* c);
     Unmanaged* createUnmanaged(Window w);
-    void addUnmanaged(Unmanaged* c, allowed_t);
+    void addUnmanaged(Unmanaged* c);
 
     Window findSpecialEventWindow(XEvent* e);
 
@@ -650,13 +650,13 @@ inline Client* Workspace::mostRecentlyActivatedClient() const
     return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
 }
 
-inline void Workspace::addGroup(Group* group, allowed_t)
+inline void Workspace::addGroup(Group* group)
 {
     emit groupAdded(group);
     groups.append(group);
 }
 
-inline void Workspace::removeGroup(Group* group, allowed_t)
+inline void Workspace::removeGroup(Group* group)
 {
     groups.removeAll(group);
 }

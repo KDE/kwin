@@ -137,12 +137,6 @@ private:
 };
 typedef QVector<StrutRect> StrutRects;
 
-// Some KWin classes, mainly Client and Workspace, are very tighly coupled,
-// and some of the methods of one class may be called only from speficic places.
-// Those methods have additional allowed_t argument. If you pass Allowed
-// as an argument to any function, make sure you really know what you're doing.
-enum allowed_t { Allowed };
-
 // some enums to have more readable code, instead of using bools
 enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
 

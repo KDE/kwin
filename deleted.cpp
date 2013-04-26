@@ -47,7 +47,7 @@ Deleted::~Deleted()
     if (delete_refcount != 0)
         kError(1212) << "Deleted client has non-zero reference count (" << delete_refcount << ")";
     assert(delete_refcount == 0);
-    workspace()->removeDeleted(this, Allowed);
+    workspace()->removeDeleted(this);
     deleteEffectWindow();
 }
 
@@ -55,12 +55,12 @@ Deleted* Deleted::create(Toplevel* c)
 {
     Deleted* d = new Deleted(c->workspace());
     d->copyToDeleted(c);
-    d->workspace()->addDeleted(d, c, Allowed);
+    d->workspace()->addDeleted(d, c);
     return d;
 }
 
 // to be used only from Workspace::finishCompositing()
-void Deleted::discard(allowed_t)
+void Deleted::discard()
 {
     delete_refcount = 0;
     delete this;
