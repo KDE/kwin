@@ -666,7 +666,6 @@ inline const ClientMachine *Toplevel::clientMachine() const
 
 QDebug& operator<<(QDebug& stream, const Toplevel*);
 QDebug& operator<<(QDebug& stream, const ToplevelList&);
-QDebug& operator<<(QDebug& stream, const ConstToplevelList&);
 
 KWIN_COMPARE_PREDICATE(WindowMatchPredicate, Toplevel, Window, cl->window() == value);
 KWIN_COMPARE_PREDICATE(FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value);

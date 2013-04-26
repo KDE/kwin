@@ -91,22 +91,6 @@ QDebug& operator<<(QDebug& stream, const ToplevelList& list)
     return stream;
 }
 
-QDebug& operator<<(QDebug& stream, const ConstToplevelList& list)
-{
-    stream << "LIST:(";
-    bool first = true;
-    for (ConstToplevelList::ConstIterator it = list.begin();
-            it != list.end();
-            ++it) {
-        if (!first)
-            stream << ":";
-        first = false;
-        stream << *it;
-    }
-    stream << ")";
-    return stream;
-}
-
 QRect Toplevel::decorationRect() const
 {
     return rect();
