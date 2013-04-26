@@ -782,7 +782,7 @@ bool Toplevel::setupCompositing()
     if (!compositing())
         return false;
 
-    if (damage_handle != None)
+    if (damage_handle != XCB_NONE)
         return false;
 
     damage_handle = xcb_generate_id(connection());
@@ -807,7 +807,7 @@ bool Toplevel::setupCompositing()
 
 void Toplevel::finishCompositing()
 {
-    if (damage_handle == None)
+    if (damage_handle == XCB_NONE)
         return;
     Compositor::self()->checkUnredirect(true);
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data

@@ -32,8 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtualdesktops.h"
 #include "workspace.h"
 
-#include <X11/extensions/Xdamage.h>
-
+#include <xcb/damage.h>
 #include <xcb/xfixes.h>
 
 class NETWinInfo2;
@@ -401,7 +400,7 @@ private:
     Window frame;
     Workspace* wspace;
     Pixmap window_pix;
-    Damage damage_handle;
+    xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
     bool is_shape;
     EffectWindowImpl* effect_window;
