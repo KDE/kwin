@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
+// KDE
+#include <KDE/KDebug>
 
 namespace KWin
 {

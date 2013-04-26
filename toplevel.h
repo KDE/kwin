@@ -21,19 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TOPLEVEL_H
 #define KWIN_TOPLEVEL_H
 
-#include <config-X11.h>
-
-#include <assert.h>
-#include <QObject>
+// kwin libs
 #include <kdecoration.h>
-#include <kdebug.h>
-
+// kwin
 #include "utils.h"
 #include "virtualdesktops.h"
-#include "workspace.h"
-
+// Qt
+#include <QObject>
+// xcb
 #include <xcb/damage.h>
 #include <xcb/xfixes.h>
+// system
+#include <assert.h>
 
 class NETWinInfo2;
 

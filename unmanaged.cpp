@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "xcbutils.h"
 
+#include <QDebug>
+
 #include <X11/extensions/shape.h>
 
 namespace KWin
