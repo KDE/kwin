@@ -680,7 +680,7 @@ bool Client::windowEvent(XEvent* e)
         }
         if (e->xany.window == frameId()) {
             if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
-                damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
+                damageNotifyEvent();
         }
         break;
     }
@@ -1638,7 +1638,7 @@ bool Unmanaged::windowEvent(XEvent* e)
             emit geometryShapeChanged(this, geometry());
         }
         if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
-            damageNotifyEvent(reinterpret_cast< XDamageNotifyEvent* >(e));
+            damageNotifyEvent();
         break;
     }
     }

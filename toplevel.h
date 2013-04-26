@@ -353,7 +353,7 @@ protected:
     void setWindowHandles(Window client, Window frame);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(XPropertyEvent* e);
-    virtual void damageNotifyEvent(XDamageNotifyEvent* e);
+    virtual void damageNotifyEvent();
     xcb_pixmap_t createWindowPixmap();
     void discardWindowPixmap();
     void addDamageFull();

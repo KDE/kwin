@@ -691,7 +691,7 @@ private:
     void leaveNotifyEvent(XCrossingEvent* e);
     void focusInEvent(XFocusInEvent* e);
     void focusOutEvent(XFocusOutEvent* e);
-    virtual void damageNotifyEvent(XDamageNotifyEvent* e);
+    virtual void damageNotifyEvent();
 
     bool buttonPressEvent(Window w, int button, int state, int x, int y, int x_root, int y_root);
     bool buttonReleaseEvent(Window w, int button, int state, int x, int y, int x_root, int y_root);

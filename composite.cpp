@@ -865,10 +865,8 @@ xcb_pixmap_t Toplevel::createWindowPixmap()
     return pix;
 }
 
-void Toplevel::damageNotifyEvent(XDamageNotifyEvent* e)
+void Toplevel::damageNotifyEvent()
 {
-    Q_UNUSED(e)
-
     m_isDamaged = true;
 
     // Note: The rect is supposed to specify the damage extents,
@@ -882,7 +880,7 @@ bool Toplevel::compositing() const
     return Workspace::self()->compositing();
 }
 
-void Client::damageNotifyEvent(XDamageNotifyEvent* e)
+void Client::damageNotifyEvent()
 {
 #ifdef HAVE_XSYNC
     if (syncRequest.isPending && isResize()) {
@@ -900,7 +898,7 @@ void Client::damageNotifyEvent(XDamageNotifyEvent* e)
         setReadyForPainting();
 #endif
 
-    Toplevel::damageNotifyEvent(e);
+    Toplevel::damageNotifyEvent();
 }
 
 bool Toplevel::resetAndFetchDamage()
