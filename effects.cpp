@@ -810,6 +810,7 @@ xcb_atom_t EffectsHandlerImpl::announceSupportProperty(const QByteArray &propert
     if (atomReply.isNull()) {
         return XCB_ATOM_NONE;
     }
+    m_compositor->keepSupportProperty(atomReply->atom);
     // announce property on root window
     unsigned char dummy = 0;
     xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, rootWindow(), atomReply->atom, atomReply->atom, 8, 1, &dummy);
@@ -836,11 +837,10 @@ void EffectsHandlerImpl::removeSupportProperty(const QByteArray &propertyName, E
         // property still registered for another effect - nothing further to do
         return;
     }
-    // remove property from root window
     const xcb_atom_t atom = m_managedProperties.take(propertyName);
-    deleteRootProperty(atom);
     registerPropertyType(atom, false);
     m_propertiesForEffects.remove(propertyName);
+    m_compositor->removeSupportProperty(atom); // delayed removal
 }
 
 QByteArray EffectsHandlerImpl::readRootProperty(long atom, long type, int format) const

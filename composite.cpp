@@ -100,10 +100,17 @@ Compositor::Compositor(QObject* workspace)
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
 
-    m_releaseSelectionTimer.setSingleShot(true);
     // 2 sec which should be enough to restart the compositor
-    m_releaseSelectionTimer.setInterval(2000);
+    static const int compositorLostMessageDelay = 2000;
+
+    m_releaseSelectionTimer.setSingleShot(true);
+    m_releaseSelectionTimer.setInterval(compositorLostMessageDelay);
     connect(&m_releaseSelectionTimer, SIGNAL(timeout()), SLOT(releaseCompositorSelection()));
+
+    m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
+    m_unusedSupportPropertyTimer.setSingleShot(true);
+    connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
+
     // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
@@ -114,6 +121,7 @@ Compositor::Compositor(QObject* workspace)
 Compositor::~Compositor()
 {
     finish();
+    deleteUnusedSupportProperties();
     delete cm_selection;
     s_compositor = NULL;
 }
@@ -332,6 +340,35 @@ void Compositor::releaseCompositorSelection()
     kDebug(1212) << "Releasing compositor selection";
     cm_selection->owning = false;
     cm_selection->release();
+}
+
+void Compositor::keepSupportProperty(xcb_atom_t atom)
+{
+    m_unusedSupportProperties.removeAll(atom);
+}
+
+void Compositor::removeSupportProperty(xcb_atom_t atom)
+{
+    m_unusedSupportProperties << atom;
+    m_unusedSupportPropertyTimer.start();
+}
+
+void Compositor::deleteUnusedSupportProperties()
+{
+    if (m_starting) {
+        // currently still starting the compositor
+        m_unusedSupportPropertyTimer.start();
+        return;
+    }
+    if (m_finishing) {
+        // still shutting down, a restart might follow
+        m_unusedSupportPropertyTimer.start();
+        return;
+    }
+    foreach (const xcb_atom_t &atom, m_unusedSupportProperties) {
+        // remove property from root window
+        XDeleteProperty(QX11Info::display(), rootWindow(), atom);
+    }
 }
 
 // OpenGL self-check failed, fallback to XRender

@@ -147,6 +147,10 @@ public:
         return s_compositor != NULL && s_compositor->isActive();
     }
 
+    // for delayed supportproperty management of effects
+    void keepSupportProperty(xcb_atom_t atom);
+    void removeSupportProperty(xcb_atom_t atom);
+
     // D-Bus: getters for Properties, see documentation on the property
     bool isCompositingPossible() const;
     QString compositingNotPossibleReason() const;
@@ -269,6 +273,7 @@ private Q_SLOTS:
     void delayedCheckUnredirect();
     void slotConfigChanged();
     void releaseCompositorSelection();
+    void deleteUnusedSupportProperties();
 
 private:
     void setCompositeTimer();
@@ -289,6 +294,8 @@ private:
     QBasicTimer compositeTimer;
     CompositorSelectionOwner* cm_selection;
     QTimer m_releaseSelectionTimer;
+    QList<xcb_atom_t> m_unusedSupportProperties;
+    QTimer m_unusedSupportPropertyTimer;
     uint vBlankInterval, fpsInterval;
     int m_xrrRefreshRate;
     QElapsedTimer nextPaintReference;
