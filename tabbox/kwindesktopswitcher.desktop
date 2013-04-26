@@ -3,6 +3,13 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/DesktopSwitcher
 
 Comment=KWin Desktop Switcher Layout
+Comment[es]=Esquema del cambiador de escritorios de KWin
+Comment[nl]=KWin indeling van bureaubladwisselaar
+Comment[pt]=Disposição da Mudança de Ecrãs do KWin
+Comment[sk]=Rozloženie prepínača okien KWin
+Comment[sv]=Kwin-skrivbordsbyteslayout
+Comment[uk]=Компонування засобу перемикання стільниць KWin
+Comment[x-test]=xxKWin Desktop Switcher Layoutxx
 
 [PropertyDef::X-Plasma-API]
 Type=QString
