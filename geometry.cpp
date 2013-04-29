@@ -77,7 +77,7 @@ void Workspace::desktopResized()
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();
     desktop_geometry.height = geom.height();
-    rootInfo->setDesktopGeometry(-1, desktop_geometry);
+    rootInfo()->setDesktopGeometry(-1, desktop_geometry);
 
     updateClientArea();
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
@@ -231,7 +231,7 @@ void Workspace::updateClientArea(bool force)
             r.pos.y = workarea[ i ].y();
             r.size.width = workarea[ i ].width();
             r.size.height = workarea[ i ].height();
-            rootInfo->setWorkArea(i, r);
+            rootInfo()->setWorkArea(i, r);
         }
 
         for (ClientList::ConstIterator it = clients.constBegin();

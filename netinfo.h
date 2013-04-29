@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/NETRootInfo>
 
+#include <xcb/xcb.h>
+
 namespace KWin
 {
 
@@ -39,8 +41,8 @@ private:
     typedef KWin::Client Client;  // Because of NET::Client
 
 public:
-    RootInfo(Window w, const char* name, unsigned long pr[],
-             int pr_num, int scr = -1);
+    static RootInfo *create();
+    static void destroy();
 
 protected:
     virtual void changeNumberOfDesktops(int n);
@@ -53,7 +55,18 @@ protected:
     virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
     virtual void gotTakeActivity(Window w, Time timestamp, long flags);
     virtual void changeShowingDesktop(bool showing);
+
+private:
+    RootInfo(xcb_window_t w, const char* name, unsigned long pr[],
+             int pr_num, int scr = -1);
+    static RootInfo *s_self;
+    friend RootInfo *rootInfo();
 };
+
+inline RootInfo *rootInfo()
+{
+    return RootInfo::s_self;
+}
 
 /**
  * NET WM Protocol handler class

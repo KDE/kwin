@@ -157,7 +157,7 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
  */
 void Workspace::stackScreenEdgesUnderOverrideRedirect()
 {
-    Xcb::restackWindows(QVector<xcb_window_t>() << supportWindow->winId() << ScreenEdges::self()->windows());
+    Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << ScreenEdges::self()->windows());
 }
 #endif
 
@@ -176,7 +176,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // but it was lowered after kwin startup. Stacking all clients below
     // it ensures that no client will be ever shown above override-redirect
     // windows (e.g. popups).
-    newWindowStack << supportWindow->winId();
+    newWindowStack << rootInfo()->supportWindow();
 
 #ifdef KWIN_BUILD_SCREENEDGES
     newWindowStack << ScreenEdges::self()->windows();
@@ -208,7 +208,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     }
     // TODO isn't it too inefficient to restack always all clients?
     // TODO don't restack not visible windows?
-    assert(newWindowStack.at(0) == supportWindow->winId());
+    assert(newWindowStack.at(0) == rootInfo()->supportWindow());
     Xcb::restackWindows(newWindowStack);
 
     int pos = 0;
@@ -220,7 +220,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
             cl[pos++] = (*it)->window();
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
             cl[pos++] = (*it)->window();
-        rootInfo->setClientList(cl, pos);
+        rootInfo()->setClientList(cl, pos);
         delete [] cl;
     }
 
@@ -230,7 +230,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
         if ((*it)->isClient())
             cl[pos++] = (*it)->window();
     }
-    rootInfo->setClientListStacking(cl, pos);
+    rootInfo()->setClientListStacking(cl, pos);
     delete [] cl;
 
     // Make the cached stacking order invalid here, in case we need the new stacking order before we get

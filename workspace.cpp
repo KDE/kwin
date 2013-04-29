@@ -237,98 +237,11 @@ void Workspace::init()
     connect(options, SIGNAL(separateScreenFocusChanged(bool)), focusChain, SLOT(setSeparateScreenFocus(bool)));
     focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
-    supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
-    XLowerWindow(display(), supportWindow->winId());   // See usage in layers.cpp
-
     const uint32_t nullFocusValues[] = {true};
     m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));
     m_nullFocus->map();
 
-    unsigned long protocols[5] = {
-        NET::Supported |
-        NET::SupportingWMCheck |
-        NET::ClientList |
-        NET::ClientListStacking |
-        NET::DesktopGeometry |
-        NET::NumberOfDesktops |
-        NET::CurrentDesktop |
-        NET::ActiveWindow |
-        NET::WorkArea |
-        NET::CloseWindow |
-        NET::DesktopNames |
-        NET::WMName |
-        NET::WMVisibleName |
-        NET::WMDesktop |
-        NET::WMWindowType |
-        NET::WMState |
-        NET::WMStrut |
-        NET::WMIconGeometry |
-        NET::WMIcon |
-        NET::WMPid |
-        NET::WMMoveResize |
-        NET::WMFrameExtents |
-        NET::WMPing
-        ,
-        NET::NormalMask |
-        NET::DesktopMask |
-        NET::DockMask |
-        NET::ToolbarMask |
-        NET::MenuMask |
-        NET::DialogMask |
-        NET::OverrideMask |
-        NET::UtilityMask |
-        NET::SplashMask |
-        // No compositing window types here unless we support them also as managed window types
-        0
-        ,
-        NET::Modal |
-        //NET::Sticky | // Large desktops not supported (and probably never will be)
-        NET::MaxVert |
-        NET::MaxHoriz |
-        NET::Shaded |
-        NET::SkipTaskbar |
-        NET::KeepAbove |
-        //NET::StaysOnTop | // The same like KeepAbove
-        NET::SkipPager |
-        NET::Hidden |
-        NET::FullScreen |
-        NET::KeepBelow |
-        NET::DemandsAttention |
-        0
-        ,
-        NET::WM2UserTime |
-        NET::WM2StartupId |
-        NET::WM2AllowedActions |
-        NET::WM2RestackWindow |
-        NET::WM2MoveResizeWindow |
-        NET::WM2ExtendedStrut |
-        NET::WM2KDETemporaryRules |
-        NET::WM2ShowingDesktop |
-        NET::WM2DesktopLayout |
-        NET::WM2FullPlacement |
-        NET::WM2FullscreenMonitors |
-        NET::WM2KDEShadow |
-        0
-        ,
-        NET::ActionMove |
-        NET::ActionResize |
-        NET::ActionMinimize |
-        NET::ActionShade |
-        //NET::ActionStick | // Sticky state is not supported
-        NET::ActionMaxVert |
-        NET::ActionMaxHoriz |
-        NET::ActionFullScreen |
-        NET::ActionChangeDesktop |
-        NET::ActionClose |
-        0
-        ,
-    };
-
-    DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->isDisabled() && deco->factory()->supports(AbilityExtendIntoClientArea))
-        protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
-
-    rootInfo = new RootInfo(supportWindow->winId(), "KWin", protocols, 5, screen_number);
+    RootInfo *rootInfo = RootInfo::create();
 
     // create VirtualDesktopManager and perform dependency injection
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -502,8 +415,7 @@ Workspace::~Workspace()
     delete RuleBook::self();
     KGlobal::config()->sync();
 
-    delete rootInfo;
-    delete supportWindow;
+    RootInfo::destroy();
     delete startup;
     delete Placement::self();
     delete client_keys_dialog;
@@ -918,9 +830,9 @@ void Workspace::slotReconfigure()
     }
 
     if (!deco->isDisabled()) {
-        rootInfo->setSupported(NET::WM2FrameOverlap, deco->factory()->supports(AbilityExtendIntoClientArea));
+        rootInfo()->setSupported(NET::WM2FrameOverlap, deco->factory()->supports(AbilityExtendIntoClientArea));
     } else {
-        rootInfo->setSupported(NET::WM2FrameOverlap, false);
+        rootInfo()->setSupported(NET::WM2FrameOverlap, false);
     }
 }
 
@@ -1019,7 +931,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newD
         }
     }
     // Now propagate the change, after hiding, before showing
-    rootInfo->setCurrentDesktop(VirtualDesktopManager::self()->current());
+    rootInfo()->setCurrentDesktop(VirtualDesktopManager::self()->current());
 
     if (movingClient && !movingClient->isOnDesktop(newDesktop)) {
         movingClient->setDesktop(newDesktop);
@@ -1330,12 +1242,12 @@ void Workspace::sendClientToScreen(Client* c, int screen)
 
 void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
 {
-    rootInfo->sendPing(window, timestamp);
+    rootInfo()->sendPing(window, timestamp);
 }
 
 void Workspace::sendTakeActivity(KWin::Client *c, xcb_timestamp_t timestamp, long int flags)
 {
-    rootInfo->takeActivity(c->window(), timestamp, flags);
+    rootInfo()->takeActivity(c->window(), timestamp, flags);
     pending_take_activity = c;
 }
 
@@ -1380,7 +1292,7 @@ void Workspace::focusToNull()
 
 void Workspace::setShowingDesktop(bool showing)
 {
-    rootInfo->setShowingDesktop(showing);
+    rootInfo()->setShowingDesktop(showing);
     showing_desktop = showing;
     ++block_showing_desktop;
     if (showing_desktop) {
@@ -1433,7 +1345,7 @@ void Workspace::resetShowingDesktop(bool keep_hidden)
 {
     if (block_showing_desktop > 0)
         return;
-    rootInfo->setShowingDesktop(false);
+    rootInfo()->setShowingDesktop(false);
     showing_desktop = false;
     ++block_showing_desktop;
     if (!keep_hidden) {

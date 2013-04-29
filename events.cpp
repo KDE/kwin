@@ -87,7 +87,7 @@ bool Workspace::workspaceEvent(XEvent * e)
 
     if (e->type == PropertyNotify || e->type == ClientMessage) {
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
-        rootInfo->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
+        rootInfo()->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
         if (dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames)
             VirtualDesktopManager::self()->save();
         if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)

@@ -53,7 +53,6 @@ class Window;
 
 class Client;
 class KillWindow;
-class RootInfo;
 class ShortcutDialog;
 class UserActionsMenu;
 class Compositor;
@@ -530,9 +529,6 @@ private:
     Client* client_keys_client;
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
-
-    RootInfo* rootInfo;
-    QWidget* supportWindow;
 
     // Colormap handling
     Colormap default_colormap;

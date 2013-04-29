@@ -21,15 +21,135 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "netinfo.h"
+// kwin libs
+#include <kdecorationfactory.h>
 // kwin
 #include "client.h"
+#include "decorations.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
 namespace KWin
 {
+extern int screen_number;
 
-RootInfo::RootInfo(Window w, const char *name, unsigned long pr[], int pr_num, int scr)
+RootInfo *RootInfo::s_self = NULL;
+
+RootInfo *RootInfo::create()
+{
+    Q_ASSERT(!s_self);
+    xcb_window_t supportWindow = xcb_generate_id(connection());
+    const uint32_t values[] = {true};
+    xcb_create_window(connection(), XCB_COPY_FROM_PARENT, supportWindow, KWin::rootWindow(),
+                      0, 0, 0, 0, 0, XCB_COPY_FROM_PARENT,
+                      XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
+
+    const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp
+    // we need to do the lower window with a roundtrip, otherwise NETRootInfo is not functioning
+    QScopedPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
+        xcb_configure_window_checked(connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
+    if (!error.isNull()) {
+        kDebug(1212) << "Error occurred while lowering support window: " << error->error_code;
+    }
+
+    unsigned long protocols[5] = {
+        NET::Supported |
+        NET::SupportingWMCheck |
+        NET::ClientList |
+        NET::ClientListStacking |
+        NET::DesktopGeometry |
+        NET::NumberOfDesktops |
+        NET::CurrentDesktop |
+        NET::ActiveWindow |
+        NET::WorkArea |
+        NET::CloseWindow |
+        NET::DesktopNames |
+        NET::WMName |
+        NET::WMVisibleName |
+        NET::WMDesktop |
+        NET::WMWindowType |
+        NET::WMState |
+        NET::WMStrut |
+        NET::WMIconGeometry |
+        NET::WMIcon |
+        NET::WMPid |
+        NET::WMMoveResize |
+        NET::WMFrameExtents |
+        NET::WMPing
+        ,
+        NET::NormalMask |
+        NET::DesktopMask |
+        NET::DockMask |
+        NET::ToolbarMask |
+        NET::MenuMask |
+        NET::DialogMask |
+        NET::OverrideMask |
+        NET::UtilityMask |
+        NET::SplashMask |
+        // No compositing window types here unless we support them also as managed window types
+        0
+        ,
+        NET::Modal |
+        //NET::Sticky | // Large desktops not supported (and probably never will be)
+        NET::MaxVert |
+        NET::MaxHoriz |
+        NET::Shaded |
+        NET::SkipTaskbar |
+        NET::KeepAbove |
+        //NET::StaysOnTop | // The same like KeepAbove
+        NET::SkipPager |
+        NET::Hidden |
+        NET::FullScreen |
+        NET::KeepBelow |
+        NET::DemandsAttention |
+        0
+        ,
+        NET::WM2UserTime |
+        NET::WM2StartupId |
+        NET::WM2AllowedActions |
+        NET::WM2RestackWindow |
+        NET::WM2MoveResizeWindow |
+        NET::WM2ExtendedStrut |
+        NET::WM2KDETemporaryRules |
+        NET::WM2ShowingDesktop |
+        NET::WM2DesktopLayout |
+        NET::WM2FullPlacement |
+        NET::WM2FullscreenMonitors |
+        NET::WM2KDEShadow |
+        0
+        ,
+        NET::ActionMove |
+        NET::ActionResize |
+        NET::ActionMinimize |
+        NET::ActionShade |
+        //NET::ActionStick | // Sticky state is not supported
+        NET::ActionMaxVert |
+        NET::ActionMaxHoriz |
+        NET::ActionFullScreen |
+        NET::ActionChangeDesktop |
+        NET::ActionClose |
+        0
+        ,
+    };
+
+    DecorationPlugin *deco = DecorationPlugin::self();
+    if (!deco->isDisabled() && deco->factory()->supports(KDecorationDefines::AbilityExtendIntoClientArea))
+        protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
+
+    s_self = new RootInfo(supportWindow, "KWin", protocols, 5, screen_number);
+    return s_self;
+}
+
+void RootInfo::destroy()
+{
+    Q_ASSERT(s_self);
+    xcb_window_t supportWindow = s_self->supportWindow();
+    delete s_self;
+    s_self = NULL;
+    xcb_destroy_window(connection(), supportWindow);
+}
+
+RootInfo::RootInfo(xcb_window_t w, const char *name, unsigned long pr[], int pr_num, int scr)
     : NETRootInfo(display(), w, name, pr, pr_num, scr)
 {
 }
