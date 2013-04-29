@@ -33,6 +33,7 @@ namespace KWin
 DesktopNamesWidget::DesktopNamesWidget(QWidget *parent)
     : QWidget(parent)
     , m_maxDesktops(0)
+    , m_desktopConfig(0)
 {
     m_namesLayout = new QGridLayout;
     m_namesLayout->setMargin(0);

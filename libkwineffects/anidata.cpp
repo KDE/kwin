@@ -84,8 +84,8 @@ static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
         return FPx2();
     }
 
-    bool forced_align = false;
-    if ((forced_align = floats.count() < 2))
+    bool forced_align = (floats.count() < 2);
+    if (forced_align)
         f2 = f1;
     else {
         f2 = floats.at(1).toFloat(&ok);
