@@ -80,6 +80,7 @@ Comment[sr@ijekavian]=Клиза уназад прозоре када се по�
 Comment[sr@ijekavianlatin]=Kliza unazad prozore kada se podigne drugi prozor
 Comment[sr@latin]=Kliza unazad prozore kada se podigne drugi prozor
 Comment[sv]=Låt fönster glida tillbaka när ett annat fönster höjs.
+Comment[tr]=Başka bir pencere yükseltildiğinde, pencereleri geri kaydır.
 Comment[uk]=Ковзання вікон на задній план під час підняття інших вікон
 Comment[x-test]=xxSlide back windows when another window is raisedxx
 Icon=preferences-system-windows-effect-slideback
