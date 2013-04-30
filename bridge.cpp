@@ -315,6 +315,7 @@ void Bridge::tab_A_before_B(long A, long B)
 
     if (Client *a = clientForId(A))
     if (Client *b = clientForId(B))
+    if (a != b)
         a->tabBefore(b, true);
 }
 
@@ -330,6 +331,7 @@ void Bridge::tab_A_behind_B(long A, long B)
 
     if (Client *a = clientForId(A))
     if (Client *b = clientForId(B))
+    if (a != b)
         a->tabBehind(b, true);
 }
 
