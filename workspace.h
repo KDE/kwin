@@ -116,8 +116,6 @@ public:
         return block_focus == 0;
     }
 
-    void updateColormap();
-
     /**
      * Indicates that the client c is being moved around by the user.
      */
@@ -530,10 +528,6 @@ private:
     bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 
-    // Colormap handling
-    Colormap default_colormap;
-    Colormap installed_colormap;
-
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
 
@@ -583,6 +577,19 @@ public:
 
 private:
     Workspace* ws;
+};
+
+class ColorMapper : public QObject
+{
+    Q_OBJECT
+public:
+    ColorMapper(QObject *parent);
+    virtual ~ColorMapper();
+public Q_SLOTS:
+    void update();
+private:
+    xcb_colormap_t m_default;
+    xcb_colormap_t m_installed;
 };
 
 //---------------------------------------------------------

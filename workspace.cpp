@@ -79,6 +79,31 @@ namespace KWin
 extern int screen_number;
 extern bool is_multihead;
 
+ColorMapper::ColorMapper(QObject *parent)
+    : QObject(parent)
+    , m_default(defaultScreen()->default_colormap)
+    , m_installed(defaultScreen()->default_colormap)
+{
+}
+
+ColorMapper::~ColorMapper()
+{
+}
+
+void ColorMapper::update()
+{
+    xcb_colormap_t cmap = m_default;
+    if (Client *c = Workspace::self()->activeClient()) {
+        if (c->colormap() != XCB_COLORMAP_NONE) {
+            cmap = c->colormap();
+        }
+    }
+    if (cmap != m_installed) {
+        xcb_install_colormap(connection(), cmap);
+        m_installed = cmap;
+    }
+}
+
 Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
@@ -144,8 +169,8 @@ Workspace::Workspace(bool restore)
     options->loadConfig();
     options->loadCompositingConfig(false);
     DecorationPlugin::create(this);
-    default_colormap = DefaultColormap(display(), screen_number);
-    installed_colormap = default_colormap;
+    ColorMapper *colormaps = new ColorMapper(this);
+    connect(this, SIGNAL(clientActivated(KWin::Client*)), colormaps, SLOT(update()));
 
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
 
@@ -714,20 +739,6 @@ void Workspace::resetUpdateToolWindowsTimer()
 void Workspace::slotUpdateToolWindows()
 {
     updateToolWindows(true);
-}
-
-/**
- * Updates the current colormap according to the currently active client
- */
-void Workspace::updateColormap()
-{
-    Colormap cmap = default_colormap;
-    if (activeClient() && activeClient()->colormap() != None)
-        cmap = activeClient()->colormap();
-    if (cmap != installed_colormap) {
-        XInstallColormap(display(), cmap);
-        installed_colormap = cmap;
-    }
 }
 
 void Workspace::slotReloadConfig()

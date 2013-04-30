@@ -264,7 +264,6 @@ void Workspace::setActiveClient(Client* c)
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
     rootInfo()->setActiveWindow(active_client ? active_client->window() : 0);
-    updateColormap();
 
     emit clientActivated(active_client);
     --set_active_client_recursion;
