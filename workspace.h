@@ -46,6 +46,11 @@ class KStartupInfoData;
 namespace KWin
 {
 
+namespace Xcb
+{
+class Window;
+}
+
 class Client;
 class KillWindow;
 class RootInfo;
@@ -556,7 +561,7 @@ private:
     int set_active_client_recursion;
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
     bool blocked_propagating_new_clients; // Propagate also new clients after enabling stacking updates?
-    Window null_focus_window;
+    QScopedPointer<Xcb::Window> m_nullFocus;
     bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
 

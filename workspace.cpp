@@ -240,11 +240,9 @@ void Workspace::init()
     supportWindow = new QWidget(NULL, Qt::X11BypassWindowManagerHint);
     XLowerWindow(display(), supportWindow->winId());   // See usage in layers.cpp
 
-    XSetWindowAttributes attr;
-    attr.override_redirect = 1;
-    null_focus_window = XCreateWindow(display(), rootWindow(), -1, -1, 1, 1, 0, CopyFromParent,
-                                      InputOnly, CopyFromParent, CWOverrideRedirect, &attr);
-    XMapWindow(display(), null_focus_window);
+    const uint32_t nullFocusValues[] = {true};
+    m_nullFocus.reset(new Xcb::Window(QRect(-1, -1, 1, 1), XCB_WINDOW_CLASS_INPUT_ONLY, XCB_CW_OVERRIDE_REDIRECT, nullFocusValues));
+    m_nullFocus->map();
 
     unsigned long protocols[5] = {
         NET::Supported |
@@ -511,7 +509,6 @@ Workspace::~Workspace()
     delete client_keys_dialog;
     foreach (SessionInfo * s, session)
     delete s;
-    XDestroyWindow(display(), null_focus_window);
 
     // TODO: ungrabXServer();
 
@@ -1378,7 +1375,7 @@ bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KSt
  */
 void Workspace::focusToNull()
 {
-    XSetInputFocus(display(), null_focus_window, RevertToPointerRoot, xTime());
+    m_nullFocus->focus();
 }
 
 void Workspace::setShowingDesktop(bool showing)

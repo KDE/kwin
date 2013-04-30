@@ -38,6 +38,7 @@ typedef xcb_window_t WindowId;
 
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
+static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
 
 template <typename Reply,
     typename Cookie,
@@ -355,6 +356,7 @@ public:
     void clear();
     void setBackgroundPixmap(xcb_pixmap_t pixmap);
     void defineCursor(xcb_cursor_t cursor);
+    void focus(uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
     operator xcb_window_t() const;
 private:
     Window(const Window &other);
@@ -533,6 +535,12 @@ void Window::defineCursor(xcb_cursor_t cursor)
     Xcb::defineCursor(m_window, cursor);
 }
 
+inline
+void Window::focus(uint8_t revertTo, xcb_timestamp_t time)
+{
+    setInputFocus(m_window, revertTo, time);
+}
+
 // helper functions
 static inline void moveResizeWindow(WindowId window, const QRect &geometry)
 {
@@ -623,6 +631,11 @@ static inline QVector<xcb_rectangle_t> regionToRects(const QRegion &region)
 static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
 {
     xcb_change_window_attributes(connection(), window, XCB_CW_CURSOR, &cursor);
+}
+
+static inline void setInputFocus(xcb_window_t window, uint8_t revertTo, xcb_timestamp_t time)
+{
+    xcb_set_input_focus(connection(), revertTo, window, time);
 }
 
 } // namespace X11
