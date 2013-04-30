@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 // KDE
 #include <KDE/NET>
-#include <KDE/KSelectionWatcher>
 // Qt
+#include <QList>
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
@@ -191,21 +191,6 @@ public:
         MWM_FUNC_MAXIMIZE = (1L << 4),
         MWM_FUNC_CLOSE = (1L << 5)
     };
-};
-
-class KWinSelectionOwner
-    : public KSelectionOwner
-{
-    Q_OBJECT
-public:
-    explicit KWinSelectionOwner(int screen);
-protected:
-    virtual bool genericReply(Atom target, Atom property, Window requestor);
-    virtual void replyTargets(Atom property, Window requestor);
-    virtual void getAtoms();
-private:
-    Atom make_selection_atom(int screen);
-    static Atom xa_version;
 };
 
 // Class which saves original value of the variable, assigns the new value

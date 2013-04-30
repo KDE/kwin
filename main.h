@@ -23,11 +23,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAIN_H
 
 #include <kapplication.h>
-#include "workspace.h"
-#include "utils.h"
+#include <KDE/KSelectionWatcher>
 
 namespace KWin
 {
+
+class KWinSelectionOwner
+    : public KSelectionOwner
+{
+    Q_OBJECT
+public:
+    explicit KWinSelectionOwner(int screen);
+protected:
+    virtual bool genericReply(Atom target, Atom property, Window requestor);
+    virtual void replyTargets(Atom property, Window requestor);
+    virtual void getAtoms();
+private:
+    Atom make_selection_atom(int screen);
+    static Atom xa_version;
+};
 
 class Application : public  KApplication
 {

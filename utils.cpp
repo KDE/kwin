@@ -118,59 +118,6 @@ void Motif::readFlags(WId w, bool& got_noborder, bool& noborder,
     }
 }
 
-//************************************
-// KWinSelectionOwner
-//************************************
-
-KWinSelectionOwner::KWinSelectionOwner(int screen_P)
-    : KSelectionOwner(make_selection_atom(screen_P), screen_P)
-{
-}
-
-Atom KWinSelectionOwner::make_selection_atom(int screen_P)
-{
-    if (screen_P < 0)
-        screen_P = DefaultScreen(display());
-    char tmp[ 30 ];
-    sprintf(tmp, "WM_S%d", screen_P);
-    return XInternAtom(display(), tmp, False);
-}
-
-void KWinSelectionOwner::getAtoms()
-{
-    KSelectionOwner::getAtoms();
-    if (xa_version == None) {
-        Atom atoms[ 1 ];
-        const char* const names[] =
-        { "VERSION" };
-        XInternAtoms(display(), const_cast< char** >(names), 1, False, atoms);
-        xa_version = atoms[ 0 ];
-    }
-}
-
-void KWinSelectionOwner::replyTargets(Atom property_P, Window requestor_P)
-{
-    KSelectionOwner::replyTargets(property_P, requestor_P);
-    Atom atoms[ 1 ] = { xa_version };
-    // PropModeAppend !
-    XChangeProperty(display(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
-    reinterpret_cast< unsigned char* >(atoms), 1);
-}
-
-bool KWinSelectionOwner::genericReply(Atom target_P, Atom property_P, Window requestor_P)
-{
-    if (target_P == xa_version) {
-        long version[] = { 2, 0 };
-        XChangeProperty(display(), requestor_P, property_P, XA_INTEGER, 32,
-        PropModeReplace, reinterpret_cast< unsigned char* >(&version), 2);
-    } else
-        return KSelectionOwner::genericReply(target_P, property_P, requestor_P);
-    return true;
-}
-
-Atom KWinSelectionOwner::xa_version = None;
-
-
 #endif
 
 QByteArray getStringProperty(WId w, Atom prop, char separator)
