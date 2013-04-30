@@ -101,8 +101,8 @@ public:
     void activateClient(Client*, bool force = false);
     void requestFocus(Client* c, bool force = false);
     void takeActivity(Client* c, int flags, bool handled);   // Flags are ActivityFlags
-    void handleTakeActivity(Client* c, Time timestamp, int flags);   // Flags are ActivityFlags
-    bool allowClientActivation(const Client* c, Time time = -1U, bool focus_in = false,
+    void handleTakeActivity(Client* c, xcb_timestamp_t timestamp, int flags);   // Flags are ActivityFlags
+    bool allowClientActivation(const Client* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     void restoreFocus();
     void gotFocusIn(const Client*);
@@ -123,8 +123,8 @@ public:
     QRect adjustClientSize(Client* c, QRect moveResizeGeom, int mode);
     void raiseClient(Client* c, bool nogroup = false);
     void lowerClient(Client* c, bool nogroup = false);
-    void raiseClientRequest(Client* c, NET::RequestSource src, Time timestamp);
-    void lowerClientRequest(Client* c, NET::RequestSource src, Time timestamp);
+    void raiseClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
+    void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restackClientUnderActive(Client*);
     void restack(Client *c, Client *under);
     void updateClientLayer(Client* c);
@@ -253,7 +253,7 @@ public:
     bool showingDesktop() const;
 
     void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
-    void sendTakeActivity(Client* c, Time timestamp, long flags);   // Called from Client::takeActivity()
+    void sendTakeActivity(Client* c, xcb_timestamp_t timestamp, long flags);   // Called from Client::takeActivity()
 
     void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
     void setActiveClient(Client*);
@@ -438,7 +438,7 @@ private:
     ToplevelList constrainedStackingOrder();
     void raiseClientWithinApplication(Client* c);
     void lowerClientWithinApplication(Client* c);
-    bool allowFullClientRaising(const Client* c, Time timestamp);
+    bool allowFullClientRaising(const Client* c, xcb_timestamp_t timestamp);
     bool keepTransientAbove(const Client* mainwindow, const Client* transient);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);

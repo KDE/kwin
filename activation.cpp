@@ -383,7 +383,7 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         screens()->setCurrent(c->screen());
 }
 
-void Workspace::handleTakeActivity(Client* c, Time /*timestamp*/, int flags)
+void Workspace::handleTakeActivity(KWin::Client *c, xcb_timestamp_t /*timestamp*/, int flags)
 {
     if (pending_take_activity != c)   // pending_take_activity is reset when doing restack or activation
         return;
@@ -533,7 +533,7 @@ void Workspace::setShouldGetFocus(Client* c)
 // focus_in -> the window got FocusIn event
 // ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
 //     is on a different desktop
-bool Workspace::allowClientActivation(const Client* c, Time time, bool focus_in, bool ignore_desktop)
+bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
 {
     // options->focusStealingPreventionLevel :
     // 0 - none    - old KWin behaviour, new windows always get focus
@@ -596,7 +596,7 @@ bool Workspace::allowClientActivation(const Client* c, Time time, bool focus_in,
 // a window to be fully raised upon its own request (XRaiseWindow),
 // if refused, it will be raised only on top of windows belonging
 // to the same application
-bool Workspace::allowFullClientRaising(const Client* c, Time time)
+bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t time)
 {
     int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (session_saving && level <= 2) { // <= normal
@@ -618,7 +618,7 @@ bool Workspace::allowFullClientRaising(const Client* c, Time time)
     }
     if (level == 3)   // high
         return false;
-    Time user_time = ac->userTime();
+    xcb_timestamp_t user_time = ac->userTime();
     kDebug(1212) << "Raising, compared:" << time << ":" << user_time
                  << ":" << (timestampCompare(time, user_time) >= 0) << endl;
     return timestampCompare(time, user_time) >= 0;   // time >= user_time

@@ -1336,7 +1336,7 @@ void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
     rootInfo->sendPing(window, timestamp);
 }
 
-void Workspace::sendTakeActivity(Client* c, Time timestamp, long flags)
+void Workspace::sendTakeActivity(KWin::Client *c, xcb_timestamp_t timestamp, long int flags)
 {
     rootInfo->takeActivity(c->window(), timestamp, flags);
     pending_take_activity = c;

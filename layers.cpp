@@ -420,7 +420,7 @@ void Workspace::raiseClientWithinApplication(Client* c)
     }
 }
 
-void Workspace::raiseClientRequest(Client* c, NET::RequestSource src, Time timestamp)
+void Workspace::raiseClientRequest(KWin::Client *c, NET::RequestSource src, xcb_timestamp_t timestamp)
 {
     if (src == NET::FromTool || allowFullClientRaising(c, timestamp))
         raiseClient(c);
@@ -430,7 +430,7 @@ void Workspace::raiseClientRequest(Client* c, NET::RequestSource src, Time times
     }
 }
 
-void Workspace::lowerClientRequest(Client* c, NET::RequestSource src, Time /*timestamp*/)
+void Workspace::lowerClientRequest(KWin::Client *c, NET::RequestSource src, xcb_timestamp_t /*timestamp*/)
 {
     // If the client has support for all this focus stealing prevention stuff,
     // do only lowering within the application, as that's the more logical
