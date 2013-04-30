@@ -323,7 +323,7 @@ void Group::lostLeader()
 // Workspace
 //***************************************
 
-Group* Workspace::findGroup(Window leader) const
+Group* Workspace::findGroup(xcb_window_t leader) const
 {
     assert(leader != None);
     for (GroupList::ConstIterator it = groups.constBegin();
@@ -419,7 +419,7 @@ void Workspace::updateOnAllDesktopsOfTransients(Client* c)
 }
 
 // A new window has been mapped. Check if it's not a mainwindow for some already existing transient window.
-void Workspace::checkTransients(Window w)
+void Workspace::checkTransients(xcb_window_t w)
 {
     TRANSIENCY_CHECK(NULL);
     for (ClientList::ConstIterator it = clients.constBegin();

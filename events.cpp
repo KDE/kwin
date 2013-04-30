@@ -365,7 +365,7 @@ bool Workspace::workspaceEvent(QEvent* e)
 // Some events don't have the actual window which caused the event
 // as e->xany.window (e.g. ConfigureRequest), but as some other
 // field in the XEvent structure.
-Window Workspace::findSpecialEventWindow(XEvent* e)
+xcb_window_t Workspace::findSpecialEventWindow(XEvent *e)
 {
     switch(e->type) {
     case CreateNotify:

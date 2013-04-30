@@ -231,7 +231,7 @@ public:
 
     void updateMinimizedOfTransients(Client*);
     void updateOnAllDesktopsOfTransients(Client*);
-    void checkTransients(Window w);
+    void checkTransients(xcb_window_t w);
 
     void performWindowOperation(Client* c, WindowOperation op);
 
@@ -252,12 +252,12 @@ public:
     void resetShowingDesktop(bool keep_hidden);
     bool showingDesktop() const;
 
-    void sendPingToWindow(Window w, Time timestamp);   // Called from Client::pingWindow()
+    void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
     void sendTakeActivity(Client* c, Time timestamp, long flags);   // Called from Client::takeActivity()
 
     void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
     void setActiveClient(Client*);
-    Group* findGroup(Window leader) const;
+    Group* findGroup(xcb_window_t leader) const;
     void addGroup(Group* group);
     void removeGroup(Group* group);
     Group* findClientLeaderGroup(const Client* c) const;
@@ -266,7 +266,7 @@ public:
     void removeDeleted(Deleted*);
     void addDeleted(Deleted*, Toplevel*);
 
-    bool checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data);
+    bool checkStartupNotification(xcb_window_t w, KStartupInfoId& id, KStartupInfoData& data);
 
     void focusToNull(); // SELI TODO: Public?
 
@@ -446,12 +446,12 @@ private:
     void saveOldScreenSizes();
 
     /// This is the right way to create a new client
-    Client* createClient(Window w, bool is_mapped);
+    Client* createClient(xcb_window_t w, bool is_mapped);
     void addClient(Client* c);
-    Unmanaged* createUnmanaged(Window w);
+    Unmanaged* createUnmanaged(xcb_window_t w);
     void addUnmanaged(Unmanaged* c);
 
-    Window findSpecialEventWindow(XEvent* e);
+    xcb_window_t findSpecialEventWindow(XEvent* e);
 
     //---------------------------------------------------------------------
 

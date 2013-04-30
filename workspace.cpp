@@ -519,7 +519,7 @@ Workspace::~Workspace()
     _self = 0;
 }
 
-Client* Workspace::createClient(Window w, bool is_mapped)
+Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client(this);
@@ -540,7 +540,7 @@ Client* Workspace::createClient(Window w, bool is_mapped)
     return c;
 }
 
-Unmanaged* Workspace::createUnmanaged(Window w)
+Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
 {
     if (m_compositor && m_compositor->checkForOverlayWindow(w))
         return NULL;
@@ -1331,7 +1331,7 @@ void Workspace::sendClientToScreen(Client* c, int screen)
         sendClientToScreen(*it, screen);
 }
 
-void Workspace::sendPingToWindow(Window window, Time timestamp)
+void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
 {
     rootInfo->sendPing(window, timestamp);
 }
@@ -1367,7 +1367,7 @@ void Workspace::cancelDelayFocus()
     delayFocusTimer = 0;
 }
 
-bool Workspace::checkStartupNotification(Window w, KStartupInfoId& id, KStartupInfoData& data)
+bool Workspace::checkStartupNotification(xcb_window_t w, KStartupInfoId &id, KStartupInfoData &data)
 {
     return startup->checkStartup(w, id, data) == KStartupInfo::Match;
 }
