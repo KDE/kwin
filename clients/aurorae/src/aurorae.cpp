@@ -242,8 +242,10 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
 
 AuroraeClient::~AuroraeClient()
 {
-    m_item->setParent(NULL);
-    m_item->deleteLater();
+    if (m_item) {
+        m_item->setParent(NULL);
+        m_item->deleteLater();
+    }
     m_scene->setParent(NULL);
     m_scene->deleteLater();
     m_view->setParent(NULL);
@@ -276,7 +278,8 @@ void AuroraeClient::init()
     QPalette pal2 = widget()->palette();
     pal2.setColor(widget()->backgroundRole(), Qt::transparent);
     widget()->setPalette(pal2);
-    m_scene->addItem(m_item);
+    if (m_item)
+        m_scene->addItem(m_item);
     slotAlphaChanged();
 
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
@@ -505,10 +508,12 @@ void AuroraeClient::themeChanged()
 {
     m_scene->clear();
     m_item = AuroraeFactory::instance()->createQmlDecoration(this);
-    if (m_item) {
-        m_item->setWidth(m_scene->sceneRect().width());
-        m_item->setHeight(m_scene->sceneRect().height());
+    if (!m_item) {
+        return;
     }
+
+    m_item->setWidth(m_scene->sceneRect().width());
+    m_item->setHeight(m_scene->sceneRect().height());
     m_scene->addItem(m_item);
     connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     slotAlphaChanged();
@@ -565,6 +570,10 @@ QVariant AuroraeClient::readConfig(const QString &key, const QVariant &defaultVa
 
 void AuroraeClient::slotAlphaChanged()
 {
+    if (!m_item) {
+        setAlphaEnabled(false);
+        return;
+    }
     QVariant alphaProperty = m_item->property("alpha");
     if (alphaProperty.isValid() && alphaProperty.canConvert<bool>()) {
         setAlphaEnabled(alphaProperty.toBool());
