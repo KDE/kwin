@@ -2510,7 +2510,7 @@ void Client::positionGeometryTip()
         return; // some effect paints this for us
     if (options->showGeometryTip()) {
         if (!geometryTip) {
-            geometryTip = new GeometryTip(&xSizeHint, false);
+            geometryTip = new GeometryTip(&xSizeHint);
         }
         QRect wgeom(moveResizeGeom);   // position of the frame, size of the window itself
         wgeom.setWidth(wgeom.width() - (width() - clientSize().width()));

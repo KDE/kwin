@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-GeometryTip::GeometryTip(const XSizeHints* xSizeHints, bool save_under):
+GeometryTip::GeometryTip(const XSizeHints* xSizeHints):
     QLabel(0)
 {
     setObjectName(QLatin1String("kwingeometry"));
@@ -35,11 +35,6 @@ GeometryTip::GeometryTip(const XSizeHints* xSizeHints, bool save_under):
     setAlignment(Qt::AlignCenter | Qt::AlignTop);
     setWindowFlags(Qt::X11BypassWindowManagerHint);
     sizeHints = xSizeHints;
-    if (save_under) {
-        XSetWindowAttributes attr;
-        attr.save_under = True; // use saveunder if possible to avoid weird effects in transparent mode
-        XChangeWindowAttributes(display(), winId(), CWSaveUnder, &attr);
-    }
 }
 
 GeometryTip::~GeometryTip()
