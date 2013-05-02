@@ -290,13 +290,13 @@ Unmanaged* findUnmanagedInList(const UnmanagedList& list, T predicate)
 }
 
 inline
-int timestampCompare(Time time1, Time time2)   // like strcmp()
+int timestampCompare(xcb_timestamp_t time1, xcb_timestamp_t time2)   // like strcmp()
 {
     return NET::timestampCompare(time1, time2);
 }
 
 inline
-Time timestampDiff(Time time1, Time time2)   // returns time2 - time1
+xcb_timestamp_t timestampDiff(xcb_timestamp_t time1, xcb_timestamp_t time2)   // returns time2 - time1
 {
     return NET::timestampDiff(time1, time2);
 }
