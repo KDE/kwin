@@ -2534,20 +2534,22 @@ bool Client::startMoveResize()
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
     // (http://lists.kde.org/?t=107302193400001&r=1&w=2)
-    XSetWindowAttributes attrs;
     QRect r = workspace()->clientArea(FullArea, this);
-    move_resize_grab_window = XCreateWindow(display(), rootWindow(), r.x(), r.y(),
-                                            r.width(), r.height(), 0, CopyFromParent, InputOnly, CopyFromParent, 0, &attrs);
-    XMapRaised(display(), move_resize_grab_window);
-    if (XGrabPointer(display(), move_resize_grab_window, False,
-                    ButtonPressMask | ButtonReleaseMask | PointerMotionMask | EnterWindowMask | LeaveWindowMask,
-                    GrabModeAsync, GrabModeAsync, move_resize_grab_window, Cursor::x11Cursor(m_cursor), xTime()) == Success)
+    m_moveResizeGrabWindow.create(r, XCB_WINDOW_CLASS_INPUT_ONLY, 0, NULL, rootWindow());
+    m_moveResizeGrabWindow.map();
+    m_moveResizeGrabWindow.raise();
+    const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(connection(), false, m_moveResizeGrabWindow,
+        XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION |
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
+        XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursor::x11Cursor(m_cursor), xTime());
+    ScopedCPointer<xcb_grab_pointer_reply_t> pointerGrab(xcb_grab_pointer_reply(connection(), cookie, NULL));
+    if (!pointerGrab.isNull() && pointerGrab->status == XCB_GRAB_STATUS_SUCCESS) {
         has_grab = true;
+    }
     if (grabXKeyboard(frameId()))
         has_grab = move_resize_has_keyboard_grab = true;
     if (!has_grab) { // at least one grab is necessary in order to be able to finish move/resize
-        XDestroyWindow(display(), move_resize_grab_window);
-        move_resize_grab_window = None;
+        m_moveResizeGrabWindow.reset();
         return false;
     }
 
@@ -2663,8 +2665,7 @@ void Client::leaveMoveResize()
         ungrabXKeyboard();
     move_resize_has_keyboard_grab = false;
     XUngrabPointer(display(), xTime());
-    XDestroyWindow(display(), move_resize_grab_window);
-    move_resize_grab_window = None;
+    m_moveResizeGrabWindow.reset();
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
 #ifdef HAVE_XSYNC

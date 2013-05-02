@@ -491,7 +491,7 @@ public:
 
     void keyPressEvent(uint key_code);   // FRAME ??
     void updateMouseGrab();
-    Window moveResizeGrabWindow() const;
+    xcb_window_t moveResizeGrabWindow() const;
 
     const QPoint calculateGravitation(bool invert, int gravity = 0) const;   // FRAME public?
 
@@ -842,7 +842,7 @@ private:
     bool m_blockedActivityUpdatesRequireTransients;
     bool buttonDown;
     bool moveResizeMode;
-    Window move_resize_grab_window;
+    Xcb::Window m_moveResizeGrabWindow;
     bool move_resize_has_keyboard_grab;
     bool unrestrictedMoveResize;
     int moveResizeStartScreen;
@@ -1234,9 +1234,9 @@ inline const WindowRules* Client::rules() const
     return &client_rules;
 }
 
-inline Window Client::moveResizeGrabWindow() const
+inline xcb_window_t Client::moveResizeGrabWindow() const
 {
-    return move_resize_grab_window;
+    return m_moveResizeGrabWindow;
 }
 
 inline KShortcut Client::shortcut() const
