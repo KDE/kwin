@@ -278,25 +278,25 @@ QPoint cursorPos()
 int qtToX11Button(Qt::MouseButton button)
 {
     if (button == Qt::LeftButton)
-        return Button1;
+        return XCB_BUTTON_INDEX_1;
     else if (button == Qt::MidButton)
-        return Button2;
+        return XCB_BUTTON_INDEX_2;
     else if (button == Qt::RightButton)
-        return Button3;
-    return AnyButton; // 0
+        return XCB_BUTTON_INDEX_3;
+    return XCB_BUTTON_INDEX_ANY; // 0
 }
 
 Qt::MouseButton x11ToQtMouseButton(int button)
 {
-    if (button == Button1)
+    if (button == XCB_BUTTON_INDEX_1)
         return Qt::LeftButton;
-    if (button == Button2)
+    if (button == XCB_BUTTON_INDEX_2)
         return Qt::MidButton;
-    if (button == Button3)
+    if (button == XCB_BUTTON_INDEX_3)
         return Qt::RightButton;
-    if (button == Button4)
+    if (button == XCB_BUTTON_INDEX_4)
         return Qt::XButton1;
-    if (button == Button5)
+    if (button == XCB_BUTTON_INDEX_5)
         return Qt::XButton2;
     return Qt::NoButton;
 }
@@ -305,15 +305,15 @@ int qtToX11State(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
 {
     int ret = 0;
     if (buttons & Qt::LeftButton)
-        ret |= Button1Mask;
+        ret |= XCB_KEY_BUT_MASK_BUTTON_1;
     if (buttons & Qt::MidButton)
-        ret |= Button2Mask;
+        ret |= XCB_KEY_BUT_MASK_BUTTON_2;
     if (buttons & Qt::RightButton)
-        ret |= Button3Mask;
+        ret |= XCB_KEY_BUT_MASK_BUTTON_3;
     if (modifiers & Qt::ShiftModifier)
-        ret |= ShiftMask;
+        ret |= XCB_KEY_BUT_MASK_SHIFT;
     if (modifiers & Qt::ControlModifier)
-        ret |= ControlMask;
+        ret |= XCB_KEY_BUT_MASK_CONTROL;
     if (modifiers & Qt::AltModifier)
         ret |= KKeyServer::modXAlt();
     if (modifiers & Qt::MetaModifier)
@@ -324,15 +324,15 @@ int qtToX11State(Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers)
 Qt::MouseButtons x11ToQtMouseButtons(int state)
 {
     Qt::MouseButtons ret = 0;
-    if (state & Button1Mask)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_1)
         ret |= Qt::LeftButton;
-    if (state & Button2Mask)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_2)
         ret |= Qt::MidButton;
-    if (state & Button3Mask)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_3)
         ret |= Qt::RightButton;
-    if (state & Button4Mask)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_4)
         ret |= Qt::XButton1;
-    if (state & Button5Mask)
+    if (state & XCB_KEY_BUT_MASK_BUTTON_5)
         ret |= Qt::XButton2;
     return ret;
 }
@@ -340,9 +340,9 @@ Qt::MouseButtons x11ToQtMouseButtons(int state)
 Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
 {
     Qt::KeyboardModifiers ret = 0;
-    if (state & ShiftMask)
+    if (state & XCB_KEY_BUT_MASK_SHIFT)
         ret |= Qt::ShiftModifier;
-    if (state & ControlMask)
+    if (state & XCB_KEY_BUT_MASK_CONTROL)
         ret |= Qt::ControlModifier;
     if (state & KKeyServer::modXAlt())
         ret |= Qt::AltModifier;
