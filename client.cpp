@@ -90,7 +90,7 @@ bool Client::s_haveResizeEffect = false;
 Client::Client()
     : Toplevel()
     , client(None)
-    , wrapper(None)
+    , m_wrapper()
     , decoration(NULL)
     , bridge(new Bridge(this))
     , m_activityUpdatesBlocked(false)
@@ -233,7 +233,7 @@ Client::~Client()
 #endif
     assert(!moveResizeMode);
     assert(client == None);
-    assert(wrapper == None);
+    assert(m_wrapper == XCB_WINDOW_NONE);
     //assert( frameId() == None );
     assert(decoration == NULL);
     assert(block_geometry_updates == 0);
@@ -303,8 +303,7 @@ void Client::releaseWindow(bool on_shutdown)
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         XUnmapWindow(display(), client);
     client = None;
-    XDestroyWindow(display(), wrapper);
-    wrapper = None;
+    m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
@@ -345,8 +344,7 @@ void Client::destroyClient()
     cleanGrouping();
     workspace()->removeClient(this);
     client = None; // invalidate
-    XDestroyWindow(display(), wrapper);
-    wrapper = None;
+    m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
@@ -981,10 +979,10 @@ void Client::setShade(ShadeMode mode)
         shade_geometry_change = true;
         QSize s(sizeForClientSize(QSize(clientSize())));
         s.setHeight(border_top + border_bottom);
-        XSelectInput(display(), wrapper, ClientWinMask);   // Avoid getting UnmapNotify
-        XUnmapWindow(display(), wrapper);
+        XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
+        m_wrapper.unmap();
         XUnmapWindow(display(), client);
-        XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
+        XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
         exportMappingState(IconicState);
         plainResize(s);
         shade_geometry_change = false;
@@ -1208,7 +1206,7 @@ void Client::map()
         decoration->widget()->show(); // Not really necessary, but let it know the state
     XMapWindow(display(), frameId());
     if (!isShade()) {
-        XMapWindow(display(), wrapper);
+        m_wrapper.map();
         XMapWindow(display(), client);
         m_decoInputExtent.map();
         exportMappingState(NormalState);
@@ -1227,12 +1225,12 @@ void Client::unmap()
     // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
     // will be missed is also very minimal, so I don't think it's needed to grab the server
     // here.
-    XSelectInput(display(), wrapper, ClientWinMask);   // Avoid getting UnmapNotify
+    XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
     XUnmapWindow(display(), frameId());
-    XUnmapWindow(display(), wrapper);
+    m_wrapper.unmap();
     XUnmapWindow(display(), client);
     m_decoInputExtent.unmap();
-    XSelectInput(display(), wrapper, ClientWinMask | SubstructureNotifyMask);
+    XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
     if (decoration != NULL)
         decoration->widget()->hide(); // Not really necessary, but let it know the state
     exportMappingState(IconicState);

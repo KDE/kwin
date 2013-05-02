@@ -591,7 +591,7 @@ void Client::unmapNotifyEvent(XUnmapEvent* e)
     // but just destroy the client
     Xcb::Tree tree(client);
     xcb_window_t daddy = tree.parent();
-    if (daddy == wrapper) {
+    if (daddy == m_wrapper) {
         releaseWindow(); // unmapped from a regular client state
     } else {
         destroyClient(); // the client was moved to some other parent

@@ -630,7 +630,7 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
 {
     assert(client == None);
     assert(frameId() == None);
-    assert(wrapper == None);
+    assert(m_wrapper == XCB_WINDOW_NONE);
     client = w;
 
     const xcb_visualid_t visualid = XVisualIDFromVisual(attr.visual);
@@ -681,17 +681,18 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
     setWindowHandles(client, frame);
 
     // Create the wrapper window
-    wrapper = xcb_generate_id(conn);
-    xcb_create_window(conn, attr.depth, wrapper, frame, 0, 0, 1, 1, 0,
+    xcb_window_t wrapperId = xcb_generate_id(conn);
+    xcb_create_window(conn, attr.depth, wrapperId, frame, 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
+    m_wrapper.reset(wrapperId);
 
-    xcb_reparent_window(conn, client, wrapper, 0, 0);
+    xcb_reparent_window(conn, client, m_wrapper, 0, 0);
 
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
     // receiving any unexpected events from the wrapper creation or the reparenting.
     xcb_change_window_attributes(conn, frame,   XCB_CW_EVENT_MASK, &frame_event_mask);
-    xcb_change_window_attributes(conn, wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
+    xcb_change_window_attributes(conn, m_wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
     xcb_change_window_attributes(conn, client,  XCB_CW_EVENT_MASK, &client_event_mask);
 
     updateMouseGrab();

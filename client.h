@@ -270,7 +270,7 @@ class Client
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 public:
     explicit Client();
-    Window wrapperId() const;
+    xcb_window_t wrapperId() const;
     Window decorationId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
 
@@ -833,7 +833,7 @@ private:
     bool tabTo(Client *other, bool behind, bool activate);
 
     Window client;
-    Window wrapper;
+    Xcb::Window m_wrapper;
     KDecoration* decoration;
     Bridge* bridge;
     int desk;
@@ -1011,9 +1011,9 @@ private:
     Client* cl;
 };
 
-inline Window Client::wrapperId() const
+inline xcb_window_t Client::wrapperId() const
 {
-    return wrapper;
+    return m_wrapper;
 }
 
 inline Window Client::decorationId() const
