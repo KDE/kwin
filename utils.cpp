@@ -72,7 +72,7 @@ StrutRect::StrutRect(const StrutRect& other)
 // Motif
 //************************************
 
-void Motif::readFlags(WId w, bool& got_noborder, bool& noborder,
+void Motif::readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
                       bool& resize, bool& move, bool& minimize, bool& maximize, bool& close)
 {
     Atom type;

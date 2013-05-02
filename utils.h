@@ -166,7 +166,7 @@ public:
     // property.  If it explicitly requests that decorations be shown
     // or hidden, 'got_noborder' is set to true and 'noborder' is set
     // appropriately.
-    static void readFlags(Window w, bool& got_noborder, bool& noborder,
+    static void readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
                           bool& resize, bool& move, bool& minimize, bool& maximize,
                           bool& close);
     struct MwmHints {
