@@ -216,15 +216,15 @@ static int server_grab_count = 0;
 void grabXServer()
 {
     if (++server_grab_count == 1)
-        XGrabServer(display());
+        xcb_grab_server(connection());
 }
 
 void ungrabXServer()
 {
     assert(server_grab_count > 0);
     if (--server_grab_count == 0) {
-        XUngrabServer(display());
-        XFlush(display());
+        xcb_ungrab_server(connection());
+        xcb_flush(connection());
     }
 }
 
