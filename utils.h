@@ -221,7 +221,7 @@ void updateXTime();
 void grabXServer();
 void ungrabXServer();
 bool grabbedXServer();
-bool grabXKeyboard(Window w = rootWindow());
+bool grabXKeyboard(xcb_window_t w = rootWindow());
 void ungrabXKeyboard();
 
 /**

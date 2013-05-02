@@ -235,7 +235,7 @@ bool grabbedXServer()
 
 static bool keyboard_grabbed = false;
 
-bool grabXKeyboard(Window w)
+bool grabXKeyboard(xcb_window_t w)
 {
     if (QWidget::keyboardGrabber() != NULL)
         return false;
@@ -243,11 +243,17 @@ bool grabXKeyboard(Window w)
         return false;
     if (qApp->activePopupWidget() != NULL)
         return false;
-    if (w == None)
+    if (w == XCB_WINDOW_NONE)
         w = rootWindow();
-    if (XGrabKeyboard(display(), w, False,
-    GrabModeAsync, GrabModeAsync, xTime()) != GrabSuccess)
+    const xcb_grab_keyboard_cookie_t c = xcb_grab_keyboard_unchecked(connection(), false, w, xTime(),
+                                                                     XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC);
+    ScopedCPointer<xcb_grab_keyboard_reply_t> grab(xcb_grab_keyboard_reply(connection(), c, NULL));
+    if (grab.isNull()) {
         return false;
+    }
+    if (grab->status != XCB_GRAB_STATUS_SUCCESS) {
+        return false;
+    }
     keyboard_grabbed = true;
     return true;
 }
@@ -259,7 +265,7 @@ void ungrabXKeyboard()
         kDebug(1212) << "ungrabXKeyboard() called but keyboard not grabbed!";
     }
     keyboard_grabbed = false;
-    XUngrabKeyboard(display(), CurrentTime);
+    xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);
 }
 
 QPoint cursorPos()
