@@ -589,7 +589,7 @@ void Client::unmapNotifyEvent(XUnmapEvent* e)
     // check whether this is result of an XReparentWindow - client then won't be parented by wrapper
     // in this case do not release the client (causes reparent to root, removal from saveSet and what not)
     // but just destroy the client
-    Xcb::Tree tree(client);
+    Xcb::Tree tree(m_client);
     xcb_window_t daddy = tree.parent();
     if (daddy == m_wrapper) {
         releaseWindow(); // unmapped from a regular client state

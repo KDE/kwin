@@ -89,7 +89,7 @@ bool Client::s_haveResizeEffect = false;
  */
 Client::Client()
     : Toplevel()
-    , client(None)
+    , m_client(XCB_WINDOW_NONE)
     , m_wrapper()
     , decoration(NULL)
     , bridge(new Bridge(this))
@@ -232,7 +232,7 @@ Client::~Client()
         XSyncDestroyAlarm(display(), syncRequest.alarm);
 #endif
     assert(!moveResizeMode);
-    assert(client == None);
+    assert(m_client == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
     //assert( frameId() == None );
     assert(decoration == NULL);
@@ -289,20 +289,21 @@ void Client::releaseWindow(bool on_shutdown)
         info->setState(0, info->state());  // Reset all state flags
     } else
         untab();
-    XDeleteProperty(display(), client, atoms->kde_net_wm_user_creation_time);
-    XDeleteProperty(display(), client, atoms->net_frame_extents);
-    XDeleteProperty(display(), client, atoms->kde_net_wm_frame_strut);
-    XReparentWindow(display(), client, rootWindow(), x(), y());
-    XRemoveFromSaveSet(display(), client);
-    XSelectInput(display(), client, NoEventMask);
+    xcb_connection_t *c = connection();
+    xcb_delete_property(c, m_client, atoms->kde_net_wm_user_creation_time);
+    xcb_delete_property(c, m_client, atoms->net_frame_extents);
+    xcb_delete_property(c, m_client, atoms->kde_net_wm_frame_strut);
+    xcb_reparent_window(c, m_client, rootWindow(), x(), y());
+    xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
+    XSelectInput(display(), m_client, NoEventMask);
     if (on_shutdown)
         // Map the window, so it can be found after another WM is started
-        XMapWindow(display(), client);
+        xcb_map_window(connection(), m_client);
     // TODO: Preserve minimized, shaded etc. state?
     else // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
-        XUnmapWindow(display(), client);
-    client = None;
+        xcb_unmap_window(connection(), m_client);
+    m_client = XCB_WINDOW_NONE;
     m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;
@@ -343,7 +344,7 @@ void Client::destroyClient()
     destroyDecoration();
     cleanGrouping();
     workspace()->removeClient(this);
-    client = None; // invalidate
+    m_client = XCB_WINDOW_NONE; // invalidate
     m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;
@@ -981,7 +982,7 @@ void Client::setShade(ShadeMode mode)
         s.setHeight(border_top + border_bottom);
         XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
         m_wrapper.unmap();
-        XUnmapWindow(display(), client);
+        xcb_unmap_window(connection(), m_client);
         XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
         exportMappingState(IconicState);
         plainResize(s);
@@ -1123,7 +1124,7 @@ void Client::resetShowingDesktop(bool keep_hidden)
  */
 void Client::exportMappingState(int s)
 {
-    assert(client != None);
+    assert(m_client != XCB_WINDOW_NONE);
     assert(!deleting || s == WithdrawnState);
     if (s == WithdrawnState) {
         XDeleteProperty(display(), window(), atoms->wm_state);
@@ -1207,7 +1208,7 @@ void Client::map()
     XMapWindow(display(), frameId());
     if (!isShade()) {
         m_wrapper.map();
-        XMapWindow(display(), client);
+        xcb_map_window(connection(), m_client);
         m_decoInputExtent.map();
         exportMappingState(NormalState);
     } else
@@ -1228,7 +1229,7 @@ void Client::unmap()
     XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
     XUnmapWindow(display(), frameId());
     m_wrapper.unmap();
-    XUnmapWindow(display(), client);
+    xcb_unmap_window(connection(), m_client);
     m_decoInputExtent.unmap();
     XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
     if (decoration != NULL)
@@ -1990,7 +1991,7 @@ void Client::getWMHints()
 void Client::getMotifHints()
 {
     bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
-    Motif::readFlags(client, mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose);
+    Motif::readFlags(m_client, mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose);
     if (mgot_noborder && motif_noborder != mnoborder) {
         motif_noborder = mnoborder;
         // If we just got a hint telling us to hide decorations, we do so.

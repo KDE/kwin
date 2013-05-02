@@ -100,7 +100,7 @@ bool Client::manage(Window w, bool isMapped)
         NET::WM2FrameOverlap |
         0;
 
-    info = new WinInfo(this, display(), client, rootWindow(), properties, 2);
+    info = new WinInfo(this, display(), m_client, rootWindow(), properties, 2);
 
     cmap = attr.colormap;
 
@@ -628,10 +628,10 @@ bool Client::manage(Window w, bool isMapped)
 // Called only from manage()
 void Client::embedClient(Window w, const XWindowAttributes& attr)
 {
-    assert(client == None);
+    assert(m_client == XCB_WINDOW_NONE);
     assert(frameId() == None);
     assert(m_wrapper == XCB_WINDOW_NONE);
-    client = w;
+    m_client = w;
 
     const xcb_visualid_t visualid = XVisualIDFromVisual(attr.visual);
     const uint32_t zero_value = 0;
@@ -639,11 +639,11 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
     xcb_connection_t *conn = connection();
 
     // We don't want the window to be destroyed when we quit
-    xcb_change_save_set(conn, XCB_SET_MODE_INSERT, client);
+    xcb_change_save_set(conn, XCB_SET_MODE_INSERT, m_client);
 
-    xcb_change_window_attributes(conn, client, XCB_CW_EVENT_MASK, &zero_value);
-    xcb_unmap_window(conn, client);
-    xcb_configure_window(conn, client, XCB_CONFIG_WINDOW_BORDER_WIDTH, &zero_value);
+    xcb_change_window_attributes(conn, m_client, XCB_CW_EVENT_MASK, &zero_value);
+    xcb_unmap_window(conn, m_client);
+    xcb_configure_window(conn, m_client, XCB_CONFIG_WINDOW_BORDER_WIDTH, &zero_value);
 
     // Note: These values must match the order in the xcb_cw_t enum
     const uint32_t cw_values[] = {
@@ -678,7 +678,7 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
     xcb_create_window(conn, attr.depth, frame, rootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
 
-    setWindowHandles(client, frame);
+    setWindowHandles(m_client, frame);
 
     // Create the wrapper window
     xcb_window_t wrapperId = xcb_generate_id(conn);
@@ -686,14 +686,14 @@ void Client::embedClient(Window w, const XWindowAttributes& attr)
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_wrapper.reset(wrapperId);
 
-    xcb_reparent_window(conn, client, m_wrapper, 0, 0);
+    xcb_reparent_window(conn, m_client, m_wrapper, 0, 0);
 
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
     // receiving any unexpected events from the wrapper creation or the reparenting.
     xcb_change_window_attributes(conn, frame,   XCB_CW_EVENT_MASK, &frame_event_mask);
     xcb_change_window_attributes(conn, m_wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
-    xcb_change_window_attributes(conn, client,  XCB_CW_EVENT_MASK, &client_event_mask);
+    xcb_change_window_attributes(conn, m_client,  XCB_CW_EVENT_MASK, &client_event_mask);
 
     updateMouseGrab();
 }
