@@ -216,7 +216,7 @@ public:
     ScopedCPointer(T *p = 0) : QScopedPointer<T, QScopedPointerPodDeleter>(p) {}
 };
 
-QByteArray getStringProperty(Window w, Atom prop, char separator = 0);
+QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator = 0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();

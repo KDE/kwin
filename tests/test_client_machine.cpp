@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 
 // mock required function from utils
-QByteArray getStringProperty(WId w, Atom prop, char separator)
+QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
 {
     Q_UNUSED(separator)
     ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(),

@@ -120,29 +120,23 @@ void Motif::readFlags(WId w, bool& got_noborder, bool& noborder,
 
 #endif
 
-QByteArray getStringProperty(WId w, Atom prop, char separator)
+QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
 {
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    QByteArray result = "";
-    KXErrorHandler handler; // ignore errors
-    status = XGetWindowProperty(display(), w, prop, 0, 10000,
-    false, XA_STRING, &type, &format,
-    &nitems, &extra, &data);
-    if (status == Success) {
-        if (data && separator) {
-            for (int i = 0; i < (int)nitems; i++)
-                if (!data[i] && i + 1 < (int)nitems)
-                    data[i] = separator;
-        }
-        if (data)
-            result = (const char*) data;
-        XFree(data);
+    const xcb_get_property_cookie_t c = xcb_get_property_unchecked(connection(), false, w, prop,
+                                                                   XCB_ATOM_STRING, 0, 10000);
+    ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(), c, NULL));
+    if (property.isNull() || property->type == XCB_ATOM_NONE) {
+        return QByteArray();
     }
-    return result;
+    char *data = static_cast<char*>(xcb_get_property_value(property.data()));
+    if (data && separator) {
+        for (uint32_t i = 0; i < property->value_len; ++i) {
+            if (!data[i] && i + 1 < property->value_len) {
+                data[i] = separator;
+            }
+        }
+    }
+    return QByteArray(data, property->value_len);
 }
 
 #ifndef KCMRULES
