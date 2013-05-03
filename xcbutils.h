@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 #include <xcb/composite.h>
+#include <xcb/xcb_icccm.h>
 
 namespace KWin {
 
@@ -203,6 +204,27 @@ public:
         if (isNull())
             return XCB_WINDOW_NONE;
         return (*this)->focus;
+    }
+};
+
+class TransientFor : public Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &xcb_icccm_get_wm_transient_for_unchecked>
+{
+public:
+    explicit TransientFor(WindowId window) : Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &xcb_icccm_get_wm_transient_for_unchecked>(window) {}
+
+    /**
+     * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
+     * @param prop WM_TRANSIENT_FOR property value.
+     * @returns @c true on success, @c false otherwise
+     **/
+    inline bool getTransientFor(WindowId *prop) {
+        if (isNull()) {
+            return false;
+        }
+        if (xcb_icccm_get_wm_transient_for_from_reply(prop, const_cast<xcb_get_property_reply_t*>(data()))) {
+            return true;
+        }
+        return false;
     }
 };
 

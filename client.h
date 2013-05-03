@@ -283,7 +283,7 @@ public:
     ClientList allMainClients() const; // Call once before loop , is indirect
     bool hasTransient(const Client* c, bool indirect) const;
     const ClientList& transients() const; // Is not indirect
-    void checkTransient(Window w);
+    void checkTransient(xcb_window_t w);
     Client* findModal(bool allow_itself = false);
     const Group* group() const;
     Group* group();
@@ -869,16 +869,16 @@ private:
     int quick_tile_mode;
 
     void readTransient();
-    Window verifyTransientFor(Window transient_for, bool set);
+    xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
     void addTransient(Client* cl);
     void removeTransient(Client* cl);
     void removeFromMainClients();
     void cleanGrouping();
     void checkGroupTransients();
-    void setTransient(Window new_transient_for_id);
+    void setTransient(xcb_window_t new_transient_for_id);
     Client* transient_for;
-    Window transient_for_id;
-    Window original_transient_for_id;
+    xcb_window_t m_transientForId;
+    xcb_window_t m_originalTransientForId;
     ClientList transients_list; // SELI TODO: Make this ordered in stacking order?
     ShadeMode shade_mode;
     Client *shade_below;
@@ -1033,19 +1033,19 @@ inline Client* Client::transientFor()
 
 inline bool Client::groupTransient() const
 {
-    return transient_for_id == rootWindow();
+    return m_transientForId == rootWindow();
 }
 
 // Needed because verifyTransientFor() may set transient_for_id to root window,
 // if the original value has a problem (window doesn't exist, etc.)
 inline bool Client::wasOriginallyGroupTransient() const
 {
-    return original_transient_for_id == rootWindow();
+    return m_originalTransientForId == rootWindow();
 }
 
 inline bool Client::isTransient() const
 {
-    return transient_for_id != None;
+    return m_transientForId != XCB_WINDOW_NONE;
 }
 
 inline const ClientList& Client::transients() const
