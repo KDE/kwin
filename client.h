@@ -497,7 +497,7 @@ public:
 
     void NETMoveResize(int x_root, int y_root, NET::Direction direction);
     void NETMoveResizeWindow(int flags, int x, int y, int width, int height);
-    void restackWindow(Window above, int detail, NET::RequestSource source, Time timestamp,
+    void restackWindow(xcb_window_t above, int detail, NET::RequestSource source, xcb_timestamp_t timestamp,
                        bool send_event = false);
 
     void gotPing(Time timestamp);

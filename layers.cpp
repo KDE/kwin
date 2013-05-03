@@ -700,10 +700,10 @@ ToplevelList Workspace::xStackingOrder() const
 // Client
 //*******************************
 
-void Client::restackWindow(Window above, int detail, NET::RequestSource src, Time timestamp, bool send_event)
+void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp, bool send_event)
 {
     Client *other = 0;
-    if (detail == Opposite) {
+    if (detail == XCB_STACK_MODE_OPPOSITE) {
         other = workspace()->findClient(WindowMatchPredicate(above));
         if (!other) {
             workspace()->raiseOrLowerClient(this);
@@ -713,22 +713,22 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
                                     end = workspace()->stackingOrder().constEnd();
         while (it != end) {
             if (*it == this) {
-                detail = Above;
+                detail = XCB_STACK_MODE_ABOVE;
                 break;
             } else if (*it == other) {
-                detail = Below;
+                detail = XCB_STACK_MODE_BELOW;
                 break;
             }
             ++it;
         }
     }
-    else if (detail == TopIf) {
+    else if (detail == XCB_STACK_MODE_TOP_IF) {
         other = workspace()->findClient(WindowMatchPredicate(above));
         if (other && other->geometry().intersects(geometry()))
             workspace()->raiseClientRequest(this, src, timestamp);
         return;
     }
-    else if (detail == BottomIf) {
+    else if (detail == XCB_STACK_MODE_BOTTOM_IF) {
         other = workspace()->findClient(WindowMatchPredicate(above));
         if (other && other->geometry().intersects(geometry()))
             workspace()->lowerClientRequest(this, src, timestamp);
@@ -738,7 +738,7 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
     if (!other)
         other = workspace()->findClient(WindowMatchPredicate(above));
 
-    if (other && detail == Above) {
+    if (other && detail == XCB_STACK_MODE_ABOVE) {
         ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                     begin = workspace()->stackingOrder().constBegin();
         while (--it != begin) {
@@ -766,9 +766,9 @@ void Client::restackWindow(Window above, int detail, NET::RequestSource src, Tim
 
     if (other)
         workspace()->restack(this, other);
-    else if (detail == Below)
+    else if (detail == XCB_STACK_MODE_BELOW)
         workspace()->lowerClientRequest(this, src, timestamp);
-    else if (detail == Above)
+    else if (detail == XCB_STACK_MODE_ABOVE)
         workspace()->raiseClientRequest(this, src, timestamp);
 
     if (send_event)
