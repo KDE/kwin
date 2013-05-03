@@ -960,7 +960,7 @@ static bool modKeyDown(int state) {
 
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonPressEvent(Window w, int button, int state, int x, int y, int x_root, int y_root)
+bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
     if (buttonDown) {
         if (w == wrapperId())
@@ -1134,7 +1134,7 @@ void Client::processMousePressEvent(QMouseEvent* e)
 }
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonReleaseEvent(Window w, int /*button*/, int state, int x, int y, int x_root, int y_root)
+bool Client::buttonReleaseEvent(xcb_window_t w, int /*button*/, int state, int x, int y, int x_root, int y_root)
 {
     if (w == decorationId() && !buttonDown)
         return false;
@@ -1226,7 +1226,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 }
 
 // return value matters only when filtering events before decoration gets them
-bool Client::motionNotifyEvent(Window w, int state, int x, int y, int x_root, int y_root)
+bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
     if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
