@@ -473,7 +473,7 @@ public:
 
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
 
-    Colormap colormap() const;
+    xcb_colormap_t colormap() const;
 
     /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
@@ -931,7 +931,7 @@ private:
     QTimer* autoRaiseTimer;
     QTimer* shadeHoverTimer;
     QTimer* delayedMoveResizeTimer;
-    Colormap cmap;
+    xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;
     xcb_window_t m_windowGroup;
@@ -1177,9 +1177,9 @@ inline bool Client::hasNETSupport() const
     return info->hasNETSupport();
 }
 
-inline Colormap Client::colormap() const
+inline xcb_colormap_t Client::colormap() const
 {
-    return cmap;
+    return m_colormap;
 }
 
 inline void Client::invalidateLayer()

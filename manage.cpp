@@ -102,7 +102,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     info = new WinInfo(this, display(), m_client, rootWindow(), properties, 2);
 
-    cmap = attr.colormap;
+    m_colormap = attr.colormap;
 
     getResourceClass();
     getWindowRole();

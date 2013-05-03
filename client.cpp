@@ -108,6 +108,7 @@ Client::Client()
     , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
+    , m_colormap(XCB_COLORMAP_NONE)
     , in_group(NULL)
     , m_windowGroup(XCB_WINDOW_NONE)
     , tab_group(NULL)
@@ -189,8 +190,6 @@ Client::Client()
     skip_pager = false;
 
     max_mode = MaximizeRestore;
-
-    cmap = None;
 
     //Client to workspace connections require that each
     //client constructed be connected to the workspace wrapper
