@@ -1205,7 +1205,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseOperationsMenu:
         if (isActive() && options->isClickRaise())
             autoRaise();
-        workspace()->showWindowMenu(globalPos, this);
+        workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
         break;
     case Options::MouseToggleRaiseAndLower:
         workspace()->raiseOrLowerClient(this);
@@ -1355,12 +1355,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         break;
     }
     return replay;
-}
-
-// KDE4 remove me
-void Workspace::showWindowMenuAt(unsigned long, int, int)
-{
-    slotWindowOperations();
 }
 
 void Workspace::slotActivateAttentionWindow()
@@ -1793,7 +1787,7 @@ void Workspace::slotWindowOperations()
     if (!active_client)
         return;
     QPoint pos = active_client->pos() + active_client->clientPos();
-    showWindowMenu(pos.x(), pos.y(), active_client);
+    showWindowMenu(QRect(pos, pos), active_client);
 }
 
 void Workspace::showWindowMenu(const QRect &pos, Client* cl)

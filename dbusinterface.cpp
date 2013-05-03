@@ -154,7 +154,10 @@ void DBusInterface::doNotManage(const QString &name)
 
 void DBusInterface::showWindowMenuAt(qlonglong winId, int x, int y)
 {
-    Workspace::self()->showWindowMenuAt(winId, x, y);
+    Q_UNUSED(winId)
+    Q_UNUSED(x)
+    Q_UNUSED(y)
+    Workspace::self()->slotWindowOperations();
 }
 
 // wrap returning methods with no arguments to COMPOSITOR

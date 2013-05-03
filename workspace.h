@@ -213,20 +213,11 @@ public:
     void windowToNextDesktop(Client* c);
     void sendClientToScreen(Client* c, int screen);
 
-    // KDE4 remove me - And it's also in the DCOP interface :(
-    void showWindowMenuAt(unsigned long id, int x, int y);
-
-
     /**
      * Shows the menu operations menu for the client and makes it active if
      * it's not already.
      */
     void showWindowMenu(const QRect& pos, Client* cl);
-    /**
-     * Backwards compatibility.
-     */
-    void showWindowMenu(int x, int y, Client* cl);
-    void showWindowMenu(QPoint pos, Client* cl);
     const UserActionsMenu *userActionsMenu() const {
         return m_userActionsMenu;
     }
@@ -625,16 +616,6 @@ inline const ToplevelList& Workspace::stackingOrder() const
 {
     // TODO: Q_ASSERT( block_stacking_updates == 0 );
     return stacking_order;
-}
-
-inline void Workspace::showWindowMenu(QPoint pos, Client* cl)
-{
-    showWindowMenu(QRect(pos, pos), cl);
-}
-
-inline void Workspace::showWindowMenu(int x, int y, Client* cl)
-{
-    showWindowMenu(QRect(QPoint(x, y), QPoint(x, y)), cl);
 }
 
 inline void Workspace::setWasUserInteraction()
