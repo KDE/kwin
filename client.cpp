@@ -109,7 +109,7 @@ Client::Client()
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
     , in_group(NULL)
-    , window_group(None)
+    , m_windowGroup(XCB_WINDOW_NONE)
     , tab_group(NULL)
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
@@ -1973,13 +1973,13 @@ void Client::getWMHints()
 {
     XWMHints* hints = XGetWMHints(display(), window());
     input = true;
-    window_group = None;
+    m_windowGroup = XCB_WINDOW_NONE;
     urgency = false;
     if (hints) {
         if (hints->flags & InputHint)
             input = hints->input;
         if (hints->flags & WindowGroupHint)
-            window_group = hints->window_group;
+            m_windowGroup = hints->window_group;
         urgency = !!(hints->flags & UrgencyHint);   // Need boolean, it's a uint bitfield
         XFree((char*)hints);
     }

@@ -934,7 +934,7 @@ private:
     Colormap cmap;
     QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;
-    Window window_group;
+    xcb_window_t m_windowGroup;
     TabGroup* tab_group;
     Layer in_layer;
     QTimer* ping_timer;
