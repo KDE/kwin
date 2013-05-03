@@ -114,7 +114,7 @@ Client::Client()
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
     , m_killHelperPID(0)
-    , user_time(CurrentTime)   // Not known yet
+    , m_userTime(XCB_TIME_CURRENT_TIME)   // Not known yet
     , allowed_actions(0)
     , block_geometry_updates(0)
     , pending_geometry_update(PendingGeometryNone)

@@ -523,8 +523,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateAllowedActions(true);
 
     // Set initial user time directly
-    user_time = readUserTimeMapTimestamp(asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session);
-    group()->updateUserTime(user_time);   // And do what Client::updateUserTime() does
+    m_userTime = readUserTimeMapTimestamp(asn_valid ? &asn_id : NULL, asn_valid ? &asn_data : NULL, session);
+    group()->updateUserTime(m_userTime);   // And do what Client::updateUserTime() does
 
     // This should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
@@ -598,11 +598,11 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     m_managed = true;
     blockGeometryUpdates(false);
 
-    if (user_time == CurrentTime || user_time == -1U) {
+    if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) {
         // No known user time, set something old
-        user_time = xTime() - 1000000;
-        if (user_time == CurrentTime || user_time == -1U)   // Let's be paranoid
-            user_time = xTime() - 1000000 + 10;
+        m_userTime = xTime() - 1000000;
+        if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U)   // Let's be paranoid
+            m_userTime = xTime() - 1000000 + 10;
     }
 
     //sendSyntheticConfigureNotify(); // Done when setting mapping state

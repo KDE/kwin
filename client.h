@@ -503,8 +503,8 @@ public:
     void gotPing(Time timestamp);
 
     void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2);
-    void updateUserTime(Time time = CurrentTime);
-    Time userTime() const;
+    void updateUserTime(xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);
+    xcb_timestamp_t userTime() const;
     bool hasUserTimeSupport() const;
 
     /// Does 'delete c;'
@@ -821,9 +821,9 @@ private:
 
     void updateInputShape();
 
-    Time readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
+    xcb_timestamp_t readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
                                   bool session) const;
-    Time readUserCreationTime() const;
+    xcb_timestamp_t readUserCreationTime() const;
     void startupIdChanged();
 
     void checkOffscreenPosition (QRect* geom, const QRect& screenArea);
@@ -940,7 +940,7 @@ private:
     QTimer* ping_timer;
     qint64 m_killHelperPID;
     Time ping_timestamp;
-    Time user_time;
+    xcb_timestamp_t m_userTime;
     unsigned long allowed_actions;
     QSize client_size;
     int block_geometry_updates; // > 0 = New geometry is remembered, but not actually set

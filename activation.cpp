@@ -658,38 +658,29 @@ void Workspace::clientAttentionChanged(Client* c, bool set)
   that qualifies for user interaction (clicking on it, activate it
   externally, etc.).
  */
-void Client::updateUserTime(Time time)
+void Client::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
-    if (time == CurrentTime)
+    if (time == XCB_TIME_CURRENT_TIME)
         time = xTime();
     if (time != -1U
-            && (user_time == CurrentTime
-                || timestampCompare(time, user_time) > 0)) {    // time > user_time
-        user_time = time;
+            && (m_userTime == XCB_TIME_CURRENT_TIME
+                || timestampCompare(time, m_userTime) > 0)) {    // time > user_time
+        m_userTime = time;
         shade_below = NULL; // do not hover re-shade a window after it got interaction
     }
-    group()->updateUserTime(user_time);
+    group()->updateUserTime(m_userTime);
 }
 
-Time Client::readUserCreationTime() const
+xcb_timestamp_t Client::readUserCreationTime() const
 {
-    long result = -1; // Time == -1 means none
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    KXErrorHandler handler; // ignore errors?
-    status = XGetWindowProperty(display(), window(),
-                                atoms->kde_net_wm_user_creation_time, 0, 10000, false, XA_CARDINAL,
-                                &type, &format, &nitems, &extra, &data);
-    if (status  == Success) {
-        if (data && nitems > 0)
-            result = *((long*) data);
-        XFree(data);
+    const xcb_get_property_cookie_t cookie = xcb_get_property_unchecked(connection(), false, window(),
+        atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 10000);
+    ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(), cookie, NULL));
+    if (property.isNull() || xcb_get_property_value_length(property.data()) == 0) {
+        return -1;
     }
-    return result;
+    return *(reinterpret_cast<xcb_timestamp_t*>(xcb_get_property_value(property.data())));
 }
 
 void Client::demandAttention(bool set)
@@ -711,10 +702,10 @@ KWIN_COMPARE_PREDICATE(SameApplicationActiveHackPredicate, Client, const Client*
                        !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
                        && Client::belongToSameApplication(cl, value, true) && cl != value);
 
-Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStartupInfoData* asn_data,
-                                      bool session) const
+xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
+                                                 bool session) const
 {
-    Time time = info->userTime();
+    xcb_timestamp_t time = info->userTime();
     //kDebug( 1212 ) << "User timestamp, initial:" << time;
     //^^ this deadlocks kwin --replace sometimes.
 
@@ -778,9 +769,9 @@ Time Client::readUserTimeMapTimestamp(const KStartupInfoId* asn_id, const KStart
     return time;
 }
 
-Time Client::userTime() const
+xcb_timestamp_t Client::userTime() const
 {
-    Time time = user_time;
+    xcb_timestamp_t time = m_userTime;
     if (time == 0)   // doesn't want focus after showing
         return 0;
     assert(group() != NULL);
