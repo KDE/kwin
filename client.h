@@ -807,7 +807,7 @@ private:
     static void sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol,
                                   long data1 = 0, long data2 = 0, long data3 = 0);
 
-    void embedClient(Window w, const XWindowAttributes& attr);
+    void embedClient(xcb_window_t w, const XWindowAttributes& attr);
     void detectNoBorder();
     void destroyDecoration();
     void updateFrameExtents();

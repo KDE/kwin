@@ -626,10 +626,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 }
 
 // Called only from manage()
-void Client::embedClient(Window w, const XWindowAttributes& attr)
+void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
 {
     assert(m_client == XCB_WINDOW_NONE);
-    assert(frameId() == None);
+    assert(frameId() == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
     m_client = w;
 
