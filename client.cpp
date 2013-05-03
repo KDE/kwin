@@ -1262,25 +1262,25 @@ void Client::updateHiddenPreview()
     }
 }
 
-void Client::sendClientMessage(Window w, Atom a, Atom protocol, long data1, long data2, long data3)
+void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, long data1, long data2, long data3)
 {
-    XEvent ev;
-    long mask;
-
+    xcb_client_message_event_t ev;
     memset(&ev, 0, sizeof(ev));
-    ev.xclient.type = ClientMessage;
-    ev.xclient.window = w;
-    ev.xclient.message_type = a;
-    ev.xclient.format = 32;
-    ev.xclient.data.l[0] = protocol;
-    ev.xclient.data.l[1] = xTime();
-    ev.xclient.data.l[2] = data1;
-    ev.xclient.data.l[3] = data2;
-    ev.xclient.data.l[4] = data3;
-    mask = 0L;
-    if (w == rootWindow())
-        mask = SubstructureRedirectMask; // Magic!
-    XSendEvent(display(), w, False, mask, &ev);
+    ev.response_type = XCB_CLIENT_MESSAGE;
+    ev.window = w;
+    ev.type = a;
+    ev.format = 32;
+    ev.data.data32[0] = protocol;
+    ev.data.data32[1] = xTime();
+    ev.data.data32[2] = data1;
+    ev.data.data32[3] = data2;
+    ev.data.data32[4] = data3;
+    uint32_t eventMask = 0;
+    if (w == rootWindow()) {
+        eventMask = XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT; // Magic!
+    }
+    xcb_send_event(connection(), false, w, eventMask, reinterpret_cast<const char*>(&ev));
+    xcb_flush(connection());
 }
 
 /**

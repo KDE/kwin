@@ -804,7 +804,7 @@ private:
     void pingWindow();
     void killProcess(bool ask, Time timestamp = CurrentTime);
     void updateUrgency();
-    static void sendClientMessage(Window w, Atom a, Atom protocol,
+    static void sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol,
                                   long data1 = 0, long data2 = 0, long data3 = 0);
 
     void embedClient(Window w, const XWindowAttributes& attr);
