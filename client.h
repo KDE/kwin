@@ -271,7 +271,7 @@ class Client
 public:
     explicit Client();
     xcb_window_t wrapperId() const;
-    Window decorationId() const;
+    xcb_window_t decorationId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
 
     const Client* transientFor() const;
@@ -1016,9 +1016,12 @@ inline xcb_window_t Client::wrapperId() const
     return m_wrapper;
 }
 
-inline Window Client::decorationId() const
+inline xcb_window_t Client::decorationId() const
 {
-    return decoration != NULL ? decoration->widget()->winId() : None;
+    if (decoration) {
+        return decoration->widget()->winId();
+    }
+    return XCB_WINDOW_NONE;
 }
 
 inline const Client* Client::transientFor() const
