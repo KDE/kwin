@@ -2019,7 +2019,7 @@ void Client::getMotifHints()
         decoration->reset(KDecoration::SettingButtons);
 }
 
-void Client::readIcons(Window win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon)
+void Client::readIcons(xcb_window_t win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon)
 {
     // Get the icons, allow scaling
     if (icon != NULL)
