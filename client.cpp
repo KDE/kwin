@@ -1363,11 +1363,11 @@ void Client::pingTimeout()
     killProcess(true, ping_timestamp);
 }
 
-void Client::killProcess(bool ask, Time timestamp)
+void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
 {
     if (m_killHelperPID && !::kill(m_killHelperPID, 0)) // means the process is alive
         return;
-    Q_ASSERT(!ask || timestamp != CurrentTime);
+    Q_ASSERT(!ask || timestamp != XCB_TIME_CURRENT_TIME);
     pid_t pid = info->pid();
     if (pid <= 0 || clientMachine()->hostName().isEmpty())  // Needed properties missing
         return;
