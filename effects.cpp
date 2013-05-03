@@ -1527,6 +1527,7 @@ void EffectsHandlerImpl::reloadEffect(Effect *effect)
 void EffectsHandlerImpl::effectsChanged()
 {
     loaded_effects.clear();
+    m_activeEffects.clear(); // it's possible to have a reconfigure and a quad rebuild between two paint cycles - bug #308201
 //    kDebug(1212) << "Recreating effects' list:";
     foreach (const EffectPair & effect, effect_order) {
 //        kDebug(1212) << effect.first;
