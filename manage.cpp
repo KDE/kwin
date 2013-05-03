@@ -47,7 +47,7 @@ namespace KWin
  * reparenting, initial geometry, initial state, placement, etc.
  * Returns false if KWin is not going to manage this window.
  */
-bool Client::manage(Window w, bool isMapped)
+bool Client::manage(xcb_window_t w, bool isMapped)
 {
     StackingUpdatesBlocker stacking_blocker(workspace());
 

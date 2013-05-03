@@ -319,7 +319,7 @@ public:
 #endif
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 
-    bool manage(Window w, bool isMapped);
+    bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
     void destroyClient();
 
