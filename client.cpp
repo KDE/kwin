@@ -114,6 +114,7 @@ Client::Client()
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
     , m_killHelperPID(0)
+    , m_pingTimestamp(XCB_TIME_CURRENT_TIME)
     , m_userTime(XCB_TIME_CURRENT_TIME)   // Not known yet
     , allowed_actions(0)
     , block_geometry_updates(0)
@@ -1338,14 +1339,14 @@ void Client::pingWindow()
     connect(ping_timer, SIGNAL(timeout()), SLOT(pingTimeout()));
     ping_timer->setSingleShot(true);
     ping_timer->start(options->killPingTimeout());
-    ping_timestamp = xTime();
-    workspace()->sendPingToWindow(window(), ping_timestamp);
+    m_pingTimestamp = xTime();
+    workspace()->sendPingToWindow(window(), m_pingTimestamp);
 }
 
-void Client::gotPing(Time timestamp)
+void Client::gotPing(xcb_timestamp_t timestamp)
 {
     // Just plain compare is not good enough because of 64bit and truncating and whatnot
-    if (NET::timestampCompare(timestamp, ping_timestamp) != 0)
+    if (NET::timestampCompare(timestamp, m_pingTimestamp) != 0)
         return;
     delete ping_timer;
     ping_timer = NULL;
@@ -1360,7 +1361,7 @@ void Client::pingTimeout()
     kDebug(1212) << "Ping timeout:" << caption();
     ping_timer->deleteLater();
     ping_timer = NULL;
-    killProcess(true, ping_timestamp);
+    killProcess(true, m_pingTimestamp);
 }
 
 void Client::killProcess(bool ask, xcb_timestamp_t timestamp)

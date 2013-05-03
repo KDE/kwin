@@ -500,7 +500,7 @@ public:
     void restackWindow(xcb_window_t above, int detail, NET::RequestSource source, xcb_timestamp_t timestamp,
                        bool send_event = false);
 
-    void gotPing(Time timestamp);
+    void gotPing(xcb_timestamp_t timestamp);
 
     void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2);
     void updateUserTime(xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);
@@ -939,7 +939,7 @@ private:
     Layer in_layer;
     QTimer* ping_timer;
     qint64 m_killHelperPID;
-    Time ping_timestamp;
+    xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
     unsigned long allowed_actions;
     QSize client_size;
