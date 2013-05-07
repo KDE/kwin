@@ -517,7 +517,9 @@ void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines
         // default - nothing to do
         break;
     }
-    emit windowMaximizedStateChanged(c->effectWindow(), horizontal, vertical);
+    if (EffectWindowImpl *w = c->effectWindow()) {
+        emit windowMaximizedStateChanged(w, horizontal, vertical);
+    }
 }
 
 void EffectsHandlerImpl::slotClientStartUserMovedResized(Client *c)

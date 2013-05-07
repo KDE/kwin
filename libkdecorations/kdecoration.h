@@ -803,6 +803,8 @@ public:
      * used to keep the decorated window at least as large.
      */
     virtual QSize minimumSize() const = 0;
+
+public Q_SLOTS:
     /**
      * This function is called whenever the window either becomes or stops being active.
      * Use isActive() to find out the current state.
@@ -1023,10 +1025,12 @@ public Q_SLOTS:
     void setKeepBelow(bool set);
     /**
      * @internal
+     * TODO KF5: remove me
      */
     void emitKeepAboveChanged(bool above);
     /**
      * @internal
+     * TODO KF5: remove me
      */
     void emitKeepBelowChanged(bool below);
 

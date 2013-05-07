@@ -725,8 +725,8 @@ signals:
     void transientChanged();
     void modalChanged();
     void shadeChanged();
-    void keepAboveChanged();
-    void keepBelowChanged();
+    void keepAboveChanged(bool);
+    void keepBelowChanged(bool);
     void minimizedChanged();
     void moveResizedChanged();
     void iconChanged();
@@ -801,6 +801,7 @@ private:
     void grabButton(int mod);
     void ungrabButton(int mod);
     void resizeDecoration(const QSize& s);
+    void createDecoration(const QRect &oldgeom);
 
     void pingWindow();
     void killProcess(bool ask, Time timestamp = CurrentTime);

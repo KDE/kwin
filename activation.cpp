@@ -827,8 +827,6 @@ void Client::setActive(bool act)
             ++it)
         if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
             workspace()->updateClientLayer(*it);
-    if (decoration != NULL)
-        decoration->activeChange();
     emit activeChanged();
     updateMouseGrab();
     updateUrgency(); // demand attention again if it's still urgent

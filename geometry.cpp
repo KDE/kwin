@@ -2096,8 +2096,6 @@ void Client::setMaximize(bool vertically, bool horizontally)
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    emit clientMaximizedStateChanged(this, max_mode);
-    emit clientMaximizedStateChanged(this, vertically, horizontally);
 
 }
 
@@ -2334,8 +2332,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     syncer.syncNow(); // important because of window rule updates!
 
     updateAllowedActions();
-    if (decoration != NULL)
-        decoration->maximizeChange();
+    emit clientMaximizedStateChanged(this, max_mode);
+    emit clientMaximizedStateChanged(this, vertical, horizontal);
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
 }
 

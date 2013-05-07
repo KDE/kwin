@@ -427,35 +427,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
     if (force)
         destroyDecoration();
     if (!noBorder()) {
-        setMask(QRegion());  // Reset shape mask
-        if (decorationPlugin()->isDisabled()) {
-            decoration = NULL;
-        } else {
-            decoration = decorationPlugin()->createDecoration(bridge);
-        }
-#ifdef KWIN_BUILD_KAPPMENU
-        connect(this, SIGNAL(showRequest()), decoration, SIGNAL(showRequest()));
-        connect(this, SIGNAL(appMenuAvailable()), decoration, SIGNAL(appMenuAvailable()));
-        connect(this, SIGNAL(appMenuUnavailable()), decoration, SIGNAL(appMenuUnavailable()));
-        connect(this, SIGNAL(menuHidden()), decoration, SIGNAL(menuHidden()));
-#endif
-        // TODO: Check decoration's minimum size?
-        decoration->init();
-        decoration->widget()->installEventFilter(this);
-        XReparentWindow(display(), decoration->widget()->winId(), frameId(), 0, 0);
-        decoration->widget()->lower();
-        decoration->borders(border_left, border_right, border_top, border_bottom);
-        padding_left = padding_right = padding_top = padding_bottom = 0;
-        if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
-            deco2->padding(padding_left, padding_right, padding_top, padding_bottom);
-        XMoveWindow(display(), decoration->widget()->winId(), -padding_left, -padding_top);
-        move(calculateGravitation(false));
-        plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
-        if (Compositor::compositing()) {
-            paintRedirector = PaintRedirector::create(this, decoration->widget());
-            discardWindowPixmap();
-        }
-        emit geometryShapeChanged(this, oldgeom);
+        createDecoration(oldgeom);
     } else
         destroyDecoration();
     if (check_workspace_pos)
@@ -465,6 +437,48 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
     if (!noBorder())
         decoration->widget()->show();
     updateFrameExtents();
+}
+
+void Client::createDecoration(const QRect& oldgeom)
+{
+    setMask(QRegion());  // Reset shape mask
+    if (decorationPlugin()->isDisabled()) {
+        decoration = NULL;
+        return;
+    } else {
+        decoration = decorationPlugin()->createDecoration(bridge);
+    }
+    connect(this, SIGNAL(shadeChanged()), decoration, SLOT(shadeChange()));
+    connect(this, SIGNAL(desktopChanged()), decoration, SLOT(desktopChange()));
+    connect(this, SIGNAL(captionChanged()), decoration, SLOT(captionChange()));
+    connect(this, SIGNAL(activeChanged()), decoration, SLOT(activeChange()));
+    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)),
+            decoration, SLOT(maximizeChange()));
+    connect(this, SIGNAL(keepAboveChanged(bool)), decoration, SIGNAL(keepAboveChanged(bool)));
+    connect(this, SIGNAL(keepBelowChanged(bool)), decoration, SIGNAL(keepBelowChanged(bool)));
+#ifdef KWIN_BUILD_KAPPMENU
+    connect(this, SIGNAL(showRequest()), decoration, SIGNAL(showRequest()));
+    connect(this, SIGNAL(appMenuAvailable()), decoration, SIGNAL(appMenuAvailable()));
+    connect(this, SIGNAL(appMenuUnavailable()), decoration, SIGNAL(appMenuUnavailable()));
+    connect(this, SIGNAL(menuHidden()), decoration, SIGNAL(menuHidden()));
+#endif
+    // TODO: Check decoration's minimum size?
+    decoration->init();
+    decoration->widget()->installEventFilter(this);
+    XReparentWindow(display(), decoration->widget()->winId(), frameId(), 0, 0);
+    decoration->widget()->lower();
+    decoration->borders(border_left, border_right, border_top, border_bottom);
+    padding_left = padding_right = padding_top = padding_bottom = 0;
+    if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
+        deco2->padding(padding_left, padding_right, padding_top, padding_bottom);
+    XMoveWindow(display(), decoration->widget()->winId(), -padding_left, -padding_top);
+    move(calculateGravitation(false));
+    plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
+    if (Compositor::compositing()) {
+        paintRedirector = PaintRedirector::create(this, decoration->widget());
+        discardWindowPixmap();
+    }
+    emit geometryShapeChanged(this, oldgeom);
 }
 
 void Client::destroyDecoration()
@@ -951,8 +965,8 @@ void Client::setShade(ShadeMode mode)
         tabGroup()->updateStates(this, TabGroup::Shaded);
 
     if (was_shade == isShade()) {
-        if (decoration != NULL)   // Decoration may want to update after e.g. hover-shade changes
-            decoration->shadeChange();
+        // Decoration may want to update after e.g. hover-shade changes
+        emit shadeChanged();
         return; // No real change in shaded state
     }
 
@@ -1016,8 +1030,6 @@ void Client::setShade(ShadeMode mode)
     discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
-    if (decoration)
-        decoration->shadeChange();
     updateWindowRules(Rules::Shade);
 
     emit shadeChanged();
@@ -1445,8 +1457,6 @@ void Client::setDesktop(int desktop)
         // onAllDesktops changed
         workspace()->updateOnAllDesktopsOfTransients(this);
     }
-    if (decoration != NULL)
-        decoration->desktopChange();
 
     ClientList transients_stacking_order = workspace()->ensureStackingOrder(transients());
     for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
@@ -1800,9 +1810,6 @@ void Client::setCaption(const QString& _s, bool force)
         // Keep the same suffix in iconic name if it's set
         info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
 
-    if (isManaged() && decoration) {
-        decoration->captionChange();
-    }
     emit captionChanged();
 }
 
@@ -2067,8 +2074,6 @@ void Client::getIcons()
         bigicon_pix = KWindowSystem::icon(window(), 64, 64, false, KWindowSystem::ClassHint | KWindowSystem::XApp);
         hugeicon_pix = KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp);
     }
-    if (isManaged() && decoration != NULL)
-        decoration->iconChange();
     emit iconChanged();
 }
 

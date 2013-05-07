@@ -788,15 +788,13 @@ void Client::setKeepAbove(bool b)
     }
     keep_above = b;
     info->setState(keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove);
-    if (decoration != NULL)
-        decoration->emitKeepAboveChanged(keepAbove());
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Above);
 
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Layer);
-    emit keepAboveChanged();
+    emit keepAboveChanged(keep_above);
 }
 
 void Client::setKeepBelow(bool b)
@@ -812,15 +810,13 @@ void Client::setKeepBelow(bool b)
     }
     keep_below = b;
     info->setState(keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow);
-    if (decoration != NULL)
-        decoration->emitKeepBelowChanged(keepBelow());
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Below);
 
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Layer);
-    emit keepBelowChanged();
+    emit keepBelowChanged(keep_below);
 }
 
 Layer Client::layer() const
