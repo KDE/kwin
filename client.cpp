@@ -465,13 +465,13 @@ void Client::createDecoration(const QRect& oldgeom)
     // TODO: Check decoration's minimum size?
     decoration->init();
     decoration->widget()->installEventFilter(this);
-    XReparentWindow(display(), decoration->widget()->winId(), frameId(), 0, 0);
+    xcb_reparent_window(connection(), decoration->widget()->winId(), frameId(), 0, 0);
     decoration->widget()->lower();
     decoration->borders(border_left, border_right, border_top, border_bottom);
     padding_left = padding_right = padding_top = padding_bottom = 0;
     if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
         deco2->padding(padding_left, padding_right, padding_top, padding_bottom);
-    XMoveWindow(display(), decoration->widget()->winId(), -padding_left, -padding_top);
+    Xcb::moveWindow(decoration->widget()->winId(), -padding_left, -padding_top);
     move(calculateGravitation(false));
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
     if (Compositor::compositing()) {
@@ -511,7 +511,7 @@ bool Client::checkBorderSizes(bool also_resize)
     if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
         deco2->padding(new_left, new_right, new_top, new_bottom);
     if (padding_left != new_left || padding_top != new_top)
-        XMoveWindow(display(), decoration->widget()->winId(), -new_left, -new_top);
+        Xcb::moveWindow(decoration->widget()->winId(), -new_left, -new_top);
     padding_left = new_left;
     padding_right = new_right;
     padding_top = new_top;

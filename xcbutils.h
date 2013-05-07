@@ -39,6 +39,8 @@ typedef xcb_window_t WindowId;
 // forward declaration of methods
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
+static void moveWindow(xcb_window_t window, const QPoint &pos);
+static void moveWindow(xcb_window_t window, uint32_t x, uint32_t y);
 
 template <typename Reply,
     typename Cookie,
@@ -471,9 +473,7 @@ void Window::move(uint32_t x, uint32_t y)
     if (!isValid()) {
         return;
     }
-    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
-    const uint32_t values[] = { x, y };
-    xcb_configure_window(connection(), m_window, mask, values);
+    moveWindow(m_window, x, y);
 }
 
 inline
@@ -559,6 +559,18 @@ static inline void moveResizeWindow(WindowId window, const QRect &geometry)
         static_cast<uint32_t>(geometry.width()),
         static_cast<uint32_t>(geometry.height())
     };
+    xcb_configure_window(connection(), window, mask, values);
+}
+
+static inline void moveWindow(xcb_window_t window, const QPoint& pos)
+{
+    moveWindow(window, pos.x(), pos.y());
+}
+
+static inline void moveWindow(xcb_window_t window, uint32_t x, uint32_t y)
+{
+    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+    const uint32_t values[] = { x, y };
     xcb_configure_window(connection(), window, mask, values);
 }
 
