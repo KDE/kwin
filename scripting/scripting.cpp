@@ -630,6 +630,12 @@ void KWin::Scripting::start()
 LoadScriptList KWin::Scripting::queryScriptsToLoad()
 {
     KSharedConfig::Ptr _config = KGlobal::config();
+    static bool s_started = false;
+    if (s_started) {
+        _config->reparseConfiguration();
+    } else {
+        s_started = true;
+    }
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
 
