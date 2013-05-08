@@ -30,13 +30,12 @@ namespace KWin
 {
 
 class Client;
-class Workspace;
 class EffectWindowGroupImpl;
 
 class Group
 {
 public:
-    Group(Window leader, Workspace* workspace);
+    Group(Window leader);
     ~Group();
     Window leader() const;
     const Client* leaderClient() const;
@@ -50,7 +49,6 @@ public:
     void removeMember(Client* member);
     void gotLeader(Client* leader);
     void lostLeader();
-    Workspace* workspace();
     bool groupEvent(XEvent* e);
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
@@ -62,7 +60,6 @@ private:
     ClientList _members;
     Client* leader_client;
     Window leader_wid;
-    Workspace* _workspace;
     NETWinInfo2* leader_info;
     Time user_time;
     int refcount;
@@ -87,11 +84,6 @@ inline Client* Group::leaderClient()
 inline const ClientList& Group::members() const
 {
     return _members;
-}
-
-inline Workspace* Group::workspace()
-{
-    return _workspace;
 }
 
 inline Time Group::userTime() const

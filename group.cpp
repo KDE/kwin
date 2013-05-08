@@ -193,16 +193,15 @@ void checkNonExistentClients()
 // Group
 //********************************************
 
-Group::Group(Window leader_P, Workspace* workspace_P)
+Group::Group(Window leader_P)
     :   leader_client(NULL),
         leader_wid(leader_P),
-        _workspace(workspace_P),
         leader_info(NULL),
         user_time(-1U),
         refcount(0)
 {
     if (leader_P != None) {
-        leader_client = workspace_P->findClient(WindowMatchPredicate(leader_P));
+        leader_client = workspace()->findClient(WindowMatchPredicate(leader_P));
         unsigned long properties[ 2 ] = { 0, NET::WM2StartupId };
         leader_info = new NETWinInfo2(display(), leader_P, rootWindow(),
                                       properties, 2);
@@ -967,7 +966,7 @@ void Client::checkGroup(Group* set_group, bool force)
             new_group = transientFor()->group();
         }
         if (new_group == NULL)   // doesn't exist yet
-            new_group = new Group(window_group, workspace());
+            new_group = new Group(window_group);
         if (new_group != in_group) {
             if (in_group != NULL)
                 in_group->removeMember(this);
@@ -990,7 +989,7 @@ void Client::checkGroup(Group* set_group, bool force)
             // try creating group with other windows with the same client leader
             Group* new_group = workspace()->findClientLeaderGroup(this);
             if (new_group == NULL)
-                new_group = new Group(None, workspace());
+                new_group = new Group(None);
             if (new_group != in_group) {
                 if (in_group != NULL)
                     in_group->removeMember(this);
@@ -1007,7 +1006,7 @@ void Client::checkGroup(Group* set_group, bool force)
                 in_group = NULL;
             }
             if (new_group == NULL)
-                new_group = new Group(None, workspace());
+                new_group = new Group(None);
             if (in_group != new_group) {
                 in_group = new_group;
                 in_group->addMember(this);
