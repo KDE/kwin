@@ -131,7 +131,6 @@ Workspace::Workspace(bool restore)
     , disable_shortcuts_keys(NULL)
     , client_keys_dialog(NULL)
     , client_keys_client(NULL)
-    , global_shortcuts_disabled(false)
     , global_shortcuts_disabled_for_client(false)
     , workspaceInit(true)
     , startup(0)
@@ -1369,39 +1368,14 @@ void Workspace::resetShowingDesktop(bool keep_hidden)
     --block_showing_desktop;
 }
 
-/**
- * Activating/deactivating this feature works like this:
- * When nothing is active, and the shortcut is pressed, global shortcuts are disabled
- *     (using global_shortcuts_disabled)
- * When a window that has disabling forced is activated, global shortcuts are disabled.
- *     (using global_shortcuts_disabled_for_client)
- * When a shortcut is pressed and global shortcuts are disabled (either by a shortcut
- * or for a client), they are enabled again.
- */
-void Workspace::slotDisableGlobalShortcuts()
-{
-    if (global_shortcuts_disabled || global_shortcuts_disabled_for_client)
-        disableGlobalShortcuts(false);
-    else
-        disableGlobalShortcuts(true);
-}
-
 static bool pending_dfc = false;
 
 void Workspace::disableGlobalShortcutsForClient(bool disable)
 {
     if (global_shortcuts_disabled_for_client == disable)
         return;
-    if (!global_shortcuts_disabled) {
-        if (disable)
-            pending_dfc = true;
-        KGlobalSettings::self()->emitChange(KGlobalSettings::BlockShortcuts, disable);
-        // KWin will get the kipc message too
-    }
-}
-
-void Workspace::disableGlobalShortcuts(bool disable)
-{
+    if (disable)
+        pending_dfc = true;
     KGlobalSettings::self()->emitChange(KGlobalSettings::BlockShortcuts, disable);
     // KWin will get the kipc message too
 }
@@ -1412,7 +1386,6 @@ void Workspace::slotBlockShortcuts(int data)
         global_shortcuts_disabled_for_client = true;
         pending_dfc = false;
     } else {
-        global_shortcuts_disabled = data;
         global_shortcuts_disabled_for_client = false;
     }
     // Update also Alt+LMB actions etc.

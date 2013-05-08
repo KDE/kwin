@@ -267,7 +267,6 @@ public:
     void clientShortcutUpdated(Client* c);
     bool shortcutAvailable(const KShortcut& cut, Client* ignore = NULL) const;
     bool globalShortcutsDisabled() const;
-    void disableGlobalShortcuts(bool disable);
     void disableGlobalShortcutsForClient(bool disable);
 
     void sessionSaveStarted();
@@ -357,8 +356,6 @@ public slots:
     void slotWindowToDesktopLeft();
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
-
-    void slotDisableGlobalShortcuts();
 
     void slotSettingsChanged(int category);
 
@@ -518,7 +515,6 @@ private:
     KActionCollection* disable_shortcuts_keys;
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
-    bool global_shortcuts_disabled;
     bool global_shortcuts_disabled_for_client;
 
     // Timer to collect requests for 'reconfigure'
@@ -653,7 +649,7 @@ inline bool Workspace::showingDesktop() const
 
 inline bool Workspace::globalShortcutsDisabled() const
 {
-    return global_shortcuts_disabled || global_shortcuts_disabled_for_client;
+    return global_shortcuts_disabled_for_client;
 }
 
 inline void Workspace::forceRestacking()
