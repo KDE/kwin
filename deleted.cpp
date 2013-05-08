@@ -29,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Deleted::Deleted(Workspace* ws)
-    : Toplevel(ws)
+Deleted::Deleted()
+    : Toplevel()
     , delete_refcount(1)
     , no_border(true)
     , padding_left(0)
@@ -54,9 +54,9 @@ Deleted::~Deleted()
 
 Deleted* Deleted::create(Toplevel* c)
 {
-    Deleted* d = new Deleted(c->workspace());
+    Deleted* d = new Deleted();
     d->copyToDeleted(c);
-    d->workspace()->addDeleted(d, c);
+    workspace()->addDeleted(d, c);
     return d;
 }
 

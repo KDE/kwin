@@ -133,11 +133,11 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
         if (!effects || c->readyForPainting()) {
             setCurrent(c);
             if (options->focusPolicyIsReasonable())
-                m_current->workspace()->requestFocus( c );
+                workspace()->requestFocus( c );
         }
         else {
             if (options->focusPolicyIsReasonable())
-                m_current->workspace()->requestFocus( m_current );
+                workspace()->requestFocus( m_current );
             m_current = c; // setCurrent will be called by Toplevel::setReadyForPainting()
         }
     }

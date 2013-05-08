@@ -40,7 +40,6 @@ namespace KWin
 {
 
 class ClientMachine;
-class Workspace;
 class EffectWindowImpl;
 class Shadow;
 
@@ -165,10 +164,9 @@ class Toplevel
      **/
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
 public:
-    explicit Toplevel(Workspace *ws);
+    explicit Toplevel();
     Window frameId() const;
     Window window() const;
-    Workspace* workspace() const;
     QRect geometry() const;
     QSize size() const;
     QPoint pos() const;
@@ -397,7 +395,6 @@ private:
     // when adding new data members, check also copyToDeleted()
     Window client;
     Window frame;
-    Workspace* wspace;
     Pixmap window_pix;
     xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
@@ -433,11 +430,6 @@ inline void Toplevel::setWindowHandles(Window w, Window f)
     client = w;
     assert(frame == None && f != None);
     frame = f;
-}
-
-inline Workspace* Toplevel::workspace() const
-{
-    return wspace;
 }
 
 inline QRect Toplevel::geometry() const

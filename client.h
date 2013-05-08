@@ -54,8 +54,6 @@ namespace TabBox
 class TabBoxClientImpl;
 }
 
-
-class Workspace;
 class Bridge;
 class PaintRedirector;
 
@@ -271,7 +269,7 @@ class Client
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
 public:
-    explicit Client(Workspace* ws);
+    explicit Client();
     Window wrapperId() const;
     Window decorationId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }

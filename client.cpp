@@ -87,8 +87,8 @@ bool Client::s_haveResizeEffect = false;
  * This ctor is "dumb" - it only initializes data. All the real initialization
  * is done in manage().
  */
-Client::Client(Workspace* ws)
-    : Toplevel(ws)
+Client::Client()
+    : Toplevel()
     , client(None)
     , wrapper(None)
     , decoration(NULL)

@@ -63,7 +63,7 @@ protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
 private:
-    Deleted(Workspace *ws);   // use create()
+    Deleted();   // use create()
     void copyToDeleted(Toplevel* c);
     virtual ~Deleted(); // deleted only using unrefWindow()
     int delete_refcount;

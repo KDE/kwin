@@ -36,14 +36,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Toplevel::Toplevel(Workspace* ws)
+Toplevel::Toplevel()
     : vis(NULL)
     , info(NULL)
     , ready_for_painting(true)
     , m_isDamaged(false)
     , client(None)
     , frame(None)
-    , wspace(ws)
     , window_pix(None)
     , damage_handle(None)
     , is_shape(false)
@@ -114,7 +113,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     info = c->info;
     client = c->client;
     frame = c->frame;
-    wspace = c->wspace;
     window_pix = c->window_pix;
     ready_for_painting = c->ready_for_painting;
     damage_handle = None;

@@ -1297,10 +1297,10 @@ static bool follows_focusin = false;
 static bool follows_focusin_failed = false;
 static Bool predicate_follows_focusin(Display*, XEvent* e, XPointer arg)
 {
+    Q_UNUSED(arg)
     if (follows_focusin || follows_focusin_failed)
         return False;
-    Client* c = (Client*) arg;
-    if (e->type == FocusIn && c->workspace()->findClient(WindowMatchPredicate(e->xfocus.window))) {
+    if (e->type == FocusIn && workspace()->findClient(WindowMatchPredicate(e->xfocus.window))) {
         // found FocusIn
         follows_focusin = true;
         return False;

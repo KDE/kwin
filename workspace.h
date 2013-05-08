@@ -550,6 +550,7 @@ private:
 
 private:
     friend bool performTransiencyCheck();
+    friend Workspace *workspace();
 };
 
 /**
@@ -721,6 +722,11 @@ KWIN_COMPARE_PREDICATE(ClientMatchPredicate, Client, const Client*, cl == value)
 inline bool Workspace::hasClient(const Client* c)
 {
     return findClient(ClientMatchPredicate(c));
+}
+
+inline Workspace *workspace()
+{
+    return Workspace::_self;
 }
 
 } // namespace

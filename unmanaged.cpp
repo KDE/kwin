@@ -32,8 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-Unmanaged::Unmanaged(Workspace* ws)
-    : Toplevel(ws)
+Unmanaged::Unmanaged()
+    : Toplevel()
 {
     connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
 }

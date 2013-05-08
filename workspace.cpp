@@ -456,7 +456,7 @@ Workspace::~Workspace()
 Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
 {
     StackingUpdatesBlocker blocker(this);
-    Client* c = new Client(this);
+    Client* c = new Client();
     connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
     connect(c, SIGNAL(activeChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(fullScreenChanged()), m_compositor, SLOT(checkUnredirect()));
@@ -478,7 +478,7 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
 {
     if (m_compositor && m_compositor->checkForOverlayWindow(w))
         return NULL;
-    Unmanaged* c = new Unmanaged(this);
+    Unmanaged* c = new Unmanaged();
     if (!c->track(w)) {
         Unmanaged::deleteUnmanaged(c);
         return NULL;
