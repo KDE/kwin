@@ -34,7 +34,6 @@ class QObject;
 namespace KWin
 {
 
-class Workspace;
 class Client;
 
 class Placement
@@ -102,7 +101,6 @@ private:
 
     QList<DesktopCascadingInfo> cci;
 
-    Workspace* m_WorkspacePtr;
     KWIN_SINGLETON(Placement)
 };
 
