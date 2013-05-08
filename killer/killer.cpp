@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char* argv[])
 {
-    KCmdLineArgs::init(argc, argv, "kwin_killer_helper", "kwin", ki18n("KWin"), "1.0" ,
+    KCmdLineArgs::init(argc, argv, "kwin_killer_helper", "kwin", ki18n("Window Manager"), "1.0" ,
                        ki18n("KWin helper utility"));
 
     KCmdLineOptions options;
@@ -69,18 +69,29 @@ int main(int argc, char* argv[])
         KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
         return 1;
     }
-    if (Qt::mightBeRichText(caption)) {
-        caption = Qt::escape(caption);
-    }
-    QString question = i18n(
-                           "<p>The window \"<b>%2</b>\" is not responding. "
-                           "It belongs to the application <b>%1</b> (Process ID = %3, hostname = %4).</p>"
-                           "<p>Do you wish to terminate the application process <em>including <b>all</b> of its child windows</em>?<br />"
-                           "<b>Any unsaved data will be lost.</b></p>" ,
-                           appname, caption, QString::number(pid), QString(hostname));
+    bool isLocal = hostname == "localhost";
+
+    caption = Qt::escape(caption);
+    appname = Qt::escape(appname);
+    hostname = Qt::escape(hostname);
+    QString pidString = QString::number(pid); // format pid ourself as it does not make sense to format an ID according to locale settings
+
+    QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
+    question += isLocal
+        ? i18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
+            caption, appname, pidString)
+        : i18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
+            caption, appname, pidString, hostname);
+    question += i18nc("@info",
+        "<para>Do you want to terminate this application?</para>"
+        "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>"
+        );
+
+    KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), "edit-bomb");
+    KGuiItem cancelButton = KGuiItem(i18n("Wait Longer"), "chronometer");
     app.updateUserTimestamp(timestamp);
-    if (KMessageBox::warningContinueCancelWId(id, question, QString(), KGuiItem(i18n("&Terminate Application %1", appname), "edit-bomb")) == KMessageBox::Continue) {
-        if (hostname != "localhost") {
+    if (KMessageBox::warningContinueCancelWId(id, question, QString(), continueButton, cancelButton) == KMessageBox::Continue) {
+        if (!isLocal) {
             QStringList lst;
             lst << hostname << "kill" << QString::number(pid);
             QProcess::startDetached("xon", lst);
