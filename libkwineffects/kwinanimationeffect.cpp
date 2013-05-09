@@ -38,10 +38,10 @@ QElapsedTimer AnimationEffect::s_clock;
 
 struct AnimationEffectPrivate {
 public:
-    AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = false; }
+    AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false; }
     AnimationEffect::AniMap m_animations;
     EffectWindowList m_zombies;
-    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched;
+    bool m_animated, m_damageDirty, m_needSceneRepaint, m_animationsTouched, m_isInitialized;
 };
 }
 
@@ -60,6 +60,10 @@ AnimationEffect::AnimationEffect() : d_ptr(new AnimationEffectPrivate())
 
 void AnimationEffect::init()
 {
+    Q_D(AnimationEffect);
+    if (d->m_isInitialized)
+        return; // not more than once, please
+    d->m_isInitialized = true;
     /* by connecting the signal from a slot AFTER the inheriting class constructor had the chance to
      * connect it we can provide auto-referencing of animated and closed windows, since at the time
      * our slot will be called, the slot of the subclass has been (SIGNAL/SLOT connections are FIFO)
@@ -188,6 +192,8 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
     }
 
     Q_D(AnimationEffect);
+    if (!d->m_isInitialized)
+        init(); // needs to ensure the window gets removed if deleted in the same event cycle
     if (d->m_animations.isEmpty()) {
         connect (effects,   SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)),
                             SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
