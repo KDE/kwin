@@ -56,6 +56,7 @@ Toplevel::Toplevel()
 {
     connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
     connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
+    connect(screens(), SIGNAL(countChanged(int,int)), SLOT(checkScreen()));
     setupCheckScreenConnection();
 }
 
