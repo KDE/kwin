@@ -207,7 +207,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(Texture)
 
-    friend class SceneOpenGL::Window;
+    friend class OpenGLWindowPixmap;
 };
 
 class SceneOpenGL::Window
@@ -218,15 +218,13 @@ public:
     bool beginRenderWindow(int mask, const QRegion &region, WindowPaintData &data);
     virtual void performPaint(int mask, QRegion region, WindowPaintData data) = 0;
     void endRenderWindow();
-    virtual void pixmapDiscarded();
     bool bindTexture();
-    void discardTexture();
-    void checkTextureSize();
     void setScene(SceneOpenGL *scene) {
         m_scene = scene;
     }
 
 protected:
+    virtual WindowPixmap* createWindowPixmap();
     Window(Toplevel* c);
     enum TextureType {
         Content,
@@ -274,7 +272,6 @@ protected:
 protected:
     SceneOpenGL *m_scene;
     bool m_hardwareClipping;
-    Texture *m_texture;
 
 private:
     OpenGLPaintRedirector *paintRedirector() const;
@@ -336,6 +333,18 @@ protected:
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 };
 #endif
+
+class OpenGLWindowPixmap : public WindowPixmap
+{
+public:
+    explicit OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL *scene);
+    virtual ~OpenGLWindowPixmap();
+    SceneOpenGL::Texture *texture() const;
+    bool bind();
+private:
+    SceneOpenGL *m_scene;
+    QScopedPointer<SceneOpenGL::Texture> m_texture;
+};
 
 class SceneOpenGL::EffectFrame
     : public Scene::EffectFrame
@@ -622,6 +631,11 @@ private:
 inline bool SceneOpenGL::hasPendingFlush() const
 {
     return m_backend->hasPendingFlush();
+}
+
+inline SceneOpenGL::Texture* OpenGLWindowPixmap::texture() const
+{
+    return m_texture.data();
 }
 
 } // namespace

@@ -479,7 +479,6 @@ void SceneOpenGL::windowGeometryShapeChanged(KWin::Toplevel* c)
         return;                 // by default
     Window* w = windows[ c ];
     w->discardShape();
-    w->checkTextureSize();
 }
 
 void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
@@ -960,73 +959,27 @@ SceneOpenGL::TexturePrivate::~TexturePrivate()
 SceneOpenGL::Window::Window(Toplevel* c)
     : Scene::Window(c)
     , m_scene(NULL)
-    , m_texture(NULL)
 {
 }
 
 SceneOpenGL::Window::~Window()
 {
-    delete m_texture;
 }
 
+static SceneOpenGL::Texture *s_frameTexture = NULL;
 // Bind the window pixmap to an OpenGL texture.
 bool SceneOpenGL::Window::bindTexture()
 {
-    if (!m_texture) {
-        m_texture = m_scene->createTexture();
-    }
-    if (!m_texture->isNull()) {
-        if (!toplevel->damage().isEmpty()) {
-            // mipmaps need to be updated
-            m_texture->setDirty();
-            toplevel->resetDamage();
-        }
-        return true;
-    }
-    // Get the pixmap with the window contents
-    Pixmap pix = toplevel->windowPixmap();
-    if (pix == None)
+    s_frameTexture = NULL;
+    OpenGLWindowPixmap *pixmap = windowPixmap<OpenGLWindowPixmap>();
+    if (!pixmap) {
         return false;
-
-    bool success = m_texture->load(pix, toplevel->size(), toplevel->depth(),
-                                   toplevel->damage());
-
-    if (success)
-        toplevel->resetDamage();
-    else
-        kDebug(1212) << "Failed to bind window";
-
-    return success;
-}
-
-void SceneOpenGL::Window::discardTexture()
-{
-    if (m_texture)
-        m_texture->discard();
-}
-
-// This call is used in SceneOpenGL::windowGeometryShapeChanged(),
-// which originally called discardTexture(), however this was causing performance
-// problems with the launch feedback icon - large number of texture rebinds.
-// Since the launch feedback icon does not resize, only changes shape, it
-// is not necessary to rebind the texture (with no strict binding), therefore
-// discard the texture only if size changes.
-void SceneOpenGL::Window::checkTextureSize()
-{
-    if (!m_texture)
-        return;
-
-    if (m_texture->size() != size())
-        discardTexture();
-}
-
-// when the window's composite pixmap is discarded, undo binding it to the texture
-void SceneOpenGL::Window::pixmapDiscarded()
-{
-    if (!m_texture)
-        return;
-
-    m_texture->discard();
+    }
+    s_frameTexture = pixmap->texture();
+    if (pixmap->isDiscarded()) {
+        return !pixmap->texture()->isNull();
+    }
+    return pixmap->bind();
 }
 
 QMatrix4x4 SceneOpenGL::Window::transformation(int mask, const WindowPaintData &data) const
@@ -1082,7 +1035,7 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
         data.quads = quads;
     }
 
-    if (!bindTexture()) {
+    if (!bindTexture() || !s_frameTexture) {
         return false;
     }
 
@@ -1097,7 +1050,7 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
     else
         filter = ImageFilterFast;
 
-    m_texture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+    s_frameTexture->setFilter(filter == ImageFilterGood ? GL_LINEAR : GL_NEAREST);
 
     const GLVertexAttrib attribs[] = {
         { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
@@ -1309,7 +1262,7 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
 
     switch(type) {
     case Content:
-        tex = m_texture;
+        tex = s_frameTexture;
         break;
 
     case DecorationLeftRight:
@@ -1326,6 +1279,10 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
     return tex;
 }
 
+WindowPixmap* SceneOpenGL::Window::createWindowPixmap()
+{
+    return new OpenGLWindowPixmap(this, m_scene);
+}
 
 //***************************************
 // SceneOpenGL2Window
@@ -1382,7 +1339,7 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
         nodes[TopBottomLeaf].coordinateType = UnnormalizedCoordinates;
     }
 
-    nodes[ContentLeaf].texture = m_texture;
+    nodes[ContentLeaf].texture = s_frameTexture;
     nodes[ContentLeaf].hasAlpha = !isOpaque();
     nodes[ContentLeaf].opacity = data.opacity();
     nodes[ContentLeaf].coordinateType = UnnormalizedCoordinates;
@@ -1589,16 +1546,16 @@ void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData 
     // paint the content
     WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (!contentQuads.empty()) {
-        m_texture->bind();
+        s_frameTexture->bind();
         prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
-        renderQuads(mask, region, contentQuads, m_texture, false);
+        renderQuads(mask, region, contentQuads, s_frameTexture, false);
         restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
-        m_texture->unbind();
+        s_frameTexture->unbind();
 
 #ifndef KWIN_HAVE_OPENGLES
         if (m_scene && m_scene->debug()) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, m_texture, false);
+            renderQuads(mask, region, contentQuads, s_frameTexture, false);
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         }
 #endif
@@ -1762,6 +1719,44 @@ void SceneOpenGL1Window::restoreStates(TextureType type, qreal opacity, qreal br
     glPopAttrib();  // ENABLE_BIT
 }
 #endif
+
+//****************************************
+// OpenGLWindowPixmap
+//****************************************
+
+OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene)
+    : WindowPixmap(window)
+    , m_scene(scene)
+    , m_texture(scene->createTexture())
+{
+}
+
+OpenGLWindowPixmap::~OpenGLWindowPixmap()
+{
+}
+
+bool OpenGLWindowPixmap::bind()
+{
+    if (!m_texture->isNull()) {
+        if (!toplevel()->damage().isEmpty()) {
+            // mipmaps need to be updated
+            m_texture->setDirty();
+            toplevel()->resetDamage();
+        }
+        return true;
+    }
+    if (!isValid()) {
+        return false;
+    }
+
+    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->depth(), toplevel()->damage());
+
+    if (success)
+        toplevel()->resetDamage();
+    else
+        kDebug(1212) << "Failed to bind window";
+    return success;
+}
 
 //****************************************
 // SceneOpenGL::EffectFrame

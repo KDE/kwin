@@ -43,7 +43,6 @@ Toplevel::Toplevel()
     , m_isDamaged(false)
     , client(None)
     , frame(None)
-    , window_pix(None)
     , damage_handle(None)
     , is_shape(false)
     , effect_window(NULL)
@@ -63,7 +62,6 @@ Toplevel::Toplevel()
 Toplevel::~Toplevel()
 {
     assert(damage_handle == None);
-    discardWindowPixmap();
     delete info;
 }
 
@@ -114,7 +112,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     info = c->info;
     client = c->client;
     frame = c->frame;
-    window_pix = c->window_pix;
     ready_for_painting = c->ready_for_painting;
     damage_handle = None;
     damage_region = c->damage_region;
@@ -131,9 +128,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     window_role = c->windowRole();
     opaque_region = c->opaqueRegion();
     m_screen = c->m_screen;
-    // this needs to be done already here, otherwise 'c' could very likely
-    // call discardWindowPixmap() in something called during cleanup
-    c->window_pix = None;
 }
 
 // before being deleted, remove references to everything that's now

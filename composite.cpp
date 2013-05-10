@@ -881,43 +881,8 @@ void Toplevel::finishCompositing()
 void Toplevel::discardWindowPixmap()
 {
     addDamageFull();
-    if (window_pix == XCB_PIXMAP_NONE)
-        return;
-    xcb_free_pixmap(connection(), window_pix);
-    window_pix = XCB_PIXMAP_NONE;
     if (effectWindow() != NULL && effectWindow()->sceneWindow() != NULL)
         effectWindow()->sceneWindow()->pixmapDiscarded();
-}
-
-xcb_pixmap_t Toplevel::createWindowPixmap()
-{
-    assert(compositing());
-    if (unredirected())
-        return XCB_PIXMAP_NONE;
-    XServerGrabber grabber();
-    xcb_pixmap_t pix = xcb_generate_id(connection());
-    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), frameId(), pix);
-    Xcb::WindowAttributes windowAttributes(frameId());
-    Xcb::WindowGeometry windowGeometry(frameId());
-    if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
-        kDebug(1212) << "Creating window pixmap failed: " << error->error_code;
-        free(error);
-        return XCB_PIXMAP_NONE;
-    }
-    // check that the received pixmap is valid and actually matches what we
-    // know about the window (i.e. size)
-    if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
-        kDebug(1212) << "Creating window pixmap failed: " << this;
-        xcb_free_pixmap(connection(), pix);
-        return XCB_PIXMAP_NONE;
-    }
-    if (!windowGeometry ||
-        windowGeometry->width != width() || windowGeometry->height != height()) {
-        kDebug(1212) << "Creating window pixmap failed: " << this;
-        xcb_free_pixmap(connection(), pix);
-        return XCB_PIXMAP_NONE;
-    }
-    return pix;
 }
 
 void Toplevel::damageNotifyEvent()

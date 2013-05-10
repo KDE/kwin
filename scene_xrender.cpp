@@ -244,7 +244,6 @@ void SceneXrender::windowGeometryShapeChanged(KWin::Toplevel* c)
     if (!windows.contains(c))    // this is ok, shape is not valid by default
         return;
     Window* w = windows[ c ];
-    w->discardPicture();
     w->discardShape();
 }
 
@@ -297,7 +296,6 @@ QRect SceneXrender::Window::temp_visibleRect;
 
 SceneXrender::Window::Window(Toplevel* c)
     : Scene::Window(c)
-    , _picture(XCB_RENDER_PICTURE_NONE)
     , format(findFormatForVisual(c->visual()->visualid))
     , alpha_cached_opacity(0.0)
 {
@@ -305,7 +303,6 @@ SceneXrender::Window::Window(Toplevel* c)
 
 SceneXrender::Window::~Window()
 {
-    discardPicture();
     discardShape();
 }
 
@@ -313,33 +310,6 @@ void SceneXrender::Window::cleanup()
 {
     delete s_tempPicture;
     s_tempPicture = NULL;
-}
-
-// Create XRender picture for the pixmap with the window contents.
-xcb_render_picture_t SceneXrender::Window::picture()
-{
-    if (!toplevel->damage().isEmpty() && _picture != XCB_RENDER_PICTURE_NONE) {
-        xcb_render_free_picture(connection(), _picture);
-        _picture = XCB_RENDER_PICTURE_NONE;
-    }
-    if (_picture == XCB_RENDER_PICTURE_NONE && format != 0) {
-        // Get the pixmap with the window contents.
-        xcb_pixmap_t pix = toplevel->windowPixmap();
-        if (pix == XCB_PIXMAP_NONE)
-            return XCB_RENDER_PICTURE_NONE;
-        _picture = xcb_generate_id(connection());
-        xcb_render_create_picture(connection(), _picture, pix, format, 0, NULL);
-        toplevel->resetDamage();
-    }
-    return _picture;
-}
-
-
-void SceneXrender::Window::discardPicture()
-{
-    if (_picture != XCB_RENDER_PICTURE_NONE)
-        xcb_render_free_picture(connection(), _picture);
-    _picture = XCB_RENDER_PICTURE_NONE;
 }
 
 // Maps window coordinates to screen coordinates
@@ -432,9 +402,14 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
 
     if (region.isEmpty())
         return;
-    xcb_render_picture_t pic = picture(); // get XRender picture
+    XRenderWindowPixmap *pixmap = windowPixmap<XRenderWindowPixmap>();
+    if (!pixmap || !pixmap->isValid()) {
+        return;
+    }
+    xcb_render_picture_t pic = pixmap->picture();
     if (pic == XCB_RENDER_PICTURE_NONE)   // The render format can be null for GL and/or Xv visuals
         return;
+    toplevel->resetDamage();
     // set picture filter
     if (options->isXrenderSmoothScale()) { // only when forced, it's slow
         if (mask & PAINT_WINDOW_TRANSFORMED)
@@ -734,10 +709,46 @@ void SceneXrender::Window::setPictureFilter(xcb_render_picture_t pic, Scene::Ima
     xcb_render_set_picture_filter(connection(), pic, filterName.length(), filterName.constData(), 0, NULL);
 }
 
+WindowPixmap* SceneXrender::Window::createWindowPixmap()
+{
+    return new XRenderWindowPixmap(this, format);
+}
+
 void SceneXrender::screenGeometryChanged(const QSize &size)
 {
     Scene::screenGeometryChanged(size);
     initXRender(false);
+}
+
+//****************************************
+// XRenderWindowPixmap
+//****************************************
+
+XRenderWindowPixmap::XRenderWindowPixmap(Scene::Window *window, xcb_render_pictformat_t format)
+    : WindowPixmap(window)
+    , m_picture(XCB_RENDER_PICTURE_NONE)
+    , m_format(format)
+{
+}
+
+XRenderWindowPixmap::~XRenderWindowPixmap()
+{
+    if (m_picture != XCB_RENDER_PICTURE_NONE) {
+        xcb_render_free_picture(connection(), m_picture);
+    }
+}
+
+void XRenderWindowPixmap::create()
+{
+    if (isValid()) {
+        return;
+    }
+    KWin::WindowPixmap::create();
+    if (!isValid()) {
+        return;
+    }
+    m_picture = xcb_generate_id(connection());
+    xcb_render_create_picture(connection(), m_picture, pixmap(), m_format, 0, NULL);
 }
 
 //****************************************

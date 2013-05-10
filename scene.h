@@ -39,6 +39,7 @@ class EffectFrameImpl;
 class EffectWindowImpl;
 class OverlayWindow;
 class Shadow;
+class WindowPixmap;
 
 // The base class for compositing backends.
 class Scene : public QObject
@@ -184,7 +185,7 @@ public:
     // perform the actual painting of the window
     virtual void performPaint(int mask, QRegion region, WindowPaintData data) = 0;
     // do any cleanup needed when the window's composite pixmap is discarded
-    virtual void pixmapDiscarded()  {}
+    void pixmapDiscarded();
     int x() const;
     int y() const;
     int width() const;
@@ -231,18 +232,118 @@ public:
     void updateShadow(Shadow* shadow);
     const Shadow* shadow() const;
     Shadow* shadow();
+    void referencePreviousPixmap();
+    void unreferencePreviousPixmap();
 protected:
     WindowQuadList makeQuads(WindowQuadType type, const QRegion& reg) const;
     WindowQuadList makeDecorationQuads(const QRect *rects, const QRegion &region) const;
+    /**
+     * @brief Returns the WindowPixmap for this Window.
+     *
+     * If the WindowPixmap does not yet exist, this method will invoke @link createWindowPixmap.
+     * If the WindowPixmap is not valid it tries to create it, in case this succeeds the WindowPixmap is
+     * returned. In case it fails, the previous (and still valid) WindowPixmap is returned.
+     *
+     * Note: this method can return @c NULL as there might neither be a valid previous nor current WindowPixmap
+     * around.
+     *
+     * The WindowPixmap gets casted to the type passed in as a template parameter. That way this class does not
+     * need to know the actual WindowPixmap subclass used by the concrete Scene implementations.
+     *
+     * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
+     */
+    template<typename T> T *windowPixmap();
+    /**
+     * @brief Factory method to create a WindowPixmap.
+     *
+     * The inheriting classes need to implement this method to create a new instance of their WindowPixmap subclass.
+     * Note: do not use @link WindowPixmap::create on the created instance. The Scene will take care of that.
+     */
+    virtual WindowPixmap *createWindowPixmap() = 0;
     Toplevel* toplevel;
     ImageFilterType filter;
     Shadow *m_shadow;
 private:
+    QScopedPointer<WindowPixmap> m_currentPixmap;
+    QScopedPointer<WindowPixmap> m_previousPixmap;
+    int m_referencePixmapCounter;
     int disable_painting;
     mutable QRegion shape_region;
     mutable bool shape_valid;
     mutable WindowQuadList* cached_quad_list;
     Q_DISABLE_COPY(Window)
+};
+
+/**
+ * @brief Wrapper for a pixmap of the @link Scene::Window.
+ *
+ * This class encapsulates the functionality to get the pixmap for a window. When initialized the pixmap is not yet
+ * mapped to the window and @link isValid will return @c false. The pixmap mapping to the window can be established
+ * through @link create. If it succeeds @link isValid will return @c true, otherwise it will keep in the non valid
+ * state and it can be tried to create the pixmap mapping again (e.g. in the next frame).
+ *
+ * This class is not intended to be updated when the pixmap is no longer valid due to e.g. resizing the window.
+ * Instead a new instance of this class should be instantiated. The idea behind this is that a valid pixmap does not
+ * get destroyed, but can continue to be used. To indicate that a newer pixmap should in generally be around, one can
+ * use @link markAsDiscarded.
+ *
+ * This class is intended to be inherited for the needs of the compositor backends which need further mapping from
+ * the native pixmap to the respective rendering format.
+ */
+class WindowPixmap
+{
+public:
+    virtual ~WindowPixmap();
+    /**
+     * @brief Tries to create the mapping between the Window and the pixmap.
+     *
+     * In case this method succeeds in creating the pixmap for the window, @link isValid will return @c true otherwise
+     * @c false.
+     *
+     * Inheriting classes should re-implement this method in case they need to add further functionality for mapping the
+     * native pixmap to the rendering format.
+     */
+    virtual void create();
+    /**
+     * @return @c true if the pixmap has been created and is valid, @c false otherwise
+     */
+    bool isValid() const;
+    /**
+     * @return The native X11 pixmap handle
+     */
+    xcb_pixmap_t pixmap() const;
+    /**
+     * @brief Whether this WindowPixmap is considered as discarded. This means the window has changed in a way that a new
+     * WindowPixmap should have been created already.
+     *
+     * @return @c true if this WindowPixmap is considered as discarded, @c false otherwise.
+     * @see markAsDiscarded
+     */
+    bool isDiscarded() const;
+    /**
+     * @brief Marks this WindowPixmap as discarded. From now on @link isDiscarded will return @c true. This method should
+     * only be used by the Window when it changes in a way that a new pixmap is required.
+     *
+     * @see isDiscarded
+     */
+    void markAsDiscarded();
+
+protected:
+    explicit WindowPixmap(Scene::Window *window);
+    /**
+     * @brief Returns the Toplevel this WindowPixmap belongs to.
+     * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
+     */
+    Toplevel *toplevel();
+    /**
+     * @return The Window this WindowPixmap belongs to
+     */
+    Scene::Window *window();
+private:
+    Scene::Window *m_window;
+    xcb_pixmap_t m_pixmap;
+    QSize m_pixmapSize;
+    bool m_discarded;
 };
 
 class Scene::EffectFrame
@@ -344,6 +445,55 @@ inline
 Shadow* Scene::Window::shadow()
 {
     return m_shadow;
+}
+
+inline
+bool WindowPixmap::isValid() const
+{
+    return m_pixmap != XCB_PIXMAP_NONE;
+}
+
+template <typename T>
+inline
+T* Scene::Window::windowPixmap()
+{
+    if (m_currentPixmap.isNull()) {
+        m_currentPixmap.reset(createWindowPixmap());
+    }
+    if (m_currentPixmap->isValid()) {
+        return static_cast<T*>(m_currentPixmap.data());
+    }
+    m_currentPixmap->create();
+    if (m_currentPixmap->isValid()) {
+        return static_cast<T*>(m_currentPixmap.data());
+    } else {
+        return static_cast<T*>(m_previousPixmap.data());
+    }
+}
+
+inline
+Toplevel* WindowPixmap::toplevel()
+{
+    return m_window->window();
+}
+
+inline
+xcb_pixmap_t WindowPixmap::pixmap() const
+{
+    return m_pixmap;
+}
+
+inline
+bool WindowPixmap::isDiscarded() const
+{
+    return m_discarded;
+}
+
+inline
+void WindowPixmap::markAsDiscarded()
+{
+    m_discarded = true;
+    m_window->referencePreviousPixmap();
 }
 
 } // namespace

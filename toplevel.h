@@ -226,7 +226,6 @@ public:
     pid_t pid() const;
     static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);
 
-    Pixmap windowPixmap(bool allow_create = true);   // may return None (e.g. at a bad moment while resizing)
     bool readyForPainting() const; // true if the window has been already painted its contents
     Visual* visual() const;
     bool shape() const;
@@ -350,7 +349,6 @@ protected:
     void detectShape(Window id);
     virtual void propertyNotifyEvent(XPropertyEvent* e);
     virtual void damageNotifyEvent();
-    xcb_pixmap_t createWindowPixmap();
     void discardWindowPixmap();
     void addDamageFull();
     void getWmClientLeader();
@@ -395,7 +393,6 @@ private:
     // when adding new data members, check also copyToDeleted()
     Window client;
     Window frame;
-    Pixmap window_pix;
     xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
     bool is_shape;
@@ -555,13 +552,6 @@ inline bool Toplevel::isComboBox() const
 inline bool Toplevel::isDNDIcon() const
 {
     return windowType() == NET::DNDIcon;
-}
-
-inline Pixmap Toplevel::windowPixmap(bool allow_create)
-{
-    if (window_pix == None && allow_create)
-        window_pix = createWindowPixmap();
-    return window_pix;
 }
 
 inline QRegion Toplevel::damage() const

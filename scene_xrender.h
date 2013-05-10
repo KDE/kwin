@@ -79,22 +79,33 @@ public:
     Window(Toplevel* c);
     virtual ~Window();
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
-    void discardPicture();
     QRegion transformedShape() const;
     void setTransformedShape(const QRegion& shape);
     static void cleanup();
+protected:
+    virtual WindowPixmap* createWindowPixmap();
 private:
-    xcb_render_picture_t picture();
     QRect mapToScreen(int mask, const WindowPaintData &data, const QRect &rect) const;
     QPoint mapToScreen(int mask, const WindowPaintData &data, const QPoint &point) const;
     void prepareTempPixmap();
     void setPictureFilter(xcb_render_picture_t pic, ImageFilterType filter);
-    xcb_render_picture_t _picture;
     xcb_render_pictformat_t format;
     double alpha_cached_opacity;
     QRegion transformed_shape;
     static QRect temp_visibleRect;
     static XRenderPicture *s_tempPicture;
+};
+
+class XRenderWindowPixmap : public WindowPixmap
+{
+public:
+    explicit XRenderWindowPixmap(Scene::Window *window, xcb_render_pictformat_t format);
+    virtual ~XRenderWindowPixmap();
+    xcb_render_picture_t picture() const;
+    virtual void create();
+private:
+    xcb_render_picture_t m_picture;
+    xcb_render_pictformat_t m_format;
 };
 
 class SceneXrender::EffectFrame
@@ -141,6 +152,12 @@ inline
 void SceneXrender::Window::setTransformedShape(const QRegion& shape)
 {
     transformed_shape = shape;
+}
+
+inline
+xcb_render_picture_t XRenderWindowPixmap::picture() const
+{
+    return m_picture;
 }
 
 /**

@@ -581,6 +581,9 @@ Scene::Window::Window(Toplevel * c)
     : toplevel(c)
     , filter(ImageFilterFast)
     , m_shadow(NULL)
+    , m_currentPixmap()
+    , m_previousPixmap()
+    , m_referencePixmapCounter(0)
     , disable_painting(0)
     , shape_valid(false)
     , cached_quad_list(NULL)
@@ -591,6 +594,32 @@ Scene::Window::~Window()
 {
     delete cached_quad_list;
     delete m_shadow;
+}
+
+void Scene::Window::referencePreviousPixmap()
+{
+    if (!m_previousPixmap.isNull() && m_previousPixmap->isDiscarded()) {
+        m_referencePixmapCounter++;
+    }
+}
+
+void Scene::Window::unreferencePreviousPixmap()
+{
+    if (m_previousPixmap.isNull() || !m_previousPixmap->isDiscarded()) {
+        return;
+    }
+    m_referencePixmapCounter--;
+    if (m_referencePixmapCounter == 0) {
+        m_previousPixmap.reset();
+    }
+}
+
+void Scene::Window::pixmapDiscarded()
+{
+    if (!m_currentPixmap.isNull() && m_currentPixmap->isValid()) {
+        m_previousPixmap.reset(m_currentPixmap.take());
+        m_previousPixmap->markAsDiscarded();
+    }
 }
 
 void Scene::Window::discardShape()
@@ -795,6 +824,56 @@ WindowQuadList Scene::Window::makeQuads(WindowQuadType type, const QRegion& reg)
         ret.append(quad);
     }
     return ret;
+}
+
+//****************************************
+// WindowPixmap
+//****************************************
+WindowPixmap::WindowPixmap(Scene::Window *window)
+    : m_window(window)
+    , m_pixmap(XCB_PIXMAP_NONE)
+    , m_discarded(false)
+{
+}
+
+WindowPixmap::~WindowPixmap()
+{
+    if (isValid()) {
+        xcb_free_pixmap(connection(), m_pixmap);
+    }
+}
+
+void WindowPixmap::create()
+{
+    if (isValid()) {
+        return;
+    }
+    XServerGrabber grabber();
+    xcb_pixmap_t pix = xcb_generate_id(connection());
+    xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), toplevel()->frameId(), pix);
+    Xcb::WindowAttributes windowAttributes(toplevel()->frameId());
+    Xcb::WindowGeometry windowGeometry(toplevel()->frameId());
+    if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
+        kDebug(1212) << "Creating window pixmap failed: " << error->error_code;
+        free(error);
+        return;
+    }
+    // check that the received pixmap is valid and actually matches what we
+    // know about the window (i.e. size)
+    if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
+        kDebug(1212) << "Creating window pixmap failed: " << this;
+        xcb_free_pixmap(connection(), pix);
+        return;
+    }
+    if (!windowGeometry ||
+        windowGeometry->width != toplevel()->width() || windowGeometry->height != toplevel()->height()) {
+        kDebug(1212) << "Creating window pixmap failed: " << this;
+        xcb_free_pixmap(connection(), pix);
+        return;
+    }
+    m_pixmap = pix;
+    m_pixmapSize = QSize(toplevel()->width(), toplevel()->height());
+    m_window->unreferencePreviousPixmap();
 }
 
 //****************************************
