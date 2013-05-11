@@ -49,7 +49,7 @@ DBusInterface::DBusInterface(QObject *parent)
     dbus.registerObject("/KWin", this);
     if (!dbus.registerService("org.kde.KWin")) {
         QDBusServiceWatcher *dog = new QDBusServiceWatcher("org.kde.KWin", dbus, QDBusServiceWatcher::WatchForUnregistration, this);
-        connect (dog, SIGNAL(serviceUnregistered(const QString&)), SLOT(becomeKWinService(const QString&)));
+        connect (dog, SIGNAL(serviceUnregistered(QString)), SLOT(becomeKWinService(QString)));
     }
     connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
     dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig",

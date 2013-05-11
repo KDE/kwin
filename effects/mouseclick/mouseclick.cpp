@@ -49,8 +49,8 @@ MouseClickEffect::MouseClickEffect()
     a->setText(i18n("Toggle Effect"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
-    connect(effects, SIGNAL(mouseChanged(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint, QPoint, Qt::MouseButtons, Qt::MouseButtons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)));
+    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 
     m_buttons[0] = new MouseButton(i18n("Left"), Qt::LeftButton);

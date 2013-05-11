@@ -40,7 +40,7 @@ SnapHelperEffect::SnapHelperEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
-    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*, const QRect&)), this, SLOT(slotWindowResized(KWin::EffectWindow*, const QRect&)));
+    connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowResized(KWin::EffectWindow*,QRect)));
 }
 
 SnapHelperEffect::~SnapHelperEffect()

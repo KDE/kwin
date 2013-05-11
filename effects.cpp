@@ -227,7 +227,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(ws, SIGNAL(currentDesktopChanged(int, KWin::Client*)), SLOT(slotDesktopChanged(int, KWin::Client*)));
+    connect(ws, SIGNAL(currentDesktopChanged(int,KWin::Client*)), SLOT(slotDesktopChanged(int,KWin::Client*)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));

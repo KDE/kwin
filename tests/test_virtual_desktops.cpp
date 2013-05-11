@@ -112,7 +112,7 @@ void TestVirtualDesktops::count()
     // start with a useful desktop count
     vds->setCount(s_countInitValue);
 
-    QSignalSpy spy(vds, SIGNAL(countChanged(uint, uint)));
+    QSignalSpy spy(vds, SIGNAL(countChanged(uint,uint)));
     QSignalSpy desktopsRemoved(vds, SIGNAL(desktopsRemoved(uint)));
 
     QFETCH(uint, request);
@@ -198,7 +198,7 @@ void TestVirtualDesktops::current()
     QVERIFY(vds->setCurrent(init));
     QCOMPARE(vds->current(), init);
 
-    QSignalSpy spy(vds, SIGNAL(currentChanged(uint, uint)));
+    QSignalSpy spy(vds, SIGNAL(currentChanged(uint,uint)));
 
     QFETCH(uint, request);
     QFETCH(uint, result);
@@ -240,7 +240,7 @@ void TestVirtualDesktops::currentChangeOnCountChange()
     vds->setCount(initCount);
     vds->setCurrent(initCurrent);
 
-    QSignalSpy spy(vds,  SIGNAL(currentChanged(uint, uint)));
+    QSignalSpy spy(vds,  SIGNAL(currentChanged(uint,uint)));
 
     QFETCH(uint, request);
     QFETCH(uint, current);
@@ -508,7 +508,7 @@ void TestVirtualDesktops::updateLayout_data()
 void TestVirtualDesktops::updateLayout()
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    QSignalSpy spy(vds, SIGNAL(layoutChanged(int, int)));
+    QSignalSpy spy(vds, SIGNAL(layoutChanged(int,int)));
     // call update layout - implicitly through setCount
     QFETCH(uint, desktop);
     QFETCH(QSize, result);

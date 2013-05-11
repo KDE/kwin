@@ -108,7 +108,7 @@ QStringList WorkspaceWrapper::activityList() const
 #endif
 }
 
-#define SLOTWRAPPER( name ) \
+#define SLOTWRAPPER(name) \
 void WorkspaceWrapper::name( ) { \
     Workspace::self()->name(); \
 }
@@ -168,17 +168,17 @@ SLOTWRAPPER(slotWindowToDesktopDown)
 
 #undef SLOTWRAPPER
 
-#define SLOTWRAPPER( name, direction ) \
+#define SLOTWRAPPER(name,direction) \
 void WorkspaceWrapper::name( ) { \
     VirtualDesktopManager::self()->moveTo<direction>(options->isRollOverDesktops()); \
 }
 
-SLOTWRAPPER(slotSwitchDesktopNext, DesktopNext)
-SLOTWRAPPER(slotSwitchDesktopPrevious, DesktopPrevious)
-SLOTWRAPPER(slotSwitchDesktopRight, DesktopRight)
-SLOTWRAPPER(slotSwitchDesktopLeft, DesktopLeft)
-SLOTWRAPPER(slotSwitchDesktopUp, DesktopAbove)
-SLOTWRAPPER(slotSwitchDesktopDown, DesktopBelow)
+SLOTWRAPPER(slotSwitchDesktopNext,DesktopNext)
+SLOTWRAPPER(slotSwitchDesktopPrevious,DesktopPrevious)
+SLOTWRAPPER(slotSwitchDesktopRight,DesktopRight)
+SLOTWRAPPER(slotSwitchDesktopLeft,DesktopLeft)
+SLOTWRAPPER(slotSwitchDesktopUp,DesktopAbove)
+SLOTWRAPPER(slotSwitchDesktopDown,DesktopBelow)
 
 #undef SLOTWRAPPER
 

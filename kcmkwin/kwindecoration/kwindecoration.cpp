@@ -165,7 +165,7 @@ void KWinDecorationModule::init()
     m_ui->decorationList->verticalScrollBar()->disconnect(m_ui->decorationList);
     connect(m_ui->decorationList->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
     connect(m_ui->decorationList->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
-    connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(rangeChanged(int, int )), SLOT(updateScrollbarRange()));
+    connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), SLOT(updateScrollbarRange()));
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(updateViewPosition(int)));
 
     m_ui->decorationList->installEventFilter(this);

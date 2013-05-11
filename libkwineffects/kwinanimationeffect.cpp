@@ -181,12 +181,12 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
 
     Q_D(AnimationEffect);
     if (d->m_animations.isEmpty()) {
-        connect (effects,   SIGNAL(windowGeometryShapeChanged(  KWin::EffectWindow*, const QRect&)),
-                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
-        connect (effects,   SIGNAL(windowStepUserMovedResized(  KWin::EffectWindow*, const QRect&)),
-                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
-        connect (effects,   SIGNAL(windowPaddingChanged(        KWin::EffectWindow*, const QRect&)),
-                            SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+        connect (effects,   SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)),
+                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+        connect (effects,   SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)),
+                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+        connect (effects,   SIGNAL(windowPaddingChanged(KWin::EffectWindow*,QRect)),
+                            SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
     }
     AniMap::iterator it = d->m_animations.find(w);
     if (it == d->m_animations.end())
@@ -402,12 +402,12 @@ void AnimationEffect::clipWindow(const EffectWindow *w, const AniData &anim, Win
 
 void AnimationEffect::disconnectGeometryChanges()
 {
-    disconnect (effects,SIGNAL(windowGeometryShapeChanged(  KWin::EffectWindow*, const QRect&)),
-                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
-    disconnect (effects,SIGNAL(windowStepUserMovedResized(  KWin::EffectWindow*, const QRect&)),
-                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
-    disconnect (effects,SIGNAL(windowPaddingChanged(        KWin::EffectWindow*, const QRect&)),
-                this,   SLOT(_expandedGeometryChanged(      KWin::EffectWindow*, const QRect&)));
+    disconnect (effects,SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)),
+                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+    disconnect (effects,SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)),
+                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
+    disconnect (effects,SIGNAL(windowPaddingChanged(KWin::EffectWindow*,QRect)),
+                this,   SLOT(_expandedGeometryChanged(KWin::EffectWindow*,QRect)));
 }
 
 
