@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Screen Edge
+Name[ca]=Vora de la pantalla
 Name[cs]=Hrana obrazovky
 Name[de]=Bildschirmkante
 Name[el]=Άκρο οθόνης
@@ -28,6 +29,7 @@ Name[x-test]=xxScreen Edgexx
 Name[zh_TW]=螢幕邊緣
 Icon=preferences-system-windows-effect-screenedge
 Comment=Highlights a screen edge when approaching
+Comment[ca]=Ressalta la vora de la pantalla en aproximar-se
 Comment[de]=Bildschirmkante bei Annäherung hervorheben
 Comment[el]=Εμφανίζει τονισμένο το άκρο της οθόνης όταν το πλησιάζετε
 Comment[es]=Resalta el borde de la pantalla al aproximarse a él

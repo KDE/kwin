@@ -101,6 +101,7 @@ Name[zh_CN]=动作
 Name[zh_TW]=動作
 
 Comment=Configure mouse actions on windows
+Comment[ca]=Configura les accions de ratolí en les finestres
 Comment[cs]=Nastavení činností myši na oknech
 Comment[es]=Configurar las acciones del ratón sobre las ventanas
 Comment[fi]=Ikkunoiden hiiritoimintojen asetukset
@@ -114,6 +115,7 @@ Comment[sk]=Nastaviť akcie myši na oknách
 Comment[sv]=Anpassa musåtgärder för fönster
 Comment[uk]=Налаштування дій за допомогою миші над вікнами
 Comment[x-test]=xxConfigure mouse actions on windowsxx
+Comment[zh_TW]=設定視窗上的滑鼠動作
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
 X-KDE-Keywords[bs]=sjena,povećali,povećala,smanjiti,umanjiti,sniziti,izbornik operacija,naslovnica,promjena veličine

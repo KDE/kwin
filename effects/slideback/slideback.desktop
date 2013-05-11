@@ -70,6 +70,7 @@ Name[zh_TW]=往回滑動
 
 Type=Service
 Comment=Slide back windows when another window is raised
+Comment[ca]=Llisca enrere les finestres quan s'eleva una altra finestra
 Comment[es]=Desliza las ventanas atrás cuando una ventana pasa a primer plano
 Comment[fr]=Faire glisser en arrière les fenêtres lors de l'apparition d'une autre fenêtre
 Comment[nb]=Skyv tilbake vinduer når et annet vindu heves
@@ -87,6 +88,7 @@ Comment[sv]=Låt fönster glida tillbaka när ett annat fönster höjs.
 Comment[tr]=Başka bir pencere yükseltildiğinde, pencereleri geri kaydır.
 Comment[uk]=Ковзання вікон на задній план під час підняття інших вікон
 Comment[x-test]=xxSlide back windows when another window is raisedxx
+Comment[zh_TW]=另一個視窗被抬升時將此視窗滑動到背景
 Icon=preferences-system-windows-effect-slideback
 X-KDE-ServiceTypes=KWin/Effect
 X-KDE-PluginInfo-Author=Michael Zanetti
