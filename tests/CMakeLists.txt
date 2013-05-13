@@ -53,6 +53,7 @@ target_link_libraries( testClientMachine
                        ${XCB_XCB_LIBRARIES}
                        ${X11_XCB_LIBRARIES}
                        ${X11_X11_LIB} # to make jenkins happy
+                       ${X11_Xcursor_LIB}
 )
 
 ########################################################
