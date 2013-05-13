@@ -100,7 +100,7 @@ public:
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
     enum Attribute {
         Opacity = 0, Brightness, Saturation, Scale, Rotation,
-        Position, Size, Translation, Clip, Generic,
+        Position, Size, Translation, Clip, Generic, CrossFadePrevious,
         NonFloatBase = Position
     };
     enum MetaType { SourceAnchor, TargetAnchor,

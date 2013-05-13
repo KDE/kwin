@@ -1343,6 +1343,14 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
     nodes[ContentLeaf].hasAlpha = !isOpaque();
     nodes[ContentLeaf].opacity = data.opacity();
     nodes[ContentLeaf].coordinateType = UnnormalizedCoordinates;
+
+    if (data.crossFadeProgress() != 1.0) {
+        OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
+        nodes[PreviousContentLeaf].texture = previous ? previous->texture() : NULL;
+        nodes[PreviousContentLeaf].hasAlpha = !isOpaque();
+        nodes[PreviousContentLeaf].opacity = 1.0 - data.crossFadeProgress();
+        nodes[PreviousContentLeaf].coordinateType = NormalizedCoordinates;
+    }
 }
 
 void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
@@ -1368,7 +1376,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
                            && options->glSmoothScale() != 0 ? GL_LINEAR : GL_NEAREST;
 
-    WindowQuadList quads[4];
+    WindowQuadList quads[LeafCount];
 
     // Split the quads into separate lists for each type
     foreach (const WindowQuad &quad, data.quads) {
@@ -1401,20 +1409,44 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         }
     }
 
+    if (data.crossFadeProgress() != 1.0) {
+        OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
+        if (previous) {
+            const QRect &oldGeometry = previous->contentsRect();
+            Q_FOREACH (const WindowQuad &quad, quads[ContentLeaf]) {
+                // we need to create new window quads with normalize texture coordinates
+                // normal quads divide the x/y position by width/height. This would not work as the texture
+                // is larger than the visible content in case of a decorated Client resulting in garbage being shown.
+                // So we calculate the normalized texture coordinate in the Client's new content space and map it to
+                // the previous Client's content space.
+                WindowQuad newQuad(WindowQuadContents);
+                for (int i = 0; i < 4; ++i) {
+                    const qreal xFactor = qreal(quad[i].textureX() - toplevel->clientPos().x())/qreal(toplevel->clientSize().width());
+                    const qreal yFactor = qreal(quad[i].textureY() - toplevel->clientPos().y())/qreal(toplevel->clientSize().height());
+                    WindowVertex vertex(quad[i].x(), quad[i].y(),
+                                        (xFactor * oldGeometry.width() + oldGeometry.x())/qreal(previous->size().width()),
+                                        (yFactor * oldGeometry.height() + oldGeometry.y())/qreal(previous->size().height()));
+                    newQuad[i] = vertex;
+                }
+                quads[PreviousContentLeaf].append(newQuad);
+            }
+        }
+    }
+
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
     const GLenum primitiveType = indexedQuads ? GL_QUADS_KWIN : GL_TRIANGLES;
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
     const size_t size = verticesPerQuad *
-        (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count()) * sizeof(GLVertex2D);
+        (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count() + quads[4].count()) * sizeof(GLVertex2D);
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     GLVertex2D *map = (GLVertex2D *) vbo->map(size);
 
-    LeafNode nodes[4];
+    LeafNode nodes[LeafCount];
     setupLeafNodes(nodes, quads, data);
 
-    for (int i = 0, v = 0; i < 4; i++) {
+    for (int i = 0, v = 0; i < LeafCount; i++) {
         if (quads[i].isEmpty() || !nodes[i].texture)
             continue;
 
@@ -1435,7 +1467,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
 
     float opacity = -1.0;
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < LeafCount; i++) {
         if (nodes[i].vertexCount == 0)
             continue;
 
@@ -1544,26 +1576,58 @@ void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData 
     paintDecorations(data, region);
 
     // paint the content
-    WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
-    if (!contentQuads.empty()) {
-        s_frameTexture->bind();
-        prepareStates(Content, data.opacity(), data.brightness(), data.saturation(), data.screen());
-        renderQuads(mask, region, contentQuads, s_frameTexture, false);
-        restoreStates(Content, data.opacity(), data.brightness(), data.saturation());
-        s_frameTexture->unbind();
-
-#ifndef KWIN_HAVE_OPENGLES
-        if (m_scene && m_scene->debug()) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-            renderQuads(mask, region, contentQuads, s_frameTexture, false);
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
+    const WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
+    if (previous && data.crossFadeProgress() != 1.0) {
+        paintContent(s_frameTexture, region, mask, data.opacity(), data, contentQuads, false);
+        previous->texture()->setFilter(filter == Scene::ImageFilterGood ? GL_LINEAR : GL_NEAREST);
+        WindowQuadList oldContents;
+        const QRect &oldGeometry = previous->contentsRect();
+        Q_FOREACH (const WindowQuad &quad, contentQuads) {
+            // we need to create new window quads with normalize texture coordinates
+            // normal quads divide the x/y position by width/height. This would not work as the texture
+            // is larger than the visible content in case of a decorated Client resulting in garbage being shown.
+            // So we calculate the normalized texture coordinate in the Client's new content space and map it to
+            // the previous Client's content space.
+            WindowQuad newQuad(WindowQuadContents);
+            for (int i = 0; i < 4; ++i) {
+                const qreal xFactor = qreal(quad[i].textureX() - toplevel->clientPos().x())/qreal(toplevel->clientSize().width());
+                const qreal yFactor = qreal(quad[i].textureY() - toplevel->clientPos().y())/qreal(toplevel->clientSize().height());
+                WindowVertex vertex(quad[i].x(), quad[i].y(),
+                                    (xFactor * oldGeometry.width() + oldGeometry.x())/qreal(previous->size().width()),
+                                    (yFactor * oldGeometry.height() + oldGeometry.y())/qreal(previous->size().height()));
+                newQuad[i] = vertex;
+            }
+            oldContents.append(newQuad);
         }
-#endif
+        paintContent(previous->texture(), region, mask, 1.0 - data.crossFadeProgress(), data, oldContents, true);
+    } else {
+        paintContent(s_frameTexture, region, mask, data.opacity(), data, contentQuads, false);
     }
 
     popMatrix();
 
     endRenderWindow();
+}
+
+void SceneOpenGL1Window::paintContent(SceneOpenGL::Texture* content, const QRegion& region, int mask,
+                                      qreal opacity, const WindowPaintData& data, const WindowQuadList &contentQuads, bool normalized)
+{
+    if (contentQuads.isEmpty()) {
+        return;
+    }
+    content->bind();
+    prepareStates(Content, opacity, data.brightness(), data.saturation(), data.screen());
+    renderQuads(mask, region, contentQuads, content, normalized);
+    restoreStates(Content, opacity, data.brightness(), data.saturation());
+    content->unbind();
+#ifndef KWIN_HAVE_OPENGLES
+    if (m_scene && m_scene->debug()) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        renderQuads(mask, region, contentQuads, content, normalized);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+#endif
 }
 
 void SceneOpenGL1Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)

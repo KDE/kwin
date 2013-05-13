@@ -253,6 +253,7 @@ protected:
      * @return The WindowPixmap casted to T* or @c NULL if there is no valid window pixmap.
      */
     template<typename T> T *windowPixmap();
+    template<typename T> T *previousWindowPixmap();
     /**
      * @brief Factory method to create a WindowPixmap.
      *
@@ -327,6 +328,16 @@ public:
      * @see isDiscarded
      */
     void markAsDiscarded();
+    /**
+     * The size of the pixmap.
+     */
+    const QSize &size() const;
+    /**
+     * The geometry of the Client's content inside the pixmap. In case of a decorated Client the
+     * pixmap also contains the decoration which is not rendered into this pixmap, though. This
+     * contentsRect tells where inside the complete pixmap the real content is.
+     */
+    const QRect &contentsRect() const;
 
 protected:
     explicit WindowPixmap(Scene::Window *window);
@@ -344,6 +355,7 @@ private:
     xcb_pixmap_t m_pixmap;
     QSize m_pixmapSize;
     bool m_discarded;
+    QRect m_contentsRect;
 };
 
 class Scene::EffectFrame
@@ -471,6 +483,13 @@ T* Scene::Window::windowPixmap()
     }
 }
 
+template <typename T>
+inline
+T* Scene::Window::previousWindowPixmap()
+{
+    return static_cast<T*>(m_previousPixmap.data());
+}
+
 inline
 Toplevel* WindowPixmap::toplevel()
 {
@@ -494,6 +513,18 @@ void WindowPixmap::markAsDiscarded()
 {
     m_discarded = true;
     m_window->referencePreviousPixmap();
+}
+
+inline
+const QRect &WindowPixmap::contentsRect() const
+{
+    return m_contentsRect;
+}
+
+inline
+const QSize &WindowPixmap::size() const
+{
+    return m_pixmapSize;
 }
 
 } // namespace

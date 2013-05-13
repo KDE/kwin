@@ -280,7 +280,7 @@ private:
 class SceneOpenGL2Window : public SceneOpenGL::Window
 {
 public:
-    enum Leaf { ShadowLeaf = 0, LeftRightLeaf, TopBottomLeaf, ContentLeaf };
+    enum Leaf { ShadowLeaf = 0, LeftRightLeaf, TopBottomLeaf, ContentLeaf, PreviousContentLeaf, LeafCount };
 
     struct LeafNode
     {
@@ -331,6 +331,9 @@ protected:
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
+private:
+    void paintContent(SceneOpenGL::Texture* content, const QRegion& region, int mask, qreal opacity,
+                      const WindowPaintData& data, const WindowQuadList &contentQuads, bool normalized);
 };
 #endif
 

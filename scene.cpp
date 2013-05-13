@@ -873,6 +873,7 @@ void WindowPixmap::create()
     }
     m_pixmap = pix;
     m_pixmapSize = QSize(toplevel()->width(), toplevel()->height());
+    m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
 }
 

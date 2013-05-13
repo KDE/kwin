@@ -177,6 +177,14 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
             to.set(1.0,1.0);
             setMetaData( TargetAnchor, metaData(SourceAnchor, meta), meta );
         }
+    } else if (a == CrossFadePrevious) {
+        if (!from.isValid()) {
+            from.set(0.0);
+        }
+        if (!to.isValid()) {
+            to.set(1.0);
+        }
+        w->referencePreviousWindowPixmap();
     }
 
     Q_D(AnimationEffect);
@@ -268,6 +276,9 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
             } else {
                 EffectWindow *oldW = entry.key();
                 AniData *aData = &(*anim);
+                if (aData->attribute == KWin::AnimationEffect::CrossFadePrevious) {
+                    oldW->unreferencePreviousWindowPixmap();
+                }
                 animationEnded(oldW, anim->attribute, anim->meta);
                 // NOTICE animationEnded is an external call and might have called "::animate"
                 // as a result our iterators could now point random junk on the heap
@@ -423,7 +434,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                     continue;
 
                 isUsed = true;
-                if (anim->attribute == Opacity)
+                if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious)
                     data.setTranslucent();
                 else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
                     data.setTransformed();
@@ -553,6 +564,9 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 }
                 case Generic:
                     genericAnimation(w, data, progress(*anim), anim->meta);
+                    break;
+                case CrossFadePrevious:
+                    data.setCrossFadeProgress(progress(*anim));
                     break;
                 default:
                     break;
@@ -725,6 +739,7 @@ void AnimationEffect::updateLayerRepaints()
                 case Opacity:
                 case Brightness:
                 case Saturation:
+                case CrossFadePrevious:
                     createRegion = true;
                     break;
                 case Rotation:

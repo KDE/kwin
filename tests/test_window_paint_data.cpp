@@ -70,6 +70,8 @@ public:
     virtual void unrefWindow();
     virtual QRegion shape() const;
     virtual void setData(int role, const QVariant &data);
+    virtual void referencePreviousWindowPixmap() {}
+    virtual void unreferencePreviousWindowPixmap() {}
 };
 
 MockEffectWindow::MockEffectWindow(QObject *parent)

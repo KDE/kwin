@@ -295,6 +295,9 @@ public:
 
     virtual WindowQuadList buildQuads(bool force = false) const;
 
+    virtual void referencePreviousWindowPixmap();
+    virtual void unreferencePreviousWindowPixmap();
+
     const Toplevel* window() const;
     Toplevel* window();
 

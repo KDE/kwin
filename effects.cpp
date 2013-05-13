@@ -1807,6 +1807,20 @@ void EffectWindowImpl::desktopThumbnailDestroyed(QObject *object)
     m_desktopThumbnails.removeAll(static_cast<DesktopThumbnailItem*>(object));
 }
 
+void EffectWindowImpl::referencePreviousWindowPixmap()
+{
+    if (sw) {
+        sw->referencePreviousPixmap();
+    }
+}
+
+void EffectWindowImpl::unreferencePreviousWindowPixmap()
+{
+    if (sw) {
+        sw->unreferencePreviousPixmap();
+    }
+}
+
 //****************************************
 // EffectWindowGroupImpl
 //****************************************

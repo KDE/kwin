@@ -1652,6 +1652,35 @@ public:
      */
     Q_SCRIPTABLE virtual void setData(int role, const QVariant &data) = 0;
     Q_SCRIPTABLE virtual QVariant data(int role) const = 0;
+
+    /**
+     * @brief References the previous window pixmap to prevent discarding.
+     *
+     * This method allows to reference the previous window pixmap in case that a window changed
+     * its size, which requires a new window pixmap. By referencing the previous (and then outdated)
+     * window pixmap an effect can for example cross fade the current window pixmap with the previous
+     * one. This allows for smoother transitions for window geometry changes.
+     *
+     * If an effect calls this method on a window it also needs to call @link unreferencePreviousWindowPixmap
+     * once it does no longer need the previous window pixmap.
+     *
+     * Note: the window pixmap is not kept forever even when referenced. If the geometry changes again, so that
+     * a new window pixmap is created, the previous window pixmap will be exchanged with the current one. This
+     * means it's still possible to have rendering glitches. An effect is supposed to track for itself the changes
+     * to the window's geometry and decide how the transition should continue in such a situation.
+     *
+     * @see unreferencePreviousWindowPixmap
+     * @since 4.11
+     */
+    virtual void referencePreviousWindowPixmap() = 0;
+    /**
+     * @brief Unreferences the previous window pixmap. Only relevant after @link referencePreviousWindowPixmap had
+     * been called.
+     *
+     * @see referencePreviousWindowPixmap
+     * @since 4.11
+     */
+    virtual void unreferencePreviousWindowPixmap() = 0;
 };
 
 class KWIN_EXPORT EffectWindowGroup
@@ -2086,6 +2115,21 @@ public:
      * A value less than 0 will indicate that a default profile should be done.
      */
     void setScreen(int screen) const;
+    /**
+     * @brief Sets the cross fading @p factor to fade over with previously sized window.
+     * If @c 1.0 only the current window is used, if @c 0.0 only the previous window is used.
+     *
+     * By default only the current window is used. This factor can only make any visual difference
+     * if the previous window get referenced.
+     *
+     * @param factor The cross fade factor between @c 0.0 (previous window) and @c 1.0 (current window)
+     * @see crossFadeProgress
+     */
+    void setCrossFadeProgress(qreal factor);
+    /**
+     * @see setCrossFadeProgress
+     */
+    qreal crossFadeProgress() const;
     WindowQuadList quads;
     /**
      * Shader to be used for rendering, if any.
