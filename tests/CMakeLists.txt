@@ -40,6 +40,9 @@ target_link_libraries( testVirtualDesktops
 set( testClientMachine_SRCS
      test_client_machine.cpp
      ../client_machine.cpp
+     ../utils.cpp
+     ../atoms.cpp # needed by utils.cpp
+     ../cursor.cpp # needed by utils.cpp
 )
 kde4_add_unit_test( testClientMachine TESTNAME kwin-TestClientMachine ${testClientMachine_SRCS} )
 

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "testutils.h"
 // KWin
+#include "../atoms.h" // needed for utils to compile
 #include "../client_machine.h"
 #include "../utils.h"
 #include "../xcbutils.h"
@@ -34,25 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netdb.h>
 
 namespace KWin {
-
-// mock required function from utils
-QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
-{
-    Q_UNUSED(separator)
-    ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(),
-        xcb_get_property_unchecked(connection(), false, w, prop, XCB_ATOM_STRING, 0, 10000),
-        NULL));
-    if (property.isNull()) {
-        return QByteArray();
-    }
-    void *data = xcb_get_property_value(property.data());
-    if (data && property->value_len > 0) {
-        QByteArray result = QByteArray((const char*) data, property->value_len);
-        return result;
-    }
-    return QByteArray();
-}
-
+// just to make the linker of utils happy
+Atoms* atoms;
 }
 
 using namespace KWin;
