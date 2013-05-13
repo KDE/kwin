@@ -52,6 +52,7 @@ target_link_libraries( testClientMachine
                        ${KDE4_KDEUI_LIBS}
                        ${XCB_XCB_LIBRARIES}
                        ${X11_XCB_LIBRARIES}
+                       ${X11_X11_LIB} # to make jenkins happy
 )
 
 ########################################################
