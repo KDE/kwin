@@ -1,0 +1,547 @@
+/********************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
+#define WL_EGL_PLATFORM 1
+#include "egl_wayland_backend.h"
+// kwin
+#include "options.h"
+// kwin libs
+#include <kwinglplatform.h>
+// KDE
+#include <KDE/KDebug>
+// system
+#include <sys/shm.h>
+
+namespace KWin
+{
+
+namespace Wayland
+{
+
+/**
+ * Callback for announcing global objects in the registry
+ **/
+static void registryHandleGlobal(void *data, struct wl_registry *registry,
+                                 uint32_t name, const char *interface, uint32_t version)
+{
+    Q_UNUSED(version)
+    WaylandBackend *d = reinterpret_cast<WaylandBackend*>(data);
+
+    if (strcmp(interface, "wl_compositor") == 0) {
+        d->setCompositor(reinterpret_cast<wl_compositor*>(wl_registry_bind(registry, name, &wl_compositor_interface, 1)));
+    } else if (strcmp(interface, "wl_shell") == 0) {
+        d->setShell(reinterpret_cast<wl_shell *>(wl_registry_bind(registry, name, &wl_shell_interface, 1)));
+    }
+    kDebug(1212) << "Wayland Interface: " << interface;
+}
+
+/**
+ * Callback for removal of global objects in the registry
+ **/
+static void registryHandleGlobalRemove(void *data, struct wl_registry *registry, uint32_t name)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(registry)
+    Q_UNUSED(name)
+    // TODO: implement me
+}
+
+/**
+ * Call back for ping from Wayland Shell.
+ **/
+static void handlePing(void *data, struct wl_shell_surface *shellSurface, uint32_t serial)
+{
+    Q_UNUSED(data)
+    wl_shell_surface_pong(shellSurface, serial);
+}
+
+/**
+ * Callback for a configure request for a shell surface
+ **/
+static void handleConfigure(void *data, struct wl_shell_surface *shellSurface, uint32_t edges, int32_t width, int32_t height)
+{
+    Q_UNUSED(shellSurface)
+    Q_UNUSED(edges)
+    WaylandBackend *display = reinterpret_cast<WaylandBackend*>(data);
+    wl_egl_window_resize(display->overlay(), width, height, 0, 0);
+    // TODO: this information should probably go into Screens
+}
+
+/**
+ * Callback for popups - not needed, we don't have popups
+ **/
+static void handlePopupDone(void *data, struct wl_shell_surface *shellSurface)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(shellSurface)
+}
+
+// handlers
+static const struct wl_registry_listener s_registryListener = {
+    registryHandleGlobal,
+    registryHandleGlobalRemove
+};
+
+static const struct wl_shell_surface_listener s_shellSurfaceListener = {
+    handlePing,
+    handleConfigure,
+    handlePopupDone
+};
+
+WaylandBackend::WaylandBackend()
+    : m_display(wl_display_connect(NULL))
+    , m_registry(wl_display_get_registry(m_display))
+    , m_compositor(NULL)
+    , m_shell(NULL)
+    , m_surface(NULL)
+    , m_overlay(NULL)
+    , m_shellSurface(NULL)
+{
+    kDebug(1212) << "Created Wayland display";
+    // setup the registry
+    wl_registry_add_listener(m_registry, &s_registryListener, this);
+    wl_display_dispatch(m_display);
+}
+
+WaylandBackend::~WaylandBackend()
+{
+    if (m_overlay) {
+        wl_egl_window_destroy(m_overlay);
+    }
+    if (m_shellSurface) {
+        wl_shell_surface_destroy(m_shellSurface);
+    }
+    if (m_surface) {
+        wl_surface_destroy(m_surface);
+    }
+    if (m_shell) {
+        wl_shell_destroy(m_shell);
+    }
+    if (m_compositor) {
+        wl_compositor_destroy(m_compositor);
+    }
+    if (m_registry) {
+        wl_registry_destroy(m_registry);
+    }
+    if (m_display) {
+        wl_display_flush(m_display);
+        wl_display_disconnect(m_display);
+    }
+    kDebug(1212) << "Destroyed Wayland display";
+}
+
+bool WaylandBackend::createSurface()
+{
+    m_surface = wl_compositor_create_surface(m_compositor);
+    if (!m_surface) {
+        kError(1212) << "Creating Wayland Surface failed";
+        return false;
+    }
+    // map the surface as fullscreen
+    m_shellSurface = wl_shell_get_shell_surface(m_shell, m_surface);
+    wl_shell_surface_add_listener(m_shellSurface, &s_shellSurfaceListener, this);
+
+    // TODO: do something better than displayWidth/displayHeight
+    m_overlay = wl_egl_window_create(m_surface, displayWidth(), displayHeight());
+    if (!m_overlay) {
+        kError(1212) << "Creating Wayland Egl window failed";
+        return false;
+    }
+//     wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
+    wl_shell_surface_set_toplevel(m_shellSurface);
+    handleConfigure(this, m_shellSurface, 0, displayWidth(), displayHeight());
+
+    return true;
+}
+
+}
+
+EglWaylandBackend::EglWaylandBackend()
+    : OpenGLBackend()
+    , m_context(EGL_NO_CONTEXT)
+    , m_wayland(new Wayland::WaylandBackend)
+{
+    kDebug(1212) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
+    if (!m_wayland->display()) {
+        setFailed("Could not connect to Wayland compositor");
+        return;
+    }
+    initializeEgl();
+    init();
+    // Egl is always direct rendering
+    setIsDirectRendering(true);
+}
+
+EglWaylandBackend::~EglWaylandBackend()
+{
+    cleanupGL();
+    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroyContext(m_display, m_context);
+    eglDestroySurface(m_display, m_surface);
+    eglTerminate(m_display);
+    eglReleaseThread();
+}
+
+bool EglWaylandBackend::initializeEgl()
+{
+    m_display = eglGetDisplay(m_wayland->display());
+    if (m_display == EGL_NO_DISPLAY)
+        return false;
+
+    EGLint major, minor;
+    if (eglInitialize(m_display, &major, &minor) == EGL_FALSE)
+        return false;
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS) {
+        kWarning(1212) << "Error during eglInitialize " << error;
+        return false;
+    }
+    kDebug(1212) << "Egl Initialize succeeded";
+
+#ifdef KWIN_HAVE_OPENGLES
+    eglBindAPI(EGL_OPENGL_ES_API);
+#else
+    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
+        kError(1212) << "bind OpenGL API failed";
+        return false;
+    }
+#endif
+    kDebug(1212) << "EGL version: " << major << "." << minor;
+    return true;
+}
+
+void EglWaylandBackend::init()
+{
+    if (!initRenderingContext()) {
+        setFailed("Could not initialize rendering context");
+        return;
+    }
+
+    initEGL();
+    GLPlatform *glPlatform = GLPlatform::instance();
+    glPlatform->detect(EglPlatformInterface);
+    glPlatform->printResults();
+    initGL(EglPlatformInterface);
+}
+
+bool EglWaylandBackend::initRenderingContext()
+{
+    initBufferConfigs();
+
+#ifdef KWIN_HAVE_OPENGLES
+    const EGLint context_attribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2,
+        EGL_NONE
+    };
+
+    m_context = eglCreateContext(m_display, m_config, EGL_NO_CONTEXT, context_attribs);
+#else
+    const EGLint context_attribs_31_core[] = {
+        EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
+        EGL_CONTEXT_MINOR_VERSION_KHR, 1,
+        EGL_CONTEXT_FLAGS_KHR,         EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
+        EGL_NONE
+    };
+
+    const EGLint context_attribs_legacy[] = {
+        EGL_NONE
+    };
+
+    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
+    const QList<QByteArray> extensions = eglExtensions.split(' ');
+
+    // Try to create a 3.1 core context
+    if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
+        m_context = eglCreateContext(m_display, m_config, EGL_NO_CONTEXT, context_attribs_31_core);
+
+    if (m_context == EGL_NO_CONTEXT)
+        m_context = eglCreateContext(m_display, m_config, EGL_NO_CONTEXT, context_attribs_legacy);
+#endif
+
+    if (m_context == EGL_NO_CONTEXT) {
+        kError(1212) << "Create Context failed";
+        return false;
+    }
+
+    if (!m_wayland->createSurface()) {
+        return false;
+    }
+
+    m_surface = eglCreateWindowSurface(m_display, m_config, m_wayland->overlay(), NULL);
+    if (m_surface == EGL_NO_SURFACE) {
+        kError(1212) << "Create Window Surface failed";
+        return false;
+    }
+
+    return makeContextCurrent();
+}
+
+bool EglWaylandBackend::makeContextCurrent()
+{
+    if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
+        kError(1212) << "Make Context Current failed";
+        return false;
+    }
+
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS) {
+        kWarning(1212) << "Error occurred while creating context " << error;
+        return false;
+    }
+    return true;
+}
+
+bool EglWaylandBackend::initBufferConfigs()
+{
+    const EGLint config_attribs[] = {
+        EGL_SURFACE_TYPE,         EGL_WINDOW_BIT,
+        EGL_RED_SIZE,             1,
+        EGL_GREEN_SIZE,           1,
+        EGL_BLUE_SIZE,            1,
+        EGL_ALPHA_SIZE,           0,
+#ifdef KWIN_HAVE_OPENGLES
+        EGL_RENDERABLE_TYPE,      EGL_OPENGL_ES2_BIT,
+#else
+        EGL_RENDERABLE_TYPE,      EGL_OPENGL_BIT,
+#endif
+        EGL_CONFIG_CAVEAT,        EGL_NONE,
+        EGL_NONE,
+    };
+
+    EGLint count;
+    EGLConfig configs[1024];
+    if (eglChooseConfig(m_display, config_attribs, configs, 1, &count) == EGL_FALSE) {
+        kError(1212) << "choose config failed";
+        return false;
+    }
+    if (count != 1) {
+        kError(1212) << "choose config did not return a config" << count;
+        return false;
+    }
+    m_config = configs[0];
+
+    return true;
+}
+
+void EglWaylandBackend::present()
+{
+    setLastDamage(QRegion());
+    wl_display_dispatch_pending(m_wayland->display());
+    wl_display_flush(m_wayland->display());
+    eglSwapBuffers(m_display, m_surface);
+    eglWaitGL();
+}
+
+void EglWaylandBackend::screenGeometryChanged(const QSize &size)
+{
+    Q_UNUSED(size)
+    // no backend specific code needed
+    // TODO: base implementation in OpenGLBackend
+}
+
+SceneOpenGL::TexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGL::Texture *texture)
+{
+    return new EglWaylandTexture(texture, this);
+}
+
+void EglWaylandBackend::prepareRenderingFrame()
+{
+    if (!lastDamage().isEmpty())
+        present();
+    eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+    startRenderTimer();
+}
+
+void EglWaylandBackend::endRenderingFrame(const QRegion &damage)
+{
+    setLastDamage(damage);
+    glFlush();
+}
+
+Shm *EglWaylandBackend::shm()
+{
+    if (m_shm.isNull()) {
+        m_shm.reset(new Shm);
+    }
+    return m_shm.data();
+}
+
+/************************************************
+ * EglTexture
+ ************************************************/
+
+EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGL::Texture *texture, KWin::EglWaylandBackend *backend)
+    : SceneOpenGL::TexturePrivate()
+    , q(texture)
+    , m_backend(backend)
+    , m_referencedPixmap(XCB_PIXMAP_NONE)
+{
+    m_target = GL_TEXTURE_2D;
+}
+
+EglWaylandTexture::~EglWaylandTexture()
+{
+}
+
+OpenGLBackend *EglWaylandTexture::backend()
+{
+    return m_backend;
+}
+
+void EglWaylandTexture::findTarget()
+{
+    if (m_target != GL_TEXTURE_2D) {
+        m_target = GL_TEXTURE_2D;
+    }
+}
+
+bool EglWaylandTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
+{
+    // HACK: egl wayland platform doesn't support texture from X11 pixmap through the KHR_image_pixmap
+    // extension. To circumvent this problem we copy the pixmap content into a SHM image and from there
+    // to the OpenGL texture. This is a temporary solution. In future we won't need to get the content
+    // from X11 pixmaps. That's what we have XWayland for to get the content into a nice Wayland buffer.
+    Q_UNUSED(depth)
+    if (pix == XCB_PIXMAP_NONE)
+        return false;
+    m_referencedPixmap = pix;
+
+    Shm *shm = m_backend->shm();
+    if (!shm->isValid()) {
+        return false;
+    }
+
+    xcb_shm_get_image_cookie_t cookie = xcb_shm_get_image_unchecked(connection(), pix, 0, 0, size.width(),
+        size.height(), ~0, XCB_IMAGE_FORMAT_Z_PIXMAP, shm->segment(), 0);
+
+    glGenTextures(1, &m_texture);
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    q->setFilter(GL_LINEAR);
+    q->bind();
+
+    ScopedCPointer<xcb_shm_get_image_reply_t> image(xcb_shm_get_image_reply(connection(), cookie, NULL));
+    if (image.isNull()) {
+        return false;
+    }
+
+    // TODO: other formats
+#ifndef KWIN_HAVE_OPENGLES
+    glTexImage2D(m_target, 0, GL_RGBA8, size.width(), size.height(), 0,
+                 GL_BGRA, GL_UNSIGNED_BYTE, shm->buffer());
+#endif
+
+    q->unbind();
+    checkGLError("load texture");
+    q->setYInverted(true);
+    m_size = size;
+    updateMatrix();
+    return true;
+}
+
+bool EglWaylandTexture::update(const QRegion &damage)
+{
+    if (m_referencedPixmap == XCB_PIXMAP_NONE) {
+        return false;
+    }
+
+    Shm *shm = m_backend->shm();
+    if (!shm->isValid()) {
+        return false;
+    }
+
+    // TODO: optimize by only updating the damaged areas
+    const QRect &damagedRect = damage.boundingRect();
+    xcb_shm_get_image_cookie_t cookie = xcb_shm_get_image_unchecked(connection(), m_referencedPixmap,
+        damagedRect.x(), damagedRect.y(), damagedRect.width(), damagedRect.height(),
+        ~0, XCB_IMAGE_FORMAT_Z_PIXMAP, shm->segment(), 0);
+
+    q->bind();
+
+    ScopedCPointer<xcb_shm_get_image_reply_t> image(xcb_shm_get_image_reply(connection(), cookie, NULL));
+    if (image.isNull()) {
+        return false;
+    }
+
+    // TODO: other formats
+#ifndef KWIN_HAVE_OPENGLES
+    glTexSubImage2D(m_target, 0, damagedRect.x(), damagedRect.y(), damagedRect.width(), damagedRect.height(), GL_BGRA, GL_UNSIGNED_BYTE, shm->buffer());
+#endif
+
+    q->unbind();
+    checkGLError("update texture");
+    return true;
+}
+
+Shm::Shm()
+    : m_shmId(-1)
+    , m_buffer(NULL)
+    , m_segment(XCB_NONE)
+    , m_valid(false)
+{
+    m_valid = init();
+}
+
+Shm::~Shm()
+{
+    if (m_valid) {
+        xcb_shm_detach(connection(), m_segment);
+        shmdt(m_buffer);
+    }
+}
+
+bool Shm::init()
+{
+    const xcb_query_extension_reply_t *ext = xcb_get_extension_data(connection(), &xcb_shm_id);
+    if (!ext || !ext->present) {
+        kDebug(1212) << "SHM extension not available";
+        return false;
+    }
+    ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
+        xcb_shm_query_version_unchecked(connection()), NULL));
+    if (version.isNull()) {
+        kDebug(1212) << "Failed to get SHM extension version information";
+        return false;
+    }
+    const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
+    m_shmId = shmget(IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600);
+    if (m_shmId < 0) {
+        kDebug(1212) << "Failed to allocate SHM segment";
+        return false;
+    }
+    m_buffer = shmat(m_shmId, NULL, 0 /*read/write*/);
+    if (-1 == reinterpret_cast<long>(m_buffer)) {
+        kDebug(1212) << "Failed to attach SHM segment";
+        shmctl(m_shmId, IPC_RMID, NULL);
+        return false;
+    }
+    shmctl(m_shmId, IPC_RMID, NULL);
+
+    m_segment = xcb_generate_id(connection());
+    const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);
+    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
+    if (!error.isNull()) {
+        kDebug(1212) << "xcb_shm_attach error: " << error->error_code;
+        shmdt(m_buffer);
+        return false;
+    }
+
+    return true;
+}
+
+} // namespace

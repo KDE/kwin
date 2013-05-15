@@ -24,6 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_opengl.h"
 #ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"
+// for Wayland
+#include "config-workspace.h"
+#ifdef WAYLAND_FOUND
+#include "egl_wayland_backend.h"
+#endif
 #endif
 #ifndef KWIN_HAVE_OPENGLES
 #include "glxbackend.h"
@@ -173,13 +178,15 @@ SceneOpenGL *SceneOpenGL::createScene()
     platformInterface = GlxPlatformInterface;
 #endif
 
+    const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
 #ifdef KWIN_HAVE_EGL
 #ifdef KWIN_HAVE_OPENGLES
     // for OpenGL ES we need to use the Egl Backend
     platformInterface = EglPlatformInterface;
 #else
     // check environment variable
-    if (qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl") == 0) {
+    if (qstrcmp(envOpenGLInterface, "egl") == 0 ||
+            qstrcmp(envOpenGLInterface, "egl_wayland") == 0) {
         kDebug(1212) << "Forcing EGL native interface through environment variable";
         platformInterface = EglPlatformInterface;
     }
@@ -194,7 +201,15 @@ SceneOpenGL *SceneOpenGL::createScene()
         break;
     case EglPlatformInterface:
 #ifdef KWIN_HAVE_EGL
+#ifdef WAYLAND_FOUND
+        if (qstrcmp(envOpenGLInterface, "egl_wayland") == 0) {
+            backend = new EglWaylandBackend();
+        } else {
+            backend = new EglOnXBackend();
+        }
+#else
         backend = new EglOnXBackend();
+#endif
 #endif
         break;
     default:
@@ -941,6 +956,12 @@ bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
     return d->loadTexture(pix, size, depth);
 }
 
+bool SceneOpenGL::Texture::update(const QRegion &damage)
+{
+    Q_D(Texture);
+    return d->update(damage);
+}
+
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
@@ -950,6 +971,12 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
+}
+
+bool SceneOpenGL::TexturePrivate::update(const QRegion &damage)
+{
+    Q_UNUSED(damage)
+    return true;
 }
 
 //****************************************
@@ -1803,9 +1830,11 @@ bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
         if (!toplevel()->damage().isEmpty()) {
+            const bool success = m_texture->update(toplevel()->damage());
             // mipmaps need to be updated
             m_texture->setDirty();
             toplevel()->resetDamage();
+            return success;
         }
         return true;
     }

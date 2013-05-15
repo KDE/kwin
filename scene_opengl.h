@@ -173,6 +173,7 @@ public:
     virtual void findTarget() = 0;
     virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth) = 0;
     virtual OpenGLBackend *backend() = 0;
+    virtual bool update(const QRegion &damage);
 
 protected:
     TexturePrivate();
@@ -195,6 +196,7 @@ public:
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
     virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
+    bool update(const QRegion &damage);
 
 protected:
     void findTarget();

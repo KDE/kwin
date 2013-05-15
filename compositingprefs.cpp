@@ -139,7 +139,8 @@ void CompositingPrefs::detect()
 #ifndef KWIN_HAVE_OPENGLES
     // HACK: This is needed for AIGLX
     const bool forceIndirect = qstrcmp(qgetenv("LIBGL_ALWAYS_INDIRECT"), "1") == 0;
-    const bool forceEgl = qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl") == 0;
+    const bool forceEgl = qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl") == 0 ||
+            qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl_wayland") == 0;
     if (!forceIndirect && !forceEgl && qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") != 0) {
         // Start an external helper program that initializes GLX and returns
         // 0 if we can use direct rendering, and 1 otherwise.
