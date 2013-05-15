@@ -107,7 +107,7 @@ int currentRefreshRate()
 
     // 0Hz or less is invalid, so we fallback to a default rate
     if (rate <= 0)
-        rate = 50;
+        rate = 60;
     // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
     // however, additional throttling prevents very high rates from taking place anyway
     else if (rate > 1000)
