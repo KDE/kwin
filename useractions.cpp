@@ -382,7 +382,7 @@ void UserActionsMenu::init()
     m_menu->addSeparator();
 
     action = m_menu->addMenu(advancedMenu);
-    action->setText(i18n("More Actions"));
+    action->setText(i18n("&More Actions"));
 
     m_menu->addSeparator();
 
@@ -579,7 +579,7 @@ void UserActionsMenu::initTabbingPopups()
     }
 
     if (!m_addTabsMenu) {
-        m_addTabsMenu = new QMenu(i18n("Attach as tab to"), m_menu);
+        m_addTabsMenu = new QMenu(i18n("&Attach as tab to"), m_menu);
         m_addTabsMenu->setFont(KGlobalSettings::menuFont());
         connect(m_addTabsMenu, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
         connect(m_addTabsMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
