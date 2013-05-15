@@ -921,7 +921,7 @@ bool SceneOpenGL::Window::bindTexture()
         if (!toplevel->damage().isEmpty()) {
             // mipmaps need to be updated
             texture->setDirty();
-            toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
+            toplevel->resetDamage();
         }
         return true;
     }
@@ -934,7 +934,7 @@ bool SceneOpenGL::Window::bindTexture()
                                 toplevel->damage());
 
     if (success)
-        toplevel->resetDamage(QRect(toplevel->clientPos(), toplevel->clientSize()));
+        toplevel->resetDamage();
     else
         kDebug(1212) << "Failed to bind window";
     return success;

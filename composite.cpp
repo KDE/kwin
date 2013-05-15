@@ -1026,12 +1026,9 @@ void Toplevel::addDamageFull()
     emit damaged(this, rect());
 }
 
-void Toplevel::resetDamage(const QRect& r)
+void Toplevel::resetDamage()
 {
-    damage_region -= r;
-    int damageArea = 0;
-    foreach (const QRect &r2, damage_region.rects())
-        damageArea += r2.width()*r2.height();
+    damage_region = QRegion();
 }
 
 void Toplevel::addRepaint(const QRect& r)

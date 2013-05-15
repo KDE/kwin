@@ -252,7 +252,7 @@ public:
     QRegion repaints() const;
     void resetRepaints();
     QRegion damage() const;
-    void resetDamage(const QRect& r);
+    void resetDamage();
     EffectWindowImpl* effectWindow();
     const EffectWindowImpl* effectWindow() const;
     /**

@@ -329,7 +329,7 @@ xcb_render_picture_t SceneXrender::Window::picture()
             return XCB_RENDER_PICTURE_NONE;
         _picture = xcb_generate_id(connection());
         xcb_render_create_picture(connection(), _picture, pix, format, 0, NULL);
-        toplevel->resetDamage(toplevel->rect());
+        toplevel->resetDamage();
     }
     return _picture;
 }
