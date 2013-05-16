@@ -31,6 +31,23 @@ namespace KWin
 
 namespace Wayland
 {
+
+class WaylandSeat
+{
+public:
+    WaylandSeat(wl_seat *seat);
+    virtual ~WaylandSeat();
+
+    void changed(uint32_t capabilities);
+    wl_seat *seat();
+private:
+    void destroyPointer();
+    void destroyKeyboard();
+    wl_seat *m_seat;
+    wl_pointer *m_pointer;
+    wl_keyboard *m_keyboard;
+};
+
 /**
 * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
 *
@@ -49,6 +66,7 @@ public:
     void setShell(wl_shell *s);
     wl_shell *shell();
     wl_egl_window *overlay();
+    void createSeat(uint32_t name);
 
     bool createSurface();
 private:
@@ -59,7 +77,14 @@ private:
     wl_surface *m_surface;
     wl_egl_window *m_overlay;
     wl_shell_surface *m_shellSurface;
+    QScopedPointer<WaylandSeat> m_seat;
 };
+
+inline
+wl_seat *WaylandSeat::seat()
+{
+    return m_seat;
+}
 
 inline
 wl_display *WaylandBackend::display()

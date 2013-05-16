@@ -25,7 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // KDE
 #include <KDE/KDebug>
+// xcb
+#include <xcb/xtest.h>
 // system
+#include <linux/input.h>
 #include <sys/shm.h>
 
 namespace KWin
@@ -47,6 +50,8 @@ static void registryHandleGlobal(void *data, struct wl_registry *registry,
         d->setCompositor(reinterpret_cast<wl_compositor*>(wl_registry_bind(registry, name, &wl_compositor_interface, 1)));
     } else if (strcmp(interface, "wl_shell") == 0) {
         d->setShell(reinterpret_cast<wl_shell *>(wl_registry_bind(registry, name, &wl_shell_interface, 1)));
+    } else if (strcmp(interface, "wl_seat") == 0) {
+        d->createSeat(name);
     }
     kDebug(1212) << "Wayland Interface: " << interface;
 }
@@ -92,6 +97,138 @@ static void handlePopupDone(void *data, struct wl_shell_surface *shellSurface)
     Q_UNUSED(shellSurface)
 }
 
+static void seatHandleCapabilities(void *data, wl_seat *seat, uint32_t capabilities)
+{
+    WaylandSeat *s = reinterpret_cast<WaylandSeat*>(data);
+    if (seat != s->seat()) {
+        return;
+    }
+    s->changed(capabilities);
+}
+
+static void pointerHandleEnter(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface,
+                               wl_fixed_t sx, wl_fixed_t sy)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(pointer)
+    Q_UNUSED(serial)
+    Q_UNUSED(surface)
+    Q_UNUSED(sx)
+    Q_UNUSED(sy)
+}
+
+static void pointerHandleLeave(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(pointer)
+    Q_UNUSED(serial)
+    Q_UNUSED(surface)
+}
+
+static void pointerHandleMotion(void *data, wl_pointer *pointer, uint32_t time, wl_fixed_t sx, wl_fixed_t sy)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(pointer)
+    Q_UNUSED(time)
+    xcb_test_fake_input(connection(), XCB_MOTION_NOTIFY, 0, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE,
+                        wl_fixed_to_int(sx), wl_fixed_to_int(sy), 0);
+}
+
+static void pointerHandleButton(void *data, wl_pointer *pointer, uint32_t serial, uint32_t time,
+                                uint32_t button, uint32_t state)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(pointer)
+    Q_UNUSED(serial)
+    Q_UNUSED(time)
+    uint8_t type = XCB_BUTTON_PRESS;
+    if (state == WL_POINTER_BUTTON_STATE_RELEASED) {
+        type = XCB_BUTTON_RELEASE;
+    }
+    // TODO: there must be a better way for mapping
+    uint8_t xButton = 0;
+    switch (button) {
+    case BTN_LEFT:
+        xButton = XCB_BUTTON_INDEX_1;
+        break;
+    case BTN_RIGHT:
+        xButton = XCB_BUTTON_INDEX_3;
+        break;
+    case BTN_MIDDLE:
+        xButton = XCB_BUTTON_INDEX_2;
+        break;
+    default:
+        // TODO: add more buttons
+        return;
+    }
+    xcb_test_fake_input(connection(), type, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+}
+
+static void pointerHandleAxis(void *data, wl_pointer *pointer, uint32_t time, uint32_t axis, wl_fixed_t value)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(pointer)
+    Q_UNUSED(time)
+    Q_UNUSED(axis)
+    Q_UNUSED(value)
+    // TODO: implement mouse wheel support
+}
+
+static void keyboardHandleKeymap(void *data, wl_keyboard *keyboard,
+                       uint32_t format, int fd, uint32_t size)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(keyboard)
+    Q_UNUSED(format)
+    Q_UNUSED(fd)
+    Q_UNUSED(size)
+}
+
+static void keyboardHandleEnter(void *data, wl_keyboard *keyboard,
+                      uint32_t serial, wl_surface *surface,
+                      wl_array *keys)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(keyboard)
+    Q_UNUSED(serial)
+    Q_UNUSED(surface)
+    Q_UNUSED(keys)
+}
+
+static void keyboardHandleLeave(void *data, wl_keyboard *keyboard, uint32_t serial, wl_surface *surface)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(keyboard)
+    Q_UNUSED(serial)
+    Q_UNUSED(surface)
+}
+
+static void keyboardHandleKey(void *data, wl_keyboard *keyboard, uint32_t serial, uint32_t time,
+                              uint32_t key, uint32_t state)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(keyboard)
+    Q_UNUSED(serial)
+    Q_UNUSED(time)
+    uint8_t type = XCB_KEY_PRESS;
+    if (state == WL_KEYBOARD_KEY_STATE_RELEASED) {
+        type = XCB_KEY_RELEASE;
+    }
+    xcb_test_fake_input(connection(), type, key + 8 /*magic*/, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+}
+
+static void keyboardHandleModifiers(void *data, wl_keyboard *keyboard, uint32_t serial, uint32_t modsDepressed,
+                                    uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(keyboard)
+    Q_UNUSED(serial)
+    Q_UNUSED(modsDepressed)
+    Q_UNUSED(modsLatched)
+    Q_UNUSED(modsLocked)
+    Q_UNUSED(group)
+}
+
 // handlers
 static const struct wl_registry_listener s_registryListener = {
     registryHandleGlobal,
@@ -104,6 +241,77 @@ static const struct wl_shell_surface_listener s_shellSurfaceListener = {
     handlePopupDone
 };
 
+static const struct wl_pointer_listener s_pointerListener = {
+    pointerHandleEnter,
+    pointerHandleLeave,
+    pointerHandleMotion,
+    pointerHandleButton,
+    pointerHandleAxis
+};
+
+static const struct wl_keyboard_listener s_keyboardListener = {
+    keyboardHandleKeymap,
+    keyboardHandleEnter,
+    keyboardHandleLeave,
+    keyboardHandleKey,
+    keyboardHandleModifiers,
+};
+
+static const struct wl_seat_listener s_seatListener = {
+    seatHandleCapabilities
+};
+
+WaylandSeat::WaylandSeat(wl_seat *seat)
+    : m_seat(seat)
+    , m_pointer(NULL)
+    , m_keyboard(NULL)
+{
+    if (m_seat) {
+        wl_seat_add_listener(m_seat, &s_seatListener, this);
+    }
+}
+
+WaylandSeat::~WaylandSeat()
+{
+    destroyPointer();
+    destroyKeyboard();
+    if (m_seat) {
+        wl_seat_destroy(m_seat);
+    }
+}
+
+void WaylandSeat::destroyPointer()
+{
+    if (m_pointer) {
+        wl_pointer_destroy(m_pointer);
+        m_pointer = NULL;
+    }
+}
+
+void WaylandSeat::destroyKeyboard()
+{
+    if (m_keyboard) {
+        wl_keyboard_destroy(m_keyboard);
+        m_keyboard = NULL;
+    }
+}
+
+void WaylandSeat::changed(uint32_t capabilities)
+{
+    if ((capabilities & WL_SEAT_CAPABILITY_POINTER) && !m_pointer) {
+        m_pointer = wl_seat_get_pointer(m_seat);
+        wl_pointer_add_listener(m_pointer, &s_pointerListener, this);
+    } else if (!(capabilities & WL_SEAT_CAPABILITY_POINTER)) {
+        destroyPointer();
+    }
+    if ((capabilities & WL_SEAT_CAPABILITY_KEYBOARD)) {
+        m_keyboard = wl_seat_get_keyboard(m_seat);
+        wl_keyboard_add_listener(m_keyboard, &s_keyboardListener, this);
+    } else if (!(capabilities & WL_SEAT_CAPABILITY_KEYBOARD)) {
+        destroyKeyboard();
+    }
+}
+
 WaylandBackend::WaylandBackend()
     : m_display(wl_display_connect(NULL))
     , m_registry(wl_display_get_registry(m_display))
@@ -112,6 +320,7 @@ WaylandBackend::WaylandBackend()
     , m_surface(NULL)
     , m_overlay(NULL)
     , m_shellSurface(NULL)
+    , m_seat()
 {
     kDebug(1212) << "Created Wayland display";
     // setup the registry
@@ -144,6 +353,12 @@ WaylandBackend::~WaylandBackend()
         wl_display_disconnect(m_display);
     }
     kDebug(1212) << "Destroyed Wayland display";
+}
+
+void WaylandBackend::createSeat(uint32_t name)
+{
+    wl_seat *seat = reinterpret_cast<wl_seat*>(wl_registry_bind(m_registry, name, &wl_seat_interface, 1));
+    m_seat.reset(new WaylandSeat(seat));
 }
 
 bool WaylandBackend::createSurface()
