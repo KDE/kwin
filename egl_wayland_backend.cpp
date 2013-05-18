@@ -169,9 +169,27 @@ static void pointerHandleAxis(void *data, wl_pointer *pointer, uint32_t time, ui
     Q_UNUSED(data)
     Q_UNUSED(pointer)
     Q_UNUSED(time)
-    Q_UNUSED(axis)
-    Q_UNUSED(value)
-    // TODO: implement mouse wheel support
+    uint8_t xButton = 0;
+    const int delta = wl_fixed_to_int(value);
+    if (delta == 0) {
+        return;
+    }
+    switch (axis) {
+    case WL_POINTER_AXIS_VERTICAL_SCROLL:
+        xButton = delta > 0 ? XCB_BUTTON_INDEX_5 : XCB_BUTTON_INDEX_4;
+        break;
+    case WL_POINTER_AXIS_HORIZONTAL_SCROLL:
+        // no enum values defined for buttons larger than 5
+        xButton = delta > 0 ? 7 : 6;
+        break;
+    default:
+        // doesn't exist
+        return;
+    }
+    for (int i = 0; i < qAbs(delta); ++i) {
+        xcb_test_fake_input(connection(), XCB_BUTTON_PRESS, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+        xcb_test_fake_input(connection(), XCB_BUTTON_RELEASE, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+    }
 }
 
 static void keyboardHandleKeymap(void *data, wl_keyboard *keyboard,
