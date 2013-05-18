@@ -378,6 +378,10 @@ bool WaylandBackend::createSurface()
         kError(1212) << "Creating Wayland Egl window failed";
         return false;
     }
+    wl_region *region = wl_compositor_create_region(m_compositor);
+    wl_region_add(region, 0, 0, displayWidth(), displayHeight());
+    wl_surface_set_opaque_region(m_surface, region);
+    wl_region_destroy(region);
 //     wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
     wl_shell_surface_set_toplevel(m_shellSurface);
     handleConfigure(this, m_shellSurface, 0, displayWidth(), displayHeight());
