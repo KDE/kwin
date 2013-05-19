@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Xlib
 #include <X11/Xcursor/Xcursor.h>
 #include <fixx11h.h>
+// xcb
+#include <xcb/xfixes.h>
 
 namespace KWin
 {
@@ -36,6 +38,7 @@ KWIN_SINGLETON_FACTORY_FACTORED(Cursor, X11Cursor)
 Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
+    , m_cursorTrackingCounter(0)
 {
 }
 
@@ -119,6 +122,40 @@ void Cursor::doStopMousePolling()
 {
 }
 
+void Cursor::startCursorTracking()
+{
+    ++m_cursorTrackingCounter;
+    if (m_cursorTrackingCounter == 1) {
+        doStartCursorTracking();
+    }
+}
+
+void Cursor::stopCursorTracking()
+{
+    Q_ASSERT(m_cursorTrackingCounter > 0);
+    --m_cursorTrackingCounter;
+    if (m_cursorTrackingCounter == 0) {
+        doStopCursorTracking();
+    }
+}
+
+void Cursor::doStartCursorTracking()
+{
+}
+
+void Cursor::doStopCursorTracking()
+{
+}
+
+void Cursor::notifyCursorChanged(uint32_t serial)
+{
+    if (m_cursorTrackingCounter <= 0) {
+        // cursor change tracking is currently disabled, so don't emit signal
+        return;
+    }
+    emit cursorChanged(serial);
+}
+
 X11Cursor::X11Cursor(QObject *parent)
     : Cursor(parent)
     , m_timeStamp(XCB_TIME_CURRENT_TIME)
@@ -176,6 +213,16 @@ void X11Cursor::doStartMousePolling()
 void X11Cursor::doStopMousePolling()
 {
     m_mousePollingTimer->stop();
+}
+
+void X11Cursor::doStartCursorTracking()
+{
+    xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
+}
+
+void X11Cursor::doStopCursorTracking()
+{
+    xcb_xfixes_select_cursor_input(connection(), rootWindow(), 0);
 }
 
 void X11Cursor::mousePolled()

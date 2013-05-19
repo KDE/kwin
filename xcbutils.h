@@ -245,6 +245,7 @@ public:
     bool isFixesAvailable() const {
         return m_fixes.version > 0;
     }
+    int fixesCursorNotifyEvent() const;
     bool isFixesRegionAvailable() const;
     bool isSyncAvailable() const {
         return m_sync.present;

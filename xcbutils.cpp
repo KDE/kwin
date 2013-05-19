@@ -215,6 +215,11 @@ bool Extensions::isFixesRegionAvailable() const
     return m_fixes.version >= 0x30; // 3
 }
 
+int Extensions::fixesCursorNotifyEvent() const
+{
+    return m_fixes.eventBase + XCB_XFIXES_CURSOR_NOTIFY;
+}
+
 bool Extensions::isShapeInputAvailable() const
 {
     return m_shape.version >= 0x11; // 1.1

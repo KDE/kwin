@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 
 #include <X11/extensions/shape.h>
+#include <X11/extensions/Xfixes.h>
 #include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
@@ -343,6 +344,8 @@ bool Workspace::workspaceEvent(XEvent * e)
             foreach (Client * c, desktops)
                 c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
 #endif
+        } else if (e->type == Xcb::Extensions::self()->fixesCursorNotifyEvent() && Xcb::Extensions::self()->isFixesAvailable()) {
+            Cursor::self()->notifyCursorChanged(reinterpret_cast<XFixesCursorNotifyEvent*>(e)->cursor_serial);
         }
         break;
     }

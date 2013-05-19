@@ -58,6 +58,34 @@ public:
     virtual ~Cursor();
     void startMousePolling();
     void stopMousePolling();
+    /**
+     * @brief Enables tracking changes of cursor images.
+     *
+     * After enabling cursor change tracking the signal @link cursorChanged will be emitted
+     * whenever a change to the cursor image is recognized.
+     *
+     * Use @link stopCursorTracking to no longer emit this signal. Note: the signal will be
+     * emitted until each call of this method has been matched with a call to stopCursorTracking.
+     *
+     * This tracking is not about pointer position tracking.
+     * @see stopCursorTracking
+     * @see cursorChanged
+     */
+    void startCursorTracking();
+    /**
+     * @brief Disables tracking changes of cursor images.
+     *
+     * Only call after using @link startCursorTracking.
+     *
+     * @see startCursorTracking
+     */
+    void stopCursorTracking();
+    /**
+     * @internal
+     *
+     * Called from X11 event handler.
+     */
+    void notifyCursorChanged(uint32_t serial);
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if
@@ -79,6 +107,16 @@ Q_SIGNALS:
     void mouseChanged(const QPoint& pos, const QPoint& oldpos,
                       Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                       Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    /**
+     * @brief Signal emitted when the cursor image changes.
+     *
+     * To enable these signals use @link startCursorTracking.
+     *
+     * @param serial The serial number of the new selected cursor.
+     * @see startCursorTracking
+     * @see stopCursorTracking
+     */
+    void cursorChanged(uint32_t serial);
 
 protected:
     /**
@@ -107,6 +145,16 @@ protected:
      **/
     virtual void doStopMousePolling();
     /**
+     * Called from @link startCursorTracking when cursor image tracking gets activated. Inheriting class needs
+     * to overwrite to enable platform specific code for the tracking.
+     */
+    virtual void doStartCursorTracking();
+    /**
+     * Called from @link stopCursorTracking when cursor image tracking gets deactivated. Inheriting class needs
+     * to overwrite to disable platform specific code for the tracking.
+     */
+    virtual void doStopCursorTracking();
+    /**
      * Provides the actual internal cursor position to inheriting classes. If an inheriting class needs
      * access to the cursor position this method should be used instead of the static @link pos, as
      * the static method syncs with the underlying system's cursor.
@@ -122,6 +170,7 @@ protected:
 private:
     QPoint m_pos;
     int m_mousePollingCounter;
+    int m_cursorTrackingCounter;
 
     KWIN_SINGLETON(Cursor)
 };
@@ -137,6 +186,8 @@ protected:
     virtual void doGetPos();
     virtual void doStartMousePolling();
     virtual void doStopMousePolling();
+    virtual void doStartCursorTracking();
+    virtual void doStopCursorTracking();
 
 private slots:
     /**
