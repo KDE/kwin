@@ -151,6 +151,7 @@ for (int i = 0; i < 8; ++i) {
     DEF3(I18N_NOOP("Window to Screen %1"),         0, slotWindowToScreen(), i);
 }
 DEF(I18N_NOOP("Window to Next Screen"),            0, slotWindowToNextScreen());
+DEF(I18N_NOOP("Window to Previous Screen"),        0, slotWindowToPrevScreen());
 DEF(I18N_NOOP("Show Desktop"),                     0, slotToggleShowDesktop());
 
 for (int i = 0; i < 8; ++i) {
@@ -158,13 +159,14 @@ for (int i = 0; i < 8; ++i) {
 }
 
 DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen());
+DEF(I18N_NOOP("Switch to Previous Screen"),        0, slotSwitchToPrevScreen());
 
 a = actionCollection->addAction("Group:Miscellaneous");
 a->setText(i18n("Miscellaneous"));
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow());
 DEF(I18N_NOOP("Block Global Shortcuts"),           0, slotDisableGlobalShortcuts());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());
-DEF(I18N_NOOP("Invert Screen Colors"),              0, slotInvertScreen());
+DEF(I18N_NOOP("Invert Screen Colors"),             0, slotInvertScreen());
 
 #undef DEF
 #undef DEF2

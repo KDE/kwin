@@ -305,6 +305,8 @@ public slots:
     void slotWindowToScreen();
     void slotSwitchToNextScreen();
     void slotWindowToNextScreen();
+    void slotSwitchToPrevScreen();
+    void slotWindowToPrevScreen();
     void slotToggleShowDesktop();
 
     void slotWindowMaximize();

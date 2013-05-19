@@ -1415,6 +1415,13 @@ void Workspace::slotSwitchToNextScreen()
     setCurrentScreen((screens()->current() + 1) % screens()->count());
 }
 
+void Workspace::slotSwitchToPrevScreen()
+{
+    if (screenSwitchImpossible())
+        return;
+    setCurrentScreen((screens()->current() + screens()->count() - 1) % screens()->count());
+}
+
 void Workspace::slotWindowToScreen()
 {
     if (USABLE_ACTIVE_CLIENT) {
@@ -1431,6 +1438,12 @@ void Workspace::slotWindowToNextScreen()
 {
     if (USABLE_ACTIVE_CLIENT)
         sendClientToScreen(active_client, (active_client->screen() + 1) % screens()->count());
+}
+
+void Workspace::slotWindowToPrevScreen()
+{
+    if (USABLE_ACTIVE_CLIENT)
+        sendClientToScreen(active_client, (active_client->screen() + screens()->count() - 1) % screens()->count());
 }
 
 /*!
