@@ -147,6 +147,14 @@ bool GlxBackend::initRenderingContext()
 
     // Use glXCreateContextAttribsARB() when it's available
     if (glXCreateContextAttribsARB) {
+        const int attribs_31_core_robustness[] = {
+            GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
+            GLX_CONTEXT_MINOR_VERSION_ARB,               1,
+            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+            0
+        };
+
         const int attribs_31_core[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
             GLX_CONTEXT_MINOR_VERSION_ARB, 1,
@@ -154,13 +162,29 @@ bool GlxBackend::initRenderingContext()
             0
         };
 
+        const int attribs_legacy_robustness[] = {
+            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+            GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
+            0
+        };
+
         const int attribs_legacy[] = {
             0
         };
 
+        const bool have_robustness = hasGLExtension("GLX_ARB_create_context_robustness");
+
         // Try to create a 3.1 context first
-        if (options->glCoreProfile())
-            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core);
+        if (options->glCoreProfile()) {
+            if (have_robustness)
+                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core_robustness);
+
+            if (!ctx)
+                ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_31_core);
+        }
+
+        if (!ctx && have_robustness)
+            ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy_robustness);
 
         if (!ctx)
             ctx = glXCreateContextAttribsARB(display(), fbconfig, 0, direct, attribs_legacy);
