@@ -276,6 +276,13 @@ eglPostSubBufferNV_func eglPostSubBufferNV;
 // GLES
 glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
+#ifdef KWIN_HAVE_OPENGLES
+// GL_EXT_robustness
+glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+glReadnPixels_func            glReadnPixels;
+glGetnUniformfv_func          glGetnUniformfv;
+#endif
+
 void eglResolveFunctions()
 {
     if (hasGLExtension("EGL_KHR_image") ||
@@ -708,6 +715,17 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
     } else {
         glMapBufferRange         = NULL;
         glFlushMappedBufferRange = NULL;
+    }
+
+    if (hasGLExtension("GL_EXT_robustness")) {
+        // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
+        glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
+        glReadnPixels            = (glReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
+        glGetnUniformfv          = (glGetnUniformfv_func)          eglGetProcAddress("glGetnUniformfvEXT");
+    } else {
+        glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
+        glReadnPixels            = KWin::ReadnPixels;
+        glGetnUniformfv          = KWin::GetnUniformfv;
     }
 
 #endif // KWIN_HAVE_OPENGLES
