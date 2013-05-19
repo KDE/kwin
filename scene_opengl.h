@@ -80,8 +80,14 @@ protected:
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 
+    void handleGraphicsReset(GLenum status);
+
     virtual void doPaintBackground(const QVector<float> &vertices) = 0;
     virtual SceneOpenGL::Window *createWindow(Toplevel *t) = 0;
+
+Q_SIGNALS:
+    void resetCompositing();
+
 public Q_SLOTS:
     virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);

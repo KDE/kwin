@@ -46,6 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 
 #include <math.h>
+#include <unistd.h>
 
 // turns on checks for opengl errors in various places (for easier finding of them)
 // normally only few of them are enabled
@@ -64,6 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 
 #include <KDE/KLocalizedString>
+#include <KDE/KNotification>
 #include <KProcess>
 
 namespace KWin
@@ -275,6 +277,48 @@ void SceneOpenGL::copyPixels(const QRegion &region)
 }
 #endif
 
+#ifndef KWIN_HAVE_OPENGLES
+#  define GL_GUILTY_CONTEXT_RESET_KWIN    GL_GUILTY_CONTEXT_RESET_ARB
+#  define GL_INNOCENT_CONTEXT_RESET_KWIN  GL_INNOCENT_CONTEXT_RESET_ARB
+#  define GL_UNKNOWN_CONTEXT_RESET_KWIN   GL_UNKNOWN_CONTEXT_RESET_ARB
+#else
+#  define GL_GUILTY_CONTEXT_RESET_KWIN    GL_GUILTY_CONTEXT_RESET_EXT
+#  define GL_INNOCENT_CONTEXT_RESET_KWIN  GL_INNOCENT_CONTEXT_RESET_EXT
+#  define GL_UNKNOWN_CONTEXT_RESET_KWIN   GL_UNKNOWN_CONTEXT_RESET_EXT
+#endif
+
+void SceneOpenGL::handleGraphicsReset(GLenum status)
+{
+    switch (status) {
+    case GL_GUILTY_CONTEXT_RESET_KWIN:
+        kDebug(1212) << "A graphics reset attributable to the current GL context occurred.";
+        break;
+
+    case GL_INNOCENT_CONTEXT_RESET_KWIN:
+        kDebug(1212) << "A graphics reset not attributable to the current GL context occurred.";
+        break;
+
+    case GL_UNKNOWN_CONTEXT_RESET_KWIN:
+        kDebug(1212) << "A graphics reset of an unknown cause occurred.";
+        break;
+
+    default:
+        break;
+    }
+
+    QElapsedTimer timer;
+    timer.start();
+
+    // Wait until the reset is completed or max 10 seconds
+    while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR)
+        usleep(50);
+
+    kDebug(1212) << "Attempting to reset compositing.";
+    QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
+
+    KNotification::event("graphicsreset", i18n("Desktop effects were restarted due to a graphics reset"));
+}
+
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -285,6 +329,13 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     }
 
     m_backend->prepareRenderingFrame();
+
+    const GLenum status = glGetGraphicsResetStatus();
+    if (status != GL_NO_ERROR) {
+        handleGraphicsReset(status);
+        return 0;
+    }
+
     int mask = 0;
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint1");

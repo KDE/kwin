@@ -194,3 +194,8 @@ Comment[x-test]=xxAnother application has requested to suspend compositing.xx
 Comment[zh_CN]=另一个应用程序已经请求中断混成操作。
 Comment[zh_TW]=另一個應用程式要求暫停組合效能。
 Action=Popup
+
+[Event/graphicsreset]
+Name=Graphics Reset
+Comment=A graphics reset event occurred
+Action=Popup
