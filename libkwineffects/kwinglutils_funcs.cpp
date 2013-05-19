@@ -52,6 +52,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static GLenum GetGraphicsResetStatus();
+static void ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+                        GLenum type, GLsizei bufSize, GLvoid *data);
+static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+
 #ifndef KWIN_HAVE_OPENGLES
 // Function pointers
 glXGetProcAddress_func glXGetProcAddress;
@@ -187,6 +192,11 @@ glUniform4ui_func           glUniform4ui;
 glUniform1uiv_func          glUniform1uiv;
 glUniform2uiv_func          glUniform2uiv;
 glUniform3uiv_func          glUniform3uiv;
+
+// GL_ARB_robustness
+glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+glReadnPixels_func            glReadnPixels;
+glGetnUniformfv_func          glGetnUniformfv;
 
 
 static glXFuncPtr getProcAddress(const char* name)
@@ -667,6 +677,17 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glFlushMappedBufferRange = NULL;
     }
 
+    if (hasGLExtension("GL_ARB_robustness")) {
+        // See http://www.opengl.org/registry/specs/ARB/robustness.txt
+        GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
+        GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
+        GL_RESOLVE_WITH_EXT(glGetnUniformfv,          glGetnUniformfvARB);
+    } else {
+        glGetGraphicsResetStatus = KWin::GetGraphicsResetStatus;
+        glReadnPixels            = KWin::ReadnPixels;
+        glGetnUniformfv          = KWin::GetnUniformfv;
+    }
+
 #else
 
     if (hasGLExtension("GL_OES_mapbuffer")) {
@@ -700,6 +721,24 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         }
     }
 #endif
+}
+
+static GLenum GetGraphicsResetStatus()
+{
+    return GL_NO_ERROR;
+}
+
+static void ReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format,
+                        GLenum type, GLsizei bufSize, GLvoid *data)
+{
+    Q_UNUSED(bufSize)
+    glReadPixels(x, y, width, height, format, type, data);
+}
+
+static void GetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
+{
+    Q_UNUSED(bufSize)
+    glGetUniformfv(program, location, params);
 }
 
 } // namespace

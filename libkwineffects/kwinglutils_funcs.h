@@ -444,6 +444,15 @@ typedef void (*glFlushMappedBufferRange_func)(GLenum target, GLintptr offset, GL
 extern KWIN_EXPORT glMapBufferRange_func glMapBufferRange;
 extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
 
+// GL_ARB_robustness
+typedef GLenum (*glGetGraphicsResetStatus_func)();
+typedef void (*glReadnPixels_func)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
+typedef void (*glGetnUniformfv_func)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+
+extern KWIN_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+extern KWIN_EXPORT glReadnPixels_func            glReadnPixels;
+extern KWIN_EXPORT glGetnUniformfv_func          glGetnUniformfv;
+
 } // namespace
 
 #endif // not KWIN_HAVE_OPENGLES
