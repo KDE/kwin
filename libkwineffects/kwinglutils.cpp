@@ -649,7 +649,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
     int location = uniformLocation(name);
     if (location >= 0) {
         GLfloat m[16];
-        glGetUniformfv(mProgram, location, m);
+        glGetnUniformfv(mProgram, location, sizeof(m), m);
         QMatrix4x4 matrix(m[0], m[4], m[8],  m[12],
                           m[1], m[5], m[9],  m[13],
                           m[2], m[6], m[10], m[14],

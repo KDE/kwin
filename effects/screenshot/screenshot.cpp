@@ -141,7 +141,7 @@ void ScreenShotEffect::postPaintScreen()
                 restoreMatrix();
                 // copy content from framebuffer into image
                 img = QImage(QSize(width, height), QImage::Format_ARGB32);
-                glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+                glReadnPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.byteCount(), (GLvoid*)img.bits());
                 GLRenderTarget::popRenderTarget();
                 ScreenShotEffect::convertFromGLImage(img, width, height);
             }
