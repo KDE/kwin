@@ -20,16 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WL_EGL_PLATFORM 1
 #include "egl_wayland_backend.h"
 // kwin
+#include "cursor.h"
 #include "options.h"
 // kwin libs
 #include <kwinglplatform.h>
 // KDE
 #include <KDE/KDebug>
+#include <KDE/KTemporaryFile>
 // xcb
 #include <xcb/xtest.h>
+// Wayland
+#include <wayland-client-protocol.h>
 // system
 #include <linux/input.h>
+#include <unistd.h>
+#include <sys/mman.h>
 #include <sys/shm.h>
+#include <sys/types.h>
 
 namespace KWin
 {
@@ -52,6 +59,8 @@ static void registryHandleGlobal(void *data, struct wl_registry *registry,
         d->setShell(reinterpret_cast<wl_shell *>(wl_registry_bind(registry, name, &wl_shell_interface, 1)));
     } else if (strcmp(interface, "wl_seat") == 0) {
         d->createSeat(name);
+    } else if (strcmp(interface, "wl_shm") == 0) {
+        d->createShm(name);
     }
     kDebug(1212) << "Wayland Interface: " << interface;
 }
@@ -111,10 +120,11 @@ static void pointerHandleEnter(void *data, wl_pointer *pointer, uint32_t serial,
 {
     Q_UNUSED(data)
     Q_UNUSED(pointer)
-    Q_UNUSED(serial)
     Q_UNUSED(surface)
     Q_UNUSED(sx)
     Q_UNUSED(sy)
+    WaylandSeat *seat = reinterpret_cast<WaylandSeat*>(data);
+    seat->pointerEntered(serial);
 }
 
 static void pointerHandleLeave(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface)
@@ -279,10 +289,165 @@ static const struct wl_seat_listener s_seatListener = {
     seatHandleCapabilities
 };
 
-WaylandSeat::WaylandSeat(wl_seat *seat)
+CursorData::CursorData(ShmPool *pool)
+    : m_cursor(NULL)
+    , m_valid(init(pool))
+{
+}
+
+CursorData::~CursorData()
+{
+}
+
+bool CursorData::init(ShmPool *pool)
+{
+    QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
+        xcb_xfixes_get_cursor_image_reply(connection(),
+                                          xcb_xfixes_get_cursor_image_unchecked(connection()),
+                                          NULL));
+    if (cursor.isNull()) {
+        return false;
+    }
+
+    QImage cursorImage((uchar *) xcb_xfixes_get_cursor_image_cursor_image(cursor.data()), cursor->width, cursor->height,
+                       QImage::Format_ARGB32_Premultiplied);
+    if (cursorImage.isNull()) {
+        return false;
+    }
+    m_size = QSize(cursor->width, cursor->height);
+
+    m_cursor = pool->createBuffer(cursorImage);
+    if (!m_cursor) {
+        kDebug(1212) << "Creating cursor buffer failed";
+        return false;
+    }
+
+    m_hotSpot = QPoint(cursor->xhot, cursor->yhot);
+    return true;
+}
+
+X11CursorTracker::X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent)
+    : QObject(parent)
+    , m_pointer(pointer)
+    , m_backend(backend)
+    , m_cursor(wl_compositor_create_surface(backend->compositor()))
+    , m_enteredSerial(0)
+    , m_lastX11Cursor(0)
+{
+    Cursor::self()->startCursorTracking();
+    connect(Cursor::self(), SIGNAL(cursorChanged(uint32_t)), SLOT(cursorChanged(uint32_t)));
+}
+
+X11CursorTracker::~X11CursorTracker()
+{
+    Cursor::self()->stopCursorTracking();
+    if (m_cursor) {
+        wl_surface_destroy(m_cursor);
+    }
+}
+
+void X11CursorTracker::cursorChanged(uint32_t serial)
+{
+    if (m_lastX11Cursor == serial) {
+        // not changed;
+        return;
+    }
+    m_lastX11Cursor = serial;
+    QHash<uint32_t, CursorData>::iterator it = m_cursors.find(serial);
+    if (it != m_cursors.end()) {
+        installCursor(it.value());
+        return;
+    }
+    ShmPool *pool = m_backend->shmPool();
+    if (!pool) {
+        return;
+    }
+    CursorData cursor(pool);
+    if (cursor.isValid()) {
+        // TODO: discard unused cursors after some time?
+        m_cursors.insert(serial, cursor);
+    }
+    installCursor(cursor);
+}
+
+void X11CursorTracker::installCursor(const CursorData& cursor)
+{
+    wl_pointer_set_cursor(m_pointer, m_enteredSerial, m_cursor, cursor.hotSpot().x(), cursor.hotSpot().y());
+    wl_surface_attach(m_cursor, cursor.cursor(), 0, 0);
+    wl_surface_damage(m_cursor, 0, 0, cursor.size().width(), cursor.size().height());
+    wl_surface_commit(m_cursor);
+}
+
+void X11CursorTracker::setEnteredSerial(uint32_t serial)
+{
+    m_enteredSerial = serial;
+}
+
+ShmPool::ShmPool(wl_shm *shm)
+    : m_shm(shm)
+    , m_pool(NULL)
+    , m_poolData(NULL)
+    , m_size(1024 * 1024) // TODO: useful size?
+    , m_tmpFile(new KTemporaryFile())
+    , m_valid(createPool())
+{
+}
+
+ShmPool::~ShmPool()
+{
+    if (m_poolData) {
+        munmap(m_poolData, m_size);
+    }
+    if (m_pool) {
+        wl_shm_pool_destroy(m_pool);
+    }
+    if (m_shm) {
+        wl_shm_destroy(m_shm);
+    }
+}
+
+bool ShmPool::createPool()
+{
+    if (!m_tmpFile->open()) {
+        kDebug(1212) << "Could not open temporary file for Shm pool";
+        return false;
+    }
+    if (ftruncate(m_tmpFile->handle(), m_size) < 0) {
+        kDebug(1212) << "Could not set size for Shm pool file";
+        return false;
+    }
+    m_poolData = mmap(NULL, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_tmpFile->handle(), 0);
+    m_pool = wl_shm_create_pool(m_shm, m_tmpFile->handle(), m_size);
+
+    if (!m_poolData || !m_pool) {
+        kDebug(1212) << "Creating Shm pool failed";
+        return false;
+    }
+    m_tmpFile->close();
+    return true;
+}
+
+wl_buffer *ShmPool::createBuffer(const QImage& image)
+{
+    if (image.isNull() || !m_valid) {
+        return NULL;
+    }
+    // TODO: test whether buffer needs resizing
+    wl_buffer *buffer = wl_shm_pool_create_buffer(m_pool, m_offset, image.width(), image.height(),
+                                                  image.bytesPerLine(), WL_SHM_FORMAT_ARGB8888);
+    if (buffer) {
+        memcpy((char *)m_poolData + m_offset, image.bits(), image.byteCount());
+        m_offset += image.byteCount();
+    }
+    return buffer;
+}
+
+WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     : m_seat(seat)
     , m_pointer(NULL)
     , m_keyboard(NULL)
+    , m_cursorTracker()
+    , m_backend(backend)
 {
     if (m_seat) {
         wl_seat_add_listener(m_seat, &s_seatListener, this);
@@ -303,6 +468,7 @@ void WaylandSeat::destroyPointer()
     if (m_pointer) {
         wl_pointer_destroy(m_pointer);
         m_pointer = NULL;
+        m_cursorTracker.reset();
     }
 }
 
@@ -319,6 +485,7 @@ void WaylandSeat::changed(uint32_t capabilities)
     if ((capabilities & WL_SEAT_CAPABILITY_POINTER) && !m_pointer) {
         m_pointer = wl_seat_get_pointer(m_seat);
         wl_pointer_add_listener(m_pointer, &s_pointerListener, this);
+        m_cursorTracker.reset(new X11CursorTracker(m_pointer, m_backend));
     } else if (!(capabilities & WL_SEAT_CAPABILITY_POINTER)) {
         destroyPointer();
     }
@@ -330,6 +497,14 @@ void WaylandSeat::changed(uint32_t capabilities)
     }
 }
 
+void WaylandSeat::pointerEntered(uint32_t serial)
+{
+    if (m_cursorTracker.isNull()) {
+        return;
+    }
+    m_cursorTracker->setEnteredSerial(serial);
+}
+
 WaylandBackend::WaylandBackend()
     : m_display(wl_display_connect(NULL))
     , m_registry(wl_display_get_registry(m_display))
@@ -339,6 +514,7 @@ WaylandBackend::WaylandBackend()
     , m_overlay(NULL)
     , m_shellSurface(NULL)
     , m_seat()
+    , m_shm()
 {
     kDebug(1212) << "Created Wayland display";
     // setup the registry
@@ -376,7 +552,7 @@ WaylandBackend::~WaylandBackend()
 void WaylandBackend::createSeat(uint32_t name)
 {
     wl_seat *seat = reinterpret_cast<wl_seat*>(wl_registry_bind(m_registry, name, &wl_seat_interface, 1));
-    m_seat.reset(new WaylandSeat(seat));
+    m_seat.reset(new WaylandSeat(seat, this));
 }
 
 bool WaylandBackend::createSurface()
@@ -405,6 +581,14 @@ bool WaylandBackend::createSurface()
     handleConfigure(this, m_shellSurface, 0, displayWidth(), displayHeight());
 
     return true;
+}
+
+void WaylandBackend::createShm(uint32_t name)
+{
+    m_shm.reset(new ShmPool(reinterpret_cast<wl_shm *>(wl_registry_bind(m_registry, name, &wl_shm_interface, 1))));
+    if (!m_shm->isValid()) {
+        m_shm.reset();
+    }
 }
 
 }

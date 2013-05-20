@@ -26,26 +26,90 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xcb
 #include <xcb/shm.h>
 
+class KTemporaryFile;
+struct wl_buffer;
+struct wl_shm;
+
 namespace KWin
 {
 
 namespace Wayland
 {
+class ShmPool;
+class WaylandBackend;
+
+class CursorData
+{
+public:
+    CursorData(ShmPool *pool);
+    ~CursorData();
+    bool isValid() const;
+    const QPoint &hotSpot() const;
+    const QSize &size() const;
+    wl_buffer *cursor() const;
+private:
+    bool init(ShmPool *pool);
+    wl_buffer *m_cursor;
+    QPoint m_hotSpot;
+    QSize m_size;
+    bool m_valid;
+};
+
+class X11CursorTracker : public QObject
+{
+    Q_OBJECT
+public:
+    explicit X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent = 0);
+    virtual ~X11CursorTracker();
+    void setEnteredSerial(uint32_t serial);
+private Q_SLOTS:
+    void cursorChanged(uint32_t serial);
+private:
+    void installCursor(const CursorData &cursor);
+    wl_pointer *m_pointer;
+    QHash<uint32_t, CursorData> m_cursors;
+    WaylandBackend *m_backend;
+    wl_surface *m_cursor;
+    uint32_t m_enteredSerial;
+    uint32_t m_installedCursor;
+    uint32_t m_lastX11Cursor;
+};
+
+class ShmPool
+{
+public:
+    ShmPool(wl_shm *shm);
+    ~ShmPool();
+    bool isValid() const;
+    wl_buffer *createBuffer(const QImage &image);
+private:
+    bool createPool();
+    wl_shm *m_shm;
+    wl_shm_pool *m_pool;
+    void *m_poolData;
+    size_t m_size;
+    QScopedPointer<KTemporaryFile> m_tmpFile;
+    bool m_valid;
+    int m_offset;
+};
 
 class WaylandSeat
 {
 public:
-    WaylandSeat(wl_seat *seat);
+    WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
 
     void changed(uint32_t capabilities);
     wl_seat *seat();
+    void pointerEntered(uint32_t serial);
 private:
     void destroyPointer();
     void destroyKeyboard();
     wl_seat *m_seat;
     wl_pointer *m_pointer;
     wl_keyboard *m_keyboard;
+    QScopedPointer<X11CursorTracker> m_cursorTracker;
+    WaylandBackend *m_backend;
 };
 
 /**
@@ -66,7 +130,9 @@ public:
     void setShell(wl_shell *s);
     wl_shell *shell();
     wl_egl_window *overlay();
+    ShmPool *shmPool();
     void createSeat(uint32_t name);
+    void createShm(uint32_t name);
 
     bool createSurface();
 private:
@@ -78,12 +144,43 @@ private:
     wl_egl_window *m_overlay;
     wl_shell_surface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
+    QScopedPointer<ShmPool> m_shm;
 };
+
+inline
+bool CursorData::isValid() const
+{
+    return m_valid;
+}
+
+inline
+const QPoint& CursorData::hotSpot() const
+{
+    return m_hotSpot;
+}
+
+inline
+wl_buffer* CursorData::cursor() const
+{
+    return m_cursor;
+}
+
+inline
+const QSize& CursorData::size() const
+{
+    return m_size;
+}
 
 inline
 wl_seat *WaylandSeat::seat()
 {
     return m_seat;
+}
+
+inline
+bool ShmPool::isValid() const
+{
+    return m_valid;
 }
 
 inline
@@ -126,6 +223,12 @@ inline
 wl_shell *WaylandBackend::shell()
 {
     return m_shell;
+}
+
+inline
+ShmPool* WaylandBackend::shmPool()
+{
+    return m_shm.data();
 }
 
 } // namespace Wayland
