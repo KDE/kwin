@@ -93,15 +93,21 @@ CubeEffect::CubeEffect()
     , zOrderingFactor(0.0f)
     , mAddedHeightCoeff1(0.0f)
     , mAddedHeightCoeff2(0.0f)
+    , m_shadersDir("kwin/shaders/1.10/")
     , m_cubeCapBuffer(NULL)
     , m_proxy(this)
 {
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
 
-    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/cube-reflection.glsl");
+#ifndef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        m_shadersDir = "kwin/shaders/1.40/";
+#endif
+
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
-    const QString capshader = KGlobal::dirs()->findResource("data", "kwin/cube-cap.glsl");
+    const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-cap.glsl");
     m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
@@ -283,8 +289,8 @@ bool CubeEffect::loadShader()
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;
-    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", "kwin/cylinder.vert");
-    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", "kwin/sphere.vert");
+    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", m_shadersDir + "cylinder.vert");
+    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", m_shadersDir + "sphere.vert");
     if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;

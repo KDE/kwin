@@ -21,12 +21,24 @@ install( FILES
 
 # Data files
 install( FILES
-    cube/data/cube-cap.glsl
-    cube/data/cube-reflection.glsl
     cube/data/cubecap.png
-    cube/data/cylinder.vert
-    cube/data/sphere.vert
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
+
+install( FILES
+    cube/data/1.10/cube-cap.glsl
+    cube/data/1.10/cube-reflection.glsl
+    cube/data/1.10/cylinder.vert
+    cube/data/1.10/sphere.vert
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10
+)
+
+install( FILES
+    cube/data/1.40/cube-cap.glsl
+    cube/data/1.40/cube-reflection.glsl
+    cube/data/1.40/cylinder.vert
+    cube/data/1.40/sphere.vert
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40
+)
 
 #######################################
 # Config

@@ -233,6 +233,8 @@ private:
     float mAddedHeightCoeff1;
     float mAddedHeightCoeff2;
 
+    QString m_shadersDir;
+
     QMatrix4x4 m_rotationMatrix;
     QMatrix4x4 m_reflectionMatrix;
     QMatrix4x4 m_textureMirrorMatrix;
