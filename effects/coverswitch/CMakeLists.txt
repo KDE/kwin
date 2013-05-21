@@ -14,8 +14,11 @@ install( FILES
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 install( FILES
-    coverswitch/coverswitch-reflection.glsl
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+    coverswitch/shaders/1.10/coverswitch-reflection.glsl
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
+install( FILES
+    coverswitch/shaders/1.40/coverswitch-reflection.glsl
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
 
 
 #######################################

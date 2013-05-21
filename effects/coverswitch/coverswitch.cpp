@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIcon>
 
 #include <kwinglutils.h>
+#include <kwinglplatform.h>
 
 #include <math.h>
 
@@ -66,7 +67,12 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setBold(true);
     captionFont.setPointSize(captionFont.pointSize() * 2);
 
-    const QString fragmentshader = KGlobal::dirs()->findResource("data", "kwin/coverswitch-reflection.glsl");
+    QString shadersDir = "kwin/shaders/1.10/";
+#ifndef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        shadersDir = "kwin/shaders/1.40/";
+#endif
+    const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + "coverswitch-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
@@ -264,9 +270,6 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 paintScene(frontWindow, leftWindows, rightWindows, true);
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#ifndef KWIN_HAVE_OPENGLES
-            glPolygonMode(GL_FRONT, GL_FILL);
-#endif
             // we can use a huge scale factor (needed to calculate the rearground vertices)
             // as we restrict with a PaintClipper painting on the current screen
             float reflectionScaleFactor = 100000 * tan(60.0 * M_PI / 360.0f) / area.width();
