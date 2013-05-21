@@ -13,8 +13,11 @@ install( FILES
 
 # Data files
 install( FILES
-    invert/data/invert.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+    invert/data/1.10/invert.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
+install( FILES
+    invert/data/1.40/invert.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
 
 #######################################
 # Config

@@ -72,7 +72,12 @@ bool InvertEffect::loadData()
 {
     m_inited = true;
 
-    const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/invert.frag");
+    QString shadersDir = "kwin/shaders/1.10/";
+#ifndef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        shadersDir = "kwin/shaders/1.40/";
+#endif
+    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + "invert.frag");
 
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     if (!m_shader->isValid()) {
