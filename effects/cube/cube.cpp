@@ -283,16 +283,14 @@ bool CubeEffect::loadShader()
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;
-    QString fragmentshader       =  KGlobal::dirs()->findResource("data", "kwin/cylinder.frag");
     QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", "kwin/cylinder.vert");
     QString sphereVertexshader   = KGlobal::dirs()->findResource("data", "kwin/sphere.vert");
-    if (fragmentshader.isEmpty() || cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
+    if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;
     }
 
-    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
-    cylinderShader = new GLShader(cylinderVertexshader, fragmentshader);
+    cylinderShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, cylinderVertexshader);
     if (!cylinderShader->isValid()) {
         kError(1212) << "The cylinder shader failed to load!" << endl;
         return false;
@@ -321,8 +319,7 @@ bool CubeEffect::loadShader()
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         cylinderShader->setUniform("width", (float)rect.width() * 0.5f);
     }
-    // TODO: use generic shader - currently it is failing in alpha/brightness manipulation
-    sphereShader = new GLShader(sphereVertexshader, fragmentshader);
+    sphereShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, sphereVertexshader);
     if (!sphereShader->isValid()) {
         kError(1212) << "The sphere shader failed to load!" << endl;
         return false;

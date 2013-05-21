@@ -24,7 +24,6 @@ install( FILES
     cube/data/cube-cap.glsl
     cube/data/cube-reflection.glsl
     cube/data/cubecap.png
-    cube/data/cylinder.frag
     cube/data/cylinder.vert
     cube/data/sphere.vert
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
