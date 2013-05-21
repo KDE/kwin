@@ -415,7 +415,7 @@ void KWinCompositingConfig::loadAdvancedTab()
 
         if (config.readEntry<bool>("GLLegacy", false))
             index = OPENGL12_INDEX;
-        else if (config.readEntry<bool>("GCCore", false))
+        else if (config.readEntry<bool>("GLCore", false))
             index = OPENGL31_INDEX;
 
         ui.compositingType->setCurrentIndex(index);
