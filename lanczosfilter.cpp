@@ -78,7 +78,7 @@ void LanczosFilter::init()
         if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
             return;
         // Broken on IvyBridge with Mesa 9.1 - BUG 313613
-        if (gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1))
+        if (gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1) && gl->mesaVersion() < kVersionNumber(9, 2))
             return;
         // also radeon before R600 has trouble
         if (gl->isRadeon() && gl->chipClass() < R600)
