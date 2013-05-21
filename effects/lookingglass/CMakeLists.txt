@@ -15,8 +15,11 @@ install( FILES
 
 # Data files
 install( FILES
-    lookingglass/data/lookingglass.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+    lookingglass/data/1.10/lookingglass.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
+install( FILES
+    lookingglass/data/1.40/lookingglass.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
 
 #######################################
 # Config

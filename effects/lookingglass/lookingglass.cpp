@@ -116,7 +116,12 @@ bool LookingGlassEffect::loadData()
         return false;
     }
 
-    const QString fragmentshader =  KGlobal::dirs()->findResource("data", "kwin/lookingglass.frag");
+    QString shadersDir = "kwin/shaders/1.10/";
+#ifndef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+        shadersDir = "kwin/shaders/1.40/";
+#endif
+    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + "lookingglass.frag");
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
