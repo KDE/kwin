@@ -359,12 +359,19 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     // Prepare the source code
     QByteArray ba;
 #ifdef KWIN_HAVE_OPENGLES
-    ba.append("#ifdef GL_ES\nprecision highp float;\n#endif\n");
+    if (GLPlatform::instance()->glslVersion() < kVersionNumber(3, 0)) {
+        ba.append("precision highp float;\n");
+    }
 #endif
     if (ShaderManager::instance()->isShaderDebug()) {
         ba.append("#define KWIN_SHADER_DEBUG 1\n");
     }
     ba.append(source);
+#ifdef KWIN_HAVE_OPENGLES
+    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0)) {
+        ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
+    }
+#endif
 
     // Inject color correction code for fragment shaders, if possible
     if (shaderType == GL_FRAGMENT_SHADER && sColorCorrect)
@@ -873,11 +880,14 @@ void ShaderManager::initShaders()
         "scene-color-fragment.glsl",
     };
 
-#ifndef KWIN_HAVE_OPENGLES
-    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
+#ifdef KWIN_HAVE_OPENGLES
+    const qint64 coreVersionNumber = kVersionNumber(3, 0);
+#else
+    const qint64 coreVersionNumber = kVersionNumber(1, 40);
+#endif
+    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         m_shaderDir = ":/resources/shaders/1.40/";
     else
-#endif
         m_shaderDir = ":/resources/shaders/1.10/";
 
     // Be optimistic
