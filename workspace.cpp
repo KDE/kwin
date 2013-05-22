@@ -1517,7 +1517,7 @@ QString Workspace::supportInformation() const
             support.append("OpenGL renderer string: " % platform->glRendererString() % '\n');
             support.append("OpenGL version string: " %  platform->glVersionString() % '\n');
 
-            if (platform->supports(LimitedGLSL))
+            if (platform->supports(LimitedGLSL) || platform->supports(GLSL))
                 support.append("OpenGL shading language version string: " % platform->glShadingLanguageVersionString() % '\n');
 
             support.append("Driver: " % GLPlatform::driverToString(platform->driver()) % '\n');
@@ -1528,7 +1528,7 @@ QString Workspace::supportInformation() const
 
             support.append("OpenGL version: " % GLPlatform::versionToString(platform->glVersion()) % '\n');
 
-            if (platform->supports(LimitedGLSL))
+            if (platform->supports(LimitedGLSL) || platform->supports(GLSL))
                 support.append("GLSL version: " % GLPlatform::versionToString(platform->glslVersion()) % '\n');
 
             if (platform->isMesaDriver())
