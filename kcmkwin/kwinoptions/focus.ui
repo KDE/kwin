@@ -83,7 +83,7 @@ likely what you want.</string>
           <item>
            <widget class="QLabel" name="label_6">
             <property name="text">
-             <string>&lt;b&gt;Click To Focus - Mouse Precendence&lt;/b&gt;&lt;br&gt;
+             <string>&lt;b&gt;Click To Focus - Mouse Precedence&lt;/b&gt;&lt;br&gt;
 This is mostly the same as &lt;i&gt;Click To Focus&lt;/i&gt;&lt;br&gt;&lt;br&gt;
 If an active window has to be chosen by the system&lt;br&gt;
 (eg. because the currently active one was closed) &lt;br&gt;
@@ -126,7 +126,7 @@ Think as &lt;i&gt;Click To Focus&lt;/i&gt; just without having to actually click
           <item>
            <widget class="QLabel" name="label_8">
             <property name="text">
-             <string>&lt;b&gt;Focus Follows Mouse - Mouse Precendence&lt;/b&gt;&lt;br&gt;
+             <string>&lt;b&gt;Focus Follows Mouse - Mouse Precedence&lt;/b&gt;&lt;br&gt;
 This is mostly the same as &lt;i&gt;Focus Follows Mouse&lt;/i&gt;&lt;br&gt;&lt;br&gt;
 If an active window has to be chosen by the system&lt;br&gt;
 (eg. because the currently active one was closed) &lt;br&gt;
@@ -155,7 +155,7 @@ Notice:&lt;br&gt;
 &lt;b&gt;Focus stealing prevention&lt;/b&gt; and the &lt;b&gt;tabbox (&quot;Alt+Tab&quot;)&lt;/b&gt;&lt;br&gt;
 contradict the policy and &lt;b&gt;will not work&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 You very likely want to use&lt;br&gt;
-&lt;i&gt;Focus Follows Mouse - Mouse Precendence&lt;/i&gt; instead!</string>
+&lt;i&gt;Focus Follows Mouse - Mouse Precedence&lt;/i&gt; instead!</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -180,7 +180,7 @@ Notice:&lt;br&gt;
 &lt;b&gt;Focus stealing prevention&lt;/b&gt; and the &lt;b&gt;tabbox (&quot;Alt+Tab&quot;)&lt;/b&gt;&lt;br&gt;
 contradict the policy and &lt;b&gt;will not work&lt;/b&gt;.&lt;br&gt;&lt;br&gt;
 You very likely want to use&lt;br&gt;
-&lt;i&gt;Focus Follows Mouse - Mouse Precendence&lt;/i&gt; instead!</string>
+&lt;i&gt;Focus Follows Mouse - Mouse Precedence&lt;/i&gt; instead!</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
