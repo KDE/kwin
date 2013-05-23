@@ -120,8 +120,9 @@ private:
 * It creates the connection to the Wayland Compositor, set's up the registry and creates
 * the Wayland surface and it's shell and egl mapping.
 */
-class WaylandBackend
+class WaylandBackend : public QObject
 {
+    Q_OBJECT
 public:
     WaylandBackend();
     virtual ~WaylandBackend();
@@ -138,6 +139,8 @@ public:
     void ping(uint32_t serial);
 
     bool createSurface();
+private Q_SLOTS:
+    void readEvents();
 private:
     wl_display *m_display;
     wl_registry *m_registry;

@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDE/KDebug>
 #include <KDE/KTemporaryFile>
+// Qt
+#include <QSocketNotifier>
 // xcb
 #include <xcb/xtest.h>
 // Wayland
@@ -521,7 +523,8 @@ void WaylandSeat::resetCursor()
 }
 
 WaylandBackend::WaylandBackend()
-    : m_display(wl_display_connect(NULL))
+    : QObject(NULL)
+    , m_display(wl_display_connect(NULL))
     , m_registry(wl_display_get_registry(m_display))
     , m_compositor(NULL)
     , m_shell(NULL)
@@ -535,6 +538,9 @@ WaylandBackend::WaylandBackend()
     // setup the registry
     wl_registry_add_listener(m_registry, &s_registryListener, this);
     wl_display_dispatch(m_display);
+    int fd = wl_display_get_fd(m_display);
+    QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    connect(notifier, SIGNAL(activated(int)), SLOT(readEvents()));
 }
 
 WaylandBackend::~WaylandBackend()
@@ -562,6 +568,13 @@ WaylandBackend::~WaylandBackend()
         wl_display_disconnect(m_display);
     }
     kDebug(1212) << "Destroyed Wayland display";
+}
+
+void WaylandBackend::readEvents()
+{
+    // TODO: this still seems to block
+    wl_display_flush(m_display);
+    wl_display_dispatch(m_display);
 }
 
 void WaylandBackend::createSeat(uint32_t name)
@@ -786,10 +799,10 @@ bool EglWaylandBackend::initBufferConfigs()
 void EglWaylandBackend::present()
 {
     setLastDamage(QRegion());
+    // need to dispatch pending events as eglSwapBuffers can block
     wl_display_dispatch_pending(m_wayland->display());
     wl_display_flush(m_wayland->display());
     eglSwapBuffers(m_display, m_surface);
-    eglWaitGL();
 }
 
 void EglWaylandBackend::screenGeometryChanged(const QSize &size)
