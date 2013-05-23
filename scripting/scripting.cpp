@@ -550,11 +550,6 @@ void KWin::DeclarativeScript::run()
     pal.setColor(m_view->backgroundRole(), Qt::transparent);
     m_view->setPalette(pal);
 
-
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_view->engine()->addImportPath(importPath);
-    }
-
     // add read config
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_view->engine());
