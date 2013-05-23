@@ -100,10 +100,13 @@ CubeEffect::CubeEffect()
     desktopNameFont.setBold(true);
     desktopNameFont.setPointSize(14);
 
-#ifndef KWIN_HAVE_OPENGLES
-    if (GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40))
-        m_shadersDir = "kwin/shaders/1.40/";
+#ifdef KWIN_HAVE_OPENGLES
+    const qint64 coreVersionNumber = kVersionNumber(3, 0);
+#else
+    const qint64 coreVersionNumber = kVersionNumber(1, 40);
 #endif
+    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
+        m_shadersDir = "kwin/shaders/1.40/";
 
     const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-reflection.glsl");
     m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
