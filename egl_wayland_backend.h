@@ -62,6 +62,7 @@ public:
     explicit X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent = 0);
     virtual ~X11CursorTracker();
     void setEnteredSerial(uint32_t serial);
+    void resetCursor();
 private Q_SLOTS:
     void cursorChanged(uint32_t serial);
 private:
@@ -102,6 +103,7 @@ public:
     void changed(uint32_t capabilities);
     wl_seat *seat();
     void pointerEntered(uint32_t serial);
+    void resetCursor();
 private:
     void destroyPointer();
     void destroyKeyboard();
@@ -133,6 +135,7 @@ public:
     ShmPool *shmPool();
     void createSeat(uint32_t name);
     void createShm(uint32_t name);
+    void ping(uint32_t serial);
 
     bool createSurface();
 private:

@@ -81,8 +81,8 @@ static void registryHandleGlobalRemove(void *data, struct wl_registry *registry,
  **/
 static void handlePing(void *data, struct wl_shell_surface *shellSurface, uint32_t serial)
 {
-    Q_UNUSED(data)
-    wl_shell_surface_pong(shellSurface, serial);
+    Q_UNUSED(shellSurface);
+    reinterpret_cast<WaylandBackend*>(data)->ping(serial);
 }
 
 /**
@@ -383,6 +383,14 @@ void X11CursorTracker::setEnteredSerial(uint32_t serial)
     m_enteredSerial = serial;
 }
 
+void X11CursorTracker::resetCursor()
+{
+    QHash<uint32_t, CursorData>::iterator it = m_cursors.find(m_lastX11Cursor);
+    if (it != m_cursors.end()) {
+        installCursor(it.value());
+    }
+}
+
 ShmPool::ShmPool(wl_shm *shm)
     : m_shm(shm)
     , m_pool(NULL)
@@ -505,6 +513,13 @@ void WaylandSeat::pointerEntered(uint32_t serial)
     m_cursorTracker->setEnteredSerial(serial);
 }
 
+void WaylandSeat::resetCursor()
+{
+    if (!m_cursorTracker.isNull()) {
+        m_cursorTracker->resetCursor();
+    }
+}
+
 WaylandBackend::WaylandBackend()
     : m_display(wl_display_connect(NULL))
     , m_registry(wl_display_get_registry(m_display))
@@ -588,6 +603,14 @@ void WaylandBackend::createShm(uint32_t name)
     m_shm.reset(new ShmPool(reinterpret_cast<wl_shm *>(wl_registry_bind(m_registry, name, &wl_shm_interface, 1))));
     if (!m_shm->isValid()) {
         m_shm.reset();
+    }
+}
+
+void WaylandBackend::ping(uint32_t serial)
+{
+    wl_shell_surface_pong(m_shellSurface, serial);
+    if (!m_seat.isNull()) {
+        m_seat->resetCursor();
     }
 }
 
