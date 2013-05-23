@@ -464,6 +464,20 @@ extern KWIN_EXPORT glGetnUniformfv_func          glGetnUniformfv;
 #ifdef KWIN_HAVE_OPENGLES
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+
+// see http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
+#ifndef GL_GUILTY_CONTEXT_RESET_EXT
+#define GL_GUILTY_CONTEXT_RESET_EXT     0x8253
+#endif
+
+#ifndef GL_INNOCENT_CONTEXT_RESET_EXT
+#define GL_INNOCENT_CONTEXT_RESET_EXT   0x8254
+#endif
+
+#ifndef GL_UNKNOWN_CONTEXT_RESET_EXT
+#define GL_UNKNOWN_CONTEXT_RESET_EXT    0x8255
+#endif
+
 #endif
 
 #include <EGL/egl.h>
