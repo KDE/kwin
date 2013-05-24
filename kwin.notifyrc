@@ -197,5 +197,24 @@ Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
+Name[cs]=Resetovat grafiku
+Name[es]=Reinicio gráfico
+Name[ia]=Reinitia Graphic
+Name[nl]=Grafische reset
+Name[pt]=Reinício Gráfico
+Name[pt_BR]=Reinício gráfico
+Name[ru]=Сброс графики
+Name[sk]=Grafické vynulovanie
+Name[uk]=Скидання графіки
+Name[x-test]=xxGraphics Resetxx
 Comment=A graphics reset event occurred
+Comment[es]=Ha ocurrido un evento de reinicio gráfico
+Comment[ia]=Il necessita un evento de reinitiar le graphic
+Comment[nl]=Een gebeurtenis van een grafische reset deed zich voor
+Comment[pt]=Ocorreu um evento de reinício gráfico
+Comment[pt_BR]=Ocorreu um evento de reinício gráfico
+Comment[ru]=Произошёл сброс графической системы
+Comment[sk]=Nastala chyba grafického vynulovania
+Comment[uk]=Сталася подія відновлення початкового стану графіки
+Comment[x-test]=xxA graphics reset event occurredxx
 Action=Popup
