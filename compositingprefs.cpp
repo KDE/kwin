@@ -38,6 +38,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+extern int screen_number; // main.cpp
+extern bool is_multihead;
+
 CompositingPrefs::CompositingPrefs()
     : mEnableDirectRendering(true)
 {
@@ -49,15 +52,17 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::openGlIsBroken()
 {
-    return KConfigGroup(KGlobal::config(), "Compositing").readEntry("OpenGLIsUnsafe", false);
+    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
+    return KConfigGroup(KGlobal::config(), "Compositing").readEntry(unsafeKey, false);
 }
 
 bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
+    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
-        gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
+        gl_workaround_group.readEntry(unsafeKey, false))
         return false;
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
@@ -85,8 +90,9 @@ QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
+    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
-        gl_workaround_group.readEntry("OpenGLIsUnsafe", false))
+        gl_workaround_group.readEntry(unsafeKey, false))
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
                     "<p>If you think that you have meanwhile upgraded to a stable driver,<br>"

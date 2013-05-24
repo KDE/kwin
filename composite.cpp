@@ -162,6 +162,7 @@ void Compositor::setup()
 }
 
 extern int screen_number; // main.cpp
+extern bool is_multihead;
 
 void Compositor::slotCompositingOptionsInitialized()
 {
@@ -182,7 +183,7 @@ void Compositor::slotCompositingOptionsInitialized()
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
         KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
-        const QString openGLIsUnsafe = "OpenGLIsUnsafe" + QString::number(screen_number);
+        const QString openGLIsUnsafe = "OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : "");
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
             kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
