@@ -88,8 +88,9 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     m_theme->setTabDragMimeType(tabDragMimeType());
     // setup the QML engine
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_engine->addImportPath(importPath);
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    while (paths.hasNext()) {
+        m_engine->addImportPath(paths.next());
     }
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
@@ -122,8 +123,9 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     }
     m_engineType = QMLEngine;
     // setup the QML engine
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_engine->addImportPath(importPath);
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    while (paths.hasNext()) {
+        m_engine->addImportPath(paths.next());
     }
     m_component->loadUrl(QUrl::fromLocalFile(file));
     m_themeName = themeName;

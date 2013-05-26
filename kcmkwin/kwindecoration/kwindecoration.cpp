@@ -135,8 +135,9 @@ void KWinDecorationModule::init()
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_ui->decorationList->engine()->addImportPath(importPath);
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    while (paths.hasNext()) {
+        m_ui->decorationList->engine()->addImportPath(paths.next());
     }
     m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
     m_ui->decorationList->rootContext()->setContextProperty("decorationBaseModel", m_model);
