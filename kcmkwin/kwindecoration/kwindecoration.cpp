@@ -135,9 +135,13 @@ void KWinDecorationModule::init()
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    /* use logic from KDeclarative::setupBindings():
+    "addImportPath adds the path at the beginning, so to honour user's
+     paths we need to traverse the list in reverse order" */
     QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
-    while (paths.hasNext()) {
-        m_ui->decorationList->engine()->addImportPath(paths.next());
+    paths.toBack();
+    while (paths.hasPrevious()) {
+        m_ui->decorationList->engine()->addImportPath(paths.previous());
     }
     m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
     m_ui->decorationList->rootContext()->setContextProperty("decorationBaseModel", m_model);
