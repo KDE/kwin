@@ -154,4 +154,35 @@ void DecorationPlugin::resetCompositing()
     factory()->reset(SettingCompositing);
 }
 
+QString DecorationPlugin::supportInformation()
+{
+    if (m_disabled) {
+        return "Decoration Plugin disabled\n";
+    }
+    QString support;
+    support.append("Current Plugin: ");
+    support.append(currentPlugin());
+    support.append('\n');
+
+    support.append("Shadows: ");
+    support.append(hasShadows() ? "yes\n" : "no\n");
+
+    support.append("Alpha: ");
+    support.append(hasAlpha() ? "yes\n" : "no\n");
+
+    support.append("Announces Alpha: ");
+    support.append(supportsAnnounceAlpha() ? "yes\n" : "no\n");
+
+    support.append("Tabbing: ");
+    support.append(supportsTabbing() ? "yes\n" : "no\n");
+
+    support.append("Frame Overlap: ");
+    support.append(supportsFrameOverlap() ? "yes\n" : "no\n");
+
+    support.append("Blur Behind: ");
+    support.append(supportsBlurBehind() ? "yes\n" : "no\n");
+    // TODO: Qt5 - read support information from Factory
+    return support;
+}
+
 } // namespace

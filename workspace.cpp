@@ -1492,6 +1492,9 @@ QString Workspace::supportInformation() const
                               .arg(geo.width())
                               .arg(geo.height()));
     }
+    support.append("\nDecoration\n");
+    support.append(  "==========\n");
+    support.append(decorationPlugin()->supportInformation());
     support.append("\nCompositing\n");
     support.append(  "===========\n");
     support.append("Qt Graphics System: ");

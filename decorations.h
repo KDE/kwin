@@ -48,6 +48,8 @@ public:
     bool supportsBlurBehind() const;
     Qt::Corner closeButtonCorner();
 
+    QString supportInformation();
+
     // D-Bus interface
     /**
      * @deprecated
