@@ -41,9 +41,8 @@ RootInfo *RootInfo::create()
     xcb_window_t supportWindow = xcb_generate_id(connection());
     const uint32_t values[] = {true};
     xcb_create_window(connection(), XCB_COPY_FROM_PARENT, supportWindow, KWin::rootWindow(),
-                      0, 0, 0, 0, 0, XCB_COPY_FROM_PARENT,
+                      0, 0, 1, 1, 0, XCB_COPY_FROM_PARENT,
                       XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
-
     const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp
     // we need to do the lower window with a roundtrip, otherwise NETRootInfo is not functioning
     QScopedPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
