@@ -949,7 +949,9 @@ void Options::reloadCompositingSettings(bool force)
 
     // Compositing settings
     CompositingPrefs prefs;
-    prefs.detect();
+    if (compositingMode() == OpenGLCompositing) {
+        prefs.detect();
+    }
 
     KSharedConfig::Ptr _config = KGlobal::config();
     KConfigGroup config(_config, "Compositing");
