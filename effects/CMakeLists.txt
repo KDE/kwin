@@ -112,6 +112,7 @@ endif()
 
 # Common effects
 include( dialogparent/CMakeLists.txt )
+include( kscreen/CMakeLists.txt )
 include( presentwindows/CMakeLists.txt )
 include( screenedge/CMakeLists.txt )
 include( slidingpopups/CMakeLists.txt )

@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Kscreen
+Icon=preferences-system-windows-effect-kscreen
+Comment=Helper Effect for KScreen
+
+Type=Service
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Martin Gräßlin
+X-KDE-PluginInfo-Email=mgraesslin@kde.org
+X-KDE-PluginInfo-Name=kwin4_effect_kscreen
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-Library=kwin4_effect_builtins
+X-KDE-Ordering=99
+X-KWin-Requires-OpenGL=false
+X-KWin-Requires-Shaders=false

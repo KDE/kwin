@@ -1,0 +1,5 @@
+File=kscreen.kcfg
+ClassName=KscreenConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true
