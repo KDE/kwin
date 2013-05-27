@@ -112,21 +112,6 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
     return icon;
 }
 
-// WARNING: this code exists to cover a bug in Qt which prevents plasma from detecting the state change
-// of the compositor through KWindowSystem.
-// once plasma uses (again) a KSelectionWatcher or Qt is fixed in this regard, the code can go.
-static QString plasmaThemeVariant()
-{
-#ifndef TABBOX_KCM
-    if (!Workspace::self()->compositing() || !effects) {
-        return Plasma::Theme::defaultTheme()->currentThemeHasImage("opaque/dialogs/background") ? QLatin1String("opaque/") : QLatin1String("");
-    }
-    if (static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur)) {
-        return Plasma::Theme::defaultTheme()->currentThemeHasImage("translucent/dialogs/background") ? QLatin1String("translucent/") : QLatin1String("");
-    }
-#endif
-    return QLatin1String("");
-}
 
 DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
     : QDeclarativeView(parent)
@@ -158,7 +143,6 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
 #endif
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
-    rootContext()->setContextProperty("plasmaThemeVariant", plasmaThemeVariant());
     if (m_mode == TabBoxConfig::ClientTabBox) {
         rootContext()->setContextProperty("clientModel", model);
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
@@ -201,7 +185,6 @@ void DeclarativeView::showEvent(QShowEvent *event)
         item->setProperty("currentIndex", tabBox->first().row());
         connect(item, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
     }
-    rootContext()->setContextProperty("plasmaThemeVariant", plasmaThemeVariant());
     slotUpdateGeometry();
     QResizeEvent re(size(), size()); // to set mask and blurring.
     resizeEvent(&re);

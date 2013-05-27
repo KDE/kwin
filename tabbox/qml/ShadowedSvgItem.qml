@@ -34,16 +34,15 @@ Item {
 
     PlasmaCore.FrameSvg {
         id: themeInfo
-        imagePath: plasmaThemeVariant + "dialogs/background"
-        // NOTICE: the following plasmaThemeVariant access causes necessary re-evaluation!
-        property bool hasNewShadows: plasmaThemeVariant != "reEvaluateMe" && hasElementPrefix("shadow")
+        imagePath: "dialogs/background"
+        property bool hasNewShadows: hasElementPrefix("shadow")
     }
 
     PlasmaCore.FrameSvgItem {
         id: shadow
         prefix: themeInfo.hasNewShadows ? "shadow" : ""
 
-        imagePath: plasmaThemeVariant + "dialogs/background"
+        imagePath: "dialogs/background"
         anchors.fill: parent
         visible: true
 
