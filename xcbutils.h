@@ -29,7 +29,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 #include <xcb/composite.h>
+#define class class_name //HACK: work around a non-C++ safe problem in xcb_iccm.h
+                         //where they put a variable called "class" in function signatures.
+                         //Needed at least for xcb v0.3.8
 #include <xcb/xcb_icccm.h>
+#undef class             //UNDO HACK
 
 namespace KWin {
 
