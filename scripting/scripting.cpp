@@ -544,11 +544,6 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_engine->addImportPath(importPath);
-    }
-
     // add read config
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_engine);

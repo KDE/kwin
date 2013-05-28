@@ -148,9 +148,6 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        engine()->addImportPath(importPath);
-    }
     engine()->addImageProvider(QLatin1String("client"), new ImageProvider(model));
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());

@@ -88,8 +88,13 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     m_theme->setTabDragMimeType(tabDragMimeType());
     // setup the QML engine
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_engine->addImportPath(importPath);
+    /* use logic from KDeclarative::setupBindings():
+    "addImportPath adds the path at the beginning, so to honour user's
+     paths we need to traverse the list in reverse order" */
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    paths.toBack();
+    while (paths.hasPrevious()) {
+        m_engine->addImportPath(paths.previous());
     }
     m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
     m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
@@ -122,8 +127,13 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     }
     m_engineType = QMLEngine;
     // setup the QML engine
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        m_engine->addImportPath(importPath);
+    /* use logic from KDeclarative::setupBindings():
+    "addImportPath adds the path at the beginning, so to honour user's
+     paths we need to traverse the list in reverse order" */
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    paths.toBack();
+    while (paths.hasPrevious()) {
+        m_engine->addImportPath(paths.previous());
     }
     m_component->loadUrl(QUrl::fromLocalFile(file));
     m_themeName = themeName;
