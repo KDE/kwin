@@ -1220,17 +1220,29 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType decora
 
 void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping)
 {
-    WindowQuadList quads = data.quads.select(WindowQuadShadowTopLeft);
-    quads.append(data.quads.select(WindowQuadShadowTop));
-    quads.append(data.quads.select(WindowQuadShadowTopRight));
-    quads.append(data.quads.select(WindowQuadShadowRight));
-    quads.append(data.quads.select(WindowQuadShadowBottomRight));
-    quads.append(data.quads.select(WindowQuadShadowBottom));
-    quads.append(data.quads.select(WindowQuadShadowBottomLeft));
-    quads.append(data.quads.select(WindowQuadShadowLeft));
-    if (quads.isEmpty()) {
-        return;
+    WindowQuadList quads;
+
+    foreach (const WindowQuad &quad, data.quads) {
+        switch (quad.type()) {
+        case WindowQuadShadowTopLeft:
+        case WindowQuadShadowTop:
+        case WindowQuadShadowTopRight:
+        case WindowQuadShadowLeft:
+        case WindowQuadShadowRight:
+        case WindowQuadShadowBottomLeft:
+        case WindowQuadShadowBottom:
+        case WindowQuadShadowBottomRight:
+             quads.append(quad);
+             break;
+
+        default:
+             break;
+        }
     }
+
+    if (quads.isEmpty())
+        return;
+
     GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
     if (!texture) {
         return;
