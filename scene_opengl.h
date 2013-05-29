@@ -235,7 +235,6 @@ protected:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads, bool hardwareClipping);
     void paintShadow(const QRegion &region, const WindowPaintData &data, bool hardwareClipping);
-    void makeDecorationArrays(const WindowQuadList& quads, GLTexture *tex) const;
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized, bool hardwareClipping);
     /**
      * @brief Called from performPaint once it is determined whether the window will be painted.

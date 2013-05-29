@@ -1203,8 +1203,7 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
     texture->bind();
 
     prepareStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    makeDecorationArrays(quads, texture);
-    GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, hardwareClipping);
+    renderQuads(0, region, quads, texture, false, hardwareClipping);
     restoreStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
 
     texture->unbind();
@@ -1264,44 +1263,6 @@ void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintDa
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 #endif
-}
-
-void SceneOpenGL::Window::makeDecorationArrays(const WindowQuadList &quads, GLTexture *texture) const
-{
-    const QMatrix4x4 matrix = texture->matrix(UnnormalizedCoordinates);
-
-    // Since we know that the texture matrix just scales and translates
-    // we can use this information to optimize the transformation
-    const QVector2D coeff(matrix(0, 0), matrix(1, 1));
-    const QVector2D offset(matrix(0, 3), matrix(1, 3));
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setVertexCount(quads.count() * 6);
-
-    GLVertex2D *vertex = (GLVertex2D *) vbo->map(quads.count() * 6 * sizeof(GLVertex2D));
-
-    foreach (const WindowQuad &quad, quads) {
-        GLVertex2D v[4]; // Four unique vertices / quad
-
-        for (int i = 0; i < 4; i++) {
-            const WindowVertex &wv = quad[i];
-
-            v[i].position = QVector2D(wv.x(), wv.y());
-            v[i].texcoord = QVector2D(wv.originalX(), wv.originalY()) * coeff + offset;
-        }
-
-        // First triangle
-        *(vertex++) = v[1]; // Top-right
-        *(vertex++) = v[0]; // Top-left
-        *(vertex++) = v[3]; // Bottom-left
-
-        // Second triangle
-        *(vertex++) = v[3]; // Bottom-left
-        *(vertex++) = v[2]; // Bottom-right
-        *(vertex++) = v[1]; // Top-right
-    }
-
-    vbo->unmap();
 }
 
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
