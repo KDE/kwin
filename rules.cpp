@@ -1031,10 +1031,8 @@ void RuleBook::cleanupTemporaryRules()
     for (QList< Rules* >::Iterator it = m_rules.begin();
             it != m_rules.end();
        ) {
-        if ((*it)->discardTemporary(false)) {
-            Rules *rules = (*it);
+        if ((*it)->discardTemporary(false)) { // deletes (*it)
             it = m_rules.erase(it);
-            delete rules;
         } else {
             if ((*it)->isTemporary())
                 has_temporary = true;
