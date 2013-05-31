@@ -107,16 +107,15 @@ void Deleted::copyToDeleted(Toplevel* c)
     }
 }
 
-void Deleted::unrefWindow(bool delay)
+void Deleted::unrefWindow()
 {
     if (--delete_refcount > 0)
         return;
-    // needs to be delayed when calling from effects, otherwise it'd be rather
-    // complicated to handle the case of the window going away during a painting pass
-    if (delay)
-        deleteLater();
-    else
-        delete this;
+    // needs to be delayed
+    // a) when calling from effects, otherwise it'd be rather complicated to handle the case of the
+    // window going away during a painting pass
+    // b) to prevent dangeling pointers in the stacking order, see bug #317765
+    deleteLater();
 }
 
 int Deleted::desktop() const
