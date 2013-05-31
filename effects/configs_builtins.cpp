@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "desktopgrid/desktopgrid_config.h"
 #include "diminactive/diminactive_config.h"
 #include "magiclamp/magiclamp_config.h"
-#include "translucency/translucency_config.h"
 #include "presentwindows/presentwindows_config.h"
 #include "resize/resize_config.h"
 #include "showfps/showfps_config.h"
@@ -63,7 +62,6 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                             KWIN_EFFECT_CONFIG_SINGLE(presentwindows, PresentWindowsEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(resize, ResizeEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(showfps, ShowFpsEffectConfig)
-                            KWIN_EFFECT_CONFIG_SINGLE(translucency, TranslucencyEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(thumbnailaside, ThumbnailAsideEffectConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(windowgeometry, WindowGeometryConfig)
                             KWIN_EFFECT_CONFIG_SINGLE(zoom, ZoomEffectConfig)
