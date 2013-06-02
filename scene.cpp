@@ -748,15 +748,20 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         ret = makeQuads(WindowQuadContents, contents);
 
         QRect rects[4];
-        client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3], Client::WindowRelative);
+        bool isShadedClient = false;
 
-        if (!client || !(center.isEmpty() || client->isShade()))
-            ret += makeDecorationQuads(rects, decoration);
-        else {
-            // this is a shaded client, we have to create four decoration quads
+        if (client) {
+            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3], Client::WindowRelative);
+            isShadedClient = client->isShade() || center.isEmpty();
+        }
+
+        if (isShadedClient) {
             const QRect bounding = rects[0] | rects[1] | rects[2] | rects[3];
             ret += makeDecorationQuads(rects, bounding);
+        } else {
+            ret += makeDecorationQuads(rects, decoration);
         }
+
     }
     if (m_shadow) {
         ret << m_shadow->shadowQuads();
