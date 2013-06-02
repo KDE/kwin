@@ -338,9 +338,6 @@ void ColorCorrection::setupForOutput(int screen)
     if (!d->m_enabled || d->m_hasError)
         return;
 
-    // Clear any previous GL errors
-    checkGLError("setupForOutput-clearErrors");
-
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     if (!shader) {
         kError(1212) << "no bound shader for color correction setup";
@@ -361,7 +358,6 @@ void ColorCorrection::setupForOutput(int screen)
         emit errorOccured();
         return;
     }
-    checkGLError("setupForOutput-setUniform");
 
     if (!d->setupCCTextures()) {
         kError(1212) << "unable to setup color correction textures";
@@ -384,13 +380,6 @@ void ColorCorrection::setupForOutput(int screen)
     }
 
     glActiveTexture(activeTexture);
-
-    if (checkGLError("setupForOutput")) {
-        kError(1212) << "GL error while setting up color correction for output" << screen;
-        d->m_hasError = true;
-        emit errorOccured();
-        return;
-    }
 
     d->m_lastOutput = screen;
 }
@@ -585,9 +574,6 @@ bool ColorCorrectionPrivate::setupCCTextures()
         return false;
     }
 
-    // Clear any previous GL errors
-    checkGLError("setupCCTextures-clearErrors");
-
     // Dummy texture first
     if (!m_dummyCCTexture) {
         glGenTextures(1, &m_dummyCCTexture);
@@ -615,7 +601,6 @@ bool ColorCorrectionPrivate::setupCCTextures()
             }
     }
 
-    success = success && !checkGLError("setupCCTextures");
     return success;
 }
 
