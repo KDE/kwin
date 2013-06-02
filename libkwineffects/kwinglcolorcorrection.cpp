@@ -352,7 +352,7 @@ void ColorCorrection::setupForOutput(int screen)
         d->m_ccTextureUnit = maxUnits - 1;
     }
 
-    if (!shader->setUniform("u_ccLookupTexture", d->m_ccTextureUnit)) {
+    if (!shader->setUniform(GLShader::ColorCorrectionLookupTextureUnit, d->m_ccTextureUnit)) {
         kError(1212) << "unable to set uniform for the color correction lookup texture";
         d->m_hasError = true;
         emit errorOccured();

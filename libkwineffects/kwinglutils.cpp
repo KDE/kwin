@@ -494,6 +494,8 @@ void GLShader::resolveLocations()
 
     mFloatLocation[Saturation]    = uniformLocation("saturation");
 
+    mIntLocation[ColorCorrectionLookupTextureUnit] = uniformLocation("u_ccLookupTexture");
+
     mColorLocation[Color] = uniformLocation("geometryColor");
 
     mLocationsResolved = true;
