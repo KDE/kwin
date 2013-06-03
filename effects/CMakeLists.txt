@@ -97,6 +97,7 @@ endif()
 set( kwin4_effect_include_directories )
 
 # scripted effects
+add_subdirectory( dialogparent )
 add_subdirectory( fade )
 add_subdirectory( login )
 
@@ -111,7 +112,6 @@ endif()
 # Built-in effects go here
 
 # Common effects
-include( dialogparent/CMakeLists.txt )
 include( kscreen/CMakeLists.txt )
 include( presentwindows/CMakeLists.txt )
 include( screenedge/CMakeLists.txt )
