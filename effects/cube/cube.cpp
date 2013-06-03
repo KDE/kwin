@@ -108,10 +108,15 @@ CubeEffect::CubeEffect()
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         m_shadersDir = "kwin/shaders/1.40/";
 
-    const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-reflection.glsl");
-    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
-    const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-cap.glsl");
-    m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
+    if (effects->compositingType() == OpenGL2Compositing) {
+        const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-reflection.glsl");
+        m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+        const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-cap.glsl");
+        m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
+    } else {
+        m_reflectionShader = NULL;
+        m_capShader = NULL;
+    }
     m_textureMirrorMatrix.scale(1.0, -1.0, 1.0);
     m_textureMirrorMatrix.translate(0.0, -1.0, 0.0);
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
@@ -219,7 +224,7 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     }
 
     // set the cap color on the shader
-    if (m_capShader->isValid()) {
+    if (m_capShader && m_capShader->isValid()) {
         ShaderBinder binder(m_capShader);
         m_capShader->setUniform("u_capColor", capColor);
     }
@@ -485,7 +490,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             ShaderManager *shaderManager = ShaderManager::instance();
-            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+            if (shaderManager->isValid() && m_reflectionShader && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
                 ShaderBinder binder(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
@@ -771,7 +776,7 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     }
 
     bool capShader = false;
-    if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
+    if (effects->compositingType() == OpenGL2Compositing && m_capShader && m_capShader->isValid()) {
         capShader = true;
         ShaderManager::instance()->pushShader(m_capShader);
         float opacity = cubeOpacity;
@@ -1544,7 +1549,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                     }
                 }
                 bool capShader = false;
-                if (effects->compositingType() == OpenGL2Compositing && m_capShader->isValid()) {
+                if (effects->compositingType() == OpenGL2Compositing && m_capShader && m_capShader->isValid()) {
                     capShader = true;
                     ShaderManager::instance()->pushShader(m_capShader);
                     m_capShader->setUniform("u_mirror", 0);

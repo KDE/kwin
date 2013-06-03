@@ -67,16 +67,20 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setBold(true);
     captionFont.setPointSize(captionFont.pointSize() * 2);
 
-    QString shadersDir = "kwin/shaders/1.10/";
+    if (effects->compositingType() == OpenGL2Compositing) {
+        QString shadersDir = "kwin/shaders/1.10/";
 #ifdef KWIN_HAVE_OPENGLES
-    const qint64 coreVersionNumber = kVersionNumber(3, 0);
+        const qint64 coreVersionNumber = kVersionNumber(3, 0);
 #else
-    const qint64 coreVersionNumber = kVersionNumber(1, 40);
+        const qint64 coreVersionNumber = kVersionNumber(1, 40);
 #endif
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        shadersDir = "kwin/shaders/1.40/";
-    const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + "coverswitch-reflection.glsl");
-    m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+        if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
+            shadersDir = "kwin/shaders/1.40/";
+        const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + "coverswitch-reflection.glsl");
+        m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
+    } else {
+        m_reflectionShader = NULL;
+    }
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
@@ -309,7 +313,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
             glScissor(area.x(), y, area.width(), area.height());
             glEnable(GL_SCISSOR_TEST);
 
-            if (shaderManager->isValid() && m_reflectionShader->isValid()) {
+            if (shaderManager->isValid() && m_reflectionShader && m_reflectionShader->isValid()) {
                 shaderManager->pushShader(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
                 windowTransformation.translate(area.x() + area.width() * 0.5f, 0.0, 0.0);
