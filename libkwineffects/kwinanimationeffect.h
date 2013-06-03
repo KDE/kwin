@@ -99,7 +99,7 @@ public:
     enum Anchor { Left = 1<<0, Top = 1<<1, Right = 1<<2, Bottom = 1<<3,
                   Horizontal = Left|Right, Vertical = Top|Bottom, Mouse = 1<<4  };
     enum Attribute {
-        Opacity = 0, Brightness, Saturation, Scale, Rotation,
+        Opacity = 0, Brightness, Saturation, Scale, Rotation, DecorationOpacity,
         Position, Size, Translation, Clip, Generic, CrossFadePrevious,
         NonFloatBase = Position
     };

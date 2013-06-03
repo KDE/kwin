@@ -434,7 +434,7 @@ void AnimationEffect::prePaintWindow( EffectWindow* w, WindowPrePaintData& data,
                     continue;
 
                 isUsed = true;
-                if (anim->attribute == Opacity || anim->attribute == CrossFadePrevious)
+                if (anim->attribute == Opacity || anim->attribute == DecorationOpacity || anim->attribute == CrossFadePrevious)
                     data.setTranslucent();
                 else if (!(anim->attribute == Brightness || anim->attribute == Saturation)) {
                     data.setTransformed();
@@ -481,6 +481,8 @@ void AnimationEffect::paintWindow( EffectWindow* w, int mask, QRegion region, Wi
                 switch (anim->attribute) {
                 case Opacity:
                     data.multiplyOpacity(interpolated(*anim)); break;
+                case DecorationOpacity:
+                    data.multiplyDecorationOpacity(interpolated(*anim)); break;
                 case Brightness:
                     data.multiplyBrightness(interpolated(*anim)); break;
                 case Saturation:
@@ -737,6 +739,7 @@ void AnimationEffect::updateLayerRepaints()
                 continue;
             switch (anim->attribute) {
                 case Opacity:
+                case DecorationOpacity:
                 case Brightness:
                 case Saturation:
                 case CrossFadePrevious:
