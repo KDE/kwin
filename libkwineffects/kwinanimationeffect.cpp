@@ -574,7 +574,19 @@ void AnimationEffect::postPaintScreen()
         } else {
             AniMap::const_iterator it = d->m_animations.constBegin(), end = d->m_animations.constEnd();
             for (; it != end; ++it) {
-                it.key()->addLayerRepaint(it->second);
+                bool addRepaint = false;
+                QList<AniData>::const_iterator anim = it->first.constBegin();
+                for (; anim != it->first.constEnd(); ++anim) {
+                    if (anim->startTime > clock())
+                        continue;
+                    if (anim->time < anim->duration) {
+                        addRepaint = true;
+                        break;
+                    }
+                }
+                if (addRepaint) {
+                    it.key()->addLayerRepaint(it->second);
+                }
             }
         }
     }
@@ -670,8 +682,9 @@ void AnimationEffect::triggerRepaint()
         effects->addRepaintFull();
     } else {
         AniMap::const_iterator it = d->m_animations.constBegin(), end = d->m_animations.constEnd();
-        for (; it != end; ++it)
+        for (; it != end; ++it) {
             it.key()->addLayerRepaint(it->second);
+        }
     }
 }
 
