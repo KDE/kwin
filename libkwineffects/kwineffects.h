@@ -1621,7 +1621,7 @@ public:
 
     bool isModal() const;
     Q_SCRIPTABLE virtual KWin::EffectWindow* findModal() = 0;
-    Q_SCRIPTABLE virtual EffectWindowList mainWindows() const = 0;
+    Q_SCRIPTABLE virtual QList<KWin::EffectWindow*> mainWindows() const = 0;
 
     /**
     * Returns whether the window should be excluded from window switching effects.
