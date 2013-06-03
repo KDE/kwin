@@ -1707,14 +1707,23 @@ EffectWindow* EffectWindowImpl::findModal()
     return NULL;
 }
 
+template <typename T>
+EffectWindowList getMainWindows(Toplevel *toplevel)
+{
+    T *c = static_cast<T*>(toplevel);
+    EffectWindowList ret;
+    ClientList mainclients = c->mainClients();
+    foreach (Client * tmp, mainclients)
+        ret.append(tmp->effectWindow());
+    return ret;
+}
+
 EffectWindowList EffectWindowImpl::mainWindows() const
 {
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        EffectWindowList ret;
-        ClientList mainclients = c->mainClients();
-        foreach (Client * tmp, mainclients)
-        ret.append(tmp->effectWindow());
-        return ret;
+    if (toplevel->isClient()) {
+        return getMainWindows<Client>(toplevel);
+    } else if (toplevel->isDeleted()) {
+        return getMainWindows<Deleted>(toplevel);
     }
     return EffectWindowList();
 }

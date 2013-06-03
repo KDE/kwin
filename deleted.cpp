@@ -39,6 +39,7 @@ Deleted::Deleted()
     , padding_bottom(0)
     , m_layer(UnknownLayer)
     , m_minimized(false)
+    , m_modal(false)
     , m_paintRedirector(NULL)
 {
 }
@@ -98,6 +99,11 @@ void Deleted::copyToDeleted(Toplevel* c)
             }
         }
         m_minimized = client->isMinimized();
+        m_modal = client->isModal();
+        m_mainClients = client->mainClients();
+        foreach (Client *c, m_mainClients) {
+            connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(mainClientClosed(KWin::Toplevel*)));
+        }
     }
 }
 
@@ -169,6 +175,11 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
         supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
     }
     return info->windowType(supportedTypes);
+}
+
+void Deleted::mainClientClosed(Toplevel *client)
+{
+    m_mainClients.removeAll(static_cast<Client*>(client));
 }
 
 } // namespace

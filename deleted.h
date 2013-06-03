@@ -32,6 +32,7 @@ class Deleted
 {
     Q_OBJECT
     Q_PROPERTY(bool minimized READ isMinimized)
+    Q_PROPERTY(bool modal READ isModal)
 public:
     static Deleted* create(Toplevel* c);
     // used by effects to keep the window around for e.g. fadeout effects when it's destroyed
@@ -55,6 +56,12 @@ public:
     bool isMinimized() const {
         return m_minimized;
     }
+    bool isModal() const {
+        return m_modal;
+    }
+    ClientList mainClients() const {
+        return m_mainClients;
+    }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
     PaintRedirector *decorationPaintRedirector() {
         return m_paintRedirector;
@@ -62,6 +69,8 @@ public:
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
+private Q_SLOTS:
+    void mainClientClosed(KWin::Toplevel *client);
 private:
     Deleted();   // use create()
     void copyToDeleted(Toplevel* c);
@@ -81,6 +90,8 @@ private:
     int padding_left, padding_top, padding_right, padding_bottom;
     Layer m_layer;
     bool m_minimized;
+    bool m_modal;
+    ClientList m_mainClients;
     PaintRedirector *m_paintRedirector;
 };
 
