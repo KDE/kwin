@@ -1,7 +1,15 @@
 [Desktop Entry]
 Name=Kscreen
+Name[cs]=Kscreen
+Name[pt]=Kscreen
+Name[uk]=Kscreen
+Name[x-test]=xxKscreenxx
 Icon=preferences-system-windows-effect-kscreen
 Comment=Helper Effect for KScreen
+Comment[cs]=Pomocný efekt pro KScreen
+Comment[pt]=Efeito auxiliar do KScreen
+Comment[uk]=Допоміжний ефект KScreen
+Comment[x-test]=xxHelper Effect for KScreenxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
