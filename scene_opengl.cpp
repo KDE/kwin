@@ -1062,6 +1062,9 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
         data.quads = quads;
     }
 
+    if (data.quads.isEmpty())
+        return false;
+
     if (!bindTexture() || !s_frameTexture) {
         return false;
     }
