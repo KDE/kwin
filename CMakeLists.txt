@@ -54,7 +54,7 @@ endif()
 
 include_directories(${XCB_INCLUDE_DIR})
 
-if(WAYLAND_FOUND)
+if(WAYLAND_FOUND AND KWIN_HAVE_EGL)
     include_directories(${WAYLAND_INCLUDE_DIR})
 endif()
 
@@ -196,7 +196,7 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(WAYLAND_FOUND)
+if(WAYLAND_FOUND AND KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
 endif()
 
@@ -293,7 +293,7 @@ set(kwinLibs
     ${kwin_OPENGL_LIBS}
 )
 
-if(WAYLAND_FOUND)
+if(WAYLAND_FOUND  AND KWIN_HAVE_EGL)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
 endif()
 
