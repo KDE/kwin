@@ -1,13 +1,23 @@
 [Desktop Entry]
 Name=Kscreen
 Name[cs]=Kscreen
+Name[de]=Kscreen
+Name[es]=Kscreen
+Name[gl]=KScreen
 Name[pt]=Kscreen
+Name[sk]=Kscreen
+Name[sv]=Kskärm
 Name[uk]=Kscreen
 Name[x-test]=xxKscreenxx
 Icon=preferences-system-windows-effect-kscreen
 Comment=Helper Effect for KScreen
 Comment[cs]=Pomocný efekt pro KScreen
+Comment[de]=Hilfseffekt für KScreen
+Comment[es]=Efecto auxiliar para KScreen
+Comment[gl]=Efecto auxiliar para KScreen.
 Comment[pt]=Efeito auxiliar do KScreen
+Comment[sk]=Pomocný efekt pre KScreen
+Comment[sv]=Hjälpeffekt för Kskärm
 Comment[uk]=Допоміжний ефект KScreen
 Comment[x-test]=xxHelper Effect for KScreenxx
 
