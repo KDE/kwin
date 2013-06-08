@@ -1820,6 +1820,9 @@ bool Client::isResizable() const
         return false;
     if (rules()->checkSize(QSize()).isValid())   // forced size
         return false;
+    if ((mode == PositionTop || mode == PositionTopLeft || mode == PositionTopRight ||
+         mode == PositionLeft || mode == PositionBottomLeft) && rules()->checkPosition(invalidPoint) != invalidPoint)
+        return false;
 
     QSize min = tabGroup() ? tabGroup()->minSize() : minSize();
     QSize max = tabGroup() ? tabGroup()->maxSize() : maxSize();
