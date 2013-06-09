@@ -169,5 +169,5 @@ X-KDE-Ordering=50
 X-Plasma-API=javascript
 X-Plasma-MainScript=code/main.js
 X-KDE-PluginKeyword=kwin4_effect_translucency
-X-KDE-Library=kcm_kwin4_effect_genericscripted
+X-KDE-Library=kcm_kwin4_genericscripted
 X-KDE-ParentComponents=kwin4_effect_translucency
