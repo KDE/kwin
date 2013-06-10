@@ -273,13 +273,12 @@ void GLSLBlurShader::init()
     stream << "uniform mat4 modelViewProjectionMatrix;\n";
     stream << "uniform mat4 textureMatrix;\n";
     stream << "uniform vec2 pixelSize;\n\n";
-    stream << attribute << " vec4 vertex;\n";
-    stream << attribute << " vec4 texCoord;\n\n";
+    stream << attribute << " vec4 vertex;\n\n";
     stream << varying_out << " vec4 samplePos[" << std::ceil(size / 2.0) << "];\n";
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
-    stream << "    vec4 center = vec4(textureMatrix * texCoord).stst;\n";
+    stream << "    vec4 center = vec4(textureMatrix * vertex).stst;\n";
     stream << "    vec4 ps = pixelSize.stst;\n\n";
     for (int i = 0; i < offsets.size(); i++) {
         stream << "    samplePos[" << i << "] = center + ps * vec4("
