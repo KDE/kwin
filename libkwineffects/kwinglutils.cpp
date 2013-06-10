@@ -1886,6 +1886,11 @@ void GLVertexBuffer::unbindArrays()
     d->unbindArrays();
 }
 
+void GLVertexBuffer::draw(GLenum primitiveMode, int first, int count)
+{
+    draw(infiniteRegion(), primitiveMode, first, count, false);
+}
+
 void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
 {
 #ifndef KWIN_HAVE_OPENGLES

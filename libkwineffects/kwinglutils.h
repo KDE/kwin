@@ -720,6 +720,11 @@ public:
     /**
      * Draws count vertices beginning with first.
      */
+    void draw(GLenum primitiveMode, int first, int count);
+
+    /**
+     * Draws count vertices beginning with first.
+     */
     void draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping = false);
 
     /**
