@@ -80,7 +80,7 @@
       <string extracomment="Enables an internal texture cache which saves the background of the blurred area. This results in less repaints and in a slightly higher memory usage."/>
      </property>
      <property name="text">
-      <string>Safe intermediate rendering results.</string>
+      <string>Save intermediate rendering results.</string>
      </property>
     </widget>
    </item>
