@@ -276,7 +276,7 @@ bool GlxBackend::initDrawableConfigs()
         GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
         GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
         GLX_X_RENDERABLE,   True,
-        GLX_CONFIG_CAVEAT,  GLX_NONE,
+        GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
         GLX_RED_SIZE,       5,
         GLX_GREEN_SIZE,     5,
         GLX_BLUE_SIZE,      5,
