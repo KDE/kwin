@@ -1041,6 +1041,8 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
     m_hardwareClipping = region != infiniteRegion() && (mask & PAINT_WINDOW_TRANSFORMED) && !(mask & PAINT_SCREEN_TRANSFORMED);
     if (region != infiniteRegion() && !m_hardwareClipping) {
         WindowQuadList quads;
+        quads.reserve(data.quads.count());
+
         const QRegion filterRegion = region.translated(-x(), -y());
         // split all quads in bounding rect with the actual rects in the region
         foreach (const WindowQuad &quad, data.quads) {
