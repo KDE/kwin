@@ -327,7 +327,7 @@ void ColorCorrection::setupForOutput(int screen)
 {
     Q_D(ColorCorrection);
 
-    if (d->m_hasError)
+    if (!d->m_enabled || d->m_hasError)
         return;
 
     // Clear any previous GL errors
@@ -348,9 +348,6 @@ void ColorCorrection::setupForOutput(int screen)
     }
 
     if (!shader->setUniform("u_ccLookupTexture", d->m_ccTextureUnit)) {
-        // This means the color correction shaders are probably not loaded
-        if (!d->m_enabled)
-            return;
         kError(1212) << "unable to set uniform for the color correction lookup texture";
         d->m_hasError = true;
         emit errorOccured();
