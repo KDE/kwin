@@ -336,10 +336,12 @@ void GLTexture::bind()
             glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         }
+        d->m_filterChanged = false;
     }
     if (d->m_wrapModeChanged) {
         glTexParameteri(d->m_target, GL_TEXTURE_WRAP_S, d->m_wrapMode);
         glTexParameteri(d->m_target, GL_TEXTURE_WRAP_T, d->m_wrapMode);
+        d->m_wrapModeChanged = false;
     }
 }
 
