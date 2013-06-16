@@ -154,10 +154,6 @@ Workspace::Workspace(bool restore)
     // start the cursor support
     Cursor::create(this);
 
-    // get screen support
-    Screens *screens = Screens::create(this);
-    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
-
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::create(this);
     connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
@@ -165,6 +161,11 @@ Workspace::Workspace(bool restore)
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
+
+    // get screen support
+    Screens *screens = Screens::create(this);
+    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
+
     options->loadConfig();
     options->loadCompositingConfig(false);
     DecorationPlugin::create(this);
