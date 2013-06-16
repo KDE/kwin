@@ -81,7 +81,7 @@ private slots:
     void glSwapStrategyChanged(int idx);
     void rearmGlSupport();
     void suggestGraphicsSystem();
-    void toogleSmoothScaleUi(int compositingType);
+    void alignGuiToCompositingType(int compositingType);
     void toggleEffectShortcutChanged(const QKeySequence &seq);
     void updateStatusUI(bool compositingIsPossible);
     void showDetailedEffectLoadingInformation();

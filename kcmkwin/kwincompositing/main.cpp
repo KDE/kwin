@@ -166,7 +166,7 @@ KWinCompositingConfig::KWinCompositingConfig(QWidget *parent, const QVariantList
     connect(ui.animationSpeedCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
 
     connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
-    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(toogleSmoothScaleUi(int)));
+    connect(ui.compositingType, SIGNAL(currentIndexChanged(int)), this, SLOT(alignGuiToCompositingType(int)));
     connect(ui.compositingType, SIGNAL(activated(int)), this, SLOT(suggestGraphicsSystem()));
     connect(ui.graphicsSystem, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
     connect(ui.windowThumbnails, SIGNAL(activated(int)), this, SLOT(changed()));
@@ -376,12 +376,16 @@ void KWinCompositingConfig::suggestGraphicsSystem()
         ui.graphicsSystem->setCurrentIndex(0);
 }
 
-void KWinCompositingConfig::toogleSmoothScaleUi(int compositingType)
+void KWinCompositingConfig::alignGuiToCompositingType(int compositingType)
 {
     ui.glScaleFilter->setVisible(compositingType != XRENDER_INDEX);
     ui.xrScaleFilter->setVisible(compositingType == XRENDER_INDEX);
     ui.scaleMethodLabel->setBuddy(compositingType == XRENDER_INDEX ? ui.xrScaleFilter : ui.glScaleFilter);
+
     ui.glGroup->setEnabled(compositingType != XRENDER_INDEX);
+
+    ui.glColorCorrection->setEnabled(compositingType == OPENGL20_INDEX ||
+                                     compositingType == OPENGL31_INDEX);
 }
 
 void KWinCompositingConfig::toggleEffectShortcutChanged(const QKeySequence &seq)
@@ -451,7 +455,7 @@ void KWinCompositingConfig::loadAdvancedTab()
     ui.glSwapStrategy->setCurrentIndex(swapStrategy);
     ui.glColorCorrection->setChecked(config.readEntry("GLColorCorrection", false));
 
-    toogleSmoothScaleUi(ui.compositingType->currentIndex());
+    alignGuiToCompositingType(ui.compositingType->currentIndex());
 }
 
 void KWinCompositingConfig::updateStatusUI(bool compositingIsPossible)
