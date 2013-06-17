@@ -197,6 +197,7 @@ Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
+Name[ca]=Reinici dels gràfics
 Name[cs]=Resetovat grafiku
 Name[es]=Reinicio gráfico
 Name[fi]=Grafiikan nollaus
@@ -221,6 +222,7 @@ Name[uk]=Скидання графіки
 Name[x-test]=xxGraphics Resetxx
 Name[zh_TW]=圖形重置
 Comment=A graphics reset event occurred
+Comment[ca]=Ha ocorregut un esdeveniment de reinici dels gràfics
 Comment[es]=Ha ocurrido un evento de reinicio gráfico
 Comment[fi]=Sattui grafiikan nollaustapahtuma
 Comment[gl]=Aconteceu un reinicio de gráficos
