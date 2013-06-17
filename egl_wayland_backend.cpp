@@ -40,15 +40,19 @@ EglWaylandBackend::EglWaylandBackend()
     , OpenGLBackend()
     , m_context(EGL_NO_CONTEXT)
     , m_bufferAge(0)
-    , m_wayland(new Wayland::WaylandBackend)
+    , m_wayland(Wayland::WaylandBackend::self())
     , m_overlay(NULL)
 {
+    if (!m_wayland) {
+        setFailed("Wayland Backend has not been created");
+        return;
+    }
     qDebug() << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
     if (!m_wayland->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
     }
-    connect(m_wayland.data(), SIGNAL(shellSurfaceSizeChanged(QSize)), SLOT(overlaySizeChanged(QSize)));
+    connect(m_wayland, SIGNAL(shellSurfaceSizeChanged(QSize)), SLOT(overlaySizeChanged(QSize)));
     initializeEgl();
     init();
     // Egl is always direct rendering

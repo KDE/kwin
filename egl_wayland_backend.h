@@ -85,7 +85,7 @@ private:
     EGLSurface m_surface;
     EGLContext m_context;
     int m_bufferAge;
-    QScopedPointer<Wayland::WaylandBackend> m_wayland;
+    Wayland::WaylandBackend *m_wayland;
     wl_egl_window *m_overlay;
     QScopedPointer<Shm> m_shm;
     friend class EglWaylandTexture;

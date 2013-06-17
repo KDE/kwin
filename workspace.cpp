@@ -58,6 +58,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include <config-workspace.h>
+#ifdef WAYLAND_FOUND
+#include "wayland_backend.h"
+#endif
 #include "xcbutils.h"
 #include "main.h"
 // KDE
@@ -167,6 +171,11 @@ Workspace::Workspace(bool restore)
 
     // first initialize the extensions
     Xcb::Extensions::self();
+
+    // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
+#ifdef WAYLAND_FOUND
+    Wayland::WaylandBackend::create(this);
+#endif
 
     // start the cursor support
     Cursor::create(this);

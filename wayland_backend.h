@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
+// KWin
+#include <kwinglobals.h>
 // Qt
 #include <QHash>
 #include <QObject>
@@ -126,7 +128,6 @@ class WaylandBackend : public QObject
 {
     Q_OBJECT
 public:
-    WaylandBackend();
     virtual ~WaylandBackend();
     wl_display *display();
     wl_registry *registry();
@@ -159,6 +160,8 @@ private:
     QSize m_shellSurfaceSize;
     QScopedPointer<WaylandSeat> m_seat;
     QScopedPointer<ShmPool> m_shm;
+
+    KWIN_SINGLETON(WaylandBackend)
 };
 
 inline

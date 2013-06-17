@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "wayland_backend.h"
 // KWin
-#include <kwinglobals.h>
 #include "cursor.h"
 // Qt
 #include <QDebug>
@@ -338,7 +337,10 @@ X11CursorTracker::X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend,
 
 X11CursorTracker::~X11CursorTracker()
 {
-    Cursor::self()->stopCursorTracking();
+    if (Cursor::self()) {
+        // Cursor might have been destroyed before Wayland backend gets destroyed
+        Cursor::self()->stopCursorTracking();
+    }
     if (m_cursor) {
         wl_surface_destroy(m_cursor);
     }
@@ -519,8 +521,20 @@ void WaylandSeat::resetCursor()
     }
 }
 
-WaylandBackend::WaylandBackend()
-    : QObject(NULL)
+WaylandBackend *WaylandBackend::s_self = 0;
+WaylandBackend *WaylandBackend::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+    const QByteArray display = qgetenv("WAYLAND_DISPLAY");
+    if (display.isEmpty()) {
+        return NULL;
+    }
+    s_self = new WaylandBackend(parent);
+    return s_self;
+}
+
+WaylandBackend::WaylandBackend(QObject *parent)
+    : QObject(parent)
     , m_display(wl_display_connect(NULL))
     , m_registry(wl_display_get_registry(m_display))
     , m_compositor(NULL)
@@ -562,6 +576,7 @@ WaylandBackend::~WaylandBackend()
         wl_display_disconnect(m_display);
     }
     qDebug() << "Destroyed Wayland display";
+    s_self = NULL;
 }
 
 void WaylandBackend::readEvents()
