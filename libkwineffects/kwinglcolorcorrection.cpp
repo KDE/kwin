@@ -260,6 +260,7 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
     : QObject(parent)
     , m_enabled(false)
     , m_hasError(false)
+    , m_duringEnablingPhase(false)
     , m_ccTextureUnit(-1)
     , m_dummyCCTexture(0)
     , m_lastOutput(-1)
@@ -313,13 +314,20 @@ bool ColorCorrection::setEnabled(bool enabled)
     if (enabled) {
         // Update all profiles and regions
         d->m_csi->update();
+        kDebug(1212) << "color correction will be enabled after contacting KolorManager";
+        d->m_duringEnablingPhase = true;
+        // d->m_enabled will be set to true in colorServerUpdateSucceededSlot()
     } else {
         d->deleteCCTextures();
+        d->m_enabled = false;
+        GLShader::sColorCorrect = false;
+        kDebug(1212) << "color correction has been disabled";
+
+        // Reload all shaders
+        ShaderManager::cleanup();
+        ShaderManager::instance();
     }
 
-    d->m_enabled = enabled;
-    GLShader::sColorCorrect = enabled;
-    kDebug(1212) << enabled;
     return true;
 }
 
@@ -665,6 +673,18 @@ void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
     // Force the color correction textures to be recreated
     deleteCCTextures();
 
+    // If this is reached after enabling color correction using ColorCorrection::setEnabled(true)
+    if (m_duringEnablingPhase) {
+        m_duringEnablingPhase = false;
+        m_enabled = true;
+        GLShader::sColorCorrect = true;
+        kDebug(1212) << "Color correction has been enabled";
+
+        // Reload all shaders
+        ShaderManager::cleanup();
+        ShaderManager::instance();
+    }
+
     emit q->changed();
 }
 
@@ -672,9 +692,11 @@ void ColorCorrectionPrivate::colorServerUpdateFailedSlot()
 {
     Q_Q(ColorCorrection);
 
-    kError(1212) << "Update of color profiles failed";
+    m_duringEnablingPhase = false;
 
-    q->setEnabled(false);
+    kError(1212) << "Update of color profiles failed";
+    m_hasError = true;
+    emit q->errorOccured();
 }
 
 } // KWin namespace

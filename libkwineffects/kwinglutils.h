@@ -237,6 +237,7 @@ private:
     static bool sColorCorrect;
 
     friend class ColorCorrection;
+    friend class ColorCorrectionPrivate;
     friend class ShaderManager;
 };
 

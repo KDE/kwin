@@ -764,11 +764,7 @@ ColorCorrection *SceneOpenGL2::colorCorrection()
 
 void SceneOpenGL2::slotColorCorrectedChanged()
 {
-    if (m_colorCorrection->setEnabled(options->isColorCorrected())) {
-        // Reload all shaders
-        ShaderManager::cleanup();
-        ShaderManager::instance();
-    }
+    m_colorCorrection->setEnabled(options->isColorCorrected());
 }
 
 

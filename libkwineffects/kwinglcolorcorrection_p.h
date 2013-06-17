@@ -92,6 +92,7 @@ public slots:
 public:
     bool m_enabled;
     bool m_hasError;
+    bool m_duringEnablingPhase;
     int m_ccTextureUnit;
 
     ColorServerInterface *m_csi;
