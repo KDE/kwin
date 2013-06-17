@@ -923,12 +923,14 @@ public:
     void *buffer() const;
     xcb_shm_seg_t segment() const;
     bool isValid() const;
+    uint8_t pixmapFormat() const;
 private:
     bool init();
     int m_shmId;
     void *m_buffer;
     xcb_shm_seg_t m_segment;
     bool m_valid;
+    uint8_t m_pixmapFormat;
 };
 
 inline
@@ -953,6 +955,12 @@ inline
 int Shm::shmId() const
 {
     return m_shmId;
+}
+
+inline
+uint8_t Shm::pixmapFormat() const
+{
+    return m_pixmapFormat;
 }
 
 } // namespace X11

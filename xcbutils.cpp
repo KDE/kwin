@@ -265,6 +265,7 @@ Shm::Shm()
     , m_buffer(NULL)
     , m_segment(XCB_NONE)
     , m_valid(false)
+    , m_pixmapFormat(XCB_IMAGE_FORMAT_XY_BITMAP)
 {
     m_valid = init();
 }
@@ -290,6 +291,7 @@ bool Shm::init()
         qDebug() << "Failed to get SHM extension version information";
         return false;
     }
+    m_pixmapFormat = version->pixmap_format;
     const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
     m_shmId = shmget(IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600);
     if (m_shmId < 0) {
