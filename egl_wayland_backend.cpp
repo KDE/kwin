@@ -22,15 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "options.h"
 #include "wayland_backend.h"
+#include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
 // KDE
 #include <KDE/KDebug>
 // Qt
 #include <QOpenGLContext>
-// system
-#include <sys/shm.h>
-#include <sys/types.h>
 
 namespace KWin
 {
@@ -327,10 +325,10 @@ void EglWaylandBackend::doneCurrent()
     eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
-Shm *EglWaylandBackend::shm()
+Xcb::Shm *EglWaylandBackend::shm()
 {
     if (m_shm.isNull()) {
-        m_shm.reset(new Shm);
+        m_shm.reset(new Xcb::Shm);
     }
     return m_shm.data();
 }
@@ -380,7 +378,7 @@ bool EglWaylandTexture::loadTexture(const Pixmap &pix, const QSize &size, int de
         return false;
     m_referencedPixmap = pix;
 
-    Shm *shm = m_backend->shm();
+    Xcb::Shm *shm = m_backend->shm();
     if (!shm->isValid()) {
         return false;
     }
@@ -418,7 +416,7 @@ bool EglWaylandTexture::update(const QRegion &damage)
         return false;
     }
 
-    Shm *shm = m_backend->shm();
+    Xcb::Shm *shm = m_backend->shm();
     if (!shm->isValid()) {
         return false;
     }
@@ -443,62 +441,6 @@ bool EglWaylandTexture::update(const QRegion &damage)
 
     q->unbind();
     checkGLError("update texture");
-    return true;
-}
-
-Shm::Shm()
-    : m_shmId(-1)
-    , m_buffer(NULL)
-    , m_segment(XCB_NONE)
-    , m_valid(false)
-{
-    m_valid = init();
-}
-
-Shm::~Shm()
-{
-    if (m_valid) {
-        xcb_shm_detach(connection(), m_segment);
-        shmdt(m_buffer);
-    }
-}
-
-bool Shm::init()
-{
-    const xcb_query_extension_reply_t *ext = xcb_get_extension_data(connection(), &xcb_shm_id);
-    if (!ext || !ext->present) {
-        qDebug() << "SHM extension not available";
-        return false;
-    }
-    ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
-        xcb_shm_query_version_unchecked(connection()), NULL));
-    if (version.isNull()) {
-        qDebug() << "Failed to get SHM extension version information";
-        return false;
-    }
-    const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
-    m_shmId = shmget(IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600);
-    if (m_shmId < 0) {
-        qDebug() << "Failed to allocate SHM segment";
-        return false;
-    }
-    m_buffer = shmat(m_shmId, NULL, 0 /*read/write*/);
-    if (-1 == reinterpret_cast<long>(m_buffer)) {
-        qDebug() << "Failed to attach SHM segment";
-        shmctl(m_shmId, IPC_RMID, NULL);
-        return false;
-    }
-    shmctl(m_shmId, IPC_RMID, NULL);
-
-    m_segment = xcb_generate_id(connection());
-    const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);
-    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
-    if (!error.isNull()) {
-        qDebug() << "xcb_shm_attach error: " << error->error_code;
-        shmdt(m_buffer);
-        return false;
-    }
-
     return true;
 }
 

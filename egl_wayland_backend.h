@@ -22,8 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_opengl.h"
 // wayland
 #include <wayland-egl.h>
-// xcb
-#include <xcb/shm.h>
 
 class QTemporaryFile;
 struct wl_buffer;
@@ -36,7 +34,9 @@ namespace Wayland {
     class WaylandBackend;
 }
 
-class Shm;
+namespace Xcb {
+    class Shm;
+}
 
 /**
  * @brief OpenGL Backend using Egl on a Wayland surface.
@@ -66,7 +66,7 @@ public:
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
-    Shm *shm();
+    Xcb::Shm *shm();
 
 protected:
     virtual void present();
@@ -87,7 +87,7 @@ private:
     int m_bufferAge;
     Wayland::WaylandBackend *m_wayland;
     wl_egl_window *m_overlay;
-    QScopedPointer<Shm> m_shm;
+    QScopedPointer<Xcb::Shm> m_shm;
     friend class EglWaylandTexture;
 };
 
@@ -113,51 +113,6 @@ private:
      */
     xcb_pixmap_t m_referencedPixmap;
 };
-
-/**
- * @brief Small helper class to encapsulate SHM related functionality.
- *
- */
-class Shm
-{
-public:
-    Shm();
-    ~Shm();
-    int shmId() const;
-    void *buffer() const;
-    xcb_shm_seg_t segment() const;
-    bool isValid() const;
-private:
-    bool init();
-    int m_shmId;
-    void *m_buffer;
-    xcb_shm_seg_t m_segment;
-    bool m_valid;
-};
-
-inline
-void *Shm::buffer() const
-{
-    return m_buffer;
-}
-
-inline
-bool Shm::isValid() const
-{
-    return m_valid;
-}
-
-inline
-xcb_shm_seg_t Shm::segment() const
-{
-    return m_segment;
-}
-
-inline
-int Shm::shmId() const
-{
-    return m_shmId;
-}
 
 } // namespace
 

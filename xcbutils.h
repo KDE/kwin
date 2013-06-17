@@ -31,6 +31,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/composite.h>
 #include <xcb/randr.h>
 
+#include <xcb/shm.h>
+
 namespace KWin {
 
 namespace Xcb {
@@ -906,6 +908,51 @@ static inline void sync()
 void selectInput(xcb_window_t window, uint32_t events)
 {
     xcb_change_window_attributes(connection(), window, XCB_CW_EVENT_MASK, &events);
+}
+
+/**
+ * @brief Small helper class to encapsulate SHM related functionality.
+ *
+ */
+class Shm
+{
+public:
+    Shm();
+    ~Shm();
+    int shmId() const;
+    void *buffer() const;
+    xcb_shm_seg_t segment() const;
+    bool isValid() const;
+private:
+    bool init();
+    int m_shmId;
+    void *m_buffer;
+    xcb_shm_seg_t m_segment;
+    bool m_valid;
+};
+
+inline
+void *Shm::buffer() const
+{
+    return m_buffer;
+}
+
+inline
+bool Shm::isValid() const
+{
+    return m_valid;
+}
+
+inline
+xcb_shm_seg_t Shm::segment() const
+{
+    return m_segment;
+}
+
+inline
+int Shm::shmId() const
+{
+    return m_shmId;
 }
 
 } // namespace X11
