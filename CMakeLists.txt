@@ -65,7 +65,7 @@ endif()
 
 include_directories(${XCB_INCLUDE_DIR})
 
-if(WAYLAND_FOUND AND KWIN_HAVE_EGL)
+if(WAYLAND_FOUND)
     include_directories(${WAYLAND_INCLUDE_DIR})
 endif()
 
@@ -214,8 +214,11 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(WAYLAND_FOUND AND KWIN_HAVE_EGL)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
+if(WAYLAND_FOUND)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} wayland_backend.cpp)
+    if(KWIN_HAVE_EGL)
+        set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
+    endif()
 endif()
 
 kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
@@ -281,9 +284,12 @@ set(kwin_XCB_LIBS
 
 set(kwin_WAYLAND_LIBS
     ${WAYLAND_CLIENT_LIBRARIES}
-    ${WAYLAND_EGL_LIBRARIES}
     ${XCB_SHM_LIBRARY}
     ${XCB_XTEST_LIBRARY}
+)
+
+set(kwin_WAYLAND_EGL_LIBS
+    ${WAYLAND_EGL_LIBRARIES}
 )
 
 set(kwin_OPENGL_LIBS )
@@ -316,8 +322,11 @@ set(kwinLibs
     ${kwin_OPENGL_LIBS}
 )
 
-if(WAYLAND_FOUND  AND KWIN_HAVE_EGL)
+if(WAYLAND_FOUND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
+    if(KWIN_HAVE_EGL)
+        set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
+    endif()
 endif()
 
 kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})

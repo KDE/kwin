@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_EGL_WAYLAND_BACKEND_H
 #include "scene_opengl.h"
 // wayland
-#include <wayland-client.h>
 #include <wayland-egl.h>
 // xcb
 #include <xcb/shm.h>
@@ -33,211 +32,9 @@ struct wl_shm;
 namespace KWin
 {
 
-namespace Wayland
-{
-class ShmPool;
-class WaylandBackend;
-
-class CursorData
-{
-public:
-    CursorData(ShmPool *pool);
-    ~CursorData();
-    bool isValid() const;
-    const QPoint &hotSpot() const;
-    const QSize &size() const;
-    wl_buffer *cursor() const;
-private:
-    bool init(ShmPool *pool);
-    wl_buffer *m_cursor;
-    QPoint m_hotSpot;
-    QSize m_size;
-    bool m_valid;
-};
-
-class X11CursorTracker : public QObject
-{
-    Q_OBJECT
-public:
-    explicit X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent = 0);
-    virtual ~X11CursorTracker();
-    void setEnteredSerial(uint32_t serial);
-    void resetCursor();
-private Q_SLOTS:
-    void cursorChanged(uint32_t serial);
-private:
-    void installCursor(const CursorData &cursor);
-    wl_pointer *m_pointer;
-    QHash<uint32_t, CursorData> m_cursors;
-    WaylandBackend *m_backend;
-    wl_surface *m_cursor;
-    uint32_t m_enteredSerial;
-    uint32_t m_installedCursor;
-    uint32_t m_lastX11Cursor;
-};
-
-class ShmPool
-{
-public:
-    ShmPool(wl_shm *shm);
-    ~ShmPool();
-    bool isValid() const;
-    wl_buffer *createBuffer(const QImage &image);
-private:
-    bool createPool();
-    wl_shm *m_shm;
-    wl_shm_pool *m_pool;
-    void *m_poolData;
-    size_t m_size;
-    QScopedPointer<QTemporaryFile> m_tmpFile;
-    bool m_valid;
-    int m_offset;
-};
-
-class WaylandSeat
-{
-public:
-    WaylandSeat(wl_seat *seat, WaylandBackend *backend);
-    virtual ~WaylandSeat();
-
-    void changed(uint32_t capabilities);
-    wl_seat *seat();
-    void pointerEntered(uint32_t serial);
-    void resetCursor();
-private:
-    void destroyPointer();
-    void destroyKeyboard();
-    wl_seat *m_seat;
-    wl_pointer *m_pointer;
-    wl_keyboard *m_keyboard;
-    QScopedPointer<X11CursorTracker> m_cursorTracker;
-    WaylandBackend *m_backend;
-};
-
-/**
-* @brief Class encapsulating all Wayland data structures needed by the Egl backend.
-*
-* It creates the connection to the Wayland Compositor, set's up the registry and creates
-* the Wayland surface and it's shell and egl mapping.
-*/
-class WaylandBackend : public QObject
-{
-    Q_OBJECT
-public:
-    WaylandBackend();
-    virtual ~WaylandBackend();
-    wl_display *display();
-    wl_registry *registry();
-    void setCompositor(wl_compositor *c);
-    wl_compositor *compositor();
-    void setShell(wl_shell *s);
-    wl_shell *shell();
-    wl_egl_window *overlay();
-    ShmPool *shmPool();
-    void createSeat(uint32_t name);
-    void createShm(uint32_t name);
-    void ping(uint32_t serial);
-
-    bool createSurface();
-private Q_SLOTS:
-    void readEvents();
-private:
-    wl_display *m_display;
-    wl_registry *m_registry;
-    wl_compositor *m_compositor;
-    wl_shell *m_shell;
-    wl_surface *m_surface;
-    wl_egl_window *m_overlay;
-    wl_shell_surface *m_shellSurface;
-    QScopedPointer<WaylandSeat> m_seat;
-    QScopedPointer<ShmPool> m_shm;
-};
-
-inline
-bool CursorData::isValid() const
-{
-    return m_valid;
+namespace Wayland {
+    class WaylandBackend;
 }
-
-inline
-const QPoint& CursorData::hotSpot() const
-{
-    return m_hotSpot;
-}
-
-inline
-wl_buffer* CursorData::cursor() const
-{
-    return m_cursor;
-}
-
-inline
-const QSize& CursorData::size() const
-{
-    return m_size;
-}
-
-inline
-wl_seat *WaylandSeat::seat()
-{
-    return m_seat;
-}
-
-inline
-bool ShmPool::isValid() const
-{
-    return m_valid;
-}
-
-inline
-wl_display *WaylandBackend::display()
-{
-    return m_display;
-}
-
-inline
-wl_registry *WaylandBackend::registry()
-{
-    return m_registry;
-}
-
-inline
-void WaylandBackend::setCompositor(wl_compositor *c)
-{
-    m_compositor = c;
-}
-
-inline
-wl_compositor *WaylandBackend::compositor()
-{
-    return m_compositor;
-}
-
-inline
-wl_egl_window *WaylandBackend::overlay()
-{
-    return m_overlay;
-}
-
-inline
-void WaylandBackend::setShell(wl_shell *s)
-{
-    m_shell = s;
-}
-
-inline
-wl_shell *WaylandBackend::shell()
-{
-    return m_shell;
-}
-
-inline
-ShmPool* WaylandBackend::shmPool()
-{
-    return m_shm.data();
-}
-
-} // namespace Wayland
 
 class Shm;
 
@@ -257,8 +54,9 @@ class Shm;
  * repaints, which is obviously not optimal. Best solution is probably to go for buffer_age extension
  * and make it the only available solution next to fullscreen repaints.
  **/
-class EglWaylandBackend : public OpenGLBackend
+class EglWaylandBackend : public QObject, public OpenGLBackend
 {
+    Q_OBJECT
 public:
     EglWaylandBackend();
     virtual ~EglWaylandBackend();
@@ -273,6 +71,9 @@ public:
 protected:
     virtual void present();
 
+private Q_SLOTS:
+    void overlaySizeChanged(const QSize &size);
+
 private:
     void init();
     bool initializeEgl();
@@ -285,6 +86,7 @@ private:
     EGLContext m_context;
     int m_bufferAge;
     QScopedPointer<Wayland::WaylandBackend> m_wayland;
+    wl_egl_window *m_overlay;
     QScopedPointer<Shm> m_shm;
     friend class EglWaylandTexture;
 };
