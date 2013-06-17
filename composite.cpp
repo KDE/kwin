@@ -207,7 +207,7 @@ void Compositor::slotCompositingOptionsInitialized()
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         qDebug() << "Initializing XRender compositing";
-        m_scene = new SceneXrender(Workspace::self());
+        m_scene = SceneXrender::createScene();
         break;
 #endif
     default:

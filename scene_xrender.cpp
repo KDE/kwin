@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "overlaywindow.h"
 #include "paintredirector.h"
+#include "workspace.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
 
@@ -42,11 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-//****************************************
-// SceneXrender
-//****************************************
-
-xcb_render_picture_t SceneXrender::buffer = XCB_RENDER_PICTURE_NONE;
 ScreenPaintData SceneXrender::screen_paint;
 
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
@@ -89,92 +85,187 @@ static xcb_render_pictformat_t findFormatForVisual(xcb_visualid_t visual)
     return s_cache.value(visual, 0);
 }
 
-SceneXrender::SceneXrender(Workspace* ws)
-    : Scene(ws)
-    , format(0)
-    , front(XCB_RENDER_PICTURE_NONE)
-    , m_overlayWindow(new OverlayWindow())
-    , init_ok(false)
+//****************************************
+// XRenderBackend
+//****************************************
+XRenderBackend::XRenderBackend()
+    : m_buffer(XCB_RENDER_PICTURE_NONE)
+    , m_failed(false)
 {
     if (!Xcb::Extensions::self()->isRenderAvailable()) {
-        qCritical() << "No XRender extension available";
+        setFailed("No XRender extension available");
         return;
     }
     if (!Xcb::Extensions::self()->isFixesRegionAvailable()) {
-        qCritical() << "No XFixes v3+ extension available";
+        setFailed("No XFixes v3+ extension available");
         return;
     }
-    initXRender(true);
 }
 
-SceneXrender::~SceneXrender()
+XRenderBackend::~XRenderBackend()
 {
-    if (!init_ok) {
-        // TODO this probably needs to clean up whatever has been created until the failure
-        m_overlayWindow->destroy();
-        return;
+    if (m_buffer) {
+        xcb_render_free_picture(connection(), m_buffer);
     }
-    SceneXrender::Window::cleanup();
-    SceneXrender::EffectFrame::cleanup();
-    xcb_render_free_picture(connection(), front);
-    xcb_render_free_picture(connection(), buffer);
-    buffer = XCB_RENDER_PICTURE_NONE;
+}
+
+OverlayWindow* XRenderBackend::overlayWindow()
+{
+    return NULL;
+}
+
+void XRenderBackend::showOverlay()
+{
+}
+
+void XRenderBackend::setBuffer(xcb_render_picture_t buffer)
+{
+    if (m_buffer != XCB_RENDER_PICTURE_NONE) {
+        xcb_render_free_picture(connection(), m_buffer);
+    }
+    m_buffer = buffer;
+}
+
+void XRenderBackend::setFailed(const QString& reason)
+{
+    qCritical() << "Creating the XRender backend failed: " << reason;
+    m_failed = true;
+}
+
+void XRenderBackend::screenGeometryChanged(const QSize &size)
+{
+    Q_UNUSED(size)
+}
+
+//****************************************
+// X11XRenderBackend
+//****************************************
+X11XRenderBackend::X11XRenderBackend()
+    : XRenderBackend()
+    , m_overlayWindow(new OverlayWindow())
+    , m_front(XCB_RENDER_PICTURE_NONE)
+    , m_format(0)
+{
+    init(true);
+}
+
+X11XRenderBackend::~X11XRenderBackend()
+{
+    if (m_front) {
+        xcb_render_free_picture(connection(), m_front);
+    }
     m_overlayWindow->destroy();
-    delete m_overlayWindow;
 }
 
-void SceneXrender::initXRender(bool createOverlay)
+OverlayWindow* X11XRenderBackend::overlayWindow()
 {
-    init_ok = false;
-    if (front != XCB_RENDER_PICTURE_NONE)
-        xcb_render_free_picture(connection(), front);
+    return m_overlayWindow.data();
+}
+
+void X11XRenderBackend::showOverlay()
+{
+    if (m_overlayWindow->window())  // show the window only after the first pass, since
+        m_overlayWindow->show();   // that pass may take long
+}
+
+void X11XRenderBackend::init(bool createOverlay)
+{
+    if (m_front != XCB_RENDER_PICTURE_NONE)
+        xcb_render_free_picture(connection(), m_front);
     bool haveOverlay = createOverlay ? m_overlayWindow->create() : (m_overlayWindow->window() != XCB_WINDOW_NONE);
     if (haveOverlay) {
         m_overlayWindow->setup(XCB_WINDOW_NONE);
         ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(connection(),
             xcb_get_window_attributes_unchecked(connection(), m_overlayWindow->window()), NULL));
         if (!attribs) {
-            qCritical() << "Failed getting window attributes for overlay window";
+            setFailed("Failed getting window attributes for overlay window");
             return;
         }
-        format = findFormatForVisual(attribs->visual);
-        if (format == 0) {
-            qCritical() << "Failed to find XRender format for overlay window";
+        m_format = findFormatForVisual(attribs->visual);
+        if (m_format == 0) {
+            setFailed("Failed to find XRender format for overlay window");
             return;
         }
-        front = xcb_generate_id(connection());
-        xcb_render_create_picture(connection(), front, m_overlayWindow->window(), format, 0, NULL);
+        m_front = xcb_generate_id(connection());
+        xcb_render_create_picture(connection(), m_front, m_overlayWindow->window(), m_format, 0, NULL);
     } else {
         // create XRender picture for the root window
-        format = findFormatForVisual(defaultScreen()->root_visual);
-        if (format == 0) {
-            qCritical() << "Failed to find XRender format for root window";
+        m_format = findFormatForVisual(defaultScreen()->root_visual);
+        if (m_format == 0) {
+            setFailed("Failed to find XRender format for root window");
             return; // error
         }
-        front = xcb_generate_id(connection());
+        m_front = xcb_generate_id(connection());
         const uint32_t values[] = {XCB_SUBWINDOW_MODE_INCLUDE_INFERIORS};
-        xcb_render_create_picture(connection(), front, rootWindow(), format, XCB_RENDER_CP_SUBWINDOW_MODE, values);
+        xcb_render_create_picture(connection(), m_front, rootWindow(), m_format, XCB_RENDER_CP_SUBWINDOW_MODE, values);
     }
     createBuffer();
-    init_ok = true;
+}
+
+void X11XRenderBackend::createBuffer()
+{
+    xcb_pixmap_t pixmap = xcb_generate_id(connection());
+    xcb_create_pixmap(connection(), Xcb::defaultDepth(), pixmap, rootWindow(), displayWidth(), displayHeight());
+    xcb_render_picture_t b = xcb_generate_id(connection());
+    xcb_render_create_picture(connection(), b, pixmap, m_format, 0, NULL);
+    xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
+    setBuffer(b);
+}
+
+void X11XRenderBackend::present(int mask, const QRegion &damage)
+{
+    if (mask & Scene::PAINT_SCREEN_REGION) {
+        // Use the damage region as the clip region for the root window
+        XFixesRegion frontRegion(damage);
+        xcb_xfixes_set_picture_clip_region(connection(), m_front, frontRegion, 0, 0);
+        // copy composed buffer to the root window
+        xcb_xfixes_set_picture_clip_region(connection(), buffer(), XCB_XFIXES_REGION_NONE, 0, 0);
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
+                             m_front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+        xcb_xfixes_set_picture_clip_region(connection(), m_front, XCB_XFIXES_REGION_NONE, 0, 0);
+        xcb_flush(connection());
+    } else {
+        // copy composed buffer to the root window
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer(), XCB_RENDER_PICTURE_NONE,
+                             m_front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
+        xcb_flush(connection());
+    }
+}
+
+void X11XRenderBackend::screenGeometryChanged(const QSize &size)
+{
+    Q_UNUSED(size)
+    init(false);
+}
+
+//****************************************
+// SceneXrender
+//****************************************
+SceneXrender* SceneXrender::createScene()
+{
+    QScopedPointer<XRenderBackend> backend;
+    backend.reset(new X11XRenderBackend);
+    if (backend->isFailed()) {
+        return NULL;
+    }
+    return new SceneXrender(backend.take());
+}
+
+SceneXrender::SceneXrender(XRenderBackend *backend)
+    : Scene(Workspace::self())
+    , m_backend(backend)
+{
+}
+
+SceneXrender::~SceneXrender()
+{
+    SceneXrender::Window::cleanup();
+    SceneXrender::EffectFrame::cleanup();
 }
 
 bool SceneXrender::initFailed() const
 {
-    return !init_ok;
-}
-
-// Create the compositing buffer. The root window is not double-buffered,
-// so it is done manually using this buffer,
-void SceneXrender::createBuffer()
-{
-    if (buffer != XCB_RENDER_PICTURE_NONE)
-        xcb_render_free_picture(connection(), buffer);
-    xcb_pixmap_t pixmap = xcb_generate_id(connection());
-    xcb_create_pixmap(connection(), Xcb::defaultDepth(), pixmap, rootWindow(), displayWidth(), displayHeight());
-    buffer = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), buffer, pixmap, format, 0, NULL);
-    xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
+    return false;
 }
 
 // the entry point for painting
@@ -189,34 +280,13 @@ qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     QRegion updateRegion, validRegion;
     paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
 
-    if (m_overlayWindow->window())  // show the window only after the first pass, since
-        m_overlayWindow->show();   // that pass may take long
+    m_backend->showOverlay();
 
-    present(mask, updateRegion);
+    m_backend->present(mask, updateRegion);
     // do cleanup
     clearStackingOrder();
 
     return renderTimer.nsecsElapsed();
-}
-
-void SceneXrender::present(int mask, QRegion damage)
-{
-    if (mask & PAINT_SCREEN_REGION) {
-        // Use the damage region as the clip region for the root window
-        XFixesRegion frontRegion(damage);
-        xcb_xfixes_set_picture_clip_region(connection(), front, frontRegion, 0, 0);
-        // copy composed buffer to the root window
-        xcb_xfixes_set_picture_clip_region(connection(), buffer, XCB_XFIXES_REGION_NONE, 0, 0);
-        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer, XCB_RENDER_PICTURE_NONE,
-                             front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
-        xcb_xfixes_set_picture_clip_region(connection(), front, XCB_XFIXES_REGION_NONE, 0, 0);
-        xcb_flush(connection());
-    } else {
-        // copy composed buffer to the root window
-        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, buffer, XCB_RENDER_PICTURE_NONE,
-                             front, 0, 0, 0, 0, 0, 0, displayWidth(), displayHeight());
-        xcb_flush(connection());
-    }
 }
 
 void SceneXrender::paintGenericScreen(int mask, ScreenPaintData data)
@@ -237,12 +307,12 @@ void SceneXrender::paintBackground(QRegion region)
 {
     xcb_render_color_t col = { 0, 0, 0, 0xffff }; // black
     const QVector<xcb_rectangle_t> &rects = Xcb::regionToRects(region);
-    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, buffer, col, rects.count(), rects.data());
+    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, bufferPicture(), col, rects.count(), rects.data());
 }
 
 Scene::Window *SceneXrender::createWindow(Toplevel *toplevel)
 {
-    return new Window(toplevel);
+    return new Window(toplevel, this);
 }
 
 Scene::EffectFrame *SceneXrender::createEffectFrame(EffectFrameImpl *frame)
@@ -262,8 +332,9 @@ Shadow *SceneXrender::createShadow(Toplevel *toplevel)
 XRenderPicture *SceneXrender::Window::s_tempPicture = 0;
 QRect SceneXrender::Window::temp_visibleRect;
 
-SceneXrender::Window::Window(Toplevel* c)
+SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
+    , m_scene(scene)
     , format(findFormatForVisual(c->visual()->visualid))
     , alpha_cached_opacity(0.0)
 {
@@ -464,7 +535,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     const bool blitInTempPixmap = xRenderOffscreen() || (data.crossFadeProgress() < 1.0 && !opaque) ||
                                  (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
 
-    xcb_render_picture_t renderTarget = buffer;
+    xcb_render_picture_t renderTarget = m_scene->bufferPicture();
     if (blitInTempPixmap) {
         if (scene_xRenderOffscreenTarget()) {
             temp_visibleRect = toplevel->visibleRect().translated(-toplevel->pos());
@@ -675,7 +746,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, _PART_, decorationAl
             xcb_render_set_picture_transform(connection(), *s_tempPicture, xform);
             setPictureFilter(*s_tempPicture, filter);
             xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *s_tempPicture,
-                                 XCB_RENDER_PICTURE_NONE, buffer,
+                                 XCB_RENDER_PICTURE_NONE, m_scene->bufferPicture(),
                                  0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
             xcb_render_set_picture_transform(connection(), *s_tempPicture, identity);
         }
@@ -715,7 +786,7 @@ WindowPixmap* SceneXrender::Window::createWindowPixmap()
 void SceneXrender::screenGeometryChanged(const QSize &size)
 {
     Scene::screenGeometryChanged(size);
-    initXRender(false);
+    m_backend->screenGeometryChanged(size);
 }
 
 //****************************************
