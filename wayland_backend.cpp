@@ -254,6 +254,15 @@ static void keyboardHandleModifiers(void *data, wl_keyboard *keyboard, uint32_t 
     Q_UNUSED(group)
 }
 
+static void bufferRelease(void *data, wl_buffer *wl_buffer)
+{
+    Buffer *buffer = reinterpret_cast<Buffer*>(data);
+    if (buffer->buffer() != wl_buffer) {
+        return;
+    }
+    buffer->setReleased(true);
+}
+
 // handlers
 static const struct wl_registry_listener s_registryListener = {
     registryHandleGlobal,
@@ -286,9 +295,12 @@ static const struct wl_seat_listener s_seatListener = {
     seatHandleCapabilities
 };
 
-CursorData::CursorData(ShmPool *pool)
-    : m_cursor(NULL)
-    , m_valid(init(pool))
+static const struct wl_buffer_listener s_bufferListener = {
+    bufferRelease
+};
+
+CursorData::CursorData()
+    : m_valid(init())
 {
 }
 
@@ -296,7 +308,7 @@ CursorData::~CursorData()
 {
 }
 
-bool CursorData::init(ShmPool *pool)
+bool CursorData::init()
 {
     QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
         xcb_xfixes_get_cursor_image_reply(connection(),
@@ -311,13 +323,9 @@ bool CursorData::init(ShmPool *pool)
     if (cursorImage.isNull()) {
         return false;
     }
-    m_size = QSize(cursor->width, cursor->height);
-
-    m_cursor = pool->createBuffer(cursorImage);
-    if (!m_cursor) {
-        qDebug() << "Creating cursor buffer failed";
-        return false;
-    }
+    // the backend for the cursorImage is destroyed once the xcb cursor goes out of scope
+    // because of that we create a copy
+    m_cursor = cursorImage.copy();
 
     m_hotSpot = QPoint(cursor->xhot, cursor->yhot);
     return true;
@@ -362,7 +370,7 @@ void X11CursorTracker::cursorChanged(uint32_t serial)
     if (!pool) {
         return;
     }
-    CursorData cursor(pool);
+    CursorData cursor;
     if (cursor.isValid()) {
         // TODO: discard unused cursors after some time?
         m_cursors.insert(serial, cursor);
@@ -372,9 +380,14 @@ void X11CursorTracker::cursorChanged(uint32_t serial)
 
 void X11CursorTracker::installCursor(const CursorData& cursor)
 {
+    const QImage &cursorImage = cursor.cursor();
+    wl_buffer *buffer = m_backend->shmPool()->createBuffer(cursorImage);
+    if (!buffer) {
+        return;
+    }
     wl_pointer_set_cursor(m_pointer, m_enteredSerial, m_cursor, cursor.hotSpot().x(), cursor.hotSpot().y());
-    wl_surface_attach(m_cursor, cursor.cursor(), 0, 0);
-    wl_surface_damage(m_cursor, 0, 0, cursor.size().width(), cursor.size().height());
+    wl_surface_attach(m_cursor, buffer, 0, 0);
+    wl_surface_damage(m_cursor, 0, 0, cursorImage.width(), cursorImage.height());
     wl_surface_commit(m_cursor);
 }
 
@@ -391,6 +404,26 @@ void X11CursorTracker::resetCursor()
     }
 }
 
+Buffer::Buffer(wl_buffer* buffer, const QSize& size, int32_t stride, void* address)
+    : m_nativeBuffer(buffer)
+    , m_released(false)
+    , m_size(size)
+    , m_stride(stride)
+    , m_address(address)
+{
+    wl_buffer_add_listener(m_nativeBuffer, &s_bufferListener, this);
+}
+
+Buffer::~Buffer()
+{
+    wl_buffer_destroy(m_nativeBuffer);
+}
+
+void Buffer::copy(const void* src)
+{
+    memcpy(m_address, src, m_size.height()*m_stride);
+}
+
 ShmPool::ShmPool(wl_shm *shm)
     : m_shm(shm)
     , m_pool(NULL)
@@ -404,6 +437,7 @@ ShmPool::ShmPool(wl_shm *shm)
 
 ShmPool::~ShmPool()
 {
+    qDeleteAll(m_buffers);
     if (m_poolData) {
         munmap(m_poolData, m_size);
     }
@@ -441,13 +475,49 @@ wl_buffer *ShmPool::createBuffer(const QImage& image)
     if (image.isNull() || !m_valid) {
         return NULL;
     }
-    // TODO: test whether buffer needs resizing
-    wl_buffer *buffer = wl_shm_pool_create_buffer(m_pool, m_offset, image.width(), image.height(),
-                                                  image.bytesPerLine(), WL_SHM_FORMAT_ARGB8888);
-    if (buffer) {
-        memcpy((char *)m_poolData + m_offset, image.bits(), image.byteCount());
-        m_offset += image.byteCount();
+    Buffer *buffer = getBuffer(image.size(), image.bytesPerLine());
+    if (!buffer) {
+        return NULL;
     }
+    buffer->copy(image.bits());
+    return buffer->buffer();
+}
+
+wl_buffer *ShmPool::createBuffer(const QSize &size, int32_t stride, const void *src)
+{
+    if (size.isNull() || !m_valid) {
+        return NULL;
+    }
+    Buffer *buffer = getBuffer(size, stride);
+    if (!buffer) {
+        return NULL;
+    }
+    buffer->copy(src);
+    return buffer->buffer();
+}
+
+Buffer *ShmPool::getBuffer(const QSize &size, int32_t stride)
+{
+    Q_FOREACH (Buffer *buffer, m_buffers) {
+        if (!buffer->isReleased()) {
+            continue;
+        }
+        if (buffer->size() != size || buffer->stride() != stride) {
+            continue;
+        }
+        buffer->setReleased(false);
+        return buffer;
+    }
+    // TODO: test whether buffer needs resizing
+    // we don't have a buffer which we could reuse - need to create a new one
+    wl_buffer *native = wl_shm_pool_create_buffer(m_pool, m_offset, size.width(), size.height(),
+                                                  stride, WL_SHM_FORMAT_ARGB8888);
+    if (!native) {
+        return NULL;
+    }
+    Buffer *buffer = new Buffer(native, size, stride, (char *)m_poolData + m_offset);
+    m_offset += size.height() * stride;
+    m_buffers.append(buffer);
     return buffer;
 }
 

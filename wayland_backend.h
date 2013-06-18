@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 // Qt
 #include <QHash>
+#include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
@@ -45,17 +46,15 @@ class WaylandBackend;
 class CursorData
 {
 public:
-    CursorData(ShmPool *pool);
+    CursorData();
     ~CursorData();
     bool isValid() const;
     const QPoint &hotSpot() const;
-    const QSize &size() const;
-    wl_buffer *cursor() const;
+    const QImage &cursor() const;
 private:
-    bool init(ShmPool *pool);
-    wl_buffer *m_cursor;
+    bool init();
+    QImage m_cursor;
     QPoint m_hotSpot;
-    QSize m_size;
     bool m_valid;
 };
 
@@ -80,6 +79,27 @@ private:
     uint32_t m_lastX11Cursor;
 };
 
+class Buffer
+{
+public:
+    Buffer(wl_buffer *buffer, const QSize &size, int32_t stride, void *address);
+    ~Buffer();
+    void copy(const void *src);
+    void setReleased(bool released);
+
+    wl_buffer *buffer() const;
+    void *address() const;
+    const QSize &size() const;
+    int32_t stride() const;
+    bool isReleased() const;
+private:
+    wl_buffer *m_nativeBuffer;
+    bool m_released;
+    QSize m_size;
+    int32_t m_stride;
+    void *m_address;
+};
+
 class ShmPool
 {
 public:
@@ -87,8 +107,10 @@ public:
     ~ShmPool();
     bool isValid() const;
     wl_buffer *createBuffer(const QImage &image);
+    wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
 private:
     bool createPool();
+    Buffer* getBuffer(const QSize &size, int32_t stride);
     wl_shm *m_shm;
     wl_shm_pool *m_pool;
     void *m_poolData;
@@ -96,6 +118,7 @@ private:
     QScopedPointer<QTemporaryFile> m_tmpFile;
     bool m_valid;
     int m_offset;
+    QList<Buffer*> m_buffers;
 };
 
 class WaylandSeat
@@ -177,15 +200,9 @@ const QPoint& CursorData::hotSpot() const
 }
 
 inline
-wl_buffer* CursorData::cursor() const
+const QImage &CursorData::cursor() const
 {
     return m_cursor;
-}
-
-inline
-const QSize& CursorData::size() const
-{
-    return m_size;
 }
 
 inline
@@ -246,6 +263,42 @@ inline
 const QSize &WaylandBackend::shellSurfaceSize() const
 {
     return m_shellSurfaceSize;
+}
+
+inline
+void* Buffer::address() const
+{
+    return m_address;
+}
+
+inline
+wl_buffer* Buffer::buffer() const
+{
+    return m_nativeBuffer;
+}
+
+inline
+const QSize& Buffer::size() const
+{
+    return m_size;
+}
+
+inline
+int32_t Buffer::stride() const
+{
+    return m_stride;
+}
+
+inline
+bool Buffer::isReleased() const
+{
+    return m_released;
+}
+
+inline
+void Buffer::setReleased(bool released)
+{
+    m_released = released;
 }
 
 } // namespace Wayland
