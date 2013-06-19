@@ -52,6 +52,7 @@ public:
     virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
     virtual OverlayWindow *overlayWindow();
+    virtual bool usesOverlayWindow() const;
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
     virtual bool makeOpenGLContextCurrent() override;
@@ -483,6 +484,7 @@ public:
      * frame got rendered. If a backend needs more control it needs to implement this method.
      */
     virtual bool isLastFrameRendered() const;
+    virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
@@ -504,9 +506,7 @@ public:
      *
      * @return :OverlayWindow*
      **/
-    OverlayWindow *overlayWindow() {
-        return m_overlayWindow;
-    }
+    virtual OverlayWindow *overlayWindow();
     /**
      * @brief Whether the creation of the Backend failed.
      *
@@ -636,10 +636,6 @@ protected:
 
 private:
     /**
-     * @brief The OverlayWindow used by this Backend.
-     **/
-    OverlayWindow *m_overlayWindow;
-    /**
      * @brief Whether VSync is available and used, defaults to @c false.
      **/
     bool m_syncsToVBlank;
@@ -681,6 +677,11 @@ inline bool SceneOpenGL::hasPendingFlush() const
 inline bool SceneOpenGL::isLastFrameRendered() const
 {
     return m_backend->isLastFrameRendered();
+}
+
+inline bool SceneOpenGL::usesOverlayWindow() const
+{
+    return m_backend->usesOverlayWindow();
 }
 
 inline SceneOpenGL::Texture* OpenGLWindowPixmap::texture() const

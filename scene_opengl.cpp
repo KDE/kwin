@@ -79,8 +79,7 @@ extern int currentRefreshRate();
 // SceneOpenGL
 //****************************************
 OpenGLBackend::OpenGLBackend()
-    : m_overlayWindow(new OverlayWindow()) // TODO: maybe create only if needed?
-    , m_syncsToVBlank(false)
+    : m_syncsToVBlank(false)
     , m_blocksForRetrace(false)
     , m_directRendering(false)
     , m_haveBufferAge(false)
@@ -90,10 +89,6 @@ OpenGLBackend::OpenGLBackend()
 
 OpenGLBackend::~OpenGLBackend()
 {
-    if (isFailed()) {
-        m_overlayWindow->destroy();
-    }
-    delete m_overlayWindow;
 }
 
 void OpenGLBackend::setFailed(const QString &reason)
@@ -136,6 +131,11 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
 bool OpenGLBackend::isLastFrameRendered() const
 {
     return true;
+}
+
+OverlayWindow* OpenGLBackend::overlayWindow()
+{
+    return NULL;
 }
 
 /************************************************

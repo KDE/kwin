@@ -38,6 +38,8 @@ public:
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
+    virtual OverlayWindow* overlayWindow() override;
+    virtual bool usesOverlayWindow() const override;
 
 protected:
     virtual void present();
@@ -46,6 +48,10 @@ private:
     void init();
     bool initBufferConfigs();
     bool initRenderingContext();
+    /**
+     * @brief The OverlayWindow used by this Backend.
+     **/
+    OverlayWindow *m_overlayWindow;
     EGLDisplay dpy;
     EGLConfig config;
     EGLSurface surface;

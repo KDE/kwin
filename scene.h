@@ -122,6 +122,10 @@ public:
     virtual void doneOpenGLContextCurrent();
 
     /**
+     * Whether the Scene uses an X11 overlay window to perform compositing.
+     */
+    virtual bool usesOverlayWindow() const = 0;
+    /**
      * @brief Allows the Compositor to delay the rendering of the next frame until the last one
      * has been rendered. This is mostly interesting in case that the system compositor is not able
      * to keep up with KWin's frame rate.

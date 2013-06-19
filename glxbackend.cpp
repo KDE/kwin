@@ -42,6 +42,7 @@ namespace KWin
 {
 GlxBackend::GlxBackend()
     : OpenGLBackend()
+    , m_overlayWindow(new OverlayWindow())
     , window(None)
     , fbconfig(NULL)
     , glxWindow(None)
@@ -54,6 +55,9 @@ GlxBackend::GlxBackend()
 
 GlxBackend::~GlxBackend()
 {
+    if (isFailed()) {
+        m_overlayWindow->destroy();
+    }
     // TODO: cleanup in error case
     // do cleanup after initBuffer()
     cleanupGL();
@@ -70,6 +74,7 @@ GlxBackend::~GlxBackend()
 
     overlayWindow()->destroy();
     checkGLError("Cleanup");
+    delete m_overlayWindow;
 }
 
 static bool gs_tripleBufferUndetected = true;
@@ -591,6 +596,16 @@ bool GlxBackend::makeCurrent()
 void GlxBackend::doneCurrent()
 {
     glXMakeCurrent(display(), None, nullptr);
+}
+
+OverlayWindow* GlxBackend::overlayWindow()
+{
+    return m_overlayWindow;
+}
+
+bool GlxBackend::usesOverlayWindow() const
+{
+    return true;
 }
 
 /********************************************************

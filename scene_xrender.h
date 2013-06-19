@@ -53,6 +53,7 @@ public:
      * @return :OverlayWindow*
      **/
     virtual OverlayWindow *overlayWindow();
+    virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Shows the Overlay Window
      *
@@ -136,6 +137,7 @@ public:
     virtual OverlayWindow* overlayWindow();
     virtual void showOverlay();
     virtual void screenGeometryChanged(const QSize &size);
+    virtual bool usesOverlayWindow() const;
 private:
     void init(bool createOverlay);
     void createBuffer();
@@ -162,6 +164,9 @@ public:
     xcb_render_picture_t bufferPicture();
     virtual OverlayWindow *overlayWindow() {
         return m_backend->overlayWindow();
+    }
+    virtual bool usesOverlayWindow() const {
+        return m_backend->usesOverlayWindow();
     }
     virtual bool isLastFrameRendered() const {
         return m_backend->isLastFrameRendered();

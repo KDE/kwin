@@ -243,6 +243,11 @@ void X11XRenderBackend::screenGeometryChanged(const QSize &size)
     init(false);
 }
 
+bool X11XRenderBackend::usesOverlayWindow() const
+{
+    return true;
+}
+
 //****************************************
 // SceneXrender
 //****************************************

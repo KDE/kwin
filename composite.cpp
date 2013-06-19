@@ -539,7 +539,7 @@ void Compositor::lastFrameRendered()
 
 void Compositor::performCompositing()
 {
-    if (!isOverlayWindowVisible())
+    if (m_scene->usesOverlayWindow() && !isOverlayWindowVisible())
         return; // nothing is visible anyway
     if (!m_scene->isLastFrameRendered()) {
         m_waitingForFrameRendered = true;
@@ -706,7 +706,7 @@ void Compositor::checkUnredirect()
 // force is needed when the list of windows changes (e.g. a window goes away)
 void Compositor::checkUnredirect(bool force)
 {
-    if (!hasScene() || m_scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
+    if (!hasScene() || !m_scene->overlayWindow() || m_scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
         return;
     if (force)
         forceUnredirectCheck = true;
@@ -716,7 +716,7 @@ void Compositor::checkUnredirect(bool force)
 
 void Compositor::delayedCheckUnredirect()
 {
-    if (!hasScene() || m_scene->overlayWindow()->window() == None || !(options->isUnredirectFullscreen() || sender() == options))
+    if (!hasScene() || !m_scene->overlayWindow() || m_scene->overlayWindow()->window() == None || !(options->isUnredirectFullscreen() || sender() == options))
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;

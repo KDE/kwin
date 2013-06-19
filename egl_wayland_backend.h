@@ -69,6 +69,7 @@ public:
     virtual bool isLastFrameRendered() const override;
     Xcb::Shm *shm();
     void lastFrameRendered();
+    virtual bool usesOverlayWindow() const override;
 
 protected:
     virtual void present();

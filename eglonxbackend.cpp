@@ -35,6 +35,7 @@ namespace KWin
 
 EglOnXBackend::EglOnXBackend()
     : OpenGLBackend()
+    , m_overlayWindow(new OverlayWindow())
     , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
@@ -46,6 +47,9 @@ EglOnXBackend::EglOnXBackend()
 
 EglOnXBackend::~EglOnXBackend()
 {
+    if (isFailed()) {
+        m_overlayWindow->destroy();
+    }
     cleanupGL();
     doneCurrent();
     eglDestroyContext(dpy, ctx);
@@ -55,6 +59,7 @@ EglOnXBackend::~EglOnXBackend()
     if (overlayWindow()->window()) {
         overlayWindow()->destroy();
     }
+    delete m_overlayWindow;
 }
 
 static bool gs_tripleBufferUndetected = true;
@@ -418,6 +423,16 @@ bool EglOnXBackend::makeCurrent()
 void EglOnXBackend::doneCurrent()
 {
     eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+}
+
+bool EglOnXBackend::usesOverlayWindow() const
+{
+    return true;
+}
+
+OverlayWindow* EglOnXBackend::overlayWindow()
+{
+    return m_overlayWindow;
 }
 
 /************************************************

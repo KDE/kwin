@@ -619,6 +619,9 @@ bool Scene::syncsToVBlank() const
 
 void Scene::screenGeometryChanged(const QSize &size)
 {
+    if (!overlayWindow()) {
+        return;
+    }
     overlayWindow()->resize(size);
 }
 

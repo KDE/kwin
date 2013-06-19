@@ -48,6 +48,8 @@ public:
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
+    virtual OverlayWindow* overlayWindow() override;
+    virtual bool usesOverlayWindow() const override;
 
 protected:
     virtual void present();
@@ -61,6 +63,10 @@ private:
     bool initFbConfig();
     void setSwapInterval(int interval);
 
+    /**
+     * @brief The OverlayWindow used by this Backend.
+     **/
+    OverlayWindow *m_overlayWindow;
     Window window;
     FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
     GLXFBConfig fbconfig;

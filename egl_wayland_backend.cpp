@@ -369,6 +369,11 @@ void EglWaylandBackend::lastFrameRendered()
     Compositor::self()->lastFrameRendered();
 }
 
+bool EglWaylandBackend::usesOverlayWindow() const
+{
+    return false;
+}
+
 /************************************************
  * EglTexture
  ************************************************/
