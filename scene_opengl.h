@@ -56,6 +56,7 @@ public:
     virtual bool syncsToVBlank() const;
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
+    virtual bool isLastFrameRendered() const override;
 
     void idle();
 
@@ -476,6 +477,13 @@ public:
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
     /**
+     * @brief Backend specific code to determine whether the last frame got rendered.
+     *
+     * Default implementation always returns @c true. That is it's always assumed that the last
+     * frame got rendered. If a backend needs more control it needs to implement this method.
+     */
+    virtual bool isLastFrameRendered() const;
+    /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
     void idle();
@@ -668,6 +676,11 @@ private:
 inline bool SceneOpenGL::hasPendingFlush() const
 {
     return m_backend->hasPendingFlush();
+}
+
+inline bool SceneOpenGL::isLastFrameRendered() const
+{
+    return m_backend->isLastFrameRendered();
 }
 
 inline SceneOpenGL::Texture* OpenGLWindowPixmap::texture() const

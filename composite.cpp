@@ -87,6 +87,7 @@ Compositor::Compositor(QObject* workspace)
     , m_finishing(false)
     , m_timeSinceLastVBlank(0)
     , m_scene(NULL)
+    , m_waitingForFrameRendered(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     new CompositingAdaptor(this);
@@ -527,10 +528,23 @@ void Compositor::timerEvent(QTimerEvent *te)
         QObject::timerEvent(te);
 }
 
+void Compositor::lastFrameRendered()
+{
+    if (!m_waitingForFrameRendered) {
+        return;
+    }
+    m_waitingForFrameRendered = false;
+    performCompositing();
+}
+
 void Compositor::performCompositing()
 {
     if (!isOverlayWindowVisible())
         return; // nothing is visible anyway
+    if (!m_scene->isLastFrameRendered()) {
+        m_waitingForFrameRendered = true;
+        return; // frame wouldn't make it on the screen
+    }
 
     // Create a list of all windows in the stacking order
     ToplevelList windows = Workspace::self()->xStackingOrder();

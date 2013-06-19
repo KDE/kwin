@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WL_EGL_PLATFORM 1
 #include "egl_wayland_backend.h"
 // kwin
+#include "composite.h"
 #include "options.h"
 #include "wayland_backend.h"
 #include "xcbutils.h"
@@ -33,6 +34,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
+{
+    Q_UNUSED(data)
+    Q_UNUSED(time)
+    reinterpret_cast<EglWaylandBackend*>(data)->lastFrameRendered();
+
+    if (callback) {
+            wl_callback_destroy(callback);
+    }
+}
+
+static const struct wl_callback_listener s_surfaceFrameListener = {
+        handleFrameCallback
+};
+
 EglWaylandBackend::EglWaylandBackend()
     : QObject(NULL)
     , OpenGLBackend()
@@ -40,6 +56,7 @@ EglWaylandBackend::EglWaylandBackend()
     , m_bufferAge(0)
     , m_wayland(Wayland::WaylandBackend::self())
     , m_overlay(NULL)
+    , m_lastFrameRendered(true)
 {
     if (!m_wayland) {
         setFailed("Wayland Backend has not been created");
@@ -236,6 +253,9 @@ void EglWaylandBackend::present()
     // need to dispatch pending events as eglSwapBuffers can block
     m_wayland->dispatchEvents();
 
+    m_lastFrameRendered = false;
+    wl_callback *callback = wl_surface_frame(m_wayland->surface());
+    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
     if (supportsBufferAge()) {
         eglSwapBuffers(m_display, m_surface);
         eglQuerySurface(m_display, m_surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
@@ -336,6 +356,17 @@ Xcb::Shm *EglWaylandBackend::shm()
 void EglWaylandBackend::overlaySizeChanged(const QSize &size)
 {
     wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
+}
+
+bool EglWaylandBackend::isLastFrameRendered() const
+{
+    return m_lastFrameRendered;
+}
+
+void EglWaylandBackend::lastFrameRendered()
+{
+    m_lastFrameRendered = true;
+    Compositor::self()->lastFrameRendered();
 }
 
 /************************************************

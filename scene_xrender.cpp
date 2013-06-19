@@ -137,6 +137,11 @@ void XRenderBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
+bool XRenderBackend::isLastFrameRendered() const
+{
+    return true;
+}
+
 //****************************************
 // X11XRenderBackend
 //****************************************

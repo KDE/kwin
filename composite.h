@@ -118,6 +118,13 @@ public:
      * Set's the Scene's Overlay X Window visibility to @p visible.
      **/
     void setOverlayWindowVisibility(bool visible);
+    /**
+     * @brief Hook for the Scene to notify about a that the last frame got rendered.
+     *
+     * In case the Compositor was waiting for the frame being rendered, the next rendering process
+     * is triggered.
+     */
+    void lastFrameRendered();
 
     Scene *scene() {
         return m_scene;
@@ -296,6 +303,7 @@ private:
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
     Scene *m_scene;
+    bool m_waitingForFrameRendered;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };

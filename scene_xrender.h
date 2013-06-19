@@ -68,6 +68,13 @@ public:
      */
     virtual void screenGeometryChanged(const QSize &size);
     /**
+     * @brief Backend specific code to determine whether the last frame got rendered.
+     *
+     * Default implementation always returns @c true. That is it's always assumed that the last
+     * frame got rendered. If a backend needs more control it needs to implement this method.
+     */
+    virtual bool isLastFrameRendered() const;
+    /**
      * @brief The compositing buffer hold by this backend.
      *
      * The Scene composites the new frame into this buffer.
@@ -155,6 +162,9 @@ public:
     xcb_render_picture_t bufferPicture();
     virtual OverlayWindow *overlayWindow() {
         return m_backend->overlayWindow();
+    }
+    virtual bool isLastFrameRendered() const {
+        return m_backend->isLastFrameRendered();
     }
 
     static SceneXrender *createScene();
