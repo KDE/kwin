@@ -456,63 +456,66 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         if (snap) {
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
-                if ((((*l)->isOnDesktop(c->desktop()) && !(*l)->isMinimized())
-                        || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(VirtualDesktopManager::self()->current())
-                            && !(*l)->isMinimized()))
-                        && (!(*l)->tabGroup() || (*l) == (*l)->tabGroup()->current())
-                        && (*l) != c) {
-                    lx = (*l)->x();
-                    ly = (*l)->y();
-                    lrx = lx + (*l)->width();
-                    lry = ly + (*l)->height();
+                if ((*l) == c)
+                    continue;
+                if ((*l)->isMinimized())
+                    continue; // is minimized
+                if ((*l)->tabGroup() && (*l) != (*l)->tabGroup()->current())
+                    continue; // is not active tab
+                if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
+                    continue; // wrong virtual desktop
+                if (!(*l)->isOnCurrentActivity())
+                    continue; // wrong activity
+                if ((*l)->isDesktop() || (*l)->isSplash())
+                    continue;
 
-                    if (((cy <= lry) && (cy  >= ly))  ||
-                            ((ry >= ly) && (ry  <= lry))  ||
-                            ((cy <= ly) && (ry >= lry))) {
-                        if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
-                            deltaX = qAbs(lrx - cx);
-                            nx = lrx;
-                        }
-                        if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
-                            deltaX = qAbs(rx - lx);
-                            nx = lx - cw;
-                        }
-                    }
+                lx = (*l)->x();
+                ly = (*l)->y();
+                lrx = lx + (*l)->width();
+                lry = ly + (*l)->height();
 
-                    if (((cx <= lrx) && (cx  >= lx))  ||
-                            ((rx >= lx) && (rx  <= lrx))  ||
-                            ((cx <= lx) && (rx >= lrx))) {
-                        if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
-                            deltaY = qAbs(lry - cy);
-                            ny = lry;
-                        }
-                        //if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
-                        if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
-                            deltaY = qAbs(ry - ly);
-                            ny = ly - ch;
-                        }
+                if (((cy <= lry) && (cy  >= ly))  || ((ry >= ly) && (ry  <= lry))  || ((cy <= ly) && (ry >= lry))) {
+                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
+                        deltaX = qAbs(lrx - cx);
+                        nx = lrx;
                     }
+                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
+                        deltaX = qAbs(rx - lx);
+                        nx = lx - cw;
+                    }
+                }
 
-                    // Corner snapping
-                    if (nx == lrx || nx + cw == lx) {
-                        if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
-                            deltaY = qAbs(lry - ry);
-                            ny = lry - ch;
-                        }
-                        if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
-                            deltaY = qAbs(cy - ly);
-                            ny = ly;
-                        }
+                if (((cx <= lrx) && (cx  >= lx))  || ((rx >= lx) && (rx  <= lrx))  || ((cx <= lx) && (rx >= lrx))) {
+                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
+                        deltaY = qAbs(lry - cy);
+                        ny = lry;
                     }
-                    if (ny == lry || ny + ch == ly) {
-                        if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
-                            deltaX = qAbs(lrx - rx);
-                            nx = lrx - cw;
-                        }
-                        if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
-                            deltaX = qAbs(cx - lx);
-                            nx = lx;
-                        }
+                    //if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
+                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
+                        deltaY = qAbs(ry - ly);
+                        ny = ly - ch;
+                    }
+                }
+
+                // Corner snapping
+                if (nx == lrx || nx + cw == lx) {
+                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
+                        deltaY = qAbs(lry - ry);
+                        ny = lry - ch;
+                    }
+                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
+                        deltaY = qAbs(cy - ly);
+                        ny = ly;
+                    }
+                }
+                if (ny == lry || ny + ch == ly) {
+                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
+                        deltaX = qAbs(lrx - rx);
+                        nx = lrx - cw;
+                    }
+                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
+                        deltaX = qAbs(cx - lx);
+                        nx = lx;
                     }
                 }
             }
