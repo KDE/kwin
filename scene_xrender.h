@@ -23,11 +23,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 #include "shadow.h"
+#include <config-workspace.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
 namespace KWin
 {
+
+namespace Xcb
+{
+    class Shm;
+}
 
 /**
  * @brief Backend for the SceneXRender to hold the compositing buffer and take care of buffer
@@ -145,6 +151,23 @@ private:
     xcb_render_picture_t m_front;
     xcb_render_pictformat_t m_format;
 };
+
+#ifdef WAYLAND_FOUND
+class WaylandXRenderBackend : public XRenderBackend
+{
+public:
+    WaylandXRenderBackend();
+    virtual ~WaylandXRenderBackend();
+    virtual void present(int mask, const QRegion &damage);
+    virtual bool isLastFrameRendered() const;
+    virtual bool usesOverlayWindow() const;
+    void lastFrameRendered();
+private:
+    void init();
+    QScopedPointer<Xcb::Shm> m_shm;
+    bool m_lastFrameRendered;
+};
+#endif
 
 class SceneXrender
     : public Scene
