@@ -433,20 +433,20 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 padding[3] = 0;
 
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
-                deltaX = xmin - (cx - padding[0]);
+                deltaX = xmin - cx;
                 nx = xmin - padding[0];
             }
             if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
-                deltaX = rx + padding[1] - xmax;
+                deltaX = rx - xmax;
                 nx = xmax - cw + padding[1];
             }
 
             if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
-                deltaY = ymin - (cy - padding[2]);
+                deltaY = ymin - cy;
                 ny = ymin - padding[2];
             }
             if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
-                deltaY = ry + padding[3] - ymax;
+                deltaY = ry - ymax;
                 ny = ymax - ch + padding[3];
             }
         }
