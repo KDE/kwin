@@ -27,6 +27,10 @@ var dialogParentEffect = {
         if (window === null || window.modal === false) {
             return;
         }
+        dialogParentEffect.dialogGotModality(window)
+    },
+    dialogGotModality: function (window) {
+        "use strict";
         mainWindows = window.mainWindows();
         for (i = 0; i < mainWindows.length; i += 1) {
             w = mainWindows[i];
@@ -60,6 +64,10 @@ var dialogParentEffect = {
         if (window.modal === false) {
             return;
         }
+        dialogParentEffect.dialogLostModality(window);
+    },
+    dialogLostModality: function (window) {
+        "use strict";
         mainWindows = window.mainWindows();
         for (i = 0; i < mainWindows.length; i += 1) {
             w = mainWindows[i];
@@ -96,9 +104,16 @@ var dialogParentEffect = {
         windows = effects.stackingOrder;
         for (i = 0; i < windows.length; i += 1) {
             window = windows[i];
-            dialogParentEffect.cancelAnimation(window);
+            dialogParentEffect.cancelAnimation(window); 
             dialogParentEffect.restartAnimation(window);
         }
+    },
+    modalDialogChanged: function(dialog) {
+        "use strict";
+        if (dialog.modal === false)
+            dialogParentEffect.dialogLostModality(dialog);
+        else if (dialog.modal === true)
+            dialogParentEffect.dialogGotModality(dialog);
     },
     restartAnimation: function (window) {
         "use strict";
@@ -110,10 +125,11 @@ var dialogParentEffect = {
     init: function () {
         "use strict";
         var i, windows;
-        effects.windowActivated.connect(dialogParentEffect.windowAdded);
+        effects.windowAdded.connect(dialogParentEffect.windowAdded);
         effects.windowClosed.connect(dialogParentEffect.windowClosed);
         effects.windowMinimized.connect(dialogParentEffect.cancelAnimation);
         effects.windowUnminimized.connect(dialogParentEffect.restartAnimation);
+        effects.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged)
         effects['desktopChanged(int,int)'].connect(dialogParentEffect.desktopChanged);
 
         // start animation

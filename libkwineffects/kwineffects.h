@@ -1080,6 +1080,12 @@ Q_SIGNALS:
      **/
     void windowUnminimized(KWin::EffectWindow *w);
     /**
+     * Signal emitted when a window either becomes modal (ie. blocking for its main client) or looses that state.
+     * @param w The window which was unminimized
+     * @since 4.11
+     **/
+    void windowModalityChanged(KWin::EffectWindow *w);
+    /**
      * Signal emitted when an area of a window is scheduled for repainting.
      * Use this signal in an effect if another area needs to be synced as well.
      * @param w The window which is scheduled for repainting
