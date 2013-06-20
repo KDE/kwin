@@ -404,12 +404,12 @@ void X11CursorTracker::resetCursor()
     }
 }
 
-Buffer::Buffer(wl_buffer* buffer, const QSize& size, int32_t stride, void* address)
+Buffer::Buffer(wl_buffer* buffer, const QSize& size, int32_t stride, size_t offset)
     : m_nativeBuffer(buffer)
     , m_released(false)
     , m_size(size)
     , m_stride(stride)
-    , m_address(address)
+    , m_offset(offset)
 {
     wl_buffer_add_listener(m_nativeBuffer, &s_bufferListener, this);
 }
@@ -421,14 +421,14 @@ Buffer::~Buffer()
 
 void Buffer::copy(const void* src)
 {
-    memcpy(m_address, src, m_size.height()*m_stride);
+    memcpy((char*)WaylandBackend::self()->shmPool()->poolAddress() + m_offset, src, m_size.height()*m_stride);
 }
 
 ShmPool::ShmPool(wl_shm *shm)
     : m_shm(shm)
     , m_pool(NULL)
     , m_poolData(NULL)
-    , m_size(1024 * 1024) // TODO: useful size?
+    , m_size(1024)
     , m_tmpFile(new QTemporaryFile())
     , m_valid(createPool())
     , m_offset(0)
@@ -447,6 +447,7 @@ ShmPool::~ShmPool()
     if (m_shm) {
         wl_shm_destroy(m_shm);
     }
+    m_tmpFile->close();
 }
 
 bool ShmPool::createPool()
@@ -466,7 +467,23 @@ bool ShmPool::createPool()
         qDebug() << "Creating Shm pool failed";
         return false;
     }
-    m_tmpFile->close();
+    return true;
+}
+
+bool ShmPool::resizePool(int32_t newSize)
+{
+    if (ftruncate(m_tmpFile->handle(), newSize) < 0) {
+        qDebug() << "Could not set new size for Shm pool file";
+        return false;
+    }
+    wl_shm_pool_resize(m_pool, newSize);
+    munmap(m_poolData, m_size);
+    m_poolData = mmap(NULL, newSize, PROT_READ | PROT_WRITE, MAP_SHARED, m_tmpFile->handle(), 0);
+    m_size = newSize;
+    if (!m_poolData) {
+        qDebug() << "Resizing Shm pool failed";
+        return false;
+    }
     return true;
 }
 
@@ -508,15 +525,20 @@ Buffer *ShmPool::getBuffer(const QSize &size, int32_t stride)
         buffer->setReleased(false);
         return buffer;
     }
-    // TODO: test whether buffer needs resizing
+    const int32_t byteCount = size.height() * stride;
+    if (m_offset + byteCount > m_size) {
+        if (!resizePool(m_size + byteCount)) {
+            return NULL;
+        }
+    }
     // we don't have a buffer which we could reuse - need to create a new one
     wl_buffer *native = wl_shm_pool_create_buffer(m_pool, m_offset, size.width(), size.height(),
                                                   stride, WL_SHM_FORMAT_ARGB8888);
     if (!native) {
         return NULL;
     }
-    Buffer *buffer = new Buffer(native, size, stride, (char *)m_poolData + m_offset);
-    m_offset += size.height() * stride;
+    Buffer *buffer = new Buffer(native, size, stride, m_offset);
+    m_offset += byteCount;
     m_buffers.append(buffer);
     return buffer;
 }
