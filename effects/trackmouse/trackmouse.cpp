@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "trackmouseconfig.h"
 
 #include <QAction>
+#include <QPainter>
 #include <QTime>
 #include <QMatrix4x4>
 
@@ -52,7 +53,7 @@ TrackMouseEffect::TrackMouseEffect()
     if ( effects->compositingType() == XRenderCompositing)
         m_angleBase = 1.57079632679489661923; // Pi/2
 #endif
-    if ( effects->isOpenGLCompositing())
+    if ( effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing)
         m_angleBase = 90.0;
     m_mousePolling = false;
 
@@ -179,6 +180,18 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         }
     }
 #endif
+    if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
+        QPainter *painter = effects->scenePainter();
+        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
+        for (int i = 0; i < 2; ++i) {
+            painter->save();
+            painter->translate(p.x(), p.y());
+            painter->rotate(i ? -2*m_angle : m_angle);
+            painter->translate(-p.x(), -p.y());
+            painter->drawImage(m_lastRect[i], m_image[i]);
+            painter->restore();
+        }
+    }
 }
 
 void TrackMouseEffect::postPaintScreen()
@@ -193,15 +206,15 @@ bool TrackMouseEffect::init()
 {
     effects->makeOpenGLContextCurrent();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (!(m_texture[0] || m_picture[0])) {
+    if (!(m_texture[0] || m_picture[0] || m_image[0].isNull())) {
         loadTexture();
-        if (!(m_texture[0] || m_picture[0]))
+        if (!(m_texture[0] || m_picture[0] || m_image[0].isNull()))
             return false;
     }
 #else
-    if (!m_texture[0]) {
+    if (!m_texture[0] || m_image[0].isNull()) {
         loadTexture();
-        if (!m_texture[0])
+        if (!m_texture[0] || m_image[0].isNull())
             return false;
     }
 #endif
@@ -263,6 +276,10 @@ void TrackMouseEffect::loadTexture()
             m_lastRect[i].setSize(pixmap.size());
         }
 #endif
+        if (effects->compositingType() == QPainterCompositing) {
+            m_image[i] = QImage(f[i]);
+            m_lastRect[i].setSize(m_image[i].size());
+        }
     }
 }
 

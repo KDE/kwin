@@ -70,6 +70,7 @@ private:
     XRenderPicture *m_picture[2];
 #endif
     QAction* m_action;
+    QImage m_image[2];
     Qt::KeyboardModifiers m_modifiers;
 };
 
