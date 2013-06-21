@@ -134,6 +134,38 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
                                  xRenderBlendPicture(opacity), effects->xrenderBufferPicture(),
                                  0, 0, 0, 0, x, y, width, height);
 #endif
+        } else if (effects->compositingType() == QPainterCompositing) {
+            QImage tmp((*it)->image->size(), QImage::Format_ARGB32_Premultiplied);
+            tmp.fill(Qt::transparent);
+            QPainter p(&tmp);
+            p.drawImage(0, 0, *(*it)->image.data());
+            QColor color(Qt::transparent);
+            color.setAlphaF(opacity);
+            p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+            p.fillRect(QRect(QPoint(0, 0), tmp.size()), color);
+            p.end();
+
+            QPainter *painter = effects->scenePainter();
+            const QRect &rect = (*it)->geometry;
+            const QSize &size = (*it)->pictureSize;
+            int x = rect.x();
+            int y = rect.y();
+            switch ((*it)->border) {
+                case ElectricTopRight:
+                    x = rect.x() + rect.width() - size.width();
+                    break;
+                case ElectricBottomRight:
+                    x = rect.x() + rect.width() - size.width();
+                    y = rect.y() + rect.height() - size.height();
+                    break;
+                case ElectricBottomLeft:
+                    y = rect.y() + rect.height() - size.height();
+                    break;
+                default:
+                    // nothing
+                    break;
+            }
+            painter->drawImage(QPoint(x, y), tmp);
         }
     }
 }
@@ -155,6 +187,8 @@ void ScreenEdgeEffect::edgeApproaching(ElectricBorder border, qreal factor, cons
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
                     (*it)->picture.reset(createEdgeGlow<XRenderPicture>(border, geometry.size()));
 #endif
+                } else if (effects->compositingType() == QPainterCompositing) {
+                    (*it)->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
                 }
             }
         }
@@ -209,6 +243,18 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
             return NULL;
         }
 #endif
+    } else if (effects->compositingType() == QPainterCompositing) {
+        if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
+            glow->image.reset(createCornerGlow<QImage>(border));
+            glow->pictureSize = cornerGlowSize(border);
+        } else {
+            glow->image.reset(createEdgeGlow<QImage>(border, geometry.size()));
+            glow->pictureSize = geometry.size();
+        }
+        if (glow->image.isNull()) {
+            delete glow;
+            return NULL;
+        }
     }
 
     return glow;
