@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "scene_xrender.h"
 #include "scene_opengl.h"
+#include "scene_qpainter.h"
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
@@ -211,6 +212,10 @@ void Compositor::slotCompositingOptionsInitialized()
         m_scene = SceneXrender::createScene();
         break;
 #endif
+    case QPainterCompositing:
+        qDebug() << "Initializing QPainter compositing";
+        m_scene = SceneQPainter::createScene();
+        break;
     default:
         qDebug() << "No compositing enabled";
         m_starting = false;
@@ -816,6 +821,8 @@ QString Compositor::compositingType() const
 #else
         return QStringLiteral("gl2");
 #endif
+    case QPainterCompositing:
+        return "qpainter";
     case NoCompositing:
     default:
         return QStringLiteral("none");

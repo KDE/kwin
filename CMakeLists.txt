@@ -148,6 +148,7 @@ set(kwin_KDEINIT_SRCS
    scene.cpp
    scene_xrender.cpp
    scene_opengl.cpp
+   scene_qpainter.cpp
    glxbackend.cpp
    thumbnailitem.cpp
    lanczosfilter.cpp

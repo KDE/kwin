@@ -47,6 +47,7 @@ enum CompositingType {
      **/
     OpenGLCompositing = 1,
     XRenderCompositing = 1<<1,
+    QPainterCompositing = 1<< 2,
     OpenGL1Compositing = 1<<2 | OpenGLCompositing,
     OpenGL2Compositing = 1<<3 | OpenGLCompositing
 };

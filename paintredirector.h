@@ -96,6 +96,7 @@ protected:
     PaintRedirector(Client *c, KDecoration *deco);
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
     virtual GLTexture *texture(DecorationPixmap border) const;
+    virtual const QImage *image(DecorationPixmap border) const;
     virtual void resizePixmaps(const QRect *rects);
     virtual void resize(DecorationPixmap border, const QSize &size);
     virtual void preparePaint(const QPixmap &pending);
@@ -182,6 +183,21 @@ private:
     QImage m_tempImage;
 };
 
+class QImagePaintRedirector : public ImageBasedPaintRedirector
+{
+    Q_OBJECT
+public:
+    QImagePaintRedirector(Client *c, KDecoration *deco);
+    virtual ~QImagePaintRedirector();
+
+protected:
+    virtual void resize(DecorationPixmap border, const QSize &size) override;
+    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg) override;
+    virtual const QImage* image(DecorationPixmap border) const override;
+private:
+    QImage m_images[PixmapCount];
+};
+
 template <>
 inline
 GLTexture *PaintRedirector::bottomDecoPixmap() const
@@ -236,6 +252,34 @@ inline
 xcb_render_picture_t PaintRedirector::topDecoPixmap() const
 {
     return picture(TopPixmap);
+}
+
+template <>
+inline
+const QImage *PaintRedirector::bottomDecoPixmap() const
+{
+    return image(BottomPixmap);
+}
+
+template <>
+inline
+const QImage *PaintRedirector::leftDecoPixmap() const
+{
+    return image(LeftPixmap);
+}
+
+template <>
+inline
+const QImage *PaintRedirector::rightDecoPixmap() const
+{
+    return image(RightPixmap);
+}
+
+template <>
+inline
+const QImage *PaintRedirector::topDecoPixmap() const
+{
+    return image(TopPixmap);
 }
 
 inline

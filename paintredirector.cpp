@@ -43,9 +43,12 @@ PaintRedirector *PaintRedirector::create(Client *c, KDecoration *deco)
 {
     if (effects->isOpenGLCompositing()) {
         return new OpenGLPaintRedirector(c, deco);
-    } else {
+    } else if (effects->compositingType() == XRenderCompositing) {
         return new RasterXRenderPaintRedirector(c, deco);
+    } else if (effects->compositingType() == QPainterCompositing) {
+        return new QImagePaintRedirector(c, deco);
     }
+    return NULL;
 }
 
 PaintRedirector::PaintRedirector(Client *c, KDecoration *deco)
@@ -267,6 +270,12 @@ xcb_render_picture_t PaintRedirector::picture(PaintRedirector::DecorationPixmap 
     return XCB_RENDER_PICTURE_NONE;
 }
 
+const QImage *PaintRedirector::image(PaintRedirector::DecorationPixmap border) const
+{
+    Q_UNUSED(border)
+    return NULL;
+}
+
 void PaintRedirector::resize(DecorationPixmap border, const QSize &size)
 {
     Q_UNUSED(border)
@@ -467,6 +476,38 @@ void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap borde
     const QImage img(scratchImage().copy(QRect(bounding.topLeft() - b.topLeft(), bounding.size())));
     xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, m_pixmaps[border], m_gc,
                   img.width(), img.height(), offset.x(), offset.y(), 0, 32, img.byteCount(), img.constBits());
+}
+
+QImagePaintRedirector::QImagePaintRedirector(Client *c, KDecoration *deco)
+    : ImageBasedPaintRedirector(c, deco)
+{
+    resizePixmaps();
+}
+
+QImagePaintRedirector::~QImagePaintRedirector()
+{
+}
+
+void QImagePaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
+{
+    // clip the sub area
+    const QRect bounding = reg.boundingRect();
+    const QPoint offset = bounding.topLeft() - r.topLeft();
+
+    QPainter painter(&m_images[border]);
+    painter.setCompositionMode(QPainter::CompositionMode_Source);
+    painter.drawImage(offset, scratchImage(), QRect(bounding.topLeft() - b.topLeft(), bounding.size()));
+}
+
+void QImagePaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
+{
+    m_images[border] = QImage(size, QImage::Format_ARGB32_Premultiplied);
+    m_images[border].fill(Qt::transparent);
+}
+
+const QImage *QImagePaintRedirector::image(PaintRedirector::DecorationPixmap border) const
+{
+    return &m_images[border];
 }
 
 } // namespace

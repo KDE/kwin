@@ -1560,6 +1560,9 @@ QString Workspace::supportInformation() const
         case XRenderCompositing:
             support.append(QStringLiteral("Compositing Type: XRender\n"));
             break;
+        case QPainterCompositing:
+            support.append("Compositing Type: QPainter\n");
+            break;
         case NoCompositing:
         default:
             support.append(QStringLiteral("Something is really broken, neither OpenGL nor XRender is used"));
