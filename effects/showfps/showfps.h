@@ -77,6 +77,7 @@ private:
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     void paintXrender(int fps);
 #endif
+    void paintQPainter(int fps);
     void paintFPSGraph(int x, int y);
     void paintDrawSizeGraph(int x, int y);
     void paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize);

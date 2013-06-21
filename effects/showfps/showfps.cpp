@@ -168,6 +168,9 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
         XSync(display(), False);   // make sure all rendering is done
     }
 #endif
+    if (effects->compositingType() == QPainterCompositing) {
+        paintQPainter(fps);
+    }
     m_noBenchmark->render(infiniteRegion(), 1.0, alpha);
 }
 
@@ -304,6 +307,39 @@ void ShowFpsEffect::paintXrender(int fps)
     }
 }
 #endif
+
+void ShowFpsEffect::paintQPainter(int fps)
+{
+    QPainter *painter = effects->scenePainter();
+    painter->save();
+
+    QColor color(255, 255, 255);
+    color.setAlphaF(alpha);
+
+    painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+    painter->fillRect(x, y, 2 * NUM_PAINTS + FPS_WIDTH, MAX_TIME, color);
+    color.setRed(0);
+    color.setGreen(0);
+    painter->fillRect(x, y + MAX_TIME - fps, FPS_WIDTH, fps, color);
+
+    color.setBlue(0);
+    for (int i = 10; i < MAX_TIME; i += 10) {
+        painter->setPen(color);
+        painter->drawLine(x, y + MAX_TIME - i, x + FPS_WIDTH, y + MAX_TIME - i);
+    }
+
+    // Paint FPS graph
+    paintFPSGraph(x + FPS_WIDTH, y + MAX_TIME - 1);
+
+    // Paint amount of rendered pixels graph
+    paintDrawSizeGraph(x + FPS_WIDTH + NUM_PAINTS, y + MAX_TIME - 1);
+
+    // Paint FPS numerical value
+    painter->setPen(Qt::black);
+    painter->drawText(fpsTextRect, textAlign, QString::number(fps));
+
+    painter->restore();
+}
 
 void ShowFpsEffect::paintFPSGraph(int x, int y)
 {
@@ -457,6 +493,32 @@ void ShowFpsEffect::paintGraph(int x, int y, QList<int> values, QList<int> lines
                              XCB_RENDER_PICTURE_NONE, effects->xrenderBufferPicture(), 0, 0, 0, 0, x, y, values.count(), MAX_TIME);
     }
 #endif
+    if (effects->compositingType() == QPainterCompositing) {
+        QPainter *painter = effects->scenePainter();
+        painter->setPen(Qt::black);
+        // First draw the lines
+        foreach (int h, lines) {
+            painter->drawLine(x, y - h, x + values.count(), y - h);
+        }
+        QColor color(0, 0, 0);
+        color.setAlphaF(alpha);
+        for (int i = 0; i < values.count(); i++) {
+            int value = values[ i ];
+            if (colorize) {
+                if (value <= 10) {
+                    color = QColor(0, 255, 0);
+                } else if (value <= 20) {
+                    color = QColor(255, 255, 0);
+                } else if (value <= 50) {
+                    color = QColor(255, 0, 0);
+                } else {
+                    color = QColor(0, 0, 0);
+                }
+            }
+            painter->setPen(color);
+            painter->drawLine(x + values.count() - i, y, x + values.count() - i, y - value);
+        }
+    }
 }
 
 void ShowFpsEffect::postPaintScreen()
