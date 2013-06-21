@@ -804,7 +804,7 @@ xcb_atom_t EffectsHandlerImpl::announceSupportProperty(const QByteArray &propert
         return m_managedProperties.value(propertyName);
     }
     // get the atom for the propertyName
-    QScopedPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(connection(),
+    ScopedCPointer<xcb_intern_atom_reply_t> atomReply(xcb_intern_atom_reply(connection(),
         xcb_intern_atom_unchecked(connection(), false, propertyName.size(), propertyName.constData()),
         NULL));
     if (atomReply.isNull()) {
