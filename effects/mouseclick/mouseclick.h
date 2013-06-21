@@ -160,6 +160,7 @@ private:
 
     void drawCircleGl(const QColor& color, float cx, float cy, float r);
     void drawCircleXr(const QColor& color, float cx, float cy, float r);
+    void drawCircleQPainter(const QColor& color, float cx, float cy, float r);
     void paintScreenSetupGl(int mask, QRegion region, ScreenPaintData& data);
     void paintScreenFinishGl(int mask, QRegion region, ScreenPaintData& data);
 

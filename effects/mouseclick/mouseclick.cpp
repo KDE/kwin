@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobalAccel>
 
+#include <QPainter>
+
 #include <math.h>
 
 namespace KWin
@@ -254,6 +256,8 @@ void MouseClickEffect::drawCircle(const QColor& color, float cx, float cy, float
         drawCircleGl(color, cx, cy, r);
     if (effects->compositingType() == XRenderCompositing)
         drawCircleXr(color, cx, cy, r);
+    if (effects->compositingType() == QPainterCompositing)
+        drawCircleQPainter(color, cx, cy, r);
 }
 
 void MouseClickEffect::paintScreenSetup(int mask, QRegion region, ScreenPaintData& data)
@@ -355,6 +359,15 @@ void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, flo
     Q_UNUSED(cy)
     Q_UNUSED(r)
 #endif
+}
+
+void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float cy, float r)
+{
+    QPainter *painter = effects->scenePainter();
+    painter->save();
+    painter->setPen(color);
+    painter->drawArc(cx - r, cy - r, r * 2, r * 2, 0, 5760);
+    painter->restore();
 }
 
 void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData&)
