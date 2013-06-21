@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include <qcolor.h>
+#include <QPainter>
 
 namespace KWin
 {
@@ -60,6 +61,9 @@ void ShowPaintEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     if (effects->compositingType() == XRenderCompositing)
         paintXrender();
 #endif
+    if (effects->compositingType() == QPainterCompositing) {
+        paintQPainter();
+    }
     if (++color_index == sizeof(colors) / sizeof(colors[ 0 ]))
         color_index = 0;
 }
@@ -113,6 +117,15 @@ void ShowPaintEffect::paintXrender()
     }
     xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
 #endif
+}
+
+void ShowPaintEffect::paintQPainter()
+{
+    QColor color = colors[ color_index ];
+    color.setAlphaF(0.2);
+    foreach (const QRect & r, painted.rects()) {
+        effects->scenePainter()->fillRect(r, color);
+    }
 }
 
 } // namespace

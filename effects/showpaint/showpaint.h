@@ -37,6 +37,7 @@ public:
 private:
     void paintGL();
     void paintXrender();
+    void paintQPainter();
     QRegion painted; // what's painted in one pass
     int color_index;
 };
