@@ -410,6 +410,7 @@ Buffer::Buffer(wl_buffer* buffer, const QSize& size, int32_t stride, size_t offs
     , m_size(size)
     , m_stride(stride)
     , m_offset(offset)
+    , m_used(false)
 {
     wl_buffer_add_listener(m_nativeBuffer, &s_bufferListener, this);
 }
@@ -421,7 +422,12 @@ Buffer::~Buffer()
 
 void Buffer::copy(const void* src)
 {
-    memcpy((char*)WaylandBackend::self()->shmPool()->poolAddress() + m_offset, src, m_size.height()*m_stride);
+    memcpy(address(), src, m_size.height()*m_stride);
+}
+
+uchar *Buffer::address()
+{
+    return (uchar*)WaylandBackend::self()->shmPool()->poolAddress() + m_offset;
 }
 
 ShmPool::ShmPool(wl_shm *shm)
@@ -484,6 +490,7 @@ bool ShmPool::resizePool(int32_t newSize)
         qDebug() << "Resizing Shm pool failed";
         return false;
     }
+    emit poolResized();
     return true;
 }
 
@@ -516,7 +523,7 @@ wl_buffer *ShmPool::createBuffer(const QSize &size, int32_t stride, const void *
 Buffer *ShmPool::getBuffer(const QSize &size, int32_t stride)
 {
     Q_FOREACH (Buffer *buffer, m_buffers) {
-        if (!buffer->isReleased()) {
+        if (!buffer->isReleased() || buffer->isUsed()) {
             continue;
         }
         if (buffer->size() != size || buffer->stride() != stride) {

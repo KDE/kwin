@@ -86,21 +86,26 @@ public:
     ~Buffer();
     void copy(const void *src);
     void setReleased(bool released);
+    void setUsed(bool used);
 
     wl_buffer *buffer() const;
     const QSize &size() const;
     int32_t stride() const;
     bool isReleased() const;
+    bool isUsed() const;
+    uchar *address();
 private:
     wl_buffer *m_nativeBuffer;
     bool m_released;
     QSize m_size;
     int32_t m_stride;
     size_t m_offset;
+    bool m_used;
 };
 
-class ShmPool
+class ShmPool : public QObject
 {
+    Q_OBJECT
 public:
     ShmPool(wl_shm *shm);
     ~ShmPool();
@@ -108,10 +113,12 @@ public:
     wl_buffer *createBuffer(const QImage &image);
     wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
     void *poolAddress() const;
+    Buffer *getBuffer(const QSize &size, int32_t stride);
+Q_SIGNALS:
+    void poolResized();
 private:
     bool createPool();
     bool resizePool(int32_t newSize);
-    Buffer* getBuffer(const QSize &size, int32_t stride);
     wl_shm *m_shm;
     wl_shm_pool *m_pool;
     void *m_poolData;
@@ -300,6 +307,18 @@ inline
 void Buffer::setReleased(bool released)
 {
     m_released = released;
+}
+
+inline
+bool Buffer::isUsed() const
+{
+    return m_used;
+}
+
+inline
+void Buffer::setUsed(bool used)
+{
+    m_used = used;
 }
 
 } // namespace Wayland
