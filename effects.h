@@ -159,6 +159,7 @@ public:
     virtual void unreserveElectricBorder(ElectricBorder border, Effect *effect);
 
     virtual unsigned long xrenderBufferPicture();
+    virtual QPainter* scenePainter();
     virtual void reconfigure();
     virtual void registerPropertyType(long atom, bool reg);
     virtual QByteArray readRootProperty(long atom, long type, int format) const;

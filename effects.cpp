@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "group.h"
 #include "scene_xrender.h"
+#include "scene_qpainter.h"
 #include "unmanaged.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -1288,6 +1289,15 @@ unsigned long EffectsHandlerImpl::xrenderBufferPicture()
         return s->bufferPicture();
 #endif
     return None;
+}
+
+QPainter *EffectsHandlerImpl::scenePainter()
+{
+    if (SceneQPainter *s = dynamic_cast<SceneQPainter*>(m_scene)) {
+        return s->painter();
+    } else {
+        return NULL;
+    }
 }
 
 KLibrary* EffectsHandlerImpl::findEffectLibrary(KService* service)

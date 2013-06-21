@@ -885,6 +885,15 @@ public:
      **/
     bool isOpenGLCompositing() const;
     virtual unsigned long xrenderBufferPicture() = 0;
+    /**
+     * @brief Provides access to the QPainter which is rendering to the back buffer.
+     *
+     * Only relevant for CompositingType QPainterCompositing. For all other compositing types
+     * @c null is returned.
+     *
+     * @return QPainter* The Scene's QPainter or @c null.
+     */
+    virtual QPainter *scenePainter() = 0;
     virtual void reconfigure() = 0;
 
     /**
