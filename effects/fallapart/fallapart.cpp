@@ -28,6 +28,12 @@ namespace KWin
 {
 
 KWIN_EFFECT(fallapart, FallApartEffect)
+KWIN_EFFECT_SUPPORTED(fallapart, FallApartEffect::supported())
+
+bool FallApartEffect::supported()
+{
+    return effects->isOpenGLCompositing();
+}
 
 FallApartEffect::FallApartEffect()
 {

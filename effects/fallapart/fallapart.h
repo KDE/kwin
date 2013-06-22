@@ -44,6 +44,9 @@ public:
     int configuredBlockSize() const {
         return blockSize;
     }
+
+    static bool supported();
+
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotWindowDeleted(KWin::EffectWindow *w);
