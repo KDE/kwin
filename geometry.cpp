@@ -1599,24 +1599,43 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
 
 void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
-    if (rules()->checkIgnoreGeometry(false))
-        return; // user said: "FU!"
-
     // "maximized" is a user setting -> we do not allow the client to resize itself
     // away from this & against the users explicit wish
     kDebug(1212) << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<
                             bool(maximizeMode() & MaximizeVertical) <<
                             bool(maximizeMode() & MaximizeHorizontal);
-    if (!app_noborder) { //
-        if (maximizeMode() & MaximizeVertical)
-            value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
-        if (maximizeMode() & MaximizeHorizontal)
-            value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+
+    // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
+    bool ignore = !app_noborder && (quick_tile_mode != QuickTileNone || maximizeMode() != MaximizeRestore);
+    // however, the user shall be able to force obedience despite and also disobedience in general
+    ignore = rules()->checkIgnoreGeometry(ignore);
+    if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
+        quick_tile_mode = QuickTileNone;
+        max_mode = MaximizeRestore;
+    } else if (!app_noborder && quick_tile_mode == QuickTileNone &&
+        (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
+        // ignoring can be, because either we do, or the user does explicitly not want it.
+        // for partially maximized windows we want to allow configures in the other dimension.
+        // so we've to ask the user again - to know whether we just ignored for the partial maximization.
+        // the problem here is, that the user can explicitly permit configure requests - even for maximized windows!
+        // we cannot distinguish that from passing "false" for partially maximized windows.
+        ignore = rules()->checkIgnoreGeometry(false);
+        if (!ignore) { // the user is not interested, so we fix up dimensions
+            if (maximizeMode() == MaximizeVertical)
+                value_mask &= ~(CWY|CWHeight);
+            if (maximizeMode() == MaximizeHorizontal)
+                value_mask &= ~(CWX|CWWidth);
+            if (!(value_mask & (CWX|CWWidth|CWY|CWHeight))) {
+                ignore = true; // the modification turned the request void
+            }
+        }
     }
-    if (!(value_mask & (CWX|CWWidth|CWY|CWHeight))) {
+
+    if (ignore) {
         kDebug(1212) << "DENIED";
-        return; // nothing to (left) to do for use - bugs #158974, #252314
+        return; // nothing to (left) to do for use - bugs #158974, #252314, #321491
     }
+
     kDebug(1212) << "PERMITTED" << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight));
 
     if (gravity == 0)   // default (nonsense) value for the argument
