@@ -594,10 +594,6 @@ void Workspace::removeClient(Client* c)
 
     updateStackingOrder(true);
 
-    if (m_compositor) {
-        m_compositor->updateCompositeBlocking();
-    }
-
 #ifdef KWIN_BUILD_TABBOX
     if (tabBox->isDisplayed())
         tabBox->reset(true);
@@ -641,6 +637,9 @@ void Workspace::removeDeleted(Deleted* c)
     unconstrained_stacking_order.removeAll(c);
     stacking_order.removeAll(c);
     x_stacking_dirty = true;
+    if (c->wasClient() && m_compositor) {
+        m_compositor->updateCompositeBlocking();
+    }
 }
 
 void Workspace::updateToolWindows(bool also_hide)

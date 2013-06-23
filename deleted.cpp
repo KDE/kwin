@@ -41,6 +41,7 @@ Deleted::Deleted()
     , m_minimized(false)
     , m_modal(false)
     , m_paintRedirector(NULL)
+    , m_wasClient(false)
 {
 }
 
@@ -81,6 +82,7 @@ void Deleted::copyToDeleted(Toplevel* c)
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
     if (client) {
+        m_wasClient = true;
         no_border = client->noBorder();
         padding_left = client->paddingLeft();
         padding_right = client->paddingRight();
