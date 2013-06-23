@@ -127,6 +127,7 @@ Comment[sv]=Anpassa musåtgärder för fönster
 Comment[tr]=Pencerelerde fare eylemlerini yapılandır
 Comment[uk]=Налаштування дій за допомогою миші над вікнами
 Comment[x-test]=xxConfigure mouse actions on windowsxx
+Comment[zh_CN]=配置窗口的鼠标动作
 Comment[zh_TW]=設定視窗上的滑鼠動作
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize

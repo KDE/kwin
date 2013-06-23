@@ -30,6 +30,7 @@ Name[sv]=Skärmkant
 Name[tr]=Ekran Kenarı
 Name[uk]=Край екрана
 Name[x-test]=xxScreen Edgexx
+Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 Icon=preferences-system-windows-effect-screenedge
 Comment=Highlights a screen edge when approaching
@@ -62,6 +63,7 @@ Comment[sv]=Markerar en skärmkant när man närmar sig den
 Comment[tr]=Yaklaşıldığında bir ekran kenarını vurgular
 Comment[uk]=Підсвічує край екрана у разі наближення вказівника
 Comment[x-test]=xxHighlights a screen edge when approachingxx
+Comment[zh_CN]=接近屏幕边缘时高亮显示
 Comment[zh_TW]=接近時突顯螢幕邊緣
 
 Type=Service

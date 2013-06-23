@@ -95,6 +95,7 @@ Comment[sv]=Låt fönster glida tillbaka när ett annat fönster höjs.
 Comment[tr]=Başka bir pencere yükseltildiğinde, pencereleri geri kaydır.
 Comment[uk]=Ковзання вікон на задній план під час підняття інших вікон
 Comment[x-test]=xxSlide back windows when another window is raisedxx
+Comment[zh_CN]=在激活其它窗口时滑出当前窗口
 Comment[zh_TW]=另一個視窗被抬升時將此視窗滑動到背景
 Icon=preferences-system-windows-effect-slideback
 X-KDE-ServiceTypes=KWin/Effect

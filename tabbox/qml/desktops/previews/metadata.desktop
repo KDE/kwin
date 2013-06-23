@@ -27,6 +27,7 @@ Name[sv]=Förhandsgranskningar
 Name[tr]=Önizlemeler
 Name[uk]=Ескізи
 Name[x-test]=xxPreviewsxx
+Name[zh_CN]=预览
 Name[zh_TW]=預覽
 Comment=A desktop switcher layout with previews of the desktops
 Comment[ca]=Una disposició del commutador d'escriptori amb vistes prèvies dels escriptoris
@@ -55,6 +56,7 @@ Comment[sv]=En layout för skrivbordsbyte med förhandsgranskningar av skrivbord
 Comment[tr]=Masaüstlerinin önizlemeleri ile bir masaüstü değiştirici düzeni
 Comment[uk]=Компонування перемикача стільниць з ескізами стільниць
 Comment[x-test]=xxA desktop switcher layout with previews of the desktopsxx
+Comment[zh_CN]=带桌面预览的切换布局
 Comment[zh_TW]=有預覽的桌面切換器佈局
 Icon=preferences-system-desktop-switcher-previews
 
