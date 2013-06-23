@@ -1897,8 +1897,6 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
 {
 #ifndef KWIN_HAVE_OPENGLES
     if (primitiveMode == GL_QUADS) {
-        primitiveMode = GL_TRIANGLES;
-
         IndexBuffer *&indexBuffer = GLVertexBufferPrivate::s_indexBuffer;
 
         if (!indexBuffer)
