@@ -586,8 +586,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     QDBusConnection::sessionBus().interface()->registerService(
         appname, QDBusConnectionInterface::DontQueueService);
 
-    KCmdLineArgs* sargs = KCmdLineArgs::parsedArgs();
-
     return a.exec();
 }
 
