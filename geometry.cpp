@@ -528,20 +528,16 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
             int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
             if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY) {
                 // Snap to center of screen
-                deltaX = diffX;
-                deltaY = diffY;
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
             } else if (options->borderSnapZone()) {
                 // Enhance border snap
                 if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
                     // Snap to vertical center on screen edge
-                    deltaY = diffY;
                     ny = (ymin + ymax) / 2 - ch / 2;
                 } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) &&
                           diffX < snap && diffX < deltaX) {
                     // Snap to horizontal center on screen edge
-                    deltaX = diffX;
                     nx = (xmin + xmax) / 2 - cw / 2;
                 }
             }
