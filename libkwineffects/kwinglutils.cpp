@@ -987,7 +987,6 @@ void ShaderManager::resetShader(ShaderType type)
 bool GLRenderTarget::sSupported = false;
 bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
-QSize GLRenderTarget::s_oldViewport;
 
 void GLRenderTarget::initStatic()
 {
@@ -1012,12 +1011,6 @@ bool GLRenderTarget::blitSupported()
 
 void GLRenderTarget::pushRenderTarget(GLRenderTarget* target)
 {
-    if (s_renderTargets.isEmpty()) {
-        GLint params[4];
-        glGetIntegerv(GL_VIEWPORT, params);
-        s_oldViewport = QSize(params[2], params[3]);
-    }
-
     target->enable();
     s_renderTargets.push(target);
 }
@@ -1026,11 +1019,13 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
 {
     GLRenderTarget* ret = s_renderTargets.pop();
     ret->disable();
+
     if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->enable();
-    } else if (!s_oldViewport.isEmpty()) {
-        glViewport (0, 0, s_oldViewport.width(), s_oldViewport.height());
+    } else {
+        glViewport (0, 0, displayWidth(), displayHeight());
     }
+
     return ret;
 }
 

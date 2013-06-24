@@ -580,7 +580,6 @@ private:
     static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
-    static QSize s_oldViewport;
 
     GLTexture mTexture;
     bool mValid;
