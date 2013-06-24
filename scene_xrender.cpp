@@ -120,8 +120,6 @@ SceneXrender::~SceneXrender()
     xcb_render_free_picture(connection(), buffer);
     buffer = XCB_RENDER_PICTURE_NONE;
     m_overlayWindow->destroy();
-    foreach (Window * w, windows)
-    delete w;
     delete m_overlayWindow;
 }
 
@@ -185,10 +183,7 @@ qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     QElapsedTimer renderTimer;
     renderTimer.start();
 
-    foreach (Toplevel * c, toplevels) {
-        assert(windows.contains(c));
-        stacking_order.append(windows[ c ]);
-    }
+    createStackingOrder(toplevels);
 
     int mask = 0;
     QRegion updateRegion, validRegion;
@@ -199,7 +194,7 @@ qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
 
     present(mask, updateRegion);
     // do cleanup
-    stacking_order.clear();
+    clearStackingOrder();
 
     return renderTimer.nsecsElapsed();
 }
@@ -245,47 +240,9 @@ void SceneXrender::paintBackground(QRegion region)
     xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, buffer, col, rects.count(), rects.data());
 }
 
-void SceneXrender::windowGeometryShapeChanged(KWin::Toplevel* c)
+Scene::Window *SceneXrender::createWindow(Toplevel *toplevel)
 {
-    if (!windows.contains(c))    // this is ok, shape is not valid by default
-        return;
-    Window* w = windows[ c ];
-    w->discardShape();
-}
-
-void SceneXrender::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
-{
-    assert(windows.contains(c));
-    if (deleted != NULL) {
-        // replace c with deleted
-        Window* w = windows.take(c);
-        w->updateToplevel(deleted);
-        if (w->shadow()) {
-            w->shadow()->setToplevel(deleted);
-        }
-        windows[ deleted ] = w;
-    } else {
-        delete windows.take(c);
-        c->effectWindow()->setSceneWindow(NULL);
-    }
-}
-
-void SceneXrender::windowDeleted(Deleted* c)
-{
-    assert(windows.contains(c));
-    delete windows.take(c);
-    c->effectWindow()->setSceneWindow(NULL);
-}
-
-void SceneXrender::windowAdded(Toplevel* c)
-{
-    assert(!windows.contains(c));
-    windows[ c ] = new Window(c);
-    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
-    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
-    c->effectWindow()->setSceneWindow(windows[ c ]);
-    c->getShadow();
-    windows[ c ]->updateShadow(c->shadow());
+    return new Window(toplevel);
 }
 
 Scene::EffectFrame *SceneXrender::createEffectFrame(EffectFrameImpl *frame)

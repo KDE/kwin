@@ -65,7 +65,7 @@ public:
     // Used to mainly discard cached data.
 
     // a new window has been created
-    virtual void windowAdded(Toplevel*) = 0;
+    void windowAdded(Toplevel*);
     /**
      * @brief Creates the Scene backend of an EffectFrame.
      *
@@ -123,12 +123,15 @@ public:
 
 public Q_SLOTS:
     // a window has been destroyed
-    virtual void windowDeleted(KWin::Deleted*) = 0;
+    void windowDeleted(KWin::Deleted*);
     // shape/size of a window changed
-    virtual void windowGeometryShapeChanged(KWin::Toplevel* c) = 0;
+    void windowGeometryShapeChanged(KWin::Toplevel* c);
     // a window has been closed
-    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted) = 0;
+    void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
+    virtual Window *createWindow(Toplevel *toplevel) = 0;
+    void createStackingOrder(ToplevelList toplevels);
+    void clearStackingOrder();
     // shared implementation, starts painting the screen
     void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
                      QRegion *updateRegion, QRegion *validRegion);
@@ -168,8 +171,6 @@ protected:
         int mask;
         WindowQuadList quads;
     };
-    // windows in their stacking order
-    QVector< Window* > stacking_order;
     // The region which actually has been painted by paintScreen() and should be
     // copied from the buffer to the screen. I.e. the region returned from Scene::paintScreen().
     // Since prePaintWindow() can extend areas to paint, these changes would have to propagate
@@ -187,6 +188,9 @@ protected:
 private:
     void paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
+    QHash< Toplevel*, Window* > m_windows;
+    // windows in their stacking order
+    QVector< Window* > stacking_order;
 };
 
 // The base class for windows representations in composite backends

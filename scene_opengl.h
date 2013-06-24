@@ -48,8 +48,6 @@ public:
     virtual bool initFailed() const;
     virtual bool hasPendingFlush() const;
     virtual qint64 paint(QRegion damage, ToplevelList windows);
-    virtual void windowAdded(Toplevel*);
-    virtual void windowDeleted(Deleted*);
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
     virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
@@ -90,20 +88,15 @@ protected:
     void handleGraphicsReset(GLenum status);
 
     virtual void doPaintBackground(const QVector<float> &vertices) = 0;
-    virtual SceneOpenGL::Window *createWindow(Toplevel *t) = 0;
 
 Q_SIGNALS:
     void resetCompositing();
 
-public Q_SLOTS:
-    virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
-    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:
     bool init_ok;
 private:
     bool viewportLimitsMatched(const QSize &size) const;
 private:
-    QHash< Toplevel*, Window* > windows;
     bool m_debug;
     OpenGLBackend *m_backend;
 };
@@ -125,7 +118,7 @@ public:
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void doPaintBackground(const QVector< float >& vertices);
-    virtual SceneOpenGL::Window *createWindow(Toplevel *t);
+    virtual Scene::Window *createWindow(Toplevel *t);
     virtual void finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 
@@ -159,7 +152,7 @@ public:
 protected:
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void doPaintBackground(const QVector< float >& vertices);
-    virtual SceneOpenGL::Window *createWindow(Toplevel *t);
+    virtual Scene::Window *createWindow(Toplevel *t);
 
 private:
     void setupModelViewProjectionMatrix();

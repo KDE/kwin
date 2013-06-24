@@ -98,6 +98,9 @@ Scene::Scene(Workspace* ws)
 
 Scene::~Scene()
 {
+    foreach (Window *w, m_windows) {
+        delete w;
+    }
 }
 
 // returns mask and possibly modified region
@@ -389,6 +392,64 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         // full repaints.
         damaged_region = paintedArea - repaintClip;
     }
+}
+
+void Scene::windowAdded(Toplevel *c)
+{
+    assert(!m_windows.contains(c));
+    Scene::Window *w = createWindow(c);
+    m_windows[ c ] = w;
+    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
+    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
+    c->effectWindow()->setSceneWindow(w);
+    c->getShadow();
+    w->updateShadow(c->shadow());
+}
+
+void Scene::windowClosed(Toplevel *c, Deleted *deleted)
+{
+    assert(m_windows.contains(c));
+    if (deleted != NULL) {
+        // replace c with deleted
+        Window* w = m_windows.take(c);
+        w->updateToplevel(deleted);
+        if (w->shadow()) {
+            w->shadow()->setToplevel(deleted);
+        }
+        m_windows[ deleted ] = w;
+    } else {
+        delete m_windows.take(c);
+        c->effectWindow()->setSceneWindow(NULL);
+    }
+}
+
+void Scene::windowDeleted(Deleted *c)
+{
+    assert(m_windows.contains(c));
+    delete m_windows.take(c);
+    c->effectWindow()->setSceneWindow(NULL);
+}
+
+void Scene::windowGeometryShapeChanged(Toplevel *c)
+{
+    if (!m_windows.contains(c))    // this is ok, shape is not valid by default
+        return;
+    Window *w = m_windows[ c ];
+    w->discardShape();
+}
+
+void Scene::createStackingOrder(ToplevelList toplevels)
+{
+    // TODO: cache the stacking_order in case it has not changed
+    foreach (Toplevel *c, toplevels) {
+        assert(m_windows.contains(c));
+        stacking_order.append(m_windows[ c ]);
+    }
+}
+
+void Scene::clearStackingOrder()
+{
+    stacking_order.clear();
 }
 
 static Scene::Window *s_recursionCheck = NULL;

@@ -43,8 +43,6 @@ public:
         return XRenderCompositing;
     }
     virtual qint64 paint(QRegion damage, ToplevelList windows);
-    virtual void windowAdded(Toplevel*);
-    virtual void windowDeleted(Deleted*);
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
     virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
@@ -53,12 +51,10 @@ public:
         return m_overlayWindow;
     }
 protected:
+    virtual Scene::Window *createWindow(Toplevel *toplevel);
     virtual void paintBackground(QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
-public Q_SLOTS:
-    virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
-    virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 private:
     void createBuffer();
     void present(int mask, QRegion damage);
@@ -68,7 +64,6 @@ private:
     static xcb_render_picture_t buffer;
     static ScreenPaintData screen_paint;
     class Window;
-    QHash< Toplevel*, Window* > windows;
     OverlayWindow* m_overlayWindow;
     bool init_ok;
 };

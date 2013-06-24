@@ -182,9 +182,6 @@ SceneOpenGL::~SceneOpenGL()
         // backend might be still needed for a different scene
         delete m_backend;
     }
-    foreach (Window * w, windows) {
-        delete w;
-    }
     // do cleanup after initBuffer()
     SceneOpenGL::EffectFrame::cleanup();
     checkGLError("Cleanup");
@@ -360,11 +357,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
-    foreach (Toplevel * c, toplevels) {
-        // TODO: cache the stacking_order in case it has not changed
-        assert(windows.contains(c));
-        stacking_order.append(windows[ c ]);
-    }
+    createStackingOrder(toplevels);
 
     m_backend->makeCurrent();
     QRegion repaint = m_backend->prepareRenderingFrame();
@@ -409,7 +402,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     m_backend->endRenderingFrame(validRegion, updateRegion);
 
     // do cleanup
-    stacking_order.clear();
+    clearStackingOrder();
     checkGLError("PostPaint");
     return m_backend->renderTime();
 }
@@ -485,51 +478,6 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
         region = QRegion(0, 0, displayWidth(), displayHeight());
     }
-}
-
-void SceneOpenGL::windowAdded(Toplevel* c)
-{
-    assert(!windows.contains(c));
-    Window *w = createWindow(c);
-    windows[ c ] = w;
-    w->setScene(this);
-    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
-    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
-    c->effectWindow()->setSceneWindow(windows[ c ]);
-    c->getShadow();
-    windows[ c ]->updateShadow(c->shadow());
-}
-
-void SceneOpenGL::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
-{
-    assert(windows.contains(c));
-    if (deleted != NULL) {
-        // replace c with deleted
-        Window* w = windows.take(c);
-        w->updateToplevel(deleted);
-        if (w->shadow()) {
-            w->shadow()->setToplevel(deleted);
-        }
-        windows[ deleted ] = w;
-    } else {
-        delete windows.take(c);
-        c->effectWindow()->setSceneWindow(NULL);
-    }
-}
-
-void SceneOpenGL::windowDeleted(Deleted* c)
-{
-    assert(windows.contains(c));
-    delete windows.take(c);
-    c->effectWindow()->setSceneWindow(NULL);
-}
-
-void SceneOpenGL::windowGeometryShapeChanged(KWin::Toplevel* c)
-{
-    if (!windows.contains(c))    // this is ok, shape is not valid
-        return;                 // by default
-    Window* w = windows[ c ];
-    w->discardShape();
 }
 
 SceneOpenGL::Texture *SceneOpenGL::createTexture()
@@ -754,9 +702,11 @@ void SceneOpenGL2::doPaintBackground(const QVector< float >& vertices)
     vbo->render(GL_TRIANGLES);
 }
 
-SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)
+Scene::Window *SceneOpenGL2::createWindow(Toplevel *t)
 {
-    return new SceneOpenGL2Window(t);
+    SceneOpenGL2Window *w = new SceneOpenGL2Window(t);
+    w->setScene(this);
+    return w;
 }
 
 void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
@@ -925,9 +875,11 @@ void SceneOpenGL1::screenGeometryChanged(const QSize &size)
     m_resetModelViewProjectionMatrix = true;
 }
 
-SceneOpenGL::Window *SceneOpenGL1::createWindow(Toplevel *t)
+Scene::Window *SceneOpenGL1::createWindow(Toplevel *t)
 {
-    return new SceneOpenGL1Window(t);
+    SceneOpenGL1Window *w = new SceneOpenGL1Window(t);
+    w->setScene(this);
+    return w;
 }
 
 #endif
