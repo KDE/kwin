@@ -73,6 +73,15 @@ public:
      */
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) = 0;
     /**
+     * @brief Creates the Scene specific Shadow subclass.
+     *
+     * An implementing class has to create a proper instance. It is not allowed to
+     * return @c null.
+     *
+     * @param toplevel The Toplevel for which the Shadow needs to be created.
+     */
+    virtual Shadow *createShadow(Toplevel *toplevel) = 0;
+    /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
      * as it takes care of resizing the overlay window.

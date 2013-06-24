@@ -51,6 +51,7 @@ public:
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
+    virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
     virtual OverlayWindow *overlayWindow();
     virtual bool blocksForRetrace() const;

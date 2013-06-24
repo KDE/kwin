@@ -20,12 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 // kwin
 #include "atoms.h"
+#include "composite.h"
 #include "effects.h"
 #include "toplevel.h"
-#include "scene_opengl.h"
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-#include "scene_xrender.h"
-#endif
 
 namespace KWin
 {
@@ -48,23 +45,14 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     }
     auto data = Shadow::readX11ShadowProperty(toplevel->window());
     if (!data.isEmpty()) {
-        Shadow *shadow = NULL;
-        if (effects->isOpenGLCompositing()) {
-            shadow = new SceneOpenGLShadow(toplevel);
-        } else if (effects->compositingType() == XRenderCompositing) {
-#ifdef KWIN_HAVE_XRENDER_COMPOSITING
-            shadow = new SceneXRenderShadow(toplevel);
-#endif
-        }
+        Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
 
-        if (shadow) {
-            if (!shadow->init(data)) {
-                delete shadow;
-                return NULL;
-            }
-            if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
-                toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
-            }
+        if (!shadow->init(data)) {
+            delete shadow;
+            return NULL;
+        }
+        if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
+            toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
         }
         return shadow;
     } else {

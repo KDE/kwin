@@ -641,6 +641,11 @@ Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
     return new SceneOpenGL::EffectFrame(frame, this);
 }
 
+Shadow *SceneOpenGL::createShadow(Toplevel *toplevel)
+{
+    return new SceneOpenGLShadow(toplevel);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************

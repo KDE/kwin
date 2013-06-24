@@ -46,6 +46,7 @@ public:
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
     virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
+    virtual Shadow *createShadow(Toplevel *toplevel);
     virtual void screenGeometryChanged(const QSize &size);
     xcb_render_picture_t bufferPicture();
     virtual OverlayWindow *overlayWindow() {

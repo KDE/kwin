@@ -293,6 +293,11 @@ Scene::EffectFrame *SceneXrender::createEffectFrame(EffectFrameImpl *frame)
     return new SceneXrender::EffectFrame(frame);
 }
 
+Shadow *SceneXrender::createShadow(Toplevel *toplevel)
+{
+    return new SceneXRenderShadow(toplevel);
+}
+
 //****************************************
 // SceneXrender::Window
 //****************************************
