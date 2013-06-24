@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
+#include <QPainter>
 
 namespace KWin
 {
@@ -159,6 +160,31 @@ void SnapHelperEffect::postPaintScreen()
                                            preMultiply(QColor(128, 128, 128, m_timeline.currentValue()*128)), 6, rects);
             }
 #endif
+        }
+        if (effects->compositingType() == QPainterCompositing) {
+            QPainter *painter = effects->scenePainter();
+            painter->save();
+            QColor color;
+            color.setRedF(0.5);
+            color.setGreenF(0.5);
+            color.setBlueF(0.5);
+            color.setAlphaF(m_timeline.currentValue() * 0.5);
+            QPen pen(color);
+            pen.setWidth(4);
+            painter->setPen(pen);
+            painter->setBrush(Qt::NoBrush);
+
+            for (int i = 0; i < effects->numScreens(); ++i) {
+                const QRect &rect = effects->clientArea(ScreenArea, i, 0);
+                // Center lines
+                painter->drawLine(rect.center().x(), rect.y(), rect.center().x(), rect.y() + rect.height());
+                painter->drawLine(rect.x(), rect.center().y(), rect.x() + rect.width(), rect.center().y());
+
+                // window outline
+                QRect windowRect(rect.center(), m_window->geometry().size());
+                painter->drawRect(windowRect.translated(-windowRect.width()/2, -windowRect.height()/2));
+            }
+            painter->restore();
         }
     } else if (m_window && !m_active) {
         if (m_window->isDeleted())
