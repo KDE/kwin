@@ -268,6 +268,9 @@ glMapBuffer_func         glMapBuffer;
 glUnmapBuffer_func       glUnmapBuffer;
 glGetBufferPointerv_func glGetBufferPointerv;
 
+// GL_OES_texture_3D
+glTexImage3DOES_func     glTexImage3D;
+
 // GL_EXT_map_buffer_range
 glMapBufferRange_func         glMapBufferRange;
 glFlushMappedBufferRange_func glFlushMappedBufferRange;
@@ -729,6 +732,12 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glMapBuffer         = NULL;
         glUnmapBuffer       = NULL;
         glGetBufferPointerv = NULL;
+    }
+
+    if (hasGLExtension("GL_OES_texture_3D")) {
+        glTexImage3D = (glTexImage3DOES_func)eglGetProcAddress("glTexImage3DOES");
+    } else {
+        glTexImage3D = NULL;
     }
 
     if (hasGLExtension("GL_EXT_map_buffer_range")) {
