@@ -94,7 +94,6 @@ Q_SIGNALS:
     void resetCompositing();
 
 public Q_SLOTS:
-    virtual void windowOpacityChanged(KWin::Toplevel* c);
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c);
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted);
 protected:

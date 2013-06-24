@@ -253,11 +253,6 @@ void SceneXrender::windowGeometryShapeChanged(KWin::Toplevel* c)
     w->discardShape();
 }
 
-void SceneXrender::windowOpacityChanged(KWin::Toplevel* c)
-{
-    Q_UNUSED(c)
-}
-
 void SceneXrender::windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted)
 {
     assert(windows.contains(c));

@@ -493,7 +493,6 @@ void SceneOpenGL::windowAdded(Toplevel* c)
     Window *w = createWindow(c);
     windows[ c ] = w;
     w->setScene(this);
-    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), SLOT(windowOpacityChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SLOT(windowGeometryShapeChanged(KWin::Toplevel*)));
     connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(windowClosed(KWin::Toplevel*,KWin::Deleted*)));
     c->effectWindow()->setSceneWindow(windows[ c ]);
@@ -531,19 +530,6 @@ void SceneOpenGL::windowGeometryShapeChanged(KWin::Toplevel* c)
         return;                 // by default
     Window* w = windows[ c ];
     w->discardShape();
-}
-
-void SceneOpenGL::windowOpacityChanged(KWin::Toplevel* t)
-{
-    Q_UNUSED(t)
-#if 0 // not really needed, windows are painted on every repaint
-    // and opacity is used when applying texture, not when
-    // creating it
-    if (!windows.contains(c))    // this is ok, texture is created
-        return;                 // on demand
-    Window* w = windows[ c ];
-    w->discardTexture();
-#endif
 }
 
 SceneOpenGL::Texture *SceneOpenGL::createTexture()

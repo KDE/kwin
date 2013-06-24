@@ -109,8 +109,6 @@ public:
 public Q_SLOTS:
     // a window has been destroyed
     virtual void windowDeleted(KWin::Deleted*) = 0;
-    // opacity of a window changed
-    virtual void windowOpacityChanged(KWin::Toplevel* c) = 0;
     // shape/size of a window changed
     virtual void windowGeometryShapeChanged(KWin::Toplevel* c) = 0;
     // a window has been closed
