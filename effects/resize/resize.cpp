@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KColorScheme>
 
 #include <QtGui/QVector2D>
+#include <QPainter>
 
 namespace KWin
 {
@@ -118,6 +119,15 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
                                            rects.count(), rects.constData());
             }
 #endif
+            if (effects->compositingType() == QPainterCompositing) {
+                QPainter *painter = effects->scenePainter();
+                painter->save();
+                color.setAlphaF(alpha);
+                foreach (const QRect &r, paintRegion.rects()) {
+                    painter->fillRect(r, color);
+                }
+                painter->restore();
+            }
         }
     } else {
         AnimationEffect::paintWindow(w, mask, region, data);
