@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
+#include <QPainter>
+
 #include <math.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -171,6 +173,28 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
         }
     }
 #endif
+    if (effects->compositingType() == QPainterCompositing) {
+        QPainter *painter = effects->scenePainter();
+        painter->save();
+        QPen pen(color);
+        pen.setWidth(width);
+        painter->setPen(pen);
+        foreach (const Mark &mark, marks) {
+            drawMark(painter, mark);
+        }
+        drawMark(painter, drawing);
+        painter->restore();
+    }
+}
+
+void MouseMarkEffect::drawMark(QPainter *painter, const Mark &mark)
+{
+    if (mark.count() <= 1) {
+        return;
+    }
+    for (int i = 0; i < mark.count() - 1; ++i) {
+        painter->drawLine(mark[i], mark[i+1]);
+    }
 }
 
 void MouseMarkEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
