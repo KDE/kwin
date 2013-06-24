@@ -67,6 +67,12 @@ public:
     // a new window has been created
     virtual void windowAdded(Toplevel*) = 0;
     /**
+     * @brief Creates the Scene backend of an EffectFrame.
+     *
+     * @param frame The EffectFrame this Scene::EffectFrame belongs to.
+     */
+    virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame) = 0;
+    /**
      * Method invoked when the screen geometry is changed.
      * Reimplementing classes should also invoke the parent method
      * as it takes care of resizing the overlay window.

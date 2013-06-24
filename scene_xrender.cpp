@@ -288,6 +288,11 @@ void SceneXrender::windowAdded(Toplevel* c)
     windows[ c ]->updateShadow(c->shadow());
 }
 
+Scene::EffectFrame *SceneXrender::createEffectFrame(EffectFrameImpl *frame)
+{
+    return new SceneXrender::EffectFrame(frame);
+}
+
 //****************************************
 // SceneXrender::Window
 //****************************************

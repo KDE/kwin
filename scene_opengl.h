@@ -50,6 +50,7 @@ public:
     virtual qint64 paint(QRegion damage, ToplevelList windows);
     virtual void windowAdded(Toplevel*);
     virtual void windowDeleted(Deleted*);
+    virtual Scene::EffectFrame *createEffectFrame(EffectFrameImpl *frame);
     virtual void screenGeometryChanged(const QSize &size);
     virtual OverlayWindow *overlayWindow();
     virtual bool blocksForRetrace() const;

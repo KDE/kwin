@@ -636,6 +636,11 @@ void SceneOpenGL::doneOpenGLContextCurrent()
     m_backend->doneCurrent();
 }
 
+Scene::EffectFrame *SceneOpenGL::createEffectFrame(EffectFrameImpl *frame)
+{
+    return new SceneOpenGL::EffectFrame(frame, this);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
