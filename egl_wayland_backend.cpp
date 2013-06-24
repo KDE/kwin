@@ -400,6 +400,7 @@ ShmPool::ShmPool(wl_shm *shm)
     , m_size(1024 * 1024) // TODO: useful size?
     , m_tmpFile(new KTemporaryFile())
     , m_valid(createPool())
+    , m_offset(0)
 {
 }
 
