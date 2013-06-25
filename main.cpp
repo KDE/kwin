@@ -189,6 +189,7 @@ Application::Application(int &argc, char **argv)
     , m_eventFilter(new XcbEventFilter())
     , m_replace(false)
     , m_configLock(false)
+    , m_operationMode(OperationModeWaylandAndX11)
 {
 }
 
@@ -200,6 +201,16 @@ void Application::setConfigLock(bool lock)
 void Application::setReplace(bool replace)
 {
     m_replace = replace;
+}
+
+Application::OperationMode Application::operationMode() const
+{
+    return m_operationMode;
+}
+
+void Application::setOperationMode(OperationMode mode)
+{
+    m_operationMode = mode;
 }
 
 void Application::start()

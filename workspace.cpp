@@ -1417,6 +1417,15 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Qt Version: "));
     support.append(QString::fromUtf8(qVersion()));
     support.append(QStringLiteral("\n\n"));
+    support.append(QStringLiteral("Operation Mode: "));
+    switch (kwinApp()->operationMode()) {
+    case Application::OperationModeX11:
+        support.append(QStringLiteral("X11 only"));
+        break;
+    case Application::OperationModeWaylandAndX11:
+        support.append(QStringLiteral("Wayland and X11"));
+        break;
+    }
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();

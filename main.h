@@ -55,6 +55,23 @@ class Application : public  QApplication
 {
     Q_OBJECT
 public:
+    /**
+    * @brief This enum provides the various operation modes of KWin depending on the available
+    * Windowing Systems at startup. For example whether KWin only talks to X11 or also to a Wayland
+    * Compositor.
+    *
+    */
+    enum OperationMode {
+        /**
+        * @brief KWin uses only X11 for managing windows and compositing
+        */
+        OperationModeX11,
+        /**
+        * @brief KWin uses X11 for managing windows, but renders to a Wayland compositor.
+        * Input is received from the Wayland compositor.
+        */
+        OperationModeWaylandAndX11
+    };
     Application(int &argc, char **argv);
     ~Application();
 
@@ -62,6 +79,13 @@ public:
     void setConfigLock(bool lock);
 
     void start();
+    /**
+    * @brief The operation mode used by KWin.
+    *
+    * @return OperationMode
+    */
+    OperationMode operationMode() const;
+    void setOperationMode(OperationMode mode);
 
     static void setCrashCount(int count);
     static bool wasCrash();
@@ -80,6 +104,7 @@ private:
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_replace;
     bool m_configLock;
+    OperationMode m_operationMode;
     static int crashes;
 };
 

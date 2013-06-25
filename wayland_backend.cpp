@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 // KWin
 #include "cursor.h"
+#include "main.h"
 // Qt
 #include <QDebug>
 #include <QImage>
@@ -645,6 +646,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shm()
 {
     qDebug() << "Created Wayland display";
+    kwinApp()->setOperationMode(Application::OperationModeWaylandAndX11);
     // setup the registry
     wl_registry_add_listener(m_registry, &s_registryListener, this);
     wl_display_dispatch(m_display);
