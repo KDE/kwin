@@ -29,6 +29,7 @@ Item {
     property alias margins: hoverItem.margins
     property alias currentItem: iconsListView.currentItem
     focus: true
+    clip: true
 
 
     function setModel(model) {
@@ -92,9 +93,10 @@ Item {
         orientation: ListView.Horizontal
         // used for image provider URL to trick Qt into reloading icons when the model changes
         property int imageId: 0
-        width: (iconSize + margins.left + margins.right) * count
+        width: Math.min(parent.width, (iconSize + margins.left + margins.right) * count)
         height: iconSize + margins.top + margins.bottom
         anchors {
+            top: parent.top
             horizontalCenter: parent.horizontalCenter
         }
         clip: true
