@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "lanczosfilter.h"
+#include "main.h"
 #include "overlaywindow.h"
 #include "paintredirector.h"
 #include "screens.h"
@@ -198,8 +199,8 @@ SceneOpenGL *SceneOpenGL::createScene()
     OpenGLPlatformInterface platformInterface = NoOpenGLPlatformInterface;
     // should we use glx?
 #ifndef KWIN_HAVE_OPENGLES
-    // on OpenGL we default to glx
-    platformInterface = GlxPlatformInterface;
+    // on OpenGL we default to glx on X11 and to egl on Wayland
+    platformInterface = kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
 #endif
 
     const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
@@ -209,8 +210,7 @@ SceneOpenGL *SceneOpenGL::createScene()
     platformInterface = EglPlatformInterface;
 #else
     // check environment variable
-    if (qstrcmp(envOpenGLInterface, "egl") == 0 ||
-            qstrcmp(envOpenGLInterface, "egl_wayland") == 0) {
+    if (qstrcmp(envOpenGLInterface, "egl") == 0) {
         qDebug() << "Forcing EGL native interface through environment variable";
         platformInterface = EglPlatformInterface;
     }
@@ -226,7 +226,7 @@ SceneOpenGL *SceneOpenGL::createScene()
     case EglPlatformInterface:
 #ifdef KWIN_HAVE_EGL
 #ifdef WAYLAND_FOUND
-        if (qstrcmp(envOpenGLInterface, "egl_wayland") == 0) {
+        if (kwinApp()->shouldUseWaylandForCompositing()) {
             backend = new EglWaylandBackend();
         } else {
             backend = new EglOnXBackend();

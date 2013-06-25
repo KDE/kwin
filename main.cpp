@@ -213,6 +213,11 @@ void Application::setOperationMode(OperationMode mode)
     m_operationMode = mode;
 }
 
+bool Application::shouldUseWaylandForCompositing() const
+{
+    return m_operationMode == OperationModeWaylandAndX11;
+}
+
 void Application::start()
 {
     setQuitOnLastWindowClosed(false);

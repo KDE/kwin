@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations.h"
 #include "deleted.h"
 #include "effects.h"
+#include "main.h"
 #include "overlaywindow.h"
 #include "paintredirector.h"
 #include "workspace.h"
@@ -367,7 +368,7 @@ SceneXrender* SceneXrender::createScene()
 {
     QScopedPointer<XRenderBackend> backend;
 #ifdef WAYLAND_FOUND
-    if (Wayland::WaylandBackend::self()) {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
         backend.reset(new WaylandXRenderBackend);
         if (backend->isFailed()) {
             return NULL;

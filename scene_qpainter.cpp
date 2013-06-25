@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "deleted.h"
 #include "effects.h"
+#include "main.h"
 #include "paintredirector.h"
 #include "toplevel.h"
 #ifdef WAYLAND_FOUND
@@ -209,7 +210,7 @@ SceneQPainter *SceneQPainter::createScene()
 {
     QScopedPointer<QPainterBackend> backend;
 #ifdef WAYLAND_FOUND
-    if (Wayland::WaylandBackend::self()) {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
         backend.reset(new WaylandQPainterBackend);
         if (backend->isFailed()) {
             return NULL;

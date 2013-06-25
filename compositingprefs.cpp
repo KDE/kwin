@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "compositingprefs.h"
 
+#include "main.h"
 #include "xcbutils.h"
 #include "kwinglplatform.h"
 
@@ -61,6 +62,11 @@ bool CompositingPrefs::compositingPossible()
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
         return false;
+
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        // don't do X specific checks if we are not going to use X for compositing
+        return true;
+    }
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
         qDebug() << "No composite extension available";

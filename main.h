@@ -86,6 +86,7 @@ public:
     */
     OperationMode operationMode() const;
     void setOperationMode(OperationMode mode);
+    bool shouldUseWaylandForCompositing() const;
 
     static void setCrashCount(int count);
     static bool wasCrash();
