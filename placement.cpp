@@ -154,6 +154,8 @@ static inline bool isIrrelevant(Client *client, Client *regarding, int desktop)
         return true;
     if (!client->isOnCurrentActivity())
         return true;
+    if (client->isDesktop())
+        return true;
     return false;
 }
 
