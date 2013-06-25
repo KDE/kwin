@@ -218,6 +218,11 @@ bool Application::shouldUseWaylandForCompositing() const
     return m_operationMode == OperationModeWaylandAndX11;
 }
 
+bool Application::requiresCompositing() const
+{
+    return shouldUseWaylandForCompositing();
+}
+
 void Application::start()
 {
     setQuitOnLastWindowClosed(false);

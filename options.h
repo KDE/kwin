@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdecoration.h>
 
+#include "main.h"
 #include "placement.h"
 
 namespace KWin
@@ -496,7 +497,7 @@ public:
     }
     // Separate to mode so the user can toggle
     bool isUseCompositing() const {
-        return m_useCompositing;
+        return m_useCompositing || kwinApp()->requiresCompositing();
     }
     bool isCompositingInitialized() const {
         return m_compositingInitialized;
@@ -507,7 +508,7 @@ public:
         return m_hiddenPreviews;
     }
     bool isUnredirectFullscreen() const {
-        return m_unredirectFullscreen;
+        return m_unredirectFullscreen && !kwinApp()->requiresCompositing();
     }
     // OpenGL
     // 0 = no, 1 = yes when transformed,
