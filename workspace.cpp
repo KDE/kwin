@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "focuschain.h"
 #include "group.h"
+#include "input.h"
 #include "killwindow.h"
 #include "netinfo.h"
 #include "outline.h"
@@ -151,6 +152,7 @@ Workspace::Workspace(bool restore)
     Wayland::WaylandBackend::create(this);
 #endif
 
+    InputRedirection::create(this);
     // start the cursor support
     Cursor::create(this);
 

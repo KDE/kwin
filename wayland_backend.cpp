@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "cursor.h"
 #include "main.h"
+#include "input.h"
 // Qt
 #include <QDebug>
 #include <QImage>
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Wayland
 #include <wayland-client-protocol.h>
 // system
-#include <linux/input.h>
 #include <unistd.h>
 #include <sys/mman.h>
 
@@ -137,9 +137,7 @@ static void pointerHandleMotion(void *data, wl_pointer *pointer, uint32_t time, 
 {
     Q_UNUSED(data)
     Q_UNUSED(pointer)
-    Q_UNUSED(time)
-    xcb_test_fake_input(connection(), XCB_MOTION_NOTIFY, 0, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE,
-                        wl_fixed_to_int(sx), wl_fixed_to_int(sy), 0);
+    input()->processPointerMotion(QPoint(wl_fixed_to_double(sx), wl_fixed_to_double(sy)), time);
 }
 
 static void pointerHandleButton(void *data, wl_pointer *pointer, uint32_t serial, uint32_t time,
@@ -148,56 +146,14 @@ static void pointerHandleButton(void *data, wl_pointer *pointer, uint32_t serial
     Q_UNUSED(data)
     Q_UNUSED(pointer)
     Q_UNUSED(serial)
-    Q_UNUSED(time)
-    uint8_t type = XCB_BUTTON_PRESS;
-    if (state == WL_POINTER_BUTTON_STATE_RELEASED) {
-        type = XCB_BUTTON_RELEASE;
-    }
-    // TODO: there must be a better way for mapping
-    uint8_t xButton = 0;
-    switch (button) {
-    case BTN_LEFT:
-        xButton = XCB_BUTTON_INDEX_1;
-        break;
-    case BTN_RIGHT:
-        xButton = XCB_BUTTON_INDEX_3;
-        break;
-    case BTN_MIDDLE:
-        xButton = XCB_BUTTON_INDEX_2;
-        break;
-    default:
-        // TODO: add more buttons
-        return;
-    }
-    xcb_test_fake_input(connection(), type, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+    input()->processPointerButton(button, static_cast<InputRedirection::PointerButtonState>(state), time);
 }
 
 static void pointerHandleAxis(void *data, wl_pointer *pointer, uint32_t time, uint32_t axis, wl_fixed_t value)
 {
     Q_UNUSED(data)
     Q_UNUSED(pointer)
-    Q_UNUSED(time)
-    uint8_t xButton = 0;
-    const int delta = wl_fixed_to_int(value);
-    if (delta == 0) {
-        return;
-    }
-    switch (axis) {
-    case WL_POINTER_AXIS_VERTICAL_SCROLL:
-        xButton = delta > 0 ? XCB_BUTTON_INDEX_5 : XCB_BUTTON_INDEX_4;
-        break;
-    case WL_POINTER_AXIS_HORIZONTAL_SCROLL:
-        // no enum values defined for buttons larger than 5
-        xButton = delta > 0 ? 7 : 6;
-        break;
-    default:
-        // doesn't exist
-        return;
-    }
-    for (int i = 0; i < qAbs(delta); ++i) {
-        xcb_test_fake_input(connection(), XCB_BUTTON_PRESS, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
-        xcb_test_fake_input(connection(), XCB_BUTTON_RELEASE, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
-    }
+    input()->processPointerAxis(static_cast<InputRedirection::PointerAxis>(axis), wl_fixed_to_double(value), time);
 }
 
 static void keyboardHandleKeymap(void *data, wl_keyboard *keyboard,
