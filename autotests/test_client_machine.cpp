@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "testutils.h"
 // KWin
 #include "../atoms.h" // needed for utils to compile
+#include "../input.h" // needed for cursor to compile
+#include "../main.h" // needed for cursor to compile
 #include "../client_machine.h"
 #include "../utils.h"
 #include "../xcbutils.h"
@@ -37,6 +39,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 // just to make the linker of utils happy
 Atoms* atoms;
+
+Application::OperationMode Application::operationMode() const
+{
+    return Application::OperationModeX11;
+}
+
+InputRedirection *InputRedirection::s_self = NULL;
+Qt::MouseButtons InputRedirection::qtButtonStates() const
+{
+    return Qt::NoButton;
+}
+
 }
 
 using namespace KWin;

@@ -63,6 +63,7 @@ public:
      * @return KWin::InputRedirection::PointerButtonState
      */
     PointerButtonState pointerButtonState(uint32_t button) const;
+    Qt::MouseButtons qtButtonStates() const;
 
     /**
      * @internal
@@ -90,19 +91,18 @@ Q_SIGNALS:
      * @param button The button which changed
      * @param state The new button state
      */
-    void pointerButtonStateChanged(uint32_t button, PointerButtonState state);
+    void pointerButtonStateChanged(uint32_t button, InputRedirection::PointerButtonState state);
     /**
      * @brief Emitted when a pointer axis changed
      *
      * @param axis The axis on which the even occurred
      * @param delta The delta of the event.
      */
-    void pointerAxisChanged(PointerAxis axis, qreal delta);
+    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta);
 
 private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
-    Qt::MouseButtons qtButtonStates() const;
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 

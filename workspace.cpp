@@ -147,12 +147,12 @@ Workspace::Workspace(bool restore)
     // first initialize the extensions
     Xcb::Extensions::self();
 
+    InputRedirection::create(this);
+
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
 #ifdef WAYLAND_FOUND
     Wayland::WaylandBackend::create(this);
 #endif
-
-    InputRedirection::create(this);
     // start the cursor support
     Cursor::create(this);
 

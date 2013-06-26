@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 // kwin
 #include <kwinglobals.h>
+#include "input.h"
+#include "main.h"
 #include "utils.h"
 // Qt
 #include <QTimer>
@@ -32,8 +34,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+Cursor *Cursor::s_self = nullptr;
 
-KWIN_SINGLETON_FACTORY_FACTORED(Cursor, X11Cursor)
+Cursor *Cursor::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+#ifndef KCMRULES
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        s_self = new X11Cursor(parent);
+    } else {
+        s_self = new InputRedirectionCursor(parent);
+    }
+#endif
+    return s_self;
+}
 
 Cursor::Cursor(QObject *parent)
     : QObject(parent)
@@ -315,6 +329,52 @@ QByteArray X11Cursor::cursorName(Qt::CursorShape shape) const
     default:
         return QByteArray();
     }
+}
+
+InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
+    : Cursor(parent)
+    , m_oldButtons(Qt::NoButton)
+    , m_currentButtons(Qt::NoButton)
+{
+    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
+    connect(input(), SIGNAL(pointerButtonStateChanged(uint32_t,InputRedirection::PointerButtonState)),
+            SLOT(slotPointerButtonChanged()));
+}
+
+InputRedirectionCursor::~InputRedirectionCursor()
+{
+}
+
+void InputRedirectionCursor::doSetPos()
+{
+    // no support for pointer warping - reset to true position
+    slotPosChanged(input()->globalPointer());
+}
+
+void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
+{
+    const QPoint oldPos = currentPos();
+    updatePos(pos.toPoint());
+    // TODO: add keyboard modifiers
+    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_oldButtons, Qt::NoModifier, Qt::NoModifier);
+}
+
+void InputRedirectionCursor::slotPointerButtonChanged()
+{
+    m_oldButtons = m_currentButtons;
+    m_currentButtons = input()->qtButtonStates();
+}
+
+void InputRedirectionCursor::doStartCursorTracking()
+{
+    xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
+    // TODO: also track the Wayland cursor
+}
+
+void InputRedirectionCursor::doStopCursorTracking()
+{
+    xcb_xfixes_select_cursor_input(connection(), rootWindow(), 0);
+    // TODO: also track the Wayland cursor
 }
 
 } // namespace

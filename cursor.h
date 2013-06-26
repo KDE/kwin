@@ -209,6 +209,31 @@ private:
     friend class Cursor;
 };
 
+/**
+ * @brief Implementation using the InputRedirection framework to get pointer positions.
+ *
+ * Does not support warping of cursor.
+ *
+ */
+class InputRedirectionCursor : public Cursor
+{
+    Q_OBJECT
+public:
+    virtual ~InputRedirectionCursor();
+protected:
+    virtual void doSetPos();
+    virtual void doStartCursorTracking();
+    virtual void doStopCursorTracking();
+private Q_SLOTS:
+    void slotPosChanged(const QPointF &pos);
+    void slotPointerButtonChanged();
+private:
+    explicit InputRedirectionCursor(QObject *parent);
+    Qt::MouseButtons m_oldButtons;
+    Qt::MouseButtons m_currentButtons;
+    friend class Cursor;
+};
+
 inline const QPoint &Cursor::currentPos() const
 {
     return m_pos;
