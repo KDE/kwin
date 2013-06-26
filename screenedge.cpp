@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "effects.h"
+#include "input.h"
+#include "main.h"
 #include "screens.h"
 #include "utils.h"
 #include "workspace.h"
@@ -547,6 +549,42 @@ void WindowBasedEdge::doUpdateBlocking()
         m_approachWindow.map();
     }
 }
+/**********************************************************
+ * AreaBasedEdge
+ *********************************************************/
+AreaBasedEdge::AreaBasedEdge(ScreenEdges* parent)
+    : Edge(parent)
+{
+    connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(pointerPosChanged(QPointF)));
+}
+
+AreaBasedEdge::~AreaBasedEdge()
+{
+}
+
+void AreaBasedEdge::pointerPosChanged(const QPointF &pos)
+{
+    if (!isReserved()) {
+        return;
+    }
+    const QPoint p = pos.toPoint();
+    if (approachGeometry().contains(p)) {
+        if (!isApproaching()) {
+            startApproaching();
+        } else {
+            updateApproaching(p);
+        }
+    } else {
+        if (isApproaching()) {
+            stopApproaching();
+        }
+    }
+    if (geometry().contains(p)) {
+        // we don't push the cursor back as pointer warping is not supported on Wayland
+        // TODO: this clearly needs improving
+        check(p, QDateTime(), true);
+    }
+}
 
 /**********************************************************
  * ScreenEdges
@@ -654,7 +692,7 @@ void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction
     }
     if (*oldValue == ElectricActionNone) {
         // have to reserve
-        for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
             if ((*it)->border() == border) {
                 (*it)->reserve();
             }
@@ -662,7 +700,7 @@ void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction
     }
     if (newValue == ElectricActionNone) {
         // have to unreserve
-        for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
             if ((*it)->border() == border) {
                 (*it)->unreserve();
             }
@@ -670,7 +708,7 @@ void ScreenEdges::setActionForBorder(ElectricBorder border, ElectricBorderAction
     }
     *oldValue = newValue;
     // update action on all Edges for given border
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
             (*it)->setAction(newValue);
         }
@@ -801,7 +839,7 @@ static bool isBottomScreen(const QRect &screen, const QRect &fullArea)
 
 void ScreenEdges::recreateEdges()
 {
-    QList<WindowBasedEdge*> oldEdges(m_edges);
+    QList<Edge*> oldEdges(m_edges);
     m_edges.clear();
     const QRect fullArea(0, 0, displayWidth(), displayHeight());
     for (int i=0; i<screens()->count(); ++i) {
@@ -824,12 +862,12 @@ void ScreenEdges::recreateEdges()
         }
     }
     // copy over the effect/script reservations from the old edges
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = *it;
-        for (QList<WindowBasedEdge*>::const_iterator oldIt = oldEdges.constBegin();
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        Edge *edge = *it;
+        for (auto oldIt = oldEdges.constBegin();
                 oldIt != oldEdges.constEnd();
                 ++oldIt) {
-            WindowBasedEdge *oldEdge = *oldIt;
+            Edge *oldEdge = *oldIt;
             if (oldEdge->client()) {
                 // show the client again and don't recreate the edge
                 oldEdge->client()->showOnScreenEdge();
@@ -896,9 +934,14 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     m_edges << createEdge(border, x, y, width, 1);
 }
 
-WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction)
+Edge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction)
 {
-    WindowBasedEdge *edge = new WindowBasedEdge(this);
+    Edge *edge;
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        edge = new WindowBasedEdge(this);
+    } else {
+        edge = new AreaBasedEdge(this);
+    }
     edge->setBorder(border);
     edge->setGeometry(QRect(x, y, width, height));
     if (createAction) {
@@ -957,8 +1000,8 @@ void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 {
     if (!o)
         return;
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = *it;
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        Edge *edge = *it;
         if (edge->isCorner()) {
             isToReserve ? edge->reserve() : edge->unreserve();
         } else {
@@ -974,7 +1017,7 @@ void ScreenEdges::reserveDesktopSwitching(bool isToReserve, Qt::Orientations o)
 
 void ScreenEdges::reserve(ElectricBorder border, QObject *object, const char *slot)
 {
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
             (*it)->reserve(object, slot);
         }
@@ -983,7 +1026,7 @@ void ScreenEdges::reserve(ElectricBorder border, QObject *object, const char *sl
 
 void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
 {
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if ((*it)->border() == border) {
             (*it)->unreserve(object);
         }
@@ -1076,7 +1119,7 @@ void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
     }
 
     if (width > 0 && height > 0) {
-        WindowBasedEdge *edge = createEdge(border, x, y, width, height, false);
+        Edge *edge = createEdge(border, x, y, width, height, false);
         edge->setClient(client);
         m_edges.append(edge);
         if (client->isHiddenInternal()) {
@@ -1111,7 +1154,7 @@ void ScreenEdges::deleteEdgeForClient(Client* c)
 void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack)
 {
     bool activatedForClient = false;
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
         if (!(*it)->isReserved()) {
             continue;
         }
@@ -1150,8 +1193,11 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
 {
     bool activated = false;
     bool activatedForClient = false;
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = *it;
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
+        if (!edge) {
+            continue;
+        }
         if (!edge->isReserved()) {
             continue;
         }
@@ -1182,8 +1228,11 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
 
 bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
 {
-    for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
-        WindowBasedEdge *edge = *it;
+    for (auto it = m_edges.begin(); it != m_edges.end(); ++it) {
+        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
+        if (!edge) {
+            continue;
+        }
         if (edge->isReserved() && edge->window() == window) {
             updateXTime();
             edge->check(point, QDateTime::fromMSecsSinceEpoch(xTime()), true);
@@ -1201,15 +1250,19 @@ void ScreenEdges::ensureOnTop()
 QVector< xcb_window_t > ScreenEdges::windows() const
 {
     QVector<xcb_window_t> wins;
-    for (QList<WindowBasedEdge*>::const_iterator it = m_edges.constBegin();
+    for (auto it = m_edges.constBegin();
             it != m_edges.constEnd();
             ++it) {
-        xcb_window_t w = (*it)->window();
+        WindowBasedEdge *edge = dynamic_cast<WindowBasedEdge*>(*it);
+        if (!edge) {
+            continue;
+        }
+        xcb_window_t w = edge->window();
         if (w != XCB_WINDOW_NONE) {
             wins.append(w);
         }
         // TODO:  lambda
-        w = (*it)->approachWindow();
+        w = edge->approachWindow();
         if (w != XCB_WINDOW_NONE) {
             wins.append(w);
         }

@@ -66,6 +66,7 @@ public:
     const QHash<QObject *, QByteArray> &callBacks() const;
     void startApproaching();
     void stopApproaching();
+    bool isApproaching() const;
     void setClient(Client *client);
     Client *client() const;
 
@@ -141,6 +142,17 @@ private:
     void createApproachWindow();
     Xcb::Window m_window;
     Xcb::Window m_approachWindow;
+};
+
+class AreaBasedEdge : public Edge
+{
+    Q_OBJECT
+public:
+    explicit AreaBasedEdge(ScreenEdges *parent);
+    virtual ~AreaBasedEdge();
+
+private Q_SLOTS:
+    void pointerPosChanged(const QPointF &pos);
 };
 
 /**
@@ -344,7 +356,7 @@ private:
     void setReActivationThreshold(int threshold);
     void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
     void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
-    WindowBasedEdge *createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction = true);
+    Edge *createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
@@ -358,7 +370,7 @@ private:
     int m_timeThreshold;
     int m_reactivateThreshold;
     Qt::Orientations m_virtualDesktopLayout;
-    QList<WindowBasedEdge*> m_edges;
+    QList<Edge*> m_edges;
     KSharedConfig::Ptr m_config;
     ElectricBorderAction m_actionTopLeft;
     ElectricBorderAction m_actionTop;
@@ -471,6 +483,11 @@ inline void Edge::setClient(Client *client)
 inline Client *Edge::client() const
 {
     return m_client;
+}
+
+inline bool Edge::isApproaching() const
+{
+    return m_approaching;
 }
 
 /**********************************************************
