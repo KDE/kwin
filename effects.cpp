@@ -767,6 +767,9 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
     if (m_grabbedMouseEffects.size() != 1) {
         return;
     }
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
     // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
     // The mouse grab is implemented by using a full screen input only window
     if (!m_mouseInterceptionWindow.isValid()) {
@@ -794,6 +797,9 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
         return;
     }
     m_grabbedMouseEffects.removeAll(effect);
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
     if (m_grabbedMouseEffects.isEmpty()) {
         m_mouseInterceptionWindow.unmap();
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -1291,9 +1297,23 @@ bool EffectsHandlerImpl::checkInputWindowEvent(xcb_motion_notify_event_t *e)
     return true; // eat event
 }
 
+bool EffectsHandlerImpl::checkInputWindowEvent(QMouseEvent *e)
+{
+    if (m_grabbedMouseEffects.isEmpty()) {
+        return false;
+    }
+    foreach (Effect *effect, m_grabbedMouseEffects) {
+        effect->windowInputMouseEvent(e);
+    }
+    return true;
+}
+
 void EffectsHandlerImpl::checkInputWindowStacking()
 {
     if (m_grabbedMouseEffects.isEmpty()) {
+        return;
+    }
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
         return;
     }
     m_mouseInterceptionWindow.raise();

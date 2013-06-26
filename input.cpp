@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
+#include "effects.h"
 // TODO: remove xtest
 #include <xcb/xtest.h>
 // system
@@ -47,6 +48,14 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     emit globalPointerChanged(m_globalPointer);
 
     // TODO: check which part of KWin would like to intercept the event
+    // TODO: keyboard modifiers
+    QMouseEvent event(QEvent::MouseMove, m_globalPointer.toPoint(), m_globalPointer.toPoint(),
+                      Qt::NoButton, qtButtonStates(), 0);
+    // check whether an effect has a mouse grab
+    if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(&event)) {
+        // an effect grabbed the pointer, we do not forward the event to surfaces
+        return;
+    }
     // TODO: redirect to proper client
 
     // TODO: don't use xtest
@@ -60,6 +69,14 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
     m_pointerButtons[button] = state;
     emit pointerButtonStateChanged(button, state);
 
+    // TODO: keyboard modifiers
+    QMouseEvent event(buttonStateToEvent(state), m_globalPointer.toPoint(), m_globalPointer.toPoint(),
+                      buttonToQtMouseButton(button), qtButtonStates(), 0);
+    // check whether an effect has a mouse grab
+    if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(&event)) {
+        // an effect grabbed the pointer, we do not forward the event to surfaces
+        return;
+    }
     // TODO: check which part of KWin would like to intercept the event
     // TODO: redirect to proper client
 
@@ -96,6 +113,7 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
     emit pointerAxisChanged(axis, delta);
 
     // TODO: check which part of KWin would like to intercept the event
+    // TODO: Axis support for effect redirection
     // TODO: redirect to proper client
 
     // TODO: don't use xtest
@@ -117,5 +135,49 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
         xcb_test_fake_input(connection(), XCB_BUTTON_RELEASE, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
     }
 }
+
+QEvent::Type InputRedirection::buttonStateToEvent(InputRedirection::PointerButtonState state)
+{
+    switch (state) {
+    case KWin::InputRedirection::PointerButtonReleased:
+        return QEvent::MouseButtonRelease;
+    case KWin::InputRedirection::PointerButtonPressed:
+        return QEvent::MouseButtonPress;
+    }
+    return QEvent::None;
+}
+
+Qt::MouseButton InputRedirection::buttonToQtMouseButton(uint32_t button)
+{
+    switch (button) {
+    case BTN_LEFT:
+        return Qt::LeftButton;
+    case BTN_MIDDLE:
+        return Qt::MiddleButton;
+    case BTN_RIGHT:
+        return Qt::RightButton;
+    case BTN_BACK:
+        return Qt::XButton1;
+    case BTN_FORWARD:
+        return Qt::XButton2;
+    }
+    return Qt::NoButton;
+}
+
+Qt::MouseButtons InputRedirection::qtButtonStates() const
+{
+    Qt::MouseButtons buttons;
+    for (auto it = m_pointerButtons.constBegin(); it != m_pointerButtons.constEnd(); ++it) {
+        if (it.value() == KWin::InputRedirection::PointerButtonReleased) {
+            continue;
+        }
+        Qt::MouseButton button = buttonToQtMouseButton(it.key());
+        if (button != Qt::NoButton) {
+            buttons |= button;
+        }
+    }
+    return buttons;
+}
+
 
 } // namespace

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QObject>
 #include <QPoint>
+#include <QEvent>
 
 namespace KWin
 {
@@ -99,6 +100,9 @@ Q_SIGNALS:
     void pointerAxisChanged(PointerAxis axis, qreal delta);
 
 private:
+    static QEvent::Type buttonStateToEvent(PointerButtonState state);
+    static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
+    Qt::MouseButtons qtButtonStates() const;
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 
