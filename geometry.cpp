@@ -2113,12 +2113,15 @@ void Client::maximize(MaximizeMode m)
 void Client::setMaximize(bool vertically, bool horizontally)
 {
     // changeMaximize() flips the state, so change from set->flip
+    MaximizeMode oldMode = maximizeMode();
     changeMaximize(
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    emit clientMaximizedStateChanged(this, max_mode);
-    emit clientMaximizedStateChanged(this, vertically, horizontally);
+    if (oldMode != maximizeMode()) {
+        emit clientMaximizedStateChanged(this, max_mode);
+        emit clientMaximizedStateChanged(this, vertically, horizontally);
+    }
 
 }
 
