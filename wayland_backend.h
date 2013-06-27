@@ -42,6 +42,7 @@ namespace Wayland
 {
 class ShmPool;
 class WaylandBackend;
+class WaylandSeat;
 
 class CursorData
 {
@@ -62,19 +63,16 @@ class X11CursorTracker : public QObject
 {
     Q_OBJECT
 public:
-    explicit X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent = 0);
+    explicit X11CursorTracker(WaylandSeat *seat, WaylandBackend *backend, QObject* parent = 0);
     virtual ~X11CursorTracker();
-    void setEnteredSerial(uint32_t serial);
     void resetCursor();
 private Q_SLOTS:
     void cursorChanged(uint32_t serial);
 private:
     void installCursor(const CursorData &cursor);
-    wl_pointer *m_pointer;
+    WaylandSeat *m_seat;
     QHash<uint32_t, CursorData> m_cursors;
     WaylandBackend *m_backend;
-    wl_surface *m_cursor;
-    uint32_t m_enteredSerial;
     uint32_t m_installedCursor;
     uint32_t m_lastX11Cursor;
 };
@@ -139,12 +137,15 @@ public:
     wl_seat *seat();
     void pointerEntered(uint32_t serial);
     void resetCursor();
+    void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
 private:
     void destroyPointer();
     void destroyKeyboard();
     wl_seat *m_seat;
     wl_pointer *m_pointer;
     wl_keyboard *m_keyboard;
+    wl_surface *m_cursor;
+    uint32_t m_enteredSerial;
     QScopedPointer<X11CursorTracker> m_cursorTracker;
     WaylandBackend *m_backend;
 };

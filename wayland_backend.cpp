@@ -288,12 +288,10 @@ bool CursorData::init()
     return true;
 }
 
-X11CursorTracker::X11CursorTracker(wl_pointer *pointer, WaylandBackend *backend, QObject* parent)
+X11CursorTracker::X11CursorTracker(WaylandSeat *seat, WaylandBackend *backend, QObject* parent)
     : QObject(parent)
-    , m_pointer(pointer)
+    , m_seat(seat)
     , m_backend(backend)
-    , m_cursor(wl_compositor_create_surface(backend->compositor()))
-    , m_enteredSerial(0)
     , m_lastX11Cursor(0)
 {
     Cursor::self()->startCursorTracking();
@@ -305,9 +303,6 @@ X11CursorTracker::~X11CursorTracker()
     if (Cursor::self()) {
         // Cursor might have been destroyed before Wayland backend gets destroyed
         Cursor::self()->stopCursorTracking();
-    }
-    if (m_cursor) {
-        wl_surface_destroy(m_cursor);
     }
 }
 
@@ -342,15 +337,7 @@ void X11CursorTracker::installCursor(const CursorData& cursor)
     if (!buffer) {
         return;
     }
-    wl_pointer_set_cursor(m_pointer, m_enteredSerial, m_cursor, cursor.hotSpot().x(), cursor.hotSpot().y());
-    wl_surface_attach(m_cursor, buffer, 0, 0);
-    wl_surface_damage(m_cursor, 0, 0, cursorImage.width(), cursorImage.height());
-    wl_surface_commit(m_cursor);
-}
-
-void X11CursorTracker::setEnteredSerial(uint32_t serial)
-{
-    m_enteredSerial = serial;
+    m_seat->installCursorImage(buffer, cursorImage.size(), cursor.hotSpot());
 }
 
 void X11CursorTracker::resetCursor()
@@ -511,6 +498,8 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     : m_seat(seat)
     , m_pointer(NULL)
     , m_keyboard(NULL)
+    , m_cursor(NULL)
+    , m_enteredSerial(0)
     , m_cursorTracker()
     , m_backend(backend)
 {
@@ -525,6 +514,9 @@ WaylandSeat::~WaylandSeat()
     destroyKeyboard();
     if (m_seat) {
         wl_seat_destroy(m_seat);
+    }
+    if (m_cursor) {
+        wl_surface_destroy(m_cursor);
     }
 }
 
@@ -550,7 +542,7 @@ void WaylandSeat::changed(uint32_t capabilities)
     if ((capabilities & WL_SEAT_CAPABILITY_POINTER) && !m_pointer) {
         m_pointer = wl_seat_get_pointer(m_seat);
         wl_pointer_add_listener(m_pointer, &s_pointerListener, this);
-        m_cursorTracker.reset(new X11CursorTracker(m_pointer, m_backend));
+        m_cursorTracker.reset(new X11CursorTracker(this, m_backend));
     } else if (!(capabilities & WL_SEAT_CAPABILITY_POINTER)) {
         destroyPointer();
     }
@@ -564,10 +556,7 @@ void WaylandSeat::changed(uint32_t capabilities)
 
 void WaylandSeat::pointerEntered(uint32_t serial)
 {
-    if (m_cursorTracker.isNull()) {
-        return;
-    }
-    m_cursorTracker->setEnteredSerial(serial);
+    m_enteredSerial = serial;
 }
 
 void WaylandSeat::resetCursor()
@@ -575,6 +564,20 @@ void WaylandSeat::resetCursor()
     if (!m_cursorTracker.isNull()) {
         m_cursorTracker->resetCursor();
     }
+}
+
+void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotSpot)
+{
+    if (!m_pointer) {
+        return;
+    }
+    if (!m_cursor) {
+        m_cursor = wl_compositor_create_surface(m_backend->compositor());
+    }
+    wl_pointer_set_cursor(m_pointer, m_enteredSerial, m_cursor, hotSpot.x(), hotSpot.y());
+    wl_surface_attach(m_cursor, image, 0, 0);
+    wl_surface_damage(m_cursor, 0, 0, size.width(), size.height());
+    wl_surface_commit(m_cursor);
 }
 
 WaylandBackend *WaylandBackend::s_self = 0;
