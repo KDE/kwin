@@ -66,6 +66,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "composite.h"
 #include "xcbutils.h"
+#ifdef WAYLAND_FOUND
+#include "wayland_backend.h"
+#endif
 
 // dbus generated
 #include "screenlocker_interface.h"
@@ -768,6 +771,11 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
         return;
     }
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
+#ifdef WAYLAND_FOUND
+        if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
+            w->installCursorImage(shape);
+        }
+#endif
         return;
     }
     // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
@@ -1257,6 +1265,11 @@ QSize EffectsHandlerImpl::virtualScreenSize() const
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
     if (!m_mouseInterceptionWindow.isValid()) {
+#ifdef WAYLAND_FOUND
+        if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
+            w->installCursorImage(shape);
+        }
+#endif
         return;
     }
     m_mouseInterceptionWindow.defineCursor(Cursor::x11Cursor(shape));
