@@ -88,6 +88,19 @@ public:
     void notifyCursorChanged(uint32_t serial);
 
     /**
+     * @brief The name of the currently used Cursor theme.
+     *
+     * @return const QString&
+     */
+    const QString &themeName() const;
+    /**
+     * @brief The size of the currently used Cursor theme.
+     *
+     * @return int
+     */
+    int themeSize() const;
+
+    /**
      * Returns the current cursor position. This method does an update of the mouse position if
      * needed. It's save to call it multiple times.
      *
@@ -117,6 +130,7 @@ Q_SIGNALS:
      * @see stopCursorTracking
      */
     void cursorChanged(uint32_t serial);
+    void themeChanged();
 
 protected:
     /**
@@ -167,10 +181,15 @@ protected:
     void updatePos(const QPoint &pos);
     void updatePos(int x, int y);
 
+private Q_SLOTS:
+    void loadThemeSettings();
+
 private:
     QPoint m_pos;
     int m_mousePollingCounter;
     int m_cursorTrackingCounter;
+    QString m_themeName;
+    int m_themeSize;
 
     KWIN_SINGLETON(Cursor)
 };
@@ -242,6 +261,16 @@ inline const QPoint &Cursor::currentPos() const
 inline void Cursor::updatePos(int x, int y)
 {
     updatePos(QPoint(x, y));
+}
+
+inline const QString& Cursor::themeName() const
+{
+    return m_themeName;
+}
+
+inline int Cursor::themeSize() const
+{
+    return m_themeSize;
 }
 
 }

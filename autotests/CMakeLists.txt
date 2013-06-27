@@ -49,6 +49,7 @@ target_link_libraries( testClientMachine
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
+                       KF5::ConfigCore
                        KF5::WindowSystem
                        XCB::XCB
                        XCB::XFIXES

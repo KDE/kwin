@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "main.h"
 #include "utils.h"
+// KDE
+#include <KDE/KConfig>
+#include <KDE/KConfigGroup>
 // Qt
 #include <QTimer>
 // Xlib
@@ -53,12 +56,30 @@ Cursor::Cursor(QObject *parent)
     : QObject(parent)
     , m_mousePollingCounter(0)
     , m_cursorTrackingCounter(0)
+    , m_themeName("default")
+    , m_themeSize(24)
 {
+    loadThemeSettings();
+    // TODO: we need to connect for cursor theme changes
+    // in KDE4 times this was done through KGlobaSettings::cursorChanged
+    // which got emitted from the cursors KCM, this needs porting
 }
 
 Cursor::~Cursor()
 {
     s_self = NULL;
+}
+
+void Cursor::loadThemeSettings()
+{
+    KConfigGroup mousecfg(KSharedConfig::openConfig("kcminputrc", KConfig::NoGlobals), "Mouse");
+    m_themeName = mousecfg.readEntry("cursorTheme", "default");
+    bool ok = false;
+    m_themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
+    if (!ok) {
+        m_themeSize = 24;
+    }
+    emit themeChanged();
 }
 
 QPoint Cursor::pos()
@@ -269,9 +290,7 @@ xcb_cursor_t X11Cursor::createCursor(Qt::CursorShape shape)
         return XCB_CURSOR_NONE;
     }
     // XCursor is an XLib only lib
-    const char *theme = XcursorGetTheme(display());
-    const int size = XcursorGetDefaultSize(display());
-    XcursorImage *ximg = XcursorLibraryLoadImage(name.constData(), theme, size);
+    XcursorImage *ximg = XcursorLibraryLoadImage(name.constData(), themeName().toUtf8().constData(), themeSize());
     if (!ximg) {
         return XCB_CURSOR_NONE;
     }
