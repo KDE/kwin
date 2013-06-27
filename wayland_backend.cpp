@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xfixes.h>
 // Wayland
 #include <wayland-client-protocol.h>
+#include <wayland-cursor.h>
 // system
 #include <unistd.h>
 #include <sys/mman.h>
@@ -495,10 +496,12 @@ Buffer *ShmPool::getBuffer(const QSize &size, int32_t stride)
 }
 
 WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
-    : m_seat(seat)
+    : QObject(NULL)
+    , m_seat(seat)
     , m_pointer(NULL)
     , m_keyboard(NULL)
     , m_cursor(NULL)
+    , m_theme(NULL)
     , m_enteredSerial(0)
     , m_cursorTracker()
     , m_backend(backend)
@@ -518,6 +521,7 @@ WaylandSeat::~WaylandSeat()
     if (m_cursor) {
         wl_surface_destroy(m_cursor);
     }
+    destroyTheme();
 }
 
 void WaylandSeat::destroyPointer()
@@ -578,6 +582,42 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
     wl_surface_attach(m_cursor, image, 0, 0);
     wl_surface_damage(m_cursor, 0, 0, size.width(), size.height());
     wl_surface_commit(m_cursor);
+}
+
+void WaylandSeat::installCursorImage(Qt::CursorShape shape)
+{
+    if (!m_theme) {
+        loadTheme();
+    }
+    wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, Cursor::self()->cursorName(shape).constData());
+    if (c->image_count <= 0) {
+        return;
+    }
+    wl_cursor_image *image = c->images[0];
+    installCursorImage(wl_cursor_image_get_buffer(image),
+                       QSize(image->width, image->height),
+                       QPoint(image->hotspot_x, image->hotspot_y));
+}
+
+void WaylandSeat::loadTheme()
+{
+    Cursor *c = Cursor::self();
+    if (!m_theme) {
+        // so far the theme had not been created, this means we need to start tracking theme changes
+        connect(c, SIGNAL(themeChanged()), SLOT(loadTheme()));
+    } else {
+        destroyTheme();
+    }
+    m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
+                                   c->themeSize(), m_backend->shmPool()->shm());
+}
+
+void WaylandSeat::destroyTheme()
+{
+    if (m_theme) {
+        wl_cursor_theme_destroy(m_theme);
+        m_theme = NULL;
+    }
 }
 
 WaylandBackend *WaylandBackend::s_self = 0;
@@ -650,6 +690,14 @@ void WaylandBackend::createSeat(uint32_t name)
 {
     wl_seat *seat = reinterpret_cast<wl_seat*>(wl_registry_bind(m_registry, name, &wl_seat_interface, 1));
     m_seat.reset(new WaylandSeat(seat, this));
+}
+
+void WaylandBackend::installCursorImage(Qt::CursorShape shape)
+{
+    if (m_seat.isNull()) {
+        return;
+    }
+    m_seat->installCursorImage(shape);
 }
 
 void WaylandBackend::createSurface()

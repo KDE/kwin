@@ -270,6 +270,7 @@ set(kwin_XCB_LIBS
 
 set(kwin_WAYLAND_LIBS
     Wayland::Client
+    Wayland::Cursor
     XCB::XTEST
 )
 

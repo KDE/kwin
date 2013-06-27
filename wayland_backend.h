@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QTemporaryFile;
 class QImage;
+struct wl_cursor_theme;
 struct wl_buffer;
 struct wl_shm;
 
@@ -112,6 +113,7 @@ public:
     wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
     void *poolAddress() const;
     Buffer *getBuffer(const QSize &size, int32_t stride);
+    wl_shm *shm();
 Q_SIGNALS:
     void poolResized();
 private:
@@ -127,8 +129,9 @@ private:
     QList<Buffer*> m_buffers;
 };
 
-class WaylandSeat
+class WaylandSeat : public QObject
 {
+    Q_OBJECT
 public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
@@ -138,13 +141,18 @@ public:
     void pointerEntered(uint32_t serial);
     void resetCursor();
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
+    void installCursorImage(Qt::CursorShape shape);
+private Q_SLOTS:
+    void loadTheme();
 private:
     void destroyPointer();
     void destroyKeyboard();
+    void destroyTheme();
     wl_seat *m_seat;
     wl_pointer *m_pointer;
     wl_keyboard *m_keyboard;
     wl_surface *m_cursor;
+    wl_cursor_theme *m_theme;
     uint32_t m_enteredSerial;
     QScopedPointer<X11CursorTracker> m_cursorTracker;
     WaylandBackend *m_backend;
@@ -175,6 +183,7 @@ public:
     wl_surface *surface() const;
     const QSize &shellSurfaceSize() const;
     void setShellSurfaceSize(const QSize &size);
+    void installCursorImage(Qt::CursorShape shape);
 
     void dispatchEvents();
 Q_SIGNALS:
@@ -230,6 +239,12 @@ inline
 void* ShmPool::poolAddress() const
 {
     return m_poolData;
+}
+
+inline
+wl_shm *ShmPool::shm()
+{
+    return m_shm;
 }
 
 inline
