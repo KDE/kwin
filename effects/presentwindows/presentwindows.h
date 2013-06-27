@@ -281,6 +281,7 @@ private:
     EffectWindowList m_selectedWindows;
     EffectWindow *m_managerWindow;
     QString m_class;
+    bool m_needInitialSelection;
 
     // Window data
     WindowMotionManager m_motionManager;

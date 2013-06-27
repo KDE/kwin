@@ -61,6 +61,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     , m_decalOpacity(0.0)
     , m_hasKeyboardGrab(false)
     , m_mode(ModeCurrentDesktop)
+    , m_needInitialSelection(false)
     , m_managerWindow(NULL)
     , m_highlightedWindow(NULL)
     , m_filterFrame(NULL)
@@ -221,6 +222,10 @@ void PresentWindowsEffect::postPaintScreen()
         }
         effects->setActiveFullScreenEffect(NULL);
         effects->addRepaintFull();
+    } else if (m_activated && m_needInitialSelection) {
+        m_needInitialSelection = false;
+        QMouseEvent me(QEvent::MouseMove, cursorPos(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+        windowInputMouseEvent(&me);
     }
 
     // Update windows that are changing brightness or opacity
@@ -330,7 +335,7 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
             m_motionManager.apply(w, data);
             QRect rect = m_motionManager.transformedGeometry(w).toRect();
 
-            if (m_activated && winData->highlight > 0.0 && !m_motionManager.areWindowsMoving()) {
+            if (m_activated && winData->highlight > 0.0) {
                 // scale the window (interpolated by the highlight level) to at least 105% or to cover 1/16 of the screen size - yet keep it in screen bounds
                 QRect area = effects->clientArea(FullScreenArea, w);
 
@@ -533,6 +538,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
     // We cannot use m_motionManager.windowAtPoint() as the window might not be visible
     EffectWindowList windows = m_motionManager.managedWindows();
     bool hovering = false;
+    EffectWindow *highlightCandidate = NULL;
     for (int i = 0; i < windows.size(); ++i) {
         DataHash::const_iterator winData = m_windowData.constFind(windows.at(i));
         if (winData == m_windowData.constEnd())
@@ -541,7 +547,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
                 winData->visible && !winData->deleted) {
             hovering = true;
             if (windows.at(i) && m_highlightedWindow != windows.at(i) && !m_dragInProgress)
-                setHighlightedWindow(windows.at(i));
+                highlightCandidate = windows.at(i);
             break;
         }
     }
@@ -553,6 +559,8 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         m_closeView->hide();
 
     if (e->type() == QEvent::MouseButtonRelease) {
+        if (highlightCandidate)
+            setHighlightedWindow(highlightCandidate);
         if (me->button() == Qt::LeftButton) {
             if (m_dragInProgress && m_dragWindow) {
                 // handle drop
@@ -612,13 +620,16 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         }
         effects->defineCursor(Qt::PointingHandCursor);
     } else if (e->type() == QEvent::MouseButtonPress && me->button() == Qt::LeftButton && hovering && m_dragToClose) {
+        if (highlightCandidate)
+            setHighlightedWindow(highlightCandidate);
         m_dragStart = me->pos();
         m_dragWindow = m_highlightedWindow;
         m_dragInProgress = false;
         m_highlightedDropTarget = NULL;
         effects->setElevatedWindow(m_dragWindow, true);
         effects->addRepaintFull();
-    }
+    } else if (highlightCandidate && !m_motionManager.areWindowsMoving())
+        setHighlightedWindow(highlightCandidate);
     if (e->type() == QEvent::MouseMove && m_dragWindow) {
         if ((me->pos() - m_dragStart).manhattanLength() > KGlobalSettings::dndEventDelay() && !m_dragInProgress) {
             m_dragInProgress = true;
@@ -1471,6 +1482,7 @@ void PresentWindowsEffect::setActive(bool active)
         return;
     m_activated = active;
     if (m_activated) {
+        m_needInitialSelection = true;
         m_closeButtonCorner = (Qt::Corner)effects->kwinOption(KWin::CloseButtonCorner).toInt();
         m_decalOpacity = 0.0;
         m_highlightedWindow = NULL;
@@ -1545,6 +1557,7 @@ void PresentWindowsEffect::setActive(bool active)
             }
         }
     } else {
+        m_needInitialSelection = false;
         if (m_highlightedWindow)
             effects->setElevatedWindow(m_highlightedWindow, false);
         // Fade in/out all windows
