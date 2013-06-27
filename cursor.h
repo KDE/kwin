@@ -99,6 +99,13 @@ public:
      * @return int
      */
     int themeSize() const;
+    /**
+     * @brief The name of a cursor shape in the theme.
+     *
+     * @param shape The cursor for which the name needs to be known.
+     * @return QByteArray
+     */
+    QByteArray cursorName(Qt::CursorShape shape) const;
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if
@@ -219,7 +226,6 @@ private Q_SLOTS:
 private:
     X11Cursor(QObject *parent);
     xcb_cursor_t createCursor(Qt::CursorShape shape);
-    QByteArray cursorName(Qt::CursorShape shape) const;
     QHash<Qt::CursorShape, xcb_cursor_t > m_cursors;
     xcb_timestamp_t m_timeStamp;
     uint16_t m_buttonMask;

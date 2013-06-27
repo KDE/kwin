@@ -300,7 +300,7 @@ xcb_cursor_t X11Cursor::createCursor(Qt::CursorShape shape)
     return cursor;
 }
 
-QByteArray X11Cursor::cursorName(Qt::CursorShape shape) const
+QByteArray Cursor::cursorName(Qt::CursorShape shape) const
 {
     switch (shape) {
     case Qt::ArrowCursor:
