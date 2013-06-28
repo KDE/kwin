@@ -703,7 +703,7 @@ void Workspace::updateToolWindows(bool also_hide)
                 for (ClientList::ConstIterator it2 = mainclients.constBegin();
                         it2 != mainclients.constEnd();
                         ++it2) {
-                    if (c->isSpecialWindow())
+                    if ((*it2)->isSpecialWindow())
                         show = true;
                 }
                 if (!show)
