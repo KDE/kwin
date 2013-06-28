@@ -1591,6 +1591,7 @@ public:
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
     void bindArrays();
     void unbindArrays();
+    void reallocateBuffer(size_t size);
     GLvoid *mapNextFreeRange(size_t size);
 
     GLuint buffer;
@@ -1725,6 +1726,17 @@ void GLVertexBufferPrivate::unbindArrays()
 #endif
 }
 
+void GLVertexBufferPrivate::reallocateBuffer(size_t size)
+{
+    // Round the size up to 4 Kb for streaming/dynamic buffers.
+    const size_t minSize = 32768; // Minimum size for streaming buffers
+    const size_t alloc = usage != GL_STATIC_DRAW ? align(qMax(size, minSize), 4096) : size;
+
+    glBufferData(GL_ARRAY_BUFFER, alloc, 0, usage);
+
+    bufferSize = alloc;
+}
+
 GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 {
     GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT | GL_MAP_UNSYNCHRONIZED_BIT;
@@ -1732,13 +1744,7 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
     if ((nextOffset + size) > bufferSize) {
         // Reallocate the data store if it's too small.
         if (size > bufferSize) {
-            // Round the size up to 4 Kb for streaming/dynamic buffers.
-            const size_t minSize = 32768; // Minimum size for streaming buffers
-            const size_t alloc = usage != GL_STATIC_DRAW ? align(qMax(size, minSize), 4096) : size;
-
-            glBufferData(GL_ARRAY_BUFFER, alloc, 0, usage);
-
-            bufferSize = alloc;
+            reallocateBuffer(size);
         } else {
             access |= GL_MAP_INVALIDATE_BUFFER_BIT;
             access ^= GL_MAP_UNSYNCHRONIZED_BIT;
@@ -1796,7 +1802,9 @@ GLvoid *GLVertexBuffer::map(size_t size)
     if (GLVertexBufferPrivate::supported)
         glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
-    if (GLVertexBufferPrivate::hasMapBufferRange)
+    bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
+
+    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData)
         return (GLvoid *) d->mapNextFreeRange(size);
 
     // If we can't map the buffer we allocate local memory to hold the
@@ -1810,26 +1818,38 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
 void GLVertexBuffer::unmap()
 {
-    if (GLVertexBufferPrivate::hasMapBufferRange) {
+    bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
+
+    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
         d->baseAddress = d->nextOffset;
         d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
-    } else {
-        if (GLVertexBufferPrivate::supported) {
-            // Upload the data from local memory to the buffer object
-            glBufferData(GL_ARRAY_BUFFER, d->mappedSize, d->dataStore.data(), d->usage);
+    } else if (GLVertexBufferPrivate::supported) {
+        // Upload the data from local memory to the buffer object
+        if (preferBufferSubData) {
+            if ((d->nextOffset + d->mappedSize) > d->bufferSize) {
+                d->reallocateBuffer(d->mappedSize);
+                d->nextOffset = 0;
+            }
 
-            // Free the local memory buffer if it's unlikely to be used again
-            if (d->usage == GL_STATIC_DRAW)
-                d->dataStore = QByteArray();
+            glBufferSubData(GL_ARRAY_BUFFER, d->nextOffset, d->mappedSize, d->dataStore.constData());
 
-            d->baseAddress = 0;
+            d->baseAddress = d->nextOffset;
+            d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
         } else {
-            // If buffer objects aren't supported we just need to update
-            // the client memory pointer and we're done.
-            d->baseAddress = intptr_t(d->dataStore.data());
+            glBufferData(GL_ARRAY_BUFFER, d->mappedSize, d->dataStore.data(), d->usage);
+            d->baseAddress = 0;
         }
+
+        // Free the local memory buffer if it's unlikely to be used again
+        if (d->usage == GL_STATIC_DRAW)
+            d->dataStore = QByteArray();
+
+    } else {
+        // If buffer objects aren't supported we just need to update
+        // the client memory pointer and we're done.
+        d->baseAddress = intptr_t(d->dataStore.data());
     }
 
     d->mappedSize = 0;
