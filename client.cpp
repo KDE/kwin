@@ -826,7 +826,7 @@ void Client::hideClient(bool hide)
  */
 bool Client::isMinimizable() const
 {
-    if (isSpecialWindow())
+    if (isSpecialWindow() && !isTransient())
         return false;
     if (!rules()->checkMinimize(true))
         return false;
