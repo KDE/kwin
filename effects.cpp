@@ -555,9 +555,9 @@ void EffectsHandlerImpl::slotClientAdded(Client *c)
 }
 
 void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{   // regardless, unmanaged windows are -yet?- not synced anyway
-    setupUnmanagedConnections(u);
-    emit windowAdded(u->effectWindow());
+{
+    // it's never initially ready but has synthetic 50ms delay
+    connect(u, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotUnmanagedShown(KWin::Toplevel*)));
 }
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
@@ -567,6 +567,14 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
+{   // regardless, unmanaged windows are -yet?- not synced anyway
+    Q_ASSERT(dynamic_cast<Unmanaged*>(t));
+    Unmanaged *u = static_cast<Unmanaged*>(t);
+    setupUnmanagedConnections(u);
+    emit windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
