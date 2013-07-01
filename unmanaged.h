@@ -47,6 +47,9 @@ public:
         return UnmanagedLayer;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+
+    void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
+    void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

@@ -56,6 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWhatsThis>
 // XLib
 #include <X11/extensions/sync.h>
+#include <xcb/xtest.h>
 // system
 #include <unistd.h>
 #include <signal.h>
@@ -2559,6 +2560,30 @@ void Client::showOnScreenEdge()
 {
     hideClient(false);
     xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
+}
+
+void Client::sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state)
+{
+    // TODO: don't use xtest
+    uint8_t type = XCB_BUTTON_PRESS;
+    if (state == KWin::InputRedirection::PointerButtonReleased) {
+        type = XCB_BUTTON_RELEASE;
+    }
+    xcb_test_fake_input(connection(), type, InputRedirection::toXPointerButton(button), XCB_TIME_CURRENT_TIME, frameId(), 0, 0, 0);
+}
+
+void Client::sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta)
+{
+    // TODO: don't use xtest
+    const int val = qRound(delta);
+    if (val == 0) {
+        return;
+    }
+    const uint8_t button = InputRedirection::toXPointerButton(axis, delta);
+    for (int i = 0; i < qAbs(val); ++i) {
+        xcb_test_fake_input(connection(), XCB_BUTTON_PRESS, button, XCB_TIME_CURRENT_TIME, frameId(), 0, 0, 0);
+        xcb_test_fake_input(connection(), XCB_BUTTON_RELEASE, button, XCB_TIME_CURRENT_TIME, frameId(), 0, 0, 0);
+    }
 }
 
 } // namespace

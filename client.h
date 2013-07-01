@@ -654,6 +654,9 @@ public:
      **/
     void showOnScreenEdge();
 
+    void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
+    void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
+
 public Q_SLOTS:
     void closeWindow();
     void updateCaption();

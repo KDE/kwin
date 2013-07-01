@@ -18,7 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "input.h"
+#include "client.h"
 #include "effects.h"
+#include "unmanaged.h"
+#include "workspace.h"
 // TODO: remove xtest
 #include <xcb/xtest.h>
 // system
@@ -31,12 +34,32 @@ KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
+    , m_pointerWindow()
 {
 }
 
 InputRedirection::~InputRedirection()
 {
     s_self = NULL;
+}
+
+void InputRedirection::updatePointerWindow()
+{
+    // TODO: handle pointer grab aka popups
+    Toplevel *t = findToplevel(m_globalPointer.toPoint());
+    const bool oldWindowValid = !m_pointerWindow.isNull();
+    if (oldWindowValid && t == m_pointerWindow.data()) {
+        return;
+    }
+    if (oldWindowValid) {
+        m_pointerWindow.data()->sendPointerLeaveEvent(m_globalPointer);
+    }
+    if (!t) {
+        m_pointerWindow.clear();
+        return;
+    }
+    m_pointerWindow = QWeakPointer<Toplevel>(t);
+    t->sendPointerEnterEvent(m_globalPointer);
 }
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
@@ -56,11 +79,16 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
         // an effect grabbed the pointer, we do not forward the event to surfaces
         return;
     }
-    // TODO: redirect to proper client
+    QWeakPointer<Toplevel> old = m_pointerWindow;
+    updatePointerWindow();
+    if (!m_pointerWindow.isNull() && old.data() == m_pointerWindow.data()) {
+        m_pointerWindow.data()->sendPointerMoveEvent(pos);
+    }
 
     // TODO: don't use xtest
+    // still doing the fake event here as it requires the event to be send on the root window
     xcb_test_fake_input(connection(), XCB_MOTION_NOTIFY, 0, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE,
-                        pos.x(), pos.y(), 0);
+                        pos.toPoint().x(), pos.toPoint().y(), 0);
 }
 
 void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
@@ -78,30 +106,11 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         return;
     }
     // TODO: check which part of KWin would like to intercept the event
-    // TODO: redirect to proper client
-
-    // TODO: don't use xtest
-    uint8_t type = XCB_BUTTON_PRESS;
-    if (state == KWin::InputRedirection::PointerButtonReleased) {
-        type = XCB_BUTTON_RELEASE;
-    }
-    // TODO: there must be a better way for mapping
-    uint8_t xButton = 0;
-    switch (button) {
-    case BTN_LEFT:
-        xButton = XCB_BUTTON_INDEX_1;
-        break;
-    case BTN_RIGHT:
-        xButton = XCB_BUTTON_INDEX_3;
-        break;
-    case BTN_MIDDLE:
-        xButton = XCB_BUTTON_INDEX_2;
-        break;
-    default:
-        // TODO: add more buttons
+    if (m_pointerWindow.isNull()) {
+        // there is no window which can receive the
         return;
     }
-    xcb_test_fake_input(connection(), type, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+    m_pointerWindow.data()->sendPointerButtonEvent(button, state);
 }
 
 void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time)
@@ -114,26 +123,11 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
     // TODO: check which part of KWin would like to intercept the event
     // TODO: Axis support for effect redirection
-    // TODO: redirect to proper client
-
-    // TODO: don't use xtest
-    uint8_t xButton = 0;
-    switch (axis) {
-    case PointerAxisVertical:
-        xButton = delta > 0 ? XCB_BUTTON_INDEX_5 : XCB_BUTTON_INDEX_4;
-        break;
-    case PointerAxisHorizontal:
-        // no enum values defined for buttons larger than 5
-        xButton = delta > 0 ? 7 : 6;
-        break;
-    default:
-        // doesn't exist
+    if (m_pointerWindow.isNull()) {
+        // there is no window which can receive the
         return;
     }
-    for (int i = 0; i < qAbs(delta); ++i) {
-        xcb_test_fake_input(connection(), XCB_BUTTON_PRESS, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
-        xcb_test_fake_input(connection(), XCB_BUTTON_RELEASE, xButton, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
-    }
+    m_pointerWindow.data()->sendPointerAxisEvent(axis, delta);
 }
 
 QEvent::Type InputRedirection::buttonStateToEvent(InputRedirection::PointerButtonState state)
@@ -179,5 +173,72 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
     return buttons;
 }
 
+Toplevel *InputRedirection::findToplevel(const QPoint &pos)
+{
+    // TODO: check whether the unmanaged wants input events at all
+    const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
+    foreach (Unmanaged *u, unmanaged) {
+        if (u->geometry().contains(pos)) {
+            return u;
+        }
+    }
+    const ToplevelList &stacking = Workspace::self()->stackingOrder();
+    if (stacking.isEmpty()) {
+        return NULL;
+    }
+    auto it = stacking.end();
+    do {
+        --it;
+        Toplevel *t = (*it);
+        if (t->isDeleted()) {
+            // a deleted window doesn't get mouse events
+            continue;
+        }
+        if (t->isClient()) {
+            Client *c = static_cast<Client*>(t);
+            if (!c->isOnCurrentActivity() || !c->isOnCurrentDesktop() || c->isMinimized() || !c->isCurrentTab()) {
+                continue;
+            }
+        }
+        if (t->geometry().contains(pos)) {
+            return t;
+        }
+    } while (it != stacking.begin());
+    return NULL;
+}
+
+uint8_t InputRedirection::toXPointerButton(uint32_t button)
+{
+    switch (button) {
+    case BTN_LEFT:
+        return XCB_BUTTON_INDEX_1;
+    case BTN_RIGHT:
+        return XCB_BUTTON_INDEX_3;
+    case BTN_MIDDLE:
+        return XCB_BUTTON_INDEX_2;
+    default:
+        // TODO: add more buttons
+        return XCB_BUTTON_INDEX_ANY;
+    }
+}
+
+uint8_t InputRedirection::toXPointerButton(InputRedirection::PointerAxis axis, qreal delta)
+{
+    switch (axis) {
+    case PointerAxisVertical:
+        if (delta < 0) {
+            return 4;
+        } else {
+            return 5;
+        }
+    case PointerAxisHorizontal:
+        if (delta < 0) {
+            return 6;
+        } else {
+            return 7;
+        }
+    }
+    return XCB_BUTTON_INDEX_ANY;
+}
 
 } // namespace

@@ -390,6 +390,7 @@ Q_SIGNALS:
     void clientDemandsAttentionChanged(KWin::Client*, bool);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
+    void unmanagedRemoved(KWin::Unmanaged*);
     void deletedRemoved(KWin::Deleted*);
     void propertyNotify(long a);
     void configChanged();

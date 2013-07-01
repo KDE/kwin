@@ -494,6 +494,33 @@ void Toplevel::setSkipCloseAnimation(bool set)
     emit skipCloseAnimationChanged();
 }
 
+void Toplevel::sendPointerEnterEvent(const QPointF &globalPos)
+{
+    Q_UNUSED(globalPos)
+}
+
+void Toplevel::sendPointerLeaveEvent(const QPointF &globalPos)
+{
+    Q_UNUSED(globalPos)
+}
+
+void Toplevel::sendPointerMoveEvent(const QPointF &globalPos)
+{
+    Q_UNUSED(globalPos)
+}
+
+void Toplevel::sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state)
+{
+    Q_UNUSED(button)
+    Q_UNUSED(state)
+}
+
+void Toplevel::sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta)
+{
+    Q_UNUSED(axis)
+    Q_UNUSED(delta)
+}
+
 } // namespace
 
 #include "toplevel.moc"

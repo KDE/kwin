@@ -24,9 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QPoint>
 #include <QEvent>
+#include <QWeakPointer>
 
 namespace KWin
 {
+class Toplevel;
 
 /**
  * @brief This class is responsible for redirecting incoming input to the surface which currently
@@ -78,6 +80,12 @@ public:
      */
     void processPointerAxis(PointerAxis axis, qreal delta, uint32_t time);
 
+    static uint8_t toXPointerButton(uint32_t button);
+    static uint8_t toXPointerButton(PointerAxis axis, qreal delta);
+
+public Q_SLOTS:
+    void updatePointerWindow();
+
 Q_SIGNALS:
     /**
      * @brief Emitted when the global pointer position changed
@@ -103,8 +111,13 @@ Q_SIGNALS:
 private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
+    Toplevel *findToplevel(const QPoint &pos);
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
+    /**
+     * @brief The Toplevel which currently receives pointer events
+     */
+    QWeakPointer<Toplevel> m_pointerWindow;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

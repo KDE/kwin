@@ -152,6 +152,9 @@ Workspace::Workspace(bool restore)
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
 #if HAVE_WAYLAND
     Wayland::WaylandBackend::create(this);
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
+    }
 #endif
     // start the cursor support
     Cursor::create(this);
@@ -608,6 +611,7 @@ void Workspace::removeUnmanaged(Unmanaged* c)
 {
     assert(unmanaged.contains(c));
     unmanaged.removeAll(c);
+    emit unmanagedRemoved(c);
     x_stacking_dirty = true;
 }
 

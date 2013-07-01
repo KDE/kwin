@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin libs
 #include <kdecoration.h>
 // kwin
+#include "input.h"
 #include "utils.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
@@ -318,6 +319,12 @@ public:
 
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
+
+    virtual void sendPointerMoveEvent(const QPointF &globalPos);
+    virtual void sendPointerEnterEvent(const QPointF &globalPos);
+    virtual void sendPointerLeaveEvent(const QPointF &globalPos);
+    virtual void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state);
+    virtual void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta);
 
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
