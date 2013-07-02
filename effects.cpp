@@ -305,6 +305,7 @@ void EffectsHandlerImpl::reconfigure()
     QFutureWatcher<KService::List> *watcher = new QFutureWatcher<KService::List>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(slotEffectsQueried()));
     watcher->setFuture(QtConcurrent::run(KServiceTypeTrader::self(), &KServiceTypeTrader::query, QString("KWin/Effect"), QString()));
+    watcher->waitForFinished(); // TODO: remove once KConfigGroup is thread safe, bug #321576
 }
 
 void EffectsHandlerImpl::slotEffectsQueried()
