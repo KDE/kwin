@@ -462,6 +462,7 @@ void Toplevel::elevate(bool elevate)
         return;
     }
     effectWindow()->elevate(elevate);
+    addWorkspaceRepaint(visibleRect());
 }
 
 pid_t Toplevel::pid() const
