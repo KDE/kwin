@@ -361,6 +361,10 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
     connect(input(), SIGNAL(globalPointerChanged(QPointF)), SLOT(slotPosChanged(QPointF)));
     connect(input(), SIGNAL(pointerButtonStateChanged(uint32_t,InputRedirection::PointerButtonState)),
             SLOT(slotPointerButtonChanged()));
+#ifndef KCMRULES
+    connect(input(), &InputRedirection::keyboardModifiersChanged,
+            this, &InputRedirectionCursor::slotModifiersChanged);
+#endif
 }
 
 InputRedirectionCursor::~InputRedirectionCursor()
@@ -377,8 +381,13 @@ void InputRedirectionCursor::slotPosChanged(const QPointF &pos)
 {
     const QPoint oldPos = currentPos();
     updatePos(pos.toPoint());
-    // TODO: add keyboard modifiers
-    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_oldButtons, Qt::NoModifier, Qt::NoModifier);
+    emit mouseChanged(pos.toPoint(), oldPos, m_currentButtons, m_oldButtons,
+                      input()->keyboardModifiers(), input()->keyboardModifiers());
+}
+
+void InputRedirectionCursor::slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods)
+{
+    emit mouseChanged(currentPos(), currentPos(), m_currentButtons, m_currentButtons, mods, oldMods);
 }
 
 void InputRedirectionCursor::slotPointerButtonChanged()

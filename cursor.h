@@ -252,6 +252,7 @@ protected:
 private Q_SLOTS:
     void slotPosChanged(const QPointF &pos);
     void slotPointerButtonChanged();
+    void slotModifiersChanged(Qt::KeyboardModifiers mods, Qt::KeyboardModifiers oldMods);
 private:
     explicit InputRedirectionCursor(QObject *parent);
     Qt::MouseButtons m_oldButtons;

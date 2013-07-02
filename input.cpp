@@ -295,7 +295,11 @@ void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t
 {
     // TODO: send to proper Client and also send when active Client changes
 #if HAVE_XKB
+    Qt::KeyboardModifiers oldMods = keyboardModifiers();
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
+    if (oldMods != keyboardModifiers()) {
+        emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
+    }
 #endif
 }
 

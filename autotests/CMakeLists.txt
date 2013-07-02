@@ -44,7 +44,6 @@ set( testClientMachine_SRCS
      ../client_machine.cpp
      ../utils.cpp
      ../atoms.cpp # needed by utils.cpp
-     ../cursor.cpp # needed by utils.cpp
 )
 add_executable( testClientMachine ${testClientMachine_SRCS} )
 

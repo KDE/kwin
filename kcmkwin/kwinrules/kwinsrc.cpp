@@ -33,3 +33,8 @@ Qt::MouseButtons KWin::InputRedirection::qtButtonStates() const
 {
     return Qt::NoButton;
 }
+
+Qt::KeyboardModifiers KWin::InputRedirection::keyboardModifiers() const
+{
+    return Qt::NoModifier;
+}

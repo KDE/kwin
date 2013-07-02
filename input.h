@@ -135,6 +135,16 @@ Q_SIGNALS:
      * @param delta The delta of the event.
      */
     void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta);
+    /**
+     * @brief Emitted when the modifiers changes.
+     *
+     * Only emitted for the mask which is provided by Qt::KeyboardModifiers, if other modifiers
+     * change signal is not emitted
+     *
+     * @param newMods The new modifiers state
+     * @param oldMods The previous modifiers state
+     */
+    void keyboardModifiersChanged(Qt::KeyboardModifiers newMods, Qt::KeyboardModifiers oldMods);
 
 private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
