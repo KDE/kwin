@@ -266,8 +266,13 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(&event);
         return;
     }
+    if (Client *c = workspace()->getMovingClient()) {
+        // TODO: this does not yet fully support moving of the Client
+        // cursor events change the cursor and on Wayland pointer warping is not possible
+        c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));
+        return;
+    }
 #endif
-    // TODO: handle move resize
     // check unmanaged
     if (!workspace()->unmanagedList().isEmpty()) {
         // TODO: better check whether this unmanaged should get the key event
