@@ -1045,8 +1045,10 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
     ToplevelList list = Workspace::self()->xStackingOrder();
     EffectWindowList ret;
-    foreach (Toplevel *w, list)
-        ret.append(effectWindow(w));
+    foreach (Toplevel *t, list) {
+        if (EffectWindow *w = effectWindow(t))
+            ret.append(w);
+    }
     return ret;
 }
 
