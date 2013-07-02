@@ -656,6 +656,7 @@ public:
 
     void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
     void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
+    void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state) override;
 
 public Q_SLOTS:
     void closeWindow();

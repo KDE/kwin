@@ -50,6 +50,7 @@ public:
 
     void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
     void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
+    void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state) override;
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

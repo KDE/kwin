@@ -174,6 +174,16 @@ void Unmanaged::sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal d
     }
 }
 
+void Unmanaged::sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state)
+{
+    // TODO: don't use xtest
+    uint8_t type = XCB_KEY_PRESS;
+    if (state == InputRedirection::KeyboardKeyReleased) {
+        type = XCB_KEY_RELEASE;
+    }
+    xcb_test_fake_input(connection(), type, key + 8, XCB_TIME_CURRENT_TIME, window(), 0, 0, 0);
+}
+
 } // namespace
 
 #include "unmanaged.moc"

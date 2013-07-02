@@ -25,10 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <QEvent>
 #include <QWeakPointer>
+#include <config-kwin.h>
+#if HAVE_XKB
+#include <xkbcommon/xkbcommon.h>
+#endif
 
 namespace KWin
 {
 class Toplevel;
+class Xkb;
 
 /**
  * @brief This class is responsible for redirecting incoming input to the surface which currently
@@ -51,6 +56,10 @@ public:
         PointerAxisVertical,
         PointerAxisHorizontal
     };
+    enum KeyboardKeyState {
+        KeyboardKeyReleased,
+        KeyboardKeyPressed
+    };
     virtual ~InputRedirection();
 
     /**
@@ -66,6 +75,7 @@ public:
      */
     PointerButtonState pointerButtonState(uint32_t button) const;
     Qt::MouseButtons qtButtonStates() const;
+    Qt::KeyboardModifiers keyboardModifiers() const;
 
     /**
      * @internal
@@ -79,6 +89,18 @@ public:
      * @internal
      */
     void processPointerAxis(PointerAxis axis, qreal delta, uint32_t time);
+    /**
+     * @internal
+     */
+    void processKeyboardKey(uint32_t key, KeyboardKeyState state, uint32_t time);
+    /**
+     * @internal
+     */
+    void processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
+    /**
+     * @internal
+     **/
+    void processKeymapChange(int fd, uint32_t size);
 
     static uint8_t toXPointerButton(uint32_t button);
     static uint8_t toXPointerButton(PointerAxis axis, qreal delta);
@@ -114,6 +136,9 @@ private:
     Toplevel *findToplevel(const QPoint &pos);
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
+#if HAVE_XKB
+    QScopedPointer<Xkb> m_xkb;
+#endif
     /**
      * @brief The Toplevel which currently receives pointer events
      */
@@ -122,6 +147,31 @@ private:
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
 };
+
+#if HAVE_XKB
+class Xkb
+{
+public:
+    Xkb();
+    ~Xkb();
+    void installKeymap(int fd, uint32_t size);
+    void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
+    void updateKey(uint32_t key, InputRedirection::KeyboardKeyState state);
+    xkb_keysym_t toKeysym(uint32_t key);
+    QString toString(xkb_keysym_t keysym);
+    Qt::Key toQtKey(xkb_keysym_t keysym);
+    Qt::KeyboardModifiers modifiers() const;
+private:
+    xkb_context *m_context;
+    xkb_keymap *m_keymap;
+    xkb_state *m_state;
+    xkb_mod_index_t m_shiftModifier;
+    xkb_mod_index_t m_controlModifier;
+    xkb_mod_index_t m_altModifier;
+    xkb_mod_index_t m_metaModifier;
+    Qt::KeyboardModifiers m_modifiers;
+};
+#endif
 
 inline
 InputRedirection *input()
@@ -145,6 +195,14 @@ InputRedirection::PointerButtonState InputRedirection::pointerButtonState(uint32
         return KWin::InputRedirection::PointerButtonReleased;
     }
 }
+
+#if HAVE_XKB
+inline
+Qt::KeyboardModifiers Xkb::modifiers() const
+{
+    return m_modifiers;
+}
+#endif
 
 } // namespace KWin
 

@@ -521,6 +521,12 @@ void Toplevel::sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal de
     Q_UNUSED(delta)
 }
 
+void Toplevel::sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state)
+{
+    Q_UNUSED(key)
+    Q_UNUSED(state)
+}
+
 } // namespace
 
 #include "toplevel.moc"

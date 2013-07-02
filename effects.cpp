@@ -741,9 +741,11 @@ bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
 {
     if (keyboard_grab_effect != NULL)
         return false;
-    bool ret = grabXKeyboard();
-    if (!ret)
-        return false;
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        bool ret = grabXKeyboard();
+        if (!ret)
+            return false;
+    }
     keyboard_grab_effect = effect;
     return true;
 }
@@ -751,7 +753,9 @@ bool EffectsHandlerImpl::grabKeyboard(Effect* effect)
 void EffectsHandlerImpl::ungrabKeyboard()
 {
     assert(keyboard_grab_effect != NULL);
-    ungrabXKeyboard();
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        ungrabXKeyboard();
+    }
     keyboard_grab_effect = NULL;
 }
 

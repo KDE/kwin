@@ -325,6 +325,7 @@ public:
     virtual void sendPointerLeaveEvent(const QPointF &globalPos);
     virtual void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state);
     virtual void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta);
+    virtual void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state);
 
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);

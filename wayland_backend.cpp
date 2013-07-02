@@ -162,9 +162,10 @@ static void keyboardHandleKeymap(void *data, wl_keyboard *keyboard,
 {
     Q_UNUSED(data)
     Q_UNUSED(keyboard)
-    Q_UNUSED(format)
-    Q_UNUSED(fd)
-    Q_UNUSED(size)
+    if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
+        return;
+    }
+    input()->processKeymapChange(fd, size);
 }
 
 static void keyboardHandleEnter(void *data, wl_keyboard *keyboard,
@@ -192,12 +193,7 @@ static void keyboardHandleKey(void *data, wl_keyboard *keyboard, uint32_t serial
     Q_UNUSED(data)
     Q_UNUSED(keyboard)
     Q_UNUSED(serial)
-    Q_UNUSED(time)
-    uint8_t type = XCB_KEY_PRESS;
-    if (state == WL_KEYBOARD_KEY_STATE_RELEASED) {
-        type = XCB_KEY_RELEASE;
-    }
-    xcb_test_fake_input(connection(), type, key + 8 /*magic*/, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE, 0, 0, 0);
+    input()->processKeyboardKey(key, static_cast<InputRedirection::KeyboardKeyState>(state), time);
 }
 
 static void keyboardHandleModifiers(void *data, wl_keyboard *keyboard, uint32_t serial, uint32_t modsDepressed,
@@ -206,10 +202,7 @@ static void keyboardHandleModifiers(void *data, wl_keyboard *keyboard, uint32_t 
     Q_UNUSED(data)
     Q_UNUSED(keyboard)
     Q_UNUSED(serial)
-    Q_UNUSED(modsDepressed)
-    Q_UNUSED(modsLatched)
-    Q_UNUSED(modsLocked)
-    Q_UNUSED(group)
+    input()->processKeyboardModifiers(modsDepressed, modsLatched, modsLocked, group);
 }
 
 static void bufferRelease(void *data, wl_buffer *wl_buffer)

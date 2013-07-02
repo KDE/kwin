@@ -61,6 +61,11 @@ configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib
 # for kwin internal things
 set(HAVE_WAYLAND ${Wayland_Client_FOUND})
 set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND} AND ${Wayland_Client_FOUND})
+if(${HAVE_WAYLAND})
+    set(HAVE_XKB ${XKB_FOUND})
+else()
+    set(HAVE_XKB FALSE)
+endif()
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
 

@@ -22,18 +22,140 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "unmanaged.h"
 #include "workspace.h"
+// KDE
+#include <kkeyserver.h>
 // TODO: remove xtest
 #include <xcb/xtest.h>
 // system
 #include <linux/input.h>
+#include <sys/mman.h>
 
 namespace KWin
 {
+
+#if HAVE_XKB
+Xkb::Xkb()
+    : m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
+    , m_keymap(NULL)
+    , m_state(NULL)
+    , m_shiftModifier(0)
+    , m_controlModifier(0)
+    , m_altModifier(0)
+    , m_metaModifier(0)
+    , m_modifiers(Qt::NoModifier)
+{
+    if (!m_context) {
+        qDebug() << "Could not create xkb context";
+    }
+}
+
+Xkb::~Xkb()
+{
+    xkb_state_unref(m_state);
+    xkb_keymap_unref(m_keymap);
+    xkb_context_unref(m_context);
+}
+
+void Xkb::installKeymap(int fd, uint32_t size)
+{
+    if (!m_context) {
+        return;
+    }
+    char *map = reinterpret_cast<char*>(mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0));
+    if (map == MAP_FAILED) {
+        return;
+    }
+    xkb_keymap *keymap = xkb_keymap_new_from_string(m_context, map, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_MAP_COMPILE_PLACEHOLDER);
+    munmap(map, size);
+    if (!keymap) {
+        qDebug() << "Could not map keymap from file";
+        return;
+    }
+    xkb_state *state = xkb_state_new(keymap);
+    if (!state) {
+        qDebug() << "Could not create XKB state";
+        xkb_keymap_unref(keymap);
+        return;
+    }
+    // now release the old ones
+    xkb_state_unref(m_state);
+    xkb_keymap_unref(m_keymap);
+
+    m_keymap = keymap;
+    m_state = state;
+
+    m_shiftModifier   = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_SHIFT);
+    m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
+    m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
+    m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
+}
+
+void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    xkb_state_update_mask(m_state, modsDepressed, modsLatched, modsLocked, 0, 0, group);
+    Qt::KeyboardModifiers mods = Qt::NoModifier;
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::ShiftModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::AltModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::ControlModifier;
+    }
+    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+        mods |= Qt::MetaModifier;
+    }
+    m_modifiers = mods;
+}
+
+void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
+}
+
+xkb_keysym_t Xkb::toKeysym(uint32_t key)
+{
+    if (!m_state) {
+        return XKB_KEY_NoSymbol;
+    }
+    return xkb_state_key_get_one_sym(m_state, key + 8);
+}
+
+QString Xkb::toString(xkb_keysym_t keysym)
+{
+    if (!m_state || keysym == XKB_KEY_NoSymbol) {
+        return QString();
+    }
+    QByteArray byteArray(7, 0);
+    int ok = xkb_keysym_to_utf8(keysym, byteArray.data(), byteArray.size());
+    if (ok == -1 || ok == 0) {
+        return QString();
+    }
+    return QString::fromUtf8(byteArray.constData());
+}
+
+Qt::Key Xkb::toQtKey(xkb_keysym_t keysym)
+{
+    int key = Qt::Key_unknown;
+    KKeyServer::symXToKeyQt(keysym, &key);
+    return static_cast<Qt::Key>(key);
+}
+#endif
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
+#if HAVE_XKB
+    , m_xkb(new Xkb())
+#endif
     , m_pointerWindow()
 {
 }
@@ -71,9 +193,8 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     emit globalPointerChanged(m_globalPointer);
 
     // TODO: check which part of KWin would like to intercept the event
-    // TODO: keyboard modifiers
     QMouseEvent event(QEvent::MouseMove, m_globalPointer.toPoint(), m_globalPointer.toPoint(),
-                      Qt::NoButton, qtButtonStates(), 0);
+                      Qt::NoButton, qtButtonStates(), keyboardModifiers());
     // check whether an effect has a mouse grab
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(&event)) {
         // an effect grabbed the pointer, we do not forward the event to surfaces
@@ -97,9 +218,8 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
     m_pointerButtons[button] = state;
     emit pointerButtonStateChanged(button, state);
 
-    // TODO: keyboard modifiers
     QMouseEvent event(buttonStateToEvent(state), m_globalPointer.toPoint(), m_globalPointer.toPoint(),
-                      buttonToQtMouseButton(button), qtButtonStates(), 0);
+                      buttonToQtMouseButton(button), qtButtonStates(), keyboardModifiers());
     // check whether an effect has a mouse grab
     if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(&event)) {
         // an effect grabbed the pointer, we do not forward the event to surfaces
@@ -128,6 +248,51 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
         return;
     }
     m_pointerWindow.data()->sendPointerAxisEvent(axis, delta);
+}
+
+void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
+{
+    Q_UNUSED(time)
+#if HAVE_XKB
+    m_xkb->updateKey(key, state);
+    // TODO: process global shortcuts
+    // TODO: pass to internal parts of KWin
+    if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
+        const xkb_keysym_t keysym = m_xkb->toKeysym(key);
+        // TODO: start auto-repeat
+        // TODO: add modifiers to the event
+        const QEvent::Type type = (state == KeyboardKeyPressed) ? QEvent::KeyPress : QEvent::KeyRelease;
+        QKeyEvent event(type, m_xkb->toQtKey(keysym), m_xkb->modifiers(), m_xkb->toString(keysym));
+        static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(&event);
+        return;
+    }
+#endif
+    // TODO: handle move resize
+    // check unmanaged
+    if (!workspace()->unmanagedList().isEmpty()) {
+        // TODO: better check whether this unmanaged should get the key event
+        workspace()->unmanagedList().first()->sendKeybordKeyEvent(key, state);
+        return;
+    }
+    if (Client *client = workspace()->activeClient()) {
+        client->sendKeybordKeyEvent(key, state);
+    }
+}
+
+void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+{
+    // TODO: send to proper Client and also send when active Client changes
+#if HAVE_XKB
+    m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
+#endif
+}
+
+void InputRedirection::processKeymapChange(int fd, uint32_t size)
+{
+    // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
+#if HAVE_XKB
+    m_xkb->installKeymap(fd, size);
+#endif
 }
 
 QEvent::Type InputRedirection::buttonStateToEvent(InputRedirection::PointerButtonState state)
@@ -240,5 +405,15 @@ uint8_t InputRedirection::toXPointerButton(InputRedirection::PointerAxis axis, q
     }
     return XCB_BUTTON_INDEX_ANY;
 }
+
+Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
+{
+#if HAVE_XKB
+    return m_xkb->modifiers();
+#else
+    return Qt::NoModifier;
+#endif
+}
+
 
 } // namespace
