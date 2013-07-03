@@ -284,6 +284,7 @@ void AnimationEffect::prePaintScreen( ScreenPrePaintData& data, int time )
                 AniData *aData = &(*anim);
                 if (aData->attribute == KWin::AnimationEffect::CrossFadePrevious) {
                     oldW->unreferencePreviousWindowPixmap();
+                    effects->addRepaint(oldW->expandedGeometry());
                 }
                 animationEnded(oldW, anim->attribute, anim->meta);
                 // NOTICE animationEnded is an external call and might have called "::animate"
