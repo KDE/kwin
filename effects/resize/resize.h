@@ -21,13 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_RESIZE_H
 #define KWIN_RESIZE_H
 
-#include <kwineffects.h>
+#include <kwinanimationeffect.h>
 
 namespace KWin
 {
 
 class ResizeEffect
-    : public Effect
+    : public AnimationEffect
 {
     Q_OBJECT
     Q_PROPERTY(bool textureScale READ isTextureScale)
@@ -38,7 +38,7 @@ public:
     virtual inline bool provides(Effect::Feature ef) {
         return ef == Effect::Resize;
     }
-    inline bool isActive() const { return m_active; }
+    inline bool isActive() const { return m_active || AnimationEffect::isActive(); }
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);

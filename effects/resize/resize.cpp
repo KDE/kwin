@@ -37,7 +37,8 @@ namespace KWin
 KWIN_EFFECT(resize, ResizeEffect)
 
 ResizeEffect::ResizeEffect()
-    : m_active(false)
+    : AnimationEffect()
+    , m_active(false)
     , m_resizeWindow(0)
 {
     reconfigure(ReconfigureAll);
@@ -55,14 +56,14 @@ void ResizeEffect::prePaintScreen(ScreenPrePaintData& data, int time)
     if (m_active) {
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
-    effects->prePaintScreen(data, time);
+    AnimationEffect::prePaintScreen(data, time);
 }
 
 void ResizeEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
     if (m_active && w == m_resizeWindow)
         data.mask |= PAINT_WINDOW_TRANSFORMED;
-    effects->prePaintWindow(w, data, time);
+    AnimationEffect::prePaintWindow(w, data, time);
 }
 
 void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
@@ -118,8 +119,9 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
             }
 #endif
         }
-    } else
-        effects->paintWindow(w, mask, region, data);
+    } else {
+        AnimationEffect::paintWindow(w, mask, region, data);
+    }
 }
 
 void ResizeEffect::reconfigure(ReconfigureFlags)
@@ -148,6 +150,8 @@ void ResizeEffect::slotWindowFinishUserMovedResized(EffectWindow *w)
     if (m_active && w == m_resizeWindow) {
         m_active = false;
         m_resizeWindow = NULL;
+        if (m_features & TextureScale)
+            animate(w, CrossFadePrevious, 0, 150, FPx2(1.0));
         effects->addRepaintFull();
     }
 }
