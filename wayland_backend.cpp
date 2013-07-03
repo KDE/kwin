@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QDebug>
 #include <QImage>
+#include <QFileSystemWatcher>
 #include <QSocketNotifier>
 #include <QTemporaryFile>
 // xcb
@@ -627,8 +628,8 @@ WaylandBackend *WaylandBackend::create(QObject *parent)
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : QObject(parent)
-    , m_display(wl_display_connect(NULL))
-    , m_registry(wl_display_get_registry(m_display))
+    , m_display(nullptr)
+    , m_registry(nullptr)
     , m_compositor(NULL)
     , m_shell(NULL)
     , m_surface(NULL)
@@ -636,15 +637,17 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shellSurfaceSize(displayWidth(), displayHeight())
     , m_seat()
     , m_shm()
+    , m_systemCompositorDied(false)
+    , m_runtimeDir(qgetenv("XDG_RUNTIME_DIR"))
+    , m_socketWatcher(nullptr)
 {
-    qDebug() << "Created Wayland display";
+    m_socketName = qgetenv("WAYLAND_DISPLAY");
+    if (m_socketName.isEmpty()) {
+        m_socketName = QStringLiteral("wayland-0");
+    }
+
+    initConnection();
     kwinApp()->setOperationMode(Application::OperationModeWaylandAndX11);
-    // setup the registry
-    wl_registry_add_listener(m_registry, &s_registryListener, this);
-    wl_display_dispatch(m_display);
-    int fd = wl_display_get_fd(m_display);
-    QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(notifier, SIGNAL(activated(int)), SLOT(readEvents()));
 }
 
 WaylandBackend::~WaylandBackend()
@@ -672,11 +675,92 @@ WaylandBackend::~WaylandBackend()
     s_self = NULL;
 }
 
+void WaylandBackend::initConnection()
+{
+    m_display = wl_display_connect(nullptr);
+    if (!m_display) {
+        // TODO: maybe we should now really tear down
+        qWarning() << "Failed connecting to Wayland display";
+        return;
+    }
+    m_registry = wl_display_get_registry(m_display);
+    // setup the registry
+    wl_registry_add_listener(m_registry, &s_registryListener, this);
+    wl_display_dispatch(m_display);
+    int fd = wl_display_get_fd(m_display);
+    QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+    connect(notifier, &QSocketNotifier::activated, this, &WaylandBackend::readEvents);
+
+    if (m_runtimeDir.exists()) {
+        m_socketWatcher = new QFileSystemWatcher(this);
+        m_socketWatcher->addPath(m_runtimeDir.absoluteFilePath(m_socketName));
+        connect(m_socketWatcher, &QFileSystemWatcher::fileChanged, this, &WaylandBackend::socketFileChanged);
+    }
+    qDebug() << "Created Wayland display";
+}
+
 void WaylandBackend::readEvents()
 {
     // TODO: this still seems to block
+    if (m_systemCompositorDied) {
+        return;
+    }
     wl_display_flush(m_display);
     wl_display_dispatch(m_display);
+}
+
+void WaylandBackend::socketFileChanged(const QString &socket)
+{
+    if (!QFile::exists(socket) && !m_systemCompositorDied) {
+        qDebug() << "We lost the system compositor at:" << socket;
+        m_systemCompositorDied = true;
+        emit systemCompositorDied();
+        m_seat.reset();
+        m_shm.reset();
+        if (m_shellSurface) {
+            free(m_shellSurface);
+            m_shellSurface = nullptr;
+        }
+        if (m_surface) {
+            free(m_surface);
+            m_surface = nullptr;
+        }
+        if (m_shell) {
+            free(m_shell);
+            m_shell = nullptr;
+        }
+        if (m_compositor) {
+            free(m_compositor);
+            m_compositor = nullptr;
+        }
+        if (m_registry) {
+            free(m_registry);
+            m_registry = nullptr;
+        }
+        if (m_display) {
+            free(m_display);
+            m_display = nullptr;
+        }
+        // need a new filesystem watcher
+        delete m_socketWatcher;
+        m_socketWatcher = new QFileSystemWatcher(this);
+        m_socketWatcher->addPath(m_runtimeDir.absolutePath());
+        connect(m_socketWatcher, &QFileSystemWatcher::directoryChanged, this, &WaylandBackend::socketDirectoryChanged);
+    }
+}
+
+void WaylandBackend::socketDirectoryChanged()
+{
+    if (!m_systemCompositorDied) {
+        return;
+    }
+    if (m_runtimeDir.exists(m_socketName)) {
+        qDebug() << "Socket reappeared";
+        delete m_socketWatcher;
+        m_socketWatcher = nullptr;
+        initConnection();
+        m_systemCompositorDied = false;
+    }
 }
 
 void WaylandBackend::createSeat(uint32_t name)
@@ -704,6 +788,7 @@ void WaylandBackend::createSurface()
     m_shellSurface = wl_shell_get_shell_surface(m_shell, m_surface);
     wl_shell_surface_add_listener(m_shellSurface, &s_shellSurfaceListener, this);
     wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
+    emit backendReady();
 }
 
 void WaylandBackend::createShm(uint32_t name)

@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglobals.h>
 // Qt
+#include <QDir>
 #include <QHash>
 #include <QImage>
 #include <QObject>
@@ -32,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QTemporaryFile;
 class QImage;
+class QFileSystemWatcher;
 struct wl_cursor_theme;
 struct wl_buffer;
 struct wl_shm;
@@ -188,9 +190,14 @@ public:
     void dispatchEvents();
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
+    void systemCompositorDied();
+    void backendReady();
 private Q_SLOTS:
     void readEvents();
+    void socketFileChanged(const QString &socket);
+    void socketDirectoryChanged();
 private:
+    void initConnection();
     void createSurface();
     wl_display *m_display;
     wl_registry *m_registry;
@@ -201,6 +208,10 @@ private:
     QSize m_shellSurfaceSize;
     QScopedPointer<WaylandSeat> m_seat;
     QScopedPointer<ShmPool> m_shm;
+    bool m_systemCompositorDied;
+    QString m_socketName;
+    QDir m_runtimeDir;
+    QFileSystemWatcher *m_socketWatcher;
 
     KWIN_SINGLETON(WaylandBackend)
 };

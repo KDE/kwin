@@ -36,6 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "compositingprefs.h"
 #include "xcbutils.h"
+#if HAVE_WAYLAND
+#include "wayland_backend.h"
+#endif
 
 #include <stdio.h>
 
@@ -113,6 +116,12 @@ Compositor::Compositor(QObject* workspace)
     m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
     m_unusedSupportPropertyTimer.setSingleShot(true);
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
+#if HAVE_WAYLAND
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::systemCompositorDied, this, &Compositor::finish);
+        connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::backendReady, this, &Compositor::setup);
+    }
+#endif
 
     // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
