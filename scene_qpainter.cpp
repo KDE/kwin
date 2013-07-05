@@ -98,10 +98,12 @@ WaylandQPainterBackend::WaylandQPainterBackend()
     : QPainterBackend()
     , m_lastFrameRendered(true)
     , m_needsFullRepaint(true)
-    , m_backBuffer(QImage(QSize(displayWidth(), displayHeight()), QImage::Format_ARGB32_Premultiplied))
+    , m_backBuffer(QImage(QSize(), QImage::Format_ARGB32_Premultiplied))
     , m_buffer(NULL)
 {
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
+    connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
+            this, &WaylandQPainterBackend::screenGeometryChanged);
 }
 
 WaylandQPainterBackend::~WaylandQPainterBackend()
@@ -172,7 +174,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
         }
     }
     m_buffer = NULL;
-    const QSize size(displayWidth(), displayHeight());
+    const QSize size(Wayland::WaylandBackend::self()->shellSurfaceSize());
     m_buffer = Wayland::WaylandBackend::self()->shmPool()->getBuffer(size, size.width() * 4);
     if (!m_buffer) {
         qDebug() << "Did not get a new Buffer from Shm Pool";
