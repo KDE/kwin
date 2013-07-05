@@ -160,6 +160,44 @@ private:
     WaylandBackend *m_backend;
 };
 
+class Output : public QObject
+{
+    Q_OBJECT
+public:
+    Output(wl_output *output, QObject *parent);
+    virtual ~Output();
+
+    wl_output *output();
+    const QSize &physicalSize() const;
+    const QPoint &globalPosition() const;
+    const QString &manufacturer() const;
+    const QString &model() const;
+    const QSize &pixelSize() const;
+    QRect geometry() const;
+    int refreshRate() const;
+
+    void setPhysicalSize(const QSize &size);
+    void setGlobalPosition(const QPoint &pos);
+    void setManufacturer(const QString &manufacturer);
+    void setModel(const QString &model);
+    void setPixelSize(const QSize &size);
+    void setRefreshRate(int refreshRate);
+
+    void emitChanged();
+
+Q_SIGNALS:
+    void changed();
+
+private:
+    wl_output *m_output;
+    QSize m_physicalSize;
+    QPoint m_globalPosition;
+    QString m_manufacturer;
+    QString m_model;
+    QSize m_pixelSize;
+    int m_refreshRate;
+};
+
 /**
 * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
 *
@@ -177,6 +215,8 @@ public:
     wl_compositor *compositor();
     void setShell(wl_shell *s);
     wl_shell *shell();
+    void addOutput(wl_output *o);
+    const QList<Output*> &outputs() const;
     ShmPool *shmPool();
     void createSeat(uint32_t name);
     void createShm(uint32_t name);
@@ -192,6 +232,7 @@ Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
     void backendReady();
+    void outputsChanged();
 private Q_SLOTS:
     void readEvents();
     void socketFileChanged(const QString &socket);
@@ -199,6 +240,7 @@ private Q_SLOTS:
 private:
     void initConnection();
     void createSurface();
+    void destroyOutputs();
     wl_display *m_display;
     wl_registry *m_registry;
     wl_compositor *m_compositor;
@@ -212,6 +254,7 @@ private:
     QString m_socketName;
     QDir m_runtimeDir;
     QFileSystemWatcher *m_socketWatcher;
+    QList<Output*> m_outputs;
 
     KWIN_SINGLETON(WaylandBackend)
 };
@@ -256,6 +299,54 @@ inline
 wl_shm *ShmPool::shm()
 {
     return m_shm;
+}
+
+inline
+QRect Output::geometry() const
+{
+    return QRect(m_globalPosition, m_pixelSize);
+}
+
+inline
+const QPoint &Output::globalPosition() const
+{
+    return m_globalPosition;
+}
+
+inline
+const QString &Output::manufacturer() const
+{
+    return m_manufacturer;
+}
+
+inline
+const QString &Output::model() const
+{
+    return m_model;
+}
+
+inline
+wl_output *Output::output()
+{
+    return m_output;
+}
+
+inline
+const QSize &Output::physicalSize() const
+{
+    return m_physicalSize;
+}
+
+inline
+const QSize &Output::pixelSize() const
+{
+    return m_pixelSize;
+}
+
+inline
+int Output::refreshRate() const
+{
+    return m_refreshRate;
 }
 
 inline
@@ -304,6 +395,12 @@ inline
 const QSize &WaylandBackend::shellSurfaceSize() const
 {
     return m_shellSurfaceSize;
+}
+
+inline
+const QList< Output* >& WaylandBackend::outputs() const
+{
+    return m_outputs;
 }
 
 inline
