@@ -275,6 +275,7 @@ static const struct wl_callback_listener s_surfaceFrameListener = {
 WaylandXRenderBackend::WaylandXRenderBackend()
     : m_shm(new Xcb::Shm)
     , m_lastFrameRendered(true)
+    , m_format(0)
 {
     if (!m_shm->isValid()) {
         setFailed("Could not create XShm");
@@ -283,6 +284,8 @@ WaylandXRenderBackend::WaylandXRenderBackend()
         setFailed("XShm pixmap does not have Z format");
     }
     init();
+    connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
+            this, &WaylandXRenderBackend::createBuffer);
 }
 
 WaylandXRenderBackend::~WaylandXRenderBackend()
@@ -291,14 +294,20 @@ WaylandXRenderBackend::~WaylandXRenderBackend()
 
 void WaylandXRenderBackend::init()
 {
-    xcb_render_pictformat_t format = findFormatForVisual(defaultScreen()->root_visual);
-    if (format == 0) {
+    m_format = findFormatForVisual(defaultScreen()->root_visual);
+    if (m_format == 0) {
         setFailed("Failed to find XRender format for root window");
         return; // error
     }
+    createBuffer();
+}
+
+void WaylandXRenderBackend::createBuffer()
+{
     xcb_pixmap_t pixmap = xcb_generate_id(connection());
+    const QSize &size = Wayland::WaylandBackend::self()->shellSurfaceSize();
     xcb_void_cookie_t cookie = xcb_shm_create_pixmap_checked(connection(), pixmap, rootWindow(),
-                                                             displayWidth(), displayHeight(),
+                                                             size.width(), size.height(),
                                                              24, m_shm->segment(), 0);
     // let's check whether the pixmap got created
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
@@ -309,7 +318,7 @@ void WaylandXRenderBackend::init()
 
     // create the render picture
     xcb_render_picture_t b = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), b, pixmap, format, 0, NULL);
+    xcb_render_create_picture(connection(), b, pixmap, m_format, 0, NULL);
     xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
     setBuffer(b);
 
@@ -325,8 +334,8 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
         connection(), xcb_get_input_focus_unchecked(connection()), NULL));
 
     Wayland::WaylandBackend *wl = Wayland::WaylandBackend::self();
-    wl_buffer *buffer = wl->shmPool()->createBuffer(QSize(displayWidth(), displayHeight()),
-                                                    displayWidth() * 4, m_shm->buffer());
+    const QSize &size = wl->shellSurfaceSize();
+    wl_buffer *buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
     if (!buffer) {
         qDebug() << "Did not get a buffer";
         return;

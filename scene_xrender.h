@@ -152,8 +152,9 @@ private:
 };
 
 #if HAVE_WAYLAND
-class WaylandXRenderBackend : public XRenderBackend
+class WaylandXRenderBackend :  public QObject, public XRenderBackend
 {
+    Q_OBJECT
 public:
     WaylandXRenderBackend();
     virtual ~WaylandXRenderBackend();
@@ -162,9 +163,11 @@ public:
     virtual bool usesOverlayWindow() const;
     void lastFrameRendered();
 private:
+    void createBuffer();
     void init();
     QScopedPointer<Xcb::Shm> m_shm;
     bool m_lastFrameRendered;
+    xcb_render_pictformat_t m_format;
 };
 #endif
 
