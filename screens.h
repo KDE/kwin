@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin includes
 #include <kwinglobals.h>
+#include <config-kwin.h>
 // KDE includes
 #include <KConfig>
 #include <KSharedConfig>
@@ -29,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QRect>
 #include <QTimer>
+
 
 class QDesktopWidget;
 
@@ -158,6 +160,26 @@ protected Q_SLOTS:
 private:
     QDesktopWidget *m_desktop;
 };
+
+#if HAVE_WAYLAND
+class WaylandScreens : public Screens
+{
+    Q_OBJECT
+public:
+    explicit WaylandScreens(QObject *parent);
+    virtual ~WaylandScreens();
+    void init() override;
+    QRect geometry(int screen) const override;
+    QSize size(int screen) const override;
+    int number(const QPoint& pos) const override;
+
+protected Q_SLOTS:
+    void updateCount() override;
+private:
+    void updateXRandr();
+    QList<QRect> m_geometries;
+};
+#endif
 
 inline
 void Screens::setConfig(KSharedConfig::Ptr config)
