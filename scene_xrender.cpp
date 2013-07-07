@@ -675,7 +675,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, _PART_, decorationAl
         if (blitInTempPixmap) {
             const QRect r = mapToScreen(mask, data, temp_visibleRect);
             xcb_render_set_picture_transform(connection(), *s_tempPicture, xform);
-            setPictureFilter(*s_tempPicture, KWin::Scene::ImageFilterGood);
+            setPictureFilter(*s_tempPicture, filter);
             xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *s_tempPicture,
                                  XCB_RENDER_PICTURE_NONE, buffer,
                                  0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
