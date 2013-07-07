@@ -1730,7 +1730,7 @@ void SceneOpenGL1Window::prepareStates(TextureType type, qreal opacity, qreal br
         glColor4f(opacity, opacity, opacity, opacity);
         tex->bind();
 
-        if (alpha || brightness != 1.0f) {
+        if (alpha || !opaque || brightness != 1.0f) {
             glActiveTexture(GL_TEXTURE3);
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
             glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
