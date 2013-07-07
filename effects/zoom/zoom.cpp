@@ -248,7 +248,8 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
     if (zoom == 1.0) {
         showCursor();
-        if (altered) // reset the generic shader to avoid artifacts in plenty other effects
+        // reset the generic shader to avoid artifacts in plenty other effects
+        if (altered && effects->isOpenGLCompositing())
             ShaderBinder binder(ShaderManager::GenericShader, true);
     } else {
         hideCursor();
