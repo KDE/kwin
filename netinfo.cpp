@@ -45,7 +45,7 @@ RootInfo *RootInfo::create()
                       XCB_COPY_FROM_PARENT, XCB_CW_OVERRIDE_REDIRECT, values);
     const uint32_t lowerValues[] = { XCB_STACK_MODE_BELOW }; // See usage in layers.cpp
     // we need to do the lower window with a roundtrip, otherwise NETRootInfo is not functioning
-    QScopedPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
+    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
         xcb_configure_window_checked(connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
     if (!error.isNull()) {
         kDebug(1212) << "Error occurred while lowering support window: " << error->error_code;
