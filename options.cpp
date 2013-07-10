@@ -651,6 +651,8 @@ void Options::setHiddenPreviews(int hiddenPreviews)
 
 void Options::setUnredirectFullscreen(bool unredirectFullscreen)
 {
+    if (GLPlatform::instance()->driver() == Driver_Intel)
+        unredirectFullscreen = false; // bug #252817
     if (m_unredirectFullscreen == unredirectFullscreen) {
         return;
     }
