@@ -470,6 +470,8 @@ TabBox::TabBox(QObject *parent)
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/TabBox"), this, QDBusConnection::ExportScriptableContents);
+
+    connect(input(), &InputRedirection::keyboardModifiersChanged, this, &TabBox::modifiersChanged);
 }
 
 TabBox::~TabBox()
@@ -1508,6 +1510,28 @@ void TabBox::keyRelease(const xcb_key_release_event_t *ev)
     }
     if (!release)
         return;
+    if (m_tabGrab) {
+        bool old_control_grab = m_desktopGrab;
+        accept();
+        m_desktopGrab = old_control_grab;
+    }
+    if (m_desktopGrab) {
+        bool old_tab_grab = m_tabGrab;
+        int desktop = currentDesktop();
+        close();
+        m_tabGrab = old_tab_grab;
+        if (desktop != -1) {
+            setCurrentDesktop(desktop);
+            VirtualDesktopManager::self()->setCurrent(desktop);
+        }
+    }
+}
+
+void TabBox::modifiersChanged(Qt::KeyboardModifiers mods)
+{
+    if (m_noModifierGrab || !(!mods)) {
+        return;
+    }
     if (m_tabGrab) {
         bool old_control_grab = m_desktopGrab;
         accept();

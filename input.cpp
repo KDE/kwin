@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "globalshortcuts.h"
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
 #include "unmanaged.h"
 #include "workspace.h"
 // KDE
@@ -258,6 +261,14 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
 #if HAVE_XKB
     m_xkb->updateKey(key, state);
     // TODO: pass to internal parts of KWin
+#ifdef KWIN_BUILD_TABBOX
+    if (TabBox::TabBox::self()->isGrabbed()) {
+        if (state == KWin::InputRedirection::KeyboardKeyPressed) {
+            TabBox::TabBox::self()->keyPress(m_xkb->modifiers() | m_xkb->toQtKey(m_xkb->toKeysym(key)));
+        }
+        return;
+    }
+#endif
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
         const xkb_keysym_t keysym = m_xkb->toKeysym(key);
         // TODO: start auto-repeat

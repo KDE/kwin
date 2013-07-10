@@ -257,6 +257,7 @@ private:
 private Q_SLOTS:
     void reconfigure();
     void globalShortcutChanged(QAction *action, const QKeySequence &seq);
+    void modifiersChanged(Qt::KeyboardModifiers mods);
 
 private:
     TabBoxMode m_tabBoxMode;
