@@ -37,6 +37,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
+    effects->registerGlobalShortcut(Qt::META + Qt::CTRL + Qt::Key_T, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
 
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));

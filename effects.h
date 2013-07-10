@@ -118,6 +118,7 @@ public:
     // not performing XGrabPointer
     void startMouseInterception(Effect *effect, Qt::CursorShape shape) override;
     void stopMouseInterception(Effect *effect) override;
+    void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) override;
     void* getProxy(QString name) override;
     void startMousePolling() override;
     void stopMousePolling() override;

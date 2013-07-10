@@ -58,11 +58,13 @@ FlipSwitchEffect::FlipSwitchEffect()
     flipSwitchCurrentAction->setText(i18n("Toggle Flip Switch (Current desktop)"));
     KGlobalAccel::self()->setShortcut(flipSwitchCurrentAction, QList<QKeySequence>());
     m_shortcutCurrent = KGlobalAccel::self()->shortcut(flipSwitchCurrentAction);
+    effects->registerGlobalShortcut(QKeySequence(), flipSwitchCurrentAction);
     connect(flipSwitchCurrentAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
     QAction* flipSwitchAllAction = new QAction(this);
     flipSwitchAllAction->setObjectName(QStringLiteral("FlipSwitchAll"));
     flipSwitchAllAction->setText(i18n("Toggle Flip Switch (All desktops)"));
     KGlobalAccel::self()->setShortcut(flipSwitchAllAction, QList<QKeySequence>());
+    effects->registerGlobalShortcut(QKeySequence(), flipSwitchAllAction);
     m_shortcutAll = KGlobalAccel::self()->shortcut(flipSwitchAllAction);
     connect(flipSwitchAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &FlipSwitchEffect::globalShortcutChanged);

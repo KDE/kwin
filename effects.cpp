@@ -820,6 +820,11 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
     }
 }
 
+void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QAction *action)
+{
+    input()->registerShortcut(shortcut, action);
+}
+
 void* EffectsHandlerImpl::getProxy(QString name)
 {
     // All effects start with "kwin4_effect_", prepend it to the name

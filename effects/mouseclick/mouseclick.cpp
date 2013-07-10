@@ -50,6 +50,7 @@ MouseClickEffect::MouseClickEffect()
     a->setText(i18n("Toggle Effect"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
+    effects->registerGlobalShortcut(Qt::META + Qt::Key_Asterisk, a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
 
     reconfigure(ReconfigureAll);

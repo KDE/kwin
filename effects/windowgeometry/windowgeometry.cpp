@@ -63,6 +63,7 @@ WindowGeometry::WindowGeometry()
 
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
+    effects->registerGlobalShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11, a);
 
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
 

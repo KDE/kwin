@@ -60,6 +60,7 @@ TrackMouseEffect::TrackMouseEffect()
     m_action->setText(i18n("Track mouse"));
     KGlobalAccel::self()->setDefaultShortcut(m_action, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(m_action, QList<QKeySequence>());
+    effects->registerGlobalShortcut(QKeySequence(), m_action);
 
     connect(m_action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
 

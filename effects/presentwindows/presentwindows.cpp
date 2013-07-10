@@ -71,6 +71,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
     KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
     shortcut = KGlobalAccel::self()->shortcut(exposeAction);
+    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F9, exposeAction);
     connect(exposeAction, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     QAction* exposeAllAction = new QAction(this);
     exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
@@ -78,12 +79,14 @@ PresentWindowsEffect::PresentWindowsEffect()
     KGlobalAccel::self()->setDefaultShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
     KGlobalAccel::self()->setShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
     shortcutAll = KGlobalAccel::self()->shortcut(exposeAllAction);
+    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F10, exposeAllAction);
     connect(exposeAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     QAction* exposeClassAction = new QAction(this);
     exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
     exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
     KGlobalAccel::self()->setShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
+    effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F7, exposeClassAction);
     connect(exposeClassAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveClass()));
     shortcutClass = KGlobalAccel::self()->shortcut(exposeClassAction);
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &PresentWindowsEffect::globalShortcutChanged);

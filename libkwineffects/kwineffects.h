@@ -736,6 +736,14 @@ public:
     virtual void stopMouseInterception(Effect *effect) = 0;
 
     /**
+     * @brief Registers a global shortcut with the provided @p action.
+     *
+     * @param shortcut The global shortcut which should trigger the action
+     * @param action The action which gets triggered when the shortcut matches
+     */
+    virtual void registerGlobalShortcut(const QKeySequence &shortcut, QAction *action) = 0;
+
+    /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
      * the effect isn't loaded or doesn't have a proxy class.
      */
