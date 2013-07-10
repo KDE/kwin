@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SCRIPTINGUTILS_H
 #define KWIN_SCRIPTINGUTILS_H
 
+#include "input.h"
 #include "workspace.h"
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
@@ -117,8 +118,10 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
     QAction* a = new QAction(script);
     a->setObjectName(context->argument(0).toString());
     a->setText(context->argument(1).toString());
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << QKeySequence(context->argument(2).toString()));
+    const QKeySequence shortcut = QKeySequence(context->argument(2).toString());
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
     script->registerShortcut(a, context->argument(3));
+    input()->registerShortcut(shortcut, a);
     return engine->newVariant(true);
 }
 

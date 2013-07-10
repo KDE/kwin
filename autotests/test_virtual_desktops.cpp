@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../virtualdesktops.h"
+#include "../input.h"
 // KDE
 #include <KConfigGroup>
 
@@ -27,6 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 
 int screen_number = 0;
+
+InputRedirection *InputRedirection::s_self = nullptr;
+
+void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
+{
+    Q_UNUSED(shortcut)
+    Q_UNUSED(action)
+}
 
 }
 

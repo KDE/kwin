@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualdesktops.h"
+#include "input.h"
 // KDE
 #include <KConfigGroup>
 #include <KGlobalAccel>
@@ -453,6 +454,7 @@ void VirtualDesktopManager::addAction(const QString &name, const KLocalizedStrin
     a->setData(value);
     connect(a, &QAction::triggered, this, slot);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << key);
+    input()->registerShortcut(key, a);
 }
 
 void VirtualDesktopManager::addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)())
@@ -462,6 +464,7 @@ void VirtualDesktopManager::addAction(const QString &name, const QString &label,
     a->setText(label);
     connect(a, &QAction::triggered, this, slot);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
+    input()->registerShortcut(QKeySequence(), a);
 }
 
 void VirtualDesktopManager::slotSwitchTo()

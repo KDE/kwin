@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "client.h"
 #include "effects.h"
+#include "input.h"
 #include "focuschain.h"
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
@@ -492,6 +493,7 @@ void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut
     a->setText(i18n(actionName));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
     connect(a, &QAction::triggered, TabBox::self(), slot);
+    input()->registerShortcut(shortcut, a);
     auto cuts = KGlobalAccel::self()->shortcut(a);
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }

@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "client.h"
 #include "decorations.h"
+#include "input.h"
 #include "workspace.h"
 #include "effects.h"
 #include "screens.h"
@@ -921,6 +922,7 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
     connect(a, &QAction::triggered, this, slot);
+    input()->registerShortcut(shortcut, a);
 }
 
 /*!
