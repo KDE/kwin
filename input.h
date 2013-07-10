@@ -30,8 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xkbcommon/xkbcommon.h>
 #endif
 
+class QAction;
+class QKeySequence;
+
 namespace KWin
 {
+class GlobalShortcutsManager;
 class Toplevel;
 class Xkb;
 
@@ -76,6 +80,8 @@ public:
     PointerButtonState pointerButtonState(uint32_t button) const;
     Qt::MouseButtons qtButtonStates() const;
     Qt::KeyboardModifiers keyboardModifiers() const;
+
+    void registerShortcut(const QKeySequence &shortcut, QAction *action);
 
     /**
      * @internal
@@ -143,6 +149,8 @@ private:
      * @brief The Toplevel which currently receives pointer events
      */
     QWeakPointer<Toplevel> m_pointerWindow;
+
+    GlobalShortcutsManager *m_shortcuts;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

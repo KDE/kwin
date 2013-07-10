@@ -264,6 +264,7 @@ set(kwin_KDEINIT_SRCS
    cursor.cpp
    tabgroup.cpp
    focuschain.cpp
+   globalshortcuts.cpp
    input.cpp
    netinfo.cpp
    placement.cpp 

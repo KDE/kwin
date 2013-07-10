@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "client.h"
 #include "effects.h"
+#include "globalshortcuts.h"
 #include "unmanaged.h"
 #include "workspace.h"
 // KDE
@@ -157,6 +158,7 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_xkb(new Xkb())
 #endif
     , m_pointerWindow()
+    , m_shortcuts(new GlobalShortcutsManager(this))
 {
 }
 
@@ -255,7 +257,6 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     Q_UNUSED(time)
 #if HAVE_XKB
     m_xkb->updateKey(key, state);
-    // TODO: process global shortcuts
     // TODO: pass to internal parts of KWin
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
         const xkb_keysym_t keysym = m_xkb->toKeysym(key);
@@ -271,6 +272,12 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         // cursor events change the cursor and on Wayland pointer warping is not possible
         c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));
         return;
+    }
+    // process global shortcuts
+    if (state == KeyboardKeyPressed) {
+        if (m_shortcuts->processKey(m_xkb->modifiers(), m_xkb->toKeysym(key))) {
+            return;
+        }
     }
 #endif
     // check unmanaged
@@ -420,5 +427,9 @@ Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 #endif
 }
 
+void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
+{
+    m_shortcuts->registerShortcut(action, shortcut);
+}
 
 } // namespace
