@@ -32,6 +32,15 @@ namespace KWin
 
 GlobalShortcut::GlobalShortcut(const QKeySequence &shortcut)
     : m_shortcut(shortcut)
+    , m_pointerModifiers(Qt::NoModifier)
+    , m_pointerButtons(Qt::NoButton)
+{
+}
+
+GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons)
+    : m_shortcut(QKeySequence())
+    , m_pointerModifiers(pointerButtonModifiers)
+    , m_pointerButtons(pointerButtons)
 {
 }
 
@@ -41,6 +50,12 @@ GlobalShortcut::~GlobalShortcut()
 
 InternalGlobalShortcut::InternalGlobalShortcut(const QKeySequence &shortcut, QAction *action)
     : GlobalShortcut(shortcut)
+    , m_action(action)
+{
+}
+
+InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action)
+    : GlobalShortcut(pointerButtonModifiers, pointerButtons)
     , m_action(action)
 {
 }
@@ -61,16 +76,24 @@ GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
 {
 }
 
-GlobalShortcutsManager::~GlobalShortcutsManager()
+template <typename T>
+void clearShortcuts(T &shortcuts)
 {
-    for (auto it = m_shortcuts.begin(); it != m_shortcuts.end(); ++it) {
+    for (auto it = shortcuts.begin(); it != shortcuts.end(); ++it) {
         qDeleteAll((*it));
     }
 }
 
-void GlobalShortcutsManager::objectDeleted(QObject *object)
+GlobalShortcutsManager::~GlobalShortcutsManager()
 {
-    for (auto it = m_shortcuts.begin(); it != m_shortcuts.end(); ++it) {
+    clearShortcuts(m_shortcuts);
+    clearShortcuts(m_pointerShortcuts);
+}
+
+template <typename T>
+void handleDestroyedAction(QObject *object, T &shortcuts)
+{
+    for (auto it = shortcuts.begin(); it != shortcuts.end(); ++it) {
         auto list = (*it);
         for (auto it2 = list.begin(); it2 != list.end(); ++it2) {
             if (InternalGlobalShortcut *shortcut = dynamic_cast<InternalGlobalShortcut*>((*it2))) {
@@ -81,6 +104,12 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
             }
         }
     }
+}
+
+void GlobalShortcutsManager::objectDeleted(QObject *object)
+{
+    handleDestroyedAction(object, m_shortcuts);
+    handleDestroyedAction(object, m_pointerShortcuts);
 }
 
 void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequence &shortcut)
@@ -121,6 +150,21 @@ void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequenc
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
 }
 
+void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
+{
+    GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, pointerButtons, action);
+    auto it = m_pointerShortcuts.find(modifiers);
+    if (it != m_pointerShortcuts.end()) {
+        // TODO: check if shortcut already exists
+        (*it).insert(pointerButtons, cut);
+    } else {
+        QHash<Qt::MouseButtons, GlobalShortcut*> shortcuts;
+        shortcuts.insert(pointerButtons, cut);
+        m_pointerShortcuts.insert(modifiers, shortcuts);
+    }
+    connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+}
+
 QKeySequence GlobalShortcutsManager::getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut)
 {
     if (!m_config->hasGroup(componentName)) {
@@ -141,10 +185,11 @@ QKeySequence GlobalShortcutsManager::getShortcutForAction(const QString &compone
     return QKeySequence(parts.first());
 }
 
-bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key)
+template <typename T, typename U>
+bool processShortcut(Qt::KeyboardModifiers mods, T key, U &shortcuts)
 {
-    auto it = m_shortcuts.find(mods);
-    if (it == m_shortcuts.end()) {
+    auto it = shortcuts.find(mods);
+    if (it == shortcuts.end()) {
         return false;
     }
     auto it2 = (*it).find(key);
@@ -153,6 +198,16 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key
     }
     it2.value()->invoke();
     return true;
+}
+
+bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key)
+{
+    return processShortcut(mods, key, m_shortcuts);
+}
+
+bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Qt::MouseButtons pointerButtons)
+{
+    return processShortcut(mods, pointerButtons, m_pointerShortcuts);
 }
 
 } // namespace

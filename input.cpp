@@ -230,6 +230,13 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         // an effect grabbed the pointer, we do not forward the event to surfaces
         return;
     }
+#if HAVE_XKB
+    if (state == KWin::InputRedirection::PointerButtonPressed) {
+        if (m_shortcuts->processPointerPressed(m_xkb->modifiers(), qtButtonStates())) {
+            return;
+        }
+    }
+#endif
     // TODO: check which part of KWin would like to intercept the event
     if (m_pointerWindow.isNull()) {
         // there is no window which can receive the
@@ -445,6 +452,11 @@ Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
 {
     m_shortcuts->registerShortcut(action, shortcut);
+}
+
+void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
+{
+    m_shortcuts->registerPointerShortcut(action, modifiers, pointerButtons);
 }
 
 } // namespace

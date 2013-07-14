@@ -53,6 +53,14 @@ public:
      * @param shortcut The key sequence which triggers this shortcut
      */
     void registerShortcut(QAction *action, const QKeySequence &shortcut);
+    /**
+     * @brief Registers an internal global pointer shortcut
+     *
+     * @param action The action to trigger if the shortcut is pressed
+     * @param modifiers The modifiers which need to be hold to trigger the action
+     * @param pointerButtons The pointer button which needs to be pressed
+     */
+    void registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -66,10 +74,12 @@ public:
      * @return @c true if a shortcut triggered, @c false otherwise
      */
     bool processKey(Qt::KeyboardModifiers modifiers, uint32_t key);
+    bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
 private:
     void objectDeleted(QObject *object);
     QKeySequence getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut);
     QHash<Qt::KeyboardModifiers, QHash<uint32_t, GlobalShortcut*> > m_shortcuts;
+    QHash<Qt::KeyboardModifiers, QHash<Qt::MouseButtons, GlobalShortcut*> > m_pointerShortcuts;
     KSharedConfigPtr m_config;
 };
 
@@ -79,19 +89,25 @@ public:
     virtual ~GlobalShortcut();
 
     const QKeySequence &shortcut() const;
+    Qt::KeyboardModifiers pointerButtonModifiers() const;
+    Qt::MouseButtons pointerButtons() const;
     virtual void invoke() = 0;
 
 protected:
     GlobalShortcut(const QKeySequence &shortcut);
+    GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons);
 
 private:
     QKeySequence m_shortcut;
+    Qt::KeyboardModifiers m_pointerModifiers;
+    Qt::MouseButtons m_pointerButtons;
 };
 
 class InternalGlobalShortcut : public GlobalShortcut
 {
 public:
     InternalGlobalShortcut(const QKeySequence &shortcut, QAction *action);
+    InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action);
     virtual ~InternalGlobalShortcut();
 
     void invoke() override;
@@ -111,6 +127,18 @@ inline
 const QKeySequence &GlobalShortcut::shortcut() const
 {
     return m_shortcut;
+}
+
+inline
+Qt::KeyboardModifiers GlobalShortcut::pointerButtonModifiers() const
+{
+    return m_pointerModifiers;
+}
+
+inline
+Qt::MouseButtons GlobalShortcut::pointerButtons() const
+{
+    return m_pointerButtons;
 }
 
 } // namespace
