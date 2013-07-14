@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Decoration
 
 Comment=KWin Window Decoration
+Comment[bs]=KWin Dekoracije prozora
 Comment[ca]=Decoració de finestres del KWin
 Comment[ca@valencia]=Decoració de finestres del KWin
 Comment[cs]=Dekorace oken KWin
