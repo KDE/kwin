@@ -825,6 +825,11 @@ void EffectsHandlerImpl::registerGlobalShortcut(const QKeySequence &shortcut, QA
     input()->registerShortcut(shortcut, action);
 }
 
+void EffectsHandlerImpl::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
+{
+    input()->registerPointerShortcut(modifiers, pointerButtons, action);
+}
+
 void* EffectsHandlerImpl::getProxy(QString name)
 {
     // All effects start with "kwin4_effect_", prepend it to the name

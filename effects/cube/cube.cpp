@@ -202,6 +202,7 @@ void CubeEffect::reconfigure(ReconfigureFlags)
         KGlobalAccel::self()->setDefaultShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
         KGlobalAccel::self()->setShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
         effects->registerGlobalShortcut(Qt::CTRL + Qt::Key_F11, cubeAction);
+        effects->registerPointerShortcut(Qt::ControlModifier | Qt::AltModifier, Qt::LeftButton, cubeAction);
         cubeShortcut = KGlobalAccel::self()->shortcut(cubeAction);
         QAction* cylinderAction = new QAction(this);
         cylinderAction->setObjectName(QStringLiteral("Cylinder"));
