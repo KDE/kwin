@@ -34,6 +34,7 @@ GlobalShortcut::GlobalShortcut(const QKeySequence &shortcut)
     : m_shortcut(shortcut)
     , m_pointerModifiers(Qt::NoModifier)
     , m_pointerButtons(Qt::NoButton)
+    , m_axis(PointerAxisUp)
 {
 }
 
@@ -41,6 +42,15 @@ GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt:
     : m_shortcut(QKeySequence())
     , m_pointerModifiers(pointerButtonModifiers)
     , m_pointerButtons(pointerButtons)
+    , m_axis(PointerAxisUp)
+{
+}
+
+GlobalShortcut::GlobalShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
+    : m_shortcut(QKeySequence())
+    , m_pointerModifiers(modifiers)
+    , m_pointerButtons(Qt::NoButton)
+    , m_axis(axis)
 {
 }
 
@@ -56,6 +66,12 @@ InternalGlobalShortcut::InternalGlobalShortcut(const QKeySequence &shortcut, QAc
 
 InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action)
     : GlobalShortcut(pointerButtonModifiers, pointerButtons)
+    , m_action(action)
+{
+}
+
+InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action)
+    : GlobalShortcut(axisModifiers, axis)
     , m_action(action)
 {
 }
@@ -88,6 +104,7 @@ GlobalShortcutsManager::~GlobalShortcutsManager()
 {
     clearShortcuts(m_shortcuts);
     clearShortcuts(m_pointerShortcuts);
+    clearShortcuts(m_axisShortcuts);
 }
 
 template <typename T>
@@ -110,6 +127,7 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
 {
     handleDestroyedAction(object, m_shortcuts);
     handleDestroyedAction(object, m_pointerShortcuts);
+    handleDestroyedAction(object, m_axisShortcuts);
 }
 
 void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequence &shortcut)
@@ -165,6 +183,21 @@ void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::Keyboa
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
 }
 
+void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
+{
+    GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, axis, action);
+    auto it = m_axisShortcuts.find(modifiers);
+    if (it != m_axisShortcuts.end()) {
+        // TODO: check if shortcut already exists
+        (*it).insert(axis, cut);
+    } else {
+        QHash<PointerAxisDirection, GlobalShortcut*> shortcuts;
+        shortcuts.insert(axis, cut);
+        m_axisShortcuts.insert(modifiers, shortcuts);
+    }
+    connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
+}
+
 QKeySequence GlobalShortcutsManager::getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut)
 {
     if (!m_config->hasGroup(componentName)) {
@@ -208,6 +241,11 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, uint32_t key
 bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Qt::MouseButtons pointerButtons)
 {
     return processShortcut(mods, pointerButtons, m_pointerShortcuts);
+}
+
+bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis)
+{
+    return processShortcut(mods, axis, m_axisShortcuts);
 }
 
 } // namespace

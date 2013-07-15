@@ -252,6 +252,27 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
         return;
     }
     emit pointerAxisChanged(axis, delta);
+#if HAVE_XKB
+    if (m_xkb->modifiers() != Qt::NoModifier) {
+        PointerAxisDirection direction = PointerAxisUp;
+        if (axis == PointerAxisHorizontal) {
+            if (delta > 0) {
+                direction = PointerAxisUp;
+            } else {
+                direction = PointerAxisDown;
+            }
+        } else {
+            if (delta > 0) {
+                direction = PointerAxisLeft;
+            } else {
+                direction = PointerAxisRight;
+            }
+        }
+        if (m_shortcuts->processAxis(m_xkb->modifiers(), direction)) {
+            return;
+        }
+    }
+#endif
 
     // TODO: check which part of KWin would like to intercept the event
     // TODO: Axis support for effect redirection
@@ -457,6 +478,11 @@ void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *a
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
 {
     m_shortcuts->registerPointerShortcut(action, modifiers, pointerButtons);
+}
+
+void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
+{
+    m_shortcuts->registerAxisShortcut(action, modifiers, axis);
 }
 
 } // namespace

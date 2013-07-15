@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_GLOBALSHORTCUTS_H
 #define KWIN_GLOBALSHORTCUTS_H
+// KWin
+#include <kwinglobals.h>
 // KDE
 #include <KSharedConfig>
 // Qt
@@ -61,6 +63,14 @@ public:
      * @param pointerButtons The pointer button which needs to be pressed
      */
     void registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
+    /**
+     * @brief Registers an internal global axis shortcut
+     *
+     * @param action The action to trigger if the shortcut is triggered
+     * @param modifiers The modifiers which need to be hold to trigger the action
+     * @param pointerButtons The pointer axis
+     */
+    void registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 
     /**
      * @brief Processes a key event to decide whether a shortcut needs to be triggered.
@@ -75,11 +85,24 @@ public:
      */
     bool processKey(Qt::KeyboardModifiers modifiers, uint32_t key);
     bool processPointerPressed(Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons);
+    /**
+     * @brief Processes a pointer axis event to decide whether a shortcut needs to be triggered.
+     *
+     * If a shortcut triggered this method returns @c true to indicate to the caller that the event
+     * should not be further processed. If there is no shortcut which triggered for the key, then
+     * @c false is returned.
+     *
+     * @param modifiers The current hold modifiers
+     * @param axis The axis direction which has triggered this event
+     * @return @c true if a shortcut triggered, @c false otherwise
+     */
+    bool processAxis(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis);
 private:
     void objectDeleted(QObject *object);
     QKeySequence getShortcutForAction(const QString &componentName, const QString &actionName, const QKeySequence &defaultShortcut);
     QHash<Qt::KeyboardModifiers, QHash<uint32_t, GlobalShortcut*> > m_shortcuts;
     QHash<Qt::KeyboardModifiers, QHash<Qt::MouseButtons, GlobalShortcut*> > m_pointerShortcuts;
+    QHash<Qt::KeyboardModifiers, QHash<PointerAxisDirection, GlobalShortcut*> > m_axisShortcuts;
     KSharedConfigPtr m_config;
 };
 
@@ -96,11 +119,13 @@ public:
 protected:
     GlobalShortcut(const QKeySequence &shortcut);
     GlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons);
+    GlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis);
 
 private:
     QKeySequence m_shortcut;
     Qt::KeyboardModifiers m_pointerModifiers;
     Qt::MouseButtons m_pointerButtons;
+    PointerAxisDirection m_axis;
 };
 
 class InternalGlobalShortcut : public GlobalShortcut
@@ -108,6 +133,7 @@ class InternalGlobalShortcut : public GlobalShortcut
 public:
     InternalGlobalShortcut(const QKeySequence &shortcut, QAction *action);
     InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action);
+    InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action);
     virtual ~InternalGlobalShortcut();
 
     void invoke() override;

@@ -113,6 +113,17 @@ enum KWinOption {
     SwitchDesktopOnScreenEdgeMovingWindows
 };
 
+/**
+ * @brief The direction in which a pointer axis is moved.
+ *
+ */
+enum PointerAxisDirection {
+    PointerAxisUp,
+    PointerAxisDown,
+    PointerAxisLeft,
+    PointerAxisRight
+};
+
 inline
 KWIN_EXPORT Display* display()
 {

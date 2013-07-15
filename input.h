@@ -83,6 +83,7 @@ public:
 
     void registerShortcut(const QKeySequence &shortcut, QAction *action);
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
+    void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
 
     /**
      * @internal
