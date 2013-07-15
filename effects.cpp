@@ -830,6 +830,11 @@ void EffectsHandlerImpl::registerPointerShortcut(Qt::KeyboardModifiers modifiers
     input()->registerPointerShortcut(modifiers, pointerButtons, action);
 }
 
+void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
+{
+    input()->registerAxisShortcut(modifiers, axis, action);
+}
+
 void* EffectsHandlerImpl::getProxy(QString name)
 {
     // All effects start with "kwin4_effect_", prepend it to the name

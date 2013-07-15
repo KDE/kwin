@@ -750,6 +750,14 @@ public:
      * @param action The action which gets triggered when the shortcut matches
      **/
     virtual void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action) = 0;
+    /**
+     * @brief Registers a global axis shortcut with the provided @p action.
+     *
+     * @param modifiers The keyboard modifiers which need to be holded
+     * @param axis The direction in which the axis needs to be moved
+     * @param action The action which gets triggered when the shortcut matches
+     **/
+    virtual void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action) = 0;
 
     /**
      * Retrieve the proxy class for an effect if it has one. Will return NULL if
