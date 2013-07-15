@@ -37,6 +37,13 @@ void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *a
     Q_UNUSED(action)
 }
 
+void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
+{
+   Q_UNUSED(modifiers)
+   Q_UNUSED(axis)
+   Q_UNUSED(action)
+}
+
 }
 
 Q_DECLARE_METATYPE(Qt::Orientation)

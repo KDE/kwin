@@ -430,6 +430,12 @@ void VirtualDesktopManager::initShortcuts()
     addAction(QStringLiteral("Switch One Desktop to the Left"), i18n("Switch One Desktop to the Left"), &VirtualDesktopManager::slotLeft);
     addAction(QStringLiteral("Switch One Desktop Up"), i18n("Switch One Desktop Up"), &VirtualDesktopManager::slotUp);
     addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), &VirtualDesktopManager::slotDown);
+
+    // axis events
+    input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisDown,
+                                  findChild<QAction*>(QStringLiteral("Switch to Next Desktop")));
+    input()->registerAxisShortcut(Qt::ControlModifier | Qt::AltModifier, PointerAxisUp,
+                                  findChild<QAction*>(QStringLiteral("Switch to Previous Desktop")));
 }
 
 void VirtualDesktopManager::initSwitchToShortcuts()
