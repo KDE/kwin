@@ -111,14 +111,17 @@ template <typename T>
 void handleDestroyedAction(QObject *object, T &shortcuts)
 {
     for (auto it = shortcuts.begin(); it != shortcuts.end(); ++it) {
-        auto list = (*it);
-        for (auto it2 = list.begin(); it2 != list.end(); ++it2) {
-            if (InternalGlobalShortcut *shortcut = dynamic_cast<InternalGlobalShortcut*>((*it2))) {
+        auto &list = it.value();
+        auto it2 = list.begin();
+        while (it2 != list.end()) {
+            if (InternalGlobalShortcut *shortcut = dynamic_cast<InternalGlobalShortcut*>(it2.value())) {
                 if (shortcut->action() == object) {
-                    delete *it2;
                     it2 = list.erase(it2);
+                    delete shortcut;
+                    continue;
                 }
             }
+            ++it2;
         }
     }
 }
