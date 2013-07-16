@@ -58,10 +58,11 @@ GlobalShortcut::~GlobalShortcut()
 {
 }
 
-InternalGlobalShortcut::InternalGlobalShortcut(const QKeySequence &shortcut, QAction *action)
+InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers modifiers, const QKeySequence &shortcut, QAction *action)
     : GlobalShortcut(shortcut)
     , m_action(action)
 {
+    Q_UNUSED(modifiers)
 }
 
 InternalGlobalShortcut::InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action)
@@ -133,6 +134,21 @@ void GlobalShortcutsManager::objectDeleted(QObject *object)
     handleDestroyedAction(object, m_axisShortcuts);
 }
 
+template <typename T, typename R>
+void addShortcut(T &shortcuts, QAction *action, Qt::KeyboardModifiers modifiers, R value)
+{
+    GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, value, action);
+    auto it = shortcuts.find(modifiers);
+    if (it != shortcuts.end()) {
+        // TODO: check if shortcut already exists
+        (*it).insert(value, cut);
+    } else {
+        QHash<R, GlobalShortcut*> s;
+        s.insert(value, cut);
+        shortcuts.insert(modifiers, s);
+    }
+}
+
 void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequence &shortcut)
 {
     QKeySequence s = getShortcutForAction(KWIN_NAME, action->objectName(), shortcut);
@@ -158,46 +174,19 @@ void GlobalShortcutsManager::registerShortcut(QAction *action, const QKeySequenc
     if (!KKeyServer::keyQtToSymX(keys, &keysym)) {
         return;
     }
-    GlobalShortcut *cut = new InternalGlobalShortcut(s, action);
-    auto it = m_shortcuts.find(mods);
-    if (it != m_shortcuts.end()) {
-        // TODO: check if key already exists?
-        (*it).insert(keysym, cut);
-    } else {
-        QHash<uint32_t, GlobalShortcut*> shortcuts;
-        shortcuts.insert(keysym, cut);
-        m_shortcuts.insert(mods, shortcuts);
-    }
+    addShortcut(m_shortcuts, action, mods, static_cast<uint32_t>(keysym));
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
 }
 
 void GlobalShortcutsManager::registerPointerShortcut(QAction *action, Qt::KeyboardModifiers modifiers, Qt::MouseButtons pointerButtons)
 {
-    GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, pointerButtons, action);
-    auto it = m_pointerShortcuts.find(modifiers);
-    if (it != m_pointerShortcuts.end()) {
-        // TODO: check if shortcut already exists
-        (*it).insert(pointerButtons, cut);
-    } else {
-        QHash<Qt::MouseButtons, GlobalShortcut*> shortcuts;
-        shortcuts.insert(pointerButtons, cut);
-        m_pointerShortcuts.insert(modifiers, shortcuts);
-    }
+    addShortcut(m_pointerShortcuts, action, modifiers, pointerButtons);
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
 }
 
 void GlobalShortcutsManager::registerAxisShortcut(QAction *action, Qt::KeyboardModifiers modifiers, PointerAxisDirection axis)
 {
-    GlobalShortcut *cut = new InternalGlobalShortcut(modifiers, axis, action);
-    auto it = m_axisShortcuts.find(modifiers);
-    if (it != m_axisShortcuts.end()) {
-        // TODO: check if shortcut already exists
-        (*it).insert(axis, cut);
-    } else {
-        QHash<PointerAxisDirection, GlobalShortcut*> shortcuts;
-        shortcuts.insert(axis, cut);
-        m_axisShortcuts.insert(modifiers, shortcuts);
-    }
+    addShortcut(m_axisShortcuts, action, modifiers, axis);
     connect(action, &QAction::destroyed, this, &GlobalShortcutsManager::objectDeleted);
 }
 

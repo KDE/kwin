@@ -131,7 +131,7 @@ private:
 class InternalGlobalShortcut : public GlobalShortcut
 {
 public:
-    InternalGlobalShortcut(const QKeySequence &shortcut, QAction *action);
+    InternalGlobalShortcut(Qt::KeyboardModifiers modifiers, const QKeySequence &shortcut, QAction *action);
     InternalGlobalShortcut(Qt::KeyboardModifiers pointerButtonModifiers, Qt::MouseButtons pointerButtons, QAction *action);
     InternalGlobalShortcut(Qt::KeyboardModifiers axisModifiers, PointerAxisDirection axis, QAction *action);
     virtual ~InternalGlobalShortcut();
