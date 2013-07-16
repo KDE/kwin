@@ -39,8 +39,6 @@ public:
     explicit CloseWindowView(QWidget *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
-public slots:
-    void arm();
 
 Q_SIGNALS:
     void close();
