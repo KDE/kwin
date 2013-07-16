@@ -43,6 +43,9 @@ public:
 Q_SIGNALS:
     void close();
 
+protected:
+    void hideEvent(QHideEvent *event);
+
 private:
     QTimer* m_armTimer;
 };

@@ -1998,6 +1998,14 @@ void CloseWindowView::disarm()
     m_armTimer->start();
 }
 
+void CloseWindowView::hideEvent(QHideEvent *event)
+{
+    const QPoint globalPos = mapToGlobal(QPoint(-1,-1));
+    QMouseEvent me(QEvent::MouseMove, QPoint(-1,-1), globalPos, Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+    mouseMoveEvent(&me);
+    QDeclarativeView::hideEvent(event);
+}
+
 } // namespace
 
 #include "presentwindows.moc"
