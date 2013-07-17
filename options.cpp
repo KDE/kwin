@@ -767,7 +767,7 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
         // see http://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
         if (GLPlatform::instance()->driver() == Driver_NVidia)
             glPreferBufferSwap = CopyFrontBuffer;
-        else
+        else if (GLPlatform::instance()->driver() != Driver_Unknown) // undetected, finally resolved when context is initialized
             glPreferBufferSwap = ExtendDamage;
     }
     if (m_glPreferBufferSwap == (GlSwapStrategy)glPreferBufferSwap) {

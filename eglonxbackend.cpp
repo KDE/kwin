@@ -74,6 +74,9 @@ void EglOnXBackend::init()
     glPlatform->detect(EglPlatformInterface);
     if (GLPlatform::instance()->driver() == Driver_Intel)
         options->setUnredirectFullscreen(false); // bug #252817
+    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
+    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
+        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
     initGL(EglPlatformInterface);
     if (!hasGLExtension("GL_OES_EGL_image")) {

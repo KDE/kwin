@@ -97,6 +97,9 @@ void GlxBackend::init()
     glPlatform->detect(GlxPlatformInterface);
     if (GLPlatform::instance()->driver() == Driver_Intel)
         options->setUnredirectFullscreen(false); // bug #252817
+    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
+    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
+        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported
