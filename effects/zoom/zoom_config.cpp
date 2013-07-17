@@ -53,6 +53,8 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
     addConfig(ZoomConfig::self(), m_ui);
 
+    connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
+
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
     actionCollection->setConfigGroup("Zoom");
