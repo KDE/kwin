@@ -2874,6 +2874,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     // we are trying to resize in from the side?
                     bool breakLoop = false;
                     switch(mode) {
+                    case PositionBottomLeft:
                     case PositionTopLeft:
                     case PositionLeft:
                         if (previousMoveResizeGeom.x() >= moveResizeGeom.x()) {
@@ -2882,6 +2883,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                         moveResizeGeom.setLeft(moveResizeGeom.x() - 1);
                         break;
+                    case PositionBottomRight:
                     case PositionTopRight:
                     case PositionRight:
                         if (previousMoveResizeGeom.right() <= moveResizeGeom.right()) {
