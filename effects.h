@@ -253,9 +253,9 @@ private Q_SLOTS:
     void slotEffectsQueried();
 
 private:
-    QList< Effect* > m_activeEffects;
-    typedef QList< Effect*> EffectsList;
+    typedef QVector< Effect*> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
+    EffectsList m_activeEffects;
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;
     EffectsIterator m_currentPaintEffectFrameIterator;

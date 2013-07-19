@@ -488,6 +488,7 @@ bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 void EffectsHandlerImpl::startPaint()
 {
     m_activeEffects.clear();
+    m_activeEffects.reserve(loaded_effects.count());
     for(QVector< KWin::EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->isActive()) {
             m_activeEffects << it->second;
@@ -1552,6 +1553,7 @@ void EffectsHandlerImpl::effectsChanged()
 //        kDebug(1212) << effect.first;
         loaded_effects.append(effect);
     }
+    m_activeEffects.reserve(loaded_effects.count());
 }
 
 QStringList EffectsHandlerImpl::activeEffects() const
