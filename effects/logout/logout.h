@@ -82,6 +82,7 @@ private:
     QHash< EffectWindow*, double > windowsOpacities;
     GLShader *m_vignettingShader;
     GLShader *m_blurShader;
+    QString m_shadersDir;
 };
 
 } // namespace
