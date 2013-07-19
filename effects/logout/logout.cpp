@@ -50,6 +50,7 @@ LogoutEffect::LogoutEffect()
     , ignoredWindows()
     , m_vignettingShader(NULL)
     , m_blurShader(NULL)
+    , m_shadersDir("kwin/shaders/1.10/")
 {
     // Persistent effect
     logoutAtom = XInternAtom(display(), "_KDE_LOGGING_OUT", False);
@@ -71,6 +72,14 @@ LogoutEffect::LogoutEffect()
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
+
+#ifdef KWIN_HAVE_OPENGLES
+    const qint64 coreVersionNumber = kVersionNumber(3, 0);
+#else
+    const qint64 coreVersionNumber = kVersionNumber(1, 40);
+#endif
+    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
+        m_shadersDir = "kwin/shaders/1.40/";
 }
 
 LogoutEffect::~LogoutEffect()
@@ -296,10 +305,8 @@ void LogoutEffect::renderVignetting()
         return;
     }
     if (!m_vignettingShader) {
-        const char *shader = GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40) ?
-                                "kwin/vignetting-140.frag" : "kwin/vignetting.frag";
         m_vignettingShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::ColorShader,
-                                                                           KGlobal::dirs()->findResource("data", shader));
+                                                                           KGlobal::dirs()->findResource("data", m_shadersDir + "vignetting.frag"));
         if (!m_vignettingShader->isValid()) {
             kDebug(1212) << "Vignetting Shader failed to load";
             return;
@@ -378,10 +385,8 @@ void LogoutEffect::renderBlurTexture()
         return;
     }
     if (!m_blurShader) {
-        const char *shader = GLPlatform::instance()->glslVersion() >= kVersionNumber(1, 40) ?
-                                "kwin/logout-blur-140.frag" : "kwin/logout-blur.frag";
         m_blurShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::SimpleShader,
-                                                                     KGlobal::dirs()->findResource("data", shader));
+                                                                     KGlobal::dirs()->findResource("data", m_shadersDir + "logout-blur.frag"));
         if (!m_blurShader->isValid()) {
             kDebug(1212) << "Logout blur shader failed to load";
         }
