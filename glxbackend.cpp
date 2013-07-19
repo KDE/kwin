@@ -95,6 +95,8 @@ void GlxBackend::init()
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
+    if (GLPlatform::instance()->driver() == Driver_Intel)
+        options->setUnredirectFullscreen(false); // bug #252817
     glPlatform->printResults();
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported

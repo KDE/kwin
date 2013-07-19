@@ -1968,8 +1968,6 @@ CloseWindowView::CloseWindowView(QWidget *parent)
     kdeclarative.initialize();
     kdeclarative.setupBindings();
 
-    rootContext()->setContextProperty("armed", QVariant(false));
-
     setSource(QUrl(KStandardDirs::locate("data", QLatin1String("kwin/effects/presentwindows/main.qml"))));
     if (QObject *item = rootObject()->findChild<QObject*>("closeButton")) {
         connect(item, SIGNAL(clicked()), SIGNAL(close()));
@@ -1978,15 +1976,14 @@ CloseWindowView::CloseWindowView(QWidget *parent)
     // setup the timer - attempt to prevent accidental clicks
     m_armTimer->setSingleShot(true);
     m_armTimer->setInterval(350); // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
-    connect(m_armTimer, SIGNAL(timeout()), SLOT(arm()));
 }
 
 void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 {
-    if (m_armTimer->isActive())
-        return;
     if (e->type() == QEvent::MouseMove) {
         mouseMoveEvent(e);
+    } else if (m_armTimer->isActive()) {
+        return;
     } else if (e->type() == QEvent::MouseButtonPress) {
         mousePressEvent(e);
     } else if (e->type() == QEvent::MouseButtonDblClick) {
@@ -1996,15 +1993,17 @@ void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
     }
 }
 
-void CloseWindowView::arm()
-{
-    rootContext()->setContextProperty("armed", QVariant(true));
-}
-
 void CloseWindowView::disarm()
 {
-    rootContext()->setContextProperty("armed", QVariant(false));
     m_armTimer->start();
+}
+
+void CloseWindowView::hideEvent(QHideEvent *event)
+{
+    const QPoint globalPos = mapToGlobal(QPoint(-1,-1));
+    QMouseEvent me(QEvent::MouseMove, QPoint(-1,-1), globalPos, Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+    mouseMoveEvent(&me);
+    QDeclarativeView::hideEvent(event);
 }
 
 } // namespace

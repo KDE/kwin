@@ -56,6 +56,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static inline int sign(int v) {
+    return (v > 0) - (v < 0);
+}
+
 //********************************************
 // Workspace
 //********************************************
@@ -2874,6 +2878,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     // we are trying to resize in from the side?
                     bool breakLoop = false;
                     switch(mode) {
+                    case PositionBottomLeft:
                     case PositionTopLeft:
                     case PositionLeft:
                         if (previousMoveResizeGeom.x() >= moveResizeGeom.x()) {
@@ -2882,6 +2887,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                         moveResizeGeom.setLeft(moveResizeGeom.x() - 1);
                         break;
+                    case PositionBottomRight:
                     case PositionTopRight:
                     case PositionRight:
                         if (previousMoveResizeGeom.right() <= moveResizeGeom.right()) {
@@ -3007,13 +3013,16 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                     }
 
-                    // Move it (Favour vertically)
-                    if (previousMoveResizeGeom.y() != moveResizeGeom.y())
-                        moveResizeGeom.translate(0,
-                                                 previousMoveResizeGeom.y() > moveResizeGeom.y() ? 1 : -1);
-                    else
-                        moveResizeGeom.translate(previousMoveResizeGeom.x() > moveResizeGeom.x() ? 1 : -1,
-                                                 0);
+                    int dx = sign(previousMoveResizeGeom.x() - moveResizeGeom.x()),
+                        dy = sign(previousMoveResizeGeom.y() - moveResizeGeom.y());
+                    if (visiblePixels && dx) // means there's no full width cap -> favor horizontally
+                        dy = 0;
+                    else if (dy)
+                        dx = 0;
+
+                    // Move it back
+                    moveResizeGeom.translate(dx, dy);
+
                     if (moveResizeGeom == previousMoveResizeGeom) {
                         break; // Prevent lockup
                     }

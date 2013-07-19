@@ -72,6 +72,8 @@ void EglOnXBackend::init()
     }
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(EglPlatformInterface);
+    if (GLPlatform::instance()->driver() == Driver_Intel)
+        options->setUnredirectFullscreen(false); // bug #252817
     glPlatform->printResults();
     initGL(EglPlatformInterface);
     if (!hasGLExtension("GL_OES_EGL_image")) {

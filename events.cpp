@@ -1201,10 +1201,10 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
     QuickTileMode mode = QuickTileNone;
     for (int i=0; i<screens()->count(); ++i) {
 
-        const QRect &area = screens()->geometry(i);
-        if (!area.contains(QPoint(xroot, yroot)))
+        if (!screens()->geometry(i).contains(QPoint(xroot, yroot)))
             continue;
 
+        QRect area = workspace()->clientArea(MaximizeArea, QPoint(xroot, yroot), desktop());
         if (options->electricBorderTiling()) {
         if (xroot <= area.x() + 20)
             mode |= QuickTileLeft;

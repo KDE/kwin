@@ -253,12 +253,14 @@ private Q_SLOTS:
     void slotEffectsQueried();
 
 private:
-    QList< Effect* > m_activeEffects;
-    QList< Effect* >::iterator m_currentDrawWindowIterator;
-    QList< Effect* >::iterator m_currentPaintWindowIterator;
-    QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
-    QList< Effect* >::iterator m_currentPaintScreenIterator;
-    QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    typedef QVector< Effect*> EffectsList;
+    typedef EffectsList::const_iterator EffectsIterator;
+    EffectsList m_activeEffects;
+    EffectsIterator m_currentDrawWindowIterator;
+    EffectsIterator m_currentPaintWindowIterator;
+    EffectsIterator m_currentPaintEffectFrameIterator;
+    EffectsIterator m_currentPaintScreenIterator;
+    EffectsIterator m_currentBuildQuadsIterator;
     typedef QHash< QByteArray, QList< Effect*> > PropertyEffectMap;
     PropertyEffectMap m_propertiesForEffects;
     QHash<QByteArray, qulonglong> m_managedProperties;
