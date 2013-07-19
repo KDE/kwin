@@ -140,7 +140,7 @@ void Placement::placeAtRandom(Client* c, const QRect& area, Policy /*next*/)
 }
 
 // TODO: one day, there'll be C++11 ...
-static inline bool isIrrelevant(Client *client, Client *regarding, int desktop)
+static inline bool isIrrelevant(const Client *client, const Client *regarding, int desktop)
 {
     if (!client)
         return true;
@@ -810,16 +810,14 @@ void Workspace::slotWindowQuickTileBottomRight()
 
 int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) const
 {
-    int newx = clientArea(MovementArea, cl).left();
+    int newx = clientArea(MaximizeArea, cl).left();
     if (oldx <= newx)   // try another Xinerama screen
-        newx = clientArea(MovementArea,
+        newx = clientArea(MaximizeArea,
                           QPoint(cl->geometry().left() - 1, cl->geometry().center().y()), cl->desktop()).left();
     if (oldx <= newx)
         return oldx;
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
-            ++it) {
-        if (!(*it)->isShown(false) || !(*it)->isOnDesktop(active_client->desktop()))
+    for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
+        if (isIrrelevant(*it, cl, cl->desktop()))
             continue;
         int x = left_edge ? (*it)->geometry().right() + 1 : (*it)->geometry().left() - 1;
         if (x > newx && x < oldx
@@ -832,16 +830,14 @@ int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) cons
 
 int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) const
 {
-    int newx = clientArea(MovementArea, cl).right();
+    int newx = clientArea(MaximizeArea, cl).right();
     if (oldx >= newx)   // try another Xinerama screen
-        newx = clientArea(MovementArea,
+        newx = clientArea(MaximizeArea,
                           QPoint(cl->geometry().right() + 1, cl->geometry().center().y()), cl->desktop()).right();
     if (oldx >= newx)
         return oldx;
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
-            ++it) {
-        if (!(*it)->isShown(false) || !(*it)->isOnDesktop(cl->desktop()))
+    for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
+        if (isIrrelevant(*it, cl, cl->desktop()))
             continue;
         int x = right_edge ? (*it)->geometry().left() - 1 : (*it)->geometry().right() + 1;
         if (x < newx && x > oldx
@@ -854,16 +850,14 @@ int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) co
 
 int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
 {
-    int newy = clientArea(MovementArea, cl).top();
+    int newy = clientArea(MaximizeArea, cl).top();
     if (oldy <= newy)   // try another Xinerama screen
-        newy = clientArea(MovementArea,
+        newy = clientArea(MaximizeArea,
                           QPoint(cl->geometry().center().x(), cl->geometry().top() - 1), cl->desktop()).top();
     if (oldy <= newy)
         return oldy;
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
-            ++it) {
-        if (!(*it)->isShown(false) || !(*it)->isOnDesktop(cl->desktop()))
+    for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
+        if (isIrrelevant(*it, cl, cl->desktop()))
             continue;
         int y = top_edge ? (*it)->geometry().bottom() + 1 : (*it)->geometry().top() - 1;
         if (y > newy && y < oldy
@@ -876,16 +870,14 @@ int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
 
 int Workspace::packPositionDown(const Client* cl, int oldy, bool bottom_edge) const
 {
-    int newy = clientArea(MovementArea, cl).bottom();
+    int newy = clientArea(MaximizeArea, cl).bottom();
     if (oldy >= newy)   // try another Xinerama screen
-        newy = clientArea(MovementArea,
+        newy = clientArea(MaximizeArea,
                           QPoint(cl->geometry().center().x(), cl->geometry().bottom() + 1), cl->desktop()).bottom();
     if (oldy >= newy)
         return oldy;
-    for (ClientList::ConstIterator it = clients.constBegin();
-            it != clients.constEnd();
-            ++it) {
-        if (!(*it)->isShown(false) || !(*it)->isOnDesktop(cl->desktop()))
+    for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
+        if (isIrrelevant(*it, cl, cl->desktop()))
             continue;
         int y = bottom_edge ? (*it)->geometry().top() - 1 : (*it)->geometry().bottom() + 1;
         if (y < newy && y > oldy
