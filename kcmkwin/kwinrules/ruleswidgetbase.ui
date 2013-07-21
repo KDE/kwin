@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
+    <width>486</width>
     <height>588</height>
    </rect>
   </property>
@@ -2597,7 +2597,7 @@ but this may sometimes fail or superact.
    <slot>detectClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>321</x>
+     <x>285</x>
      <y>124</y>
     </hint>
     <hint type="destinationlabel">
@@ -2613,7 +2613,7 @@ but this may sometimes fail or superact.
    <slot>wmclassMatchChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
+     <x>297</x>
      <y>196</y>
     </hint>
     <hint type="destinationlabel">
@@ -2629,12 +2629,44 @@ but this may sometimes fail or superact.
    <slot>roleMatchChanged()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>301</x>
+     <x>297</x>
      <y>254</y>
     </hint>
     <hint type="destinationlabel">
      <x>20</x>
      <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>title_match</sender>
+   <signal>activated(int)</signal>
+   <receiver>KWin::RulesWidgetBase</receiver>
+   <slot>titleMatchChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>482</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>293</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>machine_match</sender>
+   <signal>activated(int)</signal>
+   <receiver>KWin::RulesWidgetBase</receiver>
+   <slot>machineMatchChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>194</x>
+     <y>509</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>242</x>
+     <y>293</y>
     </hint>
    </hints>
   </connection>
