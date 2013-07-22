@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 
 #define KWIN_EXPORT KDE_EXPORT
+#define KWIN_QT5_PORTING 0
 
 namespace KWin
 {
