@@ -926,13 +926,7 @@ bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
     if (pixmap.isNull())
         return false;
 
-    // Checking whether QPixmap comes with its own X11 Pixmap
-    if (Extensions::nonNativePixmaps()) {
-        return GLTexture::load(pixmap.toImage(), target);
-    }
-
-    // use the X11 pixmap provided by Qt
-    return load(pixmap.handle(), pixmap.size(), pixmap.depth());
+    return GLTexture::load(pixmap.toImage(), target);
 }
 
 void SceneOpenGL::Texture::findTarget()

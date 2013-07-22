@@ -162,26 +162,6 @@ private:
     static unsigned int s_count;
 };
 
-class NativeXRenderPaintRedirector : public PaintRedirector
-{
-    Q_OBJECT
-public:
-    NativeXRenderPaintRedirector(Client *c, QWidget *widget);
-    virtual ~NativeXRenderPaintRedirector();
-
-protected:
-    virtual xcb_render_picture_t picture(DecorationPixmap border) const;
-    virtual void resize(DecorationPixmap border, const QSize &size);
-    virtual void paint(DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg);
-    virtual void fillScratch(Qt::GlobalColor color);
-    virtual QPaintDevice *recreateScratch(const QSize &size);
-    virtual QPaintDevice *scratch();
-    virtual void discardScratch();
-private:
-    QPixmap m_pixmaps[PixmapCount];
-    QPixmap m_scratch;
-};
-
 class RasterXRenderPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT

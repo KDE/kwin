@@ -189,11 +189,6 @@ class KWIN_EXPORT Extensions
 {
 public:
     static void init();
-    static bool nonNativePixmaps() {
-        return non_native_pixmaps;
-    }
-private:
-    static bool non_native_pixmaps;
 };
 
 } // namespace

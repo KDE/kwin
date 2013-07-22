@@ -44,9 +44,6 @@ PaintRedirector *PaintRedirector::create(Client *c, QWidget *widget)
     if (effects->isOpenGLCompositing()) {
         return new OpenGLPaintRedirector(c, widget);
     } else {
-        if (!Extensions::nonNativePixmaps()) {
-            return new NativeXRenderPaintRedirector(c, widget);
-        }
         return new RasterXRenderPaintRedirector(c, widget);
     }
 }
@@ -481,60 +478,6 @@ void RasterXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap borde
     const QImage img(scratchImage().copy(QRect(bounding.topLeft() - b.topLeft(), bounding.size())));
     xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, m_pixmaps[border], m_gc,
                   img.width(), img.height(), offset.x(), offset.y(), 0, 32, img.byteCount(), img.constBits());
-}
-
-NativeXRenderPaintRedirector::NativeXRenderPaintRedirector(Client *c, QWidget *widget)
-    : PaintRedirector(c, widget)
-{
-    resizePixmaps();
-}
-
-NativeXRenderPaintRedirector::~NativeXRenderPaintRedirector()
-{
-}
-
-xcb_render_picture_t NativeXRenderPaintRedirector::picture(PaintRedirector::DecorationPixmap border) const
-{
-    return m_pixmaps[border].x11PictureHandle();
-}
-
-void NativeXRenderPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
-{
-    if (m_pixmaps[border].size() != size) {
-        m_pixmaps[border] = QPixmap(size);
-    }
-    m_pixmaps[border].fill(Qt::transparent);
-}
-
-void NativeXRenderPaintRedirector::paint(PaintRedirector::DecorationPixmap border, const QRect &r, const QRect &b, const QRegion &reg)
-{
-    QPainter pt(&m_pixmaps[border]);
-    pt.translate(-r.topLeft());
-    pt.setCompositionMode(QPainter::CompositionMode_Source);
-    pt.setClipRegion(reg);
-    pt.drawPixmap(b.topLeft(), m_scratch);
-    pt.end();
-}
-
-void NativeXRenderPaintRedirector::fillScratch(Qt::GlobalColor color)
-{
-    m_scratch.fill(color);
-}
-
-QPaintDevice *NativeXRenderPaintRedirector::recreateScratch(const QSize &size)
-{
-    m_scratch = QPixmap(size);
-    return &m_scratch;
-}
-
-QPaintDevice *NativeXRenderPaintRedirector::scratch()
-{
-    return &m_scratch;
-}
-
-void NativeXRenderPaintRedirector::discardScratch()
-{
-    m_scratch = QPixmap();
 }
 
 } // namespace

@@ -1470,12 +1470,6 @@ QString Workspace::supportInformation() const
     support.append(decorationPlugin()->supportInformation());
     support.append("\nCompositing\n");
     support.append(  "===========\n");
-    support.append("Qt Graphics System: ");
-    if (Extensions::nonNativePixmaps()) {
-        support.append("raster\n");
-    } else {
-        support.append("native\n");
-    }
     if (effects) {
         support.append("Compositing is active\n");
         switch (effects->compositingType()) {

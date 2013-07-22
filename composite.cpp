@@ -381,15 +381,9 @@ void Compositor::fallbackToXRenderCompositing()
     finish();
     KConfigGroup config(KGlobal::config(), "Compositing");
     config.writeEntry("Backend", "XRender");
-    config.writeEntry("GraphicsSystem", "native");
     config.sync();
-    if (Extensions::nonNativePixmaps()) { // must restart to change the graphicssystem
-        restartKWin("automatic graphicssystem change for XRender backend");
-        return;
-    } else {
-        options->setCompositingMode(XRenderCompositing);
-        setup();
-    }
+    options->setCompositingMode(XRenderCompositing);
+    setup();
 }
 
 void Compositor::slotConfigChanged()
@@ -407,12 +401,6 @@ void Compositor::slotReinitialize()
 {
     // Reparse config. Config options will be reloaded by setup()
     KGlobal::config()->reparseConfiguration();
-    const QString graphicsSystem = KConfigGroup(KGlobal::config(), "Compositing").readEntry("GraphicsSystem", "");
-    if ((Extensions::nonNativePixmaps() && graphicsSystem == "native") ||
-        (!Extensions::nonNativePixmaps() && (graphicsSystem == "raster" || graphicsSystem == "opengl")) ) {
-        restartKWin("explicitly reconfigured graphicsSystem change");
-        return;
-    }
 
     // Restart compositing
     finish();

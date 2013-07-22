@@ -20,10 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglobals.h"
 
-#include <QPainter>
-#include <QPaintEngine>
-#include <QPixmap>
-
 #include <config-X11.h>
 
 #include <assert.h>
@@ -42,8 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-bool Extensions::non_native_pixmaps = false;
-
 void Extensions::init()
 {
     static bool initPerformed = false;
@@ -58,12 +52,6 @@ void Extensions::init()
 #ifdef HAVE_XSYNC
     XSyncQueryExtension(display(), &event_base, &error_base);
 #endif
-
-    QPixmap pix(1,1);
-    QPainter p(&pix);
-    non_native_pixmaps = p.paintEngine()->type() != QPaintEngine::X11;
-    p.end();
-    kDebug(1212) << " non_native_pixmaps: " << non_native_pixmaps << endl;
     initPerformed = true;
 }
 
