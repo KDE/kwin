@@ -43,7 +43,7 @@ GlxBackend::GlxBackend()
     , window(None)
     , fbconfig(NULL)
     , glxWindow(None)
-    , ctx(None)
+    , ctx(nullptr)
     , haveSwapInterval(false)
 {
     init();
