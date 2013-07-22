@@ -49,7 +49,7 @@ public:
     bool isHandlesResizes() const {
         return iHandleResizes;
     }
-private slots:
+private Q_SLOTS:
     void toggle();
     void slotWindowStartUserMovedResized(KWin::EffectWindow *w);
     void slotWindowFinishUserMovedResized(KWin::EffectWindow *w);

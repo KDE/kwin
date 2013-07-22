@@ -35,7 +35,7 @@ public:
     explicit InvertEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~InvertEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
     virtual void load();
     virtual void defaults();

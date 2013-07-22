@@ -85,7 +85,7 @@ public:
     bool deleteCCTextures();
     static bool setupCCTexture(GLuint texture, const Clut &clut);
 
-public slots:
+public Q_SLOTS:
     void colorServerUpdateSucceededSlot();
     void colorServerUpdateFailedSlot();
 
@@ -131,10 +131,10 @@ public:
     const ClutList& outputCluts() const;
     const RegionalClutMap& regionCluts() const;
 
-public slots:
+public Q_SLOTS:
     void update();
 
-signals:
+Q_SIGNALS:
     void updateSucceeded();
     void updateFailed();
     void outputClutsChanged();
@@ -145,7 +145,7 @@ private:
     QDBusPendingReply< ClutList > getOutputCluts();
     QDBusPendingReply< RegionalClutMap > getRegionCluts();
 
-private slots:
+private Q_SLOTS:
     void callFinishedSlot(QDBusPendingCallWatcher *watcher);
 
 private:

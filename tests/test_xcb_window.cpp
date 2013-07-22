@@ -31,7 +31,7 @@ using namespace KWin;
 class TestXcbWindow : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void defaultCtor();
     void ctor();
     void classCtor();

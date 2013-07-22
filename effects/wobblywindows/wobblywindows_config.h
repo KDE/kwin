@@ -38,10 +38,10 @@ public:
     explicit WobblyWindowsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~WobblyWindowsEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
-private slots:
+private Q_SLOTS:
     void wobblinessChanged();
 
 private:

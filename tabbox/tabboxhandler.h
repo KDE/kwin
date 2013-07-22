@@ -335,7 +335,7 @@ public:
     Qt::Alignment embeddedAlignment() const;
     void resetEmbedded();
 
-signals:
+Q_SIGNALS:
     /**
     * This signal is fired when the TabBoxConfig changes
     * @see setConfig
@@ -344,7 +344,7 @@ signals:
     void embeddedChanged(bool enabled);
     void selectedIndexChanged();
 
-private slots:
+private Q_SLOTS:
     void updateHighlightWindows();
 
 private:

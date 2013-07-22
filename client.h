@@ -647,11 +647,11 @@ public:
     template <typename T>
     void print(T &stream) const;
 
-public slots:
+public Q_SLOTS:
     void closeWindow();
     void updateCaption();
 
-private slots:
+private Q_SLOTS:
     void autoRaise();
     void shadeHover();
     void shadeUnhover();
@@ -696,7 +696,7 @@ protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
 
-private slots:
+private Q_SLOTS:
     void delayedSetShortcut();
     void performMoveResize();
     void removeSyncSupport();
@@ -706,7 +706,7 @@ private slots:
     //Signals make an excellent way for communication
     //in between objects as compared to simple function
     //calls
-signals:
+Q_SIGNALS:
     void clientManaging(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);

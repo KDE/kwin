@@ -189,7 +189,7 @@ protected:
     virtual void doStartCursorTracking();
     virtual void doStopCursorTracking();
 
-private slots:
+private Q_SLOTS:
     /**
     * Because of QTimer's and the impossibility to get events for all mouse
     * movements (at least I haven't figured out how) the position needs

@@ -125,7 +125,7 @@ public:
     bool isTexturedCaps() const {
         return texturedCaps;
     }
-private slots:
+private Q_SLOTS:
     void toggleCube();
     void toggleCylinder();
     void toggleSphere();

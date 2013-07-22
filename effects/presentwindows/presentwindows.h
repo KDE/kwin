@@ -39,7 +39,7 @@ public:
     explicit CloseWindowView(QWidget *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
-public slots:
+public Q_SLOTS:
     void arm();
 
 Q_SIGNALS:
@@ -185,7 +185,7 @@ public:
     bool isDragToClose() const {
         return m_dragToClose;
     }
-public slots:
+public Q_SLOTS:
     void setActive(bool active);
     void toggleActive()  {
         m_mode = ModeCurrentDesktop;
@@ -210,7 +210,7 @@ public slots:
     // atoms
     void slotPropertyNotify(KWin::EffectWindow* w, long atom);
 
-private slots:
+private Q_SLOTS:
     void closeWindow();
     void elevateCloseWindow();
     void screenCountChanged();

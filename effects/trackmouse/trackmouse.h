@@ -52,7 +52,7 @@ public:
     bool isMousePolling() const {
         return m_mousePolling;
     }
-private slots:
+private Q_SLOTS:
     void toggle();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,

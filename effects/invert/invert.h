@@ -49,7 +49,7 @@ public:
 
     static bool supported();
 
-public slots:
+public Q_SLOTS:
     void toggleScreenInversion();
     void toggleWindow();
     void slotWindowClosed(KWin::EffectWindow *w);

@@ -294,7 +294,7 @@ public:
      **/
     bool compositing() const;
 
-public slots:
+public Q_SLOTS:
     // Keybindings
     //void slotSwitchToWindow( int );
     void slotWindowToDesktop();
@@ -375,7 +375,7 @@ public slots:
     void slotActivatePrevTab(); // Slot to move right the active Client.
     void slotUntab(); // Slot to remove the active client from its group.
 
-private slots:
+private Q_SLOTS:
     void desktopResized();
     void slotUpdateToolWindows();
     void delayFocus();
@@ -395,7 +395,6 @@ Q_SIGNALS:
     void workspaceInitialized();
 
     //Signals required for the scripting interface
-signals:
     void desktopPresenceChanged(KWin::Client*, int);
     void currentDesktopChanged(int, KWin::Client*);
     void clientAdded(KWin::Client*);

@@ -38,7 +38,7 @@ using namespace KWin;
 class TestVirtualDesktops : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void init();
     void cleanup();
     void count_data();

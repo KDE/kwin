@@ -139,7 +139,7 @@ public:
         return m_enabled;
     }
 
-private slots:
+private Q_SLOTS:
     void toggleEnabled();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                           Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,

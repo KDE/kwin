@@ -57,7 +57,7 @@ public:
     int initialRadius() const {
         return initialradius;
     }
-public slots:
+public Q_SLOTS:
     void toggle();
     void zoomIn();
     void zoomOut();

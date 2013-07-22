@@ -54,7 +54,7 @@ public:
     qreal targetZoom() const {
         return target_zoom;
     }
-private slots:
+private Q_SLOTS:
     void zoomIn();
     void zoomOut();
     void toggle();

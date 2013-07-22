@@ -175,7 +175,7 @@ public:
     static TabBox *self();
     static TabBox *create(QObject *parent);
 
-public slots:
+public Q_SLOTS:
     void show();
     /**
      * Only for DBus Interface to start primary KDE Walk through windows.
@@ -236,7 +236,7 @@ public slots:
 
     bool toggle(ElectricBorder eb);
 
-signals:
+Q_SIGNALS:
     void tabBoxAdded(int);
     Q_SCRIPTABLE void tabBoxClosed();
     Q_SCRIPTABLE void itemSelected();

@@ -43,7 +43,7 @@ public:
     explicit WindowGeometryConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~WindowGeometryConfig();
 
-public slots:
+public Q_SLOTS:
     void save();
     void defaults();
 

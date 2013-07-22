@@ -35,7 +35,7 @@ public:
     explicit ShowFpsEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~ShowFpsEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
 private:

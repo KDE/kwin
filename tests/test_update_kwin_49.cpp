@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class TestUpdateKWin49 : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     /**
      * Tests that migrating the Present Windows TabBox settings
      * does not affect an empty configuration.

@@ -161,7 +161,7 @@ void MockEffectWindow::unrefWindow()
 class TestWindowPaintData : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void testCtor();
     void testCopyCtor();
     void testOperatorMultiplyAssign();

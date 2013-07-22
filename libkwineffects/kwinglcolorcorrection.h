@@ -74,7 +74,7 @@ public:
      */
     bool isEnabled() const;
 
-public slots:
+public Q_SLOTS:
     /**
      * Enables or disables color correction. Compositing should be restarted
      * for changes to take effect.
@@ -83,7 +83,7 @@ public slots:
      */
     bool setEnabled(bool enabled);
 
-signals:
+Q_SIGNALS:
     /**
      * Emitted when some changes happened to the color correction settings, and
      * a full repaint of the scene should be done to make the new settings visible.

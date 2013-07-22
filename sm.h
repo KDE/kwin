@@ -91,7 +91,7 @@ public:
     }
     void saveDone();
     void close();
-private slots:
+private Q_SLOTS:
     void processData();
 private:
     QSocketNotifier* notifier;

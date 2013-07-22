@@ -92,7 +92,7 @@ public:
     bool isUsePresentWindows() const {
         return m_usePresentWindows;
     }
-private slots:
+private Q_SLOTS:
     void toggle();
     // slots for global shortcut changed
     // needed to toggle the effect

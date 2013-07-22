@@ -46,11 +46,11 @@ public:
     explicit TrackMouseEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~TrackMouseEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
     virtual void load();
     virtual void defaults();
-private slots:
+private Q_SLOTS:
     void shortcutChanged(const QKeySequence &seq);
 private:
     void checkModifiers();

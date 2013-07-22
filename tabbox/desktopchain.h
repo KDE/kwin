@@ -99,7 +99,7 @@ public:
      **/
     uint next(uint indexDesktop) const;
 
-public slots:
+public Q_SLOTS:
     /**
      * Adds the @p currentDesktop to the currently used desktop chain.
      * @param previousDesktop The previously used desktop, should be the top element of the chain

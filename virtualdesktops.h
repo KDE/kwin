@@ -185,7 +185,7 @@ public:
      */
     static uint maximum();
 
-public slots:
+public Q_SLOTS:
     /**
      * Set the number of available desktops to @a count. This function overrides any previous
      * grid layout.
@@ -267,7 +267,7 @@ Q_SIGNALS:
      **/
     void navigationWrappingAroundChanged();
 
-private slots:
+private Q_SLOTS:
     /**
      * Common slot for all "Switch to Desktop n" shortcuts.
      * This method uses the sender() method to access some data.

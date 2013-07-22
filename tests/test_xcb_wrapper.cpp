@@ -32,7 +32,7 @@ using namespace KWin::Xcb;
 class TestXcbWrapper : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void init();
     void cleanup();
     void defaultCtor();

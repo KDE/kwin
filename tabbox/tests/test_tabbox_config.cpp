@@ -25,7 +25,7 @@ using namespace KWin::TabBox;
 class TestTabBoxConfig : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void testDefaultCtor();
     void testAssignmentOperator();
 };

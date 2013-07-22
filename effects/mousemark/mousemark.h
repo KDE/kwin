@@ -50,7 +50,7 @@ public:
     QColor configuredColor() const {
         return color;
     }
-private slots:
+private Q_SLOTS:
     void clear();
     void clearLast();
     void slotMouseChanged(const QPoint& pos, const QPoint& old,

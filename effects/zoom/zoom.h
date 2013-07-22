@@ -77,7 +77,7 @@ public:
     qreal targetZoom() const {
         return target_zoom;
     }
-private slots:
+private Q_SLOTS:
     inline void zoomIn() { zoomIn(-1.0); };
     void zoomIn(double to);
     void zoomOut();

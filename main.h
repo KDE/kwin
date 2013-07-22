@@ -55,7 +55,7 @@ protected:
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
 
-private slots:
+private Q_SLOTS:
     void lostSelection();
     void resetCrashesCount();
 

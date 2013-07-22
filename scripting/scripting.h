@@ -234,7 +234,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     Q_SCRIPTABLE void printError(const QString &text);
 
-private slots:
+private Q_SLOTS:
     /**
       * A nice clean way to handle exceptions in scripting.
       * TODO: Log to file, show from notifier..

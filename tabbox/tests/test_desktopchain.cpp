@@ -28,7 +28,7 @@ using namespace KWin::TabBox;
 class TestDesktopChain : public QObject
 {
     Q_OBJECT
-private slots:
+private Q_SLOTS:
     void chainInit_data();
     void chainInit();
     void chainAdd_data();

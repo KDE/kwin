@@ -86,7 +86,7 @@ public:
     void reparent(Deleted *d);
     static PaintRedirector *create(Client *c, QWidget* widget);
 
-public slots:
+public Q_SLOTS:
     void ensurePixmapsPainted();
 protected:
     PaintRedirector(Client *c, QWidget* widget);

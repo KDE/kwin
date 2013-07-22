@@ -44,7 +44,7 @@ public:
     explicit FlipSwitchEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~FlipSwitchEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
 private:

@@ -42,7 +42,7 @@ class MagicLampEffectConfig : public KCModule
 public:
     explicit MagicLampEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
 private:

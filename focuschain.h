@@ -165,7 +165,7 @@ public:
      **/
     Client *firstMostRecentlyUsed() const;
 
-public slots:
+public Q_SLOTS:
     /**
      * @brief Resizes the per virtual desktop focus chains from @p previousSize to @p newSize.
      * This means that for each virtual desktop between previous and new size a new focus chain is

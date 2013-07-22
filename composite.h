@@ -45,7 +45,7 @@ public:
 private:
     friend class Compositor;
     bool owning;
-private slots:
+private Q_SLOTS:
     void looseOwnership();
 };
 

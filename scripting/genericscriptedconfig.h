@@ -45,7 +45,7 @@ public:
     GenericScriptedConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args);
     virtual ~GenericScriptedConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
 protected:

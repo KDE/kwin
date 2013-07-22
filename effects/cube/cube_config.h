@@ -42,10 +42,10 @@ class CubeEffectConfig : public KCModule
 public:
     explicit CubeEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
 
-public slots:
+public Q_SLOTS:
     virtual void save();
 
-private slots:
+private Q_SLOTS:
     void capsSelectionChanged();
 private:
     CubeEffectConfigForm* m_ui;

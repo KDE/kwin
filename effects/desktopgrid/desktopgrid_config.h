@@ -44,12 +44,12 @@ public:
     explicit DesktopGridEffectConfig(QWidget* parent = 0, const QVariantList& args = QVariantList());
     ~DesktopGridEffectConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
     virtual void load();
     virtual void defaults();
 
-private slots:
+private Q_SLOTS:
     void layoutSelectionChanged();
 
 private:

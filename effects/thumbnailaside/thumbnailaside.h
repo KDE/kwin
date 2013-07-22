@@ -62,7 +62,7 @@ public:
     int configuredScreen() const {
         return screen;
     }
-private slots:
+private Q_SLOTS:
     void toggleCurrentThumbnail();
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowGeometryShapeChanged(KWin::EffectWindow *w, const QRect &old);

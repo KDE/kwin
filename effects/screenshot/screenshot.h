@@ -74,7 +74,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     Q_SCRIPTABLE void screenshotCreated(qulonglong handle);
 
-private slots:
+private Q_SLOTS:
     void windowClosed( KWin::EffectWindow* w );
 
 private:

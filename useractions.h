@@ -95,7 +95,7 @@ public:
      **/
     void show(const QRect &pos, const QWeakPointer<Client> &client);
 
-public slots:
+public Q_SLOTS:
     /**
      * Delayed initialization of the activity menu.
      *
@@ -107,7 +107,7 @@ public slots:
      **/
     void showHideActivityMenu();
 
-private slots:
+private Q_SLOTS:
     /**
      * The menu will become visible soon.
      *
@@ -270,7 +270,7 @@ public:
     QKeySequence shortcut() const;
 public Q_SLOTS:
     void keySequenceChanged(const QKeySequence &seq);
-signals:
+Q_SIGNALS:
     void dialogDone(bool ok);
 protected:
     virtual void done(int r);

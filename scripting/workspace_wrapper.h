@@ -71,7 +71,7 @@ class WorkspaceWrapper : public QObject
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
 
-signals:
+Q_SIGNALS:
     void desktopPresenceChanged(KWin::Client *client, int desktop);
     void currentDesktopChanged(int desktop, KWin::Client *client);
     void clientAdded(KWin::Client *client);

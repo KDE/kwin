@@ -146,7 +146,7 @@ public:
      */
     void updateMinMaxSize();
 
-signals:
+Q_SIGNALS:
     void minSizeChanged();
     void maxSizeChanged();
 
