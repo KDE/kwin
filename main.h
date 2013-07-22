@@ -51,7 +51,6 @@ public:
     ~Application();
 
 protected:
-    bool x11EventFilter(XEvent*);
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
 

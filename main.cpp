@@ -409,13 +409,6 @@ void Application::lostSelection()
     quit();
 }
 
-bool Application::x11EventFilter(XEvent* e)
-{
-    if (Workspace::self() && Workspace::self()->workspaceEvent(e))
-        return true;
-    return KApplication::x11EventFilter(e);
-}
-
 bool Application::notify(QObject* o, QEvent* e)
 {
     if (Workspace::self()->workspaceEvent(e))
