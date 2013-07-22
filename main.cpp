@@ -546,9 +546,12 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     ksmserver.resumeStartup(KWIN_NAME);
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
+#warning insertCatalog needs porting
+#if KWIN_QT5_PORTING
     KGlobal::locale()->insertCatalog("kwin_effects");
     KGlobal::locale()->insertCatalog("kwin_scripts");
     KGlobal::locale()->insertCatalog("kwin_scripting");
+#endif
 
     // Announce when KWIN_DIRECT_GL is set for above HACK
     if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") == 0)

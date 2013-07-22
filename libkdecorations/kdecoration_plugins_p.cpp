@@ -251,6 +251,8 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     pluginStr = nameStr;
 
     // For clients in kdeartwork
+#warning insertCatalog needs porting
+#if KWIN_QT5_PORTING
     QString catalog = nameStr;
     catalog.replace("kwin3_", "kwin_");
     KGlobal::locale()->insertCatalog(catalog);
@@ -260,6 +262,7 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     KGlobal::locale()->insertCatalog("kwin_clients");
     // For clients in kdeartwork
     KGlobal::locale()->insertCatalog("kwin_art_clients");
+#endif
 
     old_library = oldLibrary; // save for delayed destroying
     old_fact = oldFactory;
