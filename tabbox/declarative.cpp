@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KStandardDirs>
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/Theme>
-#include <KDE/Plasma/WindowEffects>
+#include <kwindoweffects.h>
 #include <kdeclarative.h>
 // KWin
 #include "thumbnailitem.h"
@@ -194,12 +194,12 @@ void DeclarativeView::showEvent(QShowEvent *event)
 void DeclarativeView::resizeEvent(QResizeEvent *event)
 {
     if (tabBox->embedded()) {
-        Plasma::WindowEffects::enableBlurBehind(winId(), false);
+        KWindowEffects::enableBlurBehind(winId(), false);
     } else {
         const QString maskImagePath = rootObject()->property("maskImagePath").toString();
         if (maskImagePath.isEmpty()) {
             clearMask();
-            Plasma::WindowEffects::enableBlurBehind(winId(), false);
+            KWindowEffects::enableBlurBehind(winId(), false);
         } else {
             const double maskWidth = rootObject()->property("maskWidth").toDouble();
             const double maskHeight = rootObject()->property("maskHeight").toDouble();
@@ -212,7 +212,7 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
             // notice: this covers an issue with plasma detecting the compositing state. see plasmaThemeVariant()
             if (Workspace::self()->compositing() && effects) {
                 // blur background?!
-                Plasma::WindowEffects::enableBlurBehind(winId(), static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur), mask);
+                KWindowEffects::enableBlurBehind(winId(), static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur), mask);
                 clearMask();
             } else
 #endif
