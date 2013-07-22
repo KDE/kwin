@@ -230,6 +230,7 @@ static QByteArray errorMessage(const XErrorEvent& event, Display* dpy)
 
 static int x11ErrorHandler(Display* d, XErrorEvent* e)
 {
+#if KWIN_QT5_PORTING
     Q_UNUSED(d);
     bool ignore_badwindow = true; // Might be temporary
 
@@ -249,6 +250,7 @@ static int x11ErrorHandler(Display* d, XErrorEvent* e)
 
     if (kwin_sync)
         fprintf(stderr, "%s\n", kBacktrace().toLocal8Bit().data());
+#endif
 
     return 0;
 }
