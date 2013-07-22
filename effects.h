@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <Plasma/FrameSvg>
 
+namespace Plasma {
+class Theme;
+}
+
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
 class KService;
@@ -391,7 +395,7 @@ public:
     /**
      * The foreground text color as specified by the default Plasma theme.
      */
-    static QColor styledTextColor();
+    QColor styledTextColor();
 
 private Q_SLOTS:
     void plasmaThemeChanged();
@@ -420,6 +424,8 @@ private:
 
     Scene::EffectFrame* m_sceneFrame;
     GLShader* m_shader;
+
+    Plasma::Theme *m_theme;
 };
 
 class ScreenLockerWatcher : public QObject

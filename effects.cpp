@@ -1846,11 +1846,12 @@ EffectFrameImpl::EffectFrameImpl(EffectFrameStyle style, bool staticSize, QPoint
     , m_point(position)
     , m_alignment(alignment)
     , m_shader(NULL)
+    , m_theme(new Plasma::Theme(this))
 {
     if (m_style == EffectFrameStyled) {
         m_frame.setImagePath("widgets/background");
         m_frame.setCacheAllRenderedFrames(true);
-        connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
+        connect(m_theme, SIGNAL(themeChanged()), this, SLOT(plasmaThemeChanged()));
     }
     m_selection.setImagePath("widgets/viewitem");
     m_selection.setElementPrefix("hover");
@@ -2077,7 +2078,7 @@ void EffectFrameImpl::autoResize()
 
 QColor EffectFrameImpl::styledTextColor()
 {
-    return Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor);
+    return m_theme->color(Plasma::Theme::TextColor);
 }
 
 } // namespace
