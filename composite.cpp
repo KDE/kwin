@@ -762,14 +762,6 @@ void Compositor::setOverlayWindowVisibility(bool visible)
     }
 }
 
-void Compositor::restartKWin(const QString &reason)
-{
-    kDebug(1212) << "restarting kwin for:" << reason;
-    char cmd[1024]; // copied from crashhandler - maybe not the best way to do?
-    sprintf(cmd, "%s --replace &", QFile::encodeName(QCoreApplication::applicationFilePath()).constData());
-    system(cmd);
-}
-
 bool Compositor::isCompositingPossible() const
 {
     return CompositingPrefs::compositingPossible();
