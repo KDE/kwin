@@ -9,8 +9,16 @@ set(kdecorations_LIB_SRCS
 
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
-target_link_libraries(kdecorations ${KDE4_KDEUI_LIBS})
-target_link_libraries(kdecorations LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
+target_link_libraries(kdecorations
+    ${Qt5Widgets_LIBRARIES}
+    ${Qt5X11Extras_LIBRARIES}
+    ${KDE4_KDECORE_LIBRARY} # kdebug
+    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings::windowTitleFont
+    KF5::KConfigCore
+    KF5::KI18n
+    KF5::KService # KLibrary
+)
+# target_link_libraries(kdecorations LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
 
 set_target_properties(kdecorations PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
