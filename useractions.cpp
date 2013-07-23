@@ -909,7 +909,7 @@ void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
         widget->setKeySequence(shortcut());
     } else if (seq != _shortcut) {
         warning->hide();
-        if (KPushButton *ok = button(KDialog::Ok))
+        if (QPushButton *ok = button(KDialog::Ok))
             ok->setFocus();
     }
 
