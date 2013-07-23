@@ -35,8 +35,8 @@ class KWinSelectionOwner
 public:
     explicit KWinSelectionOwner(int screen);
 protected:
-    virtual bool genericReply(Atom target, Atom property, Window requestor);
-    virtual void replyTargets(Atom property, Window requestor);
+    virtual bool genericReply(xcb_atom_t target, xcb_atom_t property, xcb_window_t requestor);
+    virtual void replyTargets(xcb_atom_t property, xcb_window_t requestor);
     virtual void getAtoms();
 private:
     Atom make_selection_atom(int screen);

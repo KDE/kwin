@@ -125,7 +125,7 @@ void KWinSelectionOwner::getAtoms()
     }
 }
 
-void KWinSelectionOwner::replyTargets(Atom property_P, Window requestor_P)
+void KWinSelectionOwner::replyTargets(xcb_atom_t property_P, xcb_window_t requestor_P)
 {
     KSelectionOwner::replyTargets(property_P, requestor_P);
     Atom atoms[ 1 ] = { xa_version };
@@ -134,7 +134,7 @@ void KWinSelectionOwner::replyTargets(Atom property_P, Window requestor_P)
     reinterpret_cast< unsigned char* >(atoms), 1);
 }
 
-bool KWinSelectionOwner::genericReply(Atom target_P, Atom property_P, Window requestor_P)
+bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P, xcb_window_t requestor_P)
 {
     if (target_P == xa_version) {
         long version[] = { 2, 0 };
