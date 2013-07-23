@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
 #include <KDE/KLocalizedString>
+#include <KDE/KShortcut>
 #include <KDE/NETRootInfo>
 
 namespace KWin {
@@ -420,7 +421,7 @@ void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uin
 
 void VirtualDesktopManager::initShortcuts(KActionCollection *keys)
 {
-    KAction *a = keys->addAction(QStringLiteral("Group:Desktop Switching"));
+    QAction *a = keys->addAction(QStringLiteral("Group:Desktop Switching"));
     a->setText(i18n("Desktop Switching"));
     initSwitchToShortcuts(keys);
 
@@ -448,16 +449,20 @@ void VirtualDesktopManager::initSwitchToShortcuts(KActionCollection *keys)
 
 void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const KShortcut &key, const char *slot)
 {
-    KAction *a = keys->addAction(name.arg(value), this, slot);
+    QAction *a = keys->addAction(name.arg(value), this, slot);
     a->setText(label.subs(value).toString());
+#if KWIN_QT5_PORTING
     a->setGlobalShortcut(key);
+#endif
     a->setData(value);
 }
 
 void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const QString &label, const char *slot)
 {
-    KAction *a = keys->addAction(name, this, slot);
+    QAction *a = keys->addAction(name, this, slot);
+#if KWIN_QT5_PORTING
     a->setGlobalShortcut(KShortcut());
+#endif
     a->setText(label);
 }
 

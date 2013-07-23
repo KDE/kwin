@@ -492,7 +492,7 @@ void TabBox::handlerReady()
 
 void TabBox::initShortcuts(KActionCollection* keys)
 {
-    KAction *a = NULL;
+    QAction *a = NULL;
 
     // The setGlobalShortcut(shortcut); shortcut = a->globalShortcut()
     // sequence is necessary in the case where the user has defined a
@@ -502,7 +502,7 @@ void TabBox::initShortcuts(KActionCollection* keys)
     a->setText( i18n(name) );                                                   \
     shortcut = KShortcut(key);                                                  \
     qobject_cast<KAction*>( a )->setGlobalShortcut(shortcut);                   \
-    shortcut = a->globalShortcut();                                             \
+    shortcut = qobject_cast<KAction*>( a )->globalShortcut();                   \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));                          \
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), SLOT(shortcutSlot));
 

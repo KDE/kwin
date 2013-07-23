@@ -115,9 +115,11 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
     KActionCollection* actionCollection = new KActionCollection(script);
-    KAction* a = (KAction*)actionCollection->addAction(context->argument(0).toString());
+    QAction* a = actionCollection->addAction(context->argument(0).toString());
     a->setText(context->argument(1).toString());
+#if KWIN_QT5_PORTING
     a->setGlobalShortcut(KShortcut(context->argument(2).toString()));
+#endif
     script->registerShortcut(a, context->argument(3));
     return engine->newVariant(true);
 }
