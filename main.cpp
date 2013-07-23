@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <klocale.h>
 #include <stdlib.h>
 #include <kcmdlineargs.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcrash.h>
 #include <signal.h>
 #include <fcntl.h>
@@ -500,19 +500,19 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         // number. If it had it, it was removed at the "pos" check
         envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::screen_number);
 
-        if (putenv(strdup(envir.toAscii()))) {
+        if (putenv(strdup(envir.toAscii().constData()))) {
             fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
             perror("putenv()");
         }
     }
 
-    KAboutData aboutData(
-        KWIN_NAME,                     // The program name used internally
-        0,                          // The message catalog name. If null, program name is used instead
+    K4AboutData aboutData(
+        QByteArray(KWIN_NAME),      // The program name used internally
+        QByteArray(),               // The message catalog name. If null, program name is used instead
         ki18n("KWin"),              // A displayable program name string
-        version,                    // The program version string
+        QByteArray(version),        // The program version string
         ki18n(description),         // Short description of what the app does
-        KAboutData::License_GPL,    // The license this code is released under
+        K4AboutData::License_GPL,   // The license this code is released under
         ki18n("(c) 1999-2008, The KDE Developers"));   // Copyright Statement
     aboutData.addAuthor(ki18n("Matthias Ettrich"), KLocalizedString(), "ettrich@kde.org");
     aboutData.addAuthor(ki18n("Cristian Tibirna"), KLocalizedString(), "tibirna@kde.org");
