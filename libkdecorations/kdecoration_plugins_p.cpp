@@ -159,19 +159,6 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
     if (version_func) {
         vptr = (int(*)())version_func;
         deco_version = vptr();
-    } else {
-        // block some decos known to link the unstable API but (for now) let through other legacy stuff
-        const bool isLegacyStableABI = !(nameStr.contains("qtcurve", Qt::CaseInsensitive) ||
-                                         nameStr.contains("crystal", Qt::CaseInsensitive) ||
-                                         nameStr.contains("oxygen", Qt::CaseInsensitive));
-        if (isLegacyStableABI) {
-            // it's an old build of a legacy decoration that very likely uses the stable API
-            // so we just set the API version to the current one
-            // TODO: remove for 4.9.x or 4.10 - this is just to cover recompiles
-            deco_version = KWIN_DECORATION_API_VERSION;
-        }
-        kWarning(1212) << QString("****** The library %1 has no API version ******").arg(path);
-        kWarning(1212) << "****** Please use the KWIN_DECORATION macro in extern \"C\" to get this decoration loaded in future versions of kwin";
     }
     if (deco_version != KWIN_DECORATION_API_VERSION) {
         if (version_func)
