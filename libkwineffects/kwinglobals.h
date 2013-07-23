@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdemacros.h>
 
 #include <X11/Xlib.h>
-#include <X11/Xlib-xcb.h>
 #include <fixx11h.h>
 #include <xcb/xcb.h>
 
@@ -127,7 +126,7 @@ KWIN_EXPORT xcb_connection_t *connection()
 {
     static xcb_connection_t *s_con = NULL;
     if (!s_con) {
-        s_con = XGetXCBConnection(display());
+        s_con = QX11Info::connection();
     }
     return s_con;
 }

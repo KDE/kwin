@@ -29,7 +29,6 @@ set(kwineffects_XLIB_LIBS
 
 set(kwineffects_XCB_LIBS
     ${XCB_XCB_LIBRARIES}
-    ${X11_XCB_LIBRARIES}
     ${XCB_XFIXES_LIBRARIES}
     ${XCB_RENDER_LIBRARIES}
 )
