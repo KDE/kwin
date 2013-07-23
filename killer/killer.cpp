@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
         } else {
             if (::kill(pid, SIGKILL) && errno == EPERM) {
                 KAuth::Action killer(QStringLiteral("org.kde.ksysguard.processlisthelper.sendsignal"));
-                killer.setHelperID(QStringLiteral("org.kde.ksysguard.processlisthelper"));
+                killer.setHelperId(QStringLiteral("org.kde.ksysguard.processlisthelper"));
                 killer.addArgument(QStringLiteral("pid0"), pid);
                 killer.addArgument(QStringLiteral("pidcount"), 1);
                 killer.addArgument(QStringLiteral("signal"), SIGKILL);
