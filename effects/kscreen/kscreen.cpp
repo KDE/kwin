@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kscreen.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
+// KDE
+#include <KDE/KDebug>
 
 /**
  * How this effect works:
