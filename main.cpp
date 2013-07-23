@@ -20,10 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "main.h"
+#include <QTextStream>
 
 //#define QT_CLEAN_NAMESPACE
 #include <ksharedconfig.h>
 
+#include <kdeversion.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <stdlib.h>
@@ -34,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fcntl.h>
 #include <QX11Info>
 #include <stdio.h>
-#include <fixx11h.h>
 #include <kxerrorhandler.h>
 #include <kdefakes.h>
+#include <fixx11h.h>
 #include <QtDBus/QtDBus>
 #include <QMessageBox>
 #include <QEvent>
