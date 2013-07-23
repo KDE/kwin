@@ -545,11 +545,14 @@ void KWin::DeclarativeScript::run()
         return;
     }
     // add read config
+#warning DeclarativeScripts needs porting of KDeclarative
+#if KWIN_QT5_PORTING
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_engine);
     kdeclarative.initialize();
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
+#endif
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 0, 1, "DesktopThumbnailItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();

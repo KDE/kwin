@@ -134,10 +134,13 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
     engine()->addImageProvider(QLatin1String("client"), new ImageProvider(model));
+#warning TabBox needs porting of KDeclarative
+#if KWIN_QT5_PORTING
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
+#endif
 #ifndef TABBOX_KCM
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 0, 1, "DesktopThumbnailItem");
 #endif
