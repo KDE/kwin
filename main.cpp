@@ -323,11 +323,12 @@ Application::Application()
     if (screen_number == -1)
         screen_number = DefaultScreen(display());
 
-    if (!owner.claim(args->isSet("replace"), true)) {
+    connect(&owner, &KSelectionOwner::failedToClaimOwnership, []{
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
-    }
+    });
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
+    owner.claim(args->isSet("replace"), true);
 
     KCrash::setEmergencySaveFunction(Application::crashHandler);
     crashes = args->getOption("crashes").toInt();
