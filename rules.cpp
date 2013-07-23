@@ -920,7 +920,7 @@ RuleBook::RuleBook(QObject *parent)
     : QObject(parent)
     , m_updateTimer(new QTimer(this))
     , m_updatesDisabled(false)
-    , m_temporaryRulesMessages(new KXMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL, false)) // TODO KF5 - remove *then* obsolete last parameter which is *now* mandatory
+    , m_temporaryRulesMessages(new KXMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL))
 {
     connect(m_temporaryRulesMessages.data(), SIGNAL(gotMessage(QString)), SLOT(temporaryRulesMessage(QString)));
     connect(m_updateTimer, SIGNAL(timeout()), SLOT(save()));
