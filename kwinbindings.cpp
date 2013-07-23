@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // new DEF3 allows to pass data to the action, replacing the %1 argument in the name
 
 #define DEF2( name, descr, key, fnSlot )                            \
-    a = actionCollection->addAction( name );                        \
+    a = actionCollection->addAction( QStringLiteral(name) );                        \
     a->setText( i18n(descr) );                                      \
     qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
@@ -37,23 +37,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     DEF2(name, name, key, fnSlot)
 
 #define DEF3( name, key, fnSlot, value )                            \
-    a = actionCollection->addAction( QString(name).arg(value) );    \
+    a = actionCollection->addAction( QStringLiteral(name).arg(value) );    \
     a->setText( i18n(name, value) );                                \
     qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
     a->setData(value);                                              \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
 
 
-a = actionCollection->addAction("Program:kwin");
+a = actionCollection->addAction(QStringLiteral("Program:kwin"));
 a->setText(i18n("System"));
 
-a = actionCollection->addAction("Group:Navigation");
+a = actionCollection->addAction(QStringLiteral("Group:Navigation"));
 a->setText(i18n("Navigation"));
 DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab());
 DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab());
 DEF(I18N_NOOP("Remove Window From Group"),             0, slotUntab());
 
-a = actionCollection->addAction("Group:Windows");
+a = actionCollection->addAction(QStringLiteral("Group:Windows"));
 a->setText(i18n("Windows"));
 DEF(I18N_NOOP("Window Operations Menu"),
     Qt::ALT + Qt::Key_F3, slotWindowOperations());
@@ -132,7 +132,7 @@ DEF2("Increase Opacity", I18N_NOOP("Increase Opacity of Active Window by 5 %"),
 DEF2("Decrease Opacity", I18N_NOOP("Decrease Opacity of Active Window by 5 %"),
     0, slotLowerWindowOpacity());
 
-a = actionCollection->addAction("Group:Window Desktop");
+a = actionCollection->addAction(QStringLiteral("Group:Window Desktop"));
 a->setText(i18n("Window & Desktop"));
 DEF2("Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
      0, slotWindowOnAllDesktops());
@@ -161,7 +161,7 @@ for (int i = 0; i < 8; ++i) {
 DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen());
 DEF(I18N_NOOP("Switch to Previous Screen"),        0, slotSwitchToPrevScreen());
 
-a = actionCollection->addAction("Group:Miscellaneous");
+a = actionCollection->addAction(QStringLiteral("Group:Miscellaneous"));
 a->setText(i18n("Miscellaneous"));
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow());
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing());

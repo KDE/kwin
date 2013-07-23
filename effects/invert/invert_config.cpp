@@ -43,12 +43,12 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    KAction* a = static_cast<KAction*>(actionCollection->addAction("Invert"));
+    KAction* a = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("Invert")));
     a->setText(i18n("Toggle Invert Effect"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
 
-    KAction* b = static_cast<KAction*>(actionCollection->addAction("InvertWindow"));
+    KAction* b = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("InvertWindow")));
     b->setText(i18n("Toggle Invert Effect on Window"));
     b->setProperty("isConfigurationAction", true);
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
@@ -81,7 +81,7 @@ void InvertEffectConfig::save()
     mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage("invert");
+    EffectsHandler::sendReloadMessage(QStringLiteral("invert"));
 }
 
 void InvertEffectConfig::defaults()

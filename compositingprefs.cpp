@@ -52,7 +52,7 @@ CompositingPrefs::~CompositingPrefs()
 
 bool CompositingPrefs::openGlIsBroken()
 {
-    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
+    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     return KConfigGroup(KGlobal::config(), "Compositing").readEntry(unsafeKey, false);
 }
 
@@ -60,8 +60,8 @@ bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
-    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
+    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
         return false;
 
@@ -90,8 +90,8 @@ QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
     KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
-    const QString unsafeKey("OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : ""));
-    if (gl_workaround_group.readEntry("Backend", "OpenGL") == "OpenGL" &&
+    const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
+    if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
         return i18n("<b>OpenGL compositing (the default) has crashed KWin in the past.</b><br>"
                     "This was most likely due to a driver bug."
@@ -149,7 +149,7 @@ void CompositingPrefs::detect()
         // environment variable.
         // Direct rendering is preferred, since not all OpenGL extensions are
         // available with indirect rendering.
-        const QString opengl_test = KStandardDirs::findExe("kwin_opengl_test");
+        const QString opengl_test = KStandardDirs::findExe(QStringLiteral("kwin_opengl_test"));
         if (QProcess::execute(opengl_test) != 0) {
             mEnableDirectRendering = false;
             setenv("LIBGL_ALWAYS_INDIRECT", "1", true);

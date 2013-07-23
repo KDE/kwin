@@ -190,8 +190,8 @@ bool Edge::handleAction()
 {
     switch (m_action) {
     case ElectricActionDashboard: { // Display Plasma dashboard
-        QDBusInterface plasmaApp("org.kde.plasma-desktop", "/App");
-        plasmaApp.asyncCall("toggleDashboard");
+        QDBusInterface plasmaApp(QStringLiteral("org.kde.plasma-desktop"), QStringLiteral("/App"));
+        plasmaApp.asyncCall(QStringLiteral("toggleDashboard"));
         return true;
     }
     case ElectricActionShowDesktop: {
@@ -199,8 +199,8 @@ bool Edge::handleAction()
         return true;
     }
     case ElectricActionLockScreen: { // Lock the screen
-        QDBusInterface screenSaver("org.kde.screensaver", "/ScreenSaver");
-        screenSaver.asyncCall("Lock");
+        QDBusInterface screenSaver(QStringLiteral("org.kde.screensaver"), QStringLiteral("/ScreenSaver"));
+        screenSaver.asyncCall(QStringLiteral("Lock"));
         return true;
     }
     default:
@@ -569,13 +569,13 @@ void ScreenEdges::init()
 static ElectricBorderAction electricBorderAction(const QString& name)
 {
     QString lowerName = name.toLower();
-    if (lowerName == "dashboard") {
+    if (lowerName == QStringLiteral("dashboard")) {
         return ElectricActionDashboard;
-    } else if (lowerName == "showdesktop") {
+    } else if (lowerName == QStringLiteral("showdesktop")) {
         return ElectricActionShowDesktop;
-    } else if (lowerName == "lockscreen") {
+    } else if (lowerName == QStringLiteral("lockscreen")) {
         return ElectricActionLockScreen;
-    } else if (lowerName == "preventscreenlocking") {
+    } else if (lowerName == QStringLiteral("preventscreenlocking")) {
         return ElectricActionPreventScreenLocking;
     }
     return ElectricActionNone;

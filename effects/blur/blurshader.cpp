@@ -362,7 +362,7 @@ void ARBBlurShader::reset()
 
 bool ARBBlurShader::supported()
 {
-    if (!hasGLExtension("GL_ARB_fragment_program"))
+    if (!hasGLExtension(QStringLiteral("GL_ARB_fragment_program")))
         return false;
 
     (void) glGetError(); // Clear the error state

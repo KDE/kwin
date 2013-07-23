@@ -55,8 +55,8 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
     // TODO: rename animationDuration to duration
     mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
 
-    KConfigGroup conf = effects->effectConfig("MagicLamp");
-    conf = effects->effectConfig("Shadow");
+    KConfigGroup conf = effects->effectConfig(QStringLiteral("MagicLamp"));
+    conf = effects->effectConfig(QStringLiteral("Shadow"));
     int v = conf.readEntry("Size", 5);
     v += conf.readEntry("Fuzzyness", 10);
     mShadowOffset[0] = mShadowOffset[1] = -v;

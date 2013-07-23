@@ -46,7 +46,7 @@ void DashboardEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage("dashboard");
+    EffectsHandler::sendReloadMessage(QStringLiteral("dashboard"));
 }
 
 } // namespace KWin

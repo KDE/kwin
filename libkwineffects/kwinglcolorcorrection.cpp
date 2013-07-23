@@ -160,17 +160,17 @@ void ColorServerInterface::update()
 
 QDBusPendingReply< uint > ColorServerInterface::getVersionInfo()
 {
-    return QDBusPendingReply< uint >(asyncCall("getVersionInfo"));
+    return QDBusPendingReply< uint >(asyncCall(QStringLiteral("getVersionInfo")));
 }
 
 QDBusPendingReply< ClutList > ColorServerInterface::getOutputCluts()
 {
-    return QDBusPendingReply< ClutList >(asyncCall("getOutputCluts"));
+    return QDBusPendingReply< ClutList >(asyncCall(QStringLiteral("getOutputCluts")));
 }
 
 QDBusPendingReply< RegionalClutMap > ColorServerInterface::getRegionCluts()
 {
-    return QDBusPendingReply< RegionalClutMap >(asyncCall("getRegionCluts"));
+    return QDBusPendingReply< RegionalClutMap >(asyncCall(QStringLiteral("getRegionCluts")));
 }
 
 void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
@@ -271,8 +271,8 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
 
     // Establish a D-Bus communication interface with KolorServer
     m_csi = new ColorServerInterface(
-        "org.kde.kded",
-        "/modules/kolorserver",
+        QStringLiteral("org.kde.kded"),
+        QStringLiteral("/modules/kolorserver"),
         QDBusConnection::sessionBus(),
         this);
 

@@ -50,7 +50,7 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
 void CoverSwitchEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("coverswitch");
+    EffectsHandler::sendReloadMessage(QStringLiteral("coverswitch"));
 }
 
 } // namespace

@@ -29,15 +29,15 @@ using namespace KWin::MetaScripting;
 QScriptValue Point::toScriptValue(QScriptEngine* eng, const QPoint& point)
 {
     QScriptValue temp = eng->newObject();
-    temp.setProperty("x", point.x());
-    temp.setProperty("y", point.y());
+    temp.setProperty(QStringLiteral("x"), point.x());
+    temp.setProperty(QStringLiteral("y"), point.y());
     return temp;
 }
 
 void Point::fromScriptValue(const QScriptValue& obj, QPoint& point)
 {
-    QScriptValue x = obj.property("x", QScriptValue::ResolveLocal);
-    QScriptValue y = obj.property("y", QScriptValue::ResolveLocal);
+    QScriptValue x = obj.property(QStringLiteral("x"), QScriptValue::ResolveLocal);
+    QScriptValue y = obj.property(QStringLiteral("y"), QScriptValue::ResolveLocal);
 
     if (!x.isUndefined() && !y.isUndefined()) {
         point.setX(x.toInt32());
@@ -50,15 +50,15 @@ void Point::fromScriptValue(const QScriptValue& obj, QPoint& point)
 QScriptValue Size::toScriptValue(QScriptEngine* eng, const QSize& size)
 {
     QScriptValue temp = eng->newObject();
-    temp.setProperty("w", size.width());
-    temp.setProperty("h", size.height());
+    temp.setProperty(QStringLiteral("w"), size.width());
+    temp.setProperty(QStringLiteral("h"), size.height());
     return temp;
 }
 
 void Size::fromScriptValue(const QScriptValue& obj, QSize& size)
 {
-    QScriptValue w = obj.property("w", QScriptValue::ResolveLocal);
-    QScriptValue h = obj.property("h", QScriptValue::ResolveLocal);
+    QScriptValue w = obj.property(QStringLiteral("w"), QScriptValue::ResolveLocal);
+    QScriptValue h = obj.property(QStringLiteral("h"), QScriptValue::ResolveLocal);
 
     if (!w.isUndefined() && !h.isUndefined()) {
         size.setWidth(w.toInt32());
@@ -72,20 +72,20 @@ void Size::fromScriptValue(const QScriptValue& obj, QSize& size)
 QScriptValue Rect::toScriptValue(QScriptEngine* eng, const QRect& rect)
 {
     QScriptValue temp = eng->newObject();
-    temp.setProperty("x", rect.x());
-    temp.setProperty("y", rect.y());
-    temp.setProperty("width", rect.width());
-    temp.setProperty("height", rect.height());
+    temp.setProperty(QStringLiteral("x"), rect.x());
+    temp.setProperty(QStringLiteral("y"), rect.y());
+    temp.setProperty(QStringLiteral("width"), rect.width());
+    temp.setProperty(QStringLiteral("height"), rect.height());
 
     return temp;
 }
 
 void Rect::fromScriptValue(const QScriptValue& obj, QRect &rect)
 {
-    QScriptValue w = obj.property("width", QScriptValue::ResolveLocal);
-    QScriptValue h = obj.property("height", QScriptValue::ResolveLocal);
-    QScriptValue x = obj.property("x", QScriptValue::ResolveLocal);
-    QScriptValue y = obj.property("y", QScriptValue::ResolveLocal);
+    QScriptValue w = obj.property(QStringLiteral("width"), QScriptValue::ResolveLocal);
+    QScriptValue h = obj.property(QStringLiteral("height"), QScriptValue::ResolveLocal);
+    QScriptValue x = obj.property(QStringLiteral("x"), QScriptValue::ResolveLocal);
+    QScriptValue y = obj.property(QStringLiteral("y"), QScriptValue::ResolveLocal);
 
     if (!w.isUndefined() && !h.isUndefined() && !x.isUndefined() && !y.isUndefined()) {
         rect.setX(x.toInt32());
@@ -179,7 +179,7 @@ QScriptValue KWin::MetaScripting::getConfigValue(QScriptContext* ctx, QScriptEng
         if ((ctx->argument(0)).isArray()) {
             bool simple = (num == 1) ? 0 : (ctx->argument(1)).toBool();
             QScriptValue array = (ctx->argument(0));
-            int len = (array.property("length").isValid()) ? array.property("length").toNumber() : 0;
+            int len = (array.property(QStringLiteral("length")).isValid()) ? array.property(QStringLiteral("length")).toNumber() : 0;
 
             for (int i = 0; i < len; i++) {
                 QVariant val = scriptConfig.value(array.property(i).toString(), QVariant());
@@ -218,10 +218,10 @@ void KWin::MetaScripting::supplyConfig(QScriptEngine* eng, const QVariant& scrip
 {
     QScriptValue configObject = eng->newObject();
     configObject.setData(eng->newVariant(scriptConfig));
-    configObject.setProperty("get", eng->newFunction(getConfigValue, 0), QScriptValue::Undeletable);
-    configObject.setProperty("exists", eng->newFunction(configExists, 0), QScriptValue::Undeletable);
-    configObject.setProperty("loaded", ((scriptConfig.toHash().empty()) ? eng->newVariant((bool)0) : eng->newVariant((bool)1)), QScriptValue::Undeletable);
-    (eng->globalObject()).setProperty("config", configObject);
+    configObject.setProperty(QStringLiteral("get"), eng->newFunction(getConfigValue, 0), QScriptValue::Undeletable);
+    configObject.setProperty(QStringLiteral("exists"), eng->newFunction(configExists, 0), QScriptValue::Undeletable);
+    configObject.setProperty(QStringLiteral("loaded"), ((scriptConfig.toHash().empty()) ? eng->newVariant((bool)0) : eng->newVariant((bool)1)), QScriptValue::Undeletable);
+    (eng->globalObject()).setProperty(QStringLiteral("config"), configObject);
 }
 
 void KWin::MetaScripting::supplyConfig(QScriptEngine* eng)

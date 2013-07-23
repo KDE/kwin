@@ -75,19 +75,19 @@ PresentWindowsEffect::PresentWindowsEffect()
     m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*)actionCollection->addAction("Expose");
+    KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("Expose"));
     a->setText(i18n("Toggle Present Windows (Current desktop)"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
     shortcut = a->globalShortcut();
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
-    KAction* b = (KAction*)actionCollection->addAction("ExposeAll");
+    KAction* b = (KAction*)actionCollection->addAction(QStringLiteral("ExposeAll"));
     b->setText(i18n("Toggle Present Windows (All desktops)"));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
     shortcutAll = b->globalShortcut();
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
     connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
-    KAction* c = (KAction*)actionCollection->addAction("ExposeClass");
+    KAction* c = (KAction*)actionCollection->addAction(QStringLiteral("ExposeClass"));
     c->setText(i18n("Toggle Present Windows (Window class)"));
     c->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F7));
     connect(c, SIGNAL(triggered(bool)), this, SLOT(toggleActiveClass()));
@@ -566,7 +566,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
                 m_dragInProgress = false;
                 m_dragWindow = NULL;
                 if (m_highlightedDropTarget) {
-                    KIcon icon("user-trash");
+                    KIcon icon(QStringLiteral("user-trash"));
                     m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
                     m_highlightedDropTarget = NULL;
                 }
@@ -606,7 +606,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         m_dragWindow = NULL;
         if (m_highlightedDropTarget) {
             effects->addRepaint(m_highlightedDropTarget->geometry());
-            KIcon icon("user-trash");
+            KIcon icon(QStringLiteral("user-trash"));
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
         }
@@ -637,12 +637,12 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         }
         if (target && !m_highlightedDropTarget) {
             m_highlightedDropTarget = target;
-            KIcon icon("user-trash");
+            KIcon icon(QStringLiteral("user-trash"));
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Active));
             effects->defineCursor(Qt::DragMoveCursor);
         } else if (!target && m_highlightedDropTarget) {
-            KIcon icon("user-trash");
+            KIcon icon(QStringLiteral("user-trash"));
             effects->addRepaint(m_highlightedDropTarget->geometry());
             m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
@@ -1925,7 +1925,7 @@ void PresentWindowsEffect::screenCountChanged()
         if (m_dragToClose) {
             const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
             EffectFrame *frame = effects->effectFrame(EffectFrameNone, false);
-            KIcon icon("user-trash");
+            KIcon icon(QStringLiteral("user-trash"));
             frame->setIcon(icon.pixmap(QSize(128, 128)));
             frame->setPosition(QPoint(screenRect.x() + screenRect.width(), screenRect.y()));
             frame->setAlignment(Qt::AlignRight | Qt::AlignTop);
@@ -1947,7 +1947,7 @@ CloseWindowView::CloseWindowView(QWidget *parent)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+    for (const QString &importPath : KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
         engine()->addImportPath(importPath);
     }
     KDeclarative kdeclarative;
@@ -1955,10 +1955,10 @@ CloseWindowView::CloseWindowView(QWidget *parent)
     kdeclarative.initialize();
     kdeclarative.setupBindings();
 
-    rootContext()->setContextProperty("armed", QVariant(false));
+    rootContext()->setContextProperty(QStringLiteral("armed"), QVariant(false));
 
-    setSource(QUrl(KStandardDirs::locate("data", QLatin1String("kwin/effects/presentwindows/main.qml"))));
-    if (QObject *item = rootObject()->findChild<QObject*>("closeButton")) {
+    setSource(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/effects/presentwindows/main.qml"))));
+    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(close()));
     }
 
@@ -1985,12 +1985,12 @@ void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 
 void CloseWindowView::arm()
 {
-    rootContext()->setContextProperty("armed", QVariant(true));
+    rootContext()->setContextProperty(QStringLiteral("armed"), QVariant(true));
 }
 
 void CloseWindowView::disarm()
 {
-    rootContext()->setContextProperty("armed", QVariant(false));
+    rootContext()->setContextProperty(QStringLiteral("armed"), QVariant(false));
     m_armTimer->start();
 }
 

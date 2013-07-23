@@ -177,7 +177,7 @@ void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
     WobblyWindowsConfig::self()->readConfig();
 
     QString settingsMode = WobblyWindowsConfig::settings();
-    if (settingsMode != "Custom") {
+    if (settingsMode != QStringLiteral("Custom")) {
         unsigned int wobblynessLevel = WobblyWindowsConfig::wobblynessLevel();
         if (wobblynessLevel > 4) {
             kDebug(1212) << "Wrong value for \"WobblynessLevel\" : " << wobblynessLevel;

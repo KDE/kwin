@@ -1406,179 +1406,179 @@ QString Workspace::supportInformation() const
         "what OpenGL driver and which effects are running.\n"
         "Please post the information provided underneath this introductory text to a paste bin service\n"
         "like http://paste.kde.org instead of pasting into support threads.\n").toString());
-    support.append("\n==========================\n\n");
+    support.append(QStringLiteral("\n==========================\n\n"));
     // all following strings are intended for support. They need to be pasted to e.g forums.kde.org
     // it is expected that the support will happen in English language or that the people providing
     // help understand English. Because of that all texts are not translated
-    support.append("Version\n");
-    support.append("=======\n");
-    support.append("KWin version: ");
-    support.append(KWIN_VERSION_STRING);
-    support.append('\n');
-    support.append("KDE SC version (runtime): ");
-    support.append(KDE::versionString());
-    support.append('\n');
-    support.append("KDE SC version (compile): ");
-    support.append(KDE_VERSION_STRING);
-    support.append('\n');
-    support.append("Qt Version: ");
-    support.append(qVersion());
-    support.append("\n\n");
-    support.append("Options\n");
-    support.append("=======\n");
+    support.append(QStringLiteral("Version\n"));
+    support.append(QStringLiteral("=======\n"));
+    support.append(QStringLiteral("KWin version: "));
+    support.append(QStringLiteral(KWIN_VERSION_STRING));
+    support.append(QStringLiteral("\n"));
+    support.append(QStringLiteral("KDE SC version (runtime): "));
+    support.append(QString::fromUtf8(KDE::versionString()));
+    support.append(QStringLiteral("\n"));
+    support.append(QStringLiteral("KDE SC version (compile): "));
+    support.append(QStringLiteral(KDE_VERSION_STRING));
+    support.append(QStringLiteral("\n"));
+    support.append(QStringLiteral("Qt Version: "));
+    support.append(QString::fromUtf8(qVersion()));
+    support.append(QStringLiteral("\n\n"));
+    support.append(QStringLiteral("Options\n"));
+    support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();
     for (int i=0; i<metaOptions->propertyCount(); ++i) {
         const QMetaProperty property = metaOptions->property(i);
-        if (QLatin1String(property.name()) == "objectName") {
+        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QLatin1String(property.name()) % ": " % options->property(property.name()).toString() % '\n');
+        support.append(QLatin1String(property.name()) + QStringLiteral(": ") + options->property(property.name()).toString() + QStringLiteral("\n"));
     }
 #ifdef KWIN_BUILD_SCREENEDGES
-    support.append("\nScreen Edges\n");
-    support.append(  "============\n");
+    support.append(QStringLiteral("\nScreen Edges\n"));
+    support.append(QStringLiteral(  "============\n"));
     const QMetaObject *metaScreenEdges = ScreenEdges::self()->metaObject();
     for (int i=0; i<metaScreenEdges->propertyCount(); ++i) {
         const QMetaProperty property = metaScreenEdges->property(i);
-        if (QLatin1String(property.name()) == "objectName") {
+        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QLatin1String(property.name()) % ": " % ScreenEdges::self()->property(property.name()).toString() % '\n');
+        support.append(QLatin1String(property.name()) + QStringLiteral(": ") + ScreenEdges::self()->property(property.name()).toString() + QStringLiteral("\n"));
     }
 #endif
-    support.append("\nScreens\n");
-    support.append(  "=======\n");
-    support.append("Multi-Head: ");
+    support.append(QStringLiteral("\nScreens\n"));
+    support.append(QStringLiteral(  "=======\n"));
+    support.append(QStringLiteral("Multi-Head: "));
     if (is_multihead) {
-        support.append("yes\n");
-        support.append(QString("Head: %1\n").arg(screen_number));
+        support.append(QStringLiteral("yes\n"));
+        support.append(QStringLiteral("Head: %1\n").arg(screen_number));
     } else {
-        support.append("no\n");
+        support.append(QStringLiteral("no\n"));
     }
-    support.append(QString("Number of Screens: %1\n").arg(screens()->count()));
+    support.append(QStringLiteral("Number of Screens: %1\n").arg(screens()->count()));
     for (int i=0; i<screens()->count(); ++i) {
         const QRect geo = screens()->geometry(i);
-        support.append(QString("Screen %1 Geometry: %2,%3,%4x%5\n")
+        support.append(QStringLiteral("Screen %1 Geometry: %2,%3,%4x%5\n")
                               .arg(i)
                               .arg(geo.x())
                               .arg(geo.y())
                               .arg(geo.width())
                               .arg(geo.height()));
     }
-    support.append("\nDecoration\n");
-    support.append(  "==========\n");
+    support.append(QStringLiteral("\nDecoration\n"));
+    support.append(QStringLiteral(  "==========\n"));
     support.append(decorationPlugin()->supportInformation());
-    support.append("\nCompositing\n");
-    support.append(  "===========\n");
+    support.append(QStringLiteral("\nCompositing\n"));
+    support.append(QStringLiteral(  "===========\n"));
     if (effects) {
-        support.append("Compositing is active\n");
+        support.append(QStringLiteral("Compositing is active\n"));
         switch (effects->compositingType()) {
         case OpenGL1Compositing:
         case OpenGL2Compositing:
         case OpenGLCompositing: {
 #ifdef KWIN_HAVE_OPENGLES
-            support.append("Compositing Type: OpenGL ES 2.0\n");
+            support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
 #else
-            support.append("Compositing Type: OpenGL\n");
+            support.append(QStringLiteral("Compositing Type: OpenGL\n"));
 #endif
 
             GLPlatform *platform = GLPlatform::instance();
-            support.append("OpenGL vendor string: " %   platform->glVendorString() % '\n');
-            support.append("OpenGL renderer string: " % platform->glRendererString() % '\n');
-            support.append("OpenGL version string: " %  platform->glVersionString() % '\n');
+            support.append(QStringLiteral("OpenGL vendor string: ") +   QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
+            support.append(QStringLiteral("OpenGL renderer string: ") + QString::fromUtf8(platform->glRendererString()) + QStringLiteral("\n"));
+            support.append(QStringLiteral("OpenGL version string: ") +  QString::fromUtf8(platform->glVersionString()) + QStringLiteral("\n"));
 
             if (platform->supports(LimitedGLSL) || platform->supports(GLSL))
-                support.append("OpenGL shading language version string: " % platform->glShadingLanguageVersionString() % '\n');
+                support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
 
-            support.append("Driver: " % GLPlatform::driverToString(platform->driver()) % '\n');
+            support.append(QStringLiteral("Driver: ") + GLPlatform::driverToString(platform->driver()) + QStringLiteral("\n"));
             if (!platform->isMesaDriver())
-                support.append("Driver version: " % GLPlatform::versionToString(platform->driverVersion()) % '\n');
+                support.append(QStringLiteral("Driver version: ") + GLPlatform::versionToString(platform->driverVersion()) + QStringLiteral("\n"));
 
-            support.append("GPU class: " % GLPlatform::chipClassToString(platform->chipClass()) % '\n');
+            support.append(QStringLiteral("GPU class: ") + GLPlatform::chipClassToString(platform->chipClass()) + QStringLiteral("\n"));
 
-            support.append("OpenGL version: " % GLPlatform::versionToString(platform->glVersion()) % '\n');
+            support.append(QStringLiteral("OpenGL version: ") + GLPlatform::versionToString(platform->glVersion()) + QStringLiteral("\n"));
 
             if (platform->supports(LimitedGLSL) || platform->supports(GLSL))
-                support.append("GLSL version: " % GLPlatform::versionToString(platform->glslVersion()) % '\n');
+                support.append(QStringLiteral("GLSL version: ") + GLPlatform::versionToString(platform->glslVersion()) + QStringLiteral("\n"));
 
             if (platform->isMesaDriver())
-                support.append("Mesa version: " % GLPlatform::versionToString(platform->mesaVersion()) % '\n');
+                support.append(QStringLiteral("Mesa version: ") + GLPlatform::versionToString(platform->mesaVersion()) + QStringLiteral("\n"));
             if (platform->serverVersion() > 0)
-                support.append("X server version: " % GLPlatform::versionToString(platform->serverVersion()) % '\n');
+                support.append(QStringLiteral("X server version: ") + GLPlatform::versionToString(platform->serverVersion()) + QStringLiteral("\n"));
             if (platform->kernelVersion() > 0)
-                support.append("Linux kernel version: " % GLPlatform::versionToString(platform->kernelVersion()) % '\n');
+                support.append(QStringLiteral("Linux kernel version: ") + GLPlatform::versionToString(platform->kernelVersion()) + QStringLiteral("\n"));
 
-            support.append("Direct rendering: ");
+            support.append(QStringLiteral("Direct rendering: "));
             if (platform->isDirectRendering()) {
-                support.append("yes\n");
+                support.append(QStringLiteral("yes\n"));
             } else {
-                support.append("no\n");
+                support.append(QStringLiteral("no\n"));
             }
-            support.append("Requires strict binding: ");
+            support.append(QStringLiteral("Requires strict binding: "));
             if (!platform->isLooseBinding()) {
-                support.append("yes\n");
+                support.append(QStringLiteral("yes\n"));
             } else {
-                support.append("no\n");
+                support.append(QStringLiteral("no\n"));
             }
-            support.append("GLSL shaders: ");
+            support.append(QStringLiteral("GLSL shaders: "));
             if (platform->supports(GLSL)) {
                 if (platform->supports(LimitedGLSL)) {
-                    support.append(" limited\n");
+                    support.append(QStringLiteral(" limited\n"));
                 } else {
-                    support.append(" yes\n");
+                    support.append(QStringLiteral(" yes\n"));
                 }
             } else {
-                support.append(" no\n");
+                support.append(QStringLiteral(" no\n"));
             }
-            support.append("Texture NPOT support: ");
+            support.append(QStringLiteral("Texture NPOT support: "));
             if (platform->supports(TextureNPOT)) {
                 if (platform->supports(LimitedNPOT)) {
-                    support.append(" limited\n");
+                    support.append(QStringLiteral(" limited\n"));
                 } else {
-                    support.append(" yes\n");
+                    support.append(QStringLiteral(" yes\n"));
                 }
             } else {
-                support.append(" no\n");
+                support.append(QStringLiteral(" no\n"));
             }
-            support.append("Virtual Machine: ");
+            support.append(QStringLiteral("Virtual Machine: "));
             if (platform->isVirtualMachine()) {
-                support.append(" yes\n");
+                support.append(QStringLiteral(" yes\n"));
             } else {
-                support.append(" no\n");
+                support.append(QStringLiteral(" no\n"));
             }
 
             if (effects->compositingType() == OpenGL2Compositing) {
-                support.append("OpenGL 2 Shaders are used\n");
+                support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
             } else {
-                support.append("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n");
+                support.append(QStringLiteral("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n"));
             }
             break;
         }
         case XRenderCompositing:
-            support.append("Compositing Type: XRender\n");
+            support.append(QStringLiteral("Compositing Type: XRender\n"));
             break;
         case NoCompositing:
         default:
-            support.append("Something is really broken, neither OpenGL nor XRender is used");
+            support.append(QStringLiteral("Something is really broken, neither OpenGL nor XRender is used"));
         }
-        support.append("\nLoaded Effects:\n");
-        support.append(  "---------------\n");
+        support.append(QStringLiteral("\nLoaded Effects:\n"));
+        support.append(QStringLiteral(  "---------------\n"));
         foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
-            support.append(effect % '\n');
+            support.append(effect + QStringLiteral("\n"));
         }
-        support.append("\nCurrently Active Effects:\n");
-        support.append(  "-------------------------\n");
+        support.append(QStringLiteral("\nCurrently Active Effects:\n"));
+        support.append(QStringLiteral(  "-------------------------\n"));
         foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->activeEffects()) {
-            support.append(effect % '\n');
+            support.append(effect + QStringLiteral("\n"));
         }
-        support.append("\nEffect Settings:\n");
-        support.append(  "----------------\n");
+        support.append(QStringLiteral("\nEffect Settings:\n"));
+        support.append(QStringLiteral(  "----------------\n"));
         foreach (const QString &effect, static_cast<EffectsHandlerImpl*>(effects)->loadedEffects()) {
             support.append(static_cast<EffectsHandlerImpl*>(effects)->supportInformation(effect));
-            support.append('\n');
+            support.append(QStringLiteral("\n"));
         }
     } else {
-        support.append("Compositing is not active\n");
+        support.append(QStringLiteral("Compositing is not active\n"));
     }
     return support;
 }

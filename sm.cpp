@@ -123,45 +123,45 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
 {
     c->setSessionInteract(false); //make sure we get the real values
     QString n = QString::number(num);
-    cg.writeEntry(QString("sessionId") + n, c->sessionId().constData());
-    cg.writeEntry(QString("windowRole") + n, c->windowRole().constData());
-    cg.writeEntry(QString("wmCommand") + n, c->wmCommand().constData());
-    cg.writeEntry(QString("wmClientMachine") + n, c->wmClientMachine(true).constData());
-    cg.writeEntry(QString("resourceName") + n, c->resourceName().constData());
-    cg.writeEntry(QString("resourceClass") + n, c->resourceClass().constData());
-    cg.writeEntry(QString("geometry") + n, QRect(c->calculateGravitation(true), c->clientSize()));   // FRAME
-    cg.writeEntry(QString("restore") + n, c->geometryRestore());
-    cg.writeEntry(QString("fsrestore") + n, c->geometryFSRestore());
-    cg.writeEntry(QString("maximize") + n, (int) c->maximizeMode());
-    cg.writeEntry(QString("fullscreen") + n, (int) c->fullScreenMode());
-    cg.writeEntry(QString("desktop") + n, c->desktop());
+    cg.writeEntry(QStringLiteral("sessionId") + n, c->sessionId().constData());
+    cg.writeEntry(QStringLiteral("windowRole") + n, c->windowRole().constData());
+    cg.writeEntry(QStringLiteral("wmCommand") + n, c->wmCommand().constData());
+    cg.writeEntry(QStringLiteral("wmClientMachine") + n, c->wmClientMachine(true).constData());
+    cg.writeEntry(QStringLiteral("resourceName") + n, c->resourceName().constData());
+    cg.writeEntry(QStringLiteral("resourceClass") + n, c->resourceClass().constData());
+    cg.writeEntry(QStringLiteral("geometry") + n, QRect(c->calculateGravitation(true), c->clientSize()));   // FRAME
+    cg.writeEntry(QStringLiteral("restore") + n, c->geometryRestore());
+    cg.writeEntry(QStringLiteral("fsrestore") + n, c->geometryFSRestore());
+    cg.writeEntry(QStringLiteral("maximize") + n, (int) c->maximizeMode());
+    cg.writeEntry(QStringLiteral("fullscreen") + n, (int) c->fullScreenMode());
+    cg.writeEntry(QStringLiteral("desktop") + n, c->desktop());
     // the config entry is called "iconified" for back. comp. reasons
     // (kconf_update script for updating session files would be too complicated)
-    cg.writeEntry(QString("iconified") + n, c->isMinimized());
-    cg.writeEntry(QString("opacity") + n, c->opacity());
+    cg.writeEntry(QStringLiteral("iconified") + n, c->isMinimized());
+    cg.writeEntry(QStringLiteral("opacity") + n, c->opacity());
     // the config entry is called "sticky" for back. comp. reasons
-    cg.writeEntry(QString("sticky") + n, c->isOnAllDesktops());
-    cg.writeEntry(QString("shaded") + n, c->isShade());
+    cg.writeEntry(QStringLiteral("sticky") + n, c->isOnAllDesktops());
+    cg.writeEntry(QStringLiteral("shaded") + n, c->isShade());
     // the config entry is called "staysOnTop" for back. comp. reasons
-    cg.writeEntry(QString("staysOnTop") + n, c->keepAbove());
-    cg.writeEntry(QString("keepBelow") + n, c->keepBelow());
-    cg.writeEntry(QString("skipTaskbar") + n, c->skipTaskbar(true));
-    cg.writeEntry(QString("skipPager") + n, c->skipPager());
-    cg.writeEntry(QString("skipSwitcher") + n, c->skipSwitcher());
+    cg.writeEntry(QStringLiteral("staysOnTop") + n, c->keepAbove());
+    cg.writeEntry(QStringLiteral("keepBelow") + n, c->keepBelow());
+    cg.writeEntry(QStringLiteral("skipTaskbar") + n, c->skipTaskbar(true));
+    cg.writeEntry(QStringLiteral("skipPager") + n, c->skipPager());
+    cg.writeEntry(QStringLiteral("skipSwitcher") + n, c->skipSwitcher());
     // not really just set by user, but name kept for back. comp. reasons
-    cg.writeEntry(QString("userNoBorder") + n, c->noBorder());
-    cg.writeEntry(QString("windowType") + n, windowTypeToTxt(c->windowType()));
-    cg.writeEntry(QString("shortcut") + n, c->shortcut().toString());
-    cg.writeEntry(QString("stackingOrder") + n, unconstrained_stacking_order.indexOf(c));
+    cg.writeEntry(QStringLiteral("userNoBorder") + n, c->noBorder());
+    cg.writeEntry(QStringLiteral("windowType") + n, windowTypeToTxt(c->windowType()));
+    cg.writeEntry(QStringLiteral("shortcut") + n, c->shortcut().toString());
+    cg.writeEntry(QStringLiteral("stackingOrder") + n, unconstrained_stacking_order.indexOf(c));
     // KConfig doesn't support long so we need to live with less precision on 64-bit systems
-    cg.writeEntry(QString("tabGroup") + n, static_cast<int>(reinterpret_cast<long>(c->tabGroup())));
-    cg.writeEntry(QString("activities") + n, c->activities());
+    cg.writeEntry(QStringLiteral("tabGroup") + n, static_cast<int>(reinterpret_cast<long>(c->tabGroup())));
+    cg.writeEntry(QStringLiteral("activities") + n, c->activities());
 }
 
 void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
 {
     //TODO clear it first
-    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + name);
+    KConfigGroup cg(KGlobal::config(), QStringLiteral("SubSession: ") + name);
     int count =  0;
     int active_client = -1;
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -208,41 +208,41 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
         QString n = QString::number(i);
         SessionInfo* info = new SessionInfo;
         session.append(info);
-        info->sessionId = cg.readEntry(QString("sessionId") + n, QString()).toLatin1();
-        info->windowRole = cg.readEntry(QString("windowRole") + n, QString()).toLatin1();
-        info->wmCommand = cg.readEntry(QString("wmCommand") + n, QString()).toLatin1();
-        info->wmClientMachine = cg.readEntry(QString("wmClientMachine") + n, QString()).toLatin1();
-        info->resourceName = cg.readEntry(QString("resourceName") + n, QString()).toLatin1();
-        info->resourceClass = cg.readEntry(QString("resourceClass") + n, QString()).toLower().toLatin1();
-        info->geometry = cg.readEntry(QString("geometry") + n, QRect());
-        info->restore = cg.readEntry(QString("restore") + n, QRect());
-        info->fsrestore = cg.readEntry(QString("fsrestore") + n, QRect());
-        info->maximized = cg.readEntry(QString("maximize") + n, 0);
-        info->fullscreen = cg.readEntry(QString("fullscreen") + n, 0);
-        info->desktop = cg.readEntry(QString("desktop") + n, 0);
-        info->minimized = cg.readEntry(QString("iconified") + n, false);
-        info->opacity = cg.readEntry(QString("opacity") + n, 1.0);
-        info->onAllDesktops = cg.readEntry(QString("sticky") + n, false);
-        info->shaded = cg.readEntry(QString("shaded") + n, false);
-        info->keepAbove = cg.readEntry(QString("staysOnTop") + n, false);
-        info->keepBelow = cg.readEntry(QString("keepBelow") + n, false);
-        info->skipTaskbar = cg.readEntry(QString("skipTaskbar") + n, false);
-        info->skipPager = cg.readEntry(QString("skipPager") + n, false);
-        info->skipSwitcher = cg.readEntry(QString("skipSwitcher") + n, false);
-        info->noBorder = cg.readEntry(QString("userNoBorder") + n, false);
-        info->windowType = txtToWindowType(cg.readEntry(QString("windowType") + n, QString()).toLatin1());
-        info->shortcut = cg.readEntry(QString("shortcut") + n, QString());
+        info->sessionId = cg.readEntry(QStringLiteral("sessionId") + n, QString()).toLatin1();
+        info->windowRole = cg.readEntry(QStringLiteral("windowRole") + n, QString()).toLatin1();
+        info->wmCommand = cg.readEntry(QStringLiteral("wmCommand") + n, QString()).toLatin1();
+        info->wmClientMachine = cg.readEntry(QStringLiteral("wmClientMachine") + n, QString()).toLatin1();
+        info->resourceName = cg.readEntry(QStringLiteral("resourceName") + n, QString()).toLatin1();
+        info->resourceClass = cg.readEntry(QStringLiteral("resourceClass") + n, QString()).toLower().toLatin1();
+        info->geometry = cg.readEntry(QStringLiteral("geometry") + n, QRect());
+        info->restore = cg.readEntry(QStringLiteral("restore") + n, QRect());
+        info->fsrestore = cg.readEntry(QStringLiteral("fsrestore") + n, QRect());
+        info->maximized = cg.readEntry(QStringLiteral("maximize") + n, 0);
+        info->fullscreen = cg.readEntry(QStringLiteral("fullscreen") + n, 0);
+        info->desktop = cg.readEntry(QStringLiteral("desktop") + n, 0);
+        info->minimized = cg.readEntry(QStringLiteral("iconified") + n, false);
+        info->opacity = cg.readEntry(QStringLiteral("opacity") + n, 1.0);
+        info->onAllDesktops = cg.readEntry(QStringLiteral("sticky") + n, false);
+        info->shaded = cg.readEntry(QStringLiteral("shaded") + n, false);
+        info->keepAbove = cg.readEntry(QStringLiteral("staysOnTop") + n, false);
+        info->keepBelow = cg.readEntry(QStringLiteral("keepBelow") + n, false);
+        info->skipTaskbar = cg.readEntry(QStringLiteral("skipTaskbar") + n, false);
+        info->skipPager = cg.readEntry(QStringLiteral("skipPager") + n, false);
+        info->skipSwitcher = cg.readEntry(QStringLiteral("skipSwitcher") + n, false);
+        info->noBorder = cg.readEntry(QStringLiteral("userNoBorder") + n, false);
+        info->windowType = txtToWindowType(cg.readEntry(QStringLiteral("windowType") + n, QString()).toLatin1().constData());
+        info->shortcut = cg.readEntry(QStringLiteral("shortcut") + n, QString());
         info->active = (active_client == i);
-        info->stackingOrder = cg.readEntry(QString("stackingOrder") + n, -1);
-        info->tabGroup = cg.readEntry(QString("tabGroup") + n, 0);
+        info->stackingOrder = cg.readEntry(QStringLiteral("stackingOrder") + n, -1);
+        info->tabGroup = cg.readEntry(QStringLiteral("tabGroup") + n, 0);
         info->tabGroupClient = NULL;
-        info->activities = cg.readEntry(QString("activities") + n, QStringList());
+        info->activities = cg.readEntry(QStringLiteral("activities") + n, QStringList());
     }
 }
 
 void Workspace::loadSubSessionInfo(const QString &name)
 {
-    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + name);
+    KConfigGroup cg(KGlobal::config(), QStringLiteral("SubSession: ") + name);
     addSessionInfo(cg);
 }
 

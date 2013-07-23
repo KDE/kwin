@@ -54,7 +54,7 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 void MagicLampEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("magiclamp");
+    EffectsHandler::sendReloadMessage(QStringLiteral("magiclamp"));
 }
 
 } // namespace

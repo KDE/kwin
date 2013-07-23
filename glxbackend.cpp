@@ -77,19 +77,19 @@ void GlxBackend::init()
     initGLX();
     // require at least GLX 1.3
     if (!hasGLXVersion(1, 3)) {
-        setFailed("Requires at least GLX 1.3");
+        setFailed(QStringLiteral("Requires at least GLX 1.3"));
         return;
     }
     if (!initDrawableConfigs()) {
-        setFailed("Could not initialize the drawable configs");
+        setFailed(QStringLiteral("Could not initialize the drawable configs"));
         return;
     }
     if (!initBuffer()) {
-        setFailed("Could not initialize the buffer");
+        setFailed(QStringLiteral("Could not initialize the buffer"));
         return;
     }
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
+        setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
     // Initialize OpenGL
@@ -172,7 +172,7 @@ bool GlxBackend::initRenderingContext()
             0
         };
 
-        const bool have_robustness = hasGLExtension("GLX_ARB_create_context_robustness");
+        const bool have_robustness = hasGLExtension(QStringLiteral("GLX_ARB_create_context_robustness"));
 
         // Try to create a 3.1 context first
         if (options->glCoreProfile()) {

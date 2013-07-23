@@ -60,7 +60,7 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 void DimInactiveEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("diminactive");
+    EffectsHandler::sendReloadMessage(QStringLiteral("diminactive"));
 }
 
 } // namespace

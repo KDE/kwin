@@ -115,7 +115,7 @@ bool StartupFeedbackEffect::supported()
 void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
-    KConfig conf("klaunchrc", KConfig::NoGlobals);
+    KConfig conf(QStringLiteral("klaunchrc"), KConfig::NoGlobals);
     KConfigGroup c = conf.group("FeedbackStyle");
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
@@ -132,7 +132,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         if (effects->compositingType() == OpenGL2Compositing) {
             delete m_blinkingShader;
             m_blinkingShader = 0;
-            const QString shader = KGlobal::dirs()->findResource("data", "kwin/blinking-startup-fragment.glsl");
+            const QString shader = KGlobal::dirs()->findResource("data", QStringLiteral("kwin/blinking-startup-fragment.glsl"));
             m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
             if (m_blinkingShader->isValid()) {
                 kDebug(1212) << "Blinking Shader is valid";
@@ -321,7 +321,7 @@ void StartupFeedbackEffect::start(const QString& icon)
     QPixmap iconPixmap = KIconLoader::global()->loadIcon(icon, KIconLoader::Small, 0,
                          KIconLoader::DefaultState, QStringList(), 0, true);  // return null pixmap if not found
     if (iconPixmap.isNull())
-        iconPixmap = SmallIcon("system-run");
+        iconPixmap = SmallIcon(QStringLiteral("system-run"));
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaintFull();

@@ -645,15 +645,18 @@ bool EffectsHandler::isOpenGLCompositing() const
 
 void EffectsHandler::sendReloadMessage(const QString& effectname)
 {
-    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigureEffect");
-    message << QString("kwin4_effect_" + effectname);
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin"),
+                                                          QStringLiteral("/KWin"),
+                                                          QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("reconfigureEffect"));
+    message << QString(QStringLiteral("kwin4_effect_") + effectname);
     QDBusConnection::sessionBus().send(message);
 }
 
 KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
 {
-    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig(KWIN_CONFIG, KConfig::NoGlobals);
-    return kwinconfig->group("Effect-" + effectname);
+    KSharedConfig::Ptr kwinconfig = KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG), KConfig::NoGlobals);
+    return kwinconfig->group(QStringLiteral("Effect-") + effectname);
 }
 
 EffectsHandler* effects = 0;
@@ -713,7 +716,7 @@ WINDOW_HELPER(QStringList, activities, "activities")
 
 QString EffectWindow::windowClass() const
 {
-    return parent()->property("resourceName").toString() + ' ' + parent()->property("resourceClass").toString();
+    return parent()->property("resourceName").toString() + QStringLiteral(" ") + parent()->property("resourceClass").toString();
 }
 
 QRect EffectWindow::contentsRect() const
@@ -752,7 +755,7 @@ bool EffectWindow::isOnAllActivities() const
 WINDOW_HELPER_DEFAULT(bool, isMinimized, "minimized", false)
 WINDOW_HELPER_DEFAULT(bool, isMovable, "moveable", false)
 WINDOW_HELPER_DEFAULT(bool, isMovableAcrossScreens, "moveableAcrossScreens", false)
-WINDOW_HELPER_DEFAULT(QString, caption, "caption", "")
+WINDOW_HELPER_DEFAULT(QString, caption, "caption", QString())
 WINDOW_HELPER_DEFAULT(bool, keepAbove, "keepAbove", true)
 WINDOW_HELPER_DEFAULT(bool, isModal, "modal", false)
 WINDOW_HELPER_DEFAULT(QSize, basicUnit, "basicUnit", QSize(1, 1))

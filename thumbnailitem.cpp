@@ -95,7 +95,7 @@ void AbstractThumbnailItem::findParentEffectWindow()
             kDebug(1212) << "No Context";
             return;
         }
-        const QVariant variant = ctx->engine()->rootContext()->contextProperty("viewId");
+        const QVariant variant = ctx->engine()->rootContext()->contextProperty(QStringLiteral("viewId"));
         if (!variant.isValid()) {
             kDebug(1212) << "Required context property 'viewId' not found";
             return;

@@ -578,7 +578,7 @@ public Q_SLOTS:
  * @see KWIN_EFFECT_CONFIG_MULTIPLE
  */
 #define KWIN_EFFECT_CONFIG_SINGLE( name, classname ) \
-    registerPlugin<classname>(#name);
+    registerPlugin<classname>(QStringLiteral(#name));
 /**
  * The declaration of the factory to export the effect
  */

@@ -314,7 +314,7 @@ public:
         return true;
     }
     static QString defaultLayoutName() {
-        return QString("thumbnails");
+        return QStringLiteral("thumbnails");
     }
 private:
     TabBoxConfigPrivate* d;

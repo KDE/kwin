@@ -42,7 +42,7 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
 {
     Q_UNUSED(iface)
     Q_UNUSED(parent)
-    if (keyword.startsWith("kwin4_effect_")) {
+    if (keyword.startsWith(QStringLiteral("kwin4_effect_"))) {
         return new ScriptedEffectConfig(componentData(), keyword, parentWidget, args);
     } else {
         return new ScriptingConfig(componentData(), keyword, parentWidget, args);
@@ -63,8 +63,20 @@ void GenericScriptedConfig::createUi()
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-    const QString kconfigXTFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + '/' + typeName() + '/' + m_packageName + "/contents/config/main.xml");
-    const QString uiPath = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + '/' + typeName() + '/' + m_packageName + "/contents/ui/config.ui");
+    const QString kconfigXTFile = KStandardDirs::locate("data",
+                                                        QStringLiteral(KWIN_NAME) +
+                                                        QStringLiteral("/") +
+                                                        typeName() +
+                                                        QStringLiteral("/") +
+                                                        m_packageName +
+                                                        QStringLiteral("/contents/config/main.xml"));
+    const QString uiPath = KStandardDirs::locate("data",
+                                                 QStringLiteral(KWIN_NAME) +
+                                                 QStringLiteral("/") +
+                                                 typeName() +
+                                                 QStringLiteral("/") +
+                                                 m_packageName +
+                                                 QStringLiteral("/contents/ui/config.ui"));
     if (kconfigXTFile.isEmpty() || uiPath.isEmpty()) {
         layout->addWidget(new QLabel(i18nc("Error message", "Plugin does not provide configuration file in expected location")));
         return;
@@ -104,17 +116,20 @@ ScriptedEffectConfig::~ScriptedEffectConfig()
 
 QString ScriptedEffectConfig::typeName() const
 {
-    return QString("effects");
+    return QStringLiteral("effects");
 }
 
 KConfigGroup ScriptedEffectConfig::configGroup()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group("Effect-" + packageName());
+    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QStringLiteral("Effect-") + packageName());
 }
 
 void ScriptedEffectConfig::reload()
 {
-    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/KWin", "org.kde.KWin", "reconfigureEffect");
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin"),
+                                                          QStringLiteral("/KWin"),
+                                                          QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("reconfigureEffect"));
     message << QString(packageName());
     QDBusConnection::sessionBus().send(message);
 }
@@ -131,12 +146,12 @@ ScriptingConfig::~ScriptingConfig()
 
 KConfigGroup ScriptingConfig::configGroup()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group("Script-" + packageName());
+    return KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG))->group(QStringLiteral("Script-") + packageName());
 }
 
 QString ScriptingConfig::typeName() const
 {
-    return QString("scripts");
+    return QStringLiteral("scripts");
 }
 
 void ScriptingConfig::reload()

@@ -73,7 +73,7 @@ AniData::AniData(const AniData &other)
 static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
 {
     bool ok; float f1, f2;
-    QStringList floats = s.split(',');
+    QStringList floats = s.split(QStringLiteral(","));
     f1 = floats.at(0).toFloat(&ok);
     if (!ok || (f1 < 0.0 && !(  a == AnimationEffect::Position ||
                                 a == AnimationEffect::Translation ||
@@ -106,21 +106,21 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
     duration = 1; // invalidate
     customCurve = 0; // Linear
 
-    QStringList animation = str.split(':');
+    QStringList animation = str.split(u':');
     if (animation.count() < 5)
         return; // at least window type, attribute, metadata, time and target is required
 
     windowType = (NET::WindowTypeMask)animation.at(0).toUInt();
 
-    if (animation.at(1) == "Opacity")           attribute = AnimationEffect::Opacity;
-    else if (animation.at(1) == "Brightness")   attribute = AnimationEffect::Brightness;
-    else if (animation.at(1) == "Saturation")   attribute = AnimationEffect::Saturation;
-    else if (animation.at(1) == "Scale")        attribute = AnimationEffect::Scale;
-    else if (animation.at(1) == "Translation")  attribute = AnimationEffect::Translation;
-    else if (animation.at(1) == "Rotation")     attribute = AnimationEffect::Rotation;
-    else if (animation.at(1) == "Position")     attribute = AnimationEffect::Position;
-    else if (animation.at(1) == "Size")         attribute = AnimationEffect::Size;
-    else if (animation.at(1) == "Clip")         attribute = AnimationEffect::Clip;
+    if (animation.at(1) == QStringLiteral("Opacity"))           attribute = AnimationEffect::Opacity;
+    else if (animation.at(1) == QStringLiteral("Brightness"))   attribute = AnimationEffect::Brightness;
+    else if (animation.at(1) == QStringLiteral("Saturation"))   attribute = AnimationEffect::Saturation;
+    else if (animation.at(1) == QStringLiteral("Scale"))        attribute = AnimationEffect::Scale;
+    else if (animation.at(1) == QStringLiteral("Translation"))  attribute = AnimationEffect::Translation;
+    else if (animation.at(1) == QStringLiteral("Rotation"))     attribute = AnimationEffect::Rotation;
+    else if (animation.at(1) == QStringLiteral("Position"))     attribute = AnimationEffect::Position;
+    else if (animation.at(1) == QStringLiteral("Size"))         attribute = AnimationEffect::Size;
+    else if (animation.at(1) == QStringLiteral("Clip"))         attribute = AnimationEffect::Clip;
     else {
         kDebug(1212) << "Invalid attribute" << animation.at(1);
         return;
@@ -167,23 +167,23 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
 static QString attributeString(KWin::AnimationEffect::Attribute attribute)
 {
     switch (attribute) {
-    case KWin::AnimationEffect::Opacity:      return "Opacity";
-    case KWin::AnimationEffect::Brightness:   return "Brightness";
-    case KWin::AnimationEffect::Saturation:   return "Saturation";
-    case KWin::AnimationEffect::Scale:        return "Scale";
-    case KWin::AnimationEffect::Translation:  return "Translation";
-    case KWin::AnimationEffect::Rotation:     return "Rotation";
-    case KWin::AnimationEffect::Position:     return "Position";
-    case KWin::AnimationEffect::Size:         return "Size";
-    case KWin::AnimationEffect::Clip:         return "Clip";
-    default:                                  return " ";
+    case KWin::AnimationEffect::Opacity:      return QStringLiteral("Opacity");
+    case KWin::AnimationEffect::Brightness:   return QStringLiteral("Brightness");
+    case KWin::AnimationEffect::Saturation:   return QStringLiteral("Saturation");
+    case KWin::AnimationEffect::Scale:        return QStringLiteral("Scale");
+    case KWin::AnimationEffect::Translation:  return QStringLiteral("Translation");
+    case KWin::AnimationEffect::Rotation:     return QStringLiteral("Rotation");
+    case KWin::AnimationEffect::Position:     return QStringLiteral("Position");
+    case KWin::AnimationEffect::Size:         return QStringLiteral("Size");
+    case KWin::AnimationEffect::Clip:         return QStringLiteral("Clip");
+    default:                                  return QStringLiteral(" ");
     }
 }
 
 QList<AniData> AniData::list(const QString &str)
 {
     QList<AniData> newList;
-    QStringList list = str.split(';', QString::SkipEmptyParts);
+    QStringList list = str.split(u';', QString::SkipEmptyParts);
     foreach (const QString &astr, list) {
         newList << AniData(astr);
         if (newList.last().duration < 0)
@@ -194,20 +194,20 @@ QList<AniData> AniData::list(const QString &str)
 
 QString AniData::toString() const
 {
-    QString ret =   QString::number((uint)windowType) + ':' + attributeString(attribute) + ':' +
-                    QString::number(meta) + ':' + QString::number(duration) + ':' +
-                    to.toString() + ':' + QString::number(customCurve) + ':' +
-                    QString::number(time) + ':' + from.toString();
+    QString ret =   QString::number((uint)windowType) + QStringLiteral(":") + attributeString(attribute) + QStringLiteral(":") +
+                    QString::number(meta) + QStringLiteral(":") + QString::number(duration) + QStringLiteral(":") +
+                    to.toString() + QStringLiteral(":") + QString::number(customCurve) + QStringLiteral(":") +
+                    QString::number(time) + QStringLiteral(":") + from.toString();
     return ret;
 }
 
 QString AniData::debugInfo() const
 {
-    return "Animation: " + attributeString(attribute) + '\n' +
-           "     From: " + from.toString() + '\n' +
-           "       To: " + to.toString() + '\n' +
-           "  Started: " + QString::number(AnimationEffect::clock() - startTime) + "ms ago\n" +
-           " Duration: " + QString::number(duration) + "ms\n" +
-           "   Passed: " + QString::number(time) + "ms\n" +
-           " Applying: " + QString::number(windowType) + '\n';
+    return QStringLiteral("Animation: ") + attributeString(attribute) +
+           QStringLiteral("\n     From: ") + from.toString() +
+           QStringLiteral("\n       To: ") + to.toString() +
+           QStringLiteral("\n  Started: ") + QString::number(AnimationEffect::clock() - startTime) + QStringLiteral("ms ago\n") +
+           QStringLiteral(  " Duration: ") + QString::number(duration) + QStringLiteral("ms\n") +
+           QStringLiteral(  "   Passed: ") + QString::number(time) + QStringLiteral("ms\n") +
+           QStringLiteral(  " Applying: ") + QString::number(windowType) + QStringLiteral("\n");
 }

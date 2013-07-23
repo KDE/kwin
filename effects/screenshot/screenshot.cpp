@@ -45,14 +45,14 @@ ScreenShotEffect::ScreenShotEffect()
     : m_scheduledScreenshot(0)
 {
     connect ( effects, SIGNAL(windowClosed(KWin::EffectWindow*)), SLOT(windowClosed(KWin::EffectWindow*)) );
-    QDBusConnection::sessionBus().registerObject("/Screenshot", this, QDBusConnection::ExportScriptableContents);
-    QDBusConnection::sessionBus().registerService("org.kde.kwin.Screenshot");
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Screenshot"), this, QDBusConnection::ExportScriptableContents);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.Screenshot"));
 }
 
 ScreenShotEffect::~ScreenShotEffect()
 {
-    QDBusConnection::sessionBus().unregisterObject("/Screenshot");
-    QDBusConnection::sessionBus().unregisterService("org.kde.kwin.Screenshot");
+    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Screenshot"));
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin.Screenshot"));
 }
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -305,7 +305,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
     }
 
     KTemporaryFile temp;
-    temp.setSuffix(".png");
+    temp.setSuffix(QStringLiteral(".png"));
     temp.setAutoRemove(false);
     if (!temp.open()) {
         return QString();

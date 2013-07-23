@@ -59,23 +59,23 @@ static bool gs_tripleBufferNeedsDetection = false;
 void EglOnXBackend::init()
 {
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
+        setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
 
     initEGL();
-    if (!hasGLExtension("EGL_KHR_image") &&
-        (!hasGLExtension("EGL_KHR_image_base") ||
-         !hasGLExtension("EGL_KHR_image_pixmap"))) {
-        setFailed("Required support for binding pixmaps to EGLImages not found, disabling compositing");
+    if (!hasGLExtension(QStringLiteral("EGL_KHR_image")) &&
+        (!hasGLExtension(QStringLiteral("EGL_KHR_image_base")) ||
+         !hasGLExtension(QStringLiteral("EGL_KHR_image_pixmap")))) {
+        setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(EglPlatformInterface);
     glPlatform->printResults();
     initGL(EglPlatformInterface);
-    if (!hasGLExtension("GL_OES_EGL_image")) {
-        setFailed("Required extension GL_OES_EGL_image not found, disabling compositing");
+    if (!hasGLExtension(QStringLiteral("GL_OES_EGL_image"))) {
+        setFailed(QStringLiteral("Required extension GL_OES_EGL_image not found, disabling compositing"));
         return;
     }
 
@@ -84,7 +84,7 @@ void EglOnXBackend::init()
         if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
-                setFailed("query surface failed");
+                setFailed(QStringLiteral("query surface failed"));
                 return;
             } else {
                 surfaceHasSubPost = EGL_FALSE;

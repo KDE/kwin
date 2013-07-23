@@ -49,11 +49,11 @@ KWIN_EFFECT(mousemark, MouseMarkEffect)
 MouseMarkEffect::MouseMarkEffect()
 {
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast< KAction* >(actionCollection->addAction("ClearMouseMarks"));
+    KAction* a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("ClearMouseMarks")));
     a->setText(i18n("Clear All Mouse Marks"));
     a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F11));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clear()));
-    a = static_cast< KAction* >(actionCollection->addAction("ClearLastMouseMark"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("ClearLastMouseMark")));
     a->setText(i18n("Clear Last Mouse Mark"));
     a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));

@@ -60,7 +60,7 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    m_actionCollection->setConfigGroup("Magnifier");
+    m_actionCollection->setConfigGroup(QStringLiteral("Magnifier"));
     m_actionCollection->setConfigGlobal(true);
 
     KAction* a;
@@ -92,7 +92,7 @@ void MagnifierEffectConfig::save()
 
     m_ui->editor->save();   // undo() will restore to this state from now on
     KCModule::save();
-    EffectsHandler::sendReloadMessage("magnifier");
+    EffectsHandler::sendReloadMessage(QStringLiteral("magnifier"));
 }
 
 void MagnifierEffectConfig::defaults()

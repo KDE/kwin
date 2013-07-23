@@ -56,10 +56,10 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     addConfig(TrackMouseConfig::self(), m_ui);
 
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
-    m_actionCollection->setConfigGroup("TrackMouse");
+    m_actionCollection->setConfigGroup(QStringLiteral("TrackMouse"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction *a = static_cast< KAction* >(m_actionCollection->addAction("TrackMouse"));
+    KAction *a = static_cast< KAction* >(m_actionCollection->addAction(QStringLiteral("TrackMouse")));
     a->setText(i18n("Track mouse"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut());
@@ -84,7 +84,7 @@ void TrackMouseEffectConfig::checkModifiers()
 void TrackMouseEffectConfig::load()
 {
     KCModule::load();
-    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action("TrackMouse")))
+    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(QStringLiteral("TrackMouse"))))
         m_ui->shortcut->setKeySequence(a->globalShortcut().primary());
 
     checkModifiers();
@@ -95,7 +95,7 @@ void TrackMouseEffectConfig::save()
 {
     KCModule::save();
     m_actionCollection->writeSettings();
-    EffectsHandler::sendReloadMessage("trackmouse");
+    EffectsHandler::sendReloadMessage(QStringLiteral("trackmouse"));
 }
 
 void TrackMouseEffectConfig::defaults()
@@ -107,7 +107,7 @@ void TrackMouseEffectConfig::defaults()
 
 void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
 {
-    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action("TrackMouse")))
+    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(QStringLiteral("TrackMouse"))))
         a->setGlobalShortcut(KShortcut(seq), KAction::ActiveShortcut, KAction::NoAutoloading);
 //     m_actionCollection->writeSettings();
     emit changed(true);

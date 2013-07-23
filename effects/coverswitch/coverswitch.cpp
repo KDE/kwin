@@ -68,15 +68,15 @@ CoverSwitchEffect::CoverSwitchEffect()
     captionFont.setPointSize(captionFont.pointSize() * 2);
 
     if (effects->compositingType() == OpenGL2Compositing) {
-        QString shadersDir = "kwin/shaders/1.10/";
+        QString shadersDir = QStringLiteral("kwin/shaders/1.10/");
 #ifdef KWIN_HAVE_OPENGLES
         const qint64 coreVersionNumber = kVersionNumber(3, 0);
 #else
         const qint64 coreVersionNumber = kVersionNumber(1, 40);
 #endif
         if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-            shadersDir = "kwin/shaders/1.40/";
-        const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + "coverswitch-reflection.glsl");
+            shadersDir = QStringLiteral("kwin/shaders/1.40/");
+        const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + QStringLiteral("coverswitch-reflection.glsl"));
         m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     } else {
         m_reflectionShader = NULL;
@@ -1010,7 +1010,7 @@ void CoverSwitchEffect::updateCaption()
     if (selected_window->isDesktop()) {
         captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
-        static QPixmap pix = KIcon("user-desktop").pixmap(captionFrame->iconSize());
+        static QPixmap pix = KIcon(QStringLiteral("user-desktop")).pixmap(captionFrame->iconSize());
         captionFrame->setIcon(pix);
     } else {
         captionFrame->setText(selected_window->caption());

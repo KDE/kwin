@@ -44,7 +44,7 @@ FallApartEffect::FallApartEffect()
 
 void FallApartEffect::reconfigure(ReconfigureFlags)
 {
-    KConfigGroup conf = effects->effectConfig("FallApart");
+    KConfigGroup conf = effects->effectConfig(QStringLiteral("FallApart"));
     blockSize = qBound(1, conf.readEntry("BlockSize", 40), 100000);
 }
 

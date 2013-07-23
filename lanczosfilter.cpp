@@ -86,8 +86,8 @@ void LanczosFilter::init()
     }
     m_shader.reset(ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader,
                                                                  gl->glslVersion() >= kVersionNumber(1, 40) ?
-                                                                 ":/resources/shaders/1.40/lanczos-fragment.glsl" :
-                                                                 ":/resources/shaders/1.10/lanczos-fragment.glsl"));
+                                                                 QStringLiteral(":/resources/shaders/1.40/lanczos-fragment.glsl") :
+                                                                 QStringLiteral(":/resources/shaders/1.10/lanczos-fragment.glsl")));
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader.data());
         m_uTexUnit    = m_shader->uniformLocation("texUnit");

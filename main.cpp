@@ -276,10 +276,10 @@ public:
         wmList->setEditable(true);
         layout->addWidget(wmList);
 
-        addWM("metacity");
-        addWM("openbox");
-        addWM("fvwm2");
-        addWM(KWIN_NAME);
+        addWM(QStringLiteral("metacity"));
+        addWM(QStringLiteral("openbox"));
+        addWM(QStringLiteral("fvwm2"));
+        addWM(QStringLiteral(KWIN_NAME));
 
         setMainWidget(mainWidget);
 
@@ -324,7 +324,7 @@ Application::Application()
         screen_number = DefaultScreen(display());
 
     if (!owner.claim(args->isSet("replace"), true)) {
-        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit(), stderr);
+        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     }
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
@@ -334,7 +334,7 @@ Application::Application()
     if (crashes >= 4) {
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
-        QString cmd = KWIN_NAME;
+        QString cmd = QStringLiteral(KWIN_NAME);
         if (dialog.exec() == QDialog::Accepted)
             cmd = dialog.selectedWM();
         else
@@ -541,11 +541,11 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     // for several bug reports about high CPU usage (bug #239963)
     setenv("QT_NO_GLIB", "1", true);
 
-    org::kde::KSMServerInterface ksmserver("org.kde.ksmserver", "/KSMServer", QDBusConnection::sessionBus());
-    ksmserver.suspendStartup(KWIN_NAME);
+    org::kde::KSMServerInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QDBusConnection::sessionBus());
+    ksmserver.suspendStartup(QStringLiteral(KWIN_NAME));
     KWin::Application a;
 
-    ksmserver.resumeStartup(KWIN_NAME);
+    ksmserver.resumeStartup(QStringLiteral(KWIN_NAME));
     KWin::SessionManager weAreIndeed;
     KWin::SessionSaveDoneHelper helper;
 #warning insertCatalog needs porting
@@ -563,7 +563,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
 
     QString appname;
     if (KWin::screen_number == 0)
-        appname = "org.kde.kwin";
+        appname = QStringLiteral("org.kde.kwin");
     else
         appname.sprintf("org.kde.kwin-screen-%d", KWin::screen_number);
 

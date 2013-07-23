@@ -93,7 +93,7 @@ CubeEffect::CubeEffect()
     , zOrderingFactor(0.0f)
     , mAddedHeightCoeff1(0.0f)
     , mAddedHeightCoeff2(0.0f)
-    , m_shadersDir("kwin/shaders/1.10/")
+    , m_shadersDir(QStringLiteral("kwin/shaders/1.10/"))
     , m_cubeCapBuffer(NULL)
     , m_proxy(this)
 {
@@ -106,12 +106,12 @@ CubeEffect::CubeEffect()
     const qint64 coreVersionNumber = kVersionNumber(1, 40);
 #endif
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        m_shadersDir = "kwin/shaders/1.40/";
+        m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
 
     if (effects->compositingType() == OpenGL2Compositing) {
-        const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-reflection.glsl");
+        const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cube-reflection.glsl"));
         m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
-        const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + "cube-cap.glsl");
+        const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cube-cap.glsl"));
         m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
     } else {
         m_reflectionShader = NULL;
@@ -202,15 +202,15 @@ void CubeEffect::reconfigure(ReconfigureFlags)
     // do not connect the shortcut if we use cylinder or sphere
     if (!shortcutsRegistered) {
         KActionCollection* actionCollection = new KActionCollection(this);
-        KAction* cubeAction = static_cast< KAction* >(actionCollection->addAction("Cube"));
+        KAction* cubeAction = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("Cube")));
         cubeAction->setText(i18n("Desktop Cube"));
         cubeAction->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
         cubeShortcut = cubeAction->globalShortcut();
-        KAction* cylinderAction = static_cast< KAction* >(actionCollection->addAction("Cylinder"));
+        KAction* cylinderAction = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("Cylinder")));
         cylinderAction->setText(i18n("Desktop Cylinder"));
         cylinderAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
         cylinderShortcut = cylinderAction->globalShortcut();
-        KAction* sphereAction = static_cast< KAction* >(actionCollection->addAction("Sphere"));
+        KAction* sphereAction = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("Sphere")));
         sphereAction->setText(i18n("Desktop Sphere"));
         sphereAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
         sphereShortcut = sphereAction->globalShortcut();
@@ -297,8 +297,8 @@ bool CubeEffect::loadShader()
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;
-    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", m_shadersDir + "cylinder.vert");
-    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", m_shadersDir + "sphere.vert");
+    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cylinder.vert"));
+    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("sphere.vert"));
     if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;

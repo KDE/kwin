@@ -62,7 +62,7 @@ ImageProvider::ImageProvider(QAbstractItemModel *model)
 QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
 {
     bool ok = false;
-    QStringList parts = id.split('/');
+    QStringList parts = id.split(QStringLiteral("/"));
     const int row = parts.first().toInt(&ok);
     if (!ok) {
         return QPixmap();
@@ -142,16 +142,16 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 0, 1, "DesktopThumbnailItem");
 #endif
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
-    rootContext()->setContextProperty("viewId", static_cast<qulonglong>(winId()));
+    rootContext()->setContextProperty(QStringLiteral("viewId"), static_cast<qulonglong>(winId()));
     if (m_mode == TabBoxConfig::ClientTabBox) {
-        rootContext()->setContextProperty("clientModel", model);
+        rootContext()->setContextProperty(QStringLiteral("clientModel"), model);
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
-        rootContext()->setContextProperty("clientModel", model);
+        rootContext()->setContextProperty(QStringLiteral("clientModel"), model);
     }
     setSource(QUrl(KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + QLatin1String("/tabbox/tabbox.qml"))));
 
     // FrameSvg
-    m_frame->setImagePath("dialogs/background");
+    m_frame->setImagePath(QStringLiteral("dialogs/background"));
     m_frame->setCacheAllRenderedFrames(true);
     m_frame->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 
@@ -181,7 +181,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
         rootObject()->setProperty("longestCaption", clientModel->longestCaption());
     }
 
-    if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
+    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("listView"))) {
         item->setProperty("currentIndex", tabBox->first().row());
         connect(item, SIGNAL(currentIndexChanged(int)), SLOT(currentIndexChanged(int)));
     }
@@ -307,7 +307,7 @@ void DeclarativeView::setCurrentIndex(const QModelIndex &index, bool disableAnim
     if (tabBox->config().tabBoxMode() != m_mode) {
         return;
     }
-    if (QObject *item = rootObject()->findChild<QObject*>("listView")) {
+    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("listView"))) {
         QVariant durationRestore;
         if (disableAnimation) {
             durationRestore = item->property("highlightMoveDuration");
@@ -340,7 +340,7 @@ void DeclarativeView::updateQmlSource(bool force)
     if (service.isNull()) {
         return;
     }
-    if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
+    if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
         kDebug(1212) << "Window Switcher Layout is no declarativeappletscript";
         return;
     }
@@ -354,12 +354,12 @@ void DeclarativeView::updateQmlSource(bool force)
 
 KService::Ptr DeclarativeView::findWindowSwitcher()
 {
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(tabBox->config().layoutName());
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher", constraint);
+    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(tabBox->config().layoutName());
+    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/WindowSwitcher"), constraint);
     if (offers.isEmpty()) {
         // load default
-        constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg("informative");
-        offers = KServiceTypeTrader::self()->query("KWin/WindowSwitcher", constraint);
+        constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
+        offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/WindowSwitcher"), constraint);
         if (offers.isEmpty()) {
             kDebug(1212) << "could not find default window switcher layout";
             return KService::Ptr();
@@ -370,12 +370,12 @@ KService::Ptr DeclarativeView::findWindowSwitcher()
 
 KService::Ptr DeclarativeView::findDesktopSwitcher()
 {
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(tabBox->config().layoutName());
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/DesktopSwitcher", constraint);
+    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(tabBox->config().layoutName());
+    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/DesktopSwitcher"), constraint);
     if (offers.isEmpty()) {
         // load default
-        constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg("informative");
-        offers = KServiceTypeTrader::self()->query("KWin/DesktopSwitcher", constraint);
+        constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
+        offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/DesktopSwitcher"), constraint);
         if (offers.isEmpty()) {
             kDebug(1212) << "could not find default desktop switcher layout";
             return KService::Ptr();
@@ -386,16 +386,16 @@ KService::Ptr DeclarativeView::findDesktopSwitcher()
 
 QString DeclarativeView::findWindowSwitcherScriptFile(KService::Ptr service)
 {
-    const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-    const QString scriptName = service->property("X-Plasma-MainScript").toString();
-    return KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/tabbox/" + pluginName + "/contents/" + scriptName);
+    const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+    const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    return KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/tabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
 }
 
 QString DeclarativeView::findDesktopSwitcherScriptFile(KService::Ptr service)
 {
-    const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-    const QString scriptName = service->property("X-Plasma-MainScript").toString();
-    return KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/desktoptabbox/" + pluginName + "/contents/" + scriptName);
+    const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+    const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    return KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/desktoptabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
 }
 
 void DeclarativeView::slotEmbeddedChanged(bool enabled)

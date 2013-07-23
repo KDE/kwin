@@ -56,25 +56,25 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    m_actionCollection->setConfigGroup("Cube");
+    m_actionCollection->setConfigGroup(QStringLiteral("Cube"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* cubeAction = (KAction*) m_actionCollection->addAction("Cube");
+    KAction* cubeAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Cube"));
     cubeAction->setText(i18n("Desktop Cube"));
     cubeAction->setProperty("isConfigurationAction", true);
     cubeAction->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
-    KAction* cylinderAction = (KAction*) m_actionCollection->addAction("Cylinder");
+    KAction* cylinderAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Cylinder"));
     cylinderAction->setText(i18n("Desktop Cylinder"));
     cylinderAction->setProperty("isConfigurationAction", true);
     cylinderAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    KAction* sphereAction = (KAction*) m_actionCollection->addAction("Sphere");
+    KAction* sphereAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Sphere"));
     sphereAction->setText(i18n("Desktop Sphere"));
     sphereAction->setProperty("isConfigurationAction", true);
     sphereAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
 
     m_ui->editor->addCollection(m_actionCollection);
     connect(m_ui->kcfg_Caps, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
-    m_ui->kcfg_Wallpaper->setFilter("*.png *.jpeg *.jpg ");
+    m_ui->kcfg_Wallpaper->setFilter(QStringLiteral("*.png *.jpeg *.jpg "));
     addConfig(CubeConfig::self(), m_ui);
     load();
 }
@@ -83,7 +83,7 @@ void CubeEffectConfig::save()
 {
     KCModule::save();
     m_ui->editor->save();
-    EffectsHandler::sendReloadMessage("cube");
+    EffectsHandler::sendReloadMessage(QStringLiteral("cube"));
 }
 
 void CubeEffectConfig::capsSelectionChanged()

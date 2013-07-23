@@ -147,7 +147,7 @@ bool UserActionsMenu::isMenuClient(const Client *c) const
 
 void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
 {
-    if (!KAuthorized::authorizeKAction("kwin_rmb"))
+    if (!KAuthorized::authorizeKAction(QStringLiteral("kwin_rmb")))
         return;
     if (cl.isNull())
         return;
@@ -187,63 +187,63 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Cl
     QStringList args;
     QString type;
     KActionCollection *keys = Workspace::self()->actionCollection();
-    if (message == "noborderaltf3") {
-        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
+    if (message == QStringLiteral("noborderaltf3")) {
+        KAction* action = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Operations Menu")));
         assert(action != NULL);
-        QString shortcut = QString("%1 (%2)").arg(action->text())
+        QString shortcut = QStringLiteral("%1 (%2)").arg(action->text())
                            .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" << i18n(
+        args << QStringLiteral("--msgbox") << i18n(
                  "You have selected to show a window without its border.\n"
                  "Without the border, you will not be able to enable the border "
                  "again using the mouse: use the window operations menu instead, "
                  "activated using the %1 keyboard shortcut.",
                  shortcut);
-        type = "altf3warning";
-    } else if (message == "fullscreenaltf3") {
-        KAction* action = qobject_cast<KAction*>(keys->action("Window Operations Menu"));
+        type = QStringLiteral("altf3warning");
+    } else if (message == QStringLiteral("fullscreenaltf3")) {
+        KAction* action = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Operations Menu")));
         assert(action != NULL);
-        QString shortcut = QString("%1 (%2)").arg(action->text())
+        QString shortcut = QStringLiteral("%1 (%2)").arg(action->text())
                            .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
-        args << "--msgbox" << i18n(
+        args << QStringLiteral("--msgbox") << i18n(
                  "You have selected to show a window in fullscreen mode.\n"
                  "If the application itself does not have an option to turn the fullscreen "
                  "mode off you will not be able to disable it "
                  "again using the mouse: use the window operations menu instead, "
                  "activated using the %1 keyboard shortcut.",
                  shortcut);
-        type = "altf3warning";
+        type = QStringLiteral("altf3warning");
     } else
         abort();
     if (!type.isEmpty()) {
-        KConfig cfg("kwin_dialogsrc");
+        KConfig cfg(QStringLiteral("kwin_dialogsrc"));
         KConfigGroup cg(&cfg, "Notification Messages");  // Depends on KMessageBox
         if (!cg.readEntry(type, true))
             return;
-        args << "--dontagain" << "kwin_dialogsrc:" + type;
+        args << QStringLiteral("--dontagain") << QStringLiteral("kwin_dialogsrc:") + type;
     }
     if (!c.isNull())
-        args << "--embed" << QString::number(c.data()->window());
-    KProcess::startDetached("kdialog", args);
+        args << QStringLiteral("--embed") << QString::number(c.data()->window());
+    KProcess::startDetached(QStringLiteral("kdialog"), args);
 }
 
 
 QStringList configModules(bool controlCenter)
 {
     QStringList args;
-    args <<  "kwindecoration";
+    args <<  QStringLiteral("kwindecoration");
     if (controlCenter)
-        args << "kwinoptions";
-    else if (KAuthorized::authorizeControlModule("kde-kwinoptions.desktop"))
-        args << "kwinactions" << "kwinfocus" <<  "kwinmoving" << "kwinadvanced"
-             << "kwinrules" << "kwincompositing"
+        args << QStringLiteral("kwinoptions");
+    else if (KAuthorized::authorizeControlModule(QStringLiteral("kde-kwinoptions.desktop")))
+        args << QStringLiteral("kwinactions") << QStringLiteral("kwinfocus") <<  QStringLiteral("kwinmoving") << QStringLiteral("kwinadvanced")
+             << QStringLiteral("kwinrules") << QStringLiteral("kwincompositing")
 #ifdef KWIN_BUILD_TABBOX
-             << "kwintabbox"
+             << QStringLiteral("kwintabbox")
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
-             << "kwinscreenedges"
+             << QStringLiteral("kwinscreenedges")
 #endif
 #ifdef KWIN_BUILD_SCRIPTING
-             << "kwinscripts"
+             << QStringLiteral("kwinscripts")
 #endif
              ;
     return args;
@@ -252,8 +252,8 @@ QStringList configModules(bool controlCenter)
 void UserActionsMenu::configureWM()
 {
     QStringList args;
-    args << "--icon" << "preferences-system-windows" << configModules(false);
-    KToolInvocation::kdeinitExec("kcmshell4", args);
+    args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
+    KToolInvocation::kdeinitExec(QStringLiteral("kcmshell4"), args);
 }
 
 void UserActionsMenu::init()
@@ -270,52 +270,52 @@ void UserActionsMenu::init()
     advancedMenu->setFont(KGlobalSettings::menuFont());
 
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
-    m_moveOperation->setIcon(KIcon("transform-move"));
+    m_moveOperation->setIcon(KIcon(QStringLiteral("transform-move")));
     KActionCollection *keys = Workspace::self()->actionCollection();
-    KAction *kaction = qobject_cast<KAction*>(keys->action("Window Move"));
+    KAction *kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Move")));
     if (kaction != 0)
         m_moveOperation->setShortcut(kaction->globalShortcut().primary());
     m_moveOperation->setData(Options::UnrestrictedMoveOp);
 
     m_resizeOperation = advancedMenu->addAction(i18n("Re&size"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Resize"));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Resize")));
     if (kaction != 0)
         m_resizeOperation->setShortcut(kaction->globalShortcut().primary());
     m_resizeOperation->setData(Options::ResizeOp);
 
     m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
-    m_keepAboveOperation->setIcon(KIcon("go-up"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Above Other Windows"));
+    m_keepAboveOperation->setIcon(KIcon(QStringLiteral("go-up")));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Above Other Windows")));
     if (kaction != 0)
         m_keepAboveOperation->setShortcut(kaction->globalShortcut().primary());
     m_keepAboveOperation->setCheckable(true);
     m_keepAboveOperation->setData(Options::KeepAboveOp);
 
     m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
-    m_keepBelowOperation->setIcon(KIcon("go-down"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Below Other Windows"));
+    m_keepBelowOperation->setIcon(KIcon(QStringLiteral("go-down")));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Below Other Windows")));
     if (kaction != 0)
         m_keepBelowOperation->setShortcut(kaction->globalShortcut().primary());
     m_keepBelowOperation->setCheckable(true);
     m_keepBelowOperation->setData(Options::KeepBelowOp);
 
     m_fullScreenOperation = advancedMenu->addAction(i18n("&Fullscreen"));
-    m_fullScreenOperation->setIcon(KIcon("view-fullscreen"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Fullscreen"));
+    m_fullScreenOperation->setIcon(KIcon(QStringLiteral("view-fullscreen")));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Fullscreen")));
     if (kaction != 0)
         m_fullScreenOperation->setShortcut(kaction->globalShortcut().primary());
     m_fullScreenOperation->setCheckable(true);
     m_fullScreenOperation->setData(Options::FullScreenOp);
 
     m_shadeOperation = advancedMenu->addAction(i18n("Sh&ade"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Shade"));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Shade")));
     if (kaction != 0)
         m_shadeOperation->setShortcut(kaction->globalShortcut().primary());
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
 
     m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
-    kaction = qobject_cast<KAction*>(keys->action("Window No Border"));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window No Border")));
     if (kaction != 0)
         m_noBorderOperation->setShortcut(kaction->globalShortcut().primary());
     m_noBorderOperation->setCheckable(true);
@@ -324,36 +324,36 @@ void UserActionsMenu::init()
     advancedMenu->addSeparator();
 
     QAction *action = advancedMenu->addAction(i18n("Window &Shortcut..."));
-    action->setIcon(KIcon("configure-shortcuts"));
-    kaction = qobject_cast<KAction*>(keys->action("Setup Window Shortcut"));
+    action->setIcon(KIcon(QStringLiteral("configure-shortcuts")));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Setup Window Shortcut")));
     if (kaction != 0)
         action->setShortcut(kaction->globalShortcut().primary());
     action->setData(Options::SetupWindowShortcutOp);
 
     action = advancedMenu->addAction(i18n("&Special Window Settings..."));
-    action->setIcon(KIcon("preferences-system-windows-actions"));
+    action->setIcon(KIcon(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
 
     action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
-    action->setIcon(KIcon("preferences-system-windows-actions"));
+    action->setIcon(KIcon(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
     if (!KGlobal::config()->isImmutable() &&
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
                                         "Window &Manager Settings..."));
-        action->setIcon(KIcon("configure"));
+        action->setIcon(KIcon(QStringLiteral("configure")));
         connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
     }
 
     m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Minimize"));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Minimize")));
     if (kaction != 0)
         m_minimizeOperation->setShortcut(kaction->globalShortcut().primary());
     m_minimizeOperation->setData(Options::MinimizeOp);
 
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Maximize"));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Maximize")));
     if (kaction != 0)
         m_maximizeOperation->setShortcut(kaction->globalShortcut().primary());
     m_maximizeOperation->setCheckable(true);
@@ -364,14 +364,14 @@ void UserActionsMenu::init()
     // Actions for window tabbing
     if (decorationPlugin()->supportsTabbing()) {
         m_removeFromTabGroup = m_menu->addAction(i18n("&Untab"));
-        kaction = qobject_cast<KAction*>(keys->action("Untab"));
+        kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Untab")));
         if (kaction != 0)
             m_removeFromTabGroup->setShortcut(kaction->globalShortcut().primary());
         m_removeFromTabGroup->setData(Options::RemoveTabFromGroupOp);
 
         m_closeTabGroup = m_menu->addAction(i18n("Close Entire &Group"));
-        m_closeTabGroup->setIcon(KIcon("window-close"));
-        kaction = qobject_cast<KAction*>(keys->action("Close TabGroup"));
+        m_closeTabGroup->setIcon(KIcon(QStringLiteral("window-close")));
+        kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Close TabGroup")));
         if (kaction != 0)
             m_closeTabGroup->setShortcut(kaction->globalShortcut().primary());
         m_closeTabGroup->setData(Options::CloseTabGroupOp);
@@ -387,8 +387,8 @@ void UserActionsMenu::init()
     m_menu->addSeparator();
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
-    m_closeOperation->setIcon(KIcon("window-close"));
-    kaction = qobject_cast<KAction*>(keys->action("Window Close"));
+    m_closeOperation->setIcon(KIcon(QStringLiteral("window-close")));
+    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Close")));
     if (kaction != 0)
         m_closeOperation->setShortcut(kaction->globalShortcut().primary());
     m_closeOperation->setData(Options::CloseOp);
@@ -510,7 +510,7 @@ static QString shortCaption(const QString &s)
     if (s.length() < 64)
         return s;
     QString ss = s;
-    return ss.replace(32,s.length()-64,"...");
+    return ss.replace(32,s.length()-64, QStringLiteral("..."));
 }
 
 void UserActionsMenu::rebuildTabListPopup()
@@ -660,11 +660,11 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     const uint BASE = 10;
     for (uint i = 1; i <= vds->count(); ++i) {
-        QString basic_name("%1  %2");
+        QString basic_name(QStringLiteral("%1  %2"));
         if (i < BASE) {
-            basic_name.prepend('&');
+            basic_name.prepend(QStringLiteral("&"));
         }
-        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace('&', "&&")));
+        action = m_desktopMenu->addAction(basic_name.arg(i).arg(vds->name(i).replace(QStringLiteral("&"), QStringLiteral("&&"))));
         action->setData(i);
         action->setCheckable(true);
         group->addAction(action);
@@ -757,11 +757,11 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     switch(op) {
     case Options::FullScreenOp:
         if (!c.data()->isFullScreen() && c.data()->userCanSetFullScreen())
-            type = "fullscreenaltf3";
+            type = QStringLiteral("fullscreenaltf3");
         break;
     case Options::NoBorderOp:
         if (!c.data()->noBorder() && c.data()->userCanSetNoBorder())
-            type = "noborderaltf3";
+            type = QStringLiteral("noborderaltf3");
         break;
     default:
         break;
@@ -1015,8 +1015,8 @@ void Workspace::setupWindowShortcutDone(bool ok)
 
 void Workspace::clientShortcutUpdated(Client* c)
 {
-    QString key = QString("_k_session:%1").arg(c->window());
-    QAction* action = client_keys->action(key.toLatin1().constData());
+    QString key = QStringLiteral("_k_session:%1").arg(c->window());
+    QAction* action = client_keys->action(key);
     if (!c->shortcut().isEmpty()) {
         if (action == NULL) { // new shortcut
             action = client_keys->addAction(QString(key));
@@ -1393,9 +1393,9 @@ static bool screenSwitchImpossible()
     if (!screens()->isCurrentFollowsMouse())
         return false;
     QStringList args;
-    args << "--passivepopup" << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
-                                     "Therefore it is not possible to switch to a screen explicitly.") << "20";
-    KProcess::startDetached("kdialog", args);
+    args << QStringLiteral("--passivepopup") << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
+                                     "Therefore it is not possible to switch to a screen explicitly.") << QStringLiteral("20");
+    KProcess::startDetached(QStringLiteral("kdialog"), args);
     return true;
 }
 
@@ -1922,7 +1922,7 @@ void Client::setShortcut(const QString& _cut)
 // Format:
 // base+(abcdef)<space>base+(abcdef)
 // E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
-    if (!cut.contains('(') && !cut.contains(')') && !cut.contains(" - ")) {
+    if (!cut.contains(QStringLiteral("(")) && !cut.contains(QStringLiteral(")")) && !cut.contains(QStringLiteral(" - "))) {
         if (workspace()->shortcutAvailable(KShortcut(cut), this))
             setShortcutInternal(KShortcut(cut));
         else
@@ -1930,11 +1930,11 @@ void Client::setShortcut(const QString& _cut)
         return;
     }
     QList< KShortcut > keys;
-    QStringList groups = cut.split(" - ");
+    QStringList groups = cut.split(QStringLiteral(" - "));
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();
             ++it) {
-        QRegExp reg("(.*\\+)\\((.*)\\)");
+        QRegExp reg(QStringLiteral("(.*\\+)\\((.*)\\)"));
         if (reg.indexIn(*it) > -1) {
             QString base = reg.cap(1);
             QString list = reg.cap(2);

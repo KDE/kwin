@@ -97,7 +97,7 @@ void WobblyWindowsEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage("wobblywindows");
+    EffectsHandler::sendReloadMessage(QStringLiteral("wobblywindows"));
 }
 
 void WobblyWindowsEffectConfig::wobblinessChanged()

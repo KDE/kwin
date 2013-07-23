@@ -49,7 +49,7 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
     QString result;
     for (int i = 0; i < context->argumentCount(); ++i) {
         if (i > 0) {
-            result.append(" ");
+            result.append(QStringLiteral(" "));
         }
         result.append(context->argument(i).toString());
     }
@@ -109,10 +109,10 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
     AnimationSettings settings;
     settings.set = 0;
 
-    settings.to = qscriptvalue_cast<FPx2>(object.property("to"));
-    settings.from = qscriptvalue_cast<FPx2>(object.property("from"));
+    settings.to = qscriptvalue_cast<FPx2>(object.property(QStringLiteral("to")));
+    settings.from = qscriptvalue_cast<FPx2>(object.property(QStringLiteral("from")));
 
-    QScriptValue duration = object.property("duration");
+    QScriptValue duration = object.property(QStringLiteral("duration"));
     if (duration.isValid() && duration.isNumber()) {
         settings.duration = duration.toUInt32();
         settings.set |= AnimationSettings::Duration;
@@ -120,7 +120,7 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
         settings.duration = 0;
     }
 
-    QScriptValue delay = object.property("delay");
+    QScriptValue delay = object.property(QStringLiteral("delay"));
     if (delay.isValid() && delay.isNumber()) {
         settings.delay = delay.toInt32();
         settings.set |= AnimationSettings::Delay;
@@ -128,7 +128,7 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
         settings.delay = 0;
     }
 
-    QScriptValue curve = object.property("curve");
+    QScriptValue curve = object.property(QStringLiteral("curve"));
     if (curve.isValid() && curve.isNumber()) {
         settings.curve = static_cast<QEasingCurve::Type>(curve.toInt32());
         settings.set |= AnimationSettings::Curve;
@@ -136,7 +136,7 @@ AnimationSettings animationSettingsFromObject(QScriptValue &object)
         settings.curve = QEasingCurve::Linear;
     }
 
-    QScriptValue type = object.property("type");
+    QScriptValue type = object.property(QStringLiteral("type"));
     if (type.isValid() && type.isNumber()) {
         settings.type = static_cast<AnimationEffect::Attribute>(type.toInt32());
         settings.set |= AnimationSettings::Type;
@@ -151,35 +151,35 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
 {
     QList<AnimationSettings> settings;
     if (!effect) {
-        context->throwError(QScriptContext::ReferenceError, "Internal Scripted KWin Effect error");
+        context->throwError(QScriptContext::ReferenceError, QStringLiteral("Internal Scripted KWin Effect error"));
         return settings;
     }
     if (context->argumentCount() != 1) {
-        context->throwError(QScriptContext::SyntaxError, "Exactly one argument expected");
+        context->throwError(QScriptContext::SyntaxError, QStringLiteral("Exactly one argument expected"));
         return settings;
     }
     if (!context->argument(0).isObject()) {
-        context->throwError(QScriptContext::TypeError, "Argument needs to be an object");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be an object"));
         return settings;
     }
     QScriptValue object = context->argument(0);
-    QScriptValue windowProperty = object.property("window");
+    QScriptValue windowProperty = object.property(QStringLiteral("window"));
     if (!windowProperty.isValid() || !windowProperty.isObject()) {
-        context->throwError(QScriptContext::TypeError, "Window property missing in animation options");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Window property missing in animation options"));
         return settings;
     }
     *window = qobject_cast<EffectWindow*>(windowProperty.toQObject());
 
     settings << animationSettingsFromObject(object); // global
 
-    QScriptValue animations = object.property("animations"); // array
+    QScriptValue animations = object.property(QStringLiteral("animations")); // array
     if (animations.isValid()) {
         if (!animations.isArray()) {
-            context->throwError(QScriptContext::TypeError, "Animations provided but not an array");
+            context->throwError(QScriptContext::TypeError, QStringLiteral("Animations provided but not an array"));
             settings.clear();
             return settings;
         }
-        const int length = static_cast<int>(animations.property("length").toInteger());
+        const int length = static_cast<int>(animations.property(QStringLiteral("length")).toInteger());
         for (int i=0; i<length; ++i) {
             QScriptValue value = animations.property(QString::number(i));
             if (!value.isValid()) {
@@ -190,11 +190,11 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
                 const uint set = s.set | settings.at(0).set;
                 // Catch show stoppers (incompletable animation)
                 if (!(set & AnimationSettings::Type)) {
-                    context->throwError(QScriptContext::TypeError, "Type property missing in animation options");
+                    context->throwError(QScriptContext::TypeError, QStringLiteral("Type property missing in animation options"));
                     continue;
                 }
                 if (!(set & AnimationSettings::Duration)) {
-                    context->throwError(QScriptContext::TypeError, "Duration property missing in animation options");
+                    context->throwError(QScriptContext::TypeError, QStringLiteral("Duration property missing in animation options"));
                     continue;
                 }
                 // Complete local animations from global settings
@@ -215,11 +215,11 @@ QList<AnimationSettings> animationSettings(QScriptContext *context, ScriptedEffe
     if (settings.count() == 1) {
         const uint set = settings.at(0).set;
         if (!(set & AnimationSettings::Type)) {
-            context->throwError(QScriptContext::TypeError, "Type property missing in animation options");
+            context->throwError(QScriptContext::TypeError, QStringLiteral("Type property missing in animation options"));
             settings.clear();
         }
         if (!(set & AnimationSettings::Duration)) {
-            context->throwError(QScriptContext::TypeError, "Duration property missing in animation options");
+            context->throwError(QScriptContext::TypeError, QStringLiteral("Duration property missing in animation options"));
             settings.clear();
         }
     } else if (!(settings.at(0).set & AnimationSettings::Type)) { // invalid global
@@ -235,11 +235,11 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
     EffectWindow *window;
     QList<AnimationSettings> settings = animationSettings(context, effect, &window);
     if (settings.empty()) {
-        context->throwError(QScriptContext::TypeError, "No animations provided");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("No animations provided"));
         return engine->undefinedValue();
     }
     if (!window) {
-        context->throwError(QScriptContext::TypeError, "Window property does not contain an EffectWindow");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Window property does not contain an EffectWindow"));
         return engine->undefinedValue();
     }
 
@@ -264,11 +264,11 @@ QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
     EffectWindow *window;
     QList<AnimationSettings> settings = animationSettings(context, effect, &window);
     if (settings.empty()) {
-        context->throwError(QScriptContext::TypeError, "No animations provided");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("No animations provided"));
         return engine->undefinedValue();
     }
     if (!window) {
-        context->throwError(QScriptContext::TypeError, "Window property does not contain an EffectWindow");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Window property does not contain an EffectWindow"));
         return engine->undefinedValue();
     }
 
@@ -291,7 +291,7 @@ QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
 {
     ScriptedEffect *effect = qobject_cast<ScriptedEffect*>(context->callee().data().toQObject());
     if (context->argumentCount() != 1) {
-        context->throwError(QScriptContext::SyntaxError, "Exactly one argument expected");
+        context->throwError(QScriptContext::SyntaxError, QStringLiteral("Exactly one argument expected"));
         return engine->undefinedValue();
     }
     QVariant v = context->argument(0).toVariant();
@@ -314,7 +314,7 @@ QScriptValue kwinEffectCancel(QScriptContext *context, QScriptEngine *engine)
         }
     }
     if (!ok) {
-        context->throwError(QScriptContext::TypeError, "Argument needs to be one or several quint64");
+        context->throwError(QScriptContext::TypeError, QStringLiteral("Argument needs to be one or several quint64"));
         return engine->undefinedValue();
     }
 
@@ -339,8 +339,8 @@ void effectWindowFromScriptValue(const QScriptValue &value, EffectWindow* &windo
 QScriptValue fpx2ToScriptValue(QScriptEngine *eng, const KWin::FPx2 &fpx2)
 {
     QScriptValue val = eng->newObject();
-    val.setProperty("value1", fpx2[0]);
-    val.setProperty("value2", fpx2[1]);
+    val.setProperty(QStringLiteral("value1"), fpx2[0]);
+    val.setProperty(QStringLiteral("value2"), fpx2[1]);
     return val;
 }
 
@@ -355,8 +355,8 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
         return;
     }
     if (value.isObject()) {
-        QScriptValue value1 = value.property("value1");
-        QScriptValue value2 = value.property("value2");
+        QScriptValue value1 = value.property(QStringLiteral("value1"));
+        QScriptValue value2 = value.property(QStringLiteral("value2"));
         if (!value1.isValid() || !value2.isValid() || !value1.isNumber() || !value2.isNumber()) {
             kDebug(1212) << "Cannot cast scripted FPx2 to C++";
             fpx2 = FPx2();
@@ -400,7 +400,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    const QString kconfigXTFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/effects/" + m_effectName + "/contents/config/main.xml");
+    const QString kconfigXTFile = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + m_effectName + QStringLiteral("/contents/config/main.xml"));
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = effects->effectConfig(m_effectName);
         QFile xmlFile(kconfigXTFile);
@@ -409,12 +409,12 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     }
 
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
-    m_engine->globalObject().setProperty("effects", effectsObject, QScriptValue::Undeletable);
-    m_engine->globalObject().setProperty("Effect", m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
-    m_engine->globalObject().setProperty("KWin", m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
-    m_engine->globalObject().setProperty("QEasingCurve", m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
-    m_engine->globalObject().setProperty("effect", m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
-    m_engine->globalObject().setProperty("AnimationData", m_engine->scriptValueFromQMetaObject<AnimationData>());
+    m_engine->globalObject().setProperty(QStringLiteral("effects"), effectsObject, QScriptValue::Undeletable);
+    m_engine->globalObject().setProperty(QStringLiteral("Effect"), m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
+    m_engine->globalObject().setProperty(QStringLiteral("KWin"), m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+    m_engine->globalObject().setProperty(QStringLiteral("QEasingCurve"), m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
+    m_engine->globalObject().setProperty(QStringLiteral("effect"), m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
+    m_engine->globalObject().setProperty(QStringLiteral("AnimationData"), m_engine->scriptValueFromQMetaObject<AnimationData>());
     MetaScripting::registration(m_engine);
     qScriptRegisterMetaType<KEffectWindowRef>(m_engine, effectWindowToScriptValue, effectWindowFromScriptValue);
     qScriptRegisterMetaType<KWin::FPx2>(m_engine, fpx2ToScriptValue, fpx2FromScriptValue);
@@ -422,35 +422,35 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     // add our print
     QScriptValue printFunc = m_engine->newFunction(kwinEffectScriptPrint);
     printFunc.setData(m_engine->newQObject(this));
-    m_engine->globalObject().setProperty("print", printFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("print"), printFunc);
     // add our animationTime
     QScriptValue animationTimeFunc = m_engine->newFunction(kwinEffectScriptAnimationTime);
     animationTimeFunc.setData(m_engine->newQObject(this));
-    m_engine->globalObject().setProperty("animationTime", animationTimeFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("animationTime"), animationTimeFunc);
     // add displayWidth and displayHeight
     QScriptValue displayWidthFunc = m_engine->newFunction(kwinEffectDisplayWidth);
-    m_engine->globalObject().setProperty("displayWidth", displayWidthFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("displayWidth"), displayWidthFunc);
     QScriptValue displayHeightFunc = m_engine->newFunction(kwinEffectDisplayHeight);
-    m_engine->globalObject().setProperty("displayHeight", displayHeightFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("displayHeight"), displayHeightFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, m_engine, kwinScriptGlobalShortcut);
     registerScreenEdgeFunction(this, m_engine, kwinScriptScreenEdge);
     // add the animate method
     QScriptValue animateFunc = m_engine->newFunction(kwinEffectAnimate);
     animateFunc.setData(m_engine->newQObject(this));
-    m_engine->globalObject().setProperty("animate", animateFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("animate"), animateFunc);
 
     // and the set variant
     QScriptValue setFunc = m_engine->newFunction(kwinEffectSet);
     setFunc.setData(m_engine->newQObject(this));
-    m_engine->globalObject().setProperty("set", setFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("set"), setFunc);
 
     // cancel...
     QScriptValue cancelFunc = m_engine->newFunction(kwinEffectCancel);
     cancelFunc.setData(m_engine->newQObject(this));
-    m_engine->globalObject().setProperty("cancel", cancelFunc);
+    m_engine->globalObject().setProperty(QStringLiteral("cancel"), cancelFunc);
 
-    QScriptValue ret = m_engine->evaluate(scriptFile.readAll());
+    QScriptValue ret = m_engine->evaluate(QString::fromUtf8(scriptFile.readAll()));
 
     if (ret.isError()) {
         signalHandlerException(ret);

@@ -45,7 +45,7 @@ void BlurEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage("blur");
+    EffectsHandler::sendReloadMessage(QStringLiteral("blur"));
 }
 
 } // namespace KWin

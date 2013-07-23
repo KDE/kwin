@@ -61,7 +61,7 @@ TrackMouseEffect::TrackMouseEffect()
         m_angleBase = 90.0;
     m_mousePolling = false;
     KActionCollection *actionCollection = new KActionCollection(this);
-    m_action = static_cast< KAction* >(actionCollection->addAction("TrackMouse"));
+    m_action = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("TrackMouse")));
     m_action->setText(i18n("Track mouse"));
     m_action->setGlobalShortcut(KShortcut());
 
@@ -245,8 +245,8 @@ void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
 
 void TrackMouseEffect::loadTexture()
 {
-    QString f[2] = {KGlobal::dirs()->findResource("appdata", "tm_outer.png"),
-                    KGlobal::dirs()->findResource("appdata", "tm_inner.png")};
+    QString f[2] = {KGlobal::dirs()->findResource("appdata", QStringLiteral("tm_outer.png")),
+                    KGlobal::dirs()->findResource("appdata", QStringLiteral("tm_inner.png"))};
     if (f[0].isEmpty() || f[1].isEmpty())
         return;
 

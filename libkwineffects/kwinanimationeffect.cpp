@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 QDebug operator<<(QDebug dbg, const KWin::FPx2 &fpx2)
 {
-    dbg.nospace() << fpx2[0] << "," << fpx2[1] << QString(fpx2.isValid() ? " (valid)" : " (invalid)");
+    dbg.nospace() << fpx2[0] << "," << fpx2[1] << QString(fpx2.isValid() ? QStringLiteral(" (valid)") : QStringLiteral(" (invalid)"));
     return dbg.space();
 }
 
@@ -873,14 +873,14 @@ QString AnimationEffect::debug(const QString &/*parameter*/) const
     Q_D(const AnimationEffect);
     QString dbg;
     if (d->m_animations.isEmpty())
-        dbg = "No window is animated";
+        dbg = QStringLiteral("No window is animated");
     else {
         AniMap::const_iterator entry = d->m_animations.constBegin(), mapEnd = d->m_animations.constEnd();
         for (; entry != mapEnd; ++entry) {
-            QString caption = entry.key()->isDeleted() ? "[Deleted]" : entry.key()->caption();
+            QString caption = entry.key()->isDeleted() ? QStringLiteral("[Deleted]") : entry.key()->caption();
             if (caption.isEmpty())
-                caption = "[Untitled]";
-            dbg += "Animating window: " + caption + '\n';
+                caption = QStringLiteral("[Untitled]");
+            dbg += QStringLiteral("Animating window: ") + caption + QStringLiteral("\n");
             QList<AniData>::const_iterator anim = entry->first.constBegin(), animEnd = entry->first.constEnd();
             for (; anim != animEnd; ++anim)
                 dbg += anim->debugInfo();

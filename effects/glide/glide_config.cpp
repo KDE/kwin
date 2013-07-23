@@ -44,7 +44,7 @@ GlideEffectConfig::~GlideEffectConfig()
 void GlideEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("glide");
+    EffectsHandler::sendReloadMessage(QStringLiteral("glide"));
 }
 } // namespace KWin
 #include "glide_config.moc"

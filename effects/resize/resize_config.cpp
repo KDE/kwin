@@ -54,7 +54,7 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
 void ResizeEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("resize");
+    EffectsHandler::sendReloadMessage(QStringLiteral("resize"));
 }
 
 } // namespace

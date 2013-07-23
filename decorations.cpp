@@ -38,12 +38,12 @@ DecorationPlugin::DecorationPlugin(QObject *parent)
     , KDecorationPlugins(KGlobal::config())
     , m_disabled(false)
 {
-    defaultPlugin = "kwin3_oxygen";
+    defaultPlugin = QStringLiteral("kwin3_oxygen");
 #ifndef KWIN_BUILD_OXYGEN
-    defaultPlugin = "kwin3_aurorae";
+    defaultPlugin = QStringLiteral("kwin3_aurorae");
 #endif
 #ifdef KWIN_BUILD_DECORATIONS
-    loadPlugin("");   // load the plugin specified in cfg file
+    loadPlugin(QString());   // load the plugin specified in cfg file
 #else
     setDisabled(true);
 #endif
@@ -157,30 +157,30 @@ void DecorationPlugin::resetCompositing()
 QString DecorationPlugin::supportInformation()
 {
     if (m_disabled) {
-        return "Decoration Plugin disabled\n";
+        return QStringLiteral("Decoration Plugin disabled\n");
     }
     QString support;
-    support.append("Current Plugin: ");
+    support.append(QStringLiteral("Current Plugin: "));
     support.append(currentPlugin());
-    support.append('\n');
+    support.append(QStringLiteral("\n"));
 
-    support.append("Shadows: ");
-    support.append(hasShadows() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Shadows: "));
+    support.append(hasShadows() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
 
-    support.append("Alpha: ");
-    support.append(hasAlpha() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Alpha: "));
+    support.append(hasAlpha() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
 
-    support.append("Announces Alpha: ");
-    support.append(supportsAnnounceAlpha() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Announces Alpha: "));
+    support.append(supportsAnnounceAlpha() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
 
-    support.append("Tabbing: ");
-    support.append(supportsTabbing() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Tabbing: "));
+    support.append(supportsTabbing() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
 
-    support.append("Frame Overlap: ");
-    support.append(supportsFrameOverlap() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Frame Overlap: "));
+    support.append(supportsFrameOverlap() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
 
-    support.append("Blur Behind: ");
-    support.append(supportsBlurBehind() ? "yes\n" : "no\n");
+    support.append(QStringLiteral("Blur Behind: "));
+    support.append(supportsBlurBehind() ? QStringLiteral("yes\n") : QStringLiteral("no\n"));
     // TODO: Qt5 - read support information from Factory
     return support;
 }

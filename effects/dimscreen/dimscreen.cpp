@@ -89,11 +89,11 @@ void DimScreenEffect::slotWindowActivated(EffectWindow *w)
 {
     if (!w) return;
     QStringList check;
-    check << "kdesu kdesu";
-    check << "kdesudo kdesudo";
-    check << "polkit-kde-manager polkit-kde-manager";
-    check << "polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1";
-    check << "pinentry pinentry";
+    check << QStringLiteral("kdesu kdesu");
+    check << QStringLiteral("kdesudo kdesudo");
+    check << QStringLiteral("polkit-kde-manager polkit-kde-manager");
+    check << QStringLiteral("polkit-kde-authentication-agent-1 polkit-kde-authentication-agent-1");
+    check << QStringLiteral("pinentry pinentry");
     if (check.contains(w->windowClass())) {
         mActivated = true;
         activateAnimation = true;

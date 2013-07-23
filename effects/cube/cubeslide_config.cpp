@@ -53,7 +53,7 @@ CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList
 void CubeSlideEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("cubeslide");
+    EffectsHandler::sendReloadMessage(QStringLiteral("cubeslide"));
 }
 
 } // namespace

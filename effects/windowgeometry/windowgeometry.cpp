@@ -61,7 +61,7 @@ WindowGeometry::WindowGeometry()
     myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
 
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast< KAction* >(actionCollection->addAction("WindowGeometry"));
+    KAction* a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("WindowGeometry")));
     a->setText(i18n("Toggle window geometry display (effect only)"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
@@ -130,12 +130,12 @@ static inline QString number(int n)
     QString sign;
     if (n >= 0) {
         sign = KGlobal::locale()->positiveSign();
-        if (sign.isEmpty()) sign = '+';
+        if (sign.isEmpty()) sign = QStringLiteral("+");
     }
     else {
         n = -n;
         sign = KGlobal::locale()->negativeSign();
-        if (sign.isEmpty()) sign = '-';
+        if (sign.isEmpty()) sign = QStringLiteral("-");
     }
     return  sign + QString::number(n);
 }

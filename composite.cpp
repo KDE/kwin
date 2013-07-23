@@ -93,8 +93,8 @@ Compositor::Compositor(QObject* workspace)
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     new CompositingAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/Compositor", this);
-    dbus.registerService("org.kde.kwin.Compositing");
+    dbus.registerObject(QStringLiteral("/Compositor"), this);
+    dbus.registerService(QStringLiteral("org.kde.kwin.Compositing"));
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
@@ -183,7 +183,7 @@ void Compositor::slotCompositingOptionsInitialized()
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
         KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
-        const QString openGLIsUnsafe = "OpenGLIsUnsafe" + (is_multihead ? QString::number(screen_number) : "");
+        const QString openGLIsUnsafe = QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
             kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
@@ -431,13 +431,13 @@ void Compositor::toggleCompositing()
     if (m_suspended) {
         // when disabled show a shortcut how the user can get back compositing
         QString shortcut, message;
-        if (KAction* action = qobject_cast<KAction*>(Workspace::self()->actionCollection()->action("Suspend Compositing")))
+        if (KAction* action = qobject_cast<KAction*>(Workspace::self()->actionCollection()->action(QStringLiteral("Suspend Compositing"))))
             shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
         if (!shortcut.isEmpty()) {
             // display notification only if there is the shortcut
             message = i18n("Desktop effects have been suspended by another application.<br/>"
                            "You can resume using the '%1' shortcut.", shortcut);
-            KNotification::event("compositingsuspendeddbus", message);
+            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
         }
     }
 }
@@ -780,22 +780,22 @@ bool Compositor::isOpenGLBroken() const
 QString Compositor::compositingType() const
 {
     if (!hasScene()) {
-        return "none";
+        return QStringLiteral("none");
     }
     switch (m_scene->compositingType()) {
     case XRenderCompositing:
-        return "xrender";
+        return QStringLiteral("xrender");
     case OpenGL1Compositing:
-            return "gl1";
+            return QStringLiteral("gl1");
     case OpenGL2Compositing:
 #ifdef KWIN_HAVE_OPENGLES
-        return "gles";
+        return QStringLiteral("gles");
 #else
-        return "gl2";
+        return QStringLiteral("gl2");
 #endif
     case NoCompositing:
     default:
-        return "none";
+        return QStringLiteral("none");
     }
 }
 

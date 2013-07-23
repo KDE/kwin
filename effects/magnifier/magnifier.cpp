@@ -73,7 +73,7 @@ MagnifierEffect::~MagnifierEffect()
     delete m_texture;
     destroyPixmap();
     // Save the zoom value.
-    KConfigGroup conf = EffectsHandler::effectConfig("Magnifier");
+    KConfigGroup conf = EffectsHandler::effectConfig(QStringLiteral("Magnifier"));
     conf.writeEntry("InitialZoom", target_zoom);
     conf.sync();
 }

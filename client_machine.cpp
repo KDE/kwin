@@ -98,8 +98,8 @@ void GetAddrInfo::resolve()
 
     // TODO: C++11 nullptr
     const char* nullPtr = NULL;
-    m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName, nullPtr, m_addressHints, &m_address));
-    m_ownAddressWatcher->setFuture(QtConcurrent::run(getaddrinfo, getHostName(), nullPtr, m_addressHints, &m_ownAddress));
+    m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName.constData(), nullPtr, m_addressHints, &m_address));
+    m_ownAddressWatcher->setFuture(QtConcurrent::run(getaddrinfo, getHostName().constData(), nullPtr, m_addressHints, &m_ownAddress));
 }
 
 void GetAddrInfo::slotResolved()

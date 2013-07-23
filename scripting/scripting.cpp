@@ -164,7 +164,7 @@ QScriptValue kwinCallDBus(QScriptContext *context, QScriptEngine *engine)
 {
     KWin::AbstractScript *script = qobject_cast<KWin::AbstractScript*>(context->callee().data().toQObject());
     if (!script) {
-        context->throwError(QScriptContext::UnknownError, "Internal Error: script not registered");
+        context->throwError(QScriptContext::UnknownError, QStringLiteral("Internal Error: script not registered"));
         return engine->undefinedValue();
     }
     if (context->argumentCount() < 4) {
@@ -231,7 +231,7 @@ KWin::AbstractScript::~AbstractScript()
 
 KConfigGroup KWin::AbstractScript::config() const
 {
-    return KGlobal::config()->group("Script-" + m_pluginName);
+    return KGlobal::config()->group(QStringLiteral("Script-") + m_pluginName);
 }
 
 void KWin::AbstractScript::stop()
@@ -267,14 +267,14 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     // add our print
     QScriptValue printFunc = engine->newFunction(kwinScriptPrint);
     printFunc.setData(engine->newQObject(this));
-    engine->globalObject().setProperty("print", printFunc);
+    engine->globalObject().setProperty(QStringLiteral("print"), printFunc);
     // add read config
     QScriptValue configFunc = engine->newFunction(kwinScriptReadConfig);
     configFunc.setData(engine->newQObject(this));
-    engine->globalObject().setProperty("readConfig", configFunc);
+    engine->globalObject().setProperty(QStringLiteral("readConfig"), configFunc);
     QScriptValue dbusCallFunc = engine->newFunction(kwinCallDBus);
     dbusCallFunc.setData(engine->newQObject(this));
-    engine->globalObject().setProperty("callDBus", dbusCallFunc);
+    engine->globalObject().setProperty(QStringLiteral("callDBus"), dbusCallFunc);
     // add global Shortcut
     registerGlobalShortcutFunction(this, engine, kwinScriptGlobalShortcut);
     // add screen edge
@@ -283,22 +283,22 @@ void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
     regesterUserActionsMenuFunction(this, engine, kwinRegisterUserActionsMenu);
     // add assertions
     QScriptValue assertTrueFunc = engine->newFunction(kwinAssertTrue);
-    engine->globalObject().setProperty("assertTrue", assertTrueFunc);
-    engine->globalObject().setProperty("assert", assertTrueFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertTrue"), assertTrueFunc);
+    engine->globalObject().setProperty(QStringLiteral("assert"), assertTrueFunc);
     QScriptValue assertFalseFunc = engine->newFunction(kwinAssertFalse);
-    engine->globalObject().setProperty("assertFalse", assertFalseFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertFalse"), assertFalseFunc);
     QScriptValue assertEqualsFunc = engine->newFunction(kwinAssertEquals);
-    engine->globalObject().setProperty("assertEquals", assertEqualsFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertEquals"), assertEqualsFunc);
     QScriptValue assertNullFunc = engine->newFunction(kwinAssertNull);
-    engine->globalObject().setProperty("assertNull", assertNullFunc);
-    engine->globalObject().setProperty("assertEquals", assertEqualsFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertNull"), assertNullFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertEquals"), assertEqualsFunc);
     QScriptValue assertNotNullFunc = engine->newFunction(kwinAssertNotNull);
-    engine->globalObject().setProperty("assertNotNull", assertNotNullFunc);
+    engine->globalObject().setProperty(QStringLiteral("assertNotNull"), assertNotNullFunc);
     // global properties
-    engine->globalObject().setProperty("KWin", engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+    engine->globalObject().setProperty(QStringLiteral("KWin"), engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
     QScriptValue workspace = engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
                                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
-    engine->globalObject().setProperty("workspace", workspace, QScriptValue::Undeletable);
+    engine->globalObject().setProperty(QStringLiteral("workspace"), workspace, QScriptValue::Undeletable);
     // install meta functions
     KWin::MetaScripting::registration(engine);
 }
@@ -359,11 +359,11 @@ QList< QAction * > KWin::AbstractScript::actionsForUserActionMenu(KWin::Client *
 
 QAction *KWin::AbstractScript::scriptValueToAction(QScriptValue &value, QMenu *parent)
 {
-    QScriptValue titleValue = value.property("text");
-    QScriptValue checkableValue = value.property("checkable");
-    QScriptValue checkedValue = value.property("checked");
-    QScriptValue itemsValue = value.property("items");
-    QScriptValue triggeredValue = value.property("triggered");
+    QScriptValue titleValue = value.property(QStringLiteral("text"));
+    QScriptValue checkableValue = value.property(QStringLiteral("checkable"));
+    QScriptValue checkedValue = value.property(QStringLiteral("checked"));
+    QScriptValue itemsValue = value.property(QStringLiteral("items"));
+    QScriptValue triggeredValue = value.property(QStringLiteral("triggered"));
 
     if (!titleValue.isValid()) {
         // title not specified - does not make any sense to include
@@ -378,7 +378,7 @@ QAction *KWin::AbstractScript::scriptValueToAction(QScriptValue &value, QMenu *p
             // not an array, so cannot be a menu
             return NULL;
         }
-        QScriptValue lengthValue = itemsValue.property("length");
+        QScriptValue lengthValue = itemsValue.property(QStringLiteral("length"));
         if (!lengthValue.isValid() || !lengthValue.isNumber() || lengthValue.toInteger() == 0) {
             // length property missing
             return NULL;
@@ -406,7 +406,7 @@ QAction *KWin::AbstractScript::createAction(const QString &title, bool checkable
 QAction *KWin::AbstractScript::createMenu(const QString &title, QScriptValue &items, QMenu *parent)
 {
     QMenu *menu = new QMenu(title, parent);
-    const int length = static_cast<int>(items.property("length").toInteger());
+    const int length = static_cast<int>(items.property(QStringLiteral("length")).toInteger());
     for (int i=0; i<length; ++i) {
         QScriptValue value = items.property(QString::number(i));
         if (!value.isValid()) {
@@ -434,12 +434,12 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject* pa
     , m_starting(false)
     , m_agent(new ScriptUnloaderAgent(this))
 {
-    QDBusConnection::sessionBus().registerObject('/' + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/") + QString::number(scriptId()), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
 }
 
 KWin::Script::~Script()
 {
-    QDBusConnection::sessionBus().unregisterObject('/' + QString::number(scriptId()));
+    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/") + QString::number(scriptId()));
 }
 
 void KWin::Script::run()
@@ -478,13 +478,13 @@ void KWin::Script::slotScriptLoadedFromFile()
     }
     QScriptValue optionsValue = m_engine->newQObject(options, QScriptEngine::QtOwnership,
                             QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
-    m_engine->globalObject().setProperty("options", optionsValue, QScriptValue::Undeletable);
-    m_engine->globalObject().setProperty("QTimer", constructTimerClass(m_engine));
+    m_engine->globalObject().setProperty(QStringLiteral("options"), optionsValue, QScriptValue::Undeletable);
+    m_engine->globalObject().setProperty(QStringLiteral("QTimer"), constructTimerClass(m_engine));
     QObject::connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), this, SLOT(sigException(QScriptValue)));
     KWin::MetaScripting::supplyConfig(m_engine);
     installScriptFunctions(m_engine);
 
-    QScriptValue ret = m_engine->evaluate(watcher->result());
+    QScriptValue ret = m_engine->evaluate(QString::fromUtf8(watcher->result()));
 
     if (ret.isError()) {
         sigException(ret);
@@ -559,7 +559,7 @@ void KWin::DeclarativeScript::run()
     qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 0, 1, "ClientFilterModel");
     qmlRegisterType<KWin::Client>();
 
-    m_engine->rootContext()->setContextProperty("options", options);
+    m_engine->rootContext()->setContextProperty(QStringLiteral("options"), options);
 
     m_component->loadUrl(QUrl::fromLocalFile(scriptFile().fileName()));
     if (m_component->isLoading()) {
@@ -592,8 +592,8 @@ KWin::Scripting::Scripting(QObject *parent)
     : QObject(parent)
     , m_scriptsLock(new QMutex(QMutex::Recursive))
 {
-    QDBusConnection::sessionBus().registerObject("/Scripting", this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
-    QDBusConnection::sessionBus().registerService("org.kde.kwin.Scripting");
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.Scripting"));
     connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
     connect(Workspace::self(), SIGNAL(workspaceInitialized()), SLOT(start()));
 }
@@ -632,7 +632,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         s_started = true;
     }
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Script");
+    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Script"));
 
     LoadScriptList scriptsToLoad;
 
@@ -640,8 +640,8 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         KPluginInfo plugininfo(service);
         const QString value = pluginStates.value(plugininfo.pluginName() + QString::fromLatin1("Enabled"), QString());
         plugininfo.setPluginEnabled(value.isNull() ? plugininfo.isPluginEnabledByDefault() : QVariant(value).toBool());
-        const bool javaScript = service->property("X-Plasma-API").toString() == "javascript";
-        const bool declarativeScript = service->property("X-Plasma-API").toString() == "declarativescript";
+        const bool javaScript = service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("javascript");
+        const bool declarativeScript = service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("declarativescript");
         if (!javaScript && !declarativeScript) {
             continue;
         }
@@ -653,9 +653,9 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
             }
             continue;
         }
-        const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-        const QString scriptName = service->property("X-Plasma-MainScript").toString();
-        const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/scripts/" + pluginName + "/contents/" + scriptName);
+        const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+        const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+        const QString file = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/") + pluginName + QStringLiteral("/contents/") + scriptName);
         if (file.isNull()) {
             kDebug(1212) << "Could not find script file for " << pluginName;
             continue;
@@ -753,8 +753,8 @@ int KWin::Scripting::loadDeclarativeScript(const QString& filePath, const QStrin
 
 KWin::Scripting::~Scripting()
 {
-    QDBusConnection::sessionBus().unregisterObject("/Scripting");
-    QDBusConnection::sessionBus().unregisterService("org.kde.kwin.Scripting");
+    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Scripting"));
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin.Scripting"));
     s_self = NULL;
 }
 

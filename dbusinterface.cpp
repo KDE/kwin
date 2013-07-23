@@ -46,15 +46,15 @@ DBusInterface::DBusInterface(QObject *parent)
     (void) new KWinAdaptor(this);
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject("/KWin", this);
-    if (!dbus.registerService("org.kde.KWin")) {
-        QDBusServiceWatcher *dog = new QDBusServiceWatcher("org.kde.KWin", dbus, QDBusServiceWatcher::WatchForUnregistration, this);
+    dbus.registerObject(QStringLiteral("/KWin"), this);
+    if (!dbus.registerService(QStringLiteral("org.kde.KWin"))) {
+        QDBusServiceWatcher *dog = new QDBusServiceWatcher(QStringLiteral("org.kde.KWin"), dbus, QDBusServiceWatcher::WatchForUnregistration, this);
         connect (dog, SIGNAL(serviceUnregistered(QString)), SLOT(becomeKWinService(QString)));
     }
     connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SIGNAL(compositingToggled(bool)));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reloadConfig",
+    dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));
-    dbus.connect(QString(), "/KWin", "org.kde.KWin", "reinitCompositing",
+    dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reinitCompositing"),
                  Compositor::self(), SLOT(slotReinitialize()));
 }
 
@@ -62,16 +62,16 @@ void DBusInterface::becomeKWinService(const QString &service)
 {
     // TODO: this watchdog exists to make really safe that we at some point get the service
     // but it's probably no longer needed since we explicitly unregister the service with the deconstructor
-    if (service == "org.kde.KWin" && QDBusConnection::sessionBus().registerService("org.kde.KWin") && sender()) {
+    if (service == QStringLiteral("org.kde.KWin") && QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin")) && sender()) {
         sender()->deleteLater(); // bye doggy :'(
     }
 }
 
 DBusInterface::~DBusInterface()
 {
-    QDBusConnection::sessionBus().unregisterService("org.kde.KWin"); // this is the long standing legal service
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.KWin")); // this is the long standing legal service
     // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
-    QDBusConnection::sessionBus().unregisterService("org.kde.kwin");
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin"));
 }
 
 void DBusInterface::circulateDesktopApplications()

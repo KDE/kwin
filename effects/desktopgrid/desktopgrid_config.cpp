@@ -53,10 +53,10 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    m_actionCollection->setConfigGroup("DesktopGrid");
+    m_actionCollection->setConfigGroup(QStringLiteral("DesktopGrid"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*) m_actionCollection->addAction("ShowDesktopGrid");
+    KAction* a = (KAction*) m_actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F8));
@@ -94,11 +94,11 @@ void DesktopGridEffectConfig::save()
     DesktopGridConfig::setDesktopNameAlignment(m_ui->desktopNameAlignmentCombo->itemData(m_ui->desktopNameAlignmentCombo->currentIndex()).toInt());
     KCModule::save();
 
-    KConfigGroup conf = EffectsHandler::effectConfig("DesktopGrid");
+    KConfigGroup conf = EffectsHandler::effectConfig(QStringLiteral("DesktopGrid"));
     conf.writeEntry("DesktopNameAlignment", DesktopGridConfig::desktopNameAlignment());
     conf.sync();
 
-    EffectsHandler::sendReloadMessage("desktopgrid");
+    EffectsHandler::sendReloadMessage(QStringLiteral("desktopgrid"));
 }
 
 void DesktopGridEffectConfig::load()

@@ -35,7 +35,7 @@ KWIN_EFFECT(thumbnailaside, ThumbnailAsideEffect)
 ThumbnailAsideEffect::ThumbnailAsideEffect()
 {
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*)actionCollection->addAction("ToggleCurrentThumbnail");
+    KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_T));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));

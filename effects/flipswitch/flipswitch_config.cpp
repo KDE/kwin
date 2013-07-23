@@ -50,14 +50,14 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
-    KAction* a = (KAction*)m_actionCollection->addAction("FlipSwitchCurrent");
+    KAction* a = (KAction*)m_actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
     a->setText(i18n("Toggle Flip Switch (Current desktop)"));
     a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    KAction* b = (KAction*)m_actionCollection->addAction("FlipSwitchAll");
+    KAction* b = (KAction*)m_actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
     b->setText(i18n("Toggle Flip Switch (All desktops)"));
     b->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
 
-    m_actionCollection->setConfigGroup("FlipSwitch");
+    m_actionCollection->setConfigGroup(QStringLiteral("FlipSwitch"));
     m_actionCollection->setConfigGlobal(true);
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
@@ -76,7 +76,7 @@ void FlipSwitchEffectConfig::save()
     KCModule::save();
     m_ui->shortcutEditor->save();
 
-    EffectsHandler::sendReloadMessage("flipswitch");
+    EffectsHandler::sendReloadMessage(QStringLiteral("flipswitch"));
 }
 
 

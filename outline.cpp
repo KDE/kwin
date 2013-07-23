@@ -121,7 +121,7 @@ CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    m_background->setImagePath("widgets/translucentbackground");
+    m_background->setImagePath(QStringLiteral("widgets/translucentbackground"));
     m_background->setCacheAllRenderedFrames(true);
     m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 }

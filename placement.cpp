@@ -587,23 +587,23 @@ QRect Placement::checkArea(const Client* c, const QRect& area)
 
 Placement::Policy Placement::policyFromString(const QString& policy, bool no_special)
 {
-    if (policy == "NoPlacement")
+    if (policy == QStringLiteral("NoPlacement"))
         return NoPlacement;
-    else if (policy == "Default" && !no_special)
+    else if (policy == QStringLiteral("Default") && !no_special)
         return Default;
-    else if (policy == "Random")
+    else if (policy == QStringLiteral("Random"))
         return Random;
-    else if (policy == "Cascade")
+    else if (policy == QStringLiteral("Cascade"))
         return Cascade;
-    else if (policy == "Centered")
+    else if (policy == QStringLiteral("Centered"))
         return Centered;
-    else if (policy == "ZeroCornered")
+    else if (policy == QStringLiteral("ZeroCornered"))
         return ZeroCornered;
-    else if (policy == "UnderMouse")
+    else if (policy == QStringLiteral("UnderMouse"))
         return UnderMouse;
-    else if (policy == "OnMainWindow" && !no_special)
+    else if (policy == QStringLiteral("OnMainWindow") && !no_special)
         return OnMainWindow;
-    else if (policy == "Maximizing")
+    else if (policy == QStringLiteral("Maximizing"))
         return Maximizing;
     else
         return Smart;

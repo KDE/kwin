@@ -122,7 +122,7 @@ void DashboardEffect::postPaintScreen()
 
 bool DashboardEffect::isDashboard(EffectWindow *w)
 {
-    return w->windowRole() == "plasma-dashboard";
+    return w->windowRole() == QStringLiteral("plasma-dashboard");
 }
 
 void DashboardEffect::slotWindowActivated(EffectWindow *w)

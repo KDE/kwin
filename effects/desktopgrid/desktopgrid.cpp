@@ -71,7 +71,7 @@ DesktopGridEffect::DesktopGridEffect()
 {
     // Load shortcuts
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*) actionCollection->addAction("ShowDesktopGrid");
+    KAction* a = (KAction*) actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F8));
     shortcut = a->globalShortcut();
@@ -1093,7 +1093,7 @@ void DesktopGridEffect::setup()
 
     // setup the motion managers
     if (m_usePresentWindows)
-        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy("presentwindows"));
+        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(QStringLiteral("presentwindows")));
     if (isUsingPresentWindows()) {
         for (int i = 1; i <= effects->numberOfDesktops(); i++) {
             for (int j = 0; j < effects->numScreens(); j++) {
@@ -1390,7 +1390,7 @@ DesktopButtonsView::DesktopButtonsView(QWidget *parent)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
+    for (const QString &importPath : KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
         engine()->addImportPath(importPath);
     }
     KDeclarative kdeclarative;
@@ -1398,13 +1398,13 @@ DesktopButtonsView::DesktopButtonsView(QWidget *parent)
     kdeclarative.initialize();
     kdeclarative.setupBindings();
 
-    rootContext()->setContextProperty("add", QVariant(true));
-    rootContext()->setContextProperty("remove", QVariant(true));
-    setSource(QUrl(KStandardDirs::locate("data", QLatin1String("kwin/effects/desktopgrid/main.qml"))));
-    if (QObject *item = rootObject()->findChild<QObject*>("addButton")) {
+    rootContext()->setContextProperty(QStringLiteral("add"), QVariant(true));
+    rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(true));
+    setSource(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/effects/desktopgrid/main.qml"))));
+    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("addButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(addDesktop()));
     }
-    if (QObject *item = rootObject()->findChild<QObject*>("removeButton")) {
+    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("removeButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(removeDesktop()));
     }
 }
@@ -1424,12 +1424,12 @@ void DesktopButtonsView::windowInputMouseEvent(QMouseEvent *e)
 
 void DesktopButtonsView::setAddDesktopEnabled(bool enable)
 {
-    rootContext()->setContextProperty("add", QVariant(enable));
+    rootContext()->setContextProperty(QStringLiteral("add"), QVariant(enable));
 }
 
 void DesktopButtonsView::setRemoveDesktopEnabled(bool enable)
 {
-    rootContext()->setContextProperty("remove", QVariant(enable));
+    rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(enable));
 }
 
 } // namespace

@@ -75,33 +75,33 @@ ZoomEffect::ZoomEffect()
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(actualSize())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomLeft"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomLeft")));
     a->setText(i18n("Move Zoomed Area to Left"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Left));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomLeft()));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomRight"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomRight")));
     a->setText(i18n("Move Zoomed Area to Right"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Right));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomRight()));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomUp"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomUp")));
     a->setText(i18n("Move Zoomed Area Upwards"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Up));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomUp()));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomDown"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomDown")));
     a->setText(i18n("Move Zoomed Area Downwards"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Down));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveZoomDown()));
 
     // TODO: these two actions don't belong into the effect. They need to be moved into KWin core
-    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToFocus"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToFocus")));
     a->setText(i18n("Move Mouse to Focus"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F5));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveMouseToFocus()));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToCenter"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToCenter")));
     a->setText(i18n("Move Mouse to Center"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F6));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveMouseToCenter()));
@@ -121,7 +121,7 @@ ZoomEffect::~ZoomEffect()
     // switch off and free resources
     showCursor();
     // Save the zoom value.
-    KConfigGroup conf = EffectsHandler::effectConfig("Zoom");
+    KConfigGroup conf = EffectsHandler::effectConfig(QStringLiteral("Zoom"));
     conf.writeEntry("InitialZoom", target_zoom);
     conf.sync();
 }
@@ -164,7 +164,7 @@ void ZoomEffect::hideCursor()
 void ZoomEffect::recreateTexture()
 {
     // read details about the mouse-cursor theme define per default
-    KConfigGroup mousecfg(KSharedConfig::openConfig("kcminputrc"), "Mouse");
+    KConfigGroup mousecfg(KSharedConfig::openConfig(QStringLiteral("kcminputrc")), "Mouse");
     QString theme = mousecfg.readEntry("cursorTheme", QString());
     QString size  = mousecfg.readEntry("cursorSize", QString());
 
@@ -175,7 +175,7 @@ void ZoomEffect::recreateTexture()
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
 
     // load the cursor-theme image from the Xcursor-library
-    XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", theme.toLocal8Bit(), iconSize);
+    XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", theme.toLocal8Bit().constData(), iconSize);
     if (!ximg) // default is better then nothing, so keep it as backup
         ximg = XcursorLibraryLoadImage("left_ptr", "default", iconSize);
     if (ximg) {
@@ -212,9 +212,17 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
         enableFocusTracking = _enableFocusTracking;
         if (QDBusConnection::sessionBus().isConnected()) {
             if (enableFocusTracking)
-                QDBusConnection::sessionBus().connect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int,int,int,int,int,int)));
+                QDBusConnection::sessionBus().connect(QStringLiteral("org.kde.kaccessibleapp"),
+                                                      QStringLiteral("/Adaptor"),
+                                                      QStringLiteral("org.kde.kaccessibleapp.Adaptor"),
+                                                      QStringLiteral("focusChanged"),
+                                                      this, SLOT(focusChanged(int,int,int,int,int,int)));
             else
-                QDBusConnection::sessionBus().disconnect("org.kde.kaccessibleapp", "/Adaptor", "org.kde.kaccessibleapp.Adaptor", "focusChanged", this, SLOT(focusChanged(int,int,int,int,int,int)));
+                QDBusConnection::sessionBus().disconnect(QStringLiteral("org.kde.kaccessibleapp"),
+                                                         QStringLiteral("/Adaptor"),
+                                                         QStringLiteral("org.kde.kaccessibleapp.Adaptor"),
+                                                         QStringLiteral("focusChanged"),
+                                                         this, SLOT(focusChanged(int,int,int,int,int,int)));
         }
     }
     // When the focus changes, move the zoom area to the focused location.

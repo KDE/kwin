@@ -46,7 +46,7 @@ KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
         fact(NULL),
         old_library(NULL),
         old_fact(NULL),
-        pluginStr("kwin3_undefined "),
+        pluginStr(QStringLiteral("kwin3_undefined ")),
         config(cfg)
 {
 }
@@ -75,7 +75,7 @@ bool KDecorationPlugins::reset(unsigned long changed)
     QString oldPlugin = pluginStr;
     config->reparseConfiguration();
     bool ret = false;
-    if ((!loadPlugin("") && library)     // "" = read the one in cfg file
+    if ((!loadPlugin(QString()) && library)     // "" = read the one in cfg file
             || oldPlugin == pluginStr) {
         // no new plugin loaded, reset the old one
 //       assert( fact != NULL );
@@ -119,7 +119,7 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
         return true;
     }
 
-    KConfigGroup group(config, QString("Style"));
+    KConfigGroup group(config, QStringLiteral("Style"));
     if (group.readEntry<bool>("NoPlugin", false)) {
         error(i18n("Loading of window decoration plugin library disabled in configuration."));
         return false;
@@ -205,7 +205,7 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
 // returns true if plugin was loaded successfully
 bool KDecorationPlugins::loadPlugin(QString nameStr)
 {
-    KConfigGroup group(config, QString("Style"));
+    KConfigGroup group(config, QStringLiteral("Style"));
     if (nameStr.isEmpty()) {
         nameStr = group.readEntry("PluginLib", defaultPlugin);
     }

@@ -223,18 +223,18 @@ void glxResolveFunctions()
     if (glXGetProcAddress == NULL)
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress("glXGetProcAddressARB");
     glXQueryDrawable = (glXQueryDrawable_func) getProcAddress("glXQueryDrawable");
-    if (hasGLExtension("GLX_EXT_texture_from_pixmap")) {
+    if (hasGLExtension(QStringLiteral("GLX_EXT_texture_from_pixmap"))) {
         glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress("glXBindTexImageEXT");
         glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress("glXReleaseTexImageEXT");
     } else {
         glXBindTexImageEXT = NULL;
         glXReleaseTexImageEXT = NULL;
     }
-    if (hasGLExtension("GLX_MESA_copy_sub_buffer"))
+    if (hasGLExtension(QStringLiteral("GLX_MESA_copy_sub_buffer")))
         glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress("glXCopySubBufferMESA");
     else
         glXCopySubBuffer = NULL;
-    if (hasGLExtension("GLX_SGI_video_sync")) {
+    if (hasGLExtension(QStringLiteral("GLX_SGI_video_sync"))) {
         glXGetVideoSync = (glXGetVideoSync_func) getProcAddress("glXGetVideoSyncSGI");
         glXWaitVideoSync = (glXWaitVideoSync_func) getProcAddress("glXWaitVideoSyncSGI");
     } else {
@@ -242,20 +242,20 @@ void glxResolveFunctions()
         glXWaitVideoSync = NULL;
     }
 
-    if (hasGLExtension("GLX_SGI_swap_control"))
+    if (hasGLExtension(QStringLiteral("GLX_SGI_swap_control")))
         glXSwapIntervalSGI = (glXSwapIntervalSGI_func) getProcAddress("glXSwapIntervalSGI");
     else
         glXSwapIntervalSGI = NULL;
-    if (hasGLExtension("GLX_EXT_swap_control"))
+    if (hasGLExtension(QStringLiteral("GLX_EXT_swap_control")))
         glXSwapIntervalEXT = (glXSwapIntervalEXT_func) getProcAddress("glXSwapIntervalEXT");
     else
         glXSwapIntervalEXT = NULL;
-    if (hasGLExtension("GLX_MESA_swap_control"))
+    if (hasGLExtension(QStringLiteral("GLX_MESA_swap_control")))
         glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
     else
         glXSwapIntervalMESA = NULL;
 
-    if (hasGLExtension("GLX_ARB_create_context"))
+    if (hasGLExtension(QStringLiteral("GLX_ARB_create_context")))
         glXCreateContextAttribsARB = (glXCreateContextAttribsARB_func) getProcAddress("glXCreateContextAttribsARB");
     else
         glXCreateContextAttribsARB = NULL;
@@ -292,9 +292,9 @@ glGetnUniformfv_func          glGetnUniformfv;
 
 void eglResolveFunctions()
 {
-    if (hasGLExtension("EGL_KHR_image") ||
-        (hasGLExtension("EGL_KHR_image_base") &&
-         hasGLExtension("EGL_KHR_image_pixmap"))) {
+    if (hasGLExtension(QStringLiteral("EGL_KHR_image")) ||
+        (hasGLExtension(QStringLiteral("EGL_KHR_image_base")) &&
+         hasGLExtension(QStringLiteral("EGL_KHR_image_pixmap")))) {
         eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
         eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
     } else {
@@ -302,7 +302,7 @@ void eglResolveFunctions()
         eglDestroyImageKHR = NULL;
     }
 
-    if (hasGLExtension("EGL_NV_post_sub_buffer")) {
+    if (hasGLExtension(QStringLiteral("EGL_NV_post_sub_buffer"))) {
         eglPostSubBufferNV = (eglPostSubBufferNV_func)eglGetProcAddress("eglPostSubBufferNV");
     } else {
         eglPostSubBufferNV = NULL;
@@ -317,7 +317,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glActiveTexture);
         // Get number of texture units
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
-    } else if (hasGLExtension("GL_ARB_multitexture")) {
+    } else if (hasGLExtension(QStringLiteral("GL_ARB_multitexture"))) {
         GL_RESOLVE_WITH_EXT(glActiveTexture, glActiveTextureARB);
         // Get number of texture units
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
@@ -326,7 +326,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glTextureUnitsCount = 0;
     }
 
-    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object")) {
+    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object"))) {
         // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
         GL_RESOLVE(glIsRenderbuffer);
         GL_RESOLVE(glBindRenderbuffer);
@@ -353,7 +353,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glGetFramebufferAttachmentParameteriv);
 
         GL_RESOLVE(glGenerateMipmap);
-    } else if (hasGLExtension("GL_EXT_framebuffer_object")) {
+    } else if (hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"))) {
         // see http://www.opengl.org/registry/specs/EXT/framebuffer_object.txt
         GL_RESOLVE_WITH_EXT(glIsRenderbuffer, glIsRenderbufferEXT);
         GL_RESOLVE_WITH_EXT(glBindRenderbuffer, glBindRenderbufferEXT);
@@ -400,10 +400,10 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGenerateMipmap = NULL;
     }
 
-    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object")) {
+    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object"))) {
         // see http://www.opengl.org/registry/specs/ARB/framebuffer_object.txt
         GL_RESOLVE(glBlitFramebuffer);
-    } else if (hasGLExtension("GL_EXT_framebuffer_blit")) {
+    } else if (hasGLExtension(QStringLiteral("GL_EXT_framebuffer_blit"))) {
         // see http://www.opengl.org/registry/specs/EXT/framebuffer_blit.txt
         GL_RESOLVE_WITH_EXT(glBlitFramebuffer, glBlitFramebufferEXT);
     } else {
@@ -438,7 +438,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glValidateProgram);
         GL_RESOLVE(glGetUniformLocation);
         GL_RESOLVE(glGetUniformfv);
-    } else if (hasGLExtension("GL_ARB_shader_objects")) {
+    } else if (hasGLExtension(QStringLiteral("GL_ARB_shader_objects"))) {
         GL_RESOLVE_WITH_EXT(glCreateShader, glCreateShaderObjectARB);
         GL_RESOLVE_WITH_EXT(glShaderSource, glShaderSourceARB);
         GL_RESOLVE_WITH_EXT(glCompileShader, glCompileShaderARB);
@@ -502,7 +502,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glEnableVertexAttribArray);
         GL_RESOLVE(glDisableVertexAttribArray);
         GL_RESOLVE(glVertexAttribPointer);
-    } else if (hasGLExtension("GL_ARB_vertex_shader")) {
+    } else if (hasGLExtension(QStringLiteral("GL_ARB_vertex_shader"))) {
         GL_RESOLVE_WITH_EXT(glVertexAttrib1f, glVertexAttrib1fARB);
         GL_RESOLVE_WITH_EXT(glBindAttribLocation, glBindAttribLocationARB);
         GL_RESOLVE_WITH_EXT(glGetAttribLocation, glGetAttribLocationARB);
@@ -518,7 +518,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glVertexAttribPointer = NULL;
     }
 
-    if (hasGLExtension("GL_ARB_fragment_program") && hasGLExtension("GL_ARB_vertex_program")) {
+    if (hasGLExtension(QStringLiteral("GL_ARB_fragment_program")) && hasGLExtension(QStringLiteral("GL_ARB_vertex_program"))) {
         // see http://www.opengl.org/registry/specs/ARB/fragment_program.txt
         GL_RESOLVE(glProgramStringARB);
         GL_RESOLVE(glBindProgramARB);
@@ -544,7 +544,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glBufferSubData);
         GL_RESOLVE(glMapBuffer);
         GL_RESOLVE(glUnmapBuffer);
-    } else if (hasGLExtension("GL_ARB_vertex_buffer_object")) {
+    } else if (hasGLExtension(QStringLiteral("GL_ARB_vertex_buffer_object"))) {
         GL_RESOLVE_WITH_EXT(glGenBuffers, glGenBuffersARB);
         GL_RESOLVE_WITH_EXT(glDeleteBuffers, glDeleteBuffersARB);
         GL_RESOLVE_WITH_EXT(glBindBuffer, glBindBufferARB);
@@ -564,7 +564,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glUnmapBuffer = NULL;
     }
 
-    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_vertex_array_object")) {
+    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_vertex_array_object"))) {
         // see http://www.opengl.org/registry/specs/ARB/vertex_array_object.txt
         GL_RESOLVE(glBindVertexArray);
         GL_RESOLVE(glDeleteVertexArrays);
@@ -611,7 +611,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glUniform1uiv);
         GL_RESOLVE(glUniform2uiv);
         GL_RESOLVE(glUniform3uiv);
-    } else if (hasGLExtension("GL_EXT_gpu_shader4")) {
+    } else if (hasGLExtension(QStringLiteral("GL_EXT_gpu_shader4"))) {
         // See http://www.opengl.org/registry/specs/EXT/gpu_shader4.txt
         GL_RESOLVE_WITH_EXT(glVertexAttribI1i,      glVertexAttribI1iEXT);
         GL_RESOLVE_WITH_EXT(glVertexAttribI2i,      glVertexAttribI2iEXT);
@@ -682,7 +682,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glUniform3uiv          = NULL;
     }
 
-    if (hasGLVersion(3, 0) || hasGLExtension("GL_ARB_map_buffer_range")) {
+    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"))) {
         // See http://www.opengl.org/registry/specs/ARB/map_buffer_range.txt
         GL_RESOLVE(glMapBufferRange);
         GL_RESOLVE(glFlushMappedBufferRange);
@@ -691,7 +691,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glFlushMappedBufferRange = NULL;
     }
 
-    if (hasGLExtension("GL_ARB_robustness")) {
+    if (hasGLExtension(QStringLiteral("GL_ARB_robustness"))) {
         // See http://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
         GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
@@ -702,7 +702,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGetnUniformfv          = KWin::GetnUniformfv;
     }
 
-    if (hasGLVersion(3, 2) || hasGLExtension("GL_ARB_draw_elements_base_vertex")) {
+    if (hasGLVersion(3, 2) || hasGLExtension(QStringLiteral("GL_ARB_draw_elements_base_vertex"))) {
         // See http://www.opengl.org/registry/specs/ARB/draw_elements_base_vertex.txt
         GL_RESOLVE(glDrawElementsBaseVertex);
         GL_RESOLVE(glDrawElementsInstancedBaseVertex);
@@ -711,7 +711,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glDrawElementsInstancedBaseVertex = NULL;
     }
 
-    if (hasGLVersion(3, 1) || hasGLExtension("GL_ARB_copy_buffer")) {
+    if (hasGLVersion(3, 1) || hasGLExtension(QStringLiteral("GL_ARB_copy_buffer"))) {
         // See http://www.opengl.org/registry/specs/ARB/copy_buffer.txt
         GL_RESOLVE(glCopyBufferSubData);
     } else {
@@ -720,7 +720,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 
 #else
 
-    if (hasGLExtension("GL_OES_mapbuffer")) {
+    if (hasGLExtension(QStringLiteral("GL_OES_mapbuffer"))) {
         // See http://www.khronos.org/registry/gles/extensions/OES/OES_mapbuffer.txt
         glMapBuffer         = (glMapBuffer_func)         eglGetProcAddress("glMapBufferOES");
         glUnmapBuffer       = (glUnmapBuffer_func)       eglGetProcAddress("glUnmapBufferOES");
@@ -731,7 +731,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGetBufferPointerv = NULL;
     }
 
-    if (hasGLExtension("GL_EXT_map_buffer_range")) {
+    if (hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"))) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_map_buffer_range.txt
         glMapBufferRange         = (glMapBufferRange_func)         eglGetProcAddress("glMapBufferRangeEXT");
         glFlushMappedBufferRange = (glFlushMappedBufferRange_func) eglGetProcAddress("glFlushMappedBufferRangeEXT");
@@ -740,7 +740,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glFlushMappedBufferRange = NULL;
     }
 
-    if (hasGLExtension("GL_EXT_robustness")) {
+    if (hasGLExtension(QStringLiteral("GL_EXT_robustness"))) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
         glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
         glReadnPixels            = (glReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");
@@ -755,7 +755,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 
 #ifdef KWIN_HAVE_EGL
     if (platformInterface == EglPlatformInterface) {
-        if (hasGLExtension("GL_OES_EGL_image")) {
+        if (hasGLExtension(QStringLiteral("GL_OES_EGL_image"))) {
             glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
         } else {
             glEGLImageTargetTexture2DOES = NULL;

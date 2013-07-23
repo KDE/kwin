@@ -62,7 +62,7 @@ void TestTabBoxConfig::testAssignmentOperator()
     config.setClientMultiScreenMode(TabBoxConfig::ExcludeCurrentScreenClients);
     config.setClientSwitchingMode(TabBoxConfig::StackingOrderSwitching);
     config.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
-    config.setLayoutName(QString("grid"));
+    config.setLayoutName(QStringLiteral("grid"));
     TabBoxConfig config2;
     config2 = config;
     // verify the config2 values
@@ -77,7 +77,7 @@ void TestTabBoxConfig::testAssignmentOperator()
     QCOMPARE(config2.clientMultiScreenMode(), TabBoxConfig::ExcludeCurrentScreenClients);
     QCOMPARE(config2.clientSwitchingMode(), TabBoxConfig::StackingOrderSwitching);
     QCOMPARE(config2.desktopSwitchingMode(), TabBoxConfig::StaticDesktopSwitching);
-    QCOMPARE(config2.layoutName(), QString("grid"));
+    QCOMPARE(config2.layoutName(), QStringLiteral("grid"));
 }
 
 QTEST_MAIN(TestTabBoxConfig)

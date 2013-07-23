@@ -69,7 +69,7 @@ Qt::Corner KDecorationFactory::closeButtonCorner()
 {
     if (d->closeButtonCorner)
         return d->closeButtonCorner;
-    return options()->titleButtonsLeft().contains('X') ? Qt::TopLeftCorner : Qt::TopRightCorner;
+    return options()->titleButtonsLeft().contains(QStringLiteral("X")) ? Qt::TopLeftCorner : Qt::TopRightCorner;
 }
 
 void KDecorationFactory::setCloseButtonCorner(Qt::Corner cnr)

@@ -55,7 +55,7 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
-    actionCollection->setConfigGroup("Zoom");
+    actionCollection->setConfigGroup(QStringLiteral("Zoom"));
     actionCollection->setConfigGlobal(true);
 
     KAction* a;
@@ -71,38 +71,38 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomLeft"));
-    a->setIcon(KIcon("go-previous"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomLeft")));
+    a->setIcon(KIcon(QStringLiteral("go-previous")));
     a->setText(i18n("Move Left"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Left));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomRight"));
-    a->setIcon(KIcon("go-next"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomRight")));
+    a->setIcon(KIcon(QStringLiteral("go-next")));
     a->setText(i18n("Move Right"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Right));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomUp"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomUp")));
     a->setIcon(KIcon("go-up"));
     a->setText(i18n("Move Up"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Up));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveZoomDown"));
-    a->setIcon(KIcon("go-down"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomDown")));
+    a->setIcon(KIcon(QStringLiteral("go-down")));
     a->setText(i18n("Move Down"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Down));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToFocus"));
-    a->setIcon(KIcon("view-restore"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToFocus")));
+    a->setIcon(KIcon(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Focus"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F5));
 
-    a = static_cast< KAction* >(actionCollection->addAction("MoveMouseToCenter"));
-    a->setIcon(KIcon("view-restore"));
+    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToCenter")));
+    a->setIcon(KIcon(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Center"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F6));
@@ -121,7 +121,7 @@ void ZoomEffectConfig::save()
 {
     m_ui->editor->save(); // undo() will restore to this state from now on
     KCModule::save();
-    EffectsHandler::sendReloadMessage("zoom");
+    EffectsHandler::sendReloadMessage(QStringLiteral("zoom"));
 }
 
 } // namespace

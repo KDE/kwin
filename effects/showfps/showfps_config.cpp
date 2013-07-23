@@ -54,7 +54,7 @@ ShowFpsEffectConfig::~ShowFpsEffectConfig()
 void ShowFpsEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage("showfps");
+    EffectsHandler::sendReloadMessage(QStringLiteral("showfps"));
 }
 
 } // namespace

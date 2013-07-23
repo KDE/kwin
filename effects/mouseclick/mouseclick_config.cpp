@@ -53,7 +53,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
-    KAction* a = static_cast<KAction*>(m_actionCollection->addAction("ToggleMouseClick"));
+    KAction* a = static_cast<KAction*>(m_actionCollection->addAction(QStringLiteral("ToggleMouseClick")));
     a->setText(i18n("Toggle Effect"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
@@ -74,7 +74,7 @@ void MouseClickEffectConfig::save()
 {
     KCModule::save();
     m_ui->editor->save();   // undo() will restore to this state from now on
-    EffectsHandler::sendReloadMessage("mouseclick");
+    EffectsHandler::sendReloadMessage(QStringLiteral("mouseclick"));
 }
 
 } // namespace

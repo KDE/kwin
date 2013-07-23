@@ -130,8 +130,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
 #ifndef KWIN_HAVE_OPENGLES
-    if (!hasGLExtension("GL_ARB_texture_non_power_of_two")
-            && !hasGLExtension("GL_ARB_texture_rectangle")) {
+    if (!hasGLExtension(QStringLiteral("GL_ARB_texture_non_power_of_two"))
+            && !hasGLExtension(QStringLiteral("GL_ARB_texture_rectangle"))) {
         kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         init_ok = false;
         return; // error
@@ -332,7 +332,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     kDebug(1212) << "Attempting to reset compositing.";
     QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
 
-    KNotification::event("graphicsreset", i18n("Desktop effects were restarted due to a graphics reset"));
+    KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
 }
 
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
@@ -540,19 +540,19 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
                                      "restrict the OpenGL viewport size.");
         const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
         QDBusConnection::sessionBus().interface()->setTimeout(500);
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kwinCompositingDialog").value()) {
-            QDBusInterface dialog( "org.kde.kwinCompositingDialog", "/CompositorSettings", "org.kde.kwinCompositingDialog" );
-            dialog.asyncCall("warn", message, details, "");
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kwinCompositingDialog")).value()) {
+            QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
+            dialog.asyncCall(QStringLiteral("warn"), message, details, QString());
         } else {
-            const QString args = "warn " + message.toLocal8Bit().toBase64() + " details " + details.toLocal8Bit().toBase64();
-            KProcess::startDetached("kcmshell4", QStringList() << "kwincompositing" << "--args" << args);
+            const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") + QString::fromUtf8(details.toLocal8Bit().toBase64());
+            KProcess::startDetached(QStringLiteral("kcmshell4"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
         return false;
     }
     glGetIntegerv(GL_MAX_TEXTURE_SIZE, limit);
     if (limit[0] < size.width() || limit[0] < size.height()) {
-        KConfig cfg("kwin_dialogsrc");
+        KConfig cfg(QStringLiteral("kwin_dialogsrc"));
 
         if (!KConfigGroup(&cfg, "Notification Messages").readEntry("max_tex_warning", true))
             return true;
@@ -571,13 +571,13 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
                                      "software rendering in this case.");
         const int oldTimeout = QDBusConnection::sessionBus().interface()->timeout();
         QDBusConnection::sessionBus().interface()->setTimeout(500);
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kwinCompositingDialog").value()) {
-            QDBusInterface dialog( "org.kde.kwinCompositingDialog", "/CompositorSettings", "org.kde.kwinCompositingDialog" );
-            dialog.asyncCall("warn", message, details, "kwin_dialogsrc:max_tex_warning");
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.kwinCompositingDialog")).value()) {
+            QDBusInterface dialog( QStringLiteral("org.kde.kwinCompositingDialog"), QStringLiteral("/CompositorSettings"), QStringLiteral("org.kde.kwinCompositingDialog") );
+            dialog.asyncCall(QStringLiteral("warn"), message, details, QStringLiteral("kwin_dialogsrc:max_tex_warning"));
         } else {
-            const QString args = "warn " + message.toLocal8Bit().toBase64() + " details " +
-                                 details.toLocal8Bit().toBase64() + " dontagain kwin_dialogsrc:max_tex_warning";
-            KProcess::startDetached("kcmshell4", QStringList() << "kwincompositing" << "--args" << args);
+            const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") +
+                                 QString::fromUtf8(details.toLocal8Bit().toBase64()) + QStringLiteral(" dontagain kwin_dialogsrc:max_tex_warning");
+            KProcess::startDetached(QStringLiteral("kcmshell4"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
     }
@@ -668,7 +668,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
 
 #ifndef KWIN_HAVE_OPENGLES
     // It is not legal to not have a vertex array object bound in a core context
-    if (hasGLExtension("GL_ARB_vertex_array_object")) {
+    if (hasGLExtension(QStringLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
     }
@@ -2493,7 +2493,7 @@ char SwapProfiler::end()
     m_time = (10*m_time + m_timer.nsecsElapsed())/11;
     if (++m_counter > 500) {
         const bool blocks = m_time > 1000 * 1000; // 1ms, i get ~250µs and ~7ms w/o triple buffering...
-        kDebug(1212) << "Triple buffering detection:" << QString(blocks ? "NOT available" : "Available") <<
+        kDebug(1212) << "Triple buffering detection:" << QString(blocks ? QStringLiteral("NOT available") : QStringLiteral("Available")) <<
                         " - Mean block time:" << m_time/(1000.0*1000.0) << "ms";
         return blocks ? 'd' : 't';
     }

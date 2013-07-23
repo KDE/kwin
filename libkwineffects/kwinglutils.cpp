@@ -76,8 +76,8 @@ void initGLX()
     glXQueryVersion(display(), &major, &minor);
     glXVersion = MAKE_GL_VERSION(major, minor, 0);
     // Get list of supported GLX extensions
-    glxExtensions = QString((const char*)glXQueryExtensionsString(
-                                display(), DefaultScreen(display()))).split(' ');
+    glxExtensions = QString::fromUtf8(glXQueryExtensionsString(
+                                display(), DefaultScreen(display()))).split(QStringLiteral(" "));
 
     glxResolveFunctions();
 #endif
@@ -90,7 +90,7 @@ void initEGL()
     int major, minor;
     eglInitialize(dpy, &major, &minor);
     eglVersion = MAKE_GL_VERSION(major, minor, 0);
-    eglExtension = QString((const char*)eglQueryString(dpy, EGL_EXTENSIONS)).split(' ');
+    eglExtension = QString::fromUtf8(eglQueryString(dpy, EGL_EXTENSIONS)).split(QStringLiteral(" "));
 
     eglResolveFunctions();
 #endif
@@ -99,10 +99,10 @@ void initEGL()
 void initGL(OpenGLPlatformInterface platformInterface)
 {
     // Get OpenGL version
-    QString glversionstring = QString((const char*)glGetString(GL_VERSION));
-    QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(' ')).split('.');
+    QString glversionstring = QString::fromUtf8((const char*)glGetString(GL_VERSION));
+    QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(QStringLiteral(" "))).split(QStringLiteral("."));
     while (glversioninfo.count() < 3)
-        glversioninfo << "0";
+        glversioninfo << QStringLiteral("0");
 
 #ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
@@ -123,11 +123,11 @@ void initGL(OpenGLPlatformInterface platformInterface)
 
         for (int i = 0; i < count; i++) {
             const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
-            glExtensions << QString(name);
+            glExtensions << QString::fromUtf8(name);
         }
     } else
 #endif
-        glExtensions = QString((const char*)glGetString(GL_EXTENSIONS)).split(' ');
+        glExtensions = QString::fromUtf8((const char*)glGetString(GL_EXTENSIONS)).split(QStringLiteral(" "));
 
     // handle OpenGL extensions functions
     glResolveFunctions(platformInterface);
@@ -166,16 +166,16 @@ bool hasGLExtension(const QString& extension)
 static QString formatGLError(GLenum err)
 {
     switch(err) {
-    case GL_NO_ERROR:          return "GL_NO_ERROR";
-    case GL_INVALID_ENUM:      return "GL_INVALID_ENUM";
-    case GL_INVALID_VALUE:     return "GL_INVALID_VALUE";
-    case GL_INVALID_OPERATION: return "GL_INVALID_OPERATION";
+    case GL_NO_ERROR:          return QStringLiteral("GL_NO_ERROR");
+    case GL_INVALID_ENUM:      return QStringLiteral("GL_INVALID_ENUM");
+    case GL_INVALID_VALUE:     return QStringLiteral("GL_INVALID_VALUE");
+    case GL_INVALID_OPERATION: return QStringLiteral("GL_INVALID_OPERATION");
 #ifndef KWIN_HAVE_OPENGLES
-    case GL_STACK_OVERFLOW:    return "GL_STACK_OVERFLOW";
-    case GL_STACK_UNDERFLOW:   return "GL_STACK_UNDERFLOW";
+    case GL_STACK_OVERFLOW:    return QStringLiteral("GL_STACK_OVERFLOW");
+    case GL_STACK_UNDERFLOW:   return QStringLiteral("GL_STACK_UNDERFLOW");
 #endif
-    case GL_OUT_OF_MEMORY:     return "GL_OUT_OF_MEMORY";
-    default: return QString("0x") + QString::number(err, 16);
+    case GL_OUT_OF_MEMORY:     return QStringLiteral("GL_OUT_OF_MEMORY");
+    default: return QStringLiteral("0x") + QString::number(err, 16);
     }
 }
 
@@ -831,7 +831,7 @@ GLShader *ShaderManager::loadFragmentShader(ShaderType vertex, const QString &fr
         "scene-color-vertex.glsl"
     };
 
-    GLShader *shader = new GLShader(m_shaderDir + vertexFile[vertex], fragmentFile, GLShader::ExplicitLinking);
+    GLShader *shader = new GLShader(QString::fromUtf8(m_shaderDir + vertexFile[vertex]), fragmentFile, GLShader::ExplicitLinking);
     bindAttributeLocations(shader);
     bindFragDataLocations(shader);
     shader->link();
@@ -854,7 +854,7 @@ GLShader *ShaderManager::loadVertexShader(ShaderType fragment, const QString &ve
         "scene-color-fragment.glsl"
     };
 
-    GLShader *shader = new GLShader(vertexFile, m_shaderDir + fragmentFile[fragment], GLShader::ExplicitLinking);
+    GLShader *shader = new GLShader(vertexFile, QString::fromUtf8(m_shaderDir + fragmentFile[fragment]), GLShader::ExplicitLinking);
     bindAttributeLocations(shader);
     bindFragDataLocations(shader);
     shader->link();
@@ -906,7 +906,8 @@ void ShaderManager::initShaders()
     m_valid = true;
 
     for (int i = 0; i < 3; i++) {
-        m_shader[i] = new GLShader(m_shaderDir + vertexFile[i], m_shaderDir + fragmentFile[i],
+        m_shader[i] = new GLShader(QString::fromUtf8(m_shaderDir + vertexFile[i]),
+                                   QString::fromUtf8(m_shaderDir + fragmentFile[i]),
                                    GLShader::ExplicitLinking);
         bindAttributeLocations(m_shader[i]);
         bindFragDataLocations(m_shader[i]);
@@ -995,8 +996,8 @@ void GLRenderTarget::initStatic()
     sSupported = true;
     s_blitSupported = false;
 #else
-    sSupported = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension("GL_EXT_framebuffer_object");
-    s_blitSupported = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension("GL_EXT_framebuffer_blit");
+    sSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"));
+    s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_blit"));
 #endif
 }
 
@@ -1087,32 +1088,32 @@ static QString formatFramebufferStatus(GLenum status)
     switch(status) {
     case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
         // An attachment is the wrong type / is invalid / has 0 width or height
-        return "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
     case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
         // There are no images attached to the framebuffer
-        return "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
     case GL_FRAMEBUFFER_UNSUPPORTED:
         // A format or the combination of formats of the attachments is unsupported
-        return "GL_FRAMEBUFFER_UNSUPPORTED";
+        return QStringLiteral("GL_FRAMEBUFFER_UNSUPPORTED");
 #ifndef KWIN_HAVE_OPENGLES
     case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
         // Not all attached images have the same width and height
-        return "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT");
     case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
         // The color attachments don't have the same format
-        return "GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT");
     case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT:
         // The attachments don't have the same number of samples
-        return "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE");
     case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
         // The draw buffer is missing
-        return "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER");
     case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
         // The read buffer is missing
-        return "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+        return QStringLiteral("GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER");
 #endif
     default:
-        return "Unknown (0x" + QString::number(status, 16) + ')';
+        return QStringLiteral("Unknown (0x") + QString::number(status, 16) + QStringLiteral(")");
     }
 }
 
@@ -1970,11 +1971,11 @@ void GLVertexBuffer::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
     GLVertexBufferPrivate::supported = true;
-    GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension("GL_EXT_map_buffer_range");
+    GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = false;
 #else
-    GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension("GL_ARB_vertex_buffer_object");
-    GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_map_buffer_range");
+    GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension(QStringLiteral("GL_ARB_vertex_buffer_object"));
+    GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = glMapBufferRange && glCopyBufferSubData && glDrawElementsBaseVertex;
     GLVertexBufferPrivate::s_indexBuffer = 0;
 #endif

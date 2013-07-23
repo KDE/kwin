@@ -42,7 +42,7 @@ ScreenEdgeEffect::ScreenEdgeEffect()
     , m_glow(new Plasma::Svg(this))
     , m_cleanupTimer(new QTimer(this))
 {
-    m_glow->setImagePath("widgets/glowbar");
+    m_glow->setImagePath(QStringLiteral("widgets/glowbar"));
     connect(effects, SIGNAL(screenEdgeApproaching(ElectricBorder,qreal,QRect)), SLOT(edgeApproaching(ElectricBorder,qreal,QRect)));
     m_cleanupTimer->setInterval(5000);
     m_cleanupTimer->setSingleShot(true);
@@ -218,13 +218,13 @@ T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
     switch (border) {
     case ElectricTopLeft:
-        return new T(m_glow->pixmap("bottomright"));
+        return new T(m_glow->pixmap(QStringLiteral("bottomright")));
     case ElectricTopRight:
-        return  new T(m_glow->pixmap("bottomleft"));
+        return  new T(m_glow->pixmap(QStringLiteral("bottomleft")));
     case ElectricBottomRight:
-        return new T(m_glow->pixmap("topleft"));
+        return new T(m_glow->pixmap(QStringLiteral("topleft")));
     case ElectricBottomLeft:
-        return new T(m_glow->pixmap("topright"));
+        return new T(m_glow->pixmap(QStringLiteral("topright")));
     default:
         return NULL;
     }
@@ -234,13 +234,13 @@ QSize ScreenEdgeEffect::cornerGlowSize(ElectricBorder border) const
 {
     switch (border) {
     case ElectricTopLeft:
-        return m_glow->elementSize("bottomright");
+        return m_glow->elementSize(QStringLiteral("bottomright"));
     case ElectricTopRight:
-        return  m_glow->elementSize("bottomleft");
+        return  m_glow->elementSize(QStringLiteral("bottomleft"));
     case ElectricBottomRight:
-        return m_glow->elementSize("topleft");
+        return m_glow->elementSize(QStringLiteral("topleft"));
     case ElectricBottomLeft:
-        return m_glow->elementSize("topright");
+        return m_glow->elementSize(QStringLiteral("topright"));
     default:
         return QSize();
     }
@@ -253,25 +253,25 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
     QPixmap l, r, c;
     switch (border) {
     case ElectricTop:
-        l = m_glow->pixmap("bottomleft");
-        r = m_glow->pixmap("bottomright");
-        c = m_glow->pixmap("bottom");
+        l = m_glow->pixmap(QStringLiteral("bottomleft"));
+        r = m_glow->pixmap(QStringLiteral("bottomright"));
+        c = m_glow->pixmap(QStringLiteral("bottom"));
         break;
     case ElectricBottom:
-        l = m_glow->pixmap("topleft");
-        r = m_glow->pixmap("topright");
-        c = m_glow->pixmap("top");
+        l = m_glow->pixmap(QStringLiteral("topleft"));
+        r = m_glow->pixmap(QStringLiteral("topright"));
+        c = m_glow->pixmap(QStringLiteral("top"));
         pixmapPosition = QPoint(0, size.height() - c.height());
         break;
     case ElectricLeft:
-        l = m_glow->pixmap("topright");
-        r = m_glow->pixmap("bottomright");
-        c = m_glow->pixmap("right");
+        l = m_glow->pixmap(QStringLiteral("topright"));
+        r = m_glow->pixmap(QStringLiteral("bottomright"));
+        c = m_glow->pixmap(QStringLiteral("right"));
         break;
     case ElectricRight:
-        l = m_glow->pixmap("topleft");
-        r = m_glow->pixmap("bottomleft");
-        c = m_glow->pixmap("left");
+        l = m_glow->pixmap(QStringLiteral("topleft"));
+        r = m_glow->pixmap(QStringLiteral("bottomleft"));
+        c = m_glow->pixmap(QStringLiteral("left"));
         pixmapPosition = QPoint(size.width() - c.width(), 0);
         break;
     default:

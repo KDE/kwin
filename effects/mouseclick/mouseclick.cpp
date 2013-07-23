@@ -45,7 +45,7 @@ MouseClickEffect::MouseClickEffect()
 {
     m_enabled = false;
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast<KAction*>(actionCollection->addAction("ToggleMouseClick"));
+    KAction* a = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("ToggleMouseClick")));
     a->setText(i18n("Toggle Effect"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));

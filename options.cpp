@@ -82,12 +82,12 @@ int currentRefreshRate()
         { // modeline approach failed
             QProcess nvidia_settings;
             QStringList env = QProcess::systemEnvironment();
-            env << "LC_ALL=C";
+            env << QStringLiteral("LC_ALL=C");
             nvidia_settings.setEnvironment(env);
-            nvidia_settings.start("nvidia-settings", QStringList() << "-t" << "-q" << "RefreshRate", QIODevice::ReadOnly);
+            nvidia_settings.start(QStringLiteral("nvidia-settings"), QStringList() << QStringLiteral("-t") << QStringLiteral("-q") << QStringLiteral("RefreshRate"), QIODevice::ReadOnly);
             nvidia_settings.waitForFinished();
             if (nvidia_settings.exitStatus() == QProcess::NormalExit) {
-                QString reply = QString::fromLocal8Bit(nvidia_settings.readAllStandardOutput()).split(' ').first();
+                QString reply = QString::fromLocal8Bit(nvidia_settings.readAllStandardOutput()).split(QStringLiteral(" ")).first();
                 bool ok;
                 float frate = QLocale::c().toFloat(reply, &ok);
                 if (!ok)
@@ -821,7 +821,7 @@ unsigned long Options::loadConfig()
     config = KConfigGroup(_config, "MouseBindings");
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right"));
-    CmdAllModKey = (config.readEntry("CommandAllKey", "Alt") == "Meta") ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAllModKey = (config.readEntry("CommandAllKey", "Alt") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel", "Nothing"));
     setCommandActiveTitlebar1(mouseCommand(config.readEntry("CommandActiveTitlebar1", "Raise"), true));
     setCommandActiveTitlebar2(mouseCommand(config.readEntry("CommandActiveTitlebar2", "Start Window Tab Drag"), true));
@@ -894,7 +894,7 @@ bool Options::loadCompositingConfig (bool force)
     bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
-    if (compositingBackend == "XRender")
+    if (compositingBackend == QStringLiteral("XRender"))
         compositingMode = XRenderCompositing;
     else
         compositingMode = OpenGLCompositing;
@@ -999,27 +999,27 @@ void Options::reloadCompositingSettings(bool force)
 // may not be able to move it back, unless they know about Alt+LMB)
 Options::WindowOperation Options::windowOperation(const QString &name, bool restricted)
 {
-    if (name == "Move")
+    if (name == QStringLiteral("Move"))
         return restricted ? MoveOp : UnrestrictedMoveOp;
-    else if (name == "Resize")
+    else if (name == QStringLiteral("Resize"))
         return restricted ? ResizeOp : UnrestrictedResizeOp;
-    else if (name == "Maximize")
+    else if (name == QStringLiteral("Maximize"))
         return MaximizeOp;
-    else if (name == "Minimize")
+    else if (name == QStringLiteral("Minimize"))
         return MinimizeOp;
-    else if (name == "Close")
+    else if (name == QStringLiteral("Close"))
         return CloseOp;
-    else if (name == "OnAllDesktops")
+    else if (name == QStringLiteral("OnAllDesktops"))
         return OnAllDesktopsOp;
-    else if (name == "Shade")
+    else if (name == QStringLiteral("Shade"))
         return ShadeOp;
-    else if (name == "Operations")
+    else if (name == QStringLiteral("Operations"))
         return OperationsOp;
-    else if (name == "Maximize (vertical only)")
+    else if (name == QStringLiteral("Maximize (vertical only)"))
         return VMaximizeOp;
-    else if (name == "Maximize (horizontal only)")
+    else if (name == QStringLiteral("Maximize (horizontal only)"))
         return HMaximizeOp;
-    else if (name == "Lower")
+    else if (name == QStringLiteral("Lower"))
         return LowerOp;
     return NoOp;
 }
@@ -1027,43 +1027,43 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
 Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted)
 {
     QString lowerName = name.toLower();
-    if (lowerName == "raise") return MouseRaise;
-    if (lowerName == "lower") return MouseLower;
-    if (lowerName == "operations menu") return MouseOperationsMenu;
-    if (lowerName == "toggle raise and lower") return MouseToggleRaiseAndLower;
-    if (lowerName == "activate and raise") return MouseActivateAndRaise;
-    if (lowerName == "activate and lower") return MouseActivateAndLower;
-    if (lowerName == "activate") return MouseActivate;
-    if (lowerName == "activate, raise and pass click") return MouseActivateRaiseAndPassClick;
-    if (lowerName == "activate and pass click") return MouseActivateAndPassClick;
-    if (lowerName == "scroll") return MouseNothing;
-    if (lowerName == "activate and scroll") return MouseActivateAndPassClick;
-    if (lowerName == "activate, raise and scroll") return MouseActivateRaiseAndPassClick;
-    if (lowerName == "activate, raise and move")
+    if (lowerName == QStringLiteral("raise")) return MouseRaise;
+    if (lowerName == QStringLiteral("lower")) return MouseLower;
+    if (lowerName == QStringLiteral("operations menu")) return MouseOperationsMenu;
+    if (lowerName == QStringLiteral("toggle raise and lower")) return MouseToggleRaiseAndLower;
+    if (lowerName == QStringLiteral("activate and raise")) return MouseActivateAndRaise;
+    if (lowerName == QStringLiteral("activate and lower")) return MouseActivateAndLower;
+    if (lowerName == QStringLiteral("activate")) return MouseActivate;
+    if (lowerName == QStringLiteral("activate, raise and pass click")) return MouseActivateRaiseAndPassClick;
+    if (lowerName == QStringLiteral("activate and pass click")) return MouseActivateAndPassClick;
+    if (lowerName == QStringLiteral("scroll")) return MouseNothing;
+    if (lowerName == QStringLiteral("activate and scroll")) return MouseActivateAndPassClick;
+    if (lowerName == QStringLiteral("activate, raise and scroll")) return MouseActivateRaiseAndPassClick;
+    if (lowerName == QStringLiteral("activate, raise and move"))
         return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
-    if (lowerName == "move") return restricted ? MouseMove : MouseUnrestrictedMove;
-    if (lowerName == "resize") return restricted ? MouseResize : MouseUnrestrictedResize;
-    if (lowerName == "shade") return MouseShade;
-    if (lowerName == "minimize") return MouseMinimize;
-    if (lowerName == "start window tab drag") return MouseDragTab;
-    if (lowerName == "close") return MouseClose;
-    if (lowerName == "increase opacity") return MouseOpacityMore;
-    if (lowerName == "decrease opacity") return MouseOpacityLess;
-    if (lowerName == "nothing") return MouseNothing;
+    if (lowerName == QStringLiteral("move")) return restricted ? MouseMove : MouseUnrestrictedMove;
+    if (lowerName == QStringLiteral("resize")) return restricted ? MouseResize : MouseUnrestrictedResize;
+    if (lowerName == QStringLiteral("shade")) return MouseShade;
+    if (lowerName == QStringLiteral("minimize")) return MouseMinimize;
+    if (lowerName == QStringLiteral("start window tab drag")) return MouseDragTab;
+    if (lowerName == QStringLiteral("close")) return MouseClose;
+    if (lowerName == QStringLiteral("increase opacity")) return MouseOpacityMore;
+    if (lowerName == QStringLiteral("decrease opacity")) return MouseOpacityLess;
+    if (lowerName == QStringLiteral("nothing")) return MouseNothing;
     return MouseNothing;
 }
 
 Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
 {
     QString lowerName = name.toLower();
-    if (lowerName == "raise/lower") return MouseWheelRaiseLower;
-    if (lowerName == "shade/unshade") return MouseWheelShadeUnshade;
-    if (lowerName == "maximize/restore") return MouseWheelMaximizeRestore;
-    if (lowerName == "above/below") return MouseWheelAboveBelow;
-    if (lowerName == "previous/next desktop") return MouseWheelPreviousNextDesktop;
-    if (lowerName == "change opacity") return MouseWheelChangeOpacity;
-    if (lowerName == "switch to window tab to the left/right") return MouseWheelChangeCurrentTab;
-    if (lowerName == "nothing") return MouseWheelNothing;
+    if (lowerName == QStringLiteral("raise/lower")) return MouseWheelRaiseLower;
+    if (lowerName == QStringLiteral("shade/unshade")) return MouseWheelShadeUnshade;
+    if (lowerName == QStringLiteral("maximize/restore")) return MouseWheelMaximizeRestore;
+    if (lowerName == QStringLiteral("above/below")) return MouseWheelAboveBelow;
+    if (lowerName == QStringLiteral("previous/next desktop")) return MouseWheelPreviousNextDesktop;
+    if (lowerName == QStringLiteral("change opacity")) return MouseWheelChangeOpacity;
+    if (lowerName == QStringLiteral("switch to window tab to the left/right")) return MouseWheelChangeCurrentTab;
+    if (lowerName == QStringLiteral("nothing")) return MouseWheelNothing;
     return MouseWheelChangeCurrentTab;
 }
 

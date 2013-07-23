@@ -298,7 +298,7 @@ void TestVirtualDesktops::next_data()
 
 void TestVirtualDesktops::next()
 {
-    testDirection<DesktopNext>("Switch to Next Desktop");
+    testDirection<DesktopNext>(QStringLiteral("Switch to Next Desktop"));
 }
 
 void TestVirtualDesktops::previous_data()
@@ -315,7 +315,7 @@ void TestVirtualDesktops::previous_data()
 
 void TestVirtualDesktops::previous()
 {
-    testDirection<DesktopPrevious>("Switch to Previous Desktop");
+    testDirection<DesktopPrevious>(QStringLiteral("Switch to Previous Desktop"));
 }
 
 void TestVirtualDesktops::left_data()
@@ -340,7 +340,7 @@ void TestVirtualDesktops::left_data()
 
 void TestVirtualDesktops::left()
 {
-    testDirection<DesktopLeft>("Switch One Desktop to the Left");
+    testDirection<DesktopLeft>(QStringLiteral("Switch One Desktop to the Left"));
 }
 
 void TestVirtualDesktops::right_data()
@@ -365,7 +365,7 @@ void TestVirtualDesktops::right_data()
 
 void TestVirtualDesktops::right()
 {
-    testDirection<DesktopRight>("Switch One Desktop to the Right");
+    testDirection<DesktopRight>(QStringLiteral("Switch One Desktop to the Right"));
 }
 
 void TestVirtualDesktops::above_data()
@@ -386,7 +386,7 @@ void TestVirtualDesktops::above_data()
 
 void TestVirtualDesktops::above()
 {
-    testDirection<DesktopAbove>("Switch One Desktop Up");
+    testDirection<DesktopAbove>(QStringLiteral("Switch One Desktop Up"));
 }
 
 void TestVirtualDesktops::below_data()
@@ -407,7 +407,7 @@ void TestVirtualDesktops::below_data()
 
 void TestVirtualDesktops::below()
 {
-    testDirection<DesktopBelow>("Switch One Desktop Down");
+    testDirection<DesktopBelow>(QStringLiteral("Switch One Desktop Down"));
 }
 
 void TestVirtualDesktops::updateGrid_data()
@@ -558,7 +558,7 @@ void TestVirtualDesktops::switchToShortcuts()
     vds->setCurrent(vds->maximum());
     QCOMPARE(vds->current(), vds->maximum());
     vds->initShortcuts(keys.data());
-    const QString toDesktop = "Switch to Desktop %1";
+    const QString toDesktop = QStringLiteral("Switch to Desktop %1");
     for (uint i=1; i<=vds->maximum(); ++i) {
         const QString desktop(toDesktop.arg(i));
         QAction *action = keys->action(desktop);
@@ -568,7 +568,7 @@ void TestVirtualDesktops::switchToShortcuts()
         QCOMPARE(vds->current(), i);
     }
     // test switchTo with incorrect data in QAction
-    KAction *action = keys->addAction("wrong", vds, SLOT(slotSwitchTo()));
+    KAction *action = keys->addAction(QStringLiteral("wrong"), vds, SLOT(slotSwitchTo()));
     action->trigger();
     // should still be on max
     QCOMPARE(vds->current(), vds->maximum());

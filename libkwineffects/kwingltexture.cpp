@@ -151,12 +151,12 @@ void GLTexturePrivate::initStatic()
     sNPOTTextureSupported = true;
     sFramebufferObjectSupported = true;
     sSaturationSupported = true;
-    sTextureFormatBGRA = hasGLExtension("GL_EXT_texture_format_BGRA8888");
+    sTextureFormatBGRA = hasGLExtension(QStringLiteral("GL_EXT_texture_format_BGRA8888"));
 #else
-    sNPOTTextureSupported = hasGLExtension("GL_ARB_texture_non_power_of_two");
-    sFramebufferObjectSupported = hasGLExtension("GL_EXT_framebuffer_object");
-    sSaturationSupported = ((hasGLExtension("GL_ARB_texture_env_crossbar")
-                             && hasGLExtension("GL_ARB_texture_env_dot3")) || hasGLVersion(1, 4))
+    sNPOTTextureSupported = hasGLExtension(QStringLiteral("GL_ARB_texture_non_power_of_two"));
+    sFramebufferObjectSupported = hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"));
+    sSaturationSupported = ((hasGLExtension(QStringLiteral("GL_ARB_texture_env_crossbar"))
+                             && hasGLExtension(QStringLiteral("GL_ARB_texture_env_dot3"))) || hasGLVersion(1, 4))
                            && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
     sTextureFormatBGRA = true;
 #endif
@@ -236,7 +236,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     Q_D(GLTexture);
 #ifdef KWIN_HAVE_OPENGLES
-    static bool s_supportsUnpack = hasGLExtension("GL_EXT_unpack_subimage");
+    static bool s_supportsUnpack = hasGLExtension(QStringLiteral("GL_EXT_unpack_subimage"));
 #else
     static bool s_supportsUnpack = true;
 #endif

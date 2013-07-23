@@ -46,9 +46,9 @@ public:
     inline QString toString() const {
         QString ret;
         if (valid)
-            ret = QString::number(f[0]) + ',' + QString::number(f[1]);
+            ret = QString::number(f[0]) + QStringLiteral(",") + QString::number(f[1]);
         else
-            ret = QString("");
+            ret = QString();
         return ret;
     }
 

@@ -46,9 +46,9 @@ SlidingPopupsEffect::~SlidingPopupsEffect()
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
-    KConfigGroup conf = effects->effectConfig("SlidingPopups");
-    mFadeInTime = animationTime(conf, "SlideInTime", 250);
-    mFadeOutTime = animationTime(conf, "SlideOutTime", 250);
+    KConfigGroup conf = effects->effectConfig(QStringLiteral("SlidingPopups"));
+    mFadeInTime = animationTime(conf, QStringLiteral("SlideInTime"), 250);
+    mFadeOutTime = animationTime(conf, QStringLiteral("SlideOutTime"), 250);
     QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
         it.value()->setDuration(animationTime(mFadeInTime));

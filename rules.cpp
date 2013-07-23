@@ -94,7 +94,7 @@ Rules::Rules(const QString& str, bool temporary)
     KConfig cfg(file.fileName(), KConfig::SimpleConfig);
     readFromCfg(cfg.group(QString()));
     if (description.isEmpty())
-        description = "temporary";
+        description = QStringLiteral("temporary");
 }
 
 #define READ_MATCH_STRING( var, func ) \
@@ -104,19 +104,19 @@ Rules::Rules(const QString& str, bool temporary)
 
 #define READ_SET_RULE( var, func, def ) \
     var = func ( cfg.readEntry( #var, def)); \
-    var##rule = readSetRule( cfg, #var "rule" );
+    var##rule = readSetRule( cfg, QStringLiteral( #var "rule" ) );
 
 #define READ_SET_RULE_DEF( var , func, def ) \
     var = func ( cfg.readEntry( #var, def )); \
-    var##rule = readSetRule( cfg, #var "rule" );
+    var##rule = readSetRule( cfg, QStringLiteral( #var "rule" ) );
 
 #define READ_FORCE_RULE( var, func, def) \
     var = func ( cfg.readEntry( #var, def)); \
-    var##rule = readForceRule( cfg, #var "rule" );
+    var##rule = readForceRule( cfg, QStringLiteral( #var "rule" ) );
 
 #define READ_FORCE_RULE2( var, def, func, funcarg ) \
     var = func ( cfg.readEntry( #var, def),funcarg ); \
-    var##rule = readForceRule( cfg, #var "rule" );
+    var##rule = readForceRule( cfg, QStringLiteral( #var "rule" ) );
 
 
 
@@ -163,8 +163,8 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     READ_SET_RULE(desktop, , 0);
     READ_SET_RULE(screen, , 0);
     READ_SET_RULE(activity, , QString());
-    type = readType(cfg, "type");
-    typerule = type != NET::Unknown ? readForceRule(cfg, "typerule") : UnusedForceRule;
+    type = readType(cfg, QStringLiteral("type"));
+    typerule = type != NET::Unknown ? readForceRule(cfg, QStringLiteral("typerule")) : UnusedForceRule;
     READ_SET_RULE(maximizevert, , false);
     READ_SET_RULE(maximizehoriz, , false);
     READ_SET_RULE(minimize, , false);
@@ -193,10 +193,10 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
 #undef READ_FORCE_RULE
 #undef READ_FORCE_RULE2
 
-#define WRITE_MATCH_STRING( var, cast, force ) \
+#define WRITE_MATCH_STRING( var, force ) \
     if ( !var.isEmpty() || force ) \
     { \
-        cfg.writeEntry( #var, cast var ); \
+        cfg.writeEntry( #var, var ); \
         cfg.writeEntry( #var "match", (int)var##match ); \
     } \
     else \
@@ -233,11 +233,11 @@ void Rules::write(KConfigGroup& cfg) const
 {
     cfg.writeEntry("Description", description);
     // always write wmclass
-    WRITE_MATCH_STRING(wmclass, (const char*), true);
+    WRITE_MATCH_STRING(wmclass, true);
     cfg.writeEntry("wmclasscomplete", wmclasscomplete);
-    WRITE_MATCH_STRING(windowrole, (const char*), false);
-    WRITE_MATCH_STRING(title, , false);
-    WRITE_MATCH_STRING(clientmachine, (const char*), false);
+    WRITE_MATCH_STRING(windowrole, false);
+    WRITE_MATCH_STRING(title, false);
+    WRITE_MATCH_STRING(clientmachine, false);
     if (types != NET::AllTypesMask)
         cfg.writeEntry("types", uint(types));
     else
@@ -360,7 +360,7 @@ bool Rules::matchWMClass(const QByteArray& match_class, const QByteArray& match_
         // TODO optimize?
         QByteArray cwmclass = wmclasscomplete
                               ? match_name + ' ' + match_class : match_class;
-        if (wmclassmatch == RegExpMatch && QRegExp(wmclass).indexIn(cwmclass) == -1)
+        if (wmclassmatch == RegExpMatch && QRegExp(QString::fromUtf8(wmclass)).indexIn(QString::fromUtf8(cwmclass)) == -1)
             return false;
         if (wmclassmatch == ExactMatch && wmclass != cwmclass)
             return false;
@@ -373,7 +373,7 @@ bool Rules::matchWMClass(const QByteArray& match_class, const QByteArray& match_
 bool Rules::matchRole(const QByteArray& match_role) const
 {
     if (windowrolematch != UnimportantMatch) {
-        if (windowrolematch == RegExpMatch && QRegExp(windowrole).indexIn(match_role) == -1)
+        if (windowrolematch == RegExpMatch && QRegExp(QString::fromUtf8(windowrole)).indexIn(QString::fromUtf8(match_role)) == -1)
             return false;
         if (windowrolematch == ExactMatch && windowrole != match_role)
             return false;
@@ -404,7 +404,7 @@ bool Rules::matchClientMachine(const QByteArray& match_machine, bool local) cons
                 && matchClientMachine("localhost", true))
             return true;
         if (clientmachinematch == RegExpMatch
-                && QRegExp(clientmachine).indexIn(match_machine) == -1)
+                && QRegExp(QString::fromUtf8(clientmachine)).indexIn(QString::fromUtf8(match_machine)) == -1)
             return false;
         if (clientmachinematch == ExactMatch
                 && clientmachine != match_machine)
@@ -472,7 +472,7 @@ bool Rules::update(Client* c, int selection)
     }
     if NOW_REMEMBER(Activity, activity) {
         // TODO: ivan - multiple activities support
-        const QString & joinedActivities = c->activities().join(",");
+        const QString & joinedActivities = c->activities().join(QStringLiteral(","));
         updated = updated || activity != joinedActivities;
         activity = joinedActivities;
     }
@@ -969,16 +969,16 @@ void RuleBook::edit(Client* c, bool whole_app)
 {
     save();
     QStringList args;
-    args << "--wid" << QString::number(c->window());
+    args << QStringLiteral("--wid") << QString::number(c->window());
     if (whole_app)
-        args << "--whole-app";
-    KToolInvocation::kdeinitExec("kwin_rules_dialog", args);
+        args << QStringLiteral("--whole-app");
+    KToolInvocation::kdeinitExec(QStringLiteral("kwin_rules_dialog"), args);
 }
 
 void RuleBook::load()
 {
     deleteAll();
-    KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
+    KConfig cfg(QStringLiteral(KWIN_NAME) + QStringLiteral("rulesrc"), KConfig::NoGlobals);
     int count = cfg.group("General").readEntry("count", 0);
     for (int i = 1;
             i <= count;
@@ -992,7 +992,7 @@ void RuleBook::load()
 void RuleBook::save()
 {
     m_updateTimer->stop();
-    KConfig cfg(QLatin1String(KWIN_NAME) + "rulesrc", KConfig::NoGlobals);
+    KConfig cfg(QStringLiteral(KWIN_NAME) + QStringLiteral("rulesrc"), KConfig::NoGlobals);
     QStringList groups = cfg.groupList();
     for (QStringList::ConstIterator it = groups.constBegin();
             it != groups.constEnd();

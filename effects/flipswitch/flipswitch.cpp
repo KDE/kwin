@@ -58,13 +58,13 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_captionFont.setPointSize(m_captionFont.pointSize() * 2);
 
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*)actionCollection->addAction("FlipSwitchCurrent");
+    KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
     a->setText(i18n("Toggle Flip Switch (Current desktop)"));
     a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
     m_shortcutCurrent = a->globalShortcut();
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
     connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedCurrent(QKeySequence)));
-    KAction* b = (KAction*)actionCollection->addAction("FlipSwitchAll");
+    KAction* b = (KAction*)actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
     b->setText(i18n("Toggle Flip Switch (All desktops)"));
     b->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
     m_shortcutAll = b->globalShortcut();
@@ -950,7 +950,7 @@ void FlipSwitchEffect::updateCaption()
     if (m_selectedWindow->isDesktop()) {
         m_captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
-        static QPixmap pix = KIcon("user-desktop").pixmap(m_captionFrame->iconSize());
+        static QPixmap pix = KIcon(QStringLiteral("user-desktop")).pixmap(m_captionFrame->iconSize());
         m_captionFrame->setIcon(pix);
     } else {
         m_captionFrame->setText(m_selectedWindow->caption());

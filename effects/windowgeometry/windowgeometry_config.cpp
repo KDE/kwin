@@ -45,7 +45,7 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     myActionCollection = new KActionCollection(this, KComponentData("kwin"));
-    KAction* a = (KAction*)myActionCollection->addAction("WindowGeometry");
+    KAction* a = (KAction*)myActionCollection->addAction(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle KWin composited geometry display"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
@@ -68,7 +68,7 @@ void WindowGeometryConfig::save()
 {
     KCModule::save();
     myUi->shortcuts->save();   // undo() will restore to this state from now on
-    EffectsHandler::sendReloadMessage("windowgeometry");
+    EffectsHandler::sendReloadMessage(QStringLiteral("windowgeometry"));
 }
 
 void WindowGeometryConfig::defaults()

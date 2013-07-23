@@ -57,7 +57,7 @@ LookingGlassEffect::LookingGlassEffect()
 {
     actionCollection = new KActionCollection(this);
     actionCollection->setConfigGlobal(true);
-    actionCollection->setConfigGroup("LookingGlass");
+    actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
 
     KAction* a;
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn())));
@@ -89,7 +89,7 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->readConfig();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    kDebug(1212) << QString("Radius from config: %1").arg(radius) << endl;
+    kDebug(1212) << QStringLiteral("Radius from config: %1").arg(radius) << endl;
     actionCollection->readSettings();
     m_valid = loadData();
 }
@@ -116,15 +116,15 @@ bool LookingGlassEffect::loadData()
         return false;
     }
 
-    QString shadersDir = "kwin/shaders/1.10/";
+    QString shadersDir = QStringLiteral("kwin/shaders/1.10/");
 #ifdef KWIN_HAVE_OPENGLES
     const qint64 coreVersionNumber = kVersionNumber(3, 0);
 #else
     const qint64 coreVersionNumber = kVersionNumber(1, 40);
 #endif
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
-        shadersDir = "kwin/shaders/1.40/";
-    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + "lookingglass.frag");
+        shadersDir = QStringLiteral("kwin/shaders/1.40/");
+    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + QStringLiteral("lookingglass.frag"));
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);

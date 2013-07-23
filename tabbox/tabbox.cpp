@@ -358,7 +358,7 @@ QString TabBoxClientImpl::caption() const
 QPixmap TabBoxClientImpl::icon(const QSize& size) const
 {
     if (m_client->isDesktop()) {
-        return KIcon("user-desktop").pixmap(size);
+        return KIcon(QStringLiteral("user-desktop")).pixmap(size);
     }
     return m_client->icon(size);
 }
@@ -474,12 +474,12 @@ TabBox::TabBox(QObject *parent)
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
-    QDBusConnection::sessionBus().registerObject("/TabBox", this, QDBusConnection::ExportScriptableContents);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/TabBox"), this, QDBusConnection::ExportScriptableContents);
 }
 
 TabBox::~TabBox()
 {
-    QDBusConnection::sessionBus().unregisterObject("/TabBox");
+    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/TabBox"));
     s_self = NULL;
 }
 
@@ -498,7 +498,7 @@ void TabBox::initShortcuts(KActionCollection* keys)
     // sequence is necessary in the case where the user has defined a
     // custom key binding which KAction::setGlobalShortcut autoloads.
     #define KEY( name, key, fnSlot, shortcut, shortcutSlot )                    \
-    a = keys->addAction( name );                                                \
+    a = keys->addAction( QStringLiteral( name ) );                              \
     a->setText( i18n(name) );                                                   \
     shortcut = KShortcut(key);                                                  \
     qobject_cast<KAction*>( a )->setGlobalShortcut(shortcut);                   \
@@ -734,7 +734,7 @@ void TabBox::reconfigure()
 
 #ifdef KWIN_BUILD_SCREENEDGES
     QList<ElectricBorder> *borders = &m_borderActivate;
-    QString borderConfig = "BorderActivate";
+    QString borderConfig = QStringLiteral("BorderActivate");
     for (int i = 0; i < 2; ++i) {
         foreach (ElectricBorder border, *borders) {
             ScreenEdges::self()->unreserve(border, this);
@@ -750,7 +750,7 @@ void TabBox::reconfigure()
             ScreenEdges::self()->reserve(ElectricBorder(i), this, "toggle");
         }
         borders = &m_borderAlternativeActivate;
-        borderConfig = "BorderAlternativeActivate";
+        borderConfig = QStringLiteral("BorderAlternativeActivate");
     }
 #endif
 }

@@ -1361,18 +1361,18 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
     if (!ask) {
         if (!clientMachine()->isLocal()) {
             QStringList lst;
-            lst << clientMachine()->hostName() << "kill" << QString::number(pid);
-            QProcess::startDetached("xon", lst);
+            lst << QString::fromUtf8(clientMachine()->hostName()) << QStringLiteral("kill") << QString::number(pid);
+            QProcess::startDetached(QStringLiteral("xon"), lst);
         } else
             ::kill(pid, SIGTERM);
     } else {
-        QString hostname = clientMachine()->isLocal() ? "localhost" : clientMachine()->hostName();
-        QProcess::startDetached(KStandardDirs::findExe("kwin_killer_helper"),
-                                QStringList() << "--pid" << QByteArray().setNum(unsigned(pid)) << "--hostname" << hostname
-                                << "--windowname" << caption()
-                                << "--applicationname" << resourceClass()
-                                << "--wid" << QString::number(window())
-                                << "--timestamp" << QString::number(timestamp),
+        QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
+        QProcess::startDetached(KStandardDirs::findExe(QStringLiteral("kwin_killer_helper")),
+                                QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
+                                << QStringLiteral("--windowname") << caption()
+                                << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
+                                << QStringLiteral("--wid") << QString::number(window())
+                                << QStringLiteral("--timestamp") << QString::number(timestamp),
                                 QString(), &m_killHelperPID);
     }
 }
@@ -1501,9 +1501,9 @@ void Client::setOnActivity(const QString &activity, bool enable)
 void Client::setOnActivities(QStringList newActivitiesList)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
-    QString joinedActivitiesList = newActivitiesList.join(",");
+    QString joinedActivitiesList = newActivitiesList.join(QStringLiteral(","));
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
-    newActivitiesList = joinedActivitiesList.split(',', QString::SkipEmptyParts);
+    newActivitiesList = joinedActivitiesList.split(QStringLiteral(","), QString::SkipEmptyParts);
 
     QStringList allActivities = Activities::self()->all();
     if ( newActivitiesList.isEmpty() ||
@@ -1739,7 +1739,7 @@ void Client::setCaption(const QString& _s, bool force)
     QString s(_s);
     for (int i = 0; i < s.length(); ++i)
         if (!s[i].isPrint())
-            s[i] = QChar(' ');
+            s[i] = QChar(u' ');
     cap_normal = s;
 #ifdef KWIN_BUILD_SCRIPTING
     if (options->condensedTitle()) {
@@ -1747,21 +1747,21 @@ void Client::setCaption(const QString& _s, bool force)
         static QScriptProgram stripTitle;
         static QScriptValue script;
         if (stripTitle.isNull()) {
-            const QString scriptFile = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/stripTitle.js");
+            const QString scriptFile = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/stripTitle.js"));
             if (!scriptFile.isEmpty()) {
                 QFile f(scriptFile);
                 if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {
                     f.reset();
-                    stripTitle = QScriptProgram(QString::fromLocal8Bit(f.readAll()), "stripTitle.js");
+                    stripTitle = QScriptProgram(QString::fromLocal8Bit(f.readAll()), QStringLiteral("stripTitle.js"));
                     f.close();
                 }
             }
             if (stripTitle.isNull())
-                stripTitle = QScriptProgram("(function(title, wm_name, wm_class){ return title ; })", "stripTitle.js");
+                stripTitle = QScriptProgram(QStringLiteral("(function(title, wm_name, wm_class){ return title ; })"), QStringLiteral("stripTitle.js"));
             script = engine.evaluate(stripTitle);
         }
         QScriptValueList args;
-        args << _s << QString(resourceName()) << QString(resourceClass());
+        args << _s << QString::fromUtf8(resourceName()) << QString::fromUtf8(resourceClass());
         s = script.call(QScriptValue(), args).toString();
     }
 #endif
@@ -1775,17 +1775,17 @@ void Client::setCaption(const QString& _s, bool force)
     QString machine_suffix;
     if (!options->condensedTitle()) { // machine doesn't qualify for "clean"
         if (clientMachine()->hostName() != ClientMachine::localhost() && !clientMachine()->isLocal())
-            machine_suffix = QString(" <@") + clientMachine()->hostName() + '>' + LRM;
+            machine_suffix = QStringLiteral(" <@") + QString::fromUtf8(clientMachine()->hostName()) + QStringLiteral(">") + LRM;
     }
-    QString shortcut_suffix = !shortcut().isEmpty() ? (" {" + shortcut().toString() + '}') : QString();
+    QString shortcut_suffix = !shortcut().isEmpty() ? (QStringLiteral(" {") + shortcut().toString() + QStringLiteral("}")) : QString();
     cap_suffix = machine_suffix + shortcut_suffix;
     if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(FetchNameInternalPredicate(this))) {
         int i = 2;
         do {
-            cap_suffix = machine_suffix + " <" + QString::number(i) + '>' + LRM;
+            cap_suffix = machine_suffix + QStringLiteral(" <") + QString::number(i) + QStringLiteral(">") + LRM;
             i++;
         } while (workspace()->findClient(FetchNameInternalPredicate(this)));
-        info->setVisibleName(caption().toUtf8());
+        info->setVisibleName(caption().toUtf8().constData());
         reset_name = false;
     }
     if ((was_suffix && cap_suffix.isEmpty()) || reset_name) {
@@ -1794,7 +1794,7 @@ void Client::setCaption(const QString& _s, bool force)
         info->setVisibleIconName("");
     } else if (!cap_suffix.isEmpty() && !cap_iconic.isEmpty())
         // Keep the same suffix in iconic name if it's set
-        info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8());
+        info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8().constData());
 
     emit captionChanged();
 }
@@ -1816,7 +1816,7 @@ void Client::fetchIconicName()
         cap_iconic = s;
         if (!cap_suffix.isEmpty()) {
             if (!cap_iconic.isEmpty())  // Keep the same suffix in iconic name if it's set
-                info->setVisibleIconName(QString(s + cap_suffix).toUtf8());
+                info->setVisibleIconName(QString(s + cap_suffix).toUtf8().constData());
             else if (was_set)
                 info->setVisibleIconName("");
         }
@@ -2347,7 +2347,7 @@ QPixmap* kwin_get_menu_pix_hack()
 {
     static QPixmap p;
     if (p.isNull())
-        p = SmallIcon("bx2");
+        p = SmallIcon(QStringLiteral("bx2"));
     return &p;
 }
 
@@ -2357,7 +2357,7 @@ void Client::checkActivities()
     QStringList newActivitiesList;
     QByteArray prop = getStringProperty(window(), atoms->activities);
     activitiesDefined = !prop.isEmpty();
-    if (prop == Activities::nullUuid()) {
+    if (QString::fromUtf8(prop) == Activities::nullUuid()) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
         if (!activityList.isEmpty()) {
             activityList.clear();
@@ -2374,7 +2374,7 @@ void Client::checkActivities()
         return;
     }
 
-    newActivitiesList = QString(prop).split(',');
+    newActivitiesList = QString::fromUtf8(prop).split(QStringLiteral(","));
 
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.
