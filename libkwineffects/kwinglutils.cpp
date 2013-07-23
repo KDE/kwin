@@ -238,7 +238,7 @@ void multiplyMatrix(const QMatrix4x4 &matrix)
         return;
     }
     GLfloat m[16];
-    const qreal *data = matrix.constData();
+    const auto *data = matrix.constData();
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             m[i*4+j] = data[i*4+j];
@@ -257,7 +257,7 @@ void loadMatrix(const QMatrix4x4 &matrix)
         return;
     }
     GLfloat m[16];
-    const qreal *data = matrix.constData();
+    const auto *data = matrix.constData();
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             m[i*4+j] = data[i*4+j];
@@ -635,7 +635,7 @@ bool GLShader::setUniform(int location, const QMatrix4x4 &value)
 {
     if (location >= 0) {
         GLfloat m[16];
-        const qreal *data = value.constData();
+        const auto *data = value.constData();
         // i is column, j is row for m
         for (int i = 0; i < 16; ++i) {
             m[i] = data[i];
