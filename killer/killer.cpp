@@ -35,6 +35,7 @@ DEALINGS IN THE SOFTWARE.
 #include <QProcess>
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
+#include <QWidget>
 #include <signal.h>
 #include <errno.h>
 
@@ -90,7 +91,7 @@ int main(int argc, char* argv[])
     KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), QStringLiteral("edit-bomb"));
     KGuiItem cancelButton = KGuiItem(i18n("Wait Longer"), QStringLiteral("chronometer"));
     app.updateUserTimestamp(timestamp);
-    if (KMessageBox::warningContinueCancelWId(id, question, QString(), continueButton, cancelButton) == KMessageBox::Continue) {
+    if (KMessageBox::warningContinueCancel(QWidget::find(id), question, QString(), continueButton, cancelButton) == KMessageBox::Continue) {
         if (!isLocal) {
             QStringList lst;
             lst << hostname << QStringLiteral("kill") << QString::number(pid);
