@@ -45,9 +45,14 @@ bool SessionManager::saveState(QSessionManager& sm)
     // before the WM finishes phase 1. Saving in phase 2 is
     // too late, as possible user interaction may change some things.
     // Phase2 is still needed though (ICCCM 5.2)
+#if KWIN_QT5_PORTING
     char* sm_vendor = SmcVendor(static_cast< SmcConn >(sm.handle()));
     bool ksmserver = qstrcmp(sm_vendor, "KDE") == 0;
     free(sm_vendor);
+#else
+#warning need to figure out whether the used SessionManager is ksmserver
+    bool ksmserver = false;
+#endif
     if (!sm.isPhase2()) {
         Workspace::self()->sessionSaveStarted();
         if (ksmserver)   // save stacking order etc. before "save file?" etc. dialogs change it
