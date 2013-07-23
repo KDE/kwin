@@ -568,7 +568,7 @@ void TestVirtualDesktops::switchToShortcuts()
         QCOMPARE(vds->current(), i);
     }
     // test switchTo with incorrect data in QAction
-    KAction *action = keys->addAction(QStringLiteral("wrong"), vds, SLOT(slotSwitchTo()));
+    QAction *action = keys->addAction(QStringLiteral("wrong"), vds, SLOT(slotSwitchTo()));
     action->trigger();
     // should still be on max
     QCOMPARE(vds->current(), vds->maximum());
