@@ -94,6 +94,7 @@ QVector< long > Shadow::readX11ShadowProperty(WId id)
 
 bool Shadow::init(const QVector< long > &data)
 {
+#if KWIN_QT5_PORTING
     for (int i=0; i<ShadowElementsCount; ++i) {
         QPixmap pix = QPixmap::fromX11Pixmap(data[i], QPixmap::ExplicitlyShared);
         if (pix.isNull() || pix.depth() != 32) {
@@ -111,6 +112,10 @@ bool Shadow::init(const QVector< long > &data)
     }
     buildQuads();
     return true;
+#else
+#warning Shadow system needs porting
+    return false;
+#endif
 }
 
 void Shadow::updateShadowRegion()
