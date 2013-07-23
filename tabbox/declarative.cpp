@@ -238,6 +238,7 @@ void DeclarativeView::hideEvent(QHideEvent *event)
 #endif
 }
 
+#if KWIN_QT5_PORTING
 bool DeclarativeView::x11Event(XEvent *e)
 {
     if (tabBox->embedded() && 
@@ -259,6 +260,7 @@ bool DeclarativeView::x11Event(XEvent *e)
     }
     return QDeclarativeView::x11Event(e);
 }
+#endif
 
 void DeclarativeView::slotUpdateGeometry()
 {

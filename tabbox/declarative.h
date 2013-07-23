@@ -62,7 +62,9 @@ public:
 
 protected:
     virtual void hideEvent(QHideEvent *event);
+#if KWIN_QT5_PORTING
     virtual bool x11Event(XEvent *e);
+#endif
 
 public Q_SLOTS:
     void slotUpdateGeometry();
