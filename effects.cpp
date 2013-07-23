@@ -1438,7 +1438,8 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *service)
 {
 #ifdef KWIN_BUILD_SCRIPTING
-    const KDesktopFile df("services", service->entryPath());
+#warning is DataLocation the right location for our script desktop files?
+    const KDesktopFile df(QStandardPaths::DataLocation, QStringLiteral("kde5/services/") + service->entryPath());
     const QString scriptName = df.desktopGroup().readEntry<QString>(QStringLiteral("X-Plasma-MainScript"), QString());
     if (scriptName.isEmpty()) {
         kDebug(1212) << "X-Plasma-MainScript not set";
