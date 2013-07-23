@@ -42,7 +42,7 @@ class GenericScriptedConfig : public KCModule
     Q_OBJECT
 
 public:
-    GenericScriptedConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args);
+    GenericScriptedConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
     virtual ~GenericScriptedConfig();
 
 public Q_SLOTS:
@@ -63,7 +63,7 @@ class ScriptedEffectConfig : public GenericScriptedConfig
 {
     Q_OBJECT
 public:
-    ScriptedEffectConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args);
+    ScriptedEffectConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
     virtual ~ScriptedEffectConfig();
 protected:
     virtual QString typeName() const;
@@ -75,7 +75,7 @@ class ScriptingConfig : public GenericScriptedConfig
 {
     Q_OBJECT
 public:
-    ScriptingConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args);
+    ScriptingConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args);
     virtual ~ScriptingConfig();
 
 protected:

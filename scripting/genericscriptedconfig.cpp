@@ -20,6 +20,7 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
+#include <KDE/KAboutData>
 #include <KDE/KStandardDirs>
 #include <KDE/KLocalizedString>
 #include <Plasma/ConfigLoader>
@@ -43,14 +44,14 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
     Q_UNUSED(iface)
     Q_UNUSED(parent)
     if (keyword.startsWith(QStringLiteral("kwin4_effect_"))) {
-        return new ScriptedEffectConfig(componentData(), keyword, parentWidget, args);
+        return new ScriptedEffectConfig(componentName(), keyword, parentWidget, args);
     } else {
-        return new ScriptingConfig(componentData(), keyword, parentWidget, args);
+        return new ScriptingConfig(componentName(), keyword, parentWidget, args);
     }
 }
 
-GenericScriptedConfig::GenericScriptedConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args)
-    : KCModule(data, parent, args)
+GenericScriptedConfig::GenericScriptedConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
+    : KCModule(KAboutData::pluginData(componentName), parent, args)
     , m_packageName(keyword)
 {
 }
@@ -104,8 +105,8 @@ void GenericScriptedConfig::reload()
 {
 }
 
-ScriptedEffectConfig::ScriptedEffectConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args)
-    : GenericScriptedConfig(data, keyword, parent, args)
+ScriptedEffectConfig::ScriptedEffectConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
+    : GenericScriptedConfig(componentName, keyword, parent, args)
 {
     createUi();
 }
@@ -134,8 +135,8 @@ void ScriptedEffectConfig::reload()
     QDBusConnection::sessionBus().send(message);
 }
 
-ScriptingConfig::ScriptingConfig(const KComponentData &data, const QString &keyword, QWidget *parent, const QVariantList &args)
-    : GenericScriptedConfig(data, keyword, parent, args)
+ScriptingConfig::ScriptingConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
+    : GenericScriptedConfig(componentName, keyword, parent, args)
 {
     createUi();
 }
