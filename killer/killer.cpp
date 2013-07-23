@@ -30,14 +30,13 @@ DEALINGS IN THE SOFTWARE.
 #include <kauth.h>
 #include <kdebug.h>
 #include <unistd.h>
-#include <X11/Xlib.h>
-#include <QX11Info>
 #include <QProcess>
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
 #include <QWidget>
 #include <signal.h>
 #include <errno.h>
+#include <xcb/xcb.h>
 
 int main(int argc, char* argv[])
 {
@@ -61,11 +60,11 @@ int main(int argc, char* argv[])
     QString caption = args->getOption("windowname");
     QString appname = args->getOption("applicationname");
     bool id_ok = false;
-    Window id = QString(args->getOption("wid")).toULong(&id_ok);
+    xcb_window_t id = QString(args->getOption("wid")).toULong(&id_ok);
     bool time_ok = false;
-    Time timestamp = QString(args->getOption("timestamp")).toULong(&time_ok);
+    xcb_timestamp_t timestamp = QString(args->getOption("timestamp")).toULong(&time_ok);
     args->clear();
-    if (!pid_ok || pid == 0 || !id_ok || id == None || !time_ok || timestamp == CurrentTime
+    if (!pid_ok || pid == 0 || !id_ok || id == XCB_WINDOW_NONE || !time_ok || timestamp == XCB_TIME_CURRENT_TIME
             || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
         KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
         return 1;
