@@ -52,7 +52,6 @@ KWIN_EFFECT_SUPPORTED(cube, CubeEffect::supported())
 
 CubeEffect::CubeEffect()
     : activated(false)
-    , mousePolling(false)
     , cube_painting(false)
     , keyboard_grab(false)
     , schedule_close(false)
@@ -122,8 +121,6 @@ CubeEffect::CubeEffect()
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
-    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
 
     reconfigure(ReconfigureAll);
 }
@@ -1900,10 +1897,6 @@ void CubeEffect::setActive(bool active)
             connect(watcher, SIGNAL(finished()), SLOT(slotWallPaperLoaded()));
             watcher->setFuture(QtConcurrent::run(this, &CubeEffect::loadWallPaper, wallpaperPath));
         }
-        if (!mousePolling) {
-            effects->startMousePolling();
-            mousePolling = true;
-        }
         activated = true;
         activeScreen = effects->activeScreen();
         keyboard_grab = effects->grabKeyboard(this);
@@ -1935,18 +1928,13 @@ void CubeEffect::setActive(bool active)
         m_rotationMatrix.setToIdentity();
         effects->addRepaintFull();
     } else {
-        if (mousePolling) {
-            effects->stopMousePolling();
-            mousePolling = false;
-        }
         schedule_close = true;
         // we have to add a repaint, to start the deactivating
         effects->addRepaintFull();
     }
 }
 
-void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::MouseButtons buttons,
-                              Qt::MouseButtons oldbuttons, Qt::KeyboardModifiers, Qt::KeyboardModifiers)
+void CubeEffect::windowInputMouseEvent(QEvent* e)
 {
     if (!activated)
         return;
@@ -1954,8 +1942,15 @@ void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::M
         return;
     if (stop)
         return;
-    QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
-    if (buttons.testFlag(Qt::LeftButton)) {
+
+    QMouseEvent *mouse = dynamic_cast< QMouseEvent* >(e);
+    if (!mouse)
+        return;
+
+    static QPoint oldpos;
+    if (mouse->type() == QEvent::MouseMove && mouse->buttons().testFlag(Qt::LeftButton)) {
+        const QPoint pos = mouse->pos();
+        QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
         bool repaint = false;
         // vertical movement only if there is not a rotation
         if (!verticalRotating) {
@@ -1991,25 +1986,15 @@ void CubeEffect::slotMouseChanged(const QPoint& pos, const QPoint& oldpos, Qt::M
             rotateCube();
             effects->addRepaintFull();
         }
+        oldpos = pos;
     }
-    if (!oldbuttons.testFlag(Qt::LeftButton) && buttons.testFlag(Qt::LeftButton)) {
-        effects->defineCursor(Qt::ClosedHandCursor);
-    }
-    if (oldbuttons.testFlag(Qt::LeftButton) && !buttons.testFlag(Qt::LeftButton)) {
-        effects->defineCursor(Qt::OpenHandCursor);
-        if (closeOnMouseRelease)
-            setActive(false);
-    }
-    if (oldbuttons.testFlag(Qt::RightButton) && !buttons.testFlag(Qt::RightButton)) {
-        // end effect on right mouse button
-        setActive(false);
-    }
-}
 
-void CubeEffect::windowInputMouseEvent(QEvent* e)
-{
-    QMouseEvent *mouse = dynamic_cast< QMouseEvent* >(e);
-    if (mouse && mouse->type() == QEvent::MouseButtonRelease) {
+    else if (mouse->type() == QEvent::MouseButtonPress && mouse->button() == Qt::LeftButton) {
+        oldpos = mouse->pos();
+    }
+
+    else if (mouse->type() == QEvent::MouseButtonRelease) {
+        effects->defineCursor(Qt::OpenHandCursor);
         if (mouse->button() == Qt::XButton1) {
             if (!rotating && !start) {
                 rotating = true;
@@ -2026,8 +2011,7 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
                 }
             }
             effects->addRepaintFull();
-        }
-        if (mouse->button() == Qt::XButton2) {
+        } else if (mouse->button() == Qt::XButton2) {
             if (!rotating && !start) {
                 rotating = true;
                 if (invertMouse)
@@ -2043,6 +2027,8 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
                 }
             }
             effects->addRepaintFull();
+        } else if (mouse->button() == Qt::RightButton || (mouse->button() == Qt::LeftButton && closeOnMouseRelease)) {
+            setActive(false);
         }
     }
 }
