@@ -1393,10 +1393,13 @@ DesktopButtonsView::DesktopButtonsView(QWidget *parent)
     for (const QString &importPath : KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
         engine()->addImportPath(importPath);
     }
+#warning Port declarative code to QtQuick2
+#if KWIN_QT5_PORTING
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();
     kdeclarative.setupBindings();
+#endif
 
     rootContext()->setContextProperty(QStringLiteral("add"), QVariant(true));
     rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(true));
