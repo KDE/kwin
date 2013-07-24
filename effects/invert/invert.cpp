@@ -44,6 +44,8 @@ InvertEffect::InvertEffect()
         m_shader(NULL),
         m_allWindows(false)
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
 
     KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("Invert"));
@@ -55,6 +57,7 @@ InvertEffect::InvertEffect()
     b->setText(i18n("Toggle Invert Effect on Window"));
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleWindow()));
+#endif
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
 }
 

@@ -56,6 +56,8 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
 
     addConfig(TrackMouseConfig::self(), m_ui);
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
     m_actionCollection->setConfigGroup(QStringLiteral("TrackMouse"));
     m_actionCollection->setConfigGlobal(true);
@@ -64,6 +66,7 @@ TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantLi
     a->setText(i18n("Track mouse"));
     a->setProperty("isConfigurationAction", true);
     a->setGlobalShortcut(KShortcut());
+#endif
     connect(m_ui->shortcut, SIGNAL(keySequenceChanged(QKeySequence)),
                             SLOT(shortcutChanged(QKeySequence)));
 
@@ -85,8 +88,11 @@ void TrackMouseEffectConfig::checkModifiers()
 void TrackMouseEffectConfig::load()
 {
     KCModule::load();
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(QStringLiteral("TrackMouse"))))
         m_ui->shortcut->setKeySequence(a->globalShortcut().primary());
+#endif
 
     checkModifiers();
     emit changed(false);
@@ -108,8 +114,11 @@ void TrackMouseEffectConfig::defaults()
 
 void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(QStringLiteral("TrackMouse"))))
         a->setGlobalShortcut(KShortcut(seq), KAction::ActiveShortcut, KAction::NoAutoloading);
+#endif
 //     m_actionCollection->writeSettings();
     emit changed(true);
 }

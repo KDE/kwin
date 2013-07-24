@@ -34,11 +34,14 @@ KWIN_EFFECT(thumbnailaside, ThumbnailAsideEffect)
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_T));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleCurrentThumbnail()));
+#endif
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(windowDamaged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowDamaged(KWin::EffectWindow*,QRect)));

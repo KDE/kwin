@@ -58,6 +58,8 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
     addConfig(LookingGlassConfig::self(), m_ui);
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -78,6 +80,7 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
 
     m_ui->editor->addCollection(m_actionCollection);
+#endif
 }
 
 LookingGlassEffectConfig::~LookingGlassEffectConfig()

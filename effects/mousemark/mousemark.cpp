@@ -48,6 +48,8 @@ KWIN_EFFECT(mousemark, MouseMarkEffect)
 
 MouseMarkEffect::MouseMarkEffect()
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("ClearMouseMarks")));
     a->setText(i18n("Clear All Mouse Marks"));
@@ -57,6 +59,7 @@ MouseMarkEffect::MouseMarkEffect()
     a->setText(i18n("Clear Last Mouse Mark"));
     a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));
+#endif
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(screenLockingChanged(bool)));

@@ -49,6 +49,8 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
 
     layout->addWidget(m_ui);
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
     KAction* a = (KAction*)m_actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
@@ -62,6 +64,7 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
     m_actionCollection->setConfigGlobal(true);
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
+#endif
 
     addConfig(FlipSwitchConfig::self(), m_ui);
 

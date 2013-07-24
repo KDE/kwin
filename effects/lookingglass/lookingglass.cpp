@@ -59,6 +59,8 @@ LookingGlassEffect::LookingGlassEffect()
     actionCollection->setConfigGlobal(true);
     actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KAction* a;
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
@@ -66,6 +68,7 @@ LookingGlassEffect::LookingGlassEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+#endif
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

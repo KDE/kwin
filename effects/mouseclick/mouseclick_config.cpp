@@ -51,6 +51,8 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -60,6 +62,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
 
     m_ui->editor->addCollection(m_actionCollection);
+#endif
 
     addConfig(MouseClickConfig::self(), m_ui);
     load();

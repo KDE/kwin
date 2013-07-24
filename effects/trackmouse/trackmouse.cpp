@@ -60,12 +60,15 @@ TrackMouseEffect::TrackMouseEffect()
     if ( effects->isOpenGLCompositing())
         m_angleBase = 90.0;
     m_mousePolling = false;
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection *actionCollection = new KActionCollection(this);
     m_action = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("TrackMouse")));
     m_action->setText(i18n("Track mouse"));
     m_action->setGlobalShortcut(KShortcut());
 
     connect(m_action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
+#endif
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
                      SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

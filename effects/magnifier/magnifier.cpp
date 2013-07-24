@@ -54,6 +54,8 @@ MagnifierEffect::MagnifierEffect()
     , m_pixmap(XCB_PIXMAP_NONE)
 #endif
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a;
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn())));
@@ -62,6 +64,7 @@ MagnifierEffect::MagnifierEffect()
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle())));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+#endif
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

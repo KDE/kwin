@@ -66,6 +66,8 @@ ZoomEffect::ZoomEffect()
     , yMove(0)
     , moveFactor(20.0)
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = 0;
     a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn())));
@@ -105,6 +107,7 @@ ZoomEffect::ZoomEffect()
     a->setText(i18n("Move Mouse to Center"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F6));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(moveMouseToCenter()));
+#endif
 
     timeline.setDuration(350);
     timeline.setFrameRange(0, 100);

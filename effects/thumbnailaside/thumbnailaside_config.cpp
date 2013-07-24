@@ -58,6 +58,8 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     addConfig(ThumbnailAsideConfig::self(), this);
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -70,6 +72,7 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
 
     m_ui->editor->addCollection(m_actionCollection);
+#endif
 
     load();
 }

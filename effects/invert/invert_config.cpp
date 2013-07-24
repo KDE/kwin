@@ -41,6 +41,8 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -58,14 +60,18 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
                                            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
     layout->addWidget(mShortcutEditor);
+#endif
 
     load();
 }
 
 InvertEffectConfig::~InvertEffectConfig()
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
+#endif
 }
 
 void InvertEffectConfig::load()
@@ -79,7 +85,10 @@ void InvertEffectConfig::save()
 {
     KCModule::save();
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     mShortcutEditor->save();    // undo() will restore to this state from now on
+#endif
 
     emit changed(false);
     EffectsHandler::sendReloadMessage(QStringLiteral("invert"));
@@ -87,7 +96,10 @@ void InvertEffectConfig::save()
 
 void InvertEffectConfig::defaults()
 {
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     mShortcutEditor->allDefault();
+#endif
     emit changed(true);
 }
 

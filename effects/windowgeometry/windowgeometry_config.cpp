@@ -44,6 +44,8 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     myActionCollection = new KActionCollection(this, KComponentData("kwin"));
     KAction* a = (KAction*)myActionCollection->addAction(QStringLiteral("WindowGeometry"));
@@ -52,6 +54,7 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
     a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
 
     myUi->shortcuts->addCollection(myActionCollection);
+#endif
     connect(myUi->shortcuts,    SIGNAL(keyChange()), this, SLOT(changed()));
 
     addConfig(WindowGeometryConfiguration::self(), myUi);

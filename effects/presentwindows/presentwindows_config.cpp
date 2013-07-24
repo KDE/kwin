@@ -50,6 +50,8 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
 
     layout->addWidget(m_ui);
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -72,6 +74,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     c->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F7));
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
+#endif
 
     connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
 

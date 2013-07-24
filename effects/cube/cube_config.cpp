@@ -54,6 +54,8 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     m_ui->tabWidget->setTabText(0, i18nc("@title:tab Basic Settings", "Basic"));
     m_ui->tabWidget->setTabText(1, i18nc("@title:tab Advanced Settings", "Advanced"));
 
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
 
@@ -74,6 +76,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     sphereAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
 
     m_ui->editor->addCollection(m_actionCollection);
+#endif
     connect(m_ui->kcfg_Caps, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     m_ui->kcfg_Wallpaper->setFilter(QStringLiteral("*.png *.jpeg *.jpg "));
     addConfig(CubeConfig::self(), m_ui);

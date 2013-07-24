@@ -44,11 +44,14 @@ KWIN_EFFECT(mouseclick, MouseClickEffect)
 MouseClickEffect::MouseClickEffect()
 {
     m_enabled = false;
+#warning Global Shortcuts need porting
+#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
     KAction* a = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("ToggleMouseClick")));
     a->setText(i18n("Toggle Effect"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
+#endif
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
