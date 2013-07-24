@@ -123,7 +123,6 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(disableglobalshortcuts, force);
     SETUP(blockcompositing, force);
 
-    connect (machine_match, SIGNAL(currentIndexChanged(int)), SLOT(machineMatchChanged()));
     connect (shortcut_edit, SIGNAL(clicked()), SLOT(shortcutEditClicked()));
 
     edit_reg_wmclass->hide();
