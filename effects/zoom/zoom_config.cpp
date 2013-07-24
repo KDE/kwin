@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -44,7 +45,7 @@ ZoomEffectConfigForm::ZoomEffectConfigForm(QWidget* parent) : QWidget(parent)
 }
 
 ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("zoom")), parent, args)
 {
     m_ui = new ZoomEffectConfigForm(this);
 

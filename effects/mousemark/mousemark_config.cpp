@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <KActionCollection>
 #include <kaction.h>
+#include <KDE/KAboutData>
 #include <KShortcutsEditor>
 
 #include <QWidget>
@@ -44,7 +45,7 @@ MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("mousemark")), parent, args)
 {
     m_ui = new MouseMarkEffectConfigForm(this);
 

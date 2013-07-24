@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
+#include <KDE/KAboutData>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -46,7 +47,7 @@ LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QW
 }
 
 LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("lookingglass")), parent, args)
 {
     m_ui = new LookingGlassEffectConfigForm(this);
 

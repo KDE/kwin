@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <kaction.h>
 #include <KShortcutsEditor>
+#include <KDE/KAboutData>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -45,7 +46,7 @@ MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("magnifier")), parent, args)
 {
     m_ui = new MagnifierEffectConfigForm(this);
 

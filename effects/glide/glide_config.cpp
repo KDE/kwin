@@ -23,6 +23,7 @@
 #include "glideconfig.h"
 
 #include <kwineffects.h>
+#include <KDE/KAboutData>
 
 namespace KWin
 {
@@ -30,7 +31,7 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 GlideEffectConfig::GlideEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(EffectFactory::componentData(), parent, args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("glide")), parent, args)
 {
     ui.setupUi(this);
     addConfig(GlideConfig::self(), this);

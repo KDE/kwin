@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <kaction.h>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -42,7 +43,7 @@ DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget* parent) : QWid
 }
 
 DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(EffectFactory::componentData(), parent, args)
+    :   KCModule(KAboutData::pluginData(QStringLiteral("desktopgrid")), parent, args)
 {
     m_ui = new DesktopGridEffectConfigForm(this);
 

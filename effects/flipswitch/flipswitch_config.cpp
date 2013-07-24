@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <KAction>
 #include <KActionCollection>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -40,7 +41,7 @@ FlipSwitchEffectConfigForm::FlipSwitchEffectConfigForm(QWidget* parent) : QWidge
 }
 
 FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("flipswitch")), parent, args)
 {
     m_ui = new FlipSwitchEffectConfigForm(this);
 

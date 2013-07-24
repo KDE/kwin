@@ -22,6 +22,7 @@
 #include "dashboardconfig.h"
 
 #include <kwineffects.h>
+#include <KDE/KAboutData>
 
 namespace KWin
 {
@@ -29,7 +30,7 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(EffectFactory::componentData(), parent, args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("dashboard")), parent, args)
 {
     ui.setupUi(this);
 

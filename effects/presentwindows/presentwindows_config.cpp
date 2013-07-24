@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <kaction.h>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -41,7 +42,7 @@ PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget* parent) 
 }
 
 PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QVariantList& args)
-    :   KCModule(EffectFactory::componentData(), parent, args)
+    :   KCModule(KAboutData::pluginData(QStringLiteral("presentwindows")), parent, args)
 {
     m_ui = new PresentWindowsEffectConfigForm(this);
 

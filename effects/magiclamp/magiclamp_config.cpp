@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -38,7 +39,7 @@ MagicLampEffectConfigForm::MagicLampEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("magiclamp")), parent, args)
 {
     m_ui = new MagicLampEffectConfigForm(this);
 

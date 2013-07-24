@@ -22,6 +22,7 @@
 #include "blurconfig.h"
 
 #include <kwineffects.h>
+#include <KDE/KAboutData>
 
 namespace KWin
 {
@@ -29,7 +30,7 @@ namespace KWin
 KWIN_EFFECT_CONFIG_FACTORY
 
 BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
-    : KCModule(EffectFactory::componentData(), parent, args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("blur")), parent, args)
 {
     ui.setupUi(this);
     addConfig(BlurConfig::self(), this);

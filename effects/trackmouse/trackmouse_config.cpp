@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <kaction.h>
 #include <KActionCollection>
+#include <KDE/KAboutData>
 #include <KShortcutsEditor>
 
 #include <QVBoxLayout>
@@ -46,7 +47,7 @@ TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidge
 }
 
 TrackMouseEffectConfig::TrackMouseEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("trackmouse")), parent, args)
 {
 
     m_ui = new TrackMouseEffectConfigForm(this);

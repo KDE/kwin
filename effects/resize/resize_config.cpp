@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 
@@ -38,7 +39,7 @@ ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget* parent) : QWidget(parent
 }
 
 ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("resize")), parent, args)
 {
     m_ui = new ResizeEffectConfigForm(this);
 

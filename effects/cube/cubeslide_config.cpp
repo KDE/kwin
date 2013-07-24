@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
+#include <KDE/KAboutData>
 #include <QVBoxLayout>
 
 namespace KWin
@@ -37,7 +38,7 @@ CubeSlideEffectConfigForm::CubeSlideEffectConfigForm(QWidget* parent) : QWidget(
 }
 
 CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("cubeslide")), parent, args)
 {
     m_ui = new CubeSlideEffectConfigForm(this);
 

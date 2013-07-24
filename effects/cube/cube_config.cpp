@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcolorscheme.h>
 #include <KActionCollection>
 #include <kaction.h>
+#include <KDE/KAboutData>
 
 #include <QVBoxLayout>
 #include <QColor>
@@ -42,7 +43,7 @@ CubeEffectConfigForm::CubeEffectConfigForm(QWidget* parent) : QWidget(parent)
 }
 
 CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("cube")), parent, args)
 {
     m_ui = new CubeEffectConfigForm(this);
 

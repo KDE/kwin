@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <kaction.h>
+#include <KDE/KAboutData>
 #include <kconfiggroup.h>
 
 namespace KWin
@@ -79,7 +80,7 @@ ParameterSet pset[5] = { set_0, set_1, set_2, set_3, set_4 };
 //-----------------------------------------------------------------------------
 
 WobblyWindowsEffectConfig::WobblyWindowsEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("wobblywindows")), parent, args)
 {
     m_ui.setupUi(this);
 

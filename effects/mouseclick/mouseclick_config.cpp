@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KActionCollection>
 #include <KDE/KAction>
+#include <KDE/KAboutData>
 #include <KDE/KShortcutsEditor>
 
 #include <QWidget>
@@ -41,7 +42,7 @@ MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget* parent) : QWidge
 }
 
 MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantList& args) :
-    KCModule(EffectFactory::componentData(), parent, args)
+    KCModule(KAboutData::pluginData(QStringLiteral("mouseclick")), parent, args)
 {
     m_ui = new MouseClickEffectConfigForm(this);
 

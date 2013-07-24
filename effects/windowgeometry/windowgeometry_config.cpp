@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kaction.h>
 #include <KDE/KLocalizedString>
 #include <kconfiggroup.h>
+#include <KDE/KAboutData>
 
 namespace KWin
 {
@@ -38,7 +39,7 @@ WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(pa
 }
 
 WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& args)
-    : KCModule(KWin::EffectFactory::componentData(), parent, args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("windowgeometry")), parent, args)
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
