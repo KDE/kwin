@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KGlobal>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 #include <KStandardDirs>
