@@ -156,7 +156,7 @@ Q_SIGNALS:
     void fontChanged();
     void appMenuAvailableChanged();
 
-public slots:
+public Q_SLOTS:
     void menuClicked();
     void appMenuClicked();
     void toggleShade();
@@ -174,7 +174,7 @@ public slots:
 
     QRegion region(KDecorationDefines::Region r);
 
-private slots:
+private Q_SLOTS:
     void themeChanged();
     void doCloseWindow();
     void doTitlebarDblClickOperation();

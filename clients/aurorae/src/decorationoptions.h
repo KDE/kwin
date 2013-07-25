@@ -139,13 +139,13 @@ public:
     QObject *decoration() const;
     void setDecoration(QObject *decoration);
 
-signals:
+Q_SIGNALS:
     void colorsChanged();
     void fontChanged();
     void decorationChanged();
     void titleButtonsChanged();
 
-private slots:
+private Q_SLOTS:
     void slotActiveChanged();
 
 private:
