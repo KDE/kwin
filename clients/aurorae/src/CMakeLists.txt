@@ -13,7 +13,14 @@ set(kwin3_aurorae_PART_SRCS
 
 kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 
-target_link_libraries(kwin3_aurorae ${KDE4_KDEUI_LIBS} ${QT_QTDECLARATIVE_LIBRARY} kdecorations)
+target_link_libraries(kwin3_aurorae
+    KF5::KConfigCore
+    KF5::KService
+    ${KDE4Support_LIBRARIES} # KGlobal
+    ${KDE4_KDECORE_LIBS} # needed for KDebug
+    ${Qt5Declarative_LIBRARIES}
+    kdecorations
+)
 
 install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
@@ -26,7 +33,12 @@ set(decoration_plugin_SRCS
 qt4_automoc(${decoration_plugin_SRCS})
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
-target_link_libraries(decorationplugin ${QT_QTCORE_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBRARY} kdecorations)
+target_link_libraries(decorationplugin
+    KF5::KWidgets # KColorScheme
+    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings
+    ${Qt5Declarative_LIBRARIES}
+    kdecorations
+)
 install(TARGETS decorationplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/kwin/decoration)
 
 ########### install files ###############
