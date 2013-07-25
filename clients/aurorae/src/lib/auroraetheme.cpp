@@ -22,6 +22,7 @@
 #include "themeconfig.h"
 // Qt
 #include <QHash>
+#include <QStandardPaths>
 // KDE
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
@@ -101,7 +102,7 @@ bool AuroraeTheme::isValid() const
 void AuroraeTheme::loadTheme(const QString &name)
 {
     KConfig conf(QStringLiteral("auroraerc"));
-    KConfig config(QStringLiteral("aurorae/themes/") + name + QStringLiteral("/") + name + QStringLiteral("rc"), KConfig::FullConfig, "data");
+    KConfig config(QStringLiteral("aurorae/themes/") + name + QStringLiteral("/") + name + QStringLiteral("rc"), KConfig::FullConfig, QStandardPaths::DataLocation);
     KConfigGroup themeGroup(&conf, name);
     loadTheme(name, config);
     setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));

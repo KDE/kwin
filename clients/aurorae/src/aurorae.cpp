@@ -82,7 +82,7 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
         initQML(group);
         return;
     }
-    KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, "data");
+    KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, QStandardPaths::DataLocation);
     KConfigGroup themeGroup(&conf, themeName);
     m_theme->loadTheme(themeName, config);
     m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
@@ -168,7 +168,7 @@ bool AuroraeFactory::reset(unsigned long changed)
     const KConfig conf(QStringLiteral("auroraerc"));
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
-    const KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, "data");
+    const KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, QStandardPaths::DataLocation);
     const KConfigGroup themeGroup(&conf, themeName);
     if (themeName != m_themeName) {
         m_engine->clearComponentCache();
