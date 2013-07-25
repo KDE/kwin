@@ -102,20 +102,20 @@ void ThemeConfig::load(const KConfig &conf)
     m_haloActive = general.readEntry("HaloActive", defaultHaloActive());
     m_haloInactive = general.readEntry("HaloInactive", defaultHaloInactive());
     QString alignment = (general.readEntry("TitleAlignment", "Left")).toLower();
-    if (alignment == "left") {
+    if (alignment == QStringLiteral("left")) {
         m_alignment = Qt::AlignLeft;
     }
-    else if (alignment == "center") {
+    else if (alignment == QStringLiteral("center")) {
         m_alignment = Qt::AlignCenter;
     }
     else {
         m_alignment = Qt::AlignRight;
     }
     alignment = (general.readEntry("TitleVerticalAlignment", "Center")).toLower();
-    if (alignment == "top") {
+    if (alignment == QStringLiteral("top")) {
         m_verticalAlignment = Qt::AlignTop;
     }
-    else if (alignment == "center") {
+    else if (alignment == QStringLiteral("center")) {
         m_verticalAlignment = Qt::AlignVCenter;
     }
     else {
@@ -127,7 +127,7 @@ void ThemeConfig::load(const KConfig &conf)
     m_shadow = general.readEntry("Shadow", defaultShadow());
     m_decorationPosition = general.readEntry("DecorationPosition", defaultDecorationPosition());
 
-    KConfigGroup border(&conf, "Layout");
+    KConfigGroup border(&conf, QStringLiteral("Layout"));
     // default values taken from KCommonDecoration::layoutMetric() in kcommondecoration.cpp
     m_borderLeft = border.readEntry("BorderLeft", defaultBorderLeft());
     m_borderRight = border.readEntry("BorderRight", defaultBorderRight());

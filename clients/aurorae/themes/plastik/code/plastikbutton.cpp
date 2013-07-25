@@ -37,7 +37,7 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
     if (size) {
         *size = QSize(origSize, origSize);
     }
-    QStringList idParts = id.split('/');
+    QStringList idParts = id.split(QStringLiteral("/"));
     if (idParts.isEmpty()) {
         // incorrect id
         return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
@@ -45,53 +45,53 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
     bool active = false;
     bool toggled = false;
     bool shadow = false;
-    if (idParts.length() > 1 && idParts.at(1) == "true") {
+    if (idParts.length() > 1 && idParts.at(1) == QStringLiteral("true")) {
         active = true;
     }
-    if (idParts.length() > 2 && idParts.at(2) == "true") {
+    if (idParts.length() > 2 && idParts.at(2) == QStringLiteral("true")) {
         toggled = true;
     }
-    if (idParts.length() > 3 && idParts.at(3) == "true") {
+    if (idParts.length() > 3 && idParts.at(3) == QStringLiteral("true")) {
         shadow = true;
     }
     ButtonIcon button;
-    if (idParts[0] == "X") {
+    if (idParts[0] == QStringLiteral("X")) {
         button = CloseIcon;
-    } else if (idParts[0] == "A") {
+    } else if (idParts[0] == QStringLiteral("A")) {
         if (toggled) {
             button = MaxRestoreIcon;
         } else {
             button = MaxIcon;
         }
-    } else if (idParts[0] == "I") {
+    } else if (idParts[0] == QStringLiteral("I")) {
         button = MinIcon;
-    } else if (idParts[0] == "H") {
+    } else if (idParts[0] == QStringLiteral("H")) {
         button = HelpIcon;
-    } else if (idParts[0] == "S") {
+    } else if (idParts[0] == QStringLiteral("S")) {
         if (toggled) {
             button = NotOnAllDesktopsIcon;
         } else {
             button = OnAllDesktopsIcon;
         }
-    } else if (idParts[0] == "F") {
+    } else if (idParts[0] == QStringLiteral("F")) {
         if (toggled) {
             button = NoKeepAboveIcon;
         } else {
             button = KeepAboveIcon;
         }
-    } else if (idParts[0] == "B") {
+    } else if (idParts[0] == QStringLiteral("B")) {
         if (toggled) {
             button = NoKeepBelowIcon;
         } else {
             button = KeepBelowIcon;
         }
-    } else if (idParts[0] == "L") {
+    } else if (idParts[0] == QStringLiteral("L")) {
         if (toggled) {
             button = UnShadeIcon;
         } else {
             button = ShadeIcon;
         }
-    } else if (idParts[0] == "N") {
+    } else if (idParts[0] == QStringLiteral("N")) {
         button = AppMenuIcon;
     } else {
         // not recognized icon

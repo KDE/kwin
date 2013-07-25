@@ -54,14 +54,14 @@ void AuroraeFactory::init()
 {
     qRegisterMetaType<uint>("Qt::MouseButtons");
 
-    KConfig conf("auroraerc");
+    KConfig conf(QStringLiteral("auroraerc"));
     KConfigGroup group(&conf, "Engine");
     if (!group.hasKey("EngineType") && !group.hasKey("ThemeName")) {
         // neither engine type and theme name are configured, use the only available theme
         initQML(group);
     } else if (group.hasKey("EngineType")) {
         const QString engineType = group.readEntry("EngineType", "aurorae").toLower();
-        if (engineType == "qml") {
+        if (engineType == QStringLiteral("qml")) {
             initQML(group);
         } else {
             // fallback to classic Aurorae Themes
@@ -82,7 +82,7 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
         initQML(group);
         return;
     }
-    KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
+    KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, "data");
     KConfigGroup themeGroup(&conf, themeName);
     m_theme->loadTheme(themeName, config);
     m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
@@ -92,13 +92,13 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     /* use logic from KDeclarative::setupBindings():
     "addImportPath adds the path at the beginning, so to honour user's
      paths we need to traverse the list in reverse order" */
-    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", QStringLiteral("imports")));
     paths.toBack();
     while (paths.hasPrevious()) {
         m_engine->addImportPath(paths.previous());
     }
-    m_component->loadUrl(QUrl(KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml")));
-    m_engine->rootContext()->setContextProperty("auroraeTheme", m_theme);
+    m_component->loadUrl(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/aurorae/aurorae.qml"))));
+    m_engine->rootContext()->setContextProperty(QStringLiteral("auroraeTheme"), m_theme);
     m_themeName = themeName;
 }
 
@@ -109,8 +109,8 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     kDebug(1212) << "Trying to load QML Decoration " << themeName;
     const QString internalname = themeName.toLower();
 
-    QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Decoration", constraint);
+    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
+    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"), constraint);
     if (offers.isEmpty()) {
         kError(1212) << "Couldn't find QML Decoration " << themeName << endl;
         // TODO: what to do in error case?
@@ -118,9 +118,9 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     }
     KService::Ptr service = offers.first();
     KPluginInfo plugininfo(service);
-    const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
-    const QString scriptName = service->property("X-Plasma-MainScript").toString();
-    const QString file = KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + "/decorations/" + pluginName + "/contents/" + scriptName);
+    const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+    const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    const QString file = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
     if (file.isNull()) {
         kDebug(1212) << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
@@ -131,7 +131,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     /* use logic from KDeclarative::setupBindings():
     "addImportPath adds the path at the beginning, so to honour user's
      paths we need to traverse the list in reverse order" */
-    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
+    QStringListIterator paths(KGlobal::dirs()->findDirs("module", QStringLiteral("imports")));
     paths.toBack();
     while (paths.hasPrevious()) {
         m_engine->addImportPath(paths.previous());
@@ -165,10 +165,10 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingCompositing) {
         return false;
     }
-    const KConfig conf("auroraerc");
+    const KConfig conf(QStringLiteral("auroraerc"));
     const KConfigGroup group(&conf, "Engine");
     const QString themeName = group.readEntry("ThemeName", "example-deco");
-    const KConfig config("aurorae/themes/" + themeName + '/' + themeName + "rc", KConfig::FullConfig, "data");
+    const KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"), KConfig::FullConfig, "data");
     const KConfigGroup themeGroup(&conf, themeName);
     if (themeName != m_themeName) {
         m_engine->clearComponentCache();
@@ -229,7 +229,7 @@ QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
 QDeclarativeItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *client)
 {
     QDeclarativeContext *context = new QDeclarativeContext(m_engine->rootContext(), this);
-    context->setContextProperty("decoration", client);
+    context->setContextProperty(QStringLiteral("decoration"), client);
     return qobject_cast< QDeclarativeItem* >(m_component->create(context));
 }
 
@@ -368,9 +368,9 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
     const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
     QObject *borders = NULL;
     if (maximized) {
-        borders = m_item->findChild<QObject*>("maximizedBorders");
+        borders = m_item->findChild<QObject*>(QStringLiteral("maximizedBorders"));
     } else {
-        borders = m_item->findChild<QObject*>("borders");
+        borders = m_item->findChild<QObject*>(QStringLiteral("borders"));
     }
     sizesFromBorders(borders, left, right, top, bottom);
 }
@@ -385,7 +385,7 @@ void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    sizesFromBorders(m_item->findChild<QObject*>("padding"), left, right, top, bottom);
+    sizesFromBorders(m_item->findChild<QObject*>(QStringLiteral("padding")), left, right, top, bottom);
 }
 
 void AuroraeClient::sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const
@@ -590,7 +590,7 @@ void AuroraeClient::doTitlebarDblClickOperation()
 
 QVariant AuroraeClient::readConfig(const QString &key, const QVariant &defaultValue)
 {
-    KSharedConfigPtr config = KSharedConfig::openConfig("auroraerc");
+    KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
     return config->group(AuroraeFactory::instance()->currentThemeName()).readEntry(key, defaultValue);
 }
 
@@ -623,7 +623,7 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
     }
     int left, right, top, bottom;
     left = right = top = bottom = 0;
-    sizesFromBorders(m_item->findChild<QObject*>("extendedBorders"), left, right, top, bottom);
+    sizesFromBorders(m_item->findChild<QObject*>(QStringLiteral("extendedBorders")), left, right, top, bottom);
     if (top == 0 && right == 0 && bottom == 0 && left == 0) {
         // no extended borders
         return QRegion();
