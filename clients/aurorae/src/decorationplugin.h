@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class DecorationPlugin : public QDeclarativeExtensionPlugin
 {
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.decoration")
     Q_OBJECT
 public:
     void registerTypes(const char *uri);

@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "plastikplugin.h"
 #include "plastikbutton.h"
 #include <QDeclarativeEngine>
-Q_EXPORT_PLUGIN2(plastikplugin, PlastikPlugin)
 
 void PlastikPlugin::registerTypes(const char *uri)
 {

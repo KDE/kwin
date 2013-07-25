@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class PlastikPlugin : public QDeclarativeExtensionPlugin
 {
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.decorations.plastik")
     Q_OBJECT
 public:
     virtual void registerTypes(const char *uri);

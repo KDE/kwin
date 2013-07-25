@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "colorhelper.h"
 #include "decorationoptions.h"
 #include <qdeclarative.h>
-Q_EXPORT_PLUGIN2(decorationplugin, DecorationPlugin)
 
 void DecorationPlugin::registerTypes(const char *uri)
 {
