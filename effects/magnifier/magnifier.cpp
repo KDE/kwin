@@ -266,7 +266,7 @@ void MagnifierEffect::zoomIn()
 void MagnifierEffect::zoomOut()
 {
     target_zoom /= 1.2;
-    if (target_zoom < 1) {
+    if (target_zoom <= 1) {
         target_zoom = 1;
         if (polling) {
             polling = false;
