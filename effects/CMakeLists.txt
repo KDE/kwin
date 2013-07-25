@@ -8,6 +8,7 @@ set(kwin_effect_KDE_LIBS
     ${KDE4_KDECORE_LIBS} # kdebug
     KF5::KWindowSystem
     KF5::plasma # screenedge effect
+    KF5::KDE4Attic # windowgeometry effect using KLocale
 )
 
 set(kwin_effect_QT_LIBS
