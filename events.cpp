@@ -81,13 +81,13 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
-#if KWIN_QT5_PORTING
-    if (!m_windowKiller.isNull() && m_windowKiller->isActive() && m_windowKiller->isResponsibleForEvent(e->type)) {
+    if (!m_windowKiller.isNull() && m_windowKiller->isActive() && m_windowKiller->isResponsibleForEvent(eventType)) {
         m_windowKiller->processEvent(e);
         // filter out the event
         return true;
     }
 
+#if KWIN_QT5_PORTING
     if (e->type == PropertyNotify || e->type == ClientMessage) {
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
         rootInfo()->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
