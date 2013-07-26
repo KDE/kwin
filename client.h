@@ -46,6 +46,8 @@ class QTimer;
 class KStartupInfoData;
 class KStartupInfoId;
 
+struct xcb_sync_alarm_notify_event_t;
+
 namespace KWin
 {
 namespace TabBox
@@ -315,7 +317,7 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     virtual bool eventFilter(QObject* o, QEvent* e);
 #ifdef HAVE_XSYNC
-    void syncEvent(XSyncAlarmNotifyEvent* e);
+    void syncEvent(xcb_sync_alarm_notify_event_t* e);
 #endif
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 

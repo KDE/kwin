@@ -58,6 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/Xrandr.h>
 #include <X11/Xatom.h>
 #include <QX11Info>
+#include <xcb/sync.h>
 
 #include "composite.h"
 #include "killwindow.h"
@@ -366,10 +367,12 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-#if KWIN_QT5_PORTING
     default:
-        if (e->type == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
+        if (eventType == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
+#warning Need an XCB replacement for XRRUpdateConfiguration
+#if KWIN_QT5_PORTING
             XRRUpdateConfiguration(e);
+#endif
             if (compositing()) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
@@ -378,18 +381,17 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                     m_compositor->setCompositeResetTimer(0);
             }
 
-        } else if (e->type == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
+        } else if (eventType == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
 #ifdef HAVE_XSYNC
-            foreach (Client * c, clients)
-                c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
-            foreach (Client * c, desktops)
-                c->syncEvent(reinterpret_cast< XSyncAlarmNotifyEvent* >(e));
+            for (Client *c : clients)
+                c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
+            for (Client *c : desktops)
+                c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
 #endif
-        } else if (e->type == Xcb::Extensions::self()->fixesCursorNotifyEvent() && Xcb::Extensions::self()->isFixesAvailable()) {
-            Cursor::self()->notifyCursorChanged(reinterpret_cast<XFixesCursorNotifyEvent*>(e)->cursor_serial);
+        } else if (eventType == Xcb::Extensions::self()->fixesCursorNotifyEvent() && Xcb::Extensions::self()->isFixesAvailable()) {
+            Cursor::self()->notifyCursorChanged(reinterpret_cast<xcb_xfixes_cursor_notify_event_t*>(e)->cursor_serial);
         }
         break;
-#endif
     }
     return false;
 }
@@ -1486,8 +1488,10 @@ void Client::keyPressEvent(uint key_code)
 }
 
 #ifdef HAVE_XSYNC
-void Client::syncEvent(XSyncAlarmNotifyEvent* e)
+void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
 {
+#warning port XSync to XCB
+#if KWIN_QT5_PORTING
     if (e->alarm == syncRequest.alarm && XSyncValueEqual(e->counter_value, syncRequest.value)) {
         setReadyForPainting();
         syncRequest.isPending = false;
@@ -1500,6 +1504,7 @@ void Client::syncEvent(XSyncAlarmNotifyEvent* e)
         } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
             addRepaintFull();
     }
+#endif
 }
 #endif
 
