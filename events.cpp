@@ -570,12 +570,12 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_OUT:
         focusOutEvent(reinterpret_cast<xcb_focus_out_event_t*>(e));
         break;
+    case XCB_REPARENT_NOTIFY:
+        break;
+    case XCB_CLIENT_MESSAGE:
+        clientMessageEvent(reinterpret_cast<xcb_client_message_event_t*>(e));
+        break;
 #if KWIN_QT5_PORTING
-    case ReparentNotify:
-        break;
-    case ClientMessage:
-        clientMessageEvent(&e->xclient);
-        break;
     default:
         if (e->xany.window == window()) {
             if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
@@ -671,16 +671,16 @@ void Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 /*!
    Handles client messages for the client window
 */
-void Client::clientMessageEvent(XClientMessageEvent* e)
+void Client::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->window != window())
         return; // ignore frame/wrapper
     // WM_STATE
-    if (e->message_type == atoms->kde_wm_change_state) {
-        bool avoid_animation = (e->data.l[ 1 ]);
-        if (e->data.l[ 0 ] == IconicState)
+    if (e->type == atoms->kde_wm_change_state) {
+        bool avoid_animation = (e->data.data32[ 1 ]);
+        if (e->data.data32[ 0 ] == XCB_ICCCM_WM_STATE_ICONIC)
             minimize();
-        else if (e->data.l[ 0 ] == NormalState) {
+        else if (e->data.data32[ 0 ] == XCB_ICCCM_WM_STATE_NORMAL) {
             // copied from mapRequest()
             if (isMinimized())
                 unminimize(avoid_animation);
@@ -693,8 +693,8 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
                     demandAttention();
             }
         }
-    } else if (e->message_type == atoms->wm_change_state) {
-        if (e->data.l[0] == IconicState)
+    } else if (e->type == atoms->wm_change_state) {
+        if (e->data.data32[0] == XCB_ICCCM_WM_STATE_ICONIC)
             minimize();
         return;
     }

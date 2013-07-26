@@ -677,7 +677,7 @@ private:
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureRequestEvent(xcb_configure_request_event_t *e);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
-    void clientMessageEvent(XClientMessageEvent* e);
+    void clientMessageEvent(xcb_client_message_event_t *e);
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
