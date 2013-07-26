@@ -494,10 +494,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
 
     const uint8_t eventType = e->response_type & ~0x80;
     switch(eventType) {
-#if KWIN_QT5_PORTING
-    case UnmapNotify:
-        unmapNotifyEvent(&e->xunmap);
+    case XCB_UNMAP_NOTIFY:
+        unmapNotifyEvent(reinterpret_cast<xcb_unmap_notify_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case DestroyNotify:
         destroyNotifyEvent(&e->xdestroywindow);
         break;
@@ -624,10 +624,12 @@ bool Client::mapRequestEvent(XMapRequestEvent* e)
 /*!
   Handles unmap notify events of the client window
  */
-void Client::unmapNotifyEvent(XUnmapEvent* e)
+void Client::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
 {
     if (e->window != window())
         return;
+#warning unmap notify event doesn't have a sendEvent attribute, where did it come from in XUnmapNotify?
+#if KWIN_QT5_PORTING
     if (e->event != wrapperId()) {
         // most probably event from root window when initially reparenting
         bool ignore = true;
@@ -636,6 +638,7 @@ void Client::unmapNotifyEvent(XUnmapEvent* e)
         if (ignore)
             return;
     }
+#endif
 
     // check whether this is result of an XReparentWindow - client then won't be parented by wrapper
     // in this case do not release the client (causes reparent to root, removal from saveSet and what not)
