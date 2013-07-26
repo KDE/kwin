@@ -313,15 +313,16 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-#if KWIN_QT5_PORTING
-    case FocusIn:
-        if (e->xfocus.window == rootWindow()
-                && (e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot)) {
+    case XCB_FOCUS_IN: {
+        const auto *event = reinterpret_cast<xcb_focus_in_event_t*>(e);
+        if (event->event == rootWindow()
+                && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT)) {
             updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
+            // TODO: port to XCB
             Window focus;
             int revert;
             XGetInputFocus(display(), &focus, &revert);
-            if (focus == None || focus == PointerRoot) {
+            if (focus == XCB_WINDOW_NONE || focus == XCB_NOTIFY_DETAIL_POINTER_ROOT) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
                 Client *c = mostRecentlyActivatedClient();
                 if (c != NULL)
@@ -332,9 +333,11 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                     focusToNull();
             }
         }
+    }
         // fall through
-    case FocusOut:
+    case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
+#if KWIN_QT5_PORTING
     case ClientMessage:
 #ifdef KWIN_BUILD_SCREENEDGES
         if (ScreenEdges::self()->isEntered(e))
