@@ -542,18 +542,20 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
         break;
     }
-#if KWIN_QT5_PORTING
-    case EnterNotify:
-        enterNotifyEvent(&e->xcrossing);
+    case XCB_ENTER_NOTIFY: {
+        auto *event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
+        enterNotifyEvent(event);
         // MotionNotify is guaranteed to be generated only if the mouse
         // move start and ends in the window; for cases when it only
         // starts or only ends there, Enter/LeaveNotify are generated.
         // Fake a MotionEvent in such cases to make handle of mouse
         // events simpler (Qt does that too).
-        motionNotifyEvent(e->xcrossing.window, e->xcrossing.state,
-                          e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root);
-        workspace()->updateFocusMousePosition(QPoint(e->xcrossing.x_root, e->xcrossing.y_root));
+        motionNotifyEvent(event->event, event->state,
+                          event->event_x, event->event_y, event->root_x, event->root_y);
+        workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
         break;
+    }
+#if KWIN_QT5_PORTING
     case LeaveNotify:
         motionNotifyEvent(e->xcrossing.window, e->xcrossing.state,
                           e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root);
@@ -789,14 +791,14 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 }
 
 
-void Client::enterNotifyEvent(XCrossingEvent* e)
+void Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
 {
-    if (e->window != frameId())
+    if (e->event != frameId())
         return; // care only about entering the whole frame
 
 #define MOUSE_DRIVEN_FOCUS (!options->focusPolicyIsReasonable() || \
                             (options->focusPolicy() == Options::FocusFollowsMouse && options->isNextFocusPrefersMouse()))
-    if (e->mode == NotifyNormal || (e->mode == NotifyUngrab && MOUSE_DRIVEN_FOCUS)) {
+    if (e->mode == XCB_NOTIFY_MODE_NORMAL || (e->mode == XCB_NOTIFY_MODE_UNGRAB && MOUSE_DRIVEN_FOCUS)) {
 
         if (options->isShadeHover()) {
             cancelShadeHoverTimer();
@@ -812,7 +814,7 @@ void Client::enterNotifyEvent(XCrossingEvent* e)
         if (options->focusPolicy() == Options::ClickToFocus || workspace()->userActionsMenu()->isShown())
             return;
 
-        QPoint currentPos(e->x_root, e->y_root);
+        QPoint currentPos(e->root_x, e->root_y);
         if (options->isAutoRaise() && !isDesktop() &&
                 !isDock() && workspace()->focusChangeEnabled() &&
                 currentPos != workspace()->focusMousePosition() &&

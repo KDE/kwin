@@ -678,7 +678,7 @@ private:
     void configureRequestEvent(xcb_configure_request_event_t *e);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(XClientMessageEvent* e);
-    void enterNotifyEvent(XCrossingEvent* e);
+    void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(XCrossingEvent* e);
     void focusInEvent(XFocusInEvent* e);
     void focusOutEvent(XFocusOutEvent* e);
