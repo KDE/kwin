@@ -679,7 +679,7 @@ private:
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(XClientMessageEvent* e);
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
-    void leaveNotifyEvent(XCrossingEvent* e);
+    void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(XFocusInEvent* e);
     void focusOutEvent(XFocusOutEvent* e);
     virtual void damageNotifyEvent();

@@ -555,14 +555,16 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
         break;
     }
-#if KWIN_QT5_PORTING
-    case LeaveNotify:
-        motionNotifyEvent(e->xcrossing.window, e->xcrossing.state,
-                          e->xcrossing.x, e->xcrossing.y, e->xcrossing.x_root, e->xcrossing.y_root);
-        leaveNotifyEvent(&e->xcrossing);
+    case XCB_LEAVE_NOTIFY: {
+        auto *event = reinterpret_cast<xcb_leave_notify_event_t*>(e);
+        motionNotifyEvent(event->event, event->state,
+                          event->event_x, event->event_y, event->root_x, event->root_y);
+        leaveNotifyEvent(event);
         // not here, it'd break following enter notify handling
         // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
         break;
+    }
+#if KWIN_QT5_PORTING
     case FocusIn:
         focusInEvent(&e->xfocus);
         break;
@@ -839,16 +841,16 @@ void Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
     }
 }
 
-void Client::leaveNotifyEvent(XCrossingEvent* e)
+void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
 {
-    if (e->window != frameId())
+    if (e->event != frameId())
         return; // care only about leaving the whole frame
-    if (e->mode == NotifyNormal) {
+    if (e->mode == XCB_NOTIFY_MODE_NORMAL) {
         if (!buttonDown) {
             mode = PositionCenter;
             updateCursor();
         }
-        bool lostMouse = !rect().contains(QPoint(e->x, e->y));
+        bool lostMouse = !rect().contains(QPoint(e->event_x, e->event_y));
         // 'lostMouse' wouldn't work with e.g. B2 or Keramik, which have non-rectangular decorations
         // (i.e. the LeaveNotify event comes before leaving the rect and no LeaveNotify event
         // comes after leaving the rect) - so lets check if the pointer is really outside the window
@@ -856,12 +858,13 @@ void Client::leaveNotifyEvent(XCrossingEvent* e)
         // TODO this still sucks if a window appears above this one - it should lose the mouse
         // if this window is another client, but not if it's a popup ... maybe after KDE3.1 :(
         // (repeat after me 'AARGHL!')
-        if (!lostMouse && e->detail != NotifyInferior) {
+        if (!lostMouse && e->detail != XCB_NOTIFY_DETAIL_INFERIOR) {
+            // TODO: port to XCB
             int d1, d2, d3, d4;
             unsigned int d5;
             Window w, child;
             if (XQueryPointer(display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5) == False
-                    || child == None)
+                    || child == XCB_WINDOW_NONE)
                 lostMouse = true; // really lost the mouse
         }
         if (lostMouse) {
