@@ -76,11 +76,12 @@ extern int currentRefreshRate();
  */
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
-#if KWIN_QT5_PORTING
+    const uint8_t eventType = e->response_type & ~0x80;
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
-            && (e->type == KeyPress || e->type == KeyRelease))
+            && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
 
+#if KWIN_QT5_PORTING
     if (!m_windowKiller.isNull() && m_windowKiller->isActive() && m_windowKiller->isResponsibleForEvent(e->type)) {
         m_windowKiller->processEvent(e);
         // filter out the event
