@@ -675,7 +675,7 @@ private:
     bool mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
-    void configureRequestEvent(XConfigureRequestEvent* e);
+    void configureRequestEvent(xcb_configure_request_event_t *e);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(XClientMessageEvent* e);
     void enterNotifyEvent(XCrossingEvent* e);

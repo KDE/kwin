@@ -503,11 +503,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_MAP_REQUEST:
         // this one may pass the event to workspace
         return mapRequestEvent(reinterpret_cast<xcb_map_request_event_t*>(e));
-#if KWIN_QT5_PORTING
-    case ConfigureRequest:
-        configureRequestEvent(&e->xconfigurerequest);
+    case XCB_CONFIGURE_REQUEST:
+        configureRequestEvent(reinterpret_cast<xcb_configure_request_event_t*>(e));
         break;
-#endif
     case XCB_PROPERTY_NOTIFY:
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
@@ -696,7 +694,7 @@ void Client::clientMessageEvent(XClientMessageEvent* e)
 /*!
   Handles configure  requests of the client window
  */
-void Client::configureRequestEvent(XConfigureRequestEvent* e)
+void Client::configureRequestEvent(xcb_configure_request_event_t *e)
 {
     if (e->window != window())
         return; // ignore frame/wrapper
@@ -713,21 +711,22 @@ void Client::configureRequestEvent(XConfigureRequestEvent* e)
         return;
     }
 
-    if (e->value_mask & CWBorderWidth) {
+    if (e->value_mask & XCB_CONFIG_WINDOW_BORDER_WIDTH) {
+        // TODO: port to XCB
         // first, get rid of a window border
         XWindowChanges wc;
         unsigned int value_mask = 0;
 
         wc.border_width = 0;
-        value_mask = CWBorderWidth;
+        value_mask = XCB_CONFIG_WINDOW_BORDER_WIDTH;
         XConfigureWindow(display(), window(), value_mask, & wc);
     }
 
-    if (e->value_mask & (CWX | CWY | CWHeight | CWWidth))
+    if (e->value_mask & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_WIDTH))
         configureRequest(e->value_mask, e->x, e->y, e->width, e->height, 0, false);
 
-    if (e->value_mask & CWStackMode)
-        restackWindow(e->above, e->detail, NET::FromApplication, userTime(), false);
+    if (e->value_mask & XCB_CONFIG_WINDOW_STACK_MODE)
+        restackWindow(e->sibling, e->stack_mode, NET::FromApplication, userTime(), false);
 
     // Sending a synthetic configure notify always is fine, even in cases where
     // the ICCCM doesn't require this - it can be though of as 'the WM decided to move
