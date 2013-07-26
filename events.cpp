@@ -294,24 +294,26 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             QWhatsThis::leaveWhatsThisMode();
         break;
     }
-#if KWIN_QT5_PORTING
-    case ConfigureRequest: {
-        if (e->xconfigurerequest.parent == rootWindow()) {
+    case XCB_CONFIGURE_REQUEST: {
+        const auto *event = reinterpret_cast<xcb_configure_request_event_t*>(e);
+        if (event->parent == rootWindow()) {
+            // TODO: this should be ported to xcb
             XWindowChanges wc;
-            wc.border_width = e->xconfigurerequest.border_width;
-            wc.x = e->xconfigurerequest.x;
-            wc.y = e->xconfigurerequest.y;
-            wc.width = e->xconfigurerequest.width;
-            wc.height = e->xconfigurerequest.height;
-            wc.sibling = None;
-            wc.stack_mode = Above;
-            unsigned int value_mask = e->xconfigurerequest.value_mask
-                                      & (CWX | CWY | CWWidth | CWHeight | CWBorderWidth);
-            XConfigureWindow(display(), e->xconfigurerequest.window, value_mask, &wc);
+            wc.border_width = event->border_width;
+            wc.x = event->x;
+            wc.y = event->y;
+            wc.width = event->width;
+            wc.height = event->height;
+            wc.sibling = XCB_WINDOW_NONE;
+            wc.stack_mode = XCB_STACK_MODE_ABOVE;
+            unsigned int value_mask = event->value_mask
+                                      & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH);
+            XConfigureWindow(display(), event->window, value_mask, &wc);
             return true;
         }
         break;
     }
+#if KWIN_QT5_PORTING
     case FocusIn:
         if (e->xfocus.window == rootWindow()
                 && (e->xfocus.detail == NotifyDetailNone || e->xfocus.detail == NotifyPointerRoot)) {
