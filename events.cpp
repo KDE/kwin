@@ -211,20 +211,19 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
     }
 
-#if KWIN_QT5_PORTING
-    switch(e->type) {
-    case CreateNotify:
-        if (e->xcreatewindow.parent == rootWindow() &&
-                !QWidget::find(e->xcreatewindow.window) &&
-                !e->xcreatewindow.override_redirect) {
+    switch (eventType) {
+    case XCB_CREATE_NOTIFY: {
+        const auto *event = reinterpret_cast<xcb_create_notify_event_t*>(e);
+        if (event->parent == rootWindow() &&
+                !QWidget::find(event->window) &&
+                !event->override_redirect) {
             // see comments for allowClientActivation()
-            Time t = xTime();
-            XChangeProperty(display(), e->xcreatewindow.window,
-                            atoms->kde_net_wm_user_creation_time, XA_CARDINAL,
-                            32, PropModeReplace, (unsigned char *)&t, 1);
+            const xcb_timestamp_t t = xTime();
+            xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
         }
         break;
-
+    }
+#if KWIN_QT5_PORTING
     case UnmapNotify: {
         return (e->xunmap.event != e->xunmap.window);   // hide wm typical event from Qt
     }
@@ -374,8 +373,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             Cursor::self()->notifyCursorChanged(reinterpret_cast<XFixesCursorNotifyEvent*>(e)->cursor_serial);
         }
         break;
-    }
 #endif
+    }
     return false;
 }
 
