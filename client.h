@@ -676,7 +676,7 @@ private:
     void unmapNotifyEvent(XUnmapEvent* e);
     void destroyNotifyEvent(XDestroyWindowEvent* e);
     void configureRequestEvent(XConfigureRequestEvent* e);
-    virtual void propertyNotifyEvent(XPropertyEvent* e);
+    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(XClientMessageEvent* e);
     void enterNotifyEvent(XCrossingEvent* e);
     void leaveNotifyEvent(XCrossingEvent* e);

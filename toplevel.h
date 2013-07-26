@@ -347,7 +347,7 @@ protected:
     virtual ~Toplevel();
     void setWindowHandles(Window client, Window frame);
     void detectShape(Window id);
-    virtual void propertyNotifyEvent(XPropertyEvent* e);
+    virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     virtual void damageNotifyEvent();
     void discardWindowPixmap();
     void addDamageFull();

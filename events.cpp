@@ -490,8 +490,11 @@ bool Client::windowEvent(xcb_generic_event_t *e)
             // ### Inform the decoration
         }
     }
+#endif
 
-    switch(e->type) {
+    const uint8_t eventType = e->response_type & ~0x80;
+    switch(eventType) {
+#if KWIN_QT5_PORTING
     case UnmapNotify:
         unmapNotifyEvent(&e->xunmap);
         break;
@@ -504,9 +507,11 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case ConfigureRequest:
         configureRequestEvent(&e->xconfigurerequest);
         break;
-    case PropertyNotify:
-        propertyNotifyEvent(&e->xproperty);
+#endif
+    case XCB_PROPERTY_NOTIFY:
+        propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case KeyPress:
         updateUserTime();
         workspace()->setWasUserInteraction();
@@ -575,8 +580,8 @@ bool Client::windowEvent(xcb_generic_event_t *e)
                 damageNotifyEvent();
         }
         break;
-    }
 #endif
+    }
     return true; // eat all events
 }
 
@@ -736,25 +741,25 @@ void Client::configureRequestEvent(XConfigureRequestEvent* e)
 /*!
   Handles property changes of the client window
  */
-void Client::propertyNotifyEvent(XPropertyEvent* e)
+void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     Toplevel::propertyNotifyEvent(e);
     if (e->window != window())
         return; // ignore frame/wrapper
     switch(e->atom) {
-    case XA_WM_NORMAL_HINTS:
+    case XCB_ATOM_WM_NORMAL_HINTS:
         getWmNormalHints();
         break;
-    case XA_WM_NAME:
+    case XCB_ATOM_WM_NAME:
         fetchName();
         break;
-    case XA_WM_ICON_NAME:
+    case XCB_ATOM_WM_ICON_NAME:
         fetchIconicName();
         break;
-    case XA_WM_TRANSIENT_FOR:
+    case XCB_ATOM_WM_TRANSIENT_FOR:
         readTransient();
         break;
-    case XA_WM_HINTS:
+    case XCB_ATOM_WM_HINTS:
         getWMHints();
         getIcons(); // because KWin::icon() uses WMHints as fallback
         break;
@@ -1534,11 +1539,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     case XCB_CONFIGURE_NOTIFY:
         configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t*>(e));
         break;
-#if KWIN_QT5_PORTING
-    case PropertyNotify:
-        propertyNotifyEvent(&e->xproperty);
+    case XCB_PROPERTY_NOTIFY:
+        propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
-#endif
     default: {
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
             detectShape(window());
@@ -1574,7 +1577,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
 // Toplevel
 // ****************************************
 
-void Toplevel::propertyNotifyEvent(XPropertyEvent* e)
+void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
 {
     if (e->window != window())
         return; // ignore frame/wrapper
