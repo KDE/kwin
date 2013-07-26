@@ -337,13 +337,13 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         // fall through
     case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
-#if KWIN_QT5_PORTING
-    case ClientMessage:
+    case XCB_CLIENT_MESSAGE:
 #ifdef KWIN_BUILD_SCREENEDGES
         if (ScreenEdges::self()->isEntered(e))
             return true;
 #endif
         break;
+#if KWIN_QT5_PORTING
     case Expose:
         if (compositing()
                 && (e->xexpose.window == rootWindow()   // root window needs repainting
