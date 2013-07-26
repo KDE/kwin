@@ -681,7 +681,7 @@ private:
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
-    void focusOutEvent(XFocusOutEvent* e);
+    void focusOutEvent(xcb_focus_out_event_t *e);
     virtual void damageNotifyEvent();
 
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);

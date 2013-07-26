@@ -567,10 +567,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_IN:
         focusInEvent(reinterpret_cast<xcb_focus_in_event_t*>(e));
         break;
-#if KWIN_QT5_PORTING
-    case FocusOut:
-        focusOutEvent(&e->xfocus);
+    case XCB_FOCUS_OUT:
+        focusOutEvent(reinterpret_cast<xcb_focus_out_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case ReparentNotify:
         break;
     case ClientMessage:
@@ -1403,21 +1403,24 @@ static bool check_follows_focusin(Client* c)
 }
 
 
-void Client::focusOutEvent(XFocusOutEvent* e)
+void Client::focusOutEvent(xcb_focus_out_event_t *e)
 {
-    if (e->window != window())
+    if (e->event != window())
         return; // only window gets focus
-    if (e->mode == NotifyGrab)
+    if (e->mode == XCB_NOTIFY_MODE_GRAB)
         return; // we don't care
     if (isShade())
         return; // here neither
-    if (e->detail != NotifyNonlinear
-            && e->detail != NotifyNonlinearVirtual)
+    if (e->detail != XCB_NOTIFY_DETAIL_NONLINEAR
+            && e->detail != XCB_NOTIFY_DETAIL_NONLINEAR_VIRTUAL)
         // SELI check all this
         return; // hack for motif apps like netscape
     if (QApplication::activePopupWidget())
         return;
+#warning Port for XCheckIfEvent is needed, see documentation above
+#if KWIN_QT5_PORTING
     if (!check_follows_focusin(this))
+#endif
         setActive(false);
 }
 
