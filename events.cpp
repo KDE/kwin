@@ -497,10 +497,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_UNMAP_NOTIFY:
         unmapNotifyEvent(reinterpret_cast<xcb_unmap_notify_event_t*>(e));
         break;
-#if KWIN_QT5_PORTING
-    case DestroyNotify:
-        destroyNotifyEvent(&e->xdestroywindow);
+    case XCB_DESTROY_NOTIFY:
+        destroyNotifyEvent(reinterpret_cast<xcb_destroy_notify_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case MapRequest:
         // this one may pass the event to workspace
         return mapRequestEvent(&e->xmaprequest);
@@ -652,7 +652,7 @@ void Client::unmapNotifyEvent(xcb_unmap_notify_event_t *e)
     }
 }
 
-void Client::destroyNotifyEvent(XDestroyWindowEvent* e)
+void Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 {
     if (e->window != window())
         return;

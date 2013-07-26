@@ -674,7 +674,7 @@ private:
     // Handlers for X11 events
     bool mapRequestEvent(XMapRequestEvent* e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
-    void destroyNotifyEvent(XDestroyWindowEvent* e);
+    void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureRequestEvent(XConfigureRequestEvent* e);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e) override;
     void clientMessageEvent(XClientMessageEvent* e);
