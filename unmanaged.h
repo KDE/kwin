@@ -53,7 +53,7 @@ protected:
 private:
     virtual ~Unmanaged(); // use release()
     // handlers for X11 events
-    void configureNotifyEvent(XConfigureEvent* e);
+    void configureNotifyEvent(xcb_configure_notify_event_t *e);
 };
 
 } // namespace

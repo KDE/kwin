@@ -1531,10 +1531,10 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
         workspace()->updateFocusMousePosition(Cursor::pos());
         release();
         break;
-#if KWIN_QT5_PORTING
-    case ConfigureNotify:
-        configureNotifyEvent(&e->xconfigure);
+    case XCB_CONFIGURE_NOTIFY:
+        configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case PropertyNotify:
         propertyNotifyEvent(&e->xproperty);
         break;
@@ -1554,7 +1554,7 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     return false; // don't eat events, even our own unmanaged widgets are tracked
 }
 
-void Unmanaged::configureNotifyEvent(XConfigureEvent* e)
+void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
 {
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking(); // keep them on top
