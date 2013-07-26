@@ -509,34 +509,40 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_PROPERTY_NOTIFY:
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
+    case XCB_KEY_PRESS:
+        updateUserTime();
+        workspace()->setWasUserInteraction();
+        break;
+    case XCB_BUTTON_PRESS: {
+        const auto *event = reinterpret_cast<xcb_button_press_event_t*>(e);
+        updateUserTime();
+        workspace()->setWasUserInteraction();
+        buttonPressEvent(event->event, event->detail, event->state,
+                         event->event_x, event->event_y, event->root_x, event->root_y);
+        break;
+    }
+    case XCB_KEY_RELEASE:
+        // don't update user time on releases
+        // e.g. if the user presses Alt+F2, the Alt release
+        // would appear as user input to the currently active window
+        break;
+    case XCB_BUTTON_RELEASE: {
+        const auto *event = reinterpret_cast<xcb_button_release_event_t*>(e);
+        // don't update user time on releases
+        // e.g. if the user presses Alt+F2, the Alt release
+        // would appear as user input to the currently active window
+        buttonReleaseEvent(event->event, event->detail, event->state,
+                           event->event_x, event->event_y, event->root_x, event->root_y);
+        break;
+    }
+    case XCB_MOTION_NOTIFY: {
+        const auto *event = reinterpret_cast<xcb_motion_notify_event_t*>(e);
+        motionNotifyEvent(event->event, event->state,
+                          event->event_x, event->event_y, event->root_x, event->root_y);
+        workspace()->updateFocusMousePosition(QPoint(event->root_x, event->root_y));
+        break;
+    }
 #if KWIN_QT5_PORTING
-    case KeyPress:
-        updateUserTime();
-        workspace()->setWasUserInteraction();
-        break;
-    case ButtonPress:
-        updateUserTime();
-        workspace()->setWasUserInteraction();
-        buttonPressEvent(e->xbutton.window, e->xbutton.button, e->xbutton.state,
-                         e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root);
-        break;
-    case KeyRelease:
-        // don't update user time on releases
-        // e.g. if the user presses Alt+F2, the Alt release
-        // would appear as user input to the currently active window
-        break;
-    case ButtonRelease:
-        // don't update user time on releases
-        // e.g. if the user presses Alt+F2, the Alt release
-        // would appear as user input to the currently active window
-        buttonReleaseEvent(e->xbutton.window, e->xbutton.button, e->xbutton.state,
-                           e->xbutton.x, e->xbutton.y, e->xbutton.x_root, e->xbutton.y_root);
-        break;
-    case MotionNotify:
-        motionNotifyEvent(e->xmotion.window, e->xmotion.state,
-                          e->xmotion.x, e->xmotion.y, e->xmotion.x_root, e->xmotion.y_root);
-        workspace()->updateFocusMousePosition(QPoint(e->xmotion.x_root, e->xmotion.y_root));
-        break;
     case EnterNotify:
         enterNotifyEvent(&e->xcrossing);
         // MotionNotify is guaranteed to be generated only if the mouse
