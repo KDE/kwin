@@ -1538,18 +1538,18 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     case PropertyNotify:
         propertyNotifyEvent(&e->xproperty);
         break;
+#endif
     default: {
-        if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
+        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
             detectShape(window());
             addRepaintFull();
             addWorkspaceRepaint(geometry());  // in case shape change removes part of this window
             emit geometryShapeChanged(this, geometry());
         }
-        if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
+        if (eventType == Xcb::Extensions::self()->damageNotifyEvent())
             damageNotifyEvent();
         break;
     }
-#endif
     }
     return false; // don't eat events, even our own unmanaged widgets are tracked
 }
