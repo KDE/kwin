@@ -500,10 +500,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_DESTROY_NOTIFY:
         destroyNotifyEvent(reinterpret_cast<xcb_destroy_notify_event_t*>(e));
         break;
-#if KWIN_QT5_PORTING
-    case MapRequest:
+    case XCB_MAP_REQUEST:
         // this one may pass the event to workspace
-        return mapRequestEvent(&e->xmaprequest);
+        return mapRequestEvent(reinterpret_cast<xcb_map_request_event_t*>(e));
+#if KWIN_QT5_PORTING
     case ConfigureRequest:
         configureRequestEvent(&e->xconfigurerequest);
         break;
@@ -588,7 +588,7 @@ bool Client::windowEvent(xcb_generic_event_t *e)
 /*!
   Handles map requests of the client window
  */
-bool Client::mapRequestEvent(XMapRequestEvent* e)
+bool Client::mapRequestEvent(xcb_map_request_event_t *e)
 {
     if (e->window != window()) {
         // Special support for the save-set feature, which is a bit broken.

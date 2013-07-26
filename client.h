@@ -672,7 +672,7 @@ private:
     void updateCursor();
 
     // Handlers for X11 events
-    bool mapRequestEvent(XMapRequestEvent* e);
+    bool mapRequestEvent(xcb_map_request_event_t *e);
     void unmapNotifyEvent(xcb_unmap_notify_event_t *e);
     void destroyNotifyEvent(xcb_destroy_notify_event_t *e);
     void configureRequestEvent(XConfigureRequestEvent* e);
