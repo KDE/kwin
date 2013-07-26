@@ -1489,12 +1489,12 @@ void TabBox::reject()
 /*!
   Handles alt-tab / control-tab releasing
  */
-void TabBox::keyRelease(const XKeyEvent& ev)
+void TabBox::keyRelease(const xcb_key_release_event_t *ev)
 {
     if (m_noModifierGrab) {
         return;
     }
-    unsigned int mk = ev.state &
+    unsigned int mk = ev->state &
                       (KKeyServer::modXShift() |
                        KKeyServer::modXCtrl() |
                        KKeyServer::modXAlt() |
@@ -1504,8 +1504,8 @@ void TabBox::keyRelease(const XKeyEvent& ev)
     // modifiers are released: only one modifier is active and the currently released
     // key is this modifier - if yes, release the grab
     int mod_index = -1;
-    for (int i = ShiftMapIndex;
-            i <= Mod5MapIndex;
+    for (int i = XCB_MAP_INDEX_SHIFT;
+            i <= XCB_MAP_INDEX_5;
             ++i)
         if ((mk & (1 << i)) != 0) {
             if (mod_index >= 0)
@@ -1519,7 +1519,7 @@ void TabBox::keyRelease(const XKeyEvent& ev)
         XModifierKeymap* xmk = XGetModifierMapping(display());
         for (int i = 0; i < xmk->max_keypermod; i++)
             if (xmk->modifiermap[xmk->max_keypermod * mod_index + i]
-                    == ev.keycode)
+                    == ev->detail)
                 release = true;
         XFreeModifiermap(xmk);
     }

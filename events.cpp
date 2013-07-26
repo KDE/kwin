@@ -136,11 +136,10 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 #endif
         break;
     }
-#if KWIN_QT5_PORTING
-    case KeyPress: {
+    case XCB_KEY_PRESS: {
         was_user_interaction = true;
         int keyQt;
-        KKeyServer::xEventToQt(e, &keyQt);
+        KKeyServer::xcbKeyPressEventToQt(reinterpret_cast<xcb_key_press_event_t*>(e), &keyQt);
 //            kDebug(125) << "Workspace::keyPress( " << keyQt << " )";
         if (movingClient) {
             movingClient->keyPressEvent(keyQt);
@@ -154,15 +153,16 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 #endif
         break;
     }
-    case KeyRelease:
+    case XCB_KEY_RELEASE:
         was_user_interaction = true;
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
-            TabBox::TabBox::self()->keyRelease(e->xkey);
+            TabBox::TabBox::self()->keyRelease(reinterpret_cast<xcb_key_release_event_t*>(e));
             return true;
         }
 #endif
         break;
+#if KWIN_QT5_PORTING
     case ConfigureNotify:
         if (e->xconfigure.event == rootWindow())
             x_stacking_dirty = true;

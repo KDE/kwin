@@ -174,7 +174,7 @@ public:
     int nextDesktopStatic(int iDesktop) const;
     int previousDesktopStatic(int iDesktop) const;
     void keyPress(int key);
-    void keyRelease(const XKeyEvent& ev);
+    void keyRelease(const xcb_key_release_event_t *ev);
 
     static TabBox *self();
     static TabBox *create(QObject *parent);
