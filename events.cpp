@@ -198,12 +198,20 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             emit propertyNotify(re->atom);
         }
     }
-    if (movingClient != NULL && movingClient->moveResizeGrabWindow() == e->xany.window
-            && (e->type == MotionNotify || e->type == ButtonPress || e->type == ButtonRelease)) {
-        if (movingClient->windowEvent(e))
-            return true;
+#endif
+    if (movingClient) {
+        if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
+            if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && movingClient->windowEvent(e)) {
+                return true;
+            }
+        } else if (eventType == XCB_MOTION_NOTIFY) {
+            if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_motion_notify_event_t*>(e)->event && movingClient->windowEvent(e)) {
+                return true;
+            }
+        }
     }
 
+#if KWIN_QT5_PORTING
     switch(e->type) {
     case CreateNotify:
         if (e->xcreatewindow.parent == rootWindow() &&
@@ -424,8 +432,9 @@ xcb_window_t Workspace::findSpecialEventWindow(XEvent *e)
 /*!
   General handler for XEvents concerning the client window
  */
-bool Client::windowEvent(XEvent* e)
+bool Client::windowEvent(xcb_generic_event_t *e)
 {
+#if KWIN_QT5_PORTING
     if (e->xany.window == window()) { // avoid doing stuff on frame or wrapper
         unsigned long dirty[ 2 ];
         double old_opacity = opacity();
@@ -550,6 +559,7 @@ bool Client::windowEvent(XEvent* e)
         }
         break;
     }
+#endif
     return true; // eat all events
 }
 

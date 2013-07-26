@@ -312,7 +312,7 @@ public:
     virtual QSize clientSize() const;
     QPoint inputPos() const { return input_offset; } // Inside of geometry()
 
-    bool windowEvent(XEvent* e);
+    bool windowEvent(xcb_generic_event_t *e);
     virtual bool eventFilter(QObject* o, QEvent* e);
 #ifdef HAVE_XSYNC
     void syncEvent(XSyncAlarmNotifyEvent* e);
