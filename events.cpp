@@ -343,14 +343,16 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             return true;
 #endif
         break;
-#if KWIN_QT5_PORTING
-    case Expose:
+    case XCB_EXPOSE: {
+        const auto *event = reinterpret_cast<xcb_expose_event_t*>(e);
         if (compositing()
-                && (e->xexpose.window == rootWindow()   // root window needs repainting
-                    || (m_compositor->overlayWindow() != None && e->xexpose.window == m_compositor->overlayWindow()))) { // overlay needs repainting
-            m_compositor->addRepaint(e->xexpose.x, e->xexpose.y, e->xexpose.width, e->xexpose.height);
+                && (event->window == rootWindow()   // root window needs repainting
+                    || (m_compositor->overlayWindow() != XCB_WINDOW_NONE && event->window == m_compositor->overlayWindow()))) { // overlay needs repainting
+            m_compositor->addRepaint(event->x, event->y, event->width, event->height);
         }
         break;
+    }
+#if KWIN_QT5_PORTING
     case VisibilityNotify:
         if (compositing() && m_compositor->overlayWindow() != None && e->xvisibility.window == m_compositor->overlayWindow()) {
             bool was_visible = m_compositor->isOverlayWindowVisible();
