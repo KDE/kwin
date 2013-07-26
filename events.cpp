@@ -272,10 +272,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return (event->event != event->window);   // hide wm typical event from Qt
     }
 
-#if KWIN_QT5_PORTING
-    case EnterNotify: {
+    case XCB_ENTER_NOTIFY: {
         if (QWhatsThis::inWhatsThisMode()) {
-            QWidget* w = QWidget::find(e->xcrossing.window);
+            QWidget* w = QWidget::find(reinterpret_cast<xcb_enter_notify_event_t*>(e)->event);
             if (w)
                 QWhatsThis::leaveWhatsThisMode();
         }
@@ -285,15 +284,17 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 #endif
         break;
     }
-    case LeaveNotify: {
+    case XCB_LEAVE_NOTIFY: {
         if (!QWhatsThis::inWhatsThisMode())
             break;
         // TODO is this cliente ever found, given that client events are searched above?
-        Client* c = findClient(FrameIdMatchPredicate(e->xcrossing.window));
-        if (c && e->xcrossing.detail != NotifyInferior)
+        const auto *event = reinterpret_cast<xcb_leave_notify_event_t*>(e);
+        Client* c = findClient(FrameIdMatchPredicate(event->event));
+        if (c && event->detail != XCB_NOTIFY_DETAIL_INFERIOR)
             QWhatsThis::leaveWhatsThisMode();
         break;
     }
+#if KWIN_QT5_PORTING
     case ConfigureRequest: {
         if (e->xconfigurerequest.parent == rootWindow()) {
             XWindowChanges wc;
