@@ -575,20 +575,14 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_CLIENT_MESSAGE:
         clientMessageEvent(reinterpret_cast<xcb_client_message_event_t*>(e));
         break;
-#if KWIN_QT5_PORTING
     default:
-        if (e->xany.window == window()) {
-            if (e->type == Xcb::Extensions::self()->shapeNotifyEvent()) {
-                detectShape(window());  // workaround for #19644
-                updateShape();
-            }
+        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent() && reinterpret_cast<xcb_shape_notify_event_t*>(e)->affected_window == window()) {
+            detectShape(window());  // workaround for #19644
+            updateShape();
         }
-        if (e->xany.window == frameId()) {
-            if (e->type == Xcb::Extensions::self()->damageNotifyEvent())
-                damageNotifyEvent();
-        }
+        if (eventType == Xcb::Extensions::self()->damageNotifyEvent() && reinterpret_cast<xcb_damage_notify_event_t*>(e)->drawable == frameId())
+            damageNotifyEvent();
         break;
-#endif
     }
     return true; // eat all events
 }
