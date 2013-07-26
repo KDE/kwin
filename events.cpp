@@ -235,11 +235,11 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_DESTROY_NOTIFY: {
         return false;
     }
-#if KWIN_QT5_PORTING
-    case MapRequest: {
+    case XCB_MAP_REQUEST: {
         updateXTime();
 
-        if (Client* c = findClient(WindowMatchPredicate(e->xmaprequest.window))) {
+        const auto *event = reinterpret_cast<xcb_map_request_event_t*>(e);
+        if (Client* c = findClient(WindowMatchPredicate(event->window))) {
             // e->xmaprequest.window is different from e->xany.window
             // TODO this shouldn't be necessary now
             c->windowEvent(e);
@@ -252,11 +252,15 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             // children of WindowWrapper (=clients), the check is AFAIK useless anyway
             // NOTICE: The save-set support in Client::mapRequestEvent() actually requires that
             // this code doesn't check the parent to be root.
-            if (!createClient(e->xmaprequest.window, false))
-                XMapRaised(display(), e->xmaprequest.window);
+            if (!createClient(event->window, false)) {
+                xcb_map_window(connection(), event->window);
+                const uint32_t values[] = { XCB_STACK_MODE_ABOVE };
+                xcb_configure_window(connection(), event->window, XCB_CONFIG_WINDOW_STACK_MODE, values);
+            }
         }
         return true;
     }
+#if KWIN_QT5_PORTING
     case MapNotify: {
         if (e->xmap.override_redirect) {
             Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xmap.window));
