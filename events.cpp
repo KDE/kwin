@@ -564,10 +564,10 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         // workspace()->updateFocusMousePosition( QPoint( e->xcrossing.x_root, e->xcrossing.y_root ));
         break;
     }
-#if KWIN_QT5_PORTING
-    case FocusIn:
-        focusInEvent(&e->xfocus);
+    case XCB_FOCUS_IN:
+        focusInEvent(reinterpret_cast<xcb_focus_in_event_t*>(e));
         break;
+#if KWIN_QT5_PORTING
     case FocusOut:
         focusOutEvent(&e->xfocus);
         break;
@@ -1336,13 +1336,13 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
     return true;
 }
 
-void Client::focusInEvent(XFocusInEvent* e)
+void Client::focusInEvent(xcb_focus_in_event_t *e)
 {
-    if (e->window != window())
+    if (e->event != window())
         return; // only window gets focus
-    if (e->mode == NotifyUngrab)
+    if (e->mode == XCB_NOTIFY_MODE_UNGRAB)
         return; // we don't care
-    if (e->detail == NotifyPointer)
+    if (e->detail == XCB_NOTIFY_DETAIL_POINTER)
         return;  // we don't care
     if (!isShown(false) || !isOnCurrentDesktop())    // we unmapped it, but it got focus meanwhile ->
         return;            // activateNextClient() already transferred focus elsewhere

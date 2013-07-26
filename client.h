@@ -680,7 +680,7 @@ private:
     void clientMessageEvent(XClientMessageEvent* e);
     void enterNotifyEvent(xcb_enter_notify_event_t *e);
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
-    void focusInEvent(XFocusInEvent* e);
+    void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(XFocusOutEvent* e);
     virtual void damageNotifyEvent();
 
