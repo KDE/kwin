@@ -352,11 +352,11 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-#if KWIN_QT5_PORTING
-    case VisibilityNotify:
-        if (compositing() && m_compositor->overlayWindow() != None && e->xvisibility.window == m_compositor->overlayWindow()) {
+    case XCB_VISIBILITY_NOTIFY: {
+        const auto *event = reinterpret_cast<xcb_visibility_notify_event_t*>(e);
+        if (compositing() && m_compositor->overlayWindow() != XCB_WINDOW_NONE && event->window == m_compositor->overlayWindow()) {
             bool was_visible = m_compositor->isOverlayWindowVisible();
-            m_compositor->setOverlayWindowVisibility((e->xvisibility.state != VisibilityFullyObscured));
+            m_compositor->setOverlayWindowVisibility((event->state != XCB_VISIBILITY_FULLY_OBSCURED));
             if (!was_visible && m_compositor->isOverlayWindowVisible()) {
                 // hack for #154825
                 m_compositor->addRepaintFull();
@@ -365,6 +365,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             m_compositor->scheduleRepaint();
         }
         break;
+    }
+#if KWIN_QT5_PORTING
     default:
         if (e->type == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
             XRRUpdateConfiguration(e);
