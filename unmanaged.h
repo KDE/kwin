@@ -34,7 +34,7 @@ class Unmanaged
     Q_OBJECT
 public:
     explicit Unmanaged();
-    bool windowEvent(XEvent* e);
+    bool windowEvent(xcb_generic_event_t *e);
     void release(bool on_shutdown = false);
     bool track(Window w);
     static void deleteUnmanaged(Unmanaged* c);

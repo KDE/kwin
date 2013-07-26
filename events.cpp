@@ -260,18 +260,19 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         return true;
     }
-#if KWIN_QT5_PORTING
-    case MapNotify: {
-        if (e->xmap.override_redirect) {
-            Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xmap.window));
+    case XCB_MAP_NOTIFY: {
+        const auto *event = reinterpret_cast<xcb_map_notify_event_t*>(e);
+        if (event->override_redirect) {
+            Unmanaged* c = findUnmanaged(WindowMatchPredicate(event->window));
             if (c == NULL)
-                c = createUnmanaged(e->xmap.window);
+                c = createUnmanaged(event->window);
             if (c)
                 return c->windowEvent(e);
         }
-        return (e->xmap.event != e->xmap.window);   // hide wm typical event from Qt
+        return (event->event != event->window);   // hide wm typical event from Qt
     }
 
+#if KWIN_QT5_PORTING
     case EnterNotify: {
         if (QWhatsThis::inWhatsThisMode()) {
             QWidget* w = QWidget::find(e->xcrossing.window);
@@ -1496,8 +1497,9 @@ void Client::syncEvent(XSyncAlarmNotifyEvent* e)
 // Unmanaged
 // ****************************************
 
-bool Unmanaged::windowEvent(XEvent* e)
+bool Unmanaged::windowEvent(xcb_generic_event_t *e)
 {
+#if KWIN_QT5_PORTING
     double old_opacity = opacity();
     unsigned long dirty[ 2 ];
     info->event(e, dirty, 2);   // pass through the NET stuff
@@ -1533,6 +1535,7 @@ bool Unmanaged::windowEvent(XEvent* e)
         break;
     }
     }
+#endif
     return false; // don't eat events, even our own unmanaged widgets are tracked
 }
 
