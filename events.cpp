@@ -99,31 +99,44 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
 #endif
 
-#if KWIN_QT5_PORTING
     // events that should be handled before Clients can get them
-    switch(e->type) {
-    case ButtonPress:
-    case ButtonRelease:
+    switch (eventType) {
+    case XCB_BUTTON_PRESS:
+    case XCB_BUTTON_RELEASE: {
         was_user_interaction = true;
-        // fallthrough
-    case MotionNotify:
+        auto *mouseEvent = reinterpret_cast<xcb_button_press_event_t*>(e);
+#ifdef KWIN_BUILD_TABBOX
+        if (TabBox::TabBox::self()->isGrabbed()) {
+            return TabBox::TabBox::self()->handleMouseEvent(mouseEvent);
+        }
+#endif
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
+            return true;
+        }
+        break;
+    }
+    case XCB_MOTION_NOTIFY: {
+        auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
+        const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
 #ifdef KWIN_BUILD_SCREENEDGES
-            ScreenEdges::self()->check(QPoint(e->xbutton.x_root, e->xbutton.y_root), QDateTime::fromMSecsSinceEpoch(xTime()), true);
+            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
 #endif
-            return TabBox::TabBox::self()->handleMouseEvent(e);
+            return TabBox::TabBox::self()->handleMouseEvent(mouseEvent);
         }
 #endif
-        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e)) {
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
             return true;
         }
 #ifdef KWIN_BUILD_SCREENEDGES
         if (QWidget::mouseGrabber()) {
-            ScreenEdges::self()->check(QPoint(e->xbutton.x_root, e->xbutton.y_root), QDateTime::fromMSecsSinceEpoch(xTime()), true);
+            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
         }
 #endif
         break;
+    }
+#if KWIN_QT5_PORTING
     case KeyPress: {
         was_user_interaction = true;
         int keyQt;
@@ -353,8 +366,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             Cursor::self()->notifyCursorChanged(reinterpret_cast<XFixesCursorNotifyEvent*>(e)->cursor_serial);
         }
         break;
-    }
 #endif
+    }
     return false;
 }
 

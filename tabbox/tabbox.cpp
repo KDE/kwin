@@ -813,33 +813,43 @@ void TabBox::delayedShow()
     m_delayedShowTimer.start(m_delayShowTime);
 }
 
-
-bool TabBox::handleMouseEvent(XEvent* e)
+bool TabBox::handleMouseEvent(xcb_button_press_event_t *e)
 {
-    XAllowEvents(display(), AsyncPointer, xTime());
+    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, xTime());
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
             return true;
     }
-    if (e->type == ButtonPress) {
+    if (e->response_type & ~0x80 == XCB_BUTTON_PRESS) {
         // press outside Tabbox?
-        QPoint pos(e->xbutton.x_root, e->xbutton.y_root);
+        QPoint pos(e->root_x, e->root_y);
 
         if ((!m_isShown && isDisplayed())
                 || (!m_tabBox->containsPos(pos) &&
-                    (e->xbutton.button == Button1 || e->xbutton.button == Button2 || e->xbutton.button == Button3))) {
+                    (e->detail == XCB_BUTTON_INDEX_1 || e->detail == XCB_BUTTON_INDEX_2 || e->detail == XCB_BUTTON_INDEX_3))) {
             close();  // click outside closes tab
             return true;
         }
-        if (e->xbutton.button == Button5 || e->xbutton.button == Button4) {
+        if (e->detail == XCB_BUTTON_INDEX_5 || e->detail == XCB_BUTTON_INDEX_4) {
             // mouse wheel event
-            const QModelIndex index = m_tabBox->nextPrev(e->xbutton.button == Button5);
+            const QModelIndex index = m_tabBox->nextPrev(e->detail == XCB_BUTTON_INDEX_5);
             if (index.isValid()) {
                 setCurrentIndex(index);
             }
             return true;
         }
+    }
+    return false;
+}
+
+bool TabBox::handleMouseEvent(xcb_motion_notify_event_t *e)
+{
+    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, xTime());
+    if (!m_isShown && isDisplayed()) {
+        // tabbox has been replaced, check effects
+        if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
+            return true;
     }
     return false;
 }

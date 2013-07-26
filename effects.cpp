@@ -1184,43 +1184,31 @@ void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
     m_mouseInterceptionWindow.defineCursor(Cursor::x11Cursor(shape));
 }
 
-bool EffectsHandlerImpl::checkInputWindowEvent(XEvent* e)
+bool EffectsHandlerImpl::checkInputWindowEvent(xcb_button_press_event_t *e)
 {
-    if (e->type != ButtonPress && e->type != ButtonRelease && e->type != MotionNotify)
-        return false;
-    if (m_grabbedMouseEffects.isEmpty() || m_mouseInterceptionWindow != e->xany.window) {
+    if (m_grabbedMouseEffects.isEmpty() || m_mouseInterceptionWindow != e->event) {
         return false;
     }
-    foreach (Effect *effect, m_grabbedMouseEffects) {
-        switch(e->type) {
-        case ButtonPress: {
-            XButtonEvent* e2 = &e->xbutton;
-            Qt::MouseButton button = x11ToQtMouseButton(e2->button);
-            Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) | button;
-            QMouseEvent ev(QEvent::MouseButtonPress,
-                            QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                            button, buttons, x11ToQtKeyboardModifiers(e2->state));
-            effect->windowInputMouseEvent(&ev);
-            break; // --->
-        }
-        case ButtonRelease: {
-            XButtonEvent* e2 = &e->xbutton;
-            Qt::MouseButton button = x11ToQtMouseButton(e2->button);
-            Qt::MouseButtons buttons = x11ToQtMouseButtons(e2->state) & ~button;
-            QMouseEvent ev(QEvent::MouseButtonRelease,
-                            QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                            button, buttons, x11ToQtKeyboardModifiers(e2->state));
-            effect->windowInputMouseEvent(&ev);
-            break; // --->
-        }
-        case MotionNotify: {
-            XMotionEvent* e2 = &e->xmotion;
-            QMouseEvent ev(QEvent::MouseMove, QPoint(e2->x, e2->y), QPoint(e2->x_root, e2->y_root),
-                            Qt::NoButton, x11ToQtMouseButtons(e2->state), x11ToQtKeyboardModifiers(e2->state));
-            effect->windowInputMouseEvent(&ev);
-            break; // --->
-        }
-        }
+    for (Effect *effect : m_grabbedMouseEffects) {
+        Qt::MouseButton button = x11ToQtMouseButton(e->detail);
+        Qt::MouseButtons buttons = x11ToQtMouseButtons(e->state) & ~button;
+        QMouseEvent ev(((e->response_type & ~0x80) == XCB_BUTTON_PRESS) ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+                        QPoint(e->event_x, e->event_y), QPoint(e->root_x, e->root_y),
+                        button, buttons, x11ToQtKeyboardModifiers(e->state));
+        effect->windowInputMouseEvent(&ev);
+    }
+    return true; // eat event
+}
+
+bool EffectsHandlerImpl::checkInputWindowEvent(xcb_motion_notify_event_t *e)
+{
+    if (m_grabbedMouseEffects.isEmpty() || m_mouseInterceptionWindow != e->event) {
+        return false;
+    }
+    for (Effect *effect : m_grabbedMouseEffects) {
+        QMouseEvent ev(QEvent::MouseMove, QPoint(e->event_x, e->event_y), QPoint(e->root_x, e->root_y),
+                        Qt::NoButton, x11ToQtMouseButtons(e->state), x11ToQtKeyboardModifiers(e->state));
+        effect->windowInputMouseEvent(&ev);
     }
     return true; // eat event
 }

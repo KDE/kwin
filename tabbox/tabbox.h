@@ -33,6 +33,9 @@ class KActionCollection;
 class KConfigGroup;
 class QKeyEvent;
 
+struct xcb_button_press_event_t;
+struct xcb_motion_notify_event_t;
+
 namespace KWin
 {
 
@@ -156,7 +159,8 @@ public:
         return m_displayRefcount > 0;
     };
 
-    bool handleMouseEvent(XEvent* e);
+    bool handleMouseEvent(xcb_button_press_event_t *e);
+    bool handleMouseEvent(xcb_motion_notify_event_t *e);
     void grabbedKeyEvent(QKeyEvent* event);
 
     bool isGrabbed() const {

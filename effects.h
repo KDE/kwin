@@ -151,7 +151,8 @@ public:
     virtual WindowQuadType newWindowQuadType();
 
     virtual void defineCursor(Qt::CursorShape shape);
-    virtual bool checkInputWindowEvent(XEvent* e);
+    bool checkInputWindowEvent(xcb_button_press_event_t *e);
+    bool checkInputWindowEvent(xcb_motion_notify_event_t *e);
     virtual void checkInputWindowStacking();
 
     virtual void reserveElectricBorder(ElectricBorder border, Effect *effect);
