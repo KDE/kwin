@@ -1524,14 +1524,14 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             emit opacityChanged(this, old_opacity);
         }
     }
-    switch(e->type) {
-    case UnmapNotify:
+#endif
+    const uint8_t eventType = e->response_type & ~0x80;
+    switch (eventType) {
+    case XCB_UNMAP_NOTIFY:
         workspace()->updateFocusMousePosition(Cursor::pos());
-        unmapNotifyEvent(&e->xunmap);
+        release();
         break;
-    case MapNotify:
-        mapNotifyEvent(&e->xmap);
-        break;
+#if KWIN_QT5_PORTING
     case ConfigureNotify:
         configureNotifyEvent(&e->xconfigure);
         break;
@@ -1549,18 +1549,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             damageNotifyEvent();
         break;
     }
-    }
 #endif
+    }
     return false; // don't eat events, even our own unmanaged widgets are tracked
-}
-
-void Unmanaged::mapNotifyEvent(XMapEvent*)
-{
-}
-
-void Unmanaged::unmapNotifyEvent(XUnmapEvent*)
-{
-    release();
 }
 
 void Unmanaged::configureNotifyEvent(XConfigureEvent* e)

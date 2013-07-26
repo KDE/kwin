@@ -53,8 +53,6 @@ protected:
 private:
     virtual ~Unmanaged(); // use release()
     // handlers for X11 events
-    void mapNotifyEvent(XMapEvent* e);
-    void unmapNotifyEvent(XUnmapEvent*e);
     void configureNotifyEvent(XConfigureEvent* e);
 };
 
