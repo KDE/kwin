@@ -72,6 +72,73 @@ extern int currentRefreshRate();
 // Workspace
 // ****************************************
 
+static xcb_window_t findEventWindow(xcb_generic_event_t *event)
+{
+    const uint8_t eventType = event->response_type & ~0x80;
+    switch(eventType) {
+    case XCB_KEY_PRESS:
+    case XCB_KEY_RELEASE:
+        return reinterpret_cast<xcb_key_press_event_t*>(event)->event;
+    case XCB_BUTTON_PRESS:
+    case XCB_BUTTON_RELEASE:
+        return reinterpret_cast<xcb_button_press_event_t*>(event)->event;
+    case XCB_MOTION_NOTIFY:
+        return reinterpret_cast<xcb_motion_notify_event_t*>(event)->event;
+    case XCB_ENTER_NOTIFY:
+    case XCB_LEAVE_NOTIFY:
+        return reinterpret_cast<xcb_enter_notify_event_t*>(event)->event;
+    case XCB_FOCUS_IN:
+    case XCB_FOCUS_OUT:
+        return reinterpret_cast<xcb_focus_in_event_t*>(event)->event;
+    case XCB_EXPOSE:
+        return reinterpret_cast<xcb_expose_event_t*>(event)->window;
+    case XCB_GRAPHICS_EXPOSURE:
+        return reinterpret_cast<xcb_graphics_exposure_event_t*>(event)->drawable;
+    case XCB_NO_EXPOSURE:
+        return reinterpret_cast<xcb_no_exposure_event_t*>(event)->drawable;
+    case XCB_VISIBILITY_NOTIFY:
+        return reinterpret_cast<xcb_visibility_notify_event_t*>(event)->window;
+    case XCB_CREATE_NOTIFY:
+        return reinterpret_cast<xcb_create_notify_event_t*>(event)->window;
+    case XCB_DESTROY_NOTIFY:
+        return reinterpret_cast<xcb_destroy_notify_event_t*>(event)->window;
+    case XCB_UNMAP_NOTIFY:
+        return reinterpret_cast<xcb_unmap_notify_event_t*>(event)->window;
+    case XCB_MAP_NOTIFY:
+        return reinterpret_cast<xcb_map_notify_event_t*>(event)->window;
+    case XCB_MAP_REQUEST:
+        return reinterpret_cast<xcb_map_request_event_t*>(event)->window;
+    case XCB_REPARENT_NOTIFY:
+        return reinterpret_cast<xcb_reparent_notify_event_t*>(event)->window;
+    case XCB_CONFIGURE_NOTIFY:
+        return reinterpret_cast<xcb_configure_notify_event_t*>(event)->window;
+    case XCB_CONFIGURE_REQUEST:
+        return reinterpret_cast<xcb_configure_request_event_t*>(event)->window;
+    case XCB_GRAVITY_NOTIFY:
+        return reinterpret_cast<xcb_gravity_notify_event_t*>(event)->window;
+    case XCB_RESIZE_REQUEST:
+        return reinterpret_cast<xcb_resize_request_event_t*>(event)->window;
+    case XCB_CIRCULATE_NOTIFY:
+    case XCB_CIRCULATE_REQUEST:
+        return reinterpret_cast<xcb_circulate_notify_event_t*>(event)->window;
+    case XCB_PROPERTY_NOTIFY:
+        return reinterpret_cast<xcb_property_notify_event_t*>(event)->window;
+    case XCB_COLORMAP_NOTIFY:
+        return reinterpret_cast<xcb_colormap_notify_event_t*>(event)->window;
+    case XCB_CLIENT_MESSAGE:
+        return reinterpret_cast<xcb_client_message_event_t*>(event)->window;
+    default:
+        // extension handling
+        if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
+            return reinterpret_cast<xcb_shape_notify_event_t*>(event)->affected_window;
+        }
+        if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
+            return reinterpret_cast<xcb_damage_notify_event_t*>(event)->drawable;
+        }
+        return XCB_WINDOW_NONE;
+    }
+}
+
 /*!
   Handles workspace specific XCB event
  */
@@ -169,37 +236,31 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     };
 
-#if KWIN_QT5_PORTING
-    if (Client* c = findClient(WindowMatchPredicate(e->xany.window))) {
+    const xcb_window_t eventWindow = findEventWindow(e);
+    if (Client* c = findClient(WindowMatchPredicate(eventWindow))) {
         if (c->windowEvent(e))
             return true;
-    } else if (Client* c = findClient(WrapperIdMatchPredicate(e->xany.window))) {
+    } else if (Client* c = findClient(WrapperIdMatchPredicate(eventWindow))) {
         if (c->windowEvent(e))
             return true;
-    } else if (Client* c = findClient(FrameIdMatchPredicate(e->xany.window))) {
+    } else if (Client* c = findClient(FrameIdMatchPredicate(eventWindow))) {
         if (c->windowEvent(e))
             return true;
-    } else if (Client *c = findClient(InputIdMatchPredicate(e->xany.window))) {
+    } else if (Client *c = findClient(InputIdMatchPredicate(eventWindow))) {
         if (c->windowEvent(e))
             return true;
-    } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(e->xany.window))) {
+    } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(eventWindow))) {
         if (c->windowEvent(e))
             return true;
     } else {
-        Window special = findSpecialEventWindow(e);
-        if (special != None)
-            if (Client* c = findClient(WindowMatchPredicate(special))) {
-                if (c->windowEvent(e))
-                    return true;
-            }
-
         // We want to pass root window property events to effects
-        if (e->type == PropertyNotify && e->xany.window == rootWindow()) {
-            XPropertyEvent* re = &e->xproperty;
-            emit propertyNotify(re->atom);
+        if (eventType == XCB_PROPERTY_NOTIFY) {
+            auto event = reinterpret_cast<xcb_property_notify_event_t*>(e);
+            if (event->window == rootWindow()) {
+                emit propertyNotify(event->atom);
+            }
         }
     }
-#endif
     if (movingClient) {
         if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && movingClient->windowEvent(e)) {
@@ -407,39 +468,6 @@ bool Workspace::workspaceEvent(QEvent* e)
         return true;
     }
     return false;
-}
-
-// Some events don't have the actual window which caused the event
-// as e->xany.window (e.g. ConfigureRequest), but as some other
-// field in the XEvent structure.
-xcb_window_t Workspace::findSpecialEventWindow(XEvent *e)
-{
-    switch(e->type) {
-    case CreateNotify:
-        return e->xcreatewindow.window;
-    case DestroyNotify:
-        return e->xdestroywindow.window;
-    case UnmapNotify:
-        return e->xunmap.window;
-    case MapNotify:
-        return e->xmap.window;
-    case MapRequest:
-        return e->xmaprequest.window;
-    case ReparentNotify:
-        return e->xreparent.window;
-    case ConfigureNotify:
-        return e->xconfigure.window;
-    case GravityNotify:
-        return e->xgravity.window;
-    case ConfigureRequest:
-        return e->xconfigurerequest.window;
-    case CirculateNotify:
-        return e->xcirculate.window;
-    case CirculateRequest:
-        return e->xcirculaterequest.window;
-    default:
-        return None;
-    };
 }
 
 // ****************************************

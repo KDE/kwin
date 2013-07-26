@@ -442,8 +442,6 @@ private:
     Unmanaged* createUnmanaged(xcb_window_t w);
     void addUnmanaged(Unmanaged* c);
 
-    xcb_window_t findSpecialEventWindow(XEvent* e);
-
     //---------------------------------------------------------------------
 
     void closeActivePopup();
