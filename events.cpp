@@ -223,18 +223,19 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         break;
     }
-#if KWIN_QT5_PORTING
-    case UnmapNotify: {
-        return (e->xunmap.event != e->xunmap.window);   // hide wm typical event from Qt
+    case XCB_UNMAP_NOTIFY: {
+        const auto *event = reinterpret_cast<xcb_unmap_notify_event_t*>(e);
+        return (event->event != event->window);   // hide wm typical event from Qt
     }
-    case ReparentNotify: {
+    case XCB_REPARENT_NOTIFY: {
         //do not confuse Qt with these events. After all, _we_ are the
         //window manager who does the reparenting.
         return true;
     }
-    case DestroyNotify: {
+    case XCB_DESTROY_NOTIFY: {
         return false;
     }
+#if KWIN_QT5_PORTING
     case MapRequest: {
         updateXTime();
 
