@@ -87,8 +87,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return true;
     }
 
+#warning NETRootInfo::event() needs porting to XCB
 #if KWIN_QT5_PORTING
-    if (e->type == PropertyNotify || e->type == ClientMessage) {
+    if (eventType == XCB_PROPERTY_NOTIFY || eventType == XCB_CLIENT_MESSAGE) {
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
         rootInfo()->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
         if (dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames)
@@ -96,7 +97,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)
             VirtualDesktopManager::self()->updateLayout();
     }
+#endif
 
+#if KWIN_QT5_PORTING
     // events that should be handled before Clients can get them
     switch(e->type) {
     case ButtonPress:
