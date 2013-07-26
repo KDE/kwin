@@ -24,9 +24,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kapplication.h>
 #include <KDE/KSelectionWatcher>
+// Qt
+#include <QAbstractNativeEventFilter>
 
 namespace KWin
 {
+
+class XcbEventFilter : public QAbstractNativeEventFilter
+{
+public:
+    virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
+};
 
 class KWinSelectionOwner
     : public KSelectionOwner
@@ -60,6 +68,7 @@ private Q_SLOTS:
 
 private:
     KWinSelectionOwner owner;
+    QScopedPointer<XcbEventFilter> m_eventFilter;
     static int crashes;
 };
 

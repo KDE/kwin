@@ -68,7 +68,7 @@ public:
         return _self;
     }
 
-    bool workspaceEvent(XEvent*);
+    bool workspaceEvent(xcb_generic_event_t*);
     bool workspaceEvent(QEvent*);
 
     bool hasClient(const Client*);

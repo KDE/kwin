@@ -305,6 +305,7 @@ int Application::crashes = 0;
 Application::Application()
     : KApplication()
     , owner(screen_number)
+    , m_eventFilter(new XcbEventFilter())
 {
     if (KCmdLineArgs::parsedArgs("qt")->isSet("sync")) {
         kwin_sync = true;
@@ -360,6 +361,7 @@ Application::Application()
     QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 
     initting = true; // Startup...
+    installNativeEventFilter(m_eventFilter.data());
     // first load options - done internally by a different thread
     options = new Options;
 
@@ -442,6 +444,19 @@ void Application::crashHandler(int signal)
 void Application::resetCrashesCount()
 {
     crashes = 0;
+}
+
+bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
+{
+    Q_UNUSED(result)
+    if (!Workspace::self()) {
+        // Workspace not yet created
+        return false;
+    }
+    if (eventType != "xcb_generic_event_t") {
+        return false;
+    }
+    return Workspace::self()->workspaceEvent(static_cast<xcb_generic_event_t *>(message));
 }
 
 } // namespace
