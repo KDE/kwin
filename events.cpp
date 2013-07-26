@@ -162,13 +162,13 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
 #endif
         break;
-#if KWIN_QT5_PORTING
-    case ConfigureNotify:
-        if (e->xconfigure.event == rootWindow())
+    case XCB_CONFIGURE_NOTIFY:
+        if (reinterpret_cast<xcb_configure_notify_event_t*>(e)->event == rootWindow())
             x_stacking_dirty = true;
         break;
     };
 
+#if KWIN_QT5_PORTING
     if (Client* c = findClient(WindowMatchPredicate(e->xany.window))) {
         if (c->windowEvent(e))
             return true;
@@ -366,8 +366,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             Cursor::self()->notifyCursorChanged(reinterpret_cast<XFixesCursorNotifyEvent*>(e)->cursor_serial);
         }
         break;
-#endif
     }
+#endif
     return false;
 }
 
