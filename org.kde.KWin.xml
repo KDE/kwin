@@ -14,17 +14,6 @@
     <method name="killWindow">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
-    <method name="toggleCompositing">
-      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
-    </method>
-    <method name="doNotManage">
-      <arg name="name" type="s" direction="in"/>
-    </method>
-    <method name="showWindowMenuAt">
-      <arg name="winId" type="x" direction="in"/>
-      <arg name="x" type="i" direction="in"/>
-      <arg name="y" type="i" direction="in"/>
-    </method>
     <method name="setCurrentDesktop">
       <arg name="desktop" type="i" direction="in"/>
       <arg type="b" direction="out"/>
@@ -34,45 +23,7 @@
     </method>
     <method name="nextDesktop"/>
     <method name="previousDesktop"/>
-    <method name="circulateDesktopApplications"/>
     <signal name="reloadConfig"/>
-    <signal name="reinitCompositing"/>
-    <signal name="compositingToggled">
-      <arg name="active" type="b" direction="out"/>
-    </signal>
-    <method name="loadEffect">
-      <arg name="name" type="s" direction="in"/>
-    </method>
-    <method name="unloadEffect">
-      <arg name="name" type="s" direction="in"/>
-    </method>
-    <method name="toggleEffect">
-      <arg name="name" type="s" direction="in"/>
-    </method>
-    <method name="reconfigureEffect">
-      <arg name="name" type="s" direction="in"/>
-    </method>
-    <method name="loadedEffects">
-      <arg type="as" direction="out"/>
-    </method>
-    <method name="listOfEffects">
-      <arg type="as" direction="out"/>
-    </method>
-    <method name="supportInformationForEffect">
-      <arg name="name" type="s" direction="in"/>
-      <arg type="s" direction="out"/>
-    </method>
-    <method name="compositingActive">
-      <arg type="b" direction="out"/>
-    </method>
-    <method name="waitForCompositingSetup">
-      <arg type="b" direction="out"/>
-    </method>
-<!-- @deprecated, @todo remove KDE5     -->
-    <method name="decorationSupportedColors">
-      <arg type="ai" direction="out"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;int>"/>
-    </method>
     <method name="stopActivity">
       <arg type="s" direction="in"/>
       <arg type="b" direction="out"/>
@@ -81,29 +32,7 @@
       <arg type="s" direction="in"/>
       <arg type="b" direction="out"/>
     </method>
-    <method name="activeEffects">
-      <arg type="as" direction="out"/>
-    </method>
     <method name="supportInformation">
-        <arg type="s" direction="out"/>
-    </method>
-    <method name="compositingPossible">
-        <arg type="b" direction="out"/>
-    </method>
-    <method name="compositingNotPossibleReason">
-        <arg type="s" direction="out"/>
-    </method>
-    <method name="openGLIsBroken">
-        <arg type="b" direction="out"/>
-    </method>
-    <method name="compositingType">
-        <!--
-            none: No Compositing
-            xrender: XRender
-            gl1: OpenGL 1
-            gl2: OpenGL 2
-            gles: OpenGL ES 2
-        -->
         <arg type="s" direction="out"/>
     </method>
   </interface>

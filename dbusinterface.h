@@ -23,12 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QtDBus/QtDBus>
-class QByteArray;
-template<class T> class QList;
-template<class Key, class Value> class QMap;
-class QString;
-class QStringList;
-class QVariant;
 
 namespace KWin
 {
@@ -46,7 +40,6 @@ namespace KWin
  * three singletons.
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
- * @todo KDE5: remove the methods provided on /Effects and /Compositor
  **/
 class DBusInterface: public QObject
 {
@@ -59,97 +52,17 @@ public:
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
     Q_NOREPLY void cascadeDesktop();
-    /**
-     * @deprecated
-     **/
-    void circulateDesktopApplications();
     int currentDesktop();
-    QList<int> decorationSupportedColors();
-    /**
-     * @deprecated
-     **/
-    void doNotManage(const QString &name);
     Q_NOREPLY void killWindow();
     void nextDesktop();
     void previousDesktop();
     Q_NOREPLY void reconfigure();
     bool setCurrentDesktop(int desktop);
-    /**
-     * @deprecated
-     **/
-    void showWindowMenuAt(qlonglong winId, int x, int y);
     bool startActivity(const QString &in0);
     bool stopActivity(const QString &in0);
     QString supportInformation();
     Q_NOREPLY void unclutterDesktop();
-    // from compositor
-    /**
-     * @deprecated
-     **/
-    bool compositingActive();
-    /**
-     * @deprecated
-     **/
-    QString compositingNotPossibleReason();
-    /**
-     * @deprecated
-     **/
-    bool compositingPossible();
-    /**
-     * @deprecated
-     **/
-    QString compositingType();
-    /**
-     * @deprecated
-     **/
-    bool openGLIsBroken();
-    /**
-     * @deprecated
-     **/
-    Q_NOREPLY void toggleCompositing();
-    /**
-     * @deprecated
-     **/
-    bool waitForCompositingSetup();
-    // from effectshandler
-    /**
-     * @deprecated
-     **/
-    QStringList activeEffects();
-    /**
-     * @deprecated
-     **/
-    QStringList listOfEffects();
-    /**
-     * @deprecated
-     **/
-    void loadEffect(const QString &name);
-    /**
-     * @deprecated
-     **/
-    QStringList loadedEffects();
-    /**
-     * @deprecated
-     **/
-    void reconfigureEffect(const QString &name);
-    /**
-     * @deprecated
-     **/
-    QString supportInformationForEffect(const QString &name);
-    /**
-     * @deprecated
-     **/
-    void toggleEffect(const QString &name);
-    /**
-     * @deprecated
-     **/
-    void unloadEffect(const QString &name);
 
-Q_SIGNALS: // SIGNALS
-    /**
-     * @deprecated
-     **/
-    void compositingToggled(bool active);
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
 };

@@ -50,13 +50,6 @@ public:
 
     QString supportInformation();
 
-    // D-Bus interface
-    /**
-     * @deprecated
-     * @todo: remove KDE5
-     **/
-    QList<int> supportedColors() const;
-
 public Q_SLOTS:
     void resetCompositing();
 protected:
