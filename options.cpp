@@ -656,6 +656,9 @@ void Options::setUnredirectFullscreen(bool unredirectFullscreen)
     if (m_unredirectFullscreen == unredirectFullscreen) {
         return;
     }
+    if (GLPlatform::instance()->driver() == Driver_Intel) { // write back the value
+        KConfigGroup(KGlobal::config(), "Compositing").writeEntry("UnredirectFullscreen", false);
+    }
     m_unredirectFullscreen = unredirectFullscreen;
     emit unredirectFullscreenChanged();
 }
