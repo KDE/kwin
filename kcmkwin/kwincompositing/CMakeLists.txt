@@ -15,13 +15,15 @@ include(FeatureSummary)
 find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+
 find_package(Qt5Transitional MODULE)
 find_package(Qt5Core REQUIRED NO_MODULE)
 
 find_package(Qt5Quick REQUIRED NO_MODULE)
-find_package(kde4support REQUIRED NO_MODULE)
-add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++11)
 
 if(KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
    set(KDE_NO_DEPRECATED TRUE)
@@ -36,15 +38,18 @@ find_package(kdeqt5staging REQUIRED NO_MODULE)
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
 find_package(KF5 MODULE REQUIRED COMPONENTS CMake Compiler InstallDirs
-                                            XmlGui KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons kservice Solid ThreadWeaver
-                                            KConfig KAuth kjs
-                                            ki18n kguiaddons kservice kwidgets ItemViews KNotifications KCompletion KJobWidgets KConfigWidgets KIconThemes)
+                                            KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons Solid ThreadWeaver
+                                            KConfig KAuth KJS KWallet KDBusAddons
+                                            KI18n KGuiAddons KService KWidgets ItemViews KNotifications KIconThemes KCompletion KJobWidgets KConfigWidgets Sonnet KTextWidgets XmlGui KCrash
+                                            KIO KUnitConversion KDE4Attic)
 find_package(KDELibs4 REQUIRED NO_MODULE)
+find_package(KDE4Support REQUIRED NO_MODULE)
+
 find_package(kdeclarative REQUIRED NO_MODULE)
 
 #########################################################################
 
-add_definitions(${KDE4_DEFINITIONS})
+#add_definitions(${KDE4_DEFINITIONS})
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
@@ -52,6 +57,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FR
 
 ################# setup the include directories #################
 include_directories(${KDE4_INCLUDES}
+                    ${kdeqt5staging_INCLUDE_DIR}
                     ${kdeqt5staging_INCLUDE_DIRS}
                     ${KF5_INCLUDE_DIRS}  # since e-c-m 0.0.7
                     ${Qt5Widgets_INCLUDE_DIRS}
@@ -77,6 +83,7 @@ target_link_libraries(kwincompositing
     ${Qt5Core_LIBARIES}
     ${kservice_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
+    ${KDE4_KDECORE_LIBS}
 )
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)

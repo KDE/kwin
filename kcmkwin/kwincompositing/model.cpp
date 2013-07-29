@@ -107,7 +107,7 @@ void EffectModel::loadEffects() {
     QDir effectDir(effectPath);
 
     QStringList effectListDesktop = effectDir.entryList(QDir::Files);
-    foreach(QString effectDekstop, effectListDesktop) {
+    for(QString effectDekstop : effectListDesktop) {
         KPluginInfo plugin(effectPath + '/' +effectDekstop);
         effect.name = plugin.name();
         effect.description = plugin.comment();
@@ -148,10 +148,10 @@ bool EffectView::isEnabled(const QString &effectName) {
 }
 
 void EffectView::syncConfig() {
-    QHash<QString, bool>::const_iterator it = m_effectStatus.constBegin();
+    auto it = m_effectStatus.begin();
     KConfigGroup *kwinConfig = new KConfigGroup(KSharedConfig::openConfig("kwincompositing"), "Plugins");
 
-    while (it != m_effectStatus.constEnd()) {
+    while (it != m_effectStatus.end()) {
         QVariant boolToString(it.value());
         kwinConfig->writeEntry("kwin4_effect_" + it.key() + "_Enabled", boolToString.toString());
         it++;
