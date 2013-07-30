@@ -40,11 +40,13 @@
 #include <KStyle>
 
 #include <QApplication>
+#include <QDrag>
 #include <QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QBitmap>
 #include <QtX11Extras/QX11Info>
 #include <QObjectList>
+#include <QMimeData>
 
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
