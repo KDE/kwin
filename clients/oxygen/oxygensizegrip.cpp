@@ -34,7 +34,7 @@
 #include <QtGui/QPolygon>
 #include <QTimer>
 
-#include <QtGui/QX11Info>
+#include <QtX11Extras/QX11Info>
 #include <X11/Xlib.h>
 
 namespace Oxygen
