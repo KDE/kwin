@@ -554,7 +554,7 @@ namespace Oxygen
                 // make sure button exists
                 if( !item._closeButton )
                 {
-                    item._closeButton = ClientGroupItemData::ButtonPointer( new Button( *this, "Close this tab", ButtonItemClose ) );
+                    item._closeButton = ClientGroupItemData::ButtonPointer( new Button( *this, QStringLiteral("Close this tab"), ButtonItemClose ) );
                     item._closeButton.data()->show();
                     item._closeButton.data()->installEventFilter( this );
                 }
@@ -1331,7 +1331,7 @@ namespace Oxygen
 
     //_________________________________________________________
     QString Client::defaultButtonsRight() const
-    { return "HIAX"; }
+    { return QStringLiteral("HIAX"); }
 
     //________________________________________________________________
     void Client::updateWindowShape()
@@ -1749,7 +1749,7 @@ namespace Oxygen
             const int shadowSize( shadowCache().shadowSize() );
             const bool drawShadow(
                 compositingActive() &&
-                KStyle::customStyleHint( "SH_ArgbDndWindow", widget() ) &&
+                KStyle::customStyleHint( QStringLiteral("SH_ArgbDndWindow"), widget() ) &&
                 shadowSize > 0 );
 
             if( drawShadow )
@@ -1882,7 +1882,7 @@ namespace Oxygen
 
         if( widget() != event->source() ) setForceActive( true );
 
-        const long source = QString( groupData->data( tabDragMimeType() ) ).toLong();
+        const long source = QString::fromUtf8( groupData->data( tabDragMimeType() ) ).toLong();
         const int clickedIndex( tabIndexAt( point, true ) );
         if( clickedIndex < 0 ) tab_A_behind_B( source, tabId(_itemData.count()-1) );
         else tab_A_before_B( source, tabId(clickedIndex) );
