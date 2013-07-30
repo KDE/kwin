@@ -149,114 +149,6 @@ bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P
 
 Atom KWinSelectionOwner::xa_version = None;
 
-// errorMessage is only used ifndef NDEBUG, and only in one place.
-// it might be worth reevaluating why this is used? I don't know.
-#ifndef NDEBUG
-/**
- * Outputs: "Error: <error> (<value>), Request: <request>(<value>), Resource: <value>"
- */
-// This is copied from KXErrorHandler and modified to explicitly use known extensions
-static QByteArray errorMessage(const XErrorEvent& event, Display* dpy)
-{
-    QByteArray ret;
-    char tmp[256];
-    char num[256];
-    if (event.request_code < 128) {
-        // Core request
-        XGetErrorText(dpy, event.error_code, tmp, 255);
-        // The explanation in parentheses just makes
-        // it more verbose and is not really useful
-        if (char* paren = strchr(tmp, '('))
-            * paren = '\0';
-        // The various casts are to get overloads non-ambiguous :-/
-        ret = QByteArray("error: ") + (const char*)(tmp) + '[' + QByteArray::number(event.error_code) + ']';
-        sprintf(num, "%d", event.request_code);
-        XGetErrorDatabaseText(dpy, "XRequest", num, "<unknown>", tmp, 256);
-        ret += QByteArray(", request: ") + (const char*)(tmp) + '[' + QByteArray::number(event.request_code) + ']';
-        if (event.resourceid != 0)
-            ret += QByteArray(", resource: 0x") + QByteArray::number(qlonglong(event.resourceid), 16);
-    } else { // Extensions
-        // XGetErrorText() currently has a bug that makes it fail to find text
-        // for some errors (when error==error_base), also XGetErrorDatabaseText()
-        // requires the right extension name, so it is needed to get info about
-        // all extensions. However that is almost impossible:
-        // - Xlib itself has it, but in internal data.
-        // - Opening another X connection now can cause deadlock with server grabs.
-        // - Fetching it at startup means a bunch of roundtrips.
-
-        // KWin here explicitly uses known extensions.
-        XGetErrorText(dpy, event.error_code, tmp, 255);
-        int index = -1;
-        int base = 0;
-        QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
-        for (int i = 0; i < extensions.size(); ++i) {
-            const Xcb::ExtensionData &extension = extensions.at(i);
-            if (extension.errorBase != 0 &&
-                    event.error_code >= extension.errorBase && (index == -1 || extension.errorBase > base)) {
-                index = i;
-                base = extension.errorBase;
-            }
-        }
-        if (tmp == QString::number(event.error_code)) {
-            // XGetErrorText() failed or it has a bug that causes not finding all errors, check ourselves
-            if (index != -1) {
-                snprintf(num, 255, "%s.%d", extensions.at(index).name.constData(), event.error_code - base);
-                XGetErrorDatabaseText(dpy, "XProtoError", num, "<unknown>", tmp, 255);
-            } else
-                strcpy(tmp, "<unknown>");
-        }
-        if (char* paren = strchr(tmp, '('))
-            * paren = '\0';
-        if (index != -1)
-            ret = QByteArray("error: ") + (const char*)(tmp) + '[' + extensions.at(index).name +
-                  '+' + QByteArray::number(event.error_code - base) + ']';
-        else
-            ret = QByteArray("error: ") + (const char*)(tmp) + '[' + QByteArray::number(event.error_code) + ']';
-        tmp[0] = '\0';
-        for (int i = 0; i < extensions.size(); ++i)
-            if (extensions.at(i).majorOpcode == event.request_code) {
-                snprintf(num, 255, "%s.%d", extensions.at(i).name.constData(), event.minor_code);
-                XGetErrorDatabaseText(dpy, "XRequest", num, "<unknown>", tmp, 255);
-                ret += QByteArray(", request: ") + (const char*)(tmp) + '[' +
-                       extensions.at(i).name + '+' + QByteArray::number(event.minor_code) + ']';
-            }
-        if (tmp[0] == '\0')   // Not found?
-            ret += QByteArray(", request <unknown> [") + QByteArray::number(event.request_code) + ':'
-                   + QByteArray::number(event.minor_code) + ']';
-        if (event.resourceid != 0)
-            ret += QByteArray(", resource: 0x") + QByteArray::number(qlonglong(event.resourceid), 16);
-    }
-    return ret;
-}
-#endif
-
-static int x11ErrorHandler(Display* d, XErrorEvent* e)
-{
-#if KWIN_QT5_PORTING
-    Q_UNUSED(d);
-    bool ignore_badwindow = true; // Might be temporary
-
-    if (initting && (e->request_code == X_ChangeWindowAttributes || e->request_code == X_GrabKey) &&
-            e->error_code == BadAccess) {
-        fputs(i18n("kwin: it looks like there's already a window manager running. kwin not started.\n").toLocal8Bit(), stderr);
-        exit(1);
-    }
-
-    if (ignore_badwindow && (e->error_code == BadWindow || e->error_code == BadColor))
-        return 0;
-
-#ifndef NDEBUG
-    //fprintf( stderr, "kwin: X Error (%s)\n", KXErrorHandler::errorMessage( *e, d ).data());
-    kWarning(1212) << "kwin: X Error (" << errorMessage(*e, d) << ")";
-#endif
-
-    if (kwin_sync)
-        fprintf(stderr, "%s\n", kBacktrace().toLocal8Bit().data());
-#endif
-
-    return 0;
-}
-
 class AlternativeWMDialog : public KDialog
 {
 public:
@@ -364,9 +256,6 @@ Application::Application()
     installNativeEventFilter(m_eventFilter.data());
     // first load options - done internally by a different thread
     options = new Options;
-
-    // Install X11 error handler
-    XSetErrorHandler(x11ErrorHandler);
 
     // Check  whether another windowmanager is running
     XSelectInput(display(), rootWindow(), SubstructureRedirectMask);
