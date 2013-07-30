@@ -87,33 +87,36 @@ namespace Oxygen
     //_____________________________________________
     void SizeGrip::embed( void )
     {
-
-        WId window_id = client().windowId();
+        xcb_window_t window_id = client().windowId();
         if( client().isPreview() ) {
 
             setParent( client().widget() );
 
         } else if( window_id ) {
 
-            WId current = window_id;
+            xcb_window_t current = window_id;
+            auto *c = QX11Info::connection();
             while( true )
             {
-                WId root, parent = 0;
-                WId *children = 0L;
-                uint child_count = 0;
-                XQueryTree(QX11Info::display(), current, &root, &parent, &children, &child_count);
-                if( parent && parent != root && parent != current ) current = parent;
-                else break;
+                auto cookie = xcb_query_tree_unchecked(c, current);
+                QScopedPointer<xcb_query_tree_reply_t, QScopedPointerPodDeleter> tree(xcb_query_tree_reply(c, cookie, nullptr));
+                if (tree.isNull()) {
+                    break;
+                }
+                if (tree->parent && tree->parent != tree->root && tree->parent != current) {
+                    current = tree->parent;
+                } else {
+                    break;
+                }
             }
 
             // reparent
-            XReparentWindow( QX11Info::display(), winId(), current, 0, 0 );
+            xcb_reparent_window(c, winId(), current, 0, 0);
         } else {
 
             hide();
 
         }
-
     }
 
     //_____________________________________________
