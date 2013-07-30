@@ -44,7 +44,7 @@ namespace Oxygen
     //___________________________________________________
     Factory::Factory():
         _initialized( false ),
-        _helper( "oxygenDeco" ),
+        _helper(),
         _shadowCache( _helper )
     {
         readConfig();

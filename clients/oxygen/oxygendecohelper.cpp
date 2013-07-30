@@ -30,8 +30,8 @@ namespace Oxygen
 {
 
     //______________________________________________________________________________
-    DecoHelper::DecoHelper(const QByteArray &componentName):
-        Helper(componentName),
+    DecoHelper::DecoHelper():
+        Helper(),
         _debugArea( KDebug::registerArea( "Oxygen (decoration)" ) )
 
     {}
