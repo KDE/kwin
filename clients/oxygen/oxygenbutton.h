@@ -168,7 +168,7 @@ namespace Oxygen
 
         //@}
 
-        private slots:
+        private Q_SLOTS:
             void slotAppMenuHidden();
 
         private:

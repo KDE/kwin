@@ -154,7 +154,7 @@ namespace Oxygen
         bool isDirty( void ) const
         { return _dirty; }
 
-        signals:
+        Q_SIGNALS:
 
         void pixmapsChanged( void );
 

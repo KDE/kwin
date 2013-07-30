@@ -50,7 +50,7 @@ namespace Oxygen
         virtual ~ShadowDemoDialog( void )
         {}
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! reparse configuration
         void reparseConfiguration( void );

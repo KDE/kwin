@@ -72,7 +72,7 @@ namespace Oxygen
             else return Configuration::ExceptionWindowClassName;
         }
 
-        signals:
+        Q_SIGNALS:
 
         void detectionDone( bool );
 

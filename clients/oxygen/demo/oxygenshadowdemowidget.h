@@ -87,7 +87,7 @@ namespace Oxygen
              if( isVisible() ) update();
         }
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! toggle background drawing
         void toggleBackground( bool value )

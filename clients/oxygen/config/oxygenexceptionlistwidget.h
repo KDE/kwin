@@ -53,7 +53,7 @@ namespace Oxygen
         virtual bool isChanged( void ) const
         { return _changed; }
 
-        signals:
+        Q_SIGNALS:
 
         //! emitted when changed
         void changed( bool );
@@ -68,7 +68,7 @@ namespace Oxygen
         ExceptionModel& model()
         { return _model; }
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! update button states
         virtual void updateButtons( void );

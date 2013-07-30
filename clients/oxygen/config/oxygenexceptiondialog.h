@@ -64,7 +64,7 @@ namespace Oxygen
         virtual bool isChanged( void ) const
         { return _changed; }
 
-        signals:
+        Q_SIGNALS:
 
         //! emmited when changed
         void changed( bool );
@@ -78,12 +78,12 @@ namespace Oxygen
             emit changed( value );
         }
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! check whether configuration is changed and emit appropriate signal if yes
         virtual void updateChanged();
 
-        private slots:
+        private Q_SLOTS:
 
         //! select window properties from grabbed pointers
         void selectWindowProperties( void );

@@ -81,12 +81,12 @@ namespace Oxygen
         //! event filter
         virtual bool eventFilter( QObject*, QEvent* );
 
-        signals:
+        Q_SIGNALS:
 
         //! emmited when changed
         void changed( bool );
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! toggle expert mode
         void toggleExpertModeInternal( void )

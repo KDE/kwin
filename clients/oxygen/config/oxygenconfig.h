@@ -55,7 +55,7 @@ namespace Oxygen {
         //! destructor
         ~Config();
 
-        signals:
+        Q_SIGNALS:
 
         //! emmited whenever configuration is changed
         void changed();
@@ -63,7 +63,7 @@ namespace Oxygen {
         //! emmited whenever configuration is changed
         void changed( bool );
 
-        public slots:
+        public Q_SLOTS:
 
         //! load configuration
         /*! although kconfiggroup argument is not used. It is required by KWin API */
@@ -87,7 +87,7 @@ namespace Oxygen {
         //! toggle expert mode
         void toggleExpertMode( bool );
 
-        private slots:
+        private Q_SLOTS:
 
         //! update change state
         void updateChanged( void );

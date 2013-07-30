@@ -236,7 +236,7 @@ namespace Oxygen
         //! paint background to painter
         void paintBackground( QPainter& ) const;
 
-        public slots:
+        public Q_SLOTS:
 
         //! triggers widget update in titleRect only
         /*! one needs to add the title top margin to avoid some clipping glitches */
@@ -419,7 +419,7 @@ namespace Oxygen
         //! remove shadow hint
         void removeShadowHint( void );
 
-        protected slots:
+        protected Q_SLOTS:
 
         //! set target item to -1
         void clearTargetItem( void );
