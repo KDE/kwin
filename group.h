@@ -49,7 +49,6 @@ public:
     void removeMember(Client* member);
     void gotLeader(Client* leader);
     void lostLeader();
-    bool groupEvent(XEvent* e);
     void updateUserTime(Time time = CurrentTime);
     Time userTime() const;
     void ref();

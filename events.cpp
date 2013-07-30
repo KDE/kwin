@@ -1634,18 +1634,5 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
     emit propertyNotify(this, e->atom);
 }
 
-// ****************************************
-// Group
-// ****************************************
-
-bool Group::groupEvent(XEvent* e)
-{
-    unsigned long dirty[ 2 ];
-    leader_info->event(e, dirty, 2);   // pass through the NET stuff
-    if ((dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
-        startupIdChanged();
-    return false;
-}
-
 
 } // namespace
