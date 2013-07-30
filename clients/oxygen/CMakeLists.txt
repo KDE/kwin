@@ -24,9 +24,17 @@ kde4_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})
 target_link_libraries(
     kwin3_oxygen
-    ${KDE4_KDEUI_LIBS}
+    KF5::KConfigCore
+    KF5::KGuiAddons
+    KF5::KI18n
+    KF5::KWidgets
+    KF5::KWindowSystem
+    ${KDE4_KDEUI_LIBRARY} # KStyle
+    ${Qt5Widgets_LIBRARIES}
+    ${Qt5X11Extras_LIBRARIES}
     ${X11_X11_LIB}
     ${X11_Xrender_LIB}
+    ${XCB_XCB_LIBRARIES}
     kdecorations
     oxygenstyle
   )
