@@ -33,7 +33,6 @@ target_link_libraries(
     ${Qt5Widgets_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${X11_X11_LIB}
-    ${X11_Xrender_LIB}
     ${XCB_XCB_LIBRARIES}
     kdecorations
     oxygenstyle
