@@ -30,6 +30,7 @@ target_link_libraries(
     KF5::KWidgets
     KF5::KWindowSystem
     ${KDE4_KDEUI_LIBRARY} # KStyle
+    ${KDE4Support_LIBRARIES} # kdebug
     ${Qt5Widgets_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${X11_X11_LIB}
