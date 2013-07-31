@@ -77,6 +77,7 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
     addConfig(DesktopGridConfig::self(), m_ui);
     connect(m_ui->kcfg_LayoutMode, SIGNAL(currentIndexChanged(int)), this, SLOT(layoutSelectionChanged()));
     connect(m_ui->desktopNameAlignmentCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(changed()));
+    connect(m_ui->shortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
 
     load();
     layoutSelectionChanged();
