@@ -94,13 +94,36 @@ QVector< long > Shadow::readX11ShadowProperty(WId id)
 
 bool Shadow::init(const QVector< long > &data)
 {
-#if KWIN_QT5_PORTING
-    for (int i=0; i<ShadowElementsCount; ++i) {
-        QPixmap pix = QPixmap::fromX11Pixmap(data[i], QPixmap::ExplicitlyShared);
-        if (pix.isNull() || pix.depth() != 32) {
+    QVector<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
+    QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
+    auto *c = connection();
+    for (int i = 0; i < ShadowElementsCount; ++i) {
+        pixmapGeometries[i] = Xcb::WindowGeometry(data[i]);
+    }
+    auto discardReplies = [&getImageCookies](int start) {
+        for (int i = start; i < getImageCookies.size(); ++i) {
+            xcb_discard_reply(connection(), getImageCookies.at(i).sequence);
+        }
+    };
+    for (int i = 0; i < ShadowElementsCount; ++i) {
+        auto &geo = pixmapGeometries[i];
+        if (geo.isNull()) {
+            discardReplies(0);
             return false;
         }
-        m_shadowElements[i] = pix.copy(0, 0, pix.width(), pix.height());
+        getImageCookies[i] = xcb_get_image_unchecked(c, XCB_IMAGE_FORMAT_Z_PIXMAP, data[i],
+                                                     0, 0, geo->width, geo->height, ~0);
+    }
+    for (int i = 0; i < ShadowElementsCount; ++i) {
+        auto *reply = xcb_get_image_reply(c, getImageCookies.at(i), nullptr);
+        if (!reply) {
+            discardReplies(i+1);
+            return false;
+        }
+        auto &geo = pixmapGeometries[i];
+        QImage image(xcb_get_image_data(reply), geo->width, geo->height, QImage::Format_ARGB32);
+        m_shadowElements[i] = QPixmap::fromImage(image);
+        free(reply);
     }
     m_topOffset = data[ShadowElementsCount];
     m_rightOffset = data[ShadowElementsCount+1];
@@ -112,10 +135,6 @@ bool Shadow::init(const QVector< long > &data)
     }
     buildQuads();
     return true;
-#else
-#warning Shadow system needs porting
-    return false;
-#endif
 }
 
 void Shadow::updateShadowRegion()
