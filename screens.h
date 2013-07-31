@@ -35,15 +35,6 @@ namespace KWin
 {
 class Client;
 
-class ScreenCountTimer : public QTimer {
-    public:
-        ScreenCountTimer(QObject * parent = 0);
-        /**
-         * if isActive, stop AND emit timeout()
-         */
-        void finish();
-};
-
 class Screens : public QObject
 {
     Q_OBJECT
@@ -75,6 +66,8 @@ public:
     virtual QRect geometry(int screen) const = 0;
     virtual int number(const QPoint &pos) const = 0;
 
+    inline bool isChanging() { return m_changedTimer->isActive(); }
+
 public Q_SLOTS:
     void reconfigure();
 
@@ -85,11 +78,7 @@ Q_SIGNALS:
      **/
     void changed();
 
-protected:
-    void finishChangedTimer() const;
-
 protected Q_SLOTS:
-    friend class ScreenCountTimer;
     void setCount(int count);
     void startChangedTimer();
     virtual void updateCount() = 0;
@@ -98,7 +87,7 @@ private:
     int m_count;
     int m_current;
     bool m_currentFollowsMouse;
-    ScreenCountTimer *m_changedTimer;
+    QTimer *m_changedTimer;
     KSharedConfig::Ptr m_config;
 
     KWIN_SINGLETON(Screens)
@@ -129,12 +118,6 @@ inline
 int Screens::count() const
 {
     return m_count;
-}
-
-inline
-void Screens::finishChangedTimer() const
-{
-    const_cast<ScreenCountTimer*>(m_changedTimer)->finish();
 }
 
 inline
