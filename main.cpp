@@ -214,76 +214,77 @@ Application::Application()
     }
 
     if (screen_number == -1)
-        screen_number = DefaultScreen(display());
+        screen_number = QX11Info::appScreen();
 
     connect(&owner, &KSelectionOwner::failedToClaimOwnership, []{
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     });
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
-    owner.claim(args->isSet("replace"), true);
-
-    KCrash::setEmergencySaveFunction(Application::crashHandler);
-    crashes = args->getOption("crashes").toInt();
-    if (crashes >= 4) {
-        // Something has gone seriously wrong
-        AlternativeWMDialog dialog;
-        QString cmd = QStringLiteral(KWIN_NAME);
-        if (dialog.exec() == QDialog::Accepted)
-            cmd = dialog.selectedWM();
-        else
+    connect(&owner, &KSelectionOwner::claimedOwnership, [this, args, config]{
+        KCrash::setEmergencySaveFunction(Application::crashHandler);
+        crashes = args->getOption("crashes").toInt();
+        if (crashes >= 4) {
+            // Something has gone seriously wrong
+            AlternativeWMDialog dialog;
+            QString cmd = QStringLiteral(KWIN_NAME);
+            if (dialog.exec() == QDialog::Accepted)
+                cmd = dialog.selectedWM();
+            else
+                ::exit(1);
+            if (cmd.length() > 500) {
+                kDebug(1212) << "Command is too long, truncating";
+                cmd = cmd.left(500);
+            }
+            kDebug(1212) << "Starting" << cmd << "and exiting";
+            char buf[1024];
+            sprintf(buf, "%s &", cmd.toAscii().data());
+            system(buf);
             ::exit(1);
-        if (cmd.length() > 500) {
-            kDebug(1212) << "Command is too long, truncating";
-            cmd = cmd.left(500);
         }
-        kDebug(1212) << "Starting" << cmd << "and exiting";
-        char buf[1024];
-        sprintf(buf, "%s &", cmd.toAscii().data());
-        system(buf);
-        ::exit(1);
-    }
-    if (crashes >= 2) {
-        // Disable compositing if we have had too many crashes
-        kDebug(1212) << "Too many crashes recently, disabling compositing";
-        KConfigGroup compgroup(config, "Compositing");
-        compgroup.writeEntry("Enabled", false);
-    }
-    // Reset crashes count if we stay up for more that 15 seconds
-    QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
+        if (crashes >= 2) {
+            // Disable compositing if we have had too many crashes
+            kDebug(1212) << "Too many crashes recently, disabling compositing";
+            KConfigGroup compgroup(config, "Compositing");
+            compgroup.writeEntry("Enabled", false);
+        }
+        // Reset crashes count if we stay up for more that 15 seconds
+        QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 
-    initting = true; // Startup...
-    installNativeEventFilter(m_eventFilter.data());
-    // first load options - done internally by a different thread
-    options = new Options;
+        initting = true; // Startup...
+        installNativeEventFilter(m_eventFilter.data());
+        // first load options - done internally by a different thread
+        options = new Options;
 
-    // Check  whether another windowmanager is running
-    XSelectInput(display(), rootWindow(), SubstructureRedirectMask);
-    syncX(); // Trigger error now
+        // Check  whether another windowmanager is running
+        XSelectInput(display(), rootWindow(), SubstructureRedirectMask);
+        syncX(); // Trigger error now
 
-    atoms = new Atoms;
+        atoms = new Atoms;
 
-//    initting = false; // TODO
+    //    initting = false; // TODO
 
-    // This tries to detect compositing options and can use GLX. GLX problems
-    // (X errors) shouldn't cause kwin to abort, so this is out of the
-    // critical startup section where x errors cause kwin to abort.
+        // This tries to detect compositing options and can use GLX. GLX problems
+        // (X errors) shouldn't cause kwin to abort, so this is out of the
+        // critical startup section where x errors cause kwin to abort.
 
-    // create workspace.
-    (void) new Workspace(isSessionRestored());
+        // create workspace.
+        (void) new Workspace(isSessionRestored());
 
-    syncX(); // Trigger possible errors, there's still a chance to abort
+        syncX(); // Trigger possible errors, there's still a chance to abort
 
-    initting = false; // Startup done, we are up and running now.
+        initting = false; // Startup done, we are up and running now.
 
-    XEvent e;
-    e.xclient.type = ClientMessage;
-    e.xclient.message_type = XInternAtom(display(), "_KDE_SPLASH_PROGRESS", False);
-    e.xclient.display = display();
-    e.xclient.window = rootWindow();
-    e.xclient.format = 8;
-    strcpy(e.xclient.data.b, "wm");
-    XSendEvent(display(), rootWindow(), False, SubstructureNotifyMask, &e);
+        XEvent e;
+        e.xclient.type = ClientMessage;
+        e.xclient.message_type = XInternAtom(display(), "_KDE_SPLASH_PROGRESS", False);
+        e.xclient.display = display();
+        e.xclient.window = rootWindow();
+        e.xclient.format = 8;
+        strcpy(e.xclient.data.b, "wm");
+        XSendEvent(display(), rootWindow(), False, SubstructureNotifyMask, &e);
+    });
+    owner.claim(args->isSet("replace"), true);
 }
 
 Application::~Application()
