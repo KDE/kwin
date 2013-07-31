@@ -45,7 +45,7 @@ Component {
 
                 Item {
                     id: effectItem
-                    width: effectView.width - myCheckBox.width
+                    width: effectView.width - myCheckBox.width - aboutButton.width
                     anchors.left: myCheckBox.right
                     Column {
                         id: col
@@ -53,7 +53,21 @@ Component {
                             text: model.Name
                         }
                         Text {
+                            id: desc
                             text: model.Description
+                        }
+                        Item {
+                            id:aboutItem
+                            anchors.top: desc.bottom
+                            anchors.topMargin: 20
+                            visible: false
+
+                            Text {
+                                text: "Author: " + model.AuthorName + "\n" + "License" + model.Version
+                                font.bold: true
+                            }
+                            PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
+                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ? 80 : 40}
                         }
                     }
                     MouseArea {
@@ -63,6 +77,16 @@ Component {
                         onClicked: {
                             effectView.currentIndex = index;
                         }
+                    }
+                }
+
+                Button {
+                    id: aboutButton
+                    anchors.left: effectItem.right
+                    text: "ABOUT UI BUTTON"
+                    onClicked: {
+                        animationAbout.running = true;
+                        animationAboutSpacing.running = true;
                     }
                 }
             } //end Row
