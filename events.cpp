@@ -1337,7 +1337,8 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
         x = this->x(); // translate from grab window to local coords
         y = this->y();
     }
-    if (!waitingMotionEvent()) {
+#warning Mouse event compression is lost
+    if (/*!waitingMotionEvent()*/true) {
         QRect oldGeo = geometry();
         handleMoveResize(x, y, x_root, y_root);
         if (!isFullScreen() && isMove() && oldGeo != geometry()) {
