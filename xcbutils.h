@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 #include "utils.h"
 
+#include <KDE/KDebug>
+
 #include <QRect>
 #include <QRegion>
 #include <QVector>
@@ -683,6 +685,18 @@ static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
 static inline void setInputFocus(xcb_window_t window, uint8_t revertTo, xcb_timestamp_t time)
 {
     xcb_set_input_focus(connection(), revertTo, window, time);
+}
+
+static inline void sync()
+{
+    auto *c = connection();
+    const auto cookie = xcb_get_input_focus(c);
+    xcb_generic_error_t *error = nullptr;
+    ScopedCPointer<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(c, cookie, &error));
+    if (error) {
+        kWarning(1212) << "Sync error" << kBacktrace();
+        free(error);
+    }
 }
 
 } // namespace X11

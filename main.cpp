@@ -258,7 +258,7 @@ Application::Application()
 
         // Check  whether another windowmanager is running
         XSelectInput(display(), rootWindow(), SubstructureRedirectMask);
-        syncX(); // Trigger error now
+        Xcb::sync(); // Trigger error now
 
         atoms = new Atoms;
 
@@ -271,7 +271,7 @@ Application::Application()
         // create workspace.
         (void) new Workspace(isSessionRestored());
 
-        syncX(); // Trigger possible errors, there's still a chance to abort
+        Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
         initting = false; // Startup done, we are up and running now.
 
