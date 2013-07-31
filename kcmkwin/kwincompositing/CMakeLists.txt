@@ -87,7 +87,6 @@ target_link_libraries(kwincompositing
 )
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
-INSTALL(DIRECTORY service DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})
 ################# list the subdirectories #################
 

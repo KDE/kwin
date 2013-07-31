@@ -82,33 +82,13 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const {
 
 void EffectModel::loadEffects() {
     Effect effect;
-    //TODO Until KWin has been ported to frameworks the following code will not work
-    //In order to populate our application with some testing data, we are shipping
-    //some desktop files with the service folder
-    /*KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
-    foreach (KService::Ptr service, offers) {
-        qDebug() << "mesa sto model";
-        //data.auroraeName = service->property("X-KDE-PluginInfo-Name").toString();
-        //QString scriptName = service->property("X-Plasma-MainScript").toString();
-        KPluginInfo plugin(service);
 
-        effect.name = plugin.name();
-        effect.description = plugin.comment();
-        effect.authorName = plugin.author();
-        effect.authorEmail = plugin.email();
-        effect.license = plugin.license();
-        effect.version = plugin.version();
-
-        m_effectsList << effect;
-    }*/
     beginInsertRows(QModelIndex(), rowCount(), rowCount());
-    QString effectPath = QStandardPaths::locate(QStandardPaths::DataLocation, "service", QStandardPaths::LocateDirectory);
 
-    QDir effectDir(effectPath);
-
-    QStringList effectListDesktop = effectDir.entryList(QDir::Files);
-    for(QString effectDekstop : effectListDesktop) {
-        KPluginInfo plugin(effectPath + '/' +effectDekstop);
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    for(KService::Ptr service : offers) {
+        KPluginInfo plugin(service);
+        qDebug() << "path tou effect" << plugin.entryPath();
         effect.name = plugin.name();
         effect.description = plugin.comment();
         effect.authorName = plugin.author();
@@ -118,6 +98,7 @@ void EffectModel::loadEffects() {
         effect.category = plugin.category();
         m_effectsList << effect;
     }
+
     qSort(m_effectsList.begin(), m_effectsList.end(), EffectModel::less);
     endInsertRows();
 }
@@ -143,17 +124,20 @@ void EffectView::effectStatus(const QString &effectName, bool status) {
 
 
 bool EffectView::isEnabled(const QString &effectName) {
-    KConfigGroup cg(KSharedConfig::openConfig("kwincompositing"), "Plugins");
-    return cg.readEntry("kwin4_effect_" + effectName + "_Enabled", false);
+    KConfigGroup cg(KSharedConfig::openConfig("kwinrc"), "Plugins");
+    QString effectEntry = effectName.toLower().replace(" ", "");
+    return cg.readEntry("kwin4_effect_" + effectEntry + "Enabled", false);
 }
 
 void EffectView::syncConfig() {
     auto it = m_effectStatus.begin();
-    KConfigGroup *kwinConfig = new KConfigGroup(KSharedConfig::openConfig("kwincompositing"), "Plugins");
+    KConfigGroup *kwinConfig = new KConfigGroup(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
     while (it != m_effectStatus.end()) {
         QVariant boolToString(it.value());
-        kwinConfig->writeEntry("kwin4_effect_" + it.key() + "_Enabled", boolToString.toString());
+        QString effectName = it.key().toLower();
+        QString effectEntry = effectName.replace(" ", "");
+        kwinConfig->writeEntry("kwin4_effect_" + effectEntry + "Enabled", boolToString.toString());
         it++;
     }
     kwinConfig->sync();

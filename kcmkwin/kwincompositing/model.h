@@ -37,10 +37,6 @@ struct Effect {
     QString category;
 };
 
-static bool less(Effect a, Effect b) {
-    return a.name < b.name;
-}
-
 class EffectModel : public QAbstractListModel {
 
     Q_OBJECT
@@ -61,7 +57,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
     static bool less(Effect a, Effect b) {
-    return a.name < b.name;
+    return a.category < b.category;
     }
 
 private:
