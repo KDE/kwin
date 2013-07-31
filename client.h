@@ -34,11 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QPixmap>
 // X
-#ifdef HAVE_XSYNC
-#include <X11/extensions/sync.h>
-#endif
 #include <X11/Xutil.h>
 #include <fixx11h.h>
+#include <xcb/sync.h>
 
 // TODO: Cleanup the order of things in this .h file
 
@@ -316,9 +314,7 @@ public:
 
     bool windowEvent(xcb_generic_event_t *e);
     virtual bool eventFilter(QObject* o, QEvent* e);
-#ifdef HAVE_XSYNC
     void syncEvent(xcb_sync_alarm_notify_event_t* e);
-#endif
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 
     bool manage(xcb_window_t w, bool isMapped);
@@ -955,15 +951,13 @@ private:
     QRect geom_before_block;
     QRect deco_rect_before_block;
     bool shade_geometry_change;
-#ifdef HAVE_XSYNC
     struct {
-        XSyncCounter counter;
-        XSyncValue value;
-        XSyncAlarm alarm;
+        xcb_sync_counter_t counter;
+        xcb_sync_int64_t value;
+        xcb_sync_alarm_t alarm;
         QTimer *timeout, *failsafeTimeout;
         bool isPending;
     } syncRequest;
-#endif
     int border_left, border_right, border_top, border_bottom;
     int padding_left, padding_right, padding_top, padding_bottom;
     QRegion _mask;

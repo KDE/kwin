@@ -1902,9 +1902,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             QSize cs = clientSize();
             XMoveResizeWindow(display(), wrapperId(), clientPos().x(), clientPos().y(),
                               cs.width(), cs.height());
-#ifdef HAVE_XSYNC
-            if (!isResize() || syncRequest.counter == None)
-#endif
+            if (!isResize() || syncRequest.counter == XCB_NONE)
                 XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
@@ -2654,12 +2652,10 @@ void Client::leaveMoveResize()
     m_moveResizeGrabWindow.reset();
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
-#ifdef HAVE_XSYNC
-    if (syncRequest.counter == None) // don't forget to sanitize since the timeout will no more fire
+    if (syncRequest.counter == XCB_NONE) // don't forget to sanitize since the timeout will no more fire
         syncRequest.isPending = false;
     delete syncRequest.timeout;
     syncRequest.timeout = NULL;
-#endif
 #ifdef KWIN_BUILD_SCREENEDGES
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
@@ -2738,10 +2734,8 @@ void Client::delayedMoveResize()
 
 void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 {
-#ifdef HAVE_XSYNC
     if (syncRequest.isPending && isResize())
         return; // we're still waiting for the client or the timeout
-#endif
 
     if ((mode == PositionCenter && !isMovableAcrossScreens())
             || (mode != PositionCenter && (isShade() || !isResizable())))
@@ -3007,14 +3001,13 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     if (!update)
         return;
 
-#ifdef HAVE_XSYNC
     if (isResize() && !s_haveResizeEffect) {
         if (!syncRequest.timeout) {
             syncRequest.timeout = new QTimer(this);
             connect(syncRequest.timeout, SIGNAL(timeout()), SLOT(performMoveResize()));
             syncRequest.timeout->setSingleShot(true);
         }
-        if (syncRequest.counter != None) {
+        if (syncRequest.counter != XCB_NONE) {
             syncRequest.timeout->start(250);
             sendSyncRequest();
         } else {                            // for clients not supporting the XSYNC protocol, we
@@ -3023,7 +3016,6 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
         }                                   // and no human can control faster resizes anyway
         XMoveResizeWindow(display(), window(), 0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
     } else
-#endif
         performMoveResize();
 
 #ifdef KWIN_BUILD_SCREENEDGES
@@ -3038,13 +3030,11 @@ void Client::performMoveResize()
     if (isMove() || (isResize() && !s_haveResizeEffect)) {
         setGeometry(moveResizeGeom);
     }
-#ifdef HAVE_XSYNC
-    if (syncRequest.counter == None)   // client w/o XSYNC support. allow the next resize event
+    if (syncRequest.counter == XCB_NONE)   // client w/o XSYNC support. allow the next resize event
         syncRequest.isPending = false; // NEVER do this for clients with a valid counter
                                        // (leads to sync request races in some clients)
     if (isResize())
         addRepaintFull();
-#endif
     positionGeometryTip();
     emit clientStepUserMovedResized(this, moveResizeGeom);
 }

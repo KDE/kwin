@@ -54,10 +54,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QScriptProgram>
 #endif
 #include <QWhatsThis>
-// X
-#ifdef HAVE_XSYNC
-#include <X11/extensions/sync.h>
-#endif
 // system
 #include <unistd.h>
 #include <signal.h>
@@ -142,11 +138,9 @@ Client::Client()
     , m_decoInputExtent()
 {
     // TODO: Do all as initialization
-#ifdef HAVE_XSYNC
-    syncRequest.counter = syncRequest.alarm = None;
+    syncRequest.counter = syncRequest.alarm = XCB_NONE;
     syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
     syncRequest.isPending = false;
-#endif
 
     // Set the initial mapping state
     mapping_state = Withdrawn;
@@ -227,10 +221,8 @@ Client::~Client()
         m_killHelperPID = 0;
     }
     //SWrapper::Client::clientRelease(this);
-#ifdef HAVE_XSYNC
-    if (syncRequest.alarm != None)
-        XSyncDestroyAlarm(display(), syncRequest.alarm);
-#endif
+    if (syncRequest.alarm != XCB_NONE)
+        xcb_sync_destroy_alarm(connection(), syncRequest.alarm);
     assert(!moveResizeMode);
     assert(m_client == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
@@ -2107,7 +2099,6 @@ void Client::getWindowProtocols()
 
 void Client::getSyncCounter()
 {
-#ifdef HAVE_XSYNC
     if (!Xcb::Extensions::self()->isSyncAvailable())
         return;
 
@@ -2121,26 +2112,31 @@ void Client::getSyncCounter()
 
     if (ret == Success && formatRet == 32) {
         syncRequest.counter = *(long*)(propRet);
-        XSyncIntToValue(&syncRequest.value, 0);
-        XSyncValue zero;
-        XSyncIntToValue(&zero, 0);
-        XSyncSetCounter(display(), syncRequest.counter, zero);
-        if (syncRequest.alarm == None) {
-            XSyncAlarmAttributes attrs;
-            attrs.trigger.counter = syncRequest.counter;
-            attrs.trigger.value_type = XSyncRelative;
-            attrs.trigger.test_type = XSyncPositiveTransition;
-            XSyncIntToValue(&attrs.trigger.wait_value, 1);
-            XSyncIntToValue(&attrs.delta, 1);
-            syncRequest.alarm = XSyncCreateAlarm(display(),
-                                          XSyncCACounter | XSyncCAValueType | XSyncCATestType | XSyncCADelta | XSyncCAValue,
-                                          &attrs);
+        syncRequest.value.hi = 0;
+        syncRequest.value.lo = 0;
+        xcb_sync_int64_t zero;
+        zero.hi = 0;
+        zero.lo = 0;
+        auto *c = connection();
+        xcb_sync_set_counter(c, syncRequest.counter, zero);
+        if (syncRequest.alarm == XCB_NONE) {
+            const uint32_t mask = XCB_SYNC_CA_COUNTER | XCB_SYNC_CA_VALUE_TYPE | XCB_SYNC_CA_VALUE | XCB_SYNC_CA_TEST_TYPE | XCB_SYNC_CA_DELTA ;
+            const uint32_t values[] = {
+                syncRequest.counter,
+                XCB_SYNC_VALUETYPE_RELATIVE,
+                0,
+                1,
+                XCB_SYNC_TESTTYPE_POSITIVE_TRANSITION,
+                0,
+                1
+            };
+            syncRequest.alarm = xcb_generate_id(c);
+            xcb_sync_create_alarm(c, syncRequest.alarm, mask, values);
         }
     }
 
     if (ret == Success)
         XFree(propRet);
-#endif
 }
 
 /**
@@ -2148,8 +2144,7 @@ void Client::getSyncCounter()
  */
 void Client::sendSyncRequest()
 {
-#ifdef HAVE_XSYNC
-    if (syncRequest.counter == None || syncRequest.isPending)
+    if (syncRequest.counter == XCB_NONE || syncRequest.isPending)
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
 
     if (!syncRequest.failsafeTimeout) {
@@ -2164,11 +2159,11 @@ void Client::sendSyncRequest()
     // We increment before the notify so that after the notify
     // syncCounterSerial will equal the value we are expecting
     // in the acknowledgement
-    int overflow;
-    XSyncValue one;
-    XSyncIntToValue(&one, 1);
-#undef XSyncValueAdd // It causes a warning :-/
-    XSyncValueAdd(&syncRequest.value, syncRequest.value, one, &overflow);
+    const uint32_t oldLo = syncRequest.value.lo;
+    syncRequest.value.lo++;;
+    if (oldLo > syncRequest.value.lo) {
+        syncRequest.value.hi++;
+    }
 
     // Send the message to client
     XEvent ev;
@@ -2178,13 +2173,12 @@ void Client::sendSyncRequest()
     ev.xclient.message_type = atoms->wm_protocols;
     ev.xclient.data.l[0] = atoms->net_wm_sync_request;
     ev.xclient.data.l[1] = xTime();
-    ev.xclient.data.l[2] = XSyncValueLow32(syncRequest.value);
-    ev.xclient.data.l[3] = XSyncValueHigh32(syncRequest.value);
+    ev.xclient.data.l[2] = syncRequest.value.lo;
+    ev.xclient.data.l[3] = syncRequest.value.hi;
     ev.xclient.data.l[4] = 0;
     syncRequest.isPending = true;
     XSendEvent(display(), window(), False, NoEventMask, &ev);
-    XSync(display(), false);
-#endif
+    Xcb::sync();
 }
 
 void Client::removeSyncSupport()
@@ -2193,12 +2187,10 @@ void Client::removeSyncSupport()
         setReadyForPainting();
         return;
     }
-#ifdef HAVE_XSYNC
     syncRequest.isPending = false;
-    syncRequest.counter = syncRequest.alarm = None;
+    syncRequest.counter = syncRequest.alarm = XCB_NONE;
     delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
     syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
-#endif
 }
 
 bool Client::wantsTabFocus() const

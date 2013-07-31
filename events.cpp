@@ -443,12 +443,10 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             }
 
         } else if (eventType == Xcb::Extensions::self()->syncAlarmNotifyEvent() && Xcb::Extensions::self()->isSyncAvailable()) {
-#ifdef HAVE_XSYNC
             for (Client *c : clients)
                 c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
             for (Client *c : desktops)
                 c->syncEvent(reinterpret_cast< xcb_sync_alarm_notify_event_t* >(e));
-#endif
         } else if (eventType == Xcb::Extensions::self()->fixesCursorNotifyEvent() && Xcb::Extensions::self()->isFixesAvailable()) {
             Cursor::self()->notifyCursorChanged(reinterpret_cast<xcb_xfixes_cursor_notify_event_t*>(e)->cursor_serial);
         }
@@ -1530,12 +1528,9 @@ void Client::keyPressEvent(uint key_code)
     Cursor::setPos(pos);
 }
 
-#ifdef HAVE_XSYNC
 void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
 {
-#warning port XSync to XCB
-#if KWIN_QT5_PORTING
-    if (e->alarm == syncRequest.alarm && XSyncValueEqual(e->counter_value, syncRequest.value)) {
+    if (e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo) {
         setReadyForPainting();
         syncRequest.isPending = false;
         if (syncRequest.failsafeTimeout)
@@ -1547,9 +1542,7 @@ void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
         } else // setReadyForPainting does as well, but there's a small chance for resize syncs after the resize ended
             addRepaintFull();
     }
-#endif
 }
-#endif
 
 // ****************************************
 // Unmanaged

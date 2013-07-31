@@ -882,7 +882,6 @@ bool Toplevel::compositing() const
 
 void Client::damageNotifyEvent()
 {
-#ifdef HAVE_XSYNC
     if (syncRequest.isPending && isResize()) {
         emit damaged(this, QRect());
         m_isDamaged = true;
@@ -890,13 +889,9 @@ void Client::damageNotifyEvent()
     }
 
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == None)   // cannot detect complete redraw, consider done now
+        if (syncRequest.counter == XCB_NONE)   // cannot detect complete redraw, consider done now
             setReadyForPainting();
     }
-#else
-    if (!ready_for_painting)
-        setReadyForPainting();
-#endif
 
     Toplevel::damageNotifyEvent();
 }
