@@ -63,7 +63,7 @@ Component {
                             visible: false
 
                             Text {
-                                text: "Author: " + model.AuthorName + "\n" + "License" + model.Version
+                                text: "Author: " + model.AuthorName + "\n" + "License" + model.License
                                 font.bold: true
                             }
                             PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}

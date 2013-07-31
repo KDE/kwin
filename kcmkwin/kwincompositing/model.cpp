@@ -21,6 +21,8 @@
 #include "model.h"
 
 #include <QAbstractItemModel>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QHash>
 #include <QVariant>
 #include <QList>
@@ -88,7 +90,6 @@ void EffectModel::loadEffects() {
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
         KPluginInfo plugin(service);
-        qDebug() << "path tou effect" << plugin.entryPath();
         effect.name = plugin.name();
         effect.description = plugin.comment();
         effect.authorName = plugin.author();
@@ -131,15 +132,42 @@ bool EffectView::isEnabled(const QString &effectName) {
 
 void EffectView::syncConfig() {
     auto it = m_effectStatus.begin();
-    KConfigGroup *kwinConfig = new KConfigGroup(KSharedConfig::openConfig("kwinrc"), "Plugins");
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+    QHash<QString, bool> effectsChanged;
 
     while (it != m_effectStatus.end()) {
         QVariant boolToString(it.value());
         QString effectName = it.key().toLower();
         QString effectEntry = effectName.replace(" ", "");
-        kwinConfig->writeEntry("kwin4_effect_" + effectEntry + "Enabled", boolToString.toString());
+        kwinConfig.writeEntry("kwin4_effect_" + effectEntry + "Enabled", boolToString.toString());
+        it++;
+        effectsChanged["kwin4_effect_" + effectEntry] = boolToString.toBool();
+    }
+    kwinConfig.sync();
+
+    loadKWinEffects(effectsChanged);
+}
+
+void EffectView::loadKWinEffects(const QHash<QString, bool> &effectsChanged) {
+    QDBusMessage messageLoadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "loadEffect");
+    QDBusMessage messageUnloadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "unloadEffect");
+
+    auto it = effectsChanged.begin();
+    while (it != effectsChanged.end()) {
+        bool effectStatus = it.value();
+        QString effectEntry = it.key();
+
+        if (effectStatus) {
+            messageLoadEffect << effectEntry;
+        } else {
+            messageUnloadEffect << effectEntry;
+        }
+
         it++;
     }
-    kwinConfig->sync();
+
+    QDBusConnection::sessionBus().registerObject("/Effects", this);
+    QDBusConnection::sessionBus().send(messageLoadEffect);
+    QDBusConnection::sessionBus().send(messageUnloadEffect);
 }
 

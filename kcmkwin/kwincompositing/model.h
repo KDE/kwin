@@ -72,6 +72,8 @@ class EffectView : public QQuickView {
 public:
     EffectView(QWindow *parent = 0);
     void init();
+    void loadKWinEffects(const QHash<QString, bool> &effectsChanged);
+
     Q_INVOKABLE void effectStatus(const QString &effectName, bool status);
     Q_INVOKABLE bool isEnabled(const QString &effectName);
     Q_INVOKABLE void syncConfig();
