@@ -34,7 +34,8 @@
 #include <QButtonGroup>
 #include <QLayout>
 #include <QGroupBox>
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
+#include <QPushButton>
 
 #include <QtGui/QX11Info>
 #include <X11/Xlib.h>
@@ -47,19 +48,15 @@ namespace Oxygen
 
     //_________________________________________________________
     DetectDialog::DetectDialog( QWidget* parent ):
-        KDialog( parent ),
+        QDialog( parent ),
         _grabber( 0 )
     {
 
-        // define buttons
-        setButtons( Ok|Cancel );
+        // setup
+        setupUi( this );
 
-        QWidget* local( new QWidget( this ) );
-        ui.setupUi( local );
-        ui.windowClassCheckBox->setChecked( true );
-
-        // central widget
-        setMainWidget( local );
+        connect( buttonBox->button( QDialogButtonBox::Cancel ), SIGNAL(clicked()), this, SLOT(close()) );
+        windowClassCheckBox->setChecked( true );
 
     }
 
@@ -87,13 +84,12 @@ namespace Oxygen
             return;
         }
 
-        QString wmClassClass = _info.windowClassClass();
-        QString wmClassName = _info.windowClassName();
-        QString title = _info.name();
+        const QString wmClassClass( QString::fromUtf8( _info.windowClassClass() ) );
+        const QString wmClassName( QString::fromUtf8( _info.windowClassName() ) );
 
-        ui.windowClass->setText( wmClassClass + " (" + wmClassName + ' ' + wmClassClass + ')' );
-        ui.windowTitle->setText( title );
-        emit detectionDone( exec() == KDialog::Accepted );
+        windowClass->setText( QStringLiteral( "%1 (%2 %3)" ).arg( wmClassClass ).arg( wmClassName ).arg( wmClassClass ) );
+        Ui::OxygenDetectWidget::windowTitle->setText( _info.name() );
+        emit detectionDone( exec() == QDialog::Accepted );
 
         return;
 
@@ -106,7 +102,7 @@ namespace Oxygen
         // use a dialog, so that all user input is blocked
         // use WX11BypassWM and moving away so that it's not actually visible
         // grab only mouse, so that keyboard can be used e.g. for switching windows
-        _grabber = new KDialog( 0, Qt::X11BypassWindowManagerHint );
+        _grabber = new QDialog( 0, Qt::X11BypassWindowManagerHint );
         _grabber->move( -1000, -1000 );
         _grabber->setModal( true );
         _grabber->show();
@@ -143,7 +139,7 @@ namespace Oxygen
         Window child;
         uint mask;
         int rootX, rootY, x, y;
-        Window parent = QX11Info::appRootWindow();
+        Window parent = reinterpret_cast<Window>( QX11Info::appRootWindow() );
         Atom wm_state = XInternAtom( QX11Info::display(), "WM_STATE", False );
 
         // why is there a loop of only 10 here
