@@ -25,7 +25,7 @@ kde4_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})
 target_link_libraries(
     kwin3_oxygen
-    KF5::KConfigCore
+    KF5::KConfigWidgets
     KF5::KGuiAddons
     KF5::KI18n
     KF5::KWidgets
