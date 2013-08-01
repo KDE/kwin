@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 #include <xcb/composite.h>
+#include <xcb/randr.h>
 #define class class_name //HACK: work around a non-C++ safe problem in xcb_iccm.h
                          //where they put a variable called "class" in function signatures.
                          //Needed at least for xcb v0.3.8
@@ -233,6 +234,11 @@ public:
         return false;
     }
 };
+
+namespace RandR
+{
+typedef Wrapper<xcb_randr_get_screen_info_reply_t, xcb_randr_get_screen_info_cookie_t, &xcb_randr_get_screen_info_reply, &xcb_randr_get_screen_info_unchecked> ScreenInfo;
+}
 
 class ExtensionData
 {

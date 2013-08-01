@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include <kwinglplatform.h>
 
-#include <X11/extensions/Xrandr.h>
 #ifndef KWIN_HAVE_OPENGLES
 #ifndef KWIN_NO_XF86VM
 #include <X11/extensions/xf86vmode.h>
@@ -100,9 +99,8 @@ int currentRefreshRate()
     }
 #endif
     else if (Xcb::Extensions::self()->isRandrAvailable()) {
-        XRRScreenConfiguration *config = XRRGetScreenInfo(display(), rootWindow());
-        rate = XRRConfigCurrentRate(config);
-        XRRFreeScreenConfigInfo(config);
+        Xcb::RandR::ScreenInfo screenInfo(rootWindow());
+        rate = screenInfo->rate;
     }
 
     // 0Hz or less is invalid, so we fallback to a default rate
