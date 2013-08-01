@@ -3,24 +3,36 @@ include_directories( ${KDE4_KDEUI_INCLUDES} )
 
 
 ########### next target ###############
-set( oxygen_shadow_demo_SOURCES
+set(oxygen_shadow_demo_SOURCES
     oxygenshadowdemodialog.cpp
     oxygenshadowdemowidget.cpp
     main.cpp)
 
-kde4_add_ui_files(oxygen_shadow_demo_SOURCES
-    ui/oxygenshadowdemo.ui
+set(oxygen_shadow_demo_FORMS ui/oxygenshadowdemo.ui)
+
+qt5_wrap_ui(oxygen_shadow_demo_FORMS_HEADERS ${oxygen_shadow_demo_FORMS} )
+
+add_executable(oxygen-shadow-demo
+    ${oxygen_shadow_demo_SOURCES}
+    ${oxygen_shadow_demo_FORMS_HEADERS}
 )
 
-kde4_add_executable( oxygen-shadow-demo ${oxygen_shadow_demo_SOURCES} )
+target_link_libraries(oxygen-shadow-demo
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::DBus
+)
 
-target_link_libraries( oxygen-shadow-demo
-    ${KDE4_KDEUI_LIBS}
-    ${X11_X11_LIB}
-    ${X11_Xrender_LIB}
-    ${KDE4_KIO_LIBS}
-    oxygenstyle
-  )
+target_link_libraries(oxygen-shadow-demo
+    ${KWidgets_LIBRARIES}
+    ${KI18n_LIBRARIES}
+)
 
-########### install files ###############
-install (TARGETS oxygen-shadow-demo ${INSTALL_TARGETS_DEFAULT_ARGS} )
+target_link_libraries(oxygen-shadow-demo oxygenstyle )
+
+if(X11_FOUND)
+  target_link_libraries(oxygen-shadow-demo ${X11_LIBRARIES} )
+endif()
+
+install(TARGETS oxygen-shadow-demo ${INSTALL_TARGETS_DEFAULT_ARGS} )

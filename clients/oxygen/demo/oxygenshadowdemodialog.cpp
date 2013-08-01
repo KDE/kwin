@@ -32,32 +32,25 @@
 
 #include <KPushButton>
 #include <KFileDialog>
+#include <KLocalizedString>
 
 namespace Oxygen
 {
 
     //_________________________________________________________
     ShadowDemoDialog::ShadowDemoDialog( QWidget* parent ):
-        KDialog( parent ),
-        _helper( "oxygen" ),
+        QDialog( parent ),
+        _helper(),
         _cache( _helper )
     {
 
         setWindowTitle( i18n( "Oxygen Shadow Demo" ) );
+        setupUi( this );
 
-        setButtons( KDialog::Cancel|KDialog::Apply );
-        button( KDialog::Apply )->setText( i18n("Save") );
-        button( KDialog::Apply )->setIcon( KIcon("document-save-as") );
-        button( KDialog::Apply )->setToolTip( i18n( "Save shadows as pixmaps in provided directory" ) );
-
-        QWidget *mainWidget( new QWidget( this ) );
-        ui.setupUi( mainWidget );
-        setMainWidget( mainWidget );
-
-        ui.inactiveRoundWidget->setHelper( _helper );
-        ui.inactiveSquareWidget->setHelper( _helper );
-        ui.activeRoundWidget->setHelper( _helper );
-        ui.activeSquareWidget->setHelper( _helper );
+        inactiveRoundWidget->setHelper( _helper );
+        inactiveSquareWidget->setHelper( _helper );
+        activeRoundWidget->setHelper( _helper );
+        activeSquareWidget->setHelper( _helper );
 
         // reparse configuration
         reparseConfiguration();
@@ -72,19 +65,19 @@ namespace Oxygen
             _backgroundCheckBox->setChecked( true );
             buttonBox->addButton( _backgroundCheckBox, QDialogButtonBox::ResetRole );
 
-            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.inactiveRoundWidget,  SLOT(toggleBackground(bool)) );
-            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.inactiveSquareWidget, SLOT(toggleBackground(bool)) );
-            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.activeRoundWidget, SLOT(toggleBackground(bool)) );
-            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), ui.activeSquareWidget, SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), inactiveRoundWidget,  SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), inactiveSquareWidget, SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), activeRoundWidget, SLOT(toggleBackground(bool)) );
+            connect( _backgroundCheckBox, SIGNAL(toggled(bool)), activeSquareWidget, SLOT(toggleBackground(bool)) );
 
         }
 
-        // connections
-        connect( button( KDialog::Apply ), SIGNAL(clicked()), SLOT(save()) );
-
         // use DBus connection to update on oxygen configuration change
         QDBusConnection dbus = QDBusConnection::sessionBus();
-        dbus.connect( QString(), "/OxygenWindeco", "org.kde.Oxygen.Style", "reparseConfiguration", this, SLOT(reparseConfiguration()) );
+        dbus.connect( QString(),
+            QStringLiteral( "/OxygenWindeco" ),
+            QStringLiteral( "org.kde.Oxygen.Style" ),
+            QStringLiteral( "reparseConfiguration" ), this, SLOT(reparseConfiguration()) );
 
     }
 
@@ -100,34 +93,26 @@ namespace Oxygen
         ShadowCache::Key key;
         key.active = false;
         key.hasBorder = true;
-        ui.inactiveRoundWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.inactiveRoundWidget->setShadowSize( _cache.shadowSize() );
+        inactiveRoundWidget->setTileSet( *_cache.tileSet( key ) );
+        inactiveRoundWidget->setShadowSize( _cache.shadowSize() );
 
         key.active = false;
         key.hasBorder = false;
-        ui.inactiveSquareWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.inactiveSquareWidget->setShadowSize( _cache.shadowSize() );
-        ui.inactiveSquareWidget->setSquare( true );
+        inactiveSquareWidget->setTileSet( *_cache.tileSet( key ) );
+        inactiveSquareWidget->setShadowSize( _cache.shadowSize() );
+        inactiveSquareWidget->setSquare( true );
 
         key.active = true;
         key.hasBorder = true;
-        ui.activeRoundWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.activeRoundWidget->setShadowSize( _cache.shadowSize() );
+        activeRoundWidget->setTileSet( *_cache.tileSet( key ) );
+        activeRoundWidget->setShadowSize( _cache.shadowSize() );
 
         key.active = true;
         key.hasBorder = false;
-        ui.activeSquareWidget->setTileSet( *_cache.tileSet( key ) );
-        ui.activeSquareWidget->setShadowSize( _cache.shadowSize() );
-        ui.activeSquareWidget->setSquare( true );
+        activeSquareWidget->setTileSet( *_cache.tileSet( key ) );
+        activeSquareWidget->setShadowSize( _cache.shadowSize() );
+        activeSquareWidget->setSquare( true );
 
     }
 
-    //_________________________________________________________
-    void ShadowDemoDialog::save( void )
-    {
-
-        QString dir( KFileDialog::getExistingDirectory() );
-        ui.inactiveRoundWidget->tileSet().save( dir + "/shadow" );
-
-    }
 }

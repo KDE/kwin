@@ -26,36 +26,19 @@
 
 #include "oxygenshadowdemodialog.h"
 
-#include <KCmdLineArgs>
-#include <KApplication>
-#include <KIcon>
-#include <KAboutData>
-#include <kdeversion.h>
+#include <QApplication>
+#include <QIcon>
 
-#include <cassert>
+#include <KLocalizedString>
 
 int main(int argc, char *argv[])
 {
-    KAboutData aboutData(
-        "oxygen-shadow-demo",
-        "kstyle_config",
-        ki18n( "Oxygen Shadow Demo" ),
-        KDE_VERSION_STRING,
-        ki18n( "Oxygen decoration shadows demonstration" ),
-        KAboutData::License_GPL_V2,
-        ki18n( "(c) 2011, Hugo Pereira Da Costa" ));
 
-    aboutData.addAuthor( ki18n( "Hugo Pereira Da Costa" ),KLocalizedString(), "hugo@oxygen-icons.org" );
-
-    KCmdLineArgs::init( argc, argv, &aboutData );
-    KApplication app;
-
-    app.setWindowIcon( KIcon( "oxygen" ) );
-
-    // create dialog
+    QApplication app( argc, argv );
+    app.setApplicationName( i18n( "Oxygen Shadow Demo" ) );
+    app.setWindowIcon( QIcon::fromTheme( QStringLiteral( "oxygen" ) ) );
     Oxygen::ShadowDemoDialog dialog;
     dialog.show();
-
     bool result = app.exec();
     return result;
 
