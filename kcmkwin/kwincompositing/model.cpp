@@ -18,6 +18,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.  *
 **************************************************************************/
 
+#include "effectconfig.h"
 #include "model.h"
 
 #include <QAbstractItemModel>
@@ -35,6 +36,7 @@
 #include <KService>
 #include <KServiceTypeTrader>
 #include <KSharedConfig>
+#include <KCModuleProxy>
 
 EffectModel::EffectModel(QObject *parent)
     : QAbstractListModel(parent) {
@@ -108,6 +110,8 @@ EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
     qmlRegisterType<EffectModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectModel");
+    qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
+
     init();
 }
 

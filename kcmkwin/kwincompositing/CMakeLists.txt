@@ -46,6 +46,7 @@ find_package(KDELibs4 REQUIRED NO_MODULE)
 find_package(KDE4Support REQUIRED NO_MODULE)
 
 find_package(kdeclarative REQUIRED NO_MODULE)
+find_package(LibAttica REQUIRED NO_MODULE)
 
 #########################################################################
 
@@ -73,7 +74,8 @@ set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 
 set(kwincomposing_SRC
     model.cpp
-    main.cpp)
+    main.cpp
+    effectconfig.cpp)
 
 add_executable(kwincompositing ${kwincomposing_SRC})
 
@@ -84,6 +86,7 @@ target_link_libraries(kwincompositing
     ${kservice_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KCMUTILS_LIBS}
 )
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)

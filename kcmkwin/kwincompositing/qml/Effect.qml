@@ -22,6 +22,7 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
+import org.kde.kwin.kwincompositing 1.0
 
 Component {
     id: effectDelegate
@@ -45,7 +46,7 @@ Component {
 
                 Item {
                     id: effectItem
-                    width: effectView.width - myCheckBox.width - aboutButton.width
+                    width: effectView.width - myCheckBox.width - aboutButton.width - configureButton.width
                     anchors.left: myCheckBox.right
                     Column {
                         id: col
@@ -81,14 +82,29 @@ Component {
                 }
 
                 Button {
-                    id: aboutButton
+                    id: configureButton
                     anchors.left: effectItem.right
+                    visible: effectConfig.effectUiConfigExists(model.Name)
+                    text: "CONFIGURE EFFECT"
+                    onClicked: {
+                        effectConfig.openConfig(model.Name);
+                    }
+                }
+
+                Button {
+                    id: aboutButton
+                    anchors.left: configureButton.right
                     text: "ABOUT UI BUTTON"
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;
                     }
                 }
+
+                EffectConfig {
+                    id: effectConfig
+                }
+
             } //end Row
         } //end Rectangle
     } //end item
