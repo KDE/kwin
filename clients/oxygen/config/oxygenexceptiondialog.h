@@ -28,9 +28,6 @@
 #include "ui_oxygenexceptiondialog.h"
 #include "../oxygendecorationdefines.h"
 
-#include <KDialog>
-#include <KLineEdit>
-#include <KComboBox>
 #include <QCheckBox>
 #include <QMap>
 
@@ -40,7 +37,7 @@ namespace Oxygen
     class DetectDialog;
 
     //! oxygen exceptions list
-    class ExceptionDialog: public KDialog
+    class ExceptionDialog: public QDialog, Ui::OxygenExceptionDialog
     {
 
         Q_OBJECT
@@ -92,8 +89,6 @@ namespace Oxygen
         void readWindowProperties( bool );
 
         private:
-
-        Ui_OxygenExceptionWidget ui;
 
         //! map mask and checkbox
         typedef QMap< ExceptionMask, QCheckBox*> CheckBoxMap;

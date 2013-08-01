@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>OxygenExceptionWidget</class>
- <widget class="QWidget" name="OxygenExceptionWidget">
+ <class>OxygenExceptionDialog</class>
+ <widget class="QDialog" name="OxygenExceptionDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>512</width>
-    <height>352</height>
+    <width>511</width>
+    <height>373</height>
    </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -265,6 +268,16 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -279,101 +292,37 @@
    <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>exceptionType</tabstop>
-  <tabstop>exceptionEditor</tabstop>
-  <tabstop>detectDialogButton</tabstop>
-  <tabstop>frameBorderCheckBox</tabstop>
-  <tabstop>frameBorderComboBox</tabstop>
-  <tabstop>blendColorCheckBox</tabstop>
-  <tabstop>blendColorComboBox</tabstop>
-  <tabstop>sizeGripCheckBox</tabstop>
-  <tabstop>sizeGripComboBox</tabstop>
-  <tabstop>titleOutlineCheckBox</tabstop>
-  <tabstop>titleOutlineComboBox</tabstop>
-  <tabstop>separatorCheckBox</tabstop>
-  <tabstop>separatorComboBox</tabstop>
-  <tabstop>hideTitleBar</tabstop>
- </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>frameBorderCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameBorderComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>OxygenExceptionDialog</receiver>
+   <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>179</x>
-     <y>186</y>
+     <x>248</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
-     <x>297</x>
-     <y>194</y>
+     <x>157</x>
+     <y>274</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>blendColorCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>blendColorComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>OxygenExceptionDialog</receiver>
+   <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>99</x>
-     <y>217</y>
+     <x>316</x>
+     <y>260</y>
     </hint>
     <hint type="destinationlabel">
-     <x>315</x>
-     <y>217</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>sizeGripCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>sizeGripComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>147</x>
-     <y>236</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>307</x>
-     <y>240</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>titleOutlineCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>titleOutlineComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>78</x>
-     <y>266</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>302</x>
-     <y>267</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>separatorCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>separatorComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>91</x>
-     <y>289</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>297</x>
-     <y>290</y>
+     <x>286</x>
+     <y>274</y>
     </hint>
    </hints>
   </connection>

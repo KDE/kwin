@@ -32,40 +32,37 @@ namespace Oxygen
 
     //___________________________________________
     ExceptionDialog::ExceptionDialog( QWidget* parent ):
-        KDialog( parent ),
+        QDialog( parent ),
         _detectDialog(0),
         _changed( false )
     {
 
-        // define buttons
-        setButtons( Ok|Cancel );
-        QWidget* local( new QWidget( this ) );
-        ui.setupUi( local );
-        setMainWidget( local );
+        setupUi( this );
+        connect( buttonBox->button( QDialogButtonBox::Cancel ), SIGNAL(clicked()), this, SLOT(close()) );
 
         // store checkboxes from ui into list
-        _checkBoxes.insert( FrameBorder, ui.frameBorderCheckBox );
-        _checkBoxes.insert( BlendColor, ui.blendColorCheckBox );
-        _checkBoxes.insert( SizeGripMode, ui.sizeGripCheckBox );
-        _checkBoxes.insert( TitleOutline, ui.titleOutlineCheckBox );
-        _checkBoxes.insert( DrawSeparator, ui.separatorCheckBox );
+        _checkBoxes.insert( FrameBorder, frameBorderCheckBox );
+        _checkBoxes.insert( BlendColor, blendColorCheckBox );
+        _checkBoxes.insert( SizeGripMode, sizeGripCheckBox );
+        _checkBoxes.insert( TitleOutline, titleOutlineCheckBox );
+        _checkBoxes.insert( DrawSeparator, separatorCheckBox );
 
         // detect window properties
-        connect( ui.detectDialogButton, SIGNAL(clicked()), SLOT(selectWindowProperties()) );
+        connect( detectDialogButton, SIGNAL(clicked()), SLOT(selectWindowProperties()) );
 
         // connections
-        connect( ui.exceptionType, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.exceptionEditor, SIGNAL(textChanged(QString)), SLOT(updateChanged()) );
-        connect( ui.frameBorderComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.blendColorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.sizeGripComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.titleOutlineComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.separatorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( exceptionType, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( exceptionEditor, SIGNAL(textChanged(QString)), SLOT(updateChanged()) );
+        connect( frameBorderComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( blendColorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( sizeGripComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( titleOutlineComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( separatorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
 
         for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
         { connect( iter.value(), SIGNAL(clicked()), SLOT(updateChanged()) ); }
 
-        connect( ui.hideTitleBar, SIGNAL(clicked()), SLOT(updateChanged()) );
+        connect( hideTitleBar, SIGNAL(clicked()), SLOT(updateChanged()) );
     }
 
     //___________________________________________
@@ -76,14 +73,14 @@ namespace Oxygen
         _exception = exception;
 
         // type
-        ui.exceptionType->setCurrentIndex(_exception->exceptionType() );
-        ui.exceptionEditor->setText( _exception->exceptionPattern() );
-        ui.frameBorderComboBox->setCurrentIndex( _exception->frameBorder() );
-        ui.blendColorComboBox->setCurrentIndex( _exception->blendStyle() );
-        ui.sizeGripComboBox->setCurrentIndex( _exception->drawSizeGrip() );
-        ui.separatorComboBox->setCurrentIndex( _exception->separatorMode() );
-        ui.titleOutlineComboBox->setCurrentIndex( _exception->drawTitleOutline() );
-        ui.hideTitleBar->setChecked( _exception->hideTitleBar() );
+        exceptionType->setCurrentIndex(_exception->exceptionType() );
+        exceptionEditor->setText( _exception->exceptionPattern() );
+        frameBorderComboBox->setCurrentIndex( _exception->frameBorder() );
+        blendColorComboBox->setCurrentIndex( _exception->blendStyle() );
+        sizeGripComboBox->setCurrentIndex( _exception->drawSizeGrip() );
+        separatorComboBox->setCurrentIndex( _exception->separatorMode() );
+        titleOutlineComboBox->setCurrentIndex( _exception->drawTitleOutline() );
+        hideTitleBar->setChecked( _exception->hideTitleBar() );
 
         // mask
         for( CheckBoxMap::iterator iter = _checkBoxes.begin(); iter != _checkBoxes.end(); ++iter )
@@ -96,14 +93,14 @@ namespace Oxygen
     //___________________________________________
     void ExceptionDialog::save( void )
     {
-        _exception->setExceptionType( ui.exceptionType->currentIndex() );
-        _exception->setExceptionPattern( ui.exceptionEditor->text() );
-        _exception->setFrameBorder( ui.frameBorderComboBox->currentIndex() );
-        _exception->setBlendStyle( ui.blendColorComboBox->currentIndex() );
-        _exception->setDrawSizeGrip( ui.sizeGripComboBox->currentIndex() );
-        _exception->setSeparatorMode( ui.separatorComboBox->currentIndex() );
-        _exception->setDrawTitleOutline( ui.titleOutlineComboBox->currentIndex() );
-        _exception->setHideTitleBar( ui.hideTitleBar->isChecked() );
+        _exception->setExceptionType( exceptionType->currentIndex() );
+        _exception->setExceptionPattern( exceptionEditor->text() );
+        _exception->setFrameBorder( frameBorderComboBox->currentIndex() );
+        _exception->setBlendStyle( blendColorComboBox->currentIndex() );
+        _exception->setDrawSizeGrip( sizeGripComboBox->currentIndex() );
+        _exception->setSeparatorMode( separatorComboBox->currentIndex() );
+        _exception->setDrawTitleOutline( titleOutlineComboBox->currentIndex() );
+        _exception->setHideTitleBar( hideTitleBar->isChecked() );
 
         // mask
         unsigned int mask = None;
@@ -120,14 +117,14 @@ namespace Oxygen
     void ExceptionDialog::updateChanged( void )
     {
         bool modified( false );
-        if( _exception->exceptionType() != ui.exceptionType->currentIndex() ) modified = true;
-        else if( _exception->exceptionPattern() != ui.exceptionEditor->text() ) modified = true;
-        else if( _exception->frameBorder() != ui.frameBorderComboBox->currentIndex() ) modified = true;
-        else if( _exception->blendStyle() != ui.blendColorComboBox->currentIndex() ) modified = true;
-        else if( _exception->drawSizeGrip() != ui.sizeGripComboBox->currentIndex() ) modified = true;
-        else if( _exception->separatorMode() != ui.separatorComboBox->currentIndex() ) modified = true;
-        else if( _exception->drawTitleOutline() != ui.titleOutlineComboBox->currentIndex() ) modified = true;
-        else if( _exception->hideTitleBar() != ui.hideTitleBar->isChecked() ) modified = true;
+        if( _exception->exceptionType() != exceptionType->currentIndex() ) modified = true;
+        else if( _exception->exceptionPattern() != exceptionEditor->text() ) modified = true;
+        else if( _exception->frameBorder() != frameBorderComboBox->currentIndex() ) modified = true;
+        else if( _exception->blendStyle() != blendColorComboBox->currentIndex() ) modified = true;
+        else if( _exception->drawSizeGrip() != sizeGripComboBox->currentIndex() ) modified = true;
+        else if( _exception->separatorMode() != separatorComboBox->currentIndex() ) modified = true;
+        else if( _exception->drawTitleOutline() != titleOutlineComboBox->currentIndex() ) modified = true;
+        else if( _exception->hideTitleBar() != hideTitleBar->isChecked() ) modified = true;
         else
         {
             // check mask
@@ -168,7 +165,7 @@ namespace Oxygen
         {
 
             // type
-            ui.exceptionType->setCurrentIndex( _detectDialog->exceptionType() );
+            exceptionType->setCurrentIndex( _detectDialog->exceptionType() );
 
             // window info
             const KWindowInfo& info( _detectDialog->windowInfo() );
@@ -178,11 +175,11 @@ namespace Oxygen
 
                 default:
                 case Configuration::ExceptionWindowClassName:
-                ui.exceptionEditor->setText( info.windowClassClass() );
+                exceptionEditor->setText( QString::fromUtf8( info.windowClassClass() ) );
                 break;
 
                 case Configuration::ExceptionWindowTitle:
-                ui.exceptionEditor->setText( info.name() );
+                exceptionEditor->setText( info.name() );
                 break;
 
             }
