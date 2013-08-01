@@ -341,7 +341,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 QWhatsThis::leaveWhatsThisMode();
         }
 #ifdef KWIN_BUILD_SCREENEDGES
-        if (ScreenEdges::self()->isEntered(e))
+        if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_enter_notify_event_t*>(e)))
             return true;
 #endif
         break;
@@ -401,7 +401,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return true; // always eat these, they would tell Qt that KWin is the active app
     case XCB_CLIENT_MESSAGE:
 #ifdef KWIN_BUILD_SCREENEDGES
-        if (ScreenEdges::self()->isEntered(e))
+        if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_client_message_event_t*>(e)))
             return true;
 #endif
         break;

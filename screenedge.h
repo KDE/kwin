@@ -257,8 +257,9 @@ public:
     * It may switch to another virtual desktop.
     * @param e the X event which is passed to this method.
     */
-    bool isEntered(XEvent * e);
     bool isEntered(xcb_generic_event_t *e);
+    bool isEntered(xcb_enter_notify_event_t *e);
+    bool isEntered(xcb_client_message_event_t *e);
 
     /**
      * Returns a QVector of all existing screen edge windows
