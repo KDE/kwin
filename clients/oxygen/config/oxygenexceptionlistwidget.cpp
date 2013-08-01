@@ -27,10 +27,10 @@
 #include "oxygenexceptionlistwidget.moc"
 #include "oxygenexceptiondialog.h"
 
+#include <QMessageBox>
 #include <QPointer>
 #include <QIcon>
 #include <KLocalizedString>
-#include <KMessageBox>
 
 //__________________________________________________________
 namespace Oxygen
@@ -187,7 +187,7 @@ namespace Oxygen
     {
 
         // should use a konfirmation dialog
-        if( KMessageBox::questionYesNo( this, i18n("Remove selected exception?") ) == KMessageBox::No ) return;
+        if( QMessageBox::question( this, i18n("Question - Oxygen Settings" ), i18n("Remove selected exception?") ) == QMessageBox::No ) return;
 
         // remove
         model().remove( model().get( ui.exceptionListView->selectionModel()->selectedRows() ) );
@@ -328,7 +328,7 @@ namespace Oxygen
         while( exception->exceptionPattern().isEmpty() || !QRegExp( exception->exceptionPattern() ).isValid() )
         {
 
-            KMessageBox::error( this, i18n("Regular Expression syntax is incorrect") );
+            QMessageBox::warning( this, i18n( "Warning - Oxygen Settings" ), i18n("Regular Expression syntax is incorrect") );
             QPointer<ExceptionDialog> dialog( new ExceptionDialog( this ) );
             dialog->setException( exception );
             if( dialog->exec() == QDialog::Rejected )
