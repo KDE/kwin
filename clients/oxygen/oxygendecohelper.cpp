@@ -22,7 +22,6 @@
 
 #include <QtGui/QPainter>
 #include <KColorUtils>
-#include <KDebug>
 
 #include <cmath>
 
@@ -31,9 +30,7 @@ namespace Oxygen
 
     //______________________________________________________________________________
     DecoHelper::DecoHelper():
-        Helper(),
-        _debugArea( KDebug::registerArea( "Oxygen (decoration)" ) )
-
+        Helper()
     {}
 
     //______________________________________________________________________________

@@ -36,7 +36,6 @@
 
 #include <KLocalizedString>
 #include <KColorUtils>
-#include <KDebug>
 #include <KStyle>
 
 #include <QApplication>

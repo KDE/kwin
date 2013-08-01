@@ -40,10 +40,6 @@ namespace Oxygen
         virtual ~DecoHelper()
         {}
 
-        //! dynamically allocated debug area
-        int debugArea( void ) const
-        { return _debugArea; }
-
         //! reset all caches
         virtual void invalidateCaches();
 
@@ -68,9 +64,6 @@ namespace Oxygen
         QColor reduceContrast(const QColor&, const QColor&, double) const;
 
         private:
-
-        //! dynamically allocated debug area
-        int _debugArea;
 
         //! windeco buttons
         Cache<QPixmap> _windecoButtonCache;
