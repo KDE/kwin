@@ -1,9 +1,10 @@
 ########### add version number into compilation defines
 # FIXME: CPACK_PACKAGE_VERSION_* are empty
-add_definitions ( -DAPP_VERSION=\\\"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\")
-add_subdirectory( config )
-# add_subdirectory( demo )
-add_subdirectory( data )
+add_definitions (-DAPP_VERSION=\\\"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\")
+add_definitions( -DHAVE_X11=${X11_FOUND} )
+add_subdirectory(config)
+add_subdirectory(demo)
+add_subdirectory(data)
 
 include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
 
@@ -30,7 +31,6 @@ target_link_libraries(
     KF5::KWidgets
     KF5::KWindowSystem
     ${KDE4_KDEUI_LIBRARY} # KStyle
-    ${KDE4Support_LIBRARIES} # kdebug
     ${Qt5Widgets_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${X11_X11_LIB}
