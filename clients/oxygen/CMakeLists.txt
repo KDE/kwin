@@ -1,7 +1,7 @@
 ########### add version number into compilation defines
 # FIXME: CPACK_PACKAGE_VERSION_* are empty
 add_definitions ( -DAPP_VERSION=\\\"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}\\\")
-# add_subdirectory( config )
+add_subdirectory( config )
 # add_subdirectory( demo )
 add_subdirectory( data )
 
