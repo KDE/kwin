@@ -28,6 +28,7 @@
 #include "oxygenexceptiondialog.h"
 
 #include <QPointer>
+#include <QIcon>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -52,12 +53,11 @@ namespace Oxygen
         ui.exceptionListView->sortByColumn( ExceptionModel::TYPE );
         ui.exceptionListView->setSizePolicy( QSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Ignored ) );
 
-        KIconLoader* icon_loader = KIconLoader::global();
-        ui.moveUpButton->setIcon( KIcon( "arrow-up", icon_loader ) );
-        ui.moveDownButton->setIcon( KIcon( "arrow-down", icon_loader ) );
-        ui.addButton->setIcon( KIcon( "list-add", icon_loader ) );
-        ui.removeButton->setIcon( KIcon( "list-remove", icon_loader ) );
-        ui.editButton->setIcon( KIcon( "edit-rename", icon_loader ) );
+        ui.moveUpButton->setIcon( QIcon::fromTheme( QStringLiteral( "arrow-up" ) ) );
+        ui.moveDownButton->setIcon( QIcon::fromTheme( QStringLiteral( "arrow-down" ) ) );
+        ui.addButton->setIcon( QIcon::fromTheme( QStringLiteral( "list-add" ) ) );
+        ui.removeButton->setIcon( QIcon::fromTheme( QStringLiteral( "list-remove" ) ) );
+        ui.editButton->setIcon( QIcon::fromTheme( QStringLiteral( "edit-rename" ) ) );
 
         connect( ui.addButton, SIGNAL(clicked()), SLOT(add()) );
         connect( ui.editButton, SIGNAL(clicked()), SLOT(edit()) );

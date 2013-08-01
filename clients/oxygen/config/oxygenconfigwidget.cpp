@@ -28,11 +28,12 @@
 
 #include <kdeversion.h>
 
+#include <QGroupBox>
+#include <QIcon>
 #include <QLabel>
 #include <QLayout>
-#include <QGroupBox>
+
 #include <KLocalizedString>
-#include <KTabWidget>
 
 namespace Oxygen
 {
@@ -59,7 +60,7 @@ namespace Oxygen
         _animationConfigWidget->installEventFilter( this );
 
         // expert mode
-        ui._expertModeButton->setIcon( KIcon("configure") );
+        ui._expertModeButton->setIcon( QIcon::fromTheme( QStringLiteral( "configure" ) ) );
         toggleExpertModeInternal( false );
 
         // connections

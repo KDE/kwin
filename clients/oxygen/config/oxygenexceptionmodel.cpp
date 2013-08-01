@@ -31,7 +31,7 @@ namespace Oxygen
     //_______________________________________________
     const QString ExceptionModel::_columnTitles[ ExceptionModel::nColumns ] =
     {
-        "",
+        QStringLiteral( "" ),
         i18n("Exception Type"),
         i18n("Regular Expression")
     };
