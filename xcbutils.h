@@ -238,6 +238,36 @@ public:
 namespace RandR
 {
 typedef Wrapper<xcb_randr_get_screen_info_reply_t, xcb_randr_get_screen_info_cookie_t, &xcb_randr_get_screen_info_reply, &xcb_randr_get_screen_info_unchecked> ScreenInfo;
+
+class ScreenResources : public Wrapper<xcb_randr_get_screen_resources_reply_t, xcb_randr_get_screen_resources_cookie_t, &xcb_randr_get_screen_resources_reply, &xcb_randr_get_screen_resources_unchecked>
+{
+public:
+    explicit ScreenResources(WindowId window) : Wrapper<xcb_randr_get_screen_resources_reply_t, xcb_randr_get_screen_resources_cookie_t, &xcb_randr_get_screen_resources_reply, &xcb_randr_get_screen_resources_unchecked>(window) {}
+
+    inline xcb_randr_crtc_t *crtcs() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_crtcs(data());
+    }
+};
+
+class CrtcGamma : public Wrapper<xcb_randr_get_crtc_gamma_reply_t, xcb_randr_get_crtc_gamma_cookie_t, &xcb_randr_get_crtc_gamma_reply, &xcb_randr_get_crtc_gamma_unchecked>
+{
+public:
+    explicit CrtcGamma(xcb_randr_crtc_t c) : Wrapper<xcb_randr_get_crtc_gamma_reply_t, xcb_randr_get_crtc_gamma_cookie_t, &xcb_randr_get_crtc_gamma_reply, &xcb_randr_get_crtc_gamma_unchecked>(c) {}
+
+    inline uint16_t *red() {
+        return xcb_randr_get_crtc_gamma_red(data());
+    }
+    inline uint16_t *green() {
+        return xcb_randr_get_crtc_gamma_green(data());
+    }
+    inline uint16_t *blue() {
+        return xcb_randr_get_crtc_gamma_blue(data());
+    }
+};
+
 }
 
 class ExtensionData

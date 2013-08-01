@@ -236,7 +236,6 @@ set(kwin_KDE_LIBS
 set(kwin_XLIB_LIBS
     ${X11_X11_LIB}
     ${X11_Xcursor_LIB}
-    ${X11_Xrandr_LIB}
 )
 
 set(kwin_XCB_LIBS

@@ -1840,30 +1840,38 @@ void Workspace::slotWindowResize()
 
 void Workspace::slotInvertScreen()
 {
+    using namespace Xcb::RandR;
     bool succeeded = false;
 
     //BEGIN Xrandr inversion - does atm NOT work with the nvidia blob
-    XRRScreenResources *res = XRRGetScreenResources(display(), active_client ? active_client->window() : rootWindow());
-    if (res) {
-        for (int j = 0; j < res->ncrtc; ++j) {
-            XRRCrtcGamma *gamma = XRRGetCrtcGamma(display(), res->crtcs[j]);
-            if (gamma && gamma->size) {
+    ScreenResources res(active_client ? active_client->window() : rootWindow());
+
+    if (!res.isNull()) {
+        for (int j = 0; j < res->num_crtcs; ++j) {
+            auto crtc = res.crtcs()[j];
+            CrtcGamma gamma(crtc);
+            if (gamma.isNull()) {
+                continue;
+            }
+            if (gamma->size) {
                 kDebug(1212) << "inverting screen using XRRSetCrtcGamma";
                 const int half = gamma->size / 2 + 1;
-                unsigned short swap;
+
+                uint16_t *red = gamma.red();
+                uint16_t *green = gamma.green();
+                uint16_t *blue = gamma.blue();
                 for (int i = 0; i < half; ++i) {
-#define INVERT(_C_) swap = gamma->_C_[i]; gamma->_C_[i] = gamma->_C_[gamma->size - 1 - i]; gamma->_C_[gamma->size - 1 - i] = swap
-                    INVERT(red);
-                    INVERT(green);
-                    INVERT(blue);
-#undef INVERT
+                    auto invert = [&gamma, i](uint16_t *ramp) {
+                        qSwap(ramp[i], ramp[gamma->size - 1 - i]);
+                    };
+                    invert(red);
+                    invert(green);
+                    invert(blue);
                 }
-                XRRSetCrtcGamma(display(), res->crtcs[j], gamma);
-                XRRFreeGamma(gamma);
+                xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
                 succeeded = true;
             }
         }
-        XRRFreeScreenResources(res);
     }
     if (succeeded)
         return;
