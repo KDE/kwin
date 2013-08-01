@@ -23,41 +23,6 @@
    </size>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
-    <widget class="KPushButton" name="moveUpButton">
-     <property name="text">
-      <string>Move Up</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="KPushButton" name="moveDownButton">
-     <property name="text">
-      <string>Move Down</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="KPushButton" name="addButton">
-     <property name="text">
-      <string>Add</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="KPushButton" name="removeButton">
-     <property name="text">
-      <string>Remove</string>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="KPushButton" name="editButton">
-     <property name="text">
-      <string>Edit</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0" rowspan="6">
     <widget class="QTreeView" name="exceptionListView">
      <property name="sizePolicy">
@@ -87,15 +52,43 @@
      </property>
     </spacer>
    </item>
+   <item row="0" column="1">
+    <widget class="QPushButton" name="moveUpButton">
+     <property name="text">
+      <string>Move Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="moveDownButton">
+     <property name="text">
+      <string>Move Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="addButton">
+     <property name="text">
+      <string>Add</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="removeButton">
+     <property name="text">
+      <string>Remove</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QPushButton" name="editButton">
+     <property name="text">
+      <string>Edit</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>exceptionListView</tabstop>
   <tabstop>moveUpButton</tabstop>
