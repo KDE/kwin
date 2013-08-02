@@ -675,21 +675,18 @@ ToplevelList Workspace::xStackingOrder() const
         return x_stacking;
     x_stacking_dirty = false;
     x_stacking.clear();
-    Window dummy;
-    Window* windows = NULL;
-    unsigned int count = 0;
-    XQueryTree(display(), rootWindow(), &dummy, &dummy, &windows, &count);
+    Xcb::Tree tree(rootWindow());
     // use our own stacking order, not the X one, as they may differ
     foreach (Toplevel * c, stacking_order)
     x_stacking.append(c);
+
+    xcb_window_t *windows = tree.children();
     for (unsigned int i = 0;
-            i < count;
+            i < tree->children_len;
             ++i) {
         if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(windows[ i ])))
             x_stacking.append(c);
     }
-    if (windows != NULL)
-        XFree(windows);
     if (m_compositor) {
         const_cast< Workspace* >(this)->m_compositor->checkUnredirect();
     }
