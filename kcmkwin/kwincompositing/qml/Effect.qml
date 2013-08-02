@@ -40,7 +40,12 @@ Component {
                     id: myCheckBox
                     checked: engineObject.isEnabled(model.Name)
                     onClicked: {
+                        apply.enabled = true;
                         engineObject.effectStatus(model.Name, checked);
+                    }
+
+                    onCheckedChanged: {
+                        configureButton.enabled = myCheckBox.checked;
                     }
                 }
 
@@ -86,6 +91,7 @@ Component {
                     anchors.left: effectItem.right
                     visible: effectConfig.effectUiConfigExists(model.Name)
                     text: "CONFIGURE EFFECT"
+                    enabled: myCheckBox.checked
                     onClicked: {
                         effectConfig.openConfig(model.Name);
                     }

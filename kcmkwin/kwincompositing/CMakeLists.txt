@@ -22,6 +22,7 @@ find_package(Qt5Transitional MODULE)
 find_package(Qt5Core REQUIRED NO_MODULE)
 
 find_package(Qt5Quick REQUIRED NO_MODULE)
+find_package(KCoreAddons REQUIRED NO_MODULE)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++0x)
 
@@ -87,7 +88,9 @@ target_link_libraries(kwincompositing
     ${Qt5Widgets_LIBRARIES}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KCMUTILS_LIBS}
-)
+
+    ${KDE4Support_LIBRARIES}
+    ${KCoreAddons_LIBRARIES})
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})

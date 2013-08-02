@@ -90,6 +90,7 @@ Item {
                 anchors.fill: parent
                 model: searchModel
                 delegate: Effect {}
+
                 section.property: "Category"
                 section.delegate: sectionHeading
             }
@@ -98,10 +99,15 @@ Item {
         Button {
             id: apply
             text: "Apply"
+            enabled: false
             anchors {
                 bottom: parent.bottom
             }
-            onClicked: { engineObject.syncConfig(); }
+
+            onClicked: {
+                engineObject.syncConfig();
+                apply.enabled = false;
+            }
         }
     }
 }

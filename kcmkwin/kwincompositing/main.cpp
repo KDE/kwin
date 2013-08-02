@@ -23,8 +23,26 @@
 #include "model.h"
 #include <QApplication>
 
+#include <KAboutData>
+#include <kcmdlineargs.h>
+
 int main(int argc, char *argv[])
 {
+    KAboutData aboutData("kwincompositing", 0, i18n("KWinCompositing"),
+                         "1.0", i18n("Plasma Add-Ons Creator"),
+                         KAboutData::License_GPL,
+                         i18n("Copyright 2009-2013 Plasma Development Team"),
+                         "", "", "kwin@kde.org");
+
+    aboutData.addAuthor(i18n("Antonis Tsiapaliokas"),
+                        i18n("Author and maintainer"),
+                        "kok3rs@gmail.com");
+
+    KCmdLineArgs::init(argc, argv,
+                       "kwincompositing", "",
+                       ki18n("KWinCompositing"),
+                       "0.1");
+
     QApplication app(argc, argv);
 
     EffectView *view = new EffectView();

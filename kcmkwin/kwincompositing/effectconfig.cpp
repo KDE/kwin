@@ -56,6 +56,7 @@ void EffectConfig::openConfig(const QString &effectName) {
         if (plugin.name() == effectName) {
             QString effectConfig = serviceName(plugin.name() + "_config");
             KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
+
             proxy->show();
         }
     }
