@@ -27,7 +27,7 @@
 #include "oxygentitleanimationdata.h"
 #include "oxygentitleanimationdata.moc"
 
-#include <QtGui/QPainter>
+#include <QPainter>
 
 namespace Oxygen
 {

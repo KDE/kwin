@@ -30,11 +30,11 @@
 #include "oxygenclient.h"
 
 #include <cassert>
-#include <QtGui/QPainter>
-#include <QtGui/QPolygon>
+#include <QPainter>
+#include <QPolygon>
 #include <QTimer>
 
-#include <QtX11Extras/QX11Info>
+#include <QX11Info>
 #include <X11/Xlib.h>
 
 namespace Oxygen

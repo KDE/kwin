@@ -27,7 +27,7 @@
 #include "oxygenshadowdemowidget.h"
 #include "oxygenshadowdemowidget.moc"
 
-#include <QtGui/QPainter>
+#include <QPainter>
 namespace Oxygen
 {
 

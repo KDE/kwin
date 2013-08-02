@@ -20,7 +20,7 @@
 
 #include "oxygendecohelper.h"
 
-#include <QtGui/QPainter>
+#include <QPainter>
 #include <KColorUtils>
 
 #include <cmath>

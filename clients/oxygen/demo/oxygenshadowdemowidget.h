@@ -31,8 +31,8 @@
 #include "oxygenhelper.h"
 
 #include <QWidget>
-#include <QtGui/QPaintEvent>
-#include <QtGui/QPixmap>
+#include <QPaintEvent>
+#include <QPixmap>
 #include <cassert>
 
 namespace Oxygen

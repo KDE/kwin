@@ -35,7 +35,7 @@
 #include "../oxygendecorationdefines.h"
 
 #include <KSharedConfig>
-#include <QtGui/QPalette>
+#include <QPalette>
 
 namespace Oxygen {
 

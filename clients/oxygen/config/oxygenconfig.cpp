@@ -36,8 +36,8 @@
 #include "../oxygenexceptionlist.h"
 
 #include <QTextStream>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMessage>
+#include <QDBusConnection>
+#include <QDBusMessage>
 
 #include <KConfigGroup>
 #include <KLocalizedString>

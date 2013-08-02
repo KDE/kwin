@@ -34,7 +34,7 @@
 #include <QWeakPointer>
 #include <QBasicTimer>
 #include <QTimerEvent>
-#include <QtGui/QPixmap>
+#include <QPixmap>
 
 
 namespace Oxygen
