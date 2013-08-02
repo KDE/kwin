@@ -118,7 +118,11 @@ enum KWinOption {
 inline
 KWIN_EXPORT Display* display()
 {
-    return QX11Info::display();
+    static Display *s_display = nullptr;
+    if (!s_display) {
+        s_display = QX11Info::display();
+    }
+    return s_display;
 }
 
 inline
@@ -134,7 +138,11 @@ KWIN_EXPORT xcb_connection_t *connection()
 inline
 KWIN_EXPORT xcb_window_t rootWindow()
 {
-    return QX11Info::appRootWindow();
+    static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
+    if (s_rootWindow == XCB_WINDOW_NONE) {
+        s_rootWindow = QX11Info::appRootWindow();
+    }
+    return s_rootWindow;
 }
 
 inline
