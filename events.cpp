@@ -155,8 +155,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         return true;
     }
 
-#warning NETRootInfo::event() needs porting to XCB
-#if KWIN_QT5_PORTING
     if (eventType == XCB_PROPERTY_NOTIFY || eventType == XCB_CLIENT_MESSAGE) {
         unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
         rootInfo()->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
@@ -165,7 +163,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)
             VirtualDesktopManager::self()->updateLayout();
     }
-#endif
 
     // events that should be handled before Clients can get them
     switch (eventType) {
@@ -477,8 +474,7 @@ bool Workspace::workspaceEvent(QEvent* e)
  */
 bool Client::windowEvent(xcb_generic_event_t *e)
 {
-#if KWIN_QT5_PORTING
-    if (e->xany.window == window()) { // avoid doing stuff on frame or wrapper
+    if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
         unsigned long dirty[ 2 ];
         double old_opacity = opacity();
         info->event(e, dirty, 2);   // pass through the NET stuff
@@ -516,7 +512,6 @@ bool Client::windowEvent(xcb_generic_event_t *e)
             // ### Inform the decoration
         }
     }
-#endif
 
     const uint8_t eventType = e->response_type & ~0x80;
     switch(eventType) {
@@ -1548,7 +1543,6 @@ void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
 
 bool Unmanaged::windowEvent(xcb_generic_event_t *e)
 {
-#if KWIN_QT5_PORTING
     double old_opacity = opacity();
     unsigned long dirty[ 2 ];
     info->event(e, dirty, 2);   // pass through the NET stuff
@@ -1558,7 +1552,6 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             emit opacityChanged(this, old_opacity);
         }
     }
-#endif
     const uint8_t eventType = e->response_type & ~0x80;
     switch (eventType) {
     case XCB_UNMAP_NOTIFY:
