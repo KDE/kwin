@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdebug.h>
 #include <KDE/KGlobal>
 
+#include <QApplication>
 #include <QColor>
 #include <QRect>
 #include <QEvent>
@@ -1948,6 +1949,8 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
         return;
 
     static QPoint oldpos;
+    static QElapsedTimer dblClckTime;
+    static int dblClckCounter(0);
     if (mouse->type() == QEvent::MouseMove && mouse->buttons().testFlag(Qt::LeftButton)) {
         const QPoint pos = mouse->pos();
         QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
@@ -1991,11 +1994,22 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
 
     else if (mouse->type() == QEvent::MouseButtonPress && mouse->button() == Qt::LeftButton) {
         oldpos = mouse->pos();
+        if (dblClckTime.elapsed() > QApplication::doubleClickInterval())
+            dblClckCounter = 0;
+        if (!dblClckCounter)
+            dblClckTime.start();
     }
 
     else if (mouse->type() == QEvent::MouseButtonRelease) {
         effects->defineCursor(Qt::OpenHandCursor);
-        if (mouse->button() == Qt::XButton1) {
+        if (mouse->button() == Qt::LeftButton && ++dblClckCounter == 2) {
+            dblClckCounter = 0;
+            if (dblClckTime.elapsed() < QApplication::doubleClickInterval()) {
+                setActive(false);
+                return;
+            }
+        }
+        else if (mouse->button() == Qt::XButton1) {
             if (!rotating && !start) {
                 rotating = true;
                 if (invertMouse)
