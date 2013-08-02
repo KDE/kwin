@@ -284,6 +284,8 @@ Application::Application()
         strcpy(e.xclient.data.b, "wm");
         XSendEvent(display(), rootWindow(), False, SubstructureNotifyMask, &e);
     });
+    // we need to do an XSync here, otherwise the QPA might crash us later on
+    Xcb::sync();
     owner.claim(args->isSet("replace"), true);
 }
 
