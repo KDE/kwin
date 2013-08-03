@@ -21,7 +21,6 @@
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
 #include <KDE/KAboutData>
-#include <KDE/KStandardDirs>
 #include <KDE/KLocalizedString>
 #include <Plasma/ConfigLoader>
 
@@ -31,6 +30,7 @@
 #include <QLabel>
 #include <QUiLoader>
 #include <QVBoxLayout>
+#include <QStandardPaths>
 
 namespace KWin {
 
@@ -64,14 +64,14 @@ void GenericScriptedConfig::createUi()
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-    const QString kconfigXTFile = KStandardDirs::locate("data",
+    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                         QStringLiteral(KWIN_NAME) +
                                                         QStringLiteral("/") +
                                                         typeName() +
                                                         QStringLiteral("/") +
                                                         m_packageName +
                                                         QStringLiteral("/contents/config/main.xml"));
-    const QString uiPath = KStandardDirs::locate("data",
+    const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                  QStringLiteral(KWIN_NAME) +
                                                  QStringLiteral("/") +
                                                  typeName() +

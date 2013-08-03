@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../options.h"
 #include "../workspace.h"
 // KDE
-#include <kstandarddirs.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
@@ -51,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlEngine>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
+#include <QtCore/QStandardPaths>
 
 QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
 {
@@ -671,7 +671,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         }
         const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
         const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-        const QString file = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/") + pluginName + QStringLiteral("/contents/") + scriptName);
+        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/") + pluginName + QStringLiteral("/contents/") + scriptName);
         if (file.isNull()) {
             kDebug(1212) << "Could not find script file for " << pluginName;
             continue;

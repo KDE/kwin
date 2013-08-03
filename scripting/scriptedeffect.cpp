@@ -28,12 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
-#include <KDE/KStandardDirs>
 #include <Plasma/ConfigLoader>
 // Qt
 #include <QFile>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
+#include <QtCore/QStandardPaths>
 
 typedef KWin::EffectWindow* KEffectWindowRef;
 
@@ -400,7 +400,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     m_scriptFile = pathToScript;
 
     // does the effect contain an KConfigXT file?
-    const QString kconfigXTFile = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + m_effectName + QStringLiteral("/contents/config/main.xml"));
+    const QString kconfigXTFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + m_effectName + QStringLiteral("/contents/config/main.xml"));
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = effects->effectConfig(m_effectName);
         QFile xmlFile(kconfigXTFile);
