@@ -29,8 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kdeversion.h>
 #include <ksharedconfig.h>
-#include <kstandarddirs.h>
 
+#include <QStandardPaths>
 #include <qprocess.h>
 
 
@@ -148,7 +148,7 @@ void CompositingPrefs::detect()
         // environment variable.
         // Direct rendering is preferred, since not all OpenGL extensions are
         // available with indirect rendering.
-        const QString opengl_test = KStandardDirs::findExe(QStringLiteral("kwin_opengl_test"));
+        const QString opengl_test = QStandardPaths::findExecutable(QStringLiteral("kwin_opengl_test"));
         if (QProcess::execute(opengl_test) != 0) {
             mEnableDirectRendering = false;
             setenv("LIBGL_ALWAYS_INDIRECT", "1", true);

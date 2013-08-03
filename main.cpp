@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QEvent>
 
 #include <kdialog.h>
-#include <kstandarddirs.h>
+#include <QStandardPaths>
 #include <kdebug.h>
 #include <kde_file.h>
 #include <QLabel>
@@ -179,7 +179,7 @@ public:
 
     void addWM(const QString& wm) {
         // TODO: Check if WM is installed
-        if (!KStandardDirs::findExe(wm).isEmpty())
+        if (!QStandardPaths::findExecutable(wm).isEmpty())
             wmList->addItem(wm);
     }
     QString selectedWM() const {
