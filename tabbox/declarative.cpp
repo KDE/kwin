@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QResizeEvent>
 #include <QQuickItem>
 #include <QX11Info>
+#include <QtCore/QStandardPaths>
 
 // include KDE
 #include <KDE/KDebug>
@@ -37,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
 #include <KDE/KServiceTypeTrader>
-#include <KDE/KStandardDirs>
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/Theme>
 #include <kwindoweffects.h>
@@ -149,7 +149,7 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     } else if (m_mode == TabBoxConfig::DesktopTabBox) {
         rootContext()->setContextProperty(QStringLiteral("clientModel"), model);
     }
-    setSource(QUrl(KStandardDirs::locate("data", QLatin1String(KWIN_NAME) + QLatin1String("/tabbox/tabbox.qml"))));
+    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String(KWIN_NAME) + QLatin1String("/tabbox/tabbox.qml"))));
 
     // FrameSvg
     m_frame->setImagePath(QStringLiteral("dialogs/background"));
@@ -391,14 +391,14 @@ QString DeclarativeView::findWindowSwitcherScriptFile(KService::Ptr service)
 {
     const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-    return KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/tabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/tabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
 }
 
 QString DeclarativeView::findDesktopSwitcherScriptFile(KService::Ptr service)
 {
     const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-    return KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/desktoptabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/desktoptabbox/") + pluginName + QStringLiteral("/contents/") + scriptName);
 }
 
 void DeclarativeView::slotEmbeddedChanged(bool enabled)
