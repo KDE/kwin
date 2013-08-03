@@ -44,11 +44,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 // KDE
 #include <KDE/KIconLoader>
-#include <KDE/KStandardDirs>
 #include <KDE/KWindowSystem>
 // Qt
 #include <QApplication>
 #include <QProcess>
+#include <QStandardPaths>
 #ifdef KWIN_BUILD_SCRIPTING
 #include <QScriptEngine>
 #include <QScriptProgram>
@@ -1362,7 +1362,7 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
             ::kill(pid, SIGTERM);
     } else {
         QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
-        QProcess::startDetached(KStandardDirs::findExe(QStringLiteral("kwin_killer_helper")),
+        QProcess::startDetached(QStandardPaths::findExecutable(QStringLiteral("kwin_killer_helper")),
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
                                 << QStringLiteral("--windowname") << caption()
                                 << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
@@ -1742,7 +1742,7 @@ void Client::setCaption(const QString& _s, bool force)
         static QScriptProgram stripTitle;
         static QScriptValue script;
         if (stripTitle.isNull()) {
-            const QString scriptFile = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/stripTitle.js"));
+            const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/stripTitle.js"));
             if (!scriptFile.isEmpty()) {
                 QFile f(scriptFile);
                 if (f.open(QIODevice::ReadOnly|QIODevice::Text)) {

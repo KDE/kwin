@@ -27,7 +27,6 @@
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
-#include <KDE/KStandardDirs>
 #include <KDE/KGlobal>
 
 namespace Aurorae {
@@ -65,11 +64,11 @@ AuroraeThemePrivate::~AuroraeThemePrivate()
 void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
 {
     QString file(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + AuroraeTheme::mapButtonToName(type) + QStringLiteral(".svg"));
-    QString path = KGlobal::dirs()->findResource("data", file);
+    QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     if (path.isEmpty()) {
         // let's look for svgz
         file.append(QStringLiteral("z"));
-        path = KGlobal::dirs()->findResource("data", file);
+        path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (!path.isEmpty()) {
         pathes[ type ] = path;
@@ -113,10 +112,10 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
 {
     d->themeName = name;
     QString file(QStringLiteral("aurorae/themes/") + d->themeName + QStringLiteral("/decoration.svg"));
-    QString path = KGlobal::dirs()->findResource("data", file);
+    QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     if (path.isEmpty()) {
         file += QStringLiteral("z");
-        path = KGlobal::dirs()->findResource("data", file);
+        path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (path.isEmpty()) {
         kDebug(1216) << "Could not find decoration svg: aborting";

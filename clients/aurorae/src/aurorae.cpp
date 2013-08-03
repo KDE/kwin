@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeItem>
 #include <QGraphicsView>
 #include <QPaintEngine>
+#include <QStandardPaths>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KGlobal>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
-#include <KStandardDirs>
 #include <Plasma/FrameSvg>
 
 namespace Aurorae
@@ -92,12 +92,12 @@ void AuroraeFactory::initAurorae(KConfig &conf, KConfigGroup &group)
     /* use logic from KDeclarative::setupBindings():
     "addImportPath adds the path at the beginning, so to honour user's
      paths we need to traverse the list in reverse order" */
-    QStringListIterator paths(KGlobal::dirs()->findDirs("module", QStringLiteral("imports")));
+    QStringListIterator paths(QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("module/imports"), QStandardPaths::LocateDirectory));
     paths.toBack();
     while (paths.hasPrevious()) {
         m_engine->addImportPath(paths.previous());
     }
-    m_component->loadUrl(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/aurorae/aurorae.qml"))));
+    m_component->loadUrl(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/aurorae/aurorae.qml"))));
     m_engine->rootContext()->setContextProperty(QStringLiteral("auroraeTheme"), m_theme);
     m_themeName = themeName;
 }
@@ -120,7 +120,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     KPluginInfo plugininfo(service);
     const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-    const QString file = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
+    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
     if (file.isNull()) {
         kDebug(1212) << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
@@ -131,7 +131,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     /* use logic from KDeclarative::setupBindings():
     "addImportPath adds the path at the beginning, so to honour user's
      paths we need to traverse the list in reverse order" */
-    QStringListIterator paths(KGlobal::dirs()->findDirs("module", QStringLiteral("imports")));
+    QStringListIterator paths(QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("module/imports"), QStandardPaths::LocateDirectory));
     paths.toBack();
     while (paths.hasPrevious()) {
         m_engine->addImportPath(paths.previous());
