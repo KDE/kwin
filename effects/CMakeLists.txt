@@ -90,9 +90,9 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         kwineffects
         ${Qt5Widgets_LIBRARIES}
         ${KDE4Support_LIBRARIES}
-        ${KDE4_KDEUI_LIBRARY}
         ${KDE4_KIO_LIBRARY} # KUrlRequester
         KF5::KCoreAddons
+        KF5::KConfigWidgets
         KF5::KI18n
         )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
