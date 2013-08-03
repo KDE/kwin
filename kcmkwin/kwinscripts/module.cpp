@@ -27,7 +27,6 @@
 
 #include <KDE/KAboutData>
 #include <KDE/KPluginFactory>
-#include <KDE/KStandardDirs>
 #include <KDE/KMessageBox>
 #include <KDE/KFileDialog>
 #include <KDE/KMessageWidget>

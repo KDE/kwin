@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
 #include <qgraphicsitem.h>
 #include <qgraphicsview.h>
 #include <qgraphicsscene.h>

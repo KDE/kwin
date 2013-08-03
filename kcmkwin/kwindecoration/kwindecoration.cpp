@@ -44,13 +44,13 @@
 #include <QGraphicsObject>
 #include <QScrollBar>
 #include <QUiLoader>
+#include <QtCore/QStandardPaths>
 // KDE
 #include <KAboutData>
 #include <KDialog>
 #include <KDE/KLocalizedString>
 #include <KMessageBox>
 #include <KNS3/DownloadDialog>
-#include <KDE/KStandardDirs>
 #include <KDE/KConfigDialogManager>
 #include <KPluginFactory>
 #include <Plasma/ConfigLoader>
@@ -117,7 +117,7 @@ void KWinDecorationModule::init()
         // init already called
         return;
     }
-    const QString mainQmlPath = KStandardDirs::locate("data", "kwin/kcm_kwindecoration/main.qml");
+    const QString mainQmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwindecoration/main.qml");
     if (mainQmlPath.isNull()) {
         // TODO 4.11 i18n this
         KMessageBox::error(this, "<h1>Installation error</h1>"
@@ -147,7 +147,7 @@ void KWinDecorationModule::init()
     m_ui->decorationList->rootContext()->setContextProperty("options", m_decorationButtons);
     m_ui->decorationList->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
     m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
-    m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", KStandardDirs::locate("data", "kwin/aurorae/aurorae.qml"));
+    m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/aurorae/aurorae.qml"));
     m_ui->decorationList->rootContext()->setContextProperty("decorationActiveCaptionColor", KDecoration::options()->color(ColorFont, true));
     m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveCaptionColor", KDecoration::options()->color(ColorFont, false));
     m_ui->decorationList->rootContext()->setContextProperty("decorationActiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, true));
@@ -396,8 +396,8 @@ void KWinDecorationModule::slotConfigureDecoration()
         KConfigDialogManager *configManager = NULL;
         if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
             const QString packageName = index.data(DecorationModel::AuroraeNameRole).toString();
-            const QString uiPath = KStandardDirs::locate("data", "kwin/decorations/" + packageName + "/contents/ui/config.ui");
-            const QString configPath = KStandardDirs::locate("data", "kwin/decorations/" + packageName + "/contents/config/main.xml");
+            const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/decorations/" + packageName + "/contents/ui/config.ui");
+            const QString configPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/decorations/" + packageName + "/contents/config/main.xml");
             if (!uiPath.isEmpty() && !configPath.isEmpty()) {
                 // load the KConfigSkeleton
                 QFile configFile(configPath);

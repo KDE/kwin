@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
+#include <QStandardPaths>
 
 // KDE
 #include <KAction>
@@ -36,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KTitleWidget>
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
-#include <KStandardDirs>
 #include <KNS3/DownloadDialog>
 
 // own
@@ -182,7 +182,9 @@ void KWinTabBoxConfig::initLayoutLists()
             continue;
         }
         const QString scriptName = service->property("X-Plasma-MainScript").toString();
-        const QString scriptFile = KStandardDirs::locate("data", "kwin/tabbox/" + pluginName + "/contents/" + scriptName);
+        const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                          "kwin/tabbox/" + pluginName + "/contents/"
+                                                          + scriptName);
         if (scriptFile.isNull()) {
             continue;
         }

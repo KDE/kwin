@@ -23,9 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
+#include <QtCore/QStandardPaths>
 // KDE
 #include <KDE/KDebug>
-#include <KDE/KStandardDirs>
 
 namespace KWin
 {
@@ -53,16 +53,16 @@ void WindowThumbnailItem::findImage()
     QString imagePath;
     switch (m_wId) {
     case Konqueror:
-        imagePath = KStandardDirs::locate("data", "kwin/kcm_kwintabbox/konqueror.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/konqueror.png");
         break;
     case Systemsettings:
-        imagePath = KStandardDirs::locate("data", "kwin/kcm_kwintabbox/systemsettings.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/systemsettings.png");
         break;
     case KMail:
-        imagePath = KStandardDirs::locate("data", "kwin/kcm_kwintabbox/kmail.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/kmail.png");
         break;
     case Dolphin:
-        imagePath = KStandardDirs::locate("data", "kwin/kcm_kwintabbox/dolphin.png");
+        imagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/dolphin.png");
         break;
     default:
         // ignore

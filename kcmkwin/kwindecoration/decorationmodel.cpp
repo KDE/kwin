@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QPainter>
 #include <QStyle>
 #include <QtGui/QTextDocument>
+#include <QStandardPaths>
 // KDE
 #include <KConfigGroup>
 #include <KDesktopFile>
@@ -35,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KIcon>
 #include <KDE/KLocalizedString>
 #include <KServiceTypeTrader>
-#include <KStandardDirs>
 #include <KPluginInfo>
 #include "kwindecoration.h"
 
@@ -92,7 +92,7 @@ void DecorationModel::reload()
 void DecorationModel::findDecorations()
 {
     beginResetModel();
-    const QStringList dirList = KGlobal::dirs()->findDirs("data", "kwin");
+    const QStringList dirList = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin", QStandardPaths::LocateDirectory);
 
     foreach (const QString & dir, dirList) {
         QDir d(dir);
@@ -132,7 +132,7 @@ void DecorationModel::findDecorations()
         data.type = DecorationModelData::QmlDecoration;
         data.auroraeName = service->property("X-KDE-PluginInfo-Name").toString();
         QString scriptName = service->property("X-Plasma-MainScript").toString();
-        data.qmlPath = KStandardDirs::locate("data", "kwin/decorations/" + data.auroraeName + "/contents/" + scriptName);
+        data.qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/decorations/" + data.auroraeName + "/contents/" + scriptName);
         if (data.qmlPath.isEmpty()) {
             // not a valid QML theme
             continue;
@@ -156,10 +156,14 @@ void DecorationModel::findDecorations()
 
 void DecorationModel::findAuroraeThemes()
 {
-    // get all desktop themes
-    QStringList themes = KGlobal::dirs()->findAllResources("data",
-                         "aurorae/themes/*/metadata.desktop",
-                         KStandardDirs::NoDuplicates);
+    // get all destop themes
+    QStringList themes;
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "aurorae/themes", QStandardPaths::LocateDirectory);
+    Q_FOREACH (const QString & dir, dirs) {
+        Q_FOREACH (const QString & file, QDir(dir).entryList(QStringList() << QStringLiteral("metadata.desktop"))) {
+            themes.append(dir + '/' + file);
+        }
+    }
     foreach (const QString & theme, themes) {
         int themeSepIndex = theme.lastIndexOf('/', -1);
         QString themeRoot = theme.left(themeSepIndex);

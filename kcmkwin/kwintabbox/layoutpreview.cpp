@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QGraphicsObject>
+#include <QtCore/QStandardPaths>
 #include <kdeclarative.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>
@@ -32,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
 #include <KDE/KService>
-#include <KDE/KStandardDirs>
 
 namespace KWin
 {
@@ -51,7 +51,7 @@ LayoutPreview::LayoutPreview(QWidget* parent)
     foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
         engine()->addImportPath(importPath);
     }
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("data", "kwin/tabbox")) {
+    foreach (const QString &importPath, QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin/tabbox", QStandardPaths::LocateDirectoty)) {
         engine()->addImportPath(importPath);
     }
     ExampleClientModel *model = new ExampleClientModel(this);
@@ -64,7 +64,7 @@ LayoutPreview::LayoutPreview(QWidget* parent)
     rootContext()->setContextProperty("clientModel", model);
     rootContext()->setContextProperty("sourcePath", QString());
     rootContext()->setContextProperty("name", QString());
-    setSource(KStandardDirs::locate("data", "kwin/kcm_kwintabbox/main.qml"));
+    setSource(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/main.qml"));
 }
 
 LayoutPreview::~LayoutPreview()
