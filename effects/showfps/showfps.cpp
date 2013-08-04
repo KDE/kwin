@@ -232,7 +232,18 @@ void ShowFpsEffect::paintGL(int fps)
     paintDrawSizeGraph(x, y);
 
     // Paint FPS numerical value
-    paintFPSText(fps);
+    if (fpsTextRect.isValid()) {
+        delete fpsText;
+        fpsText = new GLTexture(fpsTextImage(fps));
+        fpsText->bind();
+        ShaderBinder binder(ShaderManager::SimpleShader);
+        if (effects->compositingType() == OpenGL2Compositing) {
+            binder.shader()->setUniform("offset", QVector2D(0, 0));
+        }
+        fpsText->render(QRegion(fpsTextRect), fpsTextRect);
+        fpsText->unbind();
+        effects->addRepaint(fpsTextRect);
+    }
 
     // Paint paint sizes
     glDisable(GL_BLEND);
@@ -284,6 +295,15 @@ void ShowFpsEffect::paintXrender(int fps)
 
     // Paint amount of rendered pixels graph
     paintDrawSizeGraph(x + FPS_WIDTH + MAX_TIME, y);
+
+    // Paint FPS numerical value
+    if (fpsTextRect.isValid()) {
+        QImage textImg(fpsTextImage(fps));
+        XRenderPicture textPic(textImg);
+        xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, textPic, XCB_RENDER_PICTURE_NONE,
+                        effects->xrenderBufferPicture(), 0, 0, 0, 0, fpsTextRect.x(), fpsTextRect.y(), textImg.width(), textImg.height());
+        effects->addRepaint(fpsTextRect);
+    }
 }
 #endif
 
@@ -450,26 +470,16 @@ void ShowFpsEffect::postPaintScreen()
     effects->addRepaint(fps_rect);
 }
 
-void ShowFpsEffect::paintFPSText(int fps)
+QImage ShowFpsEffect::fpsTextImage(int fps)
 {
-    if (!fpsTextRect.isValid())
-        return;
     QImage im(100, 100, QImage::Format_ARGB32);
-    im.fill(0);
+    im.fill(Qt::transparent);
     QPainter painter(&im);
     painter.setFont(textFont);
     painter.setPen(textColor);
     painter.drawText(QRect(0, 0, 100, 100), textAlign, QString::number(fps));
-    delete fpsText;
-    fpsText = new GLTexture(im);
-    fpsText->bind();
-    ShaderBinder binder(ShaderManager::SimpleShader);
-    if (effects->compositingType() == OpenGL2Compositing) {
-        binder.shader()->setUniform("offset", QVector2D(0, 0));
-    }
-    fpsText->render(QRegion(fpsTextRect), fpsTextRect);
-    fpsText->unbind();
-    effects->addRepaint(fpsTextRect);
+    painter.end();
+    return im;
 }
 
 } // namespace

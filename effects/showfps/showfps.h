@@ -80,7 +80,7 @@ private:
     void paintFPSGraph(int x, int y);
     void paintDrawSizeGraph(int x, int y);
     void paintGraph(int x, int y, QList<int> values, QList<int> lines, bool colorize);
-    void paintFPSText(int fps);
+    QImage fpsTextImage(int fps);
     QTime t;
     enum { NUM_PAINTS = 100 }; // remember time needed to paint this many paints
     int paints[ NUM_PAINTS ]; // time needed to paint
