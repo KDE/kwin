@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdebug.h>
 #include <ksharedconfig.h>
-#include <kstandarddirs.h>
 #include <kconfiggroup.h>
 
 #include <assert.h>

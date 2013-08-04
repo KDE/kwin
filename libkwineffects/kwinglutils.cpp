@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglplatform.h"
 
 #include "kdebug.h"
-#include <kstandarddirs.h>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 
