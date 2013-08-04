@@ -109,11 +109,15 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 
 XRenderPicture::XRenderPicture(const QPixmap &pix)
 {
-    if (!Extensions::nonNativePixmaps()) {
+    if (Extensions::nonNativePixmaps()) {
+        XRenderPicture(pix.toImage());
+    } else {
         d = new XRenderPictureData(createPicture(pix.handle(), pix.depth()));
-        return;
     }
-    QImage img(pix.toImage());
+}
+
+XRenderPicture::XRenderPicture(const QImage &img)
+{
     const int depth = img.depth();
     xcb_pixmap_t xpix = xcb_generate_id(connection());
     xcb_create_pixmap(connection(), depth, xpix, rootWindow(), img.width(), img.height());
