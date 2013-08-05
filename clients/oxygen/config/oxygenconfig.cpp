@@ -57,9 +57,6 @@ namespace Oxygen
         QObject( parent )
     {
 
-        // catalog
-        KLocalizedString::insertCatalog( QStringLiteral( "kwin_clients" ) );
-
         // configuration
         _configuration = KSharedConfig::openConfig( QStringLiteral( "oxygenrc" ) );
 
