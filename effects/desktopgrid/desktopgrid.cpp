@@ -34,15 +34,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 #include <KDE/KStandardDirs>
-#include <kdeclarative.h>
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
 #include <kglobalsettings.h>
 #include <QtGui/QVector2D>
-#include <QDeclarativeEngine>
-#include <QDeclarativeContext>
-#include <QGraphicsObject>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickItem>
 
 namespace KWin
 {
@@ -1117,9 +1116,9 @@ void DesktopGridEffect::setup()
         connect(view, SIGNAL(addDesktop()), SLOT(slotAddDesktop()));
         connect(view, SIGNAL(removeDesktop()), SLOT(slotRemoveDesktop()));
         const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
-        view->setGeometry(screenRect.right() + 1 - view->sceneRect().width(),
-                          screenRect.bottom() + 1 - view->sceneRect().height(),
-                          view->sceneRect().width(), view->sceneRect().height());
+        view->setGeometry(screenRect.right() + 1 - view->width(),
+                          screenRect.bottom() + 1 - view->height(),
+                          view->width(), view->height());
         view->show();
         m_desktopButtonsViews.insert(view, NULL);
     }
@@ -1382,24 +1381,11 @@ bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 /************************************************
 * DesktopButtonView
 ************************************************/
-DesktopButtonsView::DesktopButtonsView(QWidget *parent)
-    : QDeclarativeView(parent)
+DesktopButtonsView::DesktopButtonsView(QWindow *parent)
+    : QQuickView(parent)
 {
-    setWindowFlags(Qt::X11BypassWindowManagerHint);
-    setAttribute(Qt::WA_TranslucentBackground);
-    QPalette pal = palette();
-    pal.setColor(backgroundRole(), Qt::transparent);
-    setPalette(pal);
-    for (const QString &importPath : KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
-        engine()->addImportPath(importPath);
-    }
-#warning Port declarative code to QtQuick2
-#if KWIN_QT5_PORTING
-    KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.initialize();
-    kdeclarative.setupBindings();
-#endif
+    setFlags(Qt::X11BypassWindowManagerHint);
+    setColor(Qt::transparent);
 
     rootContext()->setContextProperty(QStringLiteral("add"), QVariant(true));
     rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(true));

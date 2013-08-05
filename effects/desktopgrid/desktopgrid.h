@@ -25,19 +25,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <kshortcut.h>
 #include <QObject>
-#include <QDeclarativeView>
 #include <QTimeLine>
+#include <QQuickView>
 
 namespace KWin
 {
 
 class PresentWindowsEffectProxy;
 
-class DesktopButtonsView : public QDeclarativeView
+class DesktopButtonsView : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit DesktopButtonsView(QWidget *parent = 0);
+    explicit DesktopButtonsView(QWindow *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void setAddDesktopEnabled(bool enable);
     void setRemoveDesktopEnabled(bool enable);

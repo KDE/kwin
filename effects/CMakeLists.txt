@@ -12,7 +12,6 @@ set(kwin_effect_KDE_LIBS
 )
 
 set(kwin_effect_QT_LIBS
-    ${Qt5Declarative_LIBRARIES}
     ${Qt5Quick_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${Qt5DBus_LIBRARIES}
