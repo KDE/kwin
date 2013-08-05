@@ -69,7 +69,7 @@ Component {
                             visible: false
 
                             Text {
-                                text: "Author: " + model.AuthorName + "\n" + "License" + model.License
+                                text: "Author: " + model.AuthorName + "\n" + "License: " + model.License
                                 font.bold: true
                             }
                             PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
@@ -90,7 +90,9 @@ Component {
                     id: configureButton
                     anchors.left: effectItem.right
                     visible: effectConfig.effectUiConfigExists(model.Name)
-                    text: "CONFIGURE EFFECT"
+                    iconSource: engineObject.findImage("actions/configure.png")
+                    width: 50
+                    height: 25
                     enabled: myCheckBox.checked
                     onClicked: {
                         effectConfig.openConfig(model.Name);
@@ -100,7 +102,10 @@ Component {
                 Button {
                     id: aboutButton
                     anchors.left: configureButton.right
-                    text: "ABOUT UI BUTTON"
+                    width: 50
+                    height: 25
+                    iconSource: engineObject.findImage("status/dialog-information.png");
+
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;

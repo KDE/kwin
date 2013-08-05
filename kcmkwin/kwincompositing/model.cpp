@@ -175,3 +175,8 @@ void EffectView::loadKWinEffects(const QHash<QString, bool> &effectsChanged) {
     QDBusConnection::sessionBus().send(messageUnloadEffect);
 }
 
+QString EffectView::findImage(const QString &imagePath, int size) {
+    const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
+    const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
+    return fullImagePath;
+}

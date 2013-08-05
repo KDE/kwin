@@ -77,6 +77,7 @@ public:
     Q_INVOKABLE void effectStatus(const QString &effectName, bool status);
     Q_INVOKABLE bool isEnabled(const QString &effectName);
     Q_INVOKABLE void syncConfig();
+    Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
 
 private:
     QHash<QString, bool> m_effectStatus;
