@@ -145,7 +145,7 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
 {
     if (iAmActivated && iAmActive && w == myResizeWindow) {
         if (myExtraDirtyArea.isValid())
-            w->addLayerRepaint(myExtraDirtyArea);
+            effects->addRepaint(myExtraDirtyArea);
 
         myExtraDirtyArea = QRect();
 
@@ -197,11 +197,9 @@ void WindowGeometry::slotWindowStepUserMovedResized(EffectWindow *w, const QRect
         myExtraDirtyArea |= myMeasure[1]->geometry();
         myExtraDirtyArea |= myMeasure[2]->geometry();
         myExtraDirtyArea.adjust(-6,-6,6,6);
-        if (w->expandedGeometry().contains(myExtraDirtyArea))
-            myExtraDirtyArea = QRect();
 
         if (myExtraDirtyArea.isValid())
-            w->addLayerRepaint(myExtraDirtyArea);
+            effects->addRepaint(myExtraDirtyArea);
     }
 }
 

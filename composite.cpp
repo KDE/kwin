@@ -98,6 +98,7 @@ Compositor::Compositor(QObject* workspace)
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
+    connect(options, SIGNAL(unredirectFullscreenChanged()), SLOT(delayedCheckUnredirect()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
     nextPaintReference.invalidate(); // Initialize the timer
@@ -705,7 +706,7 @@ void Compositor::checkUnredirect(bool force)
 
 void Compositor::delayedCheckUnredirect()
 {
-    if (!hasScene() || m_scene->overlayWindow()->window() == None || !options->isUnredirectFullscreen())
+    if (!hasScene() || m_scene->overlayWindow()->window() == None || !(options->isUnredirectFullscreen() || sender() == options))
         return;
     ToplevelList list;
     bool changed = forceUnredirectCheck;
@@ -1072,7 +1073,8 @@ void Toplevel::addWorkspaceRepaint(const QRect& r2)
 bool Toplevel::updateUnredirectedState()
 {
     assert(compositing());
-    bool should = shouldUnredirect() && !unredirectSuspend && !shape() && !hasAlpha() && opacity() == 1.0 &&
+    bool should = options->isUnredirectFullscreen() && shouldUnredirect() && !unredirectSuspend &&
+                  !shape() && !hasAlpha() && opacity() == 1.0 &&
                   !static_cast<EffectsHandlerImpl*>(effects)->activeFullScreenEffect();
     if (should == unredirect)
         return false;
