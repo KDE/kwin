@@ -645,6 +645,8 @@ public:
     template <typename T>
     void print(T &stream) const;
 
+    void cancelFocusOutTimer();
+
 public Q_SLOTS:
     void closeWindow();
     void updateCaption();
@@ -987,6 +989,8 @@ private:
 #endif
     Xcb::Window m_decoInputExtent;
     QPoint input_offset;
+
+    QTimer *m_focusOutTimer;
 };
 
 /**

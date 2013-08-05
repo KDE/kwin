@@ -1359,6 +1359,9 @@ void Client::focusInEvent(xcb_focus_in_event_t *e)
         return;  // we don't care
     if (!isShown(false) || !isOnCurrentDesktop())    // we unmapped it, but it got focus meanwhile ->
         return;            // activateNextClient() already transferred focus elsewhere
+    workspace()->forEachClient([](Client *client) {
+        client->cancelFocusOutTimer();
+    });
     // check if this client is in should_get_focus list or if activation is allowed
     bool activate =  workspace()->allowClientActivation(this, -1U, true);
     workspace()->gotFocusIn(this);   // remove from should_get_focus list
@@ -1369,52 +1372,6 @@ void Client::focusInEvent(xcb_focus_in_event_t *e)
         demandAttention();
     }
 }
-
-// When a client loses focus, FocusOut events are usually immediatelly
-// followed by FocusIn events for another client that gains the focus
-// (unless the focus goes to another screen, or to the nofocus widget).
-// Without this check, the former focused client would have to be
-// deactivated, and after that, the new one would be activated, with
-// a short time when there would be no active client. This can cause
-// flicker sometimes, e.g. when a fullscreen is shown, and focus is transferred
-// from it to its transient, the fullscreen would be kept in the Active layer
-// at the beginning and at the end, but not in the middle, when the active
-// client would be temporarily none (see Client::belongToLayer() ).
-// Therefore, the events queue is checked, whether it contains the matching
-// FocusIn event, and if yes, deactivation of the previous client will
-// be skipped, as activation of the new one will automatically deactivate
-// previously active client.
-static bool follows_focusin = false;
-static bool follows_focusin_failed = false;
-static Bool predicate_follows_focusin(Display*, XEvent* e, XPointer arg)
-{
-    Q_UNUSED(arg)
-    if (follows_focusin || follows_focusin_failed)
-        return False;
-    if (e->type == FocusIn && workspace()->findClient(WindowMatchPredicate(e->xfocus.window))) {
-        // found FocusIn
-        follows_focusin = true;
-        return False;
-    }
-    // events that may be in the queue before the FocusIn event that's being
-    // searched for
-    if (e->type == FocusIn || e->type == FocusOut || e->type == KeymapNotify)
-        return False;
-    follows_focusin_failed = true; // a different event - stop search
-    return False;
-}
-
-static bool check_follows_focusin(Client* c)
-{
-    follows_focusin = follows_focusin_failed = false;
-    XEvent dummy;
-    // XCheckIfEvent() is used to make the search non-blocking, the predicate
-    // always returns False, so nothing is removed from the events queue.
-    // XPeekIfEvent() would block.
-    XCheckIfEvent(display(), &dummy, predicate_follows_focusin, (XPointer)c);
-    return follows_focusin;
-}
-
 
 void Client::focusOutEvent(xcb_focus_out_event_t *e)
 {
@@ -1430,11 +1387,31 @@ void Client::focusOutEvent(xcb_focus_out_event_t *e)
         return; // hack for motif apps like netscape
     if (QApplication::activePopupWidget())
         return;
-#warning Port for XCheckIfEvent is needed, see documentation above
-#if KWIN_QT5_PORTING
-    if (!check_follows_focusin(this))
-#endif
-        setActive(false);
+
+    // When a client loses focus, FocusOut events are usually immediatelly
+    // followed by FocusIn events for another client that gains the focus
+    // (unless the focus goes to another screen, or to the nofocus widget).
+    // Without this check, the former focused client would have to be
+    // deactivated, and after that, the new one would be activated, with
+    // a short time when there would be no active client. This can cause
+    // flicker sometimes, e.g. when a fullscreen is shown, and focus is transferred
+    // from it to its transient, the fullscreen would be kept in the Active layer
+    // at the beginning and at the end, but not in the middle, when the active
+    // client would be temporarily none (see Client::belongToLayer() ).
+    // Therefore the setActive(false) call is moved to the end of the current
+    // event queue. If there is a matching FocusIn event in the current queue
+    // this will be processed before the setActive(false) call and the activation
+    // of the Client which gained FocusIn will automatically deactivate the
+    // previously active client.
+    if (!m_focusOutTimer) {
+        m_focusOutTimer = new QTimer(this);
+        m_focusOutTimer->setSingleShot(true);
+        m_focusOutTimer->setInterval(0);
+        connect(m_focusOutTimer, &QTimer::timeout, [this]() {
+            setActive(false);
+        });
+    }
+    m_focusOutTimer->start();
 }
 
 // performs _NET_WM_MOVERESIZE

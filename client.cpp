@@ -136,6 +136,7 @@ Client::Client()
     , m_menuAvailable(false)
 #endif
     , m_decoInputExtent()
+    , m_focusOutTimer(nullptr)
 {
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
@@ -2486,6 +2487,13 @@ bool Client::decorationHasAlpha() const
     } else {
         // decoration has alpha enabled and does not support alpha announcement
         return true;
+    }
+}
+
+void Client::cancelFocusOutTimer()
+{
+    if (m_focusOutTimer) {
+        m_focusOutTimer->stop();
     }
 }
 
