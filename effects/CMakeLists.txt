@@ -4,7 +4,7 @@ set(kwin_effect_OWN_LIBS
 
 set(kwin_effect_KDE_LIBS
     ${KDE4Support_LIBRARIES}
-    ${KDE4_KDEUI_LIBRARY}
+    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings::dndEventDelay() in PW and DG
     ${KDE4_KDECORE_LIBS} # kdebug
     KF5::KWindowSystem
     KF5::plasma # screenedge effect

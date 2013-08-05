@@ -9,8 +9,8 @@ set_target_properties(kwin_killer_helper PROPERTIES COMPILE_FLAGS ${Qt5Widgets_E
 target_link_libraries(kwin_killer_helper
     ${Qt5Widgets_LIBRARIES}
     ${KDE4Support_LIBRARIES} # KCmdLineArgs
-    ${KDE4_KDECORE_LIBS} # kdebug
     KF5::KAuth
+    KF5::KI18n
     KF5::KWidgets
     KF5::KWidgetsAddons
 )
