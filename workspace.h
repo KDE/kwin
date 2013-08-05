@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector>
 // X
 #include <X11/Xlib.h>
+// std
+#include <functional>
 
 // TODO: Cleanup the order of things in this .h file
 
@@ -76,9 +78,11 @@ public:
     template<typename T> Client* findClient(T predicate) const;
     template<typename T1, typename T2> void forEachClient(T1 procedure, T2 predicate);
     template<typename T> void forEachClient(T procedure);
+    void forEachClient(std::function<void (Client*)> func);
     template<typename T> Unmanaged* findUnmanaged(T predicate) const;
     template<typename T1, typename T2> void forEachUnmanaged(T1 procedure, T2 predicate);
     template<typename T> void forEachUnmanaged(T procedure);
+    void forEachUnmanaged(std::function<void (Unmanaged*)> func);
 
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const Client* c) const;
@@ -686,6 +690,13 @@ inline void Workspace::forEachClient(T1 procedure, T2 predicate)
             procedure(*it);
 }
 
+inline
+void Workspace::forEachClient(std::function< void (Client*) > func)
+{
+    std::for_each(clients.constBegin(), clients.constEnd(), func);
+    std::for_each(desktops.constBegin(), desktops.constEnd(), func);
+}
+
 template< typename T >
 inline void Workspace::forEachClient(T procedure)
 {
@@ -710,6 +721,12 @@ template< typename T >
 inline void Workspace::forEachUnmanaged(T procedure)
 {
     return forEachUnmanaged(procedure, TruePredicate());
+}
+
+inline
+void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
+{
+    std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
 }
 
 KWIN_COMPARE_PREDICATE(ClientMatchPredicate, Client, const Client*, cl == value);
