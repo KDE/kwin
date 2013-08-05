@@ -17,16 +17,17 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 1.1
-import org.kde.plasma.components 0.1 as Plasma
+import QtQuick 2.0
+import org.kde.plasma.components 2.0 as Plasma
 
 Item {
+    width: 32
+    height: 32
     Plasma.Button {
         id: closeButton
         objectName: "closeButton"
         enabled: armed
-        width: 32
-        height: 32
         iconSource: "window-close"
+        anchors.fill: parent
     }
 }

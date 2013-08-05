@@ -41,8 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <limits.h>
 #include <QApplication>
-#include <QDeclarativeContext>
-#include <QDeclarativeEngine>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickItem>
 #include <QDesktopWidget>
 #include <QGraphicsObject>
 #include <QTimer>
@@ -1478,7 +1479,7 @@ void PresentWindowsEffect::setActive(bool active)
 
         if (!m_doNotCloseWindows) {
             m_closeView = new CloseWindowView();
-            connect(m_closeView, SIGNAL(close()), SLOT(closeWindow()));
+            connect(m_closeView, &CloseWindowView::requestClose, this, &PresentWindowsEffect::closeWindow);
         }
 
         // Add every single window to m_windowData (Just calling [w] creates it)
@@ -1690,12 +1691,12 @@ void PresentWindowsEffect::updateCloseWindow()
         return;
 
     const QRectF rect(m_motionManager.targetGeometry(m_highlightedWindow));
-    if (2*m_closeView->sceneRect().width() > rect.width() && 2*m_closeView->sceneRect().height() > rect.height()) {
+    if (2*m_closeView->width() > rect.width() && 2*m_closeView->height() > rect.height()) {
         // not for tiny windows (eg. with many windows) - they might become unselectable
         m_closeView->hide();
         return;
     }
-    QRect cvr(QPoint(0,0), m_closeView->sceneRect().size().toSize());
+    QRect cvr(QPoint(0,0), m_closeView->size());
     switch (m_closeButtonCorner)
     {
     case Qt::TopLeftCorner:
@@ -1938,31 +1939,18 @@ void PresentWindowsEffect::screenCountChanged()
 /************************************************
 * CloseWindowView
 ************************************************/
-CloseWindowView::CloseWindowView(QWidget *parent)
-    : QDeclarativeView(parent)
+CloseWindowView::CloseWindowView(QWindow *parent)
+    : QQuickView(parent)
     , m_armTimer(new QTimer(this))
 {
-    setWindowFlags(Qt::X11BypassWindowManagerHint);
-    setAttribute(Qt::WA_TranslucentBackground);
-    QPalette pal = palette();
-    pal.setColor(backgroundRole(), Qt::transparent);
-    setPalette(pal);
-    for (const QString &importPath : KGlobal::dirs()->findDirs("module", QStringLiteral("imports"))) {
-        engine()->addImportPath(importPath);
-    }
-#warning Port declarative code to QtQuick2
-#if KWIN_QT5_PORTING
-    KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.initialize();
-    kdeclarative.setupBindings();
-#endif
+    setFlags(Qt::X11BypassWindowManagerHint);
+    setColor(Qt::transparent);
 
     rootContext()->setContextProperty(QStringLiteral("armed"), QVariant(false));
 
     setSource(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/effects/presentwindows/main.qml"))));
     if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
-        connect(item, SIGNAL(clicked()), SIGNAL(close()));
+        connect(item, SIGNAL(clicked()), SIGNAL(requestClose()));
     }
 
     // setup the timer - attempt to prevent accidental clicks
