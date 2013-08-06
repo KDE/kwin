@@ -166,7 +166,7 @@ X11Cursor::X11Cursor(QObject *parent)
     m_resetTimeStampTimer->setSingleShot(true);
     connect(m_resetTimeStampTimer, SIGNAL(timeout()), SLOT(resetTimeStamp()));
     // TODO: How often do we really need to poll?
-    m_mousePollingTimer->setInterval(100);
+    m_mousePollingTimer->setInterval(50);
     connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(mousePolled()));
 }
 
