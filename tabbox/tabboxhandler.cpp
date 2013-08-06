@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xlib.h>
 // KDE
 #include <KDebug>
+#include <KProcess>
 #include <KWindowSystem>
 
 namespace KWin
@@ -216,19 +217,29 @@ void TabBoxHandler::show()
     d->lastRaisedClient = 0;
     d->lastRaisedClientSucc = 0;
     if (d->config.isShowTabBox()) {
+        DeclarativeView *dv(NULL);
         if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
             // use declarative view
             if (!d->m_declarativeView) {
                 d->m_declarativeView = new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox);
             }
-            d->m_declarativeView->show();
-            d->m_declarativeView->setCurrentIndex(d->index, true);
+            dv = d->m_declarativeView;
         } else {
             if (!d->m_declarativeDesktopView) {
                 d->m_declarativeDesktopView = new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox);
             }
-            d->m_declarativeDesktopView->show();
-            d->m_declarativeDesktopView->setCurrentIndex(d->index);
+            dv = d->m_declarativeDesktopView;
+        }
+        if (dv->status() == QDeclarativeView::Ready && dv->rootObject()) {
+            dv->show();
+            dv->setCurrentIndex(d->index, d->config.tabBoxMode() == TabBoxConfig::ClientTabBox);
+        } else {
+            QStringList args;
+            args << "--passivepopup" << /*i18n*/("The Window Switcher installation is broken, resources are missing.\n"
+                                                 "Contact your distribution about this.") << "20";
+            KProcess::startDetached("kdialog", args);
+            hide();
+            return;
         }
     }
     if (d->config.isHighlightWindows()) {

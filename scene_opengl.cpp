@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "workspace.h"
 
-#include <math.h>
+#include <cmath>
 #include <unistd.h>
 #include <stddef.h>
 
@@ -1357,26 +1357,33 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
         getDecorationTextures(textures);
 
         nodes[LeftRightLeaf].texture = textures[0];
-        nodes[LeftRightLeaf].opacity = data.opacity() * data.decorationOpacity();
+        nodes[LeftRightLeaf].opacity = data.opacity();
         nodes[LeftRightLeaf].hasAlpha = true;
         nodes[LeftRightLeaf].coordinateType = UnnormalizedCoordinates;
 
         nodes[TopBottomLeaf].texture = textures[1];
-        nodes[TopBottomLeaf].opacity = data.opacity() * data.decorationOpacity();
+        nodes[TopBottomLeaf].opacity = data.opacity();
         nodes[TopBottomLeaf].hasAlpha = true;
         nodes[TopBottomLeaf].coordinateType = UnnormalizedCoordinates;
     }
 
     nodes[ContentLeaf].texture = s_frameTexture;
     nodes[ContentLeaf].hasAlpha = !isOpaque();
-    nodes[ContentLeaf].opacity = data.opacity();
+    // TODO: ARGB crsoofading is atm. a hack, playing on opacities for two dumb SrcOver operations
+    // Should be a shader
+    if (data.crossFadeProgress() != 1.0 && (data.opacity() < 0.95 || toplevel->hasAlpha())) {
+        const float opacity = 1.0 - data.crossFadeProgress();
+        nodes[ContentLeaf].opacity = data.opacity() * (1 - pow(opacity, 1.0f + 2.0f * data.opacity()));
+    } else {
+        nodes[ContentLeaf].opacity = data.opacity();
+    }
     nodes[ContentLeaf].coordinateType = UnnormalizedCoordinates;
 
     if (data.crossFadeProgress() != 1.0) {
         OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
         nodes[PreviousContentLeaf].texture = previous ? previous->texture() : NULL;
         nodes[PreviousContentLeaf].hasAlpha = !isOpaque();
-        nodes[PreviousContentLeaf].opacity = 1.0 - data.crossFadeProgress();
+        nodes[PreviousContentLeaf].opacity = data.opacity() * (1.0 - data.crossFadeProgress());
         nodes[PreviousContentLeaf].coordinateType = NormalizedCoordinates;
     }
 }
@@ -1607,7 +1614,14 @@ void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData 
     OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
     const WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
     if (previous && data.crossFadeProgress() != 1.0) {
-        paintContent(s_frameTexture, region, mask, data.opacity(), data, contentQuads, false);
+        // TODO: ARGB crsoofading is atm. a hack, playing on opacities for two dumb SrcOver operations
+        // Will require a caching texture or sth. else 1.2 compliant
+        float opacity = data.opacity();
+        if (opacity < 0.95f || toplevel->hasAlpha()) {
+            opacity = 1 - data.crossFadeProgress();
+            opacity = data.opacity() * (1 - pow(opacity, 1.0f + 2.0f * data.opacity()));
+        }
+        paintContent(s_frameTexture, region, mask, opacity, data, contentQuads, false);
         previous->texture()->setFilter(filter == Scene::ImageFilterGood ? GL_LINEAR : GL_NEAREST);
         WindowQuadList oldContents;
         const QRect &oldGeometry = previous->contentsRect();
@@ -1628,7 +1642,8 @@ void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData 
             }
             oldContents.append(newQuad);
         }
-        paintContent(previous->texture(), region, mask, 1.0 - data.crossFadeProgress(), data, oldContents, true);
+        opacity = data.opacity() * (1.0 - data.crossFadeProgress());
+        paintContent(previous->texture(), region, mask, opacity, data, oldContents, true);
     } else {
         paintContent(s_frameTexture, region, mask, data.opacity(), data, contentQuads, false);
     }
