@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KStandardDirs>
 #include <kdebug.h>
 #include <kglobalsettings.h>
-#include <kdeclarative.h>
+#include <kdeclarative/kdeclarative.h>
 
 #include <kwinglutils.h>
 

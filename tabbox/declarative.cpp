@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/Theme>
 #include <kwindoweffects.h>
-#include <kdeclarative.h>
+#include <kdeclarative/kdeclarative.h>
 // KWin
 #include "thumbnailitem.h"
 #include <kwindowsystem.h>

@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobal>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
-#include <kdeclarative.h>
+#include <kdeclarative/kdeclarative.h>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
