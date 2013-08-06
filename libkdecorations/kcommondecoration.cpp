@@ -35,7 +35,6 @@
 
 #include <kdebug.h>
 
-#include <kapplication.h>
 #include "kdecorationfactory.h"
 #include <KDE/KLocalizedString>
 

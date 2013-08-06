@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fcntl.h>
 #include <QX11Info>
 #include <stdio.h>
-#include <kxerrorhandler.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
 #include <QMessageBox>

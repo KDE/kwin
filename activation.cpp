@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <fixx11h.h>
-#include <kxerrorhandler.h>
 #include <kstartupinfo.h>
 #include <kstringhandler.h>
 #include <KDE/KLocalizedString>

@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glxbackend.h"
 #endif
 
-#include <kxerrorhandler.h>
-
 #include <kwinglcolorcorrection.h>
 #include <kwinglplatform.h>
 
