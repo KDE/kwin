@@ -181,6 +181,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     }
     case XCB_MOTION_NOTIFY: {
+        m_mouseMotionTimer->cancel();
         auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
         const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
 #ifdef KWIN_BUILD_TABBOX
@@ -1237,39 +1238,6 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int /*button*/, int state, int x
     return true;
 }
 
-static bool was_motion = false;
-static Time next_motion_time = CurrentTime;
-// Check whole incoming X queue for MotionNotify events
-// checking whole queue is done by always returning False in the predicate.
-// If there are more MotionNotify events in the queue, all until the last
-// one may be safely discarded (if a ButtonRelease event comes, a MotionNotify
-// will be faked from it, so there's no need to check other events).
-// This helps avoiding being overloaded by being flooded from many events
-// from the XServer.
-static Bool motion_predicate(Display*, XEvent* ev, XPointer)
-{
-    if (ev->type == MotionNotify) {
-        was_motion = true;
-        next_motion_time = ev->xmotion.time;  // for setting time
-    }
-    return False;
-}
-
-static bool waitingMotionEvent()
-{
-// The queue doesn't need to be checked until the X timestamp
-// of processes events reaches the timestamp of the last suitable
-// MotionNotify event in the queue.
-    if (next_motion_time != CurrentTime
-            && timestampCompare(xTime(), next_motion_time) < 0)
-        return true;
-    was_motion = false;
-    XSync(display(), False);   // this helps to discard more MotionNotify events
-    XEvent dummy;
-    XCheckIfEvent(display(), &dummy, motion_predicate, NULL);
-    return was_motion;
-}
-
 // Checks if the mouse cursor is near the edge of the screen and if so activates quick tiling or maximization
 void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
@@ -1320,18 +1288,22 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
             mode = newmode;
             updateCursor();
         }
-        // reset the timestamp for the optimization, otherwise with long passivity
-        // the option in waitingMotionEvent() may be always true
-        next_motion_time = CurrentTime;
         return false;
     }
     if (w == moveResizeGrabWindow()) {
         x = this->x(); // translate from grab window to local coords
         y = this->y();
     }
-#warning Mouse event compression is lost
-    if (/*!waitingMotionEvent()*/true) {
-        QRect oldGeo = geometry();
+    // mouse motion event compression: the event queue might have multiple motion events
+    // in that case we are only interested in the last event to not cause too much overhead
+    // by useless move/resize operations.
+    // The compression is done using a singleshot QTimer of 0 msec to just move the processing
+    // to the end of the event queue. In case there is another motion event in the queue it will
+    // be processed before the timer fires and the processing of the newer motion event cancels
+    // the running timer. Eventually this code path will be reached again and the timer is
+    // started again
+    workspace()->scheduleMouseMotionCompression([this, x, y, x_root, y_root]() {
+        const QRect oldGeo = geometry();
         handleMoveResize(x, y, x_root, y_root);
         if (!isFullScreen() && isMove() && oldGeo != geometry()) {
             if (quick_tile_mode != QuickTileNone) {
@@ -1345,7 +1317,7 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
                 checkQuickTilingMaximizationZones(x_root, y_root);
             }
         }
-    }
+    });
     return true;
 }
 

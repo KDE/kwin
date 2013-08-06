@@ -58,6 +58,7 @@ class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
 class Compositor;
+class MouseMotionCompressionTimer;
 
 class Workspace : public QObject, public KDecorationDefines
 {
@@ -72,6 +73,7 @@ public:
 
     bool workspaceEvent(xcb_generic_event_t*);
     bool workspaceEvent(QEvent*);
+    void scheduleMouseMotionCompression(const std::function<void ()> &functor);
 
     bool hasClient(const Client*);
 
@@ -547,6 +549,9 @@ private:
 
     QScopedPointer<KillWindow> m_windowKiller;
 
+    // compression of mouse motion events
+    MouseMotionCompressionTimer *m_mouseMotionTimer;
+
 private:
     friend bool performTransiencyCheck();
     friend Workspace *workspace();
@@ -581,6 +586,18 @@ public Q_SLOTS:
 private:
     xcb_colormap_t m_default;
     xcb_colormap_t m_installed;
+};
+
+class MouseMotionCompressionTimer : public QTimer
+{
+    Q_OBJECT
+public:
+    explicit MouseMotionCompressionTimer(QObject *parent = 0);
+    virtual ~MouseMotionCompressionTimer();
+    void schedule(const std::function<void ()> &functor);
+    void cancel();
+private:
+    QMetaObject::Connection m_connection;
 };
 
 //---------------------------------------------------------
@@ -734,6 +751,12 @@ KWIN_COMPARE_PREDICATE(ClientMatchPredicate, Client, const Client*, cl == value)
 inline bool Workspace::hasClient(const Client* c)
 {
     return findClient(ClientMatchPredicate(c));
+}
+
+inline
+void Workspace::scheduleMouseMotionCompression(const std::function< void () > &functor)
+{
+    m_mouseMotionTimer->schedule(functor);
 }
 
 inline Workspace *workspace()
