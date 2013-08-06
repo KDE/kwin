@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <QDesktopWidget>
+#include <QApplication>
 
 namespace KWin {
 

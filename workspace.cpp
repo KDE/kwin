@@ -61,6 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // KDE
 #include <kdeversion.h>
+#include <KDE/KApplication>
 #include <KDE/KActionCollection>
 #include <KDE/KCmdLineArgs>
 #include <KDE/KConfig>

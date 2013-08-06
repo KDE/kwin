@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SM_H
 
 #include <QDataStream>
-#include <kapplication.h>
 #include <ksessionmanager.h>
 #include <netwm_def.h>
 #include <QRect>
