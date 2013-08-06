@@ -30,4 +30,4 @@ void PlastikPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri
     QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
 }
 
-#include "plastikplugin.moc"
+#include "moc_plastikplugin.cpp"
