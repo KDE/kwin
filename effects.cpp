@@ -1191,8 +1191,14 @@ bool EffectsHandlerImpl::checkInputWindowEvent(xcb_button_press_event_t *e)
     }
     for (Effect *effect : m_grabbedMouseEffects) {
         Qt::MouseButton button = x11ToQtMouseButton(e->detail);
-        Qt::MouseButtons buttons = x11ToQtMouseButtons(e->state) & ~button;
-        QMouseEvent ev(((e->response_type & ~0x80) == XCB_BUTTON_PRESS) ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease,
+        Qt::MouseButtons buttons = x11ToQtMouseButtons(e->state);
+        const QEvent::Type type = ((e->response_type & ~0x80) == XCB_BUTTON_PRESS) ? QEvent::MouseButtonPress : QEvent::MouseButtonRelease;
+        if (type == QEvent::MouseButtonPress) {
+            buttons |= button;
+        } else {
+            buttons &= ~button;
+        }
+        QMouseEvent ev(type,
                         QPoint(e->event_x, e->event_y), QPoint(e->root_x, e->root_y),
                         button, buttons, x11ToQtKeyboardModifiers(e->state));
         effect->windowInputMouseEvent(&ev);
