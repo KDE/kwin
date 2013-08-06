@@ -52,7 +52,6 @@ void KillWindow::start()
     if (m_active) {
         return;
     }
-    m_active = true;
 
     xcb_connection_t *c = connection();
     ScopedCPointer<xcb_grab_pointer_reply_t> grabPointer(xcb_grab_pointer_reply(c, xcb_grab_pointer_unchecked(c, false, rootWindow(),
@@ -64,7 +63,11 @@ void KillWindow::start()
     if (grabPointer.isNull() || grabPointer->status != XCB_GRAB_STATUS_SUCCESS) {
         return;
     }
-    grabXKeyboard();
+    m_active = grabXKeyboard();
+    if (!m_active) {
+        xcb_ungrab_pointer(connection(), XCB_TIME_CURRENT_TIME);
+        return;
+    }
     grabXServer();
 }
 
