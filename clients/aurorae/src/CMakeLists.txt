@@ -30,8 +30,6 @@ set(decoration_plugin_SRCS
     colorhelper.cpp
     )
 
-qt4_automoc(${decoration_plugin_SRCS})
-
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 target_link_libraries(decorationplugin
     KF5::KWidgets # KColorScheme
