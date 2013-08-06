@@ -178,5 +178,5 @@ endif()
 # Add the builtins plugin
 KWIN4_ADD_EFFECT( builtins ${kwin4_effect_builtins_sources} )
 if( NOT KWIN_MOBILE_EFFECTS )
-    KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
+#    KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
 endif()
