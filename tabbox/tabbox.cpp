@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#include "xcbutils.h"
 // Qt
 #include <QAction>
 #include <QX11Info>
@@ -705,7 +706,7 @@ void TabBox::hide(bool abort)
     if (isDisplayed())
         kDebug(1212) << "Tab box was not properly closed by an effect";
     m_tabBox->hide(abort);
-    QApplication::syncX();
+    Xcb::sync();
     XEvent otherEvent;
     while (XCheckTypedEvent(display(), EnterNotify, &otherEvent))
         ;
