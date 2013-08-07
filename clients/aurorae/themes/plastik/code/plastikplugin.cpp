@@ -25,7 +25,7 @@ void PlastikPlugin::registerTypes(const char *uri)
 
 void PlastikPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.kwin.decorations.plastik"));
+    Q_ASSERT(QLatin1String(uri) == QLatin1String("org.kde.kwin.decorations.plastik"));
     engine->addImageProvider(QLatin1String("plastik"), new KWin::PlastikButtonProvider());
     QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
 }
