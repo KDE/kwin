@@ -134,6 +134,12 @@ QString EffectModel::serviceName(const QString &effectName) {
     return "kwin4_effect_" + effectName.toLower().replace(" ", "");
 }
 
+QString EffectModel::findImage(const QString &imagePath, int size) {
+    const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
+    const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
+    return fullImagePath;
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
@@ -169,12 +175,6 @@ void EffectView::syncConfig() {
         effectsChanged["kwin4_effect_" + effectEntry] = boolToString.toBool();
     }
     kwinConfig.sync();
-}
-
-QString EffectView::findImage(const QString &imagePath, int size) {
-    const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
-    const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
-    return fullImagePath;
 }
 
 }//end namespace Compositing

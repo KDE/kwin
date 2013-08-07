@@ -90,7 +90,7 @@ Component {
                     id: configureButton
                     anchors.left: effectItem.right
                     visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                    iconSource: engineObject.findImage("actions/configure.png")
+                    iconSource: effectModel.findImage("actions/configure.png")
                     width: 50
                     height: 25
                     enabled: myCheckBox.checked
@@ -104,7 +104,7 @@ Component {
                     anchors.left: configureButton.right
                     width: 50
                     height: 25
-                    iconSource: engineObject.findImage("status/dialog-information.png");
+                    iconSource: effectModel.findImage("status/dialog-information.png");
 
                     onClicked: {
                         animationAbout.running = true;

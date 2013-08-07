@@ -64,10 +64,11 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QString serviceName(const QString &effectName);
 
+    Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
+
 private:
     void loadEffects();
     QList<EffectData> m_effectsList;
-
 };
 
 class EffectView : public QQuickView {
@@ -81,7 +82,6 @@ public:
 
     Q_INVOKABLE void effectStatus(const QString &effectName, bool status);
     Q_INVOKABLE void syncConfig();
-    Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
 
 private:
     QHash<QString, bool> m_effectStatus;
