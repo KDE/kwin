@@ -177,7 +177,6 @@ bool EglOnXBackend::initRenderingContext()
     const EGLint context_attribs_31_core[] = {
         EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
         EGL_CONTEXT_MINOR_VERSION_KHR, 1,
-        EGL_CONTEXT_FLAGS_KHR,         EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR,
         EGL_NONE
     };
 
