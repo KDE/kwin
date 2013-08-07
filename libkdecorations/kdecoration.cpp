@@ -85,7 +85,7 @@ const KDecorationOptions* KDecoration::options()
     return options_;
 }
 
-void KDecoration::createMainWidget(Qt::WFlags flags)
+void KDecoration::createMainWidget(Qt::WindowFlags flags)
 {
     // FRAME check flags?
     QWidget *w = new QWidget(initialParentWidget(), initialWFlags() | flags);
@@ -109,7 +109,7 @@ QWidget* KDecoration::initialParentWidget() const
     return bridge_->initialParentWidget();
 }
 
-Qt::WFlags KDecoration::initialWFlags() const
+Qt::WindowFlags KDecoration::initialWFlags() const
 {
     return bridge_->initialWFlags();
 }

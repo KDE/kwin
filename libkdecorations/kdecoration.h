@@ -918,7 +918,7 @@ public:
      *              flags that affect widget drawing are allowed. Window type flags
      *              like WX11BypassWM or WStyle_NoBorder are forbidden.
      */
-    void createMainWidget(Qt::WFlags flags = 0);
+    void createMainWidget(Qt::WindowFlags flags = 0);
     /**
      * The parent widget that should be used for the main widget.
      */
@@ -929,7 +929,7 @@ public:
      * that affect widget drawing are allowed. Window type flags like WX11BypassWM
      * or WStyle_NoBorder are forbidden.
      */
-    Qt::WFlags initialWFlags() const;
+    Qt::WindowFlags initialWFlags() const;
     /**
      * Returns the main widget for the decoration.
      */

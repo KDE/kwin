@@ -329,9 +329,9 @@ Q_SIGNALS:
     void keepBelowChanged(bool);
 public:
     void setMainWidget(QWidget*);
-    void createMainWidget(Qt::WFlags flags = 0);
+    void createMainWidget(Qt::WindowFlags flags = 0);
     QWidget* initialParentWidget() const;
-    Qt::WFlags initialWFlags() const;
+    Qt::WindowFlags initialWFlags() const;
     QWidget* widget();
     const QWidget* widget() const;
     KDecorationFactory* factory() const;

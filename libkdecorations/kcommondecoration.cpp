@@ -1261,7 +1261,7 @@ void KCommonDecoration::setMainWidget(QWidget* w)
 {
     return wrapper->setMainWidget(w);
 }
-void KCommonDecoration::createMainWidget(Qt::WFlags flags)
+void KCommonDecoration::createMainWidget(Qt::WindowFlags flags)
 {
     return wrapper->createMainWidget(flags);
 }
@@ -1269,7 +1269,7 @@ QWidget* KCommonDecoration::initialParentWidget() const
 {
     return wrapper->initialParentWidget();
 }
-Qt::WFlags KCommonDecoration::initialWFlags() const
+Qt::WindowFlags KCommonDecoration::initialWFlags() const
 {
     return wrapper->initialWFlags();
 }
