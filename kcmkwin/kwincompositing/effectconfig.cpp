@@ -20,6 +20,9 @@
 
 #include "effectconfig.h"
 
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 #include <QStandardPaths>
 #include <QString>
 
@@ -27,8 +30,6 @@
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 
-
-#include <QDebug>
 EffectConfig::EffectConfig(QObject *parent)
     : QObject(parent)
 {
@@ -49,15 +50,34 @@ bool EffectConfig::effectUiConfigExists(const QString &effectName) {
 }
 
 void EffectConfig::openConfig(const QString &effectName) {
+    //setup the UI
+    QDialog dialog;
+    QVBoxLayout layout;
+    KCModuleProxy *proxy;
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    buttons->setCenterButtons(true);
+
+    //Here we connect our buttons with the dialog
+    connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
 
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
         KPluginInfo plugin(service);
         if (plugin.name() == effectName) {
             QString effectConfig = serviceName(plugin.name() + "_config");
-            KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
+            proxy = new KCModuleProxy(effectConfig);
 
-            proxy->show();
+            //setup the Layout of our UI
+            layout.addWidget(proxy);
+            layout.addWidget(buttons);
+            dialog.setLayout(&layout);
+
+            //open the dialog
+            if (dialog.exec() == QDialog::Accepted) {
+                proxy->save();
+            }
         }
     }
 }
