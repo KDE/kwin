@@ -27,6 +27,8 @@
 #include <QQuickView>
 #include <QString>
 
+namespace KWin {
+namespace Compositing {
 
 class EffectConfig : public QObject {
 
@@ -34,10 +36,11 @@ class EffectConfig : public QObject {
 
 public:
     EffectConfig(QObject *parent = 0);
-    QString serviceName(const QString &effectName);
+    QString serviceName(const QString &serviceName);
 
     Q_INVOKABLE bool effectUiConfigExists(const QString &effectName);
     Q_INVOKABLE void openConfig(const QString &effectName);
-
 };
+}//end namespace Compositing
+}//end namespace KWin
 #endif

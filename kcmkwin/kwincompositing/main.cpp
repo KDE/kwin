@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    EffectView *view = new EffectView();
+    KWin::Compositing::EffectView *view = new KWin::Compositing::EffectView();
     view->show();
 
     return app.exec();

@@ -20,32 +20,30 @@
 
 #include "effectconfig.h"
 
+#include <KDE/KCModuleProxy>
+#include <KDE/KPluginInfo>
+#include <KDE/KServiceTypeTrader>
+
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QStandardPaths>
 #include <QString>
 
-#include <KCModuleProxy>
-#include <KPluginInfo>
-#include <KServiceTypeTrader>
+namespace KWin {
+namespace Compositing {
 
 EffectConfig::EffectConfig(QObject *parent)
     : QObject(parent)
 {
 }
 
-QString EffectConfig::serviceName(const QString &effectName) {
-    //The effect name is something like "Show Fps" and
-    //we want something like "showfps"
-    return effectName.toLower().replace(" ", "");
-}
+bool EffectConfig::effectUiConfigExists(const QString &serviceName) {
 
-bool EffectConfig::effectUiConfigExists(const QString &effectName) {
-
-    const QString effectConfig = serviceName(effectName) + "_config";
-    QString effectConfigFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/kwin/" + effectConfig +".desktop", QStandardPaths::LocateFile);
-
+    //Our effect UI config is something like showfps_config.dekstop
+    QString tmp = serviceName;
+    const QString effectConfig = tmp.replace("kwin4_effect_", "") + "_config.desktop";
+    QString effectConfigFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/kwin/" + effectConfig , QStandardPaths::LocateFile);
     return !effectConfigFile.isEmpty();
 }
 
@@ -65,7 +63,7 @@ void EffectConfig::openConfig(const QString &effectName) {
     for(KService::Ptr service : offers) {
         KPluginInfo plugin(service);
         if (plugin.name() == effectName) {
-            QString effectConfig = serviceName(plugin.name() + "_config");
+            QString effectConfig = effectName.toLower().replace(" ", "") + "_config";
             KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
 
             //setup the Layout of our UI
@@ -80,4 +78,5 @@ void EffectConfig::openConfig(const QString &effectName) {
         }
     }
 }
-
+}//end namespace Compositing
+}//end namespace KWin

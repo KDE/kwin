@@ -18,8 +18,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.  *
 **************************************************************************/
 
-#include "effectconfig.h"
 #include "model.h"
+#include "effectconfig.h"
+
+#include <KDE/KPluginInfo>
+#include <KDE/KService>
+#include <KDE/KServiceTypeTrader>
+#include <KDE/KSharedConfig>
+#include <KDE/KCModuleProxy>
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -32,23 +38,22 @@
 #include <QtQml>
 #include <QDebug>
 
-#include <KPluginInfo>
-#include <KService>
-#include <KServiceTypeTrader>
-#include <KSharedConfig>
-#include <KCModuleProxy>
+namespace KWin {
+namespace Compositing {
 
 EffectModel::EffectModel(QObject *parent)
     : QAbstractListModel(parent) {
 
     QHash<int, QByteArray> roleNames;
-    roleNames[Name] = "Name";
-    roleNames[Description] = "Description";
-    roleNames[AuthorName] = "AuthorName";
-    roleNames[AuthorEmail] = "AuthorEmail";
-    roleNames[License] = "License";
-    roleNames[Version] = "Version";
-    roleNames[Category] = "Category";
+    roleNames[NameRole] = "NameRole";
+    roleNames[DescriptionRole] = "DescriptionRole";
+    roleNames[AuthorNameRole] = "AuthorNameRole";
+    roleNames[AuthorEmailRole] = "AuthorEmailRole";
+    roleNames[LicenseRole] = "LicenseRole";
+    roleNames[VersionRole] = "VersionRole";
+    roleNames[CategoryRole] = "CategoryRole";
+    roleNames[ServiceNameRole] = "ServiceNameRole";
+    roleNames[EffectStatusRole] = "EffectStatusRole";
     setRoleNames(roleNames);
     loadEffects();
 }
@@ -62,33 +67,39 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
 
-    Effect currentEffect = m_effectsList.at(index.row());
+    EffectData currentEffect = m_effectsList.at(index.row());
     switch (role) {
         case Qt::DisplayRole:
-        case Name:
+        case NameRole:
             return m_effectsList.at(index.row()).name;
-        case Description:
+        case DescriptionRole:
             return m_effectsList.at(index.row()).description;
-        case AuthorName:
+        case AuthorNameRole:
             return m_effectsList.at(index.row()).authorName;
-        case AuthorEmail:
+        case AuthorEmailRole:
             return m_effectsList.at(index.row()).authorEmail;
-        case License:
+        case LicenseRole:
             return m_effectsList.at(index.row()).license;
-        case Version:
+        case VersionRole:
             return m_effectsList.at(index.row()).version;
-        case Category:
+        case CategoryRole:
             return m_effectsList.at(index.row()).category;
+        case ServiceNameRole:
+            return m_effectsList.at(index.row()).serviceName;
+        case EffectStatusRole:
+            return m_effectsList.at(index.row()).effectStatus;
         default:
             return QVariant();
     }
 }
 
 void EffectModel::loadEffects() {
-    Effect effect;
+    EffectData effect;
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+    QDBusMessage messageLoadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "loadEffect");
+    QDBusMessage messageUnloadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "unloadEffect");
 
-    beginInsertRows(QModelIndex(), rowCount(), rowCount());
-
+    beginResetModel();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
         KPluginInfo plugin(service);
@@ -99,11 +110,28 @@ void EffectModel::loadEffects() {
         effect.license = plugin.license();
         effect.version = plugin.version();
         effect.category = plugin.category();
+        effect.serviceName = serviceName(effect.name);
+        effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
+
+        effect.effectStatus ? messageLoadEffect << effect.serviceName : messageUnloadEffect << effect.serviceName;
+
         m_effectsList << effect;
     }
+    qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
+        return a.category < b.category;
+    });
 
-    qSort(m_effectsList.begin(), m_effectsList.end(), EffectModel::less);
-    endInsertRows();
+    endResetModel();
+
+    QDBusConnection::sessionBus().registerObject("/Effects", this);
+    QDBusConnection::sessionBus().send(messageLoadEffect);
+    QDBusConnection::sessionBus().send(messageUnloadEffect);
+}
+
+QString EffectModel::serviceName(const QString &effectName) {
+    //The effect name is something like "Show Fps" and
+    //we want something like "showfps"
+    return "kwin4_effect_" + effectName.toLower().replace(" ", "");
 }
 
 EffectView::EffectView(QWindow *parent)
@@ -127,13 +155,6 @@ void EffectView::effectStatus(const QString &effectName, bool status) {
     m_effectStatus[effectName] = status;
 }
 
-
-bool EffectView::isEnabled(const QString &effectName) {
-    KConfigGroup cg(KSharedConfig::openConfig("kwinrc"), "Plugins");
-    QString effectEntry = effectName.toLower().replace(" ", "");
-    return cg.readEntry("kwin4_effect_" + effectEntry + "Enabled", false);
-}
-
 void EffectView::syncConfig() {
     auto it = m_effectStatus.begin();
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
@@ -148,31 +169,6 @@ void EffectView::syncConfig() {
         effectsChanged["kwin4_effect_" + effectEntry] = boolToString.toBool();
     }
     kwinConfig.sync();
-
-    loadKWinEffects(effectsChanged);
-}
-
-void EffectView::loadKWinEffects(const QHash<QString, bool> &effectsChanged) {
-    QDBusMessage messageLoadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "loadEffect");
-    QDBusMessage messageUnloadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "unloadEffect");
-
-    auto it = effectsChanged.begin();
-    while (it != effectsChanged.end()) {
-        bool effectStatus = it.value();
-        QString effectEntry = it.key();
-
-        if (effectStatus) {
-            messageLoadEffect << effectEntry;
-        } else {
-            messageUnloadEffect << effectEntry;
-        }
-
-        it++;
-    }
-
-    QDBusConnection::sessionBus().registerObject("/Effects", this);
-    QDBusConnection::sessionBus().send(messageLoadEffect);
-    QDBusConnection::sessionBus().send(messageUnloadEffect);
 }
 
 QString EffectView::findImage(const QString &imagePath, int size) {
@@ -180,3 +176,6 @@ QString EffectView::findImage(const QString &imagePath, int size) {
     const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
     return fullImagePath;
 }
+
+}//end namespace Compositing
+}//end namespace KWin

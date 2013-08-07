@@ -27,7 +27,10 @@
 #include <QQuickView>
 #include <QString>
 
-struct Effect {
+namespace KWin {
+namespace Compositing {
+
+struct EffectData {
     QString name;
     QString description;
     QString authorName;
@@ -35,6 +38,8 @@ struct Effect {
     QString license;
     QString version;
     QString category;
+    QString serviceName;
+    bool effectStatus;
 };
 
 class EffectModel : public QAbstractListModel {
@@ -43,26 +48,26 @@ class EffectModel : public QAbstractListModel {
 
 public:
     enum EffectRoles {
-        Name = Qt::UserRole + 1,
-        Description,
-        AuthorName,
-        AuthorEmail,
-        License,
-        Version,
-        Category
+        NameRole = Qt::UserRole + 1,
+        DescriptionRole,
+        AuthorNameRole,
+        AuthorEmailRole,
+        LicenseRole,
+        VersionRole,
+        CategoryRole,
+        ServiceNameRole,
+        EffectStatusRole
     };
 
     EffectModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-    static bool less(Effect a, Effect b) {
-    return a.category < b.category;
-    }
+    QString serviceName(const QString &effectName);
 
 private:
     void loadEffects();
-    QList<Effect> m_effectsList;
+    QList<EffectData> m_effectsList;
+
 };
 
 class EffectView : public QQuickView {
@@ -75,11 +80,13 @@ public:
     void loadKWinEffects(const QHash<QString, bool> &effectsChanged);
 
     Q_INVOKABLE void effectStatus(const QString &effectName, bool status);
-    Q_INVOKABLE bool isEnabled(const QString &effectName);
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
 
 private:
     QHash<QString, bool> m_effectStatus;
 };
+
+}
+}
 #endif

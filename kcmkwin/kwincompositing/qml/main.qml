@@ -66,7 +66,7 @@ Item {
 
         PlasmaCore.SortFilterModel {
             id: searchModel
-            filterRole: "Name"
+            filterRole: "NameRole"
             filterRegExp: searchField.text
             sourceModel: EffectModel{
                 id: effectModel
@@ -91,7 +91,7 @@ Item {
                 model: searchModel
                 delegate: Effect {}
 
-                section.property: "Category"
+                section.property: "CategoryRole"
                 section.delegate: sectionHeading
             }
         }

@@ -38,10 +38,10 @@ Component {
             Row {
                 CheckBox {
                     id: myCheckBox
-                    checked: engineObject.isEnabled(model.Name)
+                    checked: model.EffectStatusRole
                     onClicked: {
                         apply.enabled = true;
-                        engineObject.effectStatus(model.Name, checked);
+                        engineObject.effectStatus(model.NameRole, checked);
                     }
 
                     onCheckedChanged: {
@@ -56,11 +56,11 @@ Component {
                     Column {
                         id: col
                         Text {
-                            text: model.Name
+                            text: model.NameRole
                         }
                         Text {
                             id: desc
-                            text: model.Description
+                            text: model.DescriptionRole
                         }
                         Item {
                             id:aboutItem
@@ -69,7 +69,7 @@ Component {
                             visible: false
 
                             Text {
-                                text: "Author: " + model.AuthorName + "\n" + "License: " + model.License
+                                text: "Author: " + model.AuthorNameRole + "\n" + "License: " + model.LicenseRole
                                 font.bold: true
                             }
                             PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
@@ -89,13 +89,13 @@ Component {
                 Button {
                     id: configureButton
                     anchors.left: effectItem.right
-                    visible: effectConfig.effectUiConfigExists(model.Name)
+                    visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
                     iconSource: engineObject.findImage("actions/configure.png")
                     width: 50
                     height: 25
                     enabled: myCheckBox.checked
                     onClicked: {
-                        effectConfig.openConfig(model.Name);
+                        effectConfig.openConfig(model.NameRole);
                     }
                 }
 
