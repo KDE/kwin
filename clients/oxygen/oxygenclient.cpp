@@ -1725,7 +1725,7 @@ namespace Oxygen
 
             QDrag *drag = new QDrag( widget() );
             QMimeData *groupData = new QMimeData();
-            groupData->setData( tabDragMimeType(), QString().setNum( tabId(clickedIndex) ).toAscii() );
+            groupData->setData( tabDragMimeType(), QByteArray().setNum( (qint64) tabId(clickedIndex) ) );
             drag->setMimeData( groupData );
             _sourceItem = tabIndexAt( _dragPoint );
 
