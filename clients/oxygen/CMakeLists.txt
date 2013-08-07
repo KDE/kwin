@@ -29,7 +29,7 @@ target_link_libraries(
     KF5::KGuiAddons
     KF5::KI18n
     KF5::KWindowSystem
-    ${KDE4_KDEUI_LIBRARY} # KStyle
+    KF5::KStyle # KStyle
     ${Qt5Widgets_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${X11_X11_LIB}

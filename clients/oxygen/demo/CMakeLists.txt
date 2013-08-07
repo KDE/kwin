@@ -24,6 +24,7 @@ target_link_libraries(oxygen-shadow-demo
 
 target_link_libraries(oxygen-shadow-demo
     ${KI18n_LIBRARIES}
+    KF5::KConfigWidgets
 )
 
 target_link_libraries(oxygen-shadow-demo oxygenstyle )
