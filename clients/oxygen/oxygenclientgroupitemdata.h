@@ -31,7 +31,7 @@
 #include "oxygenanimation.h"
 
 #include <QList>
-#include <QWeakPointer>
+#include <QPointer>
 #include <QRect>
 
 namespace Oxygen
@@ -90,7 +90,7 @@ namespace Oxygen
         QRect _boundingRect;
 
         //! tab button
-        typedef QWeakPointer<Button> ButtonPointer;
+        typedef QPointer<Button> ButtonPointer;
         ButtonPointer _closeButton;
 
     };
