@@ -602,6 +602,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     m_chipset = "Unknown";
+    m_preferBufferSubData = false;
 
 
     // Mesa classic drivers
@@ -794,8 +795,10 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         if (m_driver == Driver_NVidia && m_chipClass < NV40)
             m_supportsGLSL = false; // High likelihood of software emulation
 
-        if (m_driver == Driver_NVidia)
+        if (m_driver == Driver_NVidia) {
             m_looseBinding = true;
+            m_preferBufferSubData = true;
+        }
 
         if (m_chipClass < NV20) {
             m_recommendedCompositor = XRenderCompositing;
@@ -1049,6 +1052,11 @@ bool GLPlatform::isVirtualMachine() const
 CompositingType GLPlatform::recommendedCompositor() const
 {
     return m_recommendedCompositor;
+}
+
+bool GLPlatform::preferBufferSubData() const
+{
+    return m_preferBufferSubData;
 }
 
 bool GLPlatform::isGLES() const

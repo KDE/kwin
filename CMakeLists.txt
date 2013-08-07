@@ -248,7 +248,6 @@ set(kwin_XCB_LIBS
     ${XCB_RENDER_LIBRARIES}
     ${XCB_RANDR_LIBRARIES}
     ${XCB_KEYSYMS_LIBRARIES}
-    ${XCB_ICCCM_LIBRARIES}
 )
 
 set(kwin_WAYLAND_LIBS
@@ -309,8 +308,6 @@ if(OPENGL_FOUND)
   if (DL_LIBRARY)
     target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
   endif()
-  # must be after opengl, to be initialized first by the linker
-  target_link_libraries(kdeinit_kwin kwinnvidiahack)
 elseif(OPENGLES_FOUND)
   target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
@@ -328,18 +325,6 @@ if(OPENGLES_FOUND)
   install(TARGETS kdeinit_kwin_gles ${INSTALL_TARGETS_DEFAULT_ARGS} )
   install(TARGETS kwin_gles         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 endif()
-
-########### next target ###############
-
-set( kwinnvidiahack_LIB_SRCS 
-    nvidiahack.cpp )
-
-
-kde4_add_library(kwinnvidiahack SHARED ${kwinnvidiahack_LIB_SRCS})
-
-set_target_properties(kwinnvidiahack PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}  )
-set_target_properties(kwinnvidiahack PROPERTIES OUTPUT_NAME ${KWIN_NAME}nvidiahack)
-install(TARGETS kwinnvidiahack ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 ########### install files ###############
 

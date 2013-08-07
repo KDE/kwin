@@ -15,6 +15,13 @@ install( FILES
 
 # Data files
 install( FILES
-    logout/data/vignetting.frag
-    logout/data/logout-blur.frag
-    DESTINATION ${DATA_INSTALL_DIR}/kwin )
+    logout/data/1.10/vignetting.frag
+    logout/data/1.10/logout-blur.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10
+)
+
+install( FILES
+    logout/data/1.40/vignetting.frag
+    logout/data/1.40/logout-blur.frag
+    DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40
+)

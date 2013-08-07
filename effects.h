@@ -222,6 +222,7 @@ protected Q_SLOTS:
     void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
     void slotUnmanagedAdded(KWin::Unmanaged *u);
+    void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c);
     void slotClientActivated(KWin::Client *c);
     void slotDeletedRemoved(KWin::Deleted *d);
@@ -232,6 +233,7 @@ protected Q_SLOTS:
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientMinimized(KWin::Client *c, bool animate);
     void slotClientUnminimized(KWin::Client *c, bool animate);
+    void slotClientModalityChanged();
     void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
     void slotPaddingChanged(KWin::Toplevel *t, const QRect &old);
     void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
@@ -256,12 +258,14 @@ private Q_SLOTS:
     void slotEffectsQueried();
 
 private:
-    QList< Effect* > m_activeEffects;
-    QList< Effect* >::iterator m_currentDrawWindowIterator;
-    QList< Effect* >::iterator m_currentPaintWindowIterator;
-    QList< Effect* >::iterator m_currentPaintEffectFrameIterator;
-    QList< Effect* >::iterator m_currentPaintScreenIterator;
-    QList< Effect* >::iterator m_currentBuildQuadsIterator;
+    typedef QVector< Effect*> EffectsList;
+    typedef EffectsList::const_iterator EffectsIterator;
+    EffectsList m_activeEffects;
+    EffectsIterator m_currentDrawWindowIterator;
+    EffectsIterator m_currentPaintWindowIterator;
+    EffectsIterator m_currentPaintEffectFrameIterator;
+    EffectsIterator m_currentPaintScreenIterator;
+    EffectsIterator m_currentBuildQuadsIterator;
     typedef QHash< QByteArray, QList< Effect*> > PropertyEffectMap;
     PropertyEffectMap m_propertiesForEffects;
     QHash<QByteArray, qulonglong> m_managedProperties;

@@ -39,11 +39,12 @@ public:
     explicit CloseWindowView(QWindow *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
-public Q_SLOTS:
-    void arm();
 
 Q_SIGNALS:
     void requestClose();
+
+protected:
+    void hideEvent(QHideEvent *event);
 
 private:
     QTimer* m_armTimer;
@@ -281,6 +282,7 @@ private:
     EffectWindowList m_selectedWindows;
     EffectWindow *m_managerWindow;
     QString m_class;
+    bool m_needInitialSelection;
 
     // Window data
     WindowMotionManager m_motionManager;

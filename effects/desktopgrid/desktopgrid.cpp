@@ -857,8 +857,6 @@ int DesktopGridEffect::posToDesktop(const QPoint& pos) const
     double scaledY = (pos.y() - scaledOffset[screen].y() + double(border) / 2.0) / (scaledSize[screen].height() + border);
     int gx = qBound(0, int(scaledX), gridSize.width() - 1);     // Zero-based
     int gy = qBound(0, int(scaledY), gridSize.height() - 1);
-    scaledX -= gx;
-    scaledY -= gy;
     if (orientation == Qt::Horizontal)
         return gy * gridSize.width() + gx + 1;
     return gx * gridSize.height() + gy + 1;

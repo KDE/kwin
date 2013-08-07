@@ -17,8 +17,8 @@ void main()
         tex.rgb = tex.rgb * vec3( saturation ) + desaturated * vec3( 1.0 - saturation );
     }
 
-    tex *= modulation;
     tex.rgb = vec3(1.0) - tex.rgb;
+    tex *= modulation;
     tex.rgb *= tex.a;
 
     fragColor = tex;

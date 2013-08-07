@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "xcbutils.h"
 
+#include <QTimer>
 #include <QDebug>
 
 #include <X11/extensions/shape.h>
@@ -35,7 +36,9 @@ namespace KWin
 Unmanaged::Unmanaged()
     : Toplevel()
 {
+    ready_for_painting = false;
     connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
+    QTimer::singleShot(50, this, SLOT(setReadyForPainting()));
 }
 
 Unmanaged::~Unmanaged()

@@ -334,6 +334,8 @@ void DeclarativeView::currentIndexChanged(int row)
 
 void DeclarativeView::updateQmlSource(bool force)
 {
+    if (status() != Ready)
+        return;
     if (tabBox->config().tabBoxMode() != m_mode) {
         return;
     }

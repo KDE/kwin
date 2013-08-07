@@ -32,11 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xcb.h>
 #include <xcb/composite.h>
 #include <xcb/randr.h>
-#define class class_name //HACK: work around a non-C++ safe problem in xcb_iccm.h
-                         //where they put a variable called "class" in function signatures.
-                         //Needed at least for xcb v0.3.8
-#include <xcb/xcb_icccm.h>
-#undef class             //UNDO HACK
 
 namespace KWin {
 
@@ -214,10 +209,15 @@ public:
     }
 };
 
-class TransientFor : public Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &xcb_icccm_get_wm_transient_for_unchecked>
+inline xcb_get_property_cookie_t get_transient_for(xcb_connection_t *c, xcb_window_t window)
+{
+    return xcb_get_property_unchecked(c, 0, window, XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 0, 1);
+}
+
+class TransientFor : public Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &get_transient_for>
 {
 public:
-    explicit TransientFor(WindowId window) : Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &xcb_icccm_get_wm_transient_for_unchecked>(window) {}
+    explicit TransientFor(WindowId window) : Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &get_transient_for>(window) {}
 
     /**
      * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
@@ -228,10 +228,13 @@ public:
         if (isNull()) {
             return false;
         }
-        if (xcb_icccm_get_wm_transient_for_from_reply(prop, const_cast<xcb_get_property_reply_t*>(data()))) {
-            return true;
-        }
-        return false;
+
+        const xcb_get_property_reply_t *reply = data();
+        if (!reply || reply->type != XCB_ATOM_WINDOW || reply->format != 32 || reply->length == 0)
+            return false;
+
+        *prop = *reinterpret_cast<WindowId *>(xcb_get_property_value(reply));
+        return true;
     }
 };
 
@@ -721,6 +724,12 @@ static inline void defineCursor(xcb_window_t window, xcb_cursor_t cursor)
 static inline void setInputFocus(xcb_window_t window, uint8_t revertTo, xcb_timestamp_t time)
 {
     xcb_set_input_focus(connection(), revertTo, window, time);
+}
+
+static inline void setTransientFor(xcb_window_t window, xcb_window_t transient_for_window)
+{
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, window, XCB_ATOM_WM_TRANSIENT_FOR,
+                        XCB_ATOM_WINDOW, 32, 1, &transient_for_window);
 }
 
 static inline void sync()

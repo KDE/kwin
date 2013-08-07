@@ -538,6 +538,8 @@ extern KWIN_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
 #define GL_MAP_INVALIDATE_BUFFER_BIT      0x0008
 #define GL_MAP_FLUSH_EXPLICIT_BIT         0x0010
 #define GL_MAP_UNSYNCHRONIZED_BIT         0x0020
+#define GL_TEXTURE_3D                     0x806F
+#define GL_TEXTURE_WRAP_R                 0x8072
 #endif
 
 namespace KWin
@@ -569,6 +571,10 @@ typedef void (*glGetBufferPointerv_func)(GLenum target, GLenum pname, GLvoid **p
 extern KWIN_EXPORT glMapBuffer_func         glMapBuffer;
 extern KWIN_EXPORT glUnmapBuffer_func       glUnmapBuffer;
 extern KWIN_EXPORT glGetBufferPointerv_func glGetBufferPointerv;
+
+// GL_OES_texture_3D
+typedef GLvoid(*glTexImage3DOES_func)(GLenum, GLint, GLenum, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid*);
+extern KWIN_EXPORT glTexImage3DOES_func glTexImage3D;
 
 // GL_EXT_map_buffer_range
 typedef GLvoid *(*glMapBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);

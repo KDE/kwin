@@ -34,27 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPair>
 #include <QVector3D>
 
-#ifdef KWIN_HAVE_OPENGLES
-#define CC_TEXTURE_INTERNAL_FORMAT GL_RGB
-
-/*
- * A bit of ugliness to allow building with OpenGL ES < 3, without
- * ifdef's everywhere in the code. These should not actually be used anywhere.
- */
-#ifndef GL_TEXTURE_3D
-#define GL_TEXTURE_3D              0x806F    // From OES_texture_3D extension
-#define GL_TEXTURE_WRAP_R          0x8072    // From OES_texture_3D extension
-void glTexImage3D(GLenum, int, GLenum, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const void *)
-{
-    Q_ASSERT(false); // Execution must not reach here
-}
-#endif // defined(GL_TEXTURE_3D)
-
-#else  // KWIN_HAVE_OPENGLES
-#define CC_TEXTURE_INTERNAL_FORMAT GL_RGB16
-#endif // KWIN_HAVE_OPENGLES
-
-
 namespace KWin {
 
 /*
@@ -305,11 +284,14 @@ bool ColorCorrection::setEnabled(bool enabled)
         return false;
     }
 
+#ifdef KWIN_HAVE_OPENGLES
     const GLPlatform *gl = GLPlatform::instance();
-    if (enabled && gl->isGLES() && (gl->glVersion() >> 32) < 3) {
-        kError(1212) << "color correction is not supported with OpenGL ES < 3.0";
+    if (enabled && gl->isGLES() && glTexImage3D == 0) {
+        kError(1212) << "color correction is not supported on OpenGL ES without OES_texture_3D";
+        d->m_hasError = true;
         return false;
     }
+#endif // KWIN_HAVE_OPENGLES
 
     if (enabled) {
         // Update all profiles and regions
@@ -642,9 +624,22 @@ bool ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-    glTexImage3D(GL_TEXTURE_3D, 0, CC_TEXTURE_INTERNAL_FORMAT,
+#ifndef KWIN_HAVE_OPENGLES
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB16,
                  LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
                  0, GL_RGB, GL_UNSIGNED_SHORT, clut.data());
+#else
+    const int textureDataSize = clut.size();
+    QVector<quint8> textureData(textureDataSize);
+    quint8 *pTextureData = textureData.data();
+    const quint16 *pClutData = clut.data();
+    for (int i = 0; i < textureDataSize; ++i)
+        *(pTextureData++) = *(pClutData++) >> 8;
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB,
+                 LUT_GRID_POINTS, LUT_GRID_POINTS, LUT_GRID_POINTS,
+                 0, GL_RGB, GL_UNSIGNED_BYTE, textureData.data());
+#endif // KWIN_HAVE_OPENGLES
 
     return !checkGLError("setupCCTexture");
 }
@@ -667,7 +662,16 @@ void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
 
         // Reload all shaders
         ShaderManager::cleanup();
-        ShaderManager::instance();
+        if (!ShaderManager::instance()->isValid()) {
+            kError(1212) << "Shader reinitialization failed, possible compile problems with the shaders "
+                "altered for color-correction";
+            m_hasError = true;
+            kDebug(1212) << "Color correction has been disabled due to shader issues";
+            m_enabled = false;
+            GLShader::sColorCorrect = false;
+            ShaderManager::cleanup();
+            ShaderManager::instance();
+        }
     }
 
     emit q->changed();

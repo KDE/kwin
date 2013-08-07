@@ -48,6 +48,10 @@ namespace KWin
 xcb_render_picture_t SceneXrender::buffer = XCB_RENDER_PICTURE_NONE;
 ScreenPaintData SceneXrender::screen_paint;
 
+#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+#define FIXED_TO_DOUBLE(f) ((double) ((f) / 65536.0))
+
+
 static xcb_render_pictformat_t findFormatForVisual(xcb_visualid_t visual)
 {
     static QHash<xcb_visualid_t, xcb_render_pictformat_t> s_cache;
@@ -445,7 +449,6 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     if (toplevel->hasShadow())
         transformed_shape |= toplevel->shadow()->shadowRegion();
 
-#define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
     xcb_render_transform_t xform = {
         DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
@@ -479,7 +482,6 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         }
         transformed_shape.setRects(rects.constData(), rects.count());
     }
-#undef DOUBLE_TO_FIXED
 
     transformed_shape.translate(mapToScreen(mask, data, QPoint(0, 0)));
     PaintClipper pcreg(region);   // clip by the region to paint
@@ -495,7 +497,8 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     // the window has border
     // This solves a number of glitches and on top of this
     // it optimizes painting quite a bit
-    const bool blitInTempPixmap = xRenderOffscreen() || (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
+    const bool blitInTempPixmap = xRenderOffscreen() || (data.crossFadeProgress() < 1.0 && !opaque) ||
+                                 (scaled && (wantShadow || (client && !client->noBorder()) || (deleted && !deleted->noBorder())));
 
     xcb_render_picture_t renderTarget = buffer;
     if (blitInTempPixmap) {
@@ -630,7 +633,38 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
             if (!opaque) {
                 clientAlpha = xRenderBlendPicture(data.opacity());
             }
-            xcb_render_composite(connection(), clientRenderOp, pic, clientAlpha, renderTarget, cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+            xcb_render_composite(connection(), clientRenderOp, pic, clientAlpha, renderTarget,
+                                 cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+            if (data.crossFadeProgress() < 1.0 && data.crossFadeProgress() > 0.0) {
+                XRenderWindowPixmap *previous = previousWindowPixmap<XRenderWindowPixmap>();
+                if (previous && previous != pixmap) {
+                    static XRenderPicture cFadeAlpha(XCB_RENDER_PICTURE_NONE);
+                    static xcb_render_color_t cFadeColor = {0, 0, 0, 0};
+                    cFadeColor.alpha = uint16_t((1.0 - data.crossFadeProgress()) * 0xffff);
+                    if (cFadeAlpha == XCB_RENDER_PICTURE_NONE) {
+                        cFadeAlpha = xRenderFill(cFadeColor);
+                    } else {
+                        xcb_rectangle_t rect = {0, 0, 1, 1};
+                        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, cFadeAlpha, cFadeColor , 1, &rect);
+                    }
+                    if (previous->size() != pixmap->size()) {
+                        xcb_render_transform_t xform2 = {
+                            DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix11) * previous->size().width() / pixmap->size().width()), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
+                            DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(FIXED_TO_DOUBLE(xform.matrix22) * previous->size().height() / pixmap->size().height()), DOUBLE_TO_FIXED(0),
+                            DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
+                            };
+                        xcb_render_set_picture_transform(connection(), previous->picture(), xform2);
+                    }
+
+                    xcb_render_composite(connection(), opaque ? XCB_RENDER_PICT_OP_OVER : XCB_RENDER_PICT_OP_ATOP,
+                                         previous->picture(), cFadeAlpha, renderTarget,
+                                         cr.x(), cr.y(), 0, 0, dr.x(), dr.y(), dr.width(), dr.height());
+
+                    if (previous->size() != pixmap->size()) {
+                        xcb_render_set_picture_transform(connection(), previous->picture(), identity);
+                    }
+                }
+            }
             if (!opaque)
                 transformed_shape = QRegion();
         }
@@ -675,7 +709,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, _PART_, decorationAl
         if (blitInTempPixmap) {
             const QRect r = mapToScreen(mask, data, temp_visibleRect);
             xcb_render_set_picture_transform(connection(), *s_tempPicture, xform);
-            setPictureFilter(*s_tempPicture, KWin::Scene::ImageFilterGood);
+            setPictureFilter(*s_tempPicture, filter);
             xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *s_tempPicture,
                                  XCB_RENDER_PICTURE_NONE, buffer,
                                  0, 0, 0, 0, r.x(), r.y(), r.width(), r.height());
@@ -926,7 +960,7 @@ void SceneXrender::EffectFrame::renderUnstyled(xcb_render_picture_t pict, const 
 
         qreal x = roundness;//we start at angle = 0
         qreal y = 0;
-        #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
+
         QVector<xcb_render_pointfix_t> points;
         xcb_render_pointfix_t point;
         point.x = DOUBLE_TO_FIXED(roundness);
@@ -944,7 +978,6 @@ void SceneXrender::EffectFrame::renderUnstyled(xcb_render_picture_t pict, const 
         XRenderPicture fill = xRenderFill(Qt::black);
         xcb_render_tri_fan(connection(), XCB_RENDER_PICT_OP_OVER, fill, *s_effectFrameCircle,
                         0, 0, 0, points.count(), points.constData());
-        #undef DOUBLE_TO_FIXED
     }
     // TODO: merge alpha mask with SceneXrender::Window::alphaMask
     // alpha mask
@@ -1095,6 +1128,9 @@ xcb_render_picture_t SceneXRenderShadow::picture(Shadow::ShadowElements element)
     }
     return *m_pictures[element];
 }
+
+#undef DOUBLE_TO_FIXED
+#undef FIXED_TO_DOUBLE
 
 } // namespace
 #endif

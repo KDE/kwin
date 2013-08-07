@@ -26,7 +26,6 @@ Item {
     Plasma.Button {
         id: closeButton
         objectName: "closeButton"
-        enabled: armed
         iconSource: "window-close"
         anchors.fill: parent
     }

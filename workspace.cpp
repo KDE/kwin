@@ -179,10 +179,6 @@ Workspace::Workspace(bool restore)
     // start the cursor support
     Cursor::create(this);
 
-    // get screen support
-    Screens *screens = Screens::create(this);
-    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
-
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::create(this);
     connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
@@ -190,6 +186,11 @@ Workspace::Workspace(bool restore)
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
+
+    // get screen support
+    Screens *screens = Screens::create(this);
+    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
+
     options->loadConfig();
     options->loadCompositingConfig(false);
     DecorationPlugin::create(this);
@@ -619,10 +620,6 @@ void Workspace::removeClient(Client* c)
 
     updateStackingOrder(true);
 
-    if (m_compositor) {
-        m_compositor->updateCompositeBlocking();
-    }
-
 #ifdef KWIN_BUILD_TABBOX
     if (tabBox->isDisplayed())
         tabBox->reset(true);
@@ -666,6 +663,9 @@ void Workspace::removeDeleted(Deleted* c)
     unconstrained_stacking_order.removeAll(c);
     stacking_order.removeAll(c);
     x_stacking_dirty = true;
+    if (c->wasClient() && m_compositor) {
+        m_compositor->updateCompositeBlocking();
+    }
 }
 
 void Workspace::updateToolWindows(bool also_hide)
@@ -728,7 +728,7 @@ void Workspace::updateToolWindows(bool also_hide)
                 for (ClientList::ConstIterator it2 = mainclients.constBegin();
                         it2 != mainclients.constEnd();
                         ++it2) {
-                    if (c->isSpecialWindow())
+                    if ((*it2)->isSpecialWindow())
                         show = true;
                 }
                 if (!show)

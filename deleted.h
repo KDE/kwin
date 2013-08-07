@@ -66,6 +66,9 @@ public:
     PaintRedirector *decorationPaintRedirector() {
         return m_paintRedirector;
     }
+    bool wasClient() const {
+        return m_wasClient;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
@@ -93,6 +96,7 @@ private:
     bool m_modal;
     ClientList m_mainClients;
     PaintRedirector *m_paintRedirector;
+    bool m_wasClient;
 };
 
 inline void Deleted::refWindow()

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Mouse Click Animation
+Name[bs]=Animacija klika mišem
 Name[ca]=Animació de clic de ratolí
 Name[ca@valencia]=Animació de clic de ratolí
 Name[cs]=Animace kliknutí myši
@@ -43,6 +44,7 @@ Name[zh_TW]=滑鼠點擊動畫
 Icon=preferences-system-windows-effect-mouseclick
 
 Comment=Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations.
+Comment[bs]=Kreira animaciju kada se god protosne dugme miša. To je korisno zasnimanje ekrana/prezentacije.
 Comment[ca]=Crea una animació quan es fa clic amb un botó del ratolí. Això és útil per enregistrar la pantalla o en presentacions.
 Comment[ca@valencia]=Crea una animació quan es fa clic amb un botó del ratolí. Això és útil per enregistrar la pantalla o en presentacions.
 Comment[da]=Opretter en animation når der klikkes på en museknap. Dette er nyttigt til skærmoptagelser/præsentationer.
@@ -57,7 +59,7 @@ Comment[hu]=Animációt hoz létre, amikor az egérgombbal kattintanak. Ez haszn
 Comment[ia]=Crea un animation quando un button de mus es pressate. Isto es util pro registrationes de schermo/presentationes
 Comment[it]=Crea un'animazione ogni volta che viene premuto un pulsante del mouse. Utile per registrazioni dello schermo o presentazioni.
 Comment[kk]=Тышқанның батырмасын түрткенде анимацияны жасайды.Экраннан демонстацияны түсіргнде/презентацияны жасағанда ыңғайлы.
-Comment[ko]=마우스 단추를 눌렀을 때 애니메이션을 표시합니다. 화면 녹화/프리젠테이션에서 유용합니다.
+Comment[ko]=마우스 단추를 눌렀을 때 애니메이션을 표시합니다. 화면 녹화/프레젠테이션에서 유용합니다.
 Comment[lt]=Kuria animaciją kai pelės mygtukas paspaudžiamas. Tai naudojama ekrano įrašymams / pristatymams.
 Comment[mr]=जेव्हा माऊस बटन क्लिक केले जाईल तेव्हा ऍनीमेशन करा. स्क्रीन रेकोर्डींग व प्रेझेंटेशनच्या वेळी हे उपयोगी आहे.
 Comment[nb]=Lager en animasjon hver gang en museknapp trykkes. Dette er nyttig for skjermopptak/presentasjoner.

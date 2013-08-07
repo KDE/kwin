@@ -258,7 +258,7 @@ void MagnifierEffect::zoomIn()
         polling = true;
         effects->startMousePolling();
     }
-    if (!m_texture) {
+    if (effects->isOpenGLCompositing() && !m_texture) {
         m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
         m_texture->setYInverted(false);
         m_fbo = new GLRenderTarget(*m_texture);
@@ -269,7 +269,7 @@ void MagnifierEffect::zoomIn()
 void MagnifierEffect::zoomOut()
 {
     target_zoom /= 1.2;
-    if (target_zoom < 1) {
+    if (target_zoom <= 1) {
         target_zoom = 1;
         if (polling) {
             polling = false;
@@ -296,7 +296,7 @@ void MagnifierEffect::toggle()
             polling = true;
             effects->startMousePolling();
         }
-        if (!m_texture) {
+        if (effects->isOpenGLCompositing() && !m_texture) {
             m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
             m_texture->setYInverted(false);
             m_fbo = new GLRenderTarget(*m_texture);

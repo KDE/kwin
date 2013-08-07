@@ -94,6 +94,11 @@ void GlxBackend::init()
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
+    if (GLPlatform::instance()->driver() == Driver_Intel)
+        options->setUnredirectFullscreen(false); // bug #252817
+    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
+    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
+        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
     initGL(GlxPlatformInterface);
     // Check whether certain features are supported
@@ -168,6 +173,8 @@ bool GlxBackend::initRenderingContext()
         };
 
         const int attribs_legacy[] = {
+            GLX_CONTEXT_MAJOR_VERSION_ARB,               1,
+            GLX_CONTEXT_MINOR_VERSION_ARB,               2,
             0
         };
 
@@ -427,6 +434,18 @@ void GlxBackend::present()
                 glXWaitGL();
                 if (char result = m_swapProfiler.end()) {
                     gs_tripleBufferUndetected = gs_tripleBufferNeedsDetection = false;
+                    if (result == 'd' && GLPlatform::instance()->driver() == Driver_NVidia) {
+                        // TODO this is a workaround, we should get __GL_YIELD set before libGL checks it
+                        if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
+                            options->setGlPreferBufferSwap(0);
+                            setSwapInterval(0);
+                            kWarning(1212) << "\nIt seems you are using the nvidia driver without triple buffering\n"
+                                              "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
+                                              "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
+                                              "For this reason, the tearing prevention has been disabled.\n"
+                                              "See https://bugs.kde.org/show_bug.cgi?id=322060\n";
+                        }
+                    }
                     setBlocksForRetrace(result == 'd');
                 }
             }

@@ -223,7 +223,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     dbus.registerObject(QStringLiteral("/Effects"), this);
     dbus.registerService(QStringLiteral("org.kde.kwin.Effects"));
     // init is important, otherwise causes crashes when quads are build before the first painting pass start
-    m_currentBuildQuadsIterator = m_activeEffects.end();
+    m_currentBuildQuadsIterator = m_activeEffects.constEnd();
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -282,6 +282,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
     connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
     connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
+    connect(c, SIGNAL(modalChanged()), this, SLOT(slotClientModalityChanged()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
     connect(c, SIGNAL(paddingChanged(KWin::Toplevel*,QRect)), this, SLOT(slotPaddingChanged(KWin::Toplevel*,QRect)));
     connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
@@ -304,6 +305,7 @@ void EffectsHandlerImpl::reconfigure()
     QFutureWatcher<KService::List> *watcher = new QFutureWatcher<KService::List>(this);
     connect(watcher, SIGNAL(finished()), this, SLOT(slotEffectsQueried()));
     watcher->setFuture(QtConcurrent::run(KServiceTypeTrader::self(), &KServiceTypeTrader::query, QStringLiteral("KWin/Effect"), QString()));
+    watcher->waitForFinished(); // TODO: remove once KConfigGroup is thread safe, bug #321576
 }
 
 void EffectsHandlerImpl::slotEffectsQueried()
@@ -356,7 +358,7 @@ void EffectsHandlerImpl::slotEffectsQueried()
 // the idea is that effects call this function again which calls the next one
 void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+    if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->prePaintScreen(data, time);
         --m_currentPaintScreenIterator;
     }
@@ -365,7 +367,7 @@ void EffectsHandlerImpl::prePaintScreen(ScreenPrePaintData& data, int time)
 
 void EffectsHandlerImpl::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
-    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+    if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->paintScreen(mask, region, data);
         --m_currentPaintScreenIterator;
     } else
@@ -380,8 +382,8 @@ void EffectsHandlerImpl::paintDesktop(int desktop, int mask, QRegion region, Scr
     m_currentRenderedDesktop = desktop;
     m_desktopRendering = true;
     // save the paint screen iterator
-    QList<Effect*>::iterator savedIterator = m_currentPaintScreenIterator;
-    m_currentPaintScreenIterator = m_activeEffects.begin();
+    EffectsIterator savedIterator = m_currentPaintScreenIterator;
+    m_currentPaintScreenIterator = m_activeEffects.constBegin();
     effects->paintScreen(mask, region, data);
     // restore the saved iterator
     m_currentPaintScreenIterator = savedIterator;
@@ -390,7 +392,7 @@ void EffectsHandlerImpl::paintDesktop(int desktop, int mask, QRegion region, Scr
 
 void EffectsHandlerImpl::postPaintScreen()
 {
-    if (m_currentPaintScreenIterator != m_activeEffects.end()) {
+    if (m_currentPaintScreenIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintScreenIterator++)->postPaintScreen();
         --m_currentPaintScreenIterator;
     }
@@ -399,7 +401,7 @@ void EffectsHandlerImpl::postPaintScreen()
 
 void EffectsHandlerImpl::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
 {
-    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+    if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->prePaintWindow(w, data, time);
         --m_currentPaintWindowIterator;
     }
@@ -408,7 +410,7 @@ void EffectsHandlerImpl::prePaintWindow(EffectWindow* w, WindowPrePaintData& dat
 
 void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+    if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->paintWindow(w, mask, region, data);
         --m_currentPaintWindowIterator;
     } else
@@ -417,7 +419,7 @@ void EffectsHandlerImpl::paintWindow(EffectWindow* w, int mask, QRegion region, 
 
 void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity)
 {
-    if (m_currentPaintEffectFrameIterator != m_activeEffects.end()) {
+    if (m_currentPaintEffectFrameIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintEffectFrameIterator++)->paintEffectFrame(frame, region, opacity, frameOpacity);
         --m_currentPaintEffectFrameIterator;
     } else {
@@ -428,7 +430,7 @@ void EffectsHandlerImpl::paintEffectFrame(EffectFrame* frame, QRegion region, do
 
 void EffectsHandlerImpl::postPaintWindow(EffectWindow* w)
 {
-    if (m_currentPaintWindowIterator != m_activeEffects.end()) {
+    if (m_currentPaintWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentPaintWindowIterator++)->postPaintWindow(w);
         --m_currentPaintWindowIterator;
     }
@@ -445,7 +447,7 @@ Effect *EffectsHandlerImpl::provides(Effect::Feature ef)
 
 void EffectsHandlerImpl::drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (m_currentDrawWindowIterator != m_activeEffects.end()) {
+    if (m_currentDrawWindowIterator != m_activeEffects.constEnd()) {
         (*m_currentDrawWindowIterator++)->drawWindow(w, mask, region, data);
         --m_currentDrawWindowIterator;
     } else
@@ -456,14 +458,14 @@ void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
 {
     static bool initIterator = true;
     if (initIterator) {
-        m_currentBuildQuadsIterator = m_activeEffects.begin();
+        m_currentBuildQuadsIterator = m_activeEffects.constBegin();
         initIterator = false;
     }
-    if (m_currentBuildQuadsIterator != m_activeEffects.end()) {
+    if (m_currentBuildQuadsIterator != m_activeEffects.constEnd()) {
         (*m_currentBuildQuadsIterator++)->buildQuads(w, quadList);
         --m_currentBuildQuadsIterator;
     }
-    if (m_currentBuildQuadsIterator == m_activeEffects.begin())
+    if (m_currentBuildQuadsIterator == m_activeEffects.constBegin())
         initIterator = true;
 }
 
@@ -486,15 +488,16 @@ bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 void EffectsHandlerImpl::startPaint()
 {
     m_activeEffects.clear();
-    for(QVector< KWin::EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
+    m_activeEffects.reserve(loaded_effects.count());
+    for(QVector< KWin::EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if (it->second->isActive()) {
             m_activeEffects << it->second;
         }
     }
-    m_currentDrawWindowIterator = m_activeEffects.begin();
-    m_currentPaintWindowIterator = m_activeEffects.begin();
-    m_currentPaintScreenIterator = m_activeEffects.begin();
-    m_currentPaintEffectFrameIterator = m_activeEffects.begin();
+    m_currentDrawWindowIterator = m_activeEffects.constBegin();
+    m_currentPaintWindowIterator = m_activeEffects.constBegin();
+    m_currentPaintScreenIterator = m_activeEffects.constBegin();
+    m_currentPaintEffectFrameIterator = m_activeEffects.constBegin();
 }
 
 void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode)
@@ -554,9 +557,9 @@ void EffectsHandlerImpl::slotClientAdded(Client *c)
 }
 
 void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{   // regardless, unmanaged windows are -yet?- not synced anyway
-    setupUnmanagedConnections(u);
-    emit windowAdded(u->effectWindow());
+{
+    // it's never initially ready but has synthetic 50ms delay
+    connect(u, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotUnmanagedShown(KWin::Toplevel*)));
 }
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
@@ -566,6 +569,14 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
+{   // regardless, unmanaged windows are -yet?- not synced anyway
+    Q_ASSERT(dynamic_cast<Unmanaged*>(t));
+    Unmanaged *u = static_cast<Unmanaged*>(t);
+    setupUnmanagedConnections(u);
+    emit windowAdded(u->effectWindow());
 }
 
 void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
@@ -599,6 +610,11 @@ void EffectsHandlerImpl::slotClientUnminimized(Client* c, bool animate)
     if (animate) {
         emit windowUnminimized(c->effectWindow());
     }
+}
+
+void EffectsHandlerImpl::slotClientModalityChanged()
+{
+    emit windowModalityChanged(static_cast<Client*>(sender())->effectWindow());
 }
 
 void EffectsHandlerImpl::slotCurrentTabAboutToChange(EffectWindow *from, EffectWindow *to)
@@ -737,7 +753,7 @@ void* EffectsHandlerImpl::getProxy(QString name)
     // All effects start with "kwin4_effect_", prepend it to the name
     name.prepend(QStringLiteral("kwin4_effect_"));
 
-    for (QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it)
+    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         if ((*it).first == name)
             return (*it).second->proxy();
 
@@ -1030,8 +1046,10 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
 {
     ToplevelList list = Workspace::self()->xStackingOrder();
     EffectWindowList ret;
-    foreach (Toplevel *w, list)
-        ret.append(effectWindow(w));
+    foreach (Toplevel *t, list) {
+        if (EffectWindow *w = effectWindow(t))
+            ret.append(w);
+    }
     return ret;
 }
 
@@ -1489,7 +1507,7 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
 
 void EffectsHandlerImpl::reconfigureEffect(const QString& name)
 {
-    for (QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it)
+    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         if ((*it).first == name) {
             (*it).second->reconfigure(Effect::ReconfigureAll);
             return;
@@ -1508,7 +1526,7 @@ bool EffectsHandlerImpl::isEffectLoaded(const QString& name) const
 void EffectsHandlerImpl::reloadEffect(Effect *effect)
 {
     QString effectName;
-    for (QVector< EffectPair >::iterator it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
+    for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).second == effect) {
             effectName = (*it).first;
             break;
@@ -1529,6 +1547,7 @@ void EffectsHandlerImpl::effectsChanged()
 //        kDebug(1212) << effect.first;
         loaded_effects.append(effect);
     }
+    m_activeEffects.reserve(loaded_effects.count());
 }
 
 QStringList EffectsHandlerImpl::activeEffects() const

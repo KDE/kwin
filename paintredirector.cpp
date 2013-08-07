@@ -345,6 +345,13 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
     size[TopBottom] = QSize(align(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()), 128),
                             rects[TopPixmap].height() + rects[BottomPixmap].height());
 
+    if (!GLTexture::NPOTTextureSupported()) {
+        for (int i = 0; i < 2; i++) {
+            size[i].rwidth()  = nearestPowerOfTwo(size[i].width());
+            size[i].rheight() = nearestPowerOfTwo(size[i].height());
+        }
+    }
+
     bool fbo_bound = false;
 
     for (int i = 0; i < 2; i++) {

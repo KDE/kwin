@@ -77,8 +77,8 @@ void LanczosFilter::init()
         // The lanczos filter is reported to be broken with the Intel driver prior SandyBridge
         if (gl->driver() == Driver_Intel && gl->chipClass() < SandyBridge)
             return;
-        // Broken on IvyBridge with Mesa 9.1 - BUG 313613
-        if (gl->driver() == Driver_Intel && gl->chipClass() == IvyBridge && gl->mesaVersion() >= kVersionNumber(9, 1) && gl->mesaVersion() < kVersionNumber(9, 2))
+        // Broken on Intel chips with Mesa 9.1 - BUG 313613
+        if (gl->driver() == Driver_Intel && gl->mesaVersion() >= kVersionNumber(9, 1) && gl->mesaVersion() < kVersionNumber(9, 2))
             return;
         // also radeon before R600 has trouble
         if (gl->isRadeon() && gl->chipClass() < R600)
@@ -184,28 +184,14 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             init();
         const QRect screenRect = Workspace::self()->clientArea(ScreenArea, w->screen(), w->desktop());
         // window geometry may not be bigger than screen geometry to fit into the FBO
-        if (m_shader && w->width() <= screenRect.width() && w->height() <= screenRect.height()) {
-            double left = 0;
-            double top = 0;
-            double right = w->width();
-            double bottom = w->height();
-            foreach (const WindowQuad & quad, data.quads) {
-                // we need this loop to include the decoration padding
-                left   = qMin(left, quad.left());
-                top    = qMin(top, quad.top());
-                right  = qMax(right, quad.right());
-                bottom = qMax(bottom, quad.bottom());
-            }
-            double width = right - left;
-            double height = bottom - top;
-            if (width > screenRect.width() || height > screenRect.height()) {
-                // window with padding does not fit into the framebuffer
-                // so cut of the shadow
-                left = 0;
-                top = 0;
-                width = w->width();
-                height = w->height();
-            }
+        QRect winGeo(w->expandedGeometry());
+        if (m_shader && winGeo.width() <= screenRect.width() && winGeo.height() <= screenRect.height()) {
+            winGeo.translate(-w->geometry().topLeft());
+            double left = winGeo.left();
+            double top = winGeo.top();
+            double width = winGeo.right() - left;
+            double height = winGeo.bottom() - top;
+
             int tx = data.xTranslation() + w->x() + left * data.xScale();
             int ty = data.yTranslation() + w->y() + top * data.yScale();
             int tw = width * data.xScale();

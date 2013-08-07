@@ -54,6 +54,8 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
     addConfig(ZoomConfig::self(), m_ui);
 
+    connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
+
 #warning Global Shortcuts need porting
 #if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!

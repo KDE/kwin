@@ -342,6 +342,7 @@ protected Q_SLOTS:
     void checkScreen();
     void setupCheckScreenConnection();
     void removeCheckScreenConnection();
+    void setReadyForPainting();
 
 protected:
     virtual ~Toplevel();
@@ -353,7 +354,6 @@ protected:
     void addDamageFull();
     void getWmClientLeader();
     void getWmClientMachine();
-    void setReadyForPainting();
     /**
      * @returns Whether there is a compositor and it is active.
      **/

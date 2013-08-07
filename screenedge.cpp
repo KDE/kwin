@@ -47,8 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-// Reset timeout
-static const int TRESHOLD_RESET = 250;
 // Mouse should not move more than this many pixels
 static const int DISTANCE_RESET = 30;
 
@@ -133,7 +131,7 @@ void Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
     bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull();
     if (directActivate || canActivate(cursorPos, triggerTime)) {
         m_lastTrigger = triggerTime;
-        m_lastReset = triggerTime;
+        m_lastReset = QDateTime(); // invalidate
         handle(cursorPos);
     } else {
         pushCursorBack(cursorPos);
@@ -143,7 +141,11 @@ void Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
 
 bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 {
-    if (m_lastReset.msecsTo(triggerTime) > TRESHOLD_RESET) {
+    // we check whether either the timer has explicitly been invalidated (successfull trigger) or is
+    // bigger than the reactivation threshold (activation "aborted", usually due to moving away the cursor
+    // from the corner after successfull activation)
+    // either condition means that "this is the first event in a new attempt"
+    if (!m_lastReset.isValid() || m_lastReset.msecsTo(triggerTime) > edges()->reActivationThreshold()) {
         m_lastReset = triggerTime;
         return false;
     }

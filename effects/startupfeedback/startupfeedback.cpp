@@ -155,7 +155,9 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         switch(m_type) {
         case BouncingFeedback:
             m_progress = (m_progress + time) % BOUNCE_DURATION;
-            m_frame = qRound((qreal)m_progress / (qreal)BOUNCE_FRAME_DURATION) % BOUNCE_FRAMES;;
+            m_frame = qRound((qreal)m_progress / (qreal)BOUNCE_FRAME_DURATION) % BOUNCE_FRAMES;
+            m_currentGeometry = feedbackRect(); // bounce alters geometry with m_frame
+            data.paint.unite(m_currentGeometry);
             break;
         case BlinkingFeedback:
             m_progress = (m_progress + time) % BLINKING_DURATION;
@@ -164,10 +166,6 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         default:
             break; // nothing
         }
-        data.paint.unite(m_dirtyRect);
-        m_dirtyRect = QRect();
-        m_currentGeometry = feedbackRect();
-        data.paint.unite(m_currentGeometry);
     }
     effects->prePaintScreen(data, time);
 }
@@ -243,18 +241,9 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
 void StartupFeedbackEffect::postPaintScreen()
 {
     if (m_active) {
-        switch(m_type) {
-        case BouncingFeedback: // fall through
-        case BlinkingFeedback:
-            // repaint the icon
-            m_dirtyRect = m_currentGeometry;
-            effects->addRepaint(m_dirtyRect);
-            break;
-        case PassiveFeedback: // fall through
-        default:
-            // no need to repaint - no change
-            break;
-        }
+        m_dirtyRect = m_currentGeometry; // ensure the now dirty region is cleaned on the next pass
+        if (m_type == BlinkingFeedback || m_type == BouncingFeedback)
+            effects->addRepaint(m_dirtyRect); // we also have to trigger a repaint
     }
     effects->postPaintScreen();
 }
@@ -324,7 +313,7 @@ void StartupFeedbackEffect::start(const QString& icon)
         iconPixmap = SmallIcon(QStringLiteral("system-run"));
     prepareTextures(iconPixmap);
     m_dirtyRect = m_currentGeometry = feedbackRect();
-    effects->addRepaintFull();
+    effects->addRepaint(m_dirtyRect);
 }
 
 void StartupFeedbackEffect::stop()

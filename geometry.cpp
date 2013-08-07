@@ -56,6 +56,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static inline int sign(int v) {
+    return (v > 0) - (v < 0);
+}
+
 //********************************************
 // Workspace
 //********************************************
@@ -433,20 +437,20 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 padding[3] = 0;
 
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
-                deltaX = xmin - (cx - padding[0]);
+                deltaX = xmin - cx;
                 nx = xmin - padding[0];
             }
             if ((sOWO ? (rx > xmax) : true) && (qAbs(rx - xmax) < snapX) && (qAbs(xmax - rx) < deltaX)) {
-                deltaX = rx + padding[1] - xmax;
+                deltaX = rx - xmax;
                 nx = xmax - cw + padding[1];
             }
 
             if ((sOWO ? (cy < ymin) : true) && (qAbs(ymin - cy) < snapY)) {
-                deltaY = ymin - (cy - padding[2]);
+                deltaY = ymin - cy;
                 ny = ymin - padding[2];
             }
             if ((sOWO ? (ry > ymax) : true) && (qAbs(ry - ymax) < snapY) && (qAbs(ymax - ry) < deltaY)) {
-                deltaY = ry + padding[3] - ymax;
+                deltaY = ry - ymax;
                 ny = ymax - ch + padding[3];
             }
         }
@@ -456,63 +460,66 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         if (snap) {
             QList<Client *>::ConstIterator l;
             for (l = clients.constBegin(); l != clients.constEnd(); ++l) {
-                if ((((*l)->isOnDesktop(c->desktop()) && !(*l)->isMinimized())
-                        || (c->isOnDesktop(NET::OnAllDesktops) && (*l)->isOnDesktop(VirtualDesktopManager::self()->current())
-                            && !(*l)->isMinimized()))
-                        && (!(*l)->tabGroup() || (*l) == (*l)->tabGroup()->current())
-                        && (*l) != c) {
-                    lx = (*l)->x();
-                    ly = (*l)->y();
-                    lrx = lx + (*l)->width();
-                    lry = ly + (*l)->height();
+                if ((*l) == c)
+                    continue;
+                if ((*l)->isMinimized())
+                    continue; // is minimized
+                if ((*l)->tabGroup() && (*l) != (*l)->tabGroup()->current())
+                    continue; // is not active tab
+                if (!((*l)->isOnDesktop(c->desktop()) || c->isOnDesktop((*l)->desktop())))
+                    continue; // wrong virtual desktop
+                if (!(*l)->isOnCurrentActivity())
+                    continue; // wrong activity
+                if ((*l)->isDesktop() || (*l)->isSplash())
+                    continue;
 
-                    if (((cy <= lry) && (cy  >= ly))  ||
-                            ((ry >= ly) && (ry  <= lry))  ||
-                            ((cy <= ly) && (ry >= lry))) {
-                        if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
-                            deltaX = qAbs(lrx - cx);
-                            nx = lrx;
-                        }
-                        if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
-                            deltaX = qAbs(rx - lx);
-                            nx = lx - cw;
-                        }
-                    }
+                lx = (*l)->x();
+                ly = (*l)->y();
+                lrx = lx + (*l)->width();
+                lry = ly + (*l)->height();
 
-                    if (((cx <= lrx) && (cx  >= lx))  ||
-                            ((rx >= lx) && (rx  <= lrx))  ||
-                            ((cx <= lx) && (rx >= lrx))) {
-                        if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
-                            deltaY = qAbs(lry - cy);
-                            ny = lry;
-                        }
-                        //if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
-                        if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
-                            deltaY = qAbs(ry - ly);
-                            ny = ly - ch;
-                        }
+                if (((cy <= lry) && (cy  >= ly))  || ((ry >= ly) && (ry  <= lry))  || ((cy <= ly) && (ry >= lry))) {
+                    if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
+                        deltaX = qAbs(lrx - cx);
+                        nx = lrx;
                     }
+                    if ((sOWO ? (rx > lx) : true) && (qAbs(rx - lx) < snap) && (qAbs(rx - lx) < deltaX)) {
+                        deltaX = qAbs(rx - lx);
+                        nx = lx - cw;
+                    }
+                }
 
-                    // Corner snapping
-                    if (nx == lrx || nx + cw == lx) {
-                        if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
-                            deltaY = qAbs(lry - ry);
-                            ny = lry - ch;
-                        }
-                        if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
-                            deltaY = qAbs(cy - ly);
-                            ny = ly;
-                        }
+                if (((cx <= lrx) && (cx  >= lx))  || ((rx >= lx) && (rx  <= lrx))  || ((cx <= lx) && (rx >= lrx))) {
+                    if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
+                        deltaY = qAbs(lry - cy);
+                        ny = lry;
                     }
-                    if (ny == lry || ny + ch == ly) {
-                        if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
-                            deltaX = qAbs(lrx - rx);
-                            nx = lrx - cw;
-                        }
-                        if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
-                            deltaX = qAbs(cx - lx);
-                            nx = lx;
-                        }
+                    //if ( (qAbs( ry-ly ) < snap) && (qAbs( ry - ly ) < deltaY ))
+                    if ((sOWO ? (ry > ly) : true) && (qAbs(ry - ly) < snap) && (qAbs(ry - ly) < deltaY)) {
+                        deltaY = qAbs(ry - ly);
+                        ny = ly - ch;
+                    }
+                }
+
+                // Corner snapping
+                if (nx == lrx || nx + cw == lx) {
+                    if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
+                        deltaY = qAbs(lry - ry);
+                        ny = lry - ch;
+                    }
+                    if ((sOWO ? (cy < ly) : true) && (qAbs(cy - ly) < snap) && (qAbs(cy - ly) < deltaY)) {
+                        deltaY = qAbs(cy - ly);
+                        ny = ly;
+                    }
+                }
+                if (ny == lry || ny + ch == ly) {
+                    if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
+                        deltaX = qAbs(lrx - rx);
+                        nx = lrx - cw;
+                    }
+                    if ((sOWO ? (cx < lx) : true) && (qAbs(cx - lx) < snap) && (qAbs(cx - lx) < deltaX)) {
+                        deltaX = qAbs(cx - lx);
+                        nx = lx;
                     }
                 }
             }
@@ -525,20 +532,16 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
             int diffY = qAbs((ymin + ymax) / 2 - (cy + ch / 2));
             if (diffX < snap && diffY < snap && diffX < deltaX && diffY < deltaY) {
                 // Snap to center of screen
-                deltaX = diffX;
-                deltaY = diffY;
                 nx = (xmin + xmax) / 2 - cw / 2;
                 ny = (ymin + ymax) / 2 - ch / 2;
             } else if (options->borderSnapZone()) {
                 // Enhance border snap
                 if ((nx == xmin || nx == xmax - cw) && diffY < snap && diffY < deltaY) {
                     // Snap to vertical center on screen edge
-                    deltaY = diffY;
                     ny = (ymin + ymax) / 2 - ch / 2;
                 } else if (((unrestricted ? ny == ymin : ny <= ymin) || ny == ymax - ch) &&
                           diffX < snap && diffX < deltaX) {
                     // Snap to horizontal center on screen edge
-                    deltaX = diffX;
                     nx = (xmin + xmax) / 2 - cw / 2;
                 }
             }
@@ -1599,24 +1602,43 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
 
 void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool)
 {
-    if (rules()->checkIgnoreGeometry(false))
-        return; // user said: "FU!"
-
     // "maximized" is a user setting -> we do not allow the client to resize itself
     // away from this & against the users explicit wish
     kDebug(1212) << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<
                             bool(maximizeMode() & MaximizeVertical) <<
                             bool(maximizeMode() & MaximizeHorizontal);
-    if (!app_noborder) { //
-        if (maximizeMode() & MaximizeVertical)
-            value_mask &= ~(CWY|CWHeight); // do not allow clients to drop out of vertical ...
-        if (maximizeMode() & MaximizeHorizontal)
-            value_mask &= ~(CWX|CWWidth); // .. or horizontal maximization (MaximizeFull == MaximizeVertical|MaximizeHorizontal)
+
+    // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
+    bool ignore = !app_noborder && (quick_tile_mode != QuickTileNone || maximizeMode() != MaximizeRestore);
+    // however, the user shall be able to force obedience despite and also disobedience in general
+    ignore = rules()->checkIgnoreGeometry(ignore);
+    if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
+        quick_tile_mode = QuickTileNone;
+        max_mode = MaximizeRestore;
+    } else if (!app_noborder && quick_tile_mode == QuickTileNone &&
+        (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
+        // ignoring can be, because either we do, or the user does explicitly not want it.
+        // for partially maximized windows we want to allow configures in the other dimension.
+        // so we've to ask the user again - to know whether we just ignored for the partial maximization.
+        // the problem here is, that the user can explicitly permit configure requests - even for maximized windows!
+        // we cannot distinguish that from passing "false" for partially maximized windows.
+        ignore = rules()->checkIgnoreGeometry(false);
+        if (!ignore) { // the user is not interested, so we fix up dimensions
+            if (maximizeMode() == MaximizeVertical)
+                value_mask &= ~(CWY|CWHeight);
+            if (maximizeMode() == MaximizeHorizontal)
+                value_mask &= ~(CWX|CWWidth);
+            if (!(value_mask & (CWX|CWWidth|CWY|CWHeight))) {
+                ignore = true; // the modification turned the request void
+            }
+        }
     }
-    if (!(value_mask & (CWX|CWWidth|CWY|CWHeight))) {
+
+    if (ignore) {
         kDebug(1212) << "DENIED";
-        return; // nothing to (left) to do for use - bugs #158974, #252314
+        return; // nothing to (left) to do for use - bugs #158974, #252314, #321491
     }
+
     kDebug(1212) << "PERMITTED" << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight));
 
     if (gravity == 0)   // default (nonsense) value for the argument
@@ -2093,12 +2115,15 @@ void Client::maximize(MaximizeMode m)
 void Client::setMaximize(bool vertically, bool horizontally)
 {
     // changeMaximize() flips the state, so change from set->flip
+    MaximizeMode oldMode = maximizeMode();
     changeMaximize(
         max_mode & MaximizeVertical ? !vertically : vertically,
         max_mode & MaximizeHorizontal ? !horizontally : horizontally,
         false);
-    emit clientMaximizedStateChanged(this, max_mode);
-    emit clientMaximizedStateChanged(this, vertically, horizontally);
+    if (oldMode != maximizeMode()) {
+        emit clientMaximizedStateChanged(this, max_mode);
+        emit clientMaximizedStateChanged(this, vertically, horizontally);
+    }
 
 }
 
@@ -2847,6 +2872,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                     // we are trying to resize in from the side?
                     bool breakLoop = false;
                     switch(mode) {
+                    case PositionBottomLeft:
                     case PositionTopLeft:
                     case PositionLeft:
                         if (previousMoveResizeGeom.x() >= moveResizeGeom.x()) {
@@ -2855,6 +2881,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                         moveResizeGeom.setLeft(moveResizeGeom.x() - 1);
                         break;
+                    case PositionBottomRight:
                     case PositionTopRight:
                     case PositionRight:
                         if (previousMoveResizeGeom.right() <= moveResizeGeom.right()) {
@@ -2980,13 +3007,16 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         }
                     }
 
-                    // Move it (Favour vertically)
-                    if (previousMoveResizeGeom.y() != moveResizeGeom.y())
-                        moveResizeGeom.translate(0,
-                                                 previousMoveResizeGeom.y() > moveResizeGeom.y() ? 1 : -1);
-                    else
-                        moveResizeGeom.translate(previousMoveResizeGeom.x() > moveResizeGeom.x() ? 1 : -1,
-                                                 0);
+                    int dx = sign(previousMoveResizeGeom.x() - moveResizeGeom.x()),
+                        dy = sign(previousMoveResizeGeom.y() - moveResizeGeom.y());
+                    if (visiblePixels && dx) // means there's no full width cap -> favor horizontally
+                        dy = 0;
+                    else if (dy)
+                        dx = 0;
+
+                    // Move it back
+                    moveResizeGeom.translate(dx, dy);
+
                     if (moveResizeGeom == previousMoveResizeGeom) {
                         break; // Prevent lockup
                     }

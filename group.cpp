@@ -816,7 +816,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
         new_transient_for = rootWindow();
     }
     if (new_property_value != m_originalTransientForId)
-        xcb_icccm_set_wm_transient_for(connection(), window(), new_property_value);
+        Xcb::setTransientFor(window(), new_property_value);
     return new_transient_for;
 }
 
