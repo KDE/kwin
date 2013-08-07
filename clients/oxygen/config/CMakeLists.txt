@@ -11,7 +11,7 @@ set(kwin_oxygen_config_PART_SRCS
     ../oxygenexceptionlist.cpp
   )
 
-kde4_add_kcfg_files(kwin_oxygen_config_PART_SRCS ../oxygenconfiguration.kcfgc )
+kde4_add_kcfg_files(kwin_oxygen_config_PART_SRCS ../oxygenconfiguration.kcfgc)
 
 set( kwin_oxygen_config_PART_FORMS
    ui/oxygenconfigurationui.ui
@@ -26,29 +26,13 @@ add_library(kwin_oxygen_config
     ${kwin_oxygen_config_PART_SRCS}
     ${kwin_oxygen_config_PART_FORMS_HEADERS})
 
-target_link_libraries(kwin_oxygen_config
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Widgets
-    Qt5::X11Extras
-    Qt5::DBus)
-
-target_link_libraries(kwin_oxygen_config
-  ${KConfig_LIBRARIES}
-  ${KCompletion_LIBRARIES}
-  ${KGuiAddons_LIBRARIES}
-  ${KWindowSystem_LIBRARIES}
-  ${KI18n_LIBRARIES}
-)
-
-target_link_libraries(kwin_oxygen_config
-    kdecorations
-    oxygenstyle
-    oxygenstyleconfig
-)
+target_link_libraries(kwin_oxygen_config Qt5::Core Qt5::Gui Qt5::Widgets Qt5::DBus)
+target_link_libraries(kwin_oxygen_config KF5::KConfigCore KF5::KConfigGui KF5::KCompletion KF5::KGuiAddons KF5::KWindowSystem KF5::KI18n)
+target_link_libraries(kwin_oxygen_config kdecorations oxygenstyle  oxygenstyleconfig)
 
 if(X11_FOUND)
-  target_link_libraries(kwin_oxygen_config ${X11_LIBRARIES} )
+  target_link_libraries(kwin_oxygen_config ${X11_LIBRARIES})
+  target_link_libraries(kwin_oxygen_config Qt5::X11Extras)
 endif()
 
-install(TARGETS kwin_oxygen_config DESTINATION ${QT_PLUGIN_INSTALL_DIR}/kf5 )
+install(TARGETS kwin_oxygen_config DESTINATION ${QT_PLUGIN_INSTALL_DIR}/kf5)
