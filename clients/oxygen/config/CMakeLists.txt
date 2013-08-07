@@ -37,7 +37,6 @@ target_link_libraries(kwin_oxygen_config
   ${KConfig_LIBRARIES}
   ${KCompletion_LIBRARIES}
   ${KGuiAddons_LIBRARIES}
-  ${KWidgets_LIBRARIES}
   ${KWindowSystem_LIBRARIES}
   ${KI18n_LIBRARIES}
 )

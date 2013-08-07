@@ -11,7 +11,6 @@ target_link_libraries(kwin_killer_helper
     ${KDE4Support_LIBRARIES} # KCmdLineArgs
     KF5::KAuth
     KF5::KI18n
-    KF5::KWidgets
     KF5::KWidgetsAddons
 )
 

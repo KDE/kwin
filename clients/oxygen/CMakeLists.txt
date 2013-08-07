@@ -28,7 +28,6 @@ target_link_libraries(
     KF5::KConfigWidgets
     KF5::KGuiAddons
     KF5::KI18n
-    KF5::KWidgets
     KF5::KWindowSystem
     ${KDE4_KDEUI_LIBRARY} # KStyle
     ${Qt5Widgets_LIBRARIES}

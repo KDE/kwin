@@ -23,7 +23,6 @@ target_link_libraries(oxygen-shadow-demo
 )
 
 target_link_libraries(oxygen-shadow-demo
-    ${KWidgets_LIBRARIES}
     ${KI18n_LIBRARIES}
 )
 
