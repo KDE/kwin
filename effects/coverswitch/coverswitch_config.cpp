@@ -56,4 +56,4 @@ void CoverSwitchEffectConfig::save()
 
 } // namespace
 
-#include "coverswitch_config.moc"
+#include "moc_coverswitch_config.cpp"

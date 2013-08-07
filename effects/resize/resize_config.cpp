@@ -60,4 +60,4 @@ void ResizeEffectConfig::save()
 
 } // namespace
 
-#include "resize_config.moc"
+#include "moc_resize_config.cpp"

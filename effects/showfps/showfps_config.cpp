@@ -60,4 +60,4 @@ void ShowFpsEffectConfig::save()
 
 } // namespace
 
-#include "showfps_config.moc"
+#include "moc_showfps_config.cpp"

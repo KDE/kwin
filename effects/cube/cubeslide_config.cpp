@@ -59,4 +59,4 @@ void CubeSlideEffectConfig::save()
 
 } // namespace
 
-#include "cubeslide_config.moc"
+#include "moc_cubeslide_config.cpp"

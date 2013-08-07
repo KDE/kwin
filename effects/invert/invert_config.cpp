@@ -106,4 +106,4 @@ void InvertEffectConfig::defaults()
 
 } // namespace
 
-#include "invert_config.moc"
+#include "moc_invert_config.cpp"

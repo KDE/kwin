@@ -82,4 +82,4 @@ void WindowGeometryConfig::defaults()
 }
 
 } //namespace
-#include "windowgeometry_config.moc"
+#include "moc_windowgeometry_config.cpp"

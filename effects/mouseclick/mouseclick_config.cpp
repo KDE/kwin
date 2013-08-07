@@ -83,4 +83,4 @@ void MouseClickEffectConfig::save()
 
 } // namespace
 
-#include "mouseclick_config.moc"
+#include "moc_mouseclick_config.cpp"

@@ -91,4 +91,4 @@ void ThumbnailAsideEffectConfig::save()
 
 } // namespace
 
-#include "thumbnailaside_config.moc"
+#include "moc_thumbnailaside_config.cpp"

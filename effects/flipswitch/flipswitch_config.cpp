@@ -86,4 +86,4 @@ void FlipSwitchEffectConfig::save()
 
 } // namespace
 
-#include "flipswitch_config.moc"
+#include "moc_flipswitch_config.cpp"

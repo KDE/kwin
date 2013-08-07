@@ -97,4 +97,4 @@ void MouseMarkEffectConfig::save()
 
 } // namespace
 
-#include "mousemark_config.moc"
+#include "moc_mousemark_config.cpp"

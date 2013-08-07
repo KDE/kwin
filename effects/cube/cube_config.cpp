@@ -107,4 +107,4 @@ void CubeEffectConfig::capsSelectionChanged()
 
 } // namespace
 
-#include "cube_config.moc"
+#include "moc_cube_config.cpp"
