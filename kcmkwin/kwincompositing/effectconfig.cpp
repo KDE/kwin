@@ -53,7 +53,6 @@ void EffectConfig::openConfig(const QString &effectName) {
     //setup the UI
     QDialog dialog;
     QVBoxLayout layout;
-    KCModuleProxy *proxy;
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
 
     buttons->setCenterButtons(true);
@@ -67,7 +66,7 @@ void EffectConfig::openConfig(const QString &effectName) {
         KPluginInfo plugin(service);
         if (plugin.name() == effectName) {
             QString effectConfig = serviceName(plugin.name() + "_config");
-            proxy = new KCModuleProxy(effectConfig);
+            KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
 
             //setup the Layout of our UI
             layout.addWidget(proxy);
