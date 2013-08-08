@@ -106,6 +106,7 @@ Item {
 
             onClicked: {
                 engineObject.syncConfig();
+                effectModel.reload();
                 apply.enabled = false;
             }
         }

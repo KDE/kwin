@@ -21,11 +21,8 @@
 
 #ifndef EFFECTCONFIG_H
 #define EFFECTCONFIG_H
-#include <QAbstractListModel>
-#include <QHash>
-#include <QList>
-#include <QQuickView>
-#include <QString>
+#include <QObject>
+class QString;
 
 namespace KWin {
 namespace Compositing {
@@ -35,7 +32,7 @@ class EffectConfig : public QObject {
     Q_OBJECT
 
 public:
-    EffectConfig(QObject *parent = 0);
+    explicit EffectConfig(QObject *parent = 0);
     QString serviceName(const QString &serviceName);
 
     Q_INVOKABLE bool effectUiConfigExists(const QString &effectName);

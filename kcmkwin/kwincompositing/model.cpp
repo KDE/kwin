@@ -131,13 +131,18 @@ void EffectModel::loadEffects() {
 QString EffectModel::serviceName(const QString &effectName) {
     //The effect name is something like "Show Fps" and
     //we want something like "showfps"
-    return "kwin4_effect_" + effectName.toLower().replace(" ", "");
+    return "kwin4_effect_" + effectName.toLower().remove(" ");
 }
 
 QString EffectModel::findImage(const QString &imagePath, int size) {
     const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
     const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
     return fullImagePath;
+}
+
+void EffectModel::reload() {
+    m_effectsList.clear();
+    loadEffects();
 }
 
 EffectView::EffectView(QWindow *parent)
@@ -150,7 +155,6 @@ EffectView::EffectView(QWindow *parent)
 }
 
 void EffectView::init() {
-    EffectModel *model = new EffectModel();
     QString mainFile = QStandardPaths::locate(QStandardPaths::DataLocation, "qml/main.qml", QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
     rootContext()->setContextProperty("engineObject", this);
@@ -162,16 +166,14 @@ void EffectView::effectStatus(const QString &effectName, bool status) {
 }
 
 void EffectView::syncConfig() {
-    auto it = m_effectStatus.begin();
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
     QHash<QString, bool> effectsChanged;
 
-    while (it != m_effectStatus.end()) {
+    for (auto it = m_effectStatus.constBegin(); it != m_effectStatus.constEnd(); it++) {
         QVariant boolToString(it.value());
         QString effectName = it.key().toLower();
-        QString effectEntry = effectName.replace(" ", "");
+        QString effectEntry = effectName.remove(" ");
         kwinConfig.writeEntry("kwin4_effect_" + effectEntry + "Enabled", boolToString.toString());
-        it++;
         effectsChanged["kwin4_effect_" + effectEntry] = boolToString.toBool();
     }
     kwinConfig.sync();

@@ -40,9 +40,9 @@ EffectConfig::EffectConfig(QObject *parent)
 
 bool EffectConfig::effectUiConfigExists(const QString &serviceName) {
 
-    //Our effect UI config is something like showfps_config.dekstop
+    //Our effect UI config is something like showfps_config.desktop
     QString tmp = serviceName;
-    const QString effectConfig = tmp.replace("kwin4_effect_", "") + "_config.desktop";
+    const QString effectConfig = tmp.remove("kwin4_effect_") + "_config.desktop";
     QString effectConfigFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/kwin/" + effectConfig , QStandardPaths::LocateFile);
     return !effectConfigFile.isEmpty();
 }
@@ -63,7 +63,7 @@ void EffectConfig::openConfig(const QString &effectName) {
     for(KService::Ptr service : offers) {
         KPluginInfo plugin(service);
         if (plugin.name() == effectName) {
-            QString effectConfig = effectName.toLower().replace(" ", "") + "_config";
+            QString effectConfig = effectName.toLower().remove(" ") + "_config";
             KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
 
             //setup the Layout of our UI

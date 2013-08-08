@@ -59,12 +59,13 @@ public:
         EffectStatusRole
     };
 
-    EffectModel(QObject *parent = 0);
+    explicit EffectModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QString serviceName(const QString &effectName);
 
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
+    Q_INVOKABLE void reload();
 
 private:
     void loadEffects();
