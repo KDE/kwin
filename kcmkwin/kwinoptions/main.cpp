@@ -247,7 +247,6 @@ K_PLUGIN_FACTORY_DEFINITION(KWinOptionsFactory,
                             registerPlugin<KAdvancedConfigStandalone>("kwinadvanced");
                             registerPlugin<KWinOptions>("kwinoptions");
                            )
-K_EXPORT_PLUGIN(KWinOptionsFactory("kcmkwm"))
 
 #include "main.moc"
 #include "moc_main.cpp"

@@ -82,3 +82,5 @@ KWIN_EFFECT_CONFIG_MULTIPLE(builtins,
                            )
 
 } // namespace
+
+#include "configs_builtins.moc"

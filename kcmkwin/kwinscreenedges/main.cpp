@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>();)
-K_EXPORT_PLUGIN(KWinScreenEdgesConfigFactory("kcmkwinscreenedges"))
 
 namespace KWin
 {

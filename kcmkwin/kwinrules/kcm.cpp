@@ -34,7 +34,6 @@
 K_PLUGIN_FACTORY(KCMRulesFactory,
                  registerPlugin<KWin::KCMRules>();
                 )
-K_EXPORT_PLUGIN(KCMRulesFactory("kcmkwinrules"))
 
 namespace KWin
 {

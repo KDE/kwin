@@ -562,8 +562,8 @@ public Q_SLOTS:
  * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
  **/
 #define KWIN_EFFECT_CONFIG( name, classname ) \
-    K_PLUGIN_FACTORY(EffectFactory, registerPlugin<classname>(#name);) \
-    K_EXPORT_PLUGIN(EffectFactory("kcm_kwin4_effect_" #name))
+    K_PLUGIN_FACTORY(EffectFactory, registerPlugin<classname>(#name);)
+
 /**
  * Defines the function used to retrieve multiple effects' config widget
  * E.g.  KWIN_EFFECT_CONFIG_MULTIPLE( flames,
@@ -572,8 +572,8 @@ public Q_SLOTS:
  *           )
  **/
 #define KWIN_EFFECT_CONFIG_MULTIPLE( name, singles ) \
-    K_PLUGIN_FACTORY(EffectFactory, singles) \
-    K_EXPORT_PLUGIN(EffectFactory("kcm_kwin4_effect_" #name))
+    K_PLUGIN_FACTORY(EffectFactory, singles)
+
 /**
  * @see KWIN_EFFECT_CONFIG_MULTIPLE
  */

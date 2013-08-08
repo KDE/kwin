@@ -160,6 +160,5 @@ void ScriptingConfig::reload()
     // TODO: what to call
 }
 
-K_EXPORT_PLUGIN(GenericScriptedConfigFactory())
 
 } // namespace

@@ -52,7 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
                  registerPlugin<KWin::KWinCompositingConfig>();
                 )
-K_EXPORT_PLUGIN(KWinCompositingConfigFactory("kcmkwincompositing"))
 
 namespace KWin
 {

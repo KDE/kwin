@@ -44,7 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "layoutpreview.h"
 
 K_PLUGIN_FACTORY(KWinTabBoxConfigFactory, registerPlugin<KWin::KWinTabBoxConfig>();)
-K_EXPORT_PLUGIN(KWinTabBoxConfigFactory("kcm_kwintabbox"))
 
 namespace KWin
 {

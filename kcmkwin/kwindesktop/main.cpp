@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm.h>
 
 K_PLUGIN_FACTORY(KWinDesktopConfigFactory, registerPlugin<KWin::KWinDesktopConfig>();)
-K_EXPORT_PLUGIN(KWinDesktopConfigFactory("kcm_kwindesktop"))
 
 namespace KWin
 {

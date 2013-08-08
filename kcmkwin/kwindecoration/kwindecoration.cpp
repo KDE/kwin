@@ -61,7 +61,6 @@
 K_PLUGIN_FACTORY(KWinDecoFactory,
                  registerPlugin<KWin::KWinDecorationModule>();
                 )
-K_EXPORT_PLUGIN(KWinDecoFactory("kcmkwindecoration"))
 
 namespace KWin
 {
