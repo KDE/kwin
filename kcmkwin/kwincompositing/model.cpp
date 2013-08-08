@@ -29,6 +29,8 @@
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
 #include <QDBusMessage>
 #include <QHash>
 #include <QVariant>
@@ -96,8 +98,7 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const {
 void EffectModel::loadEffects() {
     EffectData effect;
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
-    QDBusMessage messageLoadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "loadEffect");
-    QDBusMessage messageUnloadEffect = QDBusMessage::createMethodCall("org.kde.kwin", "/Effects", "org.kde.kwin.Effects", "unloadEffect");
+    QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
 
     beginResetModel();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
@@ -113,19 +114,20 @@ void EffectModel::loadEffects() {
         effect.serviceName = serviceName(effect.name);
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
 
-        effect.effectStatus ? messageLoadEffect << effect.serviceName : messageUnloadEffect << effect.serviceName;
+        if (effect.effectStatus) {
+            interface.asyncCall("loadEffect", effect.serviceName);
+        } else {
+            interface.asyncCall("unloadEffect", effect.serviceName);
+        }
 
         m_effectsList << effect;
     }
+
     qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
         return a.category < b.category;
     });
 
     endResetModel();
-
-    QDBusConnection::sessionBus().registerObject("/Effects", this);
-    QDBusConnection::sessionBus().send(messageLoadEffect);
-    QDBusConnection::sessionBus().send(messageUnloadEffect);
 }
 
 QString EffectModel::serviceName(const QString &effectName) {
