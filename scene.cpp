@@ -70,8 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <X11/extensions/shape.h>
 
-#include <QGraphicsScene>
-#include <QGraphicsView>
+#include <QQuickWindow>
 #include <QVector2D>
 
 #include "client.h"
@@ -382,6 +381,26 @@ void Scene::paintWindow(Window* w, int mask, QRegion region, WindowQuadList quad
     paintDesktopThumbnails(w);
 }
 
+static void adjustClipRegion(AbstractThumbnailItem *item, QRegion &clippingRegion)
+{
+    if (item->clip() && item->clipTo()) {
+        // the x/y positions of the parent item are not correct. The margins are added, though the size seems fine
+        // that's why we have to get the offset by inspecting the anchors properties
+        QQuickItem *parentItem = item->clipTo();
+        QPointF offset;
+        QVariant anchors = parentItem->property("anchors");
+        if (anchors.isValid()) {
+            if (QObject *anchorsObject = anchors.value<QObject*>()) {
+                offset.setX(anchorsObject->property("leftMargin").toReal());
+                offset.setY(anchorsObject->property("topMargin").toReal());
+            }
+        }
+        const QRectF rect = parentItem->mapRectToScene(QRectF(parentItem->position() - offset,
+                                                                QSizeF(parentItem->width(), parentItem->height())));
+        clippingRegion &= rect.adjusted(0,0,-1,-1).translated(item->window()->position()).toRect();
+    }
+}
+
 void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation)
 {
     EffectWindowImpl *wImpl = static_cast<EffectWindowImpl*>(effectWindow(w));
@@ -410,18 +429,11 @@ void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacit
         }
         thumbData.setXScale(size.width() / static_cast<qreal>(visualThumbRect.width()));
         thumbData.setYScale(size.height() / static_cast<qreal>(visualThumbRect.height()));
-        // it can happen in the init/closing phase of the tabbox
-        // that the corresponding QGraphicsScene is not available
-        if (item->scene() == 0) {
-            continue;
-        }
 
-        QGraphicsView* declview = findViewForThumbnailItem(item, w);
-        if (declview == 0) {
+        if (!item->window()) {
             continue;
         }
-        QPoint viewPos = findOffsetInWindow(declview, w->window()->window());
-        const QPoint point = viewPos + declview->mapFromScene(item->scenePos());
+        const QPointF point = item->mapToScene(item->position());
         qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         x -= thumb->x();
@@ -439,14 +451,7 @@ void Scene::paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacit
         }
         QRegion clippingRegion = region;
         clippingRegion &= QRegion(wImpl->x(), wImpl->y(), wImpl->width(), wImpl->height());
-        QPainterPath path = item->clipPath();
-        if (!path.isEmpty()) {
-            // here we assume that the clippath consists of a single rectangle
-            const QPolygonF sceneBounds = item->mapToScene(path.boundingRect());
-            const QRect viewBounds = declview->mapFromScene(sceneBounds).boundingRect();
-            // shrinking the rect due to rounding errors
-            clippingRegion &= viewBounds.adjusted(0,0,-1,-1).translated(viewPos + w->pos());
-        }
+        adjustClipRegion(item, clippingRegion);
         effects->drawWindow(thumb, thumbMask, clippingRegion, thumbData);
     }
 }
@@ -461,16 +466,9 @@ void Scene::paintDesktopThumbnails(Scene::Window *w)
         if (!item->isVisible()) {
             continue;
         }
-        // it can happen in the init/closing phase of the tabbox
-        // that the corresponding QGraphicsScene is not available
-        if (item->scene() == 0) {
+        if (!item->window()) {
             continue;
         }
-        QGraphicsView* declview = findViewForThumbnailItem(item, w);
-        if (declview == 0) {
-            continue;
-        }
-        QPoint viewPos = findOffsetInWindow(declview, w->window()->window());
         s_recursionCheck = w;
 
         ScreenPaintData data;
@@ -479,60 +477,18 @@ void Scene::paintDesktopThumbnails(Scene::Window *w)
         size.scale(item->width(), item->height(), Qt::KeepAspectRatio);
         data *= QVector2D(size.width() / double(displayWidth()),
                           size.height() / double(displayHeight()));
-        const QPoint point = viewPos + declview->mapFromScene(item->scenePos());
+        const QPointF point = item->mapToScene(item->position());
         const qreal x = point.x() + w->x() + (item->width() - size.width())/2;
         const qreal y = point.y() + w->y() + (item->height() - size.height()) / 2;
         const QRect region = QRect(x, y, item->width(), item->height());
         QRegion clippingRegion = region;
         clippingRegion &= QRegion(wImpl->x(), wImpl->y(), wImpl->width(), wImpl->height());
-        QPainterPath path = item->clipPath();
-        if (!path.isEmpty()) {
-            // here we assume that the clippath consists of a single rectangle
-            const QPolygonF sceneBounds = item->mapToScene(path.boundingRect());
-            const QRect viewBounds = declview->mapFromScene(sceneBounds).boundingRect();
-            // shrinking the rect due to rounding errors
-            clippingRegion &= viewBounds.adjusted(0,0,-1,-1).translated(viewPos + w->pos());
-        }
+        adjustClipRegion(item, clippingRegion);
         data += QPointF(x, y);
         const int desktopMask = PAINT_SCREEN_TRANSFORMED | PAINT_WINDOW_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         paintDesktop(item->desktop(), desktopMask, clippingRegion, data);
         s_recursionCheck = NULL;
     }
-}
-
-QGraphicsView *Scene::findViewForThumbnailItem(AbstractThumbnailItem *item, Scene::Window *w)
-{
-    // in principle there could be more than one QGraphicsView per QGraphicsScene,
-    // although TabBox does not make use of it so far
-    QList<QGraphicsView*> views = item->scene()->views();
-    foreach (QGraphicsView* view, views) {
-        if (view->winId() == w->window()->window()) {
-            return view;
-        }
-        QWidget *parent = view;
-        while ((parent = parent->parentWidget())) {
-            // if the graphicsview is not the topmost widget we try to go up to the
-            // toplevel widget and check whether that is the window we are looking for.
-            if (parent->winId() == w->window()->window()) {
-                return view;
-            }
-        }
-    }
-    return NULL;
-}
-
-QPoint Scene::findOffsetInWindow(QWidget *view, xcb_window_t idOfTopmostWindow)
-{
-    if (view->winId() == idOfTopmostWindow) {
-        return QPoint();
-    }
-    QWidget *parent = view;
-    while ((parent = parent->parentWidget())) {
-        if (parent->winId() == idOfTopmostWindow) {
-            return view->mapTo(parent, QPoint());
-        }
-    }
-    return QPoint();
 }
 
 void Scene::paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data)

@@ -222,6 +222,7 @@ set(kwin_OWN_LIBS
 
 set(kwin_QT_LIBS
     ${Qt5Declarative_LIBRARIES}
+    ${Qt5Quick_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
 )
 

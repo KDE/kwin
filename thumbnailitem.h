@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_THUMBNAILITEM_H
 #define KWIN_THUMBNAILITEM_H
 
+#include <QPointer>
 #include <QWeakPointer>
-#include <QtDeclarative/QDeclarativeItem>
+#include <QQuickPaintedItem>
 
 namespace KWin
 {
@@ -31,37 +32,35 @@ class Client;
 class EffectWindow;
 class EffectWindowImpl;
 
-class AbstractThumbnailItem : public QDeclarativeItem
+class AbstractThumbnailItem : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(bool clip READ isClip WRITE setClip NOTIFY clipChanged SCRIPTABLE true)
     Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
     Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
+    Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 public:
     virtual ~AbstractThumbnailItem();
-    bool isClip() const {
-        return m_clip;
-    }
-    void setClip(bool clip);
     qulonglong parentWindow() const {
         return m_parentWindow;
     }
     void setParentWindow(qulonglong parentWindow);
     qreal brightness() const;
     qreal saturation() const;
+    QQuickItem *clipTo() const;
 
 public Q_SLOTS:
     void setBrightness(qreal brightness);
     void setSaturation(qreal saturation);
+    void setClipTo(QQuickItem *clip);
 
 Q_SIGNALS:
-    void clipChanged(bool clipped);
     void brightnessChanged();
     void saturationChanged();
+    void clipToChanged();
 
 protected:
-    explicit AbstractThumbnailItem(QDeclarativeItem *parent = 0);
+    explicit AbstractThumbnailItem(QQuickItem *parent = 0);
 
 protected Q_SLOTS:
     virtual void repaint(KWin::EffectWindow* w) = 0;
@@ -73,11 +72,11 @@ private Q_SLOTS:
 
 private:
     void findParentEffectWindow();
-    bool m_clip;
     QWeakPointer<EffectWindowImpl> m_parent;
     qulonglong m_parentWindow;
     qreal m_brightness;
     qreal m_saturation;
+    QPointer<QQuickItem> m_clipToItem;
 };
 
 class WindowThumbnailItem : public AbstractThumbnailItem
@@ -86,7 +85,7 @@ class WindowThumbnailItem : public AbstractThumbnailItem
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(KWin::Client *client READ client WRITE setClient NOTIFY clientChanged)
 public:
-    explicit WindowThumbnailItem(QDeclarativeItem *parent = 0);
+    explicit WindowThumbnailItem(QQuickItem *parent = 0);
     virtual ~WindowThumbnailItem();
 
     qulonglong wId() const {
@@ -95,7 +94,7 @@ public:
     void setWId(qulonglong wId);
     Client *client() const;
     void setClient(Client *client);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter);
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clientChanged();
@@ -111,14 +110,14 @@ class DesktopThumbnailItem : public AbstractThumbnailItem
     Q_OBJECT
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
 public:
-    DesktopThumbnailItem(QDeclarativeItem *parent = 0);
+    DesktopThumbnailItem(QQuickItem *parent = 0);
     virtual ~DesktopThumbnailItem();
 
     int desktop() const {
         return m_desktop;
     }
     void setDesktop(int desktop);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter);
 Q_SIGNALS:
     void desktopChanged(int desktop);
 protected Q_SLOTS:
@@ -137,6 +136,12 @@ inline
 qreal AbstractThumbnailItem::saturation() const
 {
     return m_saturation;
+}
+
+inline
+QQuickItem* AbstractThumbnailItem::clipTo() const
+{
+    return m_clipToItem.data();
 }
 
 inline

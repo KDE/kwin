@@ -98,6 +98,8 @@ Item {
                 property variant data: model
                 id: thumbnailItem
                 wId: windowId
+                clip: true
+                clipTo: thumbnailListView
                 anchors {
                     fill: parent
                     leftMargin: hoverItem.margins.left

@@ -100,6 +100,7 @@ Item {
                 id: thumbnailItem
                 property variant data: model
                 clip: true
+                clipTo: listView
                 desktop: model.desktop
                 anchors {
                     fill: parent

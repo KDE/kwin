@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "scripting_model.h"
 #include "../client.h"
+#if KWIN_QT5_PORTING
 #include "../thumbnailitem.h"
+#endif
 #include "../options.h"
 #include "../workspace.h"
 // KDE
@@ -44,8 +46,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFutureWatcher>
 #include <QSettings>
 #include <QtConcurrentRun>
+#include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeItem>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtDeclarative/qdeclarative.h>
 #include <QMenu>
@@ -552,9 +556,9 @@ void KWin::DeclarativeScript::run()
     kdeclarative.initialize();
     kdeclarative.setupBindings();
     installScriptFunctions(kdeclarative.scriptEngine());
-#endif
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 0, 1, "DesktopThumbnailItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
+#endif
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
     qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 0, 1, "ClientModel");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 0, 1, "ClientModelByScreen");

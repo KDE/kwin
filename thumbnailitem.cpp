@@ -26,24 +26,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "composite.h"
 // Qt
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QPainter>
+#include <QQuickWindow>
 // KDE
 #include <KDE/KDebug>
 
 namespace KWin
 {
 
-AbstractThumbnailItem::AbstractThumbnailItem(QDeclarativeItem *parent)
-    : QDeclarativeItem(parent)
-    , m_clip(true)
+AbstractThumbnailItem::AbstractThumbnailItem(QQuickItem *parent)
+    : QQuickPaintedItem(parent)
     , m_parent(QWeakPointer<EffectWindowImpl>())
     , m_parentWindow(0)
     , m_brightness(1.0)
     , m_saturation(1.0)
+    , m_clipToItem()
 {
-    setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
     Q_ASSERT(Compositor::isCreated());
     connect(Compositor::self(), SIGNAL(compositingToggled(bool)), SLOT(compositingToggled()));
     compositingToggled();
@@ -90,27 +88,16 @@ void AbstractThumbnailItem::findParentEffectWindow()
                 return;
             }
         }
-        QDeclarativeContext *ctx = QDeclarativeEngine::contextForObject(this);
-        if (!ctx) {
-            kDebug(1212) << "No Context";
+        QQuickWindow *qw = window();
+        if (!qw) {
+            kDebug(1212) << "No QQuickWindow assigned yet";
             return;
         }
-        const QVariant variant = ctx->engine()->rootContext()->contextProperty(QStringLiteral("viewId"));
-        if (!variant.isValid()) {
-            kDebug(1212) << "Required context property 'viewId' not found";
-            return;
-        }
-        if (EffectWindowImpl *w = static_cast<EffectWindowImpl*>(effects->findWindow(variant.value<qulonglong>()))) {
+        if (auto *w = static_cast<EffectWindowImpl*>(effects->findWindow(qw->winId()))) {
             m_parent = QWeakPointer<EffectWindowImpl>(w);
-            m_parentWindow = variant.value<qulonglong>();
+            m_parentWindow = qw->winId();
         }
     }
-}
-
-void AbstractThumbnailItem::setClip(bool clip)
-{
-    m_clip = clip;
-    emit clipChanged(clip);
 }
 
 void AbstractThumbnailItem::effectWindowAdded()
@@ -145,8 +132,13 @@ void AbstractThumbnailItem::setSaturation(qreal saturation)
     emit saturationChanged();
 }
 
+void AbstractThumbnailItem::setClipTo(QQuickItem *clip)
+{
+    m_clipToItem = QPointer<QQuickItem>(clip);
+    emit clipToChanged();
+}
 
-WindowThumbnailItem::WindowThumbnailItem(QDeclarativeItem* parent)
+WindowThumbnailItem::WindowThumbnailItem(QQuickItem* parent)
     : AbstractThumbnailItem(parent)
     , m_wId(0)
     , m_client(NULL)
@@ -186,15 +178,13 @@ void WindowThumbnailItem::setClient(Client *client)
     emit clientChanged();
 }
 
-void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void WindowThumbnailItem::paint(QPainter *painter)
 {
     if (effects) {
-        QDeclarativeItem::paint(painter, option, widget);
         return;
     }
     Client *client = Workspace::self()->findClient(WindowMatchPredicate(m_wId));
     if (!client) {
-        QDeclarativeItem::paint(painter, option, widget);
         return;
     }
     QPixmap pixmap = client->icon(boundingRect().size().toSize());
@@ -210,7 +200,7 @@ void WindowThumbnailItem::repaint(KWin::EffectWindow *w)
     }
 }
 
-DesktopThumbnailItem::DesktopThumbnailItem(QDeclarativeItem *parent)
+DesktopThumbnailItem::DesktopThumbnailItem(QQuickItem *parent)
     : AbstractThumbnailItem(parent)
     , m_desktop(0)
 {
@@ -231,10 +221,10 @@ void DesktopThumbnailItem::setDesktop(int desktop)
     emit desktopChanged(m_desktop);
 }
 
-void DesktopThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void DesktopThumbnailItem::paint(QPainter *painter)
 {
+    Q_UNUSED(painter)
     if (effects) {
-        QDeclarativeItem::paint(painter, option, widget);
         return;
     }
     // TODO: render icon

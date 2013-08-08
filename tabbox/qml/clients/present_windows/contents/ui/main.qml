@@ -88,6 +88,8 @@ Item {
             KWin.ThumbnailItem {
                 id: thumbnailItem
                 wId: windowId
+                clip: true
+                clipTo: thumbnailListView
                 anchors {
                     top: parent.top
                     left: parent.left

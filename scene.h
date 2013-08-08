@@ -27,8 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QElapsedTimer>
 
-class QGraphicsView;
-
 namespace KWin
 {
 
@@ -167,13 +165,6 @@ protected:
 private:
     void paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);
-    /**
-    * Helper function to find the GraphicsView the ThumbnailItem @p item is rendered in which
-    * matches our Window @p w.
-    * If not found @c NULL is returned.
-    **/
-    QGraphicsView *findViewForThumbnailItem(AbstractThumbnailItem *item, Scene::Window *w);
-    QPoint findOffsetInWindow(QWidget *view, xcb_window_t idOfTopmostWindow);
 };
 
 // The base class for windows representations in composite backends
