@@ -62,10 +62,13 @@ public:
     explicit EffectModel(QObject *parent = 0);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     QString serviceName(const QString &effectName);
 
+    Q_INVOKABLE void effectStatus(const QModelIndex &index, bool effectState);
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
     Q_INVOKABLE void reload();
+    Q_INVOKABLE void syncConfig();
 
 private:
     void loadEffects();
@@ -79,13 +82,6 @@ class EffectView : public QQuickView {
 public:
     EffectView(QWindow *parent = 0);
     void init();
-    void loadKWinEffects(const QHash<QString, bool> &effectsChanged);
-
-    Q_INVOKABLE void effectStatus(const QString &effectName, bool status);
-    Q_INVOKABLE void syncConfig();
-
-private:
-    QHash<QString, bool> m_effectStatus;
 };
 
 }

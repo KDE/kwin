@@ -41,7 +41,7 @@ Component {
                     checked: model.EffectStatusRole
                     onClicked: {
                         apply.enabled = true;
-                        engineObject.effectStatus(model.NameRole, checked);
+                        effectModel.effectStatus(effectView.model.modelIndex(index),checked);
                     }
 
                     onCheckedChanged: {

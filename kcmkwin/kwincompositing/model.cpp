@@ -130,6 +130,19 @@ void EffectModel::loadEffects() {
     endResetModel();
 }
 
+bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if (!index.isValid())
+        return QAbstractItemModel::setData(index, value, role);
+
+    if (role == EffectModel::EffectStatusRole) {
+        m_effectsList[index.row()].effectStatus = value.toBool();
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    return QAbstractItemModel::setData(index, value, role);
+}
+
 QString EffectModel::serviceName(const QString &effectName) {
     //The effect name is something like "Show Fps" and
     //we want something like "showfps"
@@ -147,6 +160,27 @@ void EffectModel::reload() {
     loadEffects();
 }
 
+void EffectModel::effectStatus(const QModelIndex &index, bool effectState) {
+    setData(index, effectState, EffectStatusRole);
+}
+
+void EffectModel::syncConfig() {
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
+
+    for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
+        EffectData effect = *(it);
+        bool effectConfigStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
+
+        if (effect.effectStatus) {
+            kwinConfig.writeEntry(effect.serviceName + "Enabled", effect.effectStatus);
+        } else if (effect.effectStatus != effectConfigStatus) {
+            kwinConfig.writeEntry(effect.serviceName + "Enabled", effect.effectStatus);
+        }
+    }
+
+    kwinConfig.sync();
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
@@ -159,26 +193,7 @@ EffectView::EffectView(QWindow *parent)
 void EffectView::init() {
     QString mainFile = QStandardPaths::locate(QStandardPaths::DataLocation, "qml/main.qml", QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
-    rootContext()->setContextProperty("engineObject", this);
     setSource(QUrl(mainFile));
-}
-
-void EffectView::effectStatus(const QString &effectName, bool status) {
-    m_effectStatus[effectName] = status;
-}
-
-void EffectView::syncConfig() {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
-    QHash<QString, bool> effectsChanged;
-
-    for (auto it = m_effectStatus.constBegin(); it != m_effectStatus.constEnd(); it++) {
-        QVariant boolToString(it.value());
-        QString effectName = it.key().toLower();
-        QString effectEntry = effectName.remove(" ");
-        kwinConfig.writeEntry("kwin4_effect_" + effectEntry + "Enabled", boolToString.toString());
-        effectsChanged["kwin4_effect_" + effectEntry] = boolToString.toBool();
-    }
-    kwinConfig.sync();
 }
 
 }//end namespace Compositing

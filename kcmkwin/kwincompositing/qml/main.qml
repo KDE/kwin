@@ -88,8 +88,10 @@ Item {
                 id: effectView
                 Layout.fillWidth: true
                 anchors.fill: parent
-                model: searchModel
-                delegate: Effect {}
+                model: VisualDataModel{
+                    model: searchModel
+                    delegate: Effect{}
+                }
 
                 section.property: "CategoryRole"
                 section.delegate: sectionHeading
@@ -105,7 +107,7 @@ Item {
             }
 
             onClicked: {
-                engineObject.syncConfig();
+                effectModel.syncConfig();
                 effectModel.reload();
                 apply.enabled = false;
             }
