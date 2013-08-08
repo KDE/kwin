@@ -17,9 +17,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 1.0
-import org.kde.plasma.core 0.1 as PlasmaCore
-import org.kde.qtextracomponents 0.1
+import QtQuick 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.qtextracomponents 2.0
 
 Item {
     id: textTabBox
@@ -109,7 +109,7 @@ Item {
         function calculateMaxRowWidth() {
             var width = 0;
             var textElement = Qt.createQmlObject(
-                'import QtQuick 1.0;'
+                'import QtQuick 2.0;'
                 + 'Text {\n'
                 + '     text: "' + textTabBox.longestCaption + '"\n'
                 + '     visible: false\n'
@@ -125,7 +125,7 @@ Item {
         **/
         function calcRowHeight() {
             var textElement = Qt.createQmlObject(
-                'import QtQuick 1.0;'
+                'import QtQuick 2.0;'
                 + 'Text {\n'
                 + '     text: "Some Text"\n'
                 + '     visible: false\n'

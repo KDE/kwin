@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
-import QtQuick 1.0
-import org.kde.plasma.core 0.1 as PlasmaCore
+import QtQuick 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     property double leftMargin: shadow.margins.left + background.margins.left

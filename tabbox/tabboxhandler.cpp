@@ -118,7 +118,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 
     Display *dpy = QX11Info::display();
     TabBoxClient *currentClient = q->client(index);
-    QWidget *w = NULL;
+    QWindow *w = NULL;
     if (m_declarativeView && m_declarativeView->isVisible()) {
         w = m_declarativeView;
     }
@@ -230,7 +230,7 @@ void TabBoxHandler::show()
             }
             dv = d->m_declarativeDesktopView;
         }
-        if (dv->status() == QDeclarativeView::Ready && dv->rootObject()) {
+        if (dv->status() == QQuickView::Ready && dv->rootObject()) {
             dv->show();
             dv->setCurrentIndex(d->index, d->config.tabBoxMode() == TabBoxConfig::ClientTabBox);
         } else {
@@ -386,7 +386,7 @@ void TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
 
 bool TabBoxHandler::containsPos(const QPoint& pos) const
 {
-    QWidget *w = NULL;
+    QWindow *w = NULL;
     if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
         w = d->m_declarativeView;
     } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {

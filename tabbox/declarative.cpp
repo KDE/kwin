@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "clientmodel.h"
 // Qt
 #include <QApplication>
-#include <QtDeclarative/qdeclarative.h>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlEngine>
 #include <QDesktopWidget>
-#include <QGraphicsObject>
+#include <QPainter>
 #include <QtGui/QResizeEvent>
+#include <QQuickItem>
 #include <QX11Info>
 
 // include KDE
@@ -55,7 +55,7 @@ namespace TabBox
 {
 
 ImageProvider::ImageProvider(QAbstractItemModel *model)
-    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    : QQuickImageProvider(QQuickImageProvider::Pixmap)
     , m_model(model)
 {
 }
@@ -114,8 +114,8 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
 }
 
 
-DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
-    : QDeclarativeView(parent)
+DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QQuickWindow *parent)
+    : QQuickView(parent)
     , m_model(model)
     , m_mode(mode)
     , m_currentScreenGeometry()
@@ -124,16 +124,13 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     , m_cachedWidth(0)
     , m_cachedHeight(0)
 {
-    setAttribute(Qt::WA_TranslucentBackground);
-    setWindowFlags(Qt::X11BypassWindowManagerHint);
+    setColor(Qt::transparent);
+    setFlags(Qt::X11BypassWindowManagerHint);
     if (tabBox->embedded()) {
-        setResizeMode(QDeclarativeView::SizeRootObjectToView);
+        setResizeMode(QQuickView::SizeRootObjectToView);
     } else {
-        setResizeMode(QDeclarativeView::SizeViewToRootObject);
+        setResizeMode(QQuickView::SizeViewToRootObject);
     }
-    QPalette pal = palette();
-    pal.setColor(backgroundRole(), Qt::transparent);
-    setPalette(pal);
     engine()->addImageProvider(QLatin1String("client"), new ImageProvider(model));
 #warning TabBox needs porting of KDeclarative
 #if KWIN_QT5_PORTING
@@ -192,7 +189,7 @@ void DeclarativeView::showEvent(QShowEvent *event)
     slotUpdateGeometry();
     QResizeEvent re(size(), size()); // to set mask and blurring.
     resizeEvent(&re);
-    QGraphicsView::showEvent(event);
+    QQuickView::showEvent(event);
 }
 
 void DeclarativeView::resizeEvent(QResizeEvent *event)
@@ -202,7 +199,6 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
     } else {
         const QString maskImagePath = rootObject()->property("maskImagePath").toString();
         if (maskImagePath.isEmpty()) {
-            clearMask();
             KWindowEffects::enableBlurBehind(winId(), false);
         } else {
             const double maskWidth = rootObject()->property("maskWidth").toDouble();
@@ -217,7 +213,6 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
             if (Workspace::self()->compositing() && effects) {
                 // blur background?!
                 KWindowEffects::enableBlurBehind(winId(), static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Blur), mask);
-                clearMask();
             } else
 #endif
             {
@@ -226,12 +221,12 @@ void DeclarativeView::resizeEvent(QResizeEvent *event)
             }
         }
     }
-    QDeclarativeView::resizeEvent(event);
+    QQuickView::resizeEvent(event);
 }
 
 void DeclarativeView::hideEvent(QHideEvent *event)
 {
-    QWidget::hideEvent(event);
+    QQuickView::hideEvent(event);
 #ifndef TABBOX_KCM
     if (tabBox->embedded()) {
         Client *c = Workspace::self()->findClient(WindowMatchPredicate(tabBox->embedded()));
@@ -304,7 +299,7 @@ void DeclarativeView::slotUpdateGeometry()
         setGeometry(m_currentScreenGeometry.x() + static_cast<qreal>(m_currentScreenGeometry.width()) * 0.5 - static_cast<qreal>(width) * 0.5,
             m_currentScreenGeometry.y() + static_cast<qreal>(m_currentScreenGeometry.height()) * 0.5 - static_cast<qreal>(height) * 0.5,
             width, height);
-        m_relativePos = pos();
+        m_relativePos = position();
     }
 }
 
@@ -410,11 +405,11 @@ void DeclarativeView::slotEmbeddedChanged(bool enabled)
 {
     if (enabled) {
         // cache the width
-        setResizeMode(QDeclarativeView::SizeRootObjectToView);
+        setResizeMode(QQuickView::SizeRootObjectToView);
         m_cachedWidth = rootObject()->property("width").toInt();
         m_cachedHeight = rootObject()->property("height").toInt();
     } else {
-        setResizeMode(QDeclarativeView::SizeViewToRootObject);
+        setResizeMode(QQuickView::SizeViewToRootObject);
         if (m_cachedWidth != 0 && m_cachedHeight != 0) {
             rootObject()->setProperty("width", m_cachedWidth);
             rootObject()->setProperty("height", m_cachedHeight);

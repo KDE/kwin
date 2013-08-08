@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_DECLARATIVE_H
 #define KWIN_TABBOX_DECLARATIVE_H
 // includes
-#include <QtDeclarative/QDeclarativeImageProvider>
-#include <QtDeclarative/QDeclarativeView>
+#include <QQuickImageProvider>
+#include <QQuickView>
 #include <KDE/KService>
 #include "tabboxconfig.h"
 
@@ -40,7 +40,7 @@ namespace KWin
 namespace TabBox
 {
 
-class ImageProvider : public QDeclarativeImageProvider
+class ImageProvider : public QQuickImageProvider
 {
 public:
     explicit ImageProvider(QAbstractItemModel *model);
@@ -50,11 +50,11 @@ private:
     QAbstractItemModel *m_model;
 };
 
-class DeclarativeView : public QDeclarativeView
+class DeclarativeView : public QQuickView
 {
     Q_OBJECT
 public:
-    DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent = NULL);
+    DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QQuickWindow *parent = NULL);
     virtual void showEvent(QShowEvent *event);
     virtual void resizeEvent(QResizeEvent *event);
     void setCurrentIndex(const QModelIndex &index, bool disableAnimation = false);

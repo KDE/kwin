@@ -24,7 +24,7 @@ namespace KWin
 namespace TabBox
 {
 DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QWidget *parent)
-    : QDeclarativeView(parent)
+    : QQuickView(parent)
 {
     Q_UNUSED(model)
     Q_UNUSED(mode)
