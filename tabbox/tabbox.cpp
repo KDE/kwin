@@ -707,9 +707,6 @@ void TabBox::hide(bool abort)
         kDebug(1212) << "Tab box was not properly closed by an effect";
     m_tabBox->hide(abort);
     Xcb::sync();
-    XEvent otherEvent;
-    while (XCheckTypedEvent(display(), EnterNotify, &otherEvent))
-        ;
 }
 
 void TabBox::reconfigure()
