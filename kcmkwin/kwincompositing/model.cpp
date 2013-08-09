@@ -20,7 +20,6 @@
 
 #include "model.h"
 #include "effectconfig.h"
-
 #include <KDE/KPluginInfo>
 #include <KDE/KService>
 #include <KDE/KServiceTypeTrader>
@@ -44,7 +43,7 @@ namespace KWin {
 namespace Compositing {
 
 EffectModel::EffectModel(QObject *parent)
-    : QAbstractListModel(parent) {
+    : QAbstractItemModel(parent) {
 
     QHash<int, QByteArray> roleNames;
     roleNames[NameRole] = "NameRole";
@@ -58,6 +57,23 @@ EffectModel::EffectModel(QObject *parent)
     roleNames[EffectStatusRole] = "EffectStatusRole";
     setRoleNames(roleNames);
     loadEffects();
+}
+
+QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const {
+    if (!parent.isValid() || column > 0 || row < 0 || row >= rowCount()) {
+        return QModelIndex();
+    }
+
+    return createIndex(row, column);
+}
+
+QModelIndex EffectModel::parent(const QModelIndex &child) const {
+    Q_UNUSED(child)
+    return QModelIndex();
+}
+
+int EffectModel::columnCount(const QModelIndex &parent) const {
+    return 1;
 }
 
 int EffectModel::rowCount(const QModelIndex &parent) const {
@@ -95,6 +111,19 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const {
     }
 }
 
+bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+    if (!index.isValid())
+        return QAbstractItemModel::setData(index, value, role);
+
+    if (role == EffectModel::EffectStatusRole) {
+        m_effectsList[index.row()].effectStatus = value.toBool();
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    return QAbstractItemModel::setData(index, value, role);
+}
+
 void EffectModel::loadEffects() {
     EffectData effect;
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
@@ -130,23 +159,18 @@ void EffectModel::loadEffects() {
     endResetModel();
 }
 
-bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int role) {
-    if (!index.isValid())
-        return QAbstractItemModel::setData(index, value, role);
-
-    if (role == EffectModel::EffectStatusRole) {
-        m_effectsList[index.row()].effectStatus = value.toBool();
-        emit dataChanged(index, index);
-        return true;
-    }
-
-    return QAbstractItemModel::setData(index, value, role);
-}
-
 QString EffectModel::serviceName(const QString &effectName) {
     //The effect name is something like "Show Fps" and
     //we want something like "showfps"
     return "kwin4_effect_" + effectName.toLower().remove(" ");
+}
+
+bool EffectModel::effectListContains(const QString &effectFilter, int source_row) {
+    EffectData effect;
+    effect = m_effectsList.at(source_row);
+
+    return effect.name.contains(effectFilter, Qt::CaseInsensitive);
+
 }
 
 QString EffectModel::findImage(const QString &imagePath, int size) {
@@ -181,12 +205,73 @@ void EffectModel::syncConfig() {
     kwinConfig.sync();
 }
 
+EffectFilterModel::EffectFilterModel(QObject *parent)
+    :QSortFilterProxyModel(parent),
+    m_effectModel(0)
+{
+}
+
+EffectModel *EffectFilterModel::effectModel() const {
+    return m_effectModel;
+}
+
+const QString &EffectFilterModel::filter() const {
+    return m_filter;
+}
+
+void EffectFilterModel::setEffectModel(EffectModel *effectModel) {
+    if (effectModel == m_effectModel) {
+        return;
+    }
+
+    m_effectModel = effectModel;
+    setSourceModel(m_effectModel);
+    emit effectModelChanged();
+}
+
+void EffectFilterModel::setFilter(const QString &filter) {
+    if (filter == m_filter) {
+        return;
+    }
+
+    m_filter = filter;
+    emit filterChanged();
+    invalidateFilter();
+}
+
+bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+    if (!m_effectModel) {
+        return false;
+    }
+
+    if (m_filter.isEmpty()) {
+        return true;
+    }
+
+    QModelIndex index = m_effectModel->index(source_row, 0, source_parent);
+    if (!index.isValid()) {
+        return false;
+    }
+
+    QVariant data = index.data();
+    if (!data.isValid()) {
+        //An invalid QVariant is valid data
+        return true;
+    }
+
+    if (m_effectModel->effectListContains(m_filter, source_row)) {
+        return true;
+    }
+
+    return false;
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
     qmlRegisterType<EffectModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectModel");
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
-
+    qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
     init();
 }
 

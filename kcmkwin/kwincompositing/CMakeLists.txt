@@ -23,6 +23,7 @@ find_package(Qt5Core REQUIRED NO_MODULE)
 
 find_package(Qt5Quick REQUIRED NO_MODULE)
 find_package(KCoreAddons REQUIRED NO_MODULE)
+find_package(Qt5Test REQUIRED NO_MODULE)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++0x)
 
@@ -78,6 +79,7 @@ set(kwincomposing_SRC
     main.cpp
     effectconfig.cpp)
 
+
 add_executable(kwincompositing ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
@@ -88,7 +90,27 @@ target_link_libraries(kwincompositing
     ${Qt5Widgets_LIBRARIES}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KCMUTILS_LIBS}
+    ${Qt5Test_LIBRARIES}
+    ${KDE4Support_LIBRARIES}
+    ${KCoreAddons_LIBRARIES})
 
+set(modelTest_SRC
+    model.cpp
+    effectconfig.cpp
+    test/effectmodeltest.cpp
+    test/modeltest.cpp)
+
+add_executable(effectModelTest ${modelTest_SRC})
+
+target_link_libraries(effectModelTest
+    ${Qt5Quick_LIBRARIES}
+    ${Qt5Qml_LIBRARIES}
+    ${Qt5Core_LIBARIES}
+    ${kservice_LIBRARIES}
+    ${Qt5Widgets_LIBRARIES}
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KCMUTILS_LIBS}
+    ${Qt5Test_LIBRARIES}
     ${KDE4Support_LIBRARIES}
     ${KCoreAddons_LIBRARIES})
 

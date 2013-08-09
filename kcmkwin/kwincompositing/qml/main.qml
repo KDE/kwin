@@ -22,7 +22,6 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
-import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     id: window
@@ -63,12 +62,10 @@ Item {
             focus: true
         }
 
-
-        PlasmaCore.SortFilterModel {
-            id: searchModel
-            filterRole: "NameRole"
-            filterRegExp: searchField.text
-            sourceModel: EffectModel{
+        EffectFilterModel {
+            id:searchModel
+            filter: searchField.text
+            effectModel: EffectModel {
                 id: effectModel
             }
         }
