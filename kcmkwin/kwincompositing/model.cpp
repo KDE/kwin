@@ -60,7 +60,7 @@ EffectModel::EffectModel(QObject *parent)
 }
 
 QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const {
-    if (!parent.isValid() || column > 0 || row < 0 || row >= rowCount()) {
+if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effectsList.count()) {
         return QModelIndex();
     }
 
@@ -69,6 +69,7 @@ QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) c
 
 QModelIndex EffectModel::parent(const QModelIndex &child) const {
     Q_UNUSED(child)
+
     return QModelIndex();
 }
 
@@ -77,6 +78,9 @@ int EffectModel::columnCount(const QModelIndex &parent) const {
 }
 
 int EffectModel::rowCount(const QModelIndex &parent) const {
+    if (parent.isValid()) {
+        return 0;
+    }
     return m_effectsList.count();
 }
 

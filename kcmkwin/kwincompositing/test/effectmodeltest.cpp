@@ -28,13 +28,18 @@ EffectModelTest::EffectModelTest(QObject *parent)
 
 }
 
-void EffectModelTest::testModel() {
+void EffectModelTest::testEffectModel() {
+    KWin::Compositing::EffectModel *effectModel = new KWin::Compositing::EffectModel();
+
+    new ModelTest(effectModel, this);
+}
+
+void EffectModelTest::testEffectFilterModel() {
     KWin::Compositing::EffectFilterModel *model = new KWin::Compositing::EffectFilterModel();
     KWin::Compositing::EffectModel *effectModel = new KWin::Compositing::EffectModel();
 
     model->setEffectModel(effectModel);
     new ModelTest(model, this);
-
 }
 
 QTEST_MAIN(EffectModelTest)

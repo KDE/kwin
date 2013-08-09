@@ -32,6 +32,7 @@ public:
     EffectModelTest(QObject *parent = 0);
 
 private Q_SLOTS:
-    void testModel();
+    void testEffectModel();
+    void testEffectFilterModel();
 };
 #endif
