@@ -109,9 +109,9 @@ CubeEffect::CubeEffect()
         m_shadersDir = QStringLiteral("kwin/shaders/1.40/");
 
     if (effects->compositingType() == OpenGL2Compositing) {
-        const QString fragmentshader = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cube-reflection.glsl"));
+        const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-reflection.glsl"));
         m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
-        const QString capshader = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cube-cap.glsl"));
+        const QString capshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cube-cap.glsl"));
         m_capShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, capshader);
     } else {
         m_reflectionShader = NULL;
@@ -295,8 +295,8 @@ bool CubeEffect::loadShader()
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;
-    QString cylinderVertexshader =  KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("cylinder.vert"));
-    QString sphereVertexshader   = KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("sphere.vert"));
+    QString cylinderVertexshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cylinder.vert"));
+    QString sphereVertexshader   = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("sphere.vert"));
     if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
         kError(1212) << "Couldn't locate shader files" << endl;
         return false;

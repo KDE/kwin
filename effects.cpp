@@ -53,13 +53,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtConcurrentRun>
 #include <QDBusServiceWatcher>
 #include <QDBusPendingCallWatcher>
+#include <QStandardPaths>
 
 #include <KDE/KDebug>
 #include <KDE/KLibrary>
 #include <KDE/KDesktopFile>
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobal>
-#include <KDE/KStandardDirs>
 #include <KDE/KService>
 #include <KDE/KServiceTypeTrader>
 #include <KDE/KPluginInfo>
@@ -1456,7 +1456,7 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
         kDebug(1212) << "X-Plasma-MainScript not set";
         return false;
     }
-    const QString scriptFile = KStandardDirs::locate("data", QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
+    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
     if (scriptFile.isNull()) {
         kDebug(1212) << "Could not locate the effect script";
         return false;

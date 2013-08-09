@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 
 #include <kglobal.h>
-#include <kstandarddirs.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -248,8 +247,8 @@ void TrackMouseEffect::slotMouseChanged(const QPoint&, const QPoint&,
 
 void TrackMouseEffect::loadTexture()
 {
-    QString f[2] = {KGlobal::dirs()->findResource("appdata", QStringLiteral("tm_outer.png")),
-                    KGlobal::dirs()->findResource("appdata", QStringLiteral("tm_inner.png"))};
+    QString f[2] = {QStandardPaths::locate(QStandardPaths::DataLocation, QStringLiteral("tm_outer.png")),
+                    QStandardPaths::locate(QStandardPaths::DataLocation, QStringLiteral("tm_inner.png"))};
     if (f[0].isEmpty() || f[1].isEmpty())
         return;
 

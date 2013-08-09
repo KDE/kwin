@@ -1958,7 +1958,7 @@ CloseWindowView::CloseWindowView(QWindow *parent)
     setFlags(Qt::X11BypassWindowManagerHint);
     setColor(Qt::transparent);
 
-    setSource(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/effects/presentwindows/main.qml"))));
+    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
     if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(requestClose()));
     }

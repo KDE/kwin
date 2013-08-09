@@ -20,13 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "startupfeedback.h"
 // Qt
 #include <QSize>
+#include <QtCore/QStandardPaths>
 #include <QtGui/QPainter>
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KIconLoader>
-#include <KDE/KStandardDirs>
 #include <KDE/KStartupInfo>
 #include <KDE/KSelectionOwner>
 // KWin
@@ -132,7 +132,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
         if (effects->compositingType() == OpenGL2Compositing) {
             delete m_blinkingShader;
             m_blinkingShader = 0;
-            const QString shader = KGlobal::dirs()->findResource("data", QStringLiteral("kwin/blinking-startup-fragment.glsl"));
+            const QString shader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/blinking-startup-fragment.glsl"));
             m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
             if (m_blinkingShader->isValid()) {
                 kDebug(1212) << "Blinking Shader is valid";

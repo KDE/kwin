@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KDE/KGlobal>
-#include <KDE/KStandardDirs>
 #include <QVector2D>
 
 #include <kmessagebox.h>
@@ -127,7 +126,7 @@ bool LookingGlassEffect::loadData()
 #endif
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         shadersDir = QStringLiteral("kwin/shaders/1.40/");
-    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + QStringLiteral("lookingglass.frag"));
+    const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("lookingglass.frag"));
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);

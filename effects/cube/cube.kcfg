@@ -31,7 +31,7 @@
             <default code="true">QColor(KColorScheme(QPalette::Active, KColorScheme::Window).background().color())</default>
         </entry>
         <entry name="CapPath" type="String">
-            <default code="true">KGlobal::dirs()->findResource(&quot;appdata&quot;, QStringLiteral(&quot;cubecap.png&quot;))</default>
+            <default code="true">QStandardPaths::locate(QStandardPaths::DataLocation, QStringLiteral(&quot;cubecap.png&quot;))</default>
         </entry>
         <entry name="TexturedCaps" type="Bool">
             <default>true</default>

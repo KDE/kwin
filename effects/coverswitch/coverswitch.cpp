@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kapplication.h>
 #include <kcolorscheme.h>
 #include <kglobal.h>
-#include <kstandarddirs.h>
 #include <KDE/KIcon>
 
 #include <kwinglutils.h>
@@ -76,7 +75,7 @@ CoverSwitchEffect::CoverSwitchEffect()
 #endif
         if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
             shadersDir = QStringLiteral("kwin/shaders/1.40/");
-        const QString fragmentshader = KGlobal::dirs()->findResource("data", shadersDir + QStringLiteral("coverswitch-reflection.glsl"));
+        const QString fragmentshader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("coverswitch-reflection.glsl"));
         m_reflectionShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     } else {
         m_reflectionShader = NULL;

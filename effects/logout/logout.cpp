@@ -306,7 +306,8 @@ void LogoutEffect::renderVignetting()
     }
     if (!m_vignettingShader) {
         m_vignettingShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::ColorShader,
-                                                                           KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("vignetting.frag")));
+                                                                           QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                                                                  m_shadersDir + QStringLiteral("vignetting.frag")));
         if (!m_vignettingShader->isValid()) {
             kDebug(1212) << "Vignetting Shader failed to load";
             return;
@@ -386,7 +387,8 @@ void LogoutEffect::renderBlurTexture()
     }
     if (!m_blurShader) {
         m_blurShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::SimpleShader,
-                                                                     KGlobal::dirs()->findResource("data", m_shadersDir + QStringLiteral("logout-blur.frag")));
+                                                                     QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                                                            m_shadersDir + QStringLiteral("logout-blur.frag")));
         if (!m_blurShader->isValid()) {
             kDebug(1212) << "Logout blur shader failed to load";
         }

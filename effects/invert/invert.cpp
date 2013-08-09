@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
-#include <KStandardDirs>
+#include <QStandardPaths>
 
 #include <QMatrix4x4>
 
@@ -83,7 +83,7 @@ bool InvertEffect::loadData()
 #endif
     if (GLPlatform::instance()->glslVersion() >= coreVersionNumber)
         shadersDir = QStringLiteral("kwin/shaders/1.40/");
-    const QString fragmentshader =  KGlobal::dirs()->findResource("data", shadersDir + QStringLiteral("invert.frag"));
+    const QString fragmentshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, shadersDir + QStringLiteral("invert.frag"));
 
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     if (!m_shader->isValid()) {

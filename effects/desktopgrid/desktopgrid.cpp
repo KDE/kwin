@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kdebug.h>
 #include <KDE/KLocalizedString>
-#include <KDE/KStandardDirs>
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
@@ -1386,7 +1385,7 @@ DesktopButtonsView::DesktopButtonsView(QWindow *parent)
 
     rootContext()->setContextProperty(QStringLiteral("add"), QVariant(true));
     rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(true));
-    setSource(QUrl(KStandardDirs::locate("data", QStringLiteral("kwin/effects/desktopgrid/main.qml"))));
+    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/desktopgrid/main.qml"))));
     if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("addButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(addDesktop()));
     }
