@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPaintEngine>
 #include <QTimer>
 #include <QLabel>
+#include <QTemporaryFile>
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <KIcon>

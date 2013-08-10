@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // KDE
 #include <KDE/KDebug>
-#include <KDE/KTemporaryFile>
 // Qt
 #include <QSocketNotifier>
+#include <QTemporaryFile>
 // xcb
 #include <xcb/xtest.h>
 // Wayland
@@ -398,7 +398,7 @@ ShmPool::ShmPool(wl_shm *shm)
     , m_pool(NULL)
     , m_poolData(NULL)
     , m_size(1024 * 1024) // TODO: useful size?
-    , m_tmpFile(new KTemporaryFile())
+    , m_tmpFile(new QTemporaryFile())
     , m_valid(createPool())
     , m_offset(0)
 {

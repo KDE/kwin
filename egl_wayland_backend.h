@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xcb
 #include <xcb/shm.h>
 
-class KTemporaryFile;
+class QTemporaryFile;
 struct wl_buffer;
 struct wl_shm;
 
@@ -89,7 +89,7 @@ private:
     wl_shm_pool *m_pool;
     void *m_poolData;
     size_t m_size;
-    QScopedPointer<KTemporaryFile> m_tmpFile;
+    QScopedPointer<QTemporaryFile> m_tmpFile;
     bool m_valid;
     int m_offset;
 };

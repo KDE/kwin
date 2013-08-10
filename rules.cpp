@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfig.h>
 #include <KDE/KXMessages>
 #include <QRegExp>
-#include <ktemporaryfile.h>
+#include <QTemporaryFile>
 #include <QFile>
 #include <ktoolinvocation.h>
 #include <QDebug>
@@ -86,7 +86,7 @@ Rules::Rules()
 Rules::Rules(const QString& str, bool temporary)
     : temporary_state(temporary ? 2 : 0)
 {
-    KTemporaryFile file;
+    QTemporaryFile file;
     if (file.open()) {
         QByteArray s = str.toUtf8();
         file.write(s.data(), s.length());

@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenshot.h"
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
-#include <KDE/KTemporaryFile>
 #include <QDebug>
+#include <QtCore/QTemporaryFile>
+#include <QtCore/QDir>
 #include <QtDBus/QDBusConnection>
 #include <QVarLengthArray>
 #include <QtGui/QPainter>
@@ -304,8 +305,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
 #endif
     }
 
-    KTemporaryFile temp;
-    temp.setSuffix(QStringLiteral(".png"));
+    QTemporaryFile temp(QDir::tempPath() + QDir::separator() + QLatin1String("kwin_screenshot_XXXXXX.png"));
     temp.setAutoRemove(false);
     if (!temp.open()) {
         return QString();

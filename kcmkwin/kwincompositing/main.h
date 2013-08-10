@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 
 #include <ksharedconfig.h>
-#include <ktemporaryfile.h>
 
 #include "kwin_interface.h"
 
@@ -34,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class KPluginSelector;
 class KActionCollection;
 class QLabel;
+class QTemporaryFile;
 
 namespace KWin
 {
@@ -95,7 +95,7 @@ private:
     Ui::KWinCompositingConfig ui;
 
     QMap<QString, QString> mPreviousConfig;
-    KTemporaryFile mTmpConfigFile;
+    QTemporaryFile mTmpConfigFile;
     KSharedConfigPtr mTmpConfig;
     bool m_showConfirmDialog;
     KActionCollection* m_actionCollection;
