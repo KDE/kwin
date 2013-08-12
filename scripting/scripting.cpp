@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scripting.h"
 // own
+#include "dbuscall.h"
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
@@ -547,6 +548,7 @@ void KWin::DeclarativeScript::run()
     kdeclarative.setupBindings();
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
     qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
