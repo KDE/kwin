@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "scripting_model.h"
 #include "../client.h"
-#if KWIN_QT5_PORTING
 #include "../thumbnailitem.h"
-#endif
 #include "../options.h"
 #include "../workspace.h"
 // KDE
@@ -46,13 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFutureWatcher>
 #include <QSettings>
 #include <QtConcurrentRun>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeItem>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/qdeclarative.h>
 #include <QMenu>
+#include <QQmlContext>
+#include <QQmlEngine>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 
@@ -266,7 +260,7 @@ bool KWin::AbstractScript::borderActivated(KWin::ElectricBorder edge)
     return true;
 }
 
-void KWin::AbstractScript::installScriptFunctions(QScriptEngine* engine)
+void KWin::Script::installScriptFunctions(QScriptEngine* engine)
 {
     // add our print
     QScriptValue printFunc = engine->newFunction(kwinScriptPrint);
@@ -533,9 +527,8 @@ void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
-    , m_engine(new QDeclarativeEngine(this))
-    , m_component(new QDeclarativeComponent(m_engine, this))
-    , m_scene(new QGraphicsScene(this))
+    , m_engine(new QQmlEngine(this))
+    , m_component(new QQmlComponent(m_engine, this))
 {
 }
 
@@ -548,29 +541,26 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-    // add read config
-#warning DeclarativeScripts needs porting of KDeclarative
-#if KWIN_QT5_PORTING
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_engine);
     kdeclarative.initialize();
     kdeclarative.setupBindings();
-    installScriptFunctions(kdeclarative.scriptEngine());
-    qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 0, 1, "DesktopThumbnailItem");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
-#endif
+    qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
-    qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 0, 1, "ClientModel");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 0, 1, "ClientModelByScreen");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 0, 1, "ClientModelByScreenAndDesktop");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 0, 1, "ClientFilterModel");
+    qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
     qmlRegisterType<KWin::Client>();
 
+    m_engine->rootContext()->setContextProperty(QStringLiteral("workspace"), AbstractScript::workspace());
     m_engine->rootContext()->setContextProperty(QStringLiteral("options"), options);
+    m_engine->rootContext()->setContextProperty(QStringLiteral("KWin"), new JSEngineGlobalMethodsWrapper(this));
 
     m_component->loadUrl(QUrl::fromLocalFile(scriptFile().fileName()));
     if (m_component->isLoading()) {
-        connect(m_component, SIGNAL(statusChanged(QDeclarativeComponent::Status)), SLOT(createComponent()));
+        connect(m_component, &QQmlComponent::statusChanged, this, &DeclarativeScript::createComponent);
     } else {
         createComponent();
     }
@@ -581,9 +571,24 @@ void KWin::DeclarativeScript::createComponent()
     if (m_component->isError()) {
         kDebug(1212) << "Component failed to load: " << m_component->errors();
     } else {
-        m_scene->addItem(qobject_cast<QDeclarativeItem*>(m_component->create()));
+        m_component->create();
     }
     setRunning(true);
+}
+
+KWin::JSEngineGlobalMethodsWrapper::JSEngineGlobalMethodsWrapper(KWin::DeclarativeScript *parent)
+    : QObject(parent)
+    , m_script(parent)
+{
+}
+
+KWin::JSEngineGlobalMethodsWrapper::~JSEngineGlobalMethodsWrapper()
+{
+}
+
+QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVariant defaultValue)
+{
+    return m_script->config().readEntry(key, defaultValue);
 }
 
 KWin::Scripting *KWin::Scripting::s_self = NULL;

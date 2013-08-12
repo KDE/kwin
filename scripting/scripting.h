@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringList>
 #include <QtScript/QScriptEngineAgent>
 
-class QDeclarativeComponent;
-class QDeclarativeEngine;
+class QQmlComponent;
+class QQmlEngine;
 class QAction;
 class QDBusPendingCallWatcher;
 class QGraphicsScene;
@@ -166,8 +166,6 @@ protected:
         return m_workspace;
     }
 
-    void installScriptFunctions(QScriptEngine *engine);
-
 private:
     /**
      * @brief Parses the @p value to either a QMenu or QAction.
@@ -246,6 +244,7 @@ private Q_SLOTS:
     void slotScriptLoadedFromFile();
 
 private:
+    void installScriptFunctions(QScriptEngine *engine);
     /**
      * Read the script from file into a byte array.
      * If file cannot be read an empty byte array is returned.
@@ -281,9 +280,44 @@ private Q_SLOTS:
     void createComponent();
 
 private:
-    QDeclarativeEngine *m_engine;
-    QDeclarativeComponent *m_component;
-    QGraphicsScene *m_scene;
+    QQmlEngine *m_engine;
+    QQmlComponent *m_component;
+};
+
+class JSEngineGlobalMethodsWrapper : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(ClientAreaOption)
+public:
+//------------------------------------------------------------------
+//enums copy&pasted from kwinglobals.h for exporting
+
+    enum ClientAreaOption {
+        ///< geometry where a window will be initially placed after being mapped
+        PlacementArea,
+        ///< window movement snapping area?  ignore struts
+        MovementArea,
+        ///< geometry to which a window will be maximized
+        MaximizeArea,
+        ///< like MaximizeArea, but ignore struts - used e.g. for topmenu
+        MaximizeFullArea,
+        ///< area for fullscreen windows
+        FullScreenArea,
+        ///< whole workarea (all screens together)
+        WorkArea,
+        ///< whole area (all screens together), ignore struts
+        FullArea,
+        ///< one whole screen, ignore struts
+        ScreenArea
+    };
+    explicit JSEngineGlobalMethodsWrapper(DeclarativeScript *parent);
+    virtual ~JSEngineGlobalMethodsWrapper();
+
+public Q_SLOTS:
+    QVariant readConfig(const QString &key, QVariant defaultValue = QVariant());
+
+private:
+    DeclarativeScript *m_script;
 };
 
 /**

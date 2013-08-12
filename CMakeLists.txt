@@ -221,7 +221,6 @@ set(kwin_OWN_LIBS
 )
 
 set(kwin_QT_LIBS
-    ${Qt5Declarative_LIBRARIES}
     ${Qt5Quick_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
 )
@@ -229,6 +228,7 @@ set(kwin_QT_LIBS
 set(kwin_KDE_LIBS
     ${KDE4Support_LIBRARIES}
     ${KDE4_KDEUI_LIBRARY}
+    ${KDECLARATIVE_LIBRARIES}
     KF5::KCrash
     KF5::plasma
     KF5::KWindowSystem
