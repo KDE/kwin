@@ -37,7 +37,6 @@ namespace KWin
 AbstractThumbnailItem::AbstractThumbnailItem(QQuickItem *parent)
     : QQuickPaintedItem(parent)
     , m_parent(QWeakPointer<EffectWindowImpl>())
-    , m_parentWindow(0)
     , m_brightness(1.0)
     , m_saturation(1.0)
     , m_clipToItem()
@@ -70,24 +69,9 @@ void AbstractThumbnailItem::init()
     }
 }
 
-void AbstractThumbnailItem::setParentWindow(qulonglong parentWindow)
-{
-    m_parentWindow = parentWindow;
-    findParentEffectWindow();
-    if (!m_parent.isNull()) {
-        m_parent.data()->registerThumbnail(this);
-    }
-}
-
 void AbstractThumbnailItem::findParentEffectWindow()
 {
     if (effects) {
-        if (m_parentWindow) {
-            if (EffectWindowImpl *w = static_cast<EffectWindowImpl*>(effects->findWindow(m_parentWindow))) {
-                m_parent = QWeakPointer<EffectWindowImpl>(w);
-                return;
-            }
-        }
         QQuickWindow *qw = window();
         if (!qw) {
             kDebug(1212) << "No QQuickWindow assigned yet";
@@ -95,7 +79,6 @@ void AbstractThumbnailItem::findParentEffectWindow()
         }
         if (auto *w = static_cast<EffectWindowImpl*>(effects->findWindow(qw->winId()))) {
             m_parent = QWeakPointer<EffectWindowImpl>(w);
-            m_parentWindow = qw->winId();
         }
     }
 }

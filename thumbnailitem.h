@@ -35,16 +35,11 @@ class EffectWindowImpl;
 class AbstractThumbnailItem : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(qulonglong parentWindow READ parentWindow WRITE setParentWindow)
     Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
     Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 public:
     virtual ~AbstractThumbnailItem();
-    qulonglong parentWindow() const {
-        return m_parentWindow;
-    }
-    void setParentWindow(qulonglong parentWindow);
     qreal brightness() const;
     qreal saturation() const;
     QQuickItem *clipTo() const;
@@ -73,7 +68,6 @@ private Q_SLOTS:
 private:
     void findParentEffectWindow();
     QWeakPointer<EffectWindowImpl> m_parent;
-    qulonglong m_parentWindow;
     qreal m_brightness;
     qreal m_saturation;
     QPointer<QQuickItem> m_clipToItem;
