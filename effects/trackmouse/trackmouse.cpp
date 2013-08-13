@@ -261,7 +261,7 @@ void TrackMouseEffect::loadTexture()
         }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if ( effects->compositingType() == XRenderCompositing) {
-            QPixmap pixmap(f[i]);
+            QImage pixmap(f[i]);
             m_picture[i] = new XRenderPicture(pixmap);
             m_size[i] = pixmap.size();
             m_lastRect[i].setSize(pixmap.size());

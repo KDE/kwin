@@ -190,7 +190,7 @@ void ZoomEffect::recreateTexture()
             texture.reset(new GLTexture(img));
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
-            xrenderPicture.reset(new XRenderPicture(QPixmap::fromImage(img)));
+            xrenderPicture.reset(new XRenderPicture(img));
 #endif
         XcursorImageDestroy(ximg);
     }

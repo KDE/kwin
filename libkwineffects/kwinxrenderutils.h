@@ -68,8 +68,6 @@ class KWIN_EXPORT XRenderPicture
 {
 public:
     explicit XRenderPicture(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
-    // TODO: Qt5 - replace QPixmap by QImage to make it more obvious that it uses PutImage
-    explicit XRenderPicture(const QPixmap &pix);
     explicit XRenderPicture(const QImage &img);
     XRenderPicture(xcb_pixmap_t pix, int depth);
     operator xcb_render_picture_t();

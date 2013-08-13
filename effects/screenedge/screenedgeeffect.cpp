@@ -218,13 +218,13 @@ T *ScreenEdgeEffect::createCornerGlow(ElectricBorder border)
 {
     switch (border) {
     case ElectricTopLeft:
-        return new T(m_glow->pixmap(QStringLiteral("bottomright")));
+        return new T(m_glow->pixmap(QStringLiteral("bottomright")).toImage());
     case ElectricTopRight:
-        return  new T(m_glow->pixmap(QStringLiteral("bottomleft")));
+        return  new T(m_glow->pixmap(QStringLiteral("bottomleft")).toImage());
     case ElectricBottomRight:
-        return new T(m_glow->pixmap(QStringLiteral("topleft")));
+        return new T(m_glow->pixmap(QStringLiteral("topleft")).toImage());
     case ElectricBottomLeft:
-        return new T(m_glow->pixmap(QStringLiteral("topright")));
+        return new T(m_glow->pixmap(QStringLiteral("topright")).toImage());
     default:
         return NULL;
     }
@@ -291,7 +291,7 @@ T *ScreenEdgeEffect::createEdgeGlow(ElectricBorder border, const QSize &size)
         p.drawPixmap(QPoint(pixmapPosition.x(), size.height() - r.height()), r);
     }
     p.end();
-    return new T(image);
+    return new T(image.toImage());
 }
 
 bool ScreenEdgeEffect::isActive() const

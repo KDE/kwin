@@ -107,11 +107,6 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
     return pic;
 }
 
-XRenderPicture::XRenderPicture(const QPixmap &pix)
-{
-    XRenderPicture(pix.toImage());
-}
-
 XRenderPicture::XRenderPicture(const QImage &img)
 {
     const int depth = img.depth();
