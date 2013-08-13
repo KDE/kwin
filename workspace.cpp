@@ -197,8 +197,6 @@ Workspace::Workspace(bool restore)
     ColorMapper *colormaps = new ColorMapper(this);
     connect(this, SIGNAL(clientActivated(KWin::Client*)), colormaps, SLOT(update()));
 
-    updateXTime(); // Needed for proper initialization of user_time in Client ctor
-
     delayFocusTimer = 0;
 
     if (restore)
@@ -266,6 +264,7 @@ Workspace::Workspace(bool restore)
 
 void Workspace::init()
 {
+    updateXTime(); // Needed for proper initialization of user_time in Client ctor
     Screens *screens = Screens::self();
     screens->setConfig(KGlobal::config());
     screens->reconfigure();
