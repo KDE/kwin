@@ -139,42 +139,6 @@ QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
 }
 
 #ifndef KCMRULES
-static Time next_x_time;
-static Bool update_x_time_predicate(Display*, XEvent* event, XPointer)
-{
-    if (next_x_time != CurrentTime)
-        return False;
-    // from qapplication_x11.cpp
-    switch(event->type) {
-    case ButtonPress:
-        // fallthrough intended
-    case ButtonRelease:
-        next_x_time = event->xbutton.time;
-        break;
-    case MotionNotify:
-        next_x_time = event->xmotion.time;
-        break;
-    case KeyPress:
-        // fallthrough intended
-    case KeyRelease:
-        next_x_time = event->xkey.time;
-        break;
-    case PropertyNotify:
-        next_x_time = event->xproperty.time;
-        break;
-    case EnterNotify:
-    case LeaveNotify:
-        next_x_time = event->xcrossing.time;
-        break;
-    case SelectionClear:
-        next_x_time = event->xselectionclear.time;
-        break;
-    default:
-        break;
-    }
-    return False;
-}
-
 /*
  Updates xTime(). This used to simply fetch current timestamp from the server,
  but that can cause xTime() to be newer than timestamp of events that are
@@ -185,23 +149,10 @@ static Bool update_x_time_predicate(Display*, XEvent* event, XPointer)
 */
 void updateXTime()
 {
-    static QWidget* w = 0;
-    if (!w)
-        w = new QWidget;
-    long data = 1;
-    XChangeProperty(display(), w->winId(), atoms->kwin_running, atoms->kwin_running, 32,
-    PropModeAppend, (unsigned char*) &data, 1);
-    next_x_time = CurrentTime;
-    XEvent dummy;
-    XCheckIfEvent(display(), &dummy, update_x_time_predicate, NULL);
-    if (next_x_time == CurrentTime) {
-        XSync(display(), False);
-        XCheckIfEvent(display(), &dummy, update_x_time_predicate, NULL);
-    }
-    assert(next_x_time != CurrentTime);
-    QX11Info::setAppTime(next_x_time);
-    XEvent ev; // remove the PropertyNotify event from the events queue
-    XWindowEvent(display(), w->winId(), PropertyChangeMask, &ev);
+    // NOTE: QX11Info::getTimestamp does not yet search the event queue as the old
+    // solution did. This means there might be regressions currently. See the
+    // documentation above on how it should be done properly.
+    QX11Info::setAppTime(QX11Info::getTimestamp());
 }
 
 static int server_grab_count = 0;
