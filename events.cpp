@@ -254,7 +254,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     } else {
         // We want to pass root window property events to effects
         if (eventType == XCB_PROPERTY_NOTIFY) {
-            auto event = reinterpret_cast<xcb_property_notify_event_t*>(e);
+            auto *event = reinterpret_cast<xcb_property_notify_event_t*>(e);
             if (event->window == rootWindow()) {
                 emit propertyNotify(event->atom);
             }
