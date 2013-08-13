@@ -156,6 +156,7 @@ if(KWIN_BUILD_SCRIPTING)
         scripting/timer.cpp
         scripting/scripting_model.cpp
         scripting/dbuscall.cpp
+        scripting/screenedgeitem.cpp
     )
 endif()
 

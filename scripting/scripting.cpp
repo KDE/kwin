@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "meta.h"
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
+#include "screenedgeitem.h"
 #include "scripting_model.h"
 #include "../client.h"
 #include "../thumbnailitem.h"
@@ -549,6 +550,7 @@ void KWin::DeclarativeScript::run()
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
+    qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
     qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
