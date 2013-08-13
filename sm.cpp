@@ -408,7 +408,9 @@ static void shutdown_cancelled(SmcConn conn_P, SmPointer ptr)
 
 void SessionSaveDoneHelper::saveDone()
 {
+#if KWIN_QT5_PORTING
     Workspace::self()->sessionSaveDone();
+#endif
 }
 
 SessionSaveDoneHelper::SessionSaveDoneHelper()
