@@ -420,8 +420,13 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    for (ToplevelList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+    const ToplevelList stack = stacking_order;
+    // "mutex" the stackingorder, since anything trying to access it from now on will find
+    // many dangeling pointers and crash
+    stacking_order.clear();
+
+    for (ToplevelList::const_iterator it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
+        Client *c = qobject_cast<Client*>(const_cast<Toplevel*>(*it));
         if (!c) {
             continue;
         }
