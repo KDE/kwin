@@ -20,12 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "invert_config.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KActionCollection>
-#include <kaction.h>
 #include <KShortcutsEditor>
 #include <KDE/KAboutData>
 
@@ -41,37 +42,33 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 {
     QVBoxLayout* layout = new QVBoxLayout(this);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    KActionCollection *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
-    KAction* a = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("Invert")));
+    QAction* a = actionCollection->addAction(QStringLiteral("Invert"));
     a->setText(i18n("Toggle Invert Effect"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_I));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
 
-    KAction* b = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("InvertWindow")));
+    QAction* b = actionCollection->addAction(QStringLiteral("InvertWindow"));
     b->setText(i18n("Toggle Invert Effect on Window"));
     b->setProperty("isConfigurationAction", true);
-    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
+    KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);
+    KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);
 
     mShortcutEditor = new KShortcutsEditor(actionCollection, this,
                                            KShortcutsEditor::GlobalAction, KShortcutsEditor::LetterShortcutsDisallowed);
     connect(mShortcutEditor, SIGNAL(keyChange()), this, SLOT(changed()));
     layout->addWidget(mShortcutEditor);
-#endif
 
     load();
 }
 
 InvertEffectConfig::~InvertEffectConfig()
 {
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Undo (only) unsaved changes to global key shortcuts
     mShortcutEditor->undoChanges();
-#endif
 }
 
 void InvertEffectConfig::load()
@@ -85,10 +82,7 @@ void InvertEffectConfig::save()
 {
     KCModule::save();
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     mShortcutEditor->save();    // undo() will restore to this state from now on
-#endif
 
     emit changed(false);
     EffectsHandler::sendReloadMessage(QStringLiteral("invert"));
@@ -96,10 +90,8 @@ void InvertEffectConfig::save()
 
 void InvertEffectConfig::defaults()
 {
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     mShortcutEditor->allDefault();
-#endif
+
     emit changed(true);
 }
 

@@ -21,13 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "cubeconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <kcolorscheme.h>
 #include <KActionCollection>
-#include <kaction.h>
 #include <KDE/KAboutData>
+#include <KDE/KGlobalAccel>
 
 #include <QVBoxLayout>
 #include <QColor>
@@ -54,29 +55,28 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
     m_ui->tabWidget->setTabText(0, i18nc("@title:tab Basic Settings", "Basic"));
     m_ui->tabWidget->setTabText(1, i18nc("@title:tab Advanced Settings", "Advanced"));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
     m_actionCollection->setConfigGroup(QStringLiteral("Cube"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* cubeAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Cube"));
+    QAction* cubeAction = m_actionCollection->addAction(QStringLiteral("Cube"));
     cubeAction->setText(i18n("Desktop Cube"));
     cubeAction->setProperty("isConfigurationAction", true);
-    cubeAction->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F11));
-    KAction* cylinderAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Cylinder"));
+    KGlobalAccel::self()->setDefaultShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
+    KGlobalAccel::self()->setShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
+    QAction* cylinderAction = m_actionCollection->addAction(QStringLiteral("Cylinder"));
     cylinderAction->setText(i18n("Desktop Cylinder"));
     cylinderAction->setProperty("isConfigurationAction", true);
-    cylinderAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    KAction* sphereAction = (KAction*) m_actionCollection->addAction(QStringLiteral("Sphere"));
+    KGlobalAccel::self()->setShortcut(cylinderAction, QList<QKeySequence>());
+    QAction* sphereAction = m_actionCollection->addAction(QStringLiteral("Sphere"));
     sphereAction->setText(i18n("Desktop Sphere"));
     sphereAction->setProperty("isConfigurationAction", true);
-    sphereAction->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+    KGlobalAccel::self()->setShortcut(sphereAction, QList<QKeySequence>());
 
     m_ui->editor->addCollection(m_actionCollection);
-#endif
+
     connect(m_ui->kcfg_Caps, SIGNAL(stateChanged(int)), this, SLOT(capsSelectionChanged()));
     m_ui->kcfg_Wallpaper->setFilter(QStringLiteral("*.png *.jpeg *.jpg "));
     addConfig(CubeConfig::self(), m_ui);

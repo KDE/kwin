@@ -22,15 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <kaction.h>
-#include <KShortcutsEditor>
 #include <KDE/KAboutData>
+#include <KDE/KGlobalAccel>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -58,21 +58,19 @@ ThumbnailAsideEffectConfig::ThumbnailAsideEffectConfig(QWidget* parent, const QV
 
     addConfig(ThumbnailAsideConfig::self(), this);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
     m_actionCollection->setConfigGroup(QStringLiteral("ThumbnailAside"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*)m_actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
+    QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::CTRL + Qt::Key_T));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
 
     m_ui->editor->addCollection(m_actionCollection);
-#endif
 
     load();
 }

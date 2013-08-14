@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-class KAction;
+class QAction;
 
 namespace KWin
 {
@@ -69,7 +69,7 @@ private:
     QSize m_size[2];
     XRenderPicture *m_picture[2];
 #endif
-    KAction* m_action;
+    QAction* m_action;
     Qt::KeyboardModifiers m_modifiers;
 };
 

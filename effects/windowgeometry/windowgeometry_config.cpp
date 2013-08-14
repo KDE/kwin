@@ -22,9 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "windowgeometryconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 #include <KActionCollection>
-#include <kaction.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kconfiggroup.h>
 #include <KDE/KAboutData>
@@ -44,17 +45,16 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(myUi = new WindowGeometryConfigForm(this));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    myActionCollection = new KActionCollection(this, KComponentData("kwin"));
-    KAction* a = (KAction*)myActionCollection->addAction(QStringLiteral("WindowGeometry"));
+    myActionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    QAction* a = myActionCollection->addAction(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle KWin composited geometry display"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
 
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
     myUi->shortcuts->addCollection(myActionCollection);
-#endif
+
     connect(myUi->shortcuts,    SIGNAL(keyChange()), this, SLOT(changed()));
 
     addConfig(WindowGeometryConfiguration::self(), myUi);

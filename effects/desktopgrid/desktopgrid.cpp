@@ -28,9 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#include <kaction.h>
+#include <QAction>
 #include <kactioncollection.h>
 #include <kdebug.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <netwm_def.h>
 #include <QEvent>
@@ -68,12 +69,13 @@ DesktopGridEffect::DesktopGridEffect()
 {
     // Load shortcuts
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*) actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
+    QAction* a = actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F8));
-    shortcut = a->globalShortcut();
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
+    shortcut = KGlobalAccel::self()->shortcut(a);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
-    connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &DesktopGridEffect::globalShortcutChanged);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
@@ -1207,9 +1209,10 @@ void DesktopGridEffect::finish()
     }
 }
 
-void DesktopGridEffect::globalShortcutChanged(const QKeySequence& seq)
+void DesktopGridEffect::globalShortcutChanged(QAction *action, const QKeySequence& seq)
 {
-    shortcut = KShortcut(seq);
+    shortcut.clear();
+    shortcut.append(seq);
 }
 
 bool DesktopGridEffect::isMotionManagerMovingWindows() const

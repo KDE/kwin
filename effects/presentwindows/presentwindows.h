@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_proxy.h"
 
 #include <kwineffects.h>
-#include <kshortcut.h>
 #include <QQuickView>
 
 class QTimer;
@@ -200,9 +199,7 @@ public Q_SLOTS:
 
     // slots for global shortcut changed
     // needed to toggle the effect
-    void globalShortcutChanged(const QKeySequence& seq);
-    void globalShortcutChangedAll(const QKeySequence& seq);
-    void globalShortcutChangedClass(const QKeySequence& seq);
+    void globalShortcutChanged(QAction *action, const QKeySequence &seq);
     // EffectsHandler
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
@@ -297,9 +294,9 @@ private:
     QString m_windowFilter;
 
     // Shortcut - needed to toggle the effect
-    KShortcut shortcut;
-    KShortcut shortcutAll;
-    KShortcut shortcutClass;
+    QList<QKeySequence> shortcut;
+    QList<QKeySequence> shortcutAll;
+    QList<QKeySequence> shortcutClass;
 
     // Atoms
     // Present windows for all windows of given desktop

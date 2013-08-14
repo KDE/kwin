@@ -22,8 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows.h"
 //KConfigSkeleton
 #include "presentwindowsconfig.h"
+#include <QAction>
 #include <kactioncollection.h>
-#include <kaction.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <KDE/KStandardDirs>
@@ -76,24 +77,25 @@ PresentWindowsEffect::PresentWindowsEffect()
     m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("Expose"));
-    a->setText(i18n("Toggle Present Windows (Current desktop)"));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F9));
-    shortcut = a->globalShortcut();
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
-    connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChanged(QKeySequence)));
-    KAction* b = (KAction*)actionCollection->addAction(QStringLiteral("ExposeAll"));
-    b->setText(i18n("Toggle Present Windows (All desktops)"));
-    b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F10));
-    shortcutAll = b->globalShortcut();
-    connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
-    connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
-    KAction* c = (KAction*)actionCollection->addAction(QStringLiteral("ExposeClass"));
-    c->setText(i18n("Toggle Present Windows (Window class)"));
-    c->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F7));
-    connect(c, SIGNAL(triggered(bool)), this, SLOT(toggleActiveClass()));
-    connect(c, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedClass(QKeySequence)));
-    shortcutClass = c->globalShortcut();
+    QAction* exposeAction = actionCollection->addAction(QStringLiteral("Expose"));
+    exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
+    KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
+    KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
+    shortcut = KGlobalAccel::self()->shortcut(exposeAction);
+    connect(exposeAction, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
+    QAction* exposeAllAction = actionCollection->addAction(QStringLiteral("ExposeAll"));
+    exposeAllAction->setText(i18n("Toggle Present Windows (All desktops)"));
+    KGlobalAccel::self()->setDefaultShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
+    KGlobalAccel::self()->setShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
+    shortcutAll = KGlobalAccel::self()->shortcut(exposeAllAction);
+    connect(exposeAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
+    QAction* exposeClassAction = actionCollection->addAction(QStringLiteral("ExposeClass"));
+    exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
+    KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
+    KGlobalAccel::self()->setShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
+    connect(exposeClassAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveClass()));
+    shortcutClass = KGlobalAccel::self()->shortcut(exposeClassAction);
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &PresentWindowsEffect::globalShortcutChanged);
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
@@ -1905,19 +1907,18 @@ EffectWindow* PresentWindowsEffect::findFirstWindow() const
     return topLeft;
 }
 
-void PresentWindowsEffect::globalShortcutChanged(const QKeySequence& seq)
+void PresentWindowsEffect::globalShortcutChanged(QAction *action, const QKeySequence& seq)
 {
-    shortcut = KShortcut(seq);
-}
-
-void PresentWindowsEffect::globalShortcutChangedAll(const QKeySequence& seq)
-{
-    shortcutAll = KShortcut(seq);
-}
-
-void PresentWindowsEffect::globalShortcutChangedClass(const QKeySequence& seq)
-{
-    shortcutClass = KShortcut(seq);
+    if (action->objectName() == QStringLiteral("Expose")) {
+        shortcut.clear();
+        shortcut.append(seq);
+    } else if (action->objectName() == QStringLiteral("ExposeAll")) {
+        shortcutAll.clear();
+        shortcutAll.append(seq);
+    } else if (action->objectName() == QStringLiteral("ExposeClass")) {
+        shortcutClass.clear();
+        shortcutClass.append(seq);
+    }
 }
 
 bool PresentWindowsEffect::isActive() const

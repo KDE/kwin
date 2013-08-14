@@ -22,14 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "magnifierconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <kaction.h>
-#include <KShortcutsEditor>
 #include <KDE/KAboutData>
 
 #include <QWidget>
@@ -58,29 +58,30 @@ MagnifierEffectConfig::MagnifierEffectConfig(QWidget* parent, const QVariantList
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
     m_actionCollection->setConfigGroup(QStringLiteral("Magnifier"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a;
-    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomIn));
+    QAction* a;
+    a = m_actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
 
-    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ZoomOut));
+    a = m_actionCollection->addAction(KStandardAction::ZoomOut);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
 
-    a = static_cast< KAction* >(m_actionCollection->addAction(KStandardAction::ActualSize));
+    a = m_actionCollection->addAction(KStandardAction::ActualSize);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
 
     m_ui->editor->addCollection(m_actionCollection);
-#endif
+
     load();
 }
 

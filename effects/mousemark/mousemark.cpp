@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include <QAction>
 #include <kwinconfig.h>
 #include <kwinglutils.h>
-
-#include <kaction.h>
 #include <kactioncollection.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
 #include <math.h>
@@ -48,18 +48,18 @@ KWIN_EFFECT(mousemark, MouseMarkEffect)
 
 MouseMarkEffect::MouseMarkEffect()
 {
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("ClearMouseMarks")));
+    QAction* a = actionCollection->addAction(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear All Mouse Marks"));
-    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F11));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clear()));
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("ClearLastMouseMark")));
+    a = actionCollection->addAction(QStringLiteral("ClearLastMouseMark"));
     a->setText(i18n("Clear Last Mouse Mark"));
-    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clearLast()));
-#endif
+
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(effects, SIGNAL(screenLockingChanged(bool)), SLOT(screenLockingChanged(bool)));

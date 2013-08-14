@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "trackmouseconfig.h"
 
+#include <QAction>
 #include <QTime>
 #include <QMatrix4x4>
 
@@ -33,8 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kglobal.h>
 
-#include <kaction.h>
 #include <kactioncollection.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
 #include <math.h>
@@ -59,15 +60,15 @@ TrackMouseEffect::TrackMouseEffect()
     if ( effects->isOpenGLCompositing())
         m_angleBase = 90.0;
     m_mousePolling = false;
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
+
     KActionCollection *actionCollection = new KActionCollection(this);
-    m_action = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("TrackMouse")));
+    m_action = actionCollection->addAction(QStringLiteral("TrackMouse"));
     m_action->setText(i18n("Track mouse"));
-    m_action->setGlobalShortcut(KShortcut());
+    KGlobalAccel::self()->setDefaultShortcut(m_action, QList<QKeySequence>());
+    KGlobalAccel::self()->setShortcut(m_action, QList<QKeySequence>());
 
     connect(m_action, SIGNAL(triggered(bool)), this, SLOT(toggle()));
-#endif
+
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
                      SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

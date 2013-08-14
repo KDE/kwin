@@ -21,12 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "flipswitchconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
-#include <KAction>
 #include <KActionCollection>
 #include <KDE/KAboutData>
+#include <KDE/KGlobalAccel>
 
 #include <QVBoxLayout>
 
@@ -49,22 +50,19 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
 
     layout->addWidget(m_ui);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
-    KAction* a = (KAction*)m_actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    QAction* a = m_actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
     a->setText(i18n("Toggle Flip Switch (Current desktop)"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    KAction* b = (KAction*)m_actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
+    QAction* b = m_actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
     b->setText(i18n("Toggle Flip Switch (All desktops)"));
-    b->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+    KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>());
 
     m_actionCollection->setConfigGroup(QStringLiteral("FlipSwitch"));
     m_actionCollection->setConfigGlobal(true);
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
-#endif
 
     addConfig(FlipSwitchConfig::self(), m_ui);
 

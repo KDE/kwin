@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_DESKTOPGRID_H
 
 #include <kwineffects.h>
-#include <kshortcut.h>
 #include <QObject>
 #include <QTimeLine>
 #include <QQuickView>
@@ -96,7 +95,7 @@ private Q_SLOTS:
     void toggle();
     // slots for global shortcut changed
     // needed to toggle the effect
-    void globalShortcutChanged(const QKeySequence& seq);
+    void globalShortcutChanged(QAction *action, const QKeySequence& seq);
     void slotAddDesktop();
     void slotRemoveDesktop();
     void slotWindowAdded(KWin::EffectWindow* w);
@@ -160,7 +159,7 @@ private:
     QList<QPointF> scaledOffset;
 
     // Shortcut - needed to toggle the effect
-    KShortcut shortcut;
+    QList<QKeySequence> shortcut;
 
     PresentWindowsEffectProxy* m_proxy;
     QList<WindowMotionManager> m_managers;

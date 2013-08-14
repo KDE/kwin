@@ -22,12 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "windowgeometryconfig.h"
 
+#include <QAction>
 #include <QStringBuilder>
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <kwindowsystem.h>
 #include <KActionCollection>
-#include <kaction.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocale>
 #include <KDE/KLocalizedString>
 #include <KDE/KGlobal>
@@ -60,14 +61,15 @@ WindowGeometry::WindowGeometry()
     myMeasure[1]->setAlignment(Qt::AlignCenter);
     myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("WindowGeometry")));
+    QAction* a = actionCollection->addAction(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle window geometry display (effect only)"));
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_F11));
+
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);
+
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggle()));
-#endif
+
     connect(effects, SIGNAL(windowStartUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowStartUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowFinishUserMovedResized(KWin::EffectWindow*)), this, SLOT(slotWindowFinishUserMovedResized(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowStepUserMovedResized(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowStepUserMovedResized(KWin::EffectWindow*,QRect)));

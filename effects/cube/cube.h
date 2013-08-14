@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 #include <kwinglutils.h>
-#include <kshortcut.h>
 #include <QObject>
 #include <QQueue>
 #include <QMatrix4x4>
@@ -131,9 +130,7 @@ private Q_SLOTS:
     void toggleSphere();
     // slots for global shortcut changed
     // needed to toggle the effect
-    void cubeShortcutChanged(const QKeySequence& seq);
-    void cylinderShortcutChanged(const QKeySequence& seq);
-    void sphereShortcutChanged(const QKeySequence& seq);
+    void globalShortcutChanged(QAction *action, const QKeySequence &seq);
     void slotTabBoxAdded(int mode);
     void slotTabBoxUpdated();
     void slotTabBoxClosed();
@@ -238,9 +235,9 @@ private:
     GLVertexBuffer *m_cubeCapBuffer;
 
     // Shortcuts - needed to toggle the effect
-    KShortcut cubeShortcut;
-    KShortcut cylinderShortcut;
-    KShortcut sphereShortcut;
+    QList<QKeySequence> cubeShortcut;
+    QList<QKeySequence> cylinderShortcut;
+    QList<QKeySequence> sphereShortcut;
 
     // proxy
     CubeEffectProxy m_proxy;

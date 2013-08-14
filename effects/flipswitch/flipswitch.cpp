@@ -21,14 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "flipswitchconfig.h"
 
+#include <QAction>
 #include <kwinconfig.h>
 #include <QFont>
 #include <QKeyEvent>
 #include <QMatrix4x4>
 
 #include <kdebug.h>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
+#include <KDE/KGlobalAccel>
 #include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 
@@ -58,18 +60,17 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_captionFont.setPointSize(m_captionFont.pointSize() * 2);
 
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = (KAction*)actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
-    a->setText(i18n("Toggle Flip Switch (Current desktop)"));
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    m_shortcutCurrent = a->globalShortcut();
-    connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
-    connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedCurrent(QKeySequence)));
-    KAction* b = (KAction*)actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
-    b->setText(i18n("Toggle Flip Switch (All desktops)"));
-    b->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
-    m_shortcutAll = b->globalShortcut();
-    connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
-    connect(b, SIGNAL(globalShortcutChanged(QKeySequence)), this, SLOT(globalShortcutChangedAll(QKeySequence)));
+    QAction* flipSwitchCurrentAction = actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
+    flipSwitchCurrentAction->setText(i18n("Toggle Flip Switch (Current desktop)"));
+    KGlobalAccel::self()->setShortcut(flipSwitchCurrentAction, QList<QKeySequence>());
+    m_shortcutCurrent = KGlobalAccel::self()->shortcut(flipSwitchCurrentAction);
+    connect(flipSwitchCurrentAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
+    QAction* flipSwitchAllAction = actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
+    flipSwitchAllAction->setText(i18n("Toggle Flip Switch (All desktops)"));
+    KGlobalAccel::self()->setShortcut(flipSwitchAllAction, QList<QKeySequence>());
+    m_shortcutAll = KGlobalAccel::self()->shortcut(flipSwitchAllAction);
+    connect(flipSwitchAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &FlipSwitchEffect::globalShortcutChanged);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
@@ -822,14 +823,15 @@ void FlipSwitchEffect::selectNextOrPreviousWindow(bool forward)
 //*************************************************************
 // Keyboard handling
 //*************************************************************
-void FlipSwitchEffect::globalShortcutChangedAll(QKeySequence shortcut)
+void FlipSwitchEffect::globalShortcutChanged(QAction *action, QKeySequence shortcut)
 {
-    m_shortcutAll = KShortcut(shortcut);
-}
-
-void FlipSwitchEffect::globalShortcutChangedCurrent(QKeySequence shortcut)
-{
-    m_shortcutCurrent = KShortcut(shortcut);
+    if (action->objectName() == QStringLiteral("FlipSwitchAll")) {
+        m_shortcutAll.clear();
+        m_shortcutAll.append(shortcut);
+    } else if (action->objectName() == QStringLiteral("FlipSwitchCurrent")) {
+        m_shortcutCurrent.clear();
+        m_shortcutCurrent.append(shortcut);
+    }
 }
 
 void FlipSwitchEffect::grabbedKeyboardEvent(QKeyEvent* e)

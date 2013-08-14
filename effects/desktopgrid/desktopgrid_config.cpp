@@ -23,12 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "desktopgridconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <kaction.h>
 #include <KDE/KAboutData>
+#include <KDE/KGlobalAccel>
 
 #include <QVBoxLayout>
 
@@ -51,21 +52,20 @@ DesktopGridEffectConfig::DesktopGridEffectConfig(QWidget* parent, const QVariant
 
     layout->addWidget(m_ui);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
     m_actionCollection->setConfigGroup(QStringLiteral("DesktopGrid"));
     m_actionCollection->setConfigGlobal(true);
 
-    KAction* a = (KAction*) m_actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
+    QAction* a = m_actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::Key_F8));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
 
     m_ui->shortcutEditor->addCollection(m_actionCollection);
-#endif
+
 
     m_ui->desktopNameAlignmentCombo->addItem(i18nc("Desktop name alignment:", "Disabled"), QVariant(Qt::Alignment(0)));
     m_ui->desktopNameAlignmentCombo->addItem(i18n("Top"), QVariant(Qt::AlignHCenter | Qt::AlignTop));

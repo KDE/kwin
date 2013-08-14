@@ -23,14 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "zoomconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KActionCollection>
-#include <kaction.h>
-#include <KShortcutsEditor>
 #include <KDE/KAboutData>
+#include <KDE/KIcon>
 
 #include <QVBoxLayout>
 
@@ -56,64 +57,71 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    KActionCollection *actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    KActionCollection *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     actionCollection->setConfigGroup(QStringLiteral("Zoom"));
     actionCollection->setConfigGlobal(true);
 
-    KAction* a;
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn));
+    QAction* a;
+    a = actionCollection->addAction(KStandardAction::ZoomIn);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Equal));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
 
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomOut));
+    a = actionCollection->addAction(KStandardAction::ZoomOut);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
 
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize));
+    a = actionCollection->addAction(KStandardAction::ActualSize);
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomLeft")));
+    a = actionCollection->addAction(QStringLiteral("MoveZoomLeft"));
     a->setIcon(KIcon(QStringLiteral("go-previous")));
     a->setText(i18n("Move Left"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Left));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomRight")));
+    a = actionCollection->addAction(QStringLiteral("MoveZoomRight"));
     a->setIcon(KIcon(QStringLiteral("go-next")));
     a->setText(i18n("Move Right"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Right));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomUp")));
-    a->setIcon(KIcon("go-up"));
+    a = actionCollection->addAction(QStringLiteral("MoveZoomUp"));
+    a->setIcon(KIcon(QStringLiteral("go-up")));
     a->setText(i18n("Move Up"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Up));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveZoomDown")));
+    a = actionCollection->addAction(QStringLiteral("MoveZoomDown"));
     a->setIcon(KIcon(QStringLiteral("go-down")));
     a->setText(i18n("Move Down"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Down));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToFocus")));
+    a = actionCollection->addAction(QStringLiteral("MoveMouseToFocus"));
     a->setIcon(KIcon(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Focus"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F5));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F5);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F5);
 
-    a = static_cast< KAction* >(actionCollection->addAction(QStringLiteral("MoveMouseToCenter")));
+    a = actionCollection->addAction(QStringLiteral("MoveMouseToCenter"));
     a->setIcon(KIcon(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Center"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_F6));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F6);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F6);
 
     m_ui->editor->addCollection(actionCollection);
-#endif
+
     load();
 }
 

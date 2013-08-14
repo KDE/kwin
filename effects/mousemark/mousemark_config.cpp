@@ -23,14 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KActionCollection>
-#include <kaction.h>
 #include <KDE/KAboutData>
-#include <KShortcutsEditor>
+#include <KDE/KGlobalAccel>
 
 #include <QWidget>
 
@@ -57,23 +57,22 @@ MouseMarkEffectConfig::MouseMarkEffectConfig(QWidget* parent, const QVariantList
 
     addConfig(MouseMarkConfig::self(), m_ui);
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
-    KAction* a = static_cast< KAction* >(m_actionCollection->addAction(QStringLiteral("ClearMouseMarks")));
+    QAction* a = m_actionCollection->addAction(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear Mouse Marks"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F11));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
 
-    a = static_cast< KAction* >(m_actionCollection->addAction(QStringLiteral("ClearLastMouseMark")));
+    a = m_actionCollection->addAction(QStringLiteral("ClearLastMouseMark"));
     a->setText(i18n("Clear Last Mouse Mark"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::SHIFT + Qt::META + Qt::Key_F12));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
 
     m_ui->editor->addCollection(m_actionCollection);
-#endif
 
     load();
 }

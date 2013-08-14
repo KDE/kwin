@@ -22,11 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_FLIPSWITCH_H
 
 #include <kwineffects.h>
-#include <KShortcut>
 #include <QQueue>
 #include <QTimeLine>
-
-class KShortcut;
 
 namespace KWin
 {
@@ -83,8 +80,7 @@ public:
 private Q_SLOTS:
     void toggleActiveCurrent();
     void toggleActiveAllDesktops();
-    void globalShortcutChangedCurrent(QKeySequence shortcut);
-    void globalShortcutChangedAll(QKeySequence shortcut);
+    void globalShortcutChanged(QAction *action, QKeySequence shortcut);
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotTabBoxAdded(int mode);
@@ -141,8 +137,8 @@ private:
     float m_yPosition;
     bool m_windowTitle;
     // Shortcuts
-    KShortcut m_shortcutCurrent;
-    KShortcut m_shortcutAll;
+    QList<QKeySequence> m_shortcutCurrent;
+    QList<QKeySequence> m_shortcutAll;
 };
 
 class FlipSwitchEffect::ItemInfo

@@ -24,11 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "lookingglassconfig.h"
 
+#include <QAction>
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 
 #include <kactioncollection.h>
-#include <kaction.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
 #include <KDE/KGlobal>
@@ -58,16 +59,19 @@ LookingGlassEffect::LookingGlassEffect()
     actionCollection->setConfigGlobal(true);
     actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
-    KAction* a;
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn())));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Plus));
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ZoomOut, this, SLOT(zoomOut())));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Minus));
-    a = static_cast< KAction* >(actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle())));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_0));
-#endif
+    QAction* a;
+    a = actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn()));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
+
+    a = actionCollection->addAction(KStandardAction::ZoomOut, this, SLOT(zoomOut()));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
+
+    a = actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle()));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
+
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

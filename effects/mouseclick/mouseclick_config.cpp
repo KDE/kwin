@@ -22,12 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
+#include <QAction>
 #include <kwineffects.h>
 
 #include <KDE/KActionCollection>
-#include <KDE/KAction>
 #include <KDE/KAboutData>
-#include <KDE/KShortcutsEditor>
+#include <KDE/KGlobalAccel>
 
 #include <QWidget>
 
@@ -51,18 +51,16 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
 
     connect(m_ui->editor, SIGNAL(keyChange()), this, SLOT(changed()));
 
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
-    KAction* a = static_cast<KAction*>(m_actionCollection->addAction(QStringLiteral("ToggleMouseClick")));
+    QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Effect"));
     a->setProperty("isConfigurationAction", true);
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
 
     m_ui->editor->addCollection(m_actionCollection);
-#endif
 
     addConfig(MouseClickConfig::self(), m_ui);
     load();

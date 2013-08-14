@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "mouseclickconfig.h"
 
+#include <QAction>
 #include <kwinglutils.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
@@ -30,9 +31,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/render.h>
 #endif
 
-#include <KDE/KAction>
 #include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
+#include <KDE/KGlobalAccel>
 
 #include <math.h>
 
@@ -44,14 +45,14 @@ KWIN_EFFECT(mouseclick, MouseClickEffect)
 MouseClickEffect::MouseClickEffect()
 {
     m_enabled = false;
-#warning Global Shortcuts need porting
-#if KWIN_QT5_PORTING
+
     KActionCollection* actionCollection = new KActionCollection(this);
-    KAction* a = static_cast<KAction*>(actionCollection->addAction(QStringLiteral("ToggleMouseClick")));
+    QAction* a = actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Effect"));
-    a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
-#endif
+
     connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);

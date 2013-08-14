@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KLocalizedString>
 #include <kdebug.h>
-#include <kaction.h>
 #include <KDE/KAboutData>
 #include <kconfiggroup.h>
 
