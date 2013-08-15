@@ -82,13 +82,6 @@ bool is_multihead = false;
 
 bool initting = false;
 
-/**
- * Whether to run Xlib in synchronous mode and print backtraces for X errors.
- * Note that you most probably need to configure cmake with "-D__KDE_HAVE_GCC_VISIBILITY=0"
- * and -rdynamic in CXXFLAGS for kBacktrace() to work.
- */
-static bool kwin_sync = false;
-
 //************************************
 // KWinSelectionOwner
 //************************************
@@ -194,11 +187,6 @@ Application::Application()
     , owner(screen_number)
     , m_eventFilter(new XcbEventFilter())
 {
-    if (KCmdLineArgs::parsedArgs("qt")->isSet("sync")) {
-        kwin_sync = true;
-        XSynchronize(display(), True);
-        kDebug(1212) << "Running KWin in sync mode";
-    }
     setQuitOnLastWindowClosed(false);
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     KSharedConfig::Ptr config = KGlobal::config();
