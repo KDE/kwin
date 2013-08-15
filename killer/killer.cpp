@@ -23,17 +23,13 @@ DEALINGS IN THE SOFTWARE.
 ****************************************************************************/
 
 #include <kcmdlineargs.h>
-#include <kapplication.h>
-#include <kmessagebox.h>
-#include <KDE/KIcon>
+#include <kmessagebox_kiw.h>
 #include <KDE/KLocalizedString>
-#include <kauth.h>
-#include <kdebug.h>
-#include <unistd.h>
+#include <KDE/KAuth/Action>
+#include <QApplication>
+#include <QDebug>
 #include <QProcess>
-// TODO: remove with Qt 5, only for HTML escaping the caption
-#include <QTextDocument>
-#include <QWidget>
+#include <QtX11Extras/QX11Info>
 #include <signal.h>
 #include <errno.h>
 #include <xcb/xcb.h>
@@ -51,8 +47,13 @@ int main(int argc, char* argv[])
     options.add("wid <id>", ki18n("ID of resource belonging to the application"));
     options.add("timestamp <time>", ki18n("Time of user action causing termination"));
     KCmdLineArgs::addCmdLineOptions(options);
-    KApplication app;
-    KApplication::setWindowIcon(KIcon(QStringLiteral("kwin")));
+    QApplication app(argc, argv);
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kwin")));
+    QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));
+    QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
+    QApplication::setApplicationDisplayName(i18n("Window Manager"));
+    QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
+
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
     QString hostname = args->getOption("hostname");
     bool pid_ok = false;
@@ -71,9 +72,9 @@ int main(int argc, char* argv[])
     }
     bool isLocal = hostname == QStringLiteral("localhost");
 
-    caption = Qt::escape(caption);
-    appname = Qt::escape(appname);
-    hostname = Qt::escape(hostname);
+    caption = caption.toHtmlEscaped();
+    appname = appname.toHtmlEscaped();
+    hostname = hostname.toHtmlEscaped();
     QString pidString = QString::number(pid); // format pid ourself as it does not make sense to format an ID according to locale settings
 
     QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
@@ -89,8 +90,8 @@ int main(int argc, char* argv[])
 
     KGuiItem continueButton = KGuiItem(i18n("&Terminate Application %1", appname), QStringLiteral("edit-bomb"));
     KGuiItem cancelButton = KGuiItem(i18n("Wait Longer"), QStringLiteral("chronometer"));
-    app.updateUserTimestamp(timestamp);
-    if (KMessageBox::warningContinueCancel(QWidget::find(id), question, QString(), continueButton, cancelButton) == KMessageBox::Continue) {
+    QX11Info::setAppUserTime(timestamp);
+    if (KMessageBox::warningContinueCancelWId(id, question, QString(), continueButton, cancelButton) == KMessageBox::Continue) {
         if (!isLocal) {
             QStringList lst;
             lst << hostname << QStringLiteral("kill") << QString::number(pid);
@@ -103,10 +104,10 @@ int main(int argc, char* argv[])
                 killer.addArgument(QStringLiteral("pidcount"), 1);
                 killer.addArgument(QStringLiteral("signal"), SIGKILL);
                 if (killer.isValid()) {
-                    kDebug(1212) << "Using KAuth to kill pid: " << pid;
+                    qDebug() << "Using KAuth to kill pid: " << pid;
                     killer.execute();
                 } else {
-                    kDebug(1212) << "KWin process killer action not valid";
+                    qDebug() << "KWin process killer action not valid";
                 }
             }
         }
