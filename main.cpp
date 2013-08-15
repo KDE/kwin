@@ -20,26 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "main.h"
-#include <QTextStream>
-
-//#define QT_CLEAN_NAMESPACE
-#include <ksharedconfig.h>
 
 #include <kdeversion.h>
 #include <kglobal.h>
-#include <klocale.h>
-#include <stdlib.h>
 #include <kcmdlineargs.h>
 #include <k4aboutdata.h>
 #include <kcrash.h>
 #include <KDE/KConfigGroup>
-#include <signal.h>
-#include <fcntl.h>
 #include <QX11Info>
-#include <stdio.h>
-#include <fixx11h.h>
 #include <QtDBus/QtDBus>
-#include <QEvent>
 
 #include <QStandardPaths>
 #include <kdebug.h>
@@ -67,8 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "options.h"
 #include "sm.h"
-#include "utils.h"
-#include "effects.h"
 #include "workspace.h"
 #include "xcbutils.h"
 
@@ -77,6 +64,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/Xproto.h>
 #undef INT8
 #undef INT32
+#include <X11/Xatom.h>
+#include <fixx11h.h>
 
 namespace KWin
 {
