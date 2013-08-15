@@ -20,29 +20,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "main.h"
+#include "config-workspace.h"
+// kwin
+#include "atoms.h"
+#include "options.h"
+#include "sm.h"
+#include "workspace.h"
+#include "xcbutils.h"
 
-#include <kdeversion.h>
-#include <kglobal.h>
-#include <kcmdlineargs.h>
-#include <k4aboutdata.h>
-#include <kcrash.h>
-#include <KDE/KConfigGroup>
-#include <QX11Info>
-#include <QtDBus/QtDBus>
+// KDE workspace
+#include <ksmserver_interface.h>
 
-#include <QStandardPaths>
-#include <kdebug.h>
+// KDE
 #include <kde_file.h>
+#include <kdeversion.h>
+#include <k4aboutdata.h>
+#include <KDE/KCmdLineArgs>
+#include <KDE/KConfigGroup>
+#include <KDE/KCrash>
+#include <KDE/KDebug>
+#include <KDE/KGlobal>
+#include <KDE/KGlobalSettings>
+// Qt
 #include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QStandardPaths>
 #include <QVBoxLayout>
-#include <KGlobalSettings>
+#include <QtDBus/QtDBus>
+#include <QX11Info>
 
-#include "config-workspace.h"
-
+// system
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif // HAVE_UNISTD_H
@@ -51,14 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <malloc.h>
 #endif // HAVE_MALLOC_H
 
-#include <ksmserver_interface.h>
-
-#include "atoms.h"
-#include "options.h"
-#include "sm.h"
-#include "workspace.h"
-#include "xcbutils.h"
-
+// XLib
 #define INT8 _X11INT8
 #define INT32 _X11INT32
 #include <X11/Xproto.h>
