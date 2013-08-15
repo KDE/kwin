@@ -32,21 +32,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmdlineargs.h>
 #include <k4aboutdata.h>
 #include <kcrash.h>
+#include <KDE/KConfigGroup>
 #include <signal.h>
 #include <fcntl.h>
 #include <QX11Info>
 #include <stdio.h>
 #include <fixx11h.h>
 #include <QtDBus/QtDBus>
-#include <QMessageBox>
 #include <QEvent>
 
-#include <kdialog.h>
 #include <QStandardPaths>
 #include <kdebug.h>
 #include <kde_file.h>
+#include <QComboBox>
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QLabel>
-#include <KComboBox>
+#include <QPushButton>
 #include <QVBoxLayout>
 #include <KGlobalSettings>
 
@@ -147,13 +149,11 @@ bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P
 
 Atom KWinSelectionOwner::xa_version = None;
 
-class AlternativeWMDialog : public KDialog
+class AlternativeWMDialog : public QDialog
 {
 public:
     AlternativeWMDialog()
-        : KDialog() {
-        setButtons(KDialog::Ok | KDialog::Cancel);
-
+        : QDialog() {
         QWidget* mainWidget = new QWidget(this);
         QVBoxLayout* layout = new QVBoxLayout(mainWidget);
         QString text = i18n(
@@ -162,7 +162,7 @@ public:
                            "You can select another window manager to run:");
         QLabel* textLabel = new QLabel(text, mainWidget);
         layout->addWidget(textLabel);
-        wmList = new KComboBox(mainWidget);
+        wmList = new QComboBox(mainWidget);
         wmList->setEditable(true);
         layout->addWidget(wmList);
 
@@ -171,10 +171,15 @@ public:
         addWM(QStringLiteral("fvwm2"));
         addWM(QStringLiteral(KWIN_NAME));
 
-        setMainWidget(mainWidget);
+        QVBoxLayout *mainLayout = new QVBoxLayout(this);
+        mainLayout->addWidget(mainWidget);
+        QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+        buttons->button(QDialogButtonBox::Ok)->setDefault(true);
+        connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
+        connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+        mainLayout->addWidget(buttons);
 
         raise();
-        centerOnScreen(this);
     }
 
     void addWM(const QString& wm) {
@@ -187,7 +192,7 @@ public:
     }
 
 private:
-    KComboBox* wmList;
+    QComboBox* wmList;
 };
 
 int Application::crashes = 0;
