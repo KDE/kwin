@@ -400,8 +400,9 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
+        const int screen = screens()->number(pos + c->rect().center());
         if (maxRect.isNull())
-            maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
+            maxRect = clientArea(MovementArea, screen, c->desktop());
         const int xmin = maxRect.left();
         const int xmax = maxRect.right() + 1;             //desk size
         const int ymin = maxRect.top();
@@ -424,21 +425,25 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
         const int snapX = borderSnapZone.width() * snapAdjust; //snap trigger
         const int snapY = borderSnapZone.height() * snapAdjust;
         if (snapX || snapY) {
+            QRect geo = c->geometry();
             const QPoint cp = c->clientPos();
-            const QSize cs = c->geometry().size() - c->clientSize();
+            const QSize cs = geo.size() - c->clientSize();
             int padding[4] = { cp.x(), cs.width() - cp.x(), cp.y(), cs.height() - cp.y() };
 
-            // snap to titlebar
+            // snap to titlebar / snap to window borders on inner screen edges
             Position titlePos = c->titlebarPosition();
-            if (titlePos == PositionLeft || (c->maximizeMode() & MaximizeHorizontal))
+            if (padding[0] && (titlePos == PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
+                               screens()->intersecting(geo.translated(maxRect.x() - (padding[0] + geo.x()), 0)) > 1))
                 padding[0] = 0;
-            if (titlePos == PositionRight || (c->maximizeMode() & MaximizeHorizontal))
+            if (padding[1] && (titlePos == PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
+                               screens()->intersecting(geo.translated(maxRect.right() + padding[1] - geo.right(), 0)) > 1))
                 padding[1] = 0;
-            if (titlePos == PositionTop || (c->maximizeMode() & MaximizeVertical))
+            if (padding[2] && (titlePos == PositionTop || (c->maximizeMode() & MaximizeVertical) ||
+                               screens()->intersecting(geo.translated(0, maxRect.y() - (padding[2] + geo.y()))) > 1))
                 padding[2] = 0;
-            if (titlePos == PositionBottom || (c->maximizeMode() & MaximizeVertical))
+            if (padding[3] && (titlePos == PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
+                               screens()->intersecting(geo.translated(0, maxRect.bottom() + padding[3] - geo.bottom())) > 1))
                 padding[3] = 0;
-
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
                 deltaX = xmin - cx;
                 nx = xmin - padding[0];
