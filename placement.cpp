@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 
 #ifndef KCMRULES
+#include <kdecoration.h>
 #include "workspace.h"
 #include "client.h"
 #include "options.h"
@@ -96,6 +97,30 @@ void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacemen
         placeMaximizing(c, area, nextPlacement);
     else
         placeSmart(c, area, nextPlacement);
+
+    if (options->borderSnapZone()) {
+        // snap to titlebar / snap to window borders on inner screen edges
+        const QRect geo(c->geometry());
+        QPoint corner = geo.topLeft();
+        const QPoint cp = c->clientPos();
+        const QSize cs = geo.size() - c->clientSize();
+        KDecorationDefines::Position titlePos = c->titlebarPosition();
+
+        const QRect fullRect = workspace()->clientArea(FullArea, c);
+        if (!(c->maximizeMode() & KDecorationDefines::MaximizeHorizontal)) {
+            if (titlePos != KDecorationDefines::PositionRight && geo.right() == fullRect.right())
+                corner.rx() += cs.width() - cp.x();
+            if (titlePos != KDecorationDefines::PositionLeft && geo.x() == fullRect.x())
+                corner.rx() -= cp.x();
+        }
+        if (!(c->maximizeMode() & KDecorationDefines::MaximizeVertical)) {
+            if (titlePos != KDecorationDefines::PositionBottom && geo.bottom() == fullRect.bottom())
+                corner.ry() += cs.height() - cp.y();
+            if (titlePos != KDecorationDefines::PositionTop && geo.y() == fullRect.y())
+                corner.ry() -= cp.y();
+        }
+        c->move(corner);
+    }
 }
 
 /*!
@@ -442,10 +467,7 @@ void Placement::placeCentered(Client* c, const QRect& area, Policy /*next*/)
 void Placement::placeZeroCornered(Client* c, const QRect& area, Policy /*next*/)
 {
     // get the maximum allowed windows space and desk's origin
-    const QRect maxRect = checkArea(c, area);
-
-    // place the window
-    c->move(QPoint(maxRect.left(), maxRect.top()));
+    c->move(checkArea(c, area).topLeft());
 }
 
 void Placement::placeUtility(Client* c, QRect& area, Policy /*next*/)
