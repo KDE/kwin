@@ -298,7 +298,6 @@ Application::~Application()
     if (owner.ownerWindow() != None)   // If there was no --replace (no new WM)
         XSetInputFocus(display(), PointerRoot, RevertToPointerRoot, xTime());
     delete options;
-    delete effects;
     delete atoms;
 }
 
