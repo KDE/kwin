@@ -56,7 +56,8 @@ public slots:
     virtual void defaults();
 protected:
     virtual void showEvent(QShowEvent* e);
-
+private slots:
+    void sanitizeCooldown();
 private:
     KWinScreenEdgesConfigForm* m_ui;
     KSharedConfigPtr m_config;
