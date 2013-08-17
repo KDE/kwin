@@ -122,6 +122,7 @@ CubeEffect::CubeEffect()
     connect(effects, SIGNAL(tabBoxAdded(int)), this, SLOT(slotTabBoxAdded(int)));
     connect(effects, SIGNAL(tabBoxClosed()), this, SLOT(slotTabBoxClosed()));
     connect(effects, SIGNAL(tabBoxUpdated()), this, SLOT(slotTabBoxUpdated()));
+    connect(effects, SIGNAL(screenGeometryChanged(const QSize&)), this, SLOT(slotResetShaders()));
 
     reconfigure(ReconfigureAll);
 }
@@ -288,6 +289,14 @@ void CubeEffect::slotWallPaperLoaded()
         effects->addRepaintFull();
     }
     watcher->deleteLater();
+}
+
+void CubeEffect::slotResetShaders()
+{
+    ShaderManager::instance()->resetShader(m_capShader,         ShaderManager::GenericShader);
+    ShaderManager::instance()->resetShader(m_reflectionShader,  ShaderManager::GenericShader);
+    ShaderManager::instance()->resetShader(cylinderShader,      ShaderManager::GenericShader);
+    ShaderManager::instance()->resetShader(sphereShader,        ShaderManager::GenericShader);
 }
 
 bool CubeEffect::loadShader()

@@ -787,6 +787,16 @@ void ShaderManager::resetAllShaders()
     }
 }
 
+void ShaderManager::resetShader(GLShader *shader, ShaderType type)
+{
+    if (!(shader && shader->isValid()))
+        return;
+
+    pushShader(shader);
+    resetShader(type);
+    popShader();
+}
+
 
 void ShaderManager::pushShader(GLShader *shader)
 {
