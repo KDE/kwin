@@ -23,91 +23,56 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
+
 Item {
     id: window
     width: 640
     height: 480
+    property bool openGLBrokeState: true
 
-    Component {
-        id: sectionHeading
-        Rectangle {
-            width: parent.width
-            height:25
-            color: "white"
+    Item {
+        id: openGLError
+        visible: false
+        anchors.fill: parent
+        anchors.leftMargin: parent.width/2 - 100
+        Text {
+            id: openGLErrorText
+            text: "OpenGL compositing (the default) has crashed KWin in the past.\n" +
+                  "This was most likely due to a driver bug.\n" +
+                  "If you think that you have meanwhile upgraded to a stable driver,\n" +
+                  "you can reset this protection but be aware that this might result in an immediate crash!\n" +
+                  "Alternatively, you might want to use the XRender backend instead."
+        }
 
-            Text {
-                text: section
-                font.bold: true
-                font.pointSize: 16
-                color: "gray"
+        Button {
+            id: openGLButton
+            text: "Re-enable OpenGL detection"
+            anchors.top: openGLErrorText.bottom
+            onClicked: {
+                openGLBrokeState = compositing.OpenGLIsBroken();
+                view.visible = !openGLBrokeState;
+                openGLError.visible = openGLBrokeState;
             }
         }
     }
 
-    ColumnLayout {
-        id: col
-        height: parent.height
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-        TextField {
-            id: searchField
-            Layout.fillWidth: true
-            height: 20
-            anchors {
-                top: parent.top
-            }
-            focus: true
-        }
+    EffectView{
+        id: view
+        anchors.fill: parent
+        visible: false
+    }
 
-        EffectFilterModel {
-            id:searchModel
-            filter: searchField.text
-            effectModel: EffectModel {
-                id: effectModel
-            }
-        }
+    Compositing {
+        id: compositing
+    }
 
-
-        ScrollView {
-            id: scroll
-            highlightOnFocus: true
-            Layout.fillWidth: true
-            anchors {
-                top: searchField.bottom
-                left: parent.left
-                right: parent.right
-                bottom: apply.top
-            }
-            ListView {
-                id: effectView
-                Layout.fillWidth: true
-                anchors.fill: parent
-                model: VisualDataModel{
-                    model: searchModel
-                    delegate: Effect{}
-                }
-
-                section.property: "CategoryRole"
-                section.delegate: sectionHeading
-            }
-        }
-
-        Button {
-            id: apply
-            text: "Apply"
-            enabled: false
-            anchors {
-                bottom: parent.bottom
-            }
-
-            onClicked: {
-                effectModel.syncConfig();
-                effectModel.reload();
-                apply.enabled = false;
-            }
+    Component.onCompleted: {
+        if (compositing.OpenGLIsUnsafe()) {
+            openGLError.visible = true;
+        } else {
+            openGLError.visible = false;
+            console.log("mesa")
+            view.visible = true;
         }
     }
 }

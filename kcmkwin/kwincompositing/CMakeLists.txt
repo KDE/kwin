@@ -77,6 +77,7 @@ set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 set(kwincomposing_SRC
     model.cpp
     main.cpp
+    compositing.cpp
     effectconfig.cpp)
 
 
@@ -97,6 +98,7 @@ target_link_libraries(kwincompositing
 set(modelTest_SRC
     model.cpp
     effectconfig.cpp
+    compositing.cpp
     test/effectmodeltest.cpp
     test/modeltest.cpp)
 

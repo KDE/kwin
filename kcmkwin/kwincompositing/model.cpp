@@ -20,6 +20,8 @@
 
 #include "model.h"
 #include "effectconfig.h"
+#include "compositing.h"
+
 #include <KDE/KPluginInfo>
 #include <KDE/KService>
 #include <KDE/KServiceTypeTrader>
@@ -276,6 +278,7 @@ EffectView::EffectView(QWindow *parent)
     qmlRegisterType<EffectModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectModel");
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
     qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
+    qmlRegisterType<Compositing>("org.kde.kwin.kwincompositing", 1, 0, "Compositing");
     init();
 }
 
