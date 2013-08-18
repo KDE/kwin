@@ -1460,6 +1460,11 @@ QString Workspace::supportInformation() const
     } else {
         support.append("no\n");
     }
+    support.append("Active screen follows mouse: ");
+    if (screens()->isCurrentFollowsMouse())
+        support.append(" yes\n");
+    else
+        support.append(" no\n");
     support.append(QString("Number of Screens: %1\n").arg(screens()->count()));
     for (int i=0; i<screens()->count(); ++i) {
         const QRect geo = screens()->geometry(i);
@@ -1563,6 +1568,11 @@ QString Workspace::supportInformation() const
             } else {
                 support.append("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n");
             }
+            support.append("Painting blocks for vertical retrace: ");
+            if (m_compositor->scene()->blocksForRetrace())
+                support.append(" yes\n");
+            else
+                support.append(" no\n");
             break;
         }
         case XRenderCompositing:
