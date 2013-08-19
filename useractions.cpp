@@ -59,6 +59,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include <fixx11h.h>
 #include <QCheckBox>
+#include <QtConcurrentRun>
 #include <QPushButton>
 
 #include <kglobalsettings.h>
@@ -186,31 +187,30 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Cl
 {
     QStringList args;
     QString type;
-    KActionCollection *keys = Workspace::self()->actionCollection();
-    if (message == QStringLiteral("noborderaltf3")) {
-        KAction* action = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Operations Menu")));
+    auto shortcut = [](const QString &name) {
+        KActionCollection *keys = Workspace::self()->actionCollection();
+        QAction* action = keys->action(name);
         assert(action != NULL);
-        QString shortcut = QStringLiteral("%1 (%2)").arg(action->text())
-                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
+        const auto shortcuts = KGlobalAccel::self()->shortcut(action);
+        return QStringLiteral("%1 (%2)").arg(action->text())
+                             .arg(shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
+    };
+    if (message == QStringLiteral("noborderaltf3")) {
         args << QStringLiteral("--msgbox") << i18n(
                  "You have selected to show a window without its border.\n"
                  "Without the border, you will not be able to enable the border "
                  "again using the mouse: use the window operations menu instead, "
                  "activated using the %1 keyboard shortcut.",
-                 shortcut);
+                 shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
     } else if (message == QStringLiteral("fullscreenaltf3")) {
-        KAction* action = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Operations Menu")));
-        assert(action != NULL);
-        QString shortcut = QStringLiteral("%1 (%2)").arg(action->text())
-                           .arg(action->globalShortcut().primary().toString(QKeySequence::NativeText));
         args << QStringLiteral("--msgbox") << i18n(
                  "You have selected to show a window in fullscreen mode.\n"
                  "If the application itself does not have an option to turn the fullscreen "
                  "mode off you will not be able to disable it "
                  "again using the mouse: use the window operations menu instead, "
                  "activated using the %1 keyboard shortcut.",
-                 shortcut);
+                 shortcut(QStringLiteral("Window Operations Menu")));
         type = QStringLiteral("altf3warning");
     } else
         abort();
@@ -223,7 +223,9 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Cl
     }
     if (!c.isNull())
         args << QStringLiteral("--embed") << QString::number(c.data()->window());
-    KProcess::startDetached(QStringLiteral("kdialog"), args);
+    QtConcurrent::run([args]() {
+        KProcess::startDetached(QStringLiteral("kdialog"), args);
+    });
 }
 
 
