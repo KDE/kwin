@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_USERACTIONS_H
 #define KWIN_USERACTIONS_H
 
-// KDE
-#include <KDE/KDialog>
 // Qt
+#include <QDialog>
 #include <QObject>
 #include <QWeakPointer>
 
 class KKeySequenceWidget;
 class QAction;
+class QDialogButtonBox;
 class QLabel;
 class QMenu;
 class QRect;
@@ -261,7 +261,7 @@ private:
 };
 
 class ShortcutDialog
-    : public KDialog
+    : public QDialog
 {
     Q_OBJECT
 public:
@@ -278,6 +278,7 @@ private:
     KKeySequenceWidget* widget;
     QKeySequence _shortcut;
     QLabel *warning;
+    QDialogButtonBox *m_buttons;
 };
 
 } // namespace

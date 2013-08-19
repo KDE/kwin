@@ -72,7 +72,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kglobalaccel.h>
 #include <kapplication.h>
 #include <QRegExp>
+#include <QDialogButtonBox>
 #include <QLabel>
+#include <QLayout>
 #include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>
@@ -838,6 +840,7 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
 //****************************************
 ShortcutDialog::ShortcutDialog(const QKeySequence& cut)
     : _shortcut(cut)
+    , m_buttons(new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this))
 {
     QWidget *vBoxContainer = new QWidget(this);
     vBoxContainer->setLayout(new QVBoxLayout(vBoxContainer));
@@ -857,14 +860,15 @@ ShortcutDialog::ShortcutDialog(const QKeySequence& cut)
         widget, SIGNAL(keySequenceChanged(QKeySequence)),
         SLOT(keySequenceChanged(QKeySequence)));
 
-    setMainWidget(vBoxContainer);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    mainLayout->addWidget(vBoxContainer);
+    m_buttons->button(QDialogButtonBox::Ok)->setDefault(true);
+    connect(m_buttons, &QDialogButtonBox::accepted, this, &ShortcutDialog::accept);
+    connect(m_buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    mainLayout->addWidget(m_buttons);
     widget->setFocus();
 
-    // make it a popup, so that it has the grab
-    XSetWindowAttributes attrs;
-    attrs.override_redirect = True;
-    XChangeWindowAttributes(display(), winId(), CWOverrideRedirect, &attrs);
-    setWindowFlags(Qt::Popup);
+    setWindowFlags(Qt::Popup | Qt::X11BypassWindowManagerHint);
 }
 
 void ShortcutDialog::accept()
@@ -879,16 +883,16 @@ void ShortcutDialog::accept()
         || (seq[0] & Qt::KeyboardModifierMask) == 0) {
             // clear
             widget->clearKeySequence();
-            KDialog::accept();
+            QDialog::accept();
             return;
         }
     }
-    KDialog::accept();
+    QDialog::accept();
 }
 
 void ShortcutDialog::done(int r)
 {
-    KDialog::done(r);
+    QDialog::done(r);
     emit dialogDone(r == Accepted);
 }
 
@@ -917,7 +921,7 @@ void ShortcutDialog::keySequenceChanged(const QKeySequence &seq)
         widget->setKeySequence(shortcut());
     } else if (seq != _shortcut) {
         warning->hide();
-        if (QPushButton *ok = button(KDialog::Ok))
+        if (QPushButton *ok = m_buttons->button(QDialogButtonBox::Ok))
             ok->setFocus();
     }
 
