@@ -288,7 +288,7 @@ void Client::releaseWindow(bool on_shutdown)
     xcb_delete_property(c, m_client, atoms->kde_net_wm_frame_strut);
     xcb_reparent_window(c, m_client, rootWindow(), x(), y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
-    XSelectInput(display(), m_client, NoEventMask);
+    Xcb::selectInput(m_client, XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)
         // Map the window, so it can be found after another WM is started
         xcb_map_window(connection(), m_client);
@@ -959,10 +959,10 @@ void Client::setShade(ShadeMode mode)
         shade_geometry_change = true;
         QSize s(sizeForClientSize(QSize(clientSize())));
         s.setHeight(border_top + border_bottom);
-        XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
+        m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
         m_wrapper.unmap();
         xcb_unmap_window(connection(), m_client);
-        XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
+        m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
         exportMappingState(IconicState);
         plainResize(s);
         shade_geometry_change = false;
@@ -1207,12 +1207,12 @@ void Client::unmap()
     // which won't be missed, so this shouldn't be a problem. The chance the real UnmapNotify
     // will be missed is also very minimal, so I don't think it's needed to grab the server
     // here.
-    XSelectInput(display(), m_wrapper, ClientWinMask);   // Avoid getting UnmapNotify
+    m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
     XUnmapWindow(display(), frameId());
     m_wrapper.unmap();
     xcb_unmap_window(connection(), m_client);
     m_decoInputExtent.unmap();
-    XSelectInput(display(), m_wrapper, ClientWinMask | SubstructureNotifyMask);
+    m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
     if (decoration != NULL)
         decoration->widget()->hide(); // Not really necessary, but let it know the state
     exportMappingState(IconicState);

@@ -58,7 +58,7 @@ bool Unmanaged::track(Window w)
         return false;
     }
     setWindowHandles(w, w);   // the window is also the frame
-    XSelectInput(display(), w, attr.your_event_mask | StructureNotifyMask | PropertyChangeMask);
+    Xcb::selectInput(w, attr.your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     geom = QRect(attr.x, attr.y, attr.width, attr.height);
     checkScreen();
     vis = attr.visual;
@@ -98,7 +98,7 @@ void Unmanaged::release(bool on_shutdown)
     if (!QWidget::find(window())) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable())
             XShapeSelectInput(display(), window(), NoEventMask);
-        XSelectInput(display(), window(), NoEventMask);
+        Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     if (!on_shutdown) {
         workspace()->removeUnmanaged(this);

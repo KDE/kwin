@@ -44,6 +44,7 @@ static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
 static void moveWindow(xcb_window_t window, const QPoint &pos);
 static void moveWindow(xcb_window_t window, uint32_t x, uint32_t y);
+static void selectInput(xcb_window_t window, uint32_t events);
 
 template <typename Reply,
     typename Cookie,
@@ -428,6 +429,7 @@ public:
     void setBackgroundPixmap(xcb_pixmap_t pixmap);
     void defineCursor(xcb_cursor_t cursor);
     void focus(uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
+    void selectInput(uint32_t events);
     operator xcb_window_t() const;
 private:
     Window(const Window &other);
@@ -617,6 +619,12 @@ void Window::focus(uint8_t revertTo, xcb_timestamp_t time)
     setInputFocus(m_window, revertTo, time);
 }
 
+inline
+void Window::selectInput(uint32_t events)
+{
+    Xcb::selectInput(m_window, events);
+}
+
 // helper functions
 static inline void moveResizeWindow(WindowId window, const QRect &geometry)
 {
@@ -742,6 +750,11 @@ static inline void sync()
         kWarning(1212) << "Sync error" << kBacktrace();
         free(error);
     }
+}
+
+void selectInput(xcb_window_t window, uint32_t events)
+{
+    xcb_change_window_attributes(connection(), window, XCB_CW_EVENT_MASK, &events);
 }
 
 } // namespace X11

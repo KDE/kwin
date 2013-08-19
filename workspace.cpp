@@ -209,15 +209,15 @@ Workspace::Workspace(bool restore)
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
 
     // Select windowmanager privileges
-    XSelectInput(display(), rootWindow(),
-                 KeyPressMask |
-                 PropertyChangeMask |
-                 ColormapChangeMask |
-                 SubstructureRedirectMask |
-                 SubstructureNotifyMask |
-                 FocusChangeMask | // For NotifyDetailNone
-                 ExposureMask
-                );
+    Xcb::selectInput(rootWindow(),
+                     XCB_EVENT_MASK_KEY_PRESS |
+                     XCB_EVENT_MASK_PROPERTY_CHANGE |
+                     XCB_EVENT_MASK_COLOR_MAP_CHANGE |
+                     XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
+                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+                     XCB_EVENT_MASK_FOCUS_CHANGE | // For NotifyDetailNone
+                     XCB_EVENT_MASK_EXPOSURE
+    );
 
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::create(this);

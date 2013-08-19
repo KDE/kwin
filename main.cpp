@@ -240,8 +240,16 @@ Application::Application()
         options = new Options;
 
         // Check  whether another windowmanager is running
-        XSelectInput(display(), rootWindow(), SubstructureRedirectMask);
-        Xcb::sync(); // Trigger error now
+        const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
+        ScopedCPointer<xcb_generic_error_t> redirectCheck(xcb_request_check(connection(),
+                                                                            xcb_change_window_attributes_checked(connection(),
+                                                                                                                 rootWindow(),
+                                                                                                                 XCB_CW_EVENT_MASK,
+                                                                                                                 maskValues)));
+        if (!redirectCheck.isNull()) {
+            fputs(i18n("kwin: another window manager is running (try using --replace)\n").toLocal8Bit().constData(), stderr);
+            ::exit(1);
+        }
 
         atoms = new Atoms;
 
@@ -286,7 +294,7 @@ void Application::lostSelection()
     sendPostedEvents();
     delete Workspace::self();
     // Remove windowmanager privileges
-    XSelectInput(display(), rootWindow(), PropertyChangeMask);
+    Xcb::selectInput(rootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
     quit();
 }
 
