@@ -92,6 +92,12 @@ Item {
             }
         }
 
+        ExclusiveGroup {
+            id: desktopSwitching
+            //Our ExclusiveGroup must me outside of the
+            //ListView, otherwise it will not work
+        }
+
         Button {
             id: apply
             text: "Apply"

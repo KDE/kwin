@@ -30,6 +30,7 @@ Component {
         id: item
         width: parent.width
         height: 40
+
         Rectangle {
             id: background
             color: item.ListView.isCurrentItem ? "#448" : index % 2 ? "#eee" : "#fff"
@@ -37,15 +38,27 @@ Component {
 
             Row {
                 CheckBox {
+                    function isDesktopSwitching() {
+                        if (model.ServiceNameRole == "kwin4_effect_slide") {
+                            return true;
+                        } else if (model.ServiceNameRole == "kwin4_effect_fadedesktop") {
+                            return true;
+                        } else if (model.ServiceNameRole == "kwin4_effect_cubeslide") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                     id: myCheckBox
                     checked: model.EffectStatusRole
+                    exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
                     onClicked: {
                         apply.enabled = true;
-                        effectModel.effectStatus(effectView.model.modelIndex(index),checked);
                     }
 
                     onCheckedChanged: {
                         configureButton.enabled = myCheckBox.checked;
+                        effectModel.effectStatus(effectView.model.modelIndex(index),checked);
                     }
                 }
 

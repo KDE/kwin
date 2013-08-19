@@ -123,6 +123,15 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
 
     if (role == EffectModel::EffectStatusRole) {
         m_effectsList[index.row()].effectStatus = value.toBool();
+
+        const QString effectServiceName = m_effectsList[index.row()].serviceName;
+        if (effectServiceName == "kwin4_effect_slide") {
+            handleDesktopSwitching(index.row());
+        } else if (effectServiceName == "kwin4_effect_fadedesktop") {
+            handleDesktopSwitching(index.row());
+        } else if (effectServiceName == "kwin4_effect_cubeslide") {
+            handleDesktopSwitching(index.row());
+        }
         emit dataChanged(index, index);
         return true;
     }
@@ -146,7 +155,7 @@ void EffectModel::loadEffects() {
         effect.license = plugin.license();
         effect.version = plugin.version();
         effect.category = plugin.category();
-        effect.serviceName = serviceName(effect.name);
+        effect.serviceName = plugin.property("X-KDE-PluginInfo-Name").toString();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
 
         if (effect.effectStatus) {
@@ -165,11 +174,26 @@ void EffectModel::loadEffects() {
     endResetModel();
 }
 
-QString EffectModel::serviceName(const QString &effectName) {
-    //The effect name is something like "Show Fps" and
-    //we want something like "showfps"
-    return "kwin4_effect_" + effectName.toLower().remove(" ");
+void EffectModel::handleDesktopSwitching(int row) {
+    //Q: Why do we need the handleDesktopSwitching?
+    //A: Because of the setData, when we enable the effect
+    //and then we scroll, our model is being updated,
+    //so the setData is being called again, and as a result
+    //of that we have multiple effects enabled for the desktop switching.
+    const QString currentEffect = m_effectsList[row].serviceName;
+    for (int it = 0; it < m_effectsList.size(); it++) {
+        EffectData effect = m_effectsList.at(it);
+
+        if (effect.serviceName == "kwin4_effect_slide" && currentEffect != effect.serviceName && effect.effectStatus) {
+            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
+        } else if (effect.serviceName == "kwin4_effect_cubeslide" && currentEffect != effect.serviceName && effect.effectStatus) {
+            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
+        }else if (effect.serviceName == "kwin4_effect_fadedesktop" && currentEffect != effect.serviceName && effect.effectStatus) {
+            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
+        }
+    }
 }
+
 
 bool EffectModel::effectListContains(const QString &effectFilter, int source_row) {
     EffectData effect;

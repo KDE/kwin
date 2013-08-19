@@ -71,7 +71,6 @@ Item {
             openGLError.visible = true;
         } else {
             openGLError.visible = false;
-            console.log("mesa")
             view.visible = true;
         }
     }

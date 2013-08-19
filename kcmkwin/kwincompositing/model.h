@@ -78,6 +78,7 @@ public:
 
 private:
     void loadEffects();
+    void handleDesktopSwitching(int row);
     QList<EffectData> m_effectsList;
 };
 
