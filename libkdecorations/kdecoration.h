@@ -1219,5 +1219,6 @@ inline int KDecoration::height() const
 /** @} */
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDecoration::QuickTileMode)
+Q_DECLARE_METATYPE(KDecorationDefines::WindowOperation)
 
 #endif

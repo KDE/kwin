@@ -770,7 +770,13 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     };
     if (!type.isEmpty())
         helperDialog(type, c);
-    Workspace::self()->performWindowOperation(c.data(), op);
+    // need to delay performing the window operation as we need to have the
+    // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
+    qRegisterMetaType<KDecorationDefines::WindowOperation>();
+    QMetaObject::invokeMethod(workspace(), "performWindowOperation",
+                              Qt::QueuedConnection,
+                              Q_ARG(KWin::Client*, c.data()),
+                              Q_ARG(KDecorationDefines::WindowOperation, op));
 }
 
 void UserActionsMenu::slotSendToDesktop(QAction *action)

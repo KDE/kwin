@@ -233,8 +233,6 @@ public:
     void updateOnAllDesktopsOfTransients(Client*);
     void checkTransients(xcb_window_t w);
 
-    void performWindowOperation(Client* c, WindowOperation op);
-
     void storeSession(KConfig* config, SMSavePhase phase);
     void storeClient(KConfigGroup &cg, int num, Client *c);
     void storeSubSession(const QString &name, QSet<QByteArray> sessionIds);
@@ -302,6 +300,7 @@ public:
     bool compositing() const;
 
 public Q_SLOTS:
+    void performWindowOperation(KWin::Client* c, KDecorationDefines::WindowOperation op);
     // Keybindings
     //void slotSwitchToWindow( int );
     void slotWindowToDesktop();
