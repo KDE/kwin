@@ -1036,17 +1036,13 @@ void Workspace::clientShortcutUpdated(Client* c)
             connect(action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
         }
 
-        KAction *kaction = qobject_cast<KAction*>(action);
         // no autoloading, since it's configured explicitly here and is not meant to be reused
         // (the key is the window id anyway, which is kind of random)
-        kaction->setGlobalShortcut(
-            c->shortcut(), KAction::ActiveShortcut, KAction::NoAutoloading);
-        kaction->setEnabled(true);
+        KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>() << c->shortcut().primary(),
+                                          KGlobalAccel::NoAutoloading);
+        action->setEnabled(true);
     } else {
-        KAction *kaction = qobject_cast<KAction*>(action);
-        if (kaction) {
-            kaction->forgetGlobalShortcut();
-        }
+        KGlobalAccel::self()->removeAllShortcuts(action);
         delete action;
     }
 }
