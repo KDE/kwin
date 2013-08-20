@@ -420,90 +420,81 @@ bool KDecoration::isAlphaEnabled() const
     return d->alphaEnabled;
 }
 
-KDecorationUnstable::KDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory)
-    : KDecoration(bridge, factory)
-{
-}
-
-KDecorationUnstable::~KDecorationUnstable()
-{
-}
-
-bool KDecorationUnstable::compositingActive() const
+bool KDecoration::compositingActive() const
 {
     return bridge_->compositingActive();
 }
 
-void KDecorationUnstable::padding(int &left, int &right, int &top, int &bottom) const
+void KDecoration::padding(int &left, int &right, int &top, int &bottom) const
 {
     left = right = top = bottom = 0;
 }
 
 //BEGIN Window tabbing
 
-int KDecorationUnstable::tabCount() const
+int KDecoration::tabCount() const
 {
     return bridge_->tabCount();
 }
 
-long KDecorationUnstable::tabId(int idx) const
+long KDecoration::tabId(int idx) const
 {
     return bridge_->tabId(idx);
 }
 
-QString KDecorationUnstable::caption(int idx) const
+QString KDecoration::caption(int idx) const
 {
     return bridge_->caption(idx);
 }
 
-QIcon KDecorationUnstable::icon(int idx) const
+QIcon KDecoration::icon(int idx) const
 {
     return bridge_->icon(idx);
 }
 
-long KDecorationUnstable::currentTabId() const
+long KDecoration::currentTabId() const
 {
     return bridge_->currentTabId();
 }
 
-void KDecorationUnstable::setCurrentTab(long id)
+void KDecoration::setCurrentTab(long id)
 {
     bridge_->setCurrentTab(id);
 }
 
-void KDecorationUnstable::tab_A_before_B(long A, long B)
+void KDecoration::tab_A_before_B(long A, long B)
 {
     bridge_->tab_A_before_B(A, B);
 }
 
-void KDecorationUnstable::tab_A_behind_B(long A, long B)
+void KDecoration::tab_A_behind_B(long A, long B)
 {
     bridge_->tab_A_behind_B(A, B);
 }
 
-void KDecorationUnstable::untab(long id, const QRect& newGeom)
+void KDecoration::untab(long id, const QRect& newGeom)
 {
     bridge_->untab(id, newGeom);
 }
 
-void KDecorationUnstable::closeTab(long id)
+void KDecoration::closeTab(long id)
 {
     bridge_->closeTab(id);
 }
 
-void KDecorationUnstable::closeTabGroup()
+void KDecoration::closeTabGroup()
 {
     bridge_->closeTabGroup();
 }
 
-void KDecorationUnstable::showWindowMenu(const QPoint &pos, long id)
+void KDecoration::showWindowMenu(const QPoint &pos, long id)
 {
     bridge_->showWindowMenu(pos, id);
 }
 
 //END tabbing
 
-KDecoration::WindowOperation KDecorationUnstable::buttonToWindowOperation(Qt::MouseButtons button)
+KDecoration::WindowOperation KDecoration::buttonToWindowOperation(Qt::MouseButtons button)
 {
     return bridge_->buttonToWindowOperation(button);
 }

@@ -82,7 +82,7 @@ private:
     QString m_themeName;
 };
 
-class AuroraeClient : public KDecorationUnstable
+class AuroraeClient : public KDecoration
 {
     Q_OBJECT
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)

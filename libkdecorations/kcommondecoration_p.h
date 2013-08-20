@@ -38,7 +38,7 @@ class KDecorationFactory;
 
 // wrapper all functionality that needs reimplementing in KDecoration and forward it to KCommonDecoration
 class KCommonDecorationWrapper
-    : public KDecorationUnstable
+    : public KDecoration
 {
     Q_OBJECT
 public:

@@ -449,8 +449,7 @@ void Client::createDecoration(const QRect& oldgeom)
     decoration->widget()->lower();
     decoration->borders(border_left, border_right, border_top, border_bottom);
     padding_left = padding_right = padding_top = padding_bottom = 0;
-    if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
-        deco2->padding(padding_left, padding_right, padding_top, padding_bottom);
+    decoration->padding(padding_left, padding_right, padding_top, padding_bottom);
     Xcb::moveWindow(decoration->widget()->winId(), -padding_left, -padding_top);
     move(calculateGravitation(false));
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
@@ -488,8 +487,7 @@ bool Client::checkBorderSizes(bool also_resize)
         return false;
 
     int new_left = 0, new_right = 0, new_top = 0, new_bottom = 0;
-    if (KDecorationUnstable *deco2 = dynamic_cast<KDecorationUnstable*>(decoration))
-        deco2->padding(new_left, new_right, new_top, new_bottom);
+    decoration->padding(new_left, new_right, new_top, new_bottom);
     if (padding_left != new_left || padding_top != new_top)
         Xcb::moveWindow(decoration->widget()->winId(), -new_left, -new_top);
     padding_left = new_left;

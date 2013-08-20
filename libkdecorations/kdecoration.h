@@ -822,6 +822,17 @@ public:
      * @param changed Specifies which settings were changed, given by the SettingXXX masks
      */
     virtual void reset(unsigned long changed);
+    /**
+     * This function can return additional padding values that are added outside the
+     * borders of the window, and can be used by the decoration if it wants to paint
+     * outside the frame.
+     *
+     * The typical use case is for drawing a drop shadow or glowing effect around the window.
+     *
+     * The area outside the frame cannot receive input, and when compositing is disabled,
+     * painting is clipped to the mask, or the window frame if no mask is defined.
+     */
+    virtual void padding(int &left, int &right, int &top, int &bottom) const;
 
     // special
 
@@ -873,6 +884,77 @@ public:
      * Ungrabs X server (if the number of ungrab attempts matches the number of grab attempts).
      */
     void ungrabXServer();
+    /**
+     * Returns @a true if compositing--and therefore ARGB--is enabled.
+     */
+    bool compositingActive() const;
+    /**
+     * Determine which action the user has mapped \p button to. Useful for determining whether
+     * a button press was for window tab dragging or for displaying the client menu.
+     */
+    WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
+
+
+    // Window tabbing
+
+    /**
+     * Returns whether or not this client group contains the active client.
+     */
+    bool isInActiveTabGroup();
+    /**
+     * Return the amount of tabs in this group
+     */
+    int tabCount() const;
+
+    /**
+     * Return the icon for the tab at index \p idx (\p idx must be smaller than tabCount())
+     */
+    QIcon icon(int idx) const;
+
+    /**
+     * Return the caption for the tab at index \p idx (\p idx must be smaller than tabCount())
+     */
+    QString caption(int idx) const;
+
+    /**
+     * Return the unique id for the tab at index \p idx (\p idx must be smaller than tabCount())
+     */
+    long tabId(int idx) const;
+    /**
+     * Returns the id of the currently active client in this group.
+     */
+    long currentTabId() const;
+    /**
+     * Activate tab for the window with the id  \p id.
+     */
+    void setCurrentTab(long id);
+
+    /**
+     * Entab windw with id \p A beFORE the window with the id \p B.
+     */
+    virtual void tab_A_before_B(long A, long B);
+    /**
+     * Entab windw with id \p A beHIND the window with the id \p B.
+     */
+    virtual void tab_A_behind_B(long A, long B);
+    /**
+     * Remove the window with the id \p id from its tabgroup and place it at \p newGeom
+     */
+    virtual void untab(long id, const QRect& newGeom);
+
+    /**
+     * Close the client with the id \p id.
+     */
+    void closeTab(long id);
+    /**
+     * Close all windows in this group.
+     */
+    void closeTabGroup();
+    /**
+     * Display the right-click client menu belonging to the client at index \p index at the
+     * global coordinates specified by \p pos.
+     */
+    void showWindowMenu(const QPoint& pos, long id);
 
 public: // invokables; runtime resolution
     /**
@@ -985,110 +1067,9 @@ private:
     QWidget* w_;
     KDecorationFactory* factory_;
     friend class KDecorationOptions; // for options_
-    friend class KDecorationUnstable; // for bridge_
     static KDecorationOptions* options_;
     KDecorationPrivate* d;
 
-};
-
-/**
- * @warning THIS CLASS IS UNSTABLE!
- */
-class KWIN_EXPORT KDecorationUnstable
-    : public KDecoration
-{
-    Q_OBJECT
-
-public:
-    KDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
-    virtual ~KDecorationUnstable();
-    /**
-     * This function can return additional padding values that are added outside the
-     * borders of the window, and can be used by the decoration if it wants to paint
-     * outside the frame.
-     *
-     * The typical use case is for drawing a drop shadow or glowing effect around the window.
-     *
-     * The area outside the frame cannot receive input, and when compositing is disabled,
-     * painting is clipped to the mask, or the window frame if no mask is defined.
-     */
-    virtual void padding(int &left, int &right, int &top, int &bottom) const;
-    /**
-     * Returns @a true if compositing--and therefore ARGB--is enabled.
-     */
-    bool compositingActive() const;
-
-    // Window tabbing
-
-    /**
-     * Returns whether or not this client group contains the active client.
-     */
-    bool isInActiveTabGroup();
-    /**
-     * Return the amount of tabs in this group
-     */
-    int tabCount() const;
-
-    /**
-     * Return the icon for the tab at index \p idx (\p idx must be smaller than tabCount())
-     */
-    QIcon icon(int idx) const;
-
-    /**
-     * Return the caption for the tab at index \p idx (\p idx must be smaller than tabCount())
-     */
-    QString caption(int idx) const;
-
-    /**
-     * Return the unique id for the tab at index \p idx (\p idx must be smaller than tabCount())
-     */
-    long tabId(int idx) const;
-    /**
-     * Returns the id of the currently active client in this group.
-     */
-    long currentTabId() const;
-    /**
-     * Activate tab for the window with the id  \p id.
-     */
-    void setCurrentTab(long id);
-
-    /**
-     * Entab windw with id \p A beFORE the window with the id \p B.
-     */
-    virtual void tab_A_before_B(long A, long B);
-    /**
-     * Entab windw with id \p A beHIND the window with the id \p B.
-     */
-    virtual void tab_A_behind_B(long A, long B);
-    /**
-     * Remove the window with the id \p id from its tabgroup and place it at \p newGeom
-     */
-    virtual void untab(long id, const QRect& newGeom);
-
-    /**
-     * Close the client with the id \p id.
-     */
-    void closeTab(long id);
-    /**
-     * Close all windows in this group.
-     */
-    void closeTabGroup();
-    /**
-     * Display the right-click client menu belonging to the client at index \p index at the
-     * global coordinates specified by \p pos.
-     */
-    void showWindowMenu(const QPoint& pos, long id);
-    /**
-     * unshadow virtuals
-     */
-    using KDecoration::caption;
-    using KDecoration::icon;
-    using KDecoration::showWindowMenu;
-    /**
-     * Determine which action the user has mapped \p button to. Useful for determining whether
-     * a button press was for window tab dragging or for displaying the client menu.
-     */
-    WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
 };
 
 inline

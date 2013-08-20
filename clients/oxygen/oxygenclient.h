@@ -47,7 +47,7 @@ namespace Oxygen
 {
 
     class SizeGrip;
-    class Client : public KCommonDecorationUnstable
+    class Client : public KCommonDecoration
     {
 
         Q_OBJECT

@@ -324,6 +324,25 @@ public:
     int width() const; // convenience
     int height() const;  // convenience
     void processMousePressEvent(QMouseEvent* e);
+
+    bool compositingActive() const;
+
+    // Window tabbing
+    QString caption(int idx) const;
+    void closeTab(long id);
+    void closeTabGroup();
+    long currentTabId() const;
+    QIcon icon(int idx) const;
+    void setCurrentTab(long id);
+    void showWindowMenu(const QPoint &, long id);
+    void tab_A_before_B(long A, long B);
+    void tab_A_behind_B(long A, long B);
+    int tabCount() const;
+    long tabId(int idx) const;
+    void untab(long id, const QRect& newGeom);
+
+    WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
+
 Q_SIGNALS:
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
@@ -414,34 +433,6 @@ private:
     KCommonDecorationWrapper* wrapper;
 
     KCommonDecorationPrivate *d;
-};
-
-class KWIN_EXPORT KCommonDecorationUnstable
-    : public KCommonDecoration
-{
-    Q_OBJECT
-public:
-    KCommonDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory);
-    virtual ~KCommonDecorationUnstable();
-    bool compositingActive() const;
-
-    // Window tabbing
-    using KCommonDecoration::caption;
-    QString caption(int idx) const;
-    void closeTab(long id);
-    void closeTabGroup();
-    long currentTabId() const;
-    QIcon icon(int idx = 0) const;
-    void setCurrentTab(long id);
-    void showWindowMenu(const QPoint &, long id);
-    void tab_A_before_B(long A, long B);
-    void tab_A_behind_B(long A, long B);
-    int tabCount() const;
-    long tabId(int idx) const;
-    void untab(long id, const QRect& newGeom);
-
-    WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
-    virtual bool eventFilter(QObject* o, QEvent* e);
 };
 
 /**

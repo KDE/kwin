@@ -32,7 +32,7 @@
 #include "kcommondecoration_p.moc"
 
 KCommonDecorationWrapper::KCommonDecorationWrapper(KCommonDecoration* deco, KDecorationBridge* bridge, KDecorationFactory* factory)
-    : KDecorationUnstable(bridge, factory)
+    : KDecoration(bridge, factory)
     , decoration(deco)
 {
 }
