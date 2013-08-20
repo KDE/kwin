@@ -347,11 +347,6 @@ void KDecoration::emitKeepBelowChanged(bool below)
     keepBelowChanged(below);
 }
 
-bool KDecoration::drawbound(const QRect&, bool)
-{
-    return false;
-}
-
 bool KDecoration::windowDocked(Position)
 {
     return false;
@@ -611,12 +606,6 @@ KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize(KDecorati
         d->cached_border_size = d->findPreferredBorderSize(d->border_size,
                                 factory->borderSizes());
     return d->cached_border_size;
-}
-
-bool KDecorationOptions::moveResizeMaximizedWindows() const
-{
-    // TODO KF5: remove function with API break
-    return false;
 }
 
 KDecorationDefines::WindowOperation KDecorationOptions::operationMaxButtonClick(Qt::MouseButtons button) const

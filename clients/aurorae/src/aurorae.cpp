@@ -337,9 +337,7 @@ void AuroraeClient::desktopChange()
 
 void AuroraeClient::maximizeChange()
 {
-    if (!options()->moveResizeMaximizedWindows()) {
-        emit maximizeChanged();
-    }
+    emit maximizeChanged();
 }
 
 void AuroraeClient::resize(const QSize &s)
@@ -364,9 +362,8 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
     QObject *borders = NULL;
-    if (maximized) {
+    if (maximizeMode() == MaximizeFull) {
         borders = m_item->findChild<QObject*>(QStringLiteral("maximizedBorders"));
     } else {
         borders = m_item->findChild<QObject*>(QStringLiteral("borders"));
@@ -380,7 +377,7 @@ void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    if (maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows()) {
+    if (maximizeMode() == MaximizeFull) {
         left = right = top = bottom = 0;
         return;
     }
@@ -415,7 +412,7 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     borders(borderLeft, borderRight, borderTop, borderBottom);
     int paddingLeft, paddingTop, paddingRight, paddingBottom;
     padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
-    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
+    const bool maximized = maximizeMode() == MaximizeFull;
     int titleEdgeLeft, titleEdgeRight, titleEdgeTop, titleEdgeBottom;
     AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, maximized);
     switch (AuroraeFactory::instance()->theme()->decorationPosition()) {
@@ -481,7 +478,7 @@ void AuroraeClient::toggleKeepBelow()
 
 bool AuroraeClient::isMaximized() const
 {
-    return maximizeMode()==KDecorationDefines::MaximizeFull && !options()->moveResizeMaximizedWindows();
+    return maximizeMode()==KDecorationDefines::MaximizeFull;
 }
 
 void AuroraeClient::titlePressed(int button, int buttons)

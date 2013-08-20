@@ -117,7 +117,6 @@ namespace Oxygen
 
             // announce
             case AbilityAnnounceButtons:
-            case AbilityAnnounceColors:
 
             // buttons
             case AbilityButtonMenu:

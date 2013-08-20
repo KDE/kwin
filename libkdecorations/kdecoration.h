@@ -139,19 +139,7 @@ public:
         CloseTabGroupOp, // Close the group
         ActivateNextTabOp, // Move left in the group
         ActivatePreviousTabOp, // Move right in the group
-        ///< @deprecated, tiling got removed in 4.10
-        ToggleClientTiledStateOp, // put a floating client into tiling
         TabDragOp,
-
-        //BEGIN ABI stability stuff
-        // NOTICE for ABI stability
-        // TODO remove with mandatory version tagging fo 4.9.x or 4.10
-        /** @deprecated ABI compatibility only - don't use */
-        RemoveClientFromGroupOp = RemoveTabFromGroupOp, // Remove from group
-        CloseClientGroupOp = CloseTabGroupOp, // Close the group
-        MoveClientInGroupLeftOp = ActivateNextTabOp, // Move left in the group
-        MoveClientInGroupRightOp = ActivatePreviousTabOp // Move right in the group
-        //END ABI stability stuff
     };
     /**
      * Basic color types that should be recognized by all decoration styles.
@@ -206,7 +194,6 @@ public:
     enum Ability {
         // announce
         AbilityAnnounceButtons = 0, ///< decoration supports AbilityButton* values (always use)
-        AbilityAnnounceColors = 1, ///< decoration supports AbilityColor* values (always use), @deprecated @todo remove KDE5
         // buttons
         AbilityButtonMenu = 1000,   ///< decoration supports the window menu button
         AbilityButtonOnAllDesktops = 1001, ///< decoration supports the on all desktops button
@@ -220,16 +207,6 @@ public:
         AbilityButtonShade = 1009, ///< decoration supports a shade button
         AbilityButtonResize = 1010, ///< decoration supports a resize button
         AbilityButtonApplicationMenu = 1011,   ///< decoration supports the application menu button
-        // colors
-        AbilityColorTitleBack = 2000, ///< decoration supports titlebar background color, @deprecated @todo remove KDE5
-        ABILITYCOLOR_FIRST = AbilityColorTitleBack, ///< @internal, @deprecated @todo remove KDE5
-        AbilityColorTitleFore = 2001, ///< decoration supports titlebar foreground color, @deprecated @todo remove KDE5
-        AbilityColorTitleBlend = 2002, ///< decoration supports second titlebar background color, @deprecated @todo remove KDE5
-        AbilityColorFrame = 2010, ///< decoration supports frame color, @deprecated @todo remove KDE5
-        AbilityColorHandle = 2011, ///< decoration supports resize handle color, @deprecated @todo remove KDE5
-        AbilityColorButtonBack = 2020, ///< decoration supports button background color, @deprecated @todo remove KDE5
-        AbilityColorButtonFore = 2021, ///< decoration supports button foreground color, @deprecated @todo remove KDE5
-        ABILITYCOLOR_END, ///< @internal, @deprecated @todo remove KDE5
         // compositing
         AbilityProvidesShadow = 3000, ///< The decoration draws its own shadows.
         ///  @since 4.3
@@ -247,13 +224,6 @@ public:
         AbilityTabbing = 4000, ///< The decoration supports tabbing
         // TODO colors for individual button types
         ABILITY_DUMMY = 10000000,
-
-        //BEGIN ABI stability stuff
-        // NOTICE for ABI stability
-        // TODO remove with mandatory version tagging fo 4.9.x or 4.10
-        /** @deprecated ABI compatibility only - don't use */
-        AbilityClientGrouping = AbilityTabbing
-        //END ABI stability stuff
     };
 
     enum Requirement { REQUIREMENT_DUMMY = 1000000 };
@@ -282,38 +252,9 @@ public:
     /**
      * Returns the mimeType used to drag and drop clientGroupItems
      */
-    //BEGIN ABI stability stuff
-    // NOTICE for ABI stability
-    // TODO remove with mandatory version tagging fo 4.9.x or 4.10
-    /** @deprecated ABI compatibility only - don't use */
-    static QString clientGroupItemDragMimeType() { return tabDragMimeType(); }
-    //END ABI stability stuff
     static QString tabDragMimeType();
 
 };
-
-//BEGIN ABI stability stuff
-// NOTICE for ABI stability
-// TODO remove with mandatory version tagging fo 4.9.x or 4.10
-/** @deprecated ABI compatibility only - don't use */
-class KWIN_EXPORT ClientGroupItem
-{
-public:
-    ClientGroupItem(QString t, QIcon i) {
-        title_ = t;
-        icon_ = i;
-    }
-    inline QIcon icon() const {
-        return icon_;
-    }
-    inline QString title() const {
-        return title_;
-    }
-private:
-    QString title_;
-    QIcon icon_;
-};
-//END ABI stability stuff
 
 class KDecorationProvides
     : public KDecorationDefines
@@ -431,12 +372,6 @@ public:
      * @param factory the decoration factory used
      */
     BorderSize preferredBorderSize(KDecorationFactory* factory) const;
-
-    /**
-     * This functions returns false
-     * @deprecated
-    */
-    bool moveResizeMaximizedWindows() const;
 
     /**
      * @internal
@@ -875,18 +810,6 @@ Q_SIGNALS:
     void alphaEnabledChanged(bool enabled);
 
 public:
-    /**
-     * This method is not any more invoked from KWin core since version 4.8.
-     * There is no need to implement it.
-     *
-     * @param geom  The geometry at this the bound should be drawn
-     * @param clear @a true if the bound should be cleared (when doing the usual XOR
-     *              painting this argument can be simply ignored)
-     *
-     * @see geometry()
-     * @deprecated
-     */
-    virtual bool drawbound(const QRect& geom, bool clear);
     /**
      * @internal Reserved.
      */
