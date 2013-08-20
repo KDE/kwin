@@ -28,7 +28,7 @@ namespace KWin
 
 class Client;
 
-class Bridge : public KDecorationBridgeUnstable
+class Bridge : public KDecorationBridge
 {
 public:
     explicit Bridge(Client* cl);

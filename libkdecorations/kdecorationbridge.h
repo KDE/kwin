@@ -84,25 +84,17 @@ public:
     virtual QWidget* initialParentWidget() const = 0;
     virtual Qt::WindowFlags initialWFlags() const = 0;
     virtual void grabXServer(bool grab) = 0;
-};
 
-class KDecorationBridgeUnstable
-    : public KDecorationBridge
-{
-public:
     virtual bool compositingActive() const = 0;
     virtual QRect transparentRect() const = 0;
 
     // Window tabbing
-    using KDecorationBridge::caption;
     virtual QString caption(int idx) const = 0;
     virtual void closeTab(long id) = 0;
     virtual void closeTabGroup() = 0;
     virtual long currentTabId() const = 0;
-    using KDecorationBridge::icon;
     virtual QIcon icon(int idx) const = 0;
     virtual void setCurrentTab(long id) = 0;
-    using KDecorationBridge::showWindowMenu;
     virtual void showWindowMenu(const QPoint& pos, long id) = 0;
     virtual void tab_A_before_B(long A, long B) = 0;
     virtual void tab_A_behind_B(long A, long B) = 0;
