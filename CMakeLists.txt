@@ -223,9 +223,9 @@ set(kwin_OWN_LIBS
 )
 
 set(kwin_QT_LIBS
-    ${Qt5Quick_LIBRARIES}
-    ${Qt5X11Extras_LIBRARIES}
     Qt5::DBus
+    Qt5::Quick
+    Qt5::X11Extras
 )
 
 set(kwin_KDE_LIBS

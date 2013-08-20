@@ -9,7 +9,7 @@ set( testUpdateKWin49_SRCS test_update_kwin_49.cpp ../data/update_kwin_49.cpp ..
 set( testScreenPaintData_SRCS test_screen_paint_data.cpp )
 kde4_add_unit_test( testScreenPaintData TESTNAME kwin-TestScreenPaintData ${testScreenPaintData_SRCS} )
 
-target_link_libraries( testScreenPaintData kwineffects ${Qt5Test_LIBRARIES} )
+target_link_libraries( testScreenPaintData kwineffects Qt5::Test )
 
 ########################################################
 # Test WindowPaintData
@@ -17,7 +17,7 @@ target_link_libraries( testScreenPaintData kwineffects ${Qt5Test_LIBRARIES} )
 set( testWindowPaintData_SRCS test_window_paint_data.cpp )
 kde4_add_unit_test( testWindowPaintData TESTNAME kwin-TestWindowPaintData ${testWindowPaintData_SRCS} )
 
-target_link_libraries( testWindowPaintData kwineffects ${Qt5Widgets_LIBRARIES} ${Qt5Test_LIBRARIES} )
+target_link_libraries( testWindowPaintData kwineffects Qt5::Widgets Qt5::Test )
 
 ########################################################
 # Test VirtualDesktopManager
@@ -30,8 +30,8 @@ kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${test
 
 target_link_libraries( testVirtualDesktops
                        ${KDE4Support_LIBRARIES}
-                       ${Qt5Test_LIBRARIES}
-                       ${Qt5Widgets_LIBRARIES}
+                       Qt5::Test
+                       Qt5::Widgets
                        KF5::KI18n
                        KF5::XmlGui
                        KF5::KWindowSystem
@@ -50,9 +50,9 @@ set( testClientMachine_SRCS
 kde4_add_unit_test( testClientMachine TESTNAME kwin-TestClientMachine ${testClientMachine_SRCS} )
 
 target_link_libraries( testClientMachine
-                       ${Qt5Test_LIBRARIES}
-                       ${Qt5X11Extras_LIBRARIES}
-                       ${Qt5Widgets_LIBRARIES}
+                       Qt5::Test
+                       Qt5::X11Extras
+                       Qt5::Widgets
                        ${KDE4Support_LIBRARIES} # kdebug
                        KF5::KWindowSystem
                        ${XCB_XCB_LIBRARIES}
@@ -70,9 +70,9 @@ set( testXcbWrapper_SRCS
 kde4_add_unit_test( testXcbWrapper TESTNAME kwin-TestXcbWrapper ${testXcbWrapper_SRCS} )
 
 target_link_libraries( testXcbWrapper
-                       ${Qt5Test_LIBRARIES}
-                       ${Qt5X11Extras_LIBRARIES}
-                       ${Qt5Widgets_LIBRARIES}
+                       Qt5::Test
+                       Qt5::X11Extras
+                       Qt5::Widgets
                        ${XCB_XCB_LIBRARIES}
 )
 
@@ -85,8 +85,8 @@ set( testXcbWindow_SRCS
 kde4_add_unit_test( testXcbWindow TESTNAME kwin-TestXcbWindow ${testXcbWindow_SRCS} )
 
 target_link_libraries( testXcbWindow
-                       ${Qt5Test_LIBRARIES}
-                       ${Qt5X11Extras_LIBRARIES}
-                       ${Qt5Widgets_LIBRARIES}
+                       Qt5::Test
+                       Qt5::X11Extras
+                       Qt5::Widgets
                        ${XCB_XCB_LIBRARIES}
 )

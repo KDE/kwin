@@ -10,8 +10,8 @@ set(kdecorations_LIB_SRCS
 kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
 target_link_libraries(kdecorations
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5X11Extras_LIBRARIES}
+    Qt5::Widgets
+    Qt5::X11Extras
     ${KDE4Support_LIBRARIES} # kdebug
     KF5::KConfigCore
     KF5::KI18n

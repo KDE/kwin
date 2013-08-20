@@ -6,5 +6,5 @@ target_link_libraries( kcm_kwin4_genericscripted
     KF5::KService
     KF5::plasma
     Qt5::DBus
-    ${Qt5UiTools_LIBRARIES} )
+    Qt5::UiTools )
 install( TARGETS kcm_kwin4_genericscripted DESTINATION ${PLUGIN_INSTALL_DIR} )

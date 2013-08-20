@@ -43,7 +43,7 @@ set( testTabBoxConfig_SRCS
 )
 
 kde4_add_unit_test( testTabBoxConfig TESTNAME kwin-testTabBoxConfig ${testTabBoxConfig_SRCS} )
-target_link_libraries( testTabBoxConfig ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testTabBoxConfig Qt5::Core Qt5::Test )
 
 
 ########################################################
@@ -55,4 +55,4 @@ set( testDesktopChain_SRCS
 )
 
 kde4_add_unit_test( testDesktopChain TESTNAME kwin-testDesktopChain ${testDesktopChain_SRCS} )
-target_link_libraries( testDesktopChain ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} )
+target_link_libraries( testDesktopChain Qt5::Core Qt5::Test )

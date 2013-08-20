@@ -12,9 +12,9 @@ set(kwin_effect_KDE_LIBS
 )
 
 set(kwin_effect_QT_LIBS
-    ${Qt5Quick_LIBRARIES}
-    ${Qt5X11Extras_LIBRARIES}
-    ${Qt5DBus_LIBRARIES}
+    Qt5::DBus
+    Qt5::Quick
+    Qt5::X11Extras
 )
 
 set(kwin_effect_XLIB_LIBS
@@ -88,7 +88,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endif()
     target_link_libraries( kcm_kwin4_effect_${name}
         kwineffects
-        ${Qt5Widgets_LIBRARIES}
+        Qt5::Widgets
         ${KDE4Support_LIBRARIES}
         ${KDE4_KIO_LIBRARY} # KUrlRequester
         KF5::KCoreAddons

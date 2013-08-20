@@ -10,9 +10,9 @@ set(kwin_EFFECTSLIB_SRCS
     )
 
 set(kwineffects_QT_LIBS
-    ${Qt5DBus_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5X11Extras_LIBRARIES}
+    Qt5::DBus
+    Qt5::Widgets
+    Qt5::X11Extras
 )
 
 set(kwineffects_KDE_LIBS
