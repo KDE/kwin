@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kstartupinfo.h>
 #include <kglobal.h>
-#include <X11/extensions/shape.h>
 
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -38,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "workspace.h"
 #include "xcbutils.h"
+
+#include <xcb/shape.h>
 
 namespace KWin
 {
@@ -117,7 +118,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     setCaption(cap_normal, true);
 
     if (Xcb::Extensions::self()->isShapeAvailable())
-        XShapeSelectInput(display(), window(), ShapeNotifyMask);
+        xcb_shape_select_input(connection(), window(), true);
     detectShape(window());
     detectNoBorder();
     fetchIconicName();

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimer>
 #include <QDebug>
 
-#include <X11/extensions/shape.h>
+#include <xcb/shape.h>
 
 namespace KWin
 {
@@ -77,7 +77,7 @@ bool Unmanaged::track(Window w)
     getWmClientLeader();
     getWmClientMachine();
     if (Xcb::Extensions::self()->isShapeAvailable())
-        XShapeSelectInput(display(), w, ShapeNotifyMask);
+        xcb_shape_select_input(connection(), w, true);
     detectShape(w);
     getWmOpaqueRegion();
     setupCompositing();
@@ -97,7 +97,7 @@ void Unmanaged::release(bool on_shutdown)
     finishCompositing();
     if (!QWidget::find(window())) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable())
-            XShapeSelectInput(display(), window(), NoEventMask);
+            xcb_shape_select_input(connection(), window(), false);
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
     if (!on_shutdown) {

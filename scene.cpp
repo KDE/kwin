@@ -68,8 +68,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 
-#include <X11/extensions/shape.h>
-
 #include <QQuickWindow>
 #include <QVector2D>
 
@@ -594,17 +592,16 @@ const QRegion &Scene::Window::shape() const
     if (!shape_valid) {
         Client* c = dynamic_cast< Client* >(toplevel);
         if (toplevel->shape() || (c != NULL && !c->mask().isEmpty())) {
-            int count, order;
-            XRectangle* rects = XShapeGetRectangles(display(), toplevel->frameId(),
-                                                    ShapeBounding, &count, &order);
-            if (rects) {
+            auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
+            ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
+            if (!reply.isNull()) {
                 shape_region = QRegion();
+                auto *rects = xcb_shape_get_rectangles_rectangles(reply.data());
                 for (int i = 0;
-                        i < count;
+                        i < xcb_shape_get_rectangles_rectangles_length(reply.data());
                         ++i)
                     shape_region += QRegion(rects[ i ].x, rects[ i ].y,
                                             rects[ i ].width, rects[ i ].height);
-                XFree(rects);
                 // make sure the shape is sane (X is async, maybe even XShape is broken)
                 shape_region &= QRegion(0, 0, width(), height());
             } else
