@@ -279,7 +279,7 @@ else()
 endif()
 
 if(KWIN_BUILD_SCRIPTING)
-    set(kwin_QT_LIBS ${kwin_QT_LIBS} ${QT_QTSCRIPT_LIBRARY})
+    set(kwin_QT_LIBS ${kwin_QT_LIBS} Qt5::Script)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
