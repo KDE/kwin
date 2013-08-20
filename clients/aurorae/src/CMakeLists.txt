@@ -17,7 +17,6 @@ target_link_libraries(kwin3_aurorae
     KF5::KConfigCore
     KF5::KService
     ${KDE4Support_LIBRARIES} # KGlobal
-    ${KDE4_KDECORE_LIBS} # needed for KDebug
     Qt5::Declarative
     kdecorations
 )
