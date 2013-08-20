@@ -88,11 +88,12 @@ target_link_libraries(kwincompositing
     ${Qt5Qml_LIBRARIES}
     ${Qt5Core_LIBARIES}
     ${kservice_LIBRARIES}
+    Qt5::DBus
+    KF5::KI18n
+    KF5::KService
     ${Qt5Widgets_LIBRARIES}
-    ${KDE4_KDECORE_LIBS}
     ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
-    ${KDE4Support_LIBRARIES}
     ${KCoreAddons_LIBRARIES})
 
 set(modelTest_SRC
@@ -109,12 +110,14 @@ target_link_libraries(effectModelTest
     ${Qt5Qml_LIBRARIES}
     ${Qt5Core_LIBARIES}
     ${kservice_LIBRARIES}
+    Qt5::DBus
+    KF5::KI18n
+    KF5::KService
     ${Qt5Widgets_LIBRARIES}
-    ${KDE4_KDECORE_LIBS}
     ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
-    ${KDE4Support_LIBRARIES}
     ${KCoreAddons_LIBRARIES})
+
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})

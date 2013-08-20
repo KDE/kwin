@@ -24,7 +24,7 @@
 #include <QApplication>
 
 #include <KAboutData>
-#include <kcmdlineargs.h>
+#include <klocalizedstring.h>
 
 int main(int argc, char *argv[])
 {
@@ -37,11 +37,6 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(i18n("Antonis Tsiapaliokas"),
                         i18n("Author and maintainer"),
                         "kok3rs@gmail.com");
-
-    KCmdLineArgs::init(argc, argv,
-                       "kwincompositing", "",
-                       ki18n("KWinCompositing"),
-                       "0.1");
 
     QApplication app(argc, argv);
 
