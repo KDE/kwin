@@ -35,9 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
-// X
-#include <X11/Xlib.h>
-#include <fixx11h.h>
 // system
 #include <limits.h>
 

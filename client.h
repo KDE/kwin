@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QPixmap>
 // X
-#include <X11/Xutil.h>
-#include <fixx11h.h>
 #include <xcb/sync.h>
 
 // TODO: Cleanup the order of things in this .h file

@@ -56,8 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // normally only few of them are enabled
 //#define CHECK_GL_ERROR
 
-#include <X11/extensions/Xcomposite.h>
-
 #include <qpainter.h>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>

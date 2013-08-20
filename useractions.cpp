@@ -53,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KProcess>
 #include <KDE/KToolInvocation>
 
-#include <X11/extensions/Xrandr.h>
 #ifndef KWIN_NO_XF86VM
 #include <X11/extensions/xf86vmode.h>
 #endif

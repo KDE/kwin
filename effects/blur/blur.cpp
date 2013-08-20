@@ -23,8 +23,6 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
-#include <X11/Xatom.h>
-
 #include <QMatrix4x4>
 #include <QLinkedList>
 #include <KDebug>
@@ -102,7 +100,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
 {
     QRegion region;
 
-    const QByteArray value = w->readProperty(net_wm_blur_region, XA_CARDINAL, 32);
+    const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
     if (value.size() > 0 && !(value.size() % (4 * sizeof(unsigned long)))) {
         const unsigned long *cardinals = reinterpret_cast<const unsigned long*>(value.constData());
         for (unsigned int i = 0; i < value.size() / sizeof(unsigned long);) {

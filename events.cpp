@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-#include <config-X11.h>
-
 #include "client.h"
 #include "cursor.h"
 #include "decorations.h"
@@ -53,10 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kkeyserver.h>
 
-#include <X11/extensions/Xfixes.h>
-#include <X11/extensions/Xrandr.h>
-#include <X11/Xatom.h>
-#include <QX11Info>
 #include <xcb/sync.h>
 #include <xcb/xcb_icccm.h>
 
