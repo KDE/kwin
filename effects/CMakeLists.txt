@@ -4,11 +4,11 @@ set(kwin_effect_OWN_LIBS
 
 set(kwin_effect_KDE_LIBS
     ${KDE4Support_LIBRARIES}
-    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings::dndEventDelay() in PW and DG
     ${KDE4_KDECORE_LIBS} # kdebug
     KF5::KWindowSystem
     KF5::plasma # screenedge effect
     KF5::KDE4Attic # windowgeometry effect using KLocale
+    KF5::KIconThemes
 )
 
 set(kwin_effect_QT_LIBS
@@ -94,6 +94,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         KF5::KCoreAddons
         KF5::KConfigWidgets
         KF5::KI18n
+        KF5::XmlGui
         )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
 endmacro()

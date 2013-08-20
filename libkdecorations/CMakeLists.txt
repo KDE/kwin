@@ -13,7 +13,6 @@ target_link_libraries(kdecorations
     ${Qt5Widgets_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
     ${KDE4Support_LIBRARIES} # kdebug
-    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings::windowTitleFont
     KF5::KConfigCore
     KF5::KI18n
     KF5::KService # KLibrary

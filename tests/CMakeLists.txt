@@ -34,6 +34,7 @@ target_link_libraries( testVirtualDesktops
                        ${Qt5Widgets_LIBRARIES}
                        KF5::KI18n
                        KF5::XmlGui
+                       KF5::KWindowSystem
 )
 
 ########################################################

@@ -32,9 +32,10 @@ set(decoration_plugin_SRCS
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 target_link_libraries(decorationplugin
-    ${KDE4_KDEUI_LIBRARY} # KGlobalSettings
+    ${KDE4Support_LIBRARIES} # KGlobalSettings
     ${Qt5Declarative_LIBRARIES}
     kdecorations
+    KF5::KConfigWidgets
 )
 install(TARGETS decorationplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/kwin/decoration)
 

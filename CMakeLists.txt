@@ -225,20 +225,30 @@ set(kwin_OWN_LIBS
 set(kwin_QT_LIBS
     ${Qt5Quick_LIBRARIES}
     ${Qt5X11Extras_LIBRARIES}
+    Qt5::DBus
 )
 
 set(kwin_KDE_LIBS
     ${KDE4Support_LIBRARIES}
-    ${KDE4_KDEUI_LIBRARY}
     ${KDECLARATIVE_LIBRARIES}
+    KF5::KConfigCore
+    KF5::KCoreAddons
     KF5::KCrash
+    KF5::KI18n
+    KF5::KIconThemes
+    KF5::KNotifications
+    KF5::KService
     KF5::plasma
     KF5::KWindowSystem
+    KF5::XmlGui
 )
 
 set(kwin_XLIB_LIBS
     ${X11_X11_LIB}
     ${X11_Xcursor_LIB}
+    ${X11_Xext_LIB} # XShapeSelectInput
+    ${X11_ICE_LIB}
+    ${X11_SM_LIB}
 )
 
 set(kwin_XCB_LIBS
