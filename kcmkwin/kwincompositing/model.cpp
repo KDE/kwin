@@ -147,7 +147,9 @@ void EffectModel::loadEffects() {
     beginResetModel();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
-        KPluginInfo plugin(service);
+        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
+        KPluginInfo plugin(effectPluginPath);
+
         effect.name = plugin.name();
         effect.description = plugin.comment();
         effect.authorName = plugin.author();
@@ -155,7 +157,7 @@ void EffectModel::loadEffects() {
         effect.license = plugin.license();
         effect.version = plugin.version();
         effect.category = plugin.category();
-        effect.serviceName = plugin.property("X-KDE-PluginInfo-Name").toString();
+        effect.serviceName = plugin.pluginName();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
 
         if (effect.effectStatus) {
