@@ -134,6 +134,11 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
         }
         emit dataChanged(index, index);
         return true;
+    } else if (role == EffectModel::WindowManagementRole) {
+        bool enabled = value.toBool();
+        handleWindowManagement(index.row(), enabled);
+        emit dataChanged(index, index);
+        return true;
     }
 
     return QAbstractItemModel::setData(index, value, role);
@@ -196,6 +201,18 @@ void EffectModel::handleDesktopSwitching(int row) {
     }
 }
 
+void EffectModel::handleWindowManagement(int row, bool enabled) {
+    m_effectsList[row].effectStatus = enabled;
+}
+
+int EffectModel::findRowByServiceName(const QString &serviceName) {
+    for (int it=0; m_effectsList.size(); it++) {
+        if (m_effectsList.at(it).serviceName == serviceName) {
+            return it;
+        }
+    }
+    return -1;
+}
 
 bool EffectModel::effectListContains(const QString &effectFilter, int source_row) {
     EffectData effect;
@@ -217,7 +234,7 @@ void EffectModel::reload() {
 }
 
 void EffectModel::effectStatus(const QModelIndex &index, bool effectState) {
-    setData(index, effectState, EffectStatusRole);
+    setData(index, effectState, EffectModel::EffectStatusRole);
 }
 
 void EffectModel::syncConfig() {
@@ -235,6 +252,20 @@ void EffectModel::syncConfig() {
     }
 
     kwinConfig.sync();
+}
+
+void EffectModel::enableWidnowManagement(bool enabled) {
+    int desktopGridRow = findRowByServiceName("kwin4_effect_desktopgrid");
+    const QModelIndex desktopGridIndex = createIndex(desktopGridRow, 0);
+    setData(desktopGridIndex, enabled, EffectModel::WindowManagementRole);
+
+    int dialogParentRow = findRowByServiceName("kwin4_effect_dialogparent");
+    const QModelIndex dialogParentIndex = createIndex(dialogParentRow, 0);
+    setData(dialogParentIndex, enabled, EffectModel::WindowManagementRole);
+
+    int presentWindowsRow = findRowByServiceName("kwin4_effect_presentwindows");
+    const QModelIndex presentWindowsIndex = createIndex(presentWindowsRow, 0);
+    setData(presentWindowsIndex, enabled, EffectModel::WindowManagementRole);
 }
 
 EffectFilterModel::EffectFilterModel(QObject *parent)

@@ -57,7 +57,8 @@ public:
         VersionRole,
         CategoryRole,
         ServiceNameRole,
-        EffectStatusRole
+        EffectStatusRole,
+        WindowManagementRole
     };
 
     explicit EffectModel(QObject *parent = 0);
@@ -75,10 +76,13 @@ public:
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
     Q_INVOKABLE void reload();
     Q_INVOKABLE void syncConfig();
+    Q_INVOKABLE void enableWidnowManagement(bool enabled);
 
 private:
     void loadEffects();
     void handleDesktopSwitching(int row);
+    void handleWindowManagement(int row, bool enabled);
+    int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
 };
 

@@ -40,77 +40,91 @@ Item {
             }
         }
     }
-
-    ColumnLayout {
-        id: col
+    RowLayout {
+        id: row
+        width: parent.width
         height: parent.height
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
+        CheckBox {
+            id: windowManagement
+            text: "Improved Window Management"
+            checked: false
+            anchors.left: col.right
+            anchors.top: parent.top
+            anchors.topMargin: col.height/2
+            onClicked: effectModel.enableWidnowManagement(windowManagement.checked)
         }
-        TextField {
-            id: searchField
-            Layout.fillWidth: true
-            height: 20
+
+        ColumnLayout {
+            id: col
+            height: parent.height
+
             anchors {
                 top: parent.top
-            }
-            focus: true
-        }
-
-        EffectFilterModel {
-            id:searchModel
-            filter: searchField.text
-            effectModel: EffectModel {
-                id: effectModel
-            }
-        }
-
-
-        ScrollView {
-            id: scroll
-            highlightOnFocus: true
-            Layout.fillWidth: true
-            anchors {
-                top: searchField.bottom
                 left: parent.left
-                right: parent.right
-                bottom: apply.top
             }
-            ListView {
-                id: effectView
+            TextField {
+                id: searchField
                 Layout.fillWidth: true
-                anchors.fill: parent
-                model: VisualDataModel{
-                    model: searchModel
-                    delegate: Effect{}
+                height: 20
+                anchors {
+                    top: parent.top
+                }
+                focus: true
+            }
+
+            EffectFilterModel {
+                id:searchModel
+                filter: searchField.text
+                effectModel: EffectModel {
+                    id: effectModel
+                }
+            }
+
+            ScrollView {
+                id: scroll
+                highlightOnFocus: true
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                anchors {
+                    top: searchField.bottom
+                    left: parent.left
+                    bottom: apply.top
+                }
+                ListView {
+                    id: effectView
+                    Layout.fillWidth: true
+                    anchors.fill: parent
+                    model: VisualDataModel{
+                        model: searchModel
+                        delegate: Effect{}
+                    }
+
+                    section.property: "CategoryRole"
+                    section.delegate: sectionHeading
+                }
+            }
+
+            ExclusiveGroup {
+                id: desktopSwitching
+                //Our ExclusiveGroup must me outside of the
+                //ListView, otherwise it will not work
+            }
+
+            Button {
+                id: apply
+                text: "Apply"
+                enabled: false
+                anchors {
+                    bottom: parent.bottom
                 }
 
-                section.property: "CategoryRole"
-                section.delegate: sectionHeading
-            }
-        }
-
-        ExclusiveGroup {
-            id: desktopSwitching
-            //Our ExclusiveGroup must me outside of the
-            //ListView, otherwise it will not work
-        }
-
-        Button {
-            id: apply
-            text: "Apply"
-            enabled: false
-            anchors {
-                bottom: parent.bottom
+                onClicked: {
+                    effectModel.syncConfig();
+                    effectModel.reload();
+                    apply.enabled = false;
+                }
             }
 
-            onClicked: {
-                effectModel.syncConfig();
-                effectModel.reload();
-                apply.enabled = false;
-            }
-        }
-    }
-}
+        }//End ColumnLayout
+    }//End RowLayout
+}//End item

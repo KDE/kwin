@@ -49,7 +49,22 @@ Component {
                             return false;
                         }
                     }
+                    function isWindowManagementEnabled() {
+                        if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
+                            windowManagementEnabled = myCheckBox.checked;
+                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                        } else if (model.ServiceNameRole == "kwin4_effect_desktopgrid") {
+                            windowManagementEnabled = myCheckBox.checked;
+                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                        } else if (model.ServiceNameRole == "kwin4_effect_presentwindows") {
+                            windowManagementEnabled = myCheckBox.checked;
+                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                        }
+                        return windowManagementEnabled;
+                    }
+
                     id: myCheckBox
+                    property bool windowManagementEnabled;
                     checked: model.EffectStatusRole
                     exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
                     onClicked: {
@@ -58,6 +73,7 @@ Component {
 
                     onCheckedChanged: {
                         configureButton.enabled = myCheckBox.checked;
+                        windowManagement.checked = isWindowManagementEnabled();
                         effectModel.effectStatus(effectView.model.modelIndex(index),checked);
                     }
                 }
