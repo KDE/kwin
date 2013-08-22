@@ -35,6 +35,18 @@ public:
 
     Q_INVOKABLE bool OpenGLIsUnsafe();
     Q_INVOKABLE bool OpenGLIsBroken();
+    Q_INVOKABLE void syncConfig(int openGLType, int graphicsSystem);
+    Q_INVOKABLE int currentOpenGLType();
+    Q_INVOKABLE int currentGraphicsSystem();
+
+private:
+
+    enum OpenGLTypeIndex {
+        OPENGL31_INDEX = 0,
+        OPENGL20_INDEX,
+        OPENGL12_INDEX,
+        XRENDER_INDEX
+    };
 };
 }//end namespace Compositing
 }//end namespace KWin

@@ -26,6 +26,8 @@
 
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDebug>
+
 namespace KWin {
 namespace Compositing {
 
@@ -57,6 +59,75 @@ bool Compositing::OpenGLIsBroken() {
     kwinConfig.writeEntry("OpenGLIsUnsafe", false);
     kwinConfig.sync();
     return false;
+}
+
+void Compositing::syncConfig(int openGLType, int graphicsSystem) {
+    QString graphicsSystemType;
+    QString backend;
+    bool glLegacy;
+    bool glCore;
+
+
+    switch (openGLType) {
+        case OPENGL31_INDEX:
+            backend = "OpenGL";
+            glLegacy = false;
+            glCore = true;
+            break;
+        case OPENGL20_INDEX:
+            backend = "OpenGL";
+            glLegacy = false;
+            glCore = false;
+            break;
+        case OPENGL12_INDEX:
+            backend = "OpenGL";
+            glLegacy = true;
+            glCore = false;
+            break;
+        case XRENDER_INDEX:
+            backend = "XRender";
+            glLegacy = false;
+            glCore = false;
+            break;
+    }
+
+    graphicsSystem == 0 ? graphicsSystemType = "native" : graphicsSystemType = "raster";
+
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    kwinConfig.writeEntry("Backend", backend);
+    kwinConfig.writeEntry("GLLegacy", glLegacy);
+    kwinConfig.writeEntry("GLCore", glCore);
+    kwinConfig.writeEntry("GraphicsSystem", graphicsSystemType);
+    kwinConfig.sync();
+}
+
+int Compositing::currentOpenGLType() {
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    QString backend = kwinConfig.readEntry("Backend", "OpenGL");
+    bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
+    bool glCore = kwinConfig.readEntry("GLCore", false);
+    int currentIndex = OPENGL20_INDEX;
+
+    if (backend == "OpenGL") {
+        if (glLegacy) {
+            currentIndex = OPENGL12_INDEX;
+        } else if (glCore) {
+            currentIndex = OPENGL31_INDEX;
+        } else {
+            currentIndex = OPENGL20_INDEX;
+        }
+    } else {
+        currentIndex = XRENDER_INDEX;
+    }
+
+    return currentIndex;
+}
+
+int Compositing::currentGraphicsSystem() {
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    QString graphicsSystem = kwinConfig.readEntry("GraphicsSystem", "native");
+
+    return graphicsSystem == "native" ? 0 : 1;
 }
 
 }//end namespace Compositing

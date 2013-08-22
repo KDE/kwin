@@ -54,6 +54,24 @@ Item {
             onClicked: effectModel.enableWidnowManagement(windowManagement.checked)
         }
 
+        ComboBox {
+            id: openGLType
+            model: ["OpenGL 3.1", "OpenGL 2.1", "OpenGL 1.2", "XRender"]
+            currentIndex: compositing.currentOpenGLType()
+            anchors.top: windowManagement.bottom
+            anchors.left: col.right
+            onCurrentIndexChanged: apply.enabled = true
+        }
+
+        ComboBox {
+            id: graphicsSystem
+            model: ["Native", "Raster"]
+            currentIndex: compositing.currentGraphicsSystem()
+            anchors.top: openGLType.bottom
+            anchors.left: col.right
+            onCurrentIndexChanged: apply.enabled = true
+        }
+
         ColumnLayout {
             id: col
             height: parent.height
@@ -122,6 +140,7 @@ Item {
                     effectModel.syncConfig();
                     effectModel.reload();
                     apply.enabled = false;
+                    compositing.syncConfig(openGLType.currentIndex, graphicsSystem.currentIndex);
                 }
             }
 
