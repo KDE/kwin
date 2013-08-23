@@ -120,7 +120,6 @@ public:
     virtual void resize(const QSize& s);
     // optional overrides
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
-    bool isMaximized() const;
     int doubleClickInterval() const;
 
     bool animationsSupported() const;

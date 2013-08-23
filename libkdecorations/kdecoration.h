@@ -531,8 +531,18 @@ public:
      * Returns the current maximization mode of the decorated window.
      * Note that only fully maximized windows should be treated
      * as "maximized" (e.g. if the maximize button has only two states).
+     * @see isMaximized
      */
     MaximizeMode maximizeMode() const;
+    /**
+     * @brief Convenience method for the case that the decoration is
+     * only interested in whether the decoration is in fully maximized
+     * or restored state ignoring vertical and horizontal maximized modes.
+     *
+     * @return bool @c true if maximized fully, @c false otherwise
+     * @see maximizeMode
+     */
+    bool isMaximized() const;
     /**
      * Returns @a true if the decorated window can be minimized by the user.
      */

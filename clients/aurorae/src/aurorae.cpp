@@ -437,11 +437,6 @@ void AuroraeClient::toggleKeepBelow()
     setKeepBelow(!keepBelow());
 }
 
-bool AuroraeClient::isMaximized() const
-{
-    return maximizeMode()==KDecorationDefines::MaximizeFull;
-}
-
 void AuroraeClient::titlePressed(int button, int buttons)
 {
     titlePressed(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));

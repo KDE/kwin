@@ -133,6 +133,11 @@ KDecoration::MaximizeMode KDecoration::maximizeMode() const
     return bridge_->maximizeMode();
 }
 
+bool KDecoration::isMaximized() const
+{
+    return maximizeMode() == MaximizeFull;
+}
+
 KDecoration::QuickTileMode KDecoration::quickTileMode() const
 {
     return bridge_->quickTileMode();
