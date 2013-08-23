@@ -352,10 +352,6 @@ bool KDecoration::windowDocked(Position)
     return false;
 }
 
-void KDecoration::reset(unsigned long)
-{
-}
-
 void KDecoration::grabXServer()
 {
     bridge_->grabXServer(true);

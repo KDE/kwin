@@ -108,11 +108,6 @@ bool KCommonDecorationWrapper::windowDocked(Position side)
     return decoration->windowDocked(side);
 }
 
-void KCommonDecorationWrapper::reset(unsigned long changed)
-{
-    return decoration->reset(changed);
-}
-
 void KCommonDecorationWrapper::padding(int &left, int &right, int &top, int &bottom) const
 {
     left   = decoration->layoutMetric(KCommonDecoration::LM_OuterPaddingLeft);

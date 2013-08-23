@@ -867,6 +867,15 @@ Q_SIGNALS:
      * This signal is emitted whenever the window's keep-below state changes.
      */
     void keepBelowChanged(bool);
+    /**
+     * This signal is emitted whenever the decorated Client indicated that the
+     * available buttons should change (e.g. a closeable window becomes non
+     * closable).
+     *
+     * An implementing class should connect to this signal if it wants to update
+     * the buttons accordingly.
+     **/
+    void decorationButtonsChanged();
 
     /**
      * This signal is emitted whenever application menu is closed
@@ -903,13 +912,6 @@ public:
      */
     // TODO position will need also values for top+left+bottom etc. docking ?
     virtual bool windowDocked(Position side);
-    /**
-     * This function is called to reset the decoration on settings changes.
-     * It is usually invoked by calling KDecorationFactory::resetDecorations().
-     *
-     * @param changed Specifies which settings were changed, given by the SettingXXX masks
-     */
-    virtual void reset(unsigned long changed);
     /**
      * This function can return additional padding values that are added outside the
      * borders of the window, and can be used by the decoration if it wants to paint

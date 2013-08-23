@@ -53,6 +53,10 @@ KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFacto
     memset(m_button, 0, sizeof(KCommonDecorationButton *) * NumButtons);
     connect(wrapper, SIGNAL(keepAboveChanged(bool)), this, SIGNAL(keepAboveChanged(bool)));
     connect(wrapper, SIGNAL(keepBelowChanged(bool)), this, SIGNAL(keepBelowChanged(bool)));
+    connect(wrapper, &KDecoration::decorationButtonsChanged,
+            this, &KCommonDecoration::decorationButtonsChanged);
+    connect(wrapper, &KDecoration::decorationButtonsChanged,
+            this, &KCommonDecoration::buttonsChanged);
 }
 
 KCommonDecoration::~KCommonDecoration()
@@ -141,12 +145,10 @@ void KCommonDecoration::init()
     updateCaption();
 }
 
-void KCommonDecoration::reset(unsigned long changed)
+void KCommonDecoration::buttonsChanged()
 {
-    if (changed & SettingButtons) {
-        resetLayout();
-        widget()->update();
-    }
+    resetLayout();
+    widget()->update();
 }
 
 QRegion KCommonDecoration::cornerShape(WindowCorner)

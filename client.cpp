@@ -1991,7 +1991,7 @@ void Client::getMotifHints()
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
     if (decoration && closabilityChanged)
-        decoration->reset(KDecoration::SettingButtons);
+        emit decoration->decorationButtonsChanged();
 }
 
 void Client::readIcons(xcb_window_t win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon)
@@ -2312,7 +2312,7 @@ void Client::updateAllowedActions(bool force)
     // ONLY if relevant features have changed (and the window didn't just get/loose moveresize for maximization state changes)
     const unsigned long relevant = ~(NET::ActionMove|NET::ActionResize);
     if (decoration && (allowed_actions & relevant) != (old_allowed_actions & relevant))
-        decoration->reset(KDecoration::SettingButtons);
+        emit decoration->decorationButtonsChanged();
 }
 
 void Client::autoRaise()

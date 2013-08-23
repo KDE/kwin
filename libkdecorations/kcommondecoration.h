@@ -252,10 +252,6 @@ public:
      * Handles widget and layout creation, call the base implementation when subclassing this member.
      */
     virtual void init();
-    /**
-     * Handles SettingButtons, call the base implementation when subclassing this member.
-     */
-    virtual void reset(unsigned long changed);
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void show();
     virtual void resize(const QSize& s);
@@ -346,6 +342,15 @@ public:
 Q_SIGNALS:
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
+    /**
+     * This signal is emitted whenever the decorated Client indicated that the
+     * available buttons should change (e.g. a closeable window becomes non
+     * closable).
+     *
+     * An implementing class should connect to this signal if it wants to update
+     * the buttons accordingly.
+     **/
+    void decorationButtonsChanged();
 public:
     void setMainWidget(QWidget*);
     void createMainWidget(Qt::WindowFlags flags = 0);
@@ -394,6 +399,7 @@ protected Q_SLOTS:
 private Q_SLOTS:
     /* look out for buttons that have been destroyed. */
     void objDestroyed(QObject *obj);
+    void buttonsChanged();
 
     /**
      * This slot can be reimplemented to return the regions defined

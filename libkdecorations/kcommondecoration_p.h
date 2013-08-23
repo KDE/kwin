@@ -57,7 +57,6 @@ public:
     virtual void shadeChange();
     virtual bool drawbound(const QRect& geom, bool clear);
     virtual bool windowDocked(Position side);
-    virtual void reset(unsigned long changed);
 
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
 

@@ -140,8 +140,6 @@ namespace Oxygen
     //___________________________________________
     void Client::reset( unsigned long changed )
     {
-        KCommonDecoration::reset( changed );
-
         // update window mask when compositing is changed
         if( !_initialized ) return;
         if( changed & SettingCompositing )
