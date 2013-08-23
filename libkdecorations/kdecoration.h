@@ -381,7 +381,6 @@ public:
     /**
      * @internal
      */
-    virtual unsigned long updateSettings() = 0; // returns SettingXYZ mask
 
 protected:
     /** @internal */
