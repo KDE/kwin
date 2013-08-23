@@ -35,14 +35,15 @@ class KDecorationBridge;
 class KDecorationFactoryPrivate;
 
 class KWIN_EXPORT KDecorationFactory
-    : public KDecorationDefines
+    : public QObject, public KDecorationDefines
 {
+    Q_OBJECT
 public:
     /**
      * Constructor. Called after loading the decoration plugin. All global
      * initialization of the plugin should be done in the factory constructor.
      */
-    KDecorationFactory();
+    explicit KDecorationFactory(QObject *parent = nullptr);
     /**
      * Destructor. Called before unloading the decoration plugin. All global
      * cleanup of the plugin should be done in the factory destructor.

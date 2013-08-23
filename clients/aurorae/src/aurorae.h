@@ -37,7 +37,7 @@ namespace Aurorae
 class AuroraeTheme;
 class AuroraeClient;
 
-class AuroraeFactory :  public QObject, public KDecorationFactory
+class AuroraeFactory :  public KDecorationFactory
 {
     Q_OBJECT
 public:
@@ -62,7 +62,7 @@ private:
         AuroraeEngine,
         QMLEngine
     };
-    AuroraeFactory();
+    explicit AuroraeFactory(QObject *parent = nullptr);
     void init();
     void initAurorae(KConfig &conf, KConfigGroup &group);
     void initQML(const KConfigGroup& group);

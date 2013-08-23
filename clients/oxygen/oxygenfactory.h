@@ -54,7 +54,7 @@ namespace Oxygen
     };
 
     //! window decoration factory
-    class Factory: public QObject, public KDecorationFactory
+    class Factory: public KDecorationFactory
     {
 
         Q_OBJECT
@@ -62,7 +62,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        Factory();
+        explicit Factory(QObject *parent = nullptr);
 
         //! destructor
         virtual ~Factory();

@@ -38,9 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Aurorae
 {
 
-AuroraeFactory::AuroraeFactory()
-        : QObject()
-        , KDecorationFactory()
+AuroraeFactory::AuroraeFactory(QObject *parent)
+        : KDecorationFactory(parent)
         , m_theme(new AuroraeTheme(this))
         , m_engine(new QDeclarativeEngine(this))
         , m_component(new QDeclarativeComponent(m_engine, this))
