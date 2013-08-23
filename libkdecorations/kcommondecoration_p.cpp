@@ -68,11 +68,6 @@ QSize KCommonDecorationWrapper::minimumSize() const
     return decoration->minimumSize();
 }
 
-void KCommonDecorationWrapper::iconChange()
-{
-    return decoration->iconChange();
-}
-
 void KCommonDecorationWrapper::maximizeChange()
 {
     return decoration->maximizeChange();

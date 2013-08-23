@@ -89,7 +89,6 @@ class AuroraeClient : public KDecoration
     Q_OBJECT
     Q_PROPERTY(QRect geometry READ geometry)
     Q_PROPERTY(int height READ height)
-    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool closeable READ isCloseable CONSTANT)
     Q_PROPERTY(bool maximizeable READ isMaximizable CONSTANT)
     Q_PROPERTY(bool minimizeable READ isMinimizable CONSTANT)
@@ -114,7 +113,6 @@ public:
     virtual ~AuroraeClient();
     virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
-    virtual void iconChange();
     virtual void init();
     virtual void maximizeChange();
     virtual QSize minimumSize() const;
@@ -130,7 +128,6 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
 Q_SIGNALS:
-    void iconChanged();
     void maximizeChanged();
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
