@@ -37,7 +37,7 @@ namespace Aurorae
 class AuroraeTheme;
 class AuroraeClient;
 
-class AuroraeFactory :  public QObject, public KDecorationFactoryUnstable
+class AuroraeFactory :  public QObject, public KDecorationFactory
 {
     Q_OBJECT
 public:

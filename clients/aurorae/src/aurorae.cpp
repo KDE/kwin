@@ -40,7 +40,7 @@ namespace Aurorae
 
 AuroraeFactory::AuroraeFactory()
         : QObject()
-        , KDecorationFactoryUnstable()
+        , KDecorationFactory()
         , m_theme(new AuroraeTheme(this))
         , m_engine(new QDeclarativeEngine(this))
         , m_component(new QDeclarativeComponent(m_engine, this))

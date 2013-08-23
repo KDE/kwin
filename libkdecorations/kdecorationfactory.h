@@ -130,15 +130,6 @@ private:
     KDecorationFactoryPrivate* d;
 };
 
-/**
- * @warning THIS CLASS IS UNSTABLE!
- * Keep all decoration class names in sync. E.g. KDecorationFactory2 and KDecoration2.
- */
-class KWIN_EXPORT KDecorationFactoryUnstable
-    : public KDecorationFactory
-{
-};
-
 inline const KDecorationOptions* KDecorationFactory::options()
 {
     return KDecoration::options();

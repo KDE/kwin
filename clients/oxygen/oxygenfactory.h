@@ -54,7 +54,7 @@ namespace Oxygen
     };
 
     //! window decoration factory
-    class Factory: public QObject, public KDecorationFactoryUnstable
+    class Factory: public QObject, public KDecorationFactory
     {
 
         Q_OBJECT
