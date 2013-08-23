@@ -775,9 +775,9 @@ void Options::reparseConfiguration()
     m_settings->config()->reparseConfiguration();
 }
 
-unsigned long Options::updateSettings()
+void Options::updateSettings()
 {
-    unsigned long changed = loadConfig();
+    loadConfig();
     // Read button tooltip animation effect from kdeglobals
     // Since we want to allow users to enable window decoration tooltips
     // and not kstyle tooltips and vise-versa, we don't read the
@@ -792,15 +792,12 @@ unsigned long Options::updateSettings()
     reloadCompositingSettings();
 
     emit configChanged();
-
-    return changed;
 }
 
-unsigned long Options::loadConfig()
+void Options::loadConfig()
 {
     m_settings->readConfig();
-    unsigned long changed = 0;
-    changed |= KDecorationOptions::updateSettings(m_settings->config());   // read decoration settings
+    KDecorationOptions::updateSettings(m_settings->config());   // read decoration settings
 
     syncFromKcfgc();
 
@@ -836,8 +833,6 @@ unsigned long Options::loadConfig()
     setMaxFpsInterval(1 * 1000 * 1000 * 1000 / config.readEntry("MaxFPS", Options::defaultMaxFps()));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
     setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()) * 1000); // config in micro, value in nano resolution
-
-    return changed;
 }
 
 void Options::syncFromKcfgc()

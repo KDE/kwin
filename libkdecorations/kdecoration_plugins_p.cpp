@@ -69,21 +69,12 @@ QString KDecorationPlugins::currentPlugin()
     return pluginStr;
 }
 
-bool KDecorationPlugins::reset(unsigned long changed)
+bool KDecorationPlugins::reset()
 {
     QString oldPlugin = pluginStr;
     config->reparseConfiguration();
-    bool ret = false;
-    if ((!loadPlugin(QString()) && library)     // "" = read the one in cfg file
-            || oldPlugin == pluginStr) {
-        // no new plugin loaded, reset the old one
-//       assert( fact != NULL );
-        if (fact != NULL) {
-            ret = fact->reset(changed);
-        }
-
-    }
-    return ret || oldPlugin != pluginStr;
+    loadPlugin(QString()); // "" = read the one in cfg file
+    return oldPlugin != pluginStr;
 }
 
 KDecorationFactory* KDecorationPlugins::factory()

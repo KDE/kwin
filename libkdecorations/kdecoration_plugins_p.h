@@ -58,7 +58,7 @@ public:
     const KDecorationFactory* factory() const;
     KDecoration* createDecoration(KDecorationBridge*);
     QString currentPlugin();
-    bool reset(unsigned long changed);   // returns true if decorations need to be recreated
+    bool reset();   // returns true if decorations need to be recreated
 protected:
     virtual void error(const QString& error_msg);
     QString defaultPlugin; // FRAME normalne protected?

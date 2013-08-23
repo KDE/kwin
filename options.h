@@ -199,7 +199,7 @@ public:
     explicit Options(QObject *parent = NULL);
     ~Options();
 
-    virtual unsigned long updateSettings();
+    void updateSettings();
 
     /*!
       Different focus policies:
@@ -735,7 +735,7 @@ public:
     /**
      * Performs loading all settings except compositing related.
      **/
-    unsigned long loadConfig();
+    void loadConfig();
     /**
      * Performs loading of compositing settings which do not depend on OpenGL.
      **/

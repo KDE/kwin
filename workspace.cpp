@@ -804,22 +804,15 @@ void Workspace::slotReconfigure()
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
     KSharedConfig::openConfig()->reparseConfiguration();
-    unsigned long changed = options->updateSettings();
+    options->updateSettings();
 
     emit configChanged();
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
     DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->isDisabled() && deco->reset(changed)) {
+    if (!deco->isDisabled() && deco->reset()) {
         // Decorations need to be recreated
-
-        // This actually seems to make things worse now
-        //QWidget curtain;
-        //curtain.setBackgroundMode( NoBackground );
-        //curtain.setGeometry( Kephal::ScreenUtils::desktopGeometry() );
-        //curtain.show();
-
         for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
             (*it)->updateDecoration(true, true);
         // If the new decoration doesn't supports tabs then ungroup clients
