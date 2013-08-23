@@ -46,6 +46,7 @@ DecorationPlugin::DecorationPlugin(QObject *parent)
 #ifdef KWIN_BUILD_DECORATIONS
     loadPlugin(QString());   // load the plugin specified in cfg file
     connect(factory(), &KDecorationFactory::recreateDecorations, this, &DecorationPlugin::recreateDecorations);
+    connect(this, &DecorationPlugin::compositingToggled, options, &KDecorationOptions::compositingChanged);
 #else
     setDisabled(true);
 #endif
@@ -132,14 +133,6 @@ Qt::Corner DecorationPlugin::closeButtonCorner()
         return Qt::TopRightCorner;
     }
     return factory()->closeButtonCorner();
-}
-
-void DecorationPlugin::resetCompositing()
-{
-    if (m_disabled) {
-        return;
-    }
-    factory()->reset(SettingCompositing);
 }
 
 QString DecorationPlugin::supportInformation()

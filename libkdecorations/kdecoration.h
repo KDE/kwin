@@ -460,6 +460,10 @@ Q_SIGNALS:
      * some decoration specific settings need to be updated.
      */
     void configChanged();
+    /**
+     * @brief Emitted when the compositing state in KWin core changes.
+     */
+    void compositingChanged();
 
 protected:
     /** @internal */

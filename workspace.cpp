@@ -232,7 +232,7 @@ Workspace::Workspace(bool restore)
 
     m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
-    connect(m_compositor, SIGNAL(compositingToggled(bool)), decorationPlugin(), SLOT(resetCompositing()));
+    connect(m_compositor, &Compositor::compositingToggled, decorationPlugin(), &DecorationPlugin::compositingToggled);
 
     new DBusInterface(this);
 
