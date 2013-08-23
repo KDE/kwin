@@ -1131,16 +1131,6 @@ public Q_SLOTS:
      * @param set Whether to keep the window below others
      */
     void setKeepBelow(bool set);
-    /**
-     * @internal
-     * TODO KF5: remove me
-     */
-    void emitKeepAboveChanged(bool above);
-    /**
-     * @internal
-     * TODO KF5: remove me
-     */
-    void emitKeepBelowChanged(bool below);
 
 protected Q_SLOTS:
     /**
