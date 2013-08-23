@@ -437,11 +437,6 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     return Position(pos);
 }
 
-void AuroraeClient::reset(long unsigned int changed)
-{
-    KDecoration::reset(changed);
-}
-
 void AuroraeClient::menuClicked()
 {
     showWindowMenu(QCursor::pos());

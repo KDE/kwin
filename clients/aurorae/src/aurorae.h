@@ -132,7 +132,6 @@ public:
     virtual void shadeChange();
     // optional overrides
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
-    virtual void reset(long unsigned int changed);
     bool isMaximized() const;
     int doubleClickInterval() const;
 
