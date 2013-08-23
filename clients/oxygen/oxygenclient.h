@@ -127,9 +127,6 @@ namespace Oxygen
         //! initialization
         virtual void init();
 
-        // reset
-        virtual void reset( unsigned long changed );
-
         //! return associated configuration
         Factory::ConfigurationPtr configuration( void ) const
         { return _configuration; }
@@ -434,6 +431,10 @@ namespace Oxygen
 
         //! bound one rect to another
         void boundRectTo( QRect&, const QRect& ) const;
+
+        private Q_SLOTS:
+        void updateCompositing();
+        void updateConfig();
 
         private:
 

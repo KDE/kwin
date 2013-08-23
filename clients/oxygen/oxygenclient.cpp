@@ -67,7 +67,10 @@ namespace Oxygen
         _itemData( this ),
         _sourceItem( -1 ),
         _shadowAtom( 0 )
-    {}
+    {
+        connect(options(), &KDecorationOptions::compositingChanged, this, &Client::updateCompositing);
+        connect(options(), &KDecorationOptions::configChanged, this, &Client::updateConfig);
+    }
 
     //___________________________________________
     Client::~Client()
@@ -133,20 +136,24 @@ namespace Oxygen
         _initialized = true;
 
         // first reset is needed to store Oxygen configuration
-        reset(0);
+        updateConfig();
 
     }
 
     //___________________________________________
-    void Client::reset( unsigned long changed )
+    void Client::updateCompositing()
     {
         // update window mask when compositing is changed
         if( !_initialized ) return;
-        if( changed & SettingCompositing )
-        {
-            updateWindowShape();
-            widget()->update();
-        }
+        updateWindowShape();
+        widget()->update();
+        updateConfig();
+    }
+
+    //___________________________________________
+    void Client::updateConfig()
+    {
+        if( !_initialized ) return;
 
         _configuration = _factory->configuration( *this );
 
