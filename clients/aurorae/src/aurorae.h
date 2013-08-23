@@ -44,7 +44,6 @@ public:
     ~AuroraeFactory();
 
     static AuroraeFactory* instance();
-    bool reset(unsigned long changed);
     KDecoration *createDecoration(KDecorationBridge*);
     bool supports(Ability ability) const;
     virtual QList< BorderSize > borderSizes() const;
@@ -71,6 +70,9 @@ Q_SIGNALS:
     void buttonsChanged();
     void titleFontChanged();
     void configChanged();
+
+private Q_SLOTS:
+    void updateConfiguration();
 
 private:
     static AuroraeFactory *s_instance;
