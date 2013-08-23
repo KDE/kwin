@@ -157,20 +157,6 @@ public:
     };
 
     /**
-     * These flags specify which settings changed when rereading settings.
-     * Each setting in class KDecorationOptions specifies its matching flag.
-     */
-    enum {
-        SettingDecoration  = 1 << 0, ///< The decoration was changed
-        SettingColors      = 1 << 1, ///< The color palette was changed
-        SettingFont        = 1 << 2, ///< The titlebar font was changed
-        SettingButtons     = 1 << 3, ///< The button layout was changed
-        SettingTooltips    = 1 << 4, ///< The tooltip setting was changed
-        SettingBorder      = 1 << 5, ///< The border size setting was changed
-        SettingCompositing = 1 << 6  ///< Compositing settings was changed
-    };
-
-    /**
      * Border size. KDecorationOptions::preferredBorderSize() returns
      * one of these values.
      */
