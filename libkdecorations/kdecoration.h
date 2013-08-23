@@ -491,6 +491,7 @@ class KWIN_EXPORT KDecoration
 {
     Q_OBJECT
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
 public:
     /**
      * Constructs a KDecoration object. Both the arguments are passed from
@@ -816,10 +817,6 @@ public:
 
 public Q_SLOTS:
     /**
-     * This function is called whenever the caption changes. Use caption() to get it.
-     */
-    virtual void captionChange() = 0;
-    /**
      * This function is called whenever the window icon changes. Use icon() to get it.
      */
     virtual void iconChange() = 0;
@@ -846,6 +843,10 @@ Q_SIGNALS:
      * Use isActive() to find out the current state.
      */
     void activeChanged();
+    /**
+     * This signal is emitted whenever the caption changes. Use caption() to get it.
+     */
+    void captionChanged();
     /**
      * This signal is emitted whenever the window's keep-above state changes.
      */
