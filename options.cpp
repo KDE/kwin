@@ -107,7 +107,7 @@ int currentRefreshRate()
 }
 
 Options::Options(QObject *parent)
-    : QObject(parent)
+    : KDecorationOptions(parent)
     , m_settings(new Settings(KSharedConfig::openConfig()))
     , m_focusPolicy(ClickToFocus)
     , m_nextFocusPrefersMouse(false)

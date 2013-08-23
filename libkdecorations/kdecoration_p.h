@@ -37,11 +37,12 @@ class KConfig;
 class KDecorationOptionsPrivate : public KDecorationDefines
 {
 public:
-    KDecorationOptionsPrivate();
+    KDecorationOptionsPrivate(KDecorationOptions *parent);
     ~KDecorationOptionsPrivate();
-    unsigned long updateSettings(KConfig*);   // shared implementation
+    void updateSettings(KConfig*);   // shared implementation
     BorderSize findPreferredBorderSize(BorderSize size, QList< BorderSize >) const;   // shared implementation
 
+    KDecorationOptions *q;
     QColor colors[NUM_COLORS*2];
     QPalette *pal[NUM_COLORS*2];
     QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;

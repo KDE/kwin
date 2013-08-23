@@ -269,10 +269,11 @@ public:
  * It is accessible from the decorations either as KDecoration::options()
  * or KDecorationFactory::options().
  */
-class KWIN_EXPORT KDecorationOptions : public KDecorationDefines
+class KWIN_EXPORT KDecorationOptions : public QObject, public KDecorationDefines
 {
+    Q_OBJECT
 public:
-    KDecorationOptions();
+    KDecorationOptions(QObject *parent = nullptr);
     virtual ~KDecorationOptions();
     /**
      * Call to update settings when the config changes. Return value is
@@ -378,9 +379,93 @@ public:
      */
     WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
 
+Q_SIGNALS:
     /**
-     * @internal
+     * @brief Emitted when at least one of the color settings changed.
+     *
+     * @see color
      */
+    void colorsChanged();
+    /**
+     * @brief Emitted when the active font changed.
+     *
+     * @see font
+     */
+    void activeFontChanged();
+    /**
+     * @brief Emitted when the inactive font changed.
+     *
+     * @see font
+     */
+    void inactiveFontChanged();
+    /**
+     * @brief Emitted when the small active font changed
+     *
+     * @see font
+     */
+    void smallActiveFontChanged();
+    /**
+     * @brief Emitted when the small inactive font changed
+     *
+     * @see font
+     */
+    void smallInactiveFontChanged();
+    /**
+     * @brief Emitted if any of the fonts changed.
+     *
+     * @see activeFontChanged
+     * @see inactiveFontChanged
+     * @see smallInactiveFontChanged
+     * @see smallInactiveFontChanged
+     */
+    void fontsChanged();
+    /**
+     * @brief Emitted when the left title buttons changed.
+     *
+     * @see titleButtonsLeft
+     * @see defaultTitleButtonsLeft
+     */
+    void leftButtonsChanged();
+    /**
+     * @brief Emitted when the right title buttons changed.
+     *
+     * @see titleButtonsRight
+     * @see defaultTitleButtonsRight
+     */
+    void rightButtonsChanged();
+    /**
+     * @brief Emitted when the custom buttons position setting changed.
+     *
+     * @see customButtonPositions
+     */
+    void customButtonPositionsChanged();
+    /**
+     * @brief Emitted when one of the title buttons relevant settings changed.
+     *
+     * @see leftButtonsChanged
+     * @see rightButtonsChanged
+     * @see customButtonPositionsChanged
+     */
+    void buttonsChanged();
+    /**
+     * @brief Emitted when show tooltips setting changed.
+     *
+     * @see showTooltips
+     */
+    void showTooltipsChanged();
+    /**
+     * @brief Emitted when the border size setting changed.
+     *
+     * @see preferredBorderSize
+     */
+    void borderSizeChanged();
+    /**
+     * @brief This signal is emitted whenever the configuration changed.
+     *
+     * A decoration plugin should connect to this signal and evaluate whether
+     * some decoration specific settings need to be updated.
+     */
+    void configChanged();
 
 protected:
     /** @internal */

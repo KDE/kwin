@@ -514,11 +514,19 @@ QString KDecorationDefines::tabDragMimeType()
     return QStringLiteral("text/ClientGroupItem");
 }
 
-KDecorationOptions::KDecorationOptions()
-    : d(new KDecorationOptionsPrivate)
+KDecorationOptions::KDecorationOptions(QObject *parent)
+    : QObject(parent)
+    , d(new KDecorationOptionsPrivate(this))
 {
     assert(KDecoration::options_ == NULL);
     KDecoration::options_ = this;
+    connect(this, &KDecorationOptions::activeFontChanged, this, &KDecorationOptions::fontsChanged);
+    connect(this, &KDecorationOptions::inactiveFontChanged, this, &KDecorationOptions::fontsChanged);
+    connect(this, &KDecorationOptions::smallActiveFontChanged, this, &KDecorationOptions::fontsChanged);
+    connect(this, &KDecorationOptions::smallInactiveFontChanged, this, &KDecorationOptions::fontsChanged);
+    connect(this, &KDecorationOptions::leftButtonsChanged, this, &KDecorationOptions::buttonsChanged);
+    connect(this, &KDecorationOptions::rightButtonsChanged, this, &KDecorationOptions::buttonsChanged);
+    connect(this, &KDecorationOptions::customButtonPositionsChanged, this, &KDecorationOptions::buttonsChanged);
 }
 
 KDecorationOptions::~KDecorationOptions()
@@ -555,9 +563,9 @@ QPalette KDecorationOptions::palette(ColorType type, bool active) const
     return(*d->pal[idx]);
 }
 
-unsigned long KDecorationOptions::updateSettings(KConfig* config)
+void KDecorationOptions::updateSettings(KConfig* config)
 {
-    return d->updateSettings(config);
+    d->updateSettings(config);
 }
 
 bool KDecorationOptions::customButtonPositions() const

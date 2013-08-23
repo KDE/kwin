@@ -31,8 +31,9 @@ DEALINGS IN THE SOFTWARE.
 #include <QApplication>
 #include <assert.h>
 
-KDecorationOptionsPrivate::KDecorationOptionsPrivate()
-    : title_buttons_left(KDecorationOptions::defaultTitleButtonsLeft())
+KDecorationOptionsPrivate::KDecorationOptionsPrivate(KDecorationOptions *parent)
+    : q(parent)
+    , title_buttons_left(KDecorationOptions::defaultTitleButtonsLeft())
     , title_buttons_right(KDecorationOptions::defaultTitleButtonsRight())
     , custom_button_positions(false)
     , show_tooltips(true)
@@ -57,9 +58,8 @@ KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
     }
 }
 
-unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
+void KDecorationOptionsPrivate::updateSettings(KConfig* config)
 {
-    unsigned long changed = 0;
     KConfigGroup wmConfig(config, "WM");
 
 // SettingColors
@@ -126,11 +126,17 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
     colors[ColorFont+NUM_COLORS] = wmConfig.readEntry("inactiveForeground",
                                    colors[ColorFont+NUM_COLORS]);
 
+    bool colorsChanged = false;
     for (int i = 0;
             i < NUM_COLORS * 2;
             ++i)
-        if (old_colors[ i ] != colors[ i ])
-            changed |= SettingColors;
+        if (old_colors[ i ] != colors[ i ]) {
+            colorsChanged = true;
+            break;
+        }
+    if (colorsChanged) {
+        emit q->colorsChanged();
+    }
 
 // SettingFont
     QFont old_activeFont = activeFont;
@@ -141,19 +147,25 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
     QFont activeFontGuess = QFontDatabase::systemFont(QFontDatabase::TitleFont);
 
     activeFont = wmConfig.readEntry("activeFont", activeFontGuess);
+    if (activeFont != old_activeFont) {
+        emit q->activeFontChanged();
+    }
     inactiveFont = wmConfig.readEntry("inactiveFont", activeFont);
+    if (inactiveFont != old_inactiveFont) {
+        emit q->inactiveFontChanged();
+    }
 
     activeFontSmall = activeFont;
     // TODO: Is it useful ? (Temporary hack)
     //activeFontSmall.setPointSize(activeFont.pointSize() - 2 > 0 ? activeFont.pointSize() - 2 : activeFont.pointSize()+1 );
     activeFontSmall = wmConfig.readEntry("activeFontSmall", activeFontSmall);
+    if (activeFontSmall != old_activeFontSmall) {
+        emit q->smallActiveFontChanged();
+    }
     inactiveFontSmall = wmConfig.readEntry("inactiveFontSmall", activeFontSmall);
-
-    if (old_activeFont != activeFont
-            || old_inactiveFont != inactiveFont
-            || old_activeFontSmall != activeFontSmall
-            || old_inactiveFontSmall != inactiveFontSmall)
-        changed |= SettingFont;
+    if (inactiveFontSmall != old_inactiveFontSmall) {
+        emit q->smallInactiveFontChanged();
+    }
 
     KConfigGroup styleConfig(config, "Style");
 // SettingsButtons
@@ -168,17 +180,22 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
         title_buttons_left  = KDecorationOptions::defaultTitleButtonsLeft();
         title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();
     }
-    if (old_custom_button_positions != custom_button_positions
-            || (custom_button_positions &&
-                (old_title_buttons_left != title_buttons_left
-                 || old_title_buttons_right != title_buttons_right)))
-        changed |= SettingButtons;
+    if (old_custom_button_positions != custom_button_positions) {
+        emit q->customButtonPositionsChanged();
+    }
+    if (old_title_buttons_left != title_buttons_left) {
+        emit q->leftButtonsChanged();
+    }
+    if (old_title_buttons_right != title_buttons_right) {
+        emit q->rightButtonsChanged();
+    }
 
 // SettingTooltips
     bool old_show_tooltips = show_tooltips;
     show_tooltips = styleConfig.readEntry("ShowToolTips", true);
-    if (old_show_tooltips != show_tooltips)
-        changed |= SettingTooltips;
+    if (old_show_tooltips != show_tooltips) {
+        emit q->showTooltipsChanged();
+    }
 
 // SettingBorder
 
@@ -188,8 +205,9 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
         border_size = static_cast< BorderSize >(border_size_num);
     else
         border_size = BorderNormal;
-    if (old_border_size != border_size)
-        changed |= SettingBorder;
+    if (old_border_size != border_size) {
+        emit q->borderSizeChanged();
+    }
     cached_border_size = BordersCount; // invalid
 
 // destroy cached values
@@ -201,7 +219,7 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
         }
     }
 
-    return changed;
+    emit q->configChanged();
 }
 
 KDecorationDefines::BorderSize KDecorationOptionsPrivate::findPreferredBorderSize(BorderSize size,
