@@ -40,11 +40,6 @@ class KWIN_EXPORT KDecorationFactory
     Q_OBJECT
 public:
     /**
-     * Constructor. Called after loading the decoration plugin. All global
-     * initialization of the plugin should be done in the factory constructor.
-     */
-    explicit KDecorationFactory(QObject *parent = nullptr);
-    /**
      * Destructor. Called before unloading the decoration plugin. All global
      * cleanup of the plugin should be done in the factory destructor.
      */
@@ -113,6 +108,11 @@ public:
      */
     void removeDecoration(KDecoration*);
 protected:
+    /**
+     * Constructor. Called after loading the decoration plugin. All global
+     * initialization of the plugin should be done in the factory constructor.
+     */
+    explicit KDecorationFactory(QObject *parent = nullptr);
     /**
      * Convenience function that calls KDecoration::reset() for all decoration
      * objects.
