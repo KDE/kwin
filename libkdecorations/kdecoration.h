@@ -497,6 +497,8 @@ class KWIN_EXPORT KDecoration
     Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizeChanged)
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
 public:
     /**
      * Constructs a KDecoration object. Both the arguments are passed from
@@ -863,9 +865,19 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever the window's keep-above state changes.
      */
+    void keepAboveChanged();
+    /**
+     * This signal is emitted whenever the window's keep-below state changes.
+     */
+    void keepBelowChanged();
+    /**
+     * This signal is emitted whenever the window's keep-above state changes.
+     * @deprecated connect to signal without argument
+     */
     void keepAboveChanged(bool);
     /**
      * This signal is emitted whenever the window's keep-below state changes.
+     * @deprecated connect to signal without argument
      */
     void keepBelowChanged(bool);
     /**

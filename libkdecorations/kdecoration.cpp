@@ -70,6 +70,10 @@ KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
         d(new KDecorationPrivate())
 {
     factory->addDecoration(this);
+    connect(this, static_cast<void (KDecoration::*)(bool)>(&KDecoration::keepAboveChanged),
+            this, static_cast<void (KDecoration::*)()>(&KDecoration::keepAboveChanged));
+    connect(this, static_cast<void (KDecoration::*)(bool)>(&KDecoration::keepBelowChanged),
+            this, static_cast<void (KDecoration::*)()>(&KDecoration::keepBelowChanged));
 }
 
 KDecoration::~KDecoration()

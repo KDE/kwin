@@ -97,8 +97,6 @@ class AuroraeClient : public KDecoration
     Q_PROPERTY(bool preview READ isPreview CONSTANT)
     Q_PROPERTY(bool resizeable READ isResizable CONSTANT)
     Q_PROPERTY(bool shadeable READ isShadeable)
-    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChangedWrapper)
-    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChangedWrapper)
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
     Q_PROPERTY(bool appMenu READ menuAvailable NOTIFY appMenuAvailableChanged)
     Q_PROPERTY(QRect transparentRect READ transparentRect)
@@ -125,8 +123,6 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
 Q_SIGNALS:
-    void keepAboveChangedWrapper();
-    void keepBelowChangedWrapper();
     void buttonsChanged();
     /**
      * Signal emitted when the decoration's configuration might have changed.

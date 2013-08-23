@@ -234,8 +234,6 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     , m_scene(new QGraphicsScene(this))
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
 {
-    connect(this, SIGNAL(keepAboveChanged(bool)), SIGNAL(keepAboveChangedWrapper()));
-    connect(this, SIGNAL(keepBelowChanged(bool)), SIGNAL(keepBelowChangedWrapper()));
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(titleFontChanged()), SIGNAL(fontChanged()));
