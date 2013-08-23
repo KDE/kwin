@@ -257,12 +257,12 @@ public:
     virtual void resize(const QSize& s);
     virtual QSize minimumSize() const;
     virtual void maximizeChange();
-    virtual void desktopChange();
     virtual void shadeChange();
     virtual void iconChange();
 public Q_SLOTS:
     virtual void activeChange();
     virtual void captionChange();
+    virtual void desktopChange();
     void keepAboveChange(bool above);
     void keepBelowChange(bool below);
     void slotMaximize();

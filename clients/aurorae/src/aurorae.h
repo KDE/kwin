@@ -87,7 +87,6 @@ private:
 class AuroraeClient : public KDecoration
 {
     Q_OBJECT
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
     Q_PROPERTY(QRect geometry READ geometry)
     Q_PROPERTY(int height READ height)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
@@ -96,7 +95,6 @@ class AuroraeClient : public KDecoration
     Q_PROPERTY(bool minimizeable READ isMinimizable CONSTANT)
     Q_PROPERTY(bool modal READ isModal)
     Q_PROPERTY(bool moveable READ isMovable CONSTANT)
-    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops NOTIFY desktopChanged)
     Q_PROPERTY(bool preview READ isPreview CONSTANT)
     Q_PROPERTY(bool resizeable READ isResizable CONSTANT)
     Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
@@ -118,7 +116,6 @@ public:
     virtual ~AuroraeClient();
     virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
-    virtual void desktopChange();
     virtual void iconChange();
     virtual void init();
     virtual void maximizeChange();
@@ -136,7 +133,6 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
 Q_SIGNALS:
-    void desktopChanged();
     void iconChanged();
     void maximizeChanged();
     void shadeChanged();

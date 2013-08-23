@@ -311,11 +311,6 @@ void AuroraeClient::iconChange()
     emit iconChanged();
 }
 
-void AuroraeClient::desktopChange()
-{
-    emit desktopChanged();
-}
-
 void AuroraeClient::maximizeChange()
 {
     emit maximizeChanged();

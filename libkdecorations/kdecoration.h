@@ -492,6 +492,8 @@ class KWIN_EXPORT KDecoration
     Q_OBJECT
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops NOTIFY desktopChanged)
 public:
     /**
      * Constructs a KDecoration object. Both the arguments are passed from
@@ -826,12 +828,6 @@ public Q_SLOTS:
      */
     virtual void maximizeChange() = 0;
     /**
-     * This function is called whenever the desktop for the window changes. Use
-     * desktop() or isOnAllDesktops() to find out the current desktop
-     * on which the window is.
-     */
-    virtual void desktopChange() = 0;
-    /**
      * This function is called whenever the window is shaded or unshaded. Use
      * isShade() to get the current state.
      */
@@ -847,6 +843,12 @@ Q_SIGNALS:
      * This signal is emitted whenever the caption changes. Use caption() to get it.
      */
     void captionChanged();
+    /**
+     * This signal is emitted whenever the desktop for the window changes. Use
+     * desktop() or isOnAllDesktops() to find out the current desktop
+     * on which the window is.
+     */
+    void desktopChanged();
     /**
      * This signal is emitted whenever the window's keep-above state changes.
      */

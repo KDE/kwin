@@ -78,11 +78,6 @@ void KCommonDecorationWrapper::maximizeChange()
     return decoration->maximizeChange();
 }
 
-void KCommonDecorationWrapper::desktopChange()
-{
-    return decoration->desktopChange();
-}
-
 void KCommonDecorationWrapper::shadeChange()
 {
     return decoration->shadeChange();

@@ -429,7 +429,7 @@ void Client::createDecoration(const QRect& oldgeom)
         decoration = decorationPlugin()->createDecoration(bridge);
     }
     connect(this, SIGNAL(shadeChanged()), decoration, SLOT(shadeChange()));
-    connect(this, SIGNAL(desktopChanged()), decoration, SLOT(desktopChange()));
+    connect(this, &Client::desktopChanged, decoration, &KDecoration::desktopChanged);
     connect(this, &Client::captionChanged, decoration, &KDecoration::captionChanged);
     connect(this, &Client::activeChanged, decoration, &KDecoration::activeChanged);
     connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)),
