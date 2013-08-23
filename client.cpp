@@ -433,8 +433,8 @@ void Client::createDecoration(const QRect& oldgeom)
     connect(this, &Client::desktopChanged, decoration, &KDecoration::desktopChanged);
     connect(this, &Client::captionChanged, decoration, &KDecoration::captionChanged);
     connect(this, &Client::activeChanged, decoration, &KDecoration::activeChanged);
-    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)),
-            decoration, SLOT(maximizeChange()));
+    connect(this, static_cast<void (Client::*)(Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged),
+            decoration, &KDecoration::maximizeChanged);
     connect(this, SIGNAL(keepAboveChanged(bool)), decoration, SIGNAL(keepAboveChanged(bool)));
     connect(this, SIGNAL(keepBelowChanged(bool)), decoration, SIGNAL(keepBelowChanged(bool)));
 #ifdef KWIN_BUILD_KAPPMENU

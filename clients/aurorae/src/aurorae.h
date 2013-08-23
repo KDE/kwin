@@ -99,7 +99,6 @@ class AuroraeClient : public KDecoration
     Q_PROPERTY(bool shadeable READ isShadeable)
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChangedWrapper)
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChangedWrapper)
-    Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizeChanged)
     Q_PROPERTY(bool providesContextHelp READ providesContextHelp)
     Q_PROPERTY(bool appMenu READ menuAvailable NOTIFY appMenuAvailableChanged)
     Q_PROPERTY(QRect transparentRect READ transparentRect)
@@ -114,7 +113,6 @@ public:
     virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void init();
-    virtual void maximizeChange();
     virtual QSize minimumSize() const;
     virtual Position mousePosition(const QPoint& p) const;
     virtual void resize(const QSize& s);
@@ -127,7 +125,6 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
 Q_SIGNALS:
-    void maximizeChanged();
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
     void buttonsChanged();

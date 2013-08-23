@@ -496,6 +496,7 @@ class KWIN_EXPORT KDecoration
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops NOTIFY desktopChanged)
     Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizeChanged)
 public:
     /**
      * Constructs a KDecoration object. Both the arguments are passed from
@@ -829,13 +830,6 @@ public:
      */
     virtual QSize minimumSize() const = 0;
 
-public Q_SLOTS:
-    /**
-     * This function is called whenever the maximalization state of the window changes.
-     * Use maximizeMode() to get the current state.
-     */
-    virtual void maximizeChange() = 0;
-
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the window either becomes or stops being active.
@@ -861,6 +855,11 @@ Q_SIGNALS:
      * This signal is emitted whenever the window icon changes. Use icon() to get it.
      */
     void iconChanged();
+    /**
+     * This signal is emitted whenever the maximalization state of the window changes.
+     * Use maximizeMode() or isMaximized() to get the current state.
+     */
+    void maximizeChanged();
     /**
      * This signal is emitted whenever the window's keep-above state changes.
      */

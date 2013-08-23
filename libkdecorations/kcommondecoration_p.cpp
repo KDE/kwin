@@ -68,11 +68,6 @@ QSize KCommonDecorationWrapper::minimumSize() const
     return decoration->minimumSize();
 }
 
-void KCommonDecorationWrapper::maximizeChange()
-{
-    return decoration->maximizeChange();
-}
-
 bool KCommonDecorationWrapper::drawbound(const QRect& geom, bool clear)
 {
     return decoration->drawbound(geom, clear);

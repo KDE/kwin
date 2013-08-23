@@ -49,7 +49,6 @@ public:
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void resize(const QSize& s);
     virtual QSize minimumSize() const;
-    virtual void maximizeChange();
     virtual bool drawbound(const QRect& geom, bool clear);
     virtual bool windowDocked(Position side);
 

@@ -256,13 +256,13 @@ public:
     virtual void show();
     virtual void resize(const QSize& s);
     virtual QSize minimumSize() const;
-    virtual void maximizeChange();
 public Q_SLOTS:
     virtual void activeChange();
     virtual void captionChange();
     virtual void desktopChange();
     virtual void shadeChange();
     virtual void iconChange();
+    virtual void maximizeChange();
     void keepAboveChange(bool above);
     void keepBelowChange(bool below);
     void slotMaximize();

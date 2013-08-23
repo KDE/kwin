@@ -306,11 +306,6 @@ bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
     return false;
 }
 
-void AuroraeClient::maximizeChange()
-{
-    emit maximizeChanged();
-}
-
 void AuroraeClient::resize(const QSize &s)
 {
     if (m_item) {
