@@ -51,7 +51,6 @@ public:
     virtual QSize minimumSize() const;
     virtual void iconChange();
     virtual void maximizeChange();
-    virtual void shadeChange();
     virtual bool drawbound(const QRect& geom, bool clear);
     virtual bool windowDocked(Position side);
 

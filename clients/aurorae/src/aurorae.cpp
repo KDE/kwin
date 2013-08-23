@@ -327,11 +327,6 @@ void AuroraeClient::resize(const QSize &s)
     widget()->resize(s);
 }
 
-void AuroraeClient::shadeChange()
-{
-    emit shadeChanged();
-}
-
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
 {
     if (!m_item) {

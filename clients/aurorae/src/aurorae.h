@@ -97,8 +97,6 @@ class AuroraeClient : public KDecoration
     Q_PROPERTY(bool moveable READ isMovable CONSTANT)
     Q_PROPERTY(bool preview READ isPreview CONSTANT)
     Q_PROPERTY(bool resizeable READ isResizable CONSTANT)
-    Q_PROPERTY(bool setShade READ isSetShade NOTIFY shadeChanged)
-    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
     Q_PROPERTY(bool shadeable READ isShadeable)
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChangedWrapper)
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChangedWrapper)
@@ -122,7 +120,6 @@ public:
     virtual QSize minimumSize() const;
     virtual Position mousePosition(const QPoint& p) const;
     virtual void resize(const QSize& s);
-    virtual void shadeChange();
     // optional overrides
     virtual void padding(int &left, int &right, int &top, int &bottom) const;
     bool isMaximized() const;
@@ -135,7 +132,6 @@ public:
 Q_SIGNALS:
     void iconChanged();
     void maximizeChanged();
-    void shadeChanged();
     void keepAboveChangedWrapper();
     void keepBelowChangedWrapper();
     void buttonsChanged();

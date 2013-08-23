@@ -78,11 +78,6 @@ void KCommonDecorationWrapper::maximizeChange()
     return decoration->maximizeChange();
 }
 
-void KCommonDecorationWrapper::shadeChange()
-{
-    return decoration->shadeChange();
-}
-
 bool KCommonDecorationWrapper::drawbound(const QRect& geom, bool clear)
 {
     return decoration->drawbound(geom, clear);

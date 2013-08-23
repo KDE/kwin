@@ -428,7 +428,7 @@ void Client::createDecoration(const QRect& oldgeom)
     } else {
         decoration = decorationPlugin()->createDecoration(bridge);
     }
-    connect(this, SIGNAL(shadeChanged()), decoration, SLOT(shadeChange()));
+    connect(this, &Client::shadeChanged, decoration, &KDecoration::shadeChanged);
     connect(this, &Client::desktopChanged, decoration, &KDecoration::desktopChanged);
     connect(this, &Client::captionChanged, decoration, &KDecoration::captionChanged);
     connect(this, &Client::activeChanged, decoration, &KDecoration::activeChanged);
