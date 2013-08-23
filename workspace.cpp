@@ -812,15 +812,9 @@ void Workspace::slotReconfigure()
 
     DecorationPlugin *deco = DecorationPlugin::self();
     if (!deco->isDisabled() && deco->reset()) {
-        // Decorations need to be recreated
-        for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-            (*it)->updateDecoration(true, true);
-        // If the new decoration doesn't supports tabs then ungroup clients
-        if (!decorationPlugin()->supportsTabbing()) {
-            foreach (Client * c, clients)
-                c->untab();
-        }
+        deco->recreateDecorations();
         deco->destroyPreviousPlugin();
+        connect(deco->factory(), &KDecorationFactory::recreateDecorations, deco, &DecorationPlugin::recreateDecorations);
     } else {
         forEachClient(CheckBorderSizesProcedure());
         foreach (Client * c, clients)

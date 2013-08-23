@@ -107,6 +107,14 @@ public:
      * @internal
      */
     void removeDecoration(KDecoration*);
+
+Q_SIGNALS:
+    /**
+     * @brief An implementing class should emit this signal if it's decorations should
+     * be recreated. For example after a setting changed in a way that the only logical
+     * step is to recreate the decoration.
+     */
+    void recreateDecorations();
 protected:
     /**
      * Constructor. Called after loading the decoration plugin. All global

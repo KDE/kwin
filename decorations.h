@@ -52,6 +52,7 @@ public:
 
 public Q_SLOTS:
     void resetCompositing();
+    void recreateDecorations();
 protected:
     virtual void error(const QString& error_msg);
 private:
