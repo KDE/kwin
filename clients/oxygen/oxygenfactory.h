@@ -70,9 +70,6 @@ namespace Oxygen
         //! create decoration
         virtual KDecoration *createDecoration(KDecorationBridge *b);
 
-        //! configuration reset
-        virtual bool reset(unsigned long changed);
-
         //! configuration capabilities
         virtual bool supports( Ability ability ) const;
 
