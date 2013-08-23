@@ -306,11 +306,6 @@ bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
     return false;
 }
 
-void AuroraeClient::activeChange()
-{
-    emit activeChanged();
-}
-
 void AuroraeClient::captionChange()
 {
     emit captionChanged();

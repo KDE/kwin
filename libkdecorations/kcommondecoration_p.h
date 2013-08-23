@@ -49,7 +49,6 @@ public:
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void resize(const QSize& s);
     virtual QSize minimumSize() const;
-    virtual void activeChange();
     virtual void captionChange();
     virtual void iconChange();
     virtual void maximizeChange();

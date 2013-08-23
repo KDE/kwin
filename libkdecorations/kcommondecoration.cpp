@@ -57,6 +57,7 @@ KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFacto
             this, &KCommonDecoration::decorationButtonsChanged);
     connect(wrapper, &KDecoration::decorationButtonsChanged,
             this, &KCommonDecoration::buttonsChanged);
+    connect(wrapper, &KDecoration::activeChanged, this, &KCommonDecoration::activeChange);
 }
 
 KCommonDecoration::~KCommonDecoration()

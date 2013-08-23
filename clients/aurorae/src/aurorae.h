@@ -87,7 +87,6 @@ private:
 class AuroraeClient : public KDecoration
 {
     Q_OBJECT
-    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
     Q_PROPERTY(QRect geometry READ geometry)
@@ -119,7 +118,6 @@ public:
     AuroraeClient(KDecorationBridge* bridge, KDecorationFactory* factory);
     virtual ~AuroraeClient();
     virtual bool eventFilter(QObject *object, QEvent *event);
-    virtual void activeChange();
     virtual void borders(int& left, int& right, int& top, int& bottom) const;
     virtual void captionChange();
     virtual void desktopChange();
@@ -140,7 +138,6 @@ public:
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
 Q_SIGNALS:
-    void activeChanged();
     void captionChanged();
     void desktopChanged();
     void iconChanged();

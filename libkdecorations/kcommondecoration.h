@@ -260,9 +260,9 @@ public:
     virtual void desktopChange();
     virtual void shadeChange();
     virtual void iconChange();
-    virtual void activeChange();
     virtual void captionChange();
 public Q_SLOTS:
+    virtual void activeChange();
     void keepAboveChange(bool above);
     void keepBelowChange(bool below);
     void slotMaximize();
