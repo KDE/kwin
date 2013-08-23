@@ -48,11 +48,6 @@ KDecorationFactory::~KDecorationFactory()
     assert(_decorations.count() == 0);
 }
 
-bool KDecorationFactory::reset(unsigned long)
-{
-    return true;
-}
-
 void KDecorationFactory::checkRequirements(KDecorationProvides*)
 {
 }
@@ -87,14 +82,6 @@ void KDecorationFactory::addDecoration(KDecoration* deco)
 void KDecorationFactory::removeDecoration(KDecoration* deco)
 {
     _decorations.removeAll(deco);
-}
-
-void KDecorationFactory::resetDecorations(unsigned long changed)
-{
-    for (QList< KDecoration* >::ConstIterator it = _decorations.constBegin();
-            it != _decorations.constEnd();
-            ++it)
-        (*it)->reset(changed);
 }
 
 NET::WindowType KDecorationFactory::windowType(unsigned long supported_types, KDecorationBridge* bridge) const

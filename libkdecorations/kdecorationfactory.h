@@ -50,16 +50,6 @@ public:
      * KDecoration argument should be this factory object.
      */
     virtual KDecoration* createDecoration(KDecorationBridge* bridge) = 0;
-    /**
-     * This function is called when the configuration settings changed.
-     * The argument specifies what has changed, using the SettingXXX masks.
-     * It should be determined whether the decorations need to be completely
-     * remade, in which case true should be returned, or whether only e.g.
-     * a repaint will be sufficient, in which case false should be returned,
-     * and resetDecorations() can be called to reset all decoration objects.
-     * Note that true should be returned only when really necessary.
-     */
-    virtual bool reset(unsigned long changed);   // returns true if the decoration needs to be recreated
 
     /**
      * Reimplement this function if your decoration supports more border sizes than
@@ -121,11 +111,6 @@ protected:
      * initialization of the plugin should be done in the factory constructor.
      */
     explicit KDecorationFactory(QObject *parent = nullptr);
-    /**
-     * Convenience function that calls KDecoration::reset() for all decoration
-     * objects.
-     */
-    void resetDecorations(unsigned long changed);   // convenience
     /**
      * This function has the same functionality like KDecoration::windowType().
      * It can be used in createDecoration() to return different KDecoration
