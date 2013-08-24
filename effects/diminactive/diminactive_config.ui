@@ -33,7 +33,7 @@
     </widget>
    </item>
    <item row="4" column="0" colspan="3">
-    <widget class="QCheckBox" name="kcfg_DimGroup">
+    <widget class="QCheckBox" name="kcfg_DimByGroup">
      <property name="text">
       <string>Apply effect to &amp;groups</string>
      </property>
@@ -111,7 +111,7 @@
   <tabstop>kcfg_Strength</tabstop>
   <tabstop>kcfg_DimPanels</tabstop>
   <tabstop>kcfg_DimDesktop</tabstop>
-  <tabstop>kcfg_DimGroup</tabstop>
+  <tabstop>kcfg_DimByGroup</tabstop>
  </tabstops>
  <resources/>
  <connections>
