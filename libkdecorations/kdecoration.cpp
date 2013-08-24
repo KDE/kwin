@@ -57,17 +57,18 @@ public:
     KDecorationPrivate(KDecorationBridge *b)
         : bridge(b)
         , alphaEnabled(false)
+        , w()
     {
     }
     KDecorationBridge *bridge;
     bool alphaEnabled;
+    QScopedPointer<QWidget> w;
 };
 
 KDecorationOptions* KDecoration::options_;
 
 KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
-    :   w_(NULL),
-        factory_(factory),
+    :   factory_(factory),
         d(new KDecorationPrivate(bridge))
 {
     factory->addDecoration(this);
@@ -80,7 +81,6 @@ KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
 KDecoration::~KDecoration()
 {
     factory()->removeDecoration(this);
-    delete w_;
     delete d;
 }
 
@@ -102,8 +102,8 @@ void KDecoration::createMainWidget(Qt::WindowFlags flags)
 
 void KDecoration::setMainWidget(QWidget* w)
 {
-    assert(w_ == NULL);
-    w_ = w;
+    assert(d->w.isNull());
+    d->w.reset(w);
     w->setMouseTracking(true);
     widget()->resize(geometry().size());
 }
@@ -507,12 +507,12 @@ KDecorationDefines::Position KDecoration::titlebarPosition()
 
 QWidget* KDecoration::widget()
 {
-    return w_;
+    return d->w.data();
 }
 
 const QWidget* KDecoration::widget() const
 {
-    return w_;
+    return d->w.data();
 }
 
 KDecorationFactory* KDecoration::factory() const
