@@ -34,6 +34,7 @@ public:
         closeButtonCorner = (Qt::Corner)0;
     }
     Qt::Corner closeButtonCorner;
+    QList< KDecoration* > decorations;
 };
 
 KDecorationFactory::KDecorationFactory(QObject *parent)
@@ -45,7 +46,7 @@ KDecorationFactory::KDecorationFactory(QObject *parent)
 KDecorationFactory::~KDecorationFactory()
 {
     delete d;
-    assert(_decorations.count() == 0);
+    assert(d->decorations.count() == 0);
 }
 
 void KDecorationFactory::checkRequirements(KDecorationProvides*)
@@ -59,7 +60,7 @@ QList< KDecorationDefines::BorderSize > KDecorationFactory::borderSizes() const
 
 bool KDecorationFactory::exists(const KDecoration* deco) const
 {
-    return _decorations.contains(const_cast< KDecoration* >(deco));
+    return d->decorations.contains(const_cast< KDecoration* >(deco));
 }
 
 Qt::Corner KDecorationFactory::closeButtonCorner()
@@ -76,12 +77,12 @@ void KDecorationFactory::setCloseButtonCorner(Qt::Corner cnr)
 
 void KDecorationFactory::addDecoration(KDecoration* deco)
 {
-    _decorations.append(deco);
+    d->decorations.append(deco);
 }
 
 void KDecorationFactory::removeDecoration(KDecoration* deco)
 {
-    _decorations.removeAll(deco);
+    d->decorations.removeAll(deco);
 }
 
 NET::WindowType KDecorationFactory::windowType(unsigned long supported_types, KDecorationBridge* bridge) const

@@ -120,7 +120,6 @@ protected:
      */
     NET::WindowType windowType(unsigned long supported_types, KDecorationBridge* bridge) const;
 private:
-    QList< KDecoration* > _decorations;
     KDecorationFactoryPrivate* d;
 };
 
