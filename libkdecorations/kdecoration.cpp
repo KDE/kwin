@@ -67,8 +67,6 @@ public:
     QScopedPointer<QWidget> w;
 };
 
-KDecorationOptions* KDecoration::options_;
-
 KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
     :   d(new KDecorationPrivate(bridge, factory))
 {
@@ -87,7 +85,7 @@ KDecoration::~KDecoration()
 
 const KDecorationOptions* KDecoration::options()
 {
-    return options_;
+    return KDecorationOptions::self();
 }
 
 void KDecoration::createMainWidget(Qt::WindowFlags flags)
@@ -541,12 +539,14 @@ QString KDecorationDefines::tabDragMimeType()
     return QStringLiteral("text/ClientGroupItem");
 }
 
+KDecorationOptions* KDecorationOptions::s_self = nullptr;
+
 KDecorationOptions::KDecorationOptions(QObject *parent)
     : QObject(parent)
     , d(new KDecorationOptionsPrivate(this))
 {
-    assert(KDecoration::options_ == NULL);
-    KDecoration::options_ = this;
+    assert(s_self == nullptr);
+    s_self = this;
     connect(this, &KDecorationOptions::activeFontChanged, this, &KDecorationOptions::fontsChanged);
     connect(this, &KDecorationOptions::inactiveFontChanged, this, &KDecorationOptions::fontsChanged);
     connect(this, &KDecorationOptions::smallActiveFontChanged, this, &KDecorationOptions::fontsChanged);
@@ -558,9 +558,14 @@ KDecorationOptions::KDecorationOptions(QObject *parent)
 
 KDecorationOptions::~KDecorationOptions()
 {
-    assert(KDecoration::options_ == this);
-    KDecoration::options_ = NULL;
+    assert(s_self == this);
+    s_self = nullptr;
     delete d;
+}
+
+KDecorationOptions* KDecorationOptions::self()
+{
+    return s_self;
 }
 
 QColor KDecorationOptions::color(ColorType type, bool active) const

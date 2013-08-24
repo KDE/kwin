@@ -359,6 +359,8 @@ public:
      */
     WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
 
+    static KDecorationOptions *self();
+
 Q_SIGNALS:
     /**
      * @brief Emitted when at least one of the color settings changed.
@@ -477,6 +479,7 @@ private:
      * @internal
      */
     KDecorationOptionsPrivate* d;
+    static KDecorationOptions *s_self;
 };
 
 
@@ -516,6 +519,8 @@ public:
     /**
      * Returns the KDecorationOptions object, which is used to access
      * configuration settings for the decoration.
+     *
+     * @deprecated use KDecorationOptions::self()
      */
     static const KDecorationOptions* options();
     /**
@@ -1156,8 +1161,6 @@ protected Q_SLOTS:
     QRegion region(KDecorationDefines::Region r);
 
 private:
-    friend class KDecorationOptions; // for options_
-    static KDecorationOptions* options_;
     KDecorationPrivate* d;
 
 };
