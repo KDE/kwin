@@ -89,3 +89,8 @@ NET::WindowType KDecorationFactory::windowType(unsigned long supported_types, KD
 {
     return bridge->windowType(supported_types);
 }
+
+const KDecorationOptions* KDecorationFactory::options()
+{
+    return KDecorationOptions::self();
+}

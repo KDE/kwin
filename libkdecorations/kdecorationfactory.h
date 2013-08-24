@@ -63,11 +63,6 @@ public:
 
     virtual void checkRequirements(KDecorationProvides* provides);
     /**
-     * Returns the KDecorationOptions object, which is used to access
-     * configuration settings for the decoration.
-     */
-    const KDecorationOptions* options(); // convenience
-    /**
      * Returns true if the given decoration object still exists. This is necessary
      * e.g. when calling KDecoration::showWindowMenu(), which may cause the decoration
      * to be destroyed. Note that this function is reliable only if called immediately
@@ -119,14 +114,16 @@ protected:
      * is the one passed to createDecoration().
      */
     NET::WindowType windowType(unsigned long supported_types, KDecorationBridge* bridge) const;
+    /**
+     * Returns the KDecorationOptions object, which is used to access
+     * configuration settings for the decoration.
+     *
+     * @deprecated use KDecorationOptions::self()
+     */
+    const KDecorationOptions* options(); // convenience
 private:
     KDecorationFactoryPrivate* d;
 };
-
-inline const KDecorationOptions* KDecorationFactory::options()
-{
-    return KDecoration::options();
-}
 
 /** @} */
 
