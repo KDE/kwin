@@ -1183,36 +1183,6 @@ KDecorationDefines::MaximizeMode operator|(KDecorationDefines::MaximizeMode m1, 
     return KDecorationDefines::MaximizeMode(int(m1) | int(m2));
 }
 
-inline QWidget* KDecoration::widget()
-{
-    return w_;
-}
-
-inline const QWidget* KDecoration::widget() const
-{
-    return w_;
-}
-
-inline KDecorationFactory* KDecoration::factory() const
-{
-    return factory_;
-}
-
-inline bool KDecoration::isOnAllDesktops() const
-{
-    return desktop() == NET::OnAllDesktops;
-}
-
-inline int KDecoration::width() const
-{
-    return geometry().width();
-}
-
-inline int KDecoration::height() const
-{
-    return geometry().height();
-}
-
 /** @} */
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDecoration::QuickTileMode)

@@ -499,9 +499,7 @@ public:
     /**
      * The mouse button that has been clicked last time.
      */
-    Qt::MouseButtons lastMousePress() const {
-        return m_lastMouse;
-    }
+    Qt::MouseButtons lastMousePress() const;
 
     QSize sizeHint() const;
 

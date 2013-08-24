@@ -1435,5 +1435,10 @@ KDecoration::WindowOperation KCommonDecoration::buttonToWindowOperation(Qt::Mous
     return decoration()->buttonToWindowOperation(button);
 }
 
+Qt::MouseButtons KCommonDecorationButton::lastMousePress() const
+{
+    return m_lastMouse;
+}
+
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;
 

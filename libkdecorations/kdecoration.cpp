@@ -504,6 +504,36 @@ KDecorationDefines::Position KDecoration::titlebarPosition()
     return PositionTop;
 }
 
+QWidget* KDecoration::widget()
+{
+    return w_;
+}
+
+const QWidget* KDecoration::widget() const
+{
+    return w_;
+}
+
+KDecorationFactory* KDecoration::factory() const
+{
+    return factory_;
+}
+
+bool KDecoration::isOnAllDesktops() const
+{
+    return desktop() == NET::OnAllDesktops;
+}
+
+int KDecoration::width() const
+{
+    return geometry().width();
+}
+
+int KDecoration::height() const
+{
+    return geometry().height();
+}
+
 QString KDecorationDefines::tabDragMimeType()
 {
     return QStringLiteral("text/ClientGroupItem");
