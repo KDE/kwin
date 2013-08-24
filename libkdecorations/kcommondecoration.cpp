@@ -1028,13 +1028,30 @@ QRect KCommonDecoration::transparentRect() const
     return wrapper->transparentRect();
 }
 
+class KCommonDecorationButtonPrivate
+{
+public:
+    KCommonDecorationButtonPrivate(ButtonType t, KCommonDecoration *deco);
+    KCommonDecoration *decoration;
+    ButtonType type;
+    int realizeButtons;
+    QSize size;
+    Qt::MouseButtons lastMouse;
+    bool isLeft;
+};
+
+KCommonDecorationButtonPrivate::KCommonDecorationButtonPrivate(ButtonType t, KCommonDecoration* deco)
+    : decoration(deco)
+    , type(t)
+    , realizeButtons(Qt::LeftButton)
+    , lastMouse(Qt::NoButton)
+    , isLeft(true)
+{
+}
+
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent)
     : QAbstractButton(parent ? parent->widget() : 0),
-      m_decoration(parent),
-      m_type(type),
-      m_realizeButtons(Qt::LeftButton),
-      m_lastMouse(Qt::NoButton),
-      m_isLeft(true)
+      d(new KCommonDecorationButtonPrivate(type, parent))
 {
     setCursor(Qt::ArrowCursor);
 }
@@ -1045,42 +1062,42 @@ KCommonDecorationButton::~KCommonDecorationButton()
 
 KCommonDecoration *KCommonDecorationButton::decoration() const
 {
-    return m_decoration;
+    return d->decoration;
 }
 
 ButtonType KCommonDecorationButton::type() const
 {
-    return m_type;
+    return d->type;
 }
 
 bool KCommonDecorationButton::isLeft() const
 {
-    return m_isLeft;
+    return d->isLeft;
 }
 
 void KCommonDecorationButton::setLeft(bool left)
 {
-    m_isLeft = left;
+    d->isLeft = left;
 }
 
 void KCommonDecorationButton::setRealizeButtons(int btns)
 {
-    m_realizeButtons = btns;
+    d->realizeButtons = btns;
 }
 
 void KCommonDecorationButton::setSize(const QSize &s)
 {
-    if (!m_size.isValid() || s != size()) {
-        m_size = s;
+    if (!d->size.isValid() || s != size()) {
+        d->size = s;
 
-        setFixedSize(m_size);
+        setFixedSize(d->size);
         reset(SizeChange);
     }
 }
 
 QSize KCommonDecorationButton::sizeHint() const
 {
-    return m_size;
+    return d->size;
 }
 
 void KCommonDecorationButton::setTipText(const QString &tip)
@@ -1104,18 +1121,18 @@ void KCommonDecorationButton::setOn(bool on)
 
 void KCommonDecorationButton::mousePressEvent(QMouseEvent* e)
 {
-    m_lastMouse = e->button();
+    d->lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), (e->button()&m_realizeButtons) ? Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers());
+    QMouseEvent me(e->type(), e->pos(), (e->button()&d->realizeButtons) ? Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers());
 
     QAbstractButton::mousePressEvent(&me);
 }
 
 void KCommonDecorationButton::mouseReleaseEvent(QMouseEvent* e)
 {
-    m_lastMouse = e->button();
+    d->lastMouse = e->button();
     // pass on event after changing button to LeftButton
-    QMouseEvent me(e->type(), e->pos(), (e->button()&m_realizeButtons) ? Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers());
+    QMouseEvent me(e->type(), e->pos(), (e->button()&d->realizeButtons) ? Qt::LeftButton : Qt::NoButton, e->buttons(), e->modifiers());
 
     QAbstractButton::mouseReleaseEvent(&me);
 }
@@ -1437,7 +1454,7 @@ KDecoration::WindowOperation KCommonDecoration::buttonToWindowOperation(Qt::Mous
 
 Qt::MouseButtons KCommonDecorationButton::lastMousePress() const
 {
-    return m_lastMouse;
+    return d->lastMouse;
 }
 
 // kate: space-indent on; indent-width 4; mixedindent off; indent-mode cstyle;

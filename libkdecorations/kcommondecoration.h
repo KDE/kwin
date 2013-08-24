@@ -511,15 +511,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e);
 
 private:
-    KCommonDecoration *m_decoration;
-    ButtonType m_type;
-    int m_realizeButtons;
-    QSize m_size;
-    Qt::MouseButtons m_lastMouse;
-
-    bool m_isLeft;
-
-    KCommonDecorationButtonPrivate *d;
+    const QScopedPointer<KCommonDecorationButtonPrivate> d;
 };
 
 /** @} */
