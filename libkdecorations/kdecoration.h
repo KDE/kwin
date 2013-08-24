@@ -1156,7 +1156,6 @@ protected Q_SLOTS:
     QRegion region(KDecorationDefines::Region r);
 
 private:
-    KDecorationBridge* bridge_;
     QWidget* w_;
     KDecorationFactory* factory_;
     friend class KDecorationOptions; // for options_
