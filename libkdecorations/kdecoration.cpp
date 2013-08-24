@@ -54,13 +54,15 @@ inheriting KCommonDecoration and adding the new API matching KDecoration2.
 class KDecorationPrivate
 {
 public:
-    KDecorationPrivate(KDecorationBridge *b)
+    KDecorationPrivate(KDecorationBridge *b, KDecorationFactory *f)
         : bridge(b)
+        , factory(f)
         , alphaEnabled(false)
         , w()
     {
     }
     KDecorationBridge *bridge;
+    KDecorationFactory *factory;
     bool alphaEnabled;
     QScopedPointer<QWidget> w;
 };
@@ -68,8 +70,7 @@ public:
 KDecorationOptions* KDecoration::options_;
 
 KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
-    :   factory_(factory),
-        d(new KDecorationPrivate(bridge))
+    :   d(new KDecorationPrivate(bridge, factory))
 {
     factory->addDecoration(this);
     connect(this, static_cast<void (KDecoration::*)(bool)>(&KDecoration::keepAboveChanged),
@@ -517,7 +518,7 @@ const QWidget* KDecoration::widget() const
 
 KDecorationFactory* KDecoration::factory() const
 {
-    return factory_;
+    return d->factory;
 }
 
 bool KDecoration::isOnAllDesktops() const
