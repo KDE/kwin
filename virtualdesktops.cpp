@@ -316,7 +316,7 @@ static bool s_loadingDesktopSettings = false;
 void VirtualDesktopManager::load()
 {
     s_loadingDesktopSettings = true;
-    if (m_config) {
+    if (!m_config) {
         return;
     }
     QString groupname;
@@ -354,7 +354,7 @@ void VirtualDesktopManager::save()
     if (s_loadingDesktopSettings) {
         return;
     }
-    if (m_config) {
+    if (!m_config) {
         return;
     }
     QString groupname;
