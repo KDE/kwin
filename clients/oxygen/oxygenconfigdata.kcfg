@@ -59,7 +59,7 @@
       <default>BlendFromStyle</default>
     </entry>
 
-    <entry name="drawSizeGrip" type = "Bool">
+    <entry name="DrawSizeGrip" type = "Bool">
       <default>true</default>
     </entry>
 
