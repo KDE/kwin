@@ -77,6 +77,7 @@ namespace Oxygen
         connect( ui.narrowButtonSpacing, SIGNAL(clicked()), SLOT(updateChanged()) );
         connect( ui.closeFromMenuButton, SIGNAL(clicked()), SLOT(updateChanged()) );
         connect( ui.separatorMode, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
+        connect( ui.drawBorderOnMaximizedWindows, SIGNAL(clicked()), SLOT(updateChanged()) );
 
         // track exception changes
         connect( ui.exceptions, SIGNAL(changed(bool)), SLOT(updateChanged()) );
@@ -112,6 +113,7 @@ namespace Oxygen
         ui.animationsEnabled->setChecked( _configuration->animationsEnabled() );
         ui.narrowButtonSpacing->setChecked( _configuration->useNarrowButtonSpacing() );
         ui.closeFromMenuButton->setChecked( _configuration->closeWindowFromMenuButton() );
+        ui.drawBorderOnMaximizedWindows->setChecked( _configuration->drawBorderOnMaximizedWindows() );
         setChanged( false );
 
         _animationConfigWidget->load();
@@ -134,7 +136,7 @@ namespace Oxygen
         _configuration->setDrawTitleOutline( ui.titleOutline->isChecked() );
         _configuration->setUseNarrowButtonSpacing( ui.narrowButtonSpacing->isChecked() );
         _configuration->setCloseWindowFromMenuButton( ui.closeFromMenuButton->isChecked() );
-
+        _configuration->setDrawBorderOnMaximizedWindows( ui.drawBorderOnMaximizedWindows->isChecked() );
         setChanged( false );
 
         if( _expertMode ) _animationConfigWidget->save();
@@ -235,6 +237,7 @@ namespace Oxygen
         else if( ui.titleOutline->isChecked() !=  _configuration->drawTitleOutline() ) modified = true;
         else if( ui.narrowButtonSpacing->isChecked() !=  _configuration->useNarrowButtonSpacing() ) modified = true;
         else if( ui.closeFromMenuButton->isChecked() != _configuration->closeWindowFromMenuButton() ) modified = true;
+        else if( ui.drawBorderOnMaximizedWindows->isChecked() != _configuration->drawBorderOnMaximizedWindows() ) modified = true;
 
         // exceptions
         else if( ui.exceptions->isChanged() ) modified = true;
