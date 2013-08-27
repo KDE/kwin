@@ -80,6 +80,7 @@ QModelIndex EffectModel::parent(const QModelIndex &child) const {
 }
 
 int EffectModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent)
     return 1;
 }
 
