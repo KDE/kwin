@@ -73,7 +73,7 @@ Component {
 
                     onCheckedChanged: {
                         windowManagement.checked = isWindowManagementEnabled();
-                        effectModel.effectStatus(effectView.model.modelIndex(index),checked);
+                        searchModel.effectState(index, checked);
                     }
                 }
 
@@ -118,13 +118,18 @@ Component {
                     id: configureButton
                     anchors.left: effectItem.right
                     visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                    iconSource: effectModel.findImage("actions/configure.png")
                     width: 50
                     height: 25
                     enabled: myCheckBox.checked
                     onClicked: {
                         effectConfig.openConfig(model.NameRole);
                     }
+
+                    Component.onCompleted: {
+                        searchModel.image('actions/configure.png')
+                        iconSource = searchModel.imagePath;
+                    }
+
                 }
 
                 Button {
@@ -132,11 +137,15 @@ Component {
                     anchors.left: configureButton.right
                     width: 50
                     height: 25
-                    iconSource: effectModel.findImage("status/dialog-information.png");
 
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;
+                    }
+
+                    Component.onCompleted: {
+                        searchModel.image('status/dialog-information.png')
+                        iconSource = searchModel.imagePath;
                     }
                 }
 

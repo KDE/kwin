@@ -24,9 +24,6 @@ import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
 Item {
-    EffectModel {
-        id: effectModel
-    }
 
     Component {
         id: sectionHeading
@@ -54,7 +51,7 @@ Item {
             anchors.left: col.right
             anchors.top: parent.top
             anchors.topMargin: col.height/2
-            onClicked: effectModel.enableWidnowManagement(windowManagement.checked)
+            onClicked: searchModel.enableWidnowManagement(windowManagement.checked)
         }
 
         ComboBox {
@@ -94,9 +91,19 @@ Item {
             }
 
             EffectFilterModel {
-                id:searchModel
+                id: searchModel
                 filter: searchField.text
-                model: effectModel
+                property string imagePath
+                signal image(string path)
+                signal effectState(int rowIndex, bool enabled)
+
+                onImage: {
+                    imagePath = searchModel.findImage(path);
+                }
+
+                onEffectState: {
+                    searchModel.effectStatus(rowIndex, enabled);
+                }
             }
 
             ScrollView {
@@ -136,8 +143,8 @@ Item {
                 }
 
                 onClicked: {
-                    effectModel.syncConfig();
-                    effectModel.reload();
+                    searchModel.syncConfig();
+                    searchModel.reload();
                     apply.enabled = false;
                     compositing.syncConfig(openGLType.currentIndex, graphicsSystem.currentIndex);
                 }

@@ -238,8 +238,9 @@ void EffectModel::reload() {
     loadEffects();
 }
 
-void EffectModel::effectStatus(const QModelIndex &index, bool effectState) {
-    setData(index, effectState, EffectModel::EffectStatusRole);
+void EffectModel::effectStatus(int rowIndex, bool effectState) {
+    QModelIndex currentIndex = createIndex(rowIndex, 0);
+    setData(currentIndex, effectState, EffectModel::EffectStatusRole);
 }
 
 void EffectModel::syncConfig() {
@@ -277,6 +278,8 @@ EffectFilterModel::EffectFilterModel(QObject *parent)
     :QSortFilterProxyModel(parent),
     m_effectModel(0)
 {
+    m_effectModel = new EffectModel(this);
+    setSourceModel(m_effectModel);
 }
 
 EffectModel *EffectFilterModel::effectModel() const {
@@ -334,10 +337,29 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
     return false;
 }
 
+void EffectFilterModel::effectStatus(int rowIndex, bool effectState) {
+    m_effectModel->effectStatus(rowIndex, effectState);
+}
+
+QString EffectFilterModel::findImage(const QString &imagePath, int size) {
+    m_effectModel->findImage(imagePath, size);
+}
+
+void EffectFilterModel::reload() {
+    m_effectModel->reload();
+}
+
+void EffectFilterModel::syncConfig() {
+    m_effectModel->syncConfig();
+}
+
+void EffectFilterModel::enableWidnowManagement(bool enabled) {
+    m_effectModel->enableWidnowManagement(enabled);
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
-    qmlRegisterType<EffectModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectModel");
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
     qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
     qmlRegisterType<Compositing>("org.kde.kwin.kwincompositing", 1, 0, "Compositing");

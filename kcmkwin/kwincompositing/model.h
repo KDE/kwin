@@ -74,11 +74,11 @@ public:
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
-    Q_INVOKABLE void effectStatus(const QModelIndex &index, bool effectState);
-    Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
-    Q_INVOKABLE void reload();
-    Q_INVOKABLE void syncConfig();
-    Q_INVOKABLE void enableWidnowManagement(bool enabled);
+    void effectStatus(int rowIndex, bool effectState);
+    QString findImage(const QString &imagePath, int size = 128);
+    void reload();
+    void syncConfig();
+    void enableWidnowManagement(bool enabled);
 
 private:
     void loadEffects();
@@ -86,6 +86,7 @@ private:
     void handleWindowManagement(int row, bool enabled);
     int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
+
 };
 
 class EffectView : public QQuickView {
@@ -107,6 +108,12 @@ public:
     EffectFilterModel(QObject *parent = 0);
     EffectModel *effectModel() const;
     const QString &filter() const;
+
+    Q_INVOKABLE void effectStatus(int rowIndex, bool effectState);
+    Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
+    Q_INVOKABLE void reload();
+    Q_INVOKABLE void syncConfig();
+    Q_INVOKABLE void enableWidnowManagement(bool enabled);
 
 public Q_SLOTS:
     void setEffectModel(EffectModel *effectModel);
