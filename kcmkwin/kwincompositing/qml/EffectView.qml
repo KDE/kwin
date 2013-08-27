@@ -96,7 +96,7 @@ Item {
             EffectFilterModel {
                 id:searchModel
                 filter: searchField.text
-                effectModel: effectModel
+                model: effectModel
             }
 
             ScrollView {

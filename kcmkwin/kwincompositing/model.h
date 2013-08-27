@@ -101,7 +101,7 @@ public:
 class EffectFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::Compositing::EffectModel *effectModel READ effectModel WRITE setEffectModel NOTIFY effectModelChanged)
+    Q_PROPERTY(KWin::Compositing::EffectModel *model READ effectModel WRITE setEffectModel NOTIFY effectModelChanged)
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
 public:
     EffectFilterModel(QObject *parent = 0);
