@@ -72,7 +72,6 @@ Component {
                     }
 
                     onCheckedChanged: {
-                        configureButton.enabled = myCheckBox.checked;
                         windowManagement.checked = isWindowManagementEnabled();
                         effectModel.effectStatus(effectView.model.modelIndex(index),checked);
                     }
