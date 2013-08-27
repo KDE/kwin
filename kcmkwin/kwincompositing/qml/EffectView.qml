@@ -112,10 +112,8 @@ Item {
                     id: effectView
                     Layout.fillWidth: true
                     anchors.fill: parent
-                    model: VisualDataModel{
-                        model: searchModel
-                        delegate: Effect{}
-                    }
+                    model: searchModel
+                    delegate: Effect{}
 
                     section.property: "CategoryRole"
                     section.delegate: sectionHeading
