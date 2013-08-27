@@ -24,6 +24,9 @@ import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
 Item {
+    EffectModel {
+        id: effectModel
+    }
 
     Component {
         id: sectionHeading
@@ -93,9 +96,7 @@ Item {
             EffectFilterModel {
                 id:searchModel
                 filter: searchField.text
-                effectModel: EffectModel {
-                    id: effectModel
-                }
+                effectModel: effectModel
             }
 
             ScrollView {
