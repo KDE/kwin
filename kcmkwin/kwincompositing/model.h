@@ -72,6 +72,8 @@ public:
     QString serviceName(const QString &effectName);
     bool effectListContains(const QString &effectFilter, int source_row);
 
+    virtual QHash< int, QByteArray > roleNames() const override;
+
     Q_INVOKABLE void effectStatus(const QModelIndex &index, bool effectState);
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
     Q_INVOKABLE void reload();

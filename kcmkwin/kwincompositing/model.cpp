@@ -47,6 +47,11 @@ namespace Compositing {
 EffectModel::EffectModel(QObject *parent)
     : QAbstractItemModel(parent) {
 
+    loadEffects();
+}
+
+QHash< int, QByteArray > EffectModel::roleNames() const
+{
     QHash<int, QByteArray> roleNames;
     roleNames[NameRole] = "NameRole";
     roleNames[DescriptionRole] = "DescriptionRole";
@@ -57,8 +62,7 @@ EffectModel::EffectModel(QObject *parent)
     roleNames[CategoryRole] = "CategoryRole";
     roleNames[ServiceNameRole] = "ServiceNameRole";
     roleNames[EffectStatusRole] = "EffectStatusRole";
-    setRoleNames(roleNames);
-    loadEffects();
+    return roleNames;
 }
 
 QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const {
