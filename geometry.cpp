@@ -385,7 +385,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
     QRect maxRect;
     int guideMaximized = MaximizeRestore;
     if (c->maximizeMode() != MaximizeRestore) {
-        maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
+        maxRect = clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
         QRect geo = c->geometry();
         if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
             guideMaximized |= MaximizeHorizontal;
