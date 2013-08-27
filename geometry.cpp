@@ -383,13 +383,16 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
 {
     QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
     QRect maxRect;
+    int guideMaximized = MaximizeRestore;
     if (c->maximizeMode() != MaximizeRestore) {
         maxRect = clientArea(MovementArea, pos + c->rect().center(), c->desktop());
         QRect geo = c->geometry();
         if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
+            guideMaximized |= MaximizeHorizontal;
             borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
         }
         if (c->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
+            guideMaximized |= MaximizeVertical;
             borderSnapZone.setHeight(qMax(borderSnapZone.height() + 2, maxRect.height() / 16));
         }
     }
@@ -478,7 +481,8 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 lrx = lx + (*l)->width();
                 lry = ly + (*l)->height();
 
-                if (((cy <= lry) && (cy  >= ly))  || ((ry >= ly) && (ry  <= lry))  || ((cy <= ly) && (ry >= lry))) {
+                if (!(guideMaximized & MaximizeHorizontal) &&
+                    (((cy <= lry) && (cy  >= ly)) || ((ry >= ly) && (ry  <= lry)) || ((cy <= ly) && (ry >= lry)))) {
                     if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
                         deltaX = qAbs(lrx - cx);
                         nx = lrx;
@@ -489,7 +493,8 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                     }
                 }
 
-                if (((cx <= lrx) && (cx  >= lx))  || ((rx >= lx) && (rx  <= lrx))  || ((cx <= lx) && (rx >= lrx))) {
+                if (!(guideMaximized & MaximizeVertical) &&
+                    (((cx <= lrx) && (cx  >= lx)) || ((rx >= lx) && (rx  <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
                     if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
                         deltaY = qAbs(lry - cy);
                         ny = lry;
@@ -502,7 +507,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 }
 
                 // Corner snapping
-                if (nx == lrx || nx + cw == lx) {
+                if (!(guideMaximized & MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
                     if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
                         deltaY = qAbs(lry - ry);
                         ny = lry - ch;
@@ -512,7 +517,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                         ny = ly;
                     }
                 }
-                if (ny == lry || ny + ch == ly) {
+                if (!(guideMaximized & MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
                     if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
                         deltaX = qAbs(lrx - rx);
                         nx = lrx - cw;

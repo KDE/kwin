@@ -377,6 +377,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (!placementDone) {
         // Placement needs to be after setting size
         Placement::self()->place(this, area);
+        dontKeepInArea = true;
         placementDone = true;
     }
 
@@ -419,7 +420,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             if (pseudo_max != Client::MaximizeRestore) {
                 maximize((MaximizeMode)pseudo_max);
                 // from now on, care about maxmode, since the maximization call will override mode for fix aspects
-                dontKeepInArea = (max_mode == Client::MaximizeFull);
+                dontKeepInArea |= (max_mode == Client::MaximizeFull);
                 geom_restore = QRect(); // Use placement when unmaximizing ...
                 if (!(max_mode & Client::MaximizeVertical)) {
                     geom_restore.setY(y());   // ...but only for horizontal direction

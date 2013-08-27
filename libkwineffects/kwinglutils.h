@@ -353,6 +353,12 @@ public:
     void resetAllShaders();
 
     /**
+     * Resets ShaderType @p type uniforms of a custom shader
+     * @since 4.11.1
+     */
+    void resetShader(GLShader *shader, ShaderType type);
+
+    /**
      * Creates a GLShader with a built-in vertex shader and a custom fragment shader.
      * @param vertex The generic vertex shader
      * @param fragmentFile The path to the source code of the fragment shader
