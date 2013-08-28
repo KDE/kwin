@@ -34,15 +34,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <kde_file.h>
 #include <kdeversion.h>
-#include <k4aboutdata.h>
-#include <KDE/KCmdLineArgs>
+#include <KDE/KAboutData>
 #include <KDE/KConfigGroup>
 #include <KDE/KCrash>
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KGlobalSettings>
+#include <KDE/KLocalizedString>
 // Qt
+#include <qplatformdefs.h>
 #include <QComboBox>
+#include <QCommandLineParser>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>
@@ -182,15 +184,31 @@ private:
 
 int Application::crashes = 0;
 
-Application::Application()
-    : KApplication()
+Application::Application(int &argc, char **argv)
+    : QApplication(argc, argv)
     , owner(screen_number)
     , m_eventFilter(new XcbEventFilter())
+    , m_replace(false)
+    , m_configLock(false)
+{
+}
+
+void Application::setConfigLock(bool lock)
+{
+    m_configLock = lock;
+}
+
+void Application::setReplace(bool replace)
+{
+    m_replace = replace;
+}
+
+void Application::start()
 {
     setQuitOnLastWindowClosed(false);
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+
     KSharedConfig::Ptr config = KGlobal::config();
-    if (!config->isImmutable() && args->isSet("lock")) {
+    if (!config->isImmutable() && m_configLock) {
         // TODO: This shouldn't be necessary
         //config->setReadOnly( true );
         config->reparseConfiguration();
@@ -204,9 +222,8 @@ Application::Application()
         ::exit(1);
     });
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
-    connect(&owner, &KSelectionOwner::claimedOwnership, [this, args, config]{
+    connect(&owner, &KSelectionOwner::claimedOwnership, [this, config]{
         KCrash::setEmergencySaveFunction(Application::crashHandler);
-        crashes = args->getOption("crashes").toInt();
         if (crashes >= 4) {
             // Something has gone seriously wrong
             AlternativeWMDialog dialog;
@@ -277,7 +294,7 @@ Application::Application()
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
-    owner.claim(args->isSet("replace"), true);
+    owner.claim(m_replace, true);
 }
 
 Application::~Application()
@@ -302,7 +319,7 @@ bool Application::notify(QObject* o, QEvent* e)
 {
     if (Workspace::self()->workspaceEvent(e))
         return true;
-    return KApplication::notify(o, e);
+    return QApplication::notify(o, e);
 }
 
 static void sighandler(int)
@@ -326,6 +343,16 @@ void Application::crashHandler(int signal)
 void Application::resetCrashesCount()
 {
     crashes = 0;
+}
+
+void Application::setCrashCount(int count)
+{
+    crashes = count;
+}
+
+bool Application::wasCrash()
+{
+    return crashes > 0;
 }
 
 bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
@@ -406,28 +433,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         }
     }
 
-    K4AboutData aboutData(
-        QByteArray(KWIN_NAME),      // The program name used internally
-        QByteArray(),               // The message catalog name. If null, program name is used instead
-        ki18n("KWin"),              // A displayable program name string
-        QByteArray(version),        // The program version string
-        ki18n(description),         // Short description of what the app does
-        K4AboutData::License_GPL,   // The license this code is released under
-        ki18n("(c) 1999-2008, The KDE Developers"));   // Copyright Statement
-    aboutData.addAuthor(ki18n("Matthias Ettrich"), KLocalizedString(), "ettrich@kde.org");
-    aboutData.addAuthor(ki18n("Cristian Tibirna"), KLocalizedString(), "tibirna@kde.org");
-    aboutData.addAuthor(ki18n("Daniel M. Duley"), KLocalizedString(), "mosfet@kde.org");
-    aboutData.addAuthor(ki18n("Luboš Luňák"), KLocalizedString(), "l.lunak@kde.org");
-    aboutData.addAuthor(ki18n("Martin Gräßlin"), ki18n("Maintainer"), "mgraesslin@kde.org");
-
-    KCmdLineArgs::init(argc, argv, &aboutData);
-
-    KCmdLineOptions args;
-    args.add("lock", ki18n("Disable configuration options"));
-    args.add("replace", ki18n("Replace already-running ICCCM2.0-compliant window manager"));
-    args.add("crashes <n>", ki18n("Indicate that KWin has recently crashed n times"));
-    KCmdLineArgs::addCmdLineOptions(args);
-
     if (KDE_signal(SIGTERM, KWin::sighandler) == SIG_IGN)
         KDE_signal(SIGTERM, SIG_IGN);
     if (KDE_signal(SIGINT, KWin::sighandler) == SIG_IGN)
@@ -441,7 +446,45 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
 
     org::kde::KSMServerInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QDBusConnection::sessionBus());
     ksmserver.suspendStartup(QStringLiteral(KWIN_NAME));
-    KWin::Application a;
+    KWin::Application a(argc, argv);
+
+    a.setApplicationName(QStringLiteral(KWIN_NAME));
+    a.setApplicationVersion(QStringLiteral(KDE_VERSION_STRING));
+    a.setApplicationDisplayName(i18n("KWin"));
+
+    KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
+                         QString(),                          // The message catalog name. If null, program name is used instead
+                         i18n("KWin"),                       // A displayable program name string
+                         QStringLiteral(KDE_VERSION_STRING), // The program version string
+                         i18n(description),                  // Short description of what the app does
+                         KAboutData::License_GPL,            // The license this code is released under
+                         i18n("(c) 1999-2013, The KDE Developers"));   // Copyright Statement
+
+    aboutData.addAuthor(i18n("Matthias Ettrich"), QString(), QStringLiteral("ettrich@kde.org"));
+    aboutData.addAuthor(i18n("Cristian Tibirna"), QString(), QStringLiteral("tibirna@kde.org"));
+    aboutData.addAuthor(i18n("Daniel M. Duley"),  QString(), QStringLiteral("mosfet@kde.org"));
+    aboutData.addAuthor(i18n("Luboš Luňák"),      QString(), QStringLiteral("l.lunak@kde.org"));
+    aboutData.addAuthor(i18n("Martin Gräßlin"),   i18n("Maintainer"), QStringLiteral("mgraesslin@kde.org"));
+
+    QCommandLineOption lockOption(QStringLiteral("lock"), i18n("Disable configuration options"));
+    QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
+    QCommandLineOption crashesOption(QStringLiteral("crashes"), i18n("Indicate that KWin has recently crashed n times"), QStringLiteral("n"));
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription(i18n("KDE window manager"));
+    parser.addVersionOption();
+    parser.addHelpOption();
+    parser.addOption(lockOption);
+    parser.addOption(replaceOption);
+    parser.addOption(crashesOption);
+
+    parser.process(a);
+
+    KWin::Application::setCrashCount(parser.value(crashesOption).toInt());
+    a.setConfigLock(parser.isSet(lockOption));
+    a.setReplace(parser.isSet(replaceOption));
+
+    a.start();
 
     ksmserver.resumeStartup(QStringLiteral(KWIN_NAME));
     KWin::SessionManager weAreIndeed;

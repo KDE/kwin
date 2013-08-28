@@ -59,15 +59,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include "xcbutils.h"
+#include "main.h"
 // KDE
 #include <kdeversion.h>
-#include <KDE/KApplication>
 #include <KDE/KActionCollection>
-#include <KDE/KCmdLineArgs>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobal>
 #include <KDE/KGlobalSettings>
+#include <KDE/KLocalizedString>
 #include <KDE/KStartupInfo>
 #include <KDE/KWindowInfo>
 #include <KDE/KWindowSystem>
@@ -348,8 +348,6 @@ void Workspace::init()
         // Begin updates blocker block
         StackingUpdatesBlocker blocker(this);
 
-        bool fixoffset = KCmdLineArgs::parsedArgs()->getOption("crashes").toInt() > 0;
-
         Xcb::Tree tree(rootWindow());
         xcb_window_t *wins = xcb_query_tree_children(tree.data());
 
@@ -376,7 +374,7 @@ void Workspace::init()
                     // ### This will request the attributes again
                     createUnmanaged(wins[i]);
             } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
-                if (fixoffset) {
+                if (Application::wasCrash()) {
                     fixPositionAfterCrash(wins[i], windowGeometries[i].data());
                 }
 

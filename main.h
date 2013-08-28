@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <kapplication.h>
 #include <KDE/KSelectionWatcher>
 // Qt
+#include <QApplication>
 #include <QAbstractNativeEventFilter>
 
 namespace KWin
@@ -51,12 +51,20 @@ private:
     static xcb_atom_t xa_version;
 };
 
-class Application : public  KApplication
+class Application : public  QApplication
 {
     Q_OBJECT
 public:
-    Application();
+    Application(int &argc, char **argv);
     ~Application();
+
+    void setReplace(bool replace);
+    void setConfigLock(bool lock);
+
+    void start();
+
+    static void setCrashCount(int count);
+    static bool wasCrash();
 
 protected:
     bool notify(QObject* o, QEvent* e);
@@ -69,6 +77,8 @@ private Q_SLOTS:
 private:
     KWinSelectionOwner owner;
     QScopedPointer<XcbEventFilter> m_eventFilter;
+    bool m_replace;
+    bool m_configLock;
     static int crashes;
 };
 
