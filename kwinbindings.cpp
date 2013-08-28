@@ -30,7 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEF2( name, descr, key, fnSlot )                            \
     a = actionCollection->addAction( QStringLiteral(name) );                        \
     a->setText( i18n(descr) );                                      \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << key); \
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << key); \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
 
 #define DEF( name, key, fnSlot )                                    \
@@ -39,7 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DEF3( name, key, fnSlot, value )                            \
     a = actionCollection->addAction( QStringLiteral(name).arg(value) );    \
     a->setText( i18n(name, value) );                                \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(KShortcut(key)); \
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << key); \
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << key); \
     a->setData(value);                                              \
     connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));
 

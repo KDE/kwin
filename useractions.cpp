@@ -57,10 +57,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <X11/extensions/xf86vmode.h>
 #endif
 #include <fixx11h.h>
+#include <QAction>
 #include <QCheckBox>
 #include <QtConcurrentRun>
 #include <QPushButton>
 
+#include <KDE/KGlobalAccel>
 #include <kglobalsettings.h>
 #include <KDE/KIcon>
 #include <kiconloader.h>
