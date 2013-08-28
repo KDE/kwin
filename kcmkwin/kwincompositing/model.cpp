@@ -238,9 +238,8 @@ void EffectModel::reload() {
     loadEffects();
 }
 
-void EffectModel::effectStatus(int rowIndex, bool effectState) {
-    QModelIndex currentIndex = createIndex(rowIndex, 0);
-    setData(currentIndex, effectState, EffectModel::EffectStatusRole);
+void EffectModel::effectStatus(const QModelIndex &rowIndex, bool effectState) {
+    setData(rowIndex, effectState, EffectModel::EffectStatusRole);
 }
 
 void EffectModel::syncConfig() {
@@ -276,9 +275,8 @@ void EffectModel::enableWidnowManagement(bool enabled) {
 
 EffectFilterModel::EffectFilterModel(QObject *parent)
     :QSortFilterProxyModel(parent),
-    m_effectModel(0)
+    m_effectModel( new EffectModel(this))
 {
-    m_effectModel = new EffectModel(this);
     setSourceModel(m_effectModel);
 }
 
@@ -338,11 +336,13 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
 }
 
 void EffectFilterModel::effectStatus(int rowIndex, bool effectState) {
-    m_effectModel->effectStatus(rowIndex, effectState);
+    const QModelIndex sourceIndex = mapToSource(index(rowIndex, 0));
+
+    m_effectModel->effectStatus(sourceIndex, effectState);
 }
 
 QString EffectFilterModel::findImage(const QString &imagePath, int size) {
-    m_effectModel->findImage(imagePath, size);
+    return m_effectModel->findImage(imagePath, size);
 }
 
 void EffectFilterModel::reload() {

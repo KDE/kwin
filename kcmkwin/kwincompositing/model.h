@@ -74,7 +74,7 @@ public:
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
-    void effectStatus(int rowIndex, bool effectState);
+    void effectStatus(const QModelIndex &rowIndex, bool effectState);
     QString findImage(const QString &imagePath, int size = 128);
     void reload();
     void syncConfig();
