@@ -256,12 +256,6 @@ void EffectModel::syncEffectsToKWin()
     m_effectsChanged = m_effectsList;
 }
 
-void EffectModel::reload()
-{
-    m_effectsList.clear();
-    loadEffects();
-}
-
 void EffectModel::effectStatus(const QModelIndex &rowIndex, bool effectState)
 {
     setData(rowIndex, effectState, EffectModel::EffectStatusRole);
@@ -379,10 +373,6 @@ void EffectFilterModel::effectStatus(int rowIndex, bool effectState)
 QString EffectFilterModel::findImage(const QString &imagePath, int size)
 {
     return m_effectModel->findImage(imagePath, size);
-}
-
-void EffectFilterModel::reload() {
-    m_effectModel->reload();
 }
 
 void EffectFilterModel::syncConfig()

@@ -144,7 +144,6 @@ Item {
 
                 onClicked: {
                     searchModel.syncConfig();
-                    searchModel.reload();
                     apply.enabled = false;
                     compositing.syncConfig(openGLType.currentIndex, graphicsSystem.currentIndex);
                 }

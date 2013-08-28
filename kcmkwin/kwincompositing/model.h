@@ -78,7 +78,6 @@ public:
     void effectStatus(const QModelIndex &rowIndex, bool effectState);
     QString findImage(const QString &imagePath, int size = 128);
     void syncEffectsToKWin();
-    void reload();
     void syncConfig();
     void enableWidnowManagement(bool enabled);
 
@@ -115,7 +114,6 @@ public:
 
     Q_INVOKABLE void effectStatus(int rowIndex, bool effectState);
     Q_INVOKABLE QString findImage(const QString &imagePath, int size = 128);
-    Q_INVOKABLE void reload();
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE void enableWidnowManagement(bool enabled);
 
