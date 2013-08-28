@@ -77,6 +77,7 @@ public:
 
     void effectStatus(const QModelIndex &rowIndex, bool effectState);
     QString findImage(const QString &imagePath, int size = 128);
+    void syncEffectsToKWin();
     void reload();
     void syncConfig();
     void enableWidnowManagement(bool enabled);
@@ -87,6 +88,7 @@ private:
     void handleWindowManagement(int row, bool enabled);
     int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
+    QList<EffectData> m_effectsChanged;
 
 };
 

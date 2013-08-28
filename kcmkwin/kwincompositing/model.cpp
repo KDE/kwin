@@ -159,7 +159,6 @@ void EffectModel::loadEffects()
 {
     EffectData effect;
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
-    QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
 
     beginResetModel();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
@@ -177,12 +176,6 @@ void EffectModel::loadEffects()
         effect.serviceName = plugin.pluginName();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
 
-        if (effect.effectStatus) {
-            interface.asyncCall("loadEffect", effect.serviceName);
-        } else {
-            interface.asyncCall("unloadEffect", effect.serviceName);
-        }
-
         m_effectsList << effect;
     }
 
@@ -190,6 +183,7 @@ void EffectModel::loadEffects()
         return a.category < b.category;
     });
 
+    m_effectsChanged = m_effectsList;
     endResetModel();
 }
 
@@ -208,7 +202,7 @@ void EffectModel::handleDesktopSwitching(int row)
             m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
         } else if (effect.serviceName == "kwin4_effect_cubeslide" && currentEffect != effect.serviceName && effect.effectStatus) {
             m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
-        }else if (effect.serviceName == "kwin4_effect_fadedesktop" && currentEffect != effect.serviceName && effect.effectStatus) {
+        } else if (effect.serviceName == "kwin4_effect_fadedesktop" && currentEffect != effect.serviceName && effect.effectStatus) {
             m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
         }
     }
@@ -221,7 +215,7 @@ void EffectModel::handleWindowManagement(int row, bool enabled)
 
 int EffectModel::findRowByServiceName(const QString &serviceName)
 {
-    for (int it=0; m_effectsList.size(); it++) {
+    for (int it = 0; it < m_effectsList.size(); it++) {
         if (m_effectsList.at(it).serviceName == serviceName) {
             return it;
         }
@@ -245,6 +239,23 @@ QString EffectModel::findImage(const QString &imagePath, int size)
     return fullImagePath;
 }
 
+
+void EffectModel::syncEffectsToKWin()
+{
+    QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
+    for (int it = 0; it < m_effectsList.size(); it++) {
+        if (m_effectsList.at(it).effectStatus != m_effectsChanged.at(it).effectStatus) {
+            if (m_effectsList.at(it).effectStatus) {
+                interface.asyncCall("loadEffect", m_effectsList.at(it).serviceName);
+            } else {
+                interface.asyncCall("unloadEffect", m_effectsList.at(it).serviceName);
+            }
+        }
+    }
+
+    m_effectsChanged = m_effectsList;
+}
+
 void EffectModel::reload()
 {
     m_effectsList.clear();
@@ -262,6 +273,7 @@ void EffectModel::syncConfig()
 
     for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
         EffectData effect = *(it);
+
         bool effectConfigStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
 
         if (effect.effectStatus) {
@@ -272,6 +284,7 @@ void EffectModel::syncConfig()
     }
 
     kwinConfig.sync();
+    syncEffectsToKWin();
 }
 
 void EffectModel::enableWidnowManagement(bool enabled)
