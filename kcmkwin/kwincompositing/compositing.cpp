@@ -36,12 +36,14 @@ Compositing::Compositing(QObject *parent)
 {
 }
 
-bool Compositing::OpenGLIsUnsafe() {
+bool Compositing::OpenGLIsUnsafe()
+{
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     return kwinConfig.readEntry("OpenGLIsUnsafe", true);
 }
 
-bool Compositing::OpenGLIsBroken() {
+bool Compositing::OpenGLIsBroken()
+{
     QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Compositing"));
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
 
@@ -61,7 +63,8 @@ bool Compositing::OpenGLIsBroken() {
     return false;
 }
 
-void Compositing::syncConfig(int openGLType, int graphicsSystem) {
+void Compositing::syncConfig(int openGLType, int graphicsSystem)
+{
     QString graphicsSystemType;
     QString backend;
     bool glLegacy;
@@ -101,7 +104,8 @@ void Compositing::syncConfig(int openGLType, int graphicsSystem) {
     kwinConfig.sync();
 }
 
-int Compositing::currentOpenGLType() {
+int Compositing::currentOpenGLType()
+{
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     QString backend = kwinConfig.readEntry("Backend", "OpenGL");
     bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
@@ -123,7 +127,8 @@ int Compositing::currentOpenGLType() {
     return currentIndex;
 }
 
-int Compositing::currentGraphicsSystem() {
+int Compositing::currentGraphicsSystem()
+{
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     QString graphicsSystem = kwinConfig.readEntry("GraphicsSystem", "native");
 

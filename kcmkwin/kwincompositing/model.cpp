@@ -65,7 +65,8 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     return roleNames;
 }
 
-QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const {
+QModelIndex EffectModel::index(int row, int column, const QModelIndex &parent) const
+{
 if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effectsList.count()) {
         return QModelIndex();
     }
@@ -73,25 +74,29 @@ if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_effectsL
     return createIndex(row, column);
 }
 
-QModelIndex EffectModel::parent(const QModelIndex &child) const {
+QModelIndex EffectModel::parent(const QModelIndex &child) const
+{
     Q_UNUSED(child)
 
     return QModelIndex();
 }
 
-int EffectModel::columnCount(const QModelIndex &parent) const {
+int EffectModel::columnCount(const QModelIndex &parent) const
+{
     Q_UNUSED(parent)
     return 1;
 }
 
-int EffectModel::rowCount(const QModelIndex &parent) const {
+int EffectModel::rowCount(const QModelIndex &parent) const
+{
     if (parent.isValid()) {
         return 0;
     }
     return m_effectsList.count();
 }
 
-QVariant EffectModel::data(const QModelIndex &index, int role) const {
+QVariant EffectModel::data(const QModelIndex &index, int role) const
+{
     if (!index.isValid()) {
         return QVariant();
     }
@@ -122,7 +127,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const {
     }
 }
 
-bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int role) {
+bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
     if (!index.isValid())
         return QAbstractItemModel::setData(index, value, role);
 
@@ -149,7 +155,8 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
     return QAbstractItemModel::setData(index, value, role);
 }
 
-void EffectModel::loadEffects() {
+void EffectModel::loadEffects()
+{
     EffectData effect;
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
     QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
@@ -186,7 +193,8 @@ void EffectModel::loadEffects() {
     endResetModel();
 }
 
-void EffectModel::handleDesktopSwitching(int row) {
+void EffectModel::handleDesktopSwitching(int row)
+{
     //Q: Why do we need the handleDesktopSwitching?
     //A: Because of the setData, when we enable the effect
     //and then we scroll, our model is being updated,
@@ -206,11 +214,13 @@ void EffectModel::handleDesktopSwitching(int row) {
     }
 }
 
-void EffectModel::handleWindowManagement(int row, bool enabled) {
+void EffectModel::handleWindowManagement(int row, bool enabled)
+{
     m_effectsList[row].effectStatus = enabled;
 }
 
-int EffectModel::findRowByServiceName(const QString &serviceName) {
+int EffectModel::findRowByServiceName(const QString &serviceName)
+{
     for (int it=0; m_effectsList.size(); it++) {
         if (m_effectsList.at(it).serviceName == serviceName) {
             return it;
@@ -219,7 +229,8 @@ int EffectModel::findRowByServiceName(const QString &serviceName) {
     return -1;
 }
 
-bool EffectModel::effectListContains(const QString &effectFilter, int source_row) {
+bool EffectModel::effectListContains(const QString &effectFilter, int source_row)
+{
     EffectData effect;
     effect = m_effectsList.at(source_row);
 
@@ -227,22 +238,26 @@ bool EffectModel::effectListContains(const QString &effectFilter, int source_row
 
 }
 
-QString EffectModel::findImage(const QString &imagePath, int size) {
+QString EffectModel::findImage(const QString &imagePath, int size)
+{
     const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
     const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
     return fullImagePath;
 }
 
-void EffectModel::reload() {
+void EffectModel::reload()
+{
     m_effectsList.clear();
     loadEffects();
 }
 
-void EffectModel::effectStatus(const QModelIndex &rowIndex, bool effectState) {
+void EffectModel::effectStatus(const QModelIndex &rowIndex, bool effectState)
+{
     setData(rowIndex, effectState, EffectModel::EffectStatusRole);
 }
 
-void EffectModel::syncConfig() {
+void EffectModel::syncConfig()
+{
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
     for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
@@ -259,7 +274,8 @@ void EffectModel::syncConfig() {
     kwinConfig.sync();
 }
 
-void EffectModel::enableWidnowManagement(bool enabled) {
+void EffectModel::enableWidnowManagement(bool enabled)
+{
     int desktopGridRow = findRowByServiceName("kwin4_effect_desktopgrid");
     const QModelIndex desktopGridIndex = createIndex(desktopGridRow, 0);
     setData(desktopGridIndex, enabled, EffectModel::WindowManagementRole);
@@ -280,15 +296,18 @@ EffectFilterModel::EffectFilterModel(QObject *parent)
     setSourceModel(m_effectModel);
 }
 
-EffectModel *EffectFilterModel::effectModel() const {
+EffectModel *EffectFilterModel::effectModel() const
+{
     return m_effectModel;
 }
 
-const QString &EffectFilterModel::filter() const {
+const QString &EffectFilterModel::filter() const
+{
     return m_filter;
 }
 
-void EffectFilterModel::setEffectModel(EffectModel *effectModel) {
+void EffectFilterModel::setEffectModel(EffectModel *effectModel)
+{
     if (effectModel == m_effectModel) {
         return;
     }
@@ -298,7 +317,8 @@ void EffectFilterModel::setEffectModel(EffectModel *effectModel) {
     emit effectModelChanged();
 }
 
-void EffectFilterModel::setFilter(const QString &filter) {
+void EffectFilterModel::setFilter(const QString &filter)
+{
     if (filter == m_filter) {
         return;
     }
@@ -308,7 +328,8 @@ void EffectFilterModel::setFilter(const QString &filter) {
     invalidateFilter();
 }
 
-bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+{
     if (!m_effectModel) {
         return false;
     }
@@ -335,13 +356,15 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
     return false;
 }
 
-void EffectFilterModel::effectStatus(int rowIndex, bool effectState) {
+void EffectFilterModel::effectStatus(int rowIndex, bool effectState)
+{
     const QModelIndex sourceIndex = mapToSource(index(rowIndex, 0));
 
     m_effectModel->effectStatus(sourceIndex, effectState);
 }
 
-QString EffectFilterModel::findImage(const QString &imagePath, int size) {
+QString EffectFilterModel::findImage(const QString &imagePath, int size)
+{
     return m_effectModel->findImage(imagePath, size);
 }
 
@@ -349,11 +372,13 @@ void EffectFilterModel::reload() {
     m_effectModel->reload();
 }
 
-void EffectFilterModel::syncConfig() {
+void EffectFilterModel::syncConfig()
+{
     m_effectModel->syncConfig();
 }
 
-void EffectFilterModel::enableWidnowManagement(bool enabled) {
+void EffectFilterModel::enableWidnowManagement(bool enabled)
+{
     m_effectModel->enableWidnowManagement(enabled);
 }
 
@@ -366,7 +391,8 @@ EffectView::EffectView(QWindow *parent)
     init();
 }
 
-void EffectView::init() {
+void EffectView::init()
+{
     QString mainFile = QStandardPaths::locate(QStandardPaths::DataLocation, "qml/main.qml", QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
     setSource(QUrl(mainFile));

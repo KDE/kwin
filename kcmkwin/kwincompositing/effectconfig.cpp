@@ -38,7 +38,8 @@ EffectConfig::EffectConfig(QObject *parent)
 {
 }
 
-bool EffectConfig::effectUiConfigExists(const QString &serviceName) {
+bool EffectConfig::effectUiConfigExists(const QString &serviceName)
+{
 
     //Our effect UI config is something like showfps_config.desktop
     QString tmp = serviceName;
@@ -47,7 +48,8 @@ bool EffectConfig::effectUiConfigExists(const QString &serviceName) {
     return !effectConfigFile.isEmpty();
 }
 
-void EffectConfig::openConfig(const QString &effectName) {
+void EffectConfig::openConfig(const QString &effectName)
+{
     //setup the UI
     QDialog dialog;
     QVBoxLayout layout;

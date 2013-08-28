@@ -26,7 +26,8 @@
 namespace KWin {
 namespace Compositing {
 
-class Compositing : public QObject {
+class Compositing : public QObject
+{
 
     Q_OBJECT
 

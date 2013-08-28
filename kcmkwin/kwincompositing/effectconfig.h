@@ -27,7 +27,8 @@ class QString;
 namespace KWin {
 namespace Compositing {
 
-class EffectConfig : public QObject {
+class EffectConfig : public QObject
+{
 
     Q_OBJECT
 

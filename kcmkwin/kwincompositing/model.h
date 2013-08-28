@@ -43,7 +43,8 @@ struct EffectData {
     bool effectStatus;
 };
 
-class EffectModel : public QAbstractItemModel {
+class EffectModel : public QAbstractItemModel
+{
 
     Q_OBJECT
 
@@ -89,7 +90,8 @@ private:
 
 };
 
-class EffectView : public QQuickView {
+class EffectView : public QQuickView
+{
 
     Q_OBJECT
 
