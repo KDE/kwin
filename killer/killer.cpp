@@ -22,11 +22,11 @@ DEALINGS IN THE SOFTWARE.
 
 ****************************************************************************/
 
-#include <kcmdlineargs.h>
 #include <kmessagebox_kiw.h>
 #include <KDE/KLocalizedString>
 #include <KDE/KAuth/Action>
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDebug>
 #include <QProcess>
 #include <QtX11Extras/QX11Info>
@@ -36,17 +36,6 @@ DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char* argv[])
 {
-    KCmdLineArgs::init(argc, argv, "kwin_killer_helper", "kwin", ki18n("Window Manager"), "1.0" ,
-                       ki18n("KWin helper utility"));
-
-    KCmdLineOptions options;
-    options.add("pid <pid>", ki18n("PID of the application to terminate"));
-    options.add("hostname <hostname>", ki18n("Hostname on which the application is running"));
-    options.add("windowname <caption>", ki18n("Caption of the window to be terminated"));
-    options.add("applicationname <name>", ki18n("Name of the application to be terminated"));
-    options.add("wid <id>", ki18n("ID of resource belonging to the application"));
-    options.add("timestamp <time>", ki18n("Time of user action causing termination"));
-    KCmdLineArgs::addCmdLineOptions(options);
     QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));
@@ -54,21 +43,46 @@ int main(int argc, char* argv[])
     QApplication::setApplicationDisplayName(i18n("Window Manager"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
 
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-    QString hostname = args->getOption("hostname");
+
+    QCommandLineOption pidOption(QStringLiteral("pid"),
+                                 i18n("PID of the application to terminate"), i18n("pid"));
+    QCommandLineOption hostNameOption(QStringLiteral("hostname"),
+                                      i18n("Hostname on which the application is running"), i18n("hostname"));
+    QCommandLineOption windowNameOption(QStringLiteral("windowname"),
+                                        i18n("Caption of the window to be terminated"), i18n("caption"));
+    QCommandLineOption applicationNameOption(QStringLiteral("applicationname"),
+                                             i18n("Name of the application to be terminated"), i18n("name"));
+    QCommandLineOption widOption(QStringLiteral("wid"),
+                                 i18n("ID of resource belonging to the application"), i18n("id"));
+    QCommandLineOption timestampOption(QStringLiteral("timestamp"),
+                                       i18n("Time of user action causing termination"), i18n("time"));
+    QCommandLineParser parser;
+    parser.setApplicationDescription(i18n("KWin helper utility"));
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.addOption(pidOption);
+    parser.addOption(hostNameOption);
+    parser.addOption(windowNameOption);
+    parser.addOption(applicationNameOption);
+    parser.addOption(widOption);
+    parser.addOption(timestampOption);
+
+    parser.process(app);
+
+    QString hostname = parser.value(hostNameOption);
     bool pid_ok = false;
-    pid_t pid = QString(args->getOption("pid")).toULong(&pid_ok);
-    QString caption = args->getOption("windowname");
-    QString appname = args->getOption("applicationname");
+    pid_t pid = parser.value(pidOption).toULong(&pid_ok);
+    QString caption = parser.value(windowNameOption);
+    QString appname = parser.value(applicationNameOption);
     bool id_ok = false;
-    xcb_window_t id = QString(args->getOption("wid")).toULong(&id_ok);
+    xcb_window_t id = parser.value(widOption).toULong(&id_ok);
     bool time_ok = false;
-    xcb_timestamp_t timestamp = QString(args->getOption("timestamp")).toULong(&time_ok);
-    args->clear();
+    xcb_timestamp_t timestamp = parser.value(timestampOption).toULong(&time_ok);
     if (!pid_ok || pid == 0 || !id_ok || id == XCB_WINDOW_NONE || !time_ok || timestamp == XCB_TIME_CURRENT_TIME
             || hostname.isEmpty() || caption.isEmpty() || appname.isEmpty()) {
-        KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
-        return 1;
+        fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
+        parser.showHelp(1);
     }
     bool isLocal = hostname == QStringLiteral("localhost");
 
