@@ -96,38 +96,48 @@ xcb_atom_t KWinSelectionOwner::make_selection_atom(int screen_P)
 {
     if (screen_P < 0)
         screen_P = DefaultScreen(display());
-    char tmp[ 30 ];
-    sprintf(tmp, "WM_S%d", screen_P);
-    return XInternAtom(display(), tmp, False);
+    QByteArray screen(QByteArrayLiteral("WM_S"));
+    screen.append(QByteArray::number(screen_P));
+    ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
+        connection(),
+        xcb_intern_atom_unchecked(connection(), false, screen.length(), screen.constData()),
+        nullptr));
+    if (atom.isNull()) {
+        return XCB_ATOM_NONE;
+    }
+    return atom->atom;
 }
 
 void KWinSelectionOwner::getAtoms()
 {
     KSelectionOwner::getAtoms();
-    if (xa_version == None) {
-        Atom atoms[ 1 ];
-        const char* const names[] =
-        { "VERSION" };
-        XInternAtoms(display(), const_cast< char** >(names), 1, False, atoms);
-        xa_version = atoms[ 0 ];
+    if (xa_version == XCB_ATOM_NONE) {
+        const QByteArray name(QByteArrayLiteral("VERSION"));
+        ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
+            connection(),
+            xcb_intern_atom_unchecked(connection(), false, name.length(), name.constData()),
+            nullptr));
+        if (!atom.isNull()) {
+            xa_version = atom->atom;
+        }
     }
 }
 
 void KWinSelectionOwner::replyTargets(xcb_atom_t property_P, xcb_window_t requestor_P)
 {
     KSelectionOwner::replyTargets(property_P, requestor_P);
-    Atom atoms[ 1 ] = { xa_version };
+    xcb_atom_t atoms[ 1 ] = { xa_version };
     // PropModeAppend !
-    XChangeProperty(display(), requestor_P, property_P, XA_ATOM, 32, PropModeAppend,
-    reinterpret_cast< unsigned char* >(atoms), 1);
+    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, requestor_P,
+                        property_P, XCB_ATOM_ATOM, 32, 1, atoms);
 }
 
 bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P, xcb_window_t requestor_P)
 {
     if (target_P == xa_version) {
-        long version[] = { 2, 0 };
-        XChangeProperty(display(), requestor_P, property_P, XA_INTEGER, 32,
-        PropModeReplace, reinterpret_cast< unsigned char* >(&version), 2);
+        int32_t version[] = { 2, 0 };
+        xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, requestor_P,
+                            property_P, XCB_ATOM_INTEGER, 32, 2, version);
     } else
         return KSelectionOwner::genericReply(target_P, property_P, requestor_P);
     return true;
