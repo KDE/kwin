@@ -63,7 +63,9 @@ bool SessionManager::saveState(QSessionManager& sm)
         return true;
     }
     Workspace::self()->storeSession(kapp->sessionConfig(), ksmserver ? SMSavePhase2 : SMSavePhase2Full);
+#if KWIN_QT5_PORTING
     kapp->sessionConfig()->sync();
+#endif
     return true;
 }
 
@@ -196,9 +198,11 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
 void Workspace::loadSessionInfo()
 {
     session.clear();
+#if KWIN_QT5_PORTING
     KConfigGroup cg(kapp->sessionConfig(), "Session");
 
     addSessionInfo(cg);
+#endif
 }
 
 void Workspace::addSessionInfo(KConfigGroup &cg)

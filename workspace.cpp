@@ -312,11 +312,15 @@ void Workspace::init()
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
-    if (!kapp->isSessionRestored())
+    if (!qApp->isSessionRestored())
         initial_desktop = client_info.currentDesktop();
     else {
+#if KWIN_QT5_PORTING
         KConfigGroup group(kapp->sessionConfig(), "Session");
         initial_desktop = group.readEntry("desktop", 1);
+#else
+        initial_desktop = 1;
+#endif
     }
     if (!VirtualDesktopManager::self()->setCurrent(initial_desktop))
         VirtualDesktopManager::self()->setCurrent(1);
@@ -337,7 +341,7 @@ void Workspace::init()
     active_client = NULL;
     rootInfo->setActiveWindow(None);
     focusToNull();
-    if (!kapp->isSessionRestored())
+    if (!qApp->isSessionRestored())
         ++block_focus; // Because it will be set below
 
     {
@@ -404,7 +408,7 @@ void Workspace::init()
     } // End updates blocker block
 
     Client* new_active_client = NULL;
-    if (!kapp->isSessionRestored()) {
+    if (!qApp->isSessionRestored()) {
         --block_focus;
         new_active_client = findClient(WindowMatchPredicate(client_info.activeWindow()));
     }
