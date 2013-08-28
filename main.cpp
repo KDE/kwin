@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksmserver_interface.h>
 
 // KDE
-#include <kde_file.h>
 #include <kdeversion.h>
 #include <KDE/KAboutData>
 #include <KDE/KConfigGroup>
@@ -433,12 +432,12 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         }
     }
 
-    if (KDE_signal(SIGTERM, KWin::sighandler) == SIG_IGN)
-        KDE_signal(SIGTERM, SIG_IGN);
-    if (KDE_signal(SIGINT, KWin::sighandler) == SIG_IGN)
-        KDE_signal(SIGINT, SIG_IGN);
-    if (KDE_signal(SIGHUP, KWin::sighandler) == SIG_IGN)
-        KDE_signal(SIGHUP, SIG_IGN);
+    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
+        signal(SIGTERM, SIG_IGN);
+    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
+        signal(SIGINT, SIG_IGN);
+    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
+        signal(SIGHUP, SIG_IGN);
 
     // Disable the glib event loop integration, since it seems to be responsible
     // for several bug reports about high CPU usage (bug #239963)
