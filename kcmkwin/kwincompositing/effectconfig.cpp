@@ -63,7 +63,8 @@ void EffectConfig::openConfig(const QString &effectName)
 
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
-        KPluginInfo plugin(service);
+        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
+        KPluginInfo plugin(effectPluginPath);
         if (plugin.name() == effectName) {
             QString effectConfig = effectName.toLower().remove(" ") + "_config";
             KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
