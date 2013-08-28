@@ -47,8 +47,8 @@ protected:
     virtual void replyTargets(xcb_atom_t property, xcb_window_t requestor);
     virtual void getAtoms();
 private:
-    Atom make_selection_atom(int screen);
-    static Atom xa_version;
+    xcb_atom_t make_selection_atom(int screen);
+    static xcb_atom_t xa_version;
 };
 
 class Application : public  KApplication

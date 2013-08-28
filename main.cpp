@@ -91,7 +91,7 @@ KWinSelectionOwner::KWinSelectionOwner(int screen_P)
 {
 }
 
-Atom KWinSelectionOwner::make_selection_atom(int screen_P)
+xcb_atom_t KWinSelectionOwner::make_selection_atom(int screen_P)
 {
     if (screen_P < 0)
         screen_P = DefaultScreen(display());
@@ -132,7 +132,7 @@ bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P
     return true;
 }
 
-Atom KWinSelectionOwner::xa_version = None;
+xcb_atom_t KWinSelectionOwner::xa_version = XCB_ATOM_NONE;
 
 class AlternativeWMDialog : public QDialog
 {
