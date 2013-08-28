@@ -38,7 +38,6 @@ public:
     Q_INVOKABLE bool OpenGLIsBroken();
     Q_INVOKABLE void syncConfig(int openGLType, int graphicsSystem);
     Q_INVOKABLE int currentOpenGLType();
-    Q_INVOKABLE int currentGraphicsSystem();
 
 private:
 

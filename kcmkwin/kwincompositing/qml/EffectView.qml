@@ -63,15 +63,6 @@ Item {
             onCurrentIndexChanged: apply.enabled = true
         }
 
-        ComboBox {
-            id: graphicsSystem
-            model: ["Native", "Raster"]
-            currentIndex: compositing.currentGraphicsSystem()
-            anchors.top: openGLType.bottom
-            anchors.left: col.right
-            onCurrentIndexChanged: apply.enabled = true
-        }
-
         ColumnLayout {
             id: col
             height: parent.height

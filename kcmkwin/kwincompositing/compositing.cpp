@@ -94,13 +94,10 @@ void Compositing::syncConfig(int openGLType, int graphicsSystem)
             break;
     }
 
-    graphicsSystem == 0 ? graphicsSystemType = "native" : graphicsSystemType = "raster";
-
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
-    kwinConfig.writeEntry("GraphicsSystem", graphicsSystemType);
     kwinConfig.sync();
 }
 
@@ -125,14 +122,6 @@ int Compositing::currentOpenGLType()
     }
 
     return currentIndex;
-}
-
-int Compositing::currentGraphicsSystem()
-{
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    QString graphicsSystem = kwinConfig.readEntry("GraphicsSystem", "native");
-
-    return graphicsSystem == "native" ? 0 : 1;
 }
 
 }//end namespace Compositing
