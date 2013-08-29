@@ -36,7 +36,9 @@ Component {
             color: item.ListView.isCurrentItem ? "#448" : index % 2 ? "#eee" : "#fff"
             anchors.fill : parent
 
-            Row {
+            RowLayout {
+                id: rowEffect
+                anchors.fill: parent
                 CheckBox {
                     function isDesktopSwitching() {
                         if (model.ServiceNameRole == "kwin4_effect_slide") {
@@ -80,6 +82,7 @@ Component {
                 Item {
                     id: effectItem
                     width: effectView.width - myCheckBox.width - aboutButton.width - configureButton.width
+                    height: 40
                     anchors.left: myCheckBox.right
                     Column {
                         id: col
@@ -103,7 +106,7 @@ Component {
                                 font.bold: true
                             }
                             PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
-                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ? 80 : 40}
+                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ? 120 : 40}
                         }
                     }
                     MouseArea {
@@ -118,10 +121,8 @@ Component {
 
                 Button {
                     id: configureButton
-                    anchors.left: effectItem.right
+                    anchors.right: aboutButton.left
                     visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                    width: 50
-                    height: 25
                     enabled: myCheckBox.checked
                     onClicked: {
                         effectConfig.openConfig(model.NameRole);
@@ -136,10 +137,7 @@ Component {
 
                 Button {
                     id: aboutButton
-                    anchors.left: configureButton.right
-                    width: 50
-                    height: 25
-
+                    anchors.right: parent.right
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;
