@@ -402,14 +402,15 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     mallopt(M_TRIM_THRESHOLD, 5*pagesize);
 #endif // M_TRIM_THRESHOLD
 
-    Display* dpy = XOpenDisplay(NULL);
-    if (!dpy) {
+    int primaryScreen = 0;
+    xcb_connection_t *c = xcb_connect(nullptr, &primaryScreen);
+    if (!c || xcb_connection_has_error(c)) {
         fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
-                argv[0], XDisplayName(NULL));
+                argv[0], qgetenv("DISPLAY").constData());
         exit(1);
     }
 
-    int number_of_screens = ScreenCount(dpy);
+    const int number_of_screens = xcb_setup_roots_length(xcb_get_setup(c));
 
     // multi head
     auto isMultiHead = []() -> bool {
@@ -421,11 +422,11 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     };
     if (number_of_screens != 1 && isMultiHead()) {
         KWin::is_multihead = true;
-        KWin::screen_number = DefaultScreen(dpy);
+        KWin::screen_number = primaryScreen;
         int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
-        QByteArray display_name = XDisplayString(dpy);
-        XCloseDisplay(dpy);
-        dpy = 0;
+        QByteArray display_name = qgetenv("DISPLAY");
+        xcb_disconnect(c);
+        c = nullptr;
 
         if ((pos = display_name.lastIndexOf('.')) != -1)
             display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
