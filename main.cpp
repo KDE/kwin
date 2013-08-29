@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <qplatformdefs.h>
 #include <QComboBox>
-#include <QCommandLineParser>
+#include <qcommandlineparser.h>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QLabel>

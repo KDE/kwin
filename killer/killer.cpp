@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 #include <KDE/KLocalizedString>
 #include <KDE/KAuth/Action>
 #include <QApplication>
-#include <QCommandLineParser>
+#include <qcommandlineparser.h>
 #include <QDebug>
 #include <QProcess>
 #include <QtX11Extras/QX11Info>
