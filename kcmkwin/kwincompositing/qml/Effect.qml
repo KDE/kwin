@@ -89,6 +89,8 @@ Component {
                         Text {
                             id: desc
                             text: model.DescriptionRole
+                            width: effectItem.width
+                            elide: Text.ElideRight
                         }
                         Item {
                             id:aboutItem

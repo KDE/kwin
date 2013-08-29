@@ -66,6 +66,7 @@ Item {
         ColumnLayout {
             id: col
             height: parent.height
+            Layout.minimumWidth: parent.width - windowManagement.width
 
             anchors {
                 top: parent.top
