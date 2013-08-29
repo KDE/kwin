@@ -40,6 +40,11 @@ Item {
             }
         }
     }
+
+    CompositingType {
+        id: compositingType
+    }
+
     RowLayout {
         id: row
         width: parent.width
@@ -56,8 +61,8 @@ Item {
 
         ComboBox {
             id: openGLType
-            model: ["OpenGL 3.1", "OpenGL 2.1", "OpenGL 1.2", "XRender"]
-            currentIndex: compositing.currentOpenGLType()
+            model: compositingType
+            currentIndex: compositingType.currentOpenGLType()
             anchors.top: windowManagement.bottom
             anchors.left: col.right
             onCurrentIndexChanged: apply.enabled = true
@@ -131,7 +136,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositing.syncConfig(openGLType.currentIndex, graphicsSystem.currentIndex);
+                    compositingType.syncConfig(openGLType.currentIndex);
                 }
             }
 

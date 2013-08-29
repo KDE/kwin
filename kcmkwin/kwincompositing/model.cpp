@@ -378,6 +378,7 @@ EffectView::EffectView(QWindow *parent)
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
     qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
     qmlRegisterType<Compositing>("org.kde.kwin.kwincompositing", 1, 0, "Compositing");
+    qmlRegisterType<CompositingType>("org.kde.kwin.kwincompositing", 1, 0, "CompositingType");
     init();
 }
 

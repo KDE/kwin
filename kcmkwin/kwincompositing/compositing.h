@@ -21,6 +21,8 @@
 
 #ifndef COMPOSITING_H
 #define COMPOSITING_H
+
+#include <QAbstractItemModel>
 #include <QObject>
 
 namespace KWin {
@@ -36,8 +38,6 @@ public:
 
     Q_INVOKABLE bool OpenGLIsUnsafe();
     Q_INVOKABLE bool OpenGLIsBroken();
-    Q_INVOKABLE void syncConfig(int openGLType, int graphicsSystem);
-    Q_INVOKABLE int currentOpenGLType();
 
 private:
 
@@ -48,6 +48,53 @@ private:
         XRENDER_INDEX
     };
 };
+
+
+struct CompositingData;
+
+class CompositingType : public QAbstractItemModel
+{
+
+    Q_OBJECT
+
+public:
+
+    enum CompositingTypeIndex {
+        OPENGL31_INDEX = 0,
+        OPENGL20_INDEX,
+        OPENGL12_INDEX,
+        XRENDER_INDEX
+    };
+
+    enum CompositingTypeRoles {
+        NameRole = Qt::UserRole +1,
+    };
+
+    explicit CompositingType(QObject *parent = 0);
+
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &child) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    virtual QHash< int, QByteArray > roleNames() const override;
+
+    Q_INVOKABLE int currentOpenGLType();
+    Q_INVOKABLE void syncConfig(int openGLType);
+
+private:
+    void generateCompositing();
+    QList<CompositingData> m_compositingList;
+
+};
+
+struct CompositingData {
+    QString name;
+    CompositingType::CompositingTypeIndex type;
+};
+
+
 }//end namespace Compositing
 }//end namespace KWin
 #endif

@@ -26,6 +26,7 @@
 
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QHash>
 #include <QDebug>
 
 namespace KWin {
@@ -63,9 +64,116 @@ bool Compositing::OpenGLIsBroken()
     return false;
 }
 
-void Compositing::syncConfig(int openGLType, int graphicsSystem)
+CompositingType::CompositingType(QObject *parent)
+    : QAbstractItemModel(parent) {
+
+    generateCompositing();
+}
+
+
+void CompositingType::generateCompositing()
 {
-    QString graphicsSystemType;
+    QHash<QString, CompositingType::CompositingTypeIndex> compositingTypes;
+
+    compositingTypes["OpenGL 31"] = CompositingType::OPENGL31_INDEX;
+    compositingTypes["OpenGL 20"] = CompositingType::OPENGL20_INDEX;
+    compositingTypes["OpenGL 12"] = CompositingType::OPENGL12_INDEX;
+    compositingTypes["XRender"] = CompositingType::XRENDER_INDEX;
+
+    CompositingData data;
+    beginResetModel();
+    auto it = compositingTypes.begin();
+    while (it != compositingTypes.end()) {
+        data.name = it.key();
+        data.type = it.value();
+        m_compositingList << data;
+        it++;
+    }
+
+    qSort(m_compositingList.begin(), m_compositingList.end(), [](const CompositingData &a, const CompositingData &b) {
+            return a.type < b.type;
+    });
+    endResetModel();
+}
+
+QHash< int, QByteArray > CompositingType::roleNames() const
+{
+    QHash<int, QByteArray> roleNames;
+    roleNames[NameRole] = "NameRole";
+    return roleNames;
+}
+
+QModelIndex CompositingType::index(int row, int column, const QModelIndex &parent) const
+{
+
+if (parent.isValid() || column > 0 || column < 0 || row < 0 || row >= m_compositingList.count()) {
+        return QModelIndex();
+    }
+
+    return createIndex(row, column);
+}
+
+QModelIndex CompositingType::parent(const QModelIndex &child) const
+{
+    Q_UNUSED(child)
+
+    return QModelIndex();
+}
+
+int CompositingType::columnCount(const QModelIndex &parent) const
+{
+    Q_UNUSED(parent)
+    return 1;
+}
+
+int CompositingType::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid()) {
+        return 0;
+    }
+    return m_compositingList.count();
+}
+
+QVariant CompositingType::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    switch (role) {
+        case Qt::DisplayRole:
+        case NameRole:
+            return m_compositingList.at(index.row()).name;
+        default:
+            return QVariant();
+    }
+}
+
+int CompositingType::currentOpenGLType()
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    QString backend = kwinConfig.readEntry("Backend", "OpenGL");
+    bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
+    bool glCore = kwinConfig.readEntry("GLCore", false);
+    int currentIndex = OPENGL20_INDEX;
+
+    if (backend == "OpenGL") {
+        if (glLegacy) {
+            currentIndex = OPENGL12_INDEX;
+        } else if (glCore) {
+            currentIndex = OPENGL31_INDEX;
+        } else {
+            currentIndex = OPENGL20_INDEX;
+        }
+    } else {
+        currentIndex = XRENDER_INDEX;
+    }
+
+    return currentIndex;
+}
+
+void CompositingType::syncConfig(int openGLType)
+{
     QString backend;
     bool glLegacy;
     bool glCore;
@@ -99,29 +207,6 @@ void Compositing::syncConfig(int openGLType, int graphicsSystem)
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.sync();
-}
-
-int Compositing::currentOpenGLType()
-{
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    QString backend = kwinConfig.readEntry("Backend", "OpenGL");
-    bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
-    bool glCore = kwinConfig.readEntry("GLCore", false);
-    int currentIndex = OPENGL20_INDEX;
-
-    if (backend == "OpenGL") {
-        if (glLegacy) {
-            currentIndex = OPENGL12_INDEX;
-        } else if (glCore) {
-            currentIndex = OPENGL31_INDEX;
-        } else {
-            currentIndex = OPENGL20_INDEX;
-        }
-    } else {
-        currentIndex = XRENDER_INDEX;
-    }
-
-    return currentIndex;
 }
 
 }//end namespace Compositing
