@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDE/KDebug>
 #include <KDE/KXErrorHandler>
+// system
+#include <unistd.h>
 
 namespace KWin
 {
@@ -493,6 +495,14 @@ SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Textu
 
 void GlxBackend::prepareRenderingFrame()
 {
+    if (gs_tripleBufferNeedsDetection) {
+        // the composite timer floors the repaint frequency. This can pollute our triple buffering
+        // detection because the glXSwapBuffers call for the new frame has to wait until the pending
+        // one scanned out.
+        // So we compensate for that by waiting an extra milisecond to give the driver the chance to
+        // fllush the buffer queue
+        usleep(1000);
+    }
     present();
     startRenderTimer();
     glXWaitX();

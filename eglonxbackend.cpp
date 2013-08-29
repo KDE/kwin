@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // KDE
 #include <KDE/KDebug>
+// system
+#include <unistd.h>
 
 namespace KWin
 {
@@ -320,6 +322,14 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
 
 void EglOnXBackend::prepareRenderingFrame()
 {
+    if (gs_tripleBufferNeedsDetection) {
+        // the composite timer floors the repaint frequency. This can pollute our triple buffering
+        // detection because the glXSwapBuffers call for the new frame has to wait until the pending
+        // one scanned out.
+        // So we compensate for that by waiting an extra milisecond to give the driver the chance to
+        // fllush the buffer queue
+        usleep(1000);
+    }
     present();
     startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
