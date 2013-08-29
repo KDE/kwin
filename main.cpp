@@ -412,7 +412,14 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     int number_of_screens = ScreenCount(dpy);
 
     // multi head
-    if (number_of_screens != 1 && KGlobalSettings::isMultiHead()) {
+    auto isMultiHead = []() -> bool {
+        QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
+        if (!multiHead.isEmpty()) {
+            return (multiHead.toLower() == "true");
+        }
+        return false;
+    };
+    if (number_of_screens != 1 && isMultiHead()) {
         KWin::is_multihead = true;
         KWin::screen_number = DefaultScreen(dpy);
         int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
