@@ -92,7 +92,7 @@ Component {
                         Text {
                             id: desc
                             text: model.DescriptionRole
-                            width: effectItem.width
+                            width: effectView.width - 100
                             elide: Text.ElideRight
                         }
                         Item {
