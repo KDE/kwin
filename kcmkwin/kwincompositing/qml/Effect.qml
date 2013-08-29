@@ -124,28 +124,19 @@ Component {
                     anchors.right: aboutButton.left
                     visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
                     enabled: myCheckBox.checked
+                    iconName: "configure"
                     onClicked: {
                         effectConfig.openConfig(model.NameRole);
                     }
-
-                    Component.onCompleted: {
-                        searchModel.image('actions/configure.png')
-                        iconSource = searchModel.imagePath;
-                    }
-
                 }
 
                 Button {
                     id: aboutButton
                     anchors.right: parent.right
+                    iconName: "dialog-information"
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;
-                    }
-
-                    Component.onCompleted: {
-                        searchModel.image('status/dialog-information.png')
-                        iconSource = searchModel.imagePath;
                     }
                 }
 

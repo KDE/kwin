@@ -232,14 +232,6 @@ bool EffectModel::effectListContains(const QString &effectFilter, int source_row
 
 }
 
-QString EffectModel::findImage(const QString &imagePath, int size)
-{
-    const QString relativePath("icons/oxygen/" + QString::number(size) + 'x' + QString::number(size) + '/' + imagePath);
-    const QString fullImagePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativePath, QStandardPaths::LocateFile);
-    return fullImagePath;
-}
-
-
 void EffectModel::syncEffectsToKWin()
 {
     QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
@@ -368,11 +360,6 @@ void EffectFilterModel::effectStatus(int rowIndex, bool effectState)
     const QModelIndex sourceIndex = mapToSource(index(rowIndex, 0));
 
     m_effectModel->effectStatus(sourceIndex, effectState);
-}
-
-QString EffectFilterModel::findImage(const QString &imagePath, int size)
-{
-    return m_effectModel->findImage(imagePath, size);
 }
 
 void EffectFilterModel::syncConfig()

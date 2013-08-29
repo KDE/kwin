@@ -85,13 +85,7 @@ Item {
             EffectFilterModel {
                 id: searchModel
                 filter: searchField.text
-                property string imagePath
-                signal image(string path)
                 signal effectState(int rowIndex, bool enabled)
-
-                onImage: {
-                    imagePath = searchModel.findImage(path);
-                }
 
                 onEffectState: {
                     searchModel.effectStatus(rowIndex, enabled);
