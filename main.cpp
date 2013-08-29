@@ -34,11 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <kdeversion.h>
 #include <KDE/KAboutData>
+#include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KCrash>
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
-#include <KDE/KGlobalSettings>
 #include <KDE/KLocalizedString>
 // Qt
 #include <qplatformdefs.h>
@@ -61,15 +61,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif // HAVE_MALLOC_H
-
-// XLib
-#define INT8 _X11INT8
-#define INT32 _X11INT32
-#include <X11/Xproto.h>
-#undef INT8
-#undef INT32
-#include <X11/Xatom.h>
-#include <fixx11h.h>
 
 namespace KWin
 {
