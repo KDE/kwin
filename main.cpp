@@ -292,14 +292,16 @@ void Application::start()
 
         initting = false; // Startup done, we are up and running now.
 
-        XEvent e;
-        e.xclient.type = ClientMessage;
-        e.xclient.message_type = XInternAtom(display(), "_KDE_SPLASH_PROGRESS", False);
-        e.xclient.display = display();
-        e.xclient.window = rootWindow();
-        e.xclient.format = 8;
-        strcpy(e.xclient.data.b, "wm");
-        XSendEvent(display(), rootWindow(), False, SubstructureNotifyMask, &e);
+        const QByteArray splashAtomName(QByteArrayLiteral("_KDE_SPLASH_PROGRESS"));
+        ScopedCPointer<xcb_intern_atom_reply_t> splashAtom(xcb_intern_atom_reply(connection(),
+            xcb_intern_atom_unchecked(connection(), false, splashAtomName.length(), splashAtomName.constData()), nullptr));
+        xcb_client_message_event_t e;
+        e.response_type = XCB_CLIENT_MESSAGE;
+        e.format = 8;
+        e.window = rootWindow();
+        e.type = splashAtom->atom;
+        strcpy((char*)e.data.data8, "wm");
+        xcb_send_event(connection(), false, rootWindow(), XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY, (const char *)&e);
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
