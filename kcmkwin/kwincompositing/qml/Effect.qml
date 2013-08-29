@@ -53,19 +53,19 @@ Component {
                     }
                     function isWindowManagementEnabled() {
                         if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
-                            windowManagementEnabled = myCheckBox.checked;
-                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                            windowManagementEnabled = effectStatusCheckBox.checked;
+                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
                         } else if (model.ServiceNameRole == "kwin4_effect_desktopgrid") {
-                            windowManagementEnabled = myCheckBox.checked;
-                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                            windowManagementEnabled = effectStatusCheckBox.checked;
+                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
                         } else if (model.ServiceNameRole == "kwin4_effect_presentwindows") {
-                            windowManagementEnabled = myCheckBox.checked;
-                            return windowManagementEnabled = myCheckBox.checked && windowManagementEnabled;
+                            windowManagementEnabled = effectStatusCheckBox.checked;
+                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
                         }
                         return windowManagementEnabled;
                     }
 
-                    id: myCheckBox
+                    id: effectStatusCheckBox
                     property bool windowManagementEnabled;
                     checked: model.EffectStatusRole
                     exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
@@ -81,9 +81,9 @@ Component {
 
                 Item {
                     id: effectItem
-                    width: effectView.width - myCheckBox.width - aboutButton.width - configureButton.width
+                    width: effectView.width - effectStatusCheckBox.width - aboutButton.width - configureButton.width
                     height: 40
-                    anchors.left: myCheckBox.right
+                    anchors.left: effectStatusCheckBox.right
                     Column {
                         id: col
                         Text {
@@ -111,7 +111,7 @@ Component {
                     }
                     MouseArea {
                         id: area
-                        width: effectView.width - myCheckBox.width
+                        width: effectView.width - effectStatusCheckBox.width
                         height: effectView.height
                         onClicked: {
                             effectView.currentIndex = index;
@@ -123,7 +123,7 @@ Component {
                     id: configureButton
                     anchors.right: aboutButton.left
                     visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                    enabled: myCheckBox.checked
+                    enabled: effectStatusCheckBox.checked
                     iconName: "configure"
                     onClicked: {
                         effectConfig.openConfig(model.NameRole);
