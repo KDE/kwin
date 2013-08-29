@@ -309,8 +309,8 @@ void Application::start()
 Application::~Application()
 {
     delete Workspace::self();
-    if (owner.ownerWindow() != None)   // If there was no --replace (no new WM)
-        XSetInputFocus(display(), PointerRoot, RevertToPointerRoot, xTime());
+    if (owner.ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
+        Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     delete options;
     delete atoms;
 }
