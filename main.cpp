@@ -510,8 +510,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") == 0)
         kDebug(1212) << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
 
-    fcntl(XConnectionNumber(KWin::display()), F_SETFD, 1);
-
     QString appname;
     if (KWin::screen_number == 0)
         appname = QStringLiteral("org.kde.kwin");
