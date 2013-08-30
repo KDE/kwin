@@ -229,27 +229,29 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     };
 
     const xcb_window_t eventWindow = findEventWindow(e);
-    if (Client* c = findClient(WindowMatchPredicate(eventWindow))) {
-        if (c->windowEvent(e))
-            return true;
-    } else if (Client* c = findClient(WrapperIdMatchPredicate(eventWindow))) {
-        if (c->windowEvent(e))
-            return true;
-    } else if (Client* c = findClient(FrameIdMatchPredicate(eventWindow))) {
-        if (c->windowEvent(e))
-            return true;
-    } else if (Client *c = findClient(InputIdMatchPredicate(eventWindow))) {
-        if (c->windowEvent(e))
-            return true;
-    } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(eventWindow))) {
-        if (c->windowEvent(e))
-            return true;
-    } else {
-        // We want to pass root window property events to effects
-        if (eventType == XCB_PROPERTY_NOTIFY) {
-            auto *event = reinterpret_cast<xcb_property_notify_event_t*>(e);
-            if (event->window == rootWindow()) {
-                emit propertyNotify(event->atom);
+    if (eventWindow != XCB_WINDOW_NONE) {
+        if (Client* c = findClient(WindowMatchPredicate(eventWindow))) {
+            if (c->windowEvent(e))
+                return true;
+        } else if (Client* c = findClient(WrapperIdMatchPredicate(eventWindow))) {
+            if (c->windowEvent(e))
+                return true;
+        } else if (Client* c = findClient(FrameIdMatchPredicate(eventWindow))) {
+            if (c->windowEvent(e))
+                return true;
+        } else if (Client *c = findClient(InputIdMatchPredicate(eventWindow))) {
+            if (c->windowEvent(e))
+                return true;
+        } else if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(eventWindow))) {
+            if (c->windowEvent(e))
+                return true;
+        } else {
+            // We want to pass root window property events to effects
+            if (eventType == XCB_PROPERTY_NOTIFY) {
+                auto *event = reinterpret_cast<xcb_property_notify_event_t*>(e);
+                if (event->window == rootWindow()) {
+                    emit propertyNotify(event->atom);
+                }
             }
         }
     }
