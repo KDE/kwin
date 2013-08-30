@@ -424,10 +424,19 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
     default:
         if (eventType == Xcb::Extensions::self()->randrNotifyEvent() && Xcb::Extensions::self()->isRandrAvailable()) {
-#warning Need an XCB replacement for XRRUpdateConfiguration
-#if KWIN_QT5_PORTING
-            XRRUpdateConfiguration(e);
-#endif
+            auto *event = reinterpret_cast<xcb_randr_screen_change_notify_event_t*>(e);
+            xcb_screen_t *screen = defaultScreen();
+            if (event->rotation & (XCB_RANDR_ROTATION_ROTATE_90 | XCB_RANDR_ROTATION_ROTATE_270)) {
+                screen->width_in_pixels = event->height;
+                screen->height_in_pixels = event->width;
+                screen->width_in_millimeters = event->mheight;
+                screen->height_in_millimeters = event->mwidth;
+            } else {
+                screen->width_in_pixels = event->width;
+                screen->height_in_pixels = event->height;
+                screen->width_in_millimeters = event->mwidth;
+                screen->height_in_millimeters = event->mheight;
+            }
             if (compositing()) {
                 // desktopResized() should take care of when the size or
                 // shape of the desktop has changed, but we also want to
