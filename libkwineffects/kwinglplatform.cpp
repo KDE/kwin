@@ -581,7 +581,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         GLXContext ctx = glXGetCurrentContext();
         m_directRendering = glXIsDirect(display(), ctx);
 
-        m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
+        m_supportsGLSL = m_directRendering &&
+                         m_extensions.contains("GL_ARB_shader_objects") &&
                          m_extensions.contains("GL_ARB_fragment_shader") &&
                          m_extensions.contains("GL_ARB_vertex_shader");
 
