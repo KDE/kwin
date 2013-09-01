@@ -26,7 +26,7 @@ var scaleInEffect = {
     },
     isScaleWindow: function (window) {
         "use strict";
-        if (window.popupMenu || window.specialWindow || window.utility ||
+        if (window.popupMenu || window.specialWindow || window.utility || window.minimized ||
                 effect.isGrabbed(window, Effect.WindowAddedGrabRole)) {
             return false;
         }
