@@ -340,7 +340,7 @@ void DeclarativeView::updateQmlSource(bool force)
     const bool desktopMode = (m_mode == TabBoxConfig::DesktopTabBox);
     m_currentLayout = tabBox->config().layoutName();
     KService::Ptr service = desktopMode ? findDesktopSwitcher() : findWindowSwitcher();
-    if (service.isNull()) {
+    if (!service) {
         return;
     }
     if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
