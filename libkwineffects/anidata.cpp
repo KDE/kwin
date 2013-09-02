@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "anidata_p.h"
 
-#include <KDebug>
+#include <QDebug>
 
 QDebug operator<<(QDebug dbg, const KWin::AniData &a)
 {
@@ -80,7 +80,7 @@ static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
                                 a == AnimationEffect::Size ||
                                 a == AnimationEffect::Rotation)) ) {
         if (ok)
-            kDebug(1212) << "Invalid value (must not be negative)" << s;
+            qDebug() << "Invalid value (must not be negative)" << s;
         return FPx2();
     }
 
@@ -96,7 +96,7 @@ static FPx2 fpx2(const QString &s, AnimationEffect::Attribute a)
             f2 = f1;
     }
     if ( forced_align && a >= AnimationEffect::NonFloatBase )
-        kDebug(1212) << "Generic Animations, WARNING: had to align second dimension of non-onedimensional attribute" << a;
+        qDebug() << "Generic Animations, WARNING: had to align second dimension of non-onedimensional attribute" << a;
     return FPx2(f1, f2);
 }
 
@@ -122,7 +122,7 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
     else if (animation.at(1) == QStringLiteral("Size"))         attribute = AnimationEffect::Size;
     else if (animation.at(1) == QStringLiteral("Clip"))         attribute = AnimationEffect::Clip;
     else {
-        kDebug(1212) << "Invalid attribute" << animation.at(1);
+        qDebug() << "Invalid attribute" << animation.at(1);
         return;
     }
 
@@ -131,7 +131,7 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
     bool ok;
     duration = animation.at(3).toInt(&ok);
     if (!ok || duration < 0) {
-        kDebug(1212) << "Invalid duration" << animation.at(3);
+        qDebug() << "Invalid duration" << animation.at(3);
         duration = 0;
         return;
     }
@@ -145,12 +145,12 @@ AniData::AniData(const QString &str) // format: WindowMask:Attribute:Meta:Durati
         else if (customCurve == Gaussian)
             curve.setCustomType(AnimationEffect::qecGaussian);
         else
-            kDebug(1212) << "Unknown curve type" << customCurve; // remains default, ie. linear
+            qDebug() << "Unknown curve type" << customCurve; // remains default, ie. linear
 
         if (animation.count() > 6) {
             int t = animation.at(6).toInt();
             if (t < 0)
-                kDebug(1212) << "Delay can not be negative" << animation.at(6);
+                qDebug() << "Delay can not be negative" << animation.at(6);
             else
                 time = t;
 

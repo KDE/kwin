@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QGraphicsRotation>
 #include <QGraphicsScale>
 
-#include <kdebug.h>
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 

@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
-#include <kdebug.h>
-
 #include <X11/Xlib.h>
 #include <X11/extensions/shape.h>
 

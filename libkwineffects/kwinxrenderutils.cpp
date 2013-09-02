@@ -21,9 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #include "kwinglobals.h"
 
+#include <QDebug>
 #include <QStack>
 #include <QPixmap>
-#include <kdebug.h>
 
 namespace KWin
 {
@@ -99,7 +99,7 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
     }
     QHash<int, xcb_render_pictformat_t>::const_iterator it = s_renderFormats.constFind(depth);
     if (it == s_renderFormats.constEnd()) {
-        kWarning(1212) << "Could not find XRender format for depth" << depth;
+        qWarning() << "Could not find XRender format for depth" << depth;
         return XCB_RENDER_PICTURE_NONE;
     }
     xcb_render_picture_t pic = xcb_generate_id(connection());

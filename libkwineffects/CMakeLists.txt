@@ -17,7 +17,6 @@ set(kwineffects_QT_LIBS
 
 set(kwineffects_KDE_LIBS
     KF5::XmlGui # needed for KShortcutEditor
-    ${KDE4Support_LIBRARIES} # needed for KDebug
 )
 
 set(kwineffects_XLIB_LIBS
