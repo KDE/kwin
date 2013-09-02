@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../workspace.h"
 // KDE
 #include <KDE/KConfigGroup>
-#include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
@@ -42,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusPendingCallWatcher>
+#include <QDebug>
 #include <QFutureWatcher>
 #include <QSettings>
 #include <QtConcurrentRun>
@@ -83,7 +83,7 @@ QScriptValue kwinScriptReadConfig(QScriptContext *context, QScriptEngine *engine
         return engine->undefinedValue();
     }
     if (context->argumentCount() < 1 || context->argumentCount() > 2) {
-        kDebug(1212) << "Incorrect number of arguments";
+        qDebug() << "Incorrect number of arguments";
         return engine->undefinedValue();
     }
     const QString key = context->argument(0).toString();
@@ -241,7 +241,7 @@ void KWin::AbstractScript::stop()
 
 void KWin::AbstractScript::printMessage(const QString &message)
 {
-    kDebug(1212) << scriptFile().fileName() << ":" << message;
+    qDebug() << scriptFile().fileName() << ":" << message;
     emit print(message);
 }
 
@@ -313,7 +313,7 @@ int KWin::AbstractScript::registerCallback(QScriptValue value)
 void KWin::AbstractScript::slotPendingDBusCall(QDBusPendingCallWatcher* watcher)
 {
     if (watcher->isError()) {
-        kDebug(1212) << "Received D-Bus message is error";
+        qDebug() << "Received D-Bus message is error";
         watcher->deleteLater();
         return;
     }
@@ -500,9 +500,9 @@ void KWin::Script::sigException(const QScriptValue& exception)
 {
     QScriptValue ret = exception;
     if (ret.isError()) {
-        kDebug(1212) << "defaultscript encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
-        kDebug(1212) << "Message: " << ret.toString();
-        kDebug(1212) << "-----------------";
+        qDebug() << "defaultscript encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
+        qDebug() << "Message: " << ret.toString();
+        qDebug() << "-----------------";
 
         QScriptValueIterator iter(ret);
         while (iter.hasNext()) {
@@ -573,7 +573,7 @@ void KWin::DeclarativeScript::run()
 void KWin::DeclarativeScript::createComponent()
 {
     if (m_component->isError()) {
-        kDebug(1212) << "Component failed to load: " << m_component->errors();
+        qDebug() << "Component failed to load: " << m_component->errors();
     } else {
         m_component->create();
     }
@@ -673,7 +673,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
         const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/") + pluginName + QStringLiteral("/contents/") + scriptName);
         if (file.isNull()) {
-            kDebug(1212) << "Could not find script file for " << pluginName;
+            qDebug() << "Could not find script file for " << pluginName;
             continue;
         }
         scriptsToLoad << qMakePair(javaScript, qMakePair(file, pluginName));

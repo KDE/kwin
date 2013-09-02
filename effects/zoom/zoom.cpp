@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
+#include <QDebug>
 #include <QStyle>
 #include <QtGui/QVector2D>
 #include <QtDBus/QDBusConnection>
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <KDE/KDebug>
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

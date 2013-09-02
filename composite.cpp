@@ -135,10 +135,10 @@ void Compositor::setup()
     if (hasScene())
         return;
     if (m_suspended) {
-        kDebug(1212) << "Compositing is suspended, reason:" << m_suspended;
+        qDebug() << "Compositing is suspended, reason:" << m_suspended;
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
-        kError(1212) << "Compositing is not possible";
+        qCritical() << "Compositing is not possible";
         return;
     }
     m_starting = true;
@@ -179,14 +179,14 @@ void Compositor::slotCompositingOptionsInitialized()
     }
     switch(options->compositingMode()) {
     case OpenGLCompositing: {
-        kDebug(1212) << "Initializing OpenGL compositing";
+        qDebug() << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
         KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         const QString openGLIsUnsafe = QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
-            kWarning(1212) << "KWin has detected that your OpenGL library is unsafe to use";
+            qWarning() << "KWin has detected that your OpenGL library is unsafe to use";
         else {
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
@@ -194,7 +194,7 @@ void Compositor::slotCompositingOptionsInitialized()
             if (!CompositingPrefs::hasGlx()) {
                 unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
-                kDebug(1212) << "No glx extensions available";
+                qDebug() << "No glx extensions available";
                 break;
             }
 #endif
@@ -217,20 +217,20 @@ void Compositor::slotCompositingOptionsInitialized()
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
-        kDebug(1212) << "Initializing XRender compositing";
+        qDebug() << "Initializing XRender compositing";
         m_scene = new SceneXrender(Workspace::self());
         break;
 #endif
     default:
-        kDebug(1212) << "No compositing enabled";
+        qDebug() << "No compositing enabled";
         m_starting = false;
         cm_selection->owning = false;
         cm_selection->release();
         return;
     }
     if (m_scene == NULL || m_scene->initFailed()) {
-        kError(1212) << "Failed to initialize compositing, compositing disabled";
-        kError(1212) << "Consult http://techbase.kde.org/Projects/KWin/4.0-release-notes#Setting_up";
+        qCritical() << "Failed to initialize compositing, compositing disabled";
+        qCritical() << "Consult http://techbase.kde.org/Projects/KWin/4.0-release-notes#Setting_up";
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
@@ -342,7 +342,7 @@ void Compositor::releaseCompositorSelection()
         m_releaseSelectionTimer.start();
         return;
     }
-    kDebug(1212) << "Releasing compositor selection";
+    qDebug() << "Releasing compositor selection";
     cm_selection->owning = false;
     cm_selection->release();
 }
@@ -1062,10 +1062,10 @@ bool Toplevel::updateUnredirectedState()
     lastUnredirect.start();
     unredirect = should;
     if (unredirect) {
-        kDebug(1212) << "Unredirecting:" << this;
+        qDebug() << "Unredirecting:" << this;
         xcb_composite_unredirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
     } else {
-        kDebug(1212) << "Redirecting:" << this;
+        qDebug() << "Redirecting:" << this;
         xcb_composite_redirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
         discardWindowPixmap();
     }

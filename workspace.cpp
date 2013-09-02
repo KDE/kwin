@@ -796,7 +796,7 @@ bool Workspace::waitForCompositingSetup()
 
 void Workspace::slotSettingsChanged(int category)
 {
-    kDebug(1212) << "Workspace::slotSettingsChanged()";
+    qDebug() << "Workspace::slotSettingsChanged()";
     if (category == KGlobalSettings::SETTINGS_SHORTCUTS)
         m_userActionsMenu->discard();
 }
@@ -808,7 +808,7 @@ KWIN_PROCEDURE(CheckBorderSizesProcedure, Client, cl->checkBorderSizes(true));
 
 void Workspace::slotReconfigure()
 {
-    kDebug(1212) << "Workspace::slotReconfigure()";
+    qDebug() << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();

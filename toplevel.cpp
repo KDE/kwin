@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "xcbutils.h"
 
+#include <QDebug>
+
 namespace KWin
 {
 
@@ -429,7 +431,7 @@ void Toplevel::getWmOpaqueRegion()
             }
             XFree(data);
         } else {
-            kWarning(1212) << "XGetWindowProperty failed";
+            qWarning() << "XGetWindowProperty failed";
             break;
         }
     } while (bytes_after_return > 0);

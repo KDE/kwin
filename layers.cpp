@@ -74,8 +74,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 
-#include <kdebug.h>
-
 #include "utils.h"
 #include "client.h"
 #include "focuschain.h"
@@ -93,6 +91,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
+
+#include <QDebug>
 
 namespace KWin
 {
@@ -127,12 +127,12 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
-    kDebug(1212) << "stacking:" << changed;
+    qDebug() << "stacking:" << changed;
     if (changed || propagate_new_clients) {
         for (ClientList::ConstIterator it = stacking_order.begin();
                 it != stacking_order.end();
                 ++it)
-            kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
+            qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
     }
 #endif
     if (changed || propagate_new_clients) {
@@ -504,11 +504,11 @@ ToplevelList Workspace::constrainedStackingOrder()
     ToplevelList layer[ NumLayers ];
 
 #if 0
-    kDebug(1212) << "stacking1:";
+    qDebug() << "stacking1:";
     for (ClientList::ConstIterator it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
             ++it)
-        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
+        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // build the order from layers
     QVector< QMap<Group*, Layer> > minimum_layer(screens()->count());
@@ -537,11 +537,11 @@ ToplevelList Workspace::constrainedStackingOrder()
             ++lay)
         stacking += layer[ lay ];
 #if 0
-    kDebug(1212) << "stacking2:";
+    qDebug() << "stacking2:";
     for (ClientList::ConstIterator it = stacking.begin();
             it != stacking.end();
             ++it)
-        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
+        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -603,12 +603,12 @@ ToplevelList Workspace::constrainedStackingOrder()
         stacking.insert(i2, current);
     }
 #if 0
-    kDebug(1212) << "stacking3:";
+    qDebug() << "stacking3:";
     for (ClientList::ConstIterator it = stacking.begin();
             it != stacking.end();
             ++it)
-        kDebug(1212) << (void*)(*it) << *it << ":" << (*it)->layer();
-    kDebug(1212) << "\n\n";
+        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+    qDebug() << "\n\n";
 #endif
     return stacking;
 }

@@ -25,13 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QRect>
 #include <kconfiggroup.h>
-#include <kdebug.h>
 
 #include "placement.h"
 #include <kdecoration.h>
 #include "options.h"
 #include "utils.h"
 
+class QDebug;
 class KConfig;
 class KXMessages;
 

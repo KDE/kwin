@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ktemporaryfile.h>
 #include <QFile>
 #include <ktoolinvocation.h>
+#include <QDebug>
 
 #ifndef KCMRULES
 #include "client.h"
@@ -952,7 +953,7 @@ WindowRules RuleBook::find(const Client* c, bool ignore_temporary)
         }
         if ((*it)->match(c)) {
             Rules* rule = *it;
-            kDebug(1212) << "Rule found:" << rule << ":" << c;
+            qDebug() << "Rule found:" << rule << ":" << c;
             if (rule->isTemporary())
                 it = m_rules.erase(it);
             else

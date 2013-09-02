@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 #include <kstartupinfo.h>
+#include <QDebug>
 #include <QX11Info>
 
 
@@ -71,15 +72,15 @@ bool performTransiencyCheck()
         if ((*it1)->deleting)
             continue;
         if ((*it1)->in_group == NULL) {
-            kDebug(1212) << "TC: " << *it1 << " in not in a group" << endl;
+            qDebug() << "TC: " << *it1 << " in not in a group" << endl;
             ret = false;
         } else if (!(*it1)->in_group->members().contains(*it1)) {
-            kDebug(1212) << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
+            qDebug() << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
             ret = false;
         }
         if (!(*it1)->isTransient()) {
             if (!(*it1)->mainClients().isEmpty()) {
-                kDebug(1212) << "TC: " << *it1 << " is not transient, has main clients:" << (*it1)->mainClients() << endl;
+                qDebug() << "TC: " << *it1 << " is not transient, has main clients:" << (*it1)->mainClients() << endl;
                 ret = false;
             }
         } else {
@@ -90,8 +91,8 @@ bool performTransiencyCheck()
                 if (transiencyCheckNonExistent
                         && !Workspace::self()->clients.contains(*it2)
                         && !Workspace::self()->desktops.contains(*it2)) {
-                    kDebug(1212) << "TC:" << *it1 << " has non-existent main client ";
-                    kDebug(1212) << "TC2:" << *it2; // this may crash
+                    qDebug() << "TC:" << *it1 << " has non-existent main client ";
+                    qDebug() << "TC2:" << *it2; // this may crash
                     ret = false;
                     continue;
                 }
@@ -108,8 +109,8 @@ bool performTransiencyCheck()
             if (transiencyCheckNonExistent
                     && !Workspace::self()->clients.contains(*it2)
                     && !Workspace::self()->desktops.contains(*it2)) {
-                kDebug(1212) << "TC:" << *it1 << " has non-existent transient ";
-                kDebug(1212) << "TC2:" << *it2; // this may crash
+                qDebug() << "TC:" << *it1 << " has non-existent transient ";
+                qDebug() << "TC2:" << *it2; // this may crash
                 ret = false;
                 continue;
             }
@@ -128,7 +129,7 @@ bool performTransiencyCheck()
                 it2 != members.constEnd();
                 ++it2) {
             if ((*it2)->in_group != *it1) {
-                kDebug(1212) << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
+                qDebug() << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
                 ret = false;
             }
         }
@@ -153,8 +154,8 @@ static void checkTransiency()
 {
     if (--transiencyCheck == 0) {
         if (!performTransiencyCheck()) {
-            kDebug(1212) << "BT:" << transiencyCheckStartBt << endl;
-            kDebug(1212) << "CLIENT:" << transiencyCheckClient << endl;
+            qDebug() << "BT:" << transiencyCheckStartBt << endl;
+            qDebug() << "CLIENT:" << transiencyCheckClient << endl;
             abort();
         }
         transiencyCheckNonExistent = false;
@@ -268,15 +269,15 @@ void Group::addMember(Client* member_P)
 {
     TRANSIENCY_CHECK(member_P);
     _members.append(member_P);
-//    kDebug(1212) << "GROUPADD:" << this << ":" << member_P;
-//    kDebug(1212) << kBacktrace();
+//    qDebug() << "GROUPADD:" << this << ":" << member_P;
+//    qDebug() << kBacktrace();
 }
 
 void Group::removeMember(Client* member_P)
 {
     TRANSIENCY_CHECK(member_P);
-//    kDebug(1212) << "GROUPREMOVE:" << this << ":" << member_P;
-//    kDebug(1212) << kBacktrace();
+//    qDebug() << "GROUPREMOVE:" << this << ":" << member_P;
+//    qDebug() << kBacktrace();
     Q_ASSERT(_members.contains(member_P));
     _members.removeAll(member_P);
 // there are cases when automatic deleting of groups must be delayed,
@@ -639,28 +640,28 @@ void Client::removeFromMainClients()
 void Client::cleanGrouping()
 {
     TRANSIENCY_CHECK(this);
-//    kDebug(1212) << "CLEANGROUPING:" << this;
+//    qDebug() << "CLEANGROUPING:" << this;
 //    for ( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug(1212) << "CL:" << *it;
+//        qDebug() << "CL:" << *it;
 //    ClientList mains;
 //    mains = mainClients();
 //    for ( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug(1212) << "MN:" << *it;
+//        qDebug() << "MN:" << *it;
     removeFromMainClients();
-//    kDebug(1212) << "CLEANGROUPING2:" << this;
+//    qDebug() << "CLEANGROUPING2:" << this;
 //    for ( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug(1212) << "CL2:" << *it;
+//        qDebug() << "CL2:" << *it;
 //    mains = mainClients();
 //    for ( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug(1212) << "MN2:" << *it;
+//        qDebug() << "MN2:" << *it;
     for (ClientList::ConstIterator it = transients_list.constBegin();
             it != transients_list.constEnd();
        ) {
@@ -670,16 +671,16 @@ void Client::cleanGrouping()
         } else
             ++it;
     }
-//    kDebug(1212) << "CLEANGROUPING3:" << this;
+//    qDebug() << "CLEANGROUPING3:" << this;
 //    for ( ClientList::ConstIterator it = group()->members().begin();
 //         it != group()->members().end();
 //         ++it )
-//        kDebug(1212) << "CL3:" << *it;
+//        qDebug() << "CL3:" << *it;
 //    mains = mainClients();
 //    for ( ClientList::ConstIterator it = mains.begin();
 //         it != mains.end();
 //         ++it )
-//        kDebug(1212) << "MN3:" << *it;
+//        qDebug() << "MN3:" << *it;
     // HACK
     // removeFromMainClients() did remove 'this' from transient
     // lists of all group members, but then made windows that
@@ -692,11 +693,11 @@ void Client::cleanGrouping()
             it != group_members.constEnd();
             ++it)
         (*it)->removeTransient(this);
-//    kDebug(1212) << "CLEANGROUPING4:" << this;
+//    qDebug() << "CLEANGROUPING4:" << this;
 //    for ( ClientList::ConstIterator it = group_members.begin();
 //         it != group_members.end();
 //         ++it )
-//        kDebug(1212) << "CL4:" << *it;
+//        qDebug() << "CL4:" << *it;
 }
 
 // Make sure that no group transient is considered transient
@@ -771,7 +772,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     }
     if (new_transient_for == window()) { // pointing to self
         // also fix the property itself
-        kWarning(1216) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
+        qWarning() << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
         new_property_value = new_transient_for = rootWindow();
     }
 //  The transient_for window may be embedded in another application,
@@ -789,7 +790,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     }
     if (Client* new_transient_for_client = workspace()->findClient(WindowMatchPredicate(new_transient_for))) {
         if (new_transient_for != before_search) {
-            kDebug(1212) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
+            qDebug() << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
                          << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
             new_property_value = new_transient_for; // also fix the property
         }
@@ -806,7 +807,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
             break;
         loop_pos = pos->m_transientForId;
         if (--count == 0 || pos == this) {
-            kWarning(1216) << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
+            qWarning() << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
             new_transient_for = rootWindow();
         }
     }
@@ -829,19 +830,19 @@ void Client::addTransient(Client* cl)
     transients_list.append(cl);
     if (workspace()->mostRecentlyActivatedClient() == this && cl->isModal())
         check_active_modal = true;
-//    kDebug(1212) << "ADDTRANS:" << this << ":" << cl;
-//    kDebug(1212) << kBacktrace();
+//    qDebug() << "ADDTRANS:" << this << ":" << cl;
+//    qDebug() << kBacktrace();
 //    for ( ClientList::ConstIterator it = transients_list.begin();
 //         it != transients_list.end();
 //         ++it )
-//        kDebug(1212) << "AT:" << (*it);
+//        qDebug() << "AT:" << (*it);
 }
 
 void Client::removeTransient(Client* cl)
 {
     TRANSIENCY_CHECK(this);
-//    kDebug(1212) << "REMOVETRANS:" << this << ":" << cl;
-//    kDebug(1212) << kBacktrace();
+//    qDebug() << "REMOVETRANS:" << this << ":" << cl;
+//    qDebug() << kBacktrace();
     transients_list.removeAll(cl);
     // cl is transient for this, but this is going away
     // make cl group transient

@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 // KDE
 #include <KDE/KConfigGroup>
-#include <KDE/KDebug>
 #include <Plasma/ConfigLoader>
 // Qt
+#include <QDebug>
 #include <QFile>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
@@ -53,7 +53,7 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
         }
         result.append(context->argument(i).toString());
     }
-    kDebug(1212) << script->scriptFile() << ":" << result;
+    qDebug() << script->scriptFile() << ":" << result;
 
     return engine->undefinedValue();
 }
@@ -358,7 +358,7 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
         QScriptValue value1 = value.property(QStringLiteral("value1"));
         QScriptValue value2 = value.property(QStringLiteral("value2"));
         if (!value1.isValid() || !value2.isValid() || !value1.isNumber() || !value2.isNumber()) {
-            kDebug(1212) << "Cannot cast scripted FPx2 to C++";
+            qDebug() << "Cannot cast scripted FPx2 to C++";
             fpx2 = FPx2();
             return;
         }
@@ -393,7 +393,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 {
     QFile scriptFile(pathToScript);
     if (!scriptFile.open(QIODevice::ReadOnly)) {
-        kDebug(1212) << "Could not open script file: " << pathToScript;
+        qDebug() << "Could not open script file: " << pathToScript;
         return false;
     }
     m_effectName = effectName;
@@ -463,13 +463,13 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 void ScriptedEffect::signalHandlerException(const QScriptValue &value)
 {
     if (value.isError()) {
-        kDebug(1212) << "KWin Effect script encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
-        kDebug(1212) << "Message: " << value.toString();
+        qDebug() << "KWin Effect script encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
+        qDebug() << "Message: " << value.toString();
 
         QScriptValueIterator iter(value);
         while (iter.hasNext()) {
             iter.next();
-            kDebug(1212) << " " << iter.name() << ": " << iter.value().toString();
+            qDebug() << " " << iter.name() << ": " << iter.value().toString();
         }
     }
 }

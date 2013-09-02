@@ -64,7 +64,7 @@ void LanczosFilter::init()
     m_inited = true;
     const bool force = (qstrcmp(qgetenv("KWIN_FORCE_LANCZOS"), "1") == 0);
     if (force) {
-        kWarning(1212) << "Lanczos Filter forced on by environment variable";
+        qWarning() << "Lanczos Filter forced on by environment variable";
     }
 
     if (!force && options->glSmoothScale() != 2)
@@ -94,7 +94,7 @@ void LanczosFilter::init()
         m_uKernel     = m_shader->uniformLocation("kernel");
         m_uOffsets    = m_shader->uniformLocation("offsets");
     } else {
-        kDebug(1212) << "Shader is not valid";
+        qDebug() << "Shader is not valid";
         m_shader.reset();
     }
 }

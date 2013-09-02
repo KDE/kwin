@@ -24,12 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglplatform.h"
 
 #include <kconfiggroup.h>
-#include <kdebug.h>
 #include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 #include <kdeversion.h>
 #include <ksharedconfig.h>
 
+#include <QDebug>
 #include <QStandardPaths>
 #include <qprocess.h>
 
@@ -65,11 +65,11 @@ bool CompositingPrefs::compositingPossible()
         return false;
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
-        kDebug(1212) << "No composite extension available";
+        qDebug() << "No composite extension available";
         return false;
     }
     if (!Xcb::Extensions::self()->isDamageAvailable()) {
-        kDebug(1212) << "No damage extension available";
+        qDebug() << "No damage extension available";
         return false;
     }
     if (hasGlx())
@@ -81,7 +81,7 @@ bool CompositingPrefs::compositingPossible()
 #ifdef KWIN_HAVE_OPENGLES
     return true;
 #endif
-    kDebug(1212) << "No OpenGL or XRender/XFixes support";
+    qDebug() << "No OpenGL or XRender/XFixes support";
     return false;
 }
 

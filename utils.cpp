@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 #include <assert.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kkeyserver.h>
 
 #include <X11/Xlib.h>
@@ -204,7 +204,7 @@ void ungrabXKeyboard()
 {
     if (!keyboard_grabbed) {
         // grabXKeyboard() may fail sometimes, so don't fail, but at least warn anyway
-        kDebug(1212) << "ungrabXKeyboard() called but keyboard not grabbed!";
+        qDebug() << "ungrabXKeyboard() called but keyboard not grabbed!";
     }
     keyboard_grabbed = false;
     xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);

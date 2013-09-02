@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenshot.h"
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
-#include <KDE/KDebug>
 #include <KDE/KTemporaryFile>
+#include <QDebug>
 #include <QtDBus/QDBusConnection>
 #include <QVarLengthArray>
 #include <QtGui/QPainter>

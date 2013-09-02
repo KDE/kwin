@@ -26,10 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "composite.h"
 // Qt
+#include <QDebug>
 #include <QPainter>
 #include <QQuickWindow>
-// KDE
-#include <KDE/KDebug>
 
 namespace KWin
 {
@@ -74,7 +73,7 @@ void AbstractThumbnailItem::findParentEffectWindow()
     if (effects) {
         QQuickWindow *qw = window();
         if (!qw) {
-            kDebug(1212) << "No QQuickWindow assigned yet";
+            qDebug() << "No QQuickWindow assigned yet";
             return;
         }
         if (auto *w = static_cast<EffectWindowImpl*>(effects->findWindow(qw->winId()))) {

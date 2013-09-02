@@ -19,12 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "startupfeedback.h"
 // Qt
+#include <QDebug>
 #include <QSize>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QPainter>
 // KDE
 #include <KDE/KConfigGroup>
-#include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KIconLoader>
 #include <KDE/KStartupInfo>

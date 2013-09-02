@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
-#include <KDE/KDebug>
 #include <KDE/KLocalizedString>
+#include <QDebug>
 #include <QtScript/QScriptEngine>
 
 namespace KWin
@@ -111,7 +111,7 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
     if (context->argumentCount() != 4) {
-        kDebug(1212) << "Incorrect number of arguments! Expected: title, text, keySequence, callback";
+        qDebug() << "Incorrect number of arguments! Expected: title, text, keySequence, callback";
         return engine->undefinedValue();
     }
     KActionCollection* actionCollection = new KActionCollection(script);

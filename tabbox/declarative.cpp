@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "clientmodel.h"
 // Qt
 #include <QApplication>
+#include <QDebug>
 #include <QtQml/QQmlContext>
 #include <QtQml/QQmlEngine>
 #include <QDesktopWidget>
@@ -33,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QStandardPaths>
 
 // include KDE
-#include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
@@ -344,12 +344,12 @@ void DeclarativeView::updateQmlSource(bool force)
         return;
     }
     if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
-        kDebug(1212) << "Window Switcher Layout is no declarativeappletscript";
+        qDebug() << "Window Switcher Layout is no declarativeappletscript";
         return;
     }
     const QString file = desktopMode ? findDesktopSwitcherScriptFile(service) : findWindowSwitcherScriptFile(service);
     if (file.isNull()) {
-        kDebug(1212) << "Could not find QML file for window switcher";
+        qDebug() << "Could not find QML file for window switcher";
         return;
     }
     rootObject()->setProperty("source", QUrl(file));
@@ -364,7 +364,7 @@ KService::Ptr DeclarativeView::findWindowSwitcher()
         constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
         offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/WindowSwitcher"), constraint);
         if (offers.isEmpty()) {
-            kDebug(1212) << "could not find default window switcher layout";
+            qDebug() << "could not find default window switcher layout";
             return KService::Ptr();
         }
     }
@@ -380,7 +380,7 @@ KService::Ptr DeclarativeView::findDesktopSwitcher()
         constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
         offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/DesktopSwitcher"), constraint);
         if (offers.isEmpty()) {
-            kDebug(1212) << "could not find default desktop switcher layout";
+            qDebug() << "could not find default desktop switcher layout";
             return KService::Ptr();
         }
     }

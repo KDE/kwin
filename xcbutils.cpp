@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xcbutils.h"
 #include "utils.h"
-// KDE
-#include <KDE/KDebug>
+// Qt
+#include <QDebug>
 // xcb
 #include <xcb/composite.h>
 #include <xcb/damage.h>
@@ -168,7 +168,7 @@ void Extensions::init()
     if (m_sync.present) {
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
-    kDebug(1212) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
+    qDebug() << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
                  << " composite: 0x" << QString::number(m_composite.version, 16)
                  << " render: 0x" << QString::number(m_render.version, 16)
                  << " fixes: 0x" << QString::number(m_fixes.version, 16)

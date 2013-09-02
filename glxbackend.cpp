@@ -32,8 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 // kwin libs
 #include <kwinglplatform.h>
-// KDE
-#include <KDE/KDebug>
+// Qt
+#include <QDebug>
 
 namespace KWin
 {
@@ -142,7 +142,7 @@ void GlxBackend::init()
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
-    kDebug(1212) << "Direct rendering:" << isDirectRendering() << endl;
+    qDebug() << "Direct rendering:" << isDirectRendering() << endl;
 }
 
 bool GlxBackend::initRenderingContext()
@@ -200,12 +200,12 @@ bool GlxBackend::initRenderingContext()
         ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
 
     if (!ctx) {
-        kDebug(1212) << "Failed to create an OpenGL context.";
+        qDebug() << "Failed to create an OpenGL context.";
         return false;
     }
 
     if (!glXMakeCurrent(display(), glxWindow, ctx)) {
-        kDebug(1212) << "Failed to make the OpenGL context current.";
+        qDebug() << "Failed to make the OpenGL context current.";
         glXDestroyContext(display(), ctx);
         ctx = 0;
         return false;
@@ -230,14 +230,14 @@ bool GlxBackend::initBuffer()
         overlayWindow()->setup(window);
         XFree(visual);
     } else {
-        kError(1212) << "Failed to create overlay window";
+        qCritical() << "Failed to create overlay window";
         return false;
     }
 
     int vis_buffer;
     glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, &vis_buffer);
     XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig(display(), fbconfig);
-    kDebug(1212) << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number(vis_buffer, 16);
+    qDebug() << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number(vis_buffer, 16);
     XFree(visinfo_buffer);
 
     return true;
@@ -268,7 +268,7 @@ bool GlxBackend::initFbConfig()
     }
 
     if (fbconfig == NULL) {
-        kError(1212) << "Failed to find a usable framebuffer configuration";
+        qCritical() << "Failed to find a usable framebuffer configuration";
         return false;
     }
 
@@ -296,7 +296,7 @@ bool GlxBackend::initDrawableConfigs()
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count < 1) {
-        kError(1212) << "Could not find any usable framebuffer configurations.";
+        qCritical() << "Could not find any usable framebuffer configurations.";
         return false;
     }
 
@@ -366,12 +366,12 @@ bool GlxBackend::initDrawableConfigs()
         XFree(configs);
 
     if (fbcdrawableinfo[DefaultDepth(display(), DefaultScreen(display()))].fbconfig == NULL) {
-        kError(1212) << "Could not find a framebuffer configuration for the default depth.";
+        qCritical() << "Could not find a framebuffer configuration for the default depth.";
         return false;
     }
 
     if (fbcdrawableinfo[32].fbconfig == NULL) {
-        kError(1212) << "Could not find a framebuffer configuration for depth 32.";
+        qCritical() << "Could not find a framebuffer configuration for depth 32.";
         return false;
     }
 
@@ -382,7 +382,7 @@ bool GlxBackend::initDrawableConfigs()
         int vis_drawable = 0;
         glXGetFBConfigAttrib(display(), fbcdrawableinfo[i].fbconfig, GLX_VISUAL_ID, &vis_drawable);
 
-        kDebug(1212) << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
+        qDebug() << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
     }
 
     return true;
@@ -439,7 +439,7 @@ void GlxBackend::present()
                         if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                             options->setGlPreferBufferSwap(0);
                             setSwapInterval(0);
-                            kWarning(1212) << "\nIt seems you are using the nvidia driver without triple buffering\n"
+                            qWarning() << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                               "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                               "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
                                               "For this reason, the tearing prevention has been disabled.\n"
@@ -578,7 +578,7 @@ bool GlxTexture::loadTexture(const Pixmap& pix, const QSize& size, int depth)
     if (pix == None || size.isEmpty() || depth < 1)
         return false;
     if (m_backend->fbcdrawableinfo[ depth ].fbconfig == NULL) {
-        kDebug(1212) << "No framebuffer configuration for depth " << depth
+        qDebug() << "No framebuffer configuration for depth " << depth
                      << "; not binding pixmap" << endl;
         return false;
     }

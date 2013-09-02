@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client_machine.h"
 // KWin
 #include "utils.h"
-// KDE
-#include <KDE/KDebug>
 // Qt
 #include <QtConcurrentRun>
 #include <QFutureWatcher>
@@ -124,7 +122,7 @@ bool GetAddrInfo::resolved(QFutureWatcher< int >* watcher)
         return false;
     }
     if (watcher->result() != 0) {
-        kDebug(1212) << "getaddrinfo failed with error:" << gai_strerror(watcher->result());
+        qDebug() << "getaddrinfo failed with error:" << gai_strerror(watcher->result());
         // call failed;
         deleteLater();
         return false;

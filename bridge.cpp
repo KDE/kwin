@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "workspace.h"
 
+#include <QDebug>
+
 namespace KWin
 {
 
@@ -247,7 +249,7 @@ Client *Bridge::clientForId(long id) const
 {
     Client* client = reinterpret_cast<Client*>(id);
     if (!workspace()->hasClient(client)) {
-        kWarning(1212) << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******" << id;
+        qWarning() << "****** ARBITRARY CODE EXECUTION ATTEMPT DETECTED ******" << id;
         return 0;
     }
     return client;

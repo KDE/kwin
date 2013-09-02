@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KWindowSystem>
 // Qt
 #include <QApplication>
+#include <QDebug>
 #include <QProcess>
 #include <QStandardPaths>
 #ifdef KWIN_BUILD_SCRIPTING
@@ -1297,7 +1298,7 @@ void Client::closeWindow()
  */
 void Client::killWindow()
 {
-    kDebug(1212) << "Client::killWindow():" << caption();
+    qDebug() << "Client::killWindow():" << caption();
     killProcess(false);
     XKillClient(display(), window());  // Always kill this client at the server
     destroyClient();
@@ -1338,7 +1339,7 @@ void Client::gotPing(xcb_timestamp_t timestamp)
 
 void Client::pingTimeout()
 {
-    kDebug(1212) << "Ping timeout:" << caption();
+    qDebug() << "Ping timeout:" << caption();
     ping_timer->deleteLater();
     ping_timer = NULL;
     killProcess(true, m_pingTimestamp);
@@ -1352,7 +1353,7 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
     pid_t pid = info->pid();
     if (pid <= 0 || clientMachine()->hostName().isEmpty())  // Needed properties missing
         return;
-    kDebug(1212) << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
+    qDebug() << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
     if (!ask) {
         if (!clientMachine()->isLocal()) {
             QStringList lst;

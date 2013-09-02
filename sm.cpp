@@ -30,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "workspace.h"
 #include "client.h"
+#include <QDebug>
 #include <QSocketNotifier>
 #include <QSessionManager>
-#include <kdebug.h>
 #include <KDE/KApplication>
 
 namespace KWin
@@ -179,7 +179,7 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
         if (!sessionIds.contains(sessionId))
             continue;
 
-        kDebug() << "storing" << sessionId;
+        qDebug() << "storing" << sessionId;
         count++;
         if (c->isActive())
             active_client = count;
@@ -341,7 +341,7 @@ const char* Workspace::windowTypeToTxt(NET::WindowType type)
         return window_type_names[ type + 1 ]; // +1 (unknown==-1)
     if (type == -2)   // undefined (not really part of NET::WindowType)
         return "Undefined";
-    kFatal(1212) << "Unknown Window Type" ;
+    qFatal("Unknown Window Type");
     return NULL;
 }
 

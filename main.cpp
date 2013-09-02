@@ -37,11 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KCrash>
-#include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 // Qt
 #include <qplatformdefs.h>
+#include <QDebug>
 #include <QComboBox>
 #include <qcommandlineparser.h>
 #include <QDialog>
@@ -233,10 +233,10 @@ void Application::start()
             else
                 ::exit(1);
             if (cmd.length() > 500) {
-                kDebug(1212) << "Command is too long, truncating";
+                qDebug() << "Command is too long, truncating";
                 cmd = cmd.left(500);
             }
-            kDebug(1212) << "Starting" << cmd << "and exiting";
+            qDebug() << "Starting" << cmd << "and exiting";
             char buf[1024];
             sprintf(buf, "%s &", cmd.toAscii().data());
             system(buf);
@@ -244,7 +244,7 @@ void Application::start()
         }
         if (crashes >= 2) {
             // Disable compositing if we have had too many crashes
-            kDebug(1212) << "Too many crashes recently, disabling compositing";
+            qDebug() << "Too many crashes recently, disabling compositing";
             KConfigGroup compgroup(config, "Compositing");
             compgroup.writeEntry("Enabled", false);
         }
@@ -508,7 +508,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
 
     // Announce when KWIN_DIRECT_GL is set for above HACK
     if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") == 0)
-        kDebug(1212) << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
+        qDebug() << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
 
     QString appname;
     if (KWin::screen_number == 0)

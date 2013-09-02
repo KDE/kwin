@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include <X11/Xlib.h>
 // KDE
-#include <KDebug>
 #include <KProcess>
 #include <KWindowSystem>
 

@@ -22,13 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kdebug.h>
 #include <kcomponentdata.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kglobal.h>
 #include <QtDBus/QtDBus>
 #include <QtCore/QStandardPaths>
+#include <QDebug>
 
 int main( int argc, char* argv[] )
     {
@@ -41,7 +41,7 @@ int main( int argc, char* argv[] )
     QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString( "kwin/default_rules/%1" ).arg(argv[ 1 ] ));
     if( file.isEmpty())
         {
-        kWarning(1212) << "File " << argv[ 1 ] << " not found!" ;
+        qWarning() << "File " << argv[ 1 ] << " not found!" ;
         return 1;
         }
     KConfig src_cfg( file );

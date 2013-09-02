@@ -1863,7 +1863,7 @@ void Workspace::slotInvertScreen()
                 continue;
             }
             if (gamma->size) {
-                kDebug(1212) << "inverting screen using XRRSetCrtcGamma";
+                qDebug() << "inverting screen using XRRSetCrtcGamma";
                 const int half = gamma->size / 2 + 1;
 
                 uint16_t *red = gamma.red();
@@ -1896,7 +1896,7 @@ void Workspace::slotInvertScreen()
         green = new unsigned short[size];
         blue = new unsigned short[size];
         if (XF86VidModeGetGammaRamp(display(), scrn, size, red, green, blue)) {
-            kDebug(1212) << "inverting screen using XF86VidModeSetGammaRamp";
+            qDebug() << "inverting screen using XF86VidModeSetGammaRamp";
             const int half = size / 2 + 1;
             unsigned short swap;
             for (int i = 0; i < half; ++i) {
@@ -1919,13 +1919,13 @@ void Workspace::slotInvertScreen()
     //BEGIN effect plugin inversion - atm only works with OpenGL and has an overhead to it
     if (effects) {
         if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
-            kDebug(1212) << "inverting screen using Effect plugin";
+            qDebug() << "inverting screen using Effect plugin";
             QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
         }
     }
 
     if (!succeeded)
-        kDebug(1212) << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
+        qDebug() << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
 
 }
 

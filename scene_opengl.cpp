@@ -97,7 +97,7 @@ OpenGLBackend::~OpenGLBackend()
 
 void OpenGLBackend::setFailed(const QString &reason)
 {
-    kWarning(1212) << "Creating the OpenGL rendering failed: " << reason;
+    qWarning() << "Creating the OpenGL rendering failed: " << reason;
     m_failed = true;
 }
 
@@ -128,13 +128,13 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
 #ifndef KWIN_HAVE_OPENGLES
     if (!hasGLExtension(QStringLiteral("GL_ARB_texture_non_power_of_two"))
             && !hasGLExtension(QStringLiteral("GL_ARB_texture_rectangle"))) {
-        kError(1212) << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
+        qCritical() << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         init_ok = false;
         return; // error
     }
 #endif
     if (glPlatform->isMesaDriver() && glPlatform->mesaVersion() < kVersionNumber(8, 0)) {
-        kError(1212) << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
+        qCritical() << "KWin requires at least Mesa 8.0 for OpenGL compositing.";
         init_ok = false;
         return;
     }
@@ -183,7 +183,7 @@ SceneOpenGL *SceneOpenGL::createScene()
     // check environment variable
     if (qstrcmp(envOpenGLInterface, "egl") == 0 ||
             qstrcmp(envOpenGLInterface, "egl_wayland") == 0) {
-        kDebug(1212) << "Forcing EGL native interface through environment variable";
+        qDebug() << "Forcing EGL native interface through environment variable";
         platformInterface = EglPlatformInterface;
     }
 #endif
@@ -238,9 +238,9 @@ SceneOpenGL *SceneOpenGL::createScene()
 #endif
     if (!scene) {
         if (GLPlatform::instance()->recommendedCompositor() == XRenderCompositing) {
-            kError(1212) << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
-            kError(1212) << "To overwrite the detection use the environment variable KWIN_COMPOSE";
-            kError(1212) << "For more information see http://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
+            qCritical() << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
+            qCritical() << "To overwrite the detection use the environment variable KWIN_COMPOSE";
+            qCritical() << "For more information see http://community.kde.org/KWin/Environment_Variables#KWIN_COMPOSE";
             QTimer::singleShot(0, Compositor::self(), SLOT(fallbackToXRenderCompositing()));
         }
         delete backend;
@@ -303,15 +303,15 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
 {
     switch (status) {
     case GL_GUILTY_CONTEXT_RESET_KWIN:
-        kDebug(1212) << "A graphics reset attributable to the current GL context occurred.";
+        qDebug() << "A graphics reset attributable to the current GL context occurred.";
         break;
 
     case GL_INNOCENT_CONTEXT_RESET_KWIN:
-        kDebug(1212) << "A graphics reset not attributable to the current GL context occurred.";
+        qDebug() << "A graphics reset not attributable to the current GL context occurred.";
         break;
 
     case GL_UNKNOWN_CONTEXT_RESET_KWIN:
-        kDebug(1212) << "A graphics reset of an unknown cause occurred.";
+        qDebug() << "A graphics reset of an unknown cause occurred.";
         break;
 
     default:
@@ -325,7 +325,7 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     while (timer.elapsed() < 10000 && glGetGraphicsResetStatus() != GL_NO_ERROR)
         usleep(50);
 
-    kDebug(1212) << "Attempting to reset compositing.";
+    qDebug() << "Attempting to reset compositing.";
     QMetaObject::invokeMethod(this, "resetCompositing", Qt::QueuedConnection);
 
     KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
@@ -607,7 +607,7 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
         if (qstrcmp(forceEnv, "O2") == 0) {
-            kDebug(1212) << "OpenGL 2 compositing enforced by environment variable";
+            qDebug() << "OpenGL 2 compositing enforced by environment variable";
             return true;
         } else {
             // OpenGL 2 disabled by environment variable
@@ -618,13 +618,13 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
         return false;
     }
     if (GLPlatform::instance()->recommendedCompositor() < OpenGL2Compositing) {
-        kDebug(1212) << "Driver does not recommend OpenGL 2 compositing";
+        qDebug() << "Driver does not recommend OpenGL 2 compositing";
 #ifndef KWIN_HAVE_OPENGLES
         return false;
 #endif
     }
     if (options->isGlLegacy()) {
-        kDebug(1212) << "OpenGL 2 disabled by config option";
+        qDebug() << "OpenGL 2 disabled by config option";
         return false;
     }
     return true;
@@ -640,14 +640,14 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
         return;
     }
     // Initialize color correction before the shaders
-    kDebug(1212) << "Color correction:" << options->isColorCorrected();
+    qDebug() << "Color correction:" << options->isColorCorrected();
     m_colorCorrection->setEnabled(options->isColorCorrected());
     connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
     connect(m_colorCorrection, SIGNAL(errorOccured()), options, SLOT(setColorCorrected()), Qt::QueuedConnection);
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     if (!ShaderManager::instance()->isValid()) {
-        kDebug(1212) << "No Scene Shaders available";
+        qDebug() << "No Scene Shaders available";
         init_ok = false;
         return;
     }
@@ -655,12 +655,12 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     // push one shader on the stack so that one is always bound
     ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
     if (checkGLError("Init")) {
-        kError(1212) << "OpenGL 2 compositing setup failed";
+        qCritical() << "OpenGL 2 compositing setup failed";
         init_ok = false;
         return; // error
     }
 
-    kDebug(1212) << "OpenGL 2 compositing successfully initialized";
+    qDebug() << "OpenGL 2 compositing successfully initialized";
 
 #ifndef KWIN_HAVE_OPENGLES
     // It is not legal to not have a vertex array object bound in a core context
@@ -774,7 +774,7 @@ bool SceneOpenGL1::supported(OpenGLBackend *backend)
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
         if (qstrcmp(forceEnv, "O1") == 0) {
-            kDebug(1212) << "OpenGL 1 compositing enforced by environment variable";
+            qDebug() << "OpenGL 1 compositing enforced by environment variable";
             return true;
         } else {
             // OpenGL 1 disabled by environment variable
@@ -782,7 +782,7 @@ bool SceneOpenGL1::supported(OpenGLBackend *backend)
         }
     }
     if (GLPlatform::instance()->recommendedCompositor() < OpenGL1Compositing) {
-        kDebug(1212) << "Driver does not recommend OpenGL 1 compositing";
+        qDebug() << "Driver does not recommend OpenGL 1 compositing";
         return false;
     }
     return true;
@@ -799,12 +799,12 @@ SceneOpenGL1::SceneOpenGL1(OpenGLBackend *backend)
     ShaderManager::disable();
     setupModelViewProjectionMatrix();
     if (checkGLError("Init")) {
-        kError(1212) << "OpenGL 1 compositing setup failed";
+        qCritical() << "OpenGL 1 compositing setup failed";
         init_ok = false;
         return; // error
     }
 
-    kDebug(1212) << "OpenGL 1 compositing successfully initialized";
+    qDebug() << "OpenGL 1 compositing successfully initialized";
 }
 
 SceneOpenGL1::~SceneOpenGL1()
@@ -1853,7 +1853,7 @@ bool OpenGLWindowPixmap::bind()
     if (success)
         toplevel()->resetDamage();
     else
-        kDebug(1212) << "Failed to bind window";
+        qDebug() << "Failed to bind window";
     return success;
 }
 
@@ -2504,7 +2504,7 @@ char SwapProfiler::end()
     m_time = (10*m_time + m_timer.nsecsElapsed())/11;
     if (++m_counter > 500) {
         const bool blocks = m_time > 1000 * 1000; // 1ms, i get ~250µs and ~7ms w/o triple buffering...
-        kDebug(1212) << "Triple buffering detection:" << QString(blocks ? QStringLiteral("NOT available") : QStringLiteral("Available")) <<
+        qDebug() << "Triple buffering detection:" << QString(blocks ? QStringLiteral("NOT available") : QStringLiteral("Available")) <<
                         " - Mean block time:" << m_time/(1000.0*1000.0) << "ms";
         return blocks ? 'd' : 't';
     }

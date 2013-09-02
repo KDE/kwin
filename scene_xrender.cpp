@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xfixes.h>
 
+#include <QDebug>
 #include <QtGui/QPainter>
 #include <qmath.h>
 
@@ -96,11 +97,11 @@ SceneXrender::SceneXrender(Workspace* ws)
     , init_ok(false)
 {
     if (!Xcb::Extensions::self()->isRenderAvailable()) {
-        kError(1212) << "No XRender extension available";
+        qCritical() << "No XRender extension available";
         return;
     }
     if (!Xcb::Extensions::self()->isFixesRegionAvailable()) {
-        kError(1212) << "No XFixes v3+ extension available";
+        qCritical() << "No XFixes v3+ extension available";
         return;
     }
     initXRender(true);
@@ -135,12 +136,12 @@ void SceneXrender::initXRender(bool createOverlay)
         ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(connection(),
             xcb_get_window_attributes_unchecked(connection(), m_overlayWindow->window()), NULL));
         if (!attribs) {
-            kError(1212) << "Failed getting window attributes for overlay window";
+            qCritical() << "Failed getting window attributes for overlay window";
             return;
         }
         format = findFormatForVisual(attribs->visual);
         if (format == 0) {
-            kError(1212) << "Failed to find XRender format for overlay window";
+            qCritical() << "Failed to find XRender format for overlay window";
             return;
         }
         front = xcb_generate_id(connection());
@@ -149,7 +150,7 @@ void SceneXrender::initXRender(bool createOverlay)
         // create XRender picture for the root window
         format = findFormatForVisual(defaultScreen()->root_visual);
         if (format == 0) {
-            kError(1212) << "Failed to find XRender format for root window";
+            qCritical() << "Failed to find XRender format for root window";
             return; // error
         }
         front = xcb_generate_id(connection());

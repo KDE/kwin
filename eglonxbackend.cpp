@@ -24,8 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
-// KDE
-#include <KDE/KDebug>
+// Qt
+#include <QDebug>
 
 namespace KWin
 {
@@ -101,7 +101,7 @@ void EglOnXBackend::init()
     gs_tripleBufferNeedsDetection = false;
     m_swapProfiler.init();
     if (surfaceHasSubPost) {
-        kDebug(1212) << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
+        qDebug() << "EGL implementation and surface support eglPostSubBufferNV, let's use it";
 
         if (options->glPreferBufferSwap() != Options::NoSwapEncourage) {
             // check if swap interval 1 is supported
@@ -109,7 +109,7 @@ void EglOnXBackend::init()
             eglGetConfigAttrib(dpy, config, EGL_MAX_SWAP_INTERVAL, &val);
             if (val >= 1) {
                 if (eglSwapInterval(dpy, 1)) {
-                    kDebug(1212) << "Enabled v-sync";
+                    qDebug() << "Enabled v-sync";
                     setSyncsToVBlank(true);
                     const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
                     if (!tripleBuffer.isEmpty()) {
@@ -119,7 +119,7 @@ void EglOnXBackend::init()
                     gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
                 }
             } else {
-                kWarning(1212) << "Cannot enable v-sync as max. swap interval is" << val;
+                qWarning() << "Cannot enable v-sync as max. swap interval is" << val;
             }
         } else {
             // disable v-sync
@@ -131,7 +131,7 @@ void EglOnXBackend::init()
          * Hence we need EGL to preserve the backbuffer for us, so that we can draw the partial updates on it and call
          * eglSwapBuffers() for each frame. eglSwapBuffers() then does the copy (no page flip possible in this mode),
          * which means it is slow and not synced to the v-blank. */
-        kWarning(1212) << "eglPostSubBufferNV not supported, have to enable buffer preservation - which breaks v-sync and performance";
+        qWarning() << "eglPostSubBufferNV not supported, have to enable buffer preservation - which breaks v-sync and performance";
         eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
     }
 }
@@ -150,7 +150,7 @@ bool EglOnXBackend::initRenderingContext()
     eglBindAPI(EGL_OPENGL_ES_API);
 #else
     if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-        kError(1212) << "bind OpenGL API failed";
+        qCritical() << "bind OpenGL API failed";
         return false;
     }
 #endif
@@ -158,7 +158,7 @@ bool EglOnXBackend::initRenderingContext()
     initBufferConfigs();
 
     if (!overlayWindow()->create()) {
-        kError(1212) << "Could not get overlay window";
+        qCritical() << "Could not get overlay window";
         return false;
     } else {
         overlayWindow()->setup(None);
@@ -197,20 +197,20 @@ bool EglOnXBackend::initRenderingContext()
 #endif
 
     if (ctx == EGL_NO_CONTEXT) {
-        kError(1212) << "Create Context failed";
+        qCritical() << "Create Context failed";
         return false;
     }
 
     if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE) {
-        kError(1212) << "Make Context Current failed";
+        qCritical() << "Make Context Current failed";
         return false;
     }
 
-    kDebug(1212) << "EGL version: " << major << "." << minor;
+    qDebug() << "EGL version: " << major << "." << minor;
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        kWarning(1212) << "Error occurred while creating context " << error;
+        qWarning() << "Error occurred while creating context " << error;
         return false;
     }
 
@@ -237,13 +237,13 @@ bool EglOnXBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(dpy, config_attribs, configs, 1024, &count) == EGL_FALSE) {
-        kError(1212) << "choose config failed";
+        qCritical() << "choose config failed";
         return false;
     }
 
     Xcb::WindowAttributes attribs(rootWindow());
     if (!attribs) {
-        kError(1212) << "Failed to get window attributes of root window";
+        qCritical() << "Failed to get window attributes of root window";
         return false;
     }
 
@@ -251,7 +251,7 @@ bool EglOnXBackend::initBufferConfigs()
     for (int i = 0; i < count; i++) {
         EGLint val;
         if (eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
-            kError(1212) << "egl get config attrib failed";
+            qCritical() << "egl get config attrib failed";
         }
         if (uint32_t(val) == attribs->visual) {
             config = configs[i];
@@ -285,7 +285,7 @@ void EglOnXBackend::present()
                     if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                         options->setGlPreferBufferSwap(0);
                         eglSwapInterval(dpy, 0);
-                        kWarning(1212) << "\nIt seems you are using the nvidia driver without triple buffering\n"
+                        qWarning() << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                           "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                           "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
                                           "For this reason, the tearing prevention has been disabled.\n"
@@ -388,7 +388,7 @@ bool EglTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
                                           (EGLClientBuffer)pix, attribs);
 
     if (EGL_NO_IMAGE_KHR == m_image) {
-        kDebug(1212) << "failed to create egl image";
+        qDebug() << "failed to create egl image";
         q->unbind();
         q->discard();
         return false;

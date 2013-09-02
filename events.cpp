@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "xcbutils.h"
 
+#include <QDebug>
 #include <QWhatsThis>
 
 #include <kkeyserver.h>
@@ -1195,7 +1196,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
 void Client::processMousePressEvent(QMouseEvent* e)
 {
     if (e->type() != QEvent::MouseButtonPress) {
-        kWarning(1212) << "processMousePressEvent()" ;
+        qWarning() << "processMousePressEvent()" ;
         return;
     }
     int button;

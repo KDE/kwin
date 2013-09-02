@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorations.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+// Qt
+#include <QDebug>
 
 namespace KWin
 {
@@ -48,7 +50,7 @@ RootInfo *RootInfo::create()
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
         xcb_configure_window_checked(connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
     if (!error.isNull()) {
-        kDebug(1212) << "Error occurred while lowering support window: " << error->error_code;
+        qDebug() << "Error occurred while lowering support window: " << error->error_code;
     }
 
     unsigned long protocols[5] = {

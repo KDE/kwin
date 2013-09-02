@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 #include "utils.h"
 
-#include <KDE/KDebug>
-
 #include <QRect>
 #include <QRegion>
 #include <QVector>
@@ -747,7 +745,6 @@ static inline void sync()
     xcb_generic_error_t *error = nullptr;
     ScopedCPointer<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(c, cookie, &error));
     if (error) {
-        kWarning(1212) << "Sync error" << kBacktrace();
         free(error);
     }
 }

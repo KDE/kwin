@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "screens.h"
 #include "useractions.h"
+#include <QDebug>
 #include <QX11Info>
 
 namespace KWin
@@ -382,7 +383,7 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
     if (c->tabGroup() && c->tabGroup()->current() != c)
         c->tabGroup()->setCurrent(c);
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
-        kWarning(1212) << "takeActivity: not shown" ;
+        qWarning() << "takeActivity: not shown" ;
         return;
     }
     c->takeActivity(flags, handled);
@@ -573,18 +574,18 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     if (!ignore_desktop && !c->isOnCurrentDesktop())
         return false; // allow only with level == 0
     if (ac == NULL || ac->isDesktop()) {
-        kDebug(1212) << "Activation: No client active, allowing";
+        qDebug() << "Activation: No client active, allowing";
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
     if (Client::belongToSameApplication(c, ac, true)) {
-        kDebug(1212) << "Activation: Belongs to active application";
+        qDebug() << "Activation: Belongs to active application";
         return true;
     }
     if (level == 3)   // high
         return false;
     if (time == -1U) {  // no time known
-        kDebug(1212) << "Activation: No timestamp at all";
+        qDebug() << "Activation: No timestamp at all";
         if (level == 1)   // low
             return true;
         // no timestamp at all, don't activate - because there's also creation timestamp
@@ -594,7 +595,7 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     }
     // level == 2 // normal
     Time user_time = ac->userTime();
-    kDebug(1212) << "Activation, compared:" << c << ":" << time << ":" << user_time
+    qDebug() << "Activation, compared:" << c << ":" << time << ":" << user_time
                  << ":" << (timestampCompare(time, user_time) >= 0) << endl;
     return timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
@@ -615,18 +616,18 @@ bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t ti
     if (level == 4)   // extreme
         return false;
     if (ac == NULL || ac->isDesktop()) {
-        kDebug(1212) << "Raising: No client active, allowing";
+        qDebug() << "Raising: No client active, allowing";
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
     if (Client::belongToSameApplication(c, ac, true)) {
-        kDebug(1212) << "Raising: Belongs to active application";
+        qDebug() << "Raising: Belongs to active application";
         return true;
     }
     if (level == 3)   // high
         return false;
     xcb_timestamp_t user_time = ac->userTime();
-    kDebug(1212) << "Raising, compared:" << time << ":" << user_time
+    qDebug() << "Raising, compared:" << time << ":" << user_time
                  << ":" << (timestampCompare(time, user_time) >= 0) << endl;
     return timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
@@ -729,7 +730,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             time = asn_data->timestamp();
         }
     }
-    kDebug(1212) << "User timestamp, ASN:" << time;
+    qDebug() << "User timestamp, ASN:" << time;
     if (time == -1U) {
         // The window doesn't have any timestamp.
         // If it's the first window for its application
@@ -756,7 +757,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             }
             // don't refuse if focus stealing prevention is turned off
             if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > 0) {
-                kDebug(1212) << "User timestamp, already exists:" << 0;
+                qDebug() << "User timestamp, already exists:" << 0;
                 return 0; // refuse activation
             }
         }
@@ -773,7 +774,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             return -1U;
         time = readUserCreationTime();
     }
-    kDebug(1212) << "User timestamp, final:" << this << ":" << time;
+    qDebug() << "User timestamp, final:" << this << ":" << time;
     return time;
 }
 

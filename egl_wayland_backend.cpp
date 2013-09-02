@@ -64,7 +64,7 @@ static void registryHandleGlobal(void *data, struct wl_registry *registry,
     } else if (strcmp(interface, "wl_shm") == 0) {
         d->createShm(name);
     }
-    kDebug(1212) << "Wayland Interface: " << interface;
+    qDebug() << "Wayland Interface: " << interface;
 }
 
 /**
@@ -320,7 +320,7 @@ bool CursorData::init(ShmPool *pool)
 
     m_cursor = pool->createBuffer(cursorImage);
     if (!m_cursor) {
-        kDebug(1212) << "Creating cursor buffer failed";
+        qDebug() << "Creating cursor buffer failed";
         return false;
     }
 
@@ -420,18 +420,18 @@ ShmPool::~ShmPool()
 bool ShmPool::createPool()
 {
     if (!m_tmpFile->open()) {
-        kDebug(1212) << "Could not open temporary file for Shm pool";
+        qDebug() << "Could not open temporary file for Shm pool";
         return false;
     }
     if (ftruncate(m_tmpFile->handle(), m_size) < 0) {
-        kDebug(1212) << "Could not set size for Shm pool file";
+        qDebug() << "Could not set size for Shm pool file";
         return false;
     }
     m_poolData = mmap(NULL, m_size, PROT_READ | PROT_WRITE, MAP_SHARED, m_tmpFile->handle(), 0);
     m_pool = wl_shm_create_pool(m_shm, m_tmpFile->handle(), m_size);
 
     if (!m_poolData || !m_pool) {
-        kDebug(1212) << "Creating Shm pool failed";
+        qDebug() << "Creating Shm pool failed";
         return false;
     }
     m_tmpFile->close();
@@ -535,7 +535,7 @@ WaylandBackend::WaylandBackend()
     , m_seat()
     , m_shm()
 {
-    kDebug(1212) << "Created Wayland display";
+    qDebug() << "Created Wayland display";
     // setup the registry
     wl_registry_add_listener(m_registry, &s_registryListener, this);
     wl_display_dispatch(m_display);
@@ -568,7 +568,7 @@ WaylandBackend::~WaylandBackend()
         wl_display_flush(m_display);
         wl_display_disconnect(m_display);
     }
-    kDebug(1212) << "Destroyed Wayland display";
+    qDebug() << "Destroyed Wayland display";
 }
 
 void WaylandBackend::readEvents()
@@ -588,7 +588,7 @@ bool WaylandBackend::createSurface()
 {
     m_surface = wl_compositor_create_surface(m_compositor);
     if (!m_surface) {
-        kError(1212) << "Creating Wayland Surface failed";
+        qCritical() << "Creating Wayland Surface failed";
         return false;
     }
     // map the surface as fullscreen
@@ -598,7 +598,7 @@ bool WaylandBackend::createSurface()
     // TODO: do something better than displayWidth/displayHeight
     m_overlay = wl_egl_window_create(m_surface, displayWidth(), displayHeight());
     if (!m_overlay) {
-        kError(1212) << "Creating Wayland Egl window failed";
+        qCritical() << "Creating Wayland Egl window failed";
         return false;
     }
     wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
@@ -629,7 +629,7 @@ EglWaylandBackend::EglWaylandBackend()
     , m_context(EGL_NO_CONTEXT)
     , m_wayland(new Wayland::WaylandBackend)
 {
-    kDebug(1212) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
+    qDebug() << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
     if (!m_wayland->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
@@ -639,9 +639,9 @@ EglWaylandBackend::EglWaylandBackend()
     // Egl is always direct rendering
     setIsDirectRendering(true);
 
-    kWarning(1212) << "Using Wayland rendering backend";
-    kWarning(1212) << "This is a highly experimental backend, do not use for productive usage!";
-    kWarning(1212) << "Please do not report any issues you might encounter when using this backend!";
+    qWarning() << "Using Wayland rendering backend";
+    qWarning() << "This is a highly experimental backend, do not use for productive usage!";
+    qWarning() << "Please do not report any issues you might encounter when using this backend!";
 }
 
 EglWaylandBackend::~EglWaylandBackend()
@@ -665,20 +665,20 @@ bool EglWaylandBackend::initializeEgl()
         return false;
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        kWarning(1212) << "Error during eglInitialize " << error;
+        qWarning() << "Error during eglInitialize " << error;
         return false;
     }
-    kDebug(1212) << "Egl Initialize succeeded";
+    qDebug() << "Egl Initialize succeeded";
 
 #ifdef KWIN_HAVE_OPENGLES
     eglBindAPI(EGL_OPENGL_ES_API);
 #else
     if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-        kError(1212) << "bind OpenGL API failed";
+        qCritical() << "bind OpenGL API failed";
         return false;
     }
 #endif
-    kDebug(1212) << "EGL version: " << major << "." << minor;
+    qDebug() << "EGL version: " << major << "." << minor;
     return true;
 }
 
@@ -731,7 +731,7 @@ bool EglWaylandBackend::initRenderingContext()
 #endif
 
     if (m_context == EGL_NO_CONTEXT) {
-        kError(1212) << "Create Context failed";
+        qCritical() << "Create Context failed";
         return false;
     }
 
@@ -741,7 +741,7 @@ bool EglWaylandBackend::initRenderingContext()
 
     m_surface = eglCreateWindowSurface(m_display, m_config, m_wayland->overlay(), NULL);
     if (m_surface == EGL_NO_SURFACE) {
-        kError(1212) << "Create Window Surface failed";
+        qCritical() << "Create Window Surface failed";
         return false;
     }
 
@@ -751,13 +751,13 @@ bool EglWaylandBackend::initRenderingContext()
 bool EglWaylandBackend::makeContextCurrent()
 {
     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-        kError(1212) << "Make Context Current failed";
+        qCritical() << "Make Context Current failed";
         return false;
     }
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        kWarning(1212) << "Error occurred while creating context " << error;
+        qWarning() << "Error occurred while creating context " << error;
         return false;
     }
     return true;
@@ -783,11 +783,11 @@ bool EglWaylandBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(m_display, config_attribs, configs, 1, &count) == EGL_FALSE) {
-        kError(1212) << "choose config failed";
+        qCritical() << "choose config failed";
         return false;
     }
     if (count != 1) {
-        kError(1212) << "choose config did not return a config" << count;
+        qCritical() << "choose config did not return a config" << count;
         return false;
     }
     m_config = configs[0];
@@ -965,24 +965,24 @@ bool Shm::init()
 {
     const xcb_query_extension_reply_t *ext = xcb_get_extension_data(connection(), &xcb_shm_id);
     if (!ext || !ext->present) {
-        kDebug(1212) << "SHM extension not available";
+        qDebug() << "SHM extension not available";
         return false;
     }
     ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
         xcb_shm_query_version_unchecked(connection()), NULL));
     if (version.isNull()) {
-        kDebug(1212) << "Failed to get SHM extension version information";
+        qDebug() << "Failed to get SHM extension version information";
         return false;
     }
     const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
     m_shmId = shmget(IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600);
     if (m_shmId < 0) {
-        kDebug(1212) << "Failed to allocate SHM segment";
+        qDebug() << "Failed to allocate SHM segment";
         return false;
     }
     m_buffer = shmat(m_shmId, NULL, 0 /*read/write*/);
     if (-1 == reinterpret_cast<long>(m_buffer)) {
-        kDebug(1212) << "Failed to attach SHM segment";
+        qDebug() << "Failed to attach SHM segment";
         shmctl(m_shmId, IPC_RMID, NULL);
         return false;
     }
@@ -992,7 +992,7 @@ bool Shm::init()
     const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
     if (!error.isNull()) {
-        kDebug(1212) << "xcb_shm_attach error: " << error->error_code;
+        qDebug() << "xcb_shm_attach error: " << error->error_code;
         shmdt(m_buffer);
         return false;
     }

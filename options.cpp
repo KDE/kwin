@@ -73,7 +73,7 @@ int currentRefreshRate()
                     vtotal *= 2;
                 if (modeline.htotal*vtotal) // BUG 313996
                     rate = 1000*dotclock/(modeline.htotal*vtotal); // WTF was wikipedia 1998 when I nedded it?
-                kDebug(1212) << "Vertical Refresh Rate (as detected by XF86VM): " << rate << "Hz";
+                qDebug() << "Vertical Refresh Rate (as detected by XF86VM): " << rate << "Hz";
             }
         }
         if (rate < 1)
@@ -93,7 +93,7 @@ int currentRefreshRate()
                     rate = -1;
                 else
                     rate = qRound(frate);
-                kDebug(1212) << "Vertical Refresh Rate (as detected by nvidia-settings): " << rate << "Hz";
+                qDebug() << "Vertical Refresh Rate (as detected by nvidia-settings): " << rate << "Hz";
             }
         }
     }
@@ -110,7 +110,7 @@ int currentRefreshRate()
     // however, additional throttling prevents very high rates from taking place anyway
     else if (rate > 1000)
         rate = 1000;
-    kDebug(1212) << "Vertical Refresh rate " << rate << "Hz";
+    qDebug() << "Vertical Refresh rate " << rate << "Hz";
     return rate;
 }
 
@@ -905,24 +905,24 @@ bool Options::loadCompositingConfig (bool force)
     if (const char *c = getenv("KWIN_COMPOSE")) {
         switch(c[0]) {
         case 'O':
-            kDebug(1212) << "Compositing forced to OpenGL mode by environment variable";
+            qDebug() << "Compositing forced to OpenGL mode by environment variable";
             compositingMode = OpenGLCompositing;
             useCompositing = true;
             break;
         case 'X':
-            kDebug(1212) << "Compositing forced to XRender mode by environment variable";
+            qDebug() << "Compositing forced to XRender mode by environment variable";
             compositingMode = XRenderCompositing;
             useCompositing = true;
             break;
         case 'N':
             if (getenv("KDE_FAILSAFE"))
-                kDebug(1212) << "Compositing disabled forcefully by KDE failsafe mode";
+                qDebug() << "Compositing disabled forcefully by KDE failsafe mode";
             else
-                kDebug(1212) << "Compositing disabled forcefully by environment variable";
+                qDebug() << "Compositing disabled forcefully by environment variable";
             compositingMode = NoCompositing;
             break;
         default:
-            kDebug(1212) << "Unknown KWIN_COMPOSE mode set, ignoring";
+            qDebug() << "Unknown KWIN_COMPOSE mode set, ignoring";
             break;
         }
     }

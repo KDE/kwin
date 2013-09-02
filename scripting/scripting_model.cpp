@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "workspace.h"
 
-#include <KDE/KDebug>
-
 namespace KWin {
 namespace ScriptingClientModel {
 

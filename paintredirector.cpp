@@ -30,7 +30,6 @@ DEALINGS IN THE SOFTWARE.
 #include "effects.h"
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
-#include <kdebug.h>
 #include <QPaintEngine>
 #include <qevent.h>
 #include <qpainter.h>
