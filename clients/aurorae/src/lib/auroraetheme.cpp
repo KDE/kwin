@@ -21,12 +21,12 @@
 #include "auroraetheme.h"
 #include "themeconfig.h"
 // Qt
+#include <QDebug>
 #include <QHash>
 #include <QStandardPaths>
 // KDE
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
-#include <KDE/KDebug>
 #include <KDE/KGlobal>
 
 namespace Aurorae {
@@ -73,7 +73,7 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
     if (!path.isEmpty()) {
         pathes[ type ] = path;
     } else {
-        kDebug(1216) << "No button for: " << AuroraeTheme::mapButtonToName(type);
+        qDebug() << "No button for: " << AuroraeTheme::mapButtonToName(type);
     }
 }
 
@@ -118,7 +118,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
         path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (path.isEmpty()) {
-        kDebug(1216) << "Could not find decoration svg: aborting";
+        qDebug() << "Could not find decoration svg: aborting";
         d->themeName.clear();
         return;
     }

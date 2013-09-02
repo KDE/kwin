@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config-kwin.h"
 
 #include <QApplication>
+#include <QDebug>
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
@@ -30,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDebug>
 #include <KGlobal>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
@@ -106,13 +106,13 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
 {
     // try finding the QML package
     const QString themeName = group.readEntry("ThemeName", "kwin4_decoration_qml_plastik");
-    kDebug(1212) << "Trying to load QML Decoration " << themeName;
+    qDebug() << "Trying to load QML Decoration " << themeName;
     const QString internalname = themeName.toLower();
 
     QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
     KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"), constraint);
     if (offers.isEmpty()) {
-        kError(1212) << "Couldn't find QML Decoration " << themeName << endl;
+        qCritical() << "Couldn't find QML Decoration " << themeName << endl;
         // TODO: what to do in error case?
         return;
     }
@@ -122,7 +122,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
     const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
     if (file.isNull()) {
-        kDebug(1212) << "Could not find script file for " << pluginName;
+        qDebug() << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
         return;
     }

@@ -16,7 +16,6 @@ kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 target_link_libraries(kwin3_aurorae
     KF5::KConfigCore
     KF5::KService
-    ${KDE4Support_LIBRARIES} # KGlobal
     Qt5::Declarative
     kdecorations
 )
