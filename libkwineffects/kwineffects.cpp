@@ -879,7 +879,7 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     assert(x1 < x2 && y1 < y2 && x1 >= left() && x2 <= right() && y1 >= top() && y2 <= bottom());
 #ifndef NDEBUG
     if (isTransformed())
-        kFatal(1212) << "Splitting quads is allowed only in pre-paint calls!" ;
+        qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
     WindowQuad ret(*this);
     // vertices are clockwise starting from topleft
@@ -938,7 +938,7 @@ WindowQuadList WindowQuadList::splitAtX(double x) const
     foreach (const WindowQuad & quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
-            kFatal(1212) << "Splitting quads is allowed only in pre-paint calls!" ;
+            qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
         bool wholeleft = true;
         bool wholeright = true;
@@ -970,7 +970,7 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
     foreach (const WindowQuad & quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
-            kFatal(1212) << "Splitting quads is allowed only in pre-paint calls!" ;
+            qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
         bool wholetop = true;
         bool wholebottom = true;
@@ -1008,7 +1008,7 @@ WindowQuadList WindowQuadList::makeGrid(int maxquadsize) const
     foreach (const WindowQuad & quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
-            kFatal(1212) << "Splitting quads is allowed only in pre-paint calls!" ;
+            qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
         left = qMin(left, quad.left());
         right = qMax(right, quad.right());
@@ -1046,7 +1046,7 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
     foreach (const WindowQuad & quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
-            kFatal(1212) << "Splitting quads is allowed only in pre-paint calls!" ;
+            qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
         left = qMin(left, quad.left());
         right = qMax(right, quad.right());
