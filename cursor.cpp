@@ -227,13 +227,15 @@ void X11Cursor::doStopCursorTracking()
 
 void X11Cursor::mousePolled()
 {
-    const QPoint last = currentPos();
-    const uint16_t lastMask = m_buttonMask;
+    static QPoint lastPos = currentPos();
+    static uint16_t lastMask = m_buttonMask;
     doGetPos(); // Update if needed
-    if (last != currentPos() || lastMask != m_buttonMask) {
-        emit mouseChanged(currentPos(), last,
+    if (lastPos != currentPos() || lastMask != m_buttonMask) {
+        emit mouseChanged(currentPos(), lastPos,
             x11ToQtMouseButtons(m_buttonMask), x11ToQtMouseButtons(lastMask),
             x11ToQtKeyboardModifiers(m_buttonMask), x11ToQtKeyboardModifiers(lastMask));
+        lastPos = currentPos();
+        lastMask = m_buttonMask;
     }
 }
 
