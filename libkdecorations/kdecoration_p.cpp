@@ -26,7 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kglobalsettings.h>
+#include <QFontDatabase>
 #include <QPalette>
 #include <QApplication>
 #include <assert.h>
@@ -138,7 +138,7 @@ unsigned long KDecorationOptionsPrivate::updateSettings(KConfig* config)
     QFont old_activeFontSmall = activeFontSmall;
     QFont old_inactiveFontSmall = inactiveFontSmall;
 
-    QFont activeFontGuess = KGlobalSettings::windowTitleFont();
+    QFont activeFontGuess = QFontDatabase::systemFont(QFontDatabase::TitleFont);
 
     activeFont = wmConfig.readEntry("activeFont", activeFontGuess);
     inactiveFont = wmConfig.readEntry("inactiveFont", activeFont);
