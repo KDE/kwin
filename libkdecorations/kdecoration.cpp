@@ -25,7 +25,6 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration.h"
 #include "kdecoration_p.h"
 
-#include <kdebug.h>
 #include <QApplication>
 #include <QMenu>
 #include <assert.h>

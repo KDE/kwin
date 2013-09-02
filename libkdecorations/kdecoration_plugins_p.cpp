@@ -27,13 +27,13 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_plugins_p.h"
 
 #include <kconfig.h>
-#include <kdebug.h>
 #include <klocale.h>
 #include <klibrary.h>
 #include <kconfiggroup.h>
 #include <KDE/KLocalizedString>
 #include <assert.h>
 
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 
@@ -126,7 +126,7 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
 
     KLibrary libToFind(nameStr);
     QString path = libToFind.fileName();
-    kDebug(1212) << "kwin : path " << path << " for " << nameStr;
+    qDebug() << "kwin : path " << path << " for " << nameStr;
 
     if (path.isEmpty()) {
         return false;
@@ -161,7 +161,7 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
     }
     if (deco_version != KWIN_DECORATION_API_VERSION) {
         if (version_func)
-            kWarning(1212) << i18n("The library %1 has wrong API version %2", path, deco_version);
+            qWarning() << i18n("The library %1 has wrong API version %2", path, deco_version);
         lib->unload();
         delete lib;
         return false;
@@ -172,7 +172,7 @@ bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
         cptr = (KDecorationFactory * (*)())create_func;
 
     if (!cptr) {
-        kDebug(1212) << i18n("The library %1 is not a KWin plugin.", path);
+        qDebug() << i18n("The library %1 is not a KWin plugin.", path);
         lib->unload();
         delete lib;
         return false;
@@ -221,7 +221,7 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     if (!create_ptr) {  // this means someone probably attempted to load "some" kwin plugin/lib as deco
                         // and thus cheated on the "isLoaded" shortcut -> try the default and yell a warning
         if (nameStr != defaultPlugin) {
-            kWarning(1212) << i18n("The library %1 was attempted to be loaded as a decoration plugin but it is NOT", nameStr);
+            qWarning() << i18n("The library %1 was attempted to be loaded as a decoration plugin but it is NOT", nameStr);
             return loadPlugin(defaultPlugin);
         } else {
             // big time trouble!

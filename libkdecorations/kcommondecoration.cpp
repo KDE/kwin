@@ -33,8 +33,6 @@
 
 #include <QWidget>
 
-#include <kdebug.h>
-
 #include "kdecorationfactory.h"
 #include <KDE/KLocalizedString>
 
