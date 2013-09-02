@@ -26,7 +26,7 @@
 #include <QMatrix4x4>
 #include <QTextStream>
 #include <QVector2D>
-#include <KDebug>
+#include <QDebug>
 
 #include <cmath>
 
@@ -495,7 +495,7 @@ void ARBBlurShader::init()
 
     if (glGetError()) {
         const char *error = (const char*)glGetString(GL_PROGRAM_ERROR_STRING_ARB);
-        kError() << "Failed to compile fragment program:" << error;
+        qCritical() << "Failed to compile fragment program:" << error;
         setIsValid(false);
     } else
         setIsValid(true);

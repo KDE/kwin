@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobal>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <QStandardPaths>
 
 #include <QMatrix4x4>
@@ -88,7 +88,7 @@ bool InvertEffect::loadData()
 
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     if (!m_shader->isValid()) {
-        kError(1212) << "The shader failed to load!" << endl;
+        qCritical() << "The shader failed to load!" << endl;
         return false;
     }
 

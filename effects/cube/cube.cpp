@@ -28,11 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kwinconfig.h>
-#include <kdebug.h>
 #include <KDE/KGlobal>
 
 #include <QApplication>
 #include <QColor>
+#include <QDebug>
+#include <QElapsedTimer>
 #include <QRect>
 #include <QEvent>
 #include <QFutureWatcher>
@@ -298,13 +299,13 @@ bool CubeEffect::loadShader()
     QString cylinderVertexshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cylinder.vert"));
     QString sphereVertexshader   = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("sphere.vert"));
     if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
-        kError(1212) << "Couldn't locate shader files" << endl;
+        qCritical() << "Couldn't locate shader files" << endl;
         return false;
     }
 
     cylinderShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, cylinderVertexshader);
     if (!cylinderShader->isValid()) {
-        kError(1212) << "The cylinder shader failed to load!" << endl;
+        qCritical() << "The cylinder shader failed to load!" << endl;
         return false;
     } else {
         ShaderBinder binder(cylinderShader);
@@ -333,7 +334,7 @@ bool CubeEffect::loadShader()
     }
     sphereShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, sphereVertexshader);
     if (!sphereShader->isValid()) {
-        kError(1212) << "The sphere shader failed to load!" << endl;
+        qCritical() << "The sphere shader failed to load!" << endl;
         return false;
     } else {
         ShaderBinder binder(sphereShader);
@@ -1315,7 +1316,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
     QMatrix4x4 origMatrix;
     if (activated && cube_painting) {
         shader = shaderManager->pushShader(ShaderManager::GenericShader);
-        //kDebug(1212) << w->caption();
+        //qDebug() << w->caption();
         float opacity = cubeOpacity;
         if (start) {
             opacity = 1.0 - (1.0 - opacity) * timeLine.currentValue();
@@ -1612,30 +1613,30 @@ bool CubeEffect::borderActivated(ElectricBorder border)
 
 void CubeEffect::toggleCube()
 {
-    kDebug(1212) << "toggle cube";
+    qDebug() << "toggle cube";
     toggle(Cube);
 }
 
 void CubeEffect::toggleCylinder()
 {
-    kDebug(1212) << "toggle cylinder";
+    qDebug() << "toggle cylinder";
     if (!useShaders)
         useShaders = loadShader();
     if (useShaders)
         toggle(Cylinder);
     else
-        kError(1212) << "Sorry shaders are not available - cannot activate Cylinder";
+        qCritical() << "Sorry shaders are not available - cannot activate Cylinder";
 }
 
 void CubeEffect::toggleSphere()
 {
-    kDebug(1212) << "toggle sphere";
+    qDebug() << "toggle sphere";
     if (!useShaders)
         useShaders = loadShader();
     if (useShaders)
         toggle(Sphere);
     else
-        kError(1212) << "Sorry shaders are not available - cannot activate Sphere";
+        qCritical() << "Sorry shaders are not available - cannot activate Sphere";
 }
 
 void CubeEffect::toggle(CubeMode newMode)
@@ -1691,7 +1692,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             // wrap only on autorepeat
         case Qt::Key_Left:
             // rotate to previous desktop
-            kDebug(1212) << "left";
+            qDebug() << "left";
             if (!rotating && !start) {
                 rotating = true;
                 if (invertKeys)
@@ -1709,7 +1710,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             break;
         case Qt::Key_Right:
             // rotate to next desktop
-            kDebug(1212) << "right";
+            qDebug() << "right";
             if (!rotating && !start) {
                 rotating = true;
                 if (invertKeys)
@@ -1726,7 +1727,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             break;
         case Qt::Key_Up:
-            kDebug(1212) << "up";
+            qDebug() << "up";
             if (invertKeys) {
                 if (verticalPosition != Down) {
                     if (!verticalRotating) {
@@ -1768,7 +1769,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             break;
         case Qt::Key_Down:
-            kDebug(1212) << "down";
+            qDebug() << "down";
             if (invertKeys) {
                 if (verticalPosition != Up) {
                     if (!verticalRotating) {
@@ -1907,7 +1908,7 @@ void CubeEffect::setActive(bool active)
         zOrderingFactor = zPosition / (effects->stackingOrder().count() - 1);
         start = true;
         effects->setActiveFullScreenEffect(this);
-        kDebug(1212) << "Cube is activated";
+        qDebug() << "Cube is activated";
         verticalPosition = Normal;
         verticalRotating = false;
         manualAngle = 0.0;

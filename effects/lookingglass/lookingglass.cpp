@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <KDE/KGlobal>
 #include <QVector2D>
 
@@ -95,7 +95,7 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->readConfig();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    kDebug(1212) << QStringLiteral("Radius from config: %1").arg(radius) << endl;
+    qDebug() << QStringLiteral("Radius from config: %1").arg(radius) << endl;
     actionCollection->readSettings();
     m_valid = loadData();
 }
@@ -108,7 +108,7 @@ bool LookingGlassEffect::loadData()
     int texw = displayWidth();
     int texh = displayHeight();
     if (!GLTexture::NPOTTextureSupported()) {
-        kWarning(1212) << "NPOT textures not supported, wasting some memory" ;
+        qWarning() << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
         texh = nearestPowerOfTwo(texh);
     }
@@ -136,7 +136,7 @@ bool LookingGlassEffect::loadData()
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(displayWidth(), displayHeight()));
     } else {
-        kError(1212) << "The shader failed to load!" << endl;
+        qCritical() << "The shader failed to load!" << endl;
         return false;
     }
 
@@ -216,7 +216,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             zoom = qMin(zoom * qMax(1.0 + diff, 1.2), target_zoom);
         else
             zoom = qMax(zoom * qMin(1.0 - diff, 0.8), target_zoom);
-        kDebug(1212) << "zoom is now " << zoom;
+        qDebug() << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5 * initialradius);
 
         if (zoom <= 1.0f) {

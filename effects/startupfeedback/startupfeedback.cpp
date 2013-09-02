@@ -135,9 +135,9 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
             const QString shader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/blinking-startup-fragment.glsl"));
             m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
             if (m_blinkingShader->isValid()) {
-                kDebug(1212) << "Blinking Shader is valid";
+                qDebug() << "Blinking Shader is valid";
             } else {
-                kDebug(1212) << "Blinking Shader is not valid";
+                qDebug() << "Blinking Shader is not valid";
             }
         }
     } else

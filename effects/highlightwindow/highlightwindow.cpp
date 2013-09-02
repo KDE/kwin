@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "highlightwindow.h"
 
-#include <kdebug.h>
+#include <QDebug>
 
 namespace KWin
 {
@@ -157,7 +157,7 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
     for (int i = 0; i < length; i++) {
         EffectWindow* foundWin = effects->findWindow(data[i]);
         if (!foundWin) {
-            kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[i];
+            qDebug() << "Invalid window targetted for highlight. Requested:" << data[i];
             continue;
         }
         m_highlightedWindows.append(foundWin);

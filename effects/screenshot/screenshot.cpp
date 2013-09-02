@@ -274,14 +274,14 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
 {
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(geometry)
-    kDebug(1212) << "Framebuffer Blit not supported";
+    qDebug() << "Framebuffer Blit not supported";
     return QString();
 #else
     QImage img;
     if (effects->isOpenGLCompositing())
     {
         if (!GLRenderTarget::blitSupported()) {
-            kDebug(1212) << "Framebuffer Blit not supported";
+            qDebug() << "Framebuffer Blit not supported";
             return QString();
         }
         GLTexture tex(geometry.width(), geometry.height());

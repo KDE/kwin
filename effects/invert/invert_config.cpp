@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
 #include <KActionCollection>
 #include <KShortcutsEditor>
 #include <KDE/KAboutData>

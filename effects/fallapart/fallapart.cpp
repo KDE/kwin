@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "fallapart.h"
-#include <kdebug.h>
+#include <QDebug>
 #include <assert.h>
 #include <math.h>
 #include <KDE/KConfigGroup>
@@ -135,15 +135,15 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
 {
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
     /*
-    kDebug(1212) << "--" << w->caption() << "--------------------------------";
-    kDebug(1212) << "Tooltip:" << w->isTooltip();
-    kDebug(1212) << "Toolbar:" << w->isToolbar();
-    kDebug(1212) << "Desktop:" << w->isDesktop();
-    kDebug(1212) << "Special:" << w->isSpecialWindow();
-    kDebug(1212) << "TopMenu:" << w->isTopMenu();
-    kDebug(1212) << "Notific:" << w->isNotification();
-    kDebug(1212) << "Splash:" << w->isSplash();
-    kDebug(1212) << "Normal:" << w->isNormalWindow();
+    qDebug() << "--" << w->caption() << "--------------------------------";
+    qDebug() << "Tooltip:" << w->isTooltip();
+    qDebug() << "Toolbar:" << w->isToolbar();
+    qDebug() << "Desktop:" << w->isDesktop();
+    qDebug() << "Special:" << w->isSpecialWindow();
+    qDebug() << "TopMenu:" << w->isTopMenu();
+    qDebug() << "Notific:" << w->isNotification();
+    qDebug() << "Splash:" << w->isSplash();
+    qDebug() << "Normal:" << w->isNormalWindow();
     */
     if (!w->isNormalWindow())
         return false;

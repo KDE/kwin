@@ -28,11 +28,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KDE/KAboutData>
 
+#include <QDebug>
 #include <QWidget>
 #include <QVBoxLayout>
 
@@ -91,7 +91,7 @@ LookingGlassEffectConfig::~LookingGlassEffectConfig()
 
 void LookingGlassEffectConfig::save()
 {
-    kDebug(1212) << "Saving config of LookingGlass" ;
+    qDebug() << "Saving config of LookingGlass" ;
     KCModule::save();
 
     m_ui->editor->save();   // undo() will restore to this state from now on

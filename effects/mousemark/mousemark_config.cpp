@@ -27,11 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
 #include <KActionCollection>
 #include <KDE/KAboutData>
 #include <KDE/KGlobalAccel>
 
+#include <QDebug>
 #include <QWidget>
 
 namespace KWin
@@ -85,7 +85,7 @@ MouseMarkEffectConfig::~MouseMarkEffectConfig()
 
 void MouseMarkEffectConfig::save()
 {
-    kDebug(1212) << "Saving config of MouseMark" ;
+    qDebug() << "Saving config of MouseMark" ;
     KCModule::save();
 
     m_actionCollection->writeSettings();

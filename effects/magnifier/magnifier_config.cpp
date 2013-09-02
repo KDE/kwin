@@ -27,11 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KDE/KAboutData>
 
+#include <QDebug>
 #include <QWidget>
 #include <QVBoxLayout>
 
@@ -93,7 +93,7 @@ MagnifierEffectConfig::~MagnifierEffectConfig()
 
 void MagnifierEffectConfig::save()
 {
-    kDebug(1212) << "Saving config of Magnifier" ;
+    qDebug() << "Saving config of Magnifier" ;
 
     m_ui->editor->save();   // undo() will restore to this state from now on
     KCModule::save();

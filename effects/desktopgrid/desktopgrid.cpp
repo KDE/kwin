@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <kactioncollection.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <netwm_def.h>

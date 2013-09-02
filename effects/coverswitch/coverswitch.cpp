@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <math.h>
 
-#include <kdebug.h>
+#include <QDebug>
 
 namespace KWin
 {

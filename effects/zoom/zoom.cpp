@@ -204,7 +204,7 @@ void ZoomEffect::recreateTexture()
         XcursorImageDestroy(ximg);
     }
     else {
-        kDebug(1212) << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
+        qDebug() << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
         mouseTracking = MouseTrackingProportional;
     }
 }

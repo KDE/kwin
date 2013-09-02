@@ -165,7 +165,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
         effects->addRepaintFull();
         return;
     }
-    kDebug(1212) << "Incorrect Property state, immediate stop: " << data[0];
+    qDebug() << "Incorrect Property state, immediate stop: " << data[0];
     m_state = StateNormal;
     effects->addRepaintFull();
 }
