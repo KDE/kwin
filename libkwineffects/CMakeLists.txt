@@ -19,9 +19,9 @@ set(kwineffects_KDE_LIBS
 )
 
 set(kwineffects_XCB_LIBS
-    ${XCB_XCB_LIBRARIES}
-    ${XCB_XFIXES_LIBRARIES}
-    ${XCB_RENDER_LIBRARIES}
+    ${XCB_XCB_LIBRARY}
+    ${XCB_XFIXES_LIBRARY}
+    ${XCB_RENDER_LIBRARY}
 )
 
 kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})

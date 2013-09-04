@@ -55,8 +55,8 @@ target_link_libraries( testClientMachine
                        Qt5::Widgets
                        ${KDE4Support_LIBRARIES} # kdebug
                        KF5::KWindowSystem
-                       ${XCB_XCB_LIBRARIES}
-                       ${XCB_XFIXES_LIBRARIES}
+                       ${XCB_XCB_LIBRARY}
+                       ${XCB_XFIXES_LIBRARY}
                        ${X11_X11_LIB} # to make jenkins happy
                        ${X11_Xcursor_LIB}
 )
@@ -73,7 +73,7 @@ target_link_libraries( testXcbWrapper
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
-                       ${XCB_XCB_LIBRARIES}
+                       ${XCB_XCB_LIBRARY}
 )
 
 ########################################################
@@ -88,5 +88,5 @@ target_link_libraries( testXcbWindow
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
-                       ${XCB_XCB_LIBRARIES}
+                       ${XCB_XCB_LIBRARY}
 )
