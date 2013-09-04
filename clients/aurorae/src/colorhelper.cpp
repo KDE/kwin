@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "colorhelper.h"
 
-#include <KDE/KGlobalSettings>
 #include <KDE/KColorScheme>
 
 ColorHelper::ColorHelper(QObject *parent)
@@ -40,7 +39,7 @@ QColor ColorHelper::shade(const QColor &color, ColorHelper::ShadeRole role, qrea
 
 qreal ColorHelper::contrast() const
 {
-    return KGlobalSettings::contrastF();
+    return KColorScheme::contrastF();
 }
 
 QColor ColorHelper::multiplyAlpha(const QColor &color, qreal alpha)

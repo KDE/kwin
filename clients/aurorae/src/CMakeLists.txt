@@ -30,7 +30,6 @@ set(decoration_plugin_SRCS
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 target_link_libraries(decorationplugin
-    ${KDE4Support_LIBRARIES} # KGlobalSettings
     Qt5::Declarative
     kdecorations
     KF5::KConfigWidgets
