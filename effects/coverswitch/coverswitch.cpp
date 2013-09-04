@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <kapplication.h>
 #include <kcolorscheme.h>
-#include <kglobal.h>
 #include <KDE/KIcon>
 
 #include <kwinglutils.h>

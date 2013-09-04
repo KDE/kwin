@@ -65,7 +65,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KActionCollection>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
 #include <KDE/KGlobalSettings>
 #include <KDE/KLocalizedString>
 #include <KDE/KStartupInfo>
@@ -265,13 +264,14 @@ Workspace::Workspace(bool restore)
 void Workspace::init()
 {
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
+    KSharedConfigPtr config = KSharedConfig::openConfig();
     Screens *screens = Screens::self();
-    screens->setConfig(KGlobal::config());
+    screens->setConfig(config);
     screens->reconfigure();
     connect(options, SIGNAL(configChanged()), screens, SLOT(reconfigure()));
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges *screenEdges = ScreenEdges::self();
-    screenEdges->setConfig(KGlobal::config());
+    screenEdges->setConfig(config);
     screenEdges->init();
     connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
     connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
@@ -300,7 +300,7 @@ void Workspace::init()
     vds->setNavigationWrappingAround(options->isRollOverDesktops());
     connect(options, SIGNAL(rollOverDesktopsChanged(bool)), vds, SLOT(setNavigationWrappingAround(bool)));
     vds->setRootInfo(rootInfo);
-    vds->setConfig(KGlobal::config());
+    vds->setConfig(config);
 
     // Now we know how many desktops we'll have, thus we initialize the positioning object
     Placement::create(this);
@@ -464,7 +464,7 @@ Workspace::~Workspace()
     XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
 
     delete RuleBook::self();
-    KGlobal::config()->sync();
+    KSharedConfig::openConfig()->sync();
 
     RootInfo::destroy();
     delete startup;
@@ -813,7 +813,7 @@ void Workspace::slotReconfigure()
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();
 
-    KGlobal::config()->reparseConfiguration();
+    KSharedConfig::openConfig()->reparseConfiguration();
     unsigned long changed = options->updateSettings();
 
     emit configChanged();

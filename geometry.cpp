@@ -34,7 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 
 #include <kapplication.h>
-#include <kglobal.h>
 #include <kwindowsystem.h>
 
 #include "placement.h"

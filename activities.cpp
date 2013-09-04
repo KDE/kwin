@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDE/KConfigGroup>
 #include <KDE/KDebug>
-#include <KDE/KGlobal>
 #include <KActivities/Controller>
 // Qt
 #include <QtConcurrentRun>
@@ -80,7 +79,7 @@ void Activities::slotRemoved(const QString &activity)
         client->setOnActivity(activity, false);
     }
     //toss out any session data for it
-    KConfigGroup cg(KGlobal::config(), QString("SubSession: ") + activity);
+    KConfigGroup cg(KSharedConfig::openConfig(), QString("SubSession: ") + activity);
     cg.deleteGroup();
 }
 

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 #include <kactioncollection.h>
-#include <KDE/KGlobal>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <QDebug>

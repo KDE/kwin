@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglplatform.h"
 
 #include <kconfiggroup.h>
-#include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 #include <kdeversion.h>
 #include <ksharedconfig.h>
@@ -52,13 +51,13 @@ CompositingPrefs::~CompositingPrefs()
 bool CompositingPrefs::openGlIsBroken()
 {
     const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
-    return KConfigGroup(KGlobal::config(), "Compositing").readEntry(unsafeKey, false);
+    return KConfigGroup(KSharedConfig::openConfig(), "Compositing").readEntry(unsafeKey, false);
 }
 
 bool CompositingPrefs::compositingPossible()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
+    KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
     const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))
@@ -88,7 +87,7 @@ bool CompositingPrefs::compositingPossible()
 QString CompositingPrefs::compositingNotPossibleReason()
 {
     // first off, check whether we figured that we'll crash on detection because of a buggy driver
-    KConfigGroup gl_workaround_group(KGlobal::config(), "Compositing");
+    KConfigGroup gl_workaround_group(KSharedConfig::openConfig(), "Compositing");
     const QString unsafeKey(QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString()));
     if (gl_workaround_group.readEntry("Backend", "OpenGL") == QStringLiteral("OpenGL") &&
         gl_workaround_group.readEntry(unsafeKey, false))

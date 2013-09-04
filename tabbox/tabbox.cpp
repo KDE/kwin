@@ -54,7 +54,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDE/KAction>
 #include <KDE/KIcon>
-#include <KDE/KGlobal>
 #include <KLocalizedString>
 #include <kkeyserver.h>
 // X11
@@ -711,7 +710,7 @@ void TabBox::hide(bool abort)
 
 void TabBox::reconfigure()
 {
-    KSharedConfigPtr c(KGlobal::config());
+    KSharedConfigPtr c = KSharedConfig::openConfig();
     KConfigGroup config = c->group("TabBox");
 
     loadConfig(c->group("TabBox"), m_defaultConfig);
@@ -1277,7 +1276,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     Client* nc = c;
     bool options_traverse_all;
     {
-        KConfigGroup group(KGlobal::config(), "TabBox");
+        KConfigGroup group(KSharedConfig::openConfig(), "TabBox");
         options_traverse_all = group.readEntry("TraverseAll", false);
     }
 

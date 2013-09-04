@@ -59,7 +59,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLibrary>
 #include <KDE/KDesktopFile>
 #include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
 #include <KDE/KService>
 #include <KDE/KServiceTypeTrader>
 #include <KDE/KPluginInfo>
@@ -319,8 +318,7 @@ void EffectsHandlerImpl::slotEffectsQueried()
     KService::List offers = watcher->result();
     QStringList effectsToBeLoaded;
     QStringList checkDefault;
-    KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup conf(_config, "Plugins");
+    KConfigGroup conf(KSharedConfig::openConfig(), "Plugins");
 
     // First unload necessary effects
     foreach (const KService::Ptr & service, offers) {

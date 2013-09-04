@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../workspace.h"
 // KDE
 #include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
 #include <kdeclarative/kdeclarative.h>
@@ -231,7 +230,7 @@ KWin::AbstractScript::~AbstractScript()
 
 KConfigGroup KWin::AbstractScript::config() const
 {
-    return KGlobal::config()->group(QStringLiteral("Script-") + m_pluginName);
+    return KSharedConfig::openConfig()->group(QStringLiteral("Script-") + m_pluginName);
 }
 
 void KWin::AbstractScript::stop()
@@ -640,7 +639,7 @@ void KWin::Scripting::start()
 
 LoadScriptList KWin::Scripting::queryScriptsToLoad()
 {
-    KSharedConfig::Ptr _config = KGlobal::config();
+    KSharedConfig::Ptr _config = KSharedConfig::openConfig();
     static bool s_started = false;
     if (s_started) {
         _config->reparseConfiguration();

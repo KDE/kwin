@@ -68,7 +68,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kiconloader.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
-#include <KDE/KGlobal>
 #include <KDE/KPushButton>
 #include <kglobalaccel.h>
 #include <kapplication.h>
@@ -342,7 +341,7 @@ void UserActionsMenu::init()
     action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
     action->setIcon(KIcon(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
-    if (!KGlobal::config()->isImmutable() &&
+    if (!KSharedConfig::openConfig()->isImmutable() &&
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",

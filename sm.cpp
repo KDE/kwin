@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <pwd.h>
 #include <fixx11h.h>
 #include <kconfig.h>
-#include <kglobal.h>
 
 #include "workspace.h"
 #include "client.h"
@@ -164,7 +163,7 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
 void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds)
 {
     //TODO clear it first
-    KConfigGroup cg(KGlobal::config(), QStringLiteral("SubSession: ") + name);
+    KConfigGroup cg(KSharedConfig::openConfig(), QStringLiteral("SubSession: ") + name);
     int count =  0;
     int active_client = -1;
     for (ClientList::Iterator it = clients.begin(); it != clients.end(); ++it) {
@@ -247,7 +246,7 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
 
 void Workspace::loadSubSessionInfo(const QString &name)
 {
-    KConfigGroup cg(KGlobal::config(), QStringLiteral("SubSession: ") + name);
+    KConfigGroup cg(KSharedConfig::openConfig(), QStringLiteral("SubSession: ") + name);
     addSessionInfo(cg);
 }
 

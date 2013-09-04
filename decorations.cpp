@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "config-kwin.h"
 #include <kdecorationfactory.h>
 
-#include <kglobal.h>
 #include <KDE/KLocalizedString>
 #include <stdlib.h>
 #include <QPixmap>
@@ -35,7 +34,7 @@ KWIN_SINGLETON_FACTORY(DecorationPlugin)
 
 DecorationPlugin::DecorationPlugin(QObject *parent)
     : QObject(parent)
-    , KDecorationPlugins(KGlobal::config())
+    , KDecorationPlugins(KSharedConfig::openConfig())
     , m_disabled(false)
 {
     defaultPlugin = QStringLiteral("kwin3_oxygen");

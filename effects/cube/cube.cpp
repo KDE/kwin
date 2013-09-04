@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kwinconfig.h>
-#include <KDE/KGlobal>
 
 #include <QApplication>
 #include <QColor>

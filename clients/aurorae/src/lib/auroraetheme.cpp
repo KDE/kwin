@@ -27,7 +27,6 @@
 // KDE
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
-#include <KDE/KGlobal>
 
 namespace Aurorae {
 

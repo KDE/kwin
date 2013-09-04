@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KCrash>
-#include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 // Qt
 #include <qplatformdefs.h>
@@ -207,7 +206,7 @@ void Application::start()
 {
     setQuitOnLastWindowClosed(false);
 
-    KSharedConfig::Ptr config = KGlobal::config();
+    KSharedConfig::Ptr config = KSharedConfig::openConfig();
     if (!config->isImmutable() && m_configLock) {
         // TODO: This shouldn't be necessary
         //config->setReadOnly( true );

@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QProcess>
 #include <kapplication.h>
 #include <kconfig.h>
-#include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
 
@@ -116,7 +115,7 @@ int currentRefreshRate()
 
 Options::Options(QObject *parent)
     : QObject(parent)
-    , m_settings(new Settings(KGlobal::config()))
+    , m_settings(new Settings(KSharedConfig::openConfig()))
     , m_focusPolicy(ClickToFocus)
     , m_nextFocusPrefersMouse(false)
     , m_clickRaise(false)
@@ -655,7 +654,7 @@ void Options::setUnredirectFullscreen(bool unredirectFullscreen)
         return;
     }
     if (GLPlatform::instance()->driver() == Driver_Intel) { // write back the value
-        KConfigGroup(KGlobal::config(), "Compositing").writeEntry("UnredirectFullscreen", false);
+        KConfigGroup(m_settings->config(), "Compositing").writeEntry("UnredirectFullscreen", false);
     }
     m_unredirectFullscreen = unredirectFullscreen;
     emit unredirectFullscreenChanged();
@@ -780,7 +779,7 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
 
 void Options::reparseConfiguration()
 {
-    KGlobal::config()->reparseConfiguration();
+    m_settings->config()->reparseConfiguration();
 }
 
 unsigned long Options::updateSettings()
@@ -806,7 +805,6 @@ unsigned long Options::updateSettings()
 
 unsigned long Options::loadConfig()
 {
-    KSharedConfig::Ptr _config = KGlobal::config();
     m_settings->readConfig();
     unsigned long changed = 0;
     changed |= KDecorationOptions::updateSettings(m_settings->config());   // read decoration settings
@@ -814,14 +812,14 @@ unsigned long Options::loadConfig()
     syncFromKcfgc();
 
     // Electric borders
-    KConfigGroup config(_config, "Windows");
+    KConfigGroup config(m_settings->config(), "Windows");
     OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
     setOpMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
     setOpMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
     setOpMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
     // Mouse bindings
-    config = KConfigGroup(_config, "MouseBindings");
+    config = KConfigGroup(m_settings->config(), "MouseBindings");
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Switch to Window Tab to the Left/Right"));
     CmdAllModKey = (config.readEntry("CommandAllKey", "Alt") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
@@ -841,7 +839,7 @@ unsigned long Options::loadConfig()
     setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Resize"), false));
 
     // TODO: should they be moved into reloadCompositingSettings?
-    config = KConfigGroup(_config, "Compositing");
+    config = KConfigGroup(m_settings->config(), "Compositing");
     setMaxFpsInterval(1 * 1000 * 1000 * 1000 / config.readEntry("MaxFPS", Options::defaultMaxFps()));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
     setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()) * 1000); // config in micro, value in nano resolution
@@ -891,8 +889,7 @@ void Options::syncFromKcfgc()
 
 bool Options::loadCompositingConfig (bool force)
 {
-    KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup config(_config, "Compositing");
+    KConfigGroup config(m_settings->config(), "Compositing");
 
     bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
@@ -956,8 +953,7 @@ void Options::reloadCompositingSettings(bool force)
         prefs.detect();
     }
 
-    KSharedConfig::Ptr _config = KGlobal::config();
-    KConfigGroup config(_config, "Compositing");
+    KConfigGroup config(m_settings->config(), "Compositing");
 
     setGlDirect(prefs.enableDirectRendering());
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));

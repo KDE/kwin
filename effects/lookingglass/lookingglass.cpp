@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <QDebug>
-#include <KDE/KGlobal>
 #include <QVector2D>
 
 #include <kmessagebox.h>

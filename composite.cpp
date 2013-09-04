@@ -48,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <KDE/KGlobal>
 #include <KDE/KLocalizedString>
 #include <KDE/KNotification>
 #include <KDE/KSelectionWatcher>
@@ -182,7 +181,7 @@ void Compositor::slotCompositingOptionsInitialized()
         qDebug() << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
-        KSharedConfigPtr unsafeConfigPtr = KGlobal::config();
+        KSharedConfigPtr unsafeConfigPtr = KSharedConfig::openConfig();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         const QString openGLIsUnsafe = QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
@@ -380,7 +379,7 @@ void Compositor::deleteUnusedSupportProperties()
 void Compositor::fallbackToXRenderCompositing()
 {
     finish();
-    KConfigGroup config(KGlobal::config(), "Compositing");
+    KConfigGroup config(KSharedConfig::openConfig(), "Compositing");
     config.writeEntry("Backend", "XRender");
     config.sync();
     options->setCompositingMode(XRenderCompositing);
@@ -401,7 +400,7 @@ void Compositor::slotConfigChanged()
 void Compositor::slotReinitialize()
 {
     // Reparse config. Config options will be reloaded by setup()
-    KGlobal::config()->reparseConfiguration();
+    KSharedConfig::openConfig()->reparseConfiguration();
 
     // Restart compositing
     finish();
