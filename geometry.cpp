@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVarLengthArray>
 #include <QX11Info>
 
-#include <KDE/KGlobalSettings>
 #include "outline.h"
 
 namespace KWin
@@ -2761,7 +2760,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     if (!moveResizeMode) {
         QPoint p(QPoint(x - padding_left, y - padding_top) - moveOffset);
-        if (p.manhattanLength() >= KGlobalSettings::dndEventDelay()) {
+        if (p.manhattanLength() >= QApplication::startDragDistance()) {
             if (!startMoveResize()) {
                 buttonDown = false;
                 updateCursor();

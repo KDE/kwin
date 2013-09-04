@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <KDE/KStandardDirs>
 #include <QDebug>
-#include <kglobalsettings.h>
 #include <kdeclarative/kdeclarative.h>
 
 #include <kwinglutils.h>
@@ -633,7 +632,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
     } else if (highlightCandidate && !m_motionManager.areWindowsMoving())
         setHighlightedWindow(highlightCandidate);
     if (e->type() == QEvent::MouseMove && m_dragWindow) {
-        if ((me->pos() - m_dragStart).manhattanLength() > KGlobalSettings::dndEventDelay() && !m_dragInProgress) {
+        if ((me->pos() - m_dragStart).manhattanLength() > QApplication::startDragDistance() && !m_dragInProgress) {
             m_dragInProgress = true;
             effects->defineCursor(Qt::ForbiddenCursor);
         }

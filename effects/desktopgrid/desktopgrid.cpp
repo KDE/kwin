@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <math.h>
 
 #include <QAction>
+#include <QApplication>
 #include <kactioncollection.h>
 #include <QDebug>
 #include <KDE/KGlobalAccel>
@@ -36,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
-#include <kglobalsettings.h>
 #include <QtGui/QVector2D>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -483,7 +483,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
     if (e->type() == QEvent::MouseMove) {
         int d = posToDesktop(me->pos());
         if (windowMove != NULL &&
-                (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay()) {
+                (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             // Handle window moving
             if (!wasWindowMove) { // Activate on move
                 if (isUsingPresentWindows() && windowMove->isOnAllDesktops()) {
@@ -536,7 +536,7 @@ void DesktopGridEffect::windowInputMouseEvent(QEvent* e)
             }
             effects->addRepaintFull();
         } else if ((me->buttons() & Qt::LeftButton) && !wasDesktopMove &&
-                  (me->pos() - dragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay()) {
+                  (me->pos() - dragStartPos).manhattanLength() > QApplication::startDragDistance()) {
             wasDesktopMove = true;
             effects->defineCursor(Qt::ClosedHandCursor);
         }
