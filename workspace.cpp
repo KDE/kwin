@@ -172,7 +172,6 @@ Workspace::Workspace(bool restore)
     _self = this;
 
     // first initialize the extensions
-    Extensions::init();
     Xcb::Extensions::self();
 
     // start the cursor support

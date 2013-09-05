@@ -183,14 +183,6 @@ KWIN_EXPORT int displayHeight()
     return screen ? screen->height_in_pixels : 0;
 }
 
-/** @internal */
-// TODO: QT5: remove
-class KWIN_EXPORT Extensions
-{
-public:
-    static void init();
-};
-
 } // namespace
 
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
