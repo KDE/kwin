@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinconfig.h>
 #include <QFont>
+#include <QIcon>
 #include <QMatrix4x4>
 #include <QMouseEvent>
 #include <KDE/KLocalizedString>
 #include <kapplication.h>
 #include <kcolorscheme.h>
-#include <KDE/KIcon>
 
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
@@ -1008,7 +1008,7 @@ void CoverSwitchEffect::updateCaption()
     if (selected_window->isDesktop()) {
         captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
-        static QPixmap pix = KIcon(QStringLiteral("user-desktop")).pixmap(captionFrame->iconSize());
+        static QPixmap pix = QIcon::fromTheme(QStringLiteral("user-desktop")).pixmap(captionFrame->iconSize());
         captionFrame->setIcon(pix);
     } else {
         captionFrame->setText(selected_window->caption());

@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <KActionCollection>
 #include <KDE/KGlobalAccel>
-#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 
 #include <kwinglutils.h>
@@ -952,7 +951,7 @@ void FlipSwitchEffect::updateCaption()
     if (m_selectedWindow->isDesktop()) {
         m_captionFrame->setText(i18nc("Special entry in alt+tab list for minimizing all windows",
                      "Show Desktop"));
-        static QPixmap pix = KIcon(QStringLiteral("user-desktop")).pixmap(m_captionFrame->iconSize());
+        static QPixmap pix = QIcon::fromTheme(QStringLiteral("user-desktop")).pixmap(m_captionFrame->iconSize());
         m_captionFrame->setIcon(pix);
     } else {
         m_captionFrame->setText(m_selectedWindow->caption());

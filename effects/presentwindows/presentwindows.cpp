@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
-#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <KDE/KStandardDirs>
 #include <QDebug>
@@ -575,8 +574,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
                 m_dragInProgress = false;
                 m_dragWindow = NULL;
                 if (m_highlightedDropTarget) {
-                    KIcon icon(QStringLiteral("user-trash"));
-                    m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+                    m_highlightedDropTarget->setIcon(QIcon::fromTheme(QStringLiteral("user-trash")).pixmap(QSize(128, 128), QIcon::Normal));
                     m_highlightedDropTarget = NULL;
                 }
                 effects->addRepaintFull();
@@ -615,8 +613,7 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         m_dragWindow = NULL;
         if (m_highlightedDropTarget) {
             effects->addRepaint(m_highlightedDropTarget->geometry());
-            KIcon icon(QStringLiteral("user-trash"));
-            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+            m_highlightedDropTarget->setIcon(QIcon::fromTheme(QStringLiteral("user-trash")).pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
         }
         effects->defineCursor(Qt::PointingHandCursor);
@@ -649,14 +646,12 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
         }
         if (target && !m_highlightedDropTarget) {
             m_highlightedDropTarget = target;
-            KIcon icon(QStringLiteral("user-trash"));
             effects->addRepaint(m_highlightedDropTarget->geometry());
-            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Active));
+            m_highlightedDropTarget->setIcon(QIcon::fromTheme(QStringLiteral("user-trash")).pixmap(QSize(128, 128), QIcon::Active));
             effects->defineCursor(Qt::DragMoveCursor);
         } else if (!target && m_highlightedDropTarget) {
-            KIcon icon(QStringLiteral("user-trash"));
             effects->addRepaint(m_highlightedDropTarget->geometry());
-            m_highlightedDropTarget->setIcon(icon.pixmap(QSize(128, 128), QIcon::Normal));
+            m_highlightedDropTarget->setIcon(QIcon::fromTheme(QStringLiteral("user-trash")).pixmap(QSize(128, 128), QIcon::Normal));
             m_highlightedDropTarget = NULL;
             effects->defineCursor(Qt::ForbiddenCursor);
         }
@@ -1938,8 +1933,7 @@ void PresentWindowsEffect::screenCountChanged()
         if (m_dragToClose) {
             const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
             EffectFrame *frame = effects->effectFrame(EffectFrameNone, false);
-            KIcon icon(QStringLiteral("user-trash"));
-            frame->setIcon(icon.pixmap(QSize(128, 128)));
+            frame->setIcon(QIcon::fromTheme(QStringLiteral("user-trash")).pixmap(QSize(128, 128)));
             frame->setPosition(QPoint(screenRect.x() + screenRect.width(), screenRect.y()));
             frame->setAlignment(Qt::AlignRight | Qt::AlignTop);
             m_dropTargets.append(frame);

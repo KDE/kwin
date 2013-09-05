@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <KActionCollection>
 #include <KDE/KAboutData>
-#include <KDE/KIcon>
 
 #include <QVBoxLayout>
 
@@ -78,42 +77,42 @@ ZoomEffectConfig::ZoomEffectConfig(QWidget* parent, const QVariantList& args) :
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
 
     a = actionCollection->addAction(QStringLiteral("MoveZoomLeft"));
-    a->setIcon(KIcon(QStringLiteral("go-previous")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("go-previous")));
     a->setText(i18n("Move Left"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Left);
 
     a = actionCollection->addAction(QStringLiteral("MoveZoomRight"));
-    a->setIcon(KIcon(QStringLiteral("go-next")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("go-next")));
     a->setText(i18n("Move Right"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Right);
 
     a = actionCollection->addAction(QStringLiteral("MoveZoomUp"));
-    a->setIcon(KIcon(QStringLiteral("go-up")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     a->setText(i18n("Move Up"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Up);
 
     a = actionCollection->addAction(QStringLiteral("MoveZoomDown"));
-    a->setIcon(KIcon(QStringLiteral("go-down")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     a->setText(i18n("Move Down"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Down);
 
     a = actionCollection->addAction(QStringLiteral("MoveMouseToFocus"));
-    a->setIcon(KIcon(QStringLiteral("view-restore")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Focus"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F5);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F5);
 
     a = actionCollection->addAction(QStringLiteral("MoveMouseToCenter"));
-    a->setIcon(KIcon(QStringLiteral("view-restore")));
+    a->setIcon(QIcon::fromTheme(QStringLiteral("view-restore")));
     a->setText(i18n("Move Mouse to Center"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_F6);
