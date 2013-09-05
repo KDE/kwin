@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <X11/Xlib.h>
+#include <fixx11h.h>
 
 namespace KWin
 {

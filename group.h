@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "utils.h"
 #include <X11/X.h>
+#include <fixx11h.h>
 #include <netwm.h>
 
 namespace KWin

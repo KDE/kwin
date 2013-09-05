@@ -25,8 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kdemacros.h>
 
-#include <X11/Xlib.h>
-#include <fixx11h.h>
 #include <xcb/xcb.h>
 
 #include <kwinconfig.h>

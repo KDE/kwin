@@ -18,10 +18,6 @@ set(kwineffects_KDE_LIBS
     KF5::XmlGui # needed for KShortcutEditor
 )
 
-set(kwineffects_XLIB_LIBS
-    ${X11_X11_LIB}
-)
-
 set(kwineffects_XCB_LIBS
     ${XCB_XCB_LIBRARIES}
     ${XCB_XFIXES_LIBRARIES}
@@ -32,7 +28,6 @@ kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects
     ${kwineffects_QT_LIBS}
     ${kwineffects_KDE_LIBS}
-    ${kwineffects_XLIB_LIBS}
     ${kwineffects_XCB_LIBS}
 )
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
@@ -55,7 +50,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
         include_directories(${OPENGLES_EGL_INCLUDE_DIR})
     endif()
     kde4_add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
-    target_link_libraries(${name} ${kwineffects_QT_LIBS} ${kwineffects_XLIB_LIBS} ${kwineffects_XCB_LIBS} kwineffects)
+    target_link_libraries(${name} ${kwineffects_QT_LIBS} ${kwineffects_XCB_LIBS} kwineffects)
     if(OPENGL_EGL_FOUND)
         target_link_libraries(${name} ${OPENGLES_EGL_LIBRARY})
     endif()
