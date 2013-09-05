@@ -41,10 +41,6 @@ Item {
         iconsListView.imageId++;
     }
 
-    PlasmaCore.Theme {
-        id: theme
-    }
-
     // just to get the margin sizes
     PlasmaCore.FrameSvgItem {
         id: hoverItem

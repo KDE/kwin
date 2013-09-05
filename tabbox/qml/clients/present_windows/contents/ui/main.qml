@@ -60,10 +60,6 @@ Item {
         visible: false
     }
 
-    PlasmaCore.Theme {
-        id: theme
-    }
-
     GridView {
         signal currentIndexChanged(int index)
         // used for image provider URL to trick Qt into reloading icons when the model changes

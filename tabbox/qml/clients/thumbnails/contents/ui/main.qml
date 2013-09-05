@@ -64,10 +64,6 @@ Item {
         visible: false
     }
 
-    PlasmaCore.Theme {
-        id: theme
-    }
-
     ListView {
         signal currentIndexChanged(int index)
         id: thumbnailListView

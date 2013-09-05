@@ -46,9 +46,6 @@ Item {
         visible: false
     }
 
-    PlasmaCore.Theme {
-        id: theme
-    }
     PlasmaCore.Svg {
         id: iconsSvg
         imagePath: "widgets/configuration-icons"
