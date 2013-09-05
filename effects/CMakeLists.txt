@@ -9,8 +9,8 @@ set(kwin_effect_KDE_LIBS
     KF5::KI18n
     KF5::KWindowSystem
     KF5::plasma # screenedge effect
-    KF5::KDE4Attic # windowgeometry effect using KLocale
     KF5::KIconThemes
+    KF5::XmlGui
 )
 
 set(kwin_effect_QT_LIBS

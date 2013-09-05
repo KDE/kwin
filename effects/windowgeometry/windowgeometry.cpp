@@ -23,15 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "windowgeometryconfig.h"
 
 #include <QAction>
+#include <QLocale>
 #include <QStringBuilder>
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <kwindowsystem.h>
 #include <KActionCollection>
 #include <KDE/KGlobalAccel>
-#include <KDE/KLocale>
 #include <KDE/KLocalizedString>
-#include <KDE/KGlobal>
 
 using namespace KWin;
 
@@ -132,14 +131,15 @@ void WindowGeometry::slotWindowFinishUserMovedResized(EffectWindow *w)
 
 static inline QString number(int n)
 {
+    QLocale locale;
     QString sign;
     if (n >= 0) {
-        sign = KGlobal::locale()->positiveSign();
+        sign = locale.positiveSign();
         if (sign.isEmpty()) sign = QStringLiteral("+");
     }
     else {
         n = -n;
-        sign = KGlobal::locale()->negativeSign();
+        sign = locale.negativeSign();
         if (sign.isEmpty()) sign = QStringLiteral("-");
     }
     return  sign + QString::number(n);
