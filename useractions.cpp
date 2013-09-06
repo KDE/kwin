@@ -64,12 +64,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KGlobalAccel>
 #include <KDE/KIcon>
-#include <kiconloader.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
-#include <KDE/KPushButton>
-#include <kglobalaccel.h>
-#include <kapplication.h>
 #include <QRegExp>
 #include <QDialogButtonBox>
 #include <QLabel>
@@ -78,7 +74,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVBoxLayout>
 #include <kauthorized.h>
 #include <kactioncollection.h>
-#include <kaction.h>
 
 #include "killwindow.h"
 #ifdef KWIN_BUILD_TABBOX
