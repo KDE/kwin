@@ -25,15 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 
-#include <QPalette>
-#include <QPixmap>
 #include <QProcess>
-#include <kapplication.h>
-#include <kconfig.h>
-#include <kglobalsettings.h>
-#include <klocale.h>
 
-#include "client.h"
 #include "compositingprefs.h"
 #include "settings.h"
 #include "xcbutils.h"

@@ -24,18 +24,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_OPTIONS_H
 
 #include <QObject>
-#include <QFont>
-#include <QPalette>
 #include <kdecoration.h>
 
 #include "placement.h"
-#include "utils.h"
 
 namespace KWin
 {
 
-class Client;
-class CompositingPrefs;
+// Whether to keep all windows mapped when compositing (i.e. whether to have
+// actively updated window pixmaps).
+enum HiddenPreviews {
+    // The normal mode with regard to mapped windows. Hidden (minimized, etc.)
+    // and windows on inactive virtual desktops are not mapped, their pixmaps
+    // are only their icons.
+    HiddenPreviewsNever,
+    // Like normal mode, but shown windows (i.e. on inactive virtual desktops)
+    // are kept mapped, only hidden windows are unmapped.
+    HiddenPreviewsShown,
+    // All windows are kept mapped regardless of their state.
+    HiddenPreviewsAlways
+};
+
 class Settings;
 
 class Options : public QObject, public KDecorationOptions

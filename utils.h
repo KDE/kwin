@@ -142,20 +142,6 @@ enum ShadeMode {
     ShadeActivated // "shaded", but visible due to alt+tab to the window
 };
 
-// Whether to keep all windows mapped when compositing (i.e. whether to have
-// actively updated window pixmaps).
-enum HiddenPreviews {
-    // The normal mode with regard to mapped windows. Hidden (minimized, etc.)
-    // and windows on inactive virtual desktops are not mapped, their pixmaps
-    // are only their icons.
-    HiddenPreviewsNever,
-    // Like normal mode, but shown windows (i.e. on inactive virtual desktops)
-    // are kept mapped, only hidden windows are unmapped.
-    HiddenPreviewsShown,
-    // All windows are kept mapped regardless of their state.
-    HiddenPreviewsAlways
-};
-
 class Motif
 {
 public:
