@@ -54,7 +54,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDE/KAction>
 #include <KDE/KGlobalAccel>
-#include <KDE/KIcon>
 #include <KLocalizedString>
 #include <kkeyserver.h>
 // X11
@@ -359,7 +358,7 @@ QString TabBoxClientImpl::caption() const
 QPixmap TabBoxClientImpl::icon(const QSize& size) const
 {
     if (m_client->isDesktop()) {
-        return KIcon(QStringLiteral("user-desktop")).pixmap(size);
+        return QIcon::fromTheme(QStringLiteral("user-desktop")).pixmap(size);
     }
     return m_client->icon(size);
 }
