@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 
 #include <kwineffects.h>
-#include <KDE/KGlobalSettings>
 
 #include <qmath.h>
 #include <cmath>
@@ -178,8 +177,7 @@ void LanczosFilter::createOffsets(int count, float width, Qt::Orientation direct
 
 void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if ((data.xScale() < 0.9 || data.yScale() < 0.9) &&
-            KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
+    if (data.xScale() < 0.9 || data.yScale() < 0.9) {
         if (!m_inited)
             init();
         const QRect screenRect = Workspace::self()->clientArea(ScreenArea, w->screen(), w->desktop());
