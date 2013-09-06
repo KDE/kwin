@@ -270,55 +270,46 @@ void UserActionsMenu::init()
 
     QMenu *advancedMenu = new QMenu(m_menu);
 
+    auto setShortcut = [](QAction *action, const QString &actionName) {
+        const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->actionCollection()->action(actionName));
+        if (!shortcuts.isEmpty()) {
+            action->setShortcut(shortcuts.first());
+        }
+    };
+
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
     m_moveOperation->setIcon(KIcon(QStringLiteral("transform-move")));
-    KActionCollection *keys = Workspace::self()->actionCollection();
-    KAction *kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Move")));
-    if (kaction != 0)
-        m_moveOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_moveOperation, QStringLiteral("Window Move"));
     m_moveOperation->setData(Options::UnrestrictedMoveOp);
 
     m_resizeOperation = advancedMenu->addAction(i18n("Re&size"));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Resize")));
-    if (kaction != 0)
-        m_resizeOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
     m_resizeOperation->setData(Options::ResizeOp);
 
     m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
-    m_keepAboveOperation->setIcon(KIcon(QStringLiteral("go-up")));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Above Other Windows")));
-    if (kaction != 0)
-        m_keepAboveOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
     m_keepAboveOperation->setCheckable(true);
     m_keepAboveOperation->setData(Options::KeepAboveOp);
 
     m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
     m_keepBelowOperation->setIcon(KIcon(QStringLiteral("go-down")));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Below Other Windows")));
-    if (kaction != 0)
-        m_keepBelowOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
     m_keepBelowOperation->setCheckable(true);
     m_keepBelowOperation->setData(Options::KeepBelowOp);
 
     m_fullScreenOperation = advancedMenu->addAction(i18n("&Fullscreen"));
     m_fullScreenOperation->setIcon(KIcon(QStringLiteral("view-fullscreen")));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Fullscreen")));
-    if (kaction != 0)
-        m_fullScreenOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_fullScreenOperation, QStringLiteral("Window Fullscreen"));
     m_fullScreenOperation->setCheckable(true);
     m_fullScreenOperation->setData(Options::FullScreenOp);
 
     m_shadeOperation = advancedMenu->addAction(i18n("Sh&ade"));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Shade")));
-    if (kaction != 0)
-        m_shadeOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
     m_shadeOperation->setCheckable(true);
     m_shadeOperation->setData(Options::ShadeOp);
 
     m_noBorderOperation = advancedMenu->addAction(i18n("&No Border"));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window No Border")));
-    if (kaction != 0)
-        m_noBorderOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
     m_noBorderOperation->setCheckable(true);
     m_noBorderOperation->setData(Options::NoBorderOp);
 
@@ -326,9 +317,7 @@ void UserActionsMenu::init()
 
     QAction *action = advancedMenu->addAction(i18n("Window &Shortcut..."));
     action->setIcon(KIcon(QStringLiteral("configure-shortcuts")));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Setup Window Shortcut")));
-    if (kaction != 0)
-        action->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(action, QStringLiteral("Setup Window Shortcut"));
     action->setData(Options::SetupWindowShortcutOp);
 
     action = advancedMenu->addAction(i18n("&Special Window Settings..."));
@@ -348,15 +337,11 @@ void UserActionsMenu::init()
     }
 
     m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Minimize")));
-    if (kaction != 0)
-        m_minimizeOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
 
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Maximize")));
-    if (kaction != 0)
-        m_maximizeOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_maximizeOperation, QStringLiteral("Window Maximize"));
     m_maximizeOperation->setCheckable(true);
     m_maximizeOperation->setData(Options::MaximizeOp);
 
@@ -365,16 +350,12 @@ void UserActionsMenu::init()
     // Actions for window tabbing
     if (decorationPlugin()->supportsTabbing()) {
         m_removeFromTabGroup = m_menu->addAction(i18n("&Untab"));
-        kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Untab")));
-        if (kaction != 0)
-            m_removeFromTabGroup->setShortcut(kaction->globalShortcut().primary());
+        setShortcut(m_removeFromTabGroup, QStringLiteral("Untab"));
         m_removeFromTabGroup->setData(Options::RemoveTabFromGroupOp);
 
         m_closeTabGroup = m_menu->addAction(i18n("Close Entire &Group"));
         m_closeTabGroup->setIcon(KIcon(QStringLiteral("window-close")));
-        kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Close TabGroup")));
-        if (kaction != 0)
-            m_closeTabGroup->setShortcut(kaction->globalShortcut().primary());
+        setShortcut(m_closeTabGroup, QStringLiteral("Close TabGroup"));
         m_closeTabGroup->setData(Options::CloseTabGroupOp);
 
         m_menu->addSeparator();
@@ -389,9 +370,7 @@ void UserActionsMenu::init()
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
     m_closeOperation->setIcon(KIcon(QStringLiteral("window-close")));
-    kaction = qobject_cast<KAction*>(keys->action(QStringLiteral("Window Close")));
-    if (kaction != 0)
-        m_closeOperation->setShortcut(kaction->globalShortcut().primary());
+    setShortcut(m_closeOperation, QStringLiteral("Window Close"));
     m_closeOperation->setData(Options::CloseOp);
 }
 
