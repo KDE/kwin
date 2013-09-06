@@ -63,7 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 
 #include <KDE/KGlobalAccel>
-#include <KDE/KIcon>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <QRegExp>
@@ -273,7 +272,7 @@ void UserActionsMenu::init()
     };
 
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
-    m_moveOperation->setIcon(KIcon(QStringLiteral("transform-move")));
+    m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
     setShortcut(m_moveOperation, QStringLiteral("Window Move"));
     m_moveOperation->setData(Options::UnrestrictedMoveOp);
 
@@ -287,13 +286,13 @@ void UserActionsMenu::init()
     m_keepAboveOperation->setData(Options::KeepAboveOp);
 
     m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
-    m_keepBelowOperation->setIcon(KIcon(QStringLiteral("go-down")));
+    m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("go-down")));
     setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
     m_keepBelowOperation->setCheckable(true);
     m_keepBelowOperation->setData(Options::KeepBelowOp);
 
     m_fullScreenOperation = advancedMenu->addAction(i18n("&Fullscreen"));
-    m_fullScreenOperation->setIcon(KIcon(QStringLiteral("view-fullscreen")));
+    m_fullScreenOperation->setIcon(QIcon::fromTheme(QStringLiteral("view-fullscreen")));
     setShortcut(m_fullScreenOperation, QStringLiteral("Window Fullscreen"));
     m_fullScreenOperation->setCheckable(true);
     m_fullScreenOperation->setData(Options::FullScreenOp);
@@ -311,23 +310,23 @@ void UserActionsMenu::init()
     advancedMenu->addSeparator();
 
     QAction *action = advancedMenu->addAction(i18n("Window &Shortcut..."));
-    action->setIcon(KIcon(QStringLiteral("configure-shortcuts")));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
     setShortcut(action, QStringLiteral("Setup Window Shortcut"));
     action->setData(Options::SetupWindowShortcutOp);
 
     action = advancedMenu->addAction(i18n("&Special Window Settings..."));
-    action->setIcon(KIcon(QStringLiteral("preferences-system-windows-actions")));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
 
     action = advancedMenu->addAction(i18n("S&pecial Application Settings..."));
-    action->setIcon(KIcon(QStringLiteral("preferences-system-windows-actions")));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::ApplicationRulesOp);
     if (!KSharedConfig::openConfig()->isImmutable() &&
             !KAuthorized::authorizeControlModules(configModules(true)).isEmpty()) {
         advancedMenu->addSeparator();
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
                                         "Window &Manager Settings..."));
-        action->setIcon(KIcon(QStringLiteral("configure")));
+        action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
         connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
     }
 
@@ -349,7 +348,7 @@ void UserActionsMenu::init()
         m_removeFromTabGroup->setData(Options::RemoveTabFromGroupOp);
 
         m_closeTabGroup = m_menu->addAction(i18n("Close Entire &Group"));
-        m_closeTabGroup->setIcon(KIcon(QStringLiteral("window-close")));
+        m_closeTabGroup->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
         setShortcut(m_closeTabGroup, QStringLiteral("Close TabGroup"));
         m_closeTabGroup->setData(Options::CloseTabGroupOp);
 
@@ -364,7 +363,7 @@ void UserActionsMenu::init()
     m_menu->addSeparator();
 
     m_closeOperation = m_menu->addAction(i18n("&Close"));
-    m_closeOperation->setIcon(KIcon(QStringLiteral("window-close")));
+    m_closeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-close")));
     setShortcut(m_closeOperation, QStringLiteral("Window Close"));
     m_closeOperation->setData(Options::CloseOp);
 }
@@ -698,7 +697,7 @@ void UserActionsMenu::activityPopupAboutToShow()
         action->setDefaultWidget(box);
         const QString icon = activity.icon();
         if (!icon.isEmpty())
-            box->setIcon(KIcon(icon));
+            box->setIcon(QIcon::fromTheme(icon));
         box->setBackgroundRole(m_activityMenu->backgroundRole());
         box->setForegroundRole(m_activityMenu->foregroundRole());
         box->setPalette(m_activityMenu->palette());
