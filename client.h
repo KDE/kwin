@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "xcbutils.h"
 // KDE
-#include <KDE/KShortcut>
 #include <KDE/NETWinInfo>
 // Qt
 #include <QPixmap>
@@ -461,7 +460,7 @@ public:
     void shrinkVertical();
 
     bool providesContextHelp() const;
-    KShortcut shortcut() const;
+    const QKeySequence &shortcut() const;
     void setShortcut(const QString& cut);
 
     WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
@@ -778,7 +777,7 @@ private:
     void setCaption(const QString& s, bool force = false);
     bool hasTransientInternal(const Client* c, bool indirect, ConstClientList& set) const;
     void finishWindowRules();
-    void setShortcutInternal(const KShortcut& cut);
+    void setShortcutInternal(const QKeySequence &cut = QKeySequence());
 
     void configureRequest(int value_mask, int rx, int ry, int rw, int rh, int gravity, bool from_tool);
     NETExtendedStrut strut() const;
@@ -962,7 +961,7 @@ private:
     int padding_left, padding_right, padding_top, padding_bottom;
     QRegion _mask;
     static bool check_active_modal; ///< \see Client::checkActiveModal()
-    KShortcut _shortcut;
+    QKeySequence _shortcut;
     int sm_stacking_order;
     friend struct FetchNameInternalPredicate;
     friend struct ResetupRulesProcedure;
@@ -1240,7 +1239,7 @@ inline xcb_window_t Client::moveResizeGrabWindow() const
     return m_moveResizeGrabWindow;
 }
 
-inline KShortcut Client::shortcut() const
+inline const QKeySequence &Client::shortcut() const
 {
     return _shortcut;
 }

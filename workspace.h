@@ -39,7 +39,6 @@ class QStringList;
 class KConfig;
 class KConfigGroup;
 class KActionCollection;
-class KShortcut;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
@@ -268,7 +267,7 @@ public:
 
     bool forcedGlobalMouseGrab() const;
     void clientShortcutUpdated(Client* c);
-    bool shortcutAvailable(const KShortcut& cut, Client* ignore = NULL) const;
+    bool shortcutAvailable(const QKeySequence &cut, Client* ignore = NULL) const;
     bool globalShortcutsDisabled() const;
     void disableGlobalShortcutsForClient(bool disable);
 
