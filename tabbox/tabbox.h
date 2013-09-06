@@ -23,14 +23,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_H
 #define KWIN_TABBOX_H
 
+#include <QKeySequence>
 #include <QTimer>
 #include <QModelIndex>
-#include <KDE/KShortcut>
 #include "utils.h"
 #include "tabbox/tabboxhandler.h"
 
 class KActionCollection;
 class KConfigGroup;
+class QAction;
 class QKeyEvent;
 
 struct xcb_button_press_event_t;
@@ -221,21 +222,6 @@ public Q_SLOTS:
     void slotWalkThroughCurrentAppWindowsAlternative();
     void slotWalkBackThroughCurrentAppWindowsAlternative();
 
-    void slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabLeftKeyChanged(const QKeySequence& seq);
-    void slotMoveToTabRightKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq);
-    void slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq);
-    void slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq);
-
     void handlerReady();
 
     bool toggle(ElectricBorder eb);
@@ -256,7 +242,7 @@ private:
     bool startWalkThroughDesktops(TabBoxMode mode);   // TabBoxDesktopMode | TabBoxDesktopListMode
     bool startWalkThroughDesktops();
     bool startWalkThroughDesktopList();
-    void navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    void navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode);   // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
     void KDEWalkThroughWindows(bool forward);
     void CDEWalkThroughWindows(bool forward);
     void walkThroughDesktops(bool forward);
@@ -267,9 +253,12 @@ private:
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     void modalActionsSwitch(bool enabled);
+    template <typename Slot>
+    void key(KActionCollection *keys, const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 
 private Q_SLOTS:
     void reconfigure();
+    void globalShortcutChanged(QAction *action, const QKeySequence &seq);
 
 private:
     TabBoxMode m_tabBoxMode;
@@ -293,13 +282,12 @@ private:
     bool m_tabGrab;
     // true if tabbox is in modal mode which does not require holding a modifier
     bool m_noModifierGrab;
-    KShortcut m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse;
-    KShortcut m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse;
-    KShortcut m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
-    KShortcut m_cutWalkThroughGroupWindows, m_cutWalkThroughGroupWindowsReverse;
-    KShortcut m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse;
-    KShortcut m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsReverse;
-    KShortcut m_cutWalkThroughCurrentAppWindowsAlternative, m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
+    QKeySequence m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse;
+    QKeySequence m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse;
+    QKeySequence m_cutWalkThroughWindows, m_cutWalkThroughWindowsReverse;
+    QKeySequence m_cutWalkThroughWindowsAlternative, m_cutWalkThroughWindowsAlternativeReverse;
+    QKeySequence m_cutWalkThroughCurrentAppWindows, m_cutWalkThroughCurrentAppWindowsReverse;
+    QKeySequence m_cutWalkThroughCurrentAppWindowsAlternative, m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
     bool m_forcedGlobalMouseGrab;
     bool m_ready; // indicates whether the config is completely loaded
     QList<ElectricBorder> m_borderActivate, m_borderAlternativeActivate;

@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDE/KAction>
+#include <KDE/KGlobalAccel>
 #include <KDE/KIcon>
 #include <KLocalizedString>
 #include <kkeyserver.h>
@@ -490,35 +491,75 @@ void TabBox::handlerReady()
     m_ready = true;
 }
 
+template <typename Slot>
+void TabBox::key(KActionCollection *keys, const char *actionName, Slot slot, const QKeySequence &shortcut)
+{
+    QAction *a = keys->addAction(QString::fromUtf8(actionName));
+    a->setText(i18n(actionName));
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
+    connect(a, &QAction::triggered, TabBox::self(), slot);
+    auto cuts = KGlobalAccel::self()->shortcut(a);
+    globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
+}
+
+static const char *s_windows        = I18N_NOOP("Walk Through Windows");
+static const char *s_windowsRev     = I18N_NOOP("Walk Through Windows (Reverse)");
+static const char *s_windowsAlt     = I18N_NOOP("Walk Through Windows Alternative");
+static const char *s_windowsAltRev  = I18N_NOOP("Walk Through Windows Alternative (Reverse)");
+static const char *s_app            = I18N_NOOP("Walk Through Windows of Current Application");
+static const char *s_appRev         = I18N_NOOP("Walk Through Windows of Current Application (Reverse)");
+static const char *s_appAlt         = I18N_NOOP("Walk Through Windows of Current Application Alternative");
+static const char *s_appAltRev      = I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)");
+static const char *s_desktops       = I18N_NOOP("Walk Through Desktops");
+static const char *s_desktopsRev    = I18N_NOOP("Walk Through Desktops (Reverse)");
+static const char *s_desktopList    = I18N_NOOP("Walk Through Desktop List");
+static const char *s_desktopListRev = I18N_NOOP("Walk Through Desktop List (Reverse)");
+
 void TabBox::initShortcuts(KActionCollection* keys)
 {
-    QAction *a = NULL;
+    key(keys, s_windows,        &TabBox::slotWalkThroughWindows, Qt::ALT + Qt::Key_Tab);
+    key(keys, s_windowsRev,     &TabBox::slotWalkBackThroughWindows, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
+    key(keys, s_app,            &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT + Qt::Key_QuoteLeft);
+    key(keys, s_appRev,         &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT + Qt::Key_AsciiTilde);
+    key(keys, s_windowsAlt,     &TabBox::slotWalkThroughWindowsAlternative);
+    key(keys, s_windowsAltRev,  &TabBox::slotWalkBackThroughWindowsAlternative);
+    key(keys, s_appAlt,         &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
+    key(keys, s_appAltRev,      &TabBox::slotWalkBackThroughCurrentAppWindowsAlternative);
+    key(keys, s_desktops,       &TabBox::slotWalkThroughDesktops);
+    key(keys, s_desktopsRev,    &TabBox::slotWalkBackThroughDesktops);
+    key(keys, s_desktopList,    &TabBox::slotWalkThroughDesktopList);
+    key(keys, s_desktopListRev, &TabBox::slotWalkBackThroughDesktopList);
 
-    // The setGlobalShortcut(shortcut); shortcut = a->globalShortcut()
-    // sequence is necessary in the case where the user has defined a
-    // custom key binding which KAction::setGlobalShortcut autoloads.
-    #define KEY( name, key, fnSlot, shortcut, shortcutSlot )                    \
-    a = keys->addAction( QStringLiteral( name ) );                              \
-    a->setText( i18n(name) );                                                   \
-    shortcut = KShortcut(key);                                                  \
-    qobject_cast<KAction*>( a )->setGlobalShortcut(shortcut);                   \
-    shortcut = qobject_cast<KAction*>( a )->globalShortcut();                   \
-    connect(a, SIGNAL(triggered(bool)), SLOT(fnSlot));                          \
-    connect(a, SIGNAL(globalShortcutChanged(QKeySequence)), SLOT(shortcutSlot));
+    connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &TabBox::globalShortcutChanged);
+}
 
-    KEY(I18N_NOOP("Walk Through Windows"),                 Qt::ALT + Qt::Key_Tab, slotWalkThroughWindows(), m_cutWalkThroughWindows, slotWalkThroughWindowsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows (Reverse)"),       Qt::ALT + Qt::SHIFT + Qt::Key_Backtab, slotWalkBackThroughWindows(), m_cutWalkThroughWindowsReverse, slotWalkBackThroughWindowsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows Alternative"),     0, slotWalkThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternative, slotWalkThroughWindowsAlternativeKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows Alternative (Reverse)"), 0, slotWalkBackThroughWindowsAlternative(), m_cutWalkThroughWindowsAlternativeReverse, slotWalkBackThroughWindowsAlternativeKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows of Current Application"), Qt::ALT + Qt::Key_QuoteLeft, slotWalkThroughCurrentAppWindows(), m_cutWalkThroughCurrentAppWindows, slotWalkThroughCurrentAppWindowsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows of Current Application (Reverse)"), Qt::ALT + Qt::Key_AsciiTilde, slotWalkBackThroughCurrentAppWindows(), m_cutWalkThroughCurrentAppWindowsReverse, slotWalkBackThroughCurrentAppWindowsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows of Current Application Alternative"), 0, slotWalkThroughCurrentAppWindowsAlternative(), m_cutWalkThroughCurrentAppWindowsAlternative, slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)"), 0, slotWalkBackThroughCurrentAppWindowsAlternative(), m_cutWalkThroughCurrentAppWindowsAlternativeReverse, slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Desktops"),                0, slotWalkThroughDesktops(), m_cutWalkThroughDesktops, slotWalkThroughDesktopsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Desktops (Reverse)"),      0, slotWalkBackThroughDesktops(), m_cutWalkThroughDesktopsReverse, slotWalkBackThroughDesktopsKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Desktop List"),            0, slotWalkThroughDesktopList(), m_cutWalkThroughDesktopList, slotWalkThroughDesktopListKeyChanged(QKeySequence))
-    KEY(I18N_NOOP("Walk Through Desktop List (Reverse)"),  0, slotWalkBackThroughDesktopList(), m_cutWalkThroughDesktopListReverse, slotWalkBackThroughDesktopListKeyChanged(QKeySequence))
-    #undef KEY
+void TabBox::globalShortcutChanged(QAction *action, const QKeySequence &seq)
+{
+    if (qstrcmp(qPrintable(action->objectName()), s_windows) == 0) {
+        m_cutWalkThroughWindows = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsRev) == 0) {
+        m_cutWalkThroughWindowsReverse = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_app) == 0) {
+        m_cutWalkThroughCurrentAppWindows = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appRev) == 0) {
+        m_cutWalkThroughCurrentAppWindowsReverse = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAlt) == 0) {
+        m_cutWalkThroughWindowsAlternative = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_windowsAltRev) == 0) {
+        m_cutWalkThroughWindowsAlternativeReverse = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appAlt) == 0) {
+        m_cutWalkThroughCurrentAppWindowsAlternative = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_appAltRev) == 0) {
+        m_cutWalkThroughCurrentAppWindowsAlternativeReverse = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktops) == 0) {
+        m_cutWalkThroughDesktops = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopsRev) == 0) {
+        m_cutWalkThroughDesktopsReverse = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopList) == 0) {
+        m_cutWalkThroughDesktopList = seq;
+    } else if (qstrcmp(qPrintable(action->objectName()), s_desktopListRev) == 0) {
+        m_cutWalkThroughDesktopListReverse = seq;
+    }
 }
 
 /*!
@@ -939,15 +980,7 @@ static bool areModKeysDepressed(const QKeySequence& seq) {
     return areKeySymXsDepressed(false, rgKeySyms, nKeySyms);
 }
 
-static bool areModKeysDepressed(const KShortcut& cut)
-{
-    if (areModKeysDepressed(cut.primary()) || areModKeysDepressed(cut.alternate()))
-        return true;
-
-    return false;
-}
-
-void TabBox::navigatingThroughWindows(bool forward, const KShortcut& shortcut, TabBoxMode mode)
+void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode)
 {
     if (!m_ready || isGrabbed() || !Workspace::self()->isOnCurrentHead()) {
         return;
@@ -1057,75 +1090,6 @@ void TabBox::slotWalkBackThroughDesktopList()
     } else {
         oneStepThroughDesktopList(false);
     }
-}
-
-void TabBox::slotWalkThroughDesktopsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughDesktops = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughDesktopsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughDesktopsReverse = KShortcut(seq);
-}
-
-void TabBox::slotWalkThroughDesktopListKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughDesktopList = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughDesktopListKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughDesktopListReverse = KShortcut(seq);
-}
-
-void TabBox::slotWalkThroughWindowsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughWindows = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughWindowsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughWindowsReverse = KShortcut(seq);
-}
-
-void TabBox::slotMoveToTabLeftKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughGroupWindows = KShortcut(seq);
-}
-void TabBox::slotMoveToTabRightKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughGroupWindowsReverse = KShortcut(seq);
-}
-
-void TabBox::slotWalkThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughWindowsAlternative = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughWindowsAlternativeKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughWindowsAlternativeReverse = KShortcut(seq);
-}
-
-void TabBox::slotWalkThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughCurrentAppWindows = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughCurrentAppWindowsKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughCurrentAppWindowsReverse = KShortcut(seq);
-}
-
-void TabBox::slotWalkThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughCurrentAppWindowsAlternative = KShortcut(seq);
-}
-
-void TabBox::slotWalkBackThroughCurrentAppWindowsAlternativeKeyChanged(const QKeySequence& seq)
-{
-    m_cutWalkThroughCurrentAppWindowsAlternativeReverse = KShortcut(seq);
 }
 
 void TabBox::modalActionsSwitch(bool enabled)
@@ -1349,9 +1313,18 @@ void TabBox::keyPress(int keyQt)
     bool forward = false;
     bool backward = false;
 
+    auto contains = [](const QKeySequence &shortcut, int key) -> bool {
+        for (int i = 0; i < shortcut.count(); ++i) {
+            if (shortcut[i] == key) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     if (m_tabGrab) {
-        KShortcut forwardShortcut;
-        KShortcut backwardShortcut;
+        QKeySequence forwardShortcut;
+        QKeySequence backwardShortcut;
         switch (mode()) {
             case TabBoxWindowsMode:
                 forwardShortcut = m_cutWalkThroughWindows;
@@ -1373,14 +1346,14 @@ void TabBox::keyPress(int keyQt)
                 qDebug() << "Invalid TabBoxMode";
                 return;
         }
-        forward = forwardShortcut.contains(keyQt);
-        backward = backwardShortcut.contains(keyQt);
+        forward = contains(forwardShortcut, keyQt);
+        backward = contains(backwardShortcut, keyQt);
         if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
             // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
             // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
             keyQt &= ~Qt::ShiftModifier;
-            forward = forwardShortcut.contains(keyQt);
-            backward = backwardShortcut.contains(keyQt);
+            forward = contains(forwardShortcut, keyQt);
+            backward = contains(backwardShortcut, keyQt);
             if (!(forward || backward)) {
                 // the tabkey is however overly special and withdrawing the shift state will not turn backtab into tab
                 // yet kglobalaccel fires for both. since we ensure this is in a Shift condition, try the other key
@@ -1395,8 +1368,8 @@ void TabBox::keyPress(int keyQt)
                     keyQt &= ~Qt::Key_Tab;
                     keyQt |= (Qt::Key_Backtab|Qt::ShiftModifier);
                 }
-                forward = forwardShortcut.contains(keyQt);
-                backward = backwardShortcut.contains(keyQt);
+                forward = contains(forwardShortcut, keyQt);
+                backward = contains(backwardShortcut, keyQt);
             }
         }
         if (forward || backward) {
@@ -1405,18 +1378,18 @@ void TabBox::keyPress(int keyQt)
             KDEWalkThroughWindows(forward);
         }
     } else if (m_desktopGrab) {
-        forward = m_cutWalkThroughDesktops.contains(keyQt) ||
-                  m_cutWalkThroughDesktopList.contains(keyQt);
-        backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
-                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
+        forward = contains(m_cutWalkThroughDesktops, keyQt) ||
+                  contains(m_cutWalkThroughDesktopList, keyQt);
+        backward = contains(m_cutWalkThroughDesktopsReverse, keyQt) ||
+                   contains(m_cutWalkThroughDesktopListReverse, keyQt);
         if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
             // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
             // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
             keyQt &= ~Qt::ShiftModifier;
-            forward = m_cutWalkThroughDesktops.contains(keyQt) ||
-                  m_cutWalkThroughDesktopList.contains(keyQt);
-            backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
-                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
+            forward = contains(m_cutWalkThroughDesktops, keyQt) ||
+                  contains(m_cutWalkThroughDesktopList, keyQt);
+            backward = contains(m_cutWalkThroughDesktopsReverse, keyQt) ||
+                   contains(m_cutWalkThroughDesktopListReverse, keyQt);
             if (!(forward || backward)) {
                 // the tabkey is however overly special and withdrawing the shift state will not turn backtab into tab
                 // yet kglobalaccel fires for both. since we ensure this is in a Shift condition, try the other key
@@ -1431,10 +1404,10 @@ void TabBox::keyPress(int keyQt)
                     keyQt &= ~Qt::Key_Tab;
                     keyQt |= (Qt::Key_Backtab|Qt::ShiftModifier);
                 }
-                forward = m_cutWalkThroughDesktops.contains(keyQt) ||
-                  m_cutWalkThroughDesktopList.contains(keyQt);
-                backward = m_cutWalkThroughDesktopsReverse.contains(keyQt) ||
-                   m_cutWalkThroughDesktopListReverse.contains(keyQt);
+                forward = contains(m_cutWalkThroughDesktops, keyQt) ||
+                  contains(m_cutWalkThroughDesktopList, keyQt);
+                backward = contains(m_cutWalkThroughDesktopsReverse, keyQt) ||
+                   contains(m_cutWalkThroughDesktopListReverse, keyQt);
             }
         }
         if (forward || backward)
