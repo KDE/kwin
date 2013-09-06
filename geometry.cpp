@@ -33,9 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "netinfo.h"
 #include "workspace.h"
 
-#include <kapplication.h>
-#include <kwindowsystem.h>
-
 #include "placement.h"
 #include "geometrytip.h"
 #include "rules.h"
@@ -44,11 +41,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
+#include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
-#include <QPainter>
 #include <QVarLengthArray>
-#include <QX11Info>
 
 #include "outline.h"
 
