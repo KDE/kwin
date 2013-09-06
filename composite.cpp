@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimerEvent>
 #include <QDateTime>
 #include <QDBusConnection>
-#include <kaction.h>
 #include <kactioncollection.h>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <KDE/KNotification>
 #include <KDE/KSelectionWatcher>
@@ -430,13 +430,11 @@ void Compositor::toggleCompositing()
     slotToggleCompositing(); // TODO only operate on script level here?
     if (m_suspended) {
         // when disabled show a shortcut how the user can get back compositing
-        QString shortcut, message;
-        if (KAction* action = qobject_cast<KAction*>(Workspace::self()->actionCollection()->action(QStringLiteral("Suspend Compositing"))))
-            shortcut = action->globalShortcut().primary().toString(QKeySequence::NativeText);
-        if (!shortcut.isEmpty()) {
+        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->actionCollection()->action(QStringLiteral("Suspend Compositing")));
+        if (!shortcuts.isEmpty()) {
             // display notification only if there is the shortcut
-            message = i18n("Desktop effects have been suspended by another application.<br/>"
-                           "You can resume using the '%1' shortcut.", shortcut);
+            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
+                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
             KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
         }
     }
