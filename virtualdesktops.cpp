@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KAction>
 #include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <KDE/KShortcut>
 #include <KDE/NETRootInfo>
 
 namespace KWin {
@@ -437,33 +437,29 @@ void VirtualDesktopManager::initSwitchToShortcuts(KActionCollection *keys)
 {
     const QString toDesktop = QStringLiteral("Switch to Desktop %1");
     const KLocalizedString toDesktopLabel = ki18n("Switch to Desktop %1");
-    addAction(keys, toDesktop, toDesktopLabel, 1, KShortcut(Qt::CTRL + Qt::Key_F1), SLOT(slotSwitchTo()));
-    addAction(keys, toDesktop, toDesktopLabel, 2, KShortcut(Qt::CTRL + Qt::Key_F2), SLOT(slotSwitchTo()));
-    addAction(keys, toDesktop, toDesktopLabel, 3, KShortcut(Qt::CTRL + Qt::Key_F3), SLOT(slotSwitchTo()));
-    addAction(keys, toDesktop, toDesktopLabel, 4, KShortcut(Qt::CTRL + Qt::Key_F4), SLOT(slotSwitchTo()));
+    addAction(keys, toDesktop, toDesktopLabel, 1, QKeySequence(Qt::CTRL + Qt::Key_F1), SLOT(slotSwitchTo()));
+    addAction(keys, toDesktop, toDesktopLabel, 2, QKeySequence(Qt::CTRL + Qt::Key_F2), SLOT(slotSwitchTo()));
+    addAction(keys, toDesktop, toDesktopLabel, 3, QKeySequence(Qt::CTRL + Qt::Key_F3), SLOT(slotSwitchTo()));
+    addAction(keys, toDesktop, toDesktopLabel, 4, QKeySequence(Qt::CTRL + Qt::Key_F4), SLOT(slotSwitchTo()));
 
     for (uint i = 5; i <= maximum(); ++i) {
-        addAction(keys, toDesktop, toDesktopLabel, i, KShortcut(), SLOT(slotSwitchTo()));
+        addAction(keys, toDesktop, toDesktopLabel, i, QKeySequence(), SLOT(slotSwitchTo()));
     }
 }
 
-void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const KShortcut &key, const char *slot)
+void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, const char *slot)
 {
     QAction *a = keys->addAction(name.arg(value), this, slot);
     a->setText(label.subs(value).toString());
-#if KWIN_QT5_PORTING
-    a->setGlobalShortcut(key);
-#endif
     a->setData(value);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << key);
 }
 
 void VirtualDesktopManager::addAction(KActionCollection *keys, const QString &name, const QString &label, const char *slot)
 {
     QAction *a = keys->addAction(name, this, slot);
-#if KWIN_QT5_PORTING
-    a->setGlobalShortcut(KShortcut());
-#endif
     a->setText(label);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
 }
 
 void VirtualDesktopManager::slotSwitchTo()

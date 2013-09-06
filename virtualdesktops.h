@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class KActionCollection;
 class KLocalizedString;
-class KShortcut;
 class NETRootInfo;
 
 namespace KWin {
@@ -341,7 +340,7 @@ private:
      * @param key The global shortcut for the action
      * @param slot The slot to invoke when the action is triggered
      **/
-    void addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const KShortcut &key, const char *slot);
+    void addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, const char *slot);
     /**
      * Creates an action and connects it to the @p slot in this Manager.
      * Overloaded method for the case that no additional value needs to be passed to the action and
