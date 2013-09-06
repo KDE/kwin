@@ -46,18 +46,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QAction>
 #include <QDebug>
-#include <QX11Info>
 #include <QtDBus/QDBusConnection>
 // KDE
 #include <KActionCollection>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDE/KAction>
 #include <KDE/KGlobalAccel>
 #include <KLocalizedString>
 #include <kkeyserver.h>
 // X11
-#include <fixx11h.h>
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
 
