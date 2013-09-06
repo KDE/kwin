@@ -32,11 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QSocketNotifier>
 #include <QSessionManager>
-#include <KDE/KApplication>
 
 namespace KWin
 {
 
+#if KWIN_QT5_PORTING
 bool SessionManager::saveState(QSessionManager& sm)
 {
     // If the session manager is ksmserver, save stacking
@@ -75,6 +75,7 @@ bool SessionManager::commitData(QSessionManager& sm)
         Workspace::self()->sessionSaveStarted();
     return true;
 }
+#endif
 
 // Workspace
 

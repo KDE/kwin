@@ -496,7 +496,10 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     a.start();
 
     ksmserver.resumeStartup(QStringLiteral(KWIN_NAME));
+#warning SessionManager needs porting
+#if KWIN_QT5_PORTING
     KWin::SessionManager weAreIndeed;
+#endif
     KWin::SessionSaveDoneHelper helper;
 #warning insertCatalog needs porting
 #if KWIN_QT5_PORTING
