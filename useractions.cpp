@@ -63,7 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 
 #include <KDE/KGlobalAccel>
-#include <kglobalsettings.h>
 #include <KDE/KIcon>
 #include <kiconloader.h>
 #include <KDE/KLocalizedString>
@@ -266,12 +265,10 @@ void UserActionsMenu::init()
         return;
     }
     m_menu = new QMenu;
-    m_menu->setFont(KGlobalSettings::menuFont());
     connect(m_menu, SIGNAL(aboutToShow()), this, SLOT(menuAboutToShow()));
     connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)), Qt::QueuedConnection);
 
     QMenu *advancedMenu = new QMenu(m_menu);
-    advancedMenu->setFont(KGlobalSettings::menuFont());
 
     m_moveOperation = advancedMenu->addAction(i18n("&Move"));
     m_moveOperation->setIcon(KIcon(QStringLiteral("transform-move")));
@@ -463,7 +460,6 @@ void UserActionsMenu::menuAboutToShow()
     m_scriptsMenu = new QMenu(m_menu);
     QList<QAction*> scriptActions = Scripting::self()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
-        m_scriptsMenu->setFont(KGlobalSettings::menuFont());
         m_scriptsMenu->addActions(scriptActions);
 
         QAction *action = m_scriptsMenu->menuAction();
@@ -572,7 +568,6 @@ void UserActionsMenu::initTabbingPopups()
         needTabManagers = true;
         if (!m_switchToTabMenu) {
             m_switchToTabMenu = new QMenu(i18n("Switch to Tab"), m_menu);
-            m_switchToTabMenu->setFont(KGlobalSettings::menuFont());
             connect(m_switchToTabMenu, SIGNAL(triggered(QAction*)), SLOT(selectPopupClientTab(QAction*)));
             connect(m_switchToTabMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabListPopup()));
             m_menu->insertMenu(m_removeFromTabGroup, m_switchToTabMenu);
@@ -584,7 +579,6 @@ void UserActionsMenu::initTabbingPopups()
 
     if (!m_addTabsMenu) {
         m_addTabsMenu = new QMenu(i18n("&Attach as tab to"), m_menu);
-        m_addTabsMenu->setFont(KGlobalSettings::menuFont());
         connect(m_addTabsMenu, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
         connect(m_addTabsMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
         m_menu->insertMenu(m_removeFromTabGroup, m_addTabsMenu);
@@ -600,7 +594,6 @@ void UserActionsMenu::initDesktopPopup()
         return;
 
     m_desktopMenu = new QMenu(m_menu);
-    m_desktopMenu->setFont(KGlobalSettings::menuFont());
     connect(m_desktopMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToDesktop(QAction*)));
     connect(m_desktopMenu, SIGNAL(aboutToShow()), SLOT(desktopPopupAboutToShow()));
 
@@ -617,7 +610,6 @@ void UserActionsMenu::initScreenPopup()
     }
 
     m_screenMenu = new QMenu(m_menu);
-    m_screenMenu->setFont(KGlobalSettings::menuFont());
     connect(m_screenMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToScreen(QAction*)));
     connect(m_screenMenu, SIGNAL(aboutToShow()), SLOT(screenPopupAboutToShow()));
 
@@ -633,7 +625,6 @@ void UserActionsMenu::initActivityPopup()
         return;
 
     m_activityMenu = new QMenu(m_menu);
-    m_activityMenu->setFont(KGlobalSettings::menuFont());
     connect(m_activityMenu, SIGNAL(triggered(QAction*)),
             this, SLOT(slotToggleOnActivity(QAction*)));
     connect(m_activityMenu, SIGNAL(aboutToShow()),
