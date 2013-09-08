@@ -51,11 +51,14 @@ DashboardEffect::~DashboardEffect()
 
 void DashboardEffect::reconfigure(ReconfigureFlags)
 {
+    DashboardConfig::self()->readConfig();
     brightness = DashboardConfig::brightness()/ 100.0;
     saturation = DashboardConfig::saturation()/ 100.0;
     blur = DashboardConfig::blur();
 
     timeline.setDuration(animationTime<DashboardConfig>(500));
+    if (transformWindow)
+        effects->addRepaintFull();
 }
 
 void DashboardEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)

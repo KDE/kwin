@@ -109,12 +109,15 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow* w)
 {
     if (!m_highlightedWindows.isEmpty()) {
         // The effect is activated thus we need to add it to the opacity hash
-        if (w->isNormalWindow() || w->isDialog())   // Only fade out windows
-            m_windowOpacity[w] = isInitiallyHidden(w) ? 0.0 : 0.15;
-        else
-            m_windowOpacity[w] = 1.0;
+        foreach (const WId id, m_highlightedIds) {
+            if (w == effects->findWindow(id)) {
+                m_windowOpacity[w] = 1.0; // this window was demanded to be highlighted before it appeared
+                return;
+            }
+        }
+        m_windowOpacity[w] = 0.15; // this window is not currently highlighted
     }
-    slotPropertyNotify(w, m_atom);   // Check initial value
+    slotPropertyNotify(w, m_atom, w);   // Check initial value
 }
 
 void HighlightWindowEffect::slotWindowClosed(EffectWindow* w)
@@ -128,7 +131,7 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow* w)
     m_windowOpacity.remove(w);
 }
 
-void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
+void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWindow *addedWindow)
 {
     if (a != m_atom)
         return; // Not our atom
@@ -138,7 +141,8 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
                           effects->readRootProperty(m_atom, m_atom, 32);
     if (byteData.length() < 1) {
         // Property was removed, clearing highlight
-        finishHighlighting();
+        if (!addedWindow || w != addedWindow)
+            finishHighlighting();
         return;
     }
     long* data = reinterpret_cast<long*>(byteData.data());
@@ -154,11 +158,13 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a)
     //foreach ( EffectWindow* e, m_highlightedWindows )
     //    effects->setElevatedWindow( e, false );
     m_highlightedWindows.clear();
+    m_highlightedIds.clear();
     for (int i = 0; i < length; i++) {
+        m_highlightedIds << data[i];
         EffectWindow* foundWin = effects->findWindow(data[i]);
         if (!foundWin) {
             kDebug(1212) << "Invalid window targetted for highlight. Requested:" << data[i];
-            continue;
+            continue; // might come in later.
         }
         m_highlightedWindows.append(foundWin);
         // TODO: We cannot just simply elevate the window as this will elevate it over
