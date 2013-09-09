@@ -345,6 +345,9 @@ private:
  * will be freed when the instance gets destroyed.
  *
  * Furthermore the class provides wrappers around some xcb methods operating on an xcb_window_t.
+ *
+ * For the cases that one is more interested in wrapping the xcb methods the constructor which takes
+ * an existing window and the @link reset method allow to disable the RAII functionality.
  **/
 class Window
 {
@@ -352,9 +355,16 @@ public:
     /**
      * Takes over responsibility of @p window. If @p window is not provided an invalid Window is
      * created. Use @link create to set an xcb_window_t later on.
+     *
+     * If @p destroy is @c true the window will be destroyed together with this object, if @c false
+     * the window will be kept around. This is useful if you are not interested in the RAII capabilities
+     * but still want to use a window like an object.
+     *
      * @param window The window to manage.
+     * @param destroy Whether the window should be destroyed together with the object.
+     * @see reset
      **/
-    Window(xcb_window_t window = XCB_WINDOW_NONE);
+    Window(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
      * depth, class and visual being copied from parent and border being @c 0.
@@ -402,8 +412,11 @@ public:
     void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     /**
      * Frees the existing window and starts to manage the new @p window.
+     * If @p destroy is @c true the new managed window will be destroyed together with this
+     * object or when reset is called again. If @p destroy is @c false the window will not
+     * be destroyed. It is then the responsibility of the caller to destroy the window.
      **/
-    void reset(xcb_window_t window = XCB_WINDOW_NONE);
+    void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
     /**
      * @returns @c true if a window is managed, @c false otherwise.
      **/
@@ -434,23 +447,27 @@ private:
     xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     void destroy();
     xcb_window_t m_window;
+    bool m_destroy;
 };
 
 inline
-Window::Window(xcb_window_t window)
+Window::Window(xcb_window_t window, bool destroy)
     : m_window(window)
+    , m_destroy(destroy)
 {
 }
 
 inline
 Window::Window(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
     : m_window(doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent))
+    , m_destroy(true)
 {
 }
 
 inline
 Window::Window(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
     : m_window(doCreate(geometry, windowClass, mask, values, parent))
+    , m_destroy(true)
 {
 }
 
@@ -463,7 +480,7 @@ Window::~Window()
 inline
 void Window::destroy()
 {
-    if (!isValid()) {
+    if (!isValid() || !m_destroy) {
         return;
     }
     xcb_destroy_window(connection(), m_window);
@@ -506,10 +523,11 @@ xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass, uint3
 }
 
 inline
-void Window::reset(xcb_window_t window)
+void Window::reset(xcb_window_t window, bool shouldDestroy)
 {
     destroy();
     m_window = window;
+    m_destroy = shouldDestroy;
 }
 
 inline
