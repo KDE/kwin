@@ -91,7 +91,6 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     target_link_libraries( kcm_kwin4_effect_${name}
         kwineffects
         Qt5::Widgets
-        ${KDE4Support_LIBRARIES}
         ${KDE4_KIO_LIBRARY} # KUrlRequester
         KF5::KCoreAddons
         KF5::KConfigWidgets

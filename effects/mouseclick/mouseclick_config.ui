@@ -108,7 +108,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="KDoubleNumInput" name="kcfg_LineWidth">
+           <widget class="QDoubleSpinBox" name="kcfg_LineWidth">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -189,7 +189,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KIntNumInput" name="kcfg_RingCount">
+           <widget class="QSpinBox" name="kcfg_RingCount">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -266,19 +266,9 @@
    <header>kcolorcombo.h</header>
   </customwidget>
   <customwidget>
-   <class>KDoubleNumInput</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
    <class>KFontRequester</class>
    <extends>QWidget</extends>
    <header>kfontrequester.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntNumInput</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
   </customwidget>
   <customwidget>
    <class>KShortcutsEditor</class>
