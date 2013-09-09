@@ -75,9 +75,9 @@ void CompositingType::generateCompositing()
 {
     QHash<QString, CompositingType::CompositingTypeIndex> compositingTypes;
 
-    compositingTypes["OpenGL 31"] = CompositingType::OPENGL31_INDEX;
-    compositingTypes["OpenGL 20"] = CompositingType::OPENGL20_INDEX;
-    compositingTypes["OpenGL 12"] = CompositingType::OPENGL12_INDEX;
+    compositingTypes["OpenGL 3.1"] = CompositingType::OPENGL31_INDEX;
+    compositingTypes["OpenGL 2.0"] = CompositingType::OPENGL20_INDEX;
+    compositingTypes["OpenGL 1.2"] = CompositingType::OPENGL12_INDEX;
     compositingTypes["XRender"] = CompositingType::XRENDER_INDEX;
 
     CompositingData data;
