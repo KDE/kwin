@@ -223,15 +223,6 @@ int EffectModel::findRowByServiceName(const QString &serviceName)
     return -1;
 }
 
-bool EffectModel::effectListContains(const QString &effectFilter, int source_row)
-{
-    EffectData effect;
-    effect = m_effectsList.at(source_row);
-
-    return effect.name.contains(effectFilter, Qt::CaseInsensitive);
-
-}
-
 void EffectModel::syncEffectsToKWin()
 {
     QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
@@ -348,7 +339,9 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
         return true;
     }
 
-    if (m_effectModel->effectListContains(m_filter, source_row)) {
+    if (m_effectModel->data(index, EffectModel::NameRole).toString().contains(m_filter, Qt::CaseInsensitive)) {
+        return true;
+    } else if (m_effectModel->data(index, EffectModel::DescriptionRole).toString().contains(m_filter, Qt::CaseInsensitive)) {
         return true;
     }
 

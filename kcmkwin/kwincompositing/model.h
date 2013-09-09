@@ -71,7 +71,6 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     QString serviceName(const QString &effectName);
-    bool effectListContains(const QString &effectFilter, int source_row);
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
