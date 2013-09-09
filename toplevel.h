@@ -389,7 +389,7 @@ private:
     static QByteArray staticSessionId(WId);
     static QByteArray staticWmCommand(WId);
     static QByteArray staticWmClientMachine(WId);
-    static Window staticWmClientLeader(WId);
+    static xcb_window_t staticWmClientLeader(xcb_window_t);
     // when adding new data members, check also copyToDeleted()
     Window client;
     Window frame;

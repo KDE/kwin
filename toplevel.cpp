@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "toplevel.h"
 
-#include <kxerrorhandler.h>
-
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -172,24 +170,15 @@ QByteArray Toplevel::staticWmCommand(WId w)
 /*!
   Returns WM_CLIENT_LEADER property for a given window.
  */
-Window Toplevel::staticWmClientLeader(WId w)
+xcb_window_t Toplevel::staticWmClientLeader(xcb_window_t w)
 {
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    Window result = w;
-    KXErrorHandler err;
-    status = XGetWindowProperty(display(), w, atoms->wm_client_leader, 0, 10000,
-                                false, XA_WINDOW, &type, &format,
-                                &nitems, &extra, &data);
-    if (status == Success && !err.error(false)) {
-        if (data && nitems > 0)
-            result = *((Window*) data);
-        XFree(data);
+    xcb_connection_t *c = connection();
+    auto cookie = xcb_get_property_unchecked(c, false, w, atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
+    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+    if (prop.isNull() || prop->value_len <= 0) {
+        return w;
     }
-    return result;
+    return static_cast<xcb_window_t*>(xcb_get_property_value(prop.data()))[0];
 }
 
 
