@@ -29,9 +29,9 @@
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("kwincompositing", 0, i18n("KWinCompositing"),
-                         "1.0", i18n("Plasma Add-Ons Creator"),
+                         "1.0", i18n("KWin Compositing"),
                          KAboutData::License_GPL,
-                         i18n("Copyright 2009-2013 Plasma Development Team"),
+                         i18n("Copyright 2013 KWin Development Team"),
                          "", "", "kwin@kde.org");
 
     aboutData.addAuthor(i18n("Antonis Tsiapaliokas"),
