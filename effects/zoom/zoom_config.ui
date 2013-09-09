@@ -164,12 +164,15 @@
     </widget>
    </item>
    <item>
-    <widget class="KWin::GlobalShortcutsEditor" name="editor" native="true">
+    <widget class="KShortcutsEditor" name="editor" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
+     </property>
+     <property name="actionTypes">
+      <enum>KShortcutsEditor::GlobalAction</enum>
      </property>
     </widget>
    </item>
@@ -177,9 +180,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KWin::GlobalShortcutsEditor</class>
+   <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">kwineffects.h</header>
+   <header location="global">KShortcutsEditor</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

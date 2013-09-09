@@ -18,12 +18,15 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0" colspan="2">
-       <widget class="KWin::GlobalShortcutsEditor" name="shortcutEditor" native="true">
+       <widget class="KShortcutsEditor" name="shortcutEditor" native="true">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="actionTypes">
+            <enum>KShortcutsEditor::GlobalAction</enum>
         </property>
        </widget>
       </item>
@@ -459,9 +462,9 @@
    <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KWin::GlobalShortcutsEditor</class>
+   <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">kwineffects.h</header>
+   <header location="global">KShortcutsEditor</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

@@ -12,7 +12,11 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="1" column="0" colspan="2">
-    <widget class="KWin::GlobalShortcutsEditor" name="editor" native="true"/>
+    <widget class="KShortcutsEditor" name="editor" native="true">
+        <property name="actionTypes">
+            <enum>KShortcutsEditor::GlobalAction</enum>
+        </property>
+    </widget>
    </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label">
@@ -49,9 +53,9 @@
    <header>knuminput.h</header>
   </customwidget>
   <customwidget>
-   <class>KWin::GlobalShortcutsEditor</class>
+   <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">kwineffects.h</header>
+   <header location="global">KShortcutsEditor</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

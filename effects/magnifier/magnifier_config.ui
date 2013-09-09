@@ -85,7 +85,11 @@
     </widget>
    </item>
    <item>
-    <widget class="KWin::GlobalShortcutsEditor" name="editor" native="true"/>
+    <widget class="KShortcutsEditor" name="editor" native="true">
+        <property name="actionTypes">
+            <enum>KShortcutsEditor::GlobalAction</enum>
+        </property>
+    </widget>
    </item>
   </layout>
  </widget>
@@ -96,9 +100,9 @@
    <header>knuminput.h</header>
   </customwidget>
   <customwidget>
-   <class>KWin::GlobalShortcutsEditor</class>
+   <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
-   <header location="global">kwineffects.h</header>
+   <header location="global">KShortcutsEditor</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
