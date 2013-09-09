@@ -450,7 +450,7 @@ void Workspace::restack(Client* c, Client* under)
          // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
             Client *other = qobject_cast<Client*>(unconstrained_stacking_order.at(i));
-            if (other && Client::belongToSameApplication(under, other)) {
+            if (other && other->layer() == c->layer() && Client::belongToSameApplication(under, other)) {
                 under = (c == other) ? 0 : other;
                 break;
             }
@@ -468,7 +468,7 @@ void Workspace::restack(Client* c, Client* under)
 
 void Workspace::restackClientUnderActive(Client* c)
 {
-    if (!active_client || active_client == c) {
+    if (!active_client || active_client == c || active_client->layer() != c->layer()) {
         raiseClient(c);
         return;
     }
