@@ -194,9 +194,6 @@ public:
     KActionCollection* actionCollection() const {
         return keys;
     }
-    KActionCollection* disableShortcutsKeys() const {
-        return disable_shortcuts_keys;
-    }
     KActionCollection* clientKeys() const {
         return client_keys;
     }
@@ -515,7 +512,6 @@ private:
 
     KActionCollection* keys;
     KActionCollection* client_keys;
-    KActionCollection* disable_shortcuts_keys;
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
     bool global_shortcuts_disabled_for_client;

@@ -950,12 +950,6 @@ void Workspace::initShortcuts()
     KActionCollection* actionCollection = keys;
     QAction* a = 0L;
 
-    // a separate KActionCollection is needed for the shortcut for disabling global shortcuts,
-    // otherwise it would also disable itself
-    disable_shortcuts_keys = new KActionCollection(this);
-    // TODO: PORT ME (KGlobalAccel related)
-    // FIXME KAccel port... needed?
-    //disable_shortcuts_keys->disableBlocking( true );
 #define IN_KWIN
 #include "kwinbindings.cpp"
 #ifdef KWIN_BUILD_TABBOX

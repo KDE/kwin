@@ -1092,7 +1092,6 @@ void TabBox::modalActionsSwitch(bool enabled)
 {
     QList<KActionCollection*> collections;
     collections.append(Workspace::self()->actionCollection());
-    collections.append(Workspace::self()->disableShortcutsKeys());
     collections.append(Workspace::self()->clientKeys());
     foreach (KActionCollection * collection, collections)
     foreach (QAction * action, collection->actions())
