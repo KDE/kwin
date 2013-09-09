@@ -103,11 +103,9 @@ public:
 class EffectFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(KWin::Compositing::EffectModel *model READ effectModel WRITE setEffectModel NOTIFY effectModelChanged)
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
 public:
     EffectFilterModel(QObject *parent = 0);
-    EffectModel *effectModel() const;
     const QString &filter() const;
 
     Q_INVOKABLE void effectStatus(int rowIndex, bool effectState);
@@ -115,7 +113,6 @@ public:
     Q_INVOKABLE void enableWidnowManagement(bool enabled);
 
 public Q_SLOTS:
-    void setEffectModel(EffectModel *effectModel);
     void setFilter(const QString &filter);
 
 protected:

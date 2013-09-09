@@ -36,9 +36,7 @@ void EffectModelTest::testEffectModel() {
 
 void EffectModelTest::testEffectFilterModel() {
     KWin::Compositing::EffectFilterModel *model = new KWin::Compositing::EffectFilterModel();
-    KWin::Compositing::EffectModel *effectModel = new KWin::Compositing::EffectModel();
 
-    model->setEffectModel(effectModel);
     new ModelTest(model, this);
 }
 

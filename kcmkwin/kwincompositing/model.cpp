@@ -286,25 +286,9 @@ EffectFilterModel::EffectFilterModel(QObject *parent)
     setSourceModel(m_effectModel);
 }
 
-EffectModel *EffectFilterModel::effectModel() const
-{
-    return m_effectModel;
-}
-
 const QString &EffectFilterModel::filter() const
 {
     return m_filter;
-}
-
-void EffectFilterModel::setEffectModel(EffectModel *effectModel)
-{
-    if (effectModel == m_effectModel) {
-        return;
-    }
-
-    m_effectModel = effectModel;
-    setSourceModel(m_effectModel);
-    emit effectModelChanged();
 }
 
 void EffectFilterModel::setFilter(const QString &filter)
