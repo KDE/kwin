@@ -154,7 +154,7 @@ void Toplevel::getWindowRole()
 /*!
   Returns SM_CLIENT_ID property for a given window.
  */
-QByteArray Toplevel::staticSessionId(WId w)
+QByteArray Toplevel::staticSessionId(xcb_window_t w)
 {
     return getStringProperty(w, atoms->sm_client_id);
 }
@@ -162,9 +162,9 @@ QByteArray Toplevel::staticSessionId(WId w)
 /*!
   Returns WM_COMMAND property for a given window.
  */
-QByteArray Toplevel::staticWmCommand(WId w)
+QByteArray Toplevel::staticWmCommand(xcb_window_t w)
 {
-    return getStringProperty(w, XA_WM_COMMAND, ' ');
+    return getStringProperty(w, XCB_ATOM_WM_COMMAND, ' ');
 }
 
 /*!
