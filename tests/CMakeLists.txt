@@ -29,7 +29,6 @@ set( testVirtualDesktops_SRCS
 kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${testVirtualDesktops_SRCS} )
 
 target_link_libraries( testVirtualDesktops
-                       ${KDE4Support_LIBRARIES}
                        Qt5::Test
                        Qt5::Widgets
                        KF5::KI18n
