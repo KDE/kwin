@@ -32,7 +32,7 @@
     </spacer>
    </item>
    <item row="0" column="1">
-    <widget class="KIntSpinBox" name="kcfg_RotationDuration">
+    <widget class="QSpinBox" name="kcfg_RotationDuration">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -95,13 +95,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>kcfg_RotationDuration</tabstop>
   <tabstop>kcfg_DontSlidePanels</tabstop>

@@ -132,7 +132,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <widget class="KIntSpinBox" name="kcfg_RotationDuration">
+           <widget class="QSpinBox" name="kcfg_RotationDuration">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -214,7 +214,7 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="KIntSpinBox" name="kcfg_OpacitySpin">
+           <widget class="QSpinBox" name="kcfg_OpacitySpin">
             <property name="minimumSize">
              <size>
               <width>75</width>
@@ -496,11 +496,6 @@ otherwise it will remain active</string>
    <class>KColorButton</class>
    <extends>QPushButton</extends>
    <header>kcolorbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
   </customwidget>
   <customwidget>
    <class>KUrlRequester</class>

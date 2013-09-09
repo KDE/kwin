@@ -31,7 +31,7 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="KIntSpinBox" name="kcfg_Width">
+       <widget class="QSpinBox" name="kcfg_Width">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -63,7 +63,7 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="KIntSpinBox" name="kcfg_Height">
+       <widget class="QSpinBox" name="kcfg_Height">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -94,11 +94,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
   <customwidget>
    <class>KShortcutsEditor</class>
    <extends>QWidget</extends>
