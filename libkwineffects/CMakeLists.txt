@@ -15,7 +15,7 @@ set(kwineffects_QT_LIBS
 )
 
 set(kwineffects_KDE_LIBS
-    KF5::XmlGui # needed for KShortcutEditor
+    KF5::KConfigCore
 )
 
 set(kwineffects_XCB_LIBS

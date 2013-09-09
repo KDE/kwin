@@ -39,7 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStack>
 
 #include <KDE/KPluginFactory>
-#include <KDE/KShortcutsEditor>
 
 #include <assert.h>
 #include <limits.h>
@@ -1694,12 +1693,6 @@ class KWIN_EXPORT EffectWindowGroup
 public:
     virtual ~EffectWindowGroup();
     virtual EffectWindowList members() const = 0;
-};
-
-class KWIN_EXPORT GlobalShortcutsEditor : public KShortcutsEditor
-{
-public:
-    explicit GlobalShortcutsEditor(QWidget *parent);
 };
 
 
