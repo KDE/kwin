@@ -1211,6 +1211,9 @@ void DesktopGridEffect::finish()
 
 void DesktopGridEffect::globalShortcutChanged(QAction *action, const QKeySequence& seq)
 {
+    if (action->objectName() != QStringLiteral("ShowDesktopGrid")) {
+        return;
+    }
     shortcut.clear();
     shortcut.append(seq);
 }
