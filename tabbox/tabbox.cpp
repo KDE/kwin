@@ -855,7 +855,7 @@ bool TabBox::handleMouseEvent(xcb_button_press_event_t *e)
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
             return true;
     }
-    if (e->response_type & ~0x80 == XCB_BUTTON_PRESS) {
+    if ((e->response_type & ~0x80) == XCB_BUTTON_PRESS) {
         // press outside Tabbox?
         QPoint pos(e->root_x, e->root_y);
 
