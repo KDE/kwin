@@ -927,6 +927,20 @@ void Workspace::closeActivePopup()
     m_userActionsMenu->close();
 }
 
+
+template <typename Slot>
+void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, const QVariant &data)
+{
+    QAction *a = keys->addAction(actionName);
+    a->setText(description);
+    if (data.isValid()) {
+        a->setData(data);
+    }
+    KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
+    connect(a, &QAction::triggered, this, slot);
+}
+
 /*!
   Create the global accel object \c keys.
  */
