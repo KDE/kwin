@@ -1913,8 +1913,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         XMoveResizeWindow(display(), frameId(), x, y, w, h);
         if (!isShade()) {
             QSize cs = clientSize();
-            XMoveResizeWindow(display(), wrapperId(), clientPos().x(), clientPos().y(),
-                              cs.width(), cs.height());
+            m_wrapper.setGeometry(QRect(clientPos(), cs));
             if (!isResize() || syncRequest.counter == XCB_NONE)
                 XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
             // SELI - won't this be too expensive?
@@ -2003,8 +2002,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
 //     resizeDecoration( s );
     if (!isShade()) {
         QSize cs = clientSize();
-        XMoveResizeWindow(display(), wrapperId(), clientPos().x(), clientPos().y(),
-                          cs.width(), cs.height());
+        m_wrapper.setGeometry(QRect(clientPos(), cs));
         XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
     }
     updateShape();
