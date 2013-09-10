@@ -692,8 +692,8 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
     // receiving any unexpected events from the wrapper creation or the reparenting.
-    xcb_change_window_attributes(conn, frame,   XCB_CW_EVENT_MASK, &frame_event_mask);
-    xcb_change_window_attributes(conn, m_wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
+    m_frame.selectInput(frame_event_mask);
+    m_wrapper.selectInput(wrapper_event_mask);
     m_client.selectInput(client_event_mask);
 
     updateMouseGrab();
