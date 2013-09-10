@@ -211,7 +211,7 @@ void EffectModel::handleDesktopSwitching(int row)
 void EffectModel::handleWindowManagement(int row, bool enabled)
 {
     //Make sure that our row is valid
-    if (m_effectsList.size() > 0 && row < = m_effectsList.size())
+    if (m_effectsList.size() > 0 && row <= m_effectsList.size())
         m_effectsList[row].effectStatus = enabled;
 }
 
@@ -241,7 +241,7 @@ void EffectModel::syncEffectsToKWin()
     m_effectsChanged = m_effectsList;
 }
 
-void EffectModel::effectStatus(const QModelIndex &rowIndex, bool effectState)
+void EffectModel::updateEffectStatus(const QModelIndex &rowIndex, bool effectState)
 {
     setData(rowIndex, effectState, EffectModel::EffectStatusRole);
 }
@@ -338,11 +338,11 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
     return false;
 }
 
-void EffectFilterModel::effectStatus(int rowIndex, bool effectState)
+void EffectFilterModel::updateEffectStatus(int rowIndex, bool effectState)
 {
     const QModelIndex sourceIndex = mapToSource(index(rowIndex, 0));
 
-    m_effectModel->effectStatus(sourceIndex, effectState);
+    m_effectModel->updateEffectStatus(sourceIndex, effectState);
 }
 
 void EffectFilterModel::syncConfig()

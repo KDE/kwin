@@ -105,7 +105,7 @@ Item {
                 signal effectState(int rowIndex, bool enabled)
 
                 onEffectState: {
-                    searchModel.effectStatus(rowIndex, enabled);
+                    searchModel.updateEffectStatus(rowIndex, enabled);
                 }
             }
 

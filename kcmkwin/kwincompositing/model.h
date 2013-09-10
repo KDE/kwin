@@ -74,7 +74,7 @@ public:
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
-    void effectStatus(const QModelIndex &rowIndex, bool effectState);
+    void updateEffectStatus(const QModelIndex &rowIndex, bool effectState);
     void syncEffectsToKWin();
     void syncConfig();
     void enableWidnowManagement(bool enabled);
@@ -108,7 +108,7 @@ public:
     EffectFilterModel(QObject *parent = 0);
     const QString &filter() const;
 
-    Q_INVOKABLE void effectStatus(int rowIndex, bool effectState);
+    Q_INVOKABLE void updateEffectStatus(int rowIndex, bool effectState);
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE void enableWidnowManagement(bool enabled);
 
