@@ -22,6 +22,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
+import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
 
@@ -77,8 +78,9 @@ Item {
                 top: parent.top
                 left: parent.left
             }
-            TextField {
+            PlasmaComponents.TextField {
                 id: searchField
+                clearButtonShown: true
                 Layout.fillWidth: true
                 height: 20
                 anchors {
