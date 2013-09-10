@@ -75,6 +75,7 @@ private Q_SLOTS:
     void resetCrashesCount();
 
 private:
+    void crashChecking();
     KWinSelectionOwner owner;
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_replace;

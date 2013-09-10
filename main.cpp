@@ -219,35 +219,7 @@ void Application::start()
         ::exit(1);
     });
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
-    connect(&owner, &KSelectionOwner::claimedOwnership, [this, config]{
-        KCrash::setEmergencySaveFunction(Application::crashHandler);
-        if (crashes >= 4) {
-            // Something has gone seriously wrong
-            AlternativeWMDialog dialog;
-            QString cmd = QStringLiteral(KWIN_NAME);
-            if (dialog.exec() == QDialog::Accepted)
-                cmd = dialog.selectedWM();
-            else
-                ::exit(1);
-            if (cmd.length() > 500) {
-                qDebug() << "Command is too long, truncating";
-                cmd = cmd.left(500);
-            }
-            qDebug() << "Starting" << cmd << "and exiting";
-            char buf[1024];
-            sprintf(buf, "%s &", cmd.toAscii().data());
-            system(buf);
-            ::exit(1);
-        }
-        if (crashes >= 2) {
-            // Disable compositing if we have had too many crashes
-            qDebug() << "Too many crashes recently, disabling compositing";
-            KConfigGroup compgroup(config, "Compositing");
-            compgroup.writeEntry("Enabled", false);
-        }
-        // Reset crashes count if we stay up for more that 15 seconds
-        QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
-
+    connect(&owner, &KSelectionOwner::claimedOwnership, [this]{
         installNativeEventFilter(m_eventFilter.data());
         // first load options - done internally by a different thread
         options = new Options;
@@ -289,6 +261,8 @@ void Application::start()
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
     owner.claim(m_replace, true);
+
+    crashChecking();
 }
 
 Application::~Application()
@@ -298,6 +272,37 @@ Application::~Application()
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     delete options;
     delete atoms;
+}
+
+void Application::crashChecking()
+{
+    KCrash::setEmergencySaveFunction(Application::crashHandler);
+    if (crashes >= 4) {
+        // Something has gone seriously wrong
+        AlternativeWMDialog dialog;
+        QString cmd = QStringLiteral(KWIN_NAME);
+        if (dialog.exec() == QDialog::Accepted)
+            cmd = dialog.selectedWM();
+        else
+            ::exit(1);
+        if (cmd.length() > 500) {
+            qDebug() << "Command is too long, truncating";
+            cmd = cmd.left(500);
+        }
+        qDebug() << "Starting" << cmd << "and exiting";
+        char buf[1024];
+        sprintf(buf, "%s &", cmd.toAscii().data());
+        system(buf);
+        ::exit(1);
+    }
+    if (crashes >= 2) {
+        // Disable compositing if we have had too many crashes
+        qDebug() << "Too many crashes recently, disabling compositing";
+        KConfigGroup compgroup(KSharedConfig::openConfig(), "Compositing");
+        compgroup.writeEntry("Enabled", false);
+    }
+    // Reset crashes count if we stay up for more that 15 seconds
+    QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 }
 
 void Application::lostSelection()
