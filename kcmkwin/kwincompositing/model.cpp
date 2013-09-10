@@ -210,7 +210,8 @@ void EffectModel::handleDesktopSwitching(int row)
 
 void EffectModel::handleWindowManagement(int row, bool enabled)
 {
-    if (m_effectsList.size() > 0)
+    //Make sure that our row is valid
+    if (m_effectsList.size() > 0 && row < = m_effectsList.size())
         m_effectsList[row].effectStatus = enabled;
 }
 
@@ -267,6 +268,10 @@ void EffectModel::syncConfig()
 
 void EffectModel::enableWidnowManagement(bool enabled)
 {
+    //Make sure that our effects are being installed properly
+    if (m_effectsList.size() <= 0)
+        return;
+
     int desktopGridRow = findRowByServiceName("kwin4_effect_desktopgrid");
     const QModelIndex desktopGridIndex = createIndex(desktopGridRow, 0);
     setData(desktopGridIndex, enabled, EffectModel::WindowManagementRole);
