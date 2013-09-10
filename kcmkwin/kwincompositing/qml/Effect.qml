@@ -91,6 +91,15 @@ Component {
                         }
                         Text {
                             id: desc
+                            function wrapDescription() {
+                                if (wrapMode == Text.NoWrap) {
+                                    wrapMode = Text.WordWrap;
+                                    elide = Text.ElideNone;
+                                } else {
+                                    wrapMode = Text.NoWrap;
+                                    elide = Text.ElideRight;
+                                }
+                            }
                             text: model.DescriptionRole
                             width: effectView.width - 100
                             elide: Text.ElideRight
@@ -106,7 +115,7 @@ Component {
                                 font.bold: true
                             }
                             PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
-                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ? 120 : 40}
+                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ?  item.height + 100 : 40}
                         }
                     }
                     MouseArea {
@@ -137,6 +146,7 @@ Component {
                     onClicked: {
                         animationAbout.running = true;
                         animationAboutSpacing.running = true;
+                        desc.wrapDescription();
                     }
                 }
 

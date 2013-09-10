@@ -26,7 +26,7 @@ import org.kde.kwin.kwincompositing 1.0
 
 Item {
     id: window
-    width: 640
+    width: 780
     height: 480
     property bool openGLBrokeState: true
 
