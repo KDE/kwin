@@ -210,7 +210,8 @@ void EffectModel::handleDesktopSwitching(int row)
 
 void EffectModel::handleWindowManagement(int row, bool enabled)
 {
-    m_effectsList[row].effectStatus = enabled;
+    if (m_effectsList.size() > 0)
+        m_effectsList[row].effectStatus = enabled;
 }
 
 int EffectModel::findRowByServiceName(const QString &serviceName)
