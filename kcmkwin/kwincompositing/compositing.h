@@ -36,7 +36,7 @@ class Compositing : public QObject
 public:
     explicit Compositing(QObject *parent = 0);
 
-    Q_INVOKABLE bool OpenGLIsUnsafe();
+    Q_INVOKABLE bool OpenGLIsUnsafe() const;
     Q_INVOKABLE bool OpenGLIsBroken();
 
 private:

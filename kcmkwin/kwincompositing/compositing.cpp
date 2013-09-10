@@ -37,7 +37,7 @@ Compositing::Compositing(QObject *parent)
 {
 }
 
-bool Compositing::OpenGLIsUnsafe()
+bool Compositing::OpenGLIsUnsafe() const
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     return kwinConfig.readEntry("OpenGLIsUnsafe", true);
