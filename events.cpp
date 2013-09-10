@@ -927,8 +927,7 @@ void Client::ungrabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        XUngrabButton(display(), AnyButton,
-                      modifier | mods[ i ], wrapperId());
+        m_wrapper.ungrabButton(modifier | mods[ i ]);
 }
 #undef XCapL
 #undef XNumL
@@ -943,7 +942,7 @@ void Client::ungrabButton(int modifier)
 void Client::updateMouseGrab()
 {
     if (workspace()->globalShortcutsDisabled()) {
-        XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
+        m_wrapper.ungrabButton();
         // keep grab for the simple click without modifiers if needed (see below)
         bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
         if (!(!options->isClickRaise() || not_obscured))
@@ -969,7 +968,7 @@ void Client::updateMouseGrab()
         ungrabButton(ControlMask);
         ungrabButton(ControlMask | ShiftMask);
     } else {
-        XUngrabButton(display(), AnyButton, AnyModifier, wrapperId());
+        m_wrapper.ungrabButton();
         // simply grab all modifier combinations
         XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
                     ButtonPressMask,

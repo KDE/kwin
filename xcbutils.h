@@ -438,6 +438,7 @@ public:
     void reparent(xcb_window_t parent, int x = 0, int y = 0);
     void deleteProperty(xcb_atom_t property);
     void setBorderWidth(uint32_t width);
+    void ungrabButton(uint16_t modifiers = XCB_MOD_MASK_ANY, uint8_t button = XCB_BUTTON_INDEX_ANY);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
      **/
@@ -641,6 +642,15 @@ void Window::setBorderWidth(uint32_t width)
         return;
     }
     xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_BORDER_WIDTH, &width);
+}
+
+inline
+void Window::ungrabButton(uint16_t modifiers, uint8_t button)
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_ungrab_button(connection(), button, m_window, modifiers);
 }
 
 inline
