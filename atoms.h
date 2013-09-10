@@ -4,6 +4,7 @@
 
 Copyright (C) 1999, 2000 Matthias Ettrich <ettrich@kde.org>
 Copyright (C) 2003 Lubos Lunak <l.lunak@kde.org>
+Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_ATOMS_H
 #define KWIN_ATOMS_H
 
-#include <QApplication>
-#include <X11/Xlib.h>
-#include <fixx11h.h>
+#include "xcbutils.h"
 
 namespace KWin
 {
@@ -34,38 +33,49 @@ class Atoms
 public:
     Atoms();
 
-    Atom kwin_running;
-    Atom activities;
+    Xcb::Atom kwin_running;
+    Xcb::Atom activities;
 
-    Atom wm_protocols;
-    Atom wm_delete_window;
-    Atom wm_take_focus;
-    Atom wm_change_state;
-    Atom wm_client_leader;
-    Atom wm_window_role;
-    Atom wm_state;
-    Atom sm_client_id;
+    Xcb::Atom wm_protocols;
+    Xcb::Atom wm_delete_window;
+    Xcb::Atom wm_take_focus;
+    Xcb::Atom wm_change_state;
+    Xcb::Atom wm_client_leader;
+    Xcb::Atom wm_window_role;
+    Xcb::Atom wm_state;
+    Xcb::Atom sm_client_id;
 
-    Atom motif_wm_hints;
-    Atom net_wm_context_help;
-    Atom net_wm_ping;
-    Atom kde_wm_change_state;
-    Atom net_wm_user_time;
-    Atom kde_net_wm_user_creation_time;
-    Atom kde_system_tray_embedding;
-    Atom net_wm_take_activity;
-    Atom net_wm_window_opacity;
-    Atom xdnd_aware;
-    Atom xdnd_position;
-    Atom net_frame_extents;
-    Atom kde_net_wm_frame_strut;
-    Atom net_wm_sync_request_counter;
-    Atom net_wm_sync_request;
-    Atom kde_net_wm_block_compositing;
-    Atom kde_net_wm_shadow;
-    Atom net_wm_opaque_region;
-    Atom kde_net_wm_tab_group;
-    Atom kde_first_in_window_list;
+    Xcb::Atom motif_wm_hints;
+    Xcb::Atom net_wm_context_help;
+    Xcb::Atom net_wm_ping;
+    Xcb::Atom kde_wm_change_state;
+    Xcb::Atom net_wm_user_time;
+    Xcb::Atom kde_net_wm_user_creation_time;
+    Xcb::Atom kde_system_tray_embedding;
+    Xcb::Atom net_wm_take_activity;
+    Xcb::Atom net_wm_window_opacity;
+    Xcb::Atom xdnd_aware;
+    Xcb::Atom xdnd_position;
+    Xcb::Atom net_frame_extents;
+    Xcb::Atom kde_net_wm_frame_strut;
+    Xcb::Atom net_wm_sync_request_counter;
+    Xcb::Atom net_wm_sync_request;
+    Xcb::Atom kde_net_wm_block_compositing;
+    Xcb::Atom kde_net_wm_shadow;
+    Xcb::Atom net_wm_opaque_region;
+    Xcb::Atom kde_net_wm_tab_group;
+    Xcb::Atom kde_first_in_window_list;
+
+    /**
+     * @internal
+     **/
+    void retrieveHelpers();
+
+private:
+    // helper atoms we need to resolve to "announce" support (see #172028)
+    Xcb::Atom m_dtSmWindowInfo;
+    Xcb::Atom m_motifSupport;
+    bool m_helpersRetrieved;
 };
 
 

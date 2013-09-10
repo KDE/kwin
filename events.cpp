@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "xcbutils.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QWhatsThis>
 

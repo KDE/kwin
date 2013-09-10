@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KCMRULES
 #include <assert.h>
+#include <QApplication>
 #include <QDebug>
 #include <kkeyserver.h>
 

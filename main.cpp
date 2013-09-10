@@ -51,6 +51,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVBoxLayout>
 #include <QtDBus/QtDBus>
 #include <QX11Info>
+// TODO: remove once QX11Info provides the X screen
+#include <X11/Xlib.h>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -236,7 +238,7 @@ void Application::start()
             ::exit(1);
         }
 
-        atoms = new Atoms;
+        atoms->retrieveHelpers();
 
         // This tries to detect compositing options and can use GLX. GLX problems
         // (X errors) shouldn't cause kwin to abort, so this is out of the
@@ -263,6 +265,7 @@ void Application::start()
     owner.claim(m_replace, true);
 
     crashChecking();
+    atoms = new Atoms;
 }
 
 Application::~Application()

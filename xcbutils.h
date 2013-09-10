@@ -169,6 +169,8 @@ public:
         , m_name(name)
         {
         }
+    Atom() = delete;
+    Atom(const Atom &) = delete;
 
     ~Atom() {
         if (!m_retrieved && m_cookie.sequence) {
