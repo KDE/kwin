@@ -34,6 +34,7 @@ namespace KWin
 Deleted::Deleted()
     : Toplevel()
     , delete_refcount(1)
+    , m_frame(XCB_WINDOW_NONE)
     , no_border(true)
     , padding_left(0)
     , padding_top(0)
@@ -80,6 +81,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     contentsRect = QRect(c->clientPos(), c->clientSize());
     transparent_rect = c->transparentRect();
     m_layer = c->layer();
+    m_frame = c->frameId();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
@@ -183,6 +185,11 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 void Deleted::mainClientClosed(Toplevel *client)
 {
     m_mainClients.removeAll(static_cast<Client*>(client));
+}
+
+xcb_window_t Deleted::frameId() const
+{
+    return m_frame;
 }
 
 } // namespace

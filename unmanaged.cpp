@@ -57,7 +57,7 @@ bool Unmanaged::track(Window w)
         ungrabXServer();
         return false;
     }
-    setWindowHandles(w, w);   // the window is also the frame
+    setWindowHandles(w);   // the window is also the frame
     Xcb::selectInput(w, attr.your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     geom = QRect(attr.x, attr.y, attr.width, attr.height);
     checkScreen();

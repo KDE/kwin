@@ -45,6 +45,7 @@ public:
     virtual QSize clientSize() const;
     virtual QRect transparentRect() const;
     virtual bool isDeleted() const;
+    virtual xcb_window_t frameId() const override;
     bool noBorder() const {
         return no_border;
     }
@@ -84,6 +85,7 @@ private:
     QStringList activityList;
     QRect contentsRect; // for clientPos()/clientSize()
     QRect transparent_rect;
+    xcb_window_t m_frame;
 
     bool no_border;
     QRect decoration_left;

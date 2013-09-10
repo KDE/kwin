@@ -166,7 +166,7 @@ class Toplevel
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
 public:
     explicit Toplevel();
-    Window frameId() const;
+    virtual xcb_window_t frameId() const;
     xcb_window_t window() const;
     QRect geometry() const;
     QSize size() const;
@@ -347,7 +347,7 @@ protected Q_SLOTS:
 
 protected:
     virtual ~Toplevel();
-    void setWindowHandles(xcb_window_t client, xcb_window_t frame);
+    void setWindowHandles(xcb_window_t client);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     virtual void damageNotifyEvent();
@@ -391,7 +391,6 @@ private:
     static xcb_window_t staticWmClientLeader(xcb_window_t);
     // when adding new data members, check also copyToDeleted()
     Xcb::Window m_client;
-    Window frame;
     xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
     bool is_shape;
@@ -415,17 +414,10 @@ inline xcb_window_t Toplevel::window() const
     return m_client;
 }
 
-inline Window Toplevel::frameId() const
-{
-    return frame;
-}
-
-inline void Toplevel::setWindowHandles(xcb_window_t w, xcb_window_t f)
+inline void Toplevel::setWindowHandles(xcb_window_t w)
 {
     assert(!m_client.isValid() && w != XCB_WINDOW_NONE);
     m_client.reset(w, false);
-    assert(frame == None && f != None);
-    frame = f;
 }
 
 inline QRect Toplevel::geometry() const

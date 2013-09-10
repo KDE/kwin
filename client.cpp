@@ -88,6 +88,7 @@ Client::Client()
     : Toplevel()
     , m_client()
     , m_wrapper()
+    , m_frame()
     , decoration(NULL)
     , bridge(new Bridge(this))
     , m_activityUpdatesBlocked(false)
@@ -299,7 +300,7 @@ void Client::releaseWindow(bool on_shutdown)
         m_client.unmap();
     m_client.reset();
     m_wrapper.reset();
-    XDestroyWindow(display(), frameId());
+    m_frame.reset();
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
     if (!on_shutdown) {
@@ -340,7 +341,7 @@ void Client::destroyClient()
     workspace()->removeClient(this);
     m_client.reset(); // invalidate
     m_wrapper.reset();
-    XDestroyWindow(display(), frameId());
+    m_frame.reset();
     //frame = None;
     --block_geometry_updates; // Don't use GeometryUpdatesBlocker, it would now set the geometry
     disownDataPassedToDeleted();
@@ -2498,6 +2499,11 @@ void Client::cancelFocusOutTimer()
     if (m_focusOutTimer) {
         m_focusOutTimer->stop();
     }
+}
+
+xcb_window_t Client::frameId() const
+{
+    return m_frame;
 }
 
 } // namespace

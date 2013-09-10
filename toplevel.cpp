@@ -42,7 +42,6 @@ Toplevel::Toplevel()
     , ready_for_painting(true)
     , m_isDamaged(false)
     , m_client()
-    , frame(None)
     , damage_handle(None)
     , is_shape(false)
     , effect_window(NULL)
@@ -111,7 +110,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     bit_depth = c->bit_depth;
     info = c->info;
     m_client.reset(c->m_client, false);
-    frame = c->frame;
     ready_for_painting = c->ready_for_painting;
     damage_handle = None;
     damage_region = c->damage_region;
@@ -459,6 +457,11 @@ void Toplevel::elevate(bool elevate)
 pid_t Toplevel::pid() const
 {
     return info->pid();
+}
+
+xcb_window_t Toplevel::frameId() const
+{
+    return m_client;
 }
 
 } // namespace

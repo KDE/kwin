@@ -677,8 +677,9 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     xcb_window_t frame = xcb_generate_id(conn);
     xcb_create_window(conn, attr.depth, frame, rootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
+    m_frame.reset(frame);
 
-    setWindowHandles(m_client, frame);
+    setWindowHandles(m_client);
 
     // Create the wrapper window
     xcb_window_t wrapperId = xcb_generate_id(conn);

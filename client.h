@@ -270,6 +270,7 @@ public:
     xcb_window_t wrapperId() const;
     xcb_window_t decorationId() const;
     xcb_window_t inputId() const { return m_decoInputExtent; }
+    virtual xcb_window_t frameId() const override;
 
     const Client* transientFor() const;
     Client* transientFor();
@@ -831,6 +832,7 @@ private:
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
+    Xcb::Window m_frame;
     KDecoration* decoration;
     Bridge* bridge;
     int desk;
