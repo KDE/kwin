@@ -41,7 +41,7 @@ Toplevel::Toplevel()
     , info(NULL)
     , ready_for_painting(true)
     , m_isDamaged(false)
-    , client(None)
+    , m_client()
     , frame(None)
     , damage_handle(None)
     , is_shape(false)
@@ -110,7 +110,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     vis = c->vis;
     bit_depth = c->bit_depth;
     info = c->info;
-    client = c->client;
+    m_client.reset(c->m_client, false);
     frame = c->frame;
     ready_for_painting = c->ready_for_painting;
     damage_handle = None;
@@ -400,7 +400,7 @@ void Toplevel::getWmOpaqueRegion()
         Atom type;
         int rformat;
         unsigned long nitems;
-        if (XGetWindowProperty(display(), client,
+        if (XGetWindowProperty(display(), m_client,
                                atoms->net_wm_opaque_region, 0, length, false, XA_CARDINAL,
                                &type, &rformat, &nitems, &bytes_after_return,
                                reinterpret_cast< unsigned char** >(&data)) == Success) {

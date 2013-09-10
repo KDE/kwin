@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "utils.h"
 #include "virtualdesktops.h"
+#include "xcbutils.h"
 // KDE
 #include <KDE/NETWinInfo>
 // Qt
@@ -166,7 +167,7 @@ class Toplevel
 public:
     explicit Toplevel();
     Window frameId() const;
-    Window window() const;
+    xcb_window_t window() const;
     QRect geometry() const;
     QSize size() const;
     QPoint pos() const;
@@ -346,7 +347,7 @@ protected Q_SLOTS:
 
 protected:
     virtual ~Toplevel();
-    void setWindowHandles(Window client, Window frame);
+    void setWindowHandles(xcb_window_t client, xcb_window_t frame);
     void detectShape(Window id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     virtual void damageNotifyEvent();
@@ -389,7 +390,7 @@ private:
     static QByteArray staticWmCommand(xcb_window_t);
     static xcb_window_t staticWmClientLeader(xcb_window_t);
     // when adding new data members, check also copyToDeleted()
-    Window client;
+    Xcb::Window m_client;
     Window frame;
     xcb_damage_damage_t damage_handle;
     QRegion damage_region; // damage is really damaged window (XDamage) and texture needs
@@ -409,9 +410,9 @@ private:
     // when adding new data members, check also copyToDeleted()
 };
 
-inline Window Toplevel::window() const
+inline xcb_window_t Toplevel::window() const
 {
-    return client;
+    return m_client;
 }
 
 inline Window Toplevel::frameId() const
@@ -419,10 +420,10 @@ inline Window Toplevel::frameId() const
     return frame;
 }
 
-inline void Toplevel::setWindowHandles(Window w, Window f)
+inline void Toplevel::setWindowHandles(xcb_window_t w, xcb_window_t f)
 {
-    assert(client == None && w != None);
-    client = w;
+    assert(!m_client.isValid() && w != XCB_WINDOW_NONE);
+    m_client.reset(w, false);
     assert(frame == None && f != None);
     frame = f;
 }
