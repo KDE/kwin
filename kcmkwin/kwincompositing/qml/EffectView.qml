@@ -52,7 +52,7 @@ Item {
         height: parent.height
         CheckBox {
             id: windowManagement
-            text: "Improved Window Management"
+            text: i18n("Improved Window Management")
             checked: false
             anchors.left: col.right
             anchors.top: parent.top
@@ -129,7 +129,7 @@ Item {
 
             Button {
                 id: apply
-                text: "Apply"
+                text: i18n("Apply")
                 enabled: false
                 anchors {
                     bottom: parent.bottom

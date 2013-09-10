@@ -64,7 +64,7 @@ include_directories(${KDE4_INCLUDES}
                     ${kdeqt5staging_INCLUDE_DIRS}
                     ${KF5_INCLUDE_DIRS}  # since e-c-m 0.0.7
                     ${Qt5Widgets_INCLUDE_DIRS}
-                   )
+                    ${KDECLARATIVE_INCLUDE_DIRS})
 
 ################# configure checks and create the configured files #################
 
@@ -94,7 +94,9 @@ target_link_libraries(kwincompositing
     ${Qt5Widgets_LIBRARIES}
     ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
-    ${KCoreAddons_LIBRARIES})
+    ${KCoreAddons_LIBRARIES}
+    ${KDECLARATIVE_LIBRARIES})
+
 
 set(modelTest_SRC
     model.cpp
@@ -116,8 +118,8 @@ target_link_libraries(effectModelTest
     ${Qt5Widgets_LIBRARIES}
     ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
-    ${KCoreAddons_LIBRARIES})
-
+    ${KCoreAddons_LIBRARIES}
+    ${KDECLARATIVE_LIBRARIES})
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})

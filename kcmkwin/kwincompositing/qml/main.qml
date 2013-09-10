@@ -37,16 +37,16 @@ Item {
         anchors.leftMargin: parent.width/2 - 100
         Text {
             id: openGLErrorText
-            text: "OpenGL compositing (the default) has crashed KWin in the past.\n" +
+            text: i18n("OpenGL compositing (the default) has crashed KWin in the past.\n" +
                   "This was most likely due to a driver bug.\n" +
                   "If you think that you have meanwhile upgraded to a stable driver,\n" +
                   "you can reset this protection but be aware that this might result in an immediate crash!\n" +
-                  "Alternatively, you might want to use the XRender backend instead."
+                  "Alternatively, you might want to use the XRender backend instead.")
         }
 
         Button {
             id: openGLButton
-            text: "Re-enable OpenGL detection"
+            text: i18n("Re-enable OpenGL detection")
             anchors.top: openGLErrorText.bottom
             onClicked: {
                 openGLBrokeState = compositing.OpenGLIsBroken();

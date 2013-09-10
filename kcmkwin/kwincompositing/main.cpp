@@ -25,6 +25,9 @@
 
 #include <KAboutData>
 #include <klocalizedstring.h>
+#include <kdeclarative/kdeclarative.h>
+
+#include <QStandardPaths>
 
 int main(int argc, char *argv[])
 {
@@ -40,7 +43,11 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
+    KDeclarative kdeclarative;
+
     KWin::Compositing::EffectView *view = new KWin::Compositing::EffectView();
+    kdeclarative.setDeclarativeEngine(view->engine());
+    kdeclarative.setupBindings();
     view->show();
 
     return app.exec();
