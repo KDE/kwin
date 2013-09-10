@@ -374,12 +374,9 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const auto *event = reinterpret_cast<xcb_focus_in_event_t*>(e);
         if (event->event == rootWindow()
                 && (event->detail == XCB_NOTIFY_DETAIL_NONE || event->detail == XCB_NOTIFY_DETAIL_POINTER_ROOT)) {
+            Xcb::CurrentInput currentInput;
             updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
-            // TODO: port to XCB
-            Window focus;
-            int revert;
-            XGetInputFocus(display(), &focus, &revert);
-            if (focus == XCB_WINDOW_NONE || focus == XCB_NOTIFY_DETAIL_POINTER_ROOT) {
+            if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_NOTIFY_DETAIL_POINTER_ROOT)) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
                 Client *c = mostRecentlyActivatedClient();
                 if (c != NULL)
