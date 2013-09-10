@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "tabboxhandler.h"
 #include <kwinglobals.h>
+#include "xcbutils.h"
 // tabbox
 #include "clientmodel.h"
 #include "declarative.h"
@@ -242,7 +243,7 @@ void TabBoxHandler::show()
         }
     }
     if (d->config.isHighlightWindows()) {
-        XSync(QX11Info::display(), false);
+        Xcb::sync();
         // TODO this should be
         // QMetaObject::invokeMethod(this, "updateHighlightWindows", Qt::QueuedConnection);
         // but we somehow need to cross > 1 event cycle (likely because of queued invocation in the effects)

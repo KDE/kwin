@@ -476,7 +476,7 @@ void GlxBackend::screenGeometryChanged(const QSize &size)
 
     XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());
     overlayWindow()->setup(window);
-    XSync(display(), false);
+    Xcb::sync();
 
     glXMakeCurrent(display(), glxWindow, ctx);
     glViewport(0, 0, size.width(), size.height());
