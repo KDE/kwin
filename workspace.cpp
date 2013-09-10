@@ -459,7 +459,7 @@ Workspace::~Workspace()
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
         (*it)->release(true);
-    XDeleteProperty(display(), rootWindow(), atoms->kwin_running);
+    xcb_delete_property(connection(), rootWindow(), atoms->kwin_running);
 
     delete RuleBook::self();
     KSharedConfig::openConfig()->sync();

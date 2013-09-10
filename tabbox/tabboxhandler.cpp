@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // own
 #include "tabboxhandler.h"
+#include <kwinglobals.h>
 // tabbox
 #include "clientmodel.h"
 #include "declarative.h"
@@ -178,9 +179,8 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     lastRaisedClient = 0;
     lastRaisedClientSucc = 0;
     // highlight windows
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
-    XDeleteProperty(dpy, config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : QX11Info::appRootWindow(), atom);
+    Atom atom = XInternAtom(display(), "_KDE_WINDOW_HIGHLIGHT", False);
+    xcb_delete_property(connection(), config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : rootWindow(), atom);
 }
 
 /***********************************************

@@ -201,7 +201,7 @@ static QByteArray readWindowProperty(Window win, long atom, long type, int forma
 
 static void deleteWindowProperty(Window win, long int atom)
 {
-    XDeleteProperty(QX11Info::display(), win, atom);
+    xcb_delete_property(connection(), win, atom);
 }
 
 //---------------------

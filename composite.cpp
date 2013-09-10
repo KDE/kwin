@@ -371,7 +371,7 @@ void Compositor::deleteUnusedSupportProperties()
     }
     foreach (const xcb_atom_t &atom, m_unusedSupportProperties) {
         // remove property from root window
-        XDeleteProperty(QX11Info::display(), rootWindow(), atom);
+        xcb_delete_property(connection(), rootWindow(), atom);
     }
 }
 
