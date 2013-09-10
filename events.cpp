@@ -741,14 +741,8 @@ void Client::configureRequestEvent(xcb_configure_request_event_t *e)
     }
 
     if (e->value_mask & XCB_CONFIG_WINDOW_BORDER_WIDTH) {
-        // TODO: port to XCB
         // first, get rid of a window border
-        XWindowChanges wc;
-        unsigned int value_mask = 0;
-
-        wc.border_width = 0;
-        value_mask = XCB_CONFIG_WINDOW_BORDER_WIDTH;
-        XConfigureWindow(display(), window(), value_mask, & wc);
+        m_client.setBorderWidth(0);
     }
 
     if (e->value_mask & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_WIDTH))

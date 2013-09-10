@@ -643,7 +643,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
 
     m_client.selectInput(zero_value);
     m_client.unmap();
-    xcb_configure_window(conn, m_client, XCB_CONFIG_WINDOW_BORDER_WIDTH, &zero_value);
+    m_client.setBorderWidth(zero_value);
 
     // Note: These values must match the order in the xcb_cw_t enum
     const uint32_t cw_values[] = {

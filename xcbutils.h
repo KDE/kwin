@@ -437,6 +437,7 @@ public:
     void unmap();
     void reparent(xcb_window_t parent, int x = 0, int y = 0);
     void deleteProperty(xcb_atom_t property);
+    void setBorderWidth(uint32_t width);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
      **/
@@ -631,6 +632,15 @@ void Window::deleteProperty(xcb_atom_t property)
         return;
     }
     xcb_delete_property(connection(), m_window, property);
+}
+
+inline
+void Window::setBorderWidth(uint32_t width)
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_BORDER_WIDTH, &width);
 }
 
 inline
