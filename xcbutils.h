@@ -438,6 +438,13 @@ public:
     void reparent(xcb_window_t parent, int x = 0, int y = 0);
     void deleteProperty(xcb_atom_t property);
     void setBorderWidth(uint32_t width);
+    void grabButton(uint8_t pointerMode, uint8_t keyboardmode,
+                    uint16_t modifiers = XCB_MOD_MASK_ANY,
+                    uint8_t button = XCB_BUTTON_INDEX_ANY,
+                    uint16_t eventMask = XCB_EVENT_MASK_BUTTON_PRESS,
+                    xcb_window_t confineTo = XCB_WINDOW_NONE,
+                    xcb_cursor_t cursor = XCB_CURSOR_NONE,
+                    bool ownerEvents = false);
     void ungrabButton(uint16_t modifiers = XCB_MOD_MASK_ANY, uint8_t button = XCB_BUTTON_INDEX_ANY);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
@@ -642,6 +649,18 @@ void Window::setBorderWidth(uint32_t width)
         return;
     }
     xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_BORDER_WIDTH, &width);
+}
+
+inline
+void Window::grabButton(uint8_t pointerMode, uint8_t keyboardmode, uint16_t modifiers,
+                        uint8_t button, uint16_t eventMask, xcb_window_t confineTo,
+                        xcb_cursor_t cursor, bool ownerEvents)
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_grab_button(connection(), ownerEvents, m_window, eventMask,
+                    pointerMode, keyboardmode, confineTo, cursor, button, modifiers);
 }
 
 inline

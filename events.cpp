@@ -911,10 +911,7 @@ void Client::grabButton(int modifier)
     for (int i = 0;
             i < 8;
             ++i)
-        XGrabButton(display(), AnyButton,
-                    modifier | mods[ i ],
-                    wrapperId(), false, ButtonPressMask,
-                    GrabModeSync, GrabModeAsync, None, None);
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC, modifier | mods[ i ]);
 }
 
 void Client::ungrabButton(int modifier)
@@ -951,10 +948,7 @@ void Client::updateMouseGrab()
     }
     if (isActive() && !workspace()->forcedGlobalMouseGrab()) { // see Workspace::establishTabBoxGrab()
         // first grab all modifier combinations
-        XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
-                    ButtonPressMask,
-                    GrabModeSync, GrabModeAsync,
-                    None, None);
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
         // remove the grab for no modifiers only if the window
         // is unobscured or if the user doesn't want click raise
         // (it is unobscured if it the topmost in the unconstrained stacking order, i.e. it is
@@ -970,10 +964,7 @@ void Client::updateMouseGrab()
     } else {
         m_wrapper.ungrabButton();
         // simply grab all modifier combinations
-        XGrabButton(display(), AnyButton, AnyModifier, wrapperId(), false,
-                    ButtonPressMask,
-                    GrabModeSync, GrabModeAsync,
-                    None, None);
+        m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
     }
 }
 
