@@ -58,7 +58,7 @@ void EffectConfig::openConfig(const QString &effectName)
     buttons->setCenterButtons(true);
 
     //Here we connect our buttons with the dialog
-    connect(buttons, SIGNAL(accepted()), &dialog, SLOT(accept()));
+    connect(buttons, SIGNAL(QDialogButtonBox::accepted), &dialog, SLOT(QDialog::accept));
     connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
 
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
