@@ -435,6 +435,7 @@ public:
     void lower();
     void map();
     void unmap();
+    void reparent(xcb_window_t parent, int x = 0, int y = 0);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
      **/
@@ -611,6 +612,15 @@ void Window::unmap()
         return;
     }
     xcb_unmap_window(connection(), m_window);
+}
+
+inline
+void Window::reparent(xcb_window_t parent, int x, int y)
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_reparent_window(connection(), m_window, parent, x, y);
 }
 
 inline

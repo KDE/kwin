@@ -288,7 +288,7 @@ void Client::releaseWindow(bool on_shutdown)
     xcb_delete_property(c, m_client, atoms->kde_net_wm_user_creation_time);
     xcb_delete_property(c, m_client, atoms->net_frame_extents);
     xcb_delete_property(c, m_client, atoms->kde_net_wm_frame_strut);
-    xcb_reparent_window(c, m_client, rootWindow(), x(), y());
+    m_client.reparent(rootWindow(), x(), y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)

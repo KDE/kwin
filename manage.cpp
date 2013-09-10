@@ -687,7 +687,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_wrapper.reset(wrapperId);
 
-    xcb_reparent_window(conn, m_client, m_wrapper, 0, 0);
+    m_client.reparent(m_wrapper);
 
     // We could specify the event masks when we create the windows, but the original
     // Xlib code didn't.  Let's preserve that behavior here for now so we don't end up
