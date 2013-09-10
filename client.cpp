@@ -285,9 +285,9 @@ void Client::releaseWindow(bool on_shutdown)
     } else
         untab();
     xcb_connection_t *c = connection();
-    xcb_delete_property(c, m_client, atoms->kde_net_wm_user_creation_time);
-    xcb_delete_property(c, m_client, atoms->net_frame_extents);
-    xcb_delete_property(c, m_client, atoms->kde_net_wm_frame_strut);
+    m_client.deleteProperty(atoms->kde_net_wm_user_creation_time);
+    m_client.deleteProperty(atoms->net_frame_extents);
+    m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
     m_client.reparent(rootWindow(), x(), y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
     m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
@@ -1108,7 +1108,7 @@ void Client::exportMappingState(int s)
     assert(m_client != XCB_WINDOW_NONE);
     assert(!deleting || s == WithdrawnState);
     if (s == WithdrawnState) {
-        XDeleteProperty(display(), window(), atoms->wm_state);
+        m_client.deleteProperty(atoms->wm_state);
         return;
     }
     assert(s == NormalState || s == IconicState);
@@ -1906,7 +1906,7 @@ void Client::setTabGroup(TabGroup *group)
                         PropModeReplace, (unsigned char*)(&data), 1);
     }
     else
-        XDeleteProperty(display(), window(), atoms->kde_net_wm_tab_group);
+        m_client.deleteProperty(atoms->kde_net_wm_tab_group);
     emit tabGroupChanged();
 }
 

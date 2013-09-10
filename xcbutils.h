@@ -436,6 +436,7 @@ public:
     void map();
     void unmap();
     void reparent(xcb_window_t parent, int x = 0, int y = 0);
+    void deleteProperty(xcb_atom_t property);
     /**
      * Clears the window area. Same as xcb_clear_area with x, y, width, height being @c 0.
      **/
@@ -621,6 +622,15 @@ void Window::reparent(xcb_window_t parent, int x, int y)
         return;
     }
     xcb_reparent_window(connection(), m_window, parent, x, y);
+}
+
+inline
+void Window::deleteProperty(xcb_atom_t property)
+{
+    if (!isValid()) {
+        return;
+    }
+    xcb_delete_property(connection(), m_window, property);
 }
 
 inline
