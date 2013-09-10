@@ -1910,7 +1910,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     bool resized = (geom_before_block.size() != geom.size() || pending_geometry_update == PendingGeometryForced);
     if (resized) {
         resizeDecoration(QSize(w, h));
-        XMoveResizeWindow(display(), frameId(), x, y, w, h);
+        m_frame.setGeometry(x, y, w, h);
         if (!isShade()) {
             QSize cs = clientSize();
             m_wrapper.setGeometry(QRect(clientPos(), cs));
@@ -1926,9 +1926,9 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             if (compositing())  // Defer the X update until we leave this mode
                 needsXWindowMove = true;
             else
-                XMoveWindow(display(), frameId(), x, y); // sendSyntheticConfigureNotify() on finish shall be sufficient
+                m_frame.move(x, y); // sendSyntheticConfigureNotify() on finish shall be sufficient
         } else {
-            XMoveWindow(display(), frameId(), x, y);
+            m_frame.move(x, y);
             sendSyntheticConfigureNotify();
         }
 
@@ -1998,7 +1998,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
         return;
     }
     resizeDecoration(s);
-    XResizeWindow(display(), frameId(), w, h);
+    m_frame.resize(w, h);
 //     resizeDecoration( s );
     if (!isShade()) {
         QSize cs = clientSize();
@@ -2049,7 +2049,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
             pending_geometry_update = PendingGeometryNormal;
         return;
     }
-    XMoveWindow(display(), frameId(), x, y);
+    m_frame.move(x, y);
     sendSyntheticConfigureNotify();
     updateWindowRules(Rules::Position);
     screens()->setCurrent(this);
@@ -2646,7 +2646,7 @@ void Client::leaveMoveResize()
 {
     if (needsXWindowMove) {
         // Do the deferred move
-        XMoveWindow(display(), frameId(), geom.x(), geom.y());
+        m_frame.move(geom.topLeft());
         needsXWindowMove = false;
     }
     if (!isResize())

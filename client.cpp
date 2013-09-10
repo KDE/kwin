@@ -273,7 +273,7 @@ void Client::releaseWindow(bool on_shutdown)
     hidden = true; // So that it's not considered visible anymore (can't use hideClient(), it would set flags)
     if (!on_shutdown)
         workspace()->clientHidden(this);
-    XUnmapWindow(display(), frameId());  // Destroying decoration would cause ugly visual effect
+    m_frame.unmap();  // Destroying decoration would cause ugly visual effect
     destroyDecoration();
     cleanGrouping();
     if (!on_shutdown) {
@@ -1188,7 +1188,7 @@ void Client::map()
         discardWindowPixmap();
     if (decoration != NULL)
         decoration->widget()->show(); // Not really necessary, but let it know the state
-    XMapWindow(display(), frameId());
+    m_frame.map();
     if (!isShade()) {
         m_wrapper.map();
         m_client.map();
@@ -1210,7 +1210,7 @@ void Client::unmap()
     // will be missed is also very minimal, so I don't think it's needed to grab the server
     // here.
     m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
-    XUnmapWindow(display(), frameId());
+    m_frame.unmap();
     m_wrapper.unmap();
     m_client.unmap();
     m_decoInputExtent.unmap();
@@ -2253,7 +2253,7 @@ void Client::updateCursor()
     if (decoration != NULL)
         decoration->widget()->setCursor(m_cursor);
     xcb_cursor_t nativeCursor = Cursor::x11Cursor(m_cursor);
-    Xcb::defineCursor(frameId(), nativeCursor);
+    m_frame.defineCursor(nativeCursor);
     if (m_decoInputExtent.isValid())
         m_decoInputExtent.defineCursor(nativeCursor);
     if (moveResizeMode) {
