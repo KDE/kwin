@@ -78,13 +78,23 @@ Item {
                 top: parent.top
                 left: parent.left
             }
+
+            Label {
+                id: hint
+                text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
+            }
+
             PlasmaComponents.TextField {
                 id: searchField
                 clearButtonShown: true
                 Layout.fillWidth: true
                 height: 20
                 anchors {
-                    top: parent.top
+                    top: hint.bottom
                 }
                 focus: true
             }
