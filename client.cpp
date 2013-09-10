@@ -1667,7 +1667,7 @@ void Client::takeFocus()
     previous_client = this;
 #endif
     if (rules()->checkAcceptFocus(input))
-        XSetInputFocus(display(), window(), RevertToPointerRoot, xTime());
+        m_client.focus();
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
     if (Ptakefocus)
