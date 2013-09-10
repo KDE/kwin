@@ -641,8 +641,8 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     // We don't want the window to be destroyed when we quit
     xcb_change_save_set(conn, XCB_SET_MODE_INSERT, m_client);
 
-    xcb_change_window_attributes(conn, m_client, XCB_CW_EVENT_MASK, &zero_value);
-    xcb_unmap_window(conn, m_client);
+    m_client.selectInput(zero_value);
+    m_client.unmap();
     xcb_configure_window(conn, m_client, XCB_CONFIG_WINDOW_BORDER_WIDTH, &zero_value);
 
     // Note: These values must match the order in the xcb_cw_t enum
@@ -693,7 +693,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     // receiving any unexpected events from the wrapper creation or the reparenting.
     xcb_change_window_attributes(conn, frame,   XCB_CW_EVENT_MASK, &frame_event_mask);
     xcb_change_window_attributes(conn, m_wrapper, XCB_CW_EVENT_MASK, &wrapper_event_mask);
-    xcb_change_window_attributes(conn, m_client,  XCB_CW_EVENT_MASK, &client_event_mask);
+    m_client.selectInput(client_event_mask);
 
     updateMouseGrab();
 }

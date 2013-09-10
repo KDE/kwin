@@ -289,14 +289,14 @@ void Client::releaseWindow(bool on_shutdown)
     xcb_delete_property(c, m_client, atoms->kde_net_wm_frame_strut);
     xcb_reparent_window(c, m_client, rootWindow(), x(), y());
     xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
-    Xcb::selectInput(m_client, XCB_EVENT_MASK_NO_EVENT);
+    m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
     if (on_shutdown)
         // Map the window, so it can be found after another WM is started
-        xcb_map_window(connection(), m_client);
+        m_client.map();
     // TODO: Preserve minimized, shaded etc. state?
     else // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
-        xcb_unmap_window(connection(), m_client);
+        m_client.unmap();
     m_client.reset();
     m_wrapper.reset();
     XDestroyWindow(display(), frameId());
@@ -962,7 +962,7 @@ void Client::setShade(ShadeMode mode)
         s.setHeight(border_top + border_bottom);
         m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
         m_wrapper.unmap();
-        xcb_unmap_window(connection(), m_client);
+        m_client.unmap();
         m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
         exportMappingState(IconicState);
         plainResize(s);
@@ -1190,7 +1190,7 @@ void Client::map()
     XMapWindow(display(), frameId());
     if (!isShade()) {
         m_wrapper.map();
-        xcb_map_window(connection(), m_client);
+        m_client.map();
         m_decoInputExtent.map();
         exportMappingState(NormalState);
     } else
@@ -1211,7 +1211,7 @@ void Client::unmap()
     m_wrapper.selectInput(ClientWinMask);   // Avoid getting UnmapNotify
     XUnmapWindow(display(), frameId());
     m_wrapper.unmap();
-    xcb_unmap_window(connection(), m_client);
+    m_client.unmap();
     m_decoInputExtent.unmap();
     m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
     if (decoration != NULL)
