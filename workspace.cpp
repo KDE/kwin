@@ -237,18 +237,10 @@ Workspace::Workspace(bool restore)
     new DBusInterface(this);
 
     // Compatibility
-    long data = 1;
+    int32_t data = 1;
 
-    XChangeProperty(
-        display(),
-        rootWindow(),
-        atoms->kwin_running,
-        atoms->kwin_running,
-        32,
-        PropModeAppend,
-        (unsigned char*)(&data),
-        1
-    );
+    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
+                        atoms->kwin_running, 32, 1, &data);
 
     client_keys = new KActionCollection(this);
 
