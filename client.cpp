@@ -1113,11 +1113,10 @@ void Client::exportMappingState(int s)
     }
     assert(s == NormalState || s == IconicState);
 
-    unsigned long data[2];
-    data[0] = (unsigned long) s;
-    data[1] = (unsigned long) None;
-    XChangeProperty(display(), window(), atoms->wm_state, atoms->wm_state, 32,
-                    PropModeReplace, (unsigned char*)(data), 2);
+    int32_t data[2];
+    data[0] = s;
+    data[1] = XCB_NONE;
+    m_client.changeProperty(atoms->wm_state, atoms->wm_state, 32, 2, data);
 }
 
 void Client::internalShow()
@@ -1508,16 +1507,12 @@ void Client::setOnActivities(QStringList newActivitiesList)
         (newActivitiesList.count() == 1 && newActivitiesList.at(0) == Activities::nullUuid())) {
         activityList.clear();
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
-        XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
-                        PropModeReplace, (const unsigned char *)nullUuid.constData(), nullUuid.length());
+        m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
 
     } else {
         QByteArray joined = joinedActivitiesList.toAscii();
-        char *data = joined.data();
         activityList = newActivitiesList;
-        XChangeProperty(display(), window(), atoms->activities, XA_STRING, 8,
-                    PropModeReplace, (unsigned char *)data, joined.size());
-
+        m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, joined.length(), joined.constData());
     }
 
     updateActivities(false);
@@ -1901,9 +1896,8 @@ void Client::setTabGroup(TabGroup *group)
 {
     tab_group = group;
     if (group) {
-        unsigned long data = qHash(group); //->id();
-        XChangeProperty(display(), window(), atoms->kde_net_wm_tab_group, XA_CARDINAL, 32,
-                        PropModeReplace, (unsigned char*)(&data), 1);
+        unsigned long data[] = {qHash(group)}; //->id();
+        m_client.changeProperty(atoms->kde_net_wm_tab_group, XCB_ATOM_CARDINAL, 32, 1, data);
     }
     else
         m_client.deleteProperty(atoms->kde_net_wm_tab_group);
