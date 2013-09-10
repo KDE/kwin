@@ -78,6 +78,7 @@ public:
     QPoint m_embeddedOffset;
     QSize m_embeddedSize;
     Qt::Alignment m_embeddedAlignment;
+    Xcb::Atom m_highlightWindowsAtom;
 };
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
@@ -86,6 +87,7 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     , m_embedded(0)
     , m_embeddedOffset(QPoint(0, 0))
     , m_embeddedSize(QSize(0, 0))
+    , m_highlightWindowsAtom(QByteArrayLiteral("_KDE_WINDOW_HIGHLIGHT"))
 {
     this->q = q;
     isShown = false;
@@ -117,7 +119,6 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     if (!isShown || config.tabBoxMode() != TabBoxConfig::ClientTabBox)
         return;
 
-    Display *dpy = QX11Info::display();
     TabBoxClient *currentClient = q->client(index);
     QWindow *w = NULL;
     if (m_declarativeView && m_declarativeView->isVisible()) {
@@ -154,8 +155,8 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         }
     }
 
-    WId wId;
-    QVector< WId > data;
+    xcb_window_t wId;
+    QVector< xcb_window_t > data;
     if (config.isShowTabBox() && w) {
         wId = w->winId();
         data.resize(2);
@@ -165,9 +166,8 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         data.resize(1);
     }
     data[ 0 ] = currentClient ? currentClient->window() : 0L;
-    Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
-    XChangeProperty(dpy, wId, atom, atom, 32, PropModeReplace,
-                    reinterpret_cast<unsigned char *>(data.data()), data.size());
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, wId, m_highlightWindowsAtom,
+                        m_highlightWindowsAtom, 32, data.size(), data.constData());
 }
 
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
@@ -180,8 +180,7 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
     lastRaisedClient = 0;
     lastRaisedClientSucc = 0;
     // highlight windows
-    Atom atom = XInternAtom(display(), "_KDE_WINDOW_HIGHLIGHT", False);
-    xcb_delete_property(connection(), config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : rootWindow(), atom);
+    xcb_delete_property(connection(), config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : rootWindow(), m_highlightWindowsAtom);
 }
 
 /***********************************************
