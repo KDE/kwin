@@ -159,6 +159,49 @@ private:
     Reply *m_reply;
 };
 
+class Atom
+{
+public:
+    explicit Atom(const QByteArray &name, bool onlyIfExists = false)
+        : m_retrieved(false)
+        , m_cookie(xcb_intern_atom_unchecked(connection(), onlyIfExists, name.length(), name.constData()))
+        , m_atom(XCB_ATOM_NONE)
+        , m_name(name)
+        {
+        }
+
+    ~Atom() {
+        if (!m_retrieved && m_cookie.sequence) {
+            xcb_discard_reply(connection(), m_cookie.sequence);
+        }
+    }
+
+    operator xcb_atom_t() const {
+        (const_cast<Atom*>(this))->getReply();
+        return m_atom;
+    }
+
+    inline const QByteArray &name() const {
+        return m_name;
+    }
+
+private:
+    void getReply() {
+        if (m_retrieved || !m_cookie.sequence) {
+            return;
+        }
+        ScopedCPointer<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(connection(), m_cookie, nullptr));
+        if (!reply.isNull()) {
+            m_atom = reply->atom;
+        }
+        m_retrieved = true;
+    }
+    bool m_retrieved;
+    xcb_intern_atom_cookie_t m_cookie;
+    xcb_atom_t m_atom;
+    QByteArray m_name;
+};
+
 typedef Wrapper<xcb_get_window_attributes_reply_t, xcb_get_window_attributes_cookie_t, &xcb_get_window_attributes_reply, &xcb_get_window_attributes_unchecked> WindowAttributes;
 typedef Wrapper<xcb_composite_get_overlay_window_reply_t, xcb_composite_get_overlay_window_cookie_t, &xcb_composite_get_overlay_window_reply, &xcb_composite_get_overlay_window_unchecked> OverlayWindow;
 
