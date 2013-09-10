@@ -829,7 +829,7 @@ private:
 
     bool tabTo(Client *other, bool behind, bool activate);
 
-    xcb_window_t m_client;
+    Xcb::Window m_client;
     Xcb::Window m_wrapper;
     KDecoration* decoration;
     Bridge* bridge;

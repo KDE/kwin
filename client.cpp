@@ -86,7 +86,7 @@ bool Client::s_haveResizeEffect = false;
  */
 Client::Client()
     : Toplevel()
-    , m_client(XCB_WINDOW_NONE)
+    , m_client()
     , m_wrapper()
     , decoration(NULL)
     , bridge(new Bridge(this))
@@ -297,7 +297,7 @@ void Client::releaseWindow(bool on_shutdown)
     else // Make sure it's not mapped if the app unmapped it (#65279). The app
         // may do map+unmap before we initially map the window by calling rawShow() from manage().
         xcb_unmap_window(connection(), m_client);
-    m_client = XCB_WINDOW_NONE;
+    m_client.reset();
     m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;
@@ -338,7 +338,7 @@ void Client::destroyClient()
     destroyDecoration();
     cleanGrouping();
     workspace()->removeClient(this);
-    m_client = XCB_WINDOW_NONE; // invalidate
+    m_client.reset(); // invalidate
     m_wrapper.reset();
     XDestroyWindow(display(), frameId());
     //frame = None;

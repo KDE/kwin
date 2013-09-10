@@ -631,7 +631,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     assert(m_client == XCB_WINDOW_NONE);
     assert(frameId() == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
-    m_client = w;
+    m_client.reset(w, false);
 
     const xcb_visualid_t visualid = XVisualIDFromVisual(attr.visual);
     const uint32_t zero_value = 0;
