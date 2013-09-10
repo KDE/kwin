@@ -2659,7 +2659,7 @@ void Client::leaveMoveResize()
     if (move_resize_has_keyboard_grab)
         ungrabXKeyboard();
     move_resize_has_keyboard_grab = false;
-    XUngrabPointer(display(), xTime());
+    xcb_ungrab_pointer(connection(), xTime());
     m_moveResizeGrabWindow.reset();
     workspace()->setClientIsMoving(0);
     moveResizeMode = false;
