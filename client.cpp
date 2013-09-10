@@ -1301,7 +1301,7 @@ void Client::killWindow()
 {
     qDebug() << "Client::killWindow():" << caption();
     killProcess(false);
-    XKillClient(display(), window());  // Always kill this client at the server
+    m_client.kill();  // Always kill this client at the server
     destroyClient();
 }
 

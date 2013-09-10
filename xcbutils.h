@@ -442,6 +442,7 @@ public:
     void defineCursor(xcb_cursor_t cursor);
     void focus(uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
     void selectInput(uint32_t events);
+    void kill();
     operator xcb_window_t() const;
 private:
     xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
@@ -639,6 +640,12 @@ inline
 void Window::selectInput(uint32_t events)
 {
     Xcb::selectInput(m_window, events);
+}
+
+inline
+void Window::kill()
+{
+    xcb_kill_client(connection(), m_window);
 }
 
 // helper functions
