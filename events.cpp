@@ -1031,7 +1031,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
 {
     if (buttonDown) {
         if (w == wrapperId())
-            XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
+            xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
 
@@ -1046,7 +1046,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
             // hide splashwindow if the user clicks on it
             hideClient(true);
             if (w == wrapperId())
-                XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
+                xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
             return true;
         }
 
@@ -1106,13 +1106,13 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
                 replay = true;
 
             if (w == wrapperId())  // these can come only from a grab
-                XAllowEvents(display(), replay ? ReplayPointer : SyncPointer, CurrentTime); //xTime());
+                xcb_allow_events(connection(), replay ? XCB_ALLOW_REPLAY_POINTER : XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
             return true;
         }
     }
 
     if (w == wrapperId()) { // these can come only from a grab
-        XAllowEvents(display(), ReplayPointer, CurrentTime);  //xTime());
+        xcb_allow_events(connection(), XCB_ALLOW_REPLAY_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
     if (w == inputId()) {
@@ -1206,7 +1206,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int /*button*/, int state, int x
     if (w == decorationId() && !buttonDown)
         return false;
     if (w == wrapperId()) {
-        XAllowEvents(display(), SyncPointer, CurrentTime);  //xTime());
+        xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
     if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
