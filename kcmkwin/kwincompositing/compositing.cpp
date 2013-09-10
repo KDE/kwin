@@ -22,6 +22,7 @@
 
 #include <KDE/KCModuleProxy>
 #include <KConfigGroup>
+#include <klocalizedstring.h>
 #include <KDE/KSharedConfig>
 
 #include <QDBusInterface>
@@ -75,10 +76,10 @@ void CompositingType::generateCompositing()
 {
     QHash<QString, CompositingType::CompositingTypeIndex> compositingTypes;
 
-    compositingTypes["OpenGL 3.1"] = CompositingType::OPENGL31_INDEX;
-    compositingTypes["OpenGL 2.0"] = CompositingType::OPENGL20_INDEX;
-    compositingTypes["OpenGL 1.2"] = CompositingType::OPENGL12_INDEX;
-    compositingTypes["XRender"] = CompositingType::XRENDER_INDEX;
+    compositingTypes[i18n("OpenGL 3.1")] = CompositingType::OPENGL31_INDEX;
+    compositingTypes[i18n("OpenGL 2.0")] = CompositingType::OPENGL20_INDEX;
+    compositingTypes[i18n("OpenGL 1.2")] = CompositingType::OPENGL12_INDEX;
+    compositingTypes[i18n("XRender")] = CompositingType::XRENDER_INDEX;
 
     CompositingData data;
     beginResetModel();
