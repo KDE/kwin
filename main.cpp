@@ -71,8 +71,6 @@ Atoms* atoms;
 int screen_number = -1;
 bool is_multihead = false;
 
-bool initting = false;
-
 //************************************
 // KWinSelectionOwner
 //************************************
@@ -250,7 +248,6 @@ void Application::start()
         // Reset crashes count if we stay up for more that 15 seconds
         QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 
-        initting = true; // Startup...
         installNativeEventFilter(m_eventFilter.data());
         // first load options - done internally by a different thread
         options = new Options;
@@ -269,8 +266,6 @@ void Application::start()
 
         atoms = new Atoms;
 
-    //    initting = false; // TODO
-
         // This tries to detect compositing options and can use GLX. GLX problems
         // (X errors) shouldn't cause kwin to abort, so this is out of the
         // critical startup section where x errors cause kwin to abort.
@@ -279,8 +274,6 @@ void Application::start()
         (void) new Workspace(isSessionRestored());
 
         Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-        initting = false; // Startup done, we are up and running now.
 
         const QByteArray splashAtomName(QByteArrayLiteral("_KDE_SPLASH_PROGRESS"));
         ScopedCPointer<xcb_intern_atom_reply_t> splashAtom(xcb_intern_atom_reply(connection(),
