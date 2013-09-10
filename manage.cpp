@@ -528,7 +528,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     // This should avoid flicker, because real restacking is done
     // only after manage() finishes because of blocking, but the window is shown sooner
-    XLowerWindow(display(), frameId());
+    m_frame.lower();
     if (session && session->stackingOrder != -1) {
         sm_stacking_order = session->stackingOrder;
         workspace()->restoreSessionStackingOrder(this);
