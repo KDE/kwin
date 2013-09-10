@@ -999,7 +999,7 @@ void Client::setShade(ShadeMode mode)
                 shade_below = NULL;
         }
         XMapWindow(display(), wrapperId());
-        XMapWindow(display(), window());
+        m_client.map();
         exportMappingState(NormalState);
         if (isActive())
             workspace()->requestFocus(this);

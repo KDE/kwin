@@ -1915,7 +1915,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             QSize cs = clientSize();
             m_wrapper.setGeometry(QRect(clientPos(), cs));
             if (!isResize() || syncRequest.counter == XCB_NONE)
-                XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
+                m_client.setGeometry(0, 0, cs.width(), cs.height());
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
             sendSyntheticConfigureNotify();
@@ -2003,7 +2003,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     if (!isShade()) {
         QSize cs = clientSize();
         m_wrapper.setGeometry(QRect(clientPos(), cs));
-        XMoveResizeWindow(display(), window(), 0, 0, cs.width(), cs.height());
+        m_client.setGeometry(0, 0, cs.width(), cs.height());
     }
     updateShape();
 
@@ -3030,7 +3030,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
             syncRequest.isPending = true;   // limit the resizes to 30Hz to take pointless load from X11
             syncRequest.timeout->start(33); // and the client, the mouse is still moved at full speed
         }                                   // and no human can control faster resizes anyway
-        XMoveResizeWindow(display(), window(), 0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
+        m_client.setGeometry(0, 0, moveResizeGeom.width() - (border_left + border_right), moveResizeGeom.height() - (border_top + border_bottom));
     } else
         performMoveResize();
 
