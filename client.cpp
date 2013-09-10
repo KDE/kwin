@@ -998,7 +998,7 @@ void Client::setShade(ShadeMode mode)
             else
                 shade_below = NULL;
         }
-        XMapWindow(display(), wrapperId());
+        m_wrapper.map();
         m_client.map();
         exportMappingState(NormalState);
         if (isActive())
