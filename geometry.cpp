@@ -852,19 +852,19 @@ void Client::keepInArea(QRect area, bool partial)
         if (area.width() < width() || area.height() < height())
             resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
     }
+    int tx = x(), ty = y();
     if (geometry().right() > area.right() && width() <= area.width())
-        move(area.right() - width() + 1, y());
+        tx = area.right() - width() + 1;
     if (geometry().bottom() > area.bottom() && height() <= area.height())
-        move(x(), area.bottom() - height() + 1);
+        ty = area.bottom() - height() + 1;
     if (!area.contains(geometry().topLeft())) {
-        int tx = x();
-        int ty = y();
         if (tx < area.x())
             tx = area.x();
         if (ty < area.y())
             ty = area.y();
-        move(tx, ty);
     }
+    if (tx != x() || ty != y())
+        move(tx, ty);
 }
 
 /*!
@@ -1491,16 +1491,16 @@ void Client::getWmNormalHints()
         // update to match restrictions
         QSize new_size = adjustedSize();
         if (new_size != size() && !isFullScreen()) {
-            QRect orig_geometry = geometry();
+            QRect origClientGeometry(pos() + clientPos(), clientSize());
             resizeWithChecks(new_size);
             if ((!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
                 QRect area = workspace()->clientArea(MovementArea, this);
-                if (area.contains(orig_geometry))
+                if (area.contains(origClientGeometry))
                     keepInArea(area);
                 area = workspace()->clientArea(WorkArea, this);
-                if (area.contains(orig_geometry))
+                if (area.contains(origClientGeometry))
                     keepInArea(area);
             }
         }
@@ -1682,7 +1682,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         if (newScreen != rules()->checkScreen(newScreen))
             return; // not allowed by rule
 
-        QRect orig_geometry = geometry();
+        QRect origClientGeometry(pos() + clientPos(), clientSize());
         GeometryUpdatesBlocker blocker(this);
         move(new_pos);
         plainResize(ns);
@@ -1690,7 +1690,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         updateFullScreenHack(QRect(new_pos, QSize(nw, nh)));
         QRect area = workspace()->clientArea(WorkArea, this);
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
-                && area.contains(orig_geometry))
+                && area.contains(origClientGeometry))
             keepInArea(area);
 
         // this is part of the kicker-xinerama-hack... it should be
@@ -1712,7 +1712,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         QSize ns = sizeForClientSize(QSize(nw, nh));
 
         if (ns != size()) { // don't restore if some app sets its own size again
-            QRect orig_geometry = geometry();
+            QRect origClientGeometry(pos() + clientPos(), clientSize());
             GeometryUpdatesBlocker blocker(this);
             int save_gravity = xSizeHint.win_gravity;
             xSizeHint.win_gravity = gravity;
@@ -1723,10 +1723,10 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
                 QRect area = workspace()->clientArea(MovementArea, this);
-                if (area.contains(orig_geometry))
+                if (area.contains(origClientGeometry))
                     keepInArea(area);
                 area = workspace()->clientArea(WorkArea, this);
-                if (area.contains(orig_geometry))
+                if (area.contains(origClientGeometry))
                     keepInArea(area);
             }
         }
