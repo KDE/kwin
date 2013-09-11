@@ -169,33 +169,28 @@ void ScreenLockerWatcher::setLocked(bool activated)
 //---------------------
 // Static
 
-static QByteArray readWindowProperty(Window win, long atom, long type, int format)
+static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom_t type, int format)
 {
-    int len = 32768;
+    uint32_t len = 32768;
+    xcb_connection_t *c = connection();
     for (;;) {
-        unsigned char* data;
-        Atom rtype;
-        int rformat;
-        unsigned long nitems, after;
-        if (XGetWindowProperty(QX11Info::display(), win,
-                              atom, 0, len, False, AnyPropertyType,
-                              &rtype, &rformat, &nitems, &after, &data) == Success) {
-            if (after > 0) {
-                XFree(data);
-                len *= 2;
-                continue;
-            }
-            if (long(rtype) == type && rformat == format) {
-                int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof(short) : nitems * sizeof(long);
-                QByteArray ret(reinterpret_cast< const char* >(data), bytelen);
-                XFree(data);
-                return ret;
-            } else { // wrong format, type or something
-                XFree(data);
-                return QByteArray();
-            }
-        } else // XGetWindowProperty() failed
+        const auto cookie = xcb_get_property_unchecked(c, false, win, atom, XCB_ATOM_ANY, 0, len);
+        ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+        if (prop.isNull()) {
+            // get property failed
             return QByteArray();
+        }
+        if (prop->bytes_after > 0) {
+            len *= 2;
+            continue;
+        }
+        if (prop->type == type && prop->format == format) {
+            const int nitems = xcb_get_property_value_length(prop.data());
+            int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof(short) : nitems * sizeof(long);
+            return QByteArray(reinterpret_cast< const char* >(xcb_get_property_value(prop.data())), bytelen);
+        } else {
+            return QByteArray();
+        }
     }
 }
 
