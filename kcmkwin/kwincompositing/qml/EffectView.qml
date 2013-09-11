@@ -69,6 +69,32 @@ Item {
             onCurrentIndexChanged: apply.enabled = true
         }
 
+        Label {
+            id: animationText
+            text: i18n("Animation Speed:")
+            anchors {
+                top: openGLType.bottom
+                horizontalCenter: windowManagement.horizontalCenter
+                topMargin: 20
+            }
+        }
+
+        Slider {
+            id: animationSpeed
+            maximumValue: 6.0
+            stepSize: 1.0
+            tickmarksEnabled: true
+            value: compositing.animationSpeed
+            anchors {
+                top: animationText.bottom
+                left: col.right
+            }
+
+            onValueChanged: {
+                apply.enabled = true;
+            }
+        }
+
         ColumnLayout {
             id: col
             height: parent.height
@@ -148,7 +174,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value);
                 }
             }
 

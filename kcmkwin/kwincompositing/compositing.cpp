@@ -65,6 +65,12 @@ bool Compositing::OpenGLIsBroken()
     return false;
 }
 
+int Compositing::animationSpeed() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    return kwinConfig.readEntry("AnimationSpeed", 3);
+}
+
 CompositingType::CompositingType(QObject *parent)
     : QAbstractItemModel(parent) {
 
@@ -173,7 +179,7 @@ int CompositingType::currentOpenGLType()
     return currentIndex;
 }
 
-void CompositingType::syncConfig(int openGLType)
+void CompositingType::syncConfig(int openGLType, int animationSpeed)
 {
     QString backend;
     bool glLegacy;
@@ -207,6 +213,7 @@ void CompositingType::syncConfig(int openGLType)
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
+    kwinConfig.writeEntry("AnimationSpeed", animationSpeed);
     kwinConfig.sync();
 }
 
