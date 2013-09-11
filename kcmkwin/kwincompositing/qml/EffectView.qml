@@ -66,7 +66,11 @@ Item {
             currentIndex: compositingType.currentOpenGLType()
             anchors.top: windowManagement.bottom
             anchors.left: col.right
-            onCurrentIndexChanged: apply.enabled = true
+            onCurrentIndexChanged: {
+                apply.enabled = true;
+                glScaleFilter.visible = currentIndex != 3;
+                xrScaleFilter.visible = currentIndex == 3;
+            }
         }
 
         Label {
@@ -113,6 +117,41 @@ Item {
             anchors {
                 top: windowThumbnailText.bottom
                 left: col.right
+                right: parent.right
+            }
+            onCurrentIndexChanged: apply.enabled = true;
+        }
+
+        Label {
+            id: scaleFilterText
+            text: i18n("Scale Method:")
+            anchors {
+                top: windowThumbnail.bottom
+                horizontalCenter: windowManagement.horizontalCenter
+                topMargin: 20
+            }
+        }
+
+        ComboBox {
+            id: glScaleFilter
+            model: [i18n("Crisp"), i18n("Smooth"), i18n("Accurate")]
+            visible: openGLType.currentIndex != 3
+            currentIndex: compositing.glScaleFilter
+            anchors {
+                top: scaleFilterText.bottom
+                left: col.right
+            }
+            onCurrentIndexChanged: apply.enabled = true;
+        }
+
+        ComboBox {
+            id: xrScaleFilter
+            model: [i18n("Crisp"), i18n("Smooth (slower)")]
+            visible: openGLType.currentIndex == 3
+            currentIndex: compositing.xrScaleFilter ? 1 : 0
+            anchors {
+                top: scaleFilterText.bottom
+                left: glScaleFilter.visible ? glScaleFilter.right : col.right
                 right: parent.right
             }
             onCurrentIndexChanged: apply.enabled = true;
@@ -197,7 +236,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1);
                 }
             }
 

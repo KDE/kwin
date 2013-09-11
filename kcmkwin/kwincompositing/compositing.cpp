@@ -77,12 +77,23 @@ int Compositing::windowThumbnail() const
     return kwinConfig.readEntry("HiddenPreviews", 5) - 4;
 }
 
+int Compositing::glSclaleFilter() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    return kwinConfig.readEntry("GLTextureFilter", 2);
+}
+
+bool Compositing::xrSclaleFilter() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    return kwinConfig.readEntry("XRenderSmoothScale", false);
+}
+
 CompositingType::CompositingType(QObject *parent)
     : QAbstractItemModel(parent) {
 
     generateCompositing();
 }
-
 
 void CompositingType::generateCompositing()
 {
@@ -185,7 +196,7 @@ int CompositingType::currentOpenGLType()
     return currentIndex;
 }
 
-void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail)
+void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter)
 {
     QString backend;
     bool glLegacy;
@@ -221,6 +232,8 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowT
     kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.writeEntry("AnimationSpeed", animationSpeed);
     kwinConfig.writeEntry("HiddenPreviews", windowThumbnail + 4);
+    kwinConfig.writeEntry("GLTextureFilter", glSclaleFilter);
+    kwinConfig.writeEntry("XRenderSmoothScale", xrSclaleFilter);
     kwinConfig.sync();
 }
 
