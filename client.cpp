@@ -2414,19 +2414,15 @@ KDecorationDefines::Position Client::titlebarPosition()
 void Client::updateFirstInTabBox()
 {
     // TODO: move into KWindowInfo
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    status = XGetWindowProperty(display(), window(), atoms->kde_first_in_window_list, 0, 1, false, atoms->kde_first_in_window_list, &type, &format, &nitems, &extra, &data);
-    if (status == Success && format == 32 && nitems == 1) {
+    xcb_connection_t *c = connection();
+    const auto cookie = xcb_get_property_unchecked(c, false, m_client, atoms->kde_first_in_window_list,
+                                                   atoms->kde_first_in_window_list, 0, 1);
+    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+    if (!prop.isNull() && prop->format == 32 && prop->value_len == 1) {
         setFirstInTabBox(true);
     } else {
         setFirstInTabBox(false);
     }
-    if (data)
-        XFree(data);
 }
 
 bool Client::isClient() const
