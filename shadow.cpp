@@ -46,7 +46,7 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!effects) {
         return NULL;
     }
-    QVector<long> data = Shadow::readX11ShadowProperty(toplevel->window());
+    auto data = Shadow::readX11ShadowProperty(toplevel->window());
     if (!data.isEmpty()) {
         Shadow *shadow = NULL;
         if (effects->isOpenGLCompositing()) {
@@ -72,27 +72,24 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     }
 }
 
-QVector< long > Shadow::readX11ShadowProperty(WId id)
+QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
 {
-    QVector<long> ret;
-    Atom type;
-    int format, status;
-    unsigned long nitems = 0;
-    unsigned long extra = 0;
-    unsigned char *data = 0;
-    status = XGetWindowProperty(display(), id, atoms->kde_net_wm_shadow, 0, 12, false, XA_CARDINAL, &type, &format, &nitems, &extra, &data);
-    if (status == Success && type == XA_CARDINAL && format == 32 && nitems == 12) {
-        long* shadow = reinterpret_cast< long* >(data);
+    QVector<uint32_t> ret;
+    xcb_connection_t *c = connection();
+    const auto cookie = xcb_get_property_unchecked(c, false, id, atoms->kde_net_wm_shadow,
+                                                   XCB_ATOM_CARDINAL, 0, 12);
+    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+    if (!prop.isNull() && prop->type == XCB_ATOM_CARDINAL && prop->format == 32 ) {
+        uint32_t* shadow = reinterpret_cast< uint32_t* >(xcb_get_property_value(prop.data()));
         ret.reserve(12);
         for (int i=0; i<12; ++i) {
             ret << shadow[i];
         }
-        XFree(data);
     }
     return ret;
 }
 
-bool Shadow::init(const QVector< long > &data)
+bool Shadow::init(const QVector< uint32_t > &data)
 {
     QVector<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
     QVector<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
@@ -228,7 +225,7 @@ void Shadow::buildQuads()
 
 bool Shadow::updateShadow()
 {
-    QVector<long> data = Shadow::readX11ShadowProperty(m_topLevel->window());
+    auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
         if (m_topLevel && m_topLevel->effectWindow() && m_topLevel->effectWindow()->sceneWindow() &&
                                             m_topLevel->effectWindow()->sceneWindow()->shadow()) {
