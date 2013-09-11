@@ -233,7 +233,6 @@ set(kwin_QT_LIBS
 set(kwin_KDE_LIBS
     ${KDE4Support_LIBRARIES}
     ${KDECLARATIVE_LIBRARIES}
-    kdeqt5staging # TODO: remove once QCommandLineParser is dropped
     KF5::KConfigCore
     KF5::KCoreAddons
     KF5::KCrash

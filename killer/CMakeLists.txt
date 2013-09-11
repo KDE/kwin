@@ -13,7 +13,6 @@ target_link_libraries(kwin_killer_helper
     KF5::KAuth
     KF5::KI18n
     KF5::KWidgetsAddons
-    kdeqt5staging # TODO: remove once QCommandLineParser is dropped
 )
 
 install(TARGETS kwin_killer_helper DESTINATION ${LIBEXEC_INSTALL_DIR} )
