@@ -33,12 +33,14 @@ class Compositing : public QObject
 
     Q_OBJECT
     Q_PROPERTY(int animationSpeed READ animationSpeed CONSTANT);
+    Q_PROPERTY(int windowThumbnail READ windowThumbnail CONSTANT);
 public:
     explicit Compositing(QObject *parent = 0);
 
     Q_INVOKABLE bool OpenGLIsUnsafe() const;
     Q_INVOKABLE bool OpenGLIsBroken();
     int animationSpeed() const;
+    int windowThumbnail() const;
 
 private:
 
@@ -82,7 +84,7 @@ public:
     virtual QHash< int, QByteArray > roleNames() const override;
 
     Q_INVOKABLE int currentOpenGLType();
-    Q_INVOKABLE void syncConfig(int openGLType, int animationSpeed);
+    Q_INVOKABLE void syncConfig(int openGLType, int animationSpeed, int windowThumbnail);
 
 private:
     void generateCompositing();

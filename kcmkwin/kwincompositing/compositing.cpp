@@ -71,6 +71,12 @@ int Compositing::animationSpeed() const
     return kwinConfig.readEntry("AnimationSpeed", 3);
 }
 
+int Compositing::windowThumbnail() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    return kwinConfig.readEntry("HiddenPreviews", 5) - 4;
+}
+
 CompositingType::CompositingType(QObject *parent)
     : QAbstractItemModel(parent) {
 
@@ -179,7 +185,7 @@ int CompositingType::currentOpenGLType()
     return currentIndex;
 }
 
-void CompositingType::syncConfig(int openGLType, int animationSpeed)
+void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail)
 {
     QString backend;
     bool glLegacy;
@@ -214,6 +220,7 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed)
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.writeEntry("AnimationSpeed", animationSpeed);
+    kwinConfig.writeEntry("HiddenPreviews", windowThumbnail + 4);
     kwinConfig.sync();
 }
 

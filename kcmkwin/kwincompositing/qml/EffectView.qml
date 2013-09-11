@@ -95,6 +95,29 @@ Item {
             }
         }
 
+        Label {
+            id: windowThumbnailText
+            text: i18n("Keep Window Thumbnails:")
+            anchors {
+                top: animationSpeed.bottom
+                horizontalCenter: windowManagement.horizontalCenter
+                topMargin: 20
+            }
+        }
+
+        ComboBox {
+            id: windowThumbnail
+            model: [i18n("Always (Breaks Animations)"), i18n("Only for Shown Windows"), i18n("Never")]
+            currentIndex: compositing.windowThumbnail
+            Layout.fillWidth: true
+            anchors {
+                top: windowThumbnailText.bottom
+                left: col.right
+                right: parent.right
+            }
+            onCurrentIndexChanged: apply.enabled = true;
+        }
+
         ColumnLayout {
             id: col
             height: parent.height
@@ -174,7 +197,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex);
                 }
             }
 
