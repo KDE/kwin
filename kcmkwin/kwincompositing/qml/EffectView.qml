@@ -56,7 +56,7 @@ Item {
             checked: false
             anchors.left: col.right
             anchors.top: parent.top
-            anchors.topMargin: col.height/2
+            anchors.topMargin: col.height/4
             onClicked: searchModel.enableWidnowManagement(windowManagement.checked)
         }
 
@@ -157,6 +157,16 @@ Item {
             onCurrentIndexChanged: apply.enabled = true;
         }
 
+         CheckBox {
+            id: unredirectFullScreen
+            text: i18n("Suspend desktop effects for \nfull screen windows")
+            checked: compositing.unredirectFullscreen
+            anchors.left: col.right
+            anchors.top: xrScaleFilter.bottom
+            onClicked: apply.enabled = true
+        }
+
+
         ColumnLayout {
             id: col
             height: parent.height
@@ -236,7 +246,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1, unredirectFullScreen.checked);
                 }
             }
 
