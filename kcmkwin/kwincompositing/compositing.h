@@ -38,6 +38,7 @@ class Compositing : public QObject
     Q_PROPERTY(bool xrSclaleFilter READ xrSclaleFilter CONSTANT);
     Q_PROPERTY(bool unredirectFullscreen READ unredirectFullscreen CONSTANT);
     Q_PROPERTY(int glSwapStrategy READ glSwapStrategy CONSTANT);
+    Q_PROPERTY(bool glColorCorrection READ glColorCorrection CONSTANT);
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -49,6 +50,7 @@ public:
     bool xrSclaleFilter() const;
     bool unredirectFullscreen() const;
     int glSwapStrategy() const;
+    bool glColorCorrection() const;
 
 private:
 
@@ -93,7 +95,7 @@ public:
 
     Q_INVOKABLE int currentOpenGLType();
     Q_INVOKABLE void syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
-    bool unredirectFullscreen, int glSwapStrategy);
+    bool unredirectFullscreen, int glSwapStrategy, bool glColorCorrection);
 
 private:
     void generateCompositing();

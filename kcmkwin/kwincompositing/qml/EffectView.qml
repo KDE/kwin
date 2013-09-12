@@ -70,6 +70,7 @@ Item {
                 apply.enabled = true;
                 glScaleFilter.visible = currentIndex != 3;
                 xrScaleFilter.visible = currentIndex == 3;
+                glColorCorrection.enabled = currentIndex !=3 && glColorCorrection !=4;
             }
         }
 
@@ -188,6 +189,18 @@ Item {
             onCurrentIndexChanged: apply.enabled = true;
         }
 
+        CheckBox {
+            id: glColorCorrection
+            text: i18n("Enable color correction (experimental)")
+            checked: compositing.glColorCorrection
+            enabled: openGLType.currentIndex != 3 && openGLType.currentIndex != 4
+            anchors {
+                top: glSwapStrategy.bottom
+                left: col.right
+            }
+            onClicked: apply.enabled = true
+        }
+
         ColumnLayout {
             id: col
             height: parent.height
@@ -267,7 +280,8 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1, unredirectFullScreen.checked, glSwapStrategy.currentIndex);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1,
+                    unredirectFullScreen.checked, glSwapStrategy.currentIndex, glColorCorrection.checked);
                 }
             }
 

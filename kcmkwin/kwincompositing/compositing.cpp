@@ -113,6 +113,12 @@ int Compositing::glSwapStrategy() const
     }
 }
 
+bool Compositing::glColorCorrection() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    return kwinConfig.readEntry("GLColorCorrection", false);
+}
+
 CompositingType::CompositingType(QObject *parent)
     : QAbstractItemModel(parent) {
 
@@ -221,7 +227,7 @@ int CompositingType::currentOpenGLType()
 }
 
 void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
-        bool unredirectFullscreen, int glSwapStrategy)
+        bool unredirectFullscreen, int glSwapStrategy, bool glColorCorrection)
 {
     QString glSwapStrategyValue;
     QString backend;
@@ -282,6 +288,7 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowT
     kwinConfig.writeEntry("XRenderSmoothScale", xrSclaleFilter);
     kwinConfig.writeEntry("UnredirectFullscreen", unredirectFullscreen);
     kwinConfig.writeEntry("GLPreferBufferSwap", glSwapStrategyValue);
+    kwinConfig.writeEntry("GLColorCorrection", glColorCorrection);
     kwinConfig.sync();
 }
 
