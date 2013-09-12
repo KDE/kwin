@@ -95,6 +95,24 @@ bool Compositing::unredirectFullscreen() const
     return kwinConfig.readEntry("UnredirectFullscreen", false);
 }
 
+int Compositing::glSwapStrategy() const
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
+
+    if (glSwapStrategyValue == "n") {
+        return 0;
+    } else if (glSwapStrategyValue == "a") {
+        return 1;
+    } else if (glSwapStrategyValue == "e") {
+        return 2;
+    } else if (glSwapStrategyValue == "p") {
+        return 3;
+    } else if (glSwapStrategyValue == "c") {
+        return 4;
+    }
+}
+
 CompositingType::CompositingType(QObject *parent)
     : QAbstractItemModel(parent) {
 
@@ -203,8 +221,9 @@ int CompositingType::currentOpenGLType()
 }
 
 void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
-        bool unredirectFullscreen)
+        bool unredirectFullscreen, int glSwapStrategy)
 {
+    QString glSwapStrategyValue;
     QString backend;
     bool glLegacy;
     bool glCore;
@@ -233,6 +252,26 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowT
             break;
     }
 
+    switch (glSwapStrategy) {
+        case 0:
+            glSwapStrategyValue = "n";
+            break;
+        case 1:
+            glSwapStrategyValue = "a";
+            break;
+        case 2:
+            glSwapStrategyValue = "e";
+            break;
+        case 3:
+            glSwapStrategyValue = "p";
+            break;
+        case 4:
+            glSwapStrategyValue = "c";
+            break;
+        default:
+            glSwapStrategyValue = "a";
+    }
+
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLLegacy", glLegacy);
@@ -242,6 +281,7 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowT
     kwinConfig.writeEntry("GLTextureFilter", glSclaleFilter);
     kwinConfig.writeEntry("XRenderSmoothScale", xrSclaleFilter);
     kwinConfig.writeEntry("UnredirectFullscreen", unredirectFullscreen);
+    kwinConfig.writeEntry("GLPreferBufferSwap", glSwapStrategyValue);
     kwinConfig.sync();
 }
 

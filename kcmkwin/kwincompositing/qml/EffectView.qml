@@ -166,6 +166,27 @@ Item {
             onClicked: apply.enabled = true
         }
 
+        Label {
+            id: glSwapStrategyText
+            text: i18n("Tearing Prevention (VSync):")
+            anchors {
+                top: unredirectFullScreen.bottom
+                horizontalCenter: windowManagement.horizontalCenter
+                topMargin: 20
+            }
+        }
+
+        ComboBox {
+            id: glSwapStrategy
+            model: [i18n("Never"), i18n("Automatic"), i18n("Only when cheap"), i18n("Full screen repaints"), i18n("Re-use screen content")]
+            currentIndex: compositing.glSwapStrategy
+            anchors {
+                top: glSwapStrategyText.bottom
+                left: col.right
+                right: parent.right
+            }
+            onCurrentIndexChanged: apply.enabled = true;
+        }
 
         ColumnLayout {
             id: col
@@ -246,7 +267,7 @@ Item {
                 onClicked: {
                     searchModel.syncConfig();
                     apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1, unredirectFullScreen.checked);
+                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1, unredirectFullScreen.checked, glSwapStrategy.currentIndex);
                 }
             }
 
