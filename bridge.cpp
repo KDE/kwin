@@ -186,7 +186,7 @@ QWidget* Bridge::initialParentWidget() const
 
 Qt::WindowFlags Bridge::initialWFlags() const
 {
-    return 0;
+    return Qt::WindowDoesNotAcceptFocus;
 }
 
 QRegion Bridge::unobscuredRegion(const QRegion& r) const
