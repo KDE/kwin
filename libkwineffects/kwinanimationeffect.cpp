@@ -36,7 +36,7 @@ namespace KWin {
 
 QElapsedTimer AnimationEffect::s_clock;
 
-struct AnimationEffectPrivate {
+class AnimationEffectPrivate {
 public:
     AnimationEffectPrivate() { m_animated = m_damageDirty = m_animationsTouched = m_isInitialized = false; }
     AnimationEffect::AniMap m_animations;
