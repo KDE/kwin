@@ -174,7 +174,7 @@ void EffectModel::loadEffects()
         effect.version = plugin.version();
         effect.category = plugin.category();
         effect.serviceName = plugin.pluginName();
-        effect.effectStatus = kwinConfig.hasKey(effect.serviceName + "Enabled")?  kwinConfig.readEntry(effect.serviceName + "Enabled", false) : plugin.isPluginEnabledByDefault();
+        effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault());
 
         m_effectsList << effect;
     }
