@@ -1040,7 +1040,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         const bool bModKeyHeld = modKeyDown(state);
 
         if (isSplash()
-                && button == Button1 && !bModKeyHeld) {
+                && button == XCB_BUTTON_INDEX_1 && !bModKeyHeld) {
             // hide splashwindow if the user clicks on it
             hideClient(true);
             if (w == wrapperId())
@@ -1054,18 +1054,18 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         if (bModKeyHeld) {
             was_action = true;
             switch(button) {
-            case Button1:
+            case XCB_BUTTON_INDEX_1:
                 com = options->commandAll1();
                 break;
-            case Button2:
+            case XCB_BUTTON_INDEX_2:
                 com = options->commandAll2();
                 break;
-            case Button3:
+            case XCB_BUTTON_INDEX_3:
                 com = options->commandAll3();
                 break;
-            case Button4:
-            case Button5:
-                com = options->operationWindowMouseWheel(button == Button4 ? 120 : -120);
+            case XCB_BUTTON_INDEX_4:
+            case XCB_BUTTON_INDEX_5:
+                com = options->operationWindowMouseWheel(button == XCB_BUTTON_INDEX_4 ? 120 : -120);
                 break;
             }
         } else {
@@ -1074,17 +1074,17 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
                 was_action = true;
                 perform_handled = true;
                 switch(button) {
-                case Button1:
+                case XCB_BUTTON_INDEX_1:
                     com = options->commandWindow1();
                     break;
-                case Button2:
+                case XCB_BUTTON_INDEX_2:
                     com = options->commandWindow2();
                     break;
-                case Button3:
+                case XCB_BUTTON_INDEX_3:
                     com = options->commandWindow3();
                     break;
-                case Button4:
-                case Button5:
+                case XCB_BUTTON_INDEX_4:
+                case XCB_BUTTON_INDEX_5:
                     com = options->commandWindowWheel();
                     break;
                 }
@@ -1139,13 +1139,13 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
     if (!wantsInput())    // we cannot be active, use it anyway
         active = true;
 
-    if (button == Button1)
+    if (button == XCB_BUTTON_INDEX_1)
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    else if (button == Button2)
+    else if (button == XCB_BUTTON_INDEX_2)
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    else if (button == Button3)
+    else if (button == XCB_BUTTON_INDEX_3)
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
-    if (button == Button1
+    if (button == XCB_BUTTON_INDEX_1
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
             && com != Options::MouseMinimize  // mouse release event
             && com != Options::MouseDragTab) {
@@ -1182,13 +1182,13 @@ void Client::processMousePressEvent(QMouseEvent* e)
     int button;
     switch(e->button()) {
     case Qt::LeftButton:
-        button = Button1;
+        button = XCB_BUTTON_INDEX_1;
         break;
     case Qt::MidButton:
-        button = Button2;
+        button = XCB_BUTTON_INDEX_2;
         break;
     case Qt::RightButton:
-        button = Button3;
+        button = XCB_BUTTON_INDEX_3;
         break;
     default:
         return;
