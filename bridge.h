@@ -75,7 +75,7 @@ public:
     virtual void setKeepBelow(bool);
     virtual int currentDesktop() const;
     virtual QWidget* initialParentWidget() const;
-    virtual Qt::WFlags initialWFlags() const;
+    virtual Qt::WindowFlags initialWFlags() const;
     virtual void grabXServer(bool grab);
 
     virtual bool compositingActive() const;
