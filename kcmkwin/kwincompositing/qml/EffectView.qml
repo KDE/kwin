@@ -253,6 +253,9 @@ Item {
                 }
                 ListView {
                     id: effectView
+                    property color backgroundActiveColor: searchModel.backgroundActiveColor
+                    property color backgroundNormalColor: searchModel.backgroundNormalColor
+                    property color backgroundAlternateColor: searchModel.backgroundAlternateColor
                     Layout.fillWidth: true
                     anchors.fill: parent
                     model: searchModel

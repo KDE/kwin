@@ -33,7 +33,7 @@ Component {
 
         Rectangle {
             id: background
-            color: item.ListView.isCurrentItem ? "#448" : index % 2 ? "#eee" : "#fff"
+            color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
             anchors.fill : parent
 
             RowLayout {

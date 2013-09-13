@@ -21,6 +21,9 @@
 
 #ifndef MODEL_H
 #define MODEL_H
+
+#include <KDE/KColorScheme>
+#include <KDE/KSharedConfig>
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QList>
@@ -104,6 +107,9 @@ class EffectFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
+    Q_PROPERTY(QColor backgroundActiveColor READ backgroundActiveColor CONSTANT);
+    Q_PROPERTY(QColor backgroundNormalColor READ backgroundNormalColor CONSTANT);
+    Q_PROPERTY(QColor backgroundAlternateColor READ backgroundAlternateColor CONSTANT);
 public:
     EffectFilterModel(QObject *parent = 0);
     const QString &filter() const;
@@ -111,6 +117,10 @@ public:
     Q_INVOKABLE void updateEffectStatus(int rowIndex, bool effectState);
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE void enableWidnowManagement(bool enabled);
+
+    QColor backgroundActiveColor() { return KColorScheme(QPalette::Active, KColorScheme::Selection, KSharedConfigPtr(0)).background(KColorScheme::LinkBackground).color(); };
+    QColor backgroundNormalColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
+    QColor backgroundAlternateColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::AlternateBackground).color(); };
 
 public Q_SLOTS:
     void setFilter(const QString &filter);
