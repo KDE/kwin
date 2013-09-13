@@ -806,7 +806,7 @@ void WindowPixmap::create()
     if (isValid()) {
         return;
     }
-    XServerGrabber grabber();
+    XServerGrabber grabber;
     xcb_pixmap_t pix = xcb_generate_id(connection());
     xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), toplevel()->frameId(), pix);
     Xcb::WindowAttributes windowAttributes(toplevel()->frameId());
