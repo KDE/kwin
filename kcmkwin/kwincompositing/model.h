@@ -100,6 +100,9 @@ class EffectView : public QQuickView
 public:
     EffectView(QWindow *parent = 0);
     void init();
+
+    Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
+
 };
 
 

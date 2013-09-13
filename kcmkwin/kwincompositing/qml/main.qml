@@ -24,10 +24,11 @@ import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
 
-Item {
+Rectangle {
     id: window
     width: 780
     height: 480
+    color: engine.backgroundViewColor()
     property bool openGLBrokeState: true
 
     Item {

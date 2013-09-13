@@ -369,6 +369,7 @@ void EffectView::init()
 {
     QString mainFile = QStandardPaths::locate(QStandardPaths::DataLocation, "qml/main.qml", QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
+    rootContext()->setContextProperty("engine", this);
     setSource(QUrl(mainFile));
 }
 
