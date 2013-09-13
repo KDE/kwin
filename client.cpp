@@ -647,6 +647,7 @@ void Client::resizeDecoration(const QSize& s)
     } else {
         triggerDecorationRepaint();
     }
+    Xcb::moveWindow(decoration->widget()->winId(), -padding_left, -padding_top);
     updateInputWindow();
 }
 
