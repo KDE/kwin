@@ -181,8 +181,7 @@ X-KDE-Library=kwin4_effect_cooleffect
 enum WindowQuadType {
     WindowQuadError, // for the stupid default ctor
     WindowQuadContents,
-    WindowQuadDecorationLeftRight,
-    WindowQuadDecorationTopBottom,
+    WindowQuadDecoration,
     // Shadow Quad types
     WindowQuadShadowTop,
     WindowQuadShadowTopRight,
@@ -2922,8 +2921,7 @@ inline
 bool WindowQuad::decoration() const
 {
     assert(quadType != WindowQuadError);
-    return quadType == WindowQuadDecorationLeftRight ||
-           quadType == WindowQuadDecorationTopBottom;
+    return quadType == WindowQuadDecoration;
 }
 
 inline

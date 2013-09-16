@@ -334,51 +334,68 @@ void ImageBasedPaintRedirector::discardScratch()
 
 
 OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, KDecoration *deco)
-    : ImageBasedPaintRedirector(c, deco)
+    : ImageBasedPaintRedirector(c, deco),
+      m_texture(nullptr)
 {
-    for (int i = 0; i < TextureCount; ++i)
-        m_textures[i] = NULL;
-
     PaintRedirector::resizePixmaps();
 }
 
 OpenGLPaintRedirector::~OpenGLPaintRedirector()
 {
-    for (int i = 0; i < TextureCount; ++i)
-        delete m_textures[i];
+    delete m_texture;
 }
 
 void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
 {
-    QSize size[2];
-    size[LeftRight] = QSize(rects[LeftPixmap].width() + rects[RightPixmap].width(),
-                            align(qMax(rects[LeftPixmap].height(), rects[RightPixmap].height()), 128));
-    size[TopBottom] = QSize(align(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()), 128),
-                            rects[TopPixmap].height() + rects[BottomPixmap].height());
+    QSize size;
+
+    size.rwidth() = qMax(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()),
+                         qMax(rects[LeftPixmap].height(), rects[RightPixmap].height()));
+    size.rheight() = rects[TopPixmap].height() + rects[BottomPixmap].height() +
+                     rects[LeftPixmap].width() + rects[RightPixmap].width() + 3;
+
+    size.rwidth() = align(size.width(), 128);
 
     effects->makeOpenGLContextCurrent();
     if (!GLTexture::NPOTTextureSupported()) {
-        for (int i = 0; i < 2; i++) {
-            size[i].rwidth()  = nearestPowerOfTwo(size[i].width());
-            size[i].rheight() = nearestPowerOfTwo(size[i].height());
+        size.rwidth()  = nearestPowerOfTwo(size.width());
+        size.rheight() = nearestPowerOfTwo(size.height());
+    }
+
+    if (m_texture && m_texture->size() == size)
+        return;
+
+    delete m_texture;
+    m_texture = 0;
+
+    if (!size.isEmpty()) {
+        m_texture = new GLTexture(size.width(), size.height());
+        m_texture->setYInverted(true);
+        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_texture->clear();
+    }
+}
+
+// Rotates the given source rect 90° counter-clockwise,
+// and flips it vertically
+static QImage rotate(const QImage &srcImage, const QRect &srcRect)
+{
+    QImage image(srcRect.height(), srcRect.width(), srcImage.format());
+
+    const uint32_t *src = reinterpret_cast<const uint32_t *>(srcImage.bits());
+    uint32_t *dst = reinterpret_cast<uint32_t *>(image.bits());
+
+    for (int x = 0; x < image.width(); x++) {
+        const uint32_t *s = src + (srcRect.y() + x) * srcImage.width() + srcRect.x();
+        uint32_t *d = dst + x;
+
+        for (int y = 0; y < image.height(); y++) {
+            *d = s[y];
+            d += image.width();
         }
     }
 
-    for (int i = 0; i < 2; i++) {
-        if (m_textures[i] && m_textures[i]->size() == size[i])
-            continue;
-
-        delete m_textures[i];
-        m_textures[i] = NULL;
-
-        if (size[i].isEmpty())
-            continue;
-
-        m_textures[i] = new GLTexture(size[i].width(), size[i].height());
-        m_textures[i]->setYInverted(true);
-        m_textures[i]->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_textures[i]->clear();
-    }
+    return image;
 }
 
 void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &region)
@@ -386,22 +403,38 @@ void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &reg
     const QImage &image = scratchImage();
     const QRect bounding = region.boundingRect();
 
-    const int leftWidth = rects[LeftPixmap].width();
-    const int topHeight = rects[TopPixmap].height();
+    if (!m_texture)
+        return;
 
     // Top, Right, Bottom, Left
-    GLTexture *textures[4] = { m_textures[TopBottom], m_textures[LeftRight], m_textures[TopBottom], m_textures[LeftRight] };
-    QPoint offsets[4] = { QPoint(0, 0), QPoint(leftWidth, 0), QPoint(0, topHeight), QPoint(0, 0) };
+    Qt::Orientation orientations[4] = { Qt::Horizontal, Qt::Vertical, Qt::Horizontal, Qt::Vertical };
+
+    const int topHeight    = rects[TopPixmap].height();
+    const int bottomHeight = rects[BottomPixmap].height();
+    const int leftWidth    = rects[RightPixmap].width();
+
+    const QPoint offsets[4] = {
+        QPoint(0, 0),                                         // Top
+        QPoint(0, topHeight + bottomHeight + leftWidth + 3),  // Right
+        QPoint(0, topHeight + 1),                             // Bottom
+        QPoint(0, topHeight + bottomHeight + 2)               // Left
+    };
 
     for (int i = 0; i < 4; i++) {
         const QRect dirty = (region & rects[i]).boundingRect();
-        if (!textures[i] || dirty.isEmpty())
+        if (dirty.isEmpty())
             continue;
 
         const QPoint dst = dirty.topLeft() - rects[i].topLeft() + offsets[i];
         const QRect src(dirty.topLeft() - bounding.topLeft(), dirty.size());
 
-        textures[i]->update(image, dst, src);
+        if (orientations[i] == Qt::Horizontal) {
+            m_texture->update(image, dst, src);
+        } else {
+            // We have to rotate the src image
+            const QImage im = rotate(image, src);
+            m_texture->update(im, dst);
+        }
     }
 }
 

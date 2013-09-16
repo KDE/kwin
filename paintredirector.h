@@ -146,21 +146,18 @@ class OpenGLPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT
 
-    enum Texture { LeftRight = 0, TopBottom, TextureCount };
-
 public:
     OpenGLPaintRedirector(Client *c, KDecoration *deco);
     virtual ~OpenGLPaintRedirector();
 
-    GLTexture *leftRightTexture() const { return m_textures[LeftRight]; }
-    GLTexture *topBottomTexture() const { return m_textures[TopBottom]; }
+    GLTexture *decorationTexture() const { return m_texture; }
 
 protected:
     virtual void resizePixmaps(const QRect *rects);
     virtual void updatePixmaps(const QRect *rects, const QRegion &region);
 
 private:
-    GLTexture *m_textures[2];
+    GLTexture *m_texture;
 };
 
 class RasterXRenderPaintRedirector : public ImageBasedPaintRedirector

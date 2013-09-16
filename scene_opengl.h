@@ -203,13 +203,12 @@ protected:
     Window(Toplevel* c);
     enum TextureType {
         Content,
-        DecorationLeftRight,
-        DecorationTopBottom,
+        Decoration,
         Shadow
     };
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
-    bool getDecorationTextures(GLTexture **textures) const;
+    GLTexture *getDecorationTexture() const;
     void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
     void paintShadow(const QRegion &region, const WindowPaintData &data);
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
@@ -255,7 +254,7 @@ private:
 class SceneOpenGL2Window : public SceneOpenGL::Window
 {
 public:
-    enum Leaf { ShadowLeaf = 0, LeftRightLeaf, TopBottomLeaf, ContentLeaf, PreviousContentLeaf, LeafCount };
+    enum Leaf { ShadowLeaf = 0, DecorationLeaf, ContentLeaf, PreviousContentLeaf, LeafCount };
 
     struct LeafNode
     {

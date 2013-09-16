@@ -985,48 +985,27 @@ OpenGLPaintRedirector *SceneOpenGL::Window::paintRedirector() const
     return 0;
 }
 
-bool SceneOpenGL::Window::getDecorationTextures(GLTexture **textures) const
+GLTexture *SceneOpenGL::Window::getDecorationTexture() const
 {
     OpenGLPaintRedirector *redirector = paintRedirector();
     if (!redirector)
-        return false;
+        return 0;
 
     redirector->ensurePixmapsPainted();
-
-    textures[0] = redirector->leftRightTexture();
-    textures[1] = redirector->topBottomTexture();
-
+    GLTexture *texture = redirector->decorationTexture();
     redirector->markAsRepainted();
-    return true;
+
+    return texture;
 }
 
 void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
 {
-    GLTexture *textures[2];
-    if (!getDecorationTextures(textures))
+    GLTexture *texture = getDecorationTexture();
+    if (!texture)
         return;
 
-    WindowQuadList quads[2]; // left-right, top-bottom
-
-    // Split the quads into two lists
-    foreach (const WindowQuad &quad, data.quads) {
-        switch (quad.type()) {
-        case WindowQuadDecorationLeftRight:
-            quads[0].append(quad);
-            continue;
-
-        case WindowQuadDecorationTopBottom:
-            quads[1].append(quad);
-            continue;
-
-        default:
-            continue;
-        }
-    }
-
-    TextureType type[] = { DecorationLeftRight, DecorationTopBottom };
-    for (int i = 0; i < 2; i++)
-        paintDecoration(textures[i], type[i], region, data, quads[i]);
+    const WindowQuadList quads = data.quads.select(WindowQuadDecoration);
+    paintDecoration(texture, Decoration, region, data, quads);
 }
 
 void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
@@ -1157,12 +1136,8 @@ GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType 
         tex = s_frameTexture;
         break;
 
-    case DecorationLeftRight:
-        tex = redirector ? redirector->leftRightTexture() : 0;
-        break;
-
-    case DecorationTopBottom:
-        tex = redirector ? redirector->topBottomTexture() : 0;
+    case Decoration:
+        tex = redirector ? redirector->decorationTexture() : 0;
         break;
 
     case Shadow:
@@ -1216,19 +1191,11 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
         nodes[ShadowLeaf].coordinateType = NormalizedCoordinates;
     }
 
-    if (!quads[LeftRightLeaf].isEmpty() || !quads[TopBottomLeaf].isEmpty()) {
-        GLTexture *textures[2];
-        getDecorationTextures(textures);
-
-        nodes[LeftRightLeaf].texture = textures[0];
-        nodes[LeftRightLeaf].opacity = data.opacity();
-        nodes[LeftRightLeaf].hasAlpha = true;
-        nodes[LeftRightLeaf].coordinateType = UnnormalizedCoordinates;
-
-        nodes[TopBottomLeaf].texture = textures[1];
-        nodes[TopBottomLeaf].opacity = data.opacity();
-        nodes[TopBottomLeaf].hasAlpha = true;
-        nodes[TopBottomLeaf].coordinateType = UnnormalizedCoordinates;
+    if (!quads[DecorationLeaf].isEmpty()) {
+        nodes[DecorationLeaf].texture = getDecorationTexture();
+        nodes[DecorationLeaf].opacity = data.opacity();
+        nodes[DecorationLeaf].hasAlpha = true;
+        nodes[DecorationLeaf].coordinateType = UnnormalizedCoordinates;
     }
 
     nodes[ContentLeaf].texture = s_frameTexture;
@@ -1282,12 +1249,8 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     // Split the quads into separate lists for each type
     foreach (const WindowQuad &quad, data.quads) {
         switch (quad.type()) {
-        case WindowQuadDecorationLeftRight:
-            quads[LeftRightLeaf].append(quad);
-            continue;
-
-        case WindowQuadDecorationTopBottom:
-            quads[TopBottomLeaf].append(quad);
+        case WindowQuadDecoration:
+            quads[DecorationLeaf].append(quad);
             continue;
 
         case WindowQuadContents:
@@ -1339,7 +1302,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
     const size_t size = verticesPerQuad *
-        (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count() + quads[4].count()) * sizeof(GLVertex2D);
+        (quads[0].count() + quads[1].count() + quads[2].count() + quads[3].count()) * sizeof(GLVertex2D);
 
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     GLVertex2D *map = (GLVertex2D *) vbo->map(size);

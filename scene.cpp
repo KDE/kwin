@@ -842,23 +842,25 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
     WindowQuadList list;
 
     const QPoint offsets[4] = {
-        QPoint(-rects[0].x(),                    -rects[0].y()),                     // Left
-        QPoint(-rects[1].x(),                    -rects[1].y()),                     // Top
-        QPoint(-rects[2].x() + rects[0].width(), -rects[2].y()),                     // Right
-        QPoint(-rects[3].x(),                    -rects[3].y() + rects[1].height())  // Bottom
+        QPoint(-rects[0].x() + rects[1].height() + rects[3].height() + 2, -rects[0].y()),                    // Left
+        QPoint(-rects[1].x(), -rects[1].y()),                                                                // Top
+        QPoint(-rects[2].x() + rects[1].height() + rects[3].height() + rects[0].width() + 3, -rects[2].y()), // Right
+        QPoint(-rects[3].x(), -rects[3].y() + rects[1].height() + 1)                                         // Bottom
     };
 
-    const WindowQuadType types[4] = {
-        WindowQuadDecorationLeftRight, // Left
-        WindowQuadDecorationTopBottom, // Top
-        WindowQuadDecorationLeftRight, // Right
-        WindowQuadDecorationTopBottom  // Bottom
+    const Qt::Orientation orientations[4] = {
+        Qt::Vertical,   // Left
+        Qt::Horizontal, // Top
+        Qt::Vertical,   // Right
+        Qt::Horizontal, // Bottom
     };
 
     for (int i = 0; i < 4; i++) {
         foreach (const QRect &r, (region & rects[i]).rects()) {
             if (!r.isValid())
                 continue;
+
+            const bool swap = orientations[i] == Qt::Vertical;
 
             const int x0 = r.x();
             const int y0 = r.y();
@@ -870,11 +872,21 @@ WindowQuadList Scene::Window::makeDecorationQuads(const QRect *rects, const QReg
             const int u1 = x1 + offsets[i].x();
             const int v1 = y1 + offsets[i].y();
 
-            WindowQuad quad(types[i]);
-            quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
-            quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
-            quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
-            quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+            WindowQuad quad(WindowQuadDecoration);
+            quad.setUVAxisSwapped(swap);
+
+            if (swap) {
+                quad[0] = WindowVertex(x0, y0, v0, u0); // Top-left
+                quad[1] = WindowVertex(x1, y0, v0, u1); // Top-right
+                quad[2] = WindowVertex(x1, y1, v1, u1); // Bottom-right
+                quad[3] = WindowVertex(x0, y1, v1, u0); // Bottom-left
+            } else {
+                quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
+                quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
+                quad[2] = WindowVertex(x1, y1, u1, v1); // Bottom-right
+                quad[3] = WindowVertex(x0, y1, u0, v1); // Bottom-left
+            }
+
             list.append(quad);
         }
     }
