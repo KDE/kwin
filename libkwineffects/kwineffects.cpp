@@ -910,22 +910,50 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     ret.verts[ 1 ].oy = y1;
     ret.verts[ 2 ].oy = y2;
     ret.verts[ 3 ].oy = y2;
-    double my_tleft = verts[ 0 ].tx;
-    double my_tright = verts[ 2 ].tx;
-    double my_ttop = verts[ 0 ].ty;
-    double my_tbottom = verts[ 2 ].ty;
-    double tleft = (x1 - left()) / (right() - left()) * (my_tright - my_tleft) + my_tleft;
-    double tright = (x2 - left()) / (right() - left()) * (my_tright - my_tleft) + my_tleft;
-    double ttop = (y1 - top()) / (bottom() - top()) * (my_tbottom - my_ttop) + my_ttop;
-    double tbottom = (y2 - top()) / (bottom() - top()) * (my_tbottom - my_ttop) + my_ttop;
-    ret.verts[ 0 ].tx = tleft;
-    ret.verts[ 3 ].tx = tleft;
-    ret.verts[ 1 ].tx = tright;
-    ret.verts[ 2 ].tx = tright;
-    ret.verts[ 0 ].ty = ttop;
-    ret.verts[ 1 ].ty = ttop;
-    ret.verts[ 2 ].ty = tbottom;
-    ret.verts[ 3 ].ty = tbottom;
+
+    const double my_u0 = verts[0].tx;
+    const double my_u1 = verts[2].tx;
+    const double my_v0 = verts[0].ty;
+    const double my_v1 = verts[2].ty;
+
+    const double width  = right() - left();
+    const double height = bottom() - top();
+
+    const double texWidth  = my_u1 - my_u0;
+    const double texHeight = my_v1 - my_v0;
+
+    if (!uvAxisSwapped()) {
+        const double u0 = (x1 - left()) / width  * texWidth  + my_u0;
+        const double u1 = (x2 - left()) / width  * texWidth  + my_u0;
+        const double v0 = (y1 - top())  / height * texHeight + my_v0;
+        const double v1 = (y2 - top())  / height * texHeight + my_v0;
+
+        ret.verts[0].tx = u0;
+        ret.verts[3].tx = u0;
+        ret.verts[1].tx = u1;
+        ret.verts[2].tx = u1;
+        ret.verts[0].ty = v0;
+        ret.verts[1].ty = v0;
+        ret.verts[2].ty = v1;
+        ret.verts[3].ty = v1;
+    } else {
+        const double u0 = (y1 - top())  / height * texWidth  + my_u0;
+        const double u1 = (y2 - top())  / height * texWidth  + my_u0;
+        const double v0 = (x1 - left()) / width  * texHeight + my_v0;
+        const double v1 = (x2 - left()) / width  * texHeight + my_v0;
+
+        ret.verts[0].tx = u0;
+        ret.verts[1].tx = u0;
+        ret.verts[2].tx = u1;
+        ret.verts[3].tx = u1;
+        ret.verts[0].ty = v0;
+        ret.verts[3].ty = v0;
+        ret.verts[1].ty = v1;
+        ret.verts[2].ty = v1;
+    }
+
+    ret.setUVAxisSwapped(uvAxisSwapped());
+
     return ret;
 }
 

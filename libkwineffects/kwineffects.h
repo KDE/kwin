@@ -1950,6 +1950,8 @@ public:
     WindowVertex& operator[](int index);
     const WindowVertex& operator[](int index) const;
     WindowQuadType type() const;
+    void setUVAxisSwapped(bool value) { uvSwapped = value; }
+    bool uvAxisSwapped() const { return uvSwapped; }
     int id() const;
     bool decoration() const;
     bool effect() const;
@@ -1967,6 +1969,7 @@ private:
     friend class WindowQuadList;
     WindowVertex verts[ 4 ];
     WindowQuadType quadType; // 0 - contents, 1 - decoration
+    bool uvSwapped;
     int quadID;
 };
 
@@ -2883,6 +2886,7 @@ void WindowVertex::setY(double y)
 inline
 WindowQuad::WindowQuad(WindowQuadType t, int id)
     : quadType(t)
+    , uvSwapped(false)
     , quadID(id)
 {
 }
