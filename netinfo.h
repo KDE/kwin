@@ -45,16 +45,16 @@ public:
     static void destroy();
 
 protected:
-    virtual void changeNumberOfDesktops(int n);
-    virtual void changeCurrentDesktop(int d);
-    virtual void changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window);
-    virtual void closeWindow(Window w);
-    virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction);
-    virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height);
-    virtual void gotPing(Window w, Time timestamp);
-    virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp);
-    virtual void gotTakeActivity(Window w, Time timestamp, long flags);
-    virtual void changeShowingDesktop(bool showing);
+    virtual void changeNumberOfDesktops(int n) override;
+    virtual void changeCurrentDesktop(int d) override;
+    virtual void changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window) override;
+    virtual void closeWindow(Window w) override;
+    virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction) override;
+    virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height) override;
+    virtual void gotPing(Window w, Time timestamp) override;
+    virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp) override;
+    virtual void gotTakeActivity(Window w, Time timestamp, long flags) override;
+    virtual void changeShowingDesktop(bool showing) override;
 
 private:
     RootInfo(xcb_window_t w, const char* name, unsigned long pr[],
@@ -79,9 +79,9 @@ private:
 public:
     WinInfo(Client* c, Display * display, Window window,
             Window rwin, const unsigned long pr[], int pr_size);
-    virtual void changeDesktop(int desktop);
-    virtual void changeFullscreenMonitors(NETFullscreenMonitors topology);
-    virtual void changeState(unsigned long state, unsigned long mask);
+    virtual void changeDesktop(int desktop) override;
+    virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
+    virtual void changeState(unsigned long state, unsigned long mask) override;
     void disable();
 
 private:
