@@ -222,6 +222,10 @@ bool GlxBackend::initBuffer()
     if (overlayWindow()->create()) {
         // Try to create double-buffered window in the overlay
         XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
+        if (!visual) {
+           kError(1212) << "Failed to get visual from fbconfig";
+           return false;
+        }
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
         window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),
