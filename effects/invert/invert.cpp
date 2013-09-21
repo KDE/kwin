@@ -56,6 +56,7 @@ InvertEffect::InvertEffect()
     b->setGlobalShortcut(KShortcut(Qt::CTRL + Qt::META + Qt::Key_U));
     connect(b, SIGNAL(triggered(bool)), this, SLOT(toggleWindow()));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
+    connect(effects, SIGNAL(screenGeometryChanged(const QSize&)), this, SLOT(resetShader()));
 }
 
 InvertEffect::~InvertEffect()
@@ -173,6 +174,11 @@ bool InvertEffect::isActive() const
 bool InvertEffect::provides(Feature f)
 {
     return f == ScreenInversion;
+}
+
+void InvertEffect::resetShader()
+{
+    ShaderManager::instance()->resetShader(m_shader, ShaderManager::GenericShader);
 }
 
 } // namespace
