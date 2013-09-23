@@ -68,6 +68,8 @@ public:
 
     inline bool isChanging() { return m_changedTimer->isActive(); }
 
+    int intersecting(const QRect &r) const;
+
 public Q_SLOTS:
     void reconfigure();
 
