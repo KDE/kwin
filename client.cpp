@@ -371,6 +371,9 @@ void Client::updateInputWindow()
     if (brokenQtInputHandling)
         return;
 
+    if (!Xcb::Extensions::self()->isShapeInputAvailable())
+        return;
+
     QRegion region;
 
     if (!noBorder()) {
