@@ -22,7 +22,7 @@
 #include "config-kwin.h"
 #include <KDE/KAboutData>
 #include <KDE/KLocalizedString>
-#include <Plasma/ConfigLoader>
+#include <kconfigloader.h>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -84,7 +84,7 @@ void GenericScriptedConfig::createUi()
     }
     QFile xmlFile(kconfigXTFile);
     KConfigGroup cg = configGroup();
-    Plasma::ConfigLoader *configLoader = new Plasma::ConfigLoader(&cg, &xmlFile, this);
+    KConfigLoader *configLoader = new KConfigLoader(cg, &xmlFile, this);
     // load the ui file
     QUiLoader *loader = new QUiLoader(this);
     QFile uiFile(uiPath);
