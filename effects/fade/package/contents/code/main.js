@@ -34,7 +34,7 @@ function isLoginWindow(w) {
 var fadeInTime, fadeOutTime, fadeWindows;
 function loadConfig() {
     fadeInTime = animationTime(effect.readConfig("FadeInTime", 150));
-    fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 150));
+    fadeOutTime = animationTime(effect.readConfig("FadeOutTime", 600));
     fadeWindows = effect.readConfig("FadeWindows", true);
 }
 loadConfig();
@@ -48,6 +48,6 @@ effects.windowAdded.connect(function(w) {
 });
 effects.windowClosed.connect(function(w) {
     if (fadeWindows && isFadeWindow(w)) {
-        effect.animate(w, Effect.Opacity, fadeOutTime, 0.0);
+        effect.animate(w, Effect.Opacity, fadeOutTime, 0.0, "", QEasingCurve.OutQuart);
     }
 });

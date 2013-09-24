@@ -569,7 +569,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                 }
             } else if (allow) {
                 // also force if activation is allowed
-                if (!isOnCurrentDesktop()) {
+                if (!isOnCurrentDesktop() && options->focusPolicyIsReasonable()) {
                     VirtualDesktopManager::self()->setCurrent(desktop());
                 }
                 /*if (!isOnCurrentActivity()) {
