@@ -244,7 +244,7 @@ inline xcb_get_input_focus_cookie_t get_input_focus(xcb_connection_t *c, xcb_win
 class CurrentInput : public Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>
 {
 public:
-    CurrentInput() : Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>() {}
+    CurrentInput() : Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>(XCB_WINDOW_NONE) {}
 
     inline xcb_window_t window() {
         if (isNull())

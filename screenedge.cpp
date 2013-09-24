@@ -591,7 +591,7 @@ void ScreenEdges::reconfigure()
     // TODO: migrate settings to a group ScreenEdges
     KConfigGroup windowsConfig = m_config->group("Windows");
     setTimeThreshold(windowsConfig.readEntry("ElectricBorderDelay", 150));
-    setReActivationThreshold(windowsConfig.readEntry("ElectricBorderCooldown", 350));
+    setReActivationThreshold(qMax(timeThreshold() + 50, windowsConfig.readEntry("ElectricBorderCooldown", 350)));
     int desktopSwitching = windowsConfig.readEntry("ElectricBorders", static_cast<int>(ElectricDisabled));
     if (desktopSwitching == ElectricDisabled) {
         setDesktopSwitching(false);

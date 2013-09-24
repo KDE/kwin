@@ -136,6 +136,7 @@ private Q_SLOTS:
     void slotTabBoxClosed();
     void slotCubeCapLoaded();
     void slotWallPaperLoaded();
+    void slotResetShaders();
 private:
     enum RotationDirection {
         Left,

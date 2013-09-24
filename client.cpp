@@ -352,6 +352,9 @@ void Client::destroyClient()
 
 void Client::updateInputWindow()
 {
+    if (!Xcb::Extensions::self()->isShapeInputAvailable())
+        return;
+
     QRegion region;
 
     if (!noBorder()) {

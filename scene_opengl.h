@@ -127,7 +127,7 @@ protected:
     virtual void paintDesktop(int desktop, int mask, const QRegion &region, ScreenPaintData &data);
 
 private Q_SLOTS:
-    void slotColorCorrectedChanged();
+    void slotColorCorrectedChanged(bool recreateShaders = true);
     void resetLanczosFilter();
 
 private:
@@ -135,7 +135,7 @@ private:
 
 private:
     LanczosFilter *m_lanczosFilter;
-    ColorCorrection *m_colorCorrection;
+    QScopedPointer<ColorCorrection> m_colorCorrection;
     GLuint vao;
 };
 

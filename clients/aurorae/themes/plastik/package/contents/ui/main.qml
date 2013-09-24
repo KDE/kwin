@@ -271,6 +271,7 @@ Decoration {
                 }
                 Text {
                     id: caption
+                    textFormat: Text.PlainText
                     anchors {
                         top: parent.top
                         left: leftButtonGroup.right

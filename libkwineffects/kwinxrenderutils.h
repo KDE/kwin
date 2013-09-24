@@ -72,6 +72,7 @@ public:
     XRenderPicture(xcb_pixmap_t pix, int depth);
     operator xcb_render_picture_t();
 private:
+    void fromImage(const QImage &img);
     KSharedPtr< XRenderPictureData > d;
 };
 

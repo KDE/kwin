@@ -436,8 +436,13 @@ Workspace::~Workspace()
     // TODO: grabXServer();
 
     // Use stacking_order, so that kwin --replace keeps stacking order
-    for (ToplevelList::iterator it = stacking_order.begin(), end = stacking_order.end(); it != end; ++it) {
-        Client *c = qobject_cast<Client*>(*it);
+    const ToplevelList stack = stacking_order;
+    // "mutex" the stackingorder, since anything trying to access it from now on will find
+    // many dangeling pointers and crash
+    stacking_order.clear();
+
+    for (ToplevelList::const_iterator it = stack.constBegin(), end = stack.constEnd(); it != end; ++it) {
+        Client *c = qobject_cast<Client*>(const_cast<Toplevel*>(*it));
         if (!c) {
             continue;
         }
@@ -1458,6 +1463,11 @@ QString Workspace::supportInformation() const
     } else {
         support.append(QStringLiteral("no\n"));
     }
+    support.append(QStringLiteral("Active screen follows mouse: "));
+    if (screens()->isCurrentFollowsMouse())
+        support.append(QStringLiteral(" yes\n"));
+    else
+        support.append(QStringLiteral(" no\n"));
     support.append(QStringLiteral("Number of Screens: %1\n").arg(screens()->count()));
     for (int i=0; i<screens()->count(); ++i) {
         const QRect geo = screens()->geometry(i);
@@ -1555,6 +1565,11 @@ QString Workspace::supportInformation() const
             } else {
                 support.append(QStringLiteral("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n"));
             }
+            support.append(QStringLiteral("Painting blocks for vertical retrace: "));
+            if (m_compositor->scene()->blocksForRetrace())
+                support.append(QStringLiteral(" yes\n"));
+            else
+                support.append(QStringLiteral(" no\n"));
             break;
         }
         case XRenderCompositing:

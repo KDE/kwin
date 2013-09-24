@@ -633,17 +633,14 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
 SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     : SceneOpenGL(Workspace::self(), backend)
     , m_lanczosFilter(NULL)
-    , m_colorCorrection(new ColorCorrection(this))
+    , m_colorCorrection()
 {
     if (!init_ok) {
         // base ctor already failed
         return;
     }
     // Initialize color correction before the shaders
-    qDebug() << "Color correction:" << options->isColorCorrected();
-    m_colorCorrection->setEnabled(options->isColorCorrected());
-    connect(m_colorCorrection, SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
-    connect(m_colorCorrection, SIGNAL(errorOccured()), options, SLOT(setColorCorrected()), Qt::QueuedConnection);
+    slotColorCorrectedChanged(false);
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
     if (!ShaderManager::instance()->isValid()) {
@@ -717,7 +714,7 @@ SceneOpenGL::Window *SceneOpenGL2::createWindow(Toplevel *t)
 
 void SceneOpenGL2::finalDrawWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (m_colorCorrection->isEnabled()) {
+    if (!m_colorCorrection.isNull() && m_colorCorrection->isEnabled()) {
         // Split the painting for separate screens
         const int numScreens = screens()->count();
         for (int screen = 0; screen < numScreens; ++ screen) {
@@ -755,12 +752,29 @@ void SceneOpenGL2::resetLanczosFilter()
 
 ColorCorrection *SceneOpenGL2::colorCorrection()
 {
-    return m_colorCorrection;
+    return m_colorCorrection.data();
 }
 
-void SceneOpenGL2::slotColorCorrectedChanged()
+void SceneOpenGL2::slotColorCorrectedChanged(bool recreateShaders)
 {
-    m_colorCorrection->setEnabled(options->isColorCorrected());
+    qDebug() << "Color correction:" << options->isColorCorrected();
+    if (options->isColorCorrected() && m_colorCorrection.isNull()) {
+        m_colorCorrection.reset(new ColorCorrection(this));
+        if (!m_colorCorrection->setEnabled(true)) {
+            m_colorCorrection.reset();
+            return;
+        }
+        connect(m_colorCorrection.data(), SIGNAL(changed()), Compositor::self(), SLOT(addRepaintFull()));
+        connect(m_colorCorrection.data(), SIGNAL(errorOccured()), options, SLOT(setColorCorrected()), Qt::QueuedConnection);
+        if (recreateShaders) {
+            // Reload all shaders
+            ShaderManager::cleanup();
+            ShaderManager::instance();
+        }
+    } else {
+        m_colorCorrection.reset();
+    }
+    Compositor::self()->addRepaintFull();
 }
 
 
@@ -1393,7 +1407,9 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         }
     }
 
-    static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->setupForOutput(data.screen());
+    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
+        cc->setupForOutput(data.screen());
+    }
 
     shader->setUniform(GLShader::WindowTransformation, transformation(mask, data));
     shader->setUniform(GLShader::Saturation, data.saturation());
@@ -1556,7 +1572,9 @@ void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal br
     shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::Saturation,         saturation);
 
-    static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->setupForOutput(screen);
+    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
+        cc->setupForOutput(screen);
+    }
 }
 
 void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation)
@@ -1569,7 +1587,9 @@ void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal br
         glDisable(GL_BLEND);
     }
 
-    static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()->setupForOutput(-1);
+    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
+        cc->setupForOutput(-1);
+    }
 }
 
 //***************************************

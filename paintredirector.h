@@ -157,9 +157,6 @@ protected:
 private:
     QImage m_tempImage;
     GLTexture *m_textures[2];
-
-    static unsigned int s_fbo;
-    static unsigned int s_count;
 };
 
 class RasterXRenderPaintRedirector : public ImageBasedPaintRedirector

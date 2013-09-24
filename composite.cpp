@@ -961,7 +961,7 @@ void Toplevel::addDamageFull()
         return;
 
     damage_region = rect();
-    repaints_region = rect();
+    repaints_region |= rect();
 
     emit damaged(this, rect());
 }

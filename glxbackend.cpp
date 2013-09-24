@@ -154,7 +154,7 @@ bool GlxBackend::initRenderingContext()
         const int attribs_31_core_robustness[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
             GLX_CONTEXT_MINOR_VERSION_ARB,               1,
-            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
+            GLX_CONTEXT_FLAGS_ARB,                       GLX_CONTEXT_ROBUST_ACCESS_BIT_ARB,
             GLX_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB, GLX_LOSE_CONTEXT_ON_RESET_ARB,
             0
         };
@@ -162,7 +162,6 @@ bool GlxBackend::initRenderingContext()
         const int attribs_31_core[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
             GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-            GLX_CONTEXT_FLAGS_ARB,         GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
             0
         };
 
@@ -222,6 +221,10 @@ bool GlxBackend::initBuffer()
     if (overlayWindow()->create()) {
         // Try to create double-buffered window in the overlay
         XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
+        if (!visual) {
+           qCritical() << "Failed to get visual from fbconfig";
+           return false;
+        }
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
         window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),

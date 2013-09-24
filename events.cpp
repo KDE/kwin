@@ -1523,6 +1523,7 @@ void Unmanaged::configureNotifyEvent(xcb_configure_notify_event_t *e)
         addWorkspaceRepaint(visibleRect());  // damage old area
         QRect old = geom;
         geom = newgeom;
+        emit geometryChanged(); // update shadow region
         addRepaintFull();
         if (old.size() != geom.size())
             discardWindowPixmap();

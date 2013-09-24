@@ -54,6 +54,9 @@ public Q_SLOTS:
     void toggleWindow();
     void slotWindowClosed(KWin::EffectWindow *w);
 
+private Q_SLOTS:
+    void resetShader();
+
 protected:
     bool loadData();
 

@@ -42,7 +42,7 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow* w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow* w, long atom);
+    void slotPropertyNotify(KWin::EffectWindow* w, long atom, EffectWindow *addedWindow = NULL);
 
 private:
     void prepareHighlighting();
@@ -56,6 +56,7 @@ private:
     long m_atom;
     QList<EffectWindow*> m_highlightedWindows;
     EffectWindow* m_monitorWindow;
+    QList<WId> m_highlightedIds;
 
     // Offscreen position cache
     /*QRect m_thumbArea; // Thumbnail area

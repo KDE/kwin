@@ -1023,7 +1023,7 @@ int EffectsHandlerImpl::displayWidth() const
 
 int EffectsHandlerImpl::displayHeight() const
 {
-    return KWin::displayWidth();
+    return KWin::displayHeight();
 }
 
 EffectWindow* EffectsHandlerImpl::findWindow(WId id) const

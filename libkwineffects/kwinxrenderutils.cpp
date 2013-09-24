@@ -109,6 +109,11 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
 
 XRenderPicture::XRenderPicture(const QImage &img)
 {
+    fromImage(img);
+}
+
+void XRenderPicture::fromImage(const QImage &img)
+{
     const int depth = img.depth();
     xcb_pixmap_t xpix = xcb_generate_id(connection());
     xcb_create_pixmap(connection(), depth, xpix, rootWindow(), img.width(), img.height());
