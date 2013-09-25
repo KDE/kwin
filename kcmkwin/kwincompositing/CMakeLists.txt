@@ -36,19 +36,19 @@ endif()
 
 set (QT_MIN_VERSION "5.2.0")
 
-find_package(kdeqt5staging REQUIRED NO_MODULE)
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
 find_package(KF5 MODULE REQUIRED COMPONENTS CMake Compiler InstallDirs
                                             KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons Solid ThreadWeaver
                                             KConfig KAuth KJS KWallet KDBusAddons KConfigWidgets
                                             KI18n KGuiAddons KService ItemViews KNotifications KIconThemes KCompletion KJobWidgets KConfigWidgets Sonnet KTextWidgets XmlGui KCrash
-                                            KIO KUnitConversion KDE4Attic KBookmarks)
+                                            KIO KUnitConversion KDE4Attic KBookmarks KCMUtils)
 find_package(KDELibs4 REQUIRED NO_MODULE)
 find_package(KDE4Support REQUIRED NO_MODULE)
 
 find_package(kdeclarative REQUIRED NO_MODULE)
 find_package(LibAttica REQUIRED NO_MODULE)
+find_package(COMPONENTS KCMUtils)
 
 #########################################################################
 
@@ -91,8 +91,8 @@ target_link_libraries(kwincompositing
     Qt5::DBus
     KF5::KI18n
     KF5::KService
+    KF5::KCMUtils
     ${Qt5Widgets_LIBRARIES}
-    ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
     ${KCoreAddons_LIBRARIES}
     ${KDECLARATIVE_LIBRARIES})
@@ -115,8 +115,8 @@ target_link_libraries(effectModelTest
     Qt5::DBus
     KF5::KI18n
     KF5::KService
+    KF5::KCMUtils
     ${Qt5Widgets_LIBRARIES}
-    ${KDE4_KCMUTILS_LIBS}
     ${Qt5Test_LIBRARIES}
     ${KCoreAddons_LIBRARIES}
     ${KDECLARATIVE_LIBRARIES})
