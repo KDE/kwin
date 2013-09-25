@@ -269,7 +269,6 @@ void Compositor::slotCompositingOptionsInitialized()
     }
 
     // render at least once
-    compositeTimer.stop();
     performCompositing();
 }
 
@@ -533,7 +532,6 @@ void Compositor::addRepaintFull()
 void Compositor::timerEvent(QTimerEvent *te)
 {
     if (te->timerId() == compositeTimer.timerId()) {
-        compositeTimer.stop();
         performCompositing();
     } else
         QObject::timerEvent(te);
@@ -581,10 +579,12 @@ void Compositor::performCompositing()
 
     if (repaints_region.isEmpty() && !windowRepaintsPending()) {
         m_scene->idle();
+        m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now"
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
         // need this anymore and paints normally will also reset the suspended unredirect.
         // Otherwise the window would not be painted normally anyway.
+        compositeTimer.stop();
         return;
     }
 
@@ -601,6 +601,8 @@ void Compositor::performCompositing()
     repaints_region = QRegion();
 
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+
+    compositeTimer.stop(); // stop here to ensure *we* cause the next repaint schedule - not some effect through m_scene->paint()
 
     // Trigger at least one more pass even if there would be nothing to paint, so that scene->idle()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
@@ -661,10 +663,29 @@ void Compositor::setCompositeTimer()
             waitTime = nanoToMilli(padding - options->vBlankTime());
         }
     }
-    else // w/o vsync we just jump to the next demanded tick
-        // the "1" will ensure we don't block out the eventloop - the system's just not faster
-        // "0" would be sufficient, but the compositor isn't the WMs only task
-        waitTime = (m_timeSinceLastVBlank > fpsInterval) ? 1 : nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
+    else { // w/o blocking vsync we just jump to the next demanded tick
+        if (fpsInterval > m_timeSinceLastVBlank) {
+            waitTime = nanoToMilli(fpsInterval - m_timeSinceLastVBlank);
+            if (!waitTime) {
+                waitTime = 1; // will ensure we don't block out the eventloop - the system's just not faster ...
+            }
+        }/* else if (m_scene->syncsToVBlank() && m_timeSinceLastVBlank - fpsInterval < (vBlankInterval<<1)) {
+            // NOTICE - "for later" ------------------------------------------------------------------
+            // It can happen that we push two frames within one refresh cycle.
+            // Swapping will then block even with triple buffering when the GPU does not discard but
+            // queues frames
+            // now here's the mean part: if we take that as "OMG, we're late - next frame ASAP",
+            // there'll immediately be 2 frames in the pipe, swapping will block, we think we're
+            // late ... ewww
+            // so instead we pad to the clock again and add 2ms safety to ensure the pipe is really
+            // free
+            // NOTICE: obviously m_timeSinceLastVBlank can be too big because we're too slow as well
+            // So if this code was enabled, we'd needlessly half the framerate once more (15 instead of 30)
+            waitTime = nanoToMilli(vBlankInterval - (m_timeSinceLastVBlank - fpsInterval)%vBlankInterval) + 2;
+        }*/ else {
+            waitTime = 1; // ... "0" would be sufficient, but the compositor isn't the WMs only task
+        }
+    }
     compositeTimer.start(qMin(waitTime, 250u), this); // force 4fps minimum
 }
 

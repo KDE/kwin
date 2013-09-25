@@ -117,6 +117,17 @@ int Screens::current() const
     return m_current;
 }
 
+int Screens::intersecting(const QRect &r) const
+{
+    int cnt = 0;
+    for (int i = 0; i < count(); ++i) {
+        if (geometry(i).intersects(r)) {
+            ++cnt;
+        }
+    }
+    return cnt;
+}
+
 DesktopWidgetScreens::DesktopWidgetScreens(QObject *parent)
     : Screens(parent)
     , m_desktop(QApplication::desktop())

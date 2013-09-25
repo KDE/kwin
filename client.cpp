@@ -2404,7 +2404,7 @@ QRect Client::decorationRect() const
     }
 }
 
-KDecorationDefines::Position Client::titlebarPosition()
+KDecorationDefines::Position Client::titlebarPosition() const
 {
     Position titlePos = PositionCenter; // PositionTop is returned by the default implementation
                                         // this will hint errors in the metaobject usage ;-)

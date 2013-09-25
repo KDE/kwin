@@ -599,7 +599,7 @@ public:
 
     bool decorationHasAlpha() const;
 
-    Position titlebarPosition();
+    Position titlebarPosition() const;
 
     enum CoordinateMode {
         DecorationRelative, // Relative to the top left corner of the decoration
