@@ -149,7 +149,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
         m_lastReset = triggerTime;
         return false;
     }
-    if (m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold()) {
+    if (m_lastTrigger.isValid() && m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold()) {
         return false;
     }
     if (m_lastReset.msecsTo(triggerTime) < edges()->timeThreshold()) {
