@@ -9,9 +9,9 @@ set_target_properties(kwin_killer_helper PROPERTIES COMPILE_FLAGS ${Qt5Widgets_E
 target_link_libraries(kwin_killer_helper
     Qt5::Widgets
     Qt5::X11Extras
-    ${KInterProcessWindowing_LIBRARY}
     KF5::KAuth
     KF5::KI18n
+    KF5::KInterProcessWindowing
     KF5::KWidgetsAddons
 )
 
