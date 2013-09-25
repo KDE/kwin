@@ -810,7 +810,7 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
             setActive(false);
             return;
         }
-        long* data = reinterpret_cast<long*>(byteData.data());
+        auto* data = reinterpret_cast<uint32_t*>(byteData.data());
 
         if (!data[0]) {
             // Purposely ending present windows by issuing a NULL target
@@ -839,7 +839,7 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
             setActive(false);
             return;
         }
-        long* data = reinterpret_cast<long*>(byteData.data());
+        auto* data = reinterpret_cast<uint32_t*>(byteData.data());
 
         if (!data[0]) {
             // Purposely ending present windows by issuing a NULL target

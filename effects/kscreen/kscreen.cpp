@@ -126,7 +126,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
         return;
     }
     QByteArray byteData = effects->readRootProperty(m_atom, XCB_ATOM_CARDINAL, 32);
-    long *data = reinterpret_cast<long *>(byteData.data());
+    auto *data = reinterpret_cast<uint32_t *>(byteData.data());
     if (!data[0]) {
         // Property was deleted
         if (m_state != StateNormal) {

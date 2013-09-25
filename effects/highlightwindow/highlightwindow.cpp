@@ -145,7 +145,7 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow* w, long a, EffectWi
             finishHighlighting();
         return;
     }
-    long* data = reinterpret_cast<long*>(byteData.data());
+    auto* data = reinterpret_cast<uint32_t*>(byteData.data());
 
     if (!data[0]) {
         // Purposely clearing highlight by issuing a NULL target

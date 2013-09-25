@@ -127,7 +127,7 @@ void TaskbarThumbnailEffect::slotPropertyNotify(EffectWindow* w, long a)
     QByteArray data = w->readProperty(atom, atom, 32);
     if (data.length() < 1)
         return;
-    long* d = reinterpret_cast< long* >(data.data());
+    auto* d = reinterpret_cast< uint32_t* >(data.data());
     int len = data.length() / sizeof(d[ 0 ]);
     int pos = 0;
     int cnt = d[ 0 ];

@@ -280,13 +280,13 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         return;
     }
 
-    long* d = reinterpret_cast< long* >(data.data());
+    auto* d = reinterpret_cast< uint32_t* >(data.data());
     Data animData;
     animData.start = d[ 0 ];
     animData.from = (Position)d[ 1 ];
-    if (data.length() >= (int)(sizeof(long) * 3)) {
+    if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
         animData.fadeInDuration = d[2];
-        if (data.length() >= (int)(sizeof(long) * 4))
+        if (data.length() >= (int)(sizeof(uint32_t) * 4))
             animData.fadeOutDuration = d[3];
         else
             animData.fadeOutDuration = d[2];

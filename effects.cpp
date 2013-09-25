@@ -185,9 +185,8 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
             continue;
         }
         if (prop->type == type && prop->format == format) {
-            const int nitems = xcb_get_property_value_length(prop.data());
-            int bytelen = format == 8 ? nitems : format == 16 ? nitems * sizeof(short) : nitems * sizeof(long);
-            return QByteArray(reinterpret_cast< const char* >(xcb_get_property_value(prop.data())), bytelen);
+            return QByteArray(reinterpret_cast< const char* >(xcb_get_property_value(prop.data())),
+                              xcb_get_property_value_length(prop.data()));
         } else {
             return QByteArray();
         }
