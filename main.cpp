@@ -409,7 +409,7 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
         if (!multiHead.isEmpty()) {
             return (multiHead.toLower() == "true");
         }
-        return false;
+        return true;
     };
     if (number_of_screens != 1 && isMultiHead()) {
         KWin::is_multihead = true;
