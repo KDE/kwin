@@ -425,6 +425,9 @@ void GlxBackend::present()
     if (lastDamage().isEmpty())
         return;
 
+    // a different context might have been current
+    glXMakeCurrent(display(), glxWindow, ctx);
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -504,6 +507,8 @@ void GlxBackend::prepareRenderingFrame()
     }
     present();
     startRenderTimer();
+    // different context might have been bound as present() can block
+    glXMakeCurrent(display(), glxWindow, ctx);
     glXWaitX();
 }
 

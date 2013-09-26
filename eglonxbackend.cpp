@@ -267,6 +267,9 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
+    // a different context might have been current
+    eglMakeCurrent(dpy, surface, surface, ctx);
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -331,6 +334,8 @@ void EglOnXBackend::prepareRenderingFrame()
         usleep(1000);
     }
     present();
+    // different context might have been bound as present() can block
+    eglMakeCurrent(dpy, surface, surface, ctx);
     startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 }
