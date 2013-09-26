@@ -1316,6 +1316,34 @@ void TabBox::keyPress(int keyQt)
         }
         return false;
     };
+    auto testBacktab = [&forward,&backward,keyQt,contains](const QKeySequence &forwardShortcut, const QKeySequence &backwardShortcut) {
+        if (forward || backward || !(keyQt & Qt::ShiftModifier)) {
+            return;
+        }
+        // a shortcut containing Shift+Tab will not fire as it is registered as Alt+Backtab
+        // the keyQt we get does not contain the backtab, so we need to convert it
+        // extract the modifiers, tests whether the key is tab and create a new test shortcut
+        // containing the extracted modifiers and backtab instead of tab
+        Qt::KeyboardModifiers mods = Qt::ShiftModifier;
+        auto testMod = [&mods,keyQt](Qt::KeyboardModifier modifier) {
+            if (keyQt & modifier) {
+                mods |= modifier;
+            }
+        };
+        // unfortunately we have to test each of the modifiers and cannot just and with ~NoModifier
+        // we don't need the shift test as we already know that shift is hold
+        testMod(Qt::ControlModifier);
+        testMod(Qt::AltModifier);
+        testMod(Qt::MetaModifier);
+        testMod(Qt::KeypadModifier);
+        testMod(Qt::GroupSwitchModifier);
+        // Do not AND with Key_Tab! Key_Tab is 0x01000001 which would also return true for
+        // Qt::Key_Backspace which is 0x01000003 and a whole bunch of other keys!
+        if ((keyQt & ~mods) == Qt::Key_Tab) {
+            forward = contains(forwardShortcut, mods | Qt::Key_Backtab);
+            backward = contains(backwardShortcut, mods | Qt::Key_Backtab);
+        }
+    };
 
     if (m_tabGrab) {
         QKeySequence forwardShortcut;
@@ -1343,6 +1371,7 @@ void TabBox::keyPress(int keyQt)
         }
         forward = contains(forwardShortcut, keyQt);
         backward = contains(backwardShortcut, keyQt);
+        testBacktab(forwardShortcut, backwardShortcut);
         if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
             // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
             // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
@@ -1377,6 +1406,8 @@ void TabBox::keyPress(int keyQt)
                   contains(m_cutWalkThroughDesktopList, keyQt);
         backward = contains(m_cutWalkThroughDesktopsReverse, keyQt) ||
                    contains(m_cutWalkThroughDesktopListReverse, keyQt);
+        testBacktab(m_cutWalkThroughDesktops, m_cutWalkThroughDesktopsReverse);
+        testBacktab(m_cutWalkThroughDesktopList, m_cutWalkThroughDesktopListReverse);
         if ((keyQt & Qt::ShiftModifier) && !(forward || backward)) {
             // if the shortcuts do not match, try matching again after filtering the shift key from keyQt
             // it is needed to handle correctly the ALT+~ shorcut for example as it is coded as ALT+SHIFT+~ in keyQt
