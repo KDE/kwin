@@ -48,7 +48,6 @@ find_package(KDE4Support REQUIRED NO_MODULE)
 
 find_package(kdeclarative REQUIRED NO_MODULE)
 find_package(LibAttica REQUIRED NO_MODULE)
-find_package(COMPONENTS KCMUtils)
 
 #########################################################################
 
