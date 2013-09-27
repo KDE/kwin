@@ -44,10 +44,10 @@ public:
     void setMaxDesktops(int maxDesktops);
     void setDesktopConfig(KWinDesktopConfig *desktopConfig);
 
-signals:
+Q_SIGNALS:
     void changed();
 
-public slots:
+public Q_SLOTS:
     void numberChanged(int number);
 
 private:

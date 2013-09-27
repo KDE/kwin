@@ -24,10 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QDBusInterface>
 
+#include <KAboutData>
 #include <KAboutApplicationDialog>
 #include <KActionCollection>
 #include <KAction>
 #include <KCModuleProxy>
+#include <KDialog>
 #include <KGlobalAccel>
 #include <KPluginInfo>
 #include <KPluginFactory>
@@ -52,7 +54,7 @@ KWinDesktopConfigForm::KWinDesktopConfigForm(QWidget* parent)
 }
 
 KWinDesktopConfig::KWinDesktopConfig(QWidget* parent, const QVariantList& args)
-    : KCModule(KWinDesktopConfigFactory::componentData(), parent, args)
+    : KCModule(KAboutData::pluginData(QStringLiteral("kcm_kwindesktop")), parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_actionCollection(NULL)
     , m_switchDesktopCollection(NULL)
@@ -79,11 +81,11 @@ void KWinDesktopConfig::init()
     setQuickHelp(i18n("<h1>Multiple Desktops</h1>In this module, you can configure how many virtual desktops you want and how these should be labeled."));
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_actionCollection->setConfigGroup("Desktop Switching");
     m_actionCollection->setConfigGlobal(true);
 
-    m_switchDesktopCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_switchDesktopCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_switchDesktopCollection->setConfigGroup("Desktop Switching");
     m_switchDesktopCollection->setConfigGlobal(true);
 
@@ -106,10 +108,10 @@ void KWinDesktopConfig::init()
     int n = info.numberOfDesktops();
 
     for (int i = 1; i <= n; ++i) {
-        KAction* a = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(i)));
+        QAction* a = m_actionCollection->addAction(QString("Switch to Desktop %1").arg(i));
         a->setProperty("isConfigurationAction", true);
         a->setText(i18n("Switch to Desktop %1", i));
-        a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+        KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
     }
 
     // This should be after the "Switch to Desktop %1" loop. It HAS to be
@@ -142,8 +144,8 @@ void KWinDesktopConfig::init()
     m_ui->effectComboBox->addItem(fadedesktop);
 
     // effect config and info button
-    m_ui->effectInfoButton->setIcon(KIcon("dialog-information"));
-    m_ui->effectConfigButton->setIcon(KIcon("configure"));
+    m_ui->effectInfoButton->setIcon(QIcon::fromTheme("dialog-information"));
+    m_ui->effectConfigButton->setIcon(QIcon::fromTheme("configure"));
 
     connect(m_ui->rowsSpinBox, SIGNAL(valueChanged(int)), SLOT(changed()));
     connect(m_ui->numberSpinBox, SIGNAL(valueChanged(int)), SLOT(changed()));
@@ -197,10 +199,10 @@ KWinDesktopConfig::~KWinDesktopConfig()
 
 void KWinDesktopConfig::addAction(const QString &name, const QString &label)
 {
-    KAction* a = qobject_cast<KAction*>(m_switchDesktopCollection->addAction(name));
+    QAction* a = m_switchDesktopCollection->addAction(name);
     a->setProperty("isConfigurationAction", true);
     a->setText(label);
-    a->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
 }
 
 void KWinDesktopConfig::defaults()
@@ -396,10 +398,15 @@ QString KWinDesktopConfig::extrapolatedShortcut(int desktop) const
     if (desktop == 1)
         return QString("Ctrl+F1");
 
-    KAction *beforeAction = qobject_cast<KAction*>(m_actionCollection->actions().at(qMin(9, desktop - 2)));
-    QString before = beforeAction->globalShortcut(KAction::ActiveShortcut).toString();
-    if (before.isEmpty())
-        before = beforeAction->globalShortcut(KAction::DefaultShortcut).toString();
+    QAction *beforeAction = m_actionCollection->actions().at(qMin(9, desktop - 2));
+    auto shortcuts = KGlobalAccel::self()->shortcut(beforeAction);
+    if (shortcuts.isEmpty()) {
+        shortcuts = KGlobalAccel::self()->defaultShortcut(beforeAction);
+    }
+    QString before;
+    if (!shortcuts.isEmpty()) {
+        before = shortcuts.first().toString(QKeySequence::NativeText);
+    }
 
     QString seq;
     if (before.contains(QRegExp("F[0-9]{1,2}"))) {
@@ -443,30 +450,26 @@ void KWinDesktopConfig::slotChangeShortcuts(int number)
             // Remove the action from the action collection. The action itself
             // will still exist because that's the way kwin currently works.
             // No need to remove/forget it. See kwinbindings.
-            KAction *a = qobject_cast<KAction*>(
-                             m_actionCollection->takeAction(m_actionCollection->actions().last()));
+            QAction *a = m_actionCollection->takeAction(m_actionCollection->actions().last());
             // Remove any associated global shortcut. Set it to ""
-            a->setGlobalShortcut(
-                KShortcut(),
-                KAction::ActiveShortcut,
-                KAction::NoAutoloading);
+            KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>(), KGlobalAccel::NoAutoloading);
             m_ui->messageLabel->hide();
             delete a;
         } else {
             // add desktop
             int desktop = m_actionCollection->count() + 1;
-            KAction* action = qobject_cast<KAction*>(m_actionCollection->addAction(QString("Switch to Desktop %1").arg(desktop)));
+            QAction* action = m_actionCollection->addAction(QString("Switch to Desktop %1").arg(desktop));
             action->setProperty("isConfigurationAction", true);
             action->setText(i18n("Switch to Desktop %1", desktop));
-            action->setGlobalShortcut(KShortcut(), KAction::ActiveShortcut);
+            KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>());
             QString shortcutString = extrapolatedShortcut(desktop);
             if (shortcutString.isEmpty()) {
                 m_ui->messageLabel->setText(i18n("No suitable Shortcut for Desktop %1 found", desktop));
                 m_ui->messageLabel->show();
             } else {
-                KShortcut shortcut(shortcutString);
-                if (!shortcut.primary().isEmpty() || KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut.primary())) {
-                    action->setGlobalShortcut(shortcut, KAction::ActiveShortcut, KAction::NoAutoloading);
+                QKeySequence shortcut(shortcutString);
+                if (!shortcut.isEmpty() || KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut)) {
+                    KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>(), KGlobalAccel::NoAutoloading);
                     m_ui->messageLabel->setText(i18n("Assigned global Shortcut \"%1\" to Desktop %2", shortcutString, desktop));
                     m_ui->messageLabel->show();
                 } else {
@@ -541,7 +544,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
     const QString license = pluginInfo.license();
     const QString icon    = pluginInfo.icon();
 
-    KAboutData aboutData(name.toUtf8(), name.toUtf8(), ki18n(name.toUtf8()), version.toUtf8(), ki18n(comment.toUtf8()), KAboutLicense::byKeyword(license).key(), ki18n(QByteArray()), ki18n(QByteArray()), website.toLatin1());
+    KAboutData aboutData(name, name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
     aboutData.setProgramIconName(icon);
     const QStringList authors = author.split(',');
     const QStringList emails = email.split(',');
@@ -549,12 +552,12 @@ void KWinDesktopConfig::slotAboutEffectClicked()
     if (authors.count() == emails.count()) {
         foreach (const QString & author, authors) {
             if (!author.isEmpty()) {
-                aboutData.addAuthor(ki18n(author.toUtf8()), ki18n(QByteArray()), emails[i].toUtf8(), 0);
+                aboutData.addAuthor(i18n(author.toUtf8()), QString(), emails[i]);
             }
             i++;
         }
     }
-    QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog(&aboutData, this);
+    QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog(aboutData, this);
     aboutPlugin->exec();
     delete aboutPlugin;
 }

@@ -6,7 +6,16 @@ kde4_add_ui_files(kcm_kwindesktop_PART_SRCS main.ui)
 
 kde4_add_plugin(kcm_kwindesktop ${kcm_kwindesktop_PART_SRCS})
 
-target_link_libraries(kcm_kwindesktop  ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} ${X11_LIBRARIES})
+target_link_libraries(kcm_kwindesktop
+    Qt5::X11Extras
+    KF5::KCMUtils
+    KF5::KCompletion
+    KF5::KI18n
+    KF5::KWindowSystem
+    KF5::XmlGui
+    ${KDE4Support_LIBRARIES}
+    ${X11_LIBRARIES}
+)
 
 install(TARGETS kcm_kwindesktop  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

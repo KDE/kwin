@@ -55,13 +55,13 @@ public:
     // undo all changes
     void undo();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
     virtual void load();
     virtual void defaults();
 
 
-private slots:
+private Q_SLOTS:
     void slotChangeShortcuts(int number);
     void slotShowAllShortcuts();
     void slotEffectSelectionChanged(int index);
