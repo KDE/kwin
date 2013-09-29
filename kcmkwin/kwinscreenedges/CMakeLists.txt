@@ -4,6 +4,7 @@ set(
     kcm_kwinscreenedges_PART_SRCS
     main.cpp
     monitor.cpp
+    screenpreviewwidget.cpp
     )
 kde4_add_ui_files( kcm_kwinscreenedges_PART_SRCS main.ui )
 kde4_add_plugin( kcm_kwinscreenedges ${kcm_kwinscreenedges_PART_SRCS} )
