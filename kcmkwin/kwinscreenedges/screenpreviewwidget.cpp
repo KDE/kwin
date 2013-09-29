@@ -25,9 +25,9 @@
 #include <QPainter>
 
 #include <KDebug>
+#include <KUrl>
 
-#include "Plasma/FrameSvg"
-#include "Plasma/Wallpaper"
+#include <Plasma/FrameSvg>
 
 
 class ScreenPreviewWidgetPrivate
@@ -35,7 +35,6 @@ class ScreenPreviewWidgetPrivate
 public:
     ScreenPreviewWidgetPrivate(ScreenPreviewWidget *screen)
           : q(screen),
-            wallpaper(0),
             ratio(1)
     {}
 
@@ -49,7 +48,7 @@ public:
 
     void updateScreenGraphics()
     {
-        int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(Plasma::BottomMargin);
+        int bottomElements = screenGraphics->elementSize("base").height() + screenGraphics->marginSize(Plasma::Types::BottomMargin);
         QRect bounds(QPoint(0,0), QSize(q->size().width(), q->height() - bottomElements));
 
         QSize monitorSize(q->size().width(), q->size().width()/ratio);
@@ -66,19 +65,9 @@ public:
 
         previewRect = screenGraphics->contentsRect().toRect();
         previewRect.moveCenter(bounds.center());
-
-        if (wallpaper && !previewRect.isEmpty()) {
-            wallpaper->setBoundingRect(previewRect);
-        }
-    }
-
-    void wallpaperDeleted()
-    {
-        wallpaper = 0;
     }
 
     ScreenPreviewWidget *q;
-    Plasma::Wallpaper* wallpaper;
     Plasma::FrameSvg *screenGraphics;
     QPixmap preview;
     QRect monitorRect;
@@ -104,35 +93,12 @@ void ScreenPreviewWidget::setPreview(const QPixmap &preview)
 {
     d->preview = preview;
 
-    if (d->wallpaper) {
-        disconnect(d->wallpaper, 0, this, 0);
-        d->wallpaper = 0;
-    }
     update();
 }
 
 const QPixmap ScreenPreviewWidget::preview() const
 {
     return d->preview;
-}
-
-void ScreenPreviewWidget::setPreview(Plasma::Wallpaper* wallpaper)
-{
-    d->preview = QPixmap();
-
-    if (d->wallpaper) {
-        disconnect(d->wallpaper, 0, this, 0);
-    }
-
-    d->wallpaper = wallpaper;
-
-    if (d->wallpaper) {
-        connect(d->wallpaper, SIGNAL(update(QRectF)), this, SLOT(updateRect(QRectF)));
-        connect(d->wallpaper, SIGNAL(destroyed(QObject*)), this, SLOT(wallpaperDeleted()));
-        d->updateScreenGraphics();
-    }
-
-    update(d->previewRect);
 }
 
 void ScreenPreviewWidget::setRatio(const qreal ratio)
@@ -170,9 +136,7 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
     d->screenGraphics->paintFrame(&painter, d->monitorRect.topLeft());
 
     painter.save();
-    if (d->wallpaper) {
-        d->wallpaper->paint(&painter, event->rect().intersected(d->previewRect));
-    } else if (!d->preview.isNull()) {
+    if (!d->preview.isNull()) {
         painter.setRenderHint(QPainter::SmoothPixmapTransform);
         painter.drawPixmap(d->previewRect, d->preview, d->preview.rect());
     }
@@ -194,4 +158,4 @@ void ScreenPreviewWidget::dropEvent(QDropEvent *e)
     }
 }
 
-#include "screenpreviewwidget.moc"
+#include "moc_screenpreviewwidget.cpp"

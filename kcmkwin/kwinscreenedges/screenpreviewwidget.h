@@ -23,14 +23,7 @@
 
 #include <QWidget>
 
-class Wallpaper;
-
 class ScreenPreviewWidgetPrivate;
-
-namespace Plasma
-{
-    class Wallpaper;
-}
 
 class ScreenPreviewWidget : public QWidget
 {
@@ -41,7 +34,6 @@ public:
     ~ScreenPreviewWidget();
 
     void setPreview(const QPixmap &preview);
-    void setPreview(Plasma::Wallpaper* wallpaper);
     const QPixmap preview() const;
     void setRatio(const qreal ratio);
     qreal ratio() const;
@@ -60,7 +52,6 @@ private:
     ScreenPreviewWidgetPrivate *const d;
 
     Q_PRIVATE_SLOT(d, void updateRect(const QRectF& rect))
-    Q_PRIVATE_SLOT(d, void wallpaperDeleted())
 };
 
 
