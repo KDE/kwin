@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef CCSM_MONITOR_H
 #define CCSM_MONITOR_H
 
-#include <kworkspace/screenpreviewwidget.h>
+#include "screenpreviewwidget.h"
 
 #include <qactiongroup.h>
 #include <qgraphicsitem.h>
@@ -68,7 +68,7 @@ public:
         BottomLeft,
         BottomRight
     };
-signals:
+Q_SIGNALS:
     void changed();
     void edgeSelectionChanged(int edge, int index);
 protected:

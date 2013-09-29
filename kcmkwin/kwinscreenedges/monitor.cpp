@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "monitor.h"
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <KDE/KLocalizedString>
 #include <qgraphicsitem.h>
 #include <qgraphicsview.h>
 #include <qgraphicsscene.h>
@@ -156,7 +156,7 @@ void Monitor::selectEdgeItem(int edge, int index)
     setEdge(edge, !popup_actions[ edge ][ 0 ]->isChecked());
     QString actionText = popup_actions[ edge ][ index ]->text();
     // remove accelerators added by KAcceleratorManager
-    actionText = KGlobal::locale()->removeAcceleratorMarker(actionText);
+    actionText = KLocalizedString::removeAcceleratorMarker(actionText);
     items[ edge ]->setToolTip(actionText);
 }
 
@@ -180,7 +180,7 @@ void Monitor::popup(Corner* c, QPoint pos)
                 selectEdgeItem(i, popup_actions[ i ].indexOf(a));
                 emit changed();
                 emit edgeSelectionChanged(i, popup_actions[ i ].indexOf(a));
-                c->setToolTip(KGlobal::locale()->removeAcceleratorMarker(a->text()));
+                c->setToolTip(KLocalizedString::removeAcceleratorMarker(a->text()));
             }
             return;
         }

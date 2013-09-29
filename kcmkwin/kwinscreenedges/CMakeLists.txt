@@ -8,7 +8,16 @@ set(
     )
 kde4_add_ui_files( kcm_kwinscreenedges_PART_SRCS main.ui )
 kde4_add_plugin( kcm_kwinscreenedges ${kcm_kwinscreenedges_PART_SRCS} )
-target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES} kworkspace ${KDE4_PLASMA_LIBS})
+target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
+    Qt5::DBus
+    KF5::KCompletion
+    KF5::KConfigCore
+    KF5::KConfigWidgets
+    KF5::KI18n
+    KF5::KService
+    KF5::plasma
+    ${KDE4Support_LIBRARIES}
+    )
 install( TARGETS kcm_kwinscreenedges  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 install( FILES kwinscreenedges.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )

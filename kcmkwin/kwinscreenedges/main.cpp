@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kservicetypetrader.h>
 
+#include <KDE/KAboutData>
+#include <KDE/KConfigGroup>
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <QtDBus/QtDBus>
@@ -41,7 +43,7 @@ KWinScreenEdgesConfigForm::KWinScreenEdgesConfigForm(QWidget* parent)
 }
 
 KWinScreenEdgesConfig::KWinScreenEdgesConfig(QWidget* parent, const QVariantList& args)
-    : KCModule(KWinScreenEdgesConfigFactory::componentData(), parent, args)
+    : KCModule(parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
 {
     m_ui = new KWinScreenEdgesConfigForm(this);
