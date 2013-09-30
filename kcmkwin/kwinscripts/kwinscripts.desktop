@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=kcmshell4 kwin-scripts
+Exec=kcmshell5 kwin-scripts
 Icon=preferences-system-windows-actions
 Type=Service
 X-KDE-ServiceTypes=KCModule
