@@ -56,12 +56,12 @@ public:
     explicit KWinTabBoxConfig(QWidget* parent, const QVariantList& args);
     ~KWinTabBoxConfig();
 
-public slots:
+public Q_SLOTS:
     virtual void save();
     virtual void load();
     virtual void defaults();
 
-private slots:
+private Q_SLOTS:
     void effectSelectionChanged(int index);
     void configureEffectClicked();
     void tabBoxToggled(bool on);
