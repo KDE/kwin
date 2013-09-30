@@ -20,6 +20,7 @@
 // double implementation.
 
 #include "ruleslist.h"
+#include "../../cursor.cpp"
 #include "../../rules.cpp"
 #include "../../placement.cpp"
 #include "../../options.cpp"

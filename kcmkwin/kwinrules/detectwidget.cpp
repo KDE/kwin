@@ -18,6 +18,7 @@
 
 #include <KDialog>
 #include "detectwidget.h"
+#include "../../cursor.h"
 
 #include <kapplication.h>
 #include <KDE/KLocalizedString>
@@ -165,6 +166,9 @@ QByteArray DetectDialog::selectedMachine() const
 
 void DetectDialog::selectWindow()
 {
+    if (!KWin::Cursor::self()) {
+        KWin::Cursor::create(this);
+    }
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
@@ -175,7 +179,7 @@ void DetectDialog::selectWindow()
     // Qt uses QX11Info::appTime() to grab the pointer, what can silently fail (#318437) ...
     XSync(QX11Info::display(), false);
     if (XGrabPointer(QX11Info::display(), grabber->winId(), false, ButtonReleaseMask,
-                     GrabModeAsync, GrabModeAsync, None, QCursor(Qt::CrossCursor).handle(),
+                     GrabModeAsync, GrabModeAsync, None, KWin::Cursor::x11Cursor(Qt::CrossCursor),
                      CurrentTime) == Success) { // ...so we use the far more convincing CurrentTime
         QCoreApplication::instance()->installNativeEventFilter(this);
     } else {
