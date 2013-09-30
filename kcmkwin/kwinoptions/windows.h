@@ -82,7 +82,7 @@ public:
 protected:
     void showEvent(QShowEvent *ev);
 
-private slots:
+private Q_SLOTS:
     void setDelayFocusEnabled();
     void focusPolicyChanged();
     void autoRaiseOnTog(bool);//CT 23Oct1998
@@ -130,7 +130,7 @@ public:
 protected:
     void showEvent(QShowEvent *ev);
 
-private slots:
+private Q_SLOTS:
     void changed() {
         emit KCModule::changed(true);
     }
@@ -167,7 +167,7 @@ public:
 protected:
     void showEvent(QShowEvent *ev);
 
-private slots:
+private Q_SLOTS:
     void shadeHoverChanged(bool);
 
     void changed() {

@@ -63,7 +63,7 @@ public:
 protected:
     void showEvent(QShowEvent *ev);
 
-public slots:
+public Q_SLOTS:
     void changed() {
         emit KCModule::changed(true);
     }
@@ -85,7 +85,7 @@ private:
     void createMaximizeButtonTooltips(KComboBox* combo);
     const char* fixup(const char* s);
 
-private slots:
+private Q_SLOTS:
     void paletteChanged();
 
 };
@@ -106,7 +106,7 @@ public:
 protected:
     void showEvent(QShowEvent *ev);
 
-public slots:
+public Q_SLOTS:
     void changed() {
         emit KCModule::changed(true);
     }
