@@ -61,6 +61,8 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
     connect(ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
 
+    ui->importScriptButton->setEnabled(false);
+
     updateListViewContents();
 }
 
@@ -77,13 +79,16 @@ void Module::importScript()
     if (path.isNull()) {
         return;
     }
-    if (!Plasma::Package::installPackage(path, componentData().dirs()->saveLocation("data", "kwin/scripts/"), "kwin-script-")) {
+#warning Needs adjustments to changes in Plasma::Package
+#if 0
+    if (!Plasma::Package::installPackage(path, QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + "/kwin/scripts/", "kwin-script-")) {
         KMessageWidget* msgWidget = new KMessageWidget;
         msgWidget->setText(ki18n("Cannot import selected script: maybe a script already exists with the same name or there is a permission problem.").toString());
         msgWidget->setMessageType(KMessageWidget::Error);
         ui->verticalLayout2->insertWidget(0, msgWidget);
         msgWidget->animatedShow();
     }
+#endif
     // TODO: reload list after successful import
 }
 
