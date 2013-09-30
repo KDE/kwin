@@ -106,8 +106,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     initLayoutLists();
     KWinTabBoxConfigForm *ui[2] = { m_primaryTabBoxUi, m_alternativeTabBoxUi };
     for (int i = 0; i < 2; ++i) {
-        ui[i]->effectConfigButton->setIcon(KIcon("view-preview"));
-        ui[i]->ghns->setIcon(KIcon("get-hot-new-stuff"));
+        ui[i]->effectConfigButton->setIcon(QIcon::fromTheme("view-preview"));
+        ui[i]->ghns->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
 
         connect(ui[i]->highlightWindowCheck, SIGNAL(clicked(bool)), SLOT(changed()));
         connect(ui[i]->showTabBox, SIGNAL(clicked(bool)), SLOT(tabBoxToggled(bool)));
@@ -470,7 +470,7 @@ void KWinTabBoxConfig::updateConfigFromUi(const KWin::KWinTabBoxConfigForm* ui, 
 void KWinTabBoxConfig::effectSelectionChanged(int index)
 {
     CHECK_CURRENT_TABBOX_UI
-    ui->effectConfigButton->setIcon(KIcon(index < Layout ? "configure" : "view-preview"));
+    ui->effectConfigButton->setIcon(QIcon::fromTheme(index < Layout ? "configure" : "view-preview"));
     if (!ui->showTabBox->isChecked())
         return;
     ui->highlightWindowCheck->setEnabled(index >= Layout);
