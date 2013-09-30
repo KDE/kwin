@@ -47,7 +47,7 @@ public:
     virtual void save();
     virtual void defaults();
 
-protected slots:
+protected Q_SLOTS:
 
     /**
      * Called when the import script button is clicked.
