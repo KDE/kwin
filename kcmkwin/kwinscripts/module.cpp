@@ -41,23 +41,21 @@
 K_PLUGIN_FACTORY_DECLARATION(KcmKWinScriptsFactory);
 
 Module::Module(QWidget *parent, const QVariantList &args) :
-    KCModule(KcmKWinScriptsFactory::componentData(), parent, args),
+    KCModule(parent, args),
     ui(new Ui::Module),
     m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
 {
-    KAboutData *about = new KAboutData("kwin-scripts", 0,
-                                       ki18n("KWin Scripts"),
+    KAboutData *about = new KAboutData("kwin-scripts", QString(),
+                                       i18n("KWin Scripts"),
                                        global_s_versionStringFull,
-                                       ki18n("Configure KWin scripts"),
+                                       i18n("Configure KWin scripts"),
                                        KAboutData::License_GPL_V2);
 
-    about->addAuthor(ki18n("Tamás Krutki"));
+    about->addAuthor(i18n("Tamás Krutki"));
     setAboutData(about);
-    KGlobal::locale()->insertCatalog("kwin_scripts");
-    KGlobal::locale()->insertCatalog("kwin_scripting");
 
     ui->setupUi(this);
-    ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
+    ui->ghnsButton->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
 
     connect(ui->scriptSelector, SIGNAL(changed(bool)), this, SLOT(changed()));
     connect(ui->importScriptButton, SIGNAL(clicked()), SLOT(importScript()));
@@ -123,10 +121,12 @@ void Module::save()
 void Module::slotGHNSClicked()
 {
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("kwinscripts.knsrc", this);
-    if (downloadDialog->exec() == KDialog::Accepted) {
+    if (downloadDialog->exec() == QDialog::Accepted) {
         if (!downloadDialog->changedEntries().isEmpty()) {
             updateListViewContents();
         }
     }
     delete downloadDialog;
 }
+
+#include "module.moc"
