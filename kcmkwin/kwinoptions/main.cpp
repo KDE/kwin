@@ -102,19 +102,19 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
     KAboutData *about =
-        new KAboutData(I18N_NOOP("kcmkwinoptions"), 0, ki18n("Window Behavior Configuration Module"),
-                       0, KLocalizedString(), KAboutData::License_GPL,
-                       ki18n("(c) 1997 - 2002 KWin and KControl Authors"));
+        new KAboutData(i18n("kcmkwinoptions"), QString(), i18n("Window Behavior Configuration Module"),
+                       QString(), QString(), KAboutData::License_GPL,
+                       i18n("(c) 1997 - 2002 KWin and KControl Authors"));
 
-    about->addAuthor(ki18n("Matthias Ettrich"), KLocalizedString(), "ettrich@kde.org");
-    about->addAuthor(ki18n("Waldo Bastian"), KLocalizedString(), "bastian@kde.org");
-    about->addAuthor(ki18n("Cristian Tibirna"), KLocalizedString(), "tibirna@kde.org");
-    about->addAuthor(ki18n("Matthias Kalle Dalheimer"), KLocalizedString(), "kalle@kde.org");
-    about->addAuthor(ki18n("Daniel Molkentin"), KLocalizedString(), "molkentin@kde.org");
-    about->addAuthor(ki18n("Wynn Wilkes"), KLocalizedString(), "wynnw@caldera.com");
-    about->addAuthor(ki18n("Pat Dowler"), KLocalizedString(), "dowler@pt1B1106.FSH.UVic.CA");
-    about->addAuthor(ki18n("Bernd Wuebben"), KLocalizedString(), "wuebben@kde.org");
-    about->addAuthor(ki18n("Matthias Hoelzer-Kluepfel"), KLocalizedString(), "hoelzer@kde.org");
+    about->addAuthor(i18n("Matthias Ettrich"), QString(), "ettrich@kde.org");
+    about->addAuthor(i18n("Waldo Bastian"), QString(), "bastian@kde.org");
+    about->addAuthor(i18n("Cristian Tibirna"), QString(), "tibirna@kde.org");
+    about->addAuthor(i18n("Matthias Kalle Dalheimer"), QString(), "kalle@kde.org");
+    about->addAuthor(i18n("Daniel Molkentin"), QString(), "molkentin@kde.org");
+    about->addAuthor(i18n("Wynn Wilkes"), QString(), "wynnw@caldera.com");
+    about->addAuthor(i18n("Pat Dowler"), QString(), "dowler@pt1B1106.FSH.UVic.CA");
+    about->addAuthor(i18n("Bernd Wuebben"), QString(), "wuebben@kde.org");
+    about->addAuthor(i18n("Matthias Hoelzer-Kluepfel"), QString(), "hoelzer@kde.org");
     setAboutData(about);
 }
 
