@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardPaths>
 
 // KDE
-#include <KAction>
 #include <KActionCollection>
 #include <KCModuleProxy>
+#include <KGlobalAccel>
 //#include <KLocalizedString>
 #include <KPluginFactory>
 #include <KPluginInfo>
@@ -77,29 +77,29 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     setLayout(layout);
 
 #define ADD_SHORTCUT(_NAME_, _CUT_, _BTN_) \
-    a = qobject_cast<KAction*>(m_actionCollection->addAction(_NAME_));\
+    a = m_actionCollection->addAction(_NAME_);\
     a->setProperty("isConfigurationAction", true);\
     _BTN_->setProperty("shortcutAction", _NAME_);\
     a->setText(i18n(_NAME_));\
-    a->setGlobalShortcut(KShortcut(_CUT_)); \
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << _CUT_); \
     connect(_BTN_, SIGNAL(keySequenceChanged(QKeySequence)), SLOT(shortcutChanged(QKeySequence)))
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
-    m_actionCollection = new KActionCollection(this, KComponentData("kwin"));
+    m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
     m_actionCollection->setConfigGroup("Navigation");
     m_actionCollection->setConfigGlobal(true);
-    KAction* a;
+    QAction* a;
     ADD_SHORTCUT("Walk Through Windows", Qt::ALT + Qt::Key_Tab, m_primaryTabBoxUi->scAll);
     ADD_SHORTCUT("Walk Through Windows (Reverse)", Qt::ALT + Qt::SHIFT + Qt::Key_Backtab,
                  m_primaryTabBoxUi->scAllReverse);
-    ADD_SHORTCUT("Walk Through Windows Alternative", , m_alternativeTabBoxUi->scAll);
-    ADD_SHORTCUT("Walk Through Windows Alternative (Reverse)", ,m_alternativeTabBoxUi->scAllReverse);
+    ADD_SHORTCUT("Walk Through Windows Alternative", QKeySequence(), m_alternativeTabBoxUi->scAll);
+    ADD_SHORTCUT("Walk Through Windows Alternative (Reverse)", QKeySequence(), m_alternativeTabBoxUi->scAllReverse);
     ADD_SHORTCUT("Walk Through Windows of Current Application", Qt::ALT + Qt::Key_QuoteLeft,
                  m_primaryTabBoxUi->scCurrent);
     ADD_SHORTCUT("Walk Through Windows of Current Application (Reverse)", Qt::ALT + Qt::Key_AsciiTilde,
                  m_primaryTabBoxUi->scCurrentReverse);
-    ADD_SHORTCUT("Walk Through Windows of Current Application Alternative", , m_alternativeTabBoxUi->scCurrent);
-    ADD_SHORTCUT("Walk Through Windows of Current Application Alternative (Reverse)", ,
+    ADD_SHORTCUT("Walk Through Windows of Current Application Alternative", QKeySequence(), m_alternativeTabBoxUi->scCurrent);
+    ADD_SHORTCUT("Walk Through Windows of Current Application Alternative (Reverse)", QKeySequence(),
                  m_alternativeTabBoxUi->scCurrentReverse);
 #undef ADD_SHORTCUT
 
@@ -237,8 +237,11 @@ void KWinTabBoxConfig::load()
 #define LOAD_SHORTCUT(_BTN_)\
         action = ui[i]->_BTN_->property("shortcutAction").toString();\
         qDebug() << "load shortcut for " << action;\
-        if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(action)))\
-            ui[i]->_BTN_->setKeySequence(a->globalShortcut().primary())
+        if (QAction *a = m_actionCollection->action(action)) { \
+            auto shortcuts = KGlobalAccel::self()->shortcut(a); \
+            if (!shortcuts.isEmpty()) \
+                ui[i]->_BTN_->setKeySequence(shortcuts.first()); \
+        }
         LOAD_SHORTCUT(scAll);
         LOAD_SHORTCUT(scAllReverse);
         LOAD_SHORTCUT(scCurrent);
@@ -372,20 +375,20 @@ void KWinTabBoxConfig::defaults()
     }
 
     QString action;
-#define RESET_SHORTCUT(_BTN_, _CUT_) \
-    action = _BTN_->property("shortcutAction").toString(); \
-    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(action))) \
-        a->setGlobalShortcut(KShortcut(_CUT_), KAction::ActiveShortcut, KAction::NoAutoloading)
+    auto RESET_SHORTCUT = [this](KKeySequenceWidget *widget, const QKeySequence &sequence = QKeySequence()) {
+        const QString action = widget->property("shortcutAction").toString();
+        QAction *a = m_actionCollection->action(action);
+        KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << sequence, KGlobalAccel::NoAutoloading);
+    };
     RESET_SHORTCUT(m_primaryTabBoxUi->scAll, Qt::ALT + Qt::Key_Tab);
     RESET_SHORTCUT(m_primaryTabBoxUi->scAllReverse, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
-    RESET_SHORTCUT(m_alternativeTabBoxUi->scAll, );
-    RESET_SHORTCUT(m_alternativeTabBoxUi->scAllReverse, );
+    RESET_SHORTCUT(m_alternativeTabBoxUi->scAll);
+    RESET_SHORTCUT(m_alternativeTabBoxUi->scAllReverse);
     RESET_SHORTCUT(m_primaryTabBoxUi->scCurrent, Qt::ALT + Qt::Key_QuoteLeft);
     RESET_SHORTCUT(m_primaryTabBoxUi->scCurrentReverse, Qt::ALT + Qt::Key_AsciiTilde);
-    RESET_SHORTCUT(m_alternativeTabBoxUi->scCurrent, );
-    RESET_SHORTCUT(m_alternativeTabBoxUi->scCurrentReverse, );
+    RESET_SHORTCUT(m_alternativeTabBoxUi->scCurrent);
+    RESET_SHORTCUT(m_alternativeTabBoxUi->scCurrentReverse);
     m_actionCollection->writeSettings();
-#undef RESET_SHORTCUT
     emit changed(true);
 }
 
@@ -529,15 +532,15 @@ void KWinTabBoxConfig::shortcutChanged(const QKeySequence &seq)
         action = sender()->property("shortcutAction").toString();
     if (action.isEmpty())
         return;
-    if (KAction *a = qobject_cast<KAction*>(m_actionCollection->action(action)))
-        a->setGlobalShortcut(KShortcut(seq), KAction::ActiveShortcut, KAction::NoAutoloading);
+    QAction *a = m_actionCollection->action(action);
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << seq, KGlobalAccel::NoAutoloading);
     m_actionCollection->writeSettings();
 }
 
 void KWinTabBoxConfig::slotGHNS()
 {
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("kwinswitcher.knsrc", this);
-    if (downloadDialog->exec() == KDialog::Accepted) {
+    if (downloadDialog->exec() == QDialog::Accepted) {
         if (!downloadDialog->changedEntries().isEmpty()) {
             initLayoutLists();
         }
