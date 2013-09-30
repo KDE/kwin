@@ -20,7 +20,9 @@
 #include "module.h"
 #include "ui_module.h"
 
+#include <QFileDialog>
 #include <QStringList>
+#include <QStandardPaths>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusPendingCall>
@@ -28,7 +30,6 @@
 #include <KDE/KAboutData>
 #include <KDE/KPluginFactory>
 #include <KDE/KMessageBox>
-#include <KDE/KFileDialog>
 #include <KDE/KMessageWidget>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
@@ -72,7 +73,8 @@ Module::~Module()
 
 void Module::importScript()
 {
-    QString path = KFileDialog::getOpenFileName(KUrl(), "*.kwinscript|KWin scripts (*.kwinscript)");
+    QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(),
+                                                i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
 
     if (path.isNull()) {
         return;
