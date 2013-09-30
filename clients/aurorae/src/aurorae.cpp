@@ -407,7 +407,7 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
 {
     // based on the code from deKorator
     int pos = PositionCenter;
-    if (isShade()) {
+    if (isShade() || isMaximized()) {
         return Position(pos);
     }
 
@@ -415,9 +415,8 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     borders(borderLeft, borderRight, borderTop, borderBottom);
     int paddingLeft, paddingTop, paddingRight, paddingBottom;
     padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
-    const bool maximized = maximizeMode() == MaximizeFull && !options()->moveResizeMaximizedWindows();
     int titleEdgeLeft, titleEdgeRight, titleEdgeTop, titleEdgeBottom;
-    AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, maximized);
+    AuroraeFactory::instance()->theme()->titleEdges(titleEdgeLeft, titleEdgeTop, titleEdgeRight, titleEdgeBottom, false);
     switch (AuroraeFactory::instance()->theme()->decorationPosition()) {
     case DecorationTop:
         borderTop = titleEdgeTop;
