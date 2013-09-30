@@ -34,6 +34,7 @@
 #include <QtDBus/QtDBus>
 
 #include <KButtonGroup>
+#include <KDE/KConfig>
 #include <KDE/KLocalizedString>
 #include <knuminput.h>
 #include <kdialog.h>
