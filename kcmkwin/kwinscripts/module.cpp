@@ -33,7 +33,7 @@
 #include <KDE/KMessageWidget>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
-#include <KDE/Plasma/Package>
+#include <Plasma/Package>
 #include <KNS3/DownloadDialog>
 
 #include "version.h"
