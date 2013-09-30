@@ -191,7 +191,7 @@ Item {
 
         CheckBox {
             id: glColorCorrection
-            text: i18n("Enable color correction (experimental)")
+            text: i18n("Enable color correction \n(experimental)")
             checked: compositing.glColorCorrection
             enabled: openGLType.currentIndex != 3 && openGLType.currentIndex != 4
             anchors {
