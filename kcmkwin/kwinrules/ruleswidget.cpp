@@ -750,7 +750,7 @@ RulesDialog::RulesDialog(QWidget* parent, const char* name)
     setModal(true);
     setCaption(i18n("Edit Window-Specific Settings"));
     setButtons(Ok | Cancel);
-    setWindowIcon(KIcon("preferences-system-windows-actions"));
+    setWindowIcon(QIcon::fromTheme("preferences-system-windows-actions"));
 
     widget = new RulesWidget(this);
     setMainWidget(widget);
