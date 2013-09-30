@@ -17,7 +17,18 @@ set(kwin_kcm_rules_XCB_LIBS
     ${X11_Xcursor_LIB}
 )
 
-target_link_libraries(kdeinit_kwin_rules_dialog ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${X11_LIBRARIES} ${KACTIVITIES_LIBRARY} ${kwin_kcm_rules_XCB_LIBS})
+set(kcm_libs
+    Qt5::X11Extras
+    KF5::KCMUtils
+    KF5::KCompletion
+    KF5::KI18n
+    KF5::KWindowSystem
+    KF5::XmlGui
+    ${KDE4Support_LIBRARIES}
+    ${X11_LIBRARIES}
+)
+
+target_link_libraries(kdeinit_kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
 install(TARGETS kdeinit_kwin_rules_dialog ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_rules_dialog         DESTINATION ${LIBEXEC_INSTALL_DIR} )
@@ -29,7 +40,7 @@ set(kcm_kwinrules_PART_SRCS kcm.cpp ${kwinrules_SRCS})
 
 kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
 
-target_link_libraries(kcm_kwinrules ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${X11_LIBRARIES} ${KACTIVITIES_LIBRARY} ${kwin_kcm_rules_XCB_LIBS})
+target_link_libraries(kcm_kwinrules ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
 install(TARGETS kcm_kwinrules  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
