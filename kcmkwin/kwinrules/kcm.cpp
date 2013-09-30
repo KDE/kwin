@@ -39,7 +39,7 @@ namespace KWin
 {
 
 KCMRules::KCMRules(QWidget *parent, const QVariantList &)
-    : KCModule(KCMRulesFactory::componentData(), parent)
+    : KCModule(parent)
     , config("kwinrulesrc")
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
