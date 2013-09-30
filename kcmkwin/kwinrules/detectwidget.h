@@ -57,11 +57,11 @@ public:
     Rules::StringMatch titleMatch() const;
     QByteArray selectedMachine() const;
     const KWindowInfo& windowInfo() const;
-signals:
+Q_SIGNALS:
     void detectionDone(bool);
 protected:
     virtual bool eventFilter(QObject* o, QEvent* e);
-private slots:
+private Q_SLOTS:
     void selectWindow();
 private:
     void readWindow(WId window);

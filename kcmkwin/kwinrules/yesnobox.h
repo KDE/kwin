@@ -41,14 +41,14 @@ public:
         connect(no, SIGNAL(clicked(bool)), this, SLOT(noClicked(bool)));
     }
     bool isChecked() { return yes->isChecked(); }
-public slots:
+public Q_SLOTS:
     void setChecked(bool b) { yes->setChecked(b); }
     void toggle() { yes->toggle(); }
 
-signals:
+Q_SIGNALS:
     void clicked(bool checked = false);
     void toggled(bool checked);
-private slots:
+private Q_SLOTS:
     void noClicked(bool checked) { emit clicked(!checked); }
 private:
     QRadioButton *yes, *no;

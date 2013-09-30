@@ -40,7 +40,7 @@ public:
     virtual void save();
     virtual void defaults();
     virtual QString quickHelp() const;
-protected slots:
+protected Q_SLOTS:
     void moduleChanged(bool state);
 private:
     KCMRulesList* widget;

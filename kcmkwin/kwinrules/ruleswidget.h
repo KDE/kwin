@@ -45,16 +45,16 @@ public:
     Rules* rules() const;
     bool finalCheck();
     void prepareWindowSpecific(WId window);
-signals:
+Q_SIGNALS:
     void changed(bool state);
-protected slots:
+protected Q_SLOTS:
     void detectClicked();
     void wmclassMatchChanged();
     void roleMatchChanged();
     void titleMatchChanged();
     void machineMatchChanged();
     void shortcutEditClicked();
-private slots:
+private Q_SLOTS:
     // geometry tab
     void updateEnableposition();
     void updateEnablesize();
@@ -119,7 +119,7 @@ public:
     Rules* edit(Rules* r, WId window, bool show_hints);
 protected:
     virtual void accept();
-private slots:
+private Q_SLOTS:
     void displayHints();
 private:
     RulesWidget* widget;
@@ -132,7 +132,7 @@ class EditShortcut
     Q_OBJECT
 public:
     explicit EditShortcut(QWidget* parent = NULL);
-protected slots:
+protected Q_SLOTS:
     void editShortcut();
     void clearShortcut();
 };

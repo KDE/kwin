@@ -37,9 +37,9 @@ public:
     void load();
     void save();
     void defaults();
-signals:
+Q_SIGNALS:
     void changed(bool);
-private slots:
+private Q_SLOTS:
     void newClicked();
     void modifyClicked();
     void deleteClicked();
