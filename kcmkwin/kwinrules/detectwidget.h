@@ -22,6 +22,7 @@
 
 #include <KDialog>
 #include <kwindowsystem.h>
+#include <QAbstractNativeEventFilter>
 
 #include "../../rules.h"
 //Added by qt3to4:
@@ -42,7 +43,7 @@ public:
 };
 
 class DetectDialog
-    : public KDialog
+    : public KDialog, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 public:
@@ -57,10 +58,10 @@ public:
     Rules::StringMatch titleMatch() const;
     QByteArray selectedMachine() const;
     const KWindowInfo& windowInfo() const;
+
+    virtual bool nativeEventFilter(const QByteArray& eventType, void* message, long int* result) override;
 Q_SIGNALS:
     void detectionDone(bool);
-protected:
-    virtual bool eventFilter(QObject* o, QEvent* e);
 private Q_SLOTS:
     void selectWindow();
 private:
@@ -75,7 +76,7 @@ private:
     QByteArray extrarole;
     QByteArray machine;
     DetectWidget* widget;
-    KDialog* grabber;
+    QScopedPointer<KDialog> grabber;
     KWindowInfo info;
 };
 

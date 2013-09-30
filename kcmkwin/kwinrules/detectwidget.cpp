@@ -49,7 +49,7 @@ DetectWidget::DetectWidget(QWidget* parent)
 
 DetectDialog::DetectDialog(QWidget* parent, const char* name)
     : KDialog(parent),
-      grabber(NULL)
+      grabber()
 {
     setObjectName(name);
     setModal(true);
@@ -168,7 +168,7 @@ void DetectDialog::selectWindow()
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber = new KDialog(0, Qt::X11BypassWindowManagerHint);
+    grabber.reset(new KDialog(0, Qt::X11BypassWindowManagerHint));
     grabber->move(-1000, -1000);
     grabber->setModal(true);
     grabber->show();
@@ -177,24 +177,26 @@ void DetectDialog::selectWindow()
     if (XGrabPointer(QX11Info::display(), grabber->winId(), false, ButtonReleaseMask,
                      GrabModeAsync, GrabModeAsync, None, QCursor(Qt::CrossCursor).handle(),
                      CurrentTime) == Success) { // ...so we use the far more convincing CurrentTime
-        grabber->grabMouse(Qt::CrossCursor); // do anyway, so that Qt updates the mouseGrabber info
-        grabber->installEventFilter(this);
+        QCoreApplication::instance()->installNativeEventFilter(this);
     } else {
         // ... and if we fail, cleanup, so we won't receive random events
-        delete grabber;
-        grabber = 0;
+        grabber.reset();
     }
 }
 
-bool DetectDialog::eventFilter(QObject* o, QEvent* e)
+bool DetectDialog::nativeEventFilter(const QByteArray &eventType, void *message, long int*)
 {
-    if (o != grabber)
+    if (eventType != QByteArrayLiteral("xcb_generic_event_t")) {
         return false;
-    if (e->type() != QEvent::MouseButtonRelease)
+    }
+    auto *event = reinterpret_cast<xcb_generic_event_t *>(message);
+    if ((event->response_type & ~0x80) != XCB_BUTTON_RELEASE) {
         return false;
-    delete grabber;
-    grabber = NULL;
-    if (static_cast< QMouseEvent* >(e)->button() != Qt::LeftButton) {
+    }
+    QCoreApplication::instance()->removeNativeEventFilter(this);
+    grabber.reset();
+    auto *me = reinterpret_cast<xcb_button_press_event_t*>(event);
+    if (me->detail != XCB_BUTTON_INDEX_1) {
         emit detectionDone(false);
         return true;
     }
