@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <kdebug.h>
 #include <kconfig.h>
-#include <KFileDialog>
+#include <QFileDialog>
 
 #include "ruleswidget.h"
 
@@ -152,7 +152,8 @@ void KCMRulesList::exportClicked()
 {
     int pos = rules_listbox->currentRow();
     assert(pos != -1);
-    QString path = KFileDialog::getSaveFileName(KUrl(), "*.kwinrule", this, i18n("Export Rule"), 0);
+    QString path = QFileDialog::getSaveFileName(this, i18n("Export Rule"), QDir::home().absolutePath(),
+                                                i18n("KWin Rule (*.kwinrule)"));
     if (path.isEmpty())
         return;
     KConfig config(path, KConfig::SimpleConfig);
@@ -163,7 +164,8 @@ void KCMRulesList::exportClicked()
 
 void KCMRulesList::importClicked()
 {
-    QString path = KFileDialog::getOpenFileName(KUrl(), "*.kwinrule", this, i18n("Import Rules"));
+    QString path = QFileDialog::getOpenFileName(this, i18n("Import Rules"), QDir::home().absolutePath(),
+                                                i18n("KWin Rule (*.kwinrule)"));
     if (path.isEmpty())
         return;
     KConfig config(path, KConfig::SimpleConfig);
