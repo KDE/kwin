@@ -11,11 +11,13 @@ kde4_add_ui_files(kcm_SRCS module.ui)
 kde4_add_plugin(kcm_kwin_scripts ${kcm_SRCS})
 
 target_link_libraries(kcm_kwin_scripts
-    ${KDE4_KDEUI_LIBRARY}
+    Qt5::DBus
+    KF5::KCMUtils
+    KF5::KIOCore
+    KF5::KI18n
+    KF5::plasma
+    ${KDE4Support_LIBRARIES}
     ${KDE4_KNEWSTUFF3_LIBS}
-    ${KDE4_KIO_LIBS}
-    ${KDE4_KCMUTILS_LIBS}
-    ${KDE4_PLASMA_LIBS}
 )
 
 install(TARGETS kcm_kwin_scripts DESTINATION ${PLUGIN_INSTALL_DIR})
