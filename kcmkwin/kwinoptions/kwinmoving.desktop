@@ -2,7 +2,7 @@
 Icon=preferences-system-windows-movement
 Type=Service
 X-KDE-ServiceTypes=KCModule
-Exec=kcmshell4 kwinmoving
+Exec=kcmshell5 kwinmoving
 X-DocPath=kcontrol/windowbehaviour/index.html#action-moving
 Icon=preferences-system-windows-move
 
