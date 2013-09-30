@@ -44,7 +44,7 @@ class KFocusConfigStandalone : public KFocusConfig
     Q_OBJECT
 public:
     KFocusConfigStandalone(QWidget* parent, const QVariantList &)
-        : KFocusConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
+        : KFocusConfig(true, new KConfig("kwinrc"), parent)
     {}
 };
 
@@ -53,7 +53,7 @@ class KMovingConfigStandalone : public KMovingConfig
     Q_OBJECT
 public:
     KMovingConfigStandalone(QWidget* parent, const QVariantList &)
-        : KMovingConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
+        : KMovingConfig(true, new KConfig("kwinrc"), parent)
     {}
 };
 
@@ -62,12 +62,12 @@ class KAdvancedConfigStandalone : public KAdvancedConfig
     Q_OBJECT
 public:
     KAdvancedConfigStandalone(QWidget* parent, const QVariantList &)
-        : KAdvancedConfig(true, new KConfig("kwinrc"), KWinOptionsFactory::componentData(), parent)
+        : KAdvancedConfig(true, new KConfig("kwinrc"), parent)
     {}
 };
 
 KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
-    : KCModule(KWinOptionsFactory::componentData(), parent)
+    : KCModule(parent)
 {
     mConfig = new KConfig("kwinrc");
 
@@ -76,27 +76,27 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
     tab = new KTabWidget(this);
     layout->addWidget(tab);
 
-    mFocus = new KFocusConfig(false, mConfig, componentData(), this);
+    mFocus = new KFocusConfig(false, mConfig, this);
     mFocus->setObjectName(QLatin1String("KWin Focus Config"));
     tab->addTab(mFocus, i18n("&Focus"));
     connect(mFocus, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
     connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
+    mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
     connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mMoving = new KMovingConfig(false, mConfig, componentData(), this);
+    mMoving = new KMovingConfig(false, mConfig, this);
     mMoving->setObjectName(QLatin1String("KWin Moving"));
     tab->addTab(mMoving, i18n("&Moving"));
     connect(mMoving, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mAdvanced = new KAdvancedConfig(false, mConfig, componentData(), this);
+    mAdvanced = new KAdvancedConfig(false, mConfig, this);
     mAdvanced->setObjectName(QLatin1String("KWin Advanced"));
     tab->addTab(mAdvanced, i18n("Ad&vanced"));
     connect(mAdvanced, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
@@ -180,7 +180,7 @@ void KWinOptions::moduleChanged(bool state)
 }
 
 KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
-    : KCModule(KWinOptionsFactory::componentData(), parent)
+    : KCModule(parent)
 {
     mConfig = new KConfig("kwinrc");
 
@@ -189,12 +189,12 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
     tab = new KTabWidget(this);
     layout->addWidget(tab);
 
-    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, componentData(), this);
+    mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);
     mTitleBarActions->setObjectName(QLatin1String("KWin TitleBar Actions"));
     tab->addTab(mTitleBarActions, i18n("&Titlebar Actions"));
     connect(mTitleBarActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));
 
-    mWindowActions = new KWindowActionsConfig(false, mConfig, componentData(), this);
+    mWindowActions = new KWindowActionsConfig(false, mConfig, this);
     mWindowActions->setObjectName(QLatin1String("KWin Window Actions"));
     tab->addTab(mWindowActions, i18n("Window Actio&ns"));
     connect(mWindowActions, SIGNAL(changed(bool)), this, SLOT(moduleChanged(bool)));

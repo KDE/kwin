@@ -94,8 +94,8 @@ KWinFocusConfigForm::KWinFocusConfigForm(QWidget* parent)
 }
 
 // removed the LCD display over the slider - this is not good GUI design :) RNolden 051701
-KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
-    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+KFocusConfig::KFocusConfig(bool _standAlone, KConfig *_config, QWidget * parent)
+    : KCModule(parent), config(_config), standAlone(_standAlone)
     , m_ui(new KWinFocusConfigForm(this))
 {
     connect(m_ui->focusStealing, SIGNAL(activated(int)), SLOT(changed()));
@@ -357,8 +357,8 @@ KAdvancedConfig::~KAdvancedConfig()
         delete config;
 }
 
-KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
-    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+KAdvancedConfig::KAdvancedConfig(bool _standAlone, KConfig *_config, QWidget *parent)
+    : KCModule(parent), config(_config), standAlone(_standAlone)
     , m_ui(new KWinAdvancedConfigForm(this))
 {
     m_ui->placementCombo->setItemData(0, "Smart");
@@ -511,8 +511,8 @@ KMovingConfig::~KMovingConfig()
         delete config;
 }
 
-KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget *parent)
-    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+KMovingConfig::KMovingConfig(bool _standAlone, KConfig *_config, QWidget *parent)
+    : KCModule(parent), config(_config), standAlone(_standAlone)
     , m_ui(new KWinMovingConfigForm(this))
 {
     // Any changes goes to slotChanged()

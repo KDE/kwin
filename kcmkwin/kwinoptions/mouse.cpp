@@ -155,8 +155,8 @@ void KTitleBarActionsConfig::paletteChanged()
 
 }
 
-KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
-    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_config, QWidget * parent)
+    : KCModule(parent), config(_config), standAlone(_standAlone)
     , m_ui(new KWinMouseConfigForm(this))
 {
     // create the items for the maximize button actions
@@ -442,8 +442,8 @@ void KTitleBarActionsConfig::defaults()
 }
 
 
-KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KConfig *_config, const KComponentData &inst, QWidget * parent)
-    : KCModule(inst, parent), config(_config), standAlone(_standAlone)
+KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KConfig *_config, QWidget * parent)
+    : KCModule(parent), config(_config), standAlone(_standAlone)
     , m_ui(new KWinActionsConfigForm(this))
 {
     connect(m_ui->coWin1, SIGNAL(activated(int)), SLOT(changed()));
