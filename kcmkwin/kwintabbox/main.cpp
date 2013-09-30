@@ -24,10 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QVBoxLayout>
 #include <QStandardPaths>
+#include <QPointer>
 
 // KDE
 #include <KActionCollection>
 #include <KCModuleProxy>
+#include <KDialog>
 #include <KGlobalAccel>
 //#include <KLocalizedString>
 #include <KPluginFactory>
@@ -548,3 +550,5 @@ void KWinTabBoxConfig::slotGHNS()
 }
 
 } // namespace
+
+#include "main.moc"
