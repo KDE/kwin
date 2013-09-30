@@ -28,12 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 
 #include <QWidget>
+#include <kkeyserver.h>
 
 #ifndef KCMRULES
 #include <assert.h>
 #include <QApplication>
 #include <QDebug>
-#include <kkeyserver.h>
 
 #include <X11/Xlib.h>
 
@@ -215,6 +215,7 @@ QPoint cursorPos()
 {
     return Cursor::self()->pos();
 }
+#endif
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 
@@ -294,7 +295,6 @@ Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state)
     return ret;
 }
 
-#endif
 } // namespace
 
 #ifndef KCMRULES
