@@ -21,24 +21,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_THUMBNAILITEM_H
 #define KWIN_THUMBNAILITEM_H
 
-#include <QtDeclarative/QDeclarativeItem>
+#include <QImage>
+#include <QQuickPaintedItem>
 
 namespace KWin
 {
 
-class WindowThumbnailItem : public QDeclarativeItem
+class WindowThumbnailItem : public QQuickPaintedItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
 public:
-    explicit WindowThumbnailItem(QDeclarativeItem *parent = 0);
+    explicit WindowThumbnailItem(QQuickPaintedItem *parent = 0);
     virtual ~WindowThumbnailItem();
 
     qulonglong wId() const {
         return m_wId;
     }
     void setWId(qulonglong wId);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    virtual void paint(QPainter *painter) override;
 
     enum Thumbnail {
         Konqueror = 1,

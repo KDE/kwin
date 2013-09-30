@@ -20,21 +20,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "thumbnailitem.h"
 // Qt
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
 #include <QtCore/QStandardPaths>
+#include <QPainter>
 // KDE
 #include <KDE/KDebug>
 
 namespace KWin
 {
-WindowThumbnailItem::WindowThumbnailItem(QDeclarativeItem* parent)
-    : QDeclarativeItem(parent)
+WindowThumbnailItem::WindowThumbnailItem(QQuickPaintedItem* parent)
+    : QQuickPaintedItem(parent)
     , m_wId(0)
     , m_image()
 {
-    setFlags(flags() & ~QGraphicsItem::ItemHasNoContents);
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
@@ -75,11 +72,10 @@ void WindowThumbnailItem::findImage()
     }
 }
 
-void WindowThumbnailItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void WindowThumbnailItem::paint(QPainter *painter)
 {
     if (m_image.isNull()) {
-        // no image: default behavior
-        QDeclarativeItem::paint(painter, option, widget);
+        return;
     }
     QSizeF difference(boundingRect().width() - m_image.width(), boundingRect().height() - m_image.height());
     const QRectF drawRect(boundingRect().x() + difference.width()/2.0, boundingRect().y(), m_image.width(), m_image.height());
