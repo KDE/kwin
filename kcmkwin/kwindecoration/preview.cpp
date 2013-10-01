@@ -145,21 +145,23 @@ QRect KDecorationPreview::windowGeometry(bool active) const
 
 void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size)
 {
-    options->setCustomBorderSize(size);
-    if (plugin->factory()->reset(KDecorationDefines::SettingBorder)) {
+    auto connection = connect(plugin->factory(), &KDecorationFactory::recreateDecorations, [this, plugin] {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-    }
+    });
+    options->setCustomBorderSize(size);
+    disconnect(connection);
 }
 
 void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right)
 {
-    options->setCustomTitleButtonsEnabled(customEnabled);
-    options->setCustomTitleButtons(left, right);
-    if (plugin->factory()->reset(KDecorationDefines::SettingButtons)) {
+    auto connection = connect(plugin->factory(), &KDecorationFactory::recreateDecorations, [this, plugin] {
         // can't handle the change, recreate decorations then
         recreateDecoration(plugin);
-    }
+    });
+    options->setCustomTitleButtonsEnabled(customEnabled);
+    options->setCustomTitleButtons(left, right);
+    disconnect(connection);
 }
 
 QRegion KDecorationPreview::unobscuredRegion(bool active, const QRegion& r) const
