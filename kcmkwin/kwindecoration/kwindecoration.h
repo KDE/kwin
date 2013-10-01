@@ -38,6 +38,7 @@
 
 #include "ui_decoration.h"
 
+class QQuickView;
 class QSortFilterProxyModel;
 namespace KWin
 {
@@ -139,6 +140,7 @@ private:
 
     int m_lastPreviewWidth;
     QTimer *m_previewUpdateTimer;
+    QScopedPointer<QQuickView> m_listView;
 };
 
 } //namespace

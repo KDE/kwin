@@ -36,15 +36,14 @@
 // Qt
 #include <QTimer>
 #include <QtDBus/QtDBus>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeItem>
-#include <QtDeclarative/QDeclarativeView>
 #include <QSortFilterProxyModel>
 #include <QGraphicsObject>
 #include <QScrollBar>
 #include <QUiLoader>
 #include <QtCore/QStandardPaths>
+#include <QQmlContext>
+#include <QQuickItem>
+#include <QQuickView>
 // KDE
 #include <KAboutData>
 #include <kconfigloader.h>
@@ -54,7 +53,6 @@
 #include <KNS3/DownloadDialog>
 #include <KDE/KConfigDialogManager>
 #include <KPluginFactory>
-#include <qdeclarative.h>
 
 // KCModule plugin interface
 // =========================
@@ -82,12 +80,16 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_decorationButtons(new DecorationButtons(this))
     , m_lastPreviewWidth(-1)
     , m_previewUpdateTimer(NULL)
+    , m_listView(new QQuickView())
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
     m_ui->configureDecorationButton->setIcon(QIcon::fromTheme("configure"));
     m_ui->configureButtonsButton->setIcon(QIcon::fromTheme("configure"));
     m_ui->ghnsButton->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
+    QWidget *container = QWidget::createWindowContainer(m_listView.data(), m_ui->decorationList->viewport());
+    QVBoxLayout *containerLayout = new QVBoxLayout(m_ui->decorationList->viewport());
+    containerLayout->addWidget(container);
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
@@ -133,42 +135,34 @@ void KWinDecorationModule::init()
     m_proxyModel = new QSortFilterProxyModel(this);
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-    m_ui->decorationList->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    /* use logic from KDeclarative::setupBindings():
-    "addImportPath adds the path at the beginning, so to honour user's
-     paths we need to traverse the list in reverse order" */
-    QStringListIterator paths(KGlobal::dirs()->findDirs("module", "imports"));
-    paths.toBack();
-    while (paths.hasPrevious()) {
-        m_ui->decorationList->engine()->addImportPath(paths.previous());
-    }
-    m_ui->decorationList->rootContext()->setContextProperty("decorationModel", m_proxyModel);
-    m_ui->decorationList->rootContext()->setContextProperty("decorationBaseModel", m_model);
-    m_ui->decorationList->rootContext()->setContextProperty("options", m_decorationButtons);
-    m_ui->decorationList->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
-    m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
-    m_ui->decorationList->rootContext()->setContextProperty("auroraeSource", QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/aurorae/aurorae.qml"));
-    m_ui->decorationList->rootContext()->setContextProperty("decorationActiveCaptionColor", KDecoration::options()->color(ColorFont, true));
-    m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveCaptionColor", KDecoration::options()->color(ColorFont, false));
-    m_ui->decorationList->rootContext()->setContextProperty("decorationActiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, true));
-    m_ui->decorationList->rootContext()->setContextProperty("decorationInactiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, false));
-    m_ui->decorationList->setSource(mainQmlPath);
+
+    m_listView->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_listView->rootContext()->setContextProperty("decorationModel", m_proxyModel);
+    m_listView->rootContext()->setContextProperty("decorationBaseModel", m_model);
+    m_listView->rootContext()->setContextProperty("options", m_decorationButtons);
+    m_listView->rootContext()->setContextProperty("highlightColor", m_ui->decorationList->palette().color(QPalette::Highlight));
+    m_listView->rootContext()->setContextProperty("auroraeSource", QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/aurorae/aurorae.qml"));
+    m_listView->rootContext()->setContextProperty("decorationActiveCaptionColor", KDecoration::options()->color(ColorFont, true));
+    m_listView->rootContext()->setContextProperty("decorationInactiveCaptionColor", KDecoration::options()->color(ColorFont, false));
+    m_listView->rootContext()->setContextProperty("decorationActiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, true));
+    m_listView->rootContext()->setContextProperty("decorationInactiveTitleBarColor", KDecoration::options()->color(ColorTitleBar, false));
+    m_listView->setSource(QUrl::fromLocalFile(mainQmlPath));
 
     readConfig(style);
 
-    connect(m_ui->decorationList->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
-    connect(m_ui->decorationList->rootObject(), SIGNAL(widthChanged()), SLOT(updatePreviewWidth()));
+    connect(m_listView->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
+    connect(m_listView->rootObject(), SIGNAL(widthChanged()), SLOT(updatePreviewWidth()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
-    connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_ui->decorationList->rootObject(), SLOT(returnToBounds()), Qt::QueuedConnection);
+    connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_listView->rootObject(), SLOT(returnToBounds()), Qt::QueuedConnection);
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), SLOT(updateScrollbarRange()), Qt::QueuedConnection);
     connect(m_ui->configureDecorationButton, SIGNAL(clicked(bool)), SLOT(slotConfigureDecoration()));
 
     m_ui->decorationList->disconnect(m_ui->decorationList->verticalScrollBar());
     m_ui->decorationList->verticalScrollBar()->disconnect(m_ui->decorationList);
-    connect(m_ui->decorationList->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
-    connect(m_ui->decorationList->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
+    connect(m_listView->rootObject(), SIGNAL(contentYChanged()), SLOT(updateScrollbarValue()));
+    connect(m_listView->rootObject(), SIGNAL(contentHeightChanged()), SLOT(updateScrollbarRange()));
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), SLOT(updateScrollbarRange()));
     connect(m_ui->decorationList->verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(updateViewPosition(int)));
 
@@ -180,9 +174,7 @@ void KWinDecorationModule::init()
 
 int KWinDecorationModule::itemWidth() const
 {
-    const int width = m_ui->decorationList->rootObject()->property("width").toInt();
-    const int sliderWidth = m_ui->decorationList->verticalScrollBar()->width();
-    return width - sliderWidth;
+    return m_listView->rootObject()->property("width").toInt();
 }
 
 // This is the selection handler setting
@@ -218,13 +210,13 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
         const QString type = group.readEntry("EngineType", "aurorae");
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(themeName, type));
         if (index.isValid()) {
-            m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
+            m_listView->rootObject()->setProperty("currentIndex", index.row());
         }
     } else {
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfLibrary(libraryName));
         if (index.isValid()) {
             m_model->setBorderSize(index, borderSize);
-            m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
+            m_listView->rootObject()->setProperty("currentIndex", index.row());
         }
     }
 
@@ -249,7 +241,7 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
 // Writes the selected user configuration to the kwin config file
 void KWinDecorationModule::writeConfig(KConfigGroup & conf)
 {
-    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
+    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_listView->rootObject()->property("currentIndex").toInt(), 0));
     const QString libName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
 
     // General settings
@@ -310,7 +302,7 @@ void KWinDecorationModule::defaults()
     m_showTooltips = true;
     const QModelIndex index = m_proxyModel->mapFromSource(m_model->indexOfName(i18n("Oxygen")));
     if (index.isValid())
-        m_ui->decorationList->rootObject()->setProperty("currentIndex", index.row());
+        m_listView->rootObject()->setProperty("currentIndex", index.row());
 
     m_decorationButtons->resetToDefaults();
 
@@ -351,7 +343,7 @@ void KWinDecorationModule::slotGHNSClicked()
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("aurorae.knsrc", this);
     if (downloadDialog->exec() == KDialog::Accepted) {
         if (!downloadDialog->changedEntries().isEmpty()) {
-            const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
+            const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_listView->rootObject()->property("currentIndex").toInt(), 0));
             const QString libraryName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
             bool aurorae = m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration;
             bool qml = m_model->data(index, DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration;
@@ -360,15 +352,15 @@ void KWinDecorationModule::slotGHNSClicked()
             if (aurorae) {
                 const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName, "aurorae"));
                 if (proxyIndex.isValid())
-                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
+                    m_listView->rootObject()->setProperty("currentIndex", proxyIndex.row());
             } else if (qml) {
                 const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfAuroraeName(auroraeName, "qml"));
                 if (proxyIndex.isValid())
-                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
+                    m_listView->rootObject()->setProperty("currentIndex", proxyIndex.row());
             } else {
                 const QModelIndex proxyIndex = m_proxyModel->mapFromSource(m_model->indexOfLibrary(libraryName));
                 if (proxyIndex.isValid())
-                    m_ui->decorationList->rootObject()->setProperty("currentIndex", proxyIndex.row());
+                    m_listView->rootObject()->setProperty("currentIndex", proxyIndex.row());
             }
             m_lastPreviewWidth = 0;
             updatePreviews();
@@ -379,7 +371,7 @@ void KWinDecorationModule::slotGHNSClicked()
 
 void KWinDecorationModule::slotConfigureDecoration()
 {
-    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_ui->decorationList->rootObject()->property("currentIndex").toInt(), 0));
+    const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_listView->rootObject()->property("currentIndex").toInt(), 0));
     bool reload = false;
     if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration ||
         index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
@@ -456,7 +448,7 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
             updateScrollbarRange();
         else if (e->type() == QEvent::KeyPress) {
             int d = 0;
-            const int currentRow = m_ui->decorationList->rootObject()->property("currentIndex").toInt();
+            const int currentRow = m_listView->rootObject()->property("currentIndex").toInt();
             const int key = static_cast<QKeyEvent*>(e)->key();
             switch (key) {
             case Qt::Key_Home:
@@ -474,7 +466,7 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
             case Qt::Key_PageUp:
             case Qt::Key_PageDown:
                 d = 150;
-                if (QObject *decoItem = m_ui->decorationList->rootObject()->findChild<QObject*>("decorationItem")) {
+                if (QObject *decoItem = m_listView->rootObject()->findChild<QObject*>("decorationItem")) {
                     QVariant v = decoItem->property("height");
                     if (v.isValid())
                         d = v.toInt();
@@ -489,7 +481,7 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
             }
             if (d) {
                 d = qMin(qMax(0, currentRow + d), m_proxyModel->rowCount());
-                m_ui->decorationList->rootObject()->setProperty("currentIndex", d);
+                m_listView->rootObject()->setProperty("currentIndex", d);
                 return true;
             }
         }
@@ -506,13 +498,12 @@ void KWinDecorationModule::updatePreviews()
     if (!m_model) {
         return;
     }
-    m_ui->decorationList->rootContext()->setContextProperty("sliderWidth", m_ui->decorationList->verticalScrollBar()->width());
-    const int newWidth = m_ui->decorationList->rootObject()->property("width").toInt();
+    const int newWidth = m_listView->rootObject()->property("width").toInt();
     if (newWidth == m_lastPreviewWidth)
         return;
     m_lastPreviewWidth = newWidth;
-    const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
-    const int y = m_ui->decorationList->rootObject()->property("contentY").toInt();
+    const int h = m_listView->rootObject()->property("contentHeight").toInt();
+    const int y = m_listView->rootObject()->property("contentY").toInt();
     // start at first element in sight
     int row = 0;
     if (h > 0)
@@ -534,9 +525,9 @@ void KWinDecorationModule::updatePreviewWidth()
 void KWinDecorationModule::updateScrollbarRange()
 {
     m_ui->decorationList->verticalScrollBar()->blockSignals(true);
-    const bool atMinimum = m_ui->decorationList->rootObject()->property("atYBeginning").toBool();
-    const int h = m_ui->decorationList->rootObject()->property("contentHeight").toInt();
-    const int y = atMinimum ? m_ui->decorationList->rootObject()->property("contentY").toInt() : 0;
+    const bool atMinimum = m_listView->rootObject()->property("atYBeginning").toBool();
+    const int h = m_listView->rootObject()->property("contentHeight").toInt();
+    const int y = atMinimum ? m_listView->rootObject()->property("contentY").toInt() : 0;
     m_ui->decorationList->verticalScrollBar()->setRange(y, y + h - m_ui->decorationList->height());
     m_ui->decorationList->verticalScrollBar()->setPageStep(m_ui->decorationList->verticalScrollBar()->maximum()/m_model->rowCount());
     m_ui->decorationList->verticalScrollBar()->blockSignals(false);
@@ -544,7 +535,7 @@ void KWinDecorationModule::updateScrollbarRange()
 
 void KWinDecorationModule::updateScrollbarValue()
 {
-    const int v = m_ui->decorationList->rootObject()->property("contentY").toInt();
+    const int v = m_listView->rootObject()->property("contentY").toInt();
     m_ui->decorationList->verticalScrollBar()->blockSignals(true); // skippig this will kill kinetic scrolling but the scrollwidth is too low
     m_ui->decorationList->verticalScrollBar()->setValue(v);
     m_ui->decorationList->verticalScrollBar()->blockSignals(false);
@@ -552,8 +543,7 @@ void KWinDecorationModule::updateScrollbarValue()
 
 void KWinDecorationModule::updateViewPosition(int v)
 {
-    QGraphicsObject *list = m_ui->decorationList->rootObject();
-    list->setProperty("contentY", v);
+    m_listView->rootObject()->setProperty("contentY", v);
 }
 
 DecorationButtons::DecorationButtons(QObject *parent)

@@ -15,8 +15,8 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 1.1
-import org.kde.qtextracomponents 0.1 as QtExtra
+import QtQuick 2.0
+import org.kde.qtextracomponents 2.0 as QtExtra
 
 ListView {
     id: listView
@@ -24,7 +24,7 @@ ListView {
     y: 0
     model: decorationModel
     highlight: Rectangle {
-        width: listView.width - sliderWidth
+        width: listView.width
         height: 150
         color: highlightColor
         opacity: 0.5
@@ -33,7 +33,7 @@ ListView {
     boundsBehavior: Flickable.StopAtBounds
     delegate: Item {
         objectName: "decorationItem"
-        width: listView.width - sliderWidth
+        width: listView.width
         height: 150
         QtExtra.QPixmapItem {
             pixmap: preview
