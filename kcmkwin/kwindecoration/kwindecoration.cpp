@@ -47,13 +47,13 @@
 #include <QtCore/QStandardPaths>
 // KDE
 #include <KAboutData>
+#include <kconfigloader.h>
 #include <KDialog>
 #include <KDE/KLocalizedString>
 #include <KMessageBox>
 #include <KNS3/DownloadDialog>
 #include <KDE/KConfigDialogManager>
 #include <KPluginFactory>
-#include <Plasma/ConfigLoader>
 #include <qdeclarative.h>
 
 // KCModule plugin interface
@@ -403,7 +403,7 @@ void KWinDecorationModule::slotConfigureDecoration()
                 QFile configFile(configPath);
                 KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig("auroraerc");
                 KConfigGroup configGroup = auroraeConfig->group(packageName);
-                Plasma::ConfigLoader *skeleton = new Plasma::ConfigLoader(&configGroup, &configFile, dlg);
+                KConfigLoader *skeleton = new KConfigLoader(configGroup, &configFile, dlg);
                 // load the ui file
                 QUiLoader *loader = new QUiLoader(dlg);
                 QFile uiFile(uiPath);
