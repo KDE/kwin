@@ -92,11 +92,11 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     layout->addWidget(m_ui);
 
     KAboutData *about =
-        new KAboutData(I18N_NOOP("kcmkwindecoration"), 0,
-                       ki18n("Window Decoration Control Module"),
-                       0, KLocalizedString(), KAboutData::License_GPL,
-                       ki18n("(c) 2001 Karol Szwed"));
-    about->addAuthor(ki18n("Karol Szwed"), KLocalizedString(), "gallium@kde.org");
+        new KAboutData(i18n("kcmkwindecoration"), QString(),
+                       i18n("Window Decoration Control Module"),
+                       QString(), QString(), KAboutData::License_GPL,
+                       i18n("(c) 2001 Karol Szwed"));
+    about->addAuthor(i18n("Karol Szwed"), QString(), "gallium@kde.org");
     setAboutData(about);
 }
 
