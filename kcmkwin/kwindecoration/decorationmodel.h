@@ -125,9 +125,9 @@ public:
 
 Q_SIGNALS:
     void configChanged(QString themeName);
-public slots:
+public Q_SLOTS:
     void regeneratePreview(const QModelIndex& index, const QSize& size);
-private slots:
+private Q_SLOTS:
     void regenerateNextPreview();
 private:
     void findDecorations();

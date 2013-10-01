@@ -50,7 +50,7 @@ public:
     QString buttonsLeft() const;
     QString buttonsRight() const;
 
-private slots:
+private Q_SLOTS:
     void changed();
     void slotDefaultClicked();
     void slotResetClicked();

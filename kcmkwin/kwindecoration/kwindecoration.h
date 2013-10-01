@@ -100,7 +100,7 @@ public:
 
     int itemWidth() const;
 
-signals:
+Q_SIGNALS:
     void pluginLoad(const KConfigGroup& conf);
     void pluginSave(KConfigGroup &conf);
     void pluginDefaults();
@@ -109,7 +109,7 @@ protected:
     bool eventFilter(QObject *o, QEvent *e);
     virtual void showEvent(QShowEvent *ev);
 
-protected slots:
+protected Q_SLOTS:
     // Allows us to turn "save" on
     void slotSelectionChanged();
     void slotConfigureButtons();
@@ -120,7 +120,7 @@ private:
     void init();
     void readConfig(const KConfigGroup& conf);
     void writeConfig(KConfigGroup &conf);
-private slots:
+private Q_SLOTS:
     void updatePreviews();
     void updatePreviewWidth();
     void updateScrollbarRange();

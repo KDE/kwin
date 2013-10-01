@@ -125,10 +125,10 @@ public:
     void dropEvent(QDropEvent *e);
     void mousePressEvent(QMouseEvent *e);
 
-signals:
+Q_SIGNALS:
     void dropped();
 
-public slots:
+public Q_SLOTS:
     void hideButton(QChar btn);
     void showButton(QChar btn);
 };
@@ -161,12 +161,12 @@ public:
     void mousePressEvent(QMouseEvent* e); ///< Starts dragging a button...
     void paintEvent(QPaintEvent* p);
 
-signals:
+Q_SIGNALS:
     void buttonAdded(QChar btn);
     void buttonRemoved(QChar btn);
     void changed();
 
-public slots:
+public Q_SLOTS:
     bool removeSelectedButton(); ///< This slot is called after we drop on the item listbox...
     void recalcItemGeometry(); ///< Call this whenever the item list changes... updates the items' rect property
 
@@ -204,7 +204,7 @@ public:
     void setButtonsLeft(const QString &buttons);
     void setButtonsRight(const QString &buttons);
 
-signals:
+Q_SIGNALS:
     void changed();
 
 private:

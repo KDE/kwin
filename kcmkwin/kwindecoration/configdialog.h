@@ -56,10 +56,10 @@ public:
 
     KDecorationDefines::BorderSize borderSize() const;
 
-signals:
+Q_SIGNALS:
     void pluginSave(KConfigGroup& group);
 
-private slots:
+private Q_SLOTS:
     void slotSelectionChanged();
     void slotAccepted();
     void slotDefault();
