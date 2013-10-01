@@ -85,9 +85,9 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     m_ui = new KWinDecorationForm(this);
-    m_ui->configureDecorationButton->setIcon(KIcon("configure"));
-    m_ui->configureButtonsButton->setIcon(KIcon("configure"));
-    m_ui->ghnsButton->setIcon(KIcon("get-hot-new-stuff"));
+    m_ui->configureDecorationButton->setIcon(QIcon::fromTheme("configure"));
+    m_ui->configureButtonsButton->setIcon(QIcon::fromTheme("configure"));
+    m_ui->ghnsButton->setIcon(QIcon::fromTheme("get-hot-new-stuff"));
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->addWidget(m_ui);
 
