@@ -1,7 +1,7 @@
 remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS)
 
 add_subdirectory( kwinoptions )
-# add_subdirectory( kwindecoration )
+add_subdirectory( kwindecoration )
 add_subdirectory( kwinrules )
 # add_subdirectory( kwincompositing )
 if(KWIN_BUILD_SCREENEDGES)
