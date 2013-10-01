@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=kcmshell4 kwindecoration
+Exec=kcmshell5 kwindecoration
 Icon=preferences-system-windows-action
 Type=Service
 X-KDE-ServiceTypes=KCModule
