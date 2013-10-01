@@ -60,7 +60,7 @@ private:
 };
 
 class KDecorationPreviewBridge
-    : public KDecorationBridgeUnstable
+    : public KDecorationBridge
 {
 public:
     KDecorationPreviewBridge(KDecorationPreview* preview, bool active);
@@ -139,7 +139,7 @@ class KDecorationPreviewOptions
 public:
     KDecorationPreviewOptions();
     virtual ~KDecorationPreviewOptions();
-    virtual unsigned long updateSettings();
+    void updateSettings();
 
     void setCustomBorderSize(BorderSize size);
     void setCustomTitleButtonsEnabled(bool enabled);

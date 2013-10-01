@@ -118,13 +118,11 @@ void KDecorationPreview::render(QPainter *painter, KDecoration *decoration, cons
     int padLeft, padRight, padTop, padBottom;
     padLeft = padRight = padTop = padBottom = 0;
     bool useMask = true;
-    if (KDecorationUnstable *unstable = qobject_cast<KDecorationUnstable *>(decoration)) {
-        unstable->padding(padLeft, padRight, padTop, padBottom);
-        size.setWidth(size.width() + padLeft + padRight);
-        size.setHeight(size.height() + padTop + padBottom);
-        if (padLeft || padRight || padTop || padBottom) {
-            useMask = false;
-        }
+    decoration->padding(padLeft, padRight, padTop, padBottom);
+    size.setWidth(size.width() + padLeft + padRight);
+    size.setHeight(size.height() + padTop + padBottom);
+    if (padLeft || padRight || padTop || padBottom) {
+        useMask = false;
     }
     decoration->resize(size);
 
@@ -479,11 +477,10 @@ KDecorationPreviewOptions::~KDecorationPreviewOptions()
 {
 }
 
-unsigned long KDecorationPreviewOptions::updateSettings()
+void KDecorationPreviewOptions::updateSettings()
 {
     KConfig cfg("kwinrc");
-    unsigned long changed = 0;
-    changed |= KDecorationOptions::updateSettings(&cfg);
+    KDecorationOptions::updateSettings(&cfg);
 
     // set custom border size/buttons
     if (customBorderSize != BordersCount)
@@ -499,8 +496,6 @@ unsigned long KDecorationPreviewOptions::updateSettings()
         setTitleButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
         setTitleButtonsRight(KDecorationOptions::defaultTitleButtonsRight());
     }
-
-    return changed;
 }
 
 void KDecorationPreviewOptions::setCustomBorderSize(BorderSize size)
