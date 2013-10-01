@@ -2,7 +2,7 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 Icon=window-duplicate
-Exec=kcmshell4 kwintabbox
+Exec=kcmshell5 kwintabbox
 X-DocPath=kcontrol/kwintabbox/index.html
 X-KDE-Library=kcm_kwintabbox
 X-KDE-ParentApp=kcontrol
