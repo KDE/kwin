@@ -73,7 +73,7 @@ KWinDecorationForm::KWinDecorationForm(QWidget* parent)
 
 
 KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &)
-    : KCModule(KWinDecoFactory::componentData(), parent)
+    : KCModule(parent)
     , kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_showTooltips(false)
     , m_model(NULL)
