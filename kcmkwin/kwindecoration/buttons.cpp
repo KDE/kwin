@@ -34,6 +34,7 @@
 #include "config-kwin.h"
 
 #include <QApplication>
+#include <QDrag>
 #include <QPainter>
 #include <QLabel>
 #include <QLayout>

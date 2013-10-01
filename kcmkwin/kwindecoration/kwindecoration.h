@@ -32,7 +32,7 @@
 #define KWINDECORATION_H
 
 #include <kcmodule.h>
-#include <kconfig.h>
+#include <KSharedConfig>
 
 #include <kdecoration.h>
 
