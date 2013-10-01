@@ -30,11 +30,11 @@ set(decoration_plugin_SRCS
 
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 target_link_libraries(decorationplugin
-    Qt5::Declarative
+    Qt5::Quick
     kdecorations
     KF5::KConfigWidgets
 )
-install(TARGETS decorationplugin DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/kwin/decoration)
+install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
 
 ########### install files ###############
 
@@ -57,5 +57,5 @@ install( FILES
     qml/AppMenuButton.qml
     qml/ButtonGroup.qml
     qml/qmldir
-    DESTINATION ${IMPORTS_INSTALL_DIR}/org/kde/kwin/decoration )
+    DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration )
 install( FILES kwindecoration.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )

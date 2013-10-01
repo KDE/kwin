@@ -1,3 +1,4 @@
+module org.kde.kwin.decoration
 plugin decorationplugin
 
 Decoration 0.1 Decoration.qml

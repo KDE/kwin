@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef DECORATION_PLUGIN_H
 #define DECORATION_PLUGIN_H
-#include <QDeclarativeExtensionPlugin>
+#include <QQmlExtensionPlugin>
 
-class DecorationPlugin : public QDeclarativeExtensionPlugin
+class DecorationPlugin : public QQmlExtensionPlugin
 {
     Q_PLUGIN_METADATA(IID "org.kde.kwin.decoration")
     Q_OBJECT

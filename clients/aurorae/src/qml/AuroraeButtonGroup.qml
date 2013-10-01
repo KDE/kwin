@@ -14,21 +14,21 @@ General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 1.1
-import org.kde.plasma.core 0.1 as PlasmaCore
+import QtQuick 2.0
+import org.kde.plasma.core 2.0 as PlasmaCore
 
 Item {
     function createButtons() {
         var component = Qt.createComponent("AuroraeButton.qml");
         for (var i=0; i<buttons.length; i++) {
             if (buttons.charAt(i) == "_") {
-                Qt.createQmlObject("import QtQuick 1.1; Item { width: auroraeTheme.explicitButtonSpacer * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
+                Qt.createQmlObject("import QtQuick 2.0; Item { width: auroraeTheme.explicitButtonSpacer * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "explicitSpacer" + buttons + i);
             } else if (buttons.charAt(i) == "M") {
-                Qt.createQmlObject("import QtQuick 1.1; MenuButton { width: auroraeTheme.buttonWidthMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
+                Qt.createQmlObject("import QtQuick 2.0; MenuButton { width: auroraeTheme.buttonWidthMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "menuButton" + buttons + i);
             } else if (buttons.charAt(i) == "N") {
-                Qt.createQmlObject("import QtQuick 1.1; AppMenuButton { width: auroraeTheme.buttonWidthAppMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
+                Qt.createQmlObject("import QtQuick 2.0; AppMenuButton { width: auroraeTheme.buttonWidthAppMenu * auroraeTheme.buttonSizeFactor; height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor }",
                     groupRow, "appMenuButton" + buttons + i);
             } else if (buttons.charAt(i) == "A") {
                 var maximizeComponent = Qt.createComponent("AuroraeMaximizeButton.qml");
@@ -47,7 +47,7 @@ Item {
         spacing: auroraeTheme.buttonSpacing * auroraeTheme.buttonSizeFactor
     }
     onButtonsChanged: {
-        for (i = 0; i < groupRow.children.length; i++) {
+        for (var i = 0; i < groupRow.children.length; i++) {
             groupRow.children[i].destroy();
         }
         createButtons();

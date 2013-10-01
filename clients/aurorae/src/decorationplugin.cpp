@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationplugin.h"
 #include "colorhelper.h"
 #include "decorationoptions.h"
-#include <qdeclarative.h>
+#include <QtQml>
 
 void DecorationPlugin::registerTypes(const char *uri)
 {
