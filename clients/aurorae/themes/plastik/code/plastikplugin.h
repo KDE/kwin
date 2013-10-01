@@ -17,15 +17,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef PLASTIK_PLUGIN_H
 #define PLASTIK_PLUGIN_H
 
-#include <QDeclarativeExtensionPlugin>
+#include <QQmlExtensionPlugin>
 
-class PlastikPlugin : public QDeclarativeExtensionPlugin
+class PlastikPlugin : public QQmlExtensionPlugin
 {
     Q_PLUGIN_METADATA(IID "org.kde.kwin.decorations.plastik")
     Q_OBJECT
 public:
-    virtual void registerTypes(const char *uri);
-    virtual void initializeEngine(QDeclarativeEngine *engine, const char *uri);
+    virtual void registerTypes(const char *uri) override;
+    virtual void initializeEngine(QQmlEngine *engine, const char *uri) override;
 };
 
 #endif // PLASTIK_PLUGIN_H

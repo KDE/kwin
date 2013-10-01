@@ -27,7 +27,7 @@ namespace KWin
 {
 
 PlastikButtonProvider::PlastikButtonProvider()
-    : QDeclarativeImageProvider(Pixmap)
+    : QQuickImageProvider(Pixmap)
 {
 }
 
@@ -40,7 +40,7 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
     QStringList idParts = id.split(QStringLiteral("/"));
     if (idParts.isEmpty()) {
         // incorrect id
-        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
+        return QQuickImageProvider::requestPixmap(id, size, requestedSize);
     }
     bool active = false;
     bool toggled = false;
@@ -95,7 +95,7 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
         button = AppMenuIcon;
     } else {
         // not recognized icon
-        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
+        return QQuickImageProvider::requestPixmap(id, size, requestedSize);
     }
     return icon(button, origSize, active, shadow);
 }

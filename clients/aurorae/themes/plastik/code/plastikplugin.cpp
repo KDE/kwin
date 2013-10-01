@@ -16,18 +16,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "plastikplugin.h"
 #include "plastikbutton.h"
-#include <QDeclarativeEngine>
+#include <QQmlEngine>
 
 void PlastikPlugin::registerTypes(const char *uri)
 {
     Q_UNUSED(uri)
 }
 
-void PlastikPlugin::initializeEngine(QDeclarativeEngine *engine, const char *uri)
+void PlastikPlugin::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(QLatin1String(uri) == QLatin1String("org.kde.kwin.decorations.plastik"));
     engine->addImageProvider(QLatin1String("plastik"), new KWin::PlastikButtonProvider());
-    QDeclarativeExtensionPlugin::initializeEngine(engine, uri);
+    QQmlExtensionPlugin::initializeEngine(engine, uri);
 }
 
 #include "moc_plastikplugin.cpp"
