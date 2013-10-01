@@ -187,7 +187,7 @@ QWidget* KDecorationPreviewBridge::initialParentWidget() const
     return preview;
 }
 
-Qt::WFlags KDecorationPreviewBridge::initialWFlags() const
+Qt::WindowFlags KDecorationPreviewBridge::initialWFlags() const
 {
     return 0;
 }
