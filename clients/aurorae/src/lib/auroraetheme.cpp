@@ -100,7 +100,8 @@ bool AuroraeTheme::isValid() const
 void AuroraeTheme::loadTheme(const QString &name)
 {
     KConfig conf(QStringLiteral("auroraerc"));
-    KConfig config(QStringLiteral("aurorae/themes/") + name + QStringLiteral("/") + name + QStringLiteral("rc"), KConfig::FullConfig, QStandardPaths::DataLocation);
+    KConfig config(QStringLiteral("aurorae/themes/") + name + QStringLiteral("/") + name + QStringLiteral("rc"),
+                   KConfig::FullConfig, QStandardPaths::GenericDataLocation);
     KConfigGroup themeGroup(&conf, name);
     loadTheme(name, config);
     setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
