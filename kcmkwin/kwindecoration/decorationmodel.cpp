@@ -158,8 +158,15 @@ void DecorationModel::findAuroraeThemes()
 {
     // get all destop themes
     QStringList themes;
-    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "aurorae/themes", QStandardPaths::LocateDirectory);
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "aurorae/themes/", QStandardPaths::LocateDirectory);
+    QStringList themeDirectories;
     Q_FOREACH (const QString & dir, dirs) {
+        QDir directory = QDir(dir);
+        for (const QString &themeDir : directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
+            themeDirectories << dir + themeDir;
+        }
+    }
+    for (const QString &dir : themeDirectories) {
         for (const QString & file : QDir(dir).entryList(QStringList() << QStringLiteral("metadata.desktop"))) {
             themes.append(dir + '/' + file);
         }
