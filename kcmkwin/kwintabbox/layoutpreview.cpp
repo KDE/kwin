@@ -20,18 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "layoutpreview.h"
 #include "thumbnailitem.h"
-#include <QtDeclarative/qdeclarative.h>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QGraphicsObject>
+#include <QQmlContext>
 #include <QtCore/QStandardPaths>
-#include <kdeclarative.h>
 #include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>
-#include <KDE/KGlobal>
 #include <KDE/KIcon>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
+#include <KDE/KLocalizedString>
 #include <KDE/KService>
 
 namespace KWin
@@ -39,32 +35,22 @@ namespace KWin
 namespace TabBox
 {
 
-LayoutPreview::LayoutPreview(QWidget* parent)
-    : QDeclarativeView(parent)
+LayoutPreview::LayoutPreview(QWindow *parent)
+    : QQuickView(parent)
 {
-    setAutoFillBackground(false);
-    QPalette pal = palette();
-    pal.setColor(backgroundRole(), Qt::transparent);
-    setPalette(pal);
+    setColor(Qt::white);
     setMinimumSize(QSize(480, 300));
-    setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    foreach (const QString &importPath, KGlobal::dirs()->findDirs("module", "imports")) {
-        engine()->addImportPath(importPath);
-    }
-    foreach (const QString &importPath, QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin/tabbox", QStandardPaths::LocateDirectoty)) {
+    setResizeMode(QQuickView::SizeRootObjectToView);
+    foreach (const QString &importPath, QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin/tabbox", QStandardPaths::LocateDirectory)) {
         engine()->addImportPath(importPath);
     }
     ExampleClientModel *model = new ExampleClientModel(this);
     engine()->addImageProvider(QLatin1String("client"), new TabBoxImageProvider(model));
-    KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.initialize();
-    kdeclarative.setupBindings();
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
     rootContext()->setContextProperty("clientModel", model);
     rootContext()->setContextProperty("sourcePath", QString());
     rootContext()->setContextProperty("name", QString());
-    setSource(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/main.qml"));
+    setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/main.qml")));
 }
 
 LayoutPreview::~LayoutPreview()
@@ -78,7 +64,7 @@ void LayoutPreview::setLayout(const QString &path, const QString &name)
 }
 
 TabBoxImageProvider::TabBoxImageProvider(QAbstractListModel* model)
-    : QDeclarativeImageProvider(QDeclarativeImageProvider::Pixmap)
+    : QQuickImageProvider(QQuickImageProvider::Pixmap)
     , m_model(model)
 {
 }
@@ -89,7 +75,7 @@ QPixmap TabBoxImageProvider::requestPixmap(const QString &id, QSize *size, const
     QStringList parts = id.split('/');
     const int index = parts.first().toInt(&ok);
     if (!ok) {
-        return QDeclarativeImageProvider::requestPixmap(id, size, requestedSize);
+        return QQuickImageProvider::requestPixmap(id, size, requestedSize);
     }
     QSize s(32, 32);
     if (requestedSize.isValid()) {

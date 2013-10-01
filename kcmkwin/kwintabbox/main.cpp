@@ -497,9 +497,9 @@ void KWinTabBoxConfig::configureEffectClicked()
     const int effect = ui->effectCombo->currentIndex();
     if (effect >= Layout) {
         if (!m_layoutPreview) {
-            m_layoutPreview = new LayoutPreview(this);
-            m_layoutPreview->setWindowTitle(i18n("Tabbox layout preview"));
-            m_layoutPreview->setWindowFlags(Qt::Dialog);
+            m_layoutPreview = new LayoutPreview();
+            m_layoutPreview->setTitle(i18n("Tabbox layout preview"));
+            m_layoutPreview->setFlags(Qt::Dialog);
         }
         m_layoutPreview->setLayout(ui->effectCombo->itemData(effect, Qt::UserRole+1).toString(), ui->effectCombo->itemText(effect));
         m_layoutPreview->show();

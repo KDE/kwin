@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_TABBOX_LAYOUTPREVIEW_H
 
 #include <QAbstractListModel>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDeclarative/QDeclarativeImageProvider>
+#include <QQuickView>
+#include <QQuickImageProvider>
 
 namespace KWin
 {
@@ -30,17 +30,17 @@ namespace KWin
 namespace TabBox
 {
 
-class LayoutPreview : public QDeclarativeView
+class LayoutPreview : public QQuickView
 {
     Q_OBJECT
 public:
-    explicit LayoutPreview(QWidget *parent = NULL);
+    explicit LayoutPreview(QWindow *parent = nullptr);
     virtual ~LayoutPreview();
 
     void setLayout(const QString &path, const QString &name);
 };
 
-class TabBoxImageProvider : public QDeclarativeImageProvider
+class TabBoxImageProvider : public QQuickImageProvider
 {
 public:
     explicit TabBoxImageProvider(QAbstractListModel *model);
