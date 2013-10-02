@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeItem>
 #include <QGraphicsView>
-#include <QPaintEngine>
 #include <QStandardPaths>
 
 #include <KConfig>
@@ -586,14 +585,7 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
 
 bool AuroraeClient::animationsSupported() const
 {
-    if (!compositingActive()) {
-        return false;
-    }
-    QPixmap pix(1,1);
-    QPainter p(&pix);
-    const bool raster = p.paintEngine()->type() == QPaintEngine::Raster;
-    p.end();
-    return raster;
+    return compositingActive();
 }
 
 } // namespace Aurorae
