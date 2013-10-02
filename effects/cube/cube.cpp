@@ -1323,6 +1323,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
     GLShader *shader = NULL;
     QMatrix4x4 origMatrix;
     if (activated && cube_painting) {
+        region= infiniteRegion(); // we need to explicitly prevent any clipping, bug #325432
         shader = shaderManager->pushShader(ShaderManager::GenericShader);
         //kDebug(1212) << w->caption();
         float opacity = cubeOpacity;
