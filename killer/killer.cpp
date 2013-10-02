@@ -22,7 +22,7 @@ DEALINGS IN THE SOFTWARE.
 
 ****************************************************************************/
 
-#include <kmessagebox_kiw.h>
+#include <KDE/KMessageBox>
 #include <KDE/KLocalizedString>
 #include <KDE/KAuth/Action>
 #include <QApplication>

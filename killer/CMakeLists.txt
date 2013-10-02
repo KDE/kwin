@@ -11,7 +11,6 @@ target_link_libraries(kwin_killer_helper
     Qt5::X11Extras
     KF5::KAuth
     KF5::KI18n
-    KF5::KInterProcessWindowing
     KF5::KWidgetsAddons
 )
 
