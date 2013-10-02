@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
+#include <QOpenGLFramebufferObject>
+#include <QPainter>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -259,6 +261,24 @@ void AuroraeClient::init()
     widget()->setAttribute(Qt::WA_NoSystemBackground);
     widget()->installEventFilter(this);
     m_view = new QQuickWindow();
+    if (compositingActive()) {
+        connect(m_view, &QQuickWindow::beforeRendering, [this]() {
+            if (m_fbo.isNull() || m_fbo->size() != QSize(width(), height())) {
+                m_fbo.reset(new QOpenGLFramebufferObject(QSize(width(), height()), QOpenGLFramebufferObject::CombinedDepthStencil));
+                if (!m_fbo->isValid()) {
+                    qWarning() << "Creating FBO as render target failed";
+                    m_fbo.reset();
+                    return;
+                }
+            }
+            m_view->setRenderTarget(m_fbo.data());
+        });
+        connect(m_view, &QQuickWindow::afterRendering, [this]{
+            m_buffer = m_fbo->toImage();
+        });
+        connect(m_view, &QQuickWindow::afterRendering, widget(),
+                static_cast<void (QWidget::*)(void)>(&QWidget::update), Qt::QueuedConnection);
+    }
     m_view->setColor(Qt::transparent);
     m_container = QWidget::createWindowContainer(m_view, widget(), Qt::X11BypassWindowManagerHint);
     m_container->setAttribute(Qt::WA_TranslucentBackground);
@@ -275,6 +295,11 @@ void AuroraeClient::init()
 
 bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
 {
+    if (compositingActive() && !m_fbo.isNull() && object == widget() && QEvent::Paint) {
+        QPainter painter(widget());
+        painter.drawImage(QPoint(0, 0), m_buffer);
+        return false;
+    }
     // we need to filter the wheel events on the decoration
     // QML does not yet provide a way to accept wheel events, this will change with Qt 5
     // TODO: remove in KDE5

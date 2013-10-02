@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
+class QOpenGLFramebufferObject;
 class QQmlComponent;
 class QQmlEngine;
 class QQuickItem;
@@ -160,6 +161,8 @@ private:
     QQuickWindow *m_view;
     QQuickItem *m_item;
     QWidget *m_container;
+    QScopedPointer<QOpenGLFramebufferObject> m_fbo;
+    QImage m_buffer;
 };
 
 }
