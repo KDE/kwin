@@ -225,6 +225,7 @@ set(kwin_OWN_LIBS
 )
 
 set(kwin_QT_LIBS
+    Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
     Qt5::X11Extras

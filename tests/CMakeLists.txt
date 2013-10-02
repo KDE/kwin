@@ -9,7 +9,7 @@ set( testUpdateKWin49_SRCS test_update_kwin_49.cpp ../data/update_kwin_49.cpp ..
 set( testScreenPaintData_SRCS test_screen_paint_data.cpp )
 kde4_add_unit_test( testScreenPaintData TESTNAME kwin-TestScreenPaintData ${testScreenPaintData_SRCS} )
 
-target_link_libraries( testScreenPaintData kwineffects Qt5::Test )
+target_link_libraries( testScreenPaintData kwineffects Qt5::Test Qt5::Widgets)
 
 ########################################################
 # Test WindowPaintData
@@ -49,6 +49,7 @@ set( testClientMachine_SRCS
 kde4_add_unit_test( testClientMachine TESTNAME kwin-TestClientMachine ${testClientMachine_SRCS} )
 
 target_link_libraries( testClientMachine
+                       Qt5::Concurrent
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets

@@ -18,6 +18,7 @@ set(kwin_kcm_rules_XCB_LIBS
 )
 
 set(kcm_libs
+    Qt5::Concurrent
     Qt5::X11Extras
     KF5::KCMUtils
     KF5::KCompletion

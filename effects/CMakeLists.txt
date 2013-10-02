@@ -14,6 +14,7 @@ set(kwin_effect_KDE_LIBS
 )
 
 set(kwin_effect_QT_LIBS
+    Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
     Qt5::X11Extras
@@ -90,6 +91,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endif()
     target_link_libraries( kcm_kwin4_effect_${name}
         kwineffects
+        Qt5::Quick
         Qt5::Widgets
         ${KDE4_KIO_LIBRARY} # KUrlRequester
         KF5::KCoreAddons
