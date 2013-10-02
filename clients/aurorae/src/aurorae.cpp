@@ -21,18 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeItem>
-#include <QGraphicsView>
+#include <QQmlComponent>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickItem>
+#include <QQuickWindow>
 #include <QStandardPaths>
+#include <QWidget>
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
-#include <Plasma/FrameSvg>
 
 namespace Aurorae
 {
@@ -40,8 +40,8 @@ namespace Aurorae
 AuroraeFactory::AuroraeFactory(QObject *parent)
         : KDecorationFactory(parent)
         , m_theme(new AuroraeTheme(this))
-        , m_engine(new QDeclarativeEngine(this))
-        , m_component(new QDeclarativeComponent(m_engine, this))
+        , m_engine(new QQmlEngine(this))
+        , m_component(new QQmlComponent(m_engine, this))
         , m_engineType(AuroraeEngine)
 {
     init();
@@ -217,11 +217,11 @@ QList< KDecorationDefines::BorderSize > AuroraeFactory::borderSizes() const
         BorderVeryHuge << BorderOversized;
 }
 
-QDeclarativeItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *client)
+QQuickItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *client)
 {
-    QDeclarativeContext *context = new QDeclarativeContext(m_engine->rootContext(), this);
+    QQmlContext *context = new QQmlContext(m_engine->rootContext(), this);
     context->setContextProperty(QStringLiteral("decoration"), client);
-    return qobject_cast< QDeclarativeItem* >(m_component->create(context));
+    return qobject_cast< QQuickItem* >(m_component->create(context));
 }
 
 AuroraeFactory *AuroraeFactory::s_instance = NULL;
@@ -232,8 +232,8 @@ AuroraeFactory *AuroraeFactory::s_instance = NULL;
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
     : KDecoration(bridge, factory)
     , m_view(NULL)
-    , m_scene(new QGraphicsScene(this))
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
+    , m_container(nullptr)
 {
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
@@ -245,19 +245,10 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
 
 AuroraeClient::~AuroraeClient()
 {
-    if (m_item) {
-        m_item->setParent(NULL);
-        m_item->deleteLater();
-    }
-    m_scene->setParent(NULL);
-    m_scene->deleteLater();
-    m_view->setParent(NULL);
-    m_view->deleteLater();
 }
 
 void AuroraeClient::init()
 {
-    m_scene->setItemIndexMethod(QGraphicsScene::NoIndex);
     // HACK: we need to add the GraphicsView as a child widget to a normal widget
     // the GraphicsView eats the mouse release event and by that kwin core starts to move
     // the decoration each time the decoration is clicked
@@ -267,22 +258,16 @@ void AuroraeClient::init()
     widget()->setAttribute(Qt::WA_TranslucentBackground);
     widget()->setAttribute(Qt::WA_NoSystemBackground);
     widget()->installEventFilter(this);
-    m_view = new QGraphicsView(m_scene, widget());
-    m_view->setAttribute(Qt::WA_TranslucentBackground);
-    m_view->setWindowFlags(Qt::X11BypassWindowManagerHint);
-    m_view->setFrameShape(QFrame::NoFrame);
-    m_view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    m_view->setOptimizationFlags(QGraphicsView::DontSavePainterState);
-    m_view->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
-    QPalette pal = m_view->palette();
-    pal.setColor(m_view->backgroundRole(), Qt::transparent);
-    m_view->setPalette(pal);
-    QPalette pal2 = widget()->palette();
-    pal2.setColor(widget()->backgroundRole(), Qt::transparent);
-    widget()->setPalette(pal2);
-    if (m_item)
-        m_scene->addItem(m_item);
+    m_view = new QQuickWindow();
+    m_view->setColor(Qt::transparent);
+    m_container = QWidget::createWindowContainer(m_view, widget(), Qt::X11BypassWindowManagerHint);
+    m_container->setAttribute(Qt::WA_TranslucentBackground);
+    m_container->setGeometry(0, 0, width(), height());
+    if (m_item) {
+        m_item->setParentItem(m_view->contentItem());
+        m_item->setWidth(width());
+        m_item->setHeight(height());
+    }
     slotAlphaChanged();
 
     AuroraeFactory::instance()->theme()->setCompositingActive(compositingActive());
@@ -311,9 +296,8 @@ void AuroraeClient::resize(const QSize &s)
         m_item->setWidth(s.width());
         m_item->setHeight(s.height());
     }
-    m_scene->setSceneRect(QRectF(QPoint(0, 0), s));
-    m_view->resize(s);
     widget()->resize(s);
+    m_container->setGeometry(0, 0, width(), height());
 }
 
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
@@ -390,13 +374,13 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     default:
         break; // nothing
     }
-    if (point.x() >= (m_view->width() -  borderRight - paddingRight)) {
+    if (point.x() >= (m_container->width() -  borderRight - paddingRight)) {
         pos |= PositionRight;
     } else if (point.x() <= borderLeft + paddingLeft) {
         pos |= PositionLeft;
     }
 
-    if (point.y() >= m_view->height() - borderBottom - paddingBottom) {
+    if (point.y() >= m_container->height() - borderBottom - paddingBottom) {
         pos |= PositionBottom;
     } else if (point.y() <= borderTop + paddingTop ) {
         pos |= PositionTop;
@@ -477,15 +461,15 @@ void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons but
 
 void AuroraeClient::themeChanged()
 {
-    m_scene->clear();
+    delete m_item;
     m_item = AuroraeFactory::instance()->createQmlDecoration(this);
     if (!m_item) {
         return;
     }
 
-    m_item->setWidth(m_scene->sceneRect().width());
-    m_item->setHeight(m_scene->sceneRect().height());
-    m_scene->addItem(m_item);
+    m_item->setWidth(width());
+    m_item->setHeight(height());
+    m_item->setParentItem(m_view->contentItem());
     connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     slotAlphaChanged();
 }

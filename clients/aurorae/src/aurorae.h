@@ -23,12 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
-class QDeclarativeComponent;
-class QDeclarativeEngine;
-class QDeclarativeItem;
-class QGraphicsSceneMouseEvent;
-class QGraphicsScene;
-class QGraphicsView;
+class QQmlComponent;
+class QQmlEngine;
+class QQuickItem;
+class QQuickWindow;
 class KConfig;
 class KConfigGroup;
 
@@ -51,7 +49,7 @@ public:
     AuroraeTheme *theme() const {
         return m_theme;
     }
-    QDeclarativeItem *createQmlDecoration(AuroraeClient *client);
+    QQuickItem *createQmlDecoration(AuroraeClient *client);
     const QString &currentThemeName() const {
         return m_themeName;
     }
@@ -78,8 +76,8 @@ private:
     static AuroraeFactory *s_instance;
 
     AuroraeTheme *m_theme;
-    QDeclarativeEngine *m_engine;
-    QDeclarativeComponent *m_component;
+    QQmlEngine *m_engine;
+    QQmlComponent *m_component;
     EngineType m_engineType;
     QString m_themeName;
 };
@@ -159,9 +157,9 @@ private Q_SLOTS:
 
 private:
     void sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const;
-    QGraphicsView *m_view;
-    QGraphicsScene *m_scene;
-    QDeclarativeItem *m_item;
+    QQuickWindow *m_view;
+    QQuickItem *m_item;
+    QWidget *m_container;
 };
 
 }

@@ -17,8 +17,8 @@ kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 target_link_libraries(kwin3_aurorae
     KF5::KConfigCore
     KF5::KService
-    KF5::Plasma
-    Qt5::Declarative
+    Qt5::Quick
+    Qt5::Widgets
     kdecorations
 )
 
