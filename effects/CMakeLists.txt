@@ -10,6 +10,7 @@ set(kwin_effect_KDE_LIBS
     KF5::KWindowSystem
     KF5::plasma # screenedge effect
     KF5::KIconThemes
+    KF5::KService
     KF5::XmlGui
 )
 
@@ -48,7 +49,7 @@ endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
-    if(OPENGL_FOUND OR NOT(OPENGL_FOUND AND OPENGLES_FOUND))
+    if(OPENGL_FOUND OR NOT (OPENGL_FOUND AND OPENGLES_FOUND))
         # OpenGL or neither OpenGL nor OpenGL ES - default set
         KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
         if(OPENGL_FOUND)
@@ -93,8 +94,9 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         kwineffects
         Qt5::Quick
         Qt5::Widgets
-        ${KDE4_KIO_LIBRARY} # KUrlRequester
+	KF5::KIOWidgets # KUrlRequester
         KF5::KCoreAddons
+	KF5::KCompletion
         KF5::KConfigWidgets
         KF5::KI18n
         KF5::XmlGui
