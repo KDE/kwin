@@ -233,7 +233,7 @@ set(kwin_QT_LIBS
 
 set(kwin_KDE_LIBS
     ${KDE4Support_LIBRARIES}
-    ${KDECLARATIVE_LIBRARIES}
+    KF5::KDeclarative
     KF5::KConfigCore
     KF5::KCoreAddons
     KF5::KCrash
