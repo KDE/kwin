@@ -30,6 +30,7 @@ target_link_libraries(kcm_kwindecoration
     Qt5::Quick
     Qt5::UiTools
     KF5::KCMUtils
+    KF5::KCompletion
     KF5::KI18n
     ${KDE4_KNEWSTUFF3_LIBS}
     ${KDE4Support_LIBRARIES}
