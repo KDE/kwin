@@ -93,7 +93,7 @@ private:
     int x;
     int y;
     QRect fps_rect;
-    GLTexture *fpsText;
+    QScopedPointer<GLTexture> fpsText;
     int textPosition;
     QFont textFont;
     QColor textColor;
