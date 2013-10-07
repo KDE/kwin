@@ -39,23 +39,24 @@ DEALINGS IN THE SOFTWARE.
 namespace KWin
 {
 
-PaintRedirector *PaintRedirector::create(Client *c, QWidget *widget)
+PaintRedirector *PaintRedirector::create(Client *c, KDecoration *deco)
 {
     if (effects->isOpenGLCompositing()) {
-        return new OpenGLPaintRedirector(c, widget);
+        return new OpenGLPaintRedirector(c, deco);
     } else {
-        return new RasterXRenderPaintRedirector(c, widget);
+        return new RasterXRenderPaintRedirector(c, deco);
     }
 }
 
-PaintRedirector::PaintRedirector(Client *c, QWidget* w)
-    : QObject(w)
-    , widget(w)
+PaintRedirector::PaintRedirector(Client *c, KDecoration *deco)
+    : QObject(deco)
+    , widget(deco->widget())
     , recursionCheck(false)
     , m_client(c)
+    , m_decoration(deco)
     , m_requiresRepaint(false)
 {
-    added(w);
+    added(deco->widget());
 }
 
 PaintRedirector::~PaintRedirector()
@@ -67,6 +68,7 @@ void PaintRedirector::reparent(Deleted *d)
     setParent(d);
     widget = NULL;
     m_client = NULL;
+    m_decoration = NULL;
 }
 
 static int align(int value, int align)
@@ -272,8 +274,8 @@ void PaintRedirector::paint(DecorationPixmap border, const QRect& r, const QRect
 
 
 
-ImageBasedPaintRedirector::ImageBasedPaintRedirector(Client *c, QWidget *widget)
-    : PaintRedirector(c, widget)
+ImageBasedPaintRedirector::ImageBasedPaintRedirector(Client *c, KDecoration *deco)
+    : PaintRedirector(c, deco)
 {
 }
 
@@ -307,8 +309,8 @@ void ImageBasedPaintRedirector::discardScratch()
 // ------------------------------------------------------------------
 
 
-OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, QWidget *widget)
-    : ImageBasedPaintRedirector(c, widget)
+OpenGLPaintRedirector::OpenGLPaintRedirector(Client *c, KDecoration *deco)
+    : ImageBasedPaintRedirector(c, deco)
 {
     for (int i = 0; i < TextureCount; ++i)
         m_textures[i] = NULL;
@@ -386,8 +388,8 @@ void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &reg
 
 
 
-RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, QWidget *widget)
-    : ImageBasedPaintRedirector(c, widget)
+RasterXRenderPaintRedirector::RasterXRenderPaintRedirector(Client *c, KDecoration *deco)
+    : ImageBasedPaintRedirector(c, deco)
     , m_gc(0)
 {
     for (int i=0; i<PixmapCount; ++i) {

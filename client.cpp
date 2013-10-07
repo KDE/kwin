@@ -460,7 +460,7 @@ void Client::createDecoration(const QRect& oldgeom)
     move(calculateGravitation(false));
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
     if (Compositor::compositing()) {
-        paintRedirector = PaintRedirector::create(this, decoration->widget());
+        paintRedirector = PaintRedirector::create(this, decoration);
         discardWindowPixmap();
     }
     emit geometryShapeChanged(this, oldgeom);

@@ -33,6 +33,8 @@ DEALINGS IN THE SOFTWARE.
 // xcb
 #include <xcb/render.h>
 
+class KDecoration;
+
 namespace KWin
 {
 
@@ -84,12 +86,12 @@ public:
      * is created.
      **/
     void reparent(Deleted *d);
-    static PaintRedirector *create(Client *c, QWidget* widget);
+    static PaintRedirector *create(Client *c, KDecoration *deco);
 
 public Q_SLOTS:
     void ensurePixmapsPainted();
 protected:
-    PaintRedirector(Client *c, QWidget* widget);
+    PaintRedirector(Client *c, KDecoration *deco);
     virtual xcb_render_picture_t picture(DecorationPixmap border) const;
     virtual GLTexture *texture(DecorationPixmap border) const;
     virtual void resizePixmaps(const QRect *rects);
@@ -117,6 +119,7 @@ private:
     QBasicTimer cleanupTimer;
 
     Client *m_client;
+    KDecoration *m_decoration;
     bool m_requiresRepaint;
 };
 
@@ -126,7 +129,7 @@ class ImageBasedPaintRedirector : public PaintRedirector
 public:
     virtual ~ImageBasedPaintRedirector();
 protected:
-    ImageBasedPaintRedirector(Client *c, QWidget *widget);
+    ImageBasedPaintRedirector(Client *c, KDecoration *deco);
     virtual QPaintDevice *recreateScratch(const QSize &size);
     virtual QPaintDevice *scratch();
     virtual void fillScratch(Qt::GlobalColor color);
@@ -143,7 +146,7 @@ class OpenGLPaintRedirector : public ImageBasedPaintRedirector
     enum Texture { LeftRight = 0, TopBottom, TextureCount };
 
 public:
-    OpenGLPaintRedirector(Client *c, QWidget *widget);
+    OpenGLPaintRedirector(Client *c, KDecoration *deco);
     virtual ~OpenGLPaintRedirector();
 
     GLTexture *leftRightTexture() const { return m_textures[LeftRight]; }
@@ -161,7 +164,7 @@ class RasterXRenderPaintRedirector : public ImageBasedPaintRedirector
 {
     Q_OBJECT
 public:
-    RasterXRenderPaintRedirector(Client *c, QWidget *widget);
+    RasterXRenderPaintRedirector(Client *c, KDecoration *deco);
     virtual ~RasterXRenderPaintRedirector();
 
 protected:
