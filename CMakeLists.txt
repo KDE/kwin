@@ -306,7 +306,7 @@ if(WAYLAND_FOUND  AND KWIN_HAVE_EGL)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
 endif()
 
-kde4_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
+kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${kwinLibs})
 set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
@@ -332,7 +332,7 @@ install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 if(OPENGLES_FOUND)
-  kde4_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
+  kf5_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
   target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kdeinit_kwin_gles PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
   set_target_properties(kwin_gles PROPERTIES OUTPUT_NAME ${KWIN_NAME}_gles)
