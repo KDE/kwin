@@ -354,11 +354,6 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
     }
 }
 
-void OpenGLPaintRedirector::preparePaint(const QPixmap &pending)
-{
-    m_tempImage = pending.toImage();
-}
-
 void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &region)
 {
     const QImage &image = scratchImage();

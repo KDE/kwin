@@ -152,10 +152,8 @@ public:
 protected:
     virtual void resizePixmaps(const QRect *rects);
     virtual void updatePixmaps(const QRect *rects, const QRegion &region);
-    virtual void preparePaint(const QPixmap &pending);
 
 private:
-    QImage m_tempImage;
     GLTexture *m_textures[2];
 };
 
