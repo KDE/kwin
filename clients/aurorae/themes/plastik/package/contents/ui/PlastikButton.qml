@@ -158,4 +158,8 @@ DecorationButton {
             }
         }
     }
+    Connections {
+        target: options
+        onColorsChanged: button.colorize();
+    }
 }
