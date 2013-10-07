@@ -374,6 +374,9 @@ public Q_SLOTS:
     void setShade(bool set);
     void setKeepAbove(bool set);
     void setKeepBelow(bool set);
+    void update();
+    void update(const QRect &rect);
+    void update(const QRegion &region);
     // *** end of wrapping of everything from KDecoration *** //
 public:
     // access the KDecoration wrapper

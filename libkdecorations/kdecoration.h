@@ -837,6 +837,27 @@ public:
      */
     virtual QSize minimumSize() const = 0;
 
+    /**
+     * @brief Renders the decoration into the given paint @p device.
+     *
+     * A decoration can implement this method to provide an optimized way to render the window
+     * decoration with compositing enabled. A decoration providing an implementation of this
+     * method should best not render to the decoration widget at all. To still schedule repaints
+     * it has to invoke the slot @link update() with the geometry that should be repainted in the
+     * next painting pass. The compositor might compress several calls to update in one call to
+     * render().
+     *
+     * If compositing is disabled the decoration should render in the normal way, this method is
+     * not going to be invoked.
+     *
+     * The default implementation just delegates to render() on the decoration's widget.
+     *
+     * @param device The paint device to render to
+     * @param sourceRegion The region which should be rendered to the device
+     * @see update
+     */
+    virtual void render(QPaintDevice *device, const QRegion &sourceRegion);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the window either becomes or stops being active.
@@ -1136,6 +1157,30 @@ public Q_SLOTS:
      * @param set Whether to keep the window below others
      */
     void setKeepBelow(bool set);
+
+    /**
+     * Schedules a complete repaint of the window decoration.
+     *
+     * A decoration needs to schedule repaints if compositing is active and it does not render to
+     * the decoration's QWidget.
+     *
+     * The compositor might compress several calls to update into just one call to render().
+     *
+     * @see render()
+     */
+    void update();
+    /**
+     * Overloaded method for convenience.
+     *
+     * @param rect the geometry to schedule for repaint.
+     */
+    void update(const QRect &rect);
+    /**
+     * Overloaded method for convenience.
+     *
+     * @param region the geometry to schedule for repaint.
+     */
+    void update(const QRegion &region);
 
 protected Q_SLOTS:
     /**

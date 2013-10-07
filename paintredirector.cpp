@@ -91,8 +91,7 @@ void PaintRedirector::performPendingPaint()
     }
     fillScratch(Qt::transparent);
     recursionCheck = true;
-    // do not use DrawWindowBackground, it's ok to be transparent
-    widget->render(scratch, QPoint(), pending.boundingRect(), QWidget::DrawChildren);
+    m_decoration->render(scratch, pending.boundingRect());
     recursionCheck = false;
     cleanupTimer.start(2000, this);
 }
@@ -141,6 +140,19 @@ bool PaintRedirector::eventFilter(QObject* o, QEvent* e)
         break;
     }
     return false;
+}
+
+void PaintRedirector::addRepaint(const QRegion &region)
+{
+    pending |= region;
+    scheduled = pending;
+
+    // schedule repaint
+    const int paddingLeft = m_client->paddingLeft();
+    const int paddingTop = m_client->paddingTop();
+    const bool needsTranslate = (paddingLeft != 0 || paddingTop != 0);
+    m_client->addRepaint(needsTranslate ? pending.translated(-paddingLeft, -paddingTop) : pending);
+    m_requiresRepaint = true;
 }
 
 QRegion PaintRedirector::pendingRegion() const

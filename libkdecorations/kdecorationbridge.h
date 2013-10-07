@@ -88,6 +88,8 @@ public:
     virtual bool compositingActive() const = 0;
     virtual QRect transparentRect() const = 0;
 
+    virtual void update(const QRegion &region) = 0;
+
     // Window tabbing
     virtual QString caption(int idx) const = 0;
     virtual void closeTab(long id) = 0;

@@ -533,6 +533,33 @@ int KDecoration::height() const
     return geometry().height();
 }
 
+void KDecoration::render(QPaintDevice* device, const QRegion& sourceRegion)
+{
+    if (!widget()) {
+        return;
+    }
+    // do not use DrawWindowBackground, it's ok to be transparent
+    widget()->render(device, QPoint(), sourceRegion, QWidget::DrawChildren);
+}
+
+void KDecoration::update()
+{
+    int left, right, top, bottom;
+    left = right = top = bottom = 0;
+    padding(left, right, top, bottom);
+    update(QRegion(0, 0, width() + left + right, height() + top + bottom));
+}
+
+void KDecoration::update(const QRect &rect)
+{
+    update(QRegion(rect));
+}
+
+void KDecoration::update(const QRegion &region)
+{
+    d->bridge->update(region);
+}
+
 QString KDecorationDefines::tabDragMimeType()
 {
     return QStringLiteral("text/ClientGroupItem");

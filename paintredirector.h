@@ -88,6 +88,8 @@ public:
     void reparent(Deleted *d);
     static PaintRedirector *create(Client *c, KDecoration *deco);
 
+    void addRepaint(const QRegion &region);
+
 public Q_SLOTS:
     void ensurePixmapsPainted();
 protected:

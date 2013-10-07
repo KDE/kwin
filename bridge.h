@@ -81,6 +81,8 @@ public:
     virtual bool compositingActive() const override;
     virtual QRect transparentRect() const override;
 
+    virtual void update(const QRegion &region) override;
+
     // Window tabbing
     virtual QString caption(int idx) const override;
     virtual void closeTab(long id) override;

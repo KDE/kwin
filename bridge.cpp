@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include "composite.h"
+#include "paintredirector.h"
 #include "workspace.h"
 
 #include <QDebug>
@@ -241,6 +242,13 @@ bool Bridge::compositingActive() const
 QRect Bridge::transparentRect() const
 {
     return c->transparentRect().translated(-c->decorationRect().topLeft());
+}
+
+void Bridge::update(const QRegion &region)
+{
+    if (c->paintRedirector) {
+        c->paintRedirector->addRepaint(region);
+    }
 }
 
 //BEGIN TABBING

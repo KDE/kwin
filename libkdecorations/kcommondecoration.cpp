@@ -1048,6 +1048,21 @@ QRect KCommonDecoration::transparentRect() const
     return d->wrapper->transparentRect();
 }
 
+void KCommonDecoration::update()
+{
+    d->wrapper->update();
+}
+
+void KCommonDecoration::update(const QRect &rect)
+{
+    d->wrapper->update(rect);
+}
+
+void KCommonDecoration::update(const QRegion &region)
+{
+    d->wrapper->update(region);
+}
+
 class KCommonDecorationButtonPrivate
 {
 public:

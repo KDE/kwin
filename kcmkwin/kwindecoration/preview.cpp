@@ -459,6 +459,10 @@ void KDecorationPreviewBridge::showWindowMenu(const QPoint &, long)
 {
 }
 
+void KDecorationPreviewBridge::update(const QRegion&)
+{
+
+}
 
 KDecoration::WindowOperation KDecorationPreviewBridge::buttonToWindowOperation(Qt::MouseButtons)
 {
