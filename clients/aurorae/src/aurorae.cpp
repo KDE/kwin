@@ -276,8 +276,8 @@ void AuroraeClient::init()
         connect(m_view, &QQuickWindow::afterRendering, [this]{
             m_buffer = m_fbo->toImage();
         });
-        connect(m_view, &QQuickWindow::afterRendering, widget(),
-                static_cast<void (QWidget::*)(void)>(&QWidget::update), Qt::QueuedConnection);
+        connect(m_view, &QQuickWindow::afterRendering, this,
+                static_cast<void (KDecoration::*)(void)>(&KDecoration::update), Qt::QueuedConnection);
     }
     m_view->setColor(Qt::transparent);
     m_container = QWidget::createWindowContainer(m_view, widget(), Qt::X11BypassWindowManagerHint);
@@ -295,11 +295,6 @@ void AuroraeClient::init()
 
 bool AuroraeClient::eventFilter(QObject *object, QEvent *event)
 {
-    if (compositingActive() && !m_fbo.isNull() && object == widget() && QEvent::Paint) {
-        QPainter painter(widget());
-        painter.drawImage(QPoint(0, 0), m_buffer);
-        return false;
-    }
     // we need to filter the wheel events on the decoration
     // QML does not yet provide a way to accept wheel events, this will change with Qt 5
     // TODO: remove in KDE5
@@ -595,6 +590,13 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
 bool AuroraeClient::animationsSupported() const
 {
     return compositingActive();
+}
+
+void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
+{
+    QPainter painter(device);
+    painter.setClipRegion(sourceRegion);
+    painter.drawImage(QPoint(0, 0), m_buffer);
 }
 
 } // namespace Aurorae

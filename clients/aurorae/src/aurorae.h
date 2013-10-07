@@ -121,6 +121,8 @@ public:
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
+    virtual void render(QPaintDevice *device, const QRegion &sourceRegion);
+
 Q_SIGNALS:
     void buttonsChanged();
     /**
