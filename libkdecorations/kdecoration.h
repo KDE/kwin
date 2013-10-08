@@ -998,6 +998,10 @@ public:
      */
     const QWidget* widget() const;
     /**
+     * Returns the main window for the decoration.
+     */
+    QWindow* window();
+    /**
      * Returns the factory that created this decoration.
      */
     KDecorationFactory* factory() const;

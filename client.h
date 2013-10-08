@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/NETWinInfo>
 // Qt
 #include <QPixmap>
+#include <QWindow>
 // X
 #include <xcb/sync.h>
 
@@ -1018,7 +1019,7 @@ inline xcb_window_t Client::wrapperId() const
 inline xcb_window_t Client::decorationId() const
 {
     if (decoration) {
-        return decoration->widget()->winId();
+        return decoration->window()->winId();
     }
     return XCB_WINDOW_NONE;
 }

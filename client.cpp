@@ -451,12 +451,12 @@ void Client::createDecoration(const QRect& oldgeom)
     // TODO: Check decoration's minimum size?
     decoration->init();
     decoration->widget()->installEventFilter(this);
-    xcb_reparent_window(connection(), decoration->widget()->winId(), frameId(), 0, 0);
-    decoration->widget()->lower();
+    xcb_reparent_window(connection(), decoration->window()->winId(), frameId(), 0, 0);
+    decoration->window()->lower();
     decoration->borders(border_left, border_right, border_top, border_bottom);
     padding_left = padding_right = padding_top = padding_bottom = 0;
     decoration->padding(padding_left, padding_right, padding_top, padding_bottom);
-    Xcb::moveWindow(decoration->widget()->winId(), -padding_left, -padding_top);
+    Xcb::moveWindow(decoration->window()->winId(), -padding_left, -padding_top);
     move(calculateGravitation(false));
     plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
     if (Compositor::compositing()) {
@@ -495,7 +495,7 @@ bool Client::checkBorderSizes(bool also_resize)
     int new_left = 0, new_right = 0, new_top = 0, new_bottom = 0;
     decoration->padding(new_left, new_right, new_top, new_bottom);
     if (padding_left != new_left || padding_top != new_top)
-        Xcb::moveWindow(decoration->widget()->winId(), -new_left, -new_top);
+        Xcb::moveWindow(decoration->window()->winId(), -new_left, -new_top);
     padding_left = new_left;
     padding_right = new_right;
     padding_top = new_top;
@@ -652,7 +652,7 @@ void Client::resizeDecoration(const QSize& s)
     } else {
         triggerDecorationRepaint();
     }
-    Xcb::moveWindow(decoration->widget()->winId(), -padding_left, -padding_top);
+    Xcb::moveWindow(decoration->window()->winId(), -padding_left, -padding_top);
     updateInputWindow();
 }
 
@@ -2253,7 +2253,7 @@ void Client::updateCursor()
         return;
     m_cursor = c;
     if (decoration != NULL)
-        decoration->widget()->setCursor(m_cursor);
+        decoration->window()->setCursor(m_cursor);
     xcb_cursor_t nativeCursor = Cursor::x11Cursor(m_cursor);
     m_frame.defineCursor(nativeCursor);
     if (m_decoInputExtent.isValid())

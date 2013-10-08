@@ -27,6 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <QApplication>
 #include <QMenu>
+#include <QWindow>
 #include <assert.h>
 #include <X11/Xlib.h>
 #include <fixx11h.h>
@@ -59,12 +60,14 @@ public:
         , factory(f)
         , alphaEnabled(false)
         , w()
+        , window()
     {
     }
     KDecorationBridge *bridge;
     KDecorationFactory *factory;
     bool alphaEnabled;
     QScopedPointer<QWidget> w;
+    QScopedPointer<QWindow> window;
 };
 
 KDecoration::KDecoration(KDecorationBridge* bridge, KDecorationFactory* factory)
@@ -506,6 +509,27 @@ QWidget* KDecoration::widget()
 const QWidget* KDecoration::widget() const
 {
     return d->w.data();
+}
+
+QWindow *KDecoration::window()
+{
+    if (!d->window.isNull()) {
+        return d->window.data();
+    }
+    if (!d->w.isNull()) {
+        // we have a widget
+        if (d->w->windowHandle()) {
+            // the window exists, so return it
+            return d->w->windowHandle();
+        } else {
+            // access window Id to generate the handle
+            WId tempId = d->w->winId();
+            Q_UNUSED(tempId)
+            return d->w->windowHandle();
+        }
+    }
+    // neither window, nor widget are set
+    return nullptr;
 }
 
 KDecorationFactory* KDecoration::factory() const
