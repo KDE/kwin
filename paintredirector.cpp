@@ -78,7 +78,7 @@ static int align(int value, int align)
 
 void PaintRedirector::performPendingPaint()
 {
-    if (!widget) {
+    if (!widget && !m_decoration->window()) {
         return;
     }
     //qDebug() << "### performing paint, pending:" << pending.boundingRect();
@@ -169,6 +169,9 @@ QRegion PaintRedirector::scheduledRepaintRegion()
 
 void PaintRedirector::added(QWidget* w)
 {
+    if (!w) {
+        return;
+    }
     w->installEventFilter(this);
     foreach (QObject * o, w->children()) {
         if (o->isWidgetType() && !isToolTip(static_cast< QWidget* >(o)))

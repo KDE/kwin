@@ -420,7 +420,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
     updateInputWindow();
     blockGeometryUpdates(false);
     if (!noBorder())
-        decoration->widget()->show();
+        decoration->show();
     updateFrameExtents();
 }
 
@@ -450,7 +450,9 @@ void Client::createDecoration(const QRect& oldgeom)
 #endif
     // TODO: Check decoration's minimum size?
     decoration->init();
-    decoration->widget()->installEventFilter(this);
+    if (decoration->widget()) {
+        decoration->widget()->installEventFilter(this);
+    }
     xcb_reparent_window(connection(), decoration->window()->winId(), frameId(), 0, 0);
     decoration->window()->lower();
     decoration->borders(border_left, border_right, border_top, border_bottom);
@@ -526,13 +528,13 @@ bool Client::checkBorderSizes(bool also_resize)
 
 void Client::triggerDecorationRepaint()
 {
-    if (decoration != NULL)
+    if (decoration && decoration->widget())
         decoration->widget()->update();
 }
 
 void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, Client::CoordinateMode mode) const
 {
-    QRect r = decoration->widget()->rect();
+    QRect r = decoration->rect();
     if (mode == WindowRelative)
         r.translate(-padding_left, -padding_top);
 
@@ -642,11 +644,17 @@ void Client::resizeDecoration(const QSize& s)
     if (decoration == NULL)
         return;
     QSize newSize = s + QSize(padding_left + padding_right, padding_top + padding_bottom);
-    QSize oldSize = decoration->widget()->size();
+    QSize oldSize = decoration->window()->size();
     decoration->resize(newSize);
     if (oldSize == newSize) {
         QResizeEvent e(newSize, oldSize);
-        QApplication::sendEvent(decoration->widget(), &e);
+        QObject *receiver = nullptr;
+        if (decoration->widget()) {
+            receiver = decoration->widget();
+        } else {
+            receiver = decoration->window();
+        }
+        QApplication::sendEvent(receiver, &e);
     } else if (paintRedirector) { // oldSize != newSize
         paintRedirector->resizePixmaps();
     } else {
@@ -1191,7 +1199,7 @@ void Client::map()
     if (compositing())
         discardWindowPixmap();
     if (decoration != NULL)
-        decoration->widget()->show(); // Not really necessary, but let it know the state
+        decoration->show(); // Not really necessary, but let it know the state
     m_frame.map();
     if (!isShade()) {
         m_wrapper.map();
@@ -1220,7 +1228,7 @@ void Client::unmap()
     m_decoInputExtent.unmap();
     m_wrapper.selectInput(ClientWinMask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY);
     if (decoration != NULL)
-        decoration->widget()->hide(); // Not really necessary, but let it know the state
+        decoration->hide(); // Not really necessary, but let it know the state
     exportMappingState(IconicState);
 }
 
@@ -2402,8 +2410,8 @@ void Client::setSessionInteract(bool needed)
 
 QRect Client::decorationRect() const
 {
-    if (decoration && decoration->widget()) {
-        return decoration->widget()->rect().translated(-padding_left, -padding_top);
+    if (decoration) {
+        return decoration->rect().translated(-padding_left, -padding_top);
     } else {
         return QRect(0, 0, width(), height());
     }
