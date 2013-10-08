@@ -91,7 +91,7 @@ const KDecorationOptions* KDecoration::options()
 void KDecoration::createMainWidget(Qt::WindowFlags flags)
 {
     // FRAME check flags?
-    QWidget *w = new QWidget(initialParentWidget(), initialWFlags() | flags);
+    QWidget *w = new QWidget(nullptr, initialWFlags() | flags);
     w->setObjectName(QLatin1String("decoration widget"));
     if (options()->showTooltips())
         w->setAttribute(Qt::WA_AlwaysShowToolTips);
@@ -104,11 +104,6 @@ void KDecoration::setMainWidget(QWidget* w)
     d->w.reset(w);
     w->setMouseTracking(true);
     widget()->resize(geometry().size());
-}
-
-QWidget* KDecoration::initialParentWidget() const
-{
-    return d->bridge->initialParentWidget();
 }
 
 Qt::WindowFlags KDecoration::initialWFlags() const

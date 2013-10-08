@@ -983,10 +983,6 @@ public:
      */
     void createMainWidget(Qt::WindowFlags flags = 0);
     /**
-     * The parent widget that should be used for the main widget.
-     */
-    QWidget* initialParentWidget() const;
-    /**
      * The flags that should be used when creating the main widget.
      * It is possible to add more flags when creating the main widget, but only flags
      * that affect widget drawing are allowed. Window type flags like WX11BypassWM

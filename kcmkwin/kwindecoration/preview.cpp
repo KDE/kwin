@@ -184,11 +184,6 @@ KDecorationPreviewBridge::KDecorationPreviewBridge(KDecorationPreview* p, bool a
 {
 }
 
-QWidget* KDecorationPreviewBridge::initialParentWidget() const
-{
-    return preview;
-}
-
 Qt::WindowFlags KDecorationPreviewBridge::initialWFlags() const
 {
     return 0;

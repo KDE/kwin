@@ -354,7 +354,6 @@ Q_SIGNALS:
 public:
     void setMainWidget(QWidget*);
     void createMainWidget(Qt::WindowFlags flags = 0);
-    QWidget* initialParentWidget() const;
     Qt::WindowFlags initialWFlags() const;
     QWidget* widget();
     const QWidget* widget() const;

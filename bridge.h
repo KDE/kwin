@@ -74,7 +74,6 @@ public:
     virtual void setKeepAbove(bool) override;
     virtual void setKeepBelow(bool) override;
     virtual int currentDesktop() const override;
-    virtual QWidget* initialParentWidget() const override;
     virtual Qt::WindowFlags initialWFlags() const override;
     virtual void grabXServer(bool grab) override;
 

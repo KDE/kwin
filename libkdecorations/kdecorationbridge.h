@@ -81,7 +81,6 @@ public:
     virtual void setKeepBelow(bool) = 0;
     // not part of public API
     virtual int currentDesktop() const = 0;
-    virtual QWidget* initialParentWidget() const = 0;
     virtual Qt::WindowFlags initialWFlags() const = 0;
     virtual void grabXServer(bool grab) = 0;
 

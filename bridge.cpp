@@ -180,11 +180,6 @@ int Bridge::currentDesktop() const
     return VirtualDesktopManager::self()->current();
 }
 
-QWidget* Bridge::initialParentWidget() const
-{
-    return NULL;
-}
-
 Qt::WindowFlags Bridge::initialWFlags() const
 {
     return Qt::WindowDoesNotAcceptFocus;

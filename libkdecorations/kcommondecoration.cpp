@@ -1323,10 +1323,6 @@ void KCommonDecoration::createMainWidget(Qt::WindowFlags flags)
 {
     return d->wrapper->createMainWidget(flags);
 }
-QWidget* KCommonDecoration::initialParentWidget() const
-{
-    return d->wrapper->initialParentWidget();
-}
 Qt::WindowFlags KCommonDecoration::initialWFlags() const
 {
     return d->wrapper->initialWFlags();
