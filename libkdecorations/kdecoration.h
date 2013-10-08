@@ -983,6 +983,17 @@ public:
      */
     void createMainWidget(Qt::WindowFlags flags = 0);
     /**
+     * This should be the first function called in init() to specify
+     * the main window of the decoration. The window should be created
+     * with window flags specified by initialWFlags().
+     *
+     * This class takes over ownership of the QWindow.
+     *
+     * A window decoration can either be QWidget based or QWindow based. If it
+     * calls both setMainWidget() and setMainWindow() the behavior is undefined.
+     */
+    void setMainWindow(QWindow *window);
+    /**
      * The flags that should be used when creating the main widget.
      * It is possible to add more flags when creating the main widget, but only flags
      * that affect widget drawing are allowed. Window type flags like WX11BypassWM
@@ -1022,6 +1033,18 @@ public:
      * a button press was for window tab dragging or for displaying the client menu.
      */
     WindowOperation buttonToWindowOperation(Qt::MouseButtons button);
+    /**
+     * Convenient method to show the decoration's widget or window.
+     **/
+    void show();
+    /**
+     * Convenient method to hide the decoration's widget or window.
+     **/
+    void hide();
+    /**
+     * Convenient method to get the geometry of the decoration widget or window.
+     **/
+    QRect rect() const;
 
 
     // Window tabbing

@@ -109,9 +109,44 @@ void KDecoration::setMainWidget(QWidget* w)
     widget()->resize(geometry().size());
 }
 
+void KDecoration::setMainWindow(QWindow *window)
+{
+    assert(d->window.isNull());
+    d->window.reset(window);
+    d->window->resize(geometry().size());
+}
+
 Qt::WindowFlags KDecoration::initialWFlags() const
 {
     return d->bridge->initialWFlags();
+}
+
+void KDecoration::show()
+{
+    if (!d->w.isNull()) {
+        d->w->show();
+    } else if (!d->window.isNull()) {
+        d->window->show();
+    }
+}
+
+void KDecoration::hide()
+{
+    if (!d->w.isNull()) {
+        d->w->hide();
+    } else if (!d->window.isNull()) {
+        d->window->hide();
+    }
+}
+
+QRect KDecoration::rect() const
+{
+    if (!d->w.isNull()) {
+        return d->w->rect();
+    } else if (!d->window.isNull()) {
+        return QRect(QPoint(0, 0), d->window->size());
+    }
+    return QRect();
 }
 
 bool KDecoration::isActive() const
