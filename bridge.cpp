@@ -163,6 +163,7 @@ WId Bridge::windowId() const
 void Bridge::titlebarDblClickOperation()
 {
     workspace()->performWindowOperation(c, options->operationTitlebarDblClick());
+    c->dontMoveResize();
 }
 
 void Bridge::titlebarMouseWheelOperation(int delta)
