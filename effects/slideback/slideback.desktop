@@ -72,6 +72,7 @@ Type=Service
 Comment=Slide back windows when another window is raised
 Comment[bs]=Kliza unazad prozore kada se drugi prozor oslobodi
 Comment[ca]=Llisca enrere les finestres quan s'eleva una altra finestra
+Comment[ca@valencia]=Llisca arrere les finestres quan s'eleva una altra finestra
 Comment[da]=Glid vinduer tilbage når et andet vinduet hæves
 Comment[de]=Fenster nach hinten gleiten wenn ein anderes Fenster aktiviert wird.
 Comment[es]=Desliza las ventanas atrás cuando una ventana pasa a primer plano

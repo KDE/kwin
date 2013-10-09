@@ -2,6 +2,7 @@
 Name=Kscreen
 Name[bs]=KScreen
 Name[ca]=Kscreen
+Name[ca@valencia]=Kscreen
 Name[cs]=Kscreen
 Name[da]=KScreen
 Name[de]=Kscreen
@@ -39,6 +40,7 @@ Icon=preferences-system-windows-effect-kscreen
 Comment=Helper Effect for KScreen
 Comment[bs]=Pomoćni efekat za KScreen
 Comment[ca]=Efecte auxiliar pel KScreen
+Comment[ca@valencia]=Efecte auxiliar pel KScreen
 Comment[cs]=Pomocný efekt pro KScreen
 Comment[da]=Hjælpeeffekt til KScreen
 Comment[de]=Hilfseffekt für KScreen

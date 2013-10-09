@@ -2,6 +2,7 @@
 Name=Previews
 Name[bs]=Pregledi
 Name[ca]=Vistes prèvies
+Name[ca@valencia]=Vistes prèvies
 Name[cs]=Náhledy
 Name[da]=Forhåndsvisninger
 Name[de]=Vorschauen
@@ -38,6 +39,7 @@ Name[zh_TW]=預覽
 Comment=A desktop switcher layout with previews of the desktops
 Comment[bs]=Raspored preklapanja radnih površina s pregledima radnih površina
 Comment[ca]=Una disposició del commutador d'escriptori amb vistes prèvies dels escriptoris
+Comment[ca@valencia]=Una disposició del commutador d'escriptori amb vistes prèvies dels escriptoris
 Comment[da]=Et layout til skrivebordsskift med forhåndsvisning af skrivebordene
 Comment[de]=Ein Arbeitsflächenwechsler mit Vorschauen der Arbeitsflächen
 Comment[es]=Un esquema del cambiador de escritorios con vistas previas de los escritorios
