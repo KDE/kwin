@@ -43,7 +43,7 @@ PreviewItem::PreviewItem(QQuickItem *parent)
 {
     setFlag(ItemHasContents, true);
     setAcceptHoverEvents(true);
-    connect(this, &PreviewItem::libraryChanged, this, &PreviewItem::recreateDecorations);
+    connect(this, &PreviewItem::libraryChanged, this, &PreviewItem::loadDecorationPlugin);
 }
 
 PreviewItem::~PreviewItem()
@@ -61,15 +61,24 @@ void PreviewItem::setLibraryName(const QString &library)
     emit libraryChanged();
 }
 
-void PreviewItem::recreateDecorations()
+void PreviewItem::loadDecorationPlugin()
 {
     const bool loaded = m_plugins->loadPlugin(m_libraryName);
     if (!loaded) {
         return;
     }
     m_plugins->destroyPreviousPlugin();
+    connect(m_plugins->factory(), &KDecorationFactory::recreateDecorations,
+            this, &PreviewItem::recreateDecorations, Qt::QueuedConnection);
+    recreateDecorations();
+}
+
+void PreviewItem::recreateDecorations()
+{
     delete m_activeDecoration;
     delete m_inactiveDecoration;
+    m_activeEntered = nullptr;
+    m_inactiveEntered = nullptr;
     m_activeDecoration = m_plugins->createDecoration(m_activeBridge.data());
     m_inactiveDecoration = m_plugins->createDecoration(m_inactiveBridge.data());
 
@@ -108,6 +117,7 @@ void PreviewItem::updatePreview()
 
     render(&m_activeBuffer, m_activeDecoration);
     render(&m_inactiveBuffer, m_inactiveDecoration);
+    update();
 }
 
 void PreviewItem::updateSize(const QSize &baseSize, KDecoration *decoration, QImage &buffer)

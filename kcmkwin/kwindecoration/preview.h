@@ -54,6 +54,7 @@ protected:
     virtual void hoverMoveEvent(QHoverEvent *event);
 
 private Q_SLOTS:
+    void loadDecorationPlugin();
     void recreateDecorations();
 
 private:
