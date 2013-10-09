@@ -35,8 +35,7 @@ Item {
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
-        onPositionChanged: decoration.titleMouseMoved(mouse.button, mouse.buttons)
         onPressed: decoration.titlePressed(mouse.button, mouse.buttons)
-        onReleased: decoration.titleReleased(mouse.button, mouse.buttons)
+        onDoubleClicked: decoration.titlebarDblClickOperation()
     }
 }

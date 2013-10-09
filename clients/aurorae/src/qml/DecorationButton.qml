@@ -52,7 +52,6 @@ Item {
         }
         hoverEnabled: true
         onEntered: button.hovered = true
-        onPositionChanged: decoration.titleMouseMoved(mouse.button, mouse.buttons)
         onExited: button.hovered = false
         onPressed: button.pressed = true
         onReleased: button.pressed = false

@@ -184,7 +184,6 @@ Decoration {
                     decoration.titlePressed(mouse.button, mouse.buttons);
                 }
             }
-            onReleased: decoration.titleReleased(mouse.button, mouse.buttons)
         }
         Behavior on color {
             enabled: root.animate

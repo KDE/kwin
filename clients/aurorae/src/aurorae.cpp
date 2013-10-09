@@ -235,12 +235,11 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     : KDecoration(bridge, factory)
     , m_view(NULL)
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
-    , m_container(nullptr)
 {
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(titleFontChanged()), SIGNAL(fontChanged()));
-    connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
+    connect(m_item.data(), SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     connect(this, SIGNAL(appMenuAvailable()), SIGNAL(appMenuAvailableChanged()));
     connect(this, SIGNAL(appMenuUnavailable()), SIGNAL(appMenuAvailableChanged()));
 }
@@ -251,20 +250,18 @@ AuroraeClient::~AuroraeClient()
 
 void AuroraeClient::init()
 {
-    // HACK: we need to add the GraphicsView as a child widget to a normal widget
-    // the GraphicsView eats the mouse release event and by that kwin core starts to move
-    // the decoration each time the decoration is clicked
-    // therefore we use two widgets and inject an own mouse release event to the parent widget
-    // when the graphics view eats a mouse event
-    createMainWidget();
-    widget()->setAttribute(Qt::WA_TranslucentBackground);
-    widget()->setAttribute(Qt::WA_NoSystemBackground);
-    widget()->installEventFilter(this);
     m_view = new QQuickWindow();
+    m_view->setFlags(initialWFlags());
+    m_view->setColor(Qt::transparent);
+    setMainWindow(m_view);
     if (compositingActive()) {
         connect(m_view, &QQuickWindow::beforeRendering, [this]() {
-            if (m_fbo.isNull() || m_fbo->size() != QSize(width(), height())) {
-                m_fbo.reset(new QOpenGLFramebufferObject(QSize(width(), height()), QOpenGLFramebufferObject::CombinedDepthStencil));
+            int left, right, top, bottom;
+            left = right = top = bottom = 0;
+            padding(left, right, top, bottom);
+            if (m_fbo.isNull() || m_fbo->size() != QSize(width() + left + right, height() + top + bottom)) {
+                m_fbo.reset(new QOpenGLFramebufferObject(QSize(width() + left + right, height() + top + bottom),
+                                                         QOpenGLFramebufferObject::CombinedDepthStencil));
                 if (!m_fbo->isValid()) {
                     qWarning() << "Creating FBO as render target failed";
                     m_fbo.reset();
@@ -279,14 +276,8 @@ void AuroraeClient::init()
         connect(m_view, &QQuickWindow::afterRendering, this,
                 static_cast<void (KDecoration::*)(void)>(&KDecoration::update), Qt::QueuedConnection);
     }
-    m_view->setColor(Qt::transparent);
-    m_container = QWidget::createWindowContainer(m_view, widget(), Qt::X11BypassWindowManagerHint);
-    m_container->setAttribute(Qt::WA_TranslucentBackground);
-    m_container->setGeometry(0, 0, width(), height());
     if (m_item) {
         m_item->setParentItem(m_view->contentItem());
-        m_item->setWidth(width());
-        m_item->setHeight(height());
     }
     slotAlphaChanged();
 
@@ -316,8 +307,7 @@ void AuroraeClient::resize(const QSize &s)
         m_item->setWidth(s.width());
         m_item->setHeight(s.height());
     }
-    widget()->resize(s);
-    m_container->setGeometry(0, 0, width(), height());
+    m_view->resize(s);
 }
 
 void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
@@ -361,7 +351,7 @@ void AuroraeClient::sizesFromBorders(const QObject *borders, int &left, int &rig
 
 QSize AuroraeClient::minimumSize() const
 {
-    return widget()->minimumSize();
+    return m_view->minimumSize();
 }
 
 KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) const
@@ -394,13 +384,13 @@ KDecorationDefines::Position AuroraeClient::mousePosition(const QPoint &point) c
     default:
         break; // nothing
     }
-    if (point.x() >= (m_container->width() -  borderRight - paddingRight)) {
+    if (point.x() >= (m_view->width() -  borderRight - paddingRight)) {
         pos |= PositionRight;
     } else if (point.x() <= borderLeft + paddingLeft) {
         pos |= PositionLeft;
     }
 
-    if (point.y() >= m_container->height() - borderBottom - paddingBottom) {
+    if (point.y() >= m_view->height() - borderBottom - paddingBottom) {
         pos |= PositionBottom;
     } else if (point.y() <= borderTop + paddingTop ) {
         pos |= PositionTop;
@@ -439,58 +429,25 @@ void AuroraeClient::titlePressed(int button, int buttons)
     titlePressed(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
 }
 
-void AuroraeClient::titleReleased(int button, int buttons)
-{
-    titleReleased(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
-}
-
-void AuroraeClient::titleMouseMoved(int button, int buttons)
-{
-    titleMouseMoved(static_cast<Qt::MouseButton>(button), static_cast<Qt::MouseButtons>(buttons));
-}
-
 void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
     const QPoint cursor = QCursor::pos();
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, widget()->mapFromGlobal(cursor),
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, m_view->mapFromGlobal(cursor),
                                          cursor, button, buttons, Qt::NoModifier);
     processMousePressEvent(event);
     delete event;
     event = 0;
 }
 
-void AuroraeClient::titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons)
-{
-    const QPoint cursor = QCursor::pos();
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonRelease, widget()->mapFromGlobal(cursor),
-                                         cursor, button, buttons, Qt::NoModifier);
-    QApplication::sendEvent(widget(), event);
-    delete event;
-    event = 0;
-}
-
-void AuroraeClient::titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons)
-{
-    const QPoint cursor = QCursor::pos();
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseMove, widget()->mapFromGlobal(cursor),
-                                         cursor, button, buttons, Qt::NoModifier);
-    QApplication::sendEvent(widget(), event);
-    delete event;
-    event = 0;
-}
-
 void AuroraeClient::themeChanged()
 {
-    delete m_item;
-    m_item = AuroraeFactory::instance()->createQmlDecoration(this);
+    m_item.reset(AuroraeFactory::instance()->createQmlDecoration(this));
     if (!m_item) {
         return;
     }
 
-    m_item->setWidth(width());
-    m_item->setHeight(height());
     m_item->setParentItem(m_view->contentItem());
-    connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
+    connect(m_item.data(), SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     slotAlphaChanged();
 }
 
@@ -581,7 +538,7 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
     int paddingLeft, paddingRight, paddingTop, paddingBottom;
     paddingLeft = paddingRight = paddingTop = paddingBottom = 0;
     padding(paddingLeft, paddingRight, paddingTop, paddingBottom);
-    QRect rect = widget()->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
+    QRect rect = this->rect().adjusted(paddingLeft, paddingTop, -paddingRight, -paddingBottom);
     rect.translate(-paddingLeft, -paddingTop);
 
     return QRegion(rect.adjusted(-left, -top, right, bottom)).subtract(rect);

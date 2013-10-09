@@ -140,11 +140,7 @@ public Q_SLOTS:
     void toggleKeepAbove();
     void toggleKeepBelow();
     void titlePressed(int button, int buttons);
-    void titleReleased(int button, int buttons);
-    void titleMouseMoved(int button, int buttons);
     void titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons);
-    void titleReleased(Qt::MouseButton button, Qt::MouseButtons buttons);
-    void titleMouseMoved(Qt::MouseButton button, Qt::MouseButtons buttons);
     void closeWindow();
     void titlebarDblClickOperation();
     void maximize(int button);
@@ -161,8 +157,7 @@ private Q_SLOTS:
 private:
     void sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const;
     QQuickWindow *m_view;
-    QQuickItem *m_item;
-    QWidget *m_container;
+    QScopedPointer<QQuickItem> m_item;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
 };
