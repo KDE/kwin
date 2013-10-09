@@ -25,7 +25,6 @@
 #include <QApplication>
 #include <QPainter>
 #include <QMouseEvent>
-#include <kicon.h>
 
 #include <kdecorationfactory.h>
 
@@ -352,7 +351,7 @@ NET::WindowType KDecorationPreviewBridge::windowType(unsigned long) const
 
 QIcon KDecorationPreviewBridge::icon() const
 {
-    return KIcon("xorg");
+    return QIcon::fromTheme(QStringLiteral("xorg"));
 }
 
 QString KDecorationPreviewBridge::caption() const
