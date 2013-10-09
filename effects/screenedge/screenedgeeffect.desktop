@@ -2,6 +2,7 @@
 Name=Screen Edge
 Name[bs]=Ivice ekrana
 Name[ca]=Vora de la pantalla
+Name[ca@valencia]=Vora de la pantalla
 Name[cs]=Hrana obrazovky
 Name[da]=Skærmkant
 Name[de]=Bildschirmkante
@@ -40,6 +41,7 @@ Icon=preferences-system-windows-effect-screenedge
 Comment=Highlights a screen edge when approaching
 Comment[bs]=Označava ivicu ekrana pri približavanju
 Comment[ca]=Ressalta la vora de la pantalla en aproximar-se
+Comment[ca@valencia]=Ressalta la vora de la pantalla en aproximar-se
 Comment[cs]=Zvýrazní hranu obrazovky při přiblížení k ní
 Comment[da]=Fremhæver en skærmkant når den nærmer sig
 Comment[de]=Bildschirmkante bei Annäherung hervorheben

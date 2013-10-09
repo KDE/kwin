@@ -5,6 +5,7 @@ X-KDE-ServiceType=KWin/DesktopSwitcher
 Comment=KWin Desktop Switcher Layout
 Comment[bs]=Izgled KWin prebacivača radnih površina
 Comment[ca]=Disposició del commutador d'escriptoris del KWin
+Comment[ca@valencia]=Disposició del commutador d'escriptoris del KWin
 Comment[da]=Layout til KWins skrivebordsskifter
 Comment[de]=Arbeitsflächenwechsler-Layout
 Comment[es]=Esquema del cambiador de escritorios de KWin
