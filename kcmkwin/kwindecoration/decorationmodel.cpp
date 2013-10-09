@@ -70,6 +70,7 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     roleNames[QmlMainScriptRole] = "mainScript";
     roleNames[BorderSizeRole] = "borderSize";
     roleNames[ButtonSizeRole] = "buttonSize";
+    roleNames[LibraryNameRole] = "library";
     setRoleNames(roleNames);
     m_config = KSharedConfig::openConfig("auroraerc");
     findDecorations();

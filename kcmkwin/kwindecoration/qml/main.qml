@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
-import org.kde.qtextracomponents 2.0 as QtExtra
+import org.kde.kwin.kcmdecoration 0.1
 
 ListView {
     id: listView
@@ -35,10 +35,15 @@ ListView {
         objectName: "decorationItem"
         width: listView.width
         height: 150
-        QtExtra.QPixmapItem {
-            pixmap: preview
+        PreviewItem {
+            id: preview
             anchors.fill: parent
             visible: type == 0
+            Component.onCompleted: {
+                if (type == 0) {
+                    preview.library = model.library;
+                }
+            }
         }
         Loader {
             source: type == 1 ? "AuroraePreview.qml" : ""

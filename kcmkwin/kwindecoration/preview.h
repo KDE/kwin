@@ -1,6 +1,7 @@
 /*
  *
  * Copyright (c) 2003 Lubos Lunak <l.lunak@kde.org>
+ * Copyright (c) 2013 Martin Gräßlin <mgraesslin@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
 #define KWINDECORATION_PREVIEW_H
 
 #include <QWidget>
+#include <QQuickPaintedItem>
 #include <kdecoration.h>
 #include <kdecorationbridge.h>
 #include <kdecoration_plugins_p.h>
@@ -28,6 +30,48 @@
 class KDecorationPreviewBridge;
 class KDecorationPreviewOptions;
 class QMouseEvent;
+
+class PreviewItem : public QQuickPaintedItem
+{
+    Q_OBJECT
+    Q_PROPERTY(QString library READ libraryName WRITE setLibraryName NOTIFY libraryChanged)
+public:
+    PreviewItem(QQuickItem *parent = nullptr);
+    virtual ~PreviewItem();
+    virtual void paint(QPainter *painter);
+
+    void setLibraryName(const QString &library);
+    const QString &libraryName() const {
+        return m_libraryName;
+    }
+    void updateDecoration(KDecorationPreviewBridge *bridge);
+
+Q_SIGNALS:
+    void libraryChanged();
+
+protected:
+    virtual void geometryChanged(const QRectF &newGeometry, const QRectF &oldGeometry);
+    virtual void hoverMoveEvent(QHoverEvent *event);
+
+private Q_SLOTS:
+    void recreateDecorations();
+
+private:
+    void updatePreview();
+    void updateSize(const QSize &size, KDecoration *decoration, QImage &buffer);
+    void render(QImage *image, KDecoration *decoration);
+    void forwardMoveEvent(QHoverEvent *event, const QRect &geo, KDecoration *deco, QWidget **entered);
+    QScopedPointer<KDecorationPlugins> m_plugins;
+    QScopedPointer<KDecorationPreviewBridge> m_activeBridge;
+    QScopedPointer<KDecorationPreviewBridge> m_inactiveBridge;
+    KDecoration *m_activeDecoration;
+    KDecoration *m_inactiveDecoration;
+    QWidget *m_activeEntered;
+    QWidget *m_inactiveEntered;
+    QString m_libraryName;
+    QImage m_activeBuffer;
+    QImage m_inactiveBuffer;
+};
 
 class KDecorationPreview
     : public QWidget
@@ -64,6 +108,7 @@ class KDecorationPreviewBridge
 {
 public:
     KDecorationPreviewBridge(KDecorationPreview* preview, bool active);
+    KDecorationPreviewBridge(PreviewItem* preview, bool active);
     virtual bool isActive() const override;
     virtual bool isCloseable() const override;
     virtual bool isMaximizable() const override;
@@ -131,6 +176,7 @@ public:
 
 private:
     KDecorationPreview* preview;
+    PreviewItem *m_previewItem;
     bool active;
 };
 

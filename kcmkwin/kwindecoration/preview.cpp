@@ -1,6 +1,7 @@
 /*
  *
  * Copyright (c) 2003 Lubos Lunak <l.lunak@kde.org>
+ * Copyright (c) 2013 Martin Gräßlin <mgraesslin@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -25,12 +26,186 @@
 #include <kglobal.h>
 #include <QLabel>
 #include <QStyle>
+#include <QApplication>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QVector>
 #include <kicon.h>
 
 #include <kdecorationfactory.h>
+
+static const int SMALL_OFFSET = 10;
+static const int LARGE_OFFSET = 40;
+
+PreviewItem::PreviewItem(QQuickItem *parent)
+    : QQuickPaintedItem(parent)
+    , m_plugins(new KDecorationPreviewPlugins(KSharedConfig::openConfig(QStringLiteral("kwinrc"))))
+    , m_activeBridge(new KDecorationPreviewBridge(this, true))
+    , m_inactiveBridge(new KDecorationPreviewBridge(this, false))
+    , m_activeDecoration(nullptr)
+    , m_inactiveDecoration(nullptr)
+    , m_activeEntered(nullptr)
+    , m_inactiveEntered(nullptr)
+{
+    setFlag(ItemHasContents, true);
+    setAcceptHoverEvents(true);
+    connect(this, &PreviewItem::libraryChanged, this, &PreviewItem::recreateDecorations);
+}
+
+PreviewItem::~PreviewItem()
+{
+    delete m_activeDecoration;
+    delete m_inactiveDecoration;
+}
+
+void PreviewItem::setLibraryName(const QString &library)
+{
+    if (library == m_libraryName || library.isEmpty()) {
+        return;
+    }
+    m_libraryName = library;
+    emit libraryChanged();
+}
+
+void PreviewItem::recreateDecorations()
+{
+    const bool loaded = m_plugins->loadPlugin(m_libraryName);
+    if (!loaded) {
+        return;
+    }
+    m_plugins->destroyPreviousPlugin();
+    delete m_activeDecoration;
+    delete m_inactiveDecoration;
+    m_activeDecoration = m_plugins->createDecoration(m_activeBridge.data());
+    m_inactiveDecoration = m_plugins->createDecoration(m_inactiveBridge.data());
+
+    if (m_activeDecoration) {
+        m_activeDecoration->init();
+        if (m_activeDecoration->widget()) {
+            m_activeDecoration->widget()->installEventFilter(this);
+        }
+    }
+    if (m_inactiveDecoration) {
+        m_inactiveDecoration->init();
+        if (m_inactiveDecoration->widget()) {
+            m_inactiveDecoration->widget()->installEventFilter(this);
+        }
+    }
+    updatePreview();
+}
+
+void PreviewItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
+{
+    QQuickPaintedItem::geometryChanged(newGeometry, oldGeometry);
+    updatePreview();
+}
+
+void PreviewItem::updatePreview()
+{
+    if (width() == 0 && height() == 0) {
+        return;
+    }
+    if (!m_activeDecoration && !m_inactiveDecoration) {
+        return;
+    }
+    const QSize size(width() - 50, height() - 50);
+    updateSize(size, m_activeDecoration, m_activeBuffer);
+    updateSize(size, m_inactiveDecoration, m_inactiveBuffer);
+
+    render(&m_activeBuffer, m_activeDecoration);
+    render(&m_inactiveBuffer, m_inactiveDecoration);
+}
+
+void PreviewItem::updateSize(const QSize &baseSize, KDecoration *decoration, QImage &buffer)
+{
+    if (!decoration) {
+        return;
+    }
+    int left, right, top, bottom;
+    left = right = top = bottom = 0;
+    decoration->padding(left, right, top, bottom);
+    const QSize size = baseSize + QSize(left + right, top + bottom);
+    if (decoration->geometry().size() != size) {
+        decoration->resize(size);
+    }
+    if (buffer.isNull() || buffer.size() != size) {
+        buffer = QImage(size, QImage::Format_ARGB32_Premultiplied);
+    }
+}
+
+void PreviewItem::render(QImage* image, KDecoration* decoration)
+{
+    image->fill(Qt::transparent);
+    decoration->render(image, QRegion());
+}
+
+void PreviewItem::paint(QPainter *painter)
+{
+    int paddingLeft, paddingRigth, paddingTop, paddingBottom;
+    paddingLeft = paddingRigth = paddingTop = paddingBottom = 0;
+    if (m_inactiveDecoration) {
+        m_inactiveDecoration->padding(paddingLeft, paddingRigth, paddingTop, paddingBottom);
+    }
+
+    painter->drawImage(LARGE_OFFSET - paddingLeft, SMALL_OFFSET - paddingTop, m_inactiveBuffer);
+
+    paddingLeft = paddingRigth = paddingTop = paddingBottom = 0;
+    if (m_activeDecoration) {
+        m_activeDecoration->padding(paddingLeft, paddingRigth, paddingTop, paddingBottom);
+    }
+    painter->drawImage(SMALL_OFFSET - paddingLeft, LARGE_OFFSET - paddingTop, m_activeBuffer);
+}
+
+void PreviewItem::hoverMoveEvent(QHoverEvent* event)
+{
+    QQuickItem::hoverMoveEvent(event);
+    const int w = width() - LARGE_OFFSET - SMALL_OFFSET;
+    const int h = height() - LARGE_OFFSET - SMALL_OFFSET;
+    forwardMoveEvent(event, QRect(SMALL_OFFSET, LARGE_OFFSET, w, h), m_activeDecoration, &m_activeEntered);
+    forwardMoveEvent(event, QRect(LARGE_OFFSET, SMALL_OFFSET, w, h), m_inactiveDecoration, &m_inactiveEntered);
+}
+
+void PreviewItem::forwardMoveEvent(QHoverEvent *event, const QRect &geo, KDecoration *deco, QWidget **entered)
+{
+    auto leaveEvent = [](QWidget **widget) {
+        if (!(*widget)) {
+            return;
+        }
+        // send old one a leave event
+        QEvent leave(QEvent::Leave);
+        QApplication::sendEvent(*widget, &leave);
+        *widget = nullptr;
+    };
+    if (geo.contains(event->pos()) && deco && deco->widget()) {
+        int paddingLeft, paddingRigth, paddingTop, paddingBottom;
+        paddingLeft = paddingRigth = paddingTop = paddingBottom = 0;
+        deco->padding(paddingLeft, paddingRigth, paddingTop, paddingBottom);
+        const QPoint widgetPos = event->pos() - geo.topLeft() + QPoint(paddingLeft, paddingTop);
+        if (QWidget *widget = deco->widget()->childAt(widgetPos)) {
+            if (widget != *entered) {
+                leaveEvent(entered);
+                // send enter event
+                *entered = widget;
+                QEnterEvent enter(widgetPos - widget->geometry().topLeft(), widgetPos, event->pos());
+                QApplication::sendEvent(*entered, &enter);
+            }
+        } else {
+            leaveEvent(entered);
+        }
+    } else {
+        leaveEvent(entered);
+    }
+}
+
+void PreviewItem::updateDecoration(KDecorationPreviewBridge *bridge)
+{
+    if (bridge == m_activeBridge.data()) {
+        render(&m_activeBuffer, m_activeDecoration);
+    } else if (bridge == m_inactiveBridge.data()) {
+        render(&m_inactiveBuffer, m_inactiveDecoration);
+    }
+    update();
+}
 
 KDecorationPreview::KDecorationPreview(QWidget* parent)
     :   QWidget(parent)
@@ -180,7 +355,14 @@ void KDecorationPreview::setMask(const QRegion &region, bool active)
 }
 
 KDecorationPreviewBridge::KDecorationPreviewBridge(KDecorationPreview* p, bool a)
-    :   preview(p), active(a)
+    :   preview(p), active(a), m_previewItem(nullptr)
+{
+}
+
+KDecorationPreviewBridge::KDecorationPreviewBridge(PreviewItem *p, bool a)
+    : preview(nullptr)
+    , active(a)
+    , m_previewItem(p)
 {
 }
 
@@ -311,8 +493,8 @@ void KDecorationPreviewBridge::performWindowOperation(WindowOperation)
 
 void KDecorationPreviewBridge::setMask(const QRegion& reg, int mode)
 {
+    Q_UNUSED(reg)
     Q_UNUSED(mode)
-    preview->setMask(reg, active);
 }
 
 bool KDecorationPreviewBridge::isPreview() const
@@ -322,7 +504,10 @@ bool KDecorationPreviewBridge::isPreview() const
 
 QRect KDecorationPreviewBridge::geometry() const
 {
-    return preview->windowGeometry(active);
+    if (preview) {
+        return preview->windowGeometry(active);
+    }
+    return QRect();
 }
 
 QRect KDecorationPreviewBridge::iconGeometry() const
@@ -456,7 +641,10 @@ void KDecorationPreviewBridge::showWindowMenu(const QPoint &, long)
 
 void KDecorationPreviewBridge::update(const QRegion&)
 {
-
+    if (m_previewItem) {
+        // call update
+        m_previewItem->updateDecoration(this);
+    }
 }
 
 KDecoration::WindowOperation KDecorationPreviewBridge::buttonToWindowOperation(Qt::MouseButtons)

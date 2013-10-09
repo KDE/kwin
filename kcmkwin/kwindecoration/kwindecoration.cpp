@@ -33,6 +33,7 @@
 #include "configdialog.h"
 #include "decorationmodel.h"
 #include "auroraetheme.h"
+#include "preview.h"
 // Qt
 #include <QTimer>
 #include <QtDBus/QtDBus>
@@ -83,6 +84,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_listView(new QQuickView())
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
+    qmlRegisterType<PreviewItem>("org.kde.kwin.kcmdecoration", 0, 1, "PreviewItem");
     m_ui = new KWinDecorationForm(this);
     m_ui->configureDecorationButton->setIcon(QIcon::fromTheme("configure"));
     m_ui->configureButtonsButton->setIcon(QIcon::fromTheme("configure"));
