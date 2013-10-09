@@ -25,9 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDir>
 #include <QFileInfo>
 #include <QApplication>
-#include <QtGui/QPainter>
-#include <QStyle>
-#include <QtGui/QTextDocument>
 #include <QStandardPaths>
 // KDE
 #include <KConfigGroup>

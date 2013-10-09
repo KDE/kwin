@@ -20,16 +20,11 @@
 
 #include "preview.h"
 
-#include <kapplication.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
-#include <kglobal.h>
-#include <QLabel>
-#include <QStyle>
 #include <QApplication>
 #include <QPainter>
 #include <QMouseEvent>
-#include <QVector>
 #include <kicon.h>
 
 #include <kdecorationfactory.h>

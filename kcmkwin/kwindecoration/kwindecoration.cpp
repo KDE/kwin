@@ -35,10 +35,8 @@
 #include "auroraetheme.h"
 #include "preview.h"
 // Qt
-#include <QTimer>
 #include <QtDBus/QtDBus>
 #include <QSortFilterProxyModel>
-#include <QGraphicsObject>
 #include <QScrollBar>
 #include <QUiLoader>
 #include <QtCore/QStandardPaths>
