@@ -325,7 +325,8 @@ namespace Oxygen
     void Button::parentUpdate( void )
     {
 
-        if( _client.compositingActive() && parentWidget() ) parentWidget()->update( geometry().adjusted( -1, -1, 1, 1 ) );
+        if( _client.compositingActive() || _client.isPreview() ) _client.update( geometry().adjusted( -1, -1, 1, 1 ) );
+        else if( parentWidget() ) parentWidget()->update( geometry().adjusted( -1, -1, 1, 1 ) );
         else this->update();
 
     }
