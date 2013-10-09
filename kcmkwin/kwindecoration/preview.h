@@ -90,7 +90,6 @@ public:
     QRegion unobscuredRegion(bool, const QRegion&) const;
     QRect windowGeometry(bool) const;
 private:
-    KDecorationPreviewOptions* options;
     KDecorationPreviewBridge* bridge[NumWindows];
     KDecoration* deco[NumWindows];
 };

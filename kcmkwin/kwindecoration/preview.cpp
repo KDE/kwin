@@ -204,8 +204,6 @@ void PreviewItem::updateDecoration(KDecorationPreviewBridge *bridge)
 KDecorationPreview::KDecorationPreview(QWidget* parent)
     :   QWidget(parent)
 {
-    options = new KDecorationPreviewOptions;
-
     bridge[Active]   = new KDecorationPreviewBridge(this, true);
     bridge[Inactive] = new KDecorationPreviewBridge(this, false);
 
@@ -220,7 +218,6 @@ KDecorationPreview::~KDecorationPreview()
         delete deco[i];
         delete bridge[i];
     }
-    delete options;
 }
 
 void KDecorationPreview::disablePreview()

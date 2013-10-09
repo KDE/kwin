@@ -29,6 +29,7 @@ class QWidget;
 class KDesktopFile;
 class KDecorationPlugins;
 class KDecorationPreview;
+class KDecorationPreviewOptions;
 
 namespace KWin
 {
@@ -129,6 +130,7 @@ private:
     QString m_leftButtons;
     QString m_rightButtons;
     KSharedConfigPtr m_config;
+    QScopedPointer<KDecorationPreviewOptions> m_options;
 };
 
 } // namespace KWin
