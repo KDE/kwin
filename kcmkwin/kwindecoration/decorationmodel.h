@@ -45,7 +45,6 @@ public:
     };
     QString name;
     QString libraryName;
-    QPixmap preview;
     DecorationType type;
     QString comment;
     QString author;
@@ -75,7 +74,6 @@ public:
     enum {
         NameRole = Qt::UserRole,
         LibraryNameRole = Qt::UserRole + 1,
-        PixmapRole = Qt::UserRole + 2,
         TypeRole = Qt::UserRole + 3,
         AuroraeNameRole = Qt::UserRole + 4,
         PackageDescriptionRole = Qt::UserRole + 5,
@@ -99,8 +97,6 @@ public:
 
     void reload();
 
-    void regeneratePreview(const QModelIndex& index);
-
     /**
     * Changes the button state and regenerates the preview.
     */
@@ -116,19 +112,12 @@ public:
     QModelIndex indexOfName(const QString& decoName) const;
     QModelIndex indexOfAuroraeName(const QString& auroraeName, const QString& type) const;
 
-    void regeneratePreviews(int firstIndex = 0);
-    void stopPreviewGeneration();
-
     Q_INVOKABLE QVariant readConfig(const QString &themeName, const QString &key, const QVariant &defaultValue = QVariant());
 
     void notifyConfigChanged(const QModelIndex &index);
 
 Q_SIGNALS:
     void configChanged(QString themeName);
-public Q_SLOTS:
-    void regeneratePreview(const QModelIndex& index, const QSize& size);
-private Q_SLOTS:
-    void regenerateNextPreview();
 private:
     void findDecorations();
     void findAuroraeThemes();
@@ -140,9 +129,6 @@ private:
     QString m_leftButtons;
     QString m_rightButtons;
     KSharedConfigPtr m_config;
-    int m_nextPreviewIndex;
-    int m_firstUpdateIndex;
-    int m_lastUpdateIndex;
 };
 
 } // namespace KWin

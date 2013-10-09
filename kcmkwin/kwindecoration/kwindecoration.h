@@ -99,8 +99,6 @@ public:
 
     QString quickHelp() const;
 
-    int itemWidth() const;
-
 Q_SIGNALS:
     void pluginLoad(const KConfigGroup& conf);
     void pluginSave(KConfigGroup &conf);
@@ -122,8 +120,6 @@ private:
     void readConfig(const KConfigGroup& conf);
     void writeConfig(KConfigGroup &conf);
 private Q_SLOTS:
-    void updatePreviews();
-    void updatePreviewWidth();
     void updateScrollbarRange();
     void updateScrollbarValue();
     void updateViewPosition(int v);
@@ -138,8 +134,6 @@ private:
     bool m_configLoaded;
     DecorationButtons *m_decorationButtons;
 
-    int m_lastPreviewWidth;
-    QTimer *m_previewUpdateTimer;
     QScopedPointer<QQuickView> m_listView;
 };
 

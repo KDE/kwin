@@ -85,22 +85,14 @@ public:
 
     explicit KDecorationPreview(QWidget* parent = NULL);
     virtual ~KDecorationPreview();
-    bool recreateDecoration(KDecorationPlugins* plugin);
     void disablePreview();
     KDecorationFactory *factory() const;
     QRegion unobscuredRegion(bool, const QRegion&) const;
     QRect windowGeometry(bool) const;
-    void setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size);
-    void setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right);
-    QPixmap preview();
-    void setMask(const QRegion &region, bool active);
 private:
-    void render(QPainter *painter, KDecoration *decoration, const QSize &recommendedSize, const QPoint &offset, const QRegion &mask) const;
     KDecorationPreviewOptions* options;
     KDecorationPreviewBridge* bridge[NumWindows];
     KDecoration* deco[NumWindows];
-    QRegion m_activeMask;
-    QRegion m_inactiveMask;
 };
 
 class KDecorationPreviewBridge

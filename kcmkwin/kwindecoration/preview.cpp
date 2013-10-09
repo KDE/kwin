@@ -229,24 +229,6 @@ KDecorationPreview::~KDecorationPreview()
     delete options;
 }
 
-bool KDecorationPreview::recreateDecoration(KDecorationPlugins* plugins)
-{
-    for (int i = 0; i < NumWindows; i++) {
-        delete deco[i];   // deletes also window
-        deco[i] = plugins->createDecoration(bridge[i]);
-        deco[i]->init();
-    }
-
-    m_activeMask = QRegion();
-    m_inactiveMask = QRegion();
-
-    if (deco[Active] == NULL || deco[Inactive] == NULL) {
-        return false;
-    }
-
-    return true;
-}
-
 void KDecorationPreview::disablePreview()
 {
     delete deco[Active];
@@ -259,99 +241,16 @@ KDecorationFactory *KDecorationPreview::factory() const
     return deco[Active] ? deco[Active]->factory() : 0;
 }
 
-QPixmap KDecorationPreview::preview()
-{
-    QPixmap pixmap(size());
-    pixmap.fill(Qt::transparent);
-    if (!deco[Active] || !deco[Inactive])
-        return pixmap;
-
-    int titleBarHeight, leftBorder, rightBorder, xoffset,
-        dummy1, dummy2, dummy3;
-    // don't have more than one reference to the same dummy variable in one borders() call.
-    deco[Active]->borders(dummy1, dummy2, titleBarHeight, dummy3);
-    deco[Inactive]->borders(leftBorder, rightBorder, dummy1, dummy2);
-
-    titleBarHeight = qMin(int(titleBarHeight * .9), 30);
-    xoffset = qMin(qMax(10, QApplication::isRightToLeft()
-                        ? leftBorder : rightBorder), 30);
-    QPainter p;
-    p.begin(&pixmap);
-
-    const QSize size(width() - xoffset - 20, height() - titleBarHeight - 20);
-    render(&p, deco[Inactive], size, QPoint(10 + xoffset, 10), m_inactiveMask);
-    render(&p, deco[Active], size, QPoint(10, 10 + titleBarHeight), m_activeMask);
-    p.end();
-    return pixmap;
-}
-
-void KDecorationPreview::render(QPainter *painter, KDecoration *decoration, const QSize &recommendedSize, const QPoint &offset, const QRegion &mask) const
-{
-    QWidget *w = decoration->widget();
-    QSize size = QSize(recommendedSize)
-        .expandedTo(decoration->minimumSize());
-    int padLeft, padRight, padTop, padBottom;
-    padLeft = padRight = padTop = padBottom = 0;
-    bool useMask = true;
-    decoration->padding(padLeft, padRight, padTop, padBottom);
-    size.setWidth(size.width() + padLeft + padRight);
-    size.setHeight(size.height() + padTop + padBottom);
-    if (padLeft || padRight || padTop || padBottom) {
-        useMask = false;
-    }
-    decoration->resize(size);
-
-    // why an if-else block instead of (useMask ? mask : QRegion())?
-    // For what reason ever it completely breaks if the mask is copied.
-    if (useMask) {
-        w->render(painter, offset + QPoint(-padLeft, - padTop), mask,
-                  QWidget::DrawWindowBackground | QWidget::DrawChildren | QWidget::IgnoreMask);
-    } else {
-        w->render(painter, offset + QPoint(-padLeft, - padTop), QRegion(),
-                  QWidget::DrawWindowBackground | QWidget::DrawChildren | QWidget::IgnoreMask);
-    }
-}
-
 QRect KDecorationPreview::windowGeometry(bool active) const
 {
     QWidget *widget = active ? deco[Active]->widget() : deco[Inactive]->widget();
     return widget->geometry();
 }
 
-void KDecorationPreview::setTempBorderSize(KDecorationPlugins* plugin, KDecorationDefines::BorderSize size)
-{
-    auto connection = connect(plugin->factory(), &KDecorationFactory::recreateDecorations, [this, plugin] {
-        // can't handle the change, recreate decorations then
-        recreateDecoration(plugin);
-    });
-    options->setCustomBorderSize(size);
-    disconnect(connection);
-}
-
-void KDecorationPreview::setTempButtons(KDecorationPlugins* plugin, bool customEnabled, const QString &left, const QString &right)
-{
-    auto connection = connect(plugin->factory(), &KDecorationFactory::recreateDecorations, [this, plugin] {
-        // can't handle the change, recreate decorations then
-        recreateDecoration(plugin);
-    });
-    options->setCustomTitleButtonsEnabled(customEnabled);
-    options->setCustomTitleButtons(left, right);
-    disconnect(connection);
-}
-
 QRegion KDecorationPreview::unobscuredRegion(bool active, const QRegion& r) const
 {
     Q_UNUSED(active)
     return r;
-}
-
-void KDecorationPreview::setMask(const QRegion &region, bool active)
-{
-    if (active) {
-        m_activeMask = region;
-    } else {
-        m_inactiveMask = region;
-    }
 }
 
 KDecorationPreviewBridge::KDecorationPreviewBridge(KDecorationPreview* p, bool a)

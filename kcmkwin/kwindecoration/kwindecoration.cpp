@@ -79,8 +79,6 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_proxyModel(NULL)
     , m_configLoaded(false)
     , m_decorationButtons(new DecorationButtons(this))
-    , m_lastPreviewWidth(-1)
-    , m_previewUpdateTimer(NULL)
     , m_listView(new QQuickView())
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
@@ -153,7 +151,6 @@ void KWinDecorationModule::init()
     readConfig(style);
 
     connect(m_listView->rootObject(), SIGNAL(currentIndexChanged()), SLOT(slotSelectionChanged()));
-    connect(m_listView->rootObject(), SIGNAL(widthChanged()), SLOT(updatePreviewWidth()));
     connect(m_ui->configureButtonsButton, SIGNAL(clicked(bool)), this, SLOT(slotConfigureButtons()));
     connect(m_ui->ghnsButton, SIGNAL(clicked(bool)), SLOT(slotGHNSClicked()));
     connect(m_ui->searchEdit, SIGNAL(textChanged(QString)), m_proxyModel, SLOT(setFilterFixedString(QString)));
@@ -172,11 +169,6 @@ void KWinDecorationModule::init()
     m_ui->decorationList->viewport()->installEventFilter(this);
     QMetaObject::invokeMethod(this, "updatePreviews", Qt::QueuedConnection);
     updateScrollbarRange();
-}
-
-int KWinDecorationModule::itemWidth() const
-{
-    return m_listView->rootObject()->property("width").toInt();
 }
 
 // This is the selection handler setting
@@ -364,8 +356,6 @@ void KWinDecorationModule::slotGHNSClicked()
                 if (proxyIndex.isValid())
                     m_listView->rootObject()->setProperty("currentIndex", proxyIndex.row());
             }
-            m_lastPreviewWidth = 0;
-            updatePreviews();
         }
     }
     delete downloadDialog;
@@ -491,35 +481,6 @@ bool KWinDecorationModule::eventFilter(QObject *o, QEvent *e)
         }
     }
     return KCModule::eventFilter(o, e);
-}
-
-void KWinDecorationModule::updatePreviews()
-{
-    if (!m_model) {
-        return;
-    }
-    const int newWidth = m_listView->rootObject()->property("width").toInt();
-    if (newWidth == m_lastPreviewWidth)
-        return;
-    m_lastPreviewWidth = newWidth;
-    const int h = m_listView->rootObject()->property("contentHeight").toInt();
-    const int y = m_listView->rootObject()->property("contentY").toInt();
-    // start at first element in sight
-    int row = 0;
-    if (h > 0)
-        row = qMin(qMax(0, y*m_model->rowCount()/h), m_model->rowCount());
-    m_model->regeneratePreviews(row);
-}
-
-void KWinDecorationModule::updatePreviewWidth()
-{
-    if (!m_previewUpdateTimer) {
-        m_previewUpdateTimer = new QTimer(this);
-        m_previewUpdateTimer->setSingleShot(true);
-        connect(m_previewUpdateTimer, SIGNAL(timeout()), this, SLOT(updatePreviews()));
-    }
-    m_model->stopPreviewGeneration();
-    m_previewUpdateTimer->start(100);
 }
 
 void KWinDecorationModule::updateScrollbarRange()

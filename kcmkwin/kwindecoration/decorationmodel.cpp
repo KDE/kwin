@@ -64,7 +64,6 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
 {
     QHash<int, QByteArray> roleNames;
     roleNames[Qt::DisplayRole] = "display";
-    roleNames[DecorationModel::PixmapRole] = "preview";
     roleNames[TypeRole] = "type";
     roleNames[AuroraeNameRole] = "auroraeThemeName";
     roleNames[QmlMainScriptRole] = "mainScript";
@@ -225,8 +224,6 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
         return m_decorations[ index.row()].name;
     case LibraryNameRole:
         return m_decorations[ index.row()].libraryName;
-    case PixmapRole:
-        return m_decorations[ index.row()].preview;
     case TypeRole:
         return m_decorations[ index.row()].type;
     case AuroraeNameRole:
@@ -288,7 +285,6 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
         }
         emit dataChanged(index, index);
         emit configChanged(m_decorations[ index.row()].auroraeName);
-        regeneratePreview(index);
         return true;
     }
     if (role == ButtonSizeRole && (type == DecorationModelData::AuroraeDecoration || type == DecorationModelData::QmlDecoration)) {
@@ -298,7 +294,6 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
         config.sync();
         emit dataChanged(index, index);
         emit configChanged(m_decorations[ index.row()].auroraeName);
-        regeneratePreview(index);
         return true;
     }
     if (role == CloseOnDblClickRole && (type == DecorationModelData::AuroraeDecoration || type == DecorationModelData::QmlDecoration)) {
@@ -319,14 +314,9 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
 
 void DecorationModel::changeButtons(const KWin::DecorationButtons *buttons)
 {
-    bool regenerate = (buttons->customPositions() != m_customButtons);
-    if (!regenerate && buttons->customPositions())
-        regenerate = (buttons->leftButtons() != m_leftButtons) || (buttons->rightButtons() != m_rightButtons);
     m_customButtons = buttons->customPositions();
     m_leftButtons = buttons->leftButtons();
     m_rightButtons = buttons->rightButtons();
-    if (regenerate)
-        regeneratePreviews();
 }
 
 void DecorationModel::setButtons(bool custom, const QString& left, const QString& right)
@@ -334,74 +324,6 @@ void DecorationModel::setButtons(bool custom, const QString& left, const QString
     m_customButtons = custom;
     m_leftButtons = left;
     m_rightButtons = right;
-}
-
-void DecorationModel::regenerateNextPreview()
-{
-    if (m_nextPreviewIndex < m_lastUpdateIndex && m_nextPreviewIndex < m_decorations.count())
-        regeneratePreview(index(m_nextPreviewIndex),
-                          QSize(qobject_cast<KWinDecorationModule*>(QObject::parent())->itemWidth(), 150));
-    ++m_nextPreviewIndex;
-    if (m_nextPreviewIndex >= m_lastUpdateIndex && m_firstUpdateIndex > 0) {
-        // do the above ones
-        m_lastUpdateIndex = qMin(m_firstUpdateIndex, m_decorations.count());
-        m_firstUpdateIndex = m_nextPreviewIndex = 0;
-    }
-    if (m_nextPreviewIndex < m_lastUpdateIndex)
-        QMetaObject::invokeMethod(this, "regenerateNextPreview", Qt::QueuedConnection);
-}
-
-void DecorationModel::regeneratePreviews(int firstIndex)
-{
-    m_firstUpdateIndex = firstIndex;
-    m_lastUpdateIndex = m_decorations.count();
-    m_nextPreviewIndex = firstIndex;
-    regenerateNextPreview();
-}
-
-void DecorationModel::stopPreviewGeneration()
-{
-    m_firstUpdateIndex = m_lastUpdateIndex = m_nextPreviewIndex = 0;
-}
-
-void DecorationModel::regeneratePreview(const QModelIndex& index, const QSize& size)
-{
-    DecorationModelData& data = m_decorations[ index.row()];
-
-    switch(data.type) {
-    case DecorationModelData::NativeDecoration: {
-        bool enabled = false;
-        bool loaded;
-        // m_preview->deco management is not required
-        // either the deco loads and the following recreateDecoration will sanitize decos (on new factory)
-        // or the deco does not load and destroyPreviousPlugin() is not called
-        if ((loaded = m_plugins->loadPlugin(data.libraryName)) && m_preview->recreateDecoration(m_plugins)) {
-            enabled = true;
-        } else {
-            m_preview->disablePreview();
-        }
-        if (loaded)
-            m_plugins->destroyPreviousPlugin();
-        if (enabled) {
-            m_preview->resize(size);
-            m_preview->setTempButtons(m_plugins, m_customButtons, m_leftButtons, m_rightButtons);
-            m_preview->setTempBorderSize(m_plugins, data.borderSize);
-            data.preview = m_preview->preview();
-        } else {
-            m_decorations.removeAt(index.row());
-        }
-        break;
-    }
-    default:
-        // nothing
-        break;
-    }
-    emit dataChanged(index, index);
-}
-
-void DecorationModel::regeneratePreview(const QModelIndex& index)
-{
-    regeneratePreview(index, m_decorations.at(index.row()).preview.size());
 }
 
 QModelIndex DecorationModel::indexOfLibrary(const QString& libraryName) const
