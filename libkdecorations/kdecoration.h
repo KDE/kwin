@@ -53,6 +53,7 @@ extern "C" {
 }
 
 class KConfig;
+class KConfigGroup;
 
 /** @defgroup kdecoration KWin decorations library */
 
@@ -236,6 +237,35 @@ public:
     };
 
     /**
+     * Enum values to identify the decorations buttons which should be used
+     * by the decoration.
+     *
+     */
+    enum DecorationButton {
+        /**
+         * Invalid button value. A decoration should not create a button for
+         * this type.
+         */
+        DecorationButtonNone,
+        DecorationButtonMenu,
+        DecorationButtonApplicationMenu,
+        DecorationButtonOnAllDesktops,
+        DecorationButtonQuickHelp,
+        DecorationButtonMinimize,
+        DecorationButtonMaximizeRestore,
+        DecorationButtonClose,
+        DecorationButtonKeepAbove,
+        DecorationButtonKeepBelow,
+        DecorationButtonShade,
+        DecorationButtonResize,
+        /**
+         * The decoration should create an empty spacer instead of a button for
+         * this type.
+         */
+        DecorationButtonExplicitSpacer
+    };
+
+    /**
      * Returns the mimeType used to drag and drop clientGroupItems
      */
     static QString tabDragMimeType();
@@ -296,46 +326,23 @@ public:
     /**
      * If customButtonPositions() returns true, titleButtonsLeft
      * returns which buttons should be on the left side of the titlebar from left
-     * to right. Characters in the returned string have this meaning :
-     * @li 'N' application menu button
-     * @li 'M' window menu button
-     * @li 'S' on_all_desktops button
-     * @li 'H' quickhelp button
-     * @li 'I' minimize ( iconify ) button
-     * @li 'A' maximize button
-     * @li 'X' close button
-     * @li 'F' keep_above_others button
-     * @li 'B' keep_below_others button
-     * @li 'L' shade button
-     * @li 'R' resize button
-     * @li '_' spacer
-     *
-     * The default ( which is also returned if customButtonPositions returns false )
-     * is "MS".
-     * Unknown buttons in the returned string must be ignored.
-     * The changed flags for this setting is SettingButtons.
+     * to right.
      */
-    QString titleButtonsLeft() const;
+    QList<DecorationButton> titleButtonsLeft() const;
     /**
      * Returns the default left button sequence
      */
-    static QString defaultTitleButtonsLeft();
+    static QList<DecorationButton> defaultTitleButtonsLeft();
     /**
      * If customButtonPositions() returns true, titleButtonsRight
      * returns which buttons should be on the right side of the titlebar from left
-     * to right. Characters in the return string have the same meaning like
-     * in titleButtonsLeft().
-     *
-     * The default ( which is also returned if customButtonPositions returns false )
-     * is "HIA__X".
-     * Unknown buttons in the returned string must be ignored.
-     * The changed flags for this setting is SettingButtons.
+     * to right.
      */
-    QString titleButtonsRight() const;
+    QList<DecorationButton> titleButtonsRight() const;
     /**
      * Returns the default right button sequence.
      */
-    static QString defaultTitleButtonsRight();
+    static QList<DecorationButton> defaultTitleButtonsRight();
     /**
      * @returns true if the style should use tooltips for window buttons
      * The changed flags for this setting is SettingTooltips.
@@ -360,6 +367,30 @@ public:
     WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
 
     static KDecorationOptions *self();
+
+    /**
+     * Reads the decoration buttons from the @p config group for the @p key and takes care of
+     * deserialization of the storage format.
+     *
+     * @param config The ConfigGroup from which the value should be read
+     * @param key The name of the configuration key for the value
+     * @param defaultValue The default value to use
+     * @return QList< DecorationButton >
+     * @see writeDecorationButtons
+     */
+    static QList<DecorationButton> readDecorationButtons(const KConfigGroup &config, const char *key,
+                                                         const QList<DecorationButton> &defaultValue);
+    /**
+     * @brief Writes the given buttons as @p value to the configuration @p key in the given @p config.
+     * Takes care of serializing to the storage format.
+     *
+     * @param config The ConfigGroup in which the value should be stored
+     * @param key The name of the config option
+     * @param value The decoration buttons to store
+     * @see readDecorationButtons
+     */
+    static void writeDecorationButtons(KConfigGroup &config, const char *key,
+                                       const QList<DecorationButton> &value);
 
 Q_SIGNALS:
     /**
@@ -465,9 +496,9 @@ protected:
     /** @internal */
     void setCustomButtonPositions(bool b);
     /** @internal */
-    void setTitleButtonsLeft(const QString& b);
+    void setTitleButtonsLeft(const QList<DecorationButton>& b);
     /** @internal */
-    void setTitleButtonsRight(const QString& b);
+    void setTitleButtonsRight(const QList<DecorationButton>& b);
     /**
      * Call to update settings when the config changes.
      * @since 4.0.1

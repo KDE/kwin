@@ -46,8 +46,8 @@ public:
     QColor colors[NUM_COLORS*2];
     QPalette *pal[NUM_COLORS*2];
     QFont activeFont, inactiveFont, activeFontSmall, inactiveFontSmall;
-    QString title_buttons_left;
-    QString title_buttons_right;
+    QList<DecorationButton> title_buttons_left;
+    QList<DecorationButton> title_buttons_right;
     bool custom_button_positions;
     bool show_tooltips;
     BorderSize border_size, cached_border_size;

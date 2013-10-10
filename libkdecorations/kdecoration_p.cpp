@@ -169,13 +169,15 @@ void KDecorationOptionsPrivate::updateSettings(KConfig* config)
 
     KConfigGroup styleConfig(config, "Style");
 // SettingsButtons
-    QString old_title_buttons_left = title_buttons_left;
-    QString old_title_buttons_right = title_buttons_right;
+    const auto old_title_buttons_left = title_buttons_left;
+    const auto old_title_buttons_right = title_buttons_right;
     bool old_custom_button_positions = custom_button_positions;
     custom_button_positions = styleConfig.readEntry("CustomButtonPositions", false);
     if (custom_button_positions) {
-        title_buttons_left  = styleConfig.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft());
-        title_buttons_right = styleConfig.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight());
+        title_buttons_left  = q->readDecorationButtons(styleConfig, "ButtonsOnLeft",
+                                                       KDecorationOptions::defaultTitleButtonsLeft());
+        title_buttons_right = q->readDecorationButtons(styleConfig, "ButtonsOnRight",
+                                                       KDecorationOptions::defaultTitleButtonsRight());
     } else {
         title_buttons_left  = KDecorationOptions::defaultTitleButtonsLeft();
         title_buttons_right = KDecorationOptions::defaultTitleButtonsRight();

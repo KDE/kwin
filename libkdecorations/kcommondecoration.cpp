@@ -387,187 +387,190 @@ int KCommonDecoration::buttonContainerWidth(const ButtonContainer &btnContainer,
     return w;
 }
 
-void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QString& s, bool isLeft)
+void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QList<DecorationButton>& buttons, bool isLeft)
 {
-    if (s.length() > 0) {
-        for (int n = 0; n < s.length(); n++) {
-            KCommonDecorationButton *btn = 0;
-            switch(s[n].toAscii()) {
-            case 'M': // Menu button
-                if (!d->button[MenuButton]) {
-                    btn = createButton(MenuButton);
-                    if (!btn) break;
-                    btn->setTipText(i18nc("Button showing window actions menu", "Window Menu"));
-                    btn->setRealizeButtons(Qt::LeftButton | Qt::RightButton);
-                    connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
-                    connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
+    if (buttons.isEmpty()) {
+        return;
+    }
+    for (auto button : buttons) {
+        KCommonDecorationButton *btn = 0;
+        switch(button) {
+        case DecorationButtonMenu:
+            if (!d->button[MenuButton]) {
+                btn = createButton(MenuButton);
+                if (!btn) break;
+                btn->setTipText(i18nc("Button showing window actions menu", "Window Menu"));
+                btn->setRealizeButtons(Qt::LeftButton | Qt::RightButton);
+                connect(btn, SIGNAL(pressed()), SLOT(menuButtonPressed()));
+                connect(btn, SIGNAL(released()), this, SLOT(menuButtonReleased()));
 
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
 
-                    d->button[MenuButton] = btn;
-                }
-                break;
-             case 'N': // Application Menu button
-                if (!d->button[AppMenuButton]) {
-                    btn = createButton(AppMenuButton);
-                    if (!btn) break;
-                    btn->setTipText(i18nc("Button showing application menu", "Application Menu"));
-                    btn->setRealizeButtons(Qt::LeftButton);
-                    connect(btn, SIGNAL(clicked()), SLOT(appMenuButtonPressed()), Qt::QueuedConnection);
-                    // Application want to show it menu
-                    connect(decoration(), SIGNAL(showRequest()), this, SLOT(appMenuButtonPressed()), Qt::UniqueConnection);
-                    // Wait for menu to become available before displaying any button
-                    connect(decoration(), SIGNAL(appMenuAvailable()), this, SLOT(slotAppMenuAvailable()), Qt::UniqueConnection);
-                    // On Kded module shutdown, hide application menu button
-                    connect(decoration(), SIGNAL(appMenuUnavailable()), this, SLOT(slotAppMenuUnavailable()), Qt::UniqueConnection);
-                    // Application menu button may need to be modified on this signal
-                    connect(decoration(), SIGNAL(menuHidden()), btn, SLOT(slotAppMenuHidden()), Qt::UniqueConnection);
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-                    d->button[AppMenuButton] = btn;
-                }
-                break;
-            case 'S': // OnAllDesktops button
-                if (!d->button[OnAllDesktopsButton]) {
-                    btn = createButton(OnAllDesktopsButton);
-                    if (!btn) break;
-                    const bool oad = isOnAllDesktops();
-                    btn->setTipText(oad ? i18n("Not on all desktops") : i18n("On all desktops"));
-                    btn->setToggleButton(true);
-                    btn->setOn(oad);
-                    connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[OnAllDesktopsButton] = btn;
-                }
-                break;
-            case 'H': // Help button
-                if ((!d->button[HelpButton]) && providesContextHelp()) {
-                    btn = createButton(HelpButton);
-                    if (!btn) break;
-                    btn->setTipText(i18n("Help"));
-                    connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[HelpButton] = btn;
-                }
-                break;
-            case 'I': // Minimize button
-                if ((!d->button[MinButton]) && isMinimizable()) {
-                    btn = createButton(MinButton);
-                    if (!btn) break;
-                    btn->setTipText(i18n("Minimize"));
-                    connect(btn, SIGNAL(clicked()), SLOT(minimize()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[MinButton] = btn;
-                }
-                break;
-            case 'A': // Maximize button
-                if ((!d->button[MaxButton]) && isMaximizable()) {
-                    btn = createButton(MaxButton);
-                    if (!btn) break;
-                    btn->setRealizeButtons(Qt::LeftButton | Qt::MidButton | Qt::RightButton);
-                    const bool max = maximizeMode() == MaximizeFull;
-                    btn->setTipText(max ? i18n("Restore") : i18n("Maximize"));
-                    btn->setToggleButton(true);
-                    btn->setOn(max);
-                    connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[MaxButton] = btn;
-                }
-                break;
-            case 'X': // Close button
-                if ((!d->button[CloseButton]) && isCloseable()) {
-                    btn = createButton(CloseButton);
-                    if (!btn) break;
-                    btn->setTipText(i18n("Close"));
-                    connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[CloseButton] = btn;
-                }
-                break;
-            case 'F': // AboveButton button
-                if (!d->button[AboveButton]) {
-                    btn = createButton(AboveButton);
-                    if (!btn) break;
-                    bool above = keepAbove();
-                    btn->setTipText(above ? i18n("Do not keep above others") : i18n("Keep above others"));
-                    btn->setToggleButton(true);
-                    btn->setOn(above);
-                    connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[AboveButton] = btn;
-                }
-                break;
-            case 'B': // BelowButton button
-                if (!d->button[BelowButton]) {
-                    btn = createButton(BelowButton);
-                    if (!btn) break;
-                    bool below = keepBelow();
-                    btn->setTipText(below ? i18n("Do not keep below others") : i18n("Keep below others"));
-                    btn->setToggleButton(true);
-                    btn->setOn(below);
-                    connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[BelowButton] = btn;
-                }
-                break;
-            case 'L': // Shade button
-                if ((!d->button[ShadeButton]) && isShadeable()) {
-                    btn = createButton(ShadeButton);
-                    if (!btn) break;
-                    bool shaded = isSetShade();
-                    btn->setTipText(shaded ? i18n("Unshade") : i18n("Shade"));
-                    btn->setToggleButton(true);
-                    btn->setOn(shaded);
-                    connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
-
-                    // fix double deletion, see objDestroyed()
-                    connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
-
-                    d->button[ShadeButton] = btn;
-                }
-                break;
-            case '_': // Spacer item
-                btnContainer.append(0);
+                d->button[MenuButton] = btn;
             }
+            break;
+        case DecorationButtonApplicationMenu:
+            if (!d->button[AppMenuButton]) {
+                btn = createButton(AppMenuButton);
+                if (!btn) break;
+                btn->setTipText(i18nc("Button showing application menu", "Application Menu"));
+                btn->setRealizeButtons(Qt::LeftButton);
+                connect(btn, SIGNAL(clicked()), SLOT(appMenuButtonPressed()), Qt::QueuedConnection);
+                // Application want to show it menu
+                connect(decoration(), SIGNAL(showRequest()), this, SLOT(appMenuButtonPressed()), Qt::UniqueConnection);
+                // Wait for menu to become available before displaying any button
+                connect(decoration(), SIGNAL(appMenuAvailable()), this, SLOT(slotAppMenuAvailable()), Qt::UniqueConnection);
+                // On Kded module shutdown, hide application menu button
+                connect(decoration(), SIGNAL(appMenuUnavailable()), this, SLOT(slotAppMenuUnavailable()), Qt::UniqueConnection);
+                // Application menu button may need to be modified on this signal
+                connect(decoration(), SIGNAL(menuHidden()), btn, SLOT(slotAppMenuHidden()), Qt::UniqueConnection);
 
-
-            if (btn) {
-                btn->setLeft(isLeft);
-                btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn), layoutMetric(LM_ButtonHeight, true, btn)));
-                // will be shown later on window registration
-                if (btn->type() == AppMenuButton && !isPreview() && !d->wrapper->menuAvailable()) {
-                    btn->hide();
-                } else {
-                    btn->show();
-                }
-
-                btnContainer.append(btn);
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+                d->button[AppMenuButton] = btn;
             }
+            break;
+        case DecorationButtonOnAllDesktops:
+            if (!d->button[OnAllDesktopsButton]) {
+                btn = createButton(OnAllDesktopsButton);
+                if (!btn) break;
+                const bool oad = isOnAllDesktops();
+                btn->setTipText(oad ? i18n("Not on all desktops") : i18n("On all desktops"));
+                btn->setToggleButton(true);
+                btn->setOn(oad);
+                connect(btn, SIGNAL(clicked()), SLOT(toggleOnAllDesktops()));
 
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[OnAllDesktopsButton] = btn;
+            }
+            break;
+        case DecorationButtonQuickHelp:
+            if ((!d->button[HelpButton]) && providesContextHelp()) {
+                btn = createButton(HelpButton);
+                if (!btn) break;
+                btn->setTipText(i18n("Help"));
+                connect(btn, SIGNAL(clicked()), SLOT(showContextHelp()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[HelpButton] = btn;
+            }
+            break;
+        case DecorationButtonMinimize:
+            if ((!d->button[MinButton]) && isMinimizable()) {
+                btn = createButton(MinButton);
+                if (!btn) break;
+                btn->setTipText(i18n("Minimize"));
+                connect(btn, SIGNAL(clicked()), SLOT(minimize()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[MinButton] = btn;
+            }
+            break;
+        case DecorationButtonMaximizeRestore:
+            if ((!d->button[MaxButton]) && isMaximizable()) {
+                btn = createButton(MaxButton);
+                if (!btn) break;
+                btn->setRealizeButtons(Qt::LeftButton | Qt::MidButton | Qt::RightButton);
+                const bool max = maximizeMode() == MaximizeFull;
+                btn->setTipText(max ? i18n("Restore") : i18n("Maximize"));
+                btn->setToggleButton(true);
+                btn->setOn(max);
+                connect(btn, SIGNAL(clicked()), SLOT(slotMaximize()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[MaxButton] = btn;
+            }
+            break;
+        case DecorationButtonClose:
+            if ((!d->button[CloseButton]) && isCloseable()) {
+                btn = createButton(CloseButton);
+                if (!btn) break;
+                btn->setTipText(i18n("Close"));
+                connect(btn, SIGNAL(clicked()), SLOT(closeWindow()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[CloseButton] = btn;
+            }
+            break;
+        case DecorationButtonKeepAbove:
+            if (!d->button[AboveButton]) {
+                btn = createButton(AboveButton);
+                if (!btn) break;
+                bool above = keepAbove();
+                btn->setTipText(above ? i18n("Do not keep above others") : i18n("Keep above others"));
+                btn->setToggleButton(true);
+                btn->setOn(above);
+                connect(btn, SIGNAL(clicked()), SLOT(slotKeepAbove()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[AboveButton] = btn;
+            }
+            break;
+        case DecorationButtonKeepBelow:
+            if (!d->button[BelowButton]) {
+                btn = createButton(BelowButton);
+                if (!btn) break;
+                bool below = keepBelow();
+                btn->setTipText(below ? i18n("Do not keep below others") : i18n("Keep below others"));
+                btn->setToggleButton(true);
+                btn->setOn(below);
+                connect(btn, SIGNAL(clicked()), SLOT(slotKeepBelow()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[BelowButton] = btn;
+            }
+            break;
+        case DecorationButtonShade:
+            if ((!d->button[ShadeButton]) && isShadeable()) {
+                btn = createButton(ShadeButton);
+                if (!btn) break;
+                bool shaded = isSetShade();
+                btn->setTipText(shaded ? i18n("Unshade") : i18n("Shade"));
+                btn->setToggleButton(true);
+                btn->setOn(shaded);
+                connect(btn, SIGNAL(clicked()), SLOT(slotShade()));
+
+                // fix double deletion, see objDestroyed()
+                connect(btn, SIGNAL(destroyed(QObject*)), this, SLOT(objDestroyed(QObject*)));
+
+                d->button[ShadeButton] = btn;
+            }
+            break;
+        case DecorationButtonExplicitSpacer:
+            btnContainer.append(0);
+        default:
+            break;
         }
+
+
+        if (btn) {
+            btn->setLeft(isLeft);
+            btn->setSize(QSize(layoutMetric(LM_ButtonWidth, true, btn), layoutMetric(LM_ButtonHeight, true, btn)));
+            // will be shown later on window registration
+            if (btn->type() == AppMenuButton && !isPreview() && !d->wrapper->menuAvailable()) {
+                btn->hide();
+            } else {
+                btn->show();
+            }
+
+            btnContainer.append(btn);
+        }
+
     }
 }
 

@@ -410,7 +410,7 @@ private:
 
     typedef QVector <KCommonDecorationButton*> ButtonContainer; ///< If the entry is 0, it's a spacer.
     int buttonContainerWidth(const ButtonContainer &btnContainer, bool countHidden = false) const;
-    void addButtons(ButtonContainer &btnContainer, const QString& buttons, bool isLeft);
+    void addButtons(ButtonContainer &btnContainer, const QList<DecorationButton>& buttons, bool isLeft);
 
     // button hiding for small windows
     void calcHiddenButtons();

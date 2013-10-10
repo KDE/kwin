@@ -28,6 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <QApplication>
 #include <QMenu>
 #include <QWindow>
+#include <KDE/KConfigGroup>
 #include <assert.h>
 #include <X11/Xlib.h>
 #include <fixx11h.h>
@@ -685,24 +686,28 @@ bool KDecorationOptions::customButtonPositions() const
     return d->custom_button_positions;
 }
 
-QString KDecorationOptions::titleButtonsLeft() const
+QList<KDecorationDefines::DecorationButton> KDecorationOptions::titleButtonsLeft() const
 {
     return d->title_buttons_left;
 }
 
-QString KDecorationOptions::defaultTitleButtonsLeft()
+QList<KDecorationDefines::DecorationButton> KDecorationOptions::defaultTitleButtonsLeft()
 {
-    return QStringLiteral("MS");
+    return QList<DecorationButton>() << DecorationButtonMenu
+                                     << DecorationButtonOnAllDesktops;
 }
 
-QString KDecorationOptions::titleButtonsRight() const
+QList<KDecorationDefines::DecorationButton> KDecorationOptions::titleButtonsRight() const
 {
     return d->title_buttons_right;
 }
 
-QString KDecorationOptions::defaultTitleButtonsRight()
+QList<KDecorationDefines::DecorationButton> KDecorationOptions::defaultTitleButtonsRight()
 {
-    return QStringLiteral("HIAX");
+    return QList<DecorationButton>() << DecorationButtonQuickHelp
+                                     << DecorationButtonMinimize
+                                     << DecorationButtonMaximizeRestore
+                                     << DecorationButtonClose;
 }
 
 bool KDecorationOptions::showTooltips() const
@@ -752,14 +757,80 @@ void KDecorationOptions::setCustomButtonPositions(bool b)
     d->custom_button_positions = b;
 }
 
-void KDecorationOptions::setTitleButtonsLeft(const QString& b)
+void KDecorationOptions::setTitleButtonsLeft(const QList<DecorationButton>& b)
 {
     d->title_buttons_left = b;
 }
 
-void KDecorationOptions::setTitleButtonsRight(const QString& b)
+void KDecorationOptions::setTitleButtonsRight(const QList<DecorationButton>& b)
 {
     d->title_buttons_right = b;
+}
+
+
+static QHash<KDecorationDefines::DecorationButton, QByteArray> s_buttonNames;
+static void initButtons()
+{
+    if (!s_buttonNames.isEmpty()) {
+        return;
+    }
+    s_buttonNames[KDecorationDefines::DecorationButtonMenu]            = QByteArrayLiteral("M");
+    s_buttonNames[KDecorationDefines::DecorationButtonApplicationMenu] = QByteArrayLiteral("N");
+    s_buttonNames[KDecorationDefines::DecorationButtonOnAllDesktops]   = QByteArrayLiteral("S");
+    s_buttonNames[KDecorationDefines::DecorationButtonQuickHelp]       = QByteArrayLiteral("H");
+    s_buttonNames[KDecorationDefines::DecorationButtonMinimize]        = QByteArrayLiteral("I");
+    s_buttonNames[KDecorationDefines::DecorationButtonMaximizeRestore] = QByteArrayLiteral("A");
+    s_buttonNames[KDecorationDefines::DecorationButtonClose]           = QByteArrayLiteral("X");
+    s_buttonNames[KDecorationDefines::DecorationButtonKeepAbove]       = QByteArrayLiteral("F");
+    s_buttonNames[KDecorationDefines::DecorationButtonKeepBelow]       = QByteArrayLiteral("B");
+    s_buttonNames[KDecorationDefines::DecorationButtonShade]           = QByteArrayLiteral("L");
+    s_buttonNames[KDecorationDefines::DecorationButtonResize]          = QByteArrayLiteral("R");
+    s_buttonNames[KDecorationDefines::DecorationButtonExplicitSpacer]  = QByteArrayLiteral("_");
+}
+
+static QString buttonsToString(const QList<KDecorationDefines::DecorationButton> &buttons)
+{
+    auto buttonToString = [](KDecorationDefines::DecorationButton button) -> QByteArray {
+        const auto it = s_buttonNames.constFind(button);
+        if (it != s_buttonNames.constEnd()) {
+            return it.value();
+        }
+        return QByteArray();
+    };
+    QByteArray ret;
+    for (auto button : buttons) {
+        ret.append(buttonToString(button));
+    }
+    return QString::fromUtf8(ret);
+}
+
+QList< KDecorationDefines::DecorationButton > KDecorationOptions::readDecorationButtons(const KConfigGroup &config,
+                                                                                        const char *key,
+                                                                                        const QList< DecorationButton > &defaultValue)
+{
+    initButtons();
+    auto buttonFromString = [](const QByteArray &button) -> DecorationButton {
+        return s_buttonNames.key(button, DecorationButtonNone);
+    };
+    auto buttonsFromString = [buttonFromString](const QString &buttons) -> QList<DecorationButton> {
+        QList<DecorationButton> ret;
+        for (auto it = buttons.constBegin(); it != buttons.constEnd(); ++it) {
+            char character = (*it).toLatin1();
+            const DecorationButton button = buttonFromString(QByteArray::fromRawData(&character, 1));
+            if (button != DecorationButtonNone) {
+                ret << button;
+            }
+        }
+        return ret;
+    };
+    return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
+}
+
+void KDecorationOptions::writeDecorationButtons(KConfigGroup &config, const char *key,
+                                                const QList< DecorationButton > &value)
+{
+    initButtons();
+    config.writeEntry(key, buttonsToString(value));
 }
 
 extern "C" {
