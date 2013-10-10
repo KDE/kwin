@@ -17,6 +17,7 @@ kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
 target_link_libraries(kwin3_aurorae
     KF5::KConfigCore
     KF5::KService
+    KF5::plasma
     Qt5::Declarative
     kdecorations
 )
@@ -34,6 +35,7 @@ target_link_libraries(decorationplugin
     Qt5::Quick
     kdecorations
     KF5::KConfigWidgets
+    KF5::plasma
 )
 install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
 
