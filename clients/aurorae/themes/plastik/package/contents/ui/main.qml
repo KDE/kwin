@@ -349,56 +349,56 @@ Decoration {
     Component {
         id: maximizeButtonComponent
         PlastikButton {
-            buttonType: "A"
+            buttonType: DecorationOptions.DecorationButtonMaximizeRestore
             size: root.buttonSize
         }
     }
     Component {
         id: keepBelowButtonComponent
         PlastikButton {
-            buttonType: "B"
+            buttonType: DecorationOptions.DecorationButtonKeepBelow
             size: root.buttonSize
         }
     }
     Component {
         id: keepAboveButtonComponent
         PlastikButton {
-            buttonType: "F"
+            buttonType: DecorationOptions.DecorationButtonKeepAbove
             size: root.buttonSize
         }
     }
     Component {
         id: helpButtonComponent
         PlastikButton {
-            buttonType: "H"
+            buttonType: DecorationOptions.DecorationButtonQuickHelp
             size: root.buttonSize
         }
     }
     Component {
         id: minimizeButtonComponent
         PlastikButton {
-            buttonType: "I"
+            buttonType: DecorationOptions.DecorationButtonMinimize
             size: root.buttonSize
         }
     }
     Component {
         id: shadeButtonComponent
         PlastikButton {
-            buttonType: "L"
+            buttonType: DecorationOptions.DecorationButtonShade
             size: root.buttonSize
         }
     }
     Component {
         id: stickyButtonComponent
         PlastikButton {
-            buttonType: "S"
+            buttonType: DecorationOptions.DecorationButtonOnAllDesktops
             size: root.buttonSize
         }
     }
     Component {
         id: closeButtonComponent
         PlastikButton {
-            buttonType: "X"
+            buttonType: DecorationOptions.DecorationButtonClose
             size: root.buttonSize
         }
     }
@@ -412,7 +412,7 @@ Decoration {
     Component {
         id: appMenuButtonComponent
         PlastikButton {
-            buttonType: "N"
+            buttonType: DecorationOptions.DecorationButtonApplicationMenu
             size: root.buttonSize
         }
     }

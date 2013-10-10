@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import org.kde.kwin.decoration 0.1
 
 Item {
     id: button
@@ -23,7 +24,7 @@ Item {
     AuroraeButton {
         id: maximizeButton
         anchors.fill: parent
-        buttonType: "A"
+        buttonType: DecorationOptions.DecorationButtonMaximizeRestore
         opacity: (!decoration.maximized || auroraeTheme.restoreButtonPath == "") ? 1 : 0
         Behavior on opacity {
             NumberAnimation {
@@ -34,7 +35,7 @@ Item {
     AuroraeButton {
         id: restoreButton
         anchors.fill: parent
-        buttonType: "R"
+        buttonType: DecorationOptions.DecorationButtonMaximizeRestore + 100
         opacity: (decoration.maximized && auroraeTheme.restoreButtonPath != "") ? 1 : 0
         Behavior on opacity {
             NumberAnimation {

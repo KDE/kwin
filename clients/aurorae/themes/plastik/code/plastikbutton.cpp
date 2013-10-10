@@ -55,45 +55,55 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
         shadow = true;
     }
     ButtonIcon button;
-    if (idParts[0] == QStringLiteral("X")) {
+    switch (static_cast<KDecorationDefines::DecorationButton>(idParts[0].toInt())) {
+    case KDecorationDefines::DecorationButtonClose:
         button = CloseIcon;
-    } else if (idParts[0] == QStringLiteral("A")) {
+        break;
+    case KDecorationDefines::DecorationButtonMaximizeRestore:
         if (toggled) {
             button = MaxRestoreIcon;
         } else {
             button = MaxIcon;
         }
-    } else if (idParts[0] == QStringLiteral("I")) {
+        break;
+    case KDecorationDefines::DecorationButtonMinimize:
         button = MinIcon;
-    } else if (idParts[0] == QStringLiteral("H")) {
+        break;
+    case KDecorationDefines::DecorationButtonQuickHelp:
         button = HelpIcon;
-    } else if (idParts[0] == QStringLiteral("S")) {
+        break;
+    case KDecorationDefines::DecorationButtonOnAllDesktops:
         if (toggled) {
             button = NotOnAllDesktopsIcon;
         } else {
             button = OnAllDesktopsIcon;
         }
-    } else if (idParts[0] == QStringLiteral("F")) {
+        break;
+    case KDecorationDefines::DecorationButtonKeepAbove:
         if (toggled) {
             button = NoKeepAboveIcon;
         } else {
             button = KeepAboveIcon;
         }
-    } else if (idParts[0] == QStringLiteral("B")) {
+        break;
+    case KDecorationDefines::DecorationButtonKeepBelow:
         if (toggled) {
             button = NoKeepBelowIcon;
         } else {
             button = KeepBelowIcon;
         }
-    } else if (idParts[0] == QStringLiteral("L")) {
+        break;
+    case KDecorationDefines::DecorationButtonShade:
         if (toggled) {
             button = UnShadeIcon;
         } else {
             button = ShadeIcon;
         }
-    } else if (idParts[0] == QStringLiteral("N")) {
+        break;
+    case KDecorationDefines::DecorationButtonApplicationMenu:
         button = AppMenuIcon;
-    } else {
+        break;
+    default:
         // not recognized icon
         return QQuickImageProvider::requestPixmap(id, size, requestedSize);
     }

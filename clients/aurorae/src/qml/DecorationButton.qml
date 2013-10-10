@@ -15,23 +15,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import org.kde.kwin.decoration 0.1
 
 Item {
     id: button
-    property string buttonType : ""
+    property int buttonType : DecorationOptions.DecorationButtonNone
     property bool hovered: false
     property bool pressed: false
     property bool toggled: false
     enabled: {
         switch (button.buttonType) {
-        case "X":
+        case DecorationOptions.DecorationButtonClose:
             return decoration.closeable;
-        case "A":
-        case "R":
+        case DecorationOptions.DecorationButtonMaximizeRestore:
             return decoration.maximizeable;
-        case "I":
+        case DecorationOptions.DecorationButtonMinimize:
             return decoration.minimizeable;
-        case "_":
+        case DecorationOptions.DecorationButtonExplicitSpacer:
             return false;
         default:
             return true;
@@ -41,10 +41,9 @@ Item {
         anchors.fill: parent
         acceptedButtons: {
             switch (button.buttonType) {
-            case "M":
+            case DecorationOptions.DecorationButtonMenu:
                 return Qt.LeftButton | Qt.RightButton;
-            case "A":
-            case "R":
+            case DecorationOptions.DecorationButtonMaximizeRestore:
                 return Qt.LeftButton | Qt.RightButton | Qt.MiddleButton;
             default:
                 return Qt.LeftButton;
@@ -57,67 +56,66 @@ Item {
         onReleased: button.pressed = false
         onClicked: {
             switch (button.buttonType) {
-            case "M":
+            case DecorationOptions.DecorationButtonMenu:
                 // menu
                 decoration.menuClicked();
                 break;
-            case "N":
+            case DecorationOptions.DecorationButtonApplicationMenu:
                 // app menu
                 decoration.appMenuClicked();
                 break;
-            case "S":
+            case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
                 decoration.toggleOnAllDesktops();
                 break;
-            case "H":
+            case DecorationOptions.DecorationButtonQuickHelp:
                 // help
                 decoration.showContextHelp();
                 break;
-            case "I":
+            case DecorationOptions.DecorationButtonMinimize:
                 // minimize
                 decoration.minimize();
                 break;
-            case "A":
-            case "R":
+            case DecorationOptions.DecorationButtonMaximizeRestore:
                 // maximize
                 decoration.maximize(mouse.button);
                 break;
-            case "X":
+            case DecorationOptions.DecorationButtonClose:
                 // close
                 decoration.closeWindow();
                 break;
-            case "F":
+            case DecorationOptions.DecorationButtonKeepAbove:
                 // keep above
                 decoration.toggleKeepAbove();
                 break;
-            case "B":
+            case DecorationOptions.DecorationButtonKeepBelow:
                 // keep below
                 decoration.toggleKeepBelow();
                 break;
-            case "L":
+            case DecorationOptions.DecorationButtonShade:
                 // shade
                 decoration.toggleShade();
                 break;
             }
         }
         onDoubleClicked: {
-            if (button.buttonType == "M") {
+            if (button.buttonType == DecorationOptions.DecorationButtonMenu) {
                 decoration.closeWindow();
             }
         }
         Component.onCompleted: {
             switch (button.buttonType) {
-            case "S":
+            case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
                 button.toggled = decoration.onAllDesktops;
                 break;
-            case "F":
+            case DecorationOptions.DecorationButtonKeepAbove:
                 button.toggled = decoration.keepAbove;
                 break;
-            case "B":
+            case DecorationOptions.DecorationButtonKeepBelow:
                 button.toggled = decoration.keepBelow;
                 break;
-            case "L":
+            case DecorationOptions.DecorationButtonShade:
                 button.toggled = decoration.shade;
                 break;
             }
@@ -125,25 +123,25 @@ Item {
         Connections {
             target: decoration
             onShadeChanged: {
-                if (button.buttonType != "L") {
+                if (button.buttonType != DecorationOptions.DecorationButtonShade) {
                     return;
                 }
                 button.toggled = decoration.shade;
             }
             onKeepBelowChanged: {
-                if (button.buttonType != "B") {
+                if (button.buttonType != DecorationOptions.DecorationButtonKeepBelow) {
                     return;
                 }
                 button.toggled = decoration.keepBelow;
             }
             onKeepAboveChanged: {
-                if (button.buttonType != "F") {
+                if (button.buttonType != DecorationOptions.DecorationButtonKeepAbove) {
                     return;
                 }
                 button.toggled = decoration.keepAbove;
             }
             onDesktopChanged: {
-                if (button.buttonType != "S") {
+                if (button.buttonType != DecorationOptions.DecorationButtonOnAllDesktops) {
                     return;
                 }
                 button.toggled = decoration.onAllDesktops;

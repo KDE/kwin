@@ -16,38 +16,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kwin.decoration 0.1
 
 DecorationButton {
     function widthForButton() {
         switch (buttonType) {
-        case "M":
+        case DecorationOptions.DecorationButtonMenu:
             // menu
             return auroraeTheme.buttonWidthMenu;
-        case "N":
+        case DecorationOptions.DecorationButtonApplicationMenu:
             // app menu
             return auroraeTheme.buttonWidthAppMenu;
-        case "S":
+        case DecorationOptions.DecorationButtonOnAllDesktops:
             // all desktops
             return auroraeTheme.buttonWidthAllDesktops;
-        case "H":
+        case DecorationOptions.DecorationButtonQuickHelp:
             // help
             return auroraeTheme.buttonWidthHelp;
-        case "I":
+        case DecorationOptions.DecorationButtonMinimize:
             // minimize
             return auroraeTheme.buttonWidthMinimize;
-        case "A":
+        case DecorationOptions.DecorationButtonMaximizeRestore:
             // maximize
             return auroraeTheme.buttonWidthMaximizeRestore;
-        case "X":
+        case DecorationOptions.DecorationButtonClose:
             // close
             return auroraeTheme.buttonWidthClose;
-        case "F":
+        case DecorationOptions.DecorationButtonKeepAbove:
             // keep above
             return auroraeTheme.buttonWidthKeepAbove;
-        case "B":
+        case DecorationOptions.DecorationButtonKeepBelow:
             // keep below
             return auroraeTheme.buttonWidthKeepBelow;
-        case "L":
+        case DecorationOptions.DecorationButtonShade:
             // shade
             return auroraeTheme.buttonWidthShade;
         default:
@@ -56,31 +57,31 @@ DecorationButton {
     }
     function pathForButton() {
         switch (buttonType) {
-        case "S":
+        case DecorationOptions.DecorationButtonOnAllDesktops:
             // all desktops
             return auroraeTheme.allDesktopsButtonPath;
-        case "H":
+        case DecorationOptions.DecorationButtonQuickHelp:
             // help
             return auroraeTheme.helpButtonPath;
-        case "I":
+        case DecorationOptions.DecorationButtonMinimize:
             // minimize
             return auroraeTheme.minimizeButtonPath;
-        case "A":
+        case DecorationOptions.DecorationButtonMaximizeRestore:
             // maximize
             return auroraeTheme.maximizeButtonPath;
-        case "R":
+        case DecorationOptions.DecorationButtonMaximizeRestore + 100:
             // maximize
             return auroraeTheme.restoreButtonPath;
-        case "X":
+        case DecorationOptions.DecorationButtonClose:
             // close
             return auroraeTheme.closeButtonPath;
-        case "F":
+        case DecorationOptions.DecorationButtonKeepAbove:
             // keep above
             return auroraeTheme.keepAboveButtonPath;
-        case "B":
+        case DecorationOptions.DecorationButtonKeepBelow:
             // keep below
             return auroraeTheme.keepBelowButtonPath;
-        case "L":
+        case DecorationOptions.DecorationButtonShade:
             // shade
             return auroraeTheme.shadeButtonPath;
         default:
@@ -205,7 +206,7 @@ DecorationButton {
         }
     }
     Component.onCompleted: {
-        if (buttonType == "H" && !decoration.providesContextHelp) {
+        if (buttonType == DecorationOptions.DecorationButtonQuickHelp && !decoration.providesContextHelp) {
             visible = false;
         } else {
             visible = buttonSvg.imagePath != "";

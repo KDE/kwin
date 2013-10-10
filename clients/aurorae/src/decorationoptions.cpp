@@ -69,22 +69,34 @@ QFont DecorationOptions::titleFont() const
     return KDecoration::options()->font(m_active);
 }
 
-QString DecorationOptions::titleButtonsLeft() const
+QList<int> DecorationOptions::titleButtonsLeft() const
 {
+    QList<KDecorationDefines::DecorationButton> buttons;
     if (KDecoration::options()->customButtonPositions()) {
-        return KDecoration::options()->titleButtonsLeft();
+        buttons = KDecoration::options()->titleButtonsLeft();
     } else {
-        return KDecorationOptions::defaultTitleButtonsLeft();
+        buttons = KDecorationOptions::defaultTitleButtonsLeft();
     }
+    QList<int> ret;
+    for (auto it : buttons) {
+        ret << static_cast<int>(it);
+    }
+    return ret;
 }
 
-QString DecorationOptions::titleButtonsRight() const
+QList<int> DecorationOptions::titleButtonsRight() const
 {
+    QList<KDecorationDefines::DecorationButton> buttons;
     if (KDecoration::options()->customButtonPositions()) {
-        return KDecoration::options()->titleButtonsRight();
+        buttons = KDecoration::options()->titleButtonsRight();
     } else {
-        return KDecorationOptions::defaultTitleButtonsRight();
+        buttons = KDecorationOptions::defaultTitleButtonsRight();
     }
+    QList<int> ret;
+    for (auto it : buttons) {
+        ret << static_cast<int>(it);
+    }
+    return ret;
 }
 
 QObject *DecorationOptions::decoration() const

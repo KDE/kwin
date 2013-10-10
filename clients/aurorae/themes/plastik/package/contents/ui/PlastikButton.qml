@@ -23,7 +23,7 @@ DecorationButton {
     function colorize() {
         var highlightColor = null;
         if (button.pressed) {
-            if (button.buttonType == "X") {
+            if (button.buttonType == DecorationOptions.DecorationButtonClose) {
                 highlightColor = colorHelper.foreground(decoration.active, ColorHelper.NegativeText);
             } else {
                 highlightColor = options.titleBarColor;
@@ -31,7 +31,7 @@ DecorationButton {
             highlightColor = colorHelper.shade(highlightColor, ColorHelper.ShadowShade);
             highlightColor = colorHelper.multiplyAlpha(highlightColor, 0.3);
         } else if (button.hovered) {
-            if (button.buttonType == "X") {
+            if (button.buttonType == DecorationOptions.DecorationButtonClose) {
                 highlightColor = colorHelper.foreground(decoration.active, ColorHelper.NegativeText);
             } else {
                 highlightColor = options.titleBarColor;
@@ -140,10 +140,10 @@ DecorationButton {
     }
     Component.onCompleted: {
         colorize();
-        if (buttonType == "H") {
+        if (buttonType == DecorationOptions.DecorationButtonQuickHelp) {
             visible = decoration.providesContextHelp;
         }
-        if (buttonType == "N") {
+        if (buttonType == DecorationOptions.DecorationButtonApplicationMenu) {
             visible = decoration.appMenu;
         }
     }
@@ -153,7 +153,7 @@ DecorationButton {
         target: decoration
         onActiveChanged: button.colorize()
         onAppMenuChanged: {
-            if (buttonType == "N") {
+            if (buttonType == DecorationOptions.DecorationButtonApplicationMenu) {
                 visible = decoration.appMenu;
             }
         }

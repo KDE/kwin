@@ -52,6 +52,7 @@ class DecorationOptions : public QObject
 {
     Q_OBJECT
     Q_ENUMS(BorderSize)
+    Q_ENUMS(DecorationButton)
     /**
      * The decoration Object for which this set of options should be used. The decoration is
      * required to get the correct colors and fonts depending on whether the decoration represents
@@ -90,28 +91,12 @@ class DecorationOptions : public QObject
     Q_PROPERTY(QFont titleFont READ titleFont NOTIFY fontChanged)
     /**
      * The buttons to be positioned on the left side of the titlebar from left to right.
-     *
-     * Characters in the returned string have the following meaning:
-     * <ul>
-     * <li>'M' menu button</li>
-     * <li>'S' on all desktops button</li>
-     * <li>'H' quickhelp button</li>
-     * <li>'I' minimize button</li>
-     * <li>'A' maximize button</li>
-     * <li>'X' close button</li>
-     * <li>'F' keep above button</li>
-     * <li>'B' keep below button</li>
-     * <li>'L' shade button</li>
-     * <li>'_' explicit spacer</li>
-     * </ul>
-     * @todo: make this a list of enum values
      **/
-    Q_PROPERTY(QString titleButtonsLeft READ titleButtonsLeft NOTIFY titleButtonsChanged)
+    Q_PROPERTY(QList<int> titleButtonsLeft READ titleButtonsLeft NOTIFY titleButtonsChanged)
     /**
      * The buttons to be positioned on the right side of the titlebar from left to right.
-     * @see titleButtonsRight
      **/
-    Q_PROPERTY(QString titleButtonsRight READ titleButtonsRight NOTIFY titleButtonsChanged)
+    Q_PROPERTY(QList<int> titleButtonsRight READ titleButtonsRight NOTIFY titleButtonsChanged)
 public:
     enum BorderSize {
         BorderTiny,      ///< Minimal borders
@@ -124,6 +109,34 @@ public:
         BorderNoSides,   ///< No borders on sides
         BorderNone       ///< No borders except title
     };
+    /**
+     * Enum values to identify the decorations buttons which should be used
+     * by the decoration.
+     *
+     */
+    enum DecorationButton {
+        /**
+         * Invalid button value. A decoration should not create a button for
+         * this type.
+         */
+        DecorationButtonNone,
+        DecorationButtonMenu,
+        DecorationButtonApplicationMenu,
+        DecorationButtonOnAllDesktops,
+        DecorationButtonQuickHelp,
+        DecorationButtonMinimize,
+        DecorationButtonMaximizeRestore,
+        DecorationButtonClose,
+        DecorationButtonKeepAbove,
+        DecorationButtonKeepBelow,
+        DecorationButtonShade,
+        DecorationButtonResize,
+        /**
+         * The decoration should create an empty spacer instead of a button for
+         * this type.
+         */
+        DecorationButtonExplicitSpacer
+    };
     explicit DecorationOptions(QObject *parent = 0);
     virtual ~DecorationOptions();
 
@@ -134,8 +147,8 @@ public:
     QColor borderColor() const;
     QColor resizeHandleColor() const;
     QFont titleFont() const;
-    QString titleButtonsLeft() const;
-    QString titleButtonsRight() const;
+    QList<int> titleButtonsLeft() const;
+    QList<int> titleButtonsRight() const;
     QObject *decoration() const;
     void setDecoration(QObject *decoration);
 

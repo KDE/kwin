@@ -16,10 +16,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
 import org.kde.qtextracomponents 2.0 as QtExtra
+import org.kde.kwin.decoration 0.1
 
 DecorationButton {
     id: appMenuButton
-    buttonType: "N"
+    buttonType: DecorationOptions.DecorationButtonApplicationMenu
     visible: decoration.appMenu
     QtExtra.QIconItem {
         icon: decoration.icon

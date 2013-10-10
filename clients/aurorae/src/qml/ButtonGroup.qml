@@ -15,43 +15,44 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import org.kde.kwin.decoration 0.1
 
 Item {
     function createButtons() {
         for (var i=0; i<buttons.length; i++) {
             var component = undefined;
-            switch (buttons.charAt(i)) {
-            case "_":
+            switch (buttons[i]) {
+            case DecorationOptions.DecorationButtonExplicitSpacer:
                 component = explicitSpacerComponent;
                 break;
-            case "A":
+            case DecorationOptions.DecorationButtonMaximizeRestore:
                 component = group.maximizeButton;
                 break;
-            case "B":
+            case DecorationOptions.DecorationButtonKeepBelow:
                 component = group.keepBelowButton;
                 break;
-            case "F":
+            case DecorationOptions.DecorationButtonKeepAbove:
                 component = group.keepAboveButton;
                 break;
-            case "H":
+            case DecorationOptions.DecorationButtonQuickHelp:
                 component = group.helpButton;
                 break;
-            case "I":
+            case DecorationOptions.DecorationButtonMinimize:
                 component = group.minimizeButton;
                 break;
-            case "L":
+            case DecorationOptions.DecorationButtonShade:
                 component = group.shadeButton;
                 break;
-            case "M":
+            case DecorationOptions.DecorationButtonMenu:
                 component = group.menuButton;
                 break;
-            case "N":
+            case DecorationOptions.DecorationButtonApplicationMenu:
                 component = group.appMenuButton;
                 break;
-            case "S":
+            case DecorationOptions.DecorationButtonOnAllDesktops:
                 component = group.allDesktopsButton;
                 break;
-            case "X":
+            case DecorationOptions.DecorationButtonClose:
                 component = group.closeButton;
                 break;
             }
@@ -63,7 +64,7 @@ Item {
         }
     }
     id: group
-    property string buttons
+    property variant buttons
     property int explicitSpacer
     property alias spacing: groupRow.spacing
 
