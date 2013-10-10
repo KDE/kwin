@@ -174,12 +174,6 @@ public:
         return m_paddingBottom;
     }
 
-    QString defaultButtonsLeft() const {
-        return m_defaultButtonsLeft;
-    }
-    QString defaultButtonsRight() const {
-        return m_defaultButtonsRight;
-    }
     bool shadow() const {
         return m_shadow;
     }
@@ -409,8 +403,6 @@ private:
 
     int m_animationTime;
 
-    QString m_defaultButtonsLeft;
-    QString m_defaultButtonsRight;
     bool m_shadow;
 
     int m_decorationPosition;

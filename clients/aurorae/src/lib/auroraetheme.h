@@ -109,8 +109,6 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(QColor inactiveTextColor READ inactiveTextColor NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment NOTIFY themeChanged)
-    Q_PROPERTY(QString defaultButtonsLeft READ defaultButtonsLeft NOTIFY themeChanged)
-    Q_PROPERTY(QString defaultButtonsRight READ defaultButtonsRight NOTIFY themeChanged)
 public:
     explicit AuroraeTheme(QObject* parent = 0);
     virtual ~AuroraeTheme();
@@ -181,8 +179,6 @@ public:
     * @returns true if the theme contains a FrameSvg for specified button.
     */
     bool hasButton(AuroraeButtonType button) const;
-    QString defaultButtonsLeft() const;
-    QString defaultButtonsRight() const;
     void setBorderSize(KDecorationDefines::BorderSize size);
     /**
     * Sets the size of the buttons.

@@ -448,16 +448,6 @@ void AuroraeTheme::setCompositingActive(bool active)
     d->activeCompositing = active;
 }
 
-QString AuroraeTheme::defaultButtonsLeft() const
-{
-    return d->themeConfig.defaultButtonsLeft();
-}
-
-QString AuroraeTheme::defaultButtonsRight() const
-{
-    return d->themeConfig.defaultButtonsRight();
-}
-
 void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
 {
     if (d->borderSize == size) {

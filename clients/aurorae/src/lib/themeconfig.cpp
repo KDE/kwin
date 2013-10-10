@@ -78,8 +78,6 @@ ThemeConfig::ThemeConfig()
     , m_paddingTop(defaultPaddingTop())
     , m_paddingBottom(defaultPaddingBottom())
     , m_animationTime(defaultAnimationTime())
-    , m_defaultButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft())
-    , m_defaultButtonsRight(KDecorationOptions::defaultTitleButtonsRight())
     , m_shadow(defaultShadow())
     , m_decorationPosition(defaultDecorationPosition())
 {
@@ -122,8 +120,6 @@ void ThemeConfig::load(const KConfig &conf)
         m_verticalAlignment = Qt::AlignBottom;
     }
     m_animationTime = general.readEntry("Animation", defaultAnimationTime());
-    m_defaultButtonsLeft = general.readEntry("LeftButtons", KDecorationOptions::defaultTitleButtonsLeft());
-    m_defaultButtonsRight = general.readEntry("RightButtons", KDecorationOptions::defaultTitleButtonsRight());
     m_shadow = general.readEntry("Shadow", defaultShadow());
     m_decorationPosition = general.readEntry("DecorationPosition", defaultDecorationPosition());
 
