@@ -387,8 +387,9 @@ void ZoomEffect::zoomIn(double to)
         polling = true;
         effects->startMousePolling();
     }
+    cursorPoint = effects->cursorPos();
     if (mouseTracking == MouseTrackingDisabled)
-        prevPoint = effects->cursorPos();
+        prevPoint = cursorPoint;
     effects->addRepaintFull();
 }
 
