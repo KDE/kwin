@@ -99,16 +99,6 @@ KCommonDecoration::~KCommonDecoration()
 {
 }
 
-QString KCommonDecoration::defaultButtonsLeft() const
-{
-    return KDecorationOptions::defaultTitleButtonsLeft();
-}
-
-QString KCommonDecoration::defaultButtonsRight() const
-{
-    return KDecorationOptions::defaultTitleButtonsRight();
-}
-
 bool KCommonDecoration::decorationBehaviour(DecorationBehaviour behaviour) const
 {
     switch(behaviour) {
@@ -323,10 +313,10 @@ void KCommonDecoration::resetLayout()
     }
 
     addButtons(d->buttonsLeft,
-               options()->customButtonPositions() ? options()->titleButtonsLeft() : defaultButtonsLeft(),
+               options()->customButtonPositions() ? options()->titleButtonsLeft() : KDecorationOptions::defaultTitleButtonsLeft(),
                true);
     addButtons(d->buttonsRight,
-               options()->customButtonPositions() ? options()->titleButtonsRight() : defaultButtonsRight(),
+               options()->customButtonPositions() ? options()->titleButtonsRight() : KDecorationOptions::defaultTitleButtonsRight(),
                false);
 
     updateLayout();

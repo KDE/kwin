@@ -145,18 +145,6 @@ public:
      * The name of the decoration used in the decoration preview.
      */
     virtual QString visibleName() const = 0;
-    /**
-     * The default title button order on the left.
-     * @see KDecoration::titleButtonsLeft()
-     * @see KDecoration::titleButtonsRight()
-     */
-    virtual QString defaultButtonsLeft() const;
-    /**
-     * The default title button order on the left.
-     * @see KDecoration::titleButtonsLeft()
-     * @see KDecoration::titleButtonsRight()
-     */
-    virtual QString defaultButtonsRight() const;
 
     /**
      * This controls whether some specific behaviour should be enabled or not.
