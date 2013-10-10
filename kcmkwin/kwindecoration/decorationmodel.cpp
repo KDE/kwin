@@ -56,8 +56,6 @@ DecorationModel::DecorationModel(KSharedConfigPtr config, QObject* parent)
     , m_plugins(new KDecorationPreviewPlugins(config))
     , m_preview(new KDecorationPreview())
     , m_customButtons(false)
-    , m_leftButtons(QString())
-    , m_rightButtons(QString())
     , m_options(new KDecorationPreviewOptions)
 {
     QHash<int, QByteArray> roleNames;
@@ -313,19 +311,14 @@ bool DecorationModel::setData(const QModelIndex& index, const QVariant& value, i
 void DecorationModel::changeButtons(const KWin::DecorationButtons *buttons)
 {
     m_customButtons = buttons->customPositions();
-    m_leftButtons = buttons->leftButtons();
-    m_rightButtons = buttons->rightButtons();
     m_options->setCustomTitleButtonsEnabled(m_customButtons);
-    m_options->setCustomTitleButtons(m_leftButtons, m_rightButtons);
+    m_options->setCustomTitleButtons(buttons->leftButtons(), buttons->rightButtons());
 }
 
-void DecorationModel::setButtons(bool custom, const QString& left, const QString& right)
+void DecorationModel::setButtons(bool custom, const QList<KDecorationDefines::DecorationButton> &left, const QList<KDecorationDefines::DecorationButton> &right)
 {
     m_customButtons = custom;
-    m_leftButtons = left;
-    m_rightButtons = right;
-    m_options->setCustomTitleButtonsEnabled(m_customButtons);
-    m_options->setCustomTitleButtons(m_leftButtons, m_rightButtons);
+    m_options->setCustomTitleButtons(left, right);
 }
 
 QModelIndex DecorationModel::indexOfLibrary(const QString& libraryName) const

@@ -32,11 +32,11 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
+#include <kdecoration.h>
+
 #include <QBitmap>
 #include <QListWidget>
 #include <QMimeData>
-
-class KDecorationFactory;
 
 namespace KWin
 {
@@ -48,12 +48,12 @@ class Button
 {
 public:
     Button();
-    Button(const QString& name, const QBitmap& icon, QChar type, bool duplicate, bool supported);
+    Button(const QString& name, const QBitmap& icon, KDecorationDefines::DecorationButton type, bool duplicate, bool supported);
     virtual ~Button();
 
     QString name;
     QBitmap icon;
-    QChar type;
+    KDecorationDefines::DecorationButton type;
     bool duplicate;
     bool supported;
 };
@@ -199,17 +199,17 @@ public:
     explicit ButtonPositionWidget(QWidget *parent = 0);
     ~ButtonPositionWidget();
 
-    QString buttonsLeft() const;
-    QString buttonsRight() const;
-    void setButtonsLeft(const QString &buttons);
-    void setButtonsRight(const QString &buttons);
+    QList<KDecorationDefines::DecorationButton> buttonsLeft() const;
+    QList<KDecorationDefines::DecorationButton> buttonsRight() const;
+    void setButtonsLeft(const QList<KDecorationDefines::DecorationButton> &buttons);
+    void setButtonsRight(const QList<KDecorationDefines::DecorationButton> &buttons);
 
 Q_SIGNALS:
     void changed();
 
 private:
     void clearButtonList(const ButtonList& btns);
-    Button getButton(QChar type, bool& success);
+    Button getButton(KDecorationDefines::DecorationButton type, bool& success);
 
     ButtonDropSite* m_dropSite;
     ButtonSource *m_buttonSource;

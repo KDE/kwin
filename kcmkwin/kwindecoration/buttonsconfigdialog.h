@@ -47,8 +47,8 @@ public:
 
     bool customPositions() const;
     bool showTooltips() const;
-    QString buttonsLeft() const;
-    QString buttonsRight() const;
+    QList<KDecorationDefines::DecorationButton> buttonsLeft() const;
+    QList<KDecorationDefines::DecorationButton> buttonsRight() const;
 
 private Q_SLOTS:
     void changed();

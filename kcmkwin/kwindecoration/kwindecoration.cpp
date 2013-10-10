@@ -216,9 +216,11 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
     // ============
     m_decorationButtons->setCustomPositions(conf.readEntry("CustomButtonPositions", false));
     // Menu and onAllDesktops buttons are default on LHS
-    m_decorationButtons->setLeftButtons(conf.readEntry("ButtonsOnLeft", KDecorationOptions::defaultTitleButtonsLeft()));
+    m_decorationButtons->setLeftButtons(KDecorationOptions::readDecorationButtons(conf, "ButtonsOnLeft",
+                                                                                  KDecorationOptions::defaultTitleButtonsLeft()));
     // Help, Minimize, Maximize and Close are default on RHS
-    m_decorationButtons->setRightButtons(conf.readEntry("ButtonsOnRight", KDecorationOptions::defaultTitleButtonsRight()));
+    m_decorationButtons->setRightButtons(KDecorationOptions::readDecorationButtons(conf, "ButtonsOnRight",
+                                                                                   KDecorationOptions::defaultTitleButtonsRight()));
     if (m_configLoaded)
         m_model->changeButtons(m_decorationButtons);
     else {
@@ -242,8 +244,8 @@ void KWinDecorationModule::writeConfig(KConfigGroup & conf)
     conf.writeEntry("ShowToolTips", m_showTooltips);
 
     // Button settings
-    conf.writeEntry("ButtonsOnLeft", m_decorationButtons->leftButtons());
-    conf.writeEntry("ButtonsOnRight", m_decorationButtons->rightButtons());
+    KDecorationOptions::writeDecorationButtons(conf, "ButtonsOnLeft", m_decorationButtons->leftButtons());
+    KDecorationOptions::writeDecorationButtons(conf, "ButtonsOnRight", m_decorationButtons->rightButtons());
     conf.writeEntry("BorderSize",
                     static_cast<int>(m_model->data(index, DecorationModel::BorderSizeRole).toInt()));
 
@@ -508,9 +510,11 @@ void KWinDecorationModule::updateViewPosition(int v)
 DecorationButtons::DecorationButtons(QObject *parent)
     : QObject(parent)
     , m_customPositions(false)
-    , m_leftButtons(KDecorationOptions::defaultTitleButtonsLeft())
-    , m_rightButtons(KDecorationOptions::defaultTitleButtonsRight())
+    , m_leftButtons()
+    , m_rightButtons()
 {
+    setLeftButtons(KDecorationOptions::defaultTitleButtonsLeft());
+    setRightButtons(KDecorationOptions::defaultTitleButtonsRight());
 }
 
 DecorationButtons::~DecorationButtons()
@@ -522,12 +526,12 @@ bool DecorationButtons::customPositions() const
     return m_customPositions;
 }
 
-const QString &DecorationButtons::leftButtons() const
+const QList<KDecorationDefines::DecorationButton> &DecorationButtons::leftButtons() const
 {
     return m_leftButtons;
 }
 
-const QString &DecorationButtons::rightButtons() const
+const QList<KDecorationDefines::DecorationButton> &DecorationButtons::rightButtons() const
 {
     return m_rightButtons;
 }
@@ -541,7 +545,7 @@ void DecorationButtons::setCustomPositions(bool set)
     emit customPositionsChanged();
 }
 
-void DecorationButtons::setLeftButtons(const QString &leftButtons)
+void DecorationButtons::setLeftButtons(const QList<DecorationButton> &leftButtons)
 {
     if (m_leftButtons == leftButtons) {
         return;
@@ -550,7 +554,7 @@ void DecorationButtons::setLeftButtons(const QString &leftButtons)
     emit leftButtonsChanged();
 }
 
-void DecorationButtons::setRightButtons (const QString &rightButtons)
+void DecorationButtons::setRightButtons(const QList<DecorationButton> &rightButtons)
 {
     if (m_rightButtons == rightButtons) {
         return;

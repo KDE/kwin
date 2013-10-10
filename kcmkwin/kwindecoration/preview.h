@@ -182,14 +182,14 @@ public:
 
     void setCustomBorderSize(BorderSize size);
     void setCustomTitleButtonsEnabled(bool enabled);
-    void setCustomTitleButtons(const QString &left, const QString &right);
+    void setCustomTitleButtons(const QList<DecorationButton> &left, const QList<DecorationButton> &right);
 
 private:
     BorderSize customBorderSize;
     bool customButtonsChanged;
     bool customButtons;
-    QString customTitleButtonsLeft;
-    QString customTitleButtonsRight;
+    QList<DecorationButton> customTitleButtonsLeft;
+    QList<DecorationButton> customTitleButtonsRight;
 };
 
 class KDecorationPreviewPlugins

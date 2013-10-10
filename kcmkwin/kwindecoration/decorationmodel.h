@@ -105,7 +105,7 @@ public:
     /**
     * Changes the button state without regenerating the preview.
     */
-    void setButtons(bool custom, const QString& left, const QString& right);
+    void setButtons(bool custom, const QList<KDecorationDefines::DecorationButton>& left, const QList<KDecorationDefines::DecorationButton>& right);
 
     void setBorderSize(const QModelIndex& index, KDecorationDefines::BorderSize size);
 
@@ -127,8 +127,6 @@ private:
     KDecorationPlugins* m_plugins;
     KDecorationPreview* m_preview;
     bool m_customButtons;
-    QString m_leftButtons;
-    QString m_rightButtons;
     KSharedConfigPtr m_config;
     QScopedPointer<KDecorationPreviewOptions> m_options;
 };

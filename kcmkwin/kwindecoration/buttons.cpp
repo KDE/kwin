@@ -64,7 +64,7 @@ ButtonDrag::ButtonDrag(Button btn)
     QDataStream stream(&data, QIODevice::WriteOnly);
     stream << btn.name;
     stream << btn.icon;
-    stream << btn.type.unicode();
+    stream << btn.type;
     stream << (int) btn.duplicate;
     stream << (int) btn.supported;
     setData(BUTTONDRAGMIMETYPE, data);
@@ -84,9 +84,9 @@ bool ButtonDrag::decode(QDropEvent* e, Button& btn)
         QDataStream stream(data);
         stream >> btn.name;
         stream >> btn.icon;
-        ushort type;
+        int type;
         stream >> type;
-        btn.type = QChar(type);
+        btn.type = KDecorationDefines::DecorationButton(type);
         int duplicate;
         stream >> duplicate;
         btn.duplicate = duplicate;
@@ -103,7 +103,7 @@ Button::Button()
 {
 }
 
-Button::Button(const QString& n, const QBitmap& i, QChar t, bool d, bool s)
+Button::Button(const QString& n, const QBitmap& i, KDecorationDefines::DecorationButton t, bool d, bool s)
     : name(n),
       icon(i),
       type(t),
@@ -696,115 +696,126 @@ ButtonPositionWidget::ButtonPositionWidget(QWidget *parent)
 
     if (style == "ButtonVertical") {
         m_supportedButtons = "MNSHIAX_FBLR"; // support all buttons
-        new ButtonSourceItem(m_buttonSource, getButton('N', dummy));
+        new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonApplicationMenu, dummy));
     }
 #endif
 
-    new ButtonSourceItem(m_buttonSource, getButton('R', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('L', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('B', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('F', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('X', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('A', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('I', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('H', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('S', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('M', dummy));
-    new ButtonSourceItem(m_buttonSource, getButton('_', dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonResize, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonShade, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonKeepBelow, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonKeepAbove, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonClose, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonMaximizeRestore, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonMinimize, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonQuickHelp, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonOnAllDesktops, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonMenu, dummy));
+    new ButtonSourceItem(m_buttonSource, getButton(KDecorationDefines::DecorationButtonExplicitSpacer, dummy));
 }
 
 ButtonPositionWidget::~ButtonPositionWidget()
 {
 }
 
-Button ButtonPositionWidget::getButton(QChar type, bool& success)
+Button ButtonPositionWidget::getButton(KDecorationDefines::DecorationButton type, bool& success)
 {
     success = true;
 
-    if (type == 'R') {
+    switch (type) {
+    case KDecorationDefines::DecorationButtonResize: {
         QBitmap bmp = QBitmap::fromData(QSize(resize_width, resize_height), resize_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Resize"), bmp, 'R', false, m_supportedButtons.contains('R'));
-    } else if (type == 'L') {
+        return Button(i18n("Resize"), bmp, type, false, m_supportedButtons.contains('R'));
+    }
+    case KDecorationDefines::DecorationButtonShade: {
         QBitmap bmp = QBitmap::fromData(QSize(shade_width, shade_height), shade_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Shade"), bmp, 'L', false, m_supportedButtons.contains('L'));
-    } else if (type == 'B') {
+        return Button(i18n("Shade"), bmp, type, false, m_supportedButtons.contains('L'));
+    }
+    case KDecorationDefines::DecorationButtonKeepBelow: {
         QBitmap bmp = QBitmap::fromData(QSize(keepbelowothers_width, keepbelowothers_height), keepbelowothers_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Keep Below Others"), bmp, 'B', false, m_supportedButtons.contains('B'));
-    } else if (type == 'F') {
+        return Button(i18n("Keep Below Others"), bmp, type, false, m_supportedButtons.contains('B'));
+    }
+    case KDecorationDefines::DecorationButtonKeepAbove: {
         QBitmap bmp = QBitmap::fromData(QSize(keepaboveothers_width, keepaboveothers_height), keepaboveothers_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Keep Above Others"), bmp, 'F', false, m_supportedButtons.contains('F'));
-    } else if (type == 'X') {
+        return Button(i18n("Keep Above Others"), bmp, type, false, m_supportedButtons.contains('F'));
+    }
+    case KDecorationDefines::DecorationButtonClose: {
         QBitmap bmp = QBitmap::fromData(QSize(close_width, close_height), close_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Close"), bmp, 'X', false, m_supportedButtons.contains('X'));
-    } else if (type == 'A') {
+        return Button(i18n("Close"), bmp, type, false, m_supportedButtons.contains('X'));
+    }
+    case KDecorationDefines::DecorationButtonMaximizeRestore: {
         QBitmap bmp = QBitmap::fromData(QSize(maximize_width, maximize_height), maximize_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Maximize"), bmp, 'A', false, m_supportedButtons.contains('A'));
-    } else if (type == 'I') {
+        return Button(i18n("Maximize"), bmp, type, false, m_supportedButtons.contains('A'));
+    }
+    case KDecorationDefines::DecorationButtonMinimize: {
         QBitmap bmp = QBitmap::fromData(QSize(minimize_width, minimize_height), minimize_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Minimize"), bmp, 'I', false, m_supportedButtons.contains('I'));
-    } else if (type == 'H') {
+        return Button(i18n("Minimize"), bmp, type, false, m_supportedButtons.contains('I'));
+    }
+    case KDecorationDefines::DecorationButtonQuickHelp: {
         QBitmap bmp = QBitmap::fromData(QSize(help_width, help_height), help_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("Help"), bmp, 'H', false, m_supportedButtons.contains('H'));
-    } else if (type == 'S') {
+        return Button(i18n("Help"), bmp, type, false, m_supportedButtons.contains('H'));
+    }
+    case KDecorationDefines::DecorationButtonOnAllDesktops: {
         QBitmap bmp = QBitmap::fromData(QSize(onalldesktops_width, onalldesktops_height), onalldesktops_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("On All Desktops"), bmp, 'S', false, m_supportedButtons.contains('S'));
-    } else if (type == 'M') {
+        return Button(i18n("On All Desktops"), bmp, type, false, m_supportedButtons.contains('S'));
+    }
+    case KDecorationDefines::DecorationButtonMenu: {
         QBitmap bmp = QBitmap::fromData(QSize(menu_width, menu_height), menu_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18nc("Button showing window actions menu", "Window Menu"), bmp, 'M', false, m_supportedButtons.contains('M'));
+        return Button(i18nc("Button showing window actions menu", "Window Menu"), bmp, type, false, m_supportedButtons.contains('M'));
 #ifdef KWIN_BUILD_KAPPMENU
-    } else if (type == 'N') {
+    }
+    case KDecorationDefines::DecorationButtonApplicationMenu: {
         QBitmap bmp = QBitmap::fromData(QSize(menu_width, menu_height), menu_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18nc("Button showing application menu imported from dbusmenu", "Application Menu"), bmp, 'N', false, m_supportedButtons.contains('N'));
+        return Button(i18nc("Button showing application menu imported from dbusmenu", "Application Menu"), bmp, type, false, m_supportedButtons.contains('N'));
 #endif
-    } else if (type == '_') {
+    }
+    case KDecorationDefines::DecorationButtonExplicitSpacer: {
         QBitmap bmp = QBitmap::fromData(QSize(spacer_width, spacer_height), spacer_bits);
         bmp.createMaskFromColor(Qt::white);
-        return Button(i18n("--- spacer ---"), bmp, '_', true, m_supportedButtons.contains('_'));
-    } else {
+        return Button(i18n("--- spacer ---"), bmp, type, true, m_supportedButtons.contains('_'));
+    }
+	default:
         success = false;
         return Button();
     }
 }
 
-QString ButtonPositionWidget::buttonsLeft() const
+QList<KDecorationDefines::DecorationButton> ButtonPositionWidget::buttonsLeft() const
 {
-    ButtonList btns = m_dropSite->buttonsLeft;
-    QString btnString = "";
-    for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
-        btnString.append((*it)->button().type);
+    QList<KDecorationDefines::DecorationButton> ret;
+    for (auto button : m_dropSite->buttonsLeft) {
+        ret << button->button().type;
     }
-    return btnString;
+    return ret;
 }
 
-QString ButtonPositionWidget::buttonsRight() const
+QList<KDecorationDefines::DecorationButton> ButtonPositionWidget::buttonsRight() const
 {
-    ButtonList btns = m_dropSite->buttonsRight;
-    QString btnString = "";
-    for (ButtonList::const_iterator it = btns.constBegin(); it != btns.constEnd(); ++it) {
-        btnString.append((*it)->button().type);
+    QList<KDecorationDefines::DecorationButton> ret;
+    for (auto button : m_dropSite->buttonsRight) {
+        ret << button->button().type;
     }
-    return btnString;
+    return ret;
 }
 
-void ButtonPositionWidget::setButtonsLeft(const QString &buttons)
+void ButtonPositionWidget::setButtonsLeft(const QList<KDecorationDefines::DecorationButton> &buttons)
 {
     // to keep the button lists consistent, first remove all left buttons, then add buttons again...
     m_dropSite->clearLeft();
 
-    for (int i = 0; i < buttons.length(); ++i) {
+    for (auto button : buttons) {
         bool succ = false;
-        Button btn = getButton(buttons[i], succ);
+        Button btn = getButton(button, succ);
         if (succ) {
             m_dropSite->buttonsLeft.append(new ButtonDropSiteItem(btn));
             m_buttonSource->hideButton(btn.type);
@@ -814,14 +825,14 @@ void ButtonPositionWidget::setButtonsLeft(const QString &buttons)
     m_dropSite->update();
 }
 
-void ButtonPositionWidget::setButtonsRight(const QString &buttons)
+void ButtonPositionWidget::setButtonsRight(const QList<KDecorationDefines::DecorationButton> &buttons)
 {
     // to keep the button lists consistent, first remove all left buttons, then add buttons again...
     m_dropSite->clearRight();
 
-    for (int i = 0; i < buttons.length(); ++i) {
+    for (auto button : buttons) {
         bool succ = false;
-        Button btn = getButton(buttons[i], succ);
+        Button btn = getButton(button, succ);
         if (succ) {
             m_dropSite->buttonsRight.append(new ButtonDropSiteItem(btn));
             m_buttonSource->hideButton(btn.type);

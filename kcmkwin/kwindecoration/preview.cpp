@@ -577,9 +577,9 @@ void KDecorationPreviewOptions::updateSettings()
     if (customButtonsChanged)
         setCustomButtonPositions(customButtons);
     if (customButtons) {
-        if (!customTitleButtonsLeft.isNull())
+        if (!customTitleButtonsLeft.isEmpty())
             setTitleButtonsLeft(customTitleButtonsLeft);
-        if (!customTitleButtonsRight.isNull())
+        if (!customTitleButtonsRight.isEmpty())
             setTitleButtonsRight(customTitleButtonsRight);
     } else {
         setTitleButtonsLeft(KDecorationOptions::defaultTitleButtonsLeft());
@@ -602,7 +602,7 @@ void KDecorationPreviewOptions::setCustomTitleButtonsEnabled(bool enabled)
     updateSettings();
 }
 
-void KDecorationPreviewOptions::setCustomTitleButtons(const QString &left, const QString &right)
+void KDecorationPreviewOptions::setCustomTitleButtons(const QList<DecorationButton> &left, const QList<DecorationButton> &right)
 {
     customTitleButtonsLeft = left;
     customTitleButtonsRight = right;

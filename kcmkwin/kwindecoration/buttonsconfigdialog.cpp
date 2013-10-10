@@ -74,12 +74,12 @@ bool KWinDecorationButtonsConfigDialog::showTooltips() const
     return m_ui->showToolTipsCheckBox->isChecked();
 }
 
-QString KWinDecorationButtonsConfigDialog::buttonsLeft() const
+QList<KDecorationDefines::DecorationButton> KWinDecorationButtonsConfigDialog::buttonsLeft() const
 {
     return m_ui->buttonPositionWidget->buttonsLeft();
 }
 
-QString KWinDecorationButtonsConfigDialog::buttonsRight() const
+QList<KDecorationDefines::DecorationButton> KWinDecorationButtonsConfigDialog::buttonsRight() const
 {
     return m_ui->buttonPositionWidget->buttonsRight();
 }
