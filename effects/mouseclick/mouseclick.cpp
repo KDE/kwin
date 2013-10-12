@@ -195,26 +195,16 @@ EffectFrame* MouseClickEffect::createEffectFrame(const QPoint& pos, const QStrin
 void MouseClickEffect::repaint()
 {
     if (m_clicks.size() > 0) {
-        int xmin = effects->workspaceWidth();
-        int ymin = effects->workspaceHeight();
-        int xmax = 0;
-        int ymax = 0;
-        int yfontMax = 0;
+        QRegion dirtyRegion;
+        const int radius = m_ringMaxSize + m_lineWidth;
         foreach (MouseEvent* click, m_clicks) {
-            QRect fontGeo;
+            dirtyRegion |= QRect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2*radius, 2*radius);
             if (click->m_frame) {
-                fontGeo = click->m_frame->geometry();
+                // we grant the plasma style 32px padding for stuff like shadows...
+                dirtyRegion |= click->m_frame->geometry().adjusted(-32,-32,32,32);
             }
-            xmin = qMin<int>(xmin, click->m_pos.x());
-            ymin = qMin<int>(ymin, click->m_pos.y());
-            xmax = qMax<int>(xmax, click->m_pos.x() + (fontGeo.width() + 10));
-            ymax = qMax<int>(ymax, click->m_pos.y());
-            yfontMax = qMax<int>(yfontMax, fontGeo.height() + 10);
         }
-        int radius = m_ringMaxSize + m_lineWidth;
-        int yradius = yfontMax / 2 > radius ? yfontMax / 2 : radius;
-        QRect repaint(xmin - radius, ymin - yradius, xmax - xmin + radius * 2 , ymax - ymin + yradius * 2);
-        effects->addRepaint(repaint);
+        effects->addRepaint(dirtyRegion);
     }
 }
 
