@@ -161,7 +161,7 @@ bool AuroraeFactory::reset(unsigned long changed)
     if (changed & SettingFont){
         emit titleFontChanged();
     }
-    if (changed & SettingCompositing) {
+    if (changed == SettingCompositing) {
         return false;
     }
     const KConfig conf("auroraerc");
@@ -180,7 +180,7 @@ bool AuroraeFactory::reset(unsigned long changed)
         m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
     }
     emit configChanged();
-    return false; // need hard reset
+    return changed & (SettingDecoration | SettingButtons | SettingBorder); // need hard reset
 }
 
 bool AuroraeFactory::supports(Ability ability) const
