@@ -53,7 +53,6 @@ target_link_libraries( testClientMachine
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
-                       ${KDE4Support_LIBRARIES} # kdebug
                        KF5::KWindowSystem
                        ${XCB_XCB_LIBRARY}
                        ${XCB_XFIXES_LIBRARY}
