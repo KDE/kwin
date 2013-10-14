@@ -263,6 +263,9 @@ void UserActionsMenu::init()
     connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)), Qt::QueuedConnection);
 
     QMenu *advancedMenu = new QMenu(m_menu);
+    connect(advancedMenu, &QMenu::aboutToShow, [this, advancedMenu]() {
+        advancedMenu->setPalette(m_client.data()->palette());
+    });
 
     auto setShortcut = [](QAction *action, const QString &actionName) {
         const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->actionCollection()->action(actionName));
@@ -403,6 +406,7 @@ void UserActionsMenu::menuAboutToShow()
     Activities::self()->update(true, false, this, "showHideActivityMenu");
 #endif
 
+    m_menu->setPalette(m_client.data()->palette());
     m_resizeOperation->setEnabled(m_client.data()->isResizable());
     m_moveOperation->setEnabled(m_client.data()->isMovableAcrossScreens());
     m_maximizeOperation->setEnabled(m_client.data()->isMaximizable());
@@ -420,6 +424,7 @@ void UserActionsMenu::menuAboutToShow()
 
     if (decorationPlugin()->supportsTabbing()) {
         initTabbingPopups();
+        m_addTabsMenu->setPalette(m_client.data()->palette());
     } else {
         delete m_addTabsMenu;
         m_addTabsMenu = 0;
@@ -431,6 +436,7 @@ void UserActionsMenu::menuAboutToShow()
     m_scriptsMenu = NULL;
     // ask scripts whether they want to add entries for the given Client
     m_scriptsMenu = new QMenu(m_menu);
+    m_scriptsMenu->setPalette(m_client.data()->palette());
     QList<QAction*> scriptActions = Scripting::self()->actionsForUserActionMenu(m_client.data(), m_scriptsMenu);
     if (!scriptActions.isEmpty()) {
         m_scriptsMenu->addActions(scriptActions);
@@ -616,6 +622,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
     const VirtualDesktopManager *vds = VirtualDesktopManager::self();
 
     m_desktopMenu->clear();
+    m_desktopMenu->setPalette(m_client.data()->palette());
     QActionGroup *group = new QActionGroup(m_desktopMenu);
     QAction *action = m_desktopMenu->addAction(i18n("&All Desktops"));
     action->setData(0);
@@ -657,6 +664,7 @@ void UserActionsMenu::screenPopupAboutToShow()
     }
 
     m_screenMenu->clear();
+    m_screenMenu->setPalette(m_client.data()->palette());
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
     for (int i = 0; i<screens()->count(); ++i) {
@@ -680,6 +688,7 @@ void UserActionsMenu::activityPopupAboutToShow()
 
 #ifdef KWIN_BUILD_ACTIVITIES
     m_activityMenu->clear();
+    m_activityMenu->setPalette(m_client.data()->palette());
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
     action->setData(QString());
     action->setCheckable(true);
