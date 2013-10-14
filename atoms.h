@@ -65,6 +65,7 @@ public:
     Xcb::Atom net_wm_opaque_region;
     Xcb::Atom kde_net_wm_tab_group;
     Xcb::Atom kde_first_in_window_list;
+    Xcb::Atom kde_color_sheme;
 
     /**
      * @internal

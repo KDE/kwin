@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KDE/KIconLoader>
 #include <KDE/KWindowSystem>
+#include <KDE/KColorScheme>
 // Qt
 #include <QApplication>
 #include <QDebug>
@@ -141,6 +142,7 @@ Client::Client()
 #endif
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
+    , m_palette(QApplication::palette())
 {
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
@@ -2439,6 +2441,29 @@ void Client::updateFirstInTabBox()
     } else {
         setFirstInTabBox(false);
     }
+}
+
+void Client::updateColorScheme()
+{
+    // TODO: move into KWindowInfo
+    xcb_connection_t *c = connection();
+    const auto cookie = xcb_get_property_unchecked(c, false, m_client, atoms->kde_color_sheme,
+                                                   XCB_ATOM_STRING, 0, 10000);
+    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+    auto resetToDefault = [this]() {
+        m_palette = QApplication::palette();
+    };
+    if (!prop.isNull() && prop->format == 8 && prop->value_len > 0) {
+        QString path = QString::fromUtf8(static_cast<const char*>(xcb_get_property_value(prop.data())));
+        if (!path.isNull()) {
+            m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
+        } else {
+            resetToDefault();
+        }
+    } else {
+        resetToDefault();
+    }
+    triggerDecorationRepaint();
 }
 
 bool Client::isClient() const

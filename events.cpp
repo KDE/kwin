@@ -800,6 +800,8 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateCompositeBlocking(true);
         else if (e->atom == atoms->kde_first_in_window_list)
             updateFirstInTabBox();
+        else if (e->atom == atoms->kde_color_sheme)
+            updateColorScheme();
         break;
     }
 }

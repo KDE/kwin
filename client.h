@@ -620,6 +620,7 @@ public:
         m_firstInTabBox = enable;
     }
     void updateFirstInTabBox();
+    void updateColorScheme();
 
     //sets whether the client should be treated as a SessionInteract window
     void setSessionInteract(bool needed);
@@ -647,6 +648,8 @@ public:
     void print(T &stream) const;
 
     void cancelFocusOutTimer();
+
+    QPalette palette() const;
 
 public Q_SLOTS:
     void closeWindow();
@@ -993,6 +996,8 @@ private:
     QPoint input_offset;
 
     QTimer *m_focusOutTimer;
+
+    QPalette m_palette;
 };
 
 /**
@@ -1257,6 +1262,11 @@ inline void Client::removeRule(Rules* rule)
 inline bool Client::hiddenPreview() const
 {
     return mapping_state == Kept;
+}
+
+inline QPalette Client::palette() const
+{
+    return m_palette;
 }
 
 template <typename T>
