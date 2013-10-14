@@ -1531,7 +1531,7 @@ namespace Oxygen
     {
 
         // palette
-        QPalette palette = widget()->palette();
+        QPalette palette = KCommonDecoration::palette();
         palette.setCurrentColorGroup( (isActive() ) ? QPalette::Active : QPalette::Inactive );
 
         // define frame

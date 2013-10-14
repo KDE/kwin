@@ -113,7 +113,7 @@ namespace Oxygen
     void Button::paint( QPainter& painter )
     {
 
-        QPalette palette( this->palette() );
+        QPalette palette( _client.palette() );
         palette.setCurrentColorGroup( isActive() ? QPalette::Active : QPalette::Inactive);
 
         if(
