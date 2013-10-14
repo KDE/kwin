@@ -36,9 +36,9 @@ if( KWIN_HAVE_XRENDER_COMPOSITING )
     set(kwin_effect_XCB_LIBS ${kwin_effect_XCB_LIBS} ${XCB_RENDER_LIBRARIES})
 endif()
 
-if(OPENGL_FOUND)
+if(KWIN_BUILD_OPENGL)
     set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglutils)
-elseif(OPENGLES_FOUND)
+elseif(KWIN_BUILD_OPENGLES)
     set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinglesutils)
 endif()
 
@@ -49,28 +49,17 @@ endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
-    if(OPENGL_FOUND OR NOT (OPENGL_FOUND AND OPENGLES_FOUND))
-        # OpenGL or neither OpenGL nor OpenGL ES - default set
-        KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
-        if(OPENGL_FOUND)
-            if( KWIN_BUILD_OPENGL_1_COMPOSITING )
-                set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
-            endif()
-        elseif(OPENGLES_FOUND)
-            set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
+    KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
+    if(KWIN_BUILD_OPENGL)
+        if( KWIN_BUILD_OPENGL_1_COMPOSITING )
+            set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
         endif()
-        set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
-        install( TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
+    elseif(KWIN_BUILD_OPENGLES)
+        set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
     endif()
+    set_target_properties(kwin4_effect_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_${name})
+    install( TARGETS kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
 
-
-    if(OPENGLES_FOUND)
-        KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_gles_${name} ${ARGN})
-        # OpenGL ES gets into a different library
-        set_target_properties(kwin4_effect_gles_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
-        set_target_properties(kwin4_effect_gles_${name} PROPERTIES OUTPUT_NAME ${KWIN_NAME}4_effect_gles_${name})
-        install( TARGETS kwin4_effect_gles_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
-    endif()
 endmacro()
 
 macro( KWIN4_ADD_EFFECT_CONFIG name )

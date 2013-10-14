@@ -34,12 +34,27 @@ endif()
 
 cmake_dependent_option(KWIN_BUILD_KAPPMENU "Build without appmenu support" ON "KWIN_BUILD_DECORATIONS" FALSE)
 
+set(KWIN_BUILD_OPENGL FALSE)
+set(KWIN_BUILD_OPENGLES FALSE)
+if(OPENGL_FOUND AND (${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL"))
+    set(KWIN_BUILD_OPENGL TRUE)
+    message("Building KWin with OpenGL support")
+endif()
+if(OPENGLES_FOUND AND (${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GLESv2"))
+    set(KWIN_BUILD_OPENGLES TRUE)
+    message("Building KWin with OpenGL ES 2 support")
+endif()
+
+if(NOT KWIN_BUILD_OPENGL AND NOT KWIN_BUILD_OPENGLES)
+    message(FATAL_ERROR "KWin needs to be built against either OpenGL or OpenGL ES 2. Check your Qt config!")
+endif()
+
 # KWIN_HAVE_XRENDER_COMPOSITING - whether XRender-based compositing support is available: may be disabled
 if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif()
 
-if(OPENGL_FOUND)
+if(KWIN_BUILD_OPENGL)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif()
 
@@ -48,7 +63,7 @@ if(OPENGL_EGL_FOUND)
     set(KWIN_HAVE_EGL 1)
 endif()
 
-if(OPENGLES_FOUND)
+if(KWIN_BUILD_OPENGLES)
   include_directories(${OPENGLES_INCLUDE_DIR})
 endif()
 
@@ -312,7 +327,7 @@ target_link_libraries(kdeinit_kwin ${kwinLibs})
 set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
 set_target_properties(kdeinit_kwin PROPERTIES OUTPUT_NAME kdeinit4_${KWIN_NAME})
 
-if(OPENGL_FOUND)
+if(KWIN_BUILD_OPENGL)
     if( KWIN_BUILD_OPENGL_1_COMPOSITING )
         set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
     endif()
@@ -323,23 +338,13 @@ if(OPENGL_FOUND)
   if (DL_LIBRARY)
     target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
   endif()
-elseif(OPENGLES_FOUND)
+elseif(KWIN_BUILD_OPENGLES)
   target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
   set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
 endif()
 
 install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-if(OPENGLES_FOUND)
-  kf5_add_kdeinit_executable( kwin_gles ${kwin_KDEINIT_SRCS})
-  target_link_libraries(kdeinit_kwin_gles ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
-  set_target_properties(kdeinit_kwin_gles PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
-  set_target_properties(kwin_gles PROPERTIES OUTPUT_NAME ${KWIN_NAME}_gles)
-  set_target_properties(kdeinit_kwin_gles PROPERTIES OUTPUT_NAME kdeinit4_${KWIN_NAME}_gles)
-  install(TARGETS kdeinit_kwin_gles ${INSTALL_TARGETS_DEFAULT_ARGS} )
-  install(TARGETS kwin_gles         ${INSTALL_TARGETS_DEFAULT_ARGS} )
-endif()
 
 ########### install files ###############
 
