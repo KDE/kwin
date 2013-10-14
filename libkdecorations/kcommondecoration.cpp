@@ -1056,6 +1056,11 @@ void KCommonDecoration::update(const QRegion &region)
     d->wrapper->update(region);
 }
 
+QPalette KCommonDecoration::palette() const
+{
+    return d->wrapper->palette();
+}
+
 class KCommonDecorationButtonPrivate
 {
 public:

@@ -552,6 +552,11 @@ KDecoration::WindowOperation KDecorationPreviewBridge::buttonToWindowOperation(Q
     return KDecoration::NoOp;
 }
 
+QPalette KDecorationPreviewBridge::palette() const
+{
+    return QApplication::palette();
+}
+
 KDecorationPreviewOptions::KDecorationPreviewOptions()
 {
     customBorderSize = BordersCount; // invalid

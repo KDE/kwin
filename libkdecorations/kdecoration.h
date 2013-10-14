@@ -823,6 +823,11 @@ public:
      **/
     bool isAlphaEnabled() const;
 
+    /**
+     * The recommended palette for the decoration. This can be different per decorated client.
+     */
+    QPalette palette() const;
+
     // requests to decoration
 
     /**

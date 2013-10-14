@@ -150,6 +150,7 @@ public:
     virtual QRect transparentRect() const override;
 
     virtual void update(const QRegion &region) override;
+    virtual QPalette palette() const override;
 
     // Window tabbing
     virtual QString caption(int idx) const override;

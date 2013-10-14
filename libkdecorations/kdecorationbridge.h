@@ -88,6 +88,7 @@ public:
     virtual QRect transparentRect() const = 0;
 
     virtual void update(const QRegion &region) = 0;
+    virtual QPalette palette() const = 0;
 
     // Window tabbing
     virtual QString caption(int idx) const = 0;

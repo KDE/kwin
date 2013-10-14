@@ -235,6 +235,8 @@ public:
      */
     QRect transparentRect() const;
 
+    QPalette palette() const;
+
 public:
     /**
      * Handles widget and layout creation, call the base implementation when subclassing this member.

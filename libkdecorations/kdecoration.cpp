@@ -453,6 +453,11 @@ bool KDecoration::compositingActive() const
     return d->bridge->compositingActive();
 }
 
+QPalette KDecoration::palette() const
+{
+    return d->bridge->palette();
+}
+
 void KDecoration::padding(int &left, int &right, int &top, int &bottom) const
 {
     left = right = top = bottom = 0;

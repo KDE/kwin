@@ -65,6 +65,7 @@ BRIDGE_HELPER(void, maximize, MaximizeMode m, m,)
 BRIDGE_HELPER(void, minimize, , ,)
 BRIDGE_HELPER(void, showContextHelp, , ,)
 BRIDGE_HELPER(void, setDesktop, int desktop, desktop,)
+BRIDGE_HELPER(QPalette, palette, , , const)
 
 bool Bridge::isActive() const
 {
