@@ -15,7 +15,7 @@ target_link_libraries(kcm_kwin_scripts
     KF5::KCMUtils
     KF5::KIOCore
     KF5::KI18n
-    KF5::plasma
+    KF5::Plasma
     ${KDE4Support_LIBRARIES}
     ${KDE4_KNEWSTUFF3_LIBS}
 )

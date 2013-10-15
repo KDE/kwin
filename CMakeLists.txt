@@ -256,7 +256,7 @@ set(kwin_KDE_LIBS
     KF5::KIconThemes
     KF5::KNotifications
     KF5::KService
-    KF5::plasma
+    KF5::Plasma
     KF5::KWindowSystem
     KF5::XmlGui
 )

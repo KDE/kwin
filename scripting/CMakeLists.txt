@@ -5,7 +5,7 @@ target_link_libraries( kcm_kwin4_genericscripted
     KF5::KDeclarative
     KF5::KI18n
     KF5::KService
-    KF5::plasma
+    KF5::Plasma
     Qt5::DBus
     Qt5::UiTools )
 install( TARGETS kcm_kwin4_genericscripted DESTINATION ${PLUGIN_INSTALL_DIR} )

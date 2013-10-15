@@ -28,7 +28,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::KIconThemes
     KF5::KService
     KF5::KWindowSystem
-    KF5::plasma
+    KF5::Plasma
     KF5::XmlGui
     ${KDE4_KNEWSTUFF3_LIBS}
     ${KDE4Support_LIBRARIES}
