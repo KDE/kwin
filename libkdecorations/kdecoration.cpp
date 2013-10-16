@@ -434,7 +434,6 @@ bool KDecoration::isAlphaEnabled() const
 KDecorationUnstable::KDecorationUnstable(KDecorationBridge* bridge, KDecorationFactory* factory)
     : KDecoration(bridge, factory)
 {
-    Q_ASSERT(dynamic_cast< KDecorationBridgeUnstable* >(bridge));
 }
 
 KDecorationUnstable::~KDecorationUnstable()
