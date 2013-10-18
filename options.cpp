@@ -176,6 +176,8 @@ Options::Options(QObject *parent)
 {
     m_settings->setDefaults();
     syncFromKcfgc();
+
+    connect(this, SIGNAL(focusPolicyIsResonableChanged()), this, SIGNAL(&KConfigOptions::configChanged()));
 }
 
 Options::~Options()

@@ -86,7 +86,7 @@ class Options : public KDecorationOptions
      **/
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(int placement READ placement WRITE setPlacement NOTIFY placementChanged)
-    Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY configChanged)
+    Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
      * the size of the zone that triggers snapping on desktop borders
      */
@@ -743,10 +743,9 @@ public:
 
     //----------------------
 Q_SIGNALS:
-    void configChanged();
-
     // for properties
     void focusPolicyChanged();
+    void focusPolicyIsResonableChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
