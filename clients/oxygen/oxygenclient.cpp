@@ -43,12 +43,8 @@
 #include <QLabel>
 #include <QPainter>
 #include <QBitmap>
-#include <QX11Info>
 #include <QObjectList>
 #include <QMimeData>
-
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
 
 namespace Oxygen
 {
@@ -2042,9 +2038,9 @@ namespace Oxygen
 
         // create atom
         if( !_shadowAtom )
-        { _shadowAtom = XInternAtom( QX11Info::display(), "_KDE_NET_WM_SHADOW", False); }
+        { _shadowAtom = helper().createAtom( QLatin1String( "_KDE_NET_WM_SHADOW" ) ); }
 
-        XDeleteProperty(QX11Info::display(), windowId(), _shadowAtom);
+        xcb_delete_property( helper().xcbConnection(), (xcb_window_t) windowId(), _shadowAtom);
     }
 
 }

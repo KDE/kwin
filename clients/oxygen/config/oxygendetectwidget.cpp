@@ -38,10 +38,7 @@
 #include <QPushButton>
 
 #include <QX11Info>
-#include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#include <X11/Xutil.h>
-#include <fixx11h.h>
+#include <xcb/xcb.h>
 
 namespace Oxygen
 {
@@ -49,7 +46,8 @@ namespace Oxygen
     //_________________________________________________________
     DetectDialog::DetectDialog( QWidget* parent ):
         QDialog( parent ),
-        _grabber( 0 )
+        _grabber( 0 ),
+        _wmStateAtom( 0 )
     {
 
         // setup
@@ -57,6 +55,13 @@ namespace Oxygen
 
         connect( buttonBox->button( QDialogButtonBox::Cancel ), SIGNAL(clicked()), this, SLOT(close()) );
         windowClassCheckBox->setChecked( true );
+
+        // create atom
+        xcb_connection_t* connection( QX11Info::connection() );
+        const QString atomName( QLatin1String( "WM_STATE" ) );
+        xcb_intern_atom_cookie_t cookie( xcb_intern_atom( connection, false, atomName.size(), qPrintable( atomName ) ) );
+        xcb_intern_atom_reply_t* reply( xcb_intern_atom_reply( connection, cookie, 0) );
+        if( reply ) _wmStateAtom = reply->atom;
 
     }
 
@@ -135,30 +140,31 @@ namespace Oxygen
     WId DetectDialog::findWindow()
     {
 
-        Window root;
-        Window child;
-        uint mask;
-        int rootX, rootY, x, y;
-        Window parent = reinterpret_cast<Window>( QX11Info::appRootWindow() );
-        Atom wm_state = XInternAtom( QX11Info::display(), "WM_STATE", False );
+        // check atom
+        if( !_wmStateAtom ) return 0;
+
+        xcb_connection_t* connection( QX11Info::connection() );
+        xcb_window_t parent( QX11Info::appRootWindow() );
 
         // why is there a loop of only 10 here
         for( int i = 0; i < 10; ++i )
         {
-            XQueryPointer( QX11Info::display(), parent, &root, &child, &rootX, &rootY, &x, &y, &mask );
-            if( child == None ) return 0;
-            Atom type;
-            int format;
-            unsigned long nitems, after;
-            unsigned char* prop;
-            if( XGetWindowProperty(
-                QX11Info::display(), child, wm_state, 0, 0, False,
-                AnyPropertyType, &type, &format, &nitems, &after, &prop ) == Success )
+
+            // query pointer
+            xcb_query_pointer_reply_t* pointerReply( 0x0 );
             {
-                if( prop != NULL ) XFree( prop );
-                if( type != None ) return child;
+                xcb_query_pointer_cookie_t cookie( xcb_query_pointer( connection, parent ) );
+                pointerReply = xcb_query_pointer_reply( connection, cookie, 0 );
             }
-            parent = child;
+
+            if( !( pointerReply && pointerReply->child ) ) return 0;
+
+            const xcb_window_t child( pointerReply->child );
+            xcb_get_property_cookie_t cookie( xcb_get_property( connection, 0, child, _wmStateAtom, XCB_GET_PROPERTY_TYPE_ANY, 0, 0) );
+            xcb_get_property_reply_t* reply( xcb_get_property_reply( connection, cookie, 0 ) );
+            if( reply  && reply->type ) return child;
+            else parent = child;
+
         }
 
         return 0;

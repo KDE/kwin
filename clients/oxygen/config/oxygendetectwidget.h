@@ -40,6 +40,7 @@
 #include <QLabel>
 
 #include <kwindowsystem.h>
+#include <xcb/xcb.h>
 
 namespace Oxygen
 {
@@ -99,6 +100,9 @@ namespace Oxygen
 
         //! current window information
         KWindowInfo _info;
+
+        //! wm state atom
+        xcb_atom_t _wmStateAtom;
 
     };
 

@@ -28,8 +28,7 @@ target_link_libraries(kwin3_oxygen KF5::KConfigWidgets KF5::KGuiAddons KF5::KI18
 target_link_libraries(kwin3_oxygen kdecorations oxygenstyle)
 
 if(X11_FOUND)
-  target_link_libraries(kwin3_oxygen ${X11_X11_LIB} ${XCB_XCB_LIBRARIES})
-  target_link_libraries(kwin3_oxygen Qt5::X11Extras)
+  target_link_libraries(kwin3_oxygen ${XCB_XCB_LIBRARIES})
 endif()
 
 install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR})

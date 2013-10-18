@@ -41,7 +41,7 @@
 #include <QTextStream>
 #include <QTimerEvent>
 
-#include <X11/Xdefs.h>
+#include <xcb/xcb.h>
 
 namespace Oxygen
 {
@@ -485,7 +485,7 @@ namespace Oxygen
         QBasicTimer _dragStartTimer;
 
         //! shadow atom
-        Atom _shadowAtom;
+        xcb_atom_t _shadowAtom;
 
     };
 
