@@ -11,7 +11,7 @@ set(kwin_oxygen_config_PART_SRCS
     ../oxygenexceptionlist.cpp
   )
 
-kde4_add_kcfg_files(kwin_oxygen_config_PART_SRCS ../oxygenconfiguration.kcfgc)
+kconfig_add_kcfg_files(kwin_oxygen_config_PART_SRCS ../oxygenconfiguration.kcfgc)
 
 set( kwin_oxygen_config_PART_FORMS
    ui/oxygenconfigurationui.ui

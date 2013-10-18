@@ -20,7 +20,7 @@ set(kwin_oxygen_SRCS
      oxygentitleanimationdata.cpp
   )
 
-kde4_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
+kconfig_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 
 kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})
 target_link_libraries(kwin3_oxygen Qt5::Widgets )
