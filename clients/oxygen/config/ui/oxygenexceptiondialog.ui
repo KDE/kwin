@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>511</width>
-    <height>373</height>
+    <width>514</width>
+    <height>347</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -301,8 +301,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>252</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>157</x>
@@ -317,12 +317,92 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
+     <x>320</x>
+     <y>342</y>
     </hint>
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>frameBorderCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>frameBorderComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>125</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>316</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>blendColorCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>blendColorComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>136</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>333</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sizeGripCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sizeGripComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>212</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>214</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleOutlineCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>titleOutlineComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>198</x>
+     <y>237</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>317</x>
+     <y>241</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>separatorCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>separatorComboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>264</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>266</y>
     </hint>
    </hints>
   </connection>
