@@ -47,7 +47,6 @@ const int MAX_TIME = 100;
 ShowFpsEffect::ShowFpsEffect()
     : paints_pos(0)
     , frames_pos(0)
-    , fpsText(0)
     , m_noBenchmark(effects->effectFrame(EffectFrameUnstyled, false))
 {
     for (int i = 0;
@@ -233,8 +232,7 @@ void ShowFpsEffect::paintGL(int fps)
 
     // Paint FPS numerical value
     if (fpsTextRect.isValid()) {
-        delete fpsText;
-        fpsText = new GLTexture(fpsTextImage(fps));
+        fpsText.reset(new GLTexture(fpsTextImage(fps)));
         fpsText->bind();
         ShaderBinder binder(ShaderManager::SimpleShader);
         if (effects->compositingType() == OpenGL2Compositing) {

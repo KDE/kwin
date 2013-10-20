@@ -803,7 +803,7 @@ WindowPixmap::~WindowPixmap()
 
 void WindowPixmap::create()
 {
-    if (isValid()) {
+    if (isValid() || toplevel()->isDeleted()) {
         return;
     }
     XServerGrabber grabber;

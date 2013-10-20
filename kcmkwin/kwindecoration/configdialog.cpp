@@ -46,6 +46,9 @@ KWinAuroraeConfigForm::KWinAuroraeConfigForm(QWidget* parent)
     : QWidget(parent)
 {
     setupUi(this);
+    connect(borderSizesCombo, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
+    connect(buttonSizesCombo, SIGNAL(currentIndexChanged(int)), SIGNAL(changed()));
+    connect(closeWindowsDoubleClick, SIGNAL(clicked()), SIGNAL(changed()));
 }
 
 void KWinAuroraeConfigForm::enableNoSideBorderSupport(bool enable)

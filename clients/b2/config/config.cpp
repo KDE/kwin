@@ -106,14 +106,10 @@ B2Config::B2Config(KConfig *conf, QWidget *parent)
     load(cg);
 
     // Ensure we track user changes properly
-    connect(cbColorBorder, SIGNAL(clicked()),
-	    this, SLOT(slotSelectionChanged()));
-    connect(showGrabHandleCb, SIGNAL(clicked()),
-	    this, SLOT(slotSelectionChanged()));
-	connect(autoMoveTitlebarCb, SIGNAL(clicked()),
-		this, SLOT(slotSelectionChanged()));
-    connect(menuDblClickOp, SIGNAL(activated(int)),
-	    this, SLOT(slotSelectionChanged()));
+    connect(cbColorBorder, SIGNAL(clicked()), SIGNAL(changed()));
+    connect(showGrabHandleCb, SIGNAL(clicked()), SIGNAL(changed()));
+    connect(autoMoveTitlebarCb, SIGNAL(clicked()), SIGNAL(changed()));
+    connect(menuDblClickOp, SIGNAL(activated(int)), SIGNAL(changed()));
     // Make the widgets visible in kwindecoration
     gb->show();
 }
