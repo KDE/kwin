@@ -410,13 +410,13 @@ int LaptopClient::layoutMetric(LayoutMetric lm, bool respectWindowState, const K
         case LM_TitleEdgeRight:
         case LM_BorderLeft:
         case LM_BorderRight:
-            return 4;
+            return (maximizeMode() & MaximizeHorizontal) ? 0 : 4;
 
         case LM_BorderBottom:
-            return mustDrawHandle() ? handleSize : 4;
+            return (maximizeMode() & MaximizeVertical) ? 0 : (isResizable() ? handleSize : 4);
 
         case LM_TitleEdgeTop:
-            return 3;
+            return (maximizeMode() & MaximizeVertical) ? 0 : 3;
 
         case LM_TitleEdgeBottom:
             return 1;
