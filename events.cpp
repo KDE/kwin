@@ -1197,7 +1197,7 @@ void Client::processMousePressEvent(QMouseEvent* e)
 }
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonReleaseEvent(xcb_window_t w, int /*button*/, int state, int x, int y, int x_root, int y_root)
+bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
     if (w == decorationId() && !buttonDown)
         return false;
@@ -1209,7 +1209,17 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int /*button*/, int state, int x
         return true;
     x = this->x(); // translate from grab window to local coords
     y = this->y();
-    if ((state & (Button1Mask & Button2Mask & Button3Mask)) == 0) {
+
+    // Check whether other buttons are still left pressed
+    int buttonMask = XCB_BUTTON_MASK_1 | XCB_BUTTON_MASK_2 | XCB_BUTTON_MASK_3;
+    if (button == XCB_BUTTON_INDEX_1)
+        buttonMask &= ~XCB_BUTTON_MASK_1;
+    else if (button == XCB_BUTTON_INDEX_2)
+        buttonMask &= ~XCB_BUTTON_MASK_2;
+    else if (button == XCB_BUTTON_INDEX_3)
+        buttonMask &= ~XCB_BUTTON_MASK_3;
+
+    if ((state & buttonMask) == 0) {
         buttonDown = false;
         stopDelayedMoveResize();
         if (moveResizeMode) {
