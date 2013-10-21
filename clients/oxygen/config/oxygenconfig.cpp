@@ -60,11 +60,13 @@ namespace Oxygen
         // configuration
         _configuration = KSharedConfig::openConfig( QStringLiteral( "oxygenrc" ) );
 
+        // create new configuration widget and add to layout, if any
         _configWidget = new ConfigWidget( parent );
+        if( parent && parent->layout() ) parent->layout()->addWidget( _configWidget );
+        else _configWidget->show();
 
         load();
         connect( _configWidget, SIGNAL(changed(bool)), SLOT(updateChanged()) );
-        _configWidget->show();
 
     }
 
