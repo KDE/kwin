@@ -31,7 +31,6 @@
 #include <QDBusConnection>
 
 #include <KPushButton>
-#include <KFileDialog>
 #include <KLocalizedString>
 
 namespace Oxygen
