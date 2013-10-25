@@ -64,8 +64,8 @@ public:
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
-    DeclarativeView *m_declarativeView;
-    DeclarativeView *m_declarativeDesktopView;
+    QScopedPointer<DeclarativeView> m_declarativeView;
+    QScopedPointer<DeclarativeView> m_declarativeDesktopView;
     ClientModel* m_clientModel;
     DesktopModel* m_desktopModel;
     QModelIndex index;
@@ -100,8 +100,6 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
 
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
-    delete m_declarativeView;
-    delete m_declarativeDesktopView;
 }
 
 ClientModel* TabBoxHandlerPrivate::clientModel() const
@@ -122,7 +120,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
     TabBoxClient *currentClient = q->client(index);
     QWindow *w = NULL;
     if (m_declarativeView && m_declarativeView->isVisible()) {
-        w = m_declarativeView;
+        w = m_declarativeView.data();
     }
 
     if (q->isKWinCompositing()) {
@@ -220,14 +218,14 @@ void TabBoxHandler::show()
         if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
             // use declarative view
             if (!d->m_declarativeView) {
-                d->m_declarativeView = new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox);
+                d->m_declarativeView.reset(new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox));
             }
-            dv = d->m_declarativeView;
+            dv = d->m_declarativeView.data();
         } else {
             if (!d->m_declarativeDesktopView) {
-                d->m_declarativeDesktopView = new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox);
+                d->m_declarativeDesktopView.reset(new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox));
             }
-            dv = d->m_declarativeDesktopView;
+            dv = d->m_declarativeDesktopView.data();
         }
         if (dv->status() == QQuickView::Ready && dv->rootObject()) {
             dv->show();
@@ -262,12 +260,8 @@ void TabBoxHandler::hide(bool abort)
     if (d->config.isHighlightWindows()) {
         d->endHighlightWindows(abort);
     }
-    if (d->m_declarativeView) {
-        d->m_declarativeView->hide();
-    }
-    if (d->m_declarativeDesktopView) {
-        d->m_declarativeDesktopView->hide();
-    }
+    d->m_declarativeView.reset();
+    d->m_declarativeDesktopView.reset();
 }
 
 QModelIndex TabBoxHandler::nextPrev(bool forward) const
@@ -387,9 +381,9 @@ bool TabBoxHandler::containsPos(const QPoint& pos) const
 {
     QWindow *w = NULL;
     if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
-        w = d->m_declarativeView;
+        w = d->m_declarativeView.data();
     } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
-        w = d->m_declarativeDesktopView;
+        w = d->m_declarativeDesktopView.data();
     } else {
         return false;
     }
