@@ -429,7 +429,10 @@ void DeclarativeView::slotWindowChanged(WId wId, unsigned int properties)
 
 bool DeclarativeView::sendKeyEvent(QKeyEvent *e)
 {
-    return event(e);
+    if (QQuickItem *item = rootObject()->findChild<QQuickItem*>(QStringLiteral("listView"))) {
+        return sendEvent(item, e);
+    }
+    return false;
 }
 
 } // namespace TabBox
