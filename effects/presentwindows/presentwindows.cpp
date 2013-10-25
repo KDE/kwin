@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QQuickView>
 #include <QDesktopWidget>
 #include <QGraphicsObject>
 #include <QTimer>
@@ -400,8 +401,12 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 }
                 winData->textFrame->render(region, 0.9 * data.opacity() * m_decalOpacity, 0.75);
             }
-        } else
+        } else {
+            if (w == m_closeWindow && m_closeView && !m_closeView->isVisible()) {
+                data.setOpacity(0);
+            }
             effects->paintWindow(w, mask, region, data);
+        }
     } else
         effects->paintWindow(w, mask, region, data);
 }
@@ -522,8 +527,9 @@ bool PresentWindowsEffect::borderActivated(ElectricBorder border)
 void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
 {
     QMouseEvent* me = static_cast< QMouseEvent* >(e);
-    if (m_closeView && m_closeView->geometry().contains(me->pos())) {
-        if (!m_closeView->isVisible()) {
+    if (m_closeView) {
+        const bool contains = m_closeView->geometry().contains(me->pos());
+        if (!m_closeView->isVisible() && contains) {
             updateCloseWindow();
         }
         if (m_closeView->isVisible()) {
@@ -531,7 +537,10 @@ void PresentWindowsEffect::windowInputMouseEvent(QEvent *e)
 //             const QPointF scenePos = m_closeView->mapToScene(widgetPos);
             QMouseEvent event(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
             m_closeView->windowInputMouseEvent(&event);
-            return;
+            if (contains) {
+                // filter out
+                return;
+            }
         }
     }
     // Which window are we hovering over? Always trigger as we don't always get move events before clicking
@@ -1945,15 +1954,17 @@ void PresentWindowsEffect::screenCountChanged()
 /************************************************
 * CloseWindowView
 ************************************************/
-CloseWindowView::CloseWindowView(QWindow *parent)
-    : QQuickView(parent)
+CloseWindowView::CloseWindowView(QObject *parent)
+    : QObject(parent)
     , m_armTimer(new QElapsedTimer())
+    , m_window(new QQuickView())
+    , m_visible(false)
 {
-    setFlags(Qt::X11BypassWindowManagerHint);
-    setColor(Qt::transparent);
+    m_window->setFlags(Qt::X11BypassWindowManagerHint);
+    m_window->setColor(Qt::transparent);
 
-    setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
-    if (QObject *item = rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
+    m_window->setSource(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/presentwindows/main.qml"))));
+    if (QObject *item = m_window->rootObject()->findChild<QObject*>(QStringLiteral("closeButton"))) {
         connect(item, SIGNAL(clicked()), SIGNAL(requestClose()));
     }
 
@@ -1963,17 +1974,12 @@ CloseWindowView::CloseWindowView(QWindow *parent)
 void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 {
     if (e->type() == QEvent::MouseMove) {
-        mouseMoveEvent(e);
+        qApp->sendEvent(m_window.data(), e);
     } else if (!m_armTimer->hasExpired(350)) {
         // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
         return;
-    } else if (e->type() == QEvent::MouseButtonPress) {
-        mousePressEvent(e);
-    } else if (e->type() == QEvent::MouseButtonDblClick) {
-        mouseDoubleClickEvent(e);
-    } else if (e->type() == QEvent::MouseButtonRelease) {
-        mouseReleaseEvent(e);
     }
+    qApp->sendEvent(m_window.data(), e);
 }
 
 void CloseWindowView::disarm()
@@ -1981,12 +1987,46 @@ void CloseWindowView::disarm()
     m_armTimer->restart();
 }
 
-void CloseWindowView::hideEvent(QHideEvent *event)
+bool CloseWindowView::isVisible() const
 {
-    const QPoint globalPos = mapToGlobal(QPoint(-1,-1));
-    QMouseEvent me(QEvent::MouseMove, QPoint(-1,-1), globalPos, Qt::NoButton, Qt::NoButton, Qt::NoModifier);
-    mouseMoveEvent(&me);
-    QQuickView::hideEvent(event);
+    return m_visible;
+}
+
+void CloseWindowView::show()
+{
+    m_visible = true;
+    m_window->show();
+}
+
+void CloseWindowView::hide()
+{
+    m_visible = false;
+    QEvent event(QEvent::Leave);
+    qApp->sendEvent(m_window.data(), &event);
+}
+
+#define DELEGATE(type, name) \
+type CloseWindowView::name() const \
+{ \
+    return m_window->name(); \
+}
+
+DELEGATE(int, width)
+DELEGATE(int, height)
+DELEGATE(QSize, size)
+DELEGATE(QRect, geometry)
+DELEGATE(WId, winId)
+
+#undef DELEGATE
+
+void CloseWindowView::setGeometry(const QRect &geometry)
+{
+    m_window->setGeometry(geometry);
+}
+
+QPoint CloseWindowView::mapFromGlobal(const QPoint &pos) const
+{
+    return m_window->mapFromGlobal(pos);
 }
 
 } // namespace

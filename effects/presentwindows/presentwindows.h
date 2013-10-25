@@ -25,28 +25,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_proxy.h"
 
 #include <kwineffects.h>
-#include <QQuickView>
 
 class QElapsedTimer;
+class QQuickView;
 
 namespace KWin
 {
-class CloseWindowView : public QQuickView
+class CloseWindowView : public QObject
 {
     Q_OBJECT
 public:
-    explicit CloseWindowView(QWindow *parent = 0);
+    explicit CloseWindowView(QObject *parent = 0);
     void windowInputMouseEvent(QMouseEvent* e);
     void disarm();
+
+    void show();
+    void hide();
+    bool isVisible() const;
+
+    // delegate to QWindow
+    int width() const;
+    int height() const;
+    QSize size() const;
+    QRect geometry() const;
+    WId winId() const;
+    void setGeometry(const QRect &geometry);
+    QPoint mapFromGlobal(const QPoint &pos) const;
 
 Q_SIGNALS:
     void requestClose();
 
-protected:
-    void hideEvent(QHideEvent *event);
-
 private:
     QScopedPointer<QElapsedTimer> m_armTimer;
+    QScopedPointer<QQuickView> m_window;
+    bool m_visible;
 };
 
 /**
