@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <QQuickView>
 
-class QTimer;
+class QElapsedTimer;
 
 namespace KWin
 {
@@ -46,7 +46,7 @@ protected:
     void hideEvent(QHideEvent *event);
 
 private:
-    QTimer* m_armTimer;
+    QScopedPointer<QElapsedTimer> m_armTimer;
 };
 
 /**

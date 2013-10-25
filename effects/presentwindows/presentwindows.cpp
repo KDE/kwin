@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QGraphicsObject>
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QVector2D>
 #include <QVector4D>
 
@@ -1946,7 +1947,7 @@ void PresentWindowsEffect::screenCountChanged()
 ************************************************/
 CloseWindowView::CloseWindowView(QWindow *parent)
     : QQuickView(parent)
-    , m_armTimer(new QTimer(this))
+    , m_armTimer(new QElapsedTimer())
 {
     setFlags(Qt::X11BypassWindowManagerHint);
     setColor(Qt::transparent);
@@ -1956,16 +1957,15 @@ CloseWindowView::CloseWindowView(QWindow *parent)
         connect(item, SIGNAL(clicked()), SIGNAL(requestClose()));
     }
 
-    // setup the timer - attempt to prevent accidental clicks
-    m_armTimer->setSingleShot(true);
-    m_armTimer->setInterval(350); // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
+    m_armTimer->restart();
 }
 
 void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 {
     if (e->type() == QEvent::MouseMove) {
         mouseMoveEvent(e);
-    } else if (m_armTimer->isActive()) {
+    } else if (!m_armTimer->hasExpired(350)) {
+        // 50ms until the window is elevated (seen!) and 300ms more to be "realized" by the user.
         return;
     } else if (e->type() == QEvent::MouseButtonPress) {
         mousePressEvent(e);
@@ -1978,7 +1978,7 @@ void CloseWindowView::windowInputMouseEvent(QMouseEvent *e)
 
 void CloseWindowView::disarm()
 {
-    m_armTimer->start();
+    m_armTimer->restart();
 }
 
 void CloseWindowView::hideEvent(QHideEvent *event)
