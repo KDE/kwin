@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDialogButtonBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QQuickWindow>
 #include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QtDBus/QtDBus>
@@ -222,6 +223,9 @@ void Application::start()
     });
     connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
     connect(&owner, &KSelectionOwner::claimedOwnership, [this]{
+        // we want all QQuickWindows with an alpha buffer
+        QQuickWindow::setDefaultAlphaBuffer(true);
+
         installNativeEventFilter(m_eventFilter.data());
         // first load options - done internally by a different thread
         options = new Options;
