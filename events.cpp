@@ -1014,6 +1014,14 @@ bool Client::eventFilter(QObject* o, QEvent* e)
         decoration->widget()->update();
         return false;
     }
+    if (e->type() == QEvent::ZOrderChange) {
+        // when the user actions menu is closed by clicking on the window decoration (which is not unlikely)
+        // Qt will raise the decoration window and thus the decoration window is above the actual Client
+        // see QWidgetWindow::handleMouseEvent (qtbase/src/widgets/kernel/qwidgetwindow.cpp)
+        // when this happens also a ZOrderChange event is sent, we intercept all of them and make sure that
+        // the window is lowest in stack again.
+        Xcb::lowerWindow(decorationId());
+    }
     return false;
 }
 

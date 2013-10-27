@@ -42,6 +42,7 @@ static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
 static void moveWindow(xcb_window_t window, const QPoint &pos);
 static void moveWindow(xcb_window_t window, uint32_t x, uint32_t y);
+static void lowerWindow(xcb_window_t window);
 static void selectInput(xcb_window_t window, uint32_t events);
 
 template <typename Reply,
@@ -649,8 +650,7 @@ void Window::raise()
 inline
 void Window::lower()
 {
-    const uint32_t values[] = { XCB_STACK_MODE_BELOW };
-    xcb_configure_window(connection(), m_window, XCB_CONFIG_WINDOW_STACK_MODE, values);
+    lowerWindow(m_window);
 }
 
 inline
@@ -794,6 +794,12 @@ static inline void moveWindow(xcb_window_t window, uint32_t x, uint32_t y)
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     const uint32_t values[] = { x, y };
     xcb_configure_window(connection(), window, mask, values);
+}
+
+static inline void lowerWindow(xcb_window_t window)
+{
+    const uint32_t values[] = { XCB_STACK_MODE_BELOW };
+    xcb_configure_window(connection(), window, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
 
 static inline WindowId createInputWindow(const QRect &geometry, uint32_t mask, const uint32_t *values)
