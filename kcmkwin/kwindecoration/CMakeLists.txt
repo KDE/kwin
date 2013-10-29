@@ -33,7 +33,7 @@ target_link_libraries(kcm_kwindecoration
     KF5::KCompletion
     KF5::KI18n
     ${KDE4_KNEWSTUFF3_LIBS}
-    ${KDE4Support_LIBRARIES}
+    KF5::KDE4Support
 )
 install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

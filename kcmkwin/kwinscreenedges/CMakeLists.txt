@@ -16,7 +16,7 @@ target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
     KF5::KI18n
     KF5::KService
     KF5::Plasma
-    ${KDE4Support_LIBRARIES}
+    KF5::KDE4Support
     )
 install( TARGETS kcm_kwinscreenedges  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

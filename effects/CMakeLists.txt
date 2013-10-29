@@ -3,7 +3,7 @@ set(kwin_effect_OWN_LIBS
 )
 
 set(kwin_effect_KDE_LIBS
-    ${KDE4Support_LIBRARIES}
+    KF5::KDE4Support
     KF5::KConfigCore
     KF5::KConfigWidgets
     KF5::KI18n
