@@ -32,7 +32,7 @@
 #include <kiconloader.h>
 
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <kvbox.h>
 
 #include "ktimerdialog.moc"

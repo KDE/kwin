@@ -21,7 +21,7 @@
 #include <klistwidget.h>
 #include <kpushbutton.h>
 #include <assert.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kconfig.h>
 #include <QFileDialog>
 

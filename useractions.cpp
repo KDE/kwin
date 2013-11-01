@@ -450,7 +450,7 @@ void UserActionsMenu::showHideActivityMenu()
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     const QStringList &openActivities_ = Activities::self()->running();
-    kDebug() << "activities:" << openActivities_.size();
+    qDebug() << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
         m_activityMenu = 0;

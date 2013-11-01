@@ -171,7 +171,7 @@ void Activities::reallyStop(const QString &id)
             continue; //TODO support old wm_command apps too?
         }
 
-        //kDebug() << sessionId;
+        //qDebug() << sessionId;
 
         //if it's on the activity that's closing, it needs saving
         //but if a process is on some other open activity, I don't wanna close it yet

@@ -1635,8 +1635,8 @@ void Client::takeActivity(int flags, bool handled)
 
     //if ( previous_activity_timestamp == xTime() && previous_client != this )
     //    {
-    //    kDebug( 1212 ) << "Repeated use of the same X timestamp for activity";
-    //    kDebug( 1212 ) << kBacktrace();
+    //    qDebug() << "Repeated use of the same X timestamp for activity";
+    //    qDebug() << kBacktrace();
     //    }
 
     previous_activity_timestamp = xTime();
@@ -1657,8 +1657,8 @@ void Client::takeFocus()
 
     //if ( previous_focus_timestamp == xTime() && previous_client != this )
     //    {
-    //    kDebug( 1212 ) << "Repeated use of the same X timestamp for focus";
-    //    kDebug( 1212 ) << kBacktrace();
+    //    qDebug() << "Repeated use of the same X timestamp for focus";
+    //    qDebug() << kBacktrace();
     //    }
 
     previous_focus_timestamp = xTime();
@@ -2376,13 +2376,13 @@ void Client::checkActivities()
     //otherwise, somebody else changed it. we need to validate before reacting
     QStringList allActivities = Activities::self()->all();
     if (allActivities.isEmpty()) {
-        kDebug() << "no activities!?!?";
+        qDebug() << "no activities!?!?";
         //don't touch anything, there's probably something bad going on and we don't wanna make it worse
         return;
     }
     for (int i = 0; i < newActivitiesList.size(); ++i) {
         if (! allActivities.contains(newActivitiesList.at(i))) {
-            kDebug() << "invalid:" << newActivitiesList.at(i);
+            qDebug() << "invalid:" << newActivitiesList.at(i);
             newActivitiesList.removeAt(i--);
         }
     }

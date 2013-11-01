@@ -180,7 +180,7 @@ void Workspace::updateClientArea(bool force)
             for (int iS = 0;
                     iS < nscreens;
                     iS ++) {
-//                            kDebug (1212) << "adjusting new_sarea: " << screens[ iS ];
+//                            qDebug() << "adjusting new_sarea: " << screens[ iS ];
                 new_sareas[(*it)->desktop()][ iS ]
                 = new_sareas[(*it)->desktop()][ iS ].intersected(
                       (*it)->adjustedClientArea(desktopArea, screens[ iS ]));
@@ -917,19 +917,19 @@ QRect Client::adjustedClientArea(const QRect &desktopArea, const QRect& area) co
     stareaB.setBottom(qMin(stareaB.bottom(), screenarea.bottom()));
 
     if (stareaL . intersects(area)) {
-//        kDebug (1212) << "Moving left of: " << r << " to " << stareaL.right() + 1;
+//        qDebug() << "Moving left of: " << r << " to " << stareaL.right() + 1;
         r . setLeft(stareaL . right() + 1);
     }
     if (stareaR . intersects(area)) {
-//        kDebug (1212) << "Moving right of: " << r << " to " << stareaR.left() - 1;
+//        qDebug() << "Moving right of: " << r << " to " << stareaR.left() - 1;
         r . setRight(stareaR . left() - 1);
     }
     if (stareaT . intersects(area)) {
-//        kDebug (1212) << "Moving top of: " << r << " to " << stareaT.bottom() + 1;
+//        qDebug() << "Moving top of: " << r << " to " << stareaT.bottom() + 1;
         r . setTop(stareaT . bottom() + 1);
     }
     if (stareaB . intersects(area)) {
-//        kDebug (1212) << "Moving bottom of: " << r << " to " << stareaB.top() - 1;
+//        qDebug() << "Moving bottom of: " << r << " to " << stareaB.top() - 1;
         r . setBottom(stareaB . top() - 1);
     }
     return r;
@@ -2443,7 +2443,7 @@ void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
 {
     int nscreens = screens()->count();
 
-//    kDebug( 1212 ) << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
+//    qDebug() << "incoming request with top: " << topology.top << " bottom: " << topology.bottom
 //                   << " left: " << topology.left << " right: " << topology.right
 //                   << ", we have: " << nscreens << " screens.";
 
@@ -2475,9 +2475,9 @@ QRect Client::fullscreenMonitorsArea(NETFullscreenMonitors requestedTopology) co
     right = screens()->geometry(requestedTopology.right);
     total = top.united(bottom.united(left.united(right)));
 
-//    kDebug( 1212 ) << "top: " << top << " bottom: " << bottom
+//    qDebug() << "top: " << top << " bottom: " << bottom
 //                   << " left: " << left << " right: " << right;
-//    kDebug( 1212 ) << "returning rect: " << total;
+//    qDebug() << "returning rect: " << total;
     return total;
 }
 

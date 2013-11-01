@@ -57,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QX11Info>
 #include <KUrl>
 #include <KConfigGroup>
-#include <KDebug>
+#include <QDebug>
 
 namespace B2 {
 

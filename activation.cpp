@@ -715,7 +715,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
                                                  bool session) const
 {
     xcb_timestamp_t time = info->userTime();
-    //kDebug( 1212 ) << "User timestamp, initial:" << time;
+    //qDebug() << "User timestamp, initial:" << time;
     //^^ this deadlocks kwin --replace sometimes.
 
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0

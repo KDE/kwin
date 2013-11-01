@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "monitor.h"
 
-#include <kdebug.h>
+#include <QDebug>
 #include <KDE/KLocalizedString>
 #include <qgraphicsitem.h>
 #include <qgraphicsview.h>

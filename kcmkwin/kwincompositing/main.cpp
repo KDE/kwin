@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kmessagebox.h>
 #include <ksettings/dispatcher.h>
 #include <kpluginselector.h>

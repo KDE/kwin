@@ -34,7 +34,7 @@
 
 #include <kconfig.h>
 #include <kdialog.h>
-#include <kdebug.h>
+#include <QDebug>
 #include <kglobalsettings.h>
 #include <kcolorscheme.h>
 #include <kseparator.h>

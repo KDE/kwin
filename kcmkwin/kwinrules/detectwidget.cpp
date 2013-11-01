@@ -22,7 +22,7 @@
 
 #include <kapplication.h>
 #include <KDE/KLocalizedString>
-#include <kdebug.h>
+#include <QDebug>
 #include <kwindowsystem.h>
 #include <QLabel>
 #include <QRadioButton>

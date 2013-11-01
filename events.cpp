@@ -202,7 +202,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         was_user_interaction = true;
         int keyQt;
         KKeyServer::xcbKeyPressEventToQt(reinterpret_cast<xcb_key_press_event_t*>(e), &keyQt);
-//            kDebug(125) << "Workspace::keyPress( " << keyQt << " )";
+//            qDebug() << "Workspace::keyPress( " << keyQt << " )";
         if (movingClient) {
             movingClient->keyPressEvent(keyQt);
             return true;

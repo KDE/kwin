@@ -24,7 +24,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 
 #include <Plasma/FrameSvg>
