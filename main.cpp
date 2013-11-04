@@ -253,16 +253,13 @@ void Application::start()
 
         Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
-        const QByteArray splashAtomName(QByteArrayLiteral("_KDE_SPLASH_PROGRESS"));
-        ScopedCPointer<xcb_intern_atom_reply_t> splashAtom(xcb_intern_atom_reply(connection(),
-            xcb_intern_atom_unchecked(connection(), false, splashAtomName.length(), splashAtomName.constData()), nullptr));
-        xcb_client_message_event_t e;
-        e.response_type = XCB_CLIENT_MESSAGE;
-        e.format = 8;
-        e.window = rootWindow();
-        e.type = splashAtom->atom;
-        strcpy((char*)e.data.data8, "wm");
-        xcb_send_event(connection(), false, rootWindow(), XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY, (const char *)&e);
+        // Tell KSplash that KWin has started
+        QDBusMessage ksplashProgressMessage = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KSplash"),
+                                                                             QStringLiteral("/KSplash"),
+                                                                             QStringLiteral("org.kde.KSplash"),
+                                                                             QStringLiteral("setStage"));
+        ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
+        QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
