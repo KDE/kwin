@@ -357,6 +357,6 @@ if( KWIN_BUILD_SCRIPTING )
     install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 endif()
 
-kde4_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons( ${ICON_INSTALL_DIR} )
 
 add_subdirectory(tests)
