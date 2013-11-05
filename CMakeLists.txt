@@ -331,7 +331,6 @@ if(KWIN_BUILD_OPENGL)
     if( KWIN_BUILD_OPENGL_1_COMPOSITING )
         set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
     endif()
-  add_subdirectory(opengltest)
   target_link_libraries(kdeinit_kwin kwinglutils ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)

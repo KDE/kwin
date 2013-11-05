@@ -40,7 +40,6 @@ extern int screen_number; // main.cpp
 extern bool is_multihead;
 
 CompositingPrefs::CompositingPrefs()
-    : mEnableDirectRendering(true)
 {
 }
 
@@ -126,38 +125,6 @@ bool CompositingPrefs::hasGlx()
 #endif
     s_glxDetected = true;
     return s_hasGlx;
-}
-
-void CompositingPrefs::detect()
-{
-    if (!compositingPossible() || openGlIsBroken()) {
-        return;
-    }
-
-#ifndef KWIN_HAVE_OPENGLES
-    // HACK: This is needed for AIGLX
-    const bool forceIndirect = qstrcmp(qgetenv("LIBGL_ALWAYS_INDIRECT"), "1") == 0;
-    const bool forceEgl = qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl") == 0 ||
-            qstrcmp(qgetenv("KWIN_OPENGL_INTERFACE"), "egl_wayland") == 0;
-    if (!forceIndirect && !forceEgl && qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") != 0) {
-        // Start an external helper program that initializes GLX and returns
-        // 0 if we can use direct rendering, and 1 otherwise.
-        // The reason we have to use an external program is that after GLX
-        // has been initialized, it's too late to set the LIBGL_ALWAYS_INDIRECT
-        // environment variable.
-        // Direct rendering is preferred, since not all OpenGL extensions are
-        // available with indirect rendering.
-        const QString opengl_test = QStandardPaths::findExecutable(QStringLiteral("kwin_opengl_test"));
-        if (QProcess::execute(opengl_test) != 0) {
-            mEnableDirectRendering = false;
-            setenv("LIBGL_ALWAYS_INDIRECT", "1", true);
-        } else {
-            mEnableDirectRendering = true;
-        }
-    } else {
-        mEnableDirectRendering = !forceIndirect;
-    }
-#endif
 }
 
 } // namespace

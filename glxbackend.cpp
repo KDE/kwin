@@ -149,7 +149,7 @@ void GlxBackend::init()
 
 bool GlxBackend::initRenderingContext()
 {
-    bool direct = options->isGlDirect();
+    const bool direct = true;
 
     // Use glXCreateContextAttribsARB() when it's available
     if (glXCreateContextAttribsARB) {

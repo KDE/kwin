@@ -143,7 +143,6 @@ Options::Options(QObject *parent)
     , m_maxFpsInterval(Options::defaultMaxFpsInterval())
     , m_refreshRate(Options::defaultRefreshRate())
     , m_vBlankTime(Options::defaultVBlankTime())
-    , m_glDirect(Options::defaultGlDirect())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , m_glLegacy(Options::defaultGlLegacy())
@@ -709,15 +708,6 @@ void Options::setVBlankTime(qint64 vBlankTime)
     emit vBlankTimeChanged();
 }
 
-void Options::setGlDirect(bool glDirect)
-{
-    if (m_glDirect == glDirect) {
-        return;
-    }
-    m_glDirect = glDirect;
-    emit glDirectChanged();
-}
-
 void Options::setGlStrictBinding(bool glStrictBinding)
 {
     if (m_glStrictBinding == glStrictBinding) {
@@ -938,14 +928,8 @@ void Options::reloadCompositingSettings(bool force)
     setCompositingInitialized(true);
 
     // Compositing settings
-    CompositingPrefs prefs;
-    if (compositingMode() == OpenGLCompositing) {
-        prefs.detect();
-    }
-
     KConfigGroup config(m_settings->config(), "Compositing");
 
-    setGlDirect(prefs.enableDirectRendering());
     setGlSmoothScale(qBound(-1, config.readEntry("GLTextureFilter", Options::defaultGlSmoothScale()), 2));
     setGlStrictBindingFollowsDriver(!config.hasKey("GLStrictBinding"));
     if (!isGlStrictBindingFollowsDriver()) {

@@ -179,7 +179,6 @@ class Options : public KDecorationOptions
     Q_PROPERTY(qint64 maxFpsInterval READ maxFpsInterval WRITE setMaxFpsInterval NOTIFY maxFpsIntervalChanged)
     Q_PROPERTY(uint refreshRate READ refreshRate WRITE setRefreshRate NOTIFY refreshRateChanged)
     Q_PROPERTY(qint64 vBlankTime READ vBlankTime WRITE setVBlankTime NOTIFY vBlankTimeChanged)
-    Q_PROPERTY(bool glDirect READ isGlDirect WRITE setGlDirect NOTIFY glDirectChanged)
     Q_PROPERTY(bool glStrictBinding READ isGlStrictBinding WRITE setGlStrictBinding NOTIFY glStrictBindingChanged)
     /**
      * Whether strict binding follows the driver or has been overwritten by a user defined config value.
@@ -535,9 +534,6 @@ public:
     qint64 vBlankTime() const {
         return m_vBlankTime;
     }
-    bool isGlDirect() const {
-        return m_glDirect;
-    }
     bool isGlStrictBinding() const {
         return m_glStrictBinding;
     }
@@ -611,7 +607,6 @@ public:
     void setMaxFpsInterval(qint64 maxFpsInterval);
     void setRefreshRate(uint refreshRate);
     void setVBlankTime(qint64 vBlankTime);
-    void setGlDirect(bool glDirect);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
     void setGlLegacy(bool glLegacy);
@@ -800,7 +795,6 @@ Q_SIGNALS:
     void maxFpsIntervalChanged();
     void refreshRateChanged();
     void vBlankTimeChanged();
-    void glDirectChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
     void glLegacyChanged();
@@ -850,7 +844,6 @@ private:
     // Settings that should be auto-detected
     uint m_refreshRate;
     qint64 m_vBlankTime;
-    bool m_glDirect;
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
     bool m_glLegacy;

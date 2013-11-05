@@ -510,10 +510,6 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     KGlobal::locale()->insertCatalog("kwin_scripting");
 #endif
 
-    // Announce when KWIN_DIRECT_GL is set for above HACK
-    if (qstrcmp(qgetenv("KWIN_DIRECT_GL"), "1") == 0)
-        qDebug() << "KWIN_DIRECT_GL set, not forcing LIBGL_ALWAYS_INDIRECT=1";
-
     QString appname;
     if (KWin::screen_number == 0)
         appname = QStringLiteral("org.kde.kwin");

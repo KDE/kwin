@@ -143,19 +143,8 @@ void Compositor::setup()
     m_starting = true;
 
     if (!options->isCompositingInitialized()) {
-#ifndef KWIN_HAVE_OPENGLES
-        // options->reloadCompositingSettings(true) initializes the CompositingPrefs which calls an
-        // external program in turn
-        // run this in an external thread to make startup faster.
-        QFutureWatcher<void> *compositingPrefsFuture = new QFutureWatcher<void>();
-        connect(compositingPrefsFuture, SIGNAL(finished()), this, SLOT(slotCompositingOptionsInitialized()));
-        connect(compositingPrefsFuture, SIGNAL(finished()), compositingPrefsFuture, SLOT(deleteLater()));
-        compositingPrefsFuture->setFuture(QtConcurrent::run(options, &Options::reloadCompositingSettings, true));
-#else
-        // OpenGL ES does not call the external program, so no need to create a thread
         options->reloadCompositingSettings(true);
         slotCompositingOptionsInitialized();
-#endif
     } else {
         slotCompositingOptionsInitialized();
     }

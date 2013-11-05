@@ -50,14 +50,6 @@ public:
      * @returns @c true if GLX is available, @c false otherwise and if not build with OpenGL support.
      **/
     static bool hasGlx();
-    bool enableDirectRendering() const  {
-        return mEnableDirectRendering;
-    }
-
-    void detect();
-
-private:
-    bool mEnableDirectRendering;
 };
 
 }
