@@ -2453,13 +2453,13 @@ void Client::updateColorScheme()
     auto resetToDefault = [this]() {
         m_palette = QApplication::palette();
     };
+    QString path;
     if (!prop.isNull() && prop->format == 8 && prop->value_len > 0) {
-        QString path = QString::fromUtf8(static_cast<const char*>(xcb_get_property_value(prop.data())));
-        if (!path.isNull()) {
-            m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
-        } else {
-            resetToDefault();
-        }
+        path = QString::fromUtf8(static_cast<const char*>(xcb_get_property_value(prop.data())));
+    }
+    path = rules()->checkDecoColor(path);
+    if (!path.isNull()) {
+        m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
     } else {
         resetToDefault();
     }

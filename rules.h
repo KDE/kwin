@@ -77,6 +77,7 @@ public:
     bool checkKeepBelow(bool below, bool init = false) const;
     bool checkFullScreen(bool fs, bool init = false) const;
     bool checkNoBorder(bool noborder, bool init = false) const;
+    QString checkDecoColor(QString schemeFile) const;
     bool checkBlockCompositing(bool block) const;
     int checkFSP(int fsp) const;
     bool checkAcceptFocus(bool focus) const;
@@ -144,6 +145,7 @@ public:
     bool applyKeepBelow(bool& below, bool init) const;
     bool applyFullScreen(bool& fs, bool init) const;
     bool applyNoBorder(bool& noborder, bool init) const;
+    bool applyDecoColor(QString &schemeFile) const;
     bool applyBlockCompositing(bool& block) const;
     bool applyFSP(int& fsp) const;
     bool applyAcceptFocus(bool& focus) const;
@@ -191,6 +193,7 @@ private:
     static SetRule readSetRule(const KConfigGroup&, const QString& key);
     static ForceRule readForceRule(const KConfigGroup&, const QString& key);
     static NET::WindowType readType(const KConfigGroup&, const QString& key);
+    static QString readDecoColor(const KConfigGroup &cfg);
 #ifndef KCMRULES
     static bool checkSetRule(SetRule rule, bool init);
     static bool checkForceRule(ForceRule rule);
@@ -255,6 +258,8 @@ private:
     SetRule fullscreenrule;
     bool noborder;
     SetRule noborderrule;
+    QString decocolor;
+    ForceRule decocolorrule;
     bool blockcompositing;
     ForceRule blockcompositingrule;
     int fsplevel;

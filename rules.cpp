@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRegExp>
 #include <QTemporaryFile>
 #include <QFile>
+#include <QFileInfo>
 #include <ktoolinvocation.h>
 #include <QDebug>
 
@@ -70,6 +71,7 @@ Rules::Rules()
     , belowrule(UnusedSetRule)
     , fullscreenrule(UnusedSetRule)
     , noborderrule(UnusedSetRule)
+    , decocolorrule(UnusedForceRule)
     , blockcompositingrule(UnusedForceRule)
     , fsplevelrule(UnusedForceRule)
     , acceptfocusrule(UnusedForceRule)
@@ -177,6 +179,8 @@ void Rules::readFromCfg(const KConfigGroup& cfg)
     READ_SET_RULE(below, , false);
     READ_SET_RULE(fullscreen, , false);
     READ_SET_RULE(noborder, , false);
+    decocolor = readDecoColor(cfg);
+    decocolorrule = decocolor.isEmpty() ? UnusedForceRule : readForceRule(cfg, QStringLiteral("decocolorrule"));
     READ_FORCE_RULE(blockcompositing, , false);
     READ_FORCE_RULE(fsplevel, limit0to4, 0); // fsp is 0-4
     READ_FORCE_RULE(acceptfocus, , false);
@@ -266,6 +270,14 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_SET_RULE(below,);
     WRITE_SET_RULE(fullscreen,);
     WRITE_SET_RULE(noborder,);
+    auto colorToString = [](const QString &value) {
+        if (value.endsWith(QStringLiteral(".colors"))) {
+            return QFileInfo(value).baseName();
+        } else {
+            return value;
+        }
+    };
+    WRITE_FORCE_RULE(decocolor, colorToString);
     WRITE_FORCE_RULE(blockcompositing,);
     WRITE_FORCE_RULE(fsplevel,);
     WRITE_FORCE_RULE(acceptfocus,);
@@ -308,6 +320,7 @@ bool Rules::isEmpty() const
            && belowrule == UnusedSetRule
            && fullscreenrule == UnusedSetRule
            && noborderrule == UnusedSetRule
+           && decocolorrule == UnusedForceRule
            && blockcompositingrule == UnusedForceRule
            && fsplevelrule == UnusedForceRule
            && acceptfocusrule == UnusedForceRule
@@ -342,6 +355,17 @@ NET::WindowType Rules::readType(const KConfigGroup& cfg, const QString& key)
     if (v >= NET::Normal && v <= NET::Splash)
         return static_cast< NET::WindowType >(v);
     return NET::Unknown;
+}
+
+QString Rules::readDecoColor(const KConfigGroup &cfg)
+{
+    QString themeName = cfg.readEntry("decocolor", QString());
+    if (themeName.isEmpty()) {
+        return QString();
+    }
+    // find the actual scheme file
+    return QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                  QStringLiteral("color-schemes/") + themeName + QStringLiteral(".colors"));
 }
 
 bool Rules::matchType(NET::WindowType match_type) const
@@ -625,6 +649,7 @@ APPLY_RULE(above, KeepAbove, bool)
 APPLY_RULE(below, KeepBelow, bool)
 APPLY_RULE(fullscreen, FullScreen, bool)
 APPLY_RULE(noborder, NoBorder, bool)
+APPLY_FORCE_RULE(decocolor, DecoColor, QString)
 APPLY_FORCE_RULE(blockcompositing, BlockCompositing, bool)
 APPLY_FORCE_RULE(fsplevel, FSP, int)
 APPLY_FORCE_RULE(acceptfocus, AcceptFocus, bool)
@@ -692,6 +717,7 @@ void Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(below);
     DISCARD_USED_SET_RULE(fullscreen);
     DISCARD_USED_SET_RULE(noborder);
+    DISCARD_USED_FORCE_RULE(decocolor);
     DISCARD_USED_FORCE_RULE(blockcompositing);
     DISCARD_USED_FORCE_RULE(fsplevel);
     DISCARD_USED_FORCE_RULE(acceptfocus);
@@ -824,6 +850,7 @@ CHECK_RULE(KeepAbove, bool)
 CHECK_RULE(KeepBelow, bool)
 CHECK_RULE(FullScreen, bool)
 CHECK_RULE(NoBorder, bool)
+CHECK_FORCE_RULE(DecoColor, QString)
 CHECK_FORCE_RULE(BlockCompositing, bool)
 CHECK_FORCE_RULE(FSP, int)
 CHECK_FORCE_RULE(AcceptFocus, bool)
@@ -877,6 +904,7 @@ void Client::applyWindowRules()
     setKeepBelow(keepBelow());
     setFullScreen(isFullScreen(), true);
     setNoBorder(noBorder());
+    updateColorScheme();
     // FSP
     // AcceptFocus :
     if (workspace()->mostRecentlyActivatedClient() == this
