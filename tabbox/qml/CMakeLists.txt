@@ -5,6 +5,7 @@ install( DIRECTORY clients/big_icons    DESTINATION ${DATA_INSTALL_DIR}/${KWIN_N
 install( DIRECTORY clients/compact      DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/informative  DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/present_windows  DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
+install( DIRECTORY clients/sidebar      DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/small_icons  DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/text         DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/thumbnails   DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
@@ -18,6 +19,7 @@ install( FILES clients/big_icons/metadata.desktop    DESTINATION ${SERVICES_INST
 install( FILES clients/compact/metadata.desktop      DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_compact.desktop )
 install( FILES clients/informative/metadata.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_informative.desktop )
 install( FILES clients/present_windows/metadata.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_present_windows.desktop )
+install( FILES clients/sidebar/metadata.desktop      DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_sidebar.desktop )
 install( FILES clients/small_icons/metadata.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_small_icons.desktop )
 install( FILES clients/text/metadata.desktop         DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_text.desktop )
 install( FILES clients/thumbnails/metadata.desktop   DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_thumbnails.desktop )
@@ -34,6 +36,6 @@ install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/present_windows/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/thumbnails/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/text/contents/ui)
-
+install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/sidebar/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/informative/contents/ui)
 install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/previews/contents/ui)
