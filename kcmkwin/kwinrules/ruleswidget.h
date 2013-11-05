@@ -73,6 +73,7 @@ private Q_SLOTS:
     void updateEnableabove();
     void updateEnablebelow();
     void updateEnablenoborder();
+    void updateEnabledecocolor();
     void updateEnableskiptaskbar();
     void updateEnableskippager();
     void updateEnableskipswitcher();

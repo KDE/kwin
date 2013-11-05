@@ -21,8 +21,10 @@
 #include <klineedit.h>
 #include <krestrictedline.h>
 #include <kcombobox.h>
+#include <kcolorschememanager.h>
 #include <QCheckBox>
 #include <kpushbutton.h>
+#include <QFileInfo>
 #include <QLabel>
 #include <kwindowsystem.h>
 #include <KDE/KLocalizedString>
@@ -102,6 +104,7 @@ RulesWidget::RulesWidget(QWidget* parent)
     SETUP(above, set);
     SETUP(below, set);
     SETUP(noborder, set);
+    SETUP(decocolor, force);
     SETUP(skiptaskbar, set);
     SETUP(skippager, set);
     SETUP(skipswitcher, set);
@@ -152,6 +155,9 @@ RulesWidget::RulesWidget(QWidget* parent)
     activity->addItem(i18n("All Activities"), QString::fromLatin1(NULL_UUID));
     #undef NULL_UUID
 #endif
+
+    KColorSchemeManager *schemes = new KColorSchemeManager(this);
+    decocolor->setModel(schemes->model());
 }
 
 #undef SETUP
@@ -181,6 +187,7 @@ UPDATE_ENABLE_SLOT(placement)
 UPDATE_ENABLE_SLOT(above)
 UPDATE_ENABLE_SLOT(below)
 UPDATE_ENABLE_SLOT(noborder)
+UPDATE_ENABLE_SLOT(decocolor)
 UPDATE_ENABLE_SLOT(skiptaskbar)
 UPDATE_ENABLE_SLOT(skippager)
 UPDATE_ENABLE_SLOT(skipswitcher)
@@ -456,6 +463,21 @@ void RulesWidget::setRules(Rules* rules)
     CHECKBOX_SET_RULE(above,);
     CHECKBOX_SET_RULE(below,);
     CHECKBOX_SET_RULE(noborder,);
+    auto decoColorToCombo = [this](const QString &value) {
+        for (int i = 0; i < decocolor->count(); ++i) {
+            if (decocolor->itemData(i).toString() == value) {
+                return i;
+            }
+        }
+        // search for Oxygen
+        for (int i = 0; i < decocolor->count(); ++i) {
+            if (QFileInfo(decocolor->itemData(i).toString()).baseName() == QStringLiteral("Oxygen")) {
+                return i;
+            }
+        }
+        return 0;
+    };
+    COMBOBOX_FORCE_RULE(decocolor, decoColorToCombo);
     CHECKBOX_SET_RULE(skiptaskbar,);
     CHECKBOX_SET_RULE(skippager,);
     CHECKBOX_SET_RULE(skipswitcher,);
@@ -555,6 +577,10 @@ Rules* RulesWidget::rules() const
     CHECKBOX_SET_RULE(above,);
     CHECKBOX_SET_RULE(below,);
     CHECKBOX_SET_RULE(noborder,);
+    auto comboToDecocolor = [this](int index) -> QString {
+        return QFileInfo(decocolor->itemData(index).toString()).baseName();
+    };
+    COMBOBOX_FORCE_RULE(decocolor, comboToDecocolor);
     CHECKBOX_SET_RULE(skiptaskbar,);
     CHECKBOX_SET_RULE(skippager,);
     CHECKBOX_SET_RULE(skipswitcher,);
