@@ -307,7 +307,7 @@ void DeclarativeView::slotUpdateGeometry()
 
         if (alignment & Qt::AlignLeft) {
             x = m_currentScreenGeometry.x();
-        } else if (alignment & Qt::AlignLeft) {
+        } else if (alignment & Qt::AlignRight) {
             x = m_currentScreenGeometry.right() - width;
         //Center
         } else {
