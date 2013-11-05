@@ -16,14 +16,18 @@ find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH})
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
-find_package(Qt5Transitional MODULE)
-find_package(Qt5Core REQUIRED NO_MODULE)
 
-find_package(Qt5Quick REQUIRED NO_MODULE)
 find_package(KCoreAddons REQUIRED NO_MODULE)
-find_package(Qt5Test REQUIRED NO_MODULE)
+
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
+
+find_package(Qt5Core REQUIRED NO_MODULE)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick X11Extras Svg Test PrintSupport)
+find_package(KCoreAddons REQUIRED NO_MODULE)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++0x)
 
@@ -38,15 +42,17 @@ set (QT_MIN_VERSION "5.2.0")
 
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
-find_package(KF5 MODULE REQUIRED COMPONENTS CMake Compiler InstallDirs
+find_package(KF5 CONFIG REQUIRED COMPONENTS
                                             KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons Solid ThreadWeaver
                                             KConfig KAuth KJS KWallet KDBusAddons KConfigWidgets
                                             KI18n KGuiAddons KService ItemViews KNotifications KIconThemes KCompletion KJobWidgets KConfigWidgets Sonnet KTextWidgets XmlGui KCrash
-                                            KIO KUnitConversion KDE4Attic KBookmarks KCMUtils)
-find_package(KDELibs4 REQUIRED NO_MODULE)
-find_package(KDE4Support REQUIRED NO_MODULE)
+                                            KUnitConversion KBookmarks KCMUtils Kross KParts)
 
-find_package(kdeclarative REQUIRED NO_MODULE)
+find_package(KIO REQUIRED NO_MODULE)
+find_package(KDE4Support REQUIRED NO_MODULE)
+find_package(KDELibs4 REQUIRED NO_MODULE)
+
+find_package(KDeclarative REQUIRED NO_MODULE)
 find_package(LibAttica REQUIRED NO_MODULE)
 
 #########################################################################
@@ -91,6 +97,7 @@ target_link_libraries(kwincompositing
     KF5::KI18n
     KF5::KService
     KF5::KCMUtils
+    KF5::KDeclarative
     ${Qt5Widgets_LIBRARIES}
     ${Qt5Test_LIBRARIES}
     ${KCoreAddons_LIBRARIES}
@@ -115,6 +122,7 @@ target_link_libraries(effectModelTest
     KF5::KI18n
     KF5::KService
     KF5::KCMUtils
+    KF5::KDeclarative
     ${Qt5Widgets_LIBRARIES}
     ${Qt5Test_LIBRARIES}
     ${KCoreAddons_LIBRARIES}
