@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValue>
 #include <QtCore/QStandardPaths>
+#include <QQuickWindow>
 
 QScriptValue kwinScriptPrint(QScriptContext *context, QScriptEngine *engine)
 {
@@ -556,6 +557,7 @@ void KWin::DeclarativeScript::run()
     qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
     qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
     qmlRegisterType<KWin::Client>();
+    qmlRegisterType<QQuickWindow>();
 
     m_engine->rootContext()->setContextProperty(QStringLiteral("workspace"), AbstractScript::workspace());
     m_engine->rootContext()->setContextProperty(QStringLiteral("options"), options);
@@ -592,6 +594,15 @@ KWin::JSEngineGlobalMethodsWrapper::~JSEngineGlobalMethodsWrapper()
 QVariant KWin::JSEngineGlobalMethodsWrapper::readConfig(const QString &key, QVariant defaultValue)
 {
     return m_script->config().readEntry(key, defaultValue);
+}
+
+void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
+{
+    connect(window, &QWindow::visibilityChanged, [window](QWindow::Visibility visibility) {
+        if (visibility == QWindow::Hidden) {
+            window->destroy();
+        }
+    });
 }
 
 KWin::Scripting *KWin::Scripting::s_self = NULL;
