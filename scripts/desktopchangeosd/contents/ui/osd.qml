@@ -17,11 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-import QtQuick 1.1;
-import org.kde.plasma.core 0.1 as PlasmaCore;
-import org.kde.plasma.components 0.1 as Plasma;
-import org.kde.qtextracomponents 0.1 as QtExtra;
-import org.kde.kwin 0.1;
+import QtQuick 2.0;
+import org.kde.plasma.core 2.0 as PlasmaCore;
+import org.kde.plasma.components 2.0 as Plasma;
+import org.kde.qtextracomponents 2.0 as QtExtra;
+import org.kde.kwin 2.0;
 
 PlasmaCore.Dialog {
     id: dialog
@@ -30,8 +30,8 @@ PlasmaCore.Dialog {
 
     mainItem: Item {
         function loadConfig() {
-            dialogItem.animationDuration = readConfig("PopupHideDelay", 1000);
-            if (readConfig("TextOnly", "false") == "true") {
+            dialogItem.animationDuration = KWin.readConfig("PopupHideDelay", 1000);
+            if (KWin.readConfig("TextOnly", "false") == "true") {
                 dialogItem.showGrid = false;
             } else {
                 dialogItem.showGrid = true;
@@ -42,7 +42,6 @@ PlasmaCore.Dialog {
             if (dialogItem.currentDesktop == workspace.currentDesktop - 1) {
                 return;
             }
-            dialog.visible = true;
             dialogItem.previousDesktop = dialogItem.currentDesktop;
             timer.stop();
             dialogItem.currentDesktop = workspace.currentDesktop - 1;
@@ -56,6 +55,7 @@ PlasmaCore.Dialog {
                 view.columns = workspace.desktopGridWidth;
                 view.rows = workspace.desktopGridHeight;
             }
+            dialog.visible = true;
             // position might have changed
             dialog.x = screen.x + screen.width/2 - dialogItem.width/2;
             dialog.y = screen.y + screen.height/2 - dialogItem.height/2;
@@ -288,8 +288,8 @@ PlasmaCore.Dialog {
             onConfigChanged: dialogItem.loadConfig()
         }
         Component.onCompleted: {
-            columns = workspace.desktopGridWidth;
-            rows = workspace.desktopGridHeight;
+            view.columns = workspace.desktopGridWidth;
+            view.rows = workspace.desktopGridHeight;
             dialogItem.loadConfig();
             dialogItem.show();
         }
