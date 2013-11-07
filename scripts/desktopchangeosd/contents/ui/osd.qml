@@ -25,6 +25,7 @@ import org.kde.kwin 2.0;
 
 PlasmaCore.Dialog {
     id: dialog
+    location: PlasmaCore.Types.Floating
     visible: false
     windowFlags: Qt.X11BypassWindowManagerHint
 
