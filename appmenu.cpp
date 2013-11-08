@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-static QString KDED_SERVICE = QStringLiteral("org.kde.kded");
-static QString KDED_APPMENU_PATH = QStringLiteral("/modules/appmenu");
-static QString KDED_INTERFACE = QStringLiteral("org.kde.kded");
+static QString KDED_SERVICE = QStringLiteral("org.kde.kappmenu");
+static QString KDED_APPMENU_PATH = QStringLiteral("/KAppMenu");
+static QString KDED_INTERFACE = QStringLiteral("org.kde.kappmenu");
 
 KWIN_SINGLETON_FACTORY(ApplicationMenu)
 
