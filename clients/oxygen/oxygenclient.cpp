@@ -2038,7 +2038,7 @@ namespace Oxygen
 
         // create atom
         if( !_shadowAtom )
-        { _shadowAtom = helper().createAtom( QLatin1String( "_KDE_NET_WM_SHADOW" ) ); }
+        { _shadowAtom = helper().createAtom( QStringLiteral( "_KDE_NET_WM_SHADOW" ) ); }
 
         xcb_delete_property( helper().xcbConnection(), (xcb_window_t) windowId(), _shadowAtom);
     }
