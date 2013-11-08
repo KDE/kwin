@@ -295,9 +295,35 @@ void DeclarativeView::slotUpdateGeometry()
     } else {
         const int width = rootObject()->property("width").toInt();
         const int height = rootObject()->property("height").toInt();
-        setGeometry(m_currentScreenGeometry.x() + static_cast<qreal>(m_currentScreenGeometry.width()) * 0.5 - static_cast<qreal>(width) * 0.5,
-            m_currentScreenGeometry.y() + static_cast<qreal>(m_currentScreenGeometry.height()) * 0.5 - static_cast<qreal>(height) * 0.5,
-            width, height);
+
+        Qt::Alignment alignment = Qt::AlignCenter;
+
+        if (rootObject()->property("alignment").canConvert<int>()) {
+            alignment = (Qt::Alignment)rootObject()->property("alignment").toInt();
+        }
+
+        int x;
+        int y;
+
+        if (alignment & Qt::AlignLeft) {
+            x = m_currentScreenGeometry.x();
+        } else if (alignment & Qt::AlignRight) {
+            x = m_currentScreenGeometry.right() - width;
+        //Center
+        } else {
+            x = m_currentScreenGeometry.x() + static_cast<qreal>(m_currentScreenGeometry.width()) * 0.5 - static_cast<qreal>(width) * 0.5;
+        }
+
+        if (alignment & Qt::AlignTop) {
+            y = m_currentScreenGeometry.y();
+        } else if (alignment & Qt::AlignBottom) {
+            y = m_currentScreenGeometry.bottom() - height;
+        //Center
+        } else {
+            y = m_currentScreenGeometry.y() + static_cast<qreal>(m_currentScreenGeometry.height()) * 0.5 - static_cast<qreal>(height) * 0.5;
+        }
+
+        setGeometry(x, y, width, height);
         m_relativePos = position();
     }
 }

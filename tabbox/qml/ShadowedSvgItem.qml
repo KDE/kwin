@@ -31,6 +31,7 @@ Item {
     property int centerTopMargin: shadow.margins.top
     property int centerLeftMargin: shadow.margins.left
     property alias maskImagePath: shadow.imagePath
+    property alias enabledBorders: background.enabledBorders
 
     PlasmaCore.FrameSvg {
         id: themeInfo
@@ -45,6 +46,7 @@ Item {
         imagePath: "dialogs/background"
         anchors.fill: parent
         visible: true
+        enabledBorders: background.enabledBorders
 
         PlasmaCore.FrameSvgItem {
             id: background

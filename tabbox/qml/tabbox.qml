@@ -25,6 +25,7 @@ Loader {
     property int screenWidth : 0
     property int screenHeight : 0
     property bool allDesktops: true
+    property int alignment: item && item.alignment ? item.alignment : Qt.AlignCenter
     property string longestCaption: ""
     property string maskImagePath: item && item.maskImagePath != undefined ? item.maskImagePath : ""
     property double maskWidth: item && item.maskWidth != undefined ? item.maskWidth : 0

@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=Sidebar
+Comment=A window switcher with live thumbnails on the screen side
+
+Icon=preferences-system-windows-switcher-thumbnails
+
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
+
+X-KDE-PluginInfo-Author=Marco Martin
+X-KDE-PluginInfo-Email=mart@kde.org
+X-KDE-PluginInfo-Name=sidebar
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/WindowSwitcher
+Type=Service
