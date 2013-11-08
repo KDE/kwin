@@ -90,7 +90,7 @@ Item {
             spacing: 5
             highlightMoveDuration: 250
             width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
-            
+
             clip: true
             delegate: Item {
                 property alias data: thumbnailItem.data
@@ -106,7 +106,6 @@ Item {
                     }
                     width: thumbnailListView.thumbnailWidth
                     height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
-                    
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -157,10 +156,10 @@ Item {
      * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
      **/
     Keys.onPressed: {
-        if (event.key == Qt.Key_Left) {
+        if (event.key == Qt.Key_Up) {
             thumbnailListView.decrementCurrentIndex();
             thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
-        } else if (event.key == Qt.Key_Right) {
+        } else if (event.key == Qt.Key_Down) {
             thumbnailListView.incrementCurrentIndex();
             thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
         }
