@@ -55,6 +55,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QScriptProgram>
 #endif
 #include <QWhatsThis>
+// XLib
+#include <X11/extensions/sync.h>
 // system
 #include <unistd.h>
 #include <signal.h>
@@ -2113,27 +2115,30 @@ void Client::getSyncCounter()
                                  0, 1, false, XA_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet);
 
     if (ret == Success && formatRet == 32) {
-        syncRequest.counter = *(long*)(propRet);
+        syncRequest.counter = *(xcb_sync_counter_t*)(propRet);
         syncRequest.value.hi = 0;
         syncRequest.value.lo = 0;
-        xcb_sync_int64_t zero;
-        zero.hi = 0;
-        zero.lo = 0;
         auto *c = connection();
-        xcb_sync_set_counter(c, syncRequest.counter, zero);
+        xcb_sync_set_counter(c, syncRequest.counter, syncRequest.value);
         if (syncRequest.alarm == XCB_NONE) {
-            const uint32_t mask = XCB_SYNC_CA_COUNTER | XCB_SYNC_CA_VALUE_TYPE | XCB_SYNC_CA_VALUE | XCB_SYNC_CA_TEST_TYPE | XCB_SYNC_CA_DELTA ;
+            const uint32_t mask = XCB_SYNC_CA_COUNTER | XCB_SYNC_CA_VALUE_TYPE | XCB_SYNC_CA_TEST_TYPE | XCB_SYNC_CA_EVENTS;
             const uint32_t values[] = {
                 syncRequest.counter,
                 XCB_SYNC_VALUETYPE_RELATIVE,
-                0,
-                1,
                 XCB_SYNC_TESTTYPE_POSITIVE_TRANSITION,
-                0,
                 1
             };
             syncRequest.alarm = xcb_generate_id(c);
-            xcb_sync_create_alarm(c, syncRequest.alarm, mask, values);
+            auto cookie = xcb_sync_create_alarm_checked(c, syncRequest.alarm, mask, values);
+            ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(c, cookie));
+            if (!error.isNull()) {
+                syncRequest.alarm = XCB_NONE;
+            } else {
+                XSyncAlarmAttributes attrs;
+                XSyncIntToValue(&attrs.trigger.wait_value, 1);
+                XSyncIntToValue(&attrs.delta, 1);
+                XSyncChangeAlarm(display(), syncRequest.alarm, XSyncCADelta | XSyncCAValue, &attrs);
+            }
         }
     }
 
