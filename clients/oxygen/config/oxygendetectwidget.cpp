@@ -30,12 +30,12 @@
 #include "oxygendetectwidget.h"
 #include "oxygendetectwidget.moc"
 
-#include <cassert>
 #include <QButtonGroup>
 #include <QLayout>
 #include <QGroupBox>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QScopedPointer>
 
 #include <QX11Info>
 #include <xcb/xcb.h>
@@ -58,10 +58,10 @@ namespace Oxygen
 
         // create atom
         xcb_connection_t* connection( QX11Info::connection() );
-        const QString atomName( QLatin1String( "WM_STATE" ) );
+        const QString atomName( QStringLiteral( "WM_STATE" ) );
         xcb_intern_atom_cookie_t cookie( xcb_intern_atom( connection, false, atomName.size(), qPrintable( atomName ) ) );
-        xcb_intern_atom_reply_t* reply( xcb_intern_atom_reply( connection, cookie, 0) );
-        if( reply ) _wmStateAtom = reply->atom;
+        QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> reply( xcb_intern_atom_reply( connection, cookie, nullptr) );
+        _wmStateAtom = reply ? reply->atom : 0;
 
     }
 
@@ -151,17 +151,13 @@ namespace Oxygen
         {
 
             // query pointer
-            xcb_query_pointer_reply_t* pointerReply( 0x0 );
-            {
-                xcb_query_pointer_cookie_t cookie( xcb_query_pointer( connection, parent ) );
-                pointerReply = xcb_query_pointer_reply( connection, cookie, 0 );
-            }
-
+            xcb_query_pointer_cookie_t pointerCookie( xcb_query_pointer( connection, parent ) );
+            QScopedPointer<xcb_query_pointer_reply_t, QScopedPointerPodDeleter> pointerReply( xcb_query_pointer_reply( connection, pointerCookie, nullptr ) );
             if( !( pointerReply && pointerReply->child ) ) return 0;
 
             const xcb_window_t child( pointerReply->child );
-            xcb_get_property_cookie_t cookie( xcb_get_property( connection, 0, child, _wmStateAtom, XCB_GET_PROPERTY_TYPE_ANY, 0, 0) );
-            xcb_get_property_reply_t* reply( xcb_get_property_reply( connection, cookie, 0 ) );
+            xcb_get_property_cookie_t cookie( xcb_get_property( connection, 0, child, _wmStateAtom, XCB_GET_PROPERTY_TYPE_ANY, 0, 0 ) );
+            QScopedPointer<xcb_get_property_reply_t, QScopedPointerPodDeleter> reply( xcb_get_property_reply( connection, cookie, nullptr ) );
             if( reply  && reply->type ) return child;
             else parent = child;
 
