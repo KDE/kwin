@@ -102,7 +102,7 @@ namespace Oxygen
             while( true )
             {
                 xcb_query_tree_cookie_t cookie = xcb_query_tree_unchecked( connection, current );
-                QScopedPointer<xcb_query_tree_reply_t, QScopedPointerPodDeleter> tree(xcb_query_tree_reply( connection, cookie, nullptr ) );
+                Helper::ScopedPointer<xcb_query_tree_reply_t> tree(xcb_query_tree_reply( connection, cookie, nullptr ) );
                 if (tree.isNull()) break;
 
                 if (tree->parent && tree->parent != tree->root && tree->parent != current) current = tree->parent;

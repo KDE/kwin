@@ -35,7 +35,6 @@
 #include <QGroupBox>
 #include <QMouseEvent>
 #include <QPushButton>
-#include <QScopedPointer>
 
 #include <QX11Info>
 #include <xcb/xcb.h>
