@@ -1586,6 +1586,7 @@ Client* TabBox::previousClientStatic(Client* c) const
 
 bool TabBox::establishTabBoxGrab()
 {
+    updateXTime();
     if (!grabXKeyboard())
         return false;
     // Don't try to establish a global mouse grab using XGrabPointer, as that would prevent
@@ -1602,6 +1603,7 @@ bool TabBox::establishTabBoxGrab()
 
 void TabBox::removeTabBoxGrab()
 {
+    updateXTime();
     ungrabXKeyboard();
     assert(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
