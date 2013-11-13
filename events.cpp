@@ -260,7 +260,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     if (movingClient) {
         if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && movingClient->windowEvent(e)) {
-                return true;
+                // we need to pass the button release event to the decoration, otherwise Qt still thinks the button is pressed.
+                return eventType == XCB_BUTTON_PRESS;
             }
         } else if (eventType == XCB_MOTION_NOTIFY) {
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_motion_notify_event_t*>(e)->event && movingClient->windowEvent(e)) {
