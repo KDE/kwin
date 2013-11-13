@@ -261,11 +261,11 @@ void Application::start()
         ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
         QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
     });
+    crashChecking();
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
     owner.claim(m_replace, true);
 
-    crashChecking();
     atoms = new Atoms;
 }
 
