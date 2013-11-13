@@ -24,6 +24,7 @@ target_link_libraries(kcm_kwintabbox
     Qt5::X11Extras
     KF5::KCMUtils
     KF5::KCompletion
+    KF5::KDeclarative
     KF5::KI18n
     KF5::KIconThemes
     KF5::KService
