@@ -22,10 +22,14 @@ set(kwin_oxygen_SRCS
 
 kconfig_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 
-kde4_add_plugin(kwin3_oxygen ${kwin_oxygen_SRCS})
+add_library(kwin3_oxygen MODULE ${kwin_oxygen_SRCS})
 target_link_libraries(kwin3_oxygen Qt5::Widgets )
-target_link_libraries(kwin3_oxygen KF5::KConfigWidgets KF5::KGuiAddons KF5::KI18n KF5::KWindowSystem KF5::KStyle)
-target_link_libraries(kwin3_oxygen kdecorations oxygenstyle)
+target_link_libraries(kwin3_oxygen KF5::KI18n KF5::KWindowSystem KF5::KStyle)
+
+find_library( KDECORATIONS_LIB NAMES kdecorations )
+target_link_libraries(kwin3_oxygen ${KDECORATIONS_LIB})
+
+target_link_libraries(kwin3_oxygen oxygenstyle)
 
 if(X11_FOUND)
   target_link_libraries(kwin3_oxygen ${XCB_XCB_LIBRARIES})
@@ -35,4 +39,3 @@ install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 install(FILES oxygenclient.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin/)
-
