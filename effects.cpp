@@ -261,8 +261,21 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 {
     if (keyboard_grab_effect != NULL)
         ungrabKeyboard();
-    for (const EffectPair & ep : loaded_effects)
-        unloadEffect(ep.first);
+    setActiveFullScreenEffect(nullptr);
+    for (auto it = loaded_effects.begin(); it != loaded_effects.end(); ++it) {
+        const QString &name = (*it).first;
+        Effect *effect = (*it).second;
+        stopMouseInterception(effect);
+        // remove support properties for the effect
+        const QList<QByteArray> properties = m_propertiesForEffects.keys();
+        for (const QByteArray &property : properties) {
+            removeSupportProperty(property, effect);
+        }
+        delete effect;
+        if (effect_libraries.contains(name)) {
+            effect_libraries[ name ]->unload();
+        }
+    }
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
