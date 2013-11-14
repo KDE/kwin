@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
+#include <QMutex>
 #include <QOpenGLFramebufferObject>
 #include <QPainter>
 #include <QQmlComponent>
@@ -235,6 +236,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     : KDecoration(bridge, factory)
     , m_view(NULL)
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
+    , m_mutex(new QMutex(QMutex::Recursive))
 {
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
@@ -271,6 +273,7 @@ void AuroraeClient::init()
             m_view->setRenderTarget(m_fbo.data());
         });
         connect(m_view, &QQuickWindow::afterRendering, [this]{
+            QMutexLocker locker(m_mutex.data());
             m_buffer = m_fbo->toImage();
         });
         connect(m_view, &QQuickWindow::afterRendering, this,
@@ -551,6 +554,7 @@ bool AuroraeClient::animationsSupported() const
 
 void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
 {
+    QMutexLocker locker(m_mutex.data());
     QPainter painter(device);
     painter.setClipRegion(sourceRegion);
     painter.drawImage(QPoint(0, 0), m_buffer);

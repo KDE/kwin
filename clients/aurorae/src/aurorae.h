@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include <kdecorationfactory.h>
 
+class QMutex;
 class QOpenGLFramebufferObject;
 class QQmlComponent;
 class QQmlEngine;
@@ -160,6 +161,7 @@ private:
     QScopedPointer<QQuickItem> m_item;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
+    QScopedPointer<QMutex> m_mutex;
 };
 
 }
