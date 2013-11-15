@@ -4,7 +4,7 @@
 set(kcm_kwindesktop_PART_SRCS main.cpp desktopnameswidget.cpp)
 kde4_add_ui_files(kcm_kwindesktop_PART_SRCS main.ui)
 
-kde4_add_plugin(kcm_kwindesktop ${kcm_kwindesktop_PART_SRCS})
+add_library(kcm_kwindesktop MODULE ${kcm_kwindesktop_PART_SRCS})
 
 target_link_libraries(kcm_kwindesktop
     Qt5::X11Extras

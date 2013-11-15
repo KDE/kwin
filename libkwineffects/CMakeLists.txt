@@ -24,7 +24,7 @@ set(kwineffects_XCB_LIBS
     ${XCB_RENDER_LIBRARY}
 )
 
-kde4_add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
+add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 target_link_libraries(kwineffects
     ${kwineffects_QT_LIBS}
     ${kwineffects_KDE_LIBS}
@@ -49,7 +49,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     if(OPENGL_EGL_FOUND)
         include_directories(${OPENGLES_EGL_INCLUDE_DIR})
     endif()
-    kde4_add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
+    add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
     target_link_libraries(${name} PUBLIC ${kwineffects_QT_LIBS} ${kwineffects_XCB_LIBS} kwineffects)
     if(OPENGL_EGL_FOUND)
        target_link_libraries(${name} PRIVATE ${OPENGLES_EGL_LIBRARY})
@@ -61,12 +61,12 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
 endmacro()
 
 if(KWIN_BUILD_OPENGLES)
-    KWIN4_ADD_GLUTILS_BACKEND(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})
+    kwin4_add_glutils_backend(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})
     set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGLES)
     set_target_properties(kwinglesutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glesutils)
 endif()
 if(KWIN_BUILD_OPENGL)
-    KWIN4_ADD_GLUTILS_BACKEND(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
+    kwin4_add_glutils_backend(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
     set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
     if( KWIN_BUILD_OPENGL_1_COMPOSITING )

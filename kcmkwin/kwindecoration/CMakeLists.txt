@@ -23,7 +23,7 @@ kde4_add_ui_files(kcm_kwindecoration_PART_SRCS
     decoration.ui
 )
 
-kde4_add_plugin(kcm_kwindecoration ${kcm_kwindecoration_PART_SRCS})
+add_library(kcm_kwindecoration MODULE ${kcm_kwindecoration_PART_SRCS})
 target_link_libraries(kcm_kwindecoration
     kdecorations
     Qt5::DBus
@@ -32,7 +32,7 @@ target_link_libraries(kcm_kwindecoration
     KF5::KCMUtils
     KF5::KCompletion
     KF5::KI18n
-    ${KDE4_KNEWSTUFF3_LIBS}
+    KF5::KNewStuff
     KF5::KDE4Support
 )
 install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )

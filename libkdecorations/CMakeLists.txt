@@ -7,7 +7,7 @@ set(kdecorations_LIB_SRCS
    kcommondecoration.cpp
    kcommondecoration_p.cpp )
 
-kde4_add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
+add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 
 target_link_libraries(kdecorations
     Qt5::Widgets

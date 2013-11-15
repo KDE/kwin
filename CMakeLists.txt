@@ -1,21 +1,21 @@
 ########### configure tests ###############
-INCLUDE(CMakeDependentOption)
+include(CMakeDependentOption)
 
-OPTION(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
-OPTION(KWIN_BUILD_OXYGEN "Enable building of default decoration Oxygen" ON)
-OPTION(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
-OPTION(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
-OPTION(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
-OPTION(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
-OPTION(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
-OPTION(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" ON)
-OPTION(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
-OPTION(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
-OPTION(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" OFF)
+option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
+option(KWIN_BUILD_OXYGEN "Enable building of default decoration Oxygen" ON)
+option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
+option(KWIN_MOBILE_EFFECTS "Only build effects relevant for mobile devices" OFF)
+option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+option(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
+option(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
+option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" ON)
+option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
+option(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
+option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" OFF)
 if(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
-   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+   option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 else()
-   OPTION(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
+   option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
 endif()
 
 # Binary name of KWin
@@ -225,12 +225,12 @@ qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::D
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml composite.h KWin::Compositor )
 qt4_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin::EffectsHandlerImpl )
 
-qt4_add_dbus_interface( kwin_KDEINIT_SRCS
+qt5_add_dbus_interface( kwin_KDEINIT_SRCS
   ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/org.kde.KSMServerInterface.xml ksmserver_interface)
-qt4_add_dbus_interface( kwin_KDEINIT_SRCS
+qt5_add_dbus_interface( kwin_KDEINIT_SRCS
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/screenlocker/dbus/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
-qt4_add_resources( kwin_KDEINIT_SRCS resources.qrc )
+qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
 ########### target link libraries ###############
 

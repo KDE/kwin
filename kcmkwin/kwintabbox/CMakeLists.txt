@@ -2,7 +2,7 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox ${KDEBASE_WORKS
 
 ########### next target ###############
 
-ADD_DEFINITIONS(-DTABBOX_KCM)
+add_definitions(-DTABBOX_KCM)
 
 set(kcm_kwintabbox_PART_SRCS
     main.cpp
@@ -17,7 +17,7 @@ set(kcm_kwintabbox_PART_SRCS
 
 kde4_add_ui_files( kcm_kwintabbox_PART_SRCS main.ui )
 
-kde4_add_plugin(kcm_kwintabbox ${kcm_kwintabbox_PART_SRCS})
+add_library(kcm_kwintabbox MODULE ${kcm_kwintabbox_PART_SRCS})
 
 target_link_libraries(kcm_kwintabbox
     Qt5::Quick
@@ -31,7 +31,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::KWindowSystem
     KF5::Plasma
     KF5::XmlGui
-    ${KDE4_KNEWSTUFF3_LIBS}
+    KF5::KNewStuff
     KF5::KDE4Support
     ${XCB_XCB_LIBRARY})
 

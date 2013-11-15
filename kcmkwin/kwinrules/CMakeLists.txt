@@ -1,4 +1,4 @@
-ADD_DEFINITIONS(-DKCMRULES)
+add_definitions(-DKCMRULES)
 ########### next target ###############
 
 set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h ../../cursor.h)
@@ -39,7 +39,7 @@ install(TARGETS kwin_rules_dialog         DESTINATION ${LIBEXEC_INSTALL_DIR} )
 set(kcm_kwinrules_PART_SRCS kcm.cpp ${kwinrules_SRCS})
 
 
-kde4_add_plugin(kcm_kwinrules ${kcm_kwinrules_PART_SRCS})
+add_library(kcm_kwinrules MODULE ${kcm_kwinrules_PART_SRCS})
 
 target_link_libraries(kcm_kwinrules ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 

@@ -14,7 +14,7 @@ set( testTabBoxClientModel_SRCS
 
 #kde4_add_unit_test( testTabBoxClientModel TESTNAME kwin-testTabBoxClientModel ${testTabBoxClientModel_SRCS} )
 
-#target_link_libraries( testTabBoxClientModel ${KDE4_KDEUI_LIBS} ${QT_QTDECLARATIVE_LIBRARY} ${X11_LIBRARIES} ${QT_QTTEST_LIBRARY} )
+#target_link_libraries( testTabBoxClientModel ${KDE4_KDEUI_LIBS} Qt5::Declarative ${X11_LIBRARIES} Qt5::Test )
 
 ########################################################
 # Test TabBox::TabBoxHandler
@@ -32,7 +32,7 @@ set( testTabBoxHandler_SRCS
 
 # kde4_add_unit_test( testTabBoxHandler TESTNAME kwin-testTabBoxHandler ${testTabBoxHandler_SRCS} )
 
-# target_link_libraries( testTabBoxHandler ${KDE4_KDEUI_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY} ${QT_QTTEST_LIBRARY} ${X11_LIBRARIES} )
+# target_link_libraries( testTabBoxHandler ${KDE4_KDEUI_LIBS} Qt5::Core Qt5::Gui Qt5::Declarative Qt5::Test ${X11_LIBRARIES} )
 
 ########################################################
 # Test TabBox::TabBoxConfig

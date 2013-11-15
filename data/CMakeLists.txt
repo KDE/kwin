@@ -5,53 +5,53 @@ set(kwin_xml  ${CMAKE_CURRENT_SOURCE_DIR}/../org.kde.KWin.xml)
 set(kwin_update_default_rules_SRCS update_default_rules.cpp)
 
 
-kde4_add_executable( kwin_update_default_rules ${kwin_update_default_rules_SRCS})
+add_executable( kwin_update_default_rules ${kwin_update_default_rules_SRCS})
 
-target_link_libraries( kwin_update_default_rules ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_default_rules  )
 
 install(TARGETS kwin_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/  )
 
 ########### next target ###############
 set( kwin_update_tabbox_settings_SRCS update_tabbox_settings.cpp )
 
-kde4_add_executable( kwin_update_tabbox_settings ${kwin_update_tabbox_settings_SRCS} )
+add_executable( kwin_update_tabbox_settings ${kwin_update_tabbox_settings_SRCS} )
 
-target_link_libraries( kwin_update_tabbox_settings ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_tabbox_settings  )
 
 install( TARGETS kwin_update_tabbox_settings DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 ########### next target ###############
 set( kwin_update_tabbox_qml_settings_SRCS update_tabbox_qml_settings.cpp )
 
-kde4_add_executable( kwin_update_tabbox_qml_settings ${kwin_update_tabbox_qml_settings_SRCS} )
+add_executable( kwin_update_tabbox_qml_settings ${kwin_update_tabbox_qml_settings_SRCS} )
 
-target_link_libraries( kwin_update_tabbox_qml_settings ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_tabbox_qml_settings  )
 
 install( TARGETS kwin_update_tabbox_qml_settings DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 
 ########### next target ###############
 set( kwin_update_settings_49_SRCS update_kwin_49.cpp update_kwin_49_main.cpp )
 
-kde4_add_executable( kwin_update_settings_49 ${kwin_update_settings_49_SRCS} )
+add_executable( kwin_update_settings_49 ${kwin_update_settings_49_SRCS} )
 
-target_link_libraries( kwin_update_settings_49 ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_settings_49  )
 
 install( TARGETS kwin_update_settings_49 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 
 ########### next target ###############
 set( kwin_update_settings_410_SRCS update_kwin_410.cpp )
 
-kde4_add_executable( kwin_update_settings_410 ${kwin_update_settings_410_SRCS} )
+add_executable( kwin_update_settings_410 ${kwin_update_settings_410_SRCS} )
 
-target_link_libraries( kwin_update_settings_410 ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_settings_410  )
 
 install( TARGETS kwin_update_settings_410 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 
 ########### next target ###############
 set( kwin_update_settings_411_SRCS update_kwin_411.cpp )
 
-kde4_add_executable( kwin_update_settings_411 ${kwin_update_settings_411_SRCS} )
+add_executable( kwin_update_settings_411 ${kwin_update_settings_411_SRCS} )
 
-target_link_libraries( kwin_update_settings_411 ${KDE4_KDECORE_LIBS} )
+target_link_libraries( kwin_update_settings_411  )
 
 install( TARGETS kwin_update_settings_411 DESTINATION ${LIB_INSTALL_DIR}/kconf_update_bin/ )
 

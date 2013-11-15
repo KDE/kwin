@@ -3,7 +3,7 @@ include(ECMMarkAsTest)
 set( testUpdateKWin49_SRCS test_update_kwin_49.cpp ../data/update_kwin_49.cpp ../tabbox/tabboxconfig.cpp )
 #add_executable( testUpdateKWin49 ${testUpdateKWin49_SRCS} )
 
-#target_link_libraries( testUpdateKWin49 ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
+#target_link_libraries( testUpdateKWin49  Qt5::Test )
 
 #ecm_mark_as_test(testUpdateKWin49)
 ########################################################

@@ -49,7 +49,7 @@ endmacro()
 
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
-    KWIN4_ADD_EFFECT_BACKEND(kwin4_effect_${name} ${ARGN})
+    kwin4_add_effect_backend(kwin4_effect_${name} ${ARGN})
     if(KWIN_BUILD_OPENGL)
         if( KWIN_BUILD_OPENGL_1_COMPOSITING )
             set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
@@ -171,7 +171,7 @@ endif()
 ###############################################################################
 
 # Add the builtins plugin
-KWIN4_ADD_EFFECT( builtins ${kwin4_effect_builtins_sources} )
+kwin4_add_effect( builtins ${kwin4_effect_builtins_sources} )
 if( NOT KWIN_MOBILE_EFFECTS )
-    KWIN4_ADD_EFFECT_CONFIG( builtins ${kwin4_effect_builtins_config_sources} )
+    kwin4_add_effect_config( builtins ${kwin4_effect_builtins_config_sources} )
 endif()
