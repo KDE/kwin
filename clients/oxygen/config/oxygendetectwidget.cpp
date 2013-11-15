@@ -110,6 +110,9 @@ namespace Oxygen
         _grabber->move( -1000, -1000 );
         _grabber->setModal( true );
         _grabber->show();
+
+        // need to explicitly override cursor for Qt5
+        qApp->setOverrideCursor( Qt::CrossCursor );
         _grabber->grabMouse( Qt::CrossCursor );
         _grabber->installEventFilter( this );
 
@@ -121,6 +124,9 @@ namespace Oxygen
         // check object and event type
         if( o != _grabber ) return false;
         if( e->type() != QEvent::MouseButtonRelease ) return false;
+
+        // need to explicitely release cursor for Qt5
+        qApp->restoreOverrideCursor();
 
         // delete old _grabber
         delete _grabber;
