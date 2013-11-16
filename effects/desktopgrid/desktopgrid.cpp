@@ -914,7 +914,12 @@ void DesktopGridEffect::setHighlightedDesktop(int d)
 {
     if (d == highlightedDesktop || d <= 0 || d > effects->numberOfDesktops())
         return;
+    if (highlightedDesktop > 0 && highlightedDesktop <= hoverTimeline.count())
+        hoverTimeline[highlightedDesktop-1]->setCurrentTime(qMin(hoverTimeline[highlightedDesktop-1]->currentTime(),
+                                                                 hoverTimeline[highlightedDesktop-1]->duration()));
     highlightedDesktop = d;
+    if (highlightedDesktop <= hoverTimeline.count())
+        hoverTimeline[highlightedDesktop-1]->setCurrentTime(qMax(hoverTimeline[highlightedDesktop-1]->currentTime(), 0));
     effects->addRepaintFull();
 }
 
