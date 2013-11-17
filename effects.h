@@ -214,6 +214,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void slotDesktopChanged(int old, KWin::Client *withClient);
+    void slotDesktopPresenceChanged(KWin::Client *c, int old);
     void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
     void slotUnmanagedAdded(KWin::Unmanaged *u);

@@ -1457,6 +1457,7 @@ void Client::setDesktop(int desktop)
         return;
 
     int was_desk = desk;
+    const bool wasOnCurrentDesktop = isOnCurrentDesktop();
     desk = desktop;
     info->setDesktop(desktop);
     if ((was_desk == NET::OnAllDesktops) != (desktop == NET::OnAllDesktops)) {
@@ -1486,6 +1487,8 @@ void Client::setDesktop(int desktop)
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Desktop);
     emit desktopChanged();
+    if (wasOnCurrentDesktop != isOnCurrentDesktop())
+        emit desktopPresenceChanged(this, was_desk);
 }
 
 /**

@@ -471,6 +471,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
 #ifdef KWIN_BUILD_SCREENEDGES
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
 #endif
+    connect(c, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)), Qt::QueuedConnection);
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
         return NULL;
@@ -1165,8 +1166,6 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
     if (c->desktop() != desk)   // No change or desktop forced
         return;
     desk = c->desktop(); // Client did range checking
-
-    emit desktopPresenceChanged(c, old_desktop);
 
     if (c->isOnDesktop(VirtualDesktopManager::self()->current())) {
         if (c->wantsTabFocus() && options->focusPolicyIsReasonable() &&

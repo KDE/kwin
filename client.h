@@ -719,6 +719,7 @@ signals:
     void activeChanged();
     void captionChanged();
     void desktopChanged();
+    void desktopPresenceChanged(KWin::Client*, int); // to be forwarded by Workspace
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
