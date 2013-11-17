@@ -1217,41 +1217,7 @@ bool Workspace::isOnCurrentHead()
 
 void Workspace::sendClientToScreen(Client* c, int screen)
 {
-    screen = c->rules()->checkScreen(screen);
-    if (c->isActive()) {
-        screens()->setCurrent(screen);
-        // might impact the layer of a fullscreen window
-        foreach (Client *cc, clientList()) {
-            if (cc->isFullScreen() && cc->screen() == screen) {
-                updateClientLayer(cc);
-            }
-        }
-    }
-    if (c->screen() == screen)   // Don't use isOnScreen(), that's true even when only partially
-        return;
-    GeometryUpdatesBlocker blocker(c);
-    QRect old_sarea = clientArea(MaximizeArea, c);
-    QRect sarea = clientArea(MaximizeArea, screen, c->desktop());
-    QRect oldgeom = c->geometry();
-    QRect geom = c->geometry();
-    // move the window to have the same relative position to the center of the screen
-    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
-    geom.moveCenter(
-        QPoint(( geom.center().x() - old_sarea.center().x()) * sarea.width() / old_sarea.width() + sarea.center().x(),
-            ( geom.center().y() - old_sarea.center().y()) * sarea.height() / old_sarea.height() + sarea.center().y()));
-    c->setGeometry( geom );
-    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
-    // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
-    // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
-    // which could alter the resulting geometry.
-    if( old_sarea.contains( oldgeom ))
-        c->keepInArea( sarea );
-    c->checkWorkspacePosition( oldgeom );
-    ClientList transients_stacking_order = ensureStackingOrder(c->transients());
-    for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
-            it != transients_stacking_order.constEnd();
-            ++it)
-        sendClientToScreen(*it, screen);
+    c->sendToScreen(screen);
 }
 
 void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)

@@ -3266,4 +3266,67 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 }
 
+void Client::sendToScreen(int newScreen)
+{
+    newScreen = rules()->checkScreen(newScreen);
+    if (isActive()) {
+        screens()->setCurrent(newScreen);
+        // might impact the layer of a fullscreen window
+        foreach (Client *cc, workspace()->clientList()) {
+            if (cc->isFullScreen() && cc->screen() == newScreen) {
+                cc->updateLayer();
+            }
+        }
+    }
+    if (screen() == newScreen)   // Don't use isOnScreen(), that's true even when only partially
+        return;
+
+    GeometryUpdatesBlocker blocker(this);
+
+    // operating on the maximized / quicktiled window would leave the old geom_restore behind,
+    // so we clear the state first
+    MaximizeMode maxMode = maximizeMode();
+    QuickTileMode qtMode = (QuickTileMode)quick_tile_mode;
+    maximize(MaximizeRestore);
+    setQuickTileMode(QuickTileNone);
+
+    QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
+    QRect screenArea = workspace()->clientArea(MaximizeArea, newScreen, desktop());
+    QRect oldGeom = geometry();
+    QRect newGeom = oldGeom;
+    // move the window to have the same relative position to the center of the screen
+    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
+    QPoint center = newGeom.center() - oldScreenArea.center();
+    center.setX(center.x() * screenArea.width() / oldScreenArea.width());
+    center.setY(center.y() * screenArea.height() / oldScreenArea.height());
+    center += screenArea.center();
+    newGeom.moveCenter(center);
+    setGeometry(newGeom);
+    // align geom_restore - checkWorkspacePosition operates on it
+    geom_restore = newGeom;
+
+    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
+    // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
+    // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
+    // which could alter the resulting geometry.
+    if (oldScreenArea.contains(oldGeom))
+        keepInArea(screenArea);
+    checkWorkspacePosition(oldGeom);
+
+    // re-align geom_restore to contrained geometry
+    geom_restore = geometry();
+
+    // finally reset special states
+    // NOTICE that MaximizeRestore/QuickTileNone checks are required.
+    // eg. setting QuickTileNone would break maximization
+    if (maxMode != MaximizeRestore)
+        maximize(maxMode);
+    if (qtMode != QuickTileNone)
+        setQuickTileMode(qtMode);
+
+    ClientList tso = workspace()->ensureStackingOrder(transients());
+    for (ClientList::ConstIterator it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
+        (*it)->sendToScreen(newScreen);
+}
+
 } // namespace
