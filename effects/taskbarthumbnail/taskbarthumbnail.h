@@ -48,7 +48,7 @@ public Q_SLOTS:
     void screenLockingChanged();
 private:
     struct Data {
-        Window window; // thumbnail of this window
+        WId window; // thumbnail of this window
         QRect rect;
     };
     long atom;

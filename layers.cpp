@@ -212,9 +212,9 @@ void Workspace::propagateClients(bool propagate_new_clients)
     Xcb::restackWindows(newWindowStack);
 
     int pos = 0;
-    Window *cl(NULL);
+    xcb_window_t *cl(nullptr);
     if (propagate_new_clients) {
-        cl = new Window[ desktops.count() + clients.count()];
+        cl = new xcb_window_t[ desktops.count() + clients.count()];
         // TODO this is still not completely in the map order
         for (ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
             cl[pos++] = (*it)->window();
@@ -224,7 +224,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
         delete [] cl;
     }
 
-    cl = new Window[ stacking_order.count()];
+    cl = new xcb_window_t[ stacking_order.count()];
     pos = 0;
     for (ToplevelList::ConstIterator it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
         if ((*it)->isClient())
