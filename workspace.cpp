@@ -300,7 +300,7 @@ void Workspace::init()
     vds->updateLayout();
 
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
-    NETRootInfo client_info(display(), NET::ActiveWindow | NET::CurrentDesktop);
+    NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
     int initial_desktop;
     if (!qApp->isSessionRestored())
         initial_desktop = client_info.currentDesktop();

@@ -47,13 +47,13 @@ public:
 protected:
     virtual void changeNumberOfDesktops(int n) override;
     virtual void changeCurrentDesktop(int d) override;
-    virtual void changeActiveWindow(Window w, NET::RequestSource src, Time timestamp, Window active_window) override;
-    virtual void closeWindow(Window w) override;
-    virtual void moveResize(Window w, int x_root, int y_root, unsigned long direction) override;
-    virtual void moveResizeWindow(Window w, int flags, int x, int y, int width, int height) override;
-    virtual void gotPing(Window w, Time timestamp) override;
-    virtual void restackWindow(Window w, RequestSource source, Window above, int detail, Time timestamp) override;
-    virtual void gotTakeActivity(Window w, Time timestamp, long flags) override;
+    virtual void changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window) override;
+    virtual void closeWindow(xcb_window_t w) override;
+    virtual void moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction) override;
+    virtual void moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height) override;
+    virtual void gotPing(xcb_window_t w, xcb_timestamp_t timestamp) override;
+    virtual void restackWindow(xcb_window_t w, RequestSource source, xcb_window_t above, int detail, xcb_timestamp_t timestamp) override;
+    virtual void gotTakeActivity(xcb_window_t w, xcb_timestamp_t timestamp, long flags) override;
     virtual void changeShowingDesktop(bool showing) override;
 
 private:
