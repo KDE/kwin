@@ -71,14 +71,14 @@ inline RootInfo *rootInfo()
 /**
  * NET WM Protocol handler class
  */
-class WinInfo : public NETWinInfo2
+class WinInfo : public NETWinInfo
 {
 private:
     typedef KWin::Client Client; // Because of NET::Client
 
 public:
-    WinInfo(Client* c, Display * display, Window window,
-            Window rwin, const unsigned long pr[], int pr_size);
+    WinInfo(Client* c, xcb_window_t window,
+            xcb_window_t rwin, const unsigned long pr[], int pr_size);
     virtual void changeDesktop(int desktop) override;
     virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
     virtual void changeState(unsigned long state, unsigned long mask) override;

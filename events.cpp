@@ -510,7 +510,7 @@ bool Client::windowEvent(xcb_generic_event_t *e)
                 emit opacityChanged(this, old_opacity);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo2 i(display(), frameId(), rootWindow(), 0);
+                NETWinInfo i(connection(), frameId(), rootWindow(), 0);
                 i.setOpacity(info->opacity());
             }
         }

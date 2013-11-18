@@ -2277,7 +2277,7 @@ void Client::updateCompositeBlocking(bool readProperty)
 {
     if (readProperty) {
         const unsigned long properties[2] = {0, NET::WM2BlockCompositing};
-        NETWinInfo2 i(display(), window(), rootWindow(), properties, 2);
+        NETWinInfo i(connection(), window(), rootWindow(), properties, 2);
         setBlockingCompositing(i.isBlockingCompositing());
     }
     else

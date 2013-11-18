@@ -100,7 +100,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2FrameOverlap |
         0;
 
-    info = new WinInfo(this, display(), m_client, rootWindow(), properties, 2);
+    info = new WinInfo(this, m_client, rootWindow(), properties, 2);
 
     m_colormap = attr.colormap;
 

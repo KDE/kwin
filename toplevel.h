@@ -380,7 +380,7 @@ protected:
     QRect geom;
     Visual* vis;
     int bit_depth;
-    NETWinInfo2* info;
+    NETWinInfo* info;
     bool ready_for_painting;
     QRegion repaints_region; // updating, repaint just requires repaint of that area
     QRegion layer_repaints_region;

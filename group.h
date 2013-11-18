@@ -60,7 +60,7 @@ private:
     ClientList _members;
     Client* leader_client;
     Window leader_wid;
-    NETWinInfo2* leader_info;
+    NETWinInfo* leader_info;
     Time user_time;
     int refcount;
     EffectWindowGroupImpl* effect_group;
