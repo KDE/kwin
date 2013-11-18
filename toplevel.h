@@ -34,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // xcb
 #include <xcb/damage.h>
 #include <xcb/xfixes.h>
+// XLib
+#include <X11/Xlib.h>
+#include <fixx11h.h>
 // system
 #include <assert.h>
 

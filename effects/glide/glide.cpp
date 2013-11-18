@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimeLine>
 
+#include <X11/Xlib.h>
+#include <fixx11h.h>
+
 // Effect is based on fade effect by Philip Falkner
 
 namespace KWin
