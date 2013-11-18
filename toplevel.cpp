@@ -399,10 +399,10 @@ void Toplevel::getWmOpaqueRegion()
         int rformat;
         unsigned long nitems;
         if (XGetWindowProperty(display(), m_client,
-                               atoms->net_wm_opaque_region, 0, length, false, XA_CARDINAL,
+                               atoms->net_wm_opaque_region, 0, length, false, XCB_ATOM_CARDINAL,
                                &type, &rformat, &nitems, &bytes_after_return,
                                reinterpret_cast< unsigned char** >(&data)) == Success) {
-            if (type != XA_CARDINAL || rformat != 32 || nitems%4) {
+            if (type != XCB_ATOM_CARDINAL || rformat != 32 || nitems%4) {
                 // it can happen, that the window does not provide this property
                 XFree(data);
                 break;

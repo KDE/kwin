@@ -1723,7 +1723,7 @@ QString Client::readName() const
     if (info->name() && info->name()[0] != '\0')
         return QString::fromUtf8(info->name());
     else
-        return KWindowSystem::readNameProperty(window(), XA_WM_NAME);
+        return KWindowSystem::readNameProperty(window(), XCB_ATOM_WM_NAME);
 }
 
 KWIN_COMPARE_PREDICATE(FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
@@ -1815,7 +1815,7 @@ void Client::fetchIconicName()
     if (info->iconName() && info->iconName()[0] != '\0')
         s = QString::fromUtf8(info->iconName());
     else
-        s = KWindowSystem::readNameProperty(window(), XA_WM_ICON_NAME);
+        s = KWindowSystem::readNameProperty(window(), XCB_ATOM_WM_ICON_NAME);
     if (s != cap_iconic) {
         bool was_set = !cap_iconic.isEmpty();
         cap_iconic = s;
@@ -2120,7 +2120,7 @@ void Client::getSyncCounter()
     int formatRet;
     unsigned char* propRet;
     int ret = XGetWindowProperty(display(), window(), atoms->net_wm_sync_request_counter,
-                                 0, 1, false, XA_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet);
+                                 0, 1, false, XCB_ATOM_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet);
 
     if (ret == Success && formatRet == 32) {
         syncRequest.counter = *(xcb_sync_counter_t*)(propRet);
