@@ -39,6 +39,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KShortcutsEditor>
 
 #include <QX11Info>
+#include <X11/Xlib.h>
+#include <fixx11h.h>
 
 #include <netwm.h>
 
@@ -104,7 +106,7 @@ void KWinDesktopConfig::init()
     m_editor->addCollection(m_switchDesktopCollection, i18n("Desktop Switching"));
 
     // get number of desktops
-    NETRootInfo info(QX11Info::display(), NET::NumberOfDesktops | NET::DesktopNames);
+    NETRootInfo info(QX11Info::connection(), NET::NumberOfDesktops | NET::DesktopNames);
     int n = info.numberOfDesktops();
 
     for (int i = 1; i <= n; ++i) {
@@ -164,7 +166,7 @@ void KWinDesktopConfig::init()
     connect(m_ui->effectConfigButton, SIGNAL(clicked()), SLOT(slotConfigureEffectClicked()));
 
     // Begin check for immutable - taken from old desktops kcm
-    int kwin_screen_number = DefaultScreen(QX11Info::display());
+    int kwin_screen_number = QX11Info::appScreen();
 
     m_config = KSharedConfig::openConfig("kwinrc");
 
@@ -240,7 +242,7 @@ void KWinDesktopConfig::load()
 
     // get number of desktops
     unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-    NETRootInfo info(QX11Info::display(), properties, 2);
+    NETRootInfo info(QX11Info::connection(), properties, 2);
 
     for (int i = 1; i <= maxDesktops; i++) {
         QString name = QString::fromUtf8(info.desktopName(i));
@@ -287,7 +289,7 @@ void KWinDesktopConfig::save()
 {
     // TODO: plasma stuff
     unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-    NETRootInfo info(QX11Info::display(), properties, 2);
+    NETRootInfo info(QX11Info::connection(), properties, 2);
     // set desktop names
     for (int i = 1; i <= maxDesktops; i++) {
         QString desktopName = m_desktopNames[ i -1 ];
@@ -314,7 +316,7 @@ void KWinDesktopConfig::save()
 
     // save the desktops
     QString groupname;
-    const int screenNumber = DefaultScreen(QX11Info::display());
+    const int screenNumber = QX11Info::appScreen();
     if (screenNumber == 0)
         groupname = "Desktops";
     else
