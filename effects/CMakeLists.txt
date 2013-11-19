@@ -81,7 +81,6 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endif()
     target_link_libraries( kcm_kwin4_effect_${name}
         kwineffects
-        Qt5::Quick
         Qt5::Widgets
 	KF5::KIOWidgets # KUrlRequester
         KF5::KCoreAddons
