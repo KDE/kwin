@@ -67,8 +67,8 @@ public Q_SLOTS:
 private:
     class WindowInfo;
     typedef QMap< const EffectWindow*, WindowInfo > InfoHash;
-    void glideIn(EffectWindow* w, WindowPaintData& data);
-    void glideOut(EffectWindow* w, WindowPaintData& data);
+    void glideIn(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info);
+    void glideOut(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info);
     bool isGlideWindow(EffectWindow* w);
     InfoHash windows;
     float duration;

@@ -110,38 +110,32 @@ void GlideEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowP
         default:
         case GlideInOut:
             if (info->added)
-                glideIn(w, data);
+                glideIn(w, data, info);
             else if (info->closed)
-                glideOut(w, data);
+                glideOut(w, data, info);
             break;
         case GlideOutIn:
             if (info->added)
-                glideOut(w, data);
+                glideOut(w, data, info);
             if (info->closed)
-                glideIn(w, data);
+                glideIn(w, data, info);
             break;
-        case GlideIn: glideIn(w, data); break;
-        case GlideOut: glideOut(w, data); break;
+        case GlideIn: glideIn(w, data, info); break;
+        case GlideOut: glideOut(w, data, info); break;
         }
     }
     effects->paintWindow(w, mask, region, data);
 }
 
-void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data)
+void GlideEffect::glideIn(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info)
 {
-    InfoHash::const_iterator info = windows.constFind(w);
-    if (info == windows.constEnd())
-        return;
     const double progress = info->timeLine->currentValue();
     data *= progress;
     data.translate(int(w->width() / 2 * (1 - progress)), int(w->height() / 2 * (1 - progress)));
 }
 
-void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data)
+void GlideEffect::glideOut(EffectWindow* w, WindowPaintData& data, const InfoHash::const_iterator &info)
 {
-    InfoHash::const_iterator info = windows.constFind(w);
-    if (info == windows.constEnd())
-        return;
     const double progress = info->timeLine->currentValue();
     data *= (2 - progress);
     data.translate(- int(w->width() / 2 * (1 - progress)), - int(w->height() / 2 * (1 - progress)));
