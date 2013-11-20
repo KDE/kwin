@@ -249,7 +249,7 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
 
     // Establish a D-Bus communication interface with KolorServer
     m_csi = new ColorServerInterface(
-        QStringLiteral("org.kde.kded"),
+        QStringLiteral("org.kde.kded5"),
         QStringLiteral("/modules/kolorserver"),
         QDBusConnection::sessionBus(),
         this);
