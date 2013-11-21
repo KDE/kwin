@@ -372,7 +372,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint2");
 #endif
 
-    m_backend->endRenderingFrame(damage);
+    m_backend->endRenderingFrame(damage, damage);
 
     // do cleanup
     stacking_order.clear();

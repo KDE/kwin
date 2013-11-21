@@ -493,7 +493,7 @@ SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Textu
     return new GlxTexture(texture, this);
 }
 
-void GlxBackend::prepareRenderingFrame()
+QRegion GlxBackend::prepareRenderingFrame()
 {
     if (gs_tripleBufferNeedsDetection) {
         // the composite timer floors the repaint frequency. This can pollute our triple buffering
@@ -506,11 +506,13 @@ void GlxBackend::prepareRenderingFrame()
     present();
     startRenderTimer();
     glXWaitX();
+
+    return QRegion();
 }
 
-void GlxBackend::endRenderingFrame(const QRegion &damage)
+void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    setLastDamage(damage);
+    setLastDamage(renderedRegion);
 
     if (!blocksForRetrace()) {
         // This also sets lastDamage to empty which prevents the frame from

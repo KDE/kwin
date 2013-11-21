@@ -461,21 +461,28 @@ public:
     }
     virtual void screenGeometryChanged(const QSize &size) = 0;
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) = 0;
+
     /**
      * @brief Backend specific code to prepare the rendering of a frame including flushing the
      * previously rendered frame to the screen if the backend works this way.
+     *
+     * @return A region that if not empty will be repainted in addition to the damaged region
      **/
-    virtual void prepareRenderingFrame() = 0;
+    virtual QRegion prepareRenderingFrame() = 0;
+
     /**
      * @brief Backend specific code to handle the end of rendering a frame.
      *
-     * @param damage The actual updated region in this frame
+     * @param renderedRegion The possibly larger region that has been rendered
+     * @param damagedRegion The damaged region that should be posted
      **/
-    virtual void endRenderingFrame(const QRegion &damage) = 0;
+    virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
     void idle();
+
     /**
      * @return bool Whether the scene needs to flush a frame.
      **/

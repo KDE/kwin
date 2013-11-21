@@ -320,7 +320,7 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
     return new EglTexture(texture, this);
 }
 
-void EglOnXBackend::prepareRenderingFrame()
+QRegion EglOnXBackend::prepareRenderingFrame()
 {
     if (gs_tripleBufferNeedsDetection) {
         // the composite timer floors the repaint frequency. This can pollute our triple buffering
@@ -330,14 +330,17 @@ void EglOnXBackend::prepareRenderingFrame()
         // fllush the buffer queue
         usleep(1000);
     }
+
     present();
     startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+
+    return QRegion();
 }
 
-void EglOnXBackend::endRenderingFrame(const QRegion &damage)
+void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    setLastDamage(damage);
+    setLastDamage(renderedRegion);
 
     if (!blocksForRetrace()) {
         // This also sets lastDamage to empty which prevents the frame from

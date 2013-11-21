@@ -816,17 +816,20 @@ SceneOpenGL::TexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGL
     return new EglWaylandTexture(texture, this);
 }
 
-void EglWaylandBackend::prepareRenderingFrame()
+QRegion EglWaylandBackend::prepareRenderingFrame()
 {
     if (!lastDamage().isEmpty())
         present();
+
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     startRenderTimer();
+
+    return QRegion();
 }
 
-void EglWaylandBackend::endRenderingFrame(const QRegion &damage)
+void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    setLastDamage(damage);
+    setLastDamage(renderedRegion);
     glFlush();
 }
 
