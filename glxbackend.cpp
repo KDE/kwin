@@ -511,9 +511,15 @@ void GlxBackend::prepareRenderingFrame()
 void GlxBackend::endRenderingFrame(const QRegion &damage)
 {
     setLastDamage(damage);
-    glFlush();
+
     if (!blocksForRetrace()) {
-        present(); // this sets lastDamage emtpy and prevents execution from prepareRenderingFrame()
+        // This also sets lastDamage to empty which prevents the frame from
+        // being posted again when prepareRenderingFrame() is called.
+        present();
+    } else {
+        // Make sure that the GPU begins processing the command stream
+        // now and not the next time prepareRenderingFrame() is called.
+        glFlush();
     }
 
     if (overlayWindow()->window())  // show the window only after the first pass,
