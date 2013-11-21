@@ -543,6 +543,21 @@ public:
     bool isDirectRendering() const {
         return m_directRendering;
     }
+
+    bool supportsBufferAge() const {
+        return m_haveBufferAge;
+    }
+
+    /**
+     * Returns the damage that has accumulated since a buffer of the given age was presented.
+     */
+    QRegion accumulatedDamageHistory(int bufferAge) const;
+
+    /**
+     * Saves the given region to damage history.
+     */
+    void addToDamageHistory(const QRegion &region);
+
 protected:
     /**
      * @brief Backend specific flushing of frame to screen.
@@ -589,6 +604,11 @@ protected:
     void setIsDirectRendering(bool direct) {
         m_directRendering = direct;
     }
+
+    void setSupportsBufferAge(bool value) {
+        m_haveBufferAge = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      **/
@@ -627,6 +647,10 @@ private:
      **/
     bool m_directRendering;
     /**
+     * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
+     */
+    bool m_haveBufferAge;
+    /**
      * @brief Whether the initialization failed, of course default to @c false.
      **/
     bool m_failed;
@@ -634,6 +658,10 @@ private:
      * @brief Damaged region of previously rendered frame.
      **/
     QRegion m_lastDamage;
+    /**
+     * @brief The damage history for the past 10 frames.
+     */
+    QList<QRegion> m_damageHistory;
     /**
      * @brief Timer to measure how long a frame renders.
      **/

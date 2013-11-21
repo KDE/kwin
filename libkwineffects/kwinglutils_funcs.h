@@ -77,6 +77,9 @@ void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 #define GL_READ_FRAMEBUFFER               0x8CA8
 #endif
 
+#ifndef GLX_BACK_BUFFER_AGE_EXT
+#define GLX_BACK_BUFFER_AGE_EXT           0x20F4
+#endif
 
 #include <fixx11h.h>
 
@@ -501,6 +504,10 @@ extern KWIN_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
 
 #ifndef EGL_POST_SUB_BUFFER_SUPPORTED_NV
 #define EGL_POST_SUB_BUFFER_SUPPORTED_NV 0x30BE
+#endif
+
+#ifndef EGL_BUFFER_AGE_EXT
+#define EGL_BUFFER_AGE_EXT 0x313D
 #endif
 
 #ifndef GL_UNPACK_ROW_LENGTH

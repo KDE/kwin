@@ -87,6 +87,7 @@ OpenGLBackend::OpenGLBackend()
     , m_syncsToVBlank(false)
     , m_blocksForRetrace(false)
     , m_directRendering(false)
+    , m_haveBufferAge(false)
     , m_failed(false)
 {
 }
@@ -109,6 +110,29 @@ void OpenGLBackend::idle()
 {
     if (hasPendingFlush())
         present();
+}
+
+void OpenGLBackend::addToDamageHistory(const QRegion &region)
+{
+    if (m_damageHistory.count() > 10)
+        m_damageHistory.removeLast();
+
+    m_damageHistory.prepend(region);
+}
+
+QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
+{
+    QRegion region;
+
+    // Note: An age of zero means the buffer contents are undefined
+    if (bufferAge > 0 && bufferAge <= m_damageHistory.count()) {
+        for (int i = 0; i < bufferAge - 1; i++)
+            region |= m_damageHistory[i];
+    } else {
+        region = QRegion(0, 0, displayWidth(), displayHeight());
+    }
+
+    return region;
 }
 
 /************************************************
@@ -344,7 +368,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         stacking_order.append(windows[ c ]);
     }
 
-    m_backend->prepareRenderingFrame();
+    QRegion repaint = m_backend->prepareRenderingFrame();
 
     const GLenum status = glGetGraphicsResetStatus();
     if (status != GL_NO_ERROR) {
@@ -357,25 +381,33 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint1");
 #endif
 
-    QRegion validRegion;
-    paintScreen(&mask, damage, &validRegion);   // call generic implementation
+    // After this call, updateRegion will contain the damaged region in the
+    // back buffer. This is the region that needs to be posted to repair
+    // the front buffer. It doesn't include the additional damage returned
+    // by prepareRenderingFrame(). validRegion is the region that has been
+    // repainted, and may be larger than updateRegion.
+    QRegion updateRegion, validRegion;
+    paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
 
 #ifndef KWIN_HAVE_OPENGLES
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
 
     // copy dirty parts from front to backbuffer
-    if (options->glPreferBufferSwap() == Options::CopyFrontBuffer && validRegion != displayRegion) {
+    if (!m_backend->supportsBufferAge() &&
+        options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
+        validRegion != displayRegion) {
         glReadBuffer(GL_FRONT);
         copyPixels(displayRegion - validRegion);
         glReadBuffer(GL_BACK);
         damage = displayRegion;
     }
 #endif
+
 #ifdef CHECK_GL_ERROR
     checkGLError("Paint2");
 #endif
 
-    m_backend->endRenderingFrame(validRegion, validRegion);
+    m_backend->endRenderingFrame(validRegion, updateRegion);
 
     // do cleanup
     stacking_order.clear();
@@ -431,6 +463,9 @@ void SceneOpenGL::paintBackground(QRegion region)
 
 void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
 {
+    if (m_backend->supportsBufferAge())
+        return;
+
     if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
         const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
         uint damagedPixels = 0;

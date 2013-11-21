@@ -36,6 +36,7 @@ EglOnXBackend::EglOnXBackend()
     : OpenGLBackend()
     , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
+    , m_bufferAge(0)
 {
     init();
     // Egl is always direct rendering
@@ -98,6 +99,16 @@ void EglOnXBackend::init()
             }
         }
     }
+
+    setSupportsBufferAge(false);
+
+    if (hasGLExtension("EGL_EXT_buffer_age")) {
+        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
+
+        if (useBufferAge != "0")
+            setSupportsBufferAge(true);
+    }
+
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
     gs_tripleBufferNeedsDetection = false;
@@ -267,6 +278,13 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
+    if (supportsBufferAge()) {
+        eglSwapBuffers(dpy, surface);
+        eglQuerySurface(dpy, surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+        setLastDamage(QRegion());
+        return;
+    }
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -311,8 +329,11 @@ void EglOnXBackend::present()
 void EglOnXBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)
-    // no backend specific code needed
+
     // TODO: base implementation in OpenGLBackend
+
+    // The back buffer contents are now undefined
+    m_bufferAge = 0;
 }
 
 SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Texture *texture)
@@ -322,6 +343,8 @@ SceneOpenGL::TexturePrivate *EglOnXBackend::createBackendTexture(SceneOpenGL::Te
 
 QRegion EglOnXBackend::prepareRenderingFrame()
 {
+    QRegion repaint;
+
     if (gs_tripleBufferNeedsDetection) {
         // the composite timer floors the repaint frequency. This can pollute our triple buffering
         // detection because the glXSwapBuffers call for the new frame has to wait until the pending
@@ -332,14 +355,35 @@ QRegion EglOnXBackend::prepareRenderingFrame()
     }
 
     present();
+
+    if (supportsBufferAge())
+        repaint = accumulatedDamageHistory(m_bufferAge);
+
     startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
-    return QRegion();
+    return repaint;
 }
 
 void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    if (damagedRegion.isEmpty()) {
+        setLastDamage(QRegion());
+
+        // If the damaged region of a window is fully occluded, the only
+        // rendering done, if any, will have been to repair a reused back
+        // buffer, making it identical to the front buffer.
+        //
+        // In this case we won't post the back buffer. Instead we'll just
+        // set the buffer age to 1, so the repaired regions won't be
+        // rendered again in the next frame.
+        if (!renderedRegion.isEmpty())
+            glFlush();
+
+        m_bufferAge = 1;
+        return;
+    }
+
     setLastDamage(renderedRegion);
 
     if (!blocksForRetrace()) {
@@ -354,6 +398,10 @@ void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
+
+    // Save the damaged region to history
+    if (supportsBufferAge())
+        addToDamageHistory(damagedRegion);
 }
 
 /************************************************

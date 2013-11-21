@@ -49,6 +49,7 @@ private:
     EGLSurface surface;
     EGLContext ctx;
     int surfaceHasSubPost;
+    int m_bufferAge;
     friend class EglTexture;
 };
 

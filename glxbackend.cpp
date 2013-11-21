@@ -46,6 +46,7 @@ GlxBackend::GlxBackend()
     , fbconfig(NULL)
     , glxWindow(None)
     , ctx(None)
+    , m_bufferAge(0)
     , haveSwapInterval(false)
 {
     init();
@@ -104,8 +105,19 @@ void GlxBackend::init()
         options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
     initGL(GlxPlatformInterface);
+
     // Check whether certain features are supported
     haveSwapInterval = glXSwapIntervalMESA || glXSwapIntervalEXT || glXSwapIntervalSGI;
+
+    setSupportsBufferAge(false);
+
+    if (hasGLExtension("GLX_EXT_buffer_age")) {
+        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
+
+        if (useBufferAge != "0")
+            setSupportsBufferAge(true);
+    }
+
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
     haveWaitSync = false;
@@ -426,6 +438,13 @@ void GlxBackend::present()
     if (lastDamage().isEmpty())
         return;
 
+    if (supportsBufferAge()) {
+        glXSwapBuffers(display(), glxWindow);
+        glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
+        setLastDamage(QRegion());
+        return;
+    }
+
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -486,6 +505,9 @@ void GlxBackend::screenGeometryChanged(const QSize &size)
 
     glXMakeCurrent(display(), glxWindow, ctx);
     glViewport(0, 0, size.width(), size.height());
+
+    // The back buffer contents are now undefined
+    m_bufferAge = 0;
 }
 
 SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Texture *texture)
@@ -495,6 +517,8 @@ SceneOpenGL::TexturePrivate *GlxBackend::createBackendTexture(SceneOpenGL::Textu
 
 QRegion GlxBackend::prepareRenderingFrame()
 {
+    QRegion repaint;
+
     if (gs_tripleBufferNeedsDetection) {
         // the composite timer floors the repaint frequency. This can pollute our triple buffering
         // detection because the glXSwapBuffers call for the new frame has to wait until the pending
@@ -503,15 +527,37 @@ QRegion GlxBackend::prepareRenderingFrame()
         // fllush the buffer queue
         usleep(1000);
     }
+
     present();
+
+    if (supportsBufferAge())
+        repaint = accumulatedDamageHistory(m_bufferAge);
+
     startRenderTimer();
     glXWaitX();
 
-    return QRegion();
+    return repaint;
 }
 
 void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
+    if (damagedRegion.isEmpty()) {
+        setLastDamage(QRegion());
+
+        // If the damaged region of a window is fully occluded, the only
+        // rendering done, if any, will have been to repair a reused back
+        // buffer, making it identical to the front buffer.
+        //
+        // In this case we won't post the back buffer. Instead we'll just
+        // set the buffer age to 1, so the repaired regions won't be
+        // rendered again in the next frame.
+        if (!renderedRegion.isEmpty())
+            glFlush();
+
+        m_bufferAge = 1;
+        return;
+    }
+
     setLastDamage(renderedRegion);
 
     if (!blocksForRetrace()) {
@@ -526,6 +572,10 @@ void GlxBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion 
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
+
+    // Save the damaged region to history
+    if (supportsBufferAge())
+        addToDamageHistory(damagedRegion);
 }
 
 
