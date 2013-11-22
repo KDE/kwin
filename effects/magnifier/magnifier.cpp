@@ -263,6 +263,7 @@ void MagnifierEffect::zoomIn()
         effects->startMousePolling();
     }
     if (effects->isOpenGLCompositing() && !m_texture) {
+        effects->makeOpenGLContextCurrent();
         m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
         m_texture->setYInverted(false);
         m_fbo = new GLRenderTarget(*m_texture);
@@ -280,6 +281,7 @@ void MagnifierEffect::zoomOut()
             effects->stopMousePolling();
         }
         if (zoom == target_zoom) {
+            effects->makeOpenGLContextCurrent();
             delete m_fbo;
             delete m_texture;
             m_fbo = NULL;
@@ -301,6 +303,7 @@ void MagnifierEffect::toggle()
             effects->startMousePolling();
         }
         if (effects->isOpenGLCompositing() && !m_texture) {
+            effects->makeOpenGLContextCurrent();
             m_texture = new GLTexture(magnifier_size.width(), magnifier_size.height());
             m_texture->setYInverted(false);
             m_fbo = new GLRenderTarget(*m_texture);

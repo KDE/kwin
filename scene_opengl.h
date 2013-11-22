@@ -54,6 +54,8 @@ public:
     virtual OverlayWindow *overlayWindow();
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
+    virtual bool makeOpenGLContextCurrent() override;
+    virtual void doneOpenGLContextCurrent() override;
 
     void idle();
 
@@ -472,6 +474,8 @@ public:
      * @param damage The actual updated region in this frame
      **/
     virtual void endRenderingFrame(const QRegion &damage) = 0;
+    virtual bool makeCurrent() = 0;
+    virtual void doneCurrent() = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/

@@ -177,6 +177,9 @@ public:
     virtual QVariant kwinOption(KWinOption kwopt);
     virtual bool isScreenLocked() const;
 
+    virtual bool makeOpenGLContextCurrent() override;
+    virtual void doneOpenGLContextCurrent() override;
+
     // internal (used by kwin core or compositing code)
     void startPaint();
     void grabbedKeyboardEvent(QKeyEvent* e);

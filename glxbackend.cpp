@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // Qt
 #include <QDebug>
+#include <QOpenGLContext>
 // system
 #include <unistd.h>
 
@@ -55,7 +56,7 @@ GlxBackend::~GlxBackend()
     // TODO: cleanup in error case
     // do cleanup after initBuffer()
     cleanupGL();
-    glXMakeCurrent(display(), None, NULL);
+    doneCurrent();
 
     if (ctx)
         glXDestroyContext(display(), ctx);
@@ -425,9 +426,6 @@ void GlxBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    // a different context might have been current
-    glXMakeCurrent(display(), glxWindow, ctx);
-
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -480,13 +478,13 @@ void GlxBackend::present()
 
 void GlxBackend::screenGeometryChanged(const QSize &size)
 {
-    glXMakeCurrent(display(), None, NULL);
+    doneCurrent();
 
     XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());
     overlayWindow()->setup(window);
     Xcb::sync();
 
-    glXMakeCurrent(display(), glxWindow, ctx);
+    makeCurrent();
     glViewport(0, 0, size.width(), size.height());
 }
 
@@ -507,8 +505,6 @@ void GlxBackend::prepareRenderingFrame()
     }
     present();
     startRenderTimer();
-    // different context might have been bound as present() can block
-    glXMakeCurrent(display(), glxWindow, ctx);
     glXWaitX();
 }
 
@@ -524,6 +520,20 @@ void GlxBackend::endRenderingFrame(const QRegion &damage)
         overlayWindow()->show();   // since that pass may take long
 }
 
+bool GlxBackend::makeCurrent()
+{
+    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
+        // Workaround to tell Qt that no QOpenGLContext is current
+        context->doneCurrent();
+    }
+    const bool current = glXMakeCurrent(display(), glxWindow, ctx);
+    return current;
+}
+
+void GlxBackend::doneCurrent()
+{
+    glXMakeCurrent(display(), None, nullptr);
+}
 
 /********************************************************
  * GlxTexture

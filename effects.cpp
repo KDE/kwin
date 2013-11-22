@@ -259,6 +259,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
 EffectsHandlerImpl::~EffectsHandlerImpl()
 {
+    makeOpenGLContextCurrent();
     if (keyboard_grab_effect != NULL)
         ungrabKeyboard();
     setActiveFullScreenEffect(nullptr);
@@ -326,6 +327,7 @@ void EffectsHandlerImpl::slotEffectsQueried()
     QStringList checkDefault;
     KConfigGroup conf(KSharedConfig::openConfig(), "Plugins");
 
+    makeOpenGLContextCurrent();
     // First unload necessary effects
     for (const KService::Ptr & service : offers) {
         KPluginInfo plugininfo(service);
@@ -1338,6 +1340,7 @@ QStringList EffectsHandlerImpl::listOfEffects() const
 
 bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 {
+    makeOpenGLContextCurrent();
     m_compositor->addRepaintFull();
 
     if (!name.startsWith(QLatin1String("kwin4_effect_")))
@@ -1482,6 +1485,7 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
 
 void EffectsHandlerImpl::unloadEffect(const QString& name)
 {
+    makeOpenGLContextCurrent();
     m_compositor->addRepaintFull();
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
@@ -1513,6 +1517,7 @@ void EffectsHandlerImpl::reconfigureEffect(const QString& name)
 {
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         if ((*it).first == name) {
+            makeOpenGLContextCurrent();
             (*it).second->reconfigure(Effect::ReconfigureAll);
             return;
         }
@@ -1625,6 +1630,16 @@ QString EffectsHandlerImpl::debug(const QString& name, const QString& parameter)
         }
     }
     return QString();
+}
+
+bool EffectsHandlerImpl::makeOpenGLContextCurrent()
+{
+    return m_scene->makeOpenGLContextCurrent();
+}
+
+void EffectsHandlerImpl::doneOpenGLContextCurrent()
+{
+    m_scene->doneOpenGLContextCurrent();
 }
 
 //****************************************

@@ -258,6 +258,7 @@ void CubeEffect::slotCubeCapLoaded()
     }
     QImage img = watcher->result();
     if (!img.isNull()) {
+        effects->makeOpenGLContextCurrent();
         capTexture = new GLTexture(img);
         capTexture->setFilter(GL_LINEAR);
 #ifndef KWIN_HAVE_OPENGLES
@@ -285,6 +286,7 @@ void CubeEffect::slotWallPaperLoaded()
     }
     QImage img = watcher->result();
     if (!img.isNull()) {
+        effects->makeOpenGLContextCurrent();
         wallpaper = new GLTexture(img);
         effects->addRepaintFull();
     }
@@ -301,6 +303,7 @@ void CubeEffect::slotResetShaders()
 
 bool CubeEffect::loadShader()
 {
+    effects->makeOpenGLContextCurrent();
     if (!(GLPlatform::instance()->supports(GLSL) &&
             (effects->compositingType() == OpenGL2Compositing)))
         return false;

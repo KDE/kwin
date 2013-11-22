@@ -277,6 +277,21 @@ QRect infiniteRegion()
  * For each stage there are *Screen() and *Window() methods. The window method
  *  is called for every window which the screen method is usually called just
  *  once.
+ *
+ * @section OpenGL
+ * Effects can use OpenGL if EffectsHandler::isOpenGLCompositing() returns @c true.
+ * The OpenGL context may not always be current when code inside the effect is
+ * executed. The framework ensures that the OpenGL context is current when the Effect
+ * gets created, destroyed or reconfigured and during the painting stages. All virtual
+ * methods which have the OpenGL context current are documented.
+ *
+ * If OpenGL code is going to be executed outside the painting stages, e.g. in reaction
+ * to a global shortcut, it is the task of the Effect to make the OpenGL context current:
+ * @code
+ * effects->makeOpenGLContextCurrent();
+ * @endcode
+ *
+ * There is in general no need to call the matching doneCurrent method.
  **/
 class KWIN_EXPORT Effect : public QObject
 {
@@ -330,10 +345,16 @@ public:
 
     /**
      * Constructs new Effect object.
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when the Effect is constructed.
      **/
     Effect();
     /**
      * Destructs the Effect object.
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when the Effect is destroyed.
      **/
     virtual ~Effect();
 
@@ -347,6 +368,10 @@ public:
 
     /**
      * Called when configuration changes (either the effect's or KWin's global).
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when the Effect is reconfigured. If this method is called from within the Effect it is
+     * required to ensure that the context is current if the implementation does OpenGL calls.
      */
     virtual void reconfigure(ReconfigureFlags flags);
 
@@ -362,6 +387,9 @@ public:
      * @li change the region of the screen that will be painted
      * @li do various housekeeping tasks such as initing your effect's variables
             for the upcoming paint pass or updating animation's progress
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
     **/
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     /**
@@ -370,6 +398,9 @@ public:
      *      effects->paintScreen())
      * @li paint multiple desktops and/or multiple copies of the same desktop
      *      by calling effects->paintScreen() multiple times
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData& data);
     /**
@@ -377,6 +408,9 @@ public:
      * In this method you can:
      * @li schedule next repaint in case of animations
      * You shouldn't paint anything here.
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void postPaintScreen();
 
@@ -387,6 +421,9 @@ public:
      * @li set window to be painted with translucency
      * @li set window to be transformed
      * @li request the window to be divided into multiple parts
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     /**
@@ -395,6 +432,9 @@ public:
      * @li do various transformations
      * @li change opacity of the window
      * @li change brightness and/or saturation, if it's supported
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     /**
@@ -402,6 +442,9 @@ public:
      * In this method you can:
      * @li schedule next repaint for individual window(s) in case of animations
      * You shouldn't paint anything here.
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void postPaintWindow(EffectWindow* w);
 
@@ -414,6 +457,9 @@ public:
      * @param opacity Opacity of text/icon
      * @param frameOpacity Opacity of background
      * @since 4.6
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void paintEffectFrame(EffectFrame* frame, QRegion region, double opacity, double frameOpacity);
 
@@ -426,7 +472,10 @@ public:
     /**
      * Can be called to draw multiple copies (e.g. thumbnails) of a window.
      * You can change window's opacity/brightness/etc here, but you can't
-     *  do any transformations
+     *  do any transformations.
+     *
+     * In OpenGL based compositing, the frameworks ensures that the context is current
+     * when this method is invoked.
      **/
     virtual void drawWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
@@ -920,6 +969,24 @@ public:
      * @since 4.11
      **/
     virtual bool isScreenLocked() const = 0;
+
+    /**
+     * @brief Makes the OpenGL compositing context current.
+     *
+     * If the compositing backend is not using OpenGL, this method returns @c false.
+     *
+     * @return bool @c true if the context became current, @c false otherwise.
+     */
+    virtual bool makeOpenGLContextCurrent() = 0;
+    /**
+     * @brief Makes a null OpenGL context current resulting in no context
+     * being current.
+     *
+     * If the compositing backend is not OpenGL based, this method is a noop.
+     *
+     * There is normally no reason for an Effect to call this method.
+     */
+    virtual void doneOpenGLContextCurrent() = 0;
 
     /**
      * Sends message over DCOP to reload given effect.

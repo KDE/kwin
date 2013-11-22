@@ -194,6 +194,7 @@ void TrackMouseEffect::postPaintScreen()
 
 bool TrackMouseEffect::init()
 {
+    effects->makeOpenGLContextCurrent();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (!(m_texture[0] || m_picture[0])) {
         loadTexture();

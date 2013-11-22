@@ -46,6 +46,8 @@ public:
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
     virtual void prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &damage);
+    virtual bool makeCurrent() override;
+    virtual void doneCurrent() override;
 
 protected:
     virtual void present();

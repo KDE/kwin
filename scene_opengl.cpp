@@ -103,8 +103,10 @@ void OpenGLBackend::setFailed(const QString &reason)
 
 void OpenGLBackend::idle()
 {
-    if (hasPendingFlush())
+    if (hasPendingFlush()) {
+        effects->makeOpenGLContextCurrent();
         present();
+    }
 }
 
 /************************************************
@@ -340,6 +342,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         stacking_order.append(windows[ c ]);
     }
 
+    m_backend->makeCurrent();
     m_backend->prepareRenderingFrame();
 
     const GLenum status = glGetGraphicsResetStatus();
@@ -597,6 +600,16 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
     glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
     KWin::Scene::paintDesktop(desktop, mask, region, data);
     glDisable(GL_SCISSOR_TEST);
+}
+
+bool SceneOpenGL::makeOpenGLContextCurrent()
+{
+    return m_backend->makeCurrent();
+}
+
+void SceneOpenGL::doneOpenGLContextCurrent()
+{
+    m_backend->doneCurrent();
 }
 
 //****************************************
@@ -2355,6 +2368,7 @@ SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
 
 SceneOpenGLShadow::~SceneOpenGLShadow()
 {
+    effects->makeOpenGLContextCurrent();
     delete m_texture;
 }
 
@@ -2495,6 +2509,7 @@ bool SceneOpenGLShadow::prepareBackend()
     p.drawPixmap(bottomLeft.width() + bottom.width(), topRight.height() + right.height(), shadowPixmap(ShadowElementBottomRight));
     p.end();
 
+    effects->makeOpenGLContextCurrent();
     delete m_texture;
     m_texture = new GLTexture(image);
 

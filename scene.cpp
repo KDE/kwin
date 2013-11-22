@@ -527,6 +527,15 @@ void Scene::screenGeometryChanged(const QSize &size)
     overlayWindow()->resize(size);
 }
 
+bool Scene::makeOpenGLContextCurrent()
+{
+    return false;
+}
+
+void Scene::doneOpenGLContextCurrent()
+{
+}
+
 //****************************************
 // Scene::Window
 //****************************************

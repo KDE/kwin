@@ -175,6 +175,7 @@ void ZoomEffect::hideCursor()
 
 void ZoomEffect::recreateTexture()
 {
+    effects->makeOpenGLContextCurrent();
     // read details about the mouse-cursor theme define per default
     KConfigGroup mousecfg(KSharedConfig::openConfig(QStringLiteral("kcminputrc")), "Mouse");
     QString theme = mousecfg.readEntry("cursorTheme", QString());

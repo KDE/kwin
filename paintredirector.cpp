@@ -347,6 +347,7 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
     size[TopBottom] = QSize(align(qMax(rects[TopPixmap].width(), rects[BottomPixmap].width()), 128),
                             rects[TopPixmap].height() + rects[BottomPixmap].height());
 
+    effects->makeOpenGLContextCurrent();
     if (!GLTexture::NPOTTextureSupported()) {
         for (int i = 0; i < 2; i++) {
             size[i].rwidth()  = nearestPowerOfTwo(size[i].width());

@@ -182,6 +182,7 @@ Glow *ScreenEdgeEffect::createGlow(ElectricBorder border, qreal factor, const QR
 
     // render the glow image
     if (effects->isOpenGLCompositing()) {
+        effects->makeOpenGLContextCurrent();
         if (border == ElectricTopLeft || border == ElectricTopRight || border == ElectricBottomRight || border == ElectricBottomLeft) {
             glow->texture.reset(createCornerGlow<GLTexture>(border));
         } else {

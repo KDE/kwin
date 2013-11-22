@@ -102,6 +102,10 @@ public:
     virtual bool blocksForRetrace() const;
     virtual bool syncsToVBlank() const;
     virtual OverlayWindow* overlayWindow() = 0;
+
+    virtual bool makeOpenGLContextCurrent();
+    virtual void doneOpenGLContextCurrent();
+
 public Q_SLOTS:
     // a window has been destroyed
     virtual void windowDeleted(KWin::Deleted*) = 0;

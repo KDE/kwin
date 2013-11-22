@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // Qt
 #include <QDebug>
+#include <QOpenGLContext>
 // system
 #include <unistd.h>
 
@@ -45,7 +46,7 @@ EglOnXBackend::EglOnXBackend()
 EglOnXBackend::~EglOnXBackend()
 {
     cleanupGL();
-    eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    doneCurrent();
     eglDestroyContext(dpy, ctx);
     eglDestroySurface(dpy, surface);
     eglTerminate(dpy);
@@ -267,9 +268,6 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    // a different context might have been current
-    eglMakeCurrent(dpy, surface, surface, ctx);
-
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     const bool fullRepaint = (lastDamage() == displayRegion);
 
@@ -334,8 +332,6 @@ void EglOnXBackend::prepareRenderingFrame()
         usleep(1000);
     }
     present();
-    // different context might have been bound as present() can block
-    eglMakeCurrent(dpy, surface, surface, ctx);
     startRenderTimer();
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 }
@@ -350,6 +346,21 @@ void EglOnXBackend::endRenderingFrame(const QRegion &damage)
 
     if (overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
+}
+
+bool EglOnXBackend::makeCurrent()
+{
+    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
+        // Workaround to tell Qt that no QOpenGLContext is current
+        context->doneCurrent();
+    }
+    const bool current = eglMakeCurrent(dpy, surface, surface, ctx);
+    return current;
+}
+
+void EglOnXBackend::doneCurrent()
+{
+    eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
 /************************************************

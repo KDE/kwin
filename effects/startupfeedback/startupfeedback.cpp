@@ -320,6 +320,7 @@ void StartupFeedbackEffect::stop()
     if (m_active)
         effects->stopMousePolling();
     m_active = false;
+    effects->makeOpenGLContextCurrent();
     switch(m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
@@ -342,6 +343,7 @@ void StartupFeedbackEffect::stop()
 
 void StartupFeedbackEffect::prepareTextures(const QPixmap& pix)
 {
+    effects->makeOpenGLContextCurrent();
     switch(m_type) {
     case BouncingFeedback:
         for (int i = 0; i < 5; ++i) {
