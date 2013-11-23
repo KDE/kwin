@@ -104,48 +104,56 @@ Scene::~Scene()
 }
 
 // returns mask and possibly modified region
-void Scene::paintScreen(int* mask, QRegion* region)
+void Scene::paintScreen(int* mask, const QRegion &damage, QRegion *validRegion)
 {
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-    *mask = (*region == displayRegion) ? 0 : PAINT_SCREEN_REGION;
+    *mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
 
     updateTimeDiff();
     // preparation step
     static_cast<EffectsHandlerImpl*>(effects)->startPaint();
 
+    QRegion region = damage;
+
     ScreenPrePaintData pdata;
     pdata.mask = *mask;
-    pdata.paint = *region;
+    pdata.paint = region;
 
     effects->prePaintScreen(pdata, time_diff);
     *mask = pdata.mask;
-    *region = pdata.paint;
+    region = pdata.paint;
 
     if (*mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         // Region painting is not possible with transformations,
         // because screen damage doesn't match transformed positions.
         *mask &= ~PAINT_SCREEN_REGION;
-        *region = infiniteRegion();
+        region = infiniteRegion();
     } else if (*mask & PAINT_SCREEN_REGION) {
         // make sure not to go outside visible screen
-        *region &= displayRegion;
+        region &= displayRegion;
     } else {
         // whole screen, not transformed, force region to be full
-        *region = displayRegion;
+        region = displayRegion;
     }
-    painted_region = *region;
+
+    painted_region = region;
+
     if (*mask & PAINT_SCREEN_BACKGROUND_FIRST) {
-        paintBackground(*region);
+        paintBackground(region);
     }
+
     ScreenPaintData data;
-    effects->paintScreen(*mask, *region, data);
-    foreach (Window * w, stacking_order) {
+    effects->paintScreen(*mask, region, data);
+
+    foreach (Window *w, stacking_order) {
         effects->postPaintWindow(effectWindow(w));
     }
+
     effects->postPaintScreen();
-    *region |= painted_region;
+
     // make sure not to go outside of the screen area
-    *region &= displayRegion;
+    *validRegion = (region | painted_region) & displayRegion;
+
     // make sure all clipping is restored
     Q_ASSERT(!PaintClipper::clip());
 }

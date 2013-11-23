@@ -190,7 +190,8 @@ qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     }
 
     int mask = 0;
-    paintScreen(&mask, &damage);
+    QRegion validRegion;
+    paintScreen(&mask, damage, &validRegion);
 
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long

@@ -357,13 +357,16 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint1");
 #endif
 
-    paintScreen(&mask, &damage);   // call generic implementation
+    QRegion validRegion;
+    paintScreen(&mask, damage, &validRegion);   // call generic implementation
+
 #ifndef KWIN_HAVE_OPENGLES
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+
     // copy dirty parts from front to backbuffer
-    if (options->glPreferBufferSwap() == Options::CopyFrontBuffer && damage != displayRegion) {
+    if (options->glPreferBufferSwap() == Options::CopyFrontBuffer && validRegion != displayRegion) {
         glReadBuffer(GL_FRONT);
-        copyPixels(displayRegion - damage);
+        copyPixels(displayRegion - validRegion);
         glReadBuffer(GL_BACK);
         damage = displayRegion;
     }
@@ -372,7 +375,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     checkGLError("Paint2");
 #endif
 
-    m_backend->endRenderingFrame(damage, damage);
+    m_backend->endRenderingFrame(validRegion, validRegion);
 
     // do cleanup
     stacking_order.clear();

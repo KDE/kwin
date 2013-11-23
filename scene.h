@@ -115,7 +115,7 @@ public Q_SLOTS:
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted) = 0;
 protected:
     // shared implementation, starts painting the screen
-    void paintScreen(int* mask, QRegion* region);
+    void paintScreen(int* mask, const QRegion &damage, QRegion *validRegion);
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, QRegion region, ScreenPaintData& data);
