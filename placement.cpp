@@ -668,7 +668,6 @@ void Client::packTo(int left, int top)
 void Workspace::slotWindowPackLeft()
 {
     if (active_client && active_client->isMovable())
-        active_client->screen();
         active_client->packTo(packPositionLeft(active_client, active_client->geometry().left(), true),
                               active_client->y());
 }
