@@ -987,41 +987,54 @@ WindowQuadList WindowQuadList::splitAtY(double y) const
     return ret;
 }
 
-WindowQuadList WindowQuadList::makeGrid(int maxquadsize) const
+WindowQuadList WindowQuadList::makeGrid(int maxQuadSize) const
 {
     if (empty())
         return *this;
-    // find the bounding rectangle
-    double left = first().left();
-    double right = first().right();
-    double top = first().top();
+
+    // Find the bounding rectangle
+    double left   = first().left();
+    double right  = first().right();
+    double top    = first().top();
     double bottom = first().bottom();
-    foreach (const WindowQuad & quad, *this) {
+
+    foreach (const WindowQuad &quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
-        left = qMin(left, quad.left());
-        right = qMax(right, quad.right());
-        top = qMin(top, quad.top());
+        left   = qMin(left,   quad.left());
+        right  = qMax(right,  quad.right());
+        top    = qMin(top,    quad.top());
         bottom = qMax(bottom, quad.bottom());
     }
+
     WindowQuadList ret;
-    for (double x = left;
-            x < right;
-            x += maxquadsize) {
-        for (double y = top;
-                y < bottom;
-                y += maxquadsize) {
-            foreach (const WindowQuad & quad, *this) {
-                if (QRectF(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()))
-                        .intersects(QRectF(x, y, maxquadsize, maxquadsize))) {
-                    ret.append(quad.makeSubQuad(qMax(x, quad.left()), qMax(y, quad.top()),
-                                                qMin(quad.right(), x + maxquadsize), qMin(quad.bottom(), y + maxquadsize)));
-                }
+
+    foreach (const WindowQuad &quad, *this) {
+        const double quadLeft   = quad.left();
+        const double quadRight  = quad.right();
+        const double quadTop    = quad.top();
+        const double quadBottom = quad.bottom();
+
+        // Compute the top-left corner of the first intersecting grid cell
+        const double xBegin = left + qFloor((quadLeft - left) / maxQuadSize) * maxQuadSize;
+        const double yBegin = top  + qFloor((quadTop  - top)  / maxQuadSize) * maxQuadSize;
+
+        // Loop over all intersecting cells and add sub-quads
+        for (double y = yBegin; y < quadBottom; y += maxQuadSize) {
+            const double y0 = qMax(y, quadTop);
+            const double y1 = qMin(quadBottom, y + maxQuadSize);
+
+            for (double x = xBegin; x < quadRight; x += maxQuadSize) {
+                const double x0 = qMax(x, quadLeft);
+                const double x1 = qMin(quadRight, x + maxQuadSize);
+
+                ret.append(quad.makeSubQuad(x0, y0, x1, y1));
             }
         }
     }
+
     return ret;
 }
 
@@ -1029,40 +1042,53 @@ WindowQuadList WindowQuadList::makeRegularGrid(int xSubdivisions, int ySubdivisi
 {
     if (empty())
         return *this;
-    // find the bounding rectangle
-    double left = first().left();
-    double right = first().right();
-    double top = first().top();
+
+    // Find the bounding rectangle
+    double left   = first().left();
+    double right  = first().right();
+    double top    = first().top();
     double bottom = first().bottom();
-    foreach (const WindowQuad & quad, *this) {
+
+    foreach (const WindowQuad &quad, *this) {
 #ifndef NDEBUG
         if (quad.isTransformed())
             qFatal("Splitting quads is allowed only in pre-paint calls!");
 #endif
-        left = qMin(left, quad.left());
-        right = qMax(right, quad.right());
-        top = qMin(top, quad.top());
+        left   = qMin(left,   quad.left());
+        right  = qMax(right,  quad.right());
+        top    = qMin(top,    quad.top());
         bottom = qMax(bottom, quad.bottom());
     }
 
-    double xincrement = (right - left) / xSubdivisions;
-    double yincrement = (bottom - top) / ySubdivisions;
+    double xIncrement = (right - left) / xSubdivisions;
+    double yIncrement = (bottom - top) / ySubdivisions;
+
     WindowQuadList ret;
-    for (double y = top;
-            y < bottom;
-            y += yincrement) {
-        for (double x = left;
-                x < right;
-                x +=  xincrement) {
-            foreach (const WindowQuad & quad, *this) {
-                if (QRectF(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()))
-                        .intersects(QRectF(x, y, xincrement, yincrement))) {
-                    ret.append(quad.makeSubQuad(qMax(x, quad.left()), qMax(y, quad.top()),
-                                                qMin(quad.right(), x + xincrement), qMin(quad.bottom(), y + yincrement)));
-                }
+
+    foreach (const WindowQuad &quad, *this) {
+        const double quadLeft   = quad.left();
+        const double quadRight  = quad.right();
+        const double quadTop    = quad.top();
+        const double quadBottom = quad.bottom();
+
+        // Compute the top-left corner of the first intersecting grid cell
+        const double xBegin = left + qFloor((quadLeft - left) / xIncrement) * xIncrement;
+        const double yBegin = top  + qFloor((quadTop  - top)  / yIncrement) * yIncrement;
+
+        // Loop over all intersecting cells and add sub-quads
+        for (double y = yBegin; y < quadBottom; y += yIncrement) {
+            const double y0 = qMax(y, quadTop);
+            const double y1 = qMin(quadBottom, y + yIncrement);
+
+            for (double x = xBegin; x < quadRight; x += xIncrement) {
+                const double x0 = qMax(x, quadLeft);
+                const double x1 = qMin(quadRight, x + xIncrement);
+
+                ret.append(quad.makeSubQuad(x0, y0, x1, y1));
             }
         }
     }
+
     return ret;
 }
 

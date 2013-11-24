@@ -1907,6 +1907,9 @@ void Client::setShortcut(const QString& _cut)
     QString cut = rules()->checkShortcut(_cut);
     if (cut.isEmpty())
         return setShortcutInternal();
+    if (cut == shortcut().toString()) {
+        return; // no change
+    }
 // Format:
 // base+(abcdef)<space>base+(abcdef)
 // E.g. Alt+Ctrl+(ABCDEF);Meta+X,Meta+(ABCDEF)
@@ -1981,6 +1984,8 @@ void Client::delayedSetShortcut()
 
 bool Workspace::shortcutAvailable(const QKeySequence &cut, Client* ignore) const
 {
+    if (ignore && cut == ignore->shortcut())
+        return true;
 
     if (!KGlobalAccel::getGlobalShortcutsByKey(cut).isEmpty()) {
         return false;
