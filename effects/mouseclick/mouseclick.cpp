@@ -49,8 +49,6 @@ MouseClickEffect::MouseClickEffect()
     a->setText(i18n("Toggle Effect"));
     a->setGlobalShortcut(KShortcut(Qt::META + Qt::Key_Asterisk));
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleEnabled()));
-    connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     reconfigure(ReconfigureAll);
 
     m_buttons[0] = new MouseButton(i18n("Left"), Qt::LeftButton);
@@ -221,6 +219,17 @@ bool MouseClickEffect::isPressed(Qt::MouseButtons button, Qt::MouseButtons butto
 void MouseClickEffect::toggleEnabled()
 {
     m_enabled = !m_enabled;
+
+    if (m_enabled) {
+        connect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+                         SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+        effects->startMousePolling();
+    } else {
+        disconnect(effects, SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
+                   this, SLOT(slotMouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
+        effects->stopMousePolling();
+    }
+
     if (m_clicks.size() > 0) {
         foreach (const MouseEvent* click, m_clicks) {
             delete click;
@@ -231,12 +240,6 @@ void MouseClickEffect::toggleEnabled()
     for (int i = 0; i < BUTTON_COUNT; ++i) {
         m_buttons[i]->m_time = 0;
         m_buttons[i]->m_isPressed = false;
-    }
-
-    if (m_enabled) {
-        effects->startMousePolling();
-    } else {
-        effects->stopMousePolling();
     }
 }
 
