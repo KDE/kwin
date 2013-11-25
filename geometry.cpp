@@ -2807,11 +2807,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     // When doing a restricted move we must always keep 100px of the titlebar
     // visible to allow the user to be able to move it again.
-    int frameLeft, frameRight, frameTop, frameBottom;
-    if (decoration)
-        decoration->borders(frameLeft, frameRight, frameTop, frameBottom);
-    else
-        frameTop = 10;
+    const int frameTop = border_top;
     int titlebarArea = qMin(frameTop * 100, moveResizeGeom.width() * moveResizeGeom.height());
 
     bool update = false;
