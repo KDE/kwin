@@ -26,6 +26,10 @@
 #include <QObject>
 #include <kdecoration.h>
 
+#include <QLoggingCategory>
+
+Q_DECLARE_LOGGING_CATEGORY(AURORAE)
+
 class KConfig;
 
 namespace Aurorae {

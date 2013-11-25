@@ -28,6 +28,8 @@
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 
+Q_LOGGING_CATEGORY(AURORAE, "aurorae")
+
 namespace Aurorae {
 
 /************************************************
@@ -72,7 +74,7 @@ void AuroraeThemePrivate::initButtonFrame(AuroraeButtonType type)
     if (!path.isEmpty()) {
         pathes[ type ] = path;
     } else {
-        qDebug() << "No button for: " << AuroraeTheme::mapButtonToName(type);
+        qCDebug(AURORAE) << "No button for: " << AuroraeTheme::mapButtonToName(type);
     }
 }
 
@@ -118,7 +120,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
         path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
     }
     if (path.isEmpty()) {
-        qDebug() << "Could not find decoration svg: aborting";
+        qCDebug(AURORAE) << "Could not find decoration svg: aborting";
         d->themeName.clear();
         return;
     }

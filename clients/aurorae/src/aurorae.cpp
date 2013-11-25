@@ -110,13 +110,13 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
 {
     // try finding the QML package
     const QString themeName = group.readEntry("ThemeName", "kwin4_decoration_qml_plastik");
-    qDebug() << "Trying to load QML Decoration " << themeName;
+    qCDebug(AURORAE) << "Trying to load QML Decoration " << themeName;
     const QString internalname = themeName.toLower();
 
     QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
     KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"), constraint);
     if (offers.isEmpty()) {
-        qCritical() << "Couldn't find QML Decoration " << themeName << endl;
+        qCCritical(AURORAE) << "Couldn't find QML Decoration " << themeName << endl;
         // TODO: what to do in error case?
         return;
     }
@@ -126,7 +126,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
     const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
     if (file.isNull()) {
-        qDebug() << "Could not find script file for " << pluginName;
+        qCDebug(AURORAE) << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
         return;
     }
@@ -265,7 +265,7 @@ void AuroraeClient::init()
                 m_fbo.reset(new QOpenGLFramebufferObject(QSize(width() + left + right, height() + top + bottom),
                                                          QOpenGLFramebufferObject::CombinedDepthStencil));
                 if (!m_fbo->isValid()) {
-                    qWarning() << "Creating FBO as render target failed";
+                    qCWarning(AURORAE) << "Creating FBO as render target failed";
                     m_fbo.reset();
                     return;
                 }
