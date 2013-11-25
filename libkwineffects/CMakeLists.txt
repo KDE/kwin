@@ -92,3 +92,5 @@ install( FILES
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+
+add_subdirectory(autotests)
