@@ -12,11 +12,7 @@ option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu suppor
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 option(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
 option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" OFF)
-if(${KDE_PLATFORM_PROFILE} STREQUAL "Desktop")
-   option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
-else()
-   option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." On)
-endif()
+option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
 # Binary name of KWin
 set(KWIN_NAME "kwin")
