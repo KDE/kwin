@@ -6,7 +6,7 @@ set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     flipswitch/flipswitch.cpp
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_sources flipswitch/flipswitchconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_sources flipswitch/flipswitchconfig.kcfgc)
 
 # .desktop files
 install( FILES
@@ -22,7 +22,7 @@ set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources
     flipswitch/flipswitch_config.ui
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_config_sources flipswitch/flipswitchconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources flipswitch/flipswitchconfig.kcfgc)
 
 # .desktop files
 install( FILES

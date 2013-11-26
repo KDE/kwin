@@ -6,7 +6,7 @@ set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     trackmouse/trackmouse.cpp
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_sources trackmouse/trackmouseconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_sources trackmouse/trackmouseconfig.kcfgc)
 
 # .desktop files
 install( FILES
@@ -28,7 +28,7 @@ set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources
     trackmouse/trackmouse_config.ui
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_config_sources trackmouse/trackmouseconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources trackmouse/trackmouseconfig.kcfgc)
 
 # .desktop files
 install( FILES

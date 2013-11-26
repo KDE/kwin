@@ -6,7 +6,7 @@ set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
     magiclamp/magiclamp.cpp
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_sources magiclamp/magiclampconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_sources magiclamp/magiclampconfig.kcfgc)
 
 # .desktop files
 install( FILES
@@ -22,7 +22,7 @@ set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources
     magiclamp/magiclamp_config.ui
     )
 
-kde4_add_kcfg_files(kwin4_effect_builtins_config_sources magiclamp/magiclampconfig.kcfgc)
+kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources magiclamp/magiclampconfig.kcfgc)
 
 # .desktop files
 install( FILES
