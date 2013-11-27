@@ -43,7 +43,7 @@ elseif(KWIN_BUILD_OPENGLES)
 endif()
 
 macro( KWIN4_ADD_EFFECT_BACKEND name )
-    kde4_add_plugin( ${name} ${ARGN} )
+    add_library( ${name} MODULE ${ARGN} )
     target_link_libraries( ${name} ${kwin_effect_OWN_LIBS} ${kwin_effect_KDE_LIBS} ${kwin_effect_QT_LIBS} ${kwin_effect_XLIB_LIBS} ${kwin_effect_XCB_LIBS})
 endmacro()
 
@@ -75,16 +75,17 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
     endforeach()
 
     kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
-    kde4_add_plugin( kcm_kwin4_effect_${name} ${kwin4_effect_src} )
+    add_library( kcm_kwin4_effect_${name} MODULE ${kwin4_effect_src} )
     if(OPENGLES_FOUND)
         set_target_properties(kcm_kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
     endif()
     target_link_libraries( kcm_kwin4_effect_${name}
         kwineffects
         Qt5::Widgets
-	KF5::KIOWidgets # KUrlRequester
+        Qt5::Quick
+        KF5::KIOWidgets # KUrlRequester
         KF5::KCoreAddons
-	KF5::KCompletion
+        KF5::KCompletion
         KF5::KConfigWidgets
         KF5::KI18n
         KF5::XmlGui
