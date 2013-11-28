@@ -1062,14 +1062,14 @@ bool SceneOpenGL::Window::beginRenderWindow(int mask, const QRegion &region, Win
             foreach (const QRect &r, filterRegion.rects()) {
                 const QRectF rf(r);
                 const QRectF quadRect(QPointF(quad.left(), quad.top()), QPointF(quad.right(), quad.bottom()));
-                // case 1: completely contains, include and do not check other rects
-                if (rf.contains(quadRect)) {
-                    quads << quad;
-                    break;
-                }
-                // case 2: intersection
-                if (rf.intersects(quadRect)) {
-                    const QRectF intersected = rf.intersected(quadRect);
+                const QRectF &intersected = rf.intersected(quadRect);
+                if (intersected.isValid()) {
+                    if (quadRect == intersected) {
+                        // case 1: completely contains, include and do not check other rects
+                        quads << quad;
+                        break;
+                    }
+                    // case 2: intersection
                     quads << quad.makeSubQuad(intersected.left(), intersected.top(), intersected.right(), intersected.bottom());
                 }
             }
