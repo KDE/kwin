@@ -394,7 +394,8 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     mallopt(M_TRIM_THRESHOLD, 5*pagesize);
 #endif // M_TRIM_THRESHOLD
 
-    QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true"));
+    QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true\n") +
+                                     QStringLiteral("kwineffects.debug = true"));
 
     int primaryScreen = 0;
     xcb_connection_t *c = xcb_connect(nullptr, &primaryScreen);

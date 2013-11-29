@@ -97,7 +97,7 @@ endmacro()
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
 # Create initial variables
-set( kwin4_effect_builtins_sources )
+set( kwin4_effect_builtins_sources logging.cpp)
 if( NOT KWIN_MOBILE_EFFECTS )
     set( kwin4_effect_builtins_config_sources configs_builtins.cpp )
 endif()

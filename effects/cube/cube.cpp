@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QColor>
-#include <QDebug>
 #include <QElapsedTimer>
 #include <QRect>
 #include <QEvent>
@@ -1328,7 +1327,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
     if (activated && cube_painting) {
         region= infiniteRegion(); // we need to explicitly prevent any clipping, bug #325432
         shader = shaderManager->pushShader(ShaderManager::GenericShader);
-        //qDebug() << w->caption();
+        //qCDebug(KWINEFFECTS) << w->caption();
         float opacity = cubeOpacity;
         if (start) {
             opacity = 1.0 - (1.0 - opacity) * timeLine.currentValue();
@@ -1625,13 +1624,13 @@ bool CubeEffect::borderActivated(ElectricBorder border)
 
 void CubeEffect::toggleCube()
 {
-    qDebug() << "toggle cube";
+    qCDebug(KWINEFFECTS) << "toggle cube";
     toggle(Cube);
 }
 
 void CubeEffect::toggleCylinder()
 {
-    qDebug() << "toggle cylinder";
+    qCDebug(KWINEFFECTS) << "toggle cylinder";
     if (!useShaders)
         useShaders = loadShader();
     if (useShaders)
@@ -1642,7 +1641,7 @@ void CubeEffect::toggleCylinder()
 
 void CubeEffect::toggleSphere()
 {
-    qDebug() << "toggle sphere";
+    qCDebug(KWINEFFECTS) << "toggle sphere";
     if (!useShaders)
         useShaders = loadShader();
     if (useShaders)
@@ -1704,7 +1703,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             // wrap only on autorepeat
         case Qt::Key_Left:
             // rotate to previous desktop
-            qDebug() << "left";
+            qCDebug(KWINEFFECTS) << "left";
             if (!rotating && !start) {
                 rotating = true;
                 if (invertKeys)
@@ -1722,7 +1721,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             break;
         case Qt::Key_Right:
             // rotate to next desktop
-            qDebug() << "right";
+            qCDebug(KWINEFFECTS) << "right";
             if (!rotating && !start) {
                 rotating = true;
                 if (invertKeys)
@@ -1739,7 +1738,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             break;
         case Qt::Key_Up:
-            qDebug() << "up";
+            qCDebug(KWINEFFECTS) << "up";
             if (invertKeys) {
                 if (verticalPosition != Down) {
                     if (!verticalRotating) {
@@ -1781,7 +1780,7 @@ void CubeEffect::grabbedKeyboardEvent(QKeyEvent* e)
             }
             break;
         case Qt::Key_Down:
-            qDebug() << "down";
+            qCDebug(KWINEFFECTS) << "down";
             if (invertKeys) {
                 if (verticalPosition != Up) {
                     if (!verticalRotating) {
@@ -1920,7 +1919,7 @@ void CubeEffect::setActive(bool active)
         zOrderingFactor = zPosition / (effects->stackingOrder().count() - 1);
         start = true;
         effects->setActiveFullScreenEffect(this);
-        qDebug() << "Cube is activated";
+        qCDebug(KWINEFFECTS) << "Cube is activated";
         verticalPosition = Normal;
         verticalRotating = false;
         manualAngle = 0.0;

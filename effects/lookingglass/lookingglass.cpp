@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <QDebug>
 #include <QVector2D>
 
 #include <kmessagebox.h>
@@ -94,7 +93,7 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->readConfig();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    qDebug() << QStringLiteral("Radius from config: %1").arg(radius) << endl;
+    qCDebug(KWINEFFECTS) << QStringLiteral("Radius from config: %1").arg(radius) << endl;
     actionCollection->readSettings();
     m_valid = loadData();
 }
@@ -215,7 +214,7 @@ void LookingGlassEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             zoom = qMin(zoom * qMax(1.0 + diff, 1.2), target_zoom);
         else
             zoom = qMax(zoom * qMin(1.0 - diff, 0.8), target_zoom);
-        qDebug() << "zoom is now " << zoom;
+        qCDebug(KWINEFFECTS) << "zoom is now " << zoom;
         radius = qBound((double)initialradius, initialradius * zoom, 3.5 * initialradius);
 
         if (zoom <= 1.0f) {

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
-#include <QDebug>
 #include <QStyle>
 #include <QtGui/QVector2D>
 #include <QtDBus/QDBusConnection>
@@ -205,7 +204,7 @@ void ZoomEffect::recreateTexture()
         XcursorImageDestroy(ximg);
     }
     else {
-        qDebug() << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
+        qCDebug(KWINEFFECTS) << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
         mouseTracking = MouseTrackingProportional;
     }
 }

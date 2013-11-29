@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglplatform.h"
 
 #include <math.h>
-#include <QDebug>
 
 #include <QtGui/QMatrix4x4>
 #include <QtGui/QVector2D>
@@ -307,7 +306,7 @@ void LogoutEffect::renderVignetting()
                                                                            QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                                                                   m_shadersDir + QStringLiteral("vignetting.frag")));
         if (!m_vignettingShader->isValid()) {
-            qDebug() << "Vignetting Shader failed to load";
+            qCDebug(KWINEFFECTS) << "Vignetting Shader failed to load";
             return;
         }
     } else if (!m_vignettingShader->isValid()) {
@@ -388,7 +387,7 @@ void LogoutEffect::renderBlurTexture()
                                                                      QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                                                             m_shadersDir + QStringLiteral("logout-blur.frag")));
         if (!m_blurShader->isValid()) {
-            qDebug() << "Logout blur shader failed to load";
+            qCDebug(KWINEFFECTS) << "Logout blur shader failed to load";
         }
     } else if (!m_blurShader->isValid()) {
         // shader is broken - no need to continue here

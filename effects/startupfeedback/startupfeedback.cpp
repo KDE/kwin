@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "startupfeedback.h"
 // Qt
-#include <QDebug>
 #include <QSize>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QPainter>
@@ -134,9 +133,9 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
             const QString shader = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/blinking-startup-fragment.glsl"));
             m_blinkingShader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, shader);
             if (m_blinkingShader->isValid()) {
-                qDebug() << "Blinking Shader is valid";
+                qCDebug(KWINEFFECTS) << "Blinking Shader is valid";
             } else {
-                qDebug() << "Blinking Shader is not valid";
+                qCDebug(KWINEFFECTS) << "Blinking Shader is not valid";
             }
         }
     } else

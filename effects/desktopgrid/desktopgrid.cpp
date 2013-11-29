@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QApplication>
 #include <kactioncollection.h>
-#include <QDebug>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <netwm_def.h>

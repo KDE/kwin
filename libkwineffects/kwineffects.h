@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QVector3D>
 
 #include <QVector>
+#include <QLoggingCategory>
 #include <QList>
 #include <QHash>
 #include <QStack>
@@ -51,6 +52,12 @@ class QFont;
 class QGraphicsScale;
 class QKeyEvent;
 class QMatrix4x4;
+
+/**
+ * Logging category to be used inside the KWin effects.
+ * Do not use in this library.
+ **/
+Q_DECLARE_LOGGING_CATEGORY(KWINEFFECTS);
 
 namespace KWin
 {

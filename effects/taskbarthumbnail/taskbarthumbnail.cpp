@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "taskbarthumbnail.h"
 
-#include <QDebug>
-
 #include <kwinglutils.h>
 
 // This effect shows a preview inside a window that has a special property set

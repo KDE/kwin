@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "fallapart.h"
-#include <QDebug>
 #include <assert.h>
 #include <math.h>
 #include <KDE/KConfigGroup>
@@ -135,15 +134,15 @@ bool FallApartEffect::isRealWindow(EffectWindow* w)
 {
     // TODO: isSpecialWindow is rather generic, maybe tell windowtypes separately?
     /*
-    qDebug() << "--" << w->caption() << "--------------------------------";
-    qDebug() << "Tooltip:" << w->isTooltip();
-    qDebug() << "Toolbar:" << w->isToolbar();
-    qDebug() << "Desktop:" << w->isDesktop();
-    qDebug() << "Special:" << w->isSpecialWindow();
-    qDebug() << "TopMenu:" << w->isTopMenu();
-    qDebug() << "Notific:" << w->isNotification();
-    qDebug() << "Splash:" << w->isSplash();
-    qDebug() << "Normal:" << w->isNormalWindow();
+    qCDebug(KWINEFFECTS) << "--" << w->caption() << "--------------------------------";
+    qCDebug(KWINEFFECTS) << "Tooltip:" << w->isTooltip();
+    qCDebug(KWINEFFECTS) << "Toolbar:" << w->isToolbar();
+    qCDebug(KWINEFFECTS) << "Desktop:" << w->isDesktop();
+    qCDebug(KWINEFFECTS) << "Special:" << w->isSpecialWindow();
+    qCDebug(KWINEFFECTS) << "TopMenu:" << w->isTopMenu();
+    qCDebug(KWINEFFECTS) << "Notific:" << w->isNotification();
+    qCDebug(KWINEFFECTS) << "Splash:" << w->isSplash();
+    qCDebug(KWINEFFECTS) << "Normal:" << w->isNormalWindow();
     */
     if (!w->isNormalWindow())
         return false;

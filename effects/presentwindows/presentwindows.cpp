@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
-#include <QDebug>
 #include <kdeclarative/kdeclarative.h>
 
 #include <kwinglutils.h>
@@ -866,7 +865,7 @@ void PresentWindowsEffect::slotPropertyNotify(EffectWindow* w, long a)
         for (int i = 0; i < length; i++) {
             EffectWindow* foundWin = effects->findWindow(data[i]);
             if (!foundWin) {
-                qDebug() << "Invalid window targetted for present windows. Requested:" << data[i];
+                qCDebug(KWINEFFECTS) << "Invalid window targetted for present windows. Requested:" << data[i];
                 continue;
             }
             m_selectedWindows.append(foundWin);
@@ -1114,7 +1113,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
         rows = (int)ceil(sqrt((double)windowlist.count()));
         columns = (int)ceil((double)windowlist.count() / (double)rows);
     }
-    //qDebug() << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
+    //qCDebug(KWINEFFECTS) << "Using " << rows << " rows & " << columns << " columns for " << windowlist.count() << " clients";
 
     // Calculate width & height
     int w = (availRect.width() - (columns + 1) * spacing) / columns;
@@ -1217,7 +1216,7 @@ void PresentWindowsEffect::calculateWindowTransformationsKompose(EffectWindowLis
 //                 winData->slot = pos;
             motionManager.moveWindow(window, target);
 
-            //qDebug() << "Window '" << window->caption() << "' gets moved to (" <<
+            //qCDebug(KWINEFFECTS) << "Window '" << window->caption() << "' gets moved to (" <<
             //        mWindowData[window].area.left() << "; " << mWindowData[window].area.right() <<
             //        "), scale: " << mWindowData[window].scale << endl;
         }

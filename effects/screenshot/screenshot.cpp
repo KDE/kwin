@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenshot.h"
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
-#include <QDebug>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QDir>
 #include <QtDBus/QDBusConnection>
@@ -275,14 +274,14 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
 {
 #ifdef KWIN_HAVE_OPENGLES
     Q_UNUSED(geometry)
-    qDebug() << "Framebuffer Blit not supported";
+    qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
     return QString();
 #else
     QImage img;
     if (effects->isOpenGLCompositing())
     {
         if (!GLRenderTarget::blitSupported()) {
-            qDebug() << "Framebuffer Blit not supported";
+            qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
             return QString();
         }
         GLTexture tex(geometry.width(), geometry.height());

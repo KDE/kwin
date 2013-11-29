@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kscreen.h"
 // KConfigSkeleton
 #include "kscreenconfig.h"
-// Qt
-#include <QDebug>
 
 /**
  * How this effect works:
@@ -165,7 +163,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
         effects->addRepaintFull();
         return;
     }
-    qDebug() << "Incorrect Property state, immediate stop: " << data[0];
+    qCDebug(KWINEFFECTS) << "Incorrect Property state, immediate stop: " << data[0];
     m_state = StateNormal;
     effects->addRepaintFull();
 }
