@@ -1467,7 +1467,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
         OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
         if (previous) {
             const QRect &oldGeometry = previous->contentsRect();
-            Q_FOREACH (const WindowQuad &quad, quads[ContentLeaf]) {
+            for (const WindowQuad &quad : quads[ContentLeaf]) {
                 // we need to create new window quads with normalize texture coordinates
                 // normal quads divide the x/y position by width/height. This would not work as the texture
                 // is larger than the visible content in case of a decorated Client resulting in garbage being shown.
@@ -1648,7 +1648,7 @@ void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData 
         previous->texture()->setFilter(filter == Scene::ImageFilterGood ? GL_LINEAR : GL_NEAREST);
         WindowQuadList oldContents;
         const QRect &oldGeometry = previous->contentsRect();
-        Q_FOREACH (const WindowQuad &quad, contentQuads) {
+        for (const WindowQuad &quad : contentQuads) {
             // we need to create new window quads with normalize texture coordinates
             // normal quads divide the x/y position by width/height. This would not work as the texture
             // is larger than the visible content in case of a decorated Client resulting in garbage being shown.

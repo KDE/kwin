@@ -40,7 +40,7 @@ bool migrateRulesShortcut()
         return false;
     }
     bool updated = false;
-    Q_FOREACH (const QString &groupName, config.groupList()) {
+    for (const QString &groupName : config.groupList()) {
         KConfigGroup group = config.group(groupName);
         if (!group.hasKey(KEY)) {
             continue;

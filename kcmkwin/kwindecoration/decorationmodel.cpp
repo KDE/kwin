@@ -156,7 +156,7 @@ void DecorationModel::findAuroraeThemes()
     QStringList themes;
     const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "aurorae/themes/", QStandardPaths::LocateDirectory);
     QStringList themeDirectories;
-    Q_FOREACH (const QString & dir, dirs) {
+    for (const QString & dir : dirs) {
         QDir directory = QDir(dir);
         for (const QString &themeDir : directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
             themeDirectories << dir + themeDir;
