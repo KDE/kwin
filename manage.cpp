@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "cursor.h"
+#include "decorations.h"
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"
@@ -319,7 +320,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;
     setTabGroup(NULL);
-    if (!noBorder()) {
+    if (!noBorder() && DecorationPlugin::self()->supportsTabbing()) {
         const bool autogrouping = rules()->checkAutogrouping(options->isAutogroupSimilarWindows());
         const bool autogroupInFg = rules()->checkAutogroupInForeground(options->isAutogroupInForeground());
         // Automatically add to previous groups on session restore
