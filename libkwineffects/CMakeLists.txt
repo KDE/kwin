@@ -25,6 +25,7 @@ set(kwineffects_XCB_LIBS
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
+generate_export_header(kwineffects EXPORT_FILE_NAME kwineffects_export.h)
 target_link_libraries(kwineffects
     ${kwineffects_QT_LIBS}
     ${kwineffects_KDE_LIBS}
@@ -91,6 +92,7 @@ install( FILES
     kwingltexture.h
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 add_subdirectory(autotests)

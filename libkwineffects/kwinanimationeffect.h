@@ -25,12 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QElapsedTimer>
 #include <qmath.h>
 #include <kwineffects.h>
+#include <kwineffects_export.h>
 
 
 namespace KWin
 {
 
-class KWIN_EXPORT FPx2 {
+class KWINEFFECTS_EXPORT FPx2 {
 public:
     FPx2() { f[0] = f[1] = 0.0; valid = false; }
     explicit FPx2(float v) { f[0] = f[1] = v; valid = true; }
@@ -89,7 +90,7 @@ private:
 
 class AniData;
 class AnimationEffectPrivate;
-class KWIN_EXPORT AnimationEffect : public Effect
+class KWINEFFECTS_EXPORT AnimationEffect : public Effect
 {
     Q_OBJECT
     Q_ENUMS(Anchor)

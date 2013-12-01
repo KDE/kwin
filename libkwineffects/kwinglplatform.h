@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLPLATFORM_H
 
 #include <kwinglobals.h>
+#include <kwineffects_export.h>
 #include <kwinglutils_funcs.h>
 
 #include <QByteArray>
@@ -137,7 +138,7 @@ enum ChipClass {
 };
 
 
-class KWIN_EXPORT GLPlatform
+class KWINEFFECTS_EXPORT GLPlatform
 {
 public:
     ~GLPlatform();

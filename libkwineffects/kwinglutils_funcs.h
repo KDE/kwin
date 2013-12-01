@@ -21,16 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLUTILS_FUNCS_H
 #define KWIN_GLUTILS_FUNCS_H
 
-#include <kdemacros.h>
+#include <kwineffects_export.h>
 #include <kwinconfig.h>
 #include <kwinglobals.h>
-
-#define KWIN_EXPORT KDE_EXPORT
 
 // common functionality
 namespace KWin {
 
-void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
+void KWINEFFECTS_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 
 }
 
@@ -83,7 +81,7 @@ void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 namespace KWin
 {
 
-void KWIN_EXPORT glxResolveFunctions();
+void KWINEFFECTS_EXPORT glxResolveFunctions();
 
 
 // Defines
@@ -190,42 +188,42 @@ typedef char GLchar;
 // finding of OpenGL extensions functions
 typedef void (*glXFuncPtr)();
 typedef glXFuncPtr(*glXGetProcAddress_func)(const GLubyte*);
-extern KWIN_EXPORT glXGetProcAddress_func  glXGetProcAddress;
+extern KWINEFFECTS_EXPORT glXGetProcAddress_func  glXGetProcAddress;
 // glXQueryDrawable (added in GLX 1.3)
 typedef void (*glXQueryDrawable_func)(Display* dpy, GLXDrawable drawable,
                                       int attribute, unsigned int *value);
-extern KWIN_EXPORT glXQueryDrawable_func glXQueryDrawable;
+extern KWINEFFECTS_EXPORT glXQueryDrawable_func glXQueryDrawable;
 // texture_from_pixmap extension functions
 typedef void (*glXBindTexImageEXT_func)(Display* dpy, GLXDrawable drawable,
                                         int buffer, const int* attrib_list);
 typedef void (*glXReleaseTexImageEXT_func)(Display* dpy, GLXDrawable drawable, int buffer);
-extern KWIN_EXPORT glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
-extern KWIN_EXPORT glXBindTexImageEXT_func glXBindTexImageEXT;
+extern KWINEFFECTS_EXPORT glXReleaseTexImageEXT_func glXReleaseTexImageEXT;
+extern KWINEFFECTS_EXPORT glXBindTexImageEXT_func glXBindTexImageEXT;
 // glXCopySubBufferMESA
 typedef void (*glXCopySubBuffer_func)(Display* , GLXDrawable, int, int, int, int);
-extern KWIN_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
+extern KWINEFFECTS_EXPORT glXCopySubBuffer_func glXCopySubBuffer;
 // video_sync extension functions
 typedef int (*glXGetVideoSync_func)(unsigned int *count);
 typedef int (*glXWaitVideoSync_func)(int divisor, int remainder, unsigned int *count);
 typedef int (*glXSwapIntervalMESA_func)(unsigned int interval);
 typedef void (*glXSwapIntervalEXT_func)(Display *dpy, GLXDrawable drawable, int interval);
 typedef int (*glXSwapIntervalSGI_func)(int interval);
-extern KWIN_EXPORT glXGetVideoSync_func glXGetVideoSync;
-extern KWIN_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
-extern KWIN_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
-extern KWIN_EXPORT glXSwapIntervalEXT_func glXSwapIntervalEXT;
-extern KWIN_EXPORT glXSwapIntervalSGI_func glXSwapIntervalSGI;
+extern KWINEFFECTS_EXPORT glXGetVideoSync_func glXGetVideoSync;
+extern KWINEFFECTS_EXPORT glXWaitVideoSync_func glXWaitVideoSync;
+extern KWINEFFECTS_EXPORT glXSwapIntervalMESA_func glXSwapIntervalMESA;
+extern KWINEFFECTS_EXPORT glXSwapIntervalEXT_func glXSwapIntervalEXT;
+extern KWINEFFECTS_EXPORT glXSwapIntervalSGI_func glXSwapIntervalSGI;
 
 // GLX_ARB_create_context
 typedef GLXContext (*glXCreateContextAttribsARB_func)(Display *dpy, GLXFBConfig config,
                                                       GLXContext share_context, Bool direct,
                                                       const int *attrib_list);
 
-extern KWIN_EXPORT glXCreateContextAttribsARB_func glXCreateContextAttribsARB;
+extern KWINEFFECTS_EXPORT glXCreateContextAttribsARB_func glXCreateContextAttribsARB;
 
 // glActiveTexture
 typedef void (*glActiveTexture_func)(GLenum);
-extern KWIN_EXPORT glActiveTexture_func glActiveTexture;
+extern KWINEFFECTS_EXPORT glActiveTexture_func glActiveTexture;
 // framebuffer_object extension functions
 typedef GLboolean(*glIsRenderbuffer_func)(GLuint renderbuffer);
 typedef void (*glBindRenderbuffer_func)(GLenum target, GLuint renderbuffer);
@@ -245,24 +243,24 @@ typedef void (*glFramebufferRenderbuffer_func)(GLenum target, GLenum attachment,
 typedef void (*glGetFramebufferAttachmentParameteriv_func)(GLenum target, GLenum attachment, GLenum pname, GLint *params);
 typedef void (*glGenerateMipmap_func)(GLenum target);
 typedef void (*glBlitFramebuffer_func)(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
-extern KWIN_EXPORT glIsRenderbuffer_func glIsRenderbuffer;
-extern KWIN_EXPORT glBindRenderbuffer_func glBindRenderbuffer;
-extern KWIN_EXPORT glDeleteRenderbuffers_func glDeleteRenderbuffers;
-extern KWIN_EXPORT glGenRenderbuffers_func glGenRenderbuffers;
-extern KWIN_EXPORT glRenderbufferStorage_func glRenderbufferStorage;
-extern KWIN_EXPORT glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
-extern KWIN_EXPORT glIsFramebuffer_func glIsFramebuffer;
-extern KWIN_EXPORT glBindFramebuffer_func glBindFramebuffer;
-extern KWIN_EXPORT glDeleteFramebuffers_func glDeleteFramebuffers;
-extern KWIN_EXPORT glGenFramebuffers_func glGenFramebuffers;
-extern KWIN_EXPORT glCheckFramebufferStatus_func glCheckFramebufferStatus;
-extern KWIN_EXPORT glFramebufferTexture1D_func glFramebufferTexture1D;
-extern KWIN_EXPORT glFramebufferTexture2D_func glFramebufferTexture2D;
-extern KWIN_EXPORT glFramebufferTexture3D_func glFramebufferTexture3D;
-extern KWIN_EXPORT glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
-extern KWIN_EXPORT glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
-extern KWIN_EXPORT glGenerateMipmap_func glGenerateMipmap;
-extern KWIN_EXPORT glBlitFramebuffer_func glBlitFramebuffer;
+extern KWINEFFECTS_EXPORT glIsRenderbuffer_func glIsRenderbuffer;
+extern KWINEFFECTS_EXPORT glBindRenderbuffer_func glBindRenderbuffer;
+extern KWINEFFECTS_EXPORT glDeleteRenderbuffers_func glDeleteRenderbuffers;
+extern KWINEFFECTS_EXPORT glGenRenderbuffers_func glGenRenderbuffers;
+extern KWINEFFECTS_EXPORT glRenderbufferStorage_func glRenderbufferStorage;
+extern KWINEFFECTS_EXPORT glGetRenderbufferParameteriv_func glGetRenderbufferParameteriv;
+extern KWINEFFECTS_EXPORT glIsFramebuffer_func glIsFramebuffer;
+extern KWINEFFECTS_EXPORT glBindFramebuffer_func glBindFramebuffer;
+extern KWINEFFECTS_EXPORT glDeleteFramebuffers_func glDeleteFramebuffers;
+extern KWINEFFECTS_EXPORT glGenFramebuffers_func glGenFramebuffers;
+extern KWINEFFECTS_EXPORT glCheckFramebufferStatus_func glCheckFramebufferStatus;
+extern KWINEFFECTS_EXPORT glFramebufferTexture1D_func glFramebufferTexture1D;
+extern KWINEFFECTS_EXPORT glFramebufferTexture2D_func glFramebufferTexture2D;
+extern KWINEFFECTS_EXPORT glFramebufferTexture3D_func glFramebufferTexture3D;
+extern KWINEFFECTS_EXPORT glFramebufferRenderbuffer_func glFramebufferRenderbuffer;
+extern KWINEFFECTS_EXPORT glGetFramebufferAttachmentParameteriv_func glGetFramebufferAttachmentParameteriv;
+extern KWINEFFECTS_EXPORT glGenerateMipmap_func glGenerateMipmap;
+extern KWINEFFECTS_EXPORT glBlitFramebuffer_func glBlitFramebuffer;
 // Shader stuff
 typedef GLuint(*glCreateShader_func)(GLenum);
 typedef GLvoid(*glShaderSource_func)(GLuint, GLsizei, const GLchar**, const GLint*);
@@ -300,64 +298,64 @@ typedef void (*glProgramStringARB_func)(GLenum, GLenum, GLsizei, const GLvoid*);
 typedef void (*glProgramLocalParameter4fARB_func)(GLenum, GLuint, GLfloat, GLfloat, GLfloat, GLfloat);
 typedef void (*glDeleteProgramsARB_func)(GLsizei, const GLuint*);
 typedef void (*glGetProgramivARB_func)(GLenum, GLenum, GLint*);
-extern KWIN_EXPORT glCreateShader_func glCreateShader;
-extern KWIN_EXPORT glShaderSource_func glShaderSource;
-extern KWIN_EXPORT glCompileShader_func glCompileShader;
-extern KWIN_EXPORT glDeleteShader_func glDeleteShader;
-extern KWIN_EXPORT glCreateProgram_func glCreateProgram;
-extern KWIN_EXPORT glAttachShader_func glAttachShader;
-extern KWIN_EXPORT glLinkProgram_func glLinkProgram;
-extern KWIN_EXPORT glUseProgram_func glUseProgram;
-extern KWIN_EXPORT glDeleteProgram_func glDeleteProgram;
-extern KWIN_EXPORT glGetShaderInfoLog_func glGetShaderInfoLog;
-extern KWIN_EXPORT glGetProgramInfoLog_func glGetProgramInfoLog;
-extern KWIN_EXPORT glGetProgramiv_func glGetProgramiv;
-extern KWIN_EXPORT glGetShaderiv_func glGetShaderiv;
-extern KWIN_EXPORT glUniform1f_func glUniform1f;
-extern KWIN_EXPORT glUniform2f_func glUniform2f;
-extern KWIN_EXPORT glUniform3f_func glUniform3f;
-extern KWIN_EXPORT glUniform4f_func glUniform4f;
-extern KWIN_EXPORT glUniform1i_func glUniform1i;
-extern KWIN_EXPORT glUniform1fv_func glUniform1fv;
-extern KWIN_EXPORT glUniform2fv_func glUniform2fv;
-extern KWIN_EXPORT glUniform3fv_func glUniform3fv;
-extern KWIN_EXPORT glUniform4fv_func glUniform4fv;
-extern KWIN_EXPORT glGetUniformfv_func glGetUniformfv;
-extern KWIN_EXPORT glUniformMatrix4fv_func glUniformMatrix4fv;
-extern KWIN_EXPORT glValidateProgram_func glValidateProgram;
-extern KWIN_EXPORT glGetUniformLocation_func glGetUniformLocation;
-extern KWIN_EXPORT glVertexAttrib1f_func glVertexAttrib1f;
-extern KWIN_EXPORT glGetAttribLocation_func glGetAttribLocation;
-extern KWIN_EXPORT glBindAttribLocation_func glBindAttribLocation;
-extern KWIN_EXPORT glGenProgramsARB_func glGenProgramsARB;
-extern KWIN_EXPORT glBindProgramARB_func glBindProgramARB;
-extern KWIN_EXPORT glProgramStringARB_func glProgramStringARB;
-extern KWIN_EXPORT glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
-extern KWIN_EXPORT glDeleteProgramsARB_func glDeleteProgramsARB;
-extern KWIN_EXPORT glGetProgramivARB_func glGetProgramivARB;
+extern KWINEFFECTS_EXPORT glCreateShader_func glCreateShader;
+extern KWINEFFECTS_EXPORT glShaderSource_func glShaderSource;
+extern KWINEFFECTS_EXPORT glCompileShader_func glCompileShader;
+extern KWINEFFECTS_EXPORT glDeleteShader_func glDeleteShader;
+extern KWINEFFECTS_EXPORT glCreateProgram_func glCreateProgram;
+extern KWINEFFECTS_EXPORT glAttachShader_func glAttachShader;
+extern KWINEFFECTS_EXPORT glLinkProgram_func glLinkProgram;
+extern KWINEFFECTS_EXPORT glUseProgram_func glUseProgram;
+extern KWINEFFECTS_EXPORT glDeleteProgram_func glDeleteProgram;
+extern KWINEFFECTS_EXPORT glGetShaderInfoLog_func glGetShaderInfoLog;
+extern KWINEFFECTS_EXPORT glGetProgramInfoLog_func glGetProgramInfoLog;
+extern KWINEFFECTS_EXPORT glGetProgramiv_func glGetProgramiv;
+extern KWINEFFECTS_EXPORT glGetShaderiv_func glGetShaderiv;
+extern KWINEFFECTS_EXPORT glUniform1f_func glUniform1f;
+extern KWINEFFECTS_EXPORT glUniform2f_func glUniform2f;
+extern KWINEFFECTS_EXPORT glUniform3f_func glUniform3f;
+extern KWINEFFECTS_EXPORT glUniform4f_func glUniform4f;
+extern KWINEFFECTS_EXPORT glUniform1i_func glUniform1i;
+extern KWINEFFECTS_EXPORT glUniform1fv_func glUniform1fv;
+extern KWINEFFECTS_EXPORT glUniform2fv_func glUniform2fv;
+extern KWINEFFECTS_EXPORT glUniform3fv_func glUniform3fv;
+extern KWINEFFECTS_EXPORT glUniform4fv_func glUniform4fv;
+extern KWINEFFECTS_EXPORT glGetUniformfv_func glGetUniformfv;
+extern KWINEFFECTS_EXPORT glUniformMatrix4fv_func glUniformMatrix4fv;
+extern KWINEFFECTS_EXPORT glValidateProgram_func glValidateProgram;
+extern KWINEFFECTS_EXPORT glGetUniformLocation_func glGetUniformLocation;
+extern KWINEFFECTS_EXPORT glVertexAttrib1f_func glVertexAttrib1f;
+extern KWINEFFECTS_EXPORT glGetAttribLocation_func glGetAttribLocation;
+extern KWINEFFECTS_EXPORT glBindAttribLocation_func glBindAttribLocation;
+extern KWINEFFECTS_EXPORT glGenProgramsARB_func glGenProgramsARB;
+extern KWINEFFECTS_EXPORT glBindProgramARB_func glBindProgramARB;
+extern KWINEFFECTS_EXPORT glProgramStringARB_func glProgramStringARB;
+extern KWINEFFECTS_EXPORT glProgramLocalParameter4fARB_func glProgramLocalParameter4fARB;
+extern KWINEFFECTS_EXPORT glDeleteProgramsARB_func glDeleteProgramsARB;
+extern KWINEFFECTS_EXPORT glGetProgramivARB_func glGetProgramivARB;
 // vertex buffer objects
 typedef void (*glGenBuffers_func)(GLsizei, GLuint*);
-extern KWIN_EXPORT glGenBuffers_func glGenBuffers;
+extern KWINEFFECTS_EXPORT glGenBuffers_func glGenBuffers;
 typedef void (*glDeleteBuffers_func)(GLsizei n, const GLuint*);
-extern KWIN_EXPORT glDeleteBuffers_func glDeleteBuffers;
+extern KWINEFFECTS_EXPORT glDeleteBuffers_func glDeleteBuffers;
 typedef void (*glBindBuffer_func)(GLenum, GLuint);
-extern KWIN_EXPORT glBindBuffer_func glBindBuffer;
+extern KWINEFFECTS_EXPORT glBindBuffer_func glBindBuffer;
 typedef void (*glBufferData_func)(GLenum, GLsizeiptr, const GLvoid*, GLenum);
-extern KWIN_EXPORT glBufferData_func glBufferData;
+extern KWINEFFECTS_EXPORT glBufferData_func glBufferData;
 typedef void (*glBufferSubData_func)(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data);
-extern KWIN_EXPORT glBufferSubData_func glBufferSubData;
+extern KWINEFFECTS_EXPORT glBufferSubData_func glBufferSubData;
 typedef void (*glGetBufferSubData_func)(GLenum target, GLintptr offset, GLsizeiptr size, GLvoid *data);
-extern KWIN_EXPORT glGetBufferSubData_func glGetBufferSubData;
+extern KWINEFFECTS_EXPORT glGetBufferSubData_func glGetBufferSubData;
 typedef void (*glEnableVertexAttribArray_func)(GLuint);
-extern KWIN_EXPORT glEnableVertexAttribArray_func glEnableVertexAttribArray;
+extern KWINEFFECTS_EXPORT glEnableVertexAttribArray_func glEnableVertexAttribArray;
 typedef void (*glDisableVertexAttribArray_func)(GLuint);
-extern KWIN_EXPORT glDisableVertexAttribArray_func glDisableVertexAttribArray;
+extern KWINEFFECTS_EXPORT glDisableVertexAttribArray_func glDisableVertexAttribArray;
 typedef void (*glVertexAttribPointer_func)(GLuint, GLint, GLenum, GLboolean, GLsizei, const GLvoid*);
-extern KWIN_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
+extern KWINEFFECTS_EXPORT glVertexAttribPointer_func glVertexAttribPointer;
 typedef GLvoid *(*glMapBuffer_func)(GLenum target, GLenum access);
-extern KWIN_EXPORT glMapBuffer_func glMapBuffer;
+extern KWINEFFECTS_EXPORT glMapBuffer_func glMapBuffer;
 typedef GLboolean (*glUnmapBuffer_func)(GLenum target);
-extern KWIN_EXPORT glUnmapBuffer_func glUnmapBuffer;
+extern KWINEFFECTS_EXPORT glUnmapBuffer_func glUnmapBuffer;
 
 // GL_ARB_vertex_array_object
 typedef void (*glBindVertexArray_func)(GLuint array);
@@ -365,10 +363,10 @@ typedef void (*glDeleteVertexArrays_func)(GLsizei n, const GLuint *arrays);
 typedef void (*glGenVertexArrays_func)(GLsizei n, GLuint *arrays);
 typedef GLboolean (*glIsVertexArray_func)(GLuint array);
 
-extern KWIN_EXPORT glBindVertexArray_func    glBindVertexArray;
-extern KWIN_EXPORT glDeleteVertexArrays_func glDeleteVertexArrays;
-extern KWIN_EXPORT glGenVertexArrays_func    glGenVertexArrays;
-extern KWIN_EXPORT glIsVertexArray_func      glIsVertexArray;
+extern KWINEFFECTS_EXPORT glBindVertexArray_func    glBindVertexArray;
+extern KWINEFFECTS_EXPORT glDeleteVertexArrays_func glDeleteVertexArrays;
+extern KWINEFFECTS_EXPORT glGenVertexArrays_func    glGenVertexArrays;
+extern KWINEFFECTS_EXPORT glIsVertexArray_func      glIsVertexArray;
 
 // GL_EXT_gpu_shader4 / GL 3.0
 typedef void (*glVertexAttribI1i_func)(GLuint index, GLint x_func);
@@ -405,68 +403,68 @@ typedef void (*glUniform1uiv_func)(GLint location, GLsizei count, const GLuint *
 typedef void (*glUniform2uiv_func)(GLint location, GLsizei count, const GLuint *value);
 typedef void (*glUniform3uiv_func)(GLint location, GLsizei count, const GLuint *value);
 
-extern KWIN_EXPORT glVertexAttribI1i_func      glVertexAttribI1i;
-extern KWIN_EXPORT glVertexAttribI2i_func      glVertexAttribI2i;
-extern KWIN_EXPORT glVertexAttribI3i_func      glVertexAttribI3i;
-extern KWIN_EXPORT glVertexAttribI4i_func      glVertexAttribI4i;
-extern KWIN_EXPORT glVertexAttribI1ui_func     glVertexAttribI1ui;
-extern KWIN_EXPORT glVertexAttribI2ui_func     glVertexAttribI2ui;
-extern KWIN_EXPORT glVertexAttribI3ui_func     glVertexAttribI3ui;
-extern KWIN_EXPORT glVertexAttribI4ui_func     glVertexAttribI4ui;
-extern KWIN_EXPORT glVertexAttribI1iv_func     glVertexAttribI1iv;
-extern KWIN_EXPORT glVertexAttribI2iv_func     glVertexAttribI2iv;
-extern KWIN_EXPORT glVertexAttribI3iv_func     glVertexAttribI3iv;
-extern KWIN_EXPORT glVertexAttribI4iv_func     glVertexAttribI4iv;
-extern KWIN_EXPORT glVertexAttribI1uiv_func    glVertexAttribI1uiv;
-extern KWIN_EXPORT glVertexAttribI2uiv_func    glVertexAttribI2uiv;
-extern KWIN_EXPORT glVertexAttribI3uiv_func    glVertexAttribI3uiv;
-extern KWIN_EXPORT glVertexAttribI4uiv_func    glVertexAttribI4uiv;
-extern KWIN_EXPORT glVertexAttribI4bv_func     glVertexAttribI4bv;
-extern KWIN_EXPORT glVertexAttribI4sv_func     glVertexAttribI4sv;
-extern KWIN_EXPORT glVertexAttribI4ubv_func    glVertexAttribI4ubv;
-extern KWIN_EXPORT glVertexAttribI4usv_func    glVertexAttribI4usv;
-extern KWIN_EXPORT glVertexAttribIPointer_func glVertexAttribIPointer;
-extern KWIN_EXPORT glGetVertexAttribIiv_func   glGetVertexAttribIiv;
-extern KWIN_EXPORT glGetVertexAttribIuiv_func  glGetVertexAttribIuiv;
-extern KWIN_EXPORT glGetUniformuiv_func        glGetUniformuiv;
-extern KWIN_EXPORT glBindFragDataLocation_func glBindFragDataLocation;
-extern KWIN_EXPORT glGetFragDataLocation_func  glGetFragDataLocation;
-extern KWIN_EXPORT glUniform1ui_func           glUniform1ui;
-extern KWIN_EXPORT glUniform2ui_func           glUniform2ui;
-extern KWIN_EXPORT glUniform3ui_func           glUniform3ui;
-extern KWIN_EXPORT glUniform4ui_func           glUniform4ui;
-extern KWIN_EXPORT glUniform1uiv_func          glUniform1uiv;
-extern KWIN_EXPORT glUniform2uiv_func          glUniform2uiv;
-extern KWIN_EXPORT glUniform3uiv_func          glUniform3uiv;
+extern KWINEFFECTS_EXPORT glVertexAttribI1i_func      glVertexAttribI1i;
+extern KWINEFFECTS_EXPORT glVertexAttribI2i_func      glVertexAttribI2i;
+extern KWINEFFECTS_EXPORT glVertexAttribI3i_func      glVertexAttribI3i;
+extern KWINEFFECTS_EXPORT glVertexAttribI4i_func      glVertexAttribI4i;
+extern KWINEFFECTS_EXPORT glVertexAttribI1ui_func     glVertexAttribI1ui;
+extern KWINEFFECTS_EXPORT glVertexAttribI2ui_func     glVertexAttribI2ui;
+extern KWINEFFECTS_EXPORT glVertexAttribI3ui_func     glVertexAttribI3ui;
+extern KWINEFFECTS_EXPORT glVertexAttribI4ui_func     glVertexAttribI4ui;
+extern KWINEFFECTS_EXPORT glVertexAttribI1iv_func     glVertexAttribI1iv;
+extern KWINEFFECTS_EXPORT glVertexAttribI2iv_func     glVertexAttribI2iv;
+extern KWINEFFECTS_EXPORT glVertexAttribI3iv_func     glVertexAttribI3iv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4iv_func     glVertexAttribI4iv;
+extern KWINEFFECTS_EXPORT glVertexAttribI1uiv_func    glVertexAttribI1uiv;
+extern KWINEFFECTS_EXPORT glVertexAttribI2uiv_func    glVertexAttribI2uiv;
+extern KWINEFFECTS_EXPORT glVertexAttribI3uiv_func    glVertexAttribI3uiv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4uiv_func    glVertexAttribI4uiv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4bv_func     glVertexAttribI4bv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4sv_func     glVertexAttribI4sv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4ubv_func    glVertexAttribI4ubv;
+extern KWINEFFECTS_EXPORT glVertexAttribI4usv_func    glVertexAttribI4usv;
+extern KWINEFFECTS_EXPORT glVertexAttribIPointer_func glVertexAttribIPointer;
+extern KWINEFFECTS_EXPORT glGetVertexAttribIiv_func   glGetVertexAttribIiv;
+extern KWINEFFECTS_EXPORT glGetVertexAttribIuiv_func  glGetVertexAttribIuiv;
+extern KWINEFFECTS_EXPORT glGetUniformuiv_func        glGetUniformuiv;
+extern KWINEFFECTS_EXPORT glBindFragDataLocation_func glBindFragDataLocation;
+extern KWINEFFECTS_EXPORT glGetFragDataLocation_func  glGetFragDataLocation;
+extern KWINEFFECTS_EXPORT glUniform1ui_func           glUniform1ui;
+extern KWINEFFECTS_EXPORT glUniform2ui_func           glUniform2ui;
+extern KWINEFFECTS_EXPORT glUniform3ui_func           glUniform3ui;
+extern KWINEFFECTS_EXPORT glUniform4ui_func           glUniform4ui;
+extern KWINEFFECTS_EXPORT glUniform1uiv_func          glUniform1uiv;
+extern KWINEFFECTS_EXPORT glUniform2uiv_func          glUniform2uiv;
+extern KWINEFFECTS_EXPORT glUniform3uiv_func          glUniform3uiv;
 
 // GL_ARB_map_buffer_range
 typedef GLvoid* (*glMapBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 typedef void (*glFlushMappedBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length);
 
-extern KWIN_EXPORT glMapBufferRange_func glMapBufferRange;
-extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
+extern KWINEFFECTS_EXPORT glMapBufferRange_func glMapBufferRange;
+extern KWINEFFECTS_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
 
 // GL_ARB_robustness
 typedef GLenum (*glGetGraphicsResetStatus_func)();
 typedef void (*glReadnPixels_func)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
 typedef void (*glGetnUniformfv_func)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-extern KWIN_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-extern KWIN_EXPORT glReadnPixels_func            glReadnPixels;
-extern KWIN_EXPORT glGetnUniformfv_func          glGetnUniformfv;
+extern KWINEFFECTS_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+extern KWINEFFECTS_EXPORT glReadnPixels_func            glReadnPixels;
+extern KWINEFFECTS_EXPORT glGetnUniformfv_func          glGetnUniformfv;
 
 // GL_ARB_draw_elements_base_vertex
 typedef void (*glDrawElementsBaseVertex_func)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLint basevertex);
 typedef void (*glDrawElementsInstancedBaseVertex_func)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instancecount, GLint basevertex);
 
-extern KWIN_EXPORT glDrawElementsBaseVertex_func glDrawElementsBaseVertex;
-extern KWIN_EXPORT glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
+extern KWINEFFECTS_EXPORT glDrawElementsBaseVertex_func glDrawElementsBaseVertex;
+extern KWINEFFECTS_EXPORT glDrawElementsInstancedBaseVertex_func glDrawElementsInstancedBaseVertex;
 
 // GL_ARB_copy_buffer
 typedef void (*glCopyBufferSubData_func)(GLenum readTarget, GLenum writeTarget, GLintptr readOffset,
                                          GLintptr writeOffset, GLsizeiptr size);
 
-extern KWIN_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
+extern KWINEFFECTS_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
 
 } // namespace
 
@@ -545,20 +543,20 @@ extern KWIN_EXPORT glCopyBufferSubData_func glCopyBufferSubData;
 namespace KWin
 {
 
-void KWIN_EXPORT eglResolveFunctions();
-void KWIN_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
+void KWINEFFECTS_EXPORT eglResolveFunctions();
+void KWINEFFECTS_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 
 // EGL
 typedef EGLImageKHR(*eglCreateImageKHR_func)(EGLDisplay, EGLContext, EGLenum, EGLClientBuffer, const EGLint*);
 typedef EGLBoolean(*eglDestroyImageKHR_func)(EGLDisplay, EGLImageKHR);
 typedef EGLBoolean (*eglPostSubBufferNV_func)(EGLDisplay dpy, EGLSurface surface, EGLint x, EGLint y, EGLint width, EGLint height);
-extern KWIN_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
-extern KWIN_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
-extern KWIN_EXPORT eglPostSubBufferNV_func eglPostSubBufferNV;
+extern KWINEFFECTS_EXPORT eglCreateImageKHR_func eglCreateImageKHR;
+extern KWINEFFECTS_EXPORT eglDestroyImageKHR_func eglDestroyImageKHR;
+extern KWINEFFECTS_EXPORT eglPostSubBufferNV_func eglPostSubBufferNV;
 
 // GLES
 typedef GLvoid(*glEGLImageTargetTexture2DOES_func)(GLenum, GLeglImageOES);
-extern KWIN_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
+extern KWINEFFECTS_EXPORT glEGLImageTargetTexture2DOES_func glEGLImageTargetTexture2DOES;
 
 
 #ifdef KWIN_HAVE_OPENGLES
@@ -568,29 +566,29 @@ typedef GLvoid *(*glMapBuffer_func)(GLenum target, GLenum access);
 typedef GLboolean (*glUnmapBuffer_func)(GLenum target);
 typedef void (*glGetBufferPointerv_func)(GLenum target, GLenum pname, GLvoid **params);
 
-extern KWIN_EXPORT glMapBuffer_func         glMapBuffer;
-extern KWIN_EXPORT glUnmapBuffer_func       glUnmapBuffer;
-extern KWIN_EXPORT glGetBufferPointerv_func glGetBufferPointerv;
+extern KWINEFFECTS_EXPORT glMapBuffer_func         glMapBuffer;
+extern KWINEFFECTS_EXPORT glUnmapBuffer_func       glUnmapBuffer;
+extern KWINEFFECTS_EXPORT glGetBufferPointerv_func glGetBufferPointerv;
 
 // GL_OES_texture_3D
 typedef GLvoid(*glTexImage3DOES_func)(GLenum, GLint, GLenum, GLsizei, GLsizei, GLsizei, GLint, GLenum, GLenum, const GLvoid*);
-extern KWIN_EXPORT glTexImage3DOES_func glTexImage3D;
+extern KWINEFFECTS_EXPORT glTexImage3DOES_func glTexImage3D;
 
 // GL_EXT_map_buffer_range
 typedef GLvoid *(*glMapBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
 typedef void (*glFlushMappedBufferRange_func)(GLenum target, GLintptr offset, GLsizeiptr length);
 
-extern KWIN_EXPORT glMapBufferRange_func         glMapBufferRange;
-extern KWIN_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
+extern KWINEFFECTS_EXPORT glMapBufferRange_func         glMapBufferRange;
+extern KWINEFFECTS_EXPORT glFlushMappedBufferRange_func glFlushMappedBufferRange;
 
 // GL_EXT_robustness
 typedef GLenum (*glGetGraphicsResetStatus_func)();
 typedef void (*glReadnPixels_func)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
 typedef void (*glGetnUniformfv_func)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
-extern KWIN_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
-extern KWIN_EXPORT glReadnPixels_func            glReadnPixels;
-extern KWIN_EXPORT glGetnUniformfv_func          glGetnUniformfv;
+extern KWINEFFECTS_EXPORT glGetGraphicsResetStatus_func glGetGraphicsResetStatus;
+extern KWINEFFECTS_EXPORT glReadnPixels_func            glReadnPixels;
+extern KWINEFFECTS_EXPORT glGetnUniformfv_func          glGetnUniformfv;
 
 #endif // KWIN_HAVE_OPENGLES
 

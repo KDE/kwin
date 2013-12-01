@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin
 #include <kwinglobals.h>
+#include <kwineffects_export.h>
 // KDE
 #include <KDE/KSharedPtr>
 // Qt
@@ -42,10 +43,10 @@ namespace KWin
 /**
  * dumps a QColor into a xcb_render_color_t
  */
-KWIN_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
+KWINEFFECTS_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
 
 /** @internal */
-class KWIN_EXPORT XRenderPictureData
+class KWINEFFECTS_EXPORT XRenderPictureData
     : public QSharedData
 {
 public:
@@ -64,7 +65,7 @@ private:
  * convenience constructors and freeing of resources.
  * It should otherwise act exactly like the Picture type.
  */
-class KWIN_EXPORT XRenderPicture
+class KWINEFFECTS_EXPORT XRenderPicture
 {
 public:
     explicit XRenderPicture(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
@@ -76,7 +77,7 @@ private:
     KSharedPtr< XRenderPictureData > d;
 };
 
-class KWIN_EXPORT XFixesRegion
+class KWINEFFECTS_EXPORT XFixesRegion
 {
 public:
     explicit XFixesRegion(const QRegion &region);
@@ -154,12 +155,12 @@ XFixesRegion::operator xcb_xfixes_region_t()
  * Static 1x1 picture used to deliver a black pixel with given opacity (for blending performance)
  * Call and Use, the PixelPicture will stay, but may change it's opacity meanwhile. It's NOT threadsafe either
  */
-KWIN_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
+KWINEFFECTS_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
 /**
  * Creates a 1x1 Picture filled with c
  */
-KWIN_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
-KWIN_EXPORT XRenderPicture xRenderFill(const QColor &c);
+KWINEFFECTS_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
+KWINEFFECTS_EXPORT XRenderPicture xRenderFill(const QColor &c);
 
 /**
  * Allows to render a window into a (transparent) pixmap
@@ -167,7 +168,7 @@ KWIN_EXPORT XRenderPicture xRenderFill(const QColor &c);
  * NOTICE: it may be 0
  * NOTICE: when done call setXRenderWindowOffscreen(false) to continue normal render process
  */
-KWIN_EXPORT void setXRenderOffscreen(bool b);
+KWINEFFECTS_EXPORT void setXRenderOffscreen(bool b);
 
 /**
  * Allows to define a persistent effect member as render target
@@ -175,27 +176,27 @@ KWIN_EXPORT void setXRenderOffscreen(bool b);
  * NOTICE: do NOT call setXRenderOffscreen(true) in addition!
  * NOTICE: do not forget to xRenderPopTarget once you're done to continue the normal render process
  */
-KWIN_EXPORT void xRenderPushTarget(XRenderPicture *pic);
-KWIN_EXPORT void xRenderPopTarget();
+KWINEFFECTS_EXPORT void xRenderPushTarget(XRenderPicture *pic);
+KWINEFFECTS_EXPORT void xRenderPopTarget();
 
 /**
  * Whether windows are currently rendered into an offscreen target buffer
  */
-KWIN_EXPORT bool xRenderOffscreen();
+KWINEFFECTS_EXPORT bool xRenderOffscreen();
 /**
  * The offscreen buffer as set by the renderer because of setXRenderWindowOffscreen(true)
  */
-KWIN_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
+KWINEFFECTS_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
 
 /**
  * NOTICE: HANDS OFF!!!
  * scene_setXRenderWindowOffscreenTarget() is ONLY to be used by the renderer - DO NOT TOUCH!
  */
-KWIN_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
+KWINEFFECTS_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
 /**
  * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
  */
-KWIN_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
+KWINEFFECTS_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
 
 } // namespace
 

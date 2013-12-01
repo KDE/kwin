@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_COLOR_CORRECTION_H
 
 #include "kwinglobals.h"
+#include <kwineffects_export.h>
 
 #include <QObject>
 
@@ -41,7 +42,7 @@ class ColorCorrectionPrivate;
  * \warning This class is not designed to be used by effects, however
  * it may happen to be useful their case somehow.
  */
-class KWIN_EXPORT ColorCorrection : public QObject
+class KWINEFFECTS_EXPORT ColorCorrection : public QObject
 {
     Q_OBJECT
 

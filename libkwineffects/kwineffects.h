@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWINEFFECTS_H
 
 #include <kwinconfig.h>
+#include <kwineffects_export.h>
 #include <kwinglobals.h>
 
 #include <QPair>
@@ -228,7 +229,7 @@ enum EffectFrameStyle {
 /**
  * Infinite region (i.e. a special region type saying that everything needs to be painted).
  */
-KWIN_EXPORT inline
+KWINEFFECTS_EXPORT inline
 QRect infiniteRegion()
 {
     // INT_MIN / 2 because width/height is used (INT_MIN+INT_MAX==-1)
@@ -300,7 +301,7 @@ QRect infiniteRegion()
  *
  * There is in general no need to call the matching doneCurrent method.
  **/
-class KWIN_EXPORT Effect : public QObject
+class KWINEFFECTS_EXPORT Effect : public QObject
 {
     Q_OBJECT
 public:
@@ -581,8 +582,8 @@ public Q_SLOTS:
  **/
 #define KWIN_EFFECT( name, classname ) \
     extern "C" { \
-        KWIN_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
-        KWIN_EXPORT int effect_version_kwin4_effect_##name() { return KWIN_EFFECT_API_VERSION; } \
+        KWINEFFECTS_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
+        KWINEFFECTS_EXPORT int effect_version_kwin4_effect_##name() { return KWIN_EFFECT_API_VERSION; } \
     }
 
 /**
@@ -591,7 +592,7 @@ public Q_SLOTS:
  **/
 #define KWIN_EFFECT_SUPPORTED( name, function ) \
     extern "C" { \
-        KWIN_EXPORT bool effect_supported_kwin4_effect_##name() { return function; } \
+        KWINEFFECTS_EXPORT bool effect_supported_kwin4_effect_##name() { return function; } \
     }
 
 /**
@@ -609,7 +610,7 @@ public Q_SLOTS:
  **/
 #define KWIN_EFFECT_ENABLEDBYDEFAULT(name, function) \
     extern "C" { \
-        KWIN_EXPORT bool effect_enabledbydefault_kwin4_effect_##name() { return function; } \
+        KWINEFFECTS_EXPORT bool effect_enabledbydefault_kwin4_effect_##name() { return function; } \
     }
 
 /**
@@ -650,7 +651,7 @@ public Q_SLOTS:
  *  desktop or create a special input window to receive mouse and keyboard
  *  events.
  **/
-class KWIN_EXPORT EffectsHandler : public QObject
+class KWINEFFECTS_EXPORT EffectsHandler : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY desktopChanged)
@@ -1305,7 +1306,7 @@ protected:
  * The purpose is to hide internal data and also to serve as a single
  *  representation for the case when Client/Unmanaged becomes Deleted.
  **/
-class KWIN_EXPORT EffectWindow : public QObject
+class KWINEFFECTS_EXPORT EffectWindow : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
@@ -1762,7 +1763,7 @@ public:
     virtual void unreferencePreviousWindowPixmap() = 0;
 };
 
-class KWIN_EXPORT EffectWindowGroup
+class KWINEFFECTS_EXPORT EffectWindowGroup
 {
 public:
     virtual ~EffectWindowGroup();
@@ -1789,7 +1790,7 @@ struct GLVertex3D
  * A vertex is one position in a window. WindowQuad consists of four WindowVertex objects
  * and represents one part of a window.
  **/
-class KWIN_EXPORT WindowVertex
+class KWINEFFECTS_EXPORT WindowVertex
 {
 public:
     WindowVertex();
@@ -1821,7 +1822,7 @@ private:
  * WindowQuads consists of four WindowVertex objects and represents one part of a window.
  */
 // NOTE: This class expects the (original) vertices to be in the clockwise order starting from topleft.
-class KWIN_EXPORT WindowQuad
+class KWINEFFECTS_EXPORT WindowQuad
 {
 public:
     explicit WindowQuad(WindowQuadType type, int id = -1);
@@ -1849,7 +1850,7 @@ private:
     int quadID;
 };
 
-class KWIN_EXPORT WindowQuadList
+class KWINEFFECTS_EXPORT WindowQuadList
     : public QList< WindowQuad >
 {
 public:
@@ -1865,7 +1866,7 @@ public:
     bool isTransformed() const;
 };
 
-class KWIN_EXPORT WindowPrePaintData
+class KWINEFFECTS_EXPORT WindowPrePaintData
 {
 public:
     int mask;
@@ -1890,7 +1891,7 @@ public:
     void setTransformed();
 };
 
-class KWIN_EXPORT PaintData
+class KWINEFFECTS_EXPORT PaintData
 {
 public:
     virtual ~PaintData();
@@ -2051,7 +2052,7 @@ private:
     PaintDataPrivate * const d;
 };
 
-class KWIN_EXPORT WindowPaintData : public PaintData
+class KWINEFFECTS_EXPORT WindowPaintData : public PaintData
 {
 public:
     explicit WindowPaintData(EffectWindow* w);
@@ -2211,7 +2212,7 @@ private:
     WindowPaintDataPrivate * const d;
 };
 
-class KWIN_EXPORT ScreenPaintData : public PaintData
+class KWINEFFECTS_EXPORT ScreenPaintData : public PaintData
 {
 public:
     ScreenPaintData();
@@ -2260,7 +2261,7 @@ public:
     ScreenPaintData& operator=(const ScreenPaintData &rhs);
 };
 
-class KWIN_EXPORT ScreenPrePaintData
+class KWINEFFECTS_EXPORT ScreenPrePaintData
 {
 public:
     int mask;
@@ -2276,7 +2277,7 @@ public:
  * is destroyed, the restriction will be removed.
  * Note that all painting code must use paintArea() to actually perform the clipping.
  */
-class KWIN_EXPORT PaintClipper
+class KWINEFFECTS_EXPORT PaintClipper
 {
 public:
     /**
@@ -2315,7 +2316,7 @@ public:
      *     }
      * @endcode
      */
-    class KWIN_EXPORT Iterator
+    class KWINEFFECTS_EXPORT Iterator
     {
     public:
         Iterator();
@@ -2336,7 +2337,7 @@ private:
  * @internal
  */
 template <typename T>
-class KWIN_EXPORT Motion
+class KWINEFFECTS_EXPORT Motion
 {
 public:
     /**
@@ -2423,7 +2424,7 @@ private:
  * 1D space. Although it can be used directly by itself it is
  * recommended to use a motion manager instead.
  */
-class KWIN_EXPORT Motion1D : public Motion<double>
+class KWINEFFECTS_EXPORT Motion1D : public Motion<double>
 {
 public:
     explicit Motion1D(double initial = 0.0, double strength = 0.08, double smoothness = 4.0);
@@ -2438,7 +2439,7 @@ public:
  * 2D space. Although it can be used directly by itself it is
  * recommended to use a motion manager instead.
  */
-class KWIN_EXPORT Motion2D : public Motion<QPointF>
+class KWINEFFECTS_EXPORT Motion2D : public Motion<QPointF>
 {
 public:
     explicit Motion2D(QPointF initial = QPointF(), double strength = 0.08, double smoothness = 4.0);
@@ -2458,7 +2459,7 @@ public:
  * are moving at any given time it can also be used as a notifier as
  * to see whether the effect is active or not.
  */
-class KWIN_EXPORT WindowMotionManager
+class KWINEFFECTS_EXPORT WindowMotionManager
 {
 public:
     /**
@@ -2613,7 +2614,7 @@ private:
  * another that doesn't.
  * It is recommended to use this class whenever displaying text.
  */
-class KWIN_EXPORT EffectFrame
+class KWINEFFECTS_EXPORT EffectFrame
 {
 public:
     EffectFrame();
@@ -2718,7 +2719,7 @@ private:
 /**
  * Pointer to the global EffectsHandler object.
  **/
-extern KWIN_EXPORT EffectsHandler* effects;
+extern KWINEFFECTS_EXPORT EffectsHandler* effects;
 
 /***************************************************************
  WindowVertex
