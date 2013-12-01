@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-ParentComponents=kwin4_effect_contrast
+X-KDE-PluginKeyword=contrast
+
+Name=Background Contrast
+
+

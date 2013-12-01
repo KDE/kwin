@@ -1,0 +1,5 @@
+File=contrast.kcfg
+ClassName=ContrastConfig
+NameSpace=KWin
+Singleton=true
+Mutators=true
