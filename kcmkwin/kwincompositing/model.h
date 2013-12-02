@@ -81,9 +81,9 @@ public:
     void syncEffectsToKWin();
     void syncConfig();
     void enableWidnowManagement(bool enabled);
+    void loadEffects();
 
 private:
-    void loadEffects();
     void handleDesktopSwitching(int row);
     void handleWindowManagement(int row, bool enabled);
     int findRowByServiceName(const QString &serviceName);
@@ -103,6 +103,7 @@ public:
     Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
 
     void save();
+    void load();
 
 Q_SIGNALS:
     void changed();
@@ -129,6 +130,8 @@ public:
     QColor backgroundActiveColor() { return KColorScheme(QPalette::Active, KColorScheme::Selection, KSharedConfigPtr(0)).background(KColorScheme::LinkBackground).color(); };
     QColor backgroundNormalColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
     QColor backgroundAlternateColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::AlternateBackground).color(); };
+
+    void load();
 
 public Q_SLOTS:
     void setFilter(const QString &filter);

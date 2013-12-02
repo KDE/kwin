@@ -38,6 +38,7 @@ public:
 
 public Q_SLOTS:
     void save() override;
+    void load() override;
 
 private:
     QScopedPointer<KWin::Compositing::EffectView> m_view;
@@ -71,6 +72,12 @@ void KWinCompositingKCM::save()
 {
     m_view->save();
     KCModule::save();
+}
+
+void KWinCompositingKCM::load()
+{
+    m_view->load();
+    KCModule::load();
 }
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,

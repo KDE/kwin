@@ -162,6 +162,8 @@ void EffectModel::loadEffects()
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
     beginResetModel();
+    m_effectsChanged.clear();
+    m_effectsList.clear();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     for(KService::Ptr service : offers) {
         const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
@@ -356,6 +358,11 @@ void EffectFilterModel::enableWidnowManagement(bool enabled)
     m_effectModel->enableWidnowManagement(enabled);
 }
 
+void EffectFilterModel::load()
+{
+    m_effectModel->loadEffects();
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
@@ -382,6 +389,16 @@ void EffectView::save()
     }
     if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
         compositing->save();
+    }
+}
+
+void EffectView::load()
+{
+    if (auto *model = rootObject()->findChild<EffectFilterModel*>(QStringLiteral("filterModel"))) {
+        model->load();
+    }
+    if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
+        compositing->reset();
     }
 }
 
