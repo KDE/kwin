@@ -176,6 +176,12 @@ Item {
             checked: compositing.unredirectFullscreen
             anchors.left: col.right
             anchors.top: xrScaleFilter.bottom
+            Connections {
+                target: compositing
+                onUnredirectFullscreenChanged: {
+                    unredirectFullScreen.checked = compositing.unredirectFullscreen
+                }
+            }
         }
 
         Label {
@@ -207,6 +213,12 @@ Item {
             anchors {
                 top: glSwapStrategy.bottom
                 left: col.right
+            }
+            Connections {
+                target: compositing
+                onGlColorCorrectionChanged: {
+                    glColorCorrection.checked = compositing.glColorCorrection
+                }
             }
         }
 
