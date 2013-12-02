@@ -231,7 +231,7 @@ int EffectModel::findRowByServiceName(const QString &serviceName)
 
 void EffectModel::syncEffectsToKWin()
 {
-    QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Effects"));
+    QDBusInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"));
     for (int it = 0; it < m_effectsList.size(); it++) {
         if (m_effectsList.at(it).effectStatus != m_effectsChanged.at(it).effectStatus) {
             if (m_effectsList.at(it).effectStatus) {

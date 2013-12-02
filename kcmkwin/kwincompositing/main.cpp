@@ -23,6 +23,8 @@
 
 #include "model.h"
 #include <QApplication>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QLayout>
 
 #include <kcmodule.h>
@@ -73,6 +75,10 @@ void KWinCompositingKCM::save()
 {
     m_view->save();
     KCModule::save();
+    // Send signal to all kwin instances
+    // TODO: handle reinitCompositing case and send to compositor
+    QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+    QDBusConnection::sessionBus().send(message);
 }
 
 void KWinCompositingKCM::load()

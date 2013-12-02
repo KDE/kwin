@@ -123,7 +123,7 @@ bool Compositing::OpenGLIsUnsafe() const
 
 bool Compositing::OpenGLIsBroken()
 {
-    QDBusInterface interface(QStringLiteral("org.kde.kwin"), QStringLiteral("/Compositing"));
+    QDBusInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"));
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
 
     QString oldBackend = kwinConfig.readEntry("Backend", "OpenGL");
