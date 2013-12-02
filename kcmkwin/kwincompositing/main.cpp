@@ -3,6 +3,7 @@
  * This file is part of the KDE project.                                  *
  *                                                                        *
  * Copyright (C) 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>             *
+ * Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>                 *
  *                                                                        *
  * This program is free software; you can redistribute it and/or modify   *
  * it under the terms of the GNU General Public License as published by   *
@@ -22,33 +23,46 @@
 
 #include "model.h"
 #include <QApplication>
+#include <QLayout>
 
-#include <kaboutdata.h>
-#include <klocalizedstring.h>
+#include <kcmodule.h>
+#include <kservice.h>
 #include <kdeclarative/kdeclarative.h>
 
-#include <QStandardPaths>
-
-int main(int argc, char *argv[])
+class KWinCompositingKCM : public KCModule
 {
-    KAboutData aboutData("kwincompositing", 0, i18n("KWinCompositing"),
-                         "1.0", i18n("KWin Compositing"),
-                         KAboutData::License_GPL,
-                         i18n("Copyright 2013 KWin Development Team"),
-                         "", "", "kwin@kde.org");
+    Q_OBJECT
+public:
+    explicit KWinCompositingKCM(QWidget* parent = 0, const QVariantList& args = QVariantList());
+    virtual ~KWinCompositingKCM();
 
-    aboutData.addAuthor(i18n("Antonis Tsiapaliokas"),
-                        i18n("Author and maintainer"),
-                        "kok3rs@gmail.com");
+private:
+    QScopedPointer<KWin::Compositing::EffectView> m_view;
+};
 
-    QApplication app(argc, argv);
-
+KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args)
+    : KCModule(parent, args)
+    , m_view(new KWin::Compositing::EffectView)
+{
     KDeclarative kdeclarative;
-
-    KWin::Compositing::EffectView *view = new KWin::Compositing::EffectView();
-    kdeclarative.setDeclarativeEngine(view->engine());
+    kdeclarative.setDeclarativeEngine(m_view->engine());
     kdeclarative.setupBindings();
-    view->show();
+    QVBoxLayout *vl = new QVBoxLayout(this);
 
-    return app.exec();
+    QWidget *w = QWidget::createWindowContainer(m_view.data(), this);
+    w->setMinimumSize(m_view->initialSize());
+    vl->addWidget(w);
+    setLayout(vl);
+    m_view->setWidth(width());
+    m_view->setHeight(height());
 }
+
+KWinCompositingKCM::~KWinCompositingKCM()
+{
+}
+
+K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
+                 registerPlugin<KWinCompositingKCM>();
+                )
+
+#include "main.moc"

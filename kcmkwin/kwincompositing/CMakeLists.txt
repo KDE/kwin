@@ -68,7 +68,7 @@ set(kwincomposing_SRC
     effectconfig.cpp)
 
 
-add_executable(kwincompositing ${kwincomposing_SRC})
+add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
     Qt5::Quick
@@ -107,7 +107,8 @@ target_link_libraries(effectModelTest
     KF5::KDeclarative)
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
-INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})
+INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES kwincompositing.desktop  DESTINATION  ${SERVICES_INSTALL_DIR})
 ################# list the subdirectories #################
 
 feature_summary(WHAT ALL   FATAL_ON_MISSING_REQUIRED_PACKAGES)
