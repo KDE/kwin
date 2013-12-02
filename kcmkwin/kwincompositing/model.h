@@ -44,6 +44,7 @@ struct EffectData {
     QString category;
     QString serviceName;
     bool effectStatus;
+    bool enabledByDefault;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -82,6 +83,7 @@ public:
     void syncConfig();
     void enableWidnowManagement(bool enabled);
     void loadEffects();
+    void defaults();
 
 private:
     void handleDesktopSwitching(int row);
@@ -104,6 +106,7 @@ public:
 
     void save();
     void load();
+    void defaults();
 
 Q_SIGNALS:
     void changed();
@@ -132,6 +135,7 @@ public:
     QColor backgroundAlternateColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::AlternateBackground).color(); };
 
     void load();
+    void defaults();
 
 public Q_SLOTS:
     void setFilter(const QString &filter);

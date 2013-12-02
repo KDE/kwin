@@ -71,6 +71,12 @@ Item {
                 exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
 
                 onCheckedChanged: item.changed()
+                Connections {
+                    target: searchModel
+                    onDataChanged: {
+                        effectStatusCheckBox.checked = model.EffectStatusRole;
+                    }
+                }
             }
 
             Item {

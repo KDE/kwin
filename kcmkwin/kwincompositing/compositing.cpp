@@ -103,6 +103,18 @@ void Compositing::reset()
     setCompositingType(type());
 }
 
+void Compositing::defaults()
+{
+    setAnimationSpeed(3);
+    setWindowThumbnail(1);
+    setGlScaleFilter(2);
+    setXrScaleFilter(false);
+    setUnredirectFullscreen(false);
+    setGlSwapStrategy(1);
+    setGlColorCorrection(false);
+    setCompositingType(CompositingType::OPENGL20_INDEX);
+}
+
 bool Compositing::OpenGLIsUnsafe() const
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");

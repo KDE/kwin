@@ -178,6 +178,7 @@ void EffectModel::loadEffects()
         effect.category = plugin.category();
         effect.serviceName = plugin.pluginName();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault());
+        effect.enabledByDefault = plugin.isPluginEnabledByDefault();
 
         m_effectsList << effect;
     }
@@ -288,6 +289,16 @@ void EffectModel::enableWidnowManagement(bool enabled)
     setData(presentWindowsIndex, enabled, EffectModel::WindowManagementRole);
 }
 
+void EffectModel::defaults()
+{
+    for (int i = 0; i < m_effectsList.count(); ++i) {
+        const auto &effect = m_effectsList.at(i);
+        if (effect.effectStatus != effect.enabledByDefault) {
+            updateEffectStatus(index(i, 0), effect.enabledByDefault);
+        }
+    }
+}
+
 EffectFilterModel::EffectFilterModel(QObject *parent)
     :QSortFilterProxyModel(parent),
     m_effectModel( new EffectModel(this))
@@ -363,6 +374,11 @@ void EffectFilterModel::load()
     m_effectModel->loadEffects();
 }
 
+void EffectFilterModel::defaults()
+{
+    m_effectModel->defaults();
+}
+
 EffectView::EffectView(QWindow *parent)
     : QQuickView(parent)
 {
@@ -399,6 +415,16 @@ void EffectView::load()
     }
     if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
         compositing->reset();
+    }
+}
+
+void EffectView::defaults()
+{
+    if (auto *model = rootObject()->findChild<EffectFilterModel*>(QStringLiteral("filterModel"))) {
+        model->defaults();
+    }
+    if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
+        compositing->defaults();
     }
 }
 

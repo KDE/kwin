@@ -67,6 +67,7 @@ public:
 
 public Q_SLOTS:
     void reset();
+    void defaults();
 
 Q_SIGNALS:
     void changed();
