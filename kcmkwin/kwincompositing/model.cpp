@@ -39,6 +39,7 @@
 #include <QString>
 #include <QQmlEngine>
 #include <QtQml>
+#include <QQuickItem>
 #include <QDebug>
 
 namespace KWin {
@@ -371,6 +372,7 @@ void EffectView::init()
     setResizeMode(QQuickView::SizeRootObjectToView);
     rootContext()->setContextProperty("engine", this);
     setSource(QUrl(mainFile));
+    connect(rootObject(), SIGNAL(changed()), this, SIGNAL(changed()));
 }
 
 }//end namespace Compositing

@@ -55,6 +55,9 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
     setLayout(vl);
     m_view->setWidth(width());
     m_view->setHeight(height());
+    connect(m_view.data(), &KWin::Compositing::EffectView::changed, [this]{
+        emit changed(true);
+    });
 }
 
 KWinCompositingKCM::~KWinCompositingKCM()

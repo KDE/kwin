@@ -103,6 +103,8 @@ public:
 
     Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
 
+Q_SIGNALS:
+    void changed();
 };
 
 
