@@ -26,6 +26,13 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
     signal changed
+    property alias animationSpeedValue: animationSpeed.value
+    property alias windowThumbnailIndex: windowThumbnail.currentIndex
+    property alias glScaleFilterIndex: glScaleFilter.currentIndex
+    property bool xrScaleFilterChecked: xrScaleFilter.currentIndex > 0
+    property alias unredirectFullScreenChecked: unredirectFullScreen.checked
+    property alias glSwapStrategyIndex: glSwapStrategy.currentIndex
+    property alias glColorCorrectionChecked: glColorCorrection.checked
 
     Component {
         id: sectionHeading
@@ -282,33 +289,5 @@ Item {
     Connections {
         target: openGLType
         onCurrentIndexChanged: changed()
-    }
-    Connections {
-        target: animationSpeed
-        onValueChanged: changed()
-    }
-    Connections {
-        target: windowThumbnail
-        onCurrentIndexChanged: changed()
-    }
-    Connections {
-        target: glScaleFilter
-        onCurrentIndexChanged: changed()
-    }
-    Connections {
-        target: xrScaleFilter
-        onCurrentIndexChanged: changed()
-    }
-    Connections {
-        target: unredirectFullScreen
-        onCheckedChanged: changed()
-    }
-    Connections {
-        target: glSwapStrategy
-        onCurrentIndexChanged: changed()
-    }
-    Connections {
-        target: glColorCorrection
-        onCheckedChanged: changed()
     }
 }//End item

@@ -35,7 +35,50 @@ namespace Compositing {
 
 Compositing::Compositing(QObject *parent)
     : QObject(parent)
+    , m_animationSpeed(0)
+    , m_windowThumbnail(0)
+    , m_glScaleFilter(0)
+    , m_xrScaleFilter(false)
+    , m_unredirectFullscreen(false)
+    , m_glSwapStrategy(0)
+    , m_glColorCorrection(false)
 {
+    reset();
+    connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
+    connect(this, &Compositing::windowThumbnailChanged,      this, &Compositing::changed);
+    connect(this, &Compositing::glScaleFilterChanged,        this, &Compositing::changed);
+    connect(this, &Compositing::xrScaleFilterChanged,        this, &Compositing::changed);
+    connect(this, &Compositing::unredirectFullscreenChanged, this, &Compositing::changed);
+    connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
+    connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
+}
+
+void Compositing::reset()
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), QStringLiteral("Compositing"));
+    setAnimationSpeed(kwinConfig.readEntry("AnimationSpeed", 3));
+    setWindowThumbnail(kwinConfig.readEntry("HiddenPreviews", 5) - 4);
+    setGlScaleFilter(kwinConfig.readEntry("GLTextureFilter", 2));
+    setXrScaleFilter(kwinConfig.readEntry("XRenderSmoothScale", false));
+    setUnredirectFullscreen(kwinConfig.readEntry("UnredirectFullscreen", false));
+
+    auto swapStrategy = [&kwinConfig]() {
+        const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
+
+        if (glSwapStrategyValue == "n") {
+            return 0;
+        } else if (glSwapStrategyValue == "a") {
+            return 1;
+        } else if (glSwapStrategyValue == "e") {
+            return 2;
+        } else if (glSwapStrategyValue == "p") {
+            return 3;
+        } else if (glSwapStrategyValue == "c") {
+            return 4;
+        }
+    };
+    setGlSwapStrategy(swapStrategy());
+    setGlColorCorrection(kwinConfig.readEntry("GLColorCorrection", false));
 }
 
 bool Compositing::OpenGLIsUnsafe() const
@@ -67,56 +110,128 @@ bool Compositing::OpenGLIsBroken()
 
 int Compositing::animationSpeed() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("AnimationSpeed", 3);
+    return m_animationSpeed;
 }
 
 int Compositing::windowThumbnail() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("HiddenPreviews", 5) - 4;
+    return m_windowThumbnail;
 }
 
 int Compositing::glScaleFilter() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("GLTextureFilter", 2);
+    return m_glScaleFilter;
 }
 
 bool Compositing::xrScaleFilter() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("XRenderSmoothScale", false);
+    return m_xrScaleFilter;
 }
 
 bool Compositing::unredirectFullscreen() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("UnredirectFullscreen", false);
+    return m_unredirectFullscreen;
 }
 
 int Compositing::glSwapStrategy() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
-
-    if (glSwapStrategyValue == "n") {
-        return 0;
-    } else if (glSwapStrategyValue == "a") {
-        return 1;
-    } else if (glSwapStrategyValue == "e") {
-        return 2;
-    } else if (glSwapStrategyValue == "p") {
-        return 3;
-    } else if (glSwapStrategyValue == "c") {
-        return 4;
-    }
+    return m_glSwapStrategy;
 }
 
 bool Compositing::glColorCorrection() const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    return kwinConfig.readEntry("GLColorCorrection", false);
+    return m_glColorCorrection;
+}
+
+void Compositing::setAnimationSpeed(int speed)
+{
+    if (speed == m_animationSpeed) {
+        return;
+    }
+    m_animationSpeed = speed;
+    emit animationSpeedChanged();
+}
+
+void Compositing::setGlColorCorrection(bool correction)
+{
+    if (correction == m_glColorCorrection) {
+        return;
+    }
+    m_glColorCorrection = correction;
+    emit glColorCorrectionChanged();
+}
+
+void Compositing::setGlScaleFilter(int index)
+{
+    if (index == m_glScaleFilter) {
+        return;
+    }
+    m_glScaleFilter = index;
+    emit glScaleFilterChanged();
+}
+
+void Compositing::setGlSwapStrategy(int strategy)
+{
+    if (strategy == m_glSwapStrategy) {
+        return;
+    }
+    m_glSwapStrategy = strategy;
+    emit glSwapStrategyChanged();
+}
+
+void Compositing::setUnredirectFullscreen(bool unredirect)
+{
+    if (unredirect == m_unredirectFullscreen) {
+        return;
+    }
+    m_unredirectFullscreen = unredirect;
+    emit unredirectFullscreenChanged();
+}
+
+void Compositing::setWindowThumbnail(int index)
+{
+    if (index == m_windowThumbnail) {
+        return;
+    }
+    m_windowThumbnail = index;
+    emit windowThumbnailChanged();
+}
+
+void Compositing::setXrScaleFilter(bool filter)
+{
+    if (filter == m_xrScaleFilter) {
+        return;
+    }
+    m_xrScaleFilter = filter;
+    emit xrScaleFilterChanged();
+}
+
+void Compositing::save()
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), "Compositing");
+    kwinConfig.writeEntry("AnimationSpeed", animationSpeed());
+    kwinConfig.writeEntry("HiddenPreviews", windowThumbnail() + 4);
+    kwinConfig.writeEntry("GLTextureFilter", glScaleFilter());
+    kwinConfig.writeEntry("XRenderSmoothScale", xrScaleFilter());
+    kwinConfig.writeEntry("UnredirectFullscreen", unredirectFullscreen());
+    auto swapStrategy = [this] {
+        switch (glSwapStrategy()) {
+            case 0:
+                return QStringLiteral("n");
+            case 2:
+                return QStringLiteral("e");
+            case 3:
+                return QStringLiteral("p");
+            case 4:
+                return QStringLiteral("c");
+            case 1:
+            default:
+                return QStringLiteral("a");
+        }
+    };
+    kwinConfig.writeEntry("GLPreferBufferSwap", swapStrategy());
+    kwinConfig.writeEntry("GLColorCorrection", glColorCorrection());
+    kwinConfig.sync();
 }
 
 CompositingType::CompositingType(QObject *parent)
@@ -229,7 +344,6 @@ int CompositingType::currentOpenGLType()
 void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
         bool unredirectFullscreen, int glSwapStrategy, bool glColorCorrection)
 {
-    QString glSwapStrategyValue;
     QString backend;
     bool glLegacy;
     bool glCore;
@@ -258,37 +372,10 @@ void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowT
             break;
     }
 
-    switch (glSwapStrategy) {
-        case 0:
-            glSwapStrategyValue = "n";
-            break;
-        case 1:
-            glSwapStrategyValue = "a";
-            break;
-        case 2:
-            glSwapStrategyValue = "e";
-            break;
-        case 3:
-            glSwapStrategyValue = "p";
-            break;
-        case 4:
-            glSwapStrategyValue = "c";
-            break;
-        default:
-            glSwapStrategyValue = "a";
-    }
-
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
-    kwinConfig.writeEntry("AnimationSpeed", animationSpeed);
-    kwinConfig.writeEntry("HiddenPreviews", windowThumbnail + 4);
-    kwinConfig.writeEntry("GLTextureFilter", glSclaleFilter);
-    kwinConfig.writeEntry("XRenderSmoothScale", xrSclaleFilter);
-    kwinConfig.writeEntry("UnredirectFullscreen", unredirectFullscreen);
-    kwinConfig.writeEntry("GLPreferBufferSwap", glSwapStrategyValue);
-    kwinConfig.writeEntry("GLColorCorrection", glColorCorrection);
     kwinConfig.sync();
 }
 

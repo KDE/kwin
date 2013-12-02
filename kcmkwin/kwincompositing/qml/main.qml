@@ -69,6 +69,18 @@ Rectangle {
 
     Compositing {
         id: compositing
+        objectName: "compositing"
+        animationSpeed: view.animationSpeedValue
+        windowThumbnail: view.windowThumbnailIndex
+        glScaleFilter: view.glScaleFilterIndex
+        xrScaleFilter: view.xrScaleFilterChecked
+        unredirectFullscreen: view.unredirectFullScreenChecked
+        glSwapStrategy: view.glSwapStrategyIndex
+        glColorCorrection: view.glColorCorrectionChecked
+    }
+    Connections {
+        target: compositing
+        onChanged: window.changed()
     }
 
     Component.onCompleted: {
@@ -78,5 +90,6 @@ Rectangle {
             openGLError.visible = false;
             view.visible = true;
         }
+        compositing.reset();
     }
 }

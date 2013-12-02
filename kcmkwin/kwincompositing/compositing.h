@@ -32,13 +32,13 @@ class Compositing : public QObject
 {
 
     Q_OBJECT
-    Q_PROPERTY(int animationSpeed READ animationSpeed CONSTANT);
-    Q_PROPERTY(int windowThumbnail READ windowThumbnail CONSTANT);
-    Q_PROPERTY(int glScaleFilter READ glScaleFilter CONSTANT);
-    Q_PROPERTY(bool xrScaleFilter READ xrScaleFilter CONSTANT);
-    Q_PROPERTY(bool unredirectFullscreen READ unredirectFullscreen CONSTANT);
-    Q_PROPERTY(int glSwapStrategy READ glSwapStrategy CONSTANT);
-    Q_PROPERTY(bool glColorCorrection READ glColorCorrection CONSTANT);
+    Q_PROPERTY(int animationSpeed READ animationSpeed WRITE setAnimationSpeed NOTIFY animationSpeedChanged)
+    Q_PROPERTY(int windowThumbnail READ windowThumbnail WRITE setWindowThumbnail NOTIFY windowThumbnailChanged)
+    Q_PROPERTY(int glScaleFilter READ glScaleFilter WRITE setGlScaleFilter NOTIFY glScaleFilterChanged)
+    Q_PROPERTY(bool xrScaleFilter READ xrScaleFilter WRITE setXrScaleFilter NOTIFY xrScaleFilterChanged)
+    Q_PROPERTY(bool unredirectFullscreen READ unredirectFullscreen WRITE setUnredirectFullscreen NOTIFY unredirectFullscreenChanged)
+    Q_PROPERTY(int glSwapStrategy READ glSwapStrategy WRITE setGlSwapStrategy NOTIFY glSwapStrategyChanged)
+    Q_PROPERTY(bool glColorCorrection READ glColorCorrection WRITE setGlColorCorrection NOTIFY glColorCorrectionChanged)
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -52,14 +52,37 @@ public:
     int glSwapStrategy() const;
     bool glColorCorrection() const;
 
-private:
+    void setAnimationSpeed(int speed);
+    void setWindowThumbnail(int index);
+    void setGlScaleFilter(int index);
+    void setXrScaleFilter(bool filter);
+    void setUnredirectFullscreen(bool unredirect);
+    void setGlSwapStrategy(int strategy);
+    void setGlColorCorrection(bool correction);
 
-    enum OpenGLTypeIndex {
-        OPENGL31_INDEX = 0,
-        OPENGL20_INDEX,
-        OPENGL12_INDEX,
-        XRENDER_INDEX
-    };
+    void save();
+
+public Q_SLOTS:
+    void reset();
+
+Q_SIGNALS:
+    void changed();
+    void animationSpeedChanged();
+    void windowThumbnailChanged();
+    void glScaleFilterChanged();
+    void xrScaleFilterChanged();
+    void unredirectFullscreenChanged();
+    void glSwapStrategyChanged();
+    void glColorCorrectionChanged();
+
+private:
+    int m_animationSpeed;
+    int m_windowThumbnail;
+    int m_glScaleFilter;
+    bool m_xrScaleFilter;
+    bool m_unredirectFullscreen;
+    int m_glSwapStrategy;
+    bool m_glColorCorrection;
 };
 
 
