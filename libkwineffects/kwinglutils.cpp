@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwingltexture_p.h"
 
 #include "kwinglcolorcorrection.h"
-#include "kwinglobals.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
 

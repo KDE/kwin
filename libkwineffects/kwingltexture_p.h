@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 #include <kwineffects_export.h>
-#include "kwinglobals.h"
 
 #include <QSize>
 #include <QSharedData>

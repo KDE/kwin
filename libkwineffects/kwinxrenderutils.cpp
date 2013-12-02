@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "kwinxrenderutils.h"
-#include "kwinglobals.h"
 
 #include <QDebug>
 #include <QStack>

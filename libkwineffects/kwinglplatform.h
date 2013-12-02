@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLPLATFORM_H
 #define KWIN_GLPLATFORM_H
 
-#include <kwinglobals.h>
 #include <kwineffects_export.h>
 #include <kwinglutils_funcs.h>
 
