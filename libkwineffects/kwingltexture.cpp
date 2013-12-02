@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
 
 #include "kwinglplatform.h"
-#include "kwineffects.h"
 #include "kwinglutils_funcs.h"
 #include "kwinglutils.h"
 
