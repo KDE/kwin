@@ -77,6 +77,7 @@ Rectangle {
         unredirectFullscreen: view.unredirectFullScreenChecked
         glSwapStrategy: view.glSwapStrategyIndex
         glColorCorrection: view.glColorCorrectionChecked
+        compositingType: view.compositingTypeIndex
     }
     Connections {
         target: compositing

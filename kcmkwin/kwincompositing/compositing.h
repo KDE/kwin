@@ -39,6 +39,7 @@ class Compositing : public QObject
     Q_PROPERTY(bool unredirectFullscreen READ unredirectFullscreen WRITE setUnredirectFullscreen NOTIFY unredirectFullscreenChanged)
     Q_PROPERTY(int glSwapStrategy READ glSwapStrategy WRITE setGlSwapStrategy NOTIFY glSwapStrategyChanged)
     Q_PROPERTY(bool glColorCorrection READ glColorCorrection WRITE setGlColorCorrection NOTIFY glColorCorrectionChanged)
+    Q_PROPERTY(int compositingType READ compositingType WRITE setCompositingType NOTIFY compositingTypeChanged)
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -51,6 +52,7 @@ public:
     bool unredirectFullscreen() const;
     int glSwapStrategy() const;
     bool glColorCorrection() const;
+    int compositingType() const;
 
     void setAnimationSpeed(int speed);
     void setWindowThumbnail(int index);
@@ -59,6 +61,7 @@ public:
     void setUnredirectFullscreen(bool unredirect);
     void setGlSwapStrategy(int strategy);
     void setGlColorCorrection(bool correction);
+    void setCompositingType(int index);
 
     void save();
 
@@ -74,6 +77,7 @@ Q_SIGNALS:
     void unredirectFullscreenChanged();
     void glSwapStrategyChanged();
     void glColorCorrectionChanged();
+    void compositingTypeChanged();
 
 private:
     int m_animationSpeed;
@@ -83,6 +87,7 @@ private:
     bool m_unredirectFullscreen;
     int m_glSwapStrategy;
     bool m_glColorCorrection;
+    int m_compositingType;
 };
 
 
@@ -104,6 +109,7 @@ public:
 
     enum CompositingTypeRoles {
         NameRole = Qt::UserRole +1,
+        TypeRole = Qt::UserRole +2
     };
 
     explicit CompositingType(QObject *parent = 0);
@@ -116,9 +122,8 @@ public:
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
-    Q_INVOKABLE int currentOpenGLType();
-    Q_INVOKABLE void syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
-    bool unredirectFullscreen, int glSwapStrategy, bool glColorCorrection);
+    Q_INVOKABLE int compositingTypeForIndex(int row) const;
+    Q_INVOKABLE int indexForCompositingType(int type) const;
 
 private:
     void generateCompositing();

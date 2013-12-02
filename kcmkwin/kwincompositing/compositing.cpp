@@ -3,6 +3,7 @@
 * This file is part of the KDE project.                                  *
 *                                                                        *
 * Copyright (C) 2013 Antonis Tsiapaliokas <kok3rs@gmail.com>             *
+* Copyright (C) 2013 Martin Gräßlin <mgraesslin@kde.org>                 *
 *                                                                        *
 * This program is free software; you can redistribute it and/or modify   *
 * it under the terms of the GNU General Public License as published by   *
@@ -42,6 +43,7 @@ Compositing::Compositing(QObject *parent)
     , m_unredirectFullscreen(false)
     , m_glSwapStrategy(0)
     , m_glColorCorrection(false)
+    , m_compositingType(0)
 {
     reset();
     connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
@@ -51,6 +53,7 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::unredirectFullscreenChanged, this, &Compositing::changed);
     connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
     connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
+    connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
 }
 
 void Compositing::reset()
@@ -79,6 +82,25 @@ void Compositing::reset()
     };
     setGlSwapStrategy(swapStrategy());
     setGlColorCorrection(kwinConfig.readEntry("GLColorCorrection", false));
+
+    auto type = [&kwinConfig]{
+        const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
+        const bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
+        const bool glCore = kwinConfig.readEntry("GLCore", false);
+
+        if (backend == QStringLiteral("OpenGL")) {
+            if (glLegacy) {
+                return CompositingType::OPENGL12_INDEX;
+            } else if (glCore) {
+                return CompositingType::OPENGL31_INDEX;
+            } else {
+                return CompositingType::OPENGL20_INDEX;
+            }
+        } else {
+            return CompositingType::XRENDER_INDEX;
+        }
+    };
+    setCompositingType(type());
 }
 
 bool Compositing::OpenGLIsUnsafe() const
@@ -141,6 +163,11 @@ int Compositing::glSwapStrategy() const
 bool Compositing::glColorCorrection() const
 {
     return m_glColorCorrection;
+}
+
+int Compositing::compositingType() const
+{
+    return m_compositingType;
 }
 
 void Compositing::setAnimationSpeed(int speed)
@@ -206,6 +233,15 @@ void Compositing::setXrScaleFilter(bool filter)
     emit xrScaleFilterChanged();
 }
 
+void Compositing::setCompositingType(int index)
+{
+    if (index == m_compositingType) {
+        return;
+    }
+    m_compositingType = index;
+    emit compositingTypeChanged();
+}
+
 void Compositing::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), "Compositing");
@@ -231,6 +267,34 @@ void Compositing::save()
     };
     kwinConfig.writeEntry("GLPreferBufferSwap", swapStrategy());
     kwinConfig.writeEntry("GLColorCorrection", glColorCorrection());
+    QString backend;
+    bool glLegacy = false;
+    bool glCore = false;
+    switch (compositingType()) {
+    case CompositingType::OPENGL31_INDEX:
+        backend = "OpenGL";
+        glLegacy = false;
+        glCore = true;
+        break;
+    case CompositingType::OPENGL20_INDEX:
+        backend = "OpenGL";
+        glLegacy = false;
+        glCore = false;
+        break;
+    case CompositingType::OPENGL12_INDEX:
+        backend = "OpenGL";
+        glLegacy = true;
+        glCore = false;
+        break;
+    case CompositingType::XRENDER_INDEX:
+        backend = "XRender";
+        glLegacy = false;
+        glCore = false;
+        break;
+    }
+    kwinConfig.writeEntry("Backend", backend);
+    kwinConfig.writeEntry("GLLegacy", glLegacy);
+    kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.sync();
 }
 
@@ -269,6 +333,7 @@ QHash< int, QByteArray > CompositingType::roleNames() const
 {
     QHash<int, QByteArray> roleNames;
     roleNames[NameRole] = "NameRole";
+    roleNames[TypeRole] = QByteArrayLiteral("type");
     return roleNames;
 }
 
@@ -313,70 +378,26 @@ QVariant CompositingType::data(const QModelIndex &index, int role) const
         case Qt::DisplayRole:
         case NameRole:
             return m_compositingList.at(index.row()).name;
+        case TypeRole:
+            return m_compositingList.at(index.row()).type;
         default:
             return QVariant();
     }
 }
 
-int CompositingType::currentOpenGLType()
+int CompositingType::compositingTypeForIndex(int row) const
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    QString backend = kwinConfig.readEntry("Backend", "OpenGL");
-    bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
-    bool glCore = kwinConfig.readEntry("GLCore", false);
-    int currentIndex = OPENGL20_INDEX;
-
-    if (backend == "OpenGL") {
-        if (glLegacy) {
-            currentIndex = OPENGL12_INDEX;
-        } else if (glCore) {
-            currentIndex = OPENGL31_INDEX;
-        } else {
-            currentIndex = OPENGL20_INDEX;
-        }
-    } else {
-        currentIndex = XRENDER_INDEX;
-    }
-
-    return currentIndex;
+    return index(row, 0).data(TypeRole).toInt();
 }
 
-void CompositingType::syncConfig(int openGLType, int animationSpeed, int windowThumbnail, int glSclaleFilter, bool xrSclaleFilter,
-        bool unredirectFullscreen, int glSwapStrategy, bool glColorCorrection)
+int CompositingType::indexForCompositingType(int type) const
 {
-    QString backend;
-    bool glLegacy;
-    bool glCore;
-
-
-    switch (openGLType) {
-        case OPENGL31_INDEX:
-            backend = "OpenGL";
-            glLegacy = false;
-            glCore = true;
-            break;
-        case OPENGL20_INDEX:
-            backend = "OpenGL";
-            glLegacy = false;
-            glCore = false;
-            break;
-        case OPENGL12_INDEX:
-            backend = "OpenGL";
-            glLegacy = true;
-            glCore = false;
-            break;
-        case XRENDER_INDEX:
-            backend = "XRender";
-            glLegacy = false;
-            glCore = false;
-            break;
+    for (int i = 0; i < m_compositingList.count(); ++i) {
+        if (m_compositingList.at(i).type == type) {
+            return i;
+        }
     }
-
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
-    kwinConfig.writeEntry("Backend", backend);
-    kwinConfig.writeEntry("GLLegacy", glLegacy);
-    kwinConfig.writeEntry("GLCore", glCore);
-    kwinConfig.sync();
+    return -1;
 }
 
 }//end namespace Compositing

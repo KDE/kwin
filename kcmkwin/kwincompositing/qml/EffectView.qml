@@ -33,6 +33,7 @@ Item {
     property alias unredirectFullScreenChecked: unredirectFullScreen.checked
     property alias glSwapStrategyIndex: glSwapStrategy.currentIndex
     property alias glColorCorrectionChecked: glColorCorrection.checked
+    property alias compositingTypeIndex: openGLType.type
 
     Component {
         id: sectionHeading
@@ -70,14 +71,25 @@ Item {
 
         ComboBox {
             id: openGLType
+            property int type: 0
             model: compositingType
-            currentIndex: compositingType.currentOpenGLType()
+            textRole: "NameRole"
             anchors.top: windowManagement.bottom
             anchors.left: col.right
             onCurrentIndexChanged: {
                 glScaleFilter.visible = currentIndex != 3;
                 xrScaleFilter.visible = currentIndex == 3;
                 glColorCorrection.enabled = currentIndex !=3 && glColorCorrection !=4;
+                type = compositingType.compositingTypeForIndex(currentIndex);
+            }
+            Component.onCompleted: {
+                type = compositingType.compositingTypeForIndex(currentIndex);
+            }
+            Connections {
+                target: compositing
+                onCompositingTypeChanged: {
+                    openGLType.currentIndex = compositingType.indexForCompositingType(compositing.compositingType)
+                }
             }
         }
 
