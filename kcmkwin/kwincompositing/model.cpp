@@ -375,5 +375,15 @@ void EffectView::init()
     connect(rootObject(), SIGNAL(changed()), this, SIGNAL(changed()));
 }
 
+void EffectView::save()
+{
+    if (auto *model = rootObject()->findChild<EffectFilterModel*>(QStringLiteral("filterModel"))) {
+        model->syncConfig();
+    }
+    if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
+        compositing->save();
+    }
+}
+
 }//end namespace Compositing
 }//end namespace KWin

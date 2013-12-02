@@ -102,6 +102,8 @@ public:
 
     Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
 
+    void save();
+
 Q_SIGNALS:
     void changed();
 private:

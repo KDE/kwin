@@ -36,6 +36,9 @@ public:
     explicit KWinCompositingKCM(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~KWinCompositingKCM();
 
+public Q_SLOTS:
+    void save() override;
+
 private:
     QScopedPointer<KWin::Compositing::EffectView> m_view;
 };
@@ -62,6 +65,12 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
 
 KWinCompositingKCM::~KWinCompositingKCM()
 {
+}
+
+void KWinCompositingKCM::save()
+{
+    m_view->save();
+    KCModule::save();
 }
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
