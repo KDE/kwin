@@ -30,6 +30,7 @@ Rectangle {
     height: 480
     color: engine.backgroundViewColor()
     property bool openGLBrokeState: true
+    signal changed
 
     Item {
         id: openGLError
@@ -61,6 +62,9 @@ Rectangle {
         id: view
         anchors.fill: parent
         visible: false
+        onChanged: {
+            window.changed()
+        }
     }
 
     Compositing {

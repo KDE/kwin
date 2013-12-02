@@ -25,6 +25,7 @@ import org.kde.kwin.kwincompositing 1.0
 import org.kde.plasma.components 2.0 as PlasmaComponents
 
 Item {
+    signal changed
 
     Component {
         id: sectionHeading
@@ -67,7 +68,6 @@ Item {
             anchors.top: windowManagement.bottom
             anchors.left: col.right
             onCurrentIndexChanged: {
-                apply.enabled = true;
                 glScaleFilter.visible = currentIndex != 3;
                 xrScaleFilter.visible = currentIndex == 3;
                 glColorCorrection.enabled = currentIndex !=3 && glColorCorrection !=4;
@@ -94,10 +94,6 @@ Item {
                 top: animationText.bottom
                 left: col.right
             }
-
-            onValueChanged: {
-                apply.enabled = true;
-            }
         }
 
         Label {
@@ -120,7 +116,6 @@ Item {
                 left: col.right
                 right: parent.right
             }
-            onCurrentIndexChanged: apply.enabled = true;
         }
 
         Label {
@@ -142,7 +137,6 @@ Item {
                 top: scaleFilterText.bottom
                 left: col.right
             }
-            onCurrentIndexChanged: apply.enabled = true;
         }
 
         ComboBox {
@@ -155,7 +149,6 @@ Item {
                 left: glScaleFilter.visible ? glScaleFilter.right : col.right
                 right: parent.right
             }
-            onCurrentIndexChanged: apply.enabled = true;
         }
 
          CheckBox {
@@ -164,7 +157,6 @@ Item {
             checked: compositing.unredirectFullscreen
             anchors.left: col.right
             anchors.top: xrScaleFilter.bottom
-            onClicked: apply.enabled = true
         }
 
         Label {
@@ -186,7 +178,6 @@ Item {
                 left: col.right
                 right: parent.right
             }
-            onCurrentIndexChanged: apply.enabled = true;
         }
 
         CheckBox {
@@ -198,7 +189,6 @@ Item {
                 top: glSwapStrategy.bottom
                 left: col.right
             }
-            onClicked: apply.enabled = true
         }
 
         ColumnLayout {
@@ -233,6 +223,7 @@ Item {
 
             EffectFilterModel {
                 id: searchModel
+                objectName: "filterModel"
                 filter: searchField.text
                 signal effectState(int rowIndex, bool enabled)
 
@@ -249,7 +240,7 @@ Item {
                 anchors {
                     top: searchField.bottom
                     left: parent.left
-                    bottom: apply.top
+                    bottom: parent.bottom
                 }
                 ListView {
                     id: effectView
@@ -259,7 +250,17 @@ Item {
                     Layout.fillWidth: true
                     anchors.fill: parent
                     model: searchModel
-                    delegate: Effect{}
+                    delegate: Effect{
+                        id: effectDelegate
+                        Connections {
+                            id: effectStateConnection
+                            target: null
+                            onChanged: searchModel.effectState(index, checked)
+                        }
+                        Component.onCompleted: {
+                            effectStateConnection.target = effectDelegate
+                        }
+                    }
 
                     section.property: "CategoryRole"
                     section.delegate: sectionHeading
@@ -272,22 +273,42 @@ Item {
                 //ListView, otherwise it will not work
             }
 
-            Button {
-                id: apply
-                text: i18n("Apply")
-                enabled: false
-                anchors {
-                    bottom: parent.bottom
-                }
-
-                onClicked: {
-                    searchModel.syncConfig();
-                    apply.enabled = false;
-                    compositingType.syncConfig(openGLType.currentIndex, animationSpeed.value, windowThumbnail.currentIndex, glScaleFilter.currentIndex, xrScaleFilter.currentIndex == 1,
-                    unredirectFullScreen.checked, glSwapStrategy.currentIndex, glColorCorrection.checked);
-                }
-            }
-
         }//End ColumnLayout
     }//End RowLayout
+    Connections {
+        target: searchModel
+        onEffectState: changed()
+    }
+    Connections {
+        target: openGLType
+        onCurrentIndexChanged: changed()
+    }
+    Connections {
+        target: animationSpeed
+        onValueChanged: changed()
+    }
+    Connections {
+        target: windowThumbnail
+        onCurrentIndexChanged: changed()
+    }
+    Connections {
+        target: glScaleFilter
+        onCurrentIndexChanged: changed()
+    }
+    Connections {
+        target: xrScaleFilter
+        onCurrentIndexChanged: changed()
+    }
+    Connections {
+        target: unredirectFullScreen
+        onCheckedChanged: changed()
+    }
+    Connections {
+        target: glSwapStrategy
+        onCurrentIndexChanged: changed()
+    }
+    Connections {
+        target: glColorCorrection
+        onCheckedChanged: changed()
+    }
 }//End item

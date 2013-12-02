@@ -24,138 +24,131 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
-Component {
-    id: effectDelegate
-    Item {
-        id: item
-        width: parent.width
-        height: 40
+Item {
+    id: item
+    width: parent.width
+    height: 40
+    signal changed()
+    property alias checked: effectStatusCheckBox.checked
 
-        Rectangle {
-            id: background
-            color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
-            anchors.fill : parent
+    Rectangle {
+        id: background
+        color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
+        anchors.fill : parent
 
-            RowLayout {
-                id: rowEffect
-                anchors.fill: parent
-                CheckBox {
-                    function isDesktopSwitching() {
-                        if (model.ServiceNameRole == "kwin4_effect_slide") {
-                            return true;
-                        } else if (model.ServiceNameRole == "kwin4_effect_fadedesktop") {
-                            return true;
-                        } else if (model.ServiceNameRole == "kwin4_effect_cubeslide") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    }
-                    function isWindowManagementEnabled() {
-                        if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
-                            windowManagementEnabled = effectStatusCheckBox.checked;
-                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                        } else if (model.ServiceNameRole == "kwin4_effect_desktopgrid") {
-                            windowManagementEnabled = effectStatusCheckBox.checked;
-                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                        } else if (model.ServiceNameRole == "kwin4_effect_presentwindows") {
-                            windowManagementEnabled = effectStatusCheckBox.checked;
-                            return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                        }
-                        return windowManagementEnabled;
-                    }
-
-                    id: effectStatusCheckBox
-                    property bool windowManagementEnabled;
-                    checked: model.EffectStatusRole
-                    exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
-                    onClicked: {
-                        apply.enabled = true;
-                    }
-
-                    onCheckedChanged: {
-                        windowManagement.checked = isWindowManagementEnabled();
-                        searchModel.effectState(index, checked);
+        RowLayout {
+            id: rowEffect
+            anchors.fill: parent
+            CheckBox {
+                function isDesktopSwitching() {
+                    if (model.ServiceNameRole == "kwin4_effect_slide") {
+                        return true;
+                    } else if (model.ServiceNameRole == "kwin4_effect_fadedesktop") {
+                        return true;
+                    } else if (model.ServiceNameRole == "kwin4_effect_cubeslide") {
+                        return true;
+                    } else {
+                        return false;
                     }
                 }
+                function isWindowManagementEnabled() {
+                    if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
+                        windowManagementEnabled = effectStatusCheckBox.checked;
+                        return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
+                    } else if (model.ServiceNameRole == "kwin4_effect_desktopgrid") {
+                        windowManagementEnabled = effectStatusCheckBox.checked;
+                        return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
+                    } else if (model.ServiceNameRole == "kwin4_effect_presentwindows") {
+                        windowManagementEnabled = effectStatusCheckBox.checked;
+                        return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
+                    }
+                    return windowManagementEnabled;
+                }
 
-                Item {
-                    id: effectItem
-                    width: effectView.width - effectStatusCheckBox.width - aboutButton.width - configureButton.width
-                    height: 40
-                    anchors.left: effectStatusCheckBox.right
-                    Column {
-                        id: col
-                        Text {
-                            text: model.NameRole
-                        }
-                        Text {
-                            id: desc
-                            function wrapDescription() {
-                                if (wrapMode == Text.NoWrap) {
-                                    wrapMode = Text.WordWrap;
-                                    elide = Text.ElideNone;
-                                } else {
-                                    wrapMode = Text.NoWrap;
-                                    elide = Text.ElideRight;
-                                }
+                id: effectStatusCheckBox
+                property bool windowManagementEnabled;
+                checked: model.EffectStatusRole
+                exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
+
+                onCheckedChanged: item.changed()
+            }
+
+            Item {
+                id: effectItem
+                width: effectView.width - effectStatusCheckBox.width - aboutButton.width - configureButton.width
+                height: 40
+                anchors.left: effectStatusCheckBox.right
+                Column {
+                    id: col
+                    Text {
+                        text: model.NameRole
+                    }
+                    Text {
+                        id: desc
+                        function wrapDescription() {
+                            if (wrapMode == Text.NoWrap) {
+                                wrapMode = Text.WordWrap;
+                                elide = Text.ElideNone;
+                            } else {
+                                wrapMode = Text.NoWrap;
+                                elide = Text.ElideRight;
                             }
-                            text: model.DescriptionRole
-                            width: effectView.width - 100
-                            elide: Text.ElideRight
                         }
-                        Item {
-                            id:aboutItem
-                            anchors.top: desc.bottom
-                            anchors.topMargin: 20
-                            visible: false
-
-                            Text {
-                                text: "Author: " + model.AuthorNameRole + "\n" + "License: " + model.LicenseRole
-                                font.bold: true
-                            }
-                            PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
-                            PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ?  item.height + 100 : 40}
-                        }
+                        text: model.DescriptionRole
+                        width: effectView.width - 100
+                        elide: Text.ElideRight
                     }
-                    MouseArea {
-                        id: area
-                        width: effectView.width - effectStatusCheckBox.width
-                        height: effectView.height
-                        onClicked: {
-                            effectView.currentIndex = index;
+                    Item {
+                        id:aboutItem
+                        anchors.top: desc.bottom
+                        anchors.topMargin: 20
+                        visible: false
+
+                        Text {
+                            text: "Author: " + model.AuthorNameRole + "\n" + "License: " + model.LicenseRole
+                            font.bold: true
                         }
+                        PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
+                        PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ?  item.height + 100 : 40}
                     }
                 }
-
-                Button {
-                    id: configureButton
-                    anchors.right: aboutButton.left
-                    visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                    enabled: effectStatusCheckBox.checked
-                    iconName: "configure"
+                MouseArea {
+                    id: area
+                    width: effectView.width - effectStatusCheckBox.width
+                    height: effectView.height
                     onClicked: {
-                        effectConfig.openConfig(model.NameRole);
+                        effectView.currentIndex = index;
                     }
                 }
+            }
 
-                Button {
-                    id: aboutButton
-                    anchors.right: parent.right
-                    iconName: "dialog-information"
-                    onClicked: {
-                        animationAbout.running = true;
-                        animationAboutSpacing.running = true;
-                        desc.wrapDescription();
-                    }
+            Button {
+                id: configureButton
+                anchors.right: aboutButton.left
+                visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
+                enabled: effectStatusCheckBox.checked
+                iconName: "configure"
+                onClicked: {
+                    effectConfig.openConfig(model.NameRole);
                 }
+            }
 
-                EffectConfig {
-                    id: effectConfig
+            Button {
+                id: aboutButton
+                anchors.right: parent.right
+                iconName: "dialog-information"
+                onClicked: {
+                    animationAbout.running = true;
+                    animationAboutSpacing.running = true;
+                    desc.wrapDescription();
                 }
+            }
 
-            } //end Row
-        } //end Rectangle
-    } //end item
-}
+            EffectConfig {
+                id: effectConfig
+            }
+
+        } //end Row
+    } //end Rectangle
+} //end item
 
