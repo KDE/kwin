@@ -1,7 +1,7 @@
 
 cmake_minimum_required(VERSION 2.8.10.1)
 
-project(kwineffects)
+project(kwin-compositing-kcm)
 
 ################# Disallow in-source build #################
 
@@ -26,8 +26,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings)
 
 find_package(Qt5Core REQUIRED NO_MODULE)
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Quick X11Extras Svg Test PrintSupport)
-find_package(KCoreAddons REQUIRED NO_MODULE)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS DBus Quick Test Widgets)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++0x)
 
@@ -42,35 +41,17 @@ set (QT_MIN_VERSION "5.2.0")
 
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
-find_package(KF5 CONFIG REQUIRED COMPONENTS
-                                            KIdleTime ItemModels KWidgetsAddons KWindowSystem KCodecs KArchive KCoreAddons Solid ThreadWeaver
-                                            KConfig KAuth KJS KWallet KDBusAddons Sonnet
-                                            KI18n KGuiAddons KService KConfigWidgets ItemViews KNotifications KIconThemes KStyle KCompletion KJobWidgets KTextWidgets XmlGui KCrash
-                                            KUnitConversion KBookmarks Kross KParts KCMUtils)
+find_package(KF5 CONFIG REQUIRED COMPONENTS KCoreAddons KConfig KI18n KService XmlGui KCMUtils)
 
-
-find_package(KIO REQUIRED NO_MODULE)
-find_package(KDE4Support REQUIRED NO_MODULE)
-find_package(KDELibs4 REQUIRED NO_MODULE)
 
 find_package(KDeclarative REQUIRED NO_MODULE)
-find_package(LibAttica REQUIRED NO_MODULE)
 
 #########################################################################
 
-#add_definitions(${KDE4_DEFINITIONS})
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
-remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY -DQT_NO_KEYWORDS)
-
-################# setup the include directories #################
-include_directories(${KDE4_INCLUDES}
-                    ${kdeqt5staging_INCLUDE_DIR}
-                    ${kdeqt5staging_INCLUDE_DIRS}
-                    ${KF5_INCLUDE_DIRS}  # since e-c-m 0.0.7
-                    ${Qt5Widgets_INCLUDE_DIRS}
-                    ${KDECLARATIVE_INCLUDE_DIRS})
+remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
 
 ################# configure checks and create the configured files #################
 
@@ -90,19 +71,17 @@ set(kwincomposing_SRC
 add_executable(kwincompositing ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
-    ${Qt5Quick_LIBRARIES}
-    ${Qt5Qml_LIBRARIES}
-    ${Qt5Core_LIBARIES}
-    ${kservice_LIBRARIES}
+    Qt5::Quick
     Qt5::DBus
+    Qt5::Widgets
+    KF5::KCoreAddons
+    KF5::KConfigCore
+    KF5::KDeclarative
     KF5::KI18n
     KF5::KService
     KF5::KCMUtils
     KF5::KDeclarative
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5Test_LIBRARIES}
-    ${KCoreAddons_LIBRARIES}
-    ${KDECLARATIVE_LIBRARIES})
+)
 
 
 set(modelTest_SRC
@@ -115,19 +94,17 @@ set(modelTest_SRC
 add_executable(effectModelTest ${modelTest_SRC})
 
 target_link_libraries(effectModelTest
-    ${Qt5Quick_LIBRARIES}
-    ${Qt5Qml_LIBRARIES}
-    ${Qt5Core_LIBARIES}
-    ${kservice_LIBRARIES}
+    Qt5::Quick
     Qt5::DBus
+    Qt5::Test
+    Qt5::Widgets
+    KF5::KCoreAddons
+    KF5::KConfigCore
+    KF5::KDeclarative
     KF5::KI18n
     KF5::KService
     KF5::KCMUtils
-    KF5::KDeclarative
-    ${Qt5Widgets_LIBRARIES}
-    ${Qt5Test_LIBRARIES}
-    ${KCoreAddons_LIBRARIES}
-    ${KDECLARATIVE_LIBRARIES})
+    KF5::KDeclarative)
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing ${INSTALL_TARGETS_DEFAULT_ARGS})

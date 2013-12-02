@@ -23,7 +23,7 @@
 #include "model.h"
 #include <QApplication>
 
-#include <KAboutData>
+#include <kaboutdata.h>
 #include <klocalizedstring.h>
 #include <kdeclarative/kdeclarative.h>
 

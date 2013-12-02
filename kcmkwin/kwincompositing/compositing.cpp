@@ -21,7 +21,7 @@
 #include "compositing.h"
 
 #include <KDE/KCModuleProxy>
-#include <KConfigGroup>
+#include <kconfiggroup.h>
 #include <klocalizedstring.h>
 #include <KDE/KSharedConfig>
 
