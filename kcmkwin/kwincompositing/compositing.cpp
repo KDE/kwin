@@ -77,13 +77,13 @@ int Compositing::windowThumbnail() const
     return kwinConfig.readEntry("HiddenPreviews", 5) - 4;
 }
 
-int Compositing::glSclaleFilter() const
+int Compositing::glScaleFilter() const
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     return kwinConfig.readEntry("GLTextureFilter", 2);
 }
 
-bool Compositing::xrSclaleFilter() const
+bool Compositing::xrScaleFilter() const
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
     return kwinConfig.readEntry("XRenderSmoothScale", false);

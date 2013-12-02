@@ -34,8 +34,8 @@ class Compositing : public QObject
     Q_OBJECT
     Q_PROPERTY(int animationSpeed READ animationSpeed CONSTANT);
     Q_PROPERTY(int windowThumbnail READ windowThumbnail CONSTANT);
-    Q_PROPERTY(int glSclaleFilter READ glSclaleFilter CONSTANT);
-    Q_PROPERTY(bool xrSclaleFilter READ xrSclaleFilter CONSTANT);
+    Q_PROPERTY(int glScaleFilter READ glScaleFilter CONSTANT);
+    Q_PROPERTY(bool xrScaleFilter READ xrScaleFilter CONSTANT);
     Q_PROPERTY(bool unredirectFullscreen READ unredirectFullscreen CONSTANT);
     Q_PROPERTY(int glSwapStrategy READ glSwapStrategy CONSTANT);
     Q_PROPERTY(bool glColorCorrection READ glColorCorrection CONSTANT);
@@ -46,8 +46,8 @@ public:
     Q_INVOKABLE bool OpenGLIsBroken();
     int animationSpeed() const;
     int windowThumbnail() const;
-    int glSclaleFilter() const;
-    bool xrSclaleFilter() const;
+    int glScaleFilter() const;
+    bool xrScaleFilter() const;
     bool unredirectFullscreen() const;
     int glSwapStrategy() const;
     bool glColorCorrection() const;
