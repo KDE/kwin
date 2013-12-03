@@ -63,6 +63,7 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     roleNames[CategoryRole] = "CategoryRole";
     roleNames[ServiceNameRole] = "ServiceNameRole";
     roleNames[EffectStatusRole] = "EffectStatusRole";
+    roleNames[VideoRole] = "VideoRole";
     return roleNames;
 }
 
@@ -123,6 +124,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).serviceName;
         case EffectStatusRole:
             return m_effectsList.at(index.row()).effectStatus;
+        case VideoRole:
+            return m_effectsList.at(index.row()).video;
         default:
             return QVariant();
     }
@@ -179,6 +182,7 @@ void EffectModel::loadEffects()
         effect.serviceName = plugin.pluginName();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault());
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
+        effect.video = service->property(QStringLiteral("X-KWin-Video-Url"), QVariant::Url).toUrl();
 
         m_effectsList << effect;
     }

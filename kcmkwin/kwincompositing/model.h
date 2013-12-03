@@ -45,6 +45,7 @@ struct EffectData {
     QString serviceName;
     bool effectStatus;
     bool enabledByDefault;
+    QUrl video;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -63,7 +64,8 @@ public:
         CategoryRole,
         ServiceNameRole,
         EffectStatusRole,
-        WindowManagementRole
+        WindowManagementRole,
+        VideoRole
     };
 
     explicit EffectModel(QObject *parent = 0);
