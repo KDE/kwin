@@ -97,3 +97,6 @@ Type=bool
 
 [PropertyDef::X-KWin-Requires-Shaders]
 Type=bool
+
+[PropertyDef::X-KWin-Video-Url]
+Type=Url
