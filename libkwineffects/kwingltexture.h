@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLTEXTURE_H
 #define KWIN_GLTEXTURE_H
 
-#include <kwineffects_export.h>
+#include <kwinglutils_export.h>
 
 #include <QSize>
 #include <QRegion>
@@ -47,7 +47,7 @@ enum TextureCoordinateType {
     UnnormalizedCoordinates
 };
 
-class KWINEFFECTS_EXPORT GLTexture
+class KWINGLUTILS_EXPORT GLTexture
 {
 public:
     GLTexture();

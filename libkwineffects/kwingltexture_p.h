@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLTEXTURE_P_H
 
 #include "kwinconfig.h" // KWIN_HAVE_OPENGL
-#include <kwineffects_export.h>
+#include <kwinglutils_export.h>
 
 #include <QSize>
 #include <QSharedData>
@@ -35,7 +35,7 @@ namespace KWin
 // forward declarations
 class GLVertexBuffer;
 
-class KWINEFFECTS_EXPORT GLTexturePrivate
+class KWINGLUTILS_EXPORT GLTexturePrivate
     : public QSharedData
 {
 public:

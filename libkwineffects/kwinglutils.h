@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_GLUTILS_H
 
 // kwin
-#include <kwineffects_export.h>
+#include <kwinglutils_export.h>
 #include "kwinglutils_funcs.h"
 #include "kwingltexture.h"
 
@@ -50,30 +50,30 @@ class GLVertexBufferPrivate;
 
 
 // Initializes GLX function pointers
-void KWINEFFECTS_EXPORT initGLX();
+void KWINGLUTILS_EXPORT initGLX();
 // Initializes OpenGL stuff. This includes resolving function pointers as
 //  well as checking for GL version and extensions
 //  Note that GL context has to be created by the time this function is called
-void KWINEFFECTS_EXPORT initGL(OpenGLPlatformInterface platformInterface);
+void KWINGLUTILS_EXPORT initGL(OpenGLPlatformInterface platformInterface);
 // Initializes EGL function pointers
-void KWINEFFECTS_EXPORT initEGL();
+void KWINGLUTILS_EXPORT initEGL();
 // Cleans up all resources hold by the GL Context
-void KWINEFFECTS_EXPORT cleanupGL();
+void KWINGLUTILS_EXPORT cleanupGL();
 
 // Number of supported texture units
-extern KWINEFFECTS_EXPORT int glTextureUnitsCount;
+extern KWINGLUTILS_EXPORT int glTextureUnitsCount;
 
 
-bool KWINEFFECTS_EXPORT hasGLVersion(int major, int minor, int release = 0);
-bool KWINEFFECTS_EXPORT hasGLXVersion(int major, int minor, int release = 0);
-bool KWINEFFECTS_EXPORT hasEGLVersion(int major, int minor, int release = 0);
+bool KWINGLUTILS_EXPORT hasGLVersion(int major, int minor, int release = 0);
+bool KWINGLUTILS_EXPORT hasGLXVersion(int major, int minor, int release = 0);
+bool KWINGLUTILS_EXPORT hasEGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
-bool KWINEFFECTS_EXPORT hasGLExtension(const QString& extension);
+bool KWINGLUTILS_EXPORT hasGLExtension(const QString& extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
-bool KWINEFFECTS_EXPORT checkGLError(const char* txt);
+bool KWINGLUTILS_EXPORT checkGLError(const char* txt);
 
-inline bool KWINEFFECTS_EXPORT isPowerOfTwo(int x)
+inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
 {
     return ((x & (x - 1)) == 0);
 }
@@ -81,7 +81,7 @@ inline bool KWINEFFECTS_EXPORT isPowerOfTwo(int x)
  * @return power of two integer _greater or equal to_ x.
  *  E.g. nearestPowerOfTwo(513) = nearestPowerOfTwo(800) = 1024
  **/
-int KWINEFFECTS_EXPORT nearestPowerOfTwo(int x);
+int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
 
 /**
  * Push a new matrix on the GL matrix stack.
@@ -89,7 +89,7 @@ int KWINEFFECTS_EXPORT nearestPowerOfTwo(int x);
  * as it also handles GLES.
  * @since 4.7
  **/
-KWINEFFECTS_EXPORT void pushMatrix();
+KWINGLUTILS_EXPORT void pushMatrix();
 /**
  * Multiplies current matrix on GL stack with @p matrix and pushes the result on the matrix stack.
  * This method is the same as pushMatrix followed by multiplyMatrix.
@@ -100,7 +100,7 @@ KWINEFFECTS_EXPORT void pushMatrix();
  * @see multiplyMatrix
  * @since 4.7
  **/
-KWINEFFECTS_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
+KWINGLUTILS_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
 /**
  * Multiplies the current matrix on GL stack with @p matrix.
  * In GLES this method is a noop. This method should be preferred over glMultMatrix
@@ -108,7 +108,7 @@ KWINEFFECTS_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
  * @param matrix The matrix the current matrix on the stack should be multiplied with.
  * @since 4.7
  **/
-KWINEFFECTS_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
+KWINGLUTILS_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
 /**
  * Replaces the current matrix on GL stack with @p matrix.
  * In GLES this method is a no-op. This method should be preferred over glLoadMatrix
@@ -116,16 +116,16 @@ KWINEFFECTS_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
  * @param matrix The new matrix to replace the existing one on the GL stack.
  * @since 4.7
  **/
-KWINEFFECTS_EXPORT void loadMatrix(const QMatrix4x4 &matrix);
+KWINGLUTILS_EXPORT void loadMatrix(const QMatrix4x4 &matrix);
 /**
  * Pops the current matrix from the GL matrix stack.
  * In GLES this method is a noop. This method should be preferred over glPopMatrix
  * as it also handles GLES.
  * @since 4.7
  **/
-KWINEFFECTS_EXPORT void popMatrix();
+KWINGLUTILS_EXPORT void popMatrix();
 
-class KWINEFFECTS_EXPORT GLShader
+class KWINGLUTILS_EXPORT GLShader
 {
 public:
     enum Flags {
@@ -254,7 +254,7 @@ private:
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.7
  **/
-class KWINEFFECTS_EXPORT ShaderManager
+class KWINGLUTILS_EXPORT ShaderManager
 {
 public:
     /**
@@ -438,7 +438,7 @@ private:
  * the code to remove checks for OpenGL 1/2.
  * @since 4.10
  **/
-class KWINEFFECTS_EXPORT ShaderBinder
+class KWINGLUTILS_EXPORT ShaderBinder
 {
 public:
     /**
@@ -516,7 +516,7 @@ GLShader* ShaderBinder::shader()
  *
  * @author Rivo Laks <rivolaks@hot.ee>
  **/
-class KWINEFFECTS_EXPORT GLRenderTarget
+class KWINGLUTILS_EXPORT GLRenderTarget
 {
 public:
     /**
@@ -628,7 +628,7 @@ struct GLVertexAttrib
  * @author Martin Gräßlin <mgraesslin@kde.org>
  * @since 4.6
  */
-class KWINEFFECTS_EXPORT GLVertexBuffer
+class KWINGLUTILS_EXPORT GLVertexBuffer
 {
 public:
     /**

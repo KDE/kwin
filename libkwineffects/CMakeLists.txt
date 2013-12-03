@@ -51,6 +51,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
         include_directories(${OPENGLES_EGL_INCLUDE_DIR})
     endif()
     add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
+    generate_export_header(kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
     target_link_libraries(${name} PUBLIC Qt5::DBus Qt5::X11Extras ${XCB_XCB_LIBRARY})
     if(OPENGL_EGL_FOUND)
        target_link_libraries(${name} PRIVATE ${OPENGLES_EGL_LIBRARY})
@@ -93,6 +94,7 @@ install( FILES
     kwinxrenderutils.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 add_subdirectory(autotests)
