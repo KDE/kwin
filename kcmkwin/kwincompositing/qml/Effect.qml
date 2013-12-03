@@ -23,6 +23,8 @@ import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
+import QtMultimedia 5.0 as Multimedia
+import org.kde.qtextracomponents 2.0 as QtExtra
 
 Item {
     id: item
@@ -82,10 +84,20 @@ Item {
             Item {
                 id: effectItem
                 width: effectView.width - effectStatusCheckBox.width - aboutButton.width - configureButton.width
-                height: 40
+                height: item.height
+                anchors.top: rowEffect.top
                 anchors.left: effectStatusCheckBox.right
+                MouseArea {
+                    id: area
+                    width: effectView.width - effectStatusCheckBox.width
+                    height: effectView.height
+                    onClicked: {
+                        effectView.currentIndex = index;
+                    }
+                }
                 Column {
                     id: col
+                    height: parent.height
                     Text {
                         text: model.NameRole
                     }
@@ -117,17 +129,61 @@ Item {
                         PropertyAnimation {id: animationAbout; target: aboutItem; property: "visible"; to: !aboutItem.visible}
                         PropertyAnimation {id: animationAboutSpacing; target: item; property: "height"; to: item.height == 40 ?  item.height + 100 : 40}
                     }
-                }
-                MouseArea {
-                    id: area
-                    width: effectView.width - effectStatusCheckBox.width
-                    height: effectView.height
-                    onClicked: {
-                        effectView.currentIndex = index;
+                    Multimedia.Video {
+                        id: videoItem
+                        function showHide() {
+                            replayButton.visible = false;
+                            if (videoItem.visible === true) {
+                                videoItem.stop();
+                                videoItem.visible = false;
+                                // TODO: this should be done in a better way
+                                item.height = item.height - 400;
+                            } else {
+                                videoItem.visible = true;
+                                videoItem.play();
+                                item.height = item.height + 400;
+                            }
+                        }
+                        autoLoad: false
+                        source: model.VideoRole
+                        visible: false
+                        width: 400
+                        height: 400
+                        anchors.bottom: parent.bottom
+                        MouseArea {
+                            // it's a mouse area with icon inside to not have an ugly button background
+                            id: replayButton
+                            visible: false
+                            anchors.fill: parent
+                            onClicked: {
+                                replayButton.visible = false;
+                                videoItem.play();
+                            }
+                            QtExtra.QIconItem {
+                                id: replayIcon
+                                anchors.centerIn: parent
+                                width: 16
+                                height: 16
+                                icon: "media-playback-start"
+                            }
+                            Connections {
+                                target: videoItem
+                                onStopped: {
+                                    replayButton.visible = true
+                                }
+                            }
+                        }
                     }
                 }
             }
 
+            Button {
+                id: videoButton
+                anchors.right: effectConfig.effectUiConfigExists(model.ServiceNameRole) ? configureButton.left : aboutButton.left
+                visible: model.VideoRole.toString() !== ""
+                iconName: "video"
+                onClicked: videoItem.showHide()
+            }
             Button {
                 id: configureButton
                 anchors.right: aboutButton.left
