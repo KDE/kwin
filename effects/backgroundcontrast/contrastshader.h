@@ -44,6 +44,8 @@ public:
     int strength() const {
         return mStrength;
     }
+    
+    virtual void setColorMatrix(const QMatrix4x4 &matrix) = 0;
 
     virtual void setTextureMatrix(const QMatrix4x4 &matrix) = 0;
     virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
@@ -77,6 +79,7 @@ public:
 
     void bind();
     void unbind();
+    void setColorMatrix(const QMatrix4x4 &matrix);
     void setTextureMatrix(const QMatrix4x4 &matrix);
     void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
 
@@ -90,6 +93,7 @@ private:
     GLShader *shader;
     int mvpMatrixLocation;
     int textureMatrixLocation;
+    int colorMatrixLocation;
     int pixelSizeLocation;
 };
 

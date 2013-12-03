@@ -35,7 +35,6 @@ class ContrastShader;
 class ContrastEffect : public KWin::Effect
 {
     Q_OBJECT
-    Q_PROPERTY(bool cacheTexture READ isCacheTexture)
 public:
     ContrastEffect();
     ~ContrastEffect();
@@ -49,16 +48,10 @@ public:
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
-    // for dynamic setting extraction
-    bool isCacheTexture() const {
-        return m_shouldCache;
-    }
     virtual bool provides(Feature feature);
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
-    void slotWindowDeleted(KWin::EffectWindow *w);
-    void slotPropertyNotify(KWin::EffectWindow *w, long atom);
     void slotScreenGeometryChanged();
 
 private:
@@ -66,35 +59,21 @@ private:
     bool shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const;
     void updateContrastRegion(EffectWindow *w) const;
     void doContrast(const QRegion &shape, const QRect &screen, const float opacity);
-    void doCachedContrast(EffectWindow *w, const QRegion& region, const float opacity);
     void uploadRegion(QVector2D *&map, const QRegion &region);
-    void uploadGeometry(GLVertexBuffer *vbo, const QRegion &horizontal, const QRegion &vertical);
+    void uploadGeometry(GLVertexBuffer *vbo, const QRegion &region);
 
 private:
     ContrastShader *shader;
-    GLRenderTarget *target;
-    GLTexture tex;
-    long net_wm_blur_region;
+    long net_wm_contrast_region;
     QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
-    QRegion m_currentBlur; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
-    bool m_shouldCache;
-
-    struct BlurWindowInfo {
-        GLTexture coloredBackground; // keeps the horizontally contrasted background
-        QRegion damagedRegion;
-        QPoint windowPos;
-        bool dropCache;
-    };
-
-    QHash< const EffectWindow*, BlurWindowInfo > windows;
-    typedef QHash<const EffectWindow*, BlurWindowInfo>::iterator CacheEntry;
+    QRegion m_currentContrast; // keeps track of the currently contrasted area of  windows(from bottom to top)
 };
 
 inline
 bool ContrastEffect::provides(Effect::Feature feature)
 {
-    if (feature == Blur) {
+    if (feature == Contrast) {
         return true;
     }
     return KWin::Effect::provides(feature);

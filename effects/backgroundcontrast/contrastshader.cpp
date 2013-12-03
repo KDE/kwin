@@ -115,6 +115,16 @@ bool GLSLContrastShader::supported()
     return true;
 }
 
+void GLSLContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
+{
+    if (!isValid())
+        return;
+
+    ShaderManager::instance()->pushShader(shader);
+    shader->setUniform(colorMatrixLocation, matrix);
+    ShaderManager::instance()->popShader();
+}
+
 void GLSLContrastShader::setTextureMatrix(const QMatrix4x4 &matrix)
 {
     if (!isValid())
@@ -190,6 +200,7 @@ void GLSLContrastShader::init()
     if (glsl_140)
         stream2 << "#version 140\n\n";
 
+    stream2 << "uniform mat4 colorMatrix;\n";
     stream2 << "uniform sampler2D sampler;\n";
     stream2 << "in vec4 varyingTexCoords;\n";
 
@@ -206,7 +217,7 @@ void GLSLContrastShader::init()
                                 0, 0, 0, 1);\n";
 
     
-    stream2 << "    "  << fragColor << " = tex * " << colorMatrix;
+    stream2 << "    "  << fragColor << " = tex * colorMatrix;\n";// << colorMatrix;
     
     stream2 << "}\n";
     stream2.flush();
@@ -214,12 +225,14 @@ void GLSLContrastShader::init()
     shader = ShaderManager::instance()->loadShaderFromCode(vertexSource, fragmentSource);
 
     if (shader->isValid()) {
+        colorMatrixLocation = shader->uniformLocation("colorMatrix");
         textureMatrixLocation = shader->uniformLocation("textureMatrix");
         mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
 
         QMatrix4x4 modelViewProjection;
         modelViewProjection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
         ShaderManager::instance()->pushShader(shader);
+        shader->setUniform(colorMatrixLocation, QMatrix4x4());
         shader->setUniform(textureMatrixLocation, QMatrix4x4());
         shader->setUniform(mvpMatrixLocation, modelViewProjection);
         ShaderManager::instance()->popShader();
