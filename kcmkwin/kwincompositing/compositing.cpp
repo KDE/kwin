@@ -44,6 +44,7 @@ Compositing::Compositing(QObject *parent)
     , m_glSwapStrategy(0)
     , m_glColorCorrection(false)
     , m_compositingType(0)
+    , m_changed(false)
 {
     reset();
     connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
@@ -54,6 +55,10 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
     connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
+
+    connect(this, &Compositing::changed, [this]{
+        m_changed = true;
+    });
 }
 
 void Compositing::reset()
@@ -101,6 +106,7 @@ void Compositing::reset()
         }
     };
     setCompositingType(type());
+    m_changed = false;
 }
 
 void Compositing::defaults()
@@ -113,6 +119,7 @@ void Compositing::defaults()
     setGlSwapStrategy(1);
     setGlColorCorrection(false);
     setCompositingType(CompositingType::OPENGL20_INDEX);
+    m_changed = true;
 }
 
 bool Compositing::OpenGLIsUnsafe() const
@@ -308,6 +315,15 @@ void Compositing::save()
     kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.sync();
+
+    if (m_changed) {
+        // Send signal to all kwin instances
+        QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),
+                                                          QStringLiteral("org.kde.kwin.Compositing"),
+                                                          QStringLiteral("reinit"));
+        QDBusConnection::sessionBus().asyncCall(message);
+        m_changed = false;
+    }
 }
 
 CompositingType::CompositingType(QObject *parent)

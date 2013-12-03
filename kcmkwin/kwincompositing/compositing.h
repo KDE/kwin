@@ -89,6 +89,8 @@ private:
     int m_glSwapStrategy;
     bool m_glColorCorrection;
     int m_compositingType;
+
+    bool m_changed;
 };
 
 
