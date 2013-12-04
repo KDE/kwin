@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 #define KDECORATIONFACTORY_H
 
 #include "kdecoration.h"
+#include <kdecorations_export.h>
 
 /** @addtogroup kdecoration */
 /** @{ */
@@ -34,7 +35,7 @@ class KDecoration;
 class KDecorationBridge;
 class KDecorationFactoryPrivate;
 
-class KWIN_EXPORT KDecorationFactory
+class KDECORATIONS_EXPORT KDecorationFactory
     : public QObject, public KDecorationDefines
 {
     Q_OBJECT

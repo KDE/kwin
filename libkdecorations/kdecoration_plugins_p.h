@@ -36,13 +36,14 @@ DEALINGS IN THE SOFTWARE.
 #include <ksharedconfig.h>
 
 #include "kdecoration.h"
+#include <kdecorations_export.h>
 
 class KLibrary;
 class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;
 
-class KWIN_EXPORT KDecorationPlugins
+class KDECORATIONS_EXPORT KDecorationPlugins
     : public KDecorationProvides
 {
 public:

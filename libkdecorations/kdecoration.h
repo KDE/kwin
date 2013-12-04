@@ -25,7 +25,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef KDECORATION_H
 #define KDECORATION_H
 
-#include <kwinglobals.h>
+#include <kdecorations_export.h>
 
 #include <QtGui/QColor>
 #include <QtGui/QFont>
@@ -43,8 +43,8 @@ DEALINGS IN THE SOFTWARE.
  **/
 #define KWIN_DECORATION( classname ) \
     extern "C" { \
-        KWIN_EXPORT KDecorationFactory* create_factory() { return new classname(); } \
-        KWIN_EXPORT int decoration_version() { return KWIN_DECORATION_API_VERSION; } \
+        KDECORATIONS_EXPORT KDecorationFactory* create_factory() { return new classname(); } \
+        KDECORATIONS_EXPORT int decoration_version() { return KWIN_DECORATION_API_VERSION; } \
     }
 
 #define KWIN_DECORATION_BRIDGE_API_VERSION 1
@@ -69,7 +69,7 @@ class KDecorationFactory;
  * This class provides a namespace for all decoration related classes.
  * All shared types are defined here.
  */
-class KWIN_EXPORT KDecorationDefines
+class KDECORATIONS_EXPORT KDecorationDefines
 {
 public:
     /**
@@ -285,7 +285,7 @@ public:
  * It is accessible from the decorations either as KDecoration::options()
  * or KDecorationFactory::options().
  */
-class KWIN_EXPORT KDecorationOptions : public QObject, public KDecorationDefines
+class KDECORATIONS_EXPORT KDecorationOptions : public QObject, public KDecorationDefines
 {
     Q_OBJECT
 public:
@@ -520,7 +520,7 @@ private:
  * provides pure virtual functions for controlling the decoration that
  * every decoration should implement.
  */
-class KWIN_EXPORT KDecoration
+class KDECORATIONS_EXPORT KDecoration
     : public QObject, public KDecorationDefines
 {
     Q_OBJECT

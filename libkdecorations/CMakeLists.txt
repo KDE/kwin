@@ -8,7 +8,7 @@ set(kdecorations_LIB_SRCS
    kcommondecoration_p.cpp )
 
 add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
-
+generate_export_header(kdecorations EXPORT_FILE_NAME kdecorations_export.h)
 target_link_libraries(kdecorations
     Qt5::Widgets
     Qt5::X11Extras
@@ -30,4 +30,5 @@ install( FILES
     kdecoration.h
     kdecorationfactory.h
     kcommondecoration.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdecorations_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )

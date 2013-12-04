@@ -78,6 +78,7 @@ configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 ########### global ###############
 
 include_directories(BEFORE
+    ${CMAKE_CURRENT_BINARY_DIR}/libkdecorations
     ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/libkwineffects

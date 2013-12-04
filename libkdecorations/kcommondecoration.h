@@ -27,6 +27,7 @@
 
 #include <QAbstractButton>
 #include "kdecoration.h"
+#include <kdecorations_export.h>
 
 /** @addtogroup kdecoration */
 /** @{ */
@@ -65,7 +66,7 @@ class KCommonDecorationWrapper;
  * use the decoration() function.
  * See KDecoration documentation for all the wrapped functions.
  */
-class KWIN_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
+class KDECORATIONS_EXPORT KCommonDecoration : public QObject, public KDecorationDefines
 {
     Q_OBJECT
 
@@ -424,7 +425,7 @@ private:
 /**
  * Title bar buttons of KCommonDecoration need to inherit this class.
  */
-class KWIN_EXPORT KCommonDecorationButton : public QAbstractButton
+class KDECORATIONS_EXPORT KCommonDecorationButton : public QAbstractButton
 {
     Q_OBJECT
 

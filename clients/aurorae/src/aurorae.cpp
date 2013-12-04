@@ -564,10 +564,10 @@ void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
 
 extern "C"
 {
-    KDE_EXPORT KDecorationFactory *create_factory() {
+    KDECORATIONS_EXPORT KDecorationFactory *create_factory() {
         return Aurorae::AuroraeFactory::instance();
     }
-    KWIN_EXPORT int decoration_version() {
+    KDECORATIONS_EXPORT int decoration_version() {
         return KWIN_DECORATION_API_VERSION;
     }
 }
