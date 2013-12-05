@@ -11,7 +11,6 @@ add_library(kdecorations SHARED ${kdecorations_LIB_SRCS})
 generate_export_header(kdecorations EXPORT_FILE_NAME kdecorations_export.h)
 target_link_libraries(kdecorations
     Qt5::Widgets
-    Qt5::X11Extras
     KF5::KConfigCore
     KF5::KI18n
     KF5::KService # KLibrary
