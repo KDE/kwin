@@ -1743,7 +1743,7 @@ namespace Oxygen
             const int shadowSize( shadowCache().shadowSize() );
             const bool drawShadow(
                 compositingActive() &&
-                KStyle::customStyleHint( QStringLiteral("SH_ArgbDndWindow"), widget() ) &&
+                //KStyle::customStyleHint( QStringLiteral("SH_ArgbDndWindow"), widget() ) &&
                 shadowSize > 0 );
 
             if( drawShadow )
