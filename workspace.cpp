@@ -61,7 +61,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include "main.h"
 // KDE
-#include <kdeversion.h>
 #include <KDE/KActionCollection>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
@@ -1422,12 +1421,6 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("=======\n"));
     support.append(QStringLiteral("KWin version: "));
     support.append(QStringLiteral(KWIN_VERSION_STRING));
-    support.append(QStringLiteral("\n"));
-    support.append(QStringLiteral("KDE SC version (runtime): "));
-    support.append(QString::fromUtf8(KDE::versionString()));
-    support.append(QStringLiteral("\n"));
-    support.append(QStringLiteral("KDE SC version (compile): "));
-    support.append(QStringLiteral(KDE_VERSION_STRING));
     support.append(QStringLiteral("\n"));
     support.append(QStringLiteral("Qt Version: "));
     support.append(QString::fromUtf8(qVersion()));

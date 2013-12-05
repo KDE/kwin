@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksmserver_interface.h>
 
 // KDE
-#include <kdeversion.h>
 #include <KDE/KAboutData>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
@@ -373,7 +372,7 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
 
 } // namespace
 
-static const char version[] = KDE_VERSION_STRING;
+static const char version[] = KWIN_VERSION_STRING;
 static const char description[] = I18N_NOOP("KDE window manager");
 
 extern "C"
@@ -463,13 +462,13 @@ KDE_EXPORT int kdemain(int argc, char * argv[])
     KWin::Application a(argc, argv);
 
     a.setApplicationName(QStringLiteral(KWIN_NAME));
-    a.setApplicationVersion(QStringLiteral(KDE_VERSION_STRING));
+    a.setApplicationVersion(QStringLiteral(KWIN_VERSION_STRING));
     a.setApplicationDisplayName(i18n("KWin"));
 
     KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
                          QString(),                          // The message catalog name. If null, program name is used instead
                          i18n("KWin"),                       // A displayable program name string
-                         QStringLiteral(KDE_VERSION_STRING), // The program version string
+                         QStringLiteral(KWIN_VERSION_STRING), // The program version string
                          i18n(description),                  // Short description of what the app does
                          KAboutData::License_GPL,            // The license this code is released under
                          i18n("(c) 1999-2013, The KDE Developers"));   // Copyright Statement
