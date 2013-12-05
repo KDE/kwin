@@ -20,11 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWINDECORATIONCONFIGDIALOG_H
 #define KWINDECORATIONCONFIGDIALOG_H
 #include <QWidget>
-#include <kdialog.h>
+#include <QDialog>
 #include <kdecoration.h>
+#include <KSharedConfig>
 #include "ui_config.h"
 #include "ui_auroraeconfig.h"
 
+class QDialogButtonBox;
 namespace KWin
 {
 
@@ -47,7 +49,7 @@ public:
     explicit KWinDecorationConfigForm(QWidget* parent);
 };
 
-class KWinDecorationConfigDialog : public KDialog, public KDecorationDefines
+class KWinDecorationConfigDialog : public QDialog, public KDecorationDefines
 {
     Q_OBJECT
 public:
@@ -78,6 +80,7 @@ private:
     QObject*(*allocatePlugin)(KConfigGroup& conf, QWidget* parent);
     QObject* m_pluginObject;
     QWidget* m_pluginConfigWidget;
+    QDialogButtonBox* m_buttons;
 };
 
 } // namespace KWin

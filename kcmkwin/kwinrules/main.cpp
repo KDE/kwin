@@ -16,8 +16,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <kcmdlineargs.h>
-#include <kapplication.h>
+#include <QCommandLineParser>
+#include <QApplication>
 #include <kconfig.h>
 #include <KDE/KLocalizedString>
 #include <kwindowsystem.h>
@@ -241,21 +241,26 @@ static int edit(Window wid, bool whole_app)
 extern "C"
 KDE_EXPORT int kdemain(int argc, char* argv[])
 {
-    KCmdLineArgs::init(argc, argv, "kwin_rules_dialog", "kcmkwinrules", ki18n("KWin"), "1.0" ,
-                       ki18n("KWin helper utility"));
-
-    KCmdLineOptions options;
-    options.add("wid <wid>", ki18n("WId of the window for special window settings."));
-    options.add("whole-app", ki18n("Whether the settings should affect all windows of the application."));
-    KCmdLineArgs::addCmdLineOptions(options);
-    KApplication app;
-    KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+    QApplication app(argc, argv);
+    app.setApplicationDisplayName(i18n("KWin"));
+    app.setApplicationName("kwin_rules_dialog");
+    app.setApplicationVersion("1.0");
+    bool whole_app = false;
     bool id_ok = false;
-    Window id = args->getOption("wid").toULongLong(&id_ok);
-    bool whole_app = args->isSet("whole-app");
-    args->clear();
+    Window id = None;
+    {
+        QCommandLineParser parser;
+        parser.setApplicationDescription(i18n("KWin helper utility"));
+        parser.addOption(QCommandLineOption("wid", i18n("WId of the window for special window settings."), "wid"));
+        parser.addOption(QCommandLineOption("whole-app", i18n("Whether the settings should affect all windows of the application.")));
+        parser.process(app);
+
+        id = parser.value("wid").toULongLong(&id_ok);
+        whole_app = parser.isSet("whole-app");
+    }
+
     if (!id_ok || id == None) {
-        KCmdLineArgs::usageError(i18n("This helper utility is not supposed to be called directly."));
+        printf("%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         return 1;
     }
     return KWin::edit(id, whole_app);

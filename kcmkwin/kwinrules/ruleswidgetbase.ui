@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>486</width>
+    <width>584</width>
     <height>588</height>
    </rect>
   </property>
@@ -57,7 +57,7 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="KComboBox" name="wmclass_match">
+        <widget class="QComboBox" name="wmclass_match">
          <item>
           <property name="text">
            <string>Unimportant</string>
@@ -84,7 +84,7 @@
         <widget class="KLineEdit" name="wmclass"/>
        </item>
        <item row="4" column="4">
-        <widget class="KPushButton" name="edit_reg_wmclass">
+        <widget class="QPushButton" name="edit_reg_wmclass">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -147,7 +147,7 @@
         <widget class="KLineEdit" name="role"/>
        </item>
        <item row="6" column="4">
-        <widget class="KPushButton" name="edit_reg_role">
+        <widget class="QPushButton" name="edit_reg_role">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -189,7 +189,7 @@
         </widget>
        </item>
        <item row="10" column="1">
-        <widget class="KComboBox" name="title_match">
+        <widget class="QComboBox" name="title_match">
          <item>
           <property name="text">
            <string>Unimportant</string>
@@ -213,7 +213,7 @@
         </widget>
        </item>
        <item row="10" column="4">
-        <widget class="KPushButton" name="edit_reg_title">
+        <widget class="QPushButton" name="edit_reg_title">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -266,7 +266,7 @@
         </widget>
        </item>
        <item row="11" column="4">
-        <widget class="KPushButton" name="edit_reg_machine">
+        <widget class="QPushButton" name="edit_reg_machine">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -313,7 +313,7 @@
           </spacer>
          </item>
          <item>
-          <widget class="KPushButton" name="detect">
+          <widget class="QPushButton" name="detect">
            <property name="text">
             <string>&amp;Detect Window Properties</string>
            </property>
@@ -497,7 +497,7 @@
         </widget>
        </item>
        <item row="0" column="3">
-        <widget class="KComboBox" name="rule_position">
+        <widget class="QComboBox" name="rule_position">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -534,14 +534,14 @@
         </widget>
        </item>
        <item row="0" column="4">
-        <widget class="KRestrictedLine" name="position">
+        <widget class="QLineEdit" name="position">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="placeholderText">
           <string>x,y</string>
          </property>
-         <property name="validChars">
+         <property name="validChars" stdset="0">
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -554,7 +554,7 @@
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="KComboBox" name="rule_size">
+        <widget class="QComboBox" name="rule_size">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -591,14 +591,14 @@
         </widget>
        </item>
        <item row="1" column="4">
-        <widget class="KRestrictedLine" name="size">
+        <widget class="QLineEdit" name="size">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="placeholderText">
           <string>width,height</string>
          </property>
-         <property name="validChars">
+         <property name="validChars" stdset="0">
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -618,7 +618,7 @@
         </widget>
        </item>
        <item row="3" column="3">
-        <widget class="KComboBox" name="rule_maximizehoriz">
+        <widget class="QComboBox" name="rule_maximizehoriz">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -669,7 +669,7 @@
         </widget>
        </item>
        <item row="4" column="3">
-        <widget class="KComboBox" name="rule_maximizevert">
+        <widget class="QComboBox" name="rule_maximizevert">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -740,7 +740,7 @@
         </widget>
        </item>
        <item row="6" column="3">
-        <widget class="KComboBox" name="rule_desktop">
+        <widget class="QComboBox" name="rule_desktop">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -777,7 +777,7 @@
         </widget>
        </item>
        <item row="6" column="4">
-        <widget class="KComboBox" name="desktop">
+        <widget class="QComboBox" name="desktop">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -804,7 +804,7 @@
         </widget>
        </item>
        <item row="7" column="3">
-        <widget class="KComboBox" name="rule_activity">
+        <widget class="QComboBox" name="rule_activity">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -841,7 +841,7 @@
         </widget>
        </item>
        <item row="7" column="4">
-        <widget class="KComboBox" name="activity">
+        <widget class="QComboBox" name="activity">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -872,7 +872,7 @@
         </widget>
        </item>
        <item row="10" column="3">
-        <widget class="KComboBox" name="rule_fullscreen">
+        <widget class="QComboBox" name="rule_fullscreen">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -923,7 +923,7 @@
         </widget>
        </item>
        <item row="11" column="3">
-        <widget class="KComboBox" name="rule_minimize">
+        <widget class="QComboBox" name="rule_minimize">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -974,7 +974,7 @@
         </widget>
        </item>
        <item row="12" column="3">
-        <widget class="KComboBox" name="rule_shade">
+        <widget class="QComboBox" name="rule_shade">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1025,7 +1025,7 @@
         </widget>
        </item>
        <item row="14" column="3" rowspan="2">
-        <widget class="KComboBox" name="rule_placement">
+        <widget class="QComboBox" name="rule_placement">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1047,7 +1047,7 @@
         </widget>
        </item>
        <item row="14" column="4" rowspan="2">
-        <widget class="KComboBox" name="placement">
+        <widget class="QComboBox" name="placement">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1127,7 +1127,7 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="16" column="3">
-        <widget class="KComboBox" name="rule_ignoregeometry">
+        <widget class="QComboBox" name="rule_ignoregeometry">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1178,7 +1178,7 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="18" column="3" rowspan="2">
-        <widget class="KComboBox" name="rule_minsize">
+        <widget class="QComboBox" name="rule_minsize">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1207,14 +1207,14 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="19" column="4">
-        <widget class="KRestrictedLine" name="minsize">
+        <widget class="QLineEdit" name="minsize">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="placeholderText">
           <string>width,height</string>
          </property>
-         <property name="validChars">
+         <property name="validChars" stdset="0">
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -1227,7 +1227,7 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="20" column="3">
-        <widget class="KComboBox" name="rule_maxsize">
+        <widget class="QComboBox" name="rule_maxsize">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1249,14 +1249,14 @@ to unconditionally popup in the middle of your screen.</string>
         </widget>
        </item>
        <item row="20" column="4">
-        <widget class="KRestrictedLine" name="maxsize">
+        <widget class="QLineEdit" name="maxsize">
          <property name="enabled">
           <bool>false</bool>
          </property>
          <property name="placeholderText">
           <string>width,height</string>
          </property>
-         <property name="validChars">
+         <property name="validChars" stdset="0">
           <string>0123456789-+,xX:</string>
          </property>
         </widget>
@@ -1282,7 +1282,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="21" column="3">
-        <widget class="KComboBox" name="rule_strictgeometry">
+        <widget class="QComboBox" name="rule_strictgeometry">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1327,7 +1327,7 @@ like your complete screen area.</string>
         </spacer>
        </item>
        <item row="8" column="3">
-        <widget class="KComboBox" name="rule_screen">
+        <widget class="QComboBox" name="rule_screen">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1378,7 +1378,7 @@ like your complete screen area.</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_4">
        <item row="1" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_below">
+        <widget class="QComboBox" name="rule_below">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1425,7 +1425,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="16" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_shortcut">
+        <widget class="QComboBox" name="rule_shortcut">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1526,7 +1526,7 @@ like your complete screen area.</string>
         </spacer>
        </item>
        <item row="5" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_autogroup">
+        <widget class="QComboBox" name="rule_autogroup">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1548,7 +1548,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="13" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_skippager">
+        <widget class="QComboBox" name="rule_skippager">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1632,7 +1632,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="14" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_skipswitcher">
+        <widget class="QComboBox" name="rule_skipswitcher">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1669,7 +1669,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="12" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_skiptaskbar">
+        <widget class="QComboBox" name="rule_skiptaskbar">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1706,7 +1706,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="16" column="4" colspan="2">
-        <widget class="KRestrictedLine" name="shortcut">
+        <widget class="QLineEdit" name="shortcut">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1747,7 +1747,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="6" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_autogroupfg">
+        <widget class="QComboBox" name="rule_autogroupfg">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1803,7 +1803,7 @@ like your complete screen area.</string>
         </spacer>
        </item>
        <item row="7" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_autogroupid">
+        <widget class="QComboBox" name="rule_autogroupid">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1852,7 +1852,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="0" column="2" colspan="2">
-        <widget class="KComboBox" name="rule_above">
+        <widget class="QComboBox" name="rule_above">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1910,7 +1910,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="3" column="2" rowspan="2" colspan="3">
-        <widget class="KComboBox" name="rule_opacityactive">
+        <widget class="QComboBox" name="rule_opacityactive">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -1946,7 +1946,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="0" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_noborder">
+        <widget class="QComboBox" name="rule_noborder">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2033,7 +2033,7 @@ like your complete screen area.</string>
         </widget>
        </item>
        <item row="5" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_opacityinactive">
+        <widget class="QComboBox" name="rule_opacityinactive">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2099,7 +2099,7 @@ from getting focused on a mouse click.</string>
         </widget>
        </item>
        <item row="11" column="2" rowspan="2" colspan="3">
-        <widget class="KComboBox" name="rule_acceptfocus">
+        <widget class="QComboBox" name="rule_acceptfocus">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2148,7 +2148,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="13" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_disableglobalshortcuts">
+        <widget class="QComboBox" name="rule_disableglobalshortcuts">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2198,7 +2198,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="19" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_type">
+        <widget class="QComboBox" name="rule_type">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2220,7 +2220,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="19" column="5" colspan="2">
-        <widget class="KComboBox" name="type">
+        <widget class="QComboBox" name="type">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2342,7 +2342,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="17" column="2" rowspan="2" colspan="3">
-        <widget class="KComboBox" name="rule_closeable">
+        <widget class="QComboBox" name="rule_closeable">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2396,7 +2396,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="23" column="2" rowspan="2" colspan="3">
-        <widget class="KComboBox" name="rule_blockcompositing">
+        <widget class="QComboBox" name="rule_blockcompositing">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2418,7 +2418,7 @@ while it's active!</string>
         </widget>
        </item>
        <item row="10" column="2" colspan="3">
-        <widget class="KComboBox" name="rule_fsplevel">
+        <widget class="QComboBox" name="rule_fsplevel">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2461,14 +2461,14 @@ but this may sometimes fail or superact.
         </widget>
        </item>
        <item row="1" column="5" colspan="2">
-        <widget class="KComboBox" name="decocolor">
+        <widget class="QComboBox" name="decocolor">
          <property name="enabled">
           <bool>false</bool>
          </property>
         </widget>
        </item>
        <item row="1" column="3">
-        <widget class="KComboBox" name="rule_decocolor">
+        <widget class="QComboBox" name="rule_decocolor">
          <property name="enabled">
           <bool>false</bool>
          </property>
@@ -2496,16 +2496,6 @@ but this may sometimes fail or superact.
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KRestrictedLine</class>
-   <extends>KLineEdit</extends>
-   <header>krestrictedline.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
   <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>

@@ -11,28 +11,37 @@
    </rect>
   </property>
   <layout class="QGridLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item row="0" column="0" rowspan="14">
-    <widget class="KListWidget" name="rules_listbox"/>
+    <widget class="QListWidget" name="rules_listbox"/>
    </item>
    <item row="0" column="1">
-    <widget class="KPushButton" name="new_button">
+    <widget class="QPushButton" name="new_button">
      <property name="text">
       <string>&amp;New...</string>
      </property>
     </widget>
    </item>
    <item row="3" column="1">
-    <widget class="KPushButton" name="modify_button">
+    <widget class="QPushButton" name="modify_button">
      <property name="text">
       <string>&amp;Modify...</string>
      </property>
     </widget>
    </item>
    <item row="6" column="1">
-    <widget class="KPushButton" name="delete_button">
+    <widget class="QPushButton" name="delete_button">
      <property name="text">
       <string>Delete</string>
      </property>
@@ -42,14 +51,14 @@
     </widget>
    </item>
    <item row="8" column="1">
-    <widget class="KPushButton" name="moveup_button">
+    <widget class="QPushButton" name="moveup_button">
      <property name="text">
       <string>Move &amp;Up</string>
      </property>
     </widget>
    </item>
    <item row="9" column="1">
-    <widget class="KPushButton" name="movedown_button">
+    <widget class="QPushButton" name="movedown_button">
      <property name="text">
       <string>Move &amp;Down</string>
      </property>
@@ -108,18 +117,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
- </customwidgets>
  <includes>
   <include location="local">kdialog.h</include>
  </includes>

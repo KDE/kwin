@@ -32,7 +32,6 @@ target_link_libraries(kcm_kwintabbox
     KF5::Plasma
     KF5::XmlGui
     KF5::KNewStuff
-    KF5::KDE4Support
     ${XCB_XCB_LIBRARY})
 
 install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )

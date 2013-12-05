@@ -13,7 +13,6 @@ target_link_libraries(kcm_kwindesktop
     KF5::KI18n
     KF5::KWindowSystem
     KF5::XmlGui
-    KF5::KDE4Support
     ${X11_LIBRARIES}
 )
 

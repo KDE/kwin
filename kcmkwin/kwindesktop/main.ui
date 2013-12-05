@@ -11,7 +11,16 @@
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -50,7 +59,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="KIntSpinBox" name="numberSpinBox">
+           <widget class="QSpinBox" name="numberSpinBox">
             <property name="whatsThis">
              <string>Here you can set how many virtual desktops you want on your KDE desktop.</string>
             </property>
@@ -79,7 +88,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="KIntSpinBox" name="rowsSpinBox">
+           <widget class="QSpinBox" name="rowsSpinBox">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -169,7 +178,7 @@
           <item row="0" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
-             <widget class="KComboBox" name="effectComboBox">
+             <widget class="QComboBox" name="effectComboBox">
               <property name="sizePolicy">
                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -179,7 +188,7 @@
              </widget>
             </item>
             <item>
-             <widget class="KPushButton" name="effectConfigButton">
+             <widget class="QPushButton" name="effectConfigButton">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -189,7 +198,7 @@
              </widget>
             </item>
             <item>
-             <widget class="KPushButton" name="effectInfoButton"/>
+             <widget class="QPushButton" name="effectInfoButton"/>
             </item>
            </layout>
           </item>
@@ -225,7 +234,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="KIntSpinBox" name="popupHideSpinBox">
+           <widget class="QSpinBox" name="popupHideSpinBox">
             <property name="suffix">
              <string> msec</string>
             </property>
@@ -286,21 +295,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KIntSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>knuminput.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
   <customwidget>
    <class>KWin::DesktopNamesWidget</class>
    <extends>QWidget</extends>

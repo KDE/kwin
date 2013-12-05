@@ -20,7 +20,7 @@
 #ifndef __DETECTWIDGET_H__
 #define __DETECTWIDGET_H__
 
-#include <KDialog>
+#include <QDialog>
 #include <kwindowsystem.h>
 #include <QAbstractNativeEventFilter>
 
@@ -43,7 +43,7 @@ public:
 };
 
 class DetectDialog
-    : public KDialog, public QAbstractNativeEventFilter
+    : public QDialog, public QAbstractNativeEventFilter
 {
     Q_OBJECT
 public:
@@ -76,7 +76,7 @@ private:
     QByteArray extrarole;
     QByteArray machine;
     DetectWidget* widget;
-    QScopedPointer<KDialog> grabber;
+    QScopedPointer<QDialog> grabber;
     KWindowInfo info;
 };
 

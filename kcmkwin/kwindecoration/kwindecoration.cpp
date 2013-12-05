@@ -367,12 +367,17 @@ void KWinDecorationModule::slotConfigureDecoration()
     bool reload = false;
     if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::AuroraeDecoration ||
         index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
-        QPointer< KDialog > dlg = new KDialog(this);
-        dlg->setCaption(i18n("Decoration Options"));
-        dlg->setButtons(KDialog::Ok | KDialog::Cancel);
+        QPointer<QDialog> dlg = new QDialog(this);
+        dlg->setWindowTitle(i18n("Decoration Options"));
         KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm(dlg);
         form->enableNoSideBorderSupport(index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration);
-        dlg->setMainWidget(form);
+        setLayout(new QVBoxLayout);
+        QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, dlg.data());
+        connect(buttons, SIGNAL(accepted()), dlg, SLOT(accept()));
+        connect(buttons, SIGNAL(rejected()), dlg, SLOT(reject()));
+        layout()->addWidget(form);
+        layout()->addWidget(buttons);
+
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
         form->closeWindowsDoubleClick->setChecked(index.data(DecorationModel::CloseOnDblClickRole).toBool());
@@ -400,7 +405,7 @@ void KWinDecorationModule::slotConfigureDecoration()
                 configManager->updateWidgets();
             }
         }
-        if (dlg->exec() == KDialog::Accepted) {
+        if (dlg->exec() == QDialog::Accepted) {
             m_model->setData(index, form->borderSizesCombo->currentIndex(), DecorationModel::BorderSizeRole);
             m_model->setData(index, form->buttonSizesCombo->currentIndex(), DecorationModel::ButtonSizeRole);
             m_model->setData(index, form->closeWindowsDoubleClick->isChecked(), DecorationModel::CloseOnDblClickRole);
@@ -419,7 +424,7 @@ void KWinDecorationModule::slotConfigureDecoration()
             static_cast<KDecorationDefines::BorderSize>(index.data(DecorationModel::BorderSizeRole).toInt());
         QPointer< KWinDecorationConfigDialog > configDialog =
             new KWinDecorationConfigDialog(name, borderSizes, size, this);
-        if (configDialog->exec() == KDialog::Accepted) {
+        if (configDialog->exec() == QDialog::Accepted) {
             m_model->setData(index, configDialog->borderSize(), DecorationModel::BorderSizeRole);
             reload = true;
         }

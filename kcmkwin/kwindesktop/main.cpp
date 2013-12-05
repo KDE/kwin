@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 
 #include <netwm.h>
+#include <QDialogButtonBox>
 
 K_PLUGIN_FACTORY(KWinDesktopConfigFactory, registerPlugin<KWin::KWinDesktopConfig>();)
 
@@ -575,17 +576,20 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
         return;
     }
     KCModuleProxy* proxy = new KCModuleProxy(effect);
-    QPointer< KDialog > configDialog = new KDialog(this);
+    QPointer<QDialog> configDialog = new QDialog(this);
     configDialog->setWindowTitle(m_ui->effectComboBox->currentText());
-    configDialog->setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
-    connect(configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
+    configDialog->setLayout(new QVBoxLayout);
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
+    connect(buttons, SIGNAL(accepted()), configDialog, SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), configDialog, SLOT(reject()));
+    connect(buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), proxy, SLOT(defaults()));
 
     QWidget *showWidget = new QWidget(configDialog);
     QVBoxLayout *layout = new QVBoxLayout;
     showWidget->setLayout(layout);
     layout->addWidget(proxy);
-    layout->insertSpacing(-1, KDialog::marginHint());
-    configDialog->setMainWidget(showWidget);
+    configDialog->layout()->addWidget(showWidget);
+    configDialog->layout()->addWidget(buttons);
 
     if (configDialog->exec() == QDialog::Accepted) {
         proxy->save();

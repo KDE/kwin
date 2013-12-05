@@ -23,13 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtDBus/QtDBus>
 #include <QDesktopWidget>
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
 #include <QStandardPaths>
 #include <QPointer>
 
 // KDE
 #include <KActionCollection>
 #include <KCModuleProxy>
-#include <KDialog>
 #include <KGlobalAccel>
 //#include <KLocalizedString>
 #include <KPluginFactory>
@@ -63,7 +63,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
     , m_layoutPreview(NULL)
 {
-    KTabWidget* tabWidget = new KTabWidget(this);
+    QTabWidget* tabWidget = new QTabWidget(this);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(tabWidget);
     m_alternativeTabBoxUi = new KWinTabBoxConfigForm(tabWidget);
     tabWidget->addTab(m_primaryTabBoxUi, i18n("Main"));
@@ -504,9 +504,13 @@ void KWinTabBoxConfig::configureEffectClicked()
         m_layoutPreview->setLayout(ui->effectCombo->itemData(effect, Qt::UserRole+1).toString(), ui->effectCombo->itemText(effect));
         m_layoutPreview->show();
     } else {
-        QPointer< KDialog > configDialog = new KDialog(this);
-        configDialog->setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
+        QPointer<QDialog> configDialog = new QDialog(this);
+        configDialog->setLayout(new QVBoxLayout);
         configDialog->setWindowTitle(ui->effectCombo->currentText());
+        QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
+        connect(buttonBox, SIGNAL(accepted()), configDialog, SLOT(accept()));
+        connect(buttonBox, SIGNAL(rejected()), configDialog, SLOT(reject()));
+
         KCModuleProxy* proxy = new KCModuleProxy(effect == CoverSwitch ? "coverswitch_config" : "flipswitch_config");
         connect(configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
 
@@ -514,8 +518,8 @@ void KWinTabBoxConfig::configureEffectClicked()
         QVBoxLayout *layout = new QVBoxLayout;
         showWidget->setLayout(layout);
         layout->addWidget(proxy);
-        layout->insertSpacing(-1, KDialog::marginHint());
-        configDialog->setMainWidget(showWidget);
+        configDialog->layout()->addWidget(showWidget);
+        configDialog->layout()->addWidget(buttonBox);
 
         if (configDialog->exec() == QDialog::Accepted) {
             proxy->save();

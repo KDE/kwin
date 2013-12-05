@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwindecoration.h"
 
 #include <QVBoxLayout>
+#include <QDialogButtonBox>
 
 #include <KDE/KLocalizedString>
 #include <kdecoration.h>
@@ -35,27 +36,30 @@ KWinDecorationButtonsConfigForm::KWinDecorationButtonsConfigForm(QWidget* parent
 }
 
 KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(DecorationButtons const *buttons, bool showTooltips, QWidget* parent, Qt::WFlags flags)
-    : KDialog(parent, flags)
+    : QDialog(parent, flags)
+    , m_ui(new KWinDecorationButtonsConfigForm(this))
     , m_showTooltip(showTooltips)
     , m_buttons(buttons)
 {
-    m_ui = new KWinDecorationButtonsConfigForm(this);
     setWindowTitle(i18n("Buttons"));
-    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default | KDialog::Reset);
-    enableButton(KDialog::Reset, false);
+    m_buttonBox = new QDialogButtonBox(this);
+    m_buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
+    m_buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(false);
+
     QVBoxLayout* layout = new QVBoxLayout;
+    layout->addWidget(m_buttonBox);
     layout->addWidget(m_ui);
     m_ui->buttonPositionWidget->setEnabled(buttons->customPositions());
 
-    QWidget* main = new QWidget(this);
-    main->setLayout(layout);
-    setMainWidget(main);
+    setLayout(layout);
 
     connect(m_ui->buttonPositionWidget, SIGNAL(changed()), this, SLOT(changed()));
     connect(m_ui->showToolTipsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
     connect(m_ui->useCustomButtonPositionsCheckBox, SIGNAL(stateChanged(int)), this, SLOT(changed()));
-    connect(this, SIGNAL(defaultClicked()), this, SLOT(slotDefaultClicked()));
-    connect(this, SIGNAL(resetClicked()), this, SLOT(slotResetClicked()));
+    connect(m_buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), this, SLOT(slotDefaultClicked()));
+    connect(m_buttonBox->button(QDialogButtonBox::Reset), SIGNAL(clicked(bool)), this, SLOT(slotResetClicked()));
+    connect(m_buttonBox, SIGNAL(accepted()), SLOT(accept()));
+    connect(m_buttonBox, SIGNAL(rejected()), SLOT(reject()));
 
     slotResetClicked();
 }
@@ -86,7 +90,7 @@ QList<KDecorationDefines::DecorationButton> KWinDecorationButtonsConfigDialog::b
 
 void KWinDecorationButtonsConfigDialog::changed()
 {
-    enableButton(KDialog::Reset, true);
+    m_buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(true);
 }
 
 void KWinDecorationButtonsConfigDialog::slotDefaultClicked()
@@ -105,7 +109,8 @@ void KWinDecorationButtonsConfigDialog::slotResetClicked()
     m_ui->buttonPositionWidget->setButtonsLeft(m_buttons->leftButtons());
     m_ui->buttonPositionWidget->setButtonsRight(m_buttons->rightButtons());
     changed();
-    enableButton(KDialog::Reset, false);
+
+    m_buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
 }
 
 } // namespace KWin

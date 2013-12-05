@@ -13,7 +13,7 @@
   <layout class="QVBoxLayout" name="verticalLayout" stretch="1,100,1">
    <item>
     <widget class="KLineEdit" name="searchEdit">
-     <property name="clickMessage">
+     <property name="clickMessage" stdset="0">
       <string>Search</string>
      </property>
      <property name="showClearButton" stdset="0">
@@ -53,21 +53,21 @@
       </spacer>
      </item>
      <item>
-      <widget class="KPushButton" name="configureDecorationButton">
+      <widget class="QPushButton" name="configureDecorationButton">
        <property name="text">
         <string>Configure Decoration...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="configureButtonsButton">
+      <widget class="QPushButton" name="configureButtonsButton">
        <property name="text">
         <string>Configure Buttons...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="ghnsButton">
+      <widget class="QPushButton" name="ghnsButton">
        <property name="text">
         <string>Get New Decorations...</string>
        </property>
@@ -79,19 +79,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QDeclarativeView</class>
-   <extends>QGraphicsView</extends>
-   <header>QtDeclarative/QDeclarativeView</header>
-  </customwidget>
-  <customwidget>
    <class>KLineEdit</class>
    <extends>QLineEdit</extends>
    <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusMessage>
 
 #include <KLibrary>
-#include <KVBox>
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <KConfigGroup>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 namespace KWin
 {
@@ -69,7 +71,7 @@ KWinDecorationConfigForm::KWinDecorationConfigForm(QWidget* parent)
 KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList<QVariant>& borderSizes,
         KDecorationDefines::BorderSize size,
         QWidget* parent, Qt::WFlags flags)
-    : KDialog(parent, flags)
+    : QDialog(parent, flags)
     , m_borderSizes(borderSizes)
     , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_pluginObject(0)
@@ -77,10 +79,15 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
 {
     m_ui = new KWinDecorationConfigForm(this);
     setWindowTitle(i18n("Decoration Options"));
-    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default | KDialog::Reset);
-    enableButton(KDialog::Reset, false);
+
+    m_buttons = new QDialogButtonBox(this);
+    m_buttons->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel | QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset);
+    m_buttons->button(QDialogButtonBox::Reset)->setEnabled(false);
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(m_ui);
+    layout->addWidget(m_buttons);
+    connect(m_buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(m_buttons, SIGNAL(rejected()), SLOT(reject()));
 
     KLibrary library(styleToConfigLib(deco));
     if (library.load()) {
@@ -88,15 +95,16 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
         if (alloc_ptr != NULL) {
             allocatePlugin = (QObject * (*)(KConfigGroup & conf, QWidget * parent))alloc_ptr;
             KConfigGroup config(m_kwinConfig, "Style");
-            m_pluginConfigWidget = new KVBox(this);
+            m_pluginConfigWidget = new QWidget(this);
+            m_pluginConfigWidget->setLayout(new QVBoxLayout);
             m_pluginObject = (QObject*)(allocatePlugin(config, m_pluginConfigWidget));
 
             // connect required signals and slots together...
             connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
             connect(m_pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()));
             connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup&)));
-            connect(this, SIGNAL(defaultClicked()), m_pluginObject, SLOT(defaults()));
-            connect(this, SIGNAL(defaultClicked()), SLOT(slotDefault()));
+            connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), m_pluginObject, SLOT(defaults()));
+            connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), SLOT(slotDefault()));
         }
     }
 
@@ -116,9 +124,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
         m_ui->borderLabel->hide();
     }
 
-    QWidget* main = new QWidget(this);
-    main->setLayout(layout);
-    setMainWidget(main);
+    setLayout(layout);
 }
 
 KWinDecorationConfigDialog::~KWinDecorationConfigDialog()
@@ -153,7 +159,7 @@ void KWinDecorationConfigDialog::slotAccepted()
 
 void KWinDecorationConfigDialog::slotSelectionChanged()
 {
-    enableButton(KDialog::Reset, true);
+    m_buttons->button(QDialogButtonBox::Reset)->setEnabled(true);
 }
 
 QString KWinDecorationConfigDialog::styleToConfigLib(const QString& styleLib) const

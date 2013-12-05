@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
+    <width>658</width>
     <height>418</height>
    </rect>
   </property>
@@ -123,7 +123,16 @@
            <bool>false</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -175,7 +184,16 @@
            <bool>false</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -227,7 +245,16 @@
            <bool>false</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_7">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -279,7 +306,16 @@
            <bool>false</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
@@ -417,18 +453,10 @@
          </widget>
         </item>
         <item row="6" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scCurrentReverse">
-          <property name="checkForConflictsAgainst">
-           <set>KKeySequenceWidget::GlobalShortcuts</set>
-          </property>
-         </widget>
+         <widget class="KKeySequenceWidget" name="scCurrentReverse" native="true"/>
         </item>
         <item row="5" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scCurrent">
-          <property name="checkForConflictsAgainst">
-           <set>KKeySequenceWidget::GlobalShortcuts</set>
-          </property>
-         </widget>
+         <widget class="KKeySequenceWidget" name="scCurrent" native="true"/>
         </item>
         <item row="4" column="0" colspan="4">
          <widget class="QLabel" name="label_2">
@@ -447,18 +475,10 @@
          </widget>
         </item>
         <item row="2" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scAllReverse">
-          <property name="checkForConflictsAgainst">
-           <set>KKeySequenceWidget::GlobalShortcuts</set>
-          </property>
-         </widget>
+         <widget class="KKeySequenceWidget" name="scAllReverse" native="true"/>
         </item>
         <item row="1" column="1" colspan="3">
-         <widget class="KKeySequenceWidget" name="scAll">
-          <property name="checkForConflictsAgainst">
-           <set>KKeySequenceWidget::GlobalShortcuts</set>
-          </property>
-         </widget>
+         <widget class="KKeySequenceWidget" name="scAll" native="true"/>
         </item>
        </layout>
       </widget>
@@ -475,11 +495,20 @@
         <item row="1" column="1">
          <widget class="QWidget" name="widget_6" native="true">
           <layout class="QHBoxLayout" name="horizontalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
             <number>0</number>
            </property>
            <item>
-            <widget class="KComboBox" name="effectCombo">
+            <widget class="QComboBox" name="effectCombo">
              <property name="sizePolicy">
               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -492,7 +521,7 @@
             </widget>
            </item>
            <item>
-            <widget class="KPushButton" name="effectConfigButton">
+            <widget class="QPushButton" name="effectConfigButton">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -538,7 +567,7 @@
          </spacer>
         </item>
         <item row="1" column="3">
-         <widget class="KPushButton" name="ghns">
+         <widget class="QPushButton" name="ghns">
           <property name="toolTip">
            <string>Get New Window Switcher Layout</string>
           </property>
@@ -581,11 +610,6 @@
    <class>KComboBox</class>
    <extends>QComboBox</extends>
    <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

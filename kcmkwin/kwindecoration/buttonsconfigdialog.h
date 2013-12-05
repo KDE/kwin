@@ -21,10 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWINDECORATIONBUTTONSCONFIGDIALOG_H
 
 #include <QWidget>
-#include <KDialog>
+#include <QDialog>
 
 #include "ui_buttons.h"
 
+class QDialogButtonBox;
 namespace KWin
 {
 
@@ -38,7 +39,7 @@ public:
     explicit KWinDecorationButtonsConfigForm(QWidget* parent);
 };
 
-class KWinDecorationButtonsConfigDialog : public KDialog
+class KWinDecorationButtonsConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -59,6 +60,7 @@ private:
     KWinDecorationButtonsConfigForm* m_ui;
     bool m_showTooltip;
     DecorationButtons const *m_buttons;
+    QDialogButtonBox* m_buttonBox;
 };
 
 } // namespace KWin

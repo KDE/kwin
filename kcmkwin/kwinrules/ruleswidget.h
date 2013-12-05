@@ -22,7 +22,7 @@
 
 #include <config-kwin.h>
 
-#include <kdialog.h>
+#include <QDialog>
 #include <kwindowsystem.h>
 #include <kkeysequencewidget.h>
 
@@ -112,7 +112,7 @@ private:
 };
 
 class RulesDialog
-    : public KDialog
+    : public QDialog
 {
     Q_OBJECT
 public:
@@ -139,7 +139,7 @@ protected Q_SLOTS:
 };
 
 class EditShortcutDialog
-    : public KDialog
+    : public QDialog
 {
     Q_OBJECT
 public:
@@ -152,7 +152,7 @@ private:
 
 // slightly duped from utils.cpp
 class ShortcutDialog
-    : public KDialog
+    : public QDialog
 {
     Q_OBJECT
 public:

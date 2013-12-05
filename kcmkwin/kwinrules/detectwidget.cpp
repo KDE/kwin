@@ -16,18 +16,16 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <KDialog>
 #include "detectwidget.h"
 #include "../../cursor.h"
 
-#include <kapplication.h>
 #include <KDE/KLocalizedString>
 #include <QDebug>
 #include <kwindowsystem.h>
 #include <QLabel>
 #include <QRadioButton>
 #include <QCheckBox>
-//Added by qt3to4:
+#include <QDialogButtonBox>
 #include <QMouseEvent>
 #include <QEvent>
 #include <QByteArray>
@@ -49,15 +47,21 @@ DetectWidget::DetectWidget(QWidget* parent)
 }
 
 DetectDialog::DetectDialog(QWidget* parent, const char* name)
-    : KDialog(parent),
+    : QDialog(parent),
       grabber()
 {
     setObjectName(name);
     setModal(true);
-    setButtons(Ok | Cancel);
+    setLayout(new QVBoxLayout);
 
     widget = new DetectWidget(this);
-    setMainWidget(widget);
+    layout()->addWidget(widget);
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel, this);
+    layout()->addWidget(buttons);
+
+    connect(buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), SLOT(reject()));
 }
 
 void DetectDialog::detect(WId window, int secs)
@@ -117,7 +121,7 @@ void DetectDialog::executeDialog()
     adjustSize();
     if (width() < 4*height()/3)
         resize(4*height()/3, height());
-    emit detectionDone(exec() == KDialog::Accepted);
+    emit detectionDone(exec() == QDialog::Accepted);
 }
 
 QByteArray DetectDialog::selectedClass() const
@@ -172,7 +176,7 @@ void DetectDialog::selectWindow()
     // use a dialog, so that all user input is blocked
     // use WX11BypassWM and moving away so that it's not actually visible
     // grab only mouse, so that keyboard can be used e.g. for switching windows
-    grabber.reset(new KDialog(0, Qt::X11BypassWindowManagerHint));
+    grabber.reset(new QDialog(0, Qt::X11BypassWindowManagerHint));
     grabber->move(-1000, -1000);
     grabber->setModal(true);
     grabber->show();

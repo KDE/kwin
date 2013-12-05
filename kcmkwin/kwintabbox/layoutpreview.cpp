@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QStandardPaths>
 #include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>
-#include <KDE/KIcon>
 #include <KDE/KIconEffect>
 #include <KDE/KIconLoader>
 #include <KDE/KLocalizedString>
@@ -82,7 +81,7 @@ QPixmap TabBoxImageProvider::requestPixmap(const QString &id, QSize *size, const
         s = requestedSize;
     }
     *size = s;
-    QPixmap icon(KIcon(m_model->data(m_model->index(index), Qt::UserRole+3).toString()).pixmap(s));
+    QPixmap icon(QIcon::fromTheme(m_model->data(m_model->index(index), Qt::UserRole+3).toString()).pixmap(s));
     if (parts.size() > 2) {
         KIconEffect *effect = KIconLoader::global()->iconEffect();
         KIconLoader::States state = KIconLoader::DefaultState;

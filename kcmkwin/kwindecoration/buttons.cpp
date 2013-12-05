@@ -36,13 +36,13 @@
 #include <QApplication>
 #include <QDrag>
 #include <QPainter>
+#include <QFontDatabase>
 #include <QLabel>
 #include <QLayout>
 #include <QMimeData>
 #include <QScrollBar>
 
 #include <KDE/KLocalizedString>
-#include <kglobalsettings.h>
 
 #ifdef KWIN_BUILD_KAPPMENU
 #include <KConfigGroup>
@@ -616,7 +616,7 @@ void ButtonDropSite::paintEvent(QPaintEvent* /*pe*/)
     QColor c1(palette().color(QPalette::Mid));
     p.fillRect(r, c1);
     p.setPen(palette().color(QPalette::WindowText));
-    p.setFont(KGlobalSettings::windowTitleFont());
+    p.setFont(QFontDatabase::systemFont(QFontDatabase::TitleFont));
     p.drawText(r.adjusted(4, 0, -4, 0), Qt::AlignLeft | Qt::AlignVCenter, i18n("KDE"));
 
     offset = geometry().width() - 3 - rightoffset;

@@ -57,6 +57,11 @@ RulesWidget::RulesWidget(QWidget* parent)
     : detect_dlg(NULL)
 {
     Q_UNUSED(parent);
+    QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\-+,xX:]*"), this);
+    maxsize->setValidator(validator);
+    minsize->setValidator(validator);
+    position->setValidator(validator);
+    Ui::RulesWidgetBase::size->setValidator(validator);
     setupUi(this);
 
     QString enableDesc =
@@ -410,11 +415,11 @@ static NET::WindowType comboToType(int val)
     }
 
 #define CHECKBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setChecked, setChecked( false ))
-#define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setText, setText( "" ))
+#define LINEEDIT_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setText, setText( QString() ))
 #define COMBOBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setCurrentIndex, setCurrentIndex( 0 ))
 #define SPINBOX_SET_RULE( var, func ) GENERIC_RULE( var, func, Set, set, setValue, setValue(0))
 #define CHECKBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setChecked, setChecked( false ))
-#define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setText, setText( "" ))
+#define LINEEDIT_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setText, setText( QString() ))
 #define COMBOBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setCurrentIndex, setCurrentIndex( 0 ))
 #define SPINBOX_FORCE_RULE( var, func ) GENERIC_RULE( var, func, Force, force, setValue, setValue(0))
 
@@ -770,16 +775,21 @@ void RulesWidget::shortcutEditClicked()
 }
 
 RulesDialog::RulesDialog(QWidget* parent, const char* name)
-    : KDialog(parent)
+    : QDialog(parent)
 {
     setObjectName(name);
     setModal(true);
-    setCaption(i18n("Edit Window-Specific Settings"));
-    setButtons(Ok | Cancel);
+    setWindowTitle(i18n("Edit Window-Specific Settings"));
     setWindowIcon(QIcon::fromTheme("preferences-system-windows-actions"));
 
+    setLayout(new QVBoxLayout);
     widget = new RulesWidget(this);
-    setMainWidget(widget);
+    layout()->addWidget(widget);
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    connect(buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+    layout()->addWidget(buttons);
 }
 
 // window is set only for Alt+F3/Window-specific settings, because the dialog
@@ -814,7 +824,7 @@ void RulesDialog::accept()
     if (!widget->finalCheck())
         return;
     rules = widget->rules();
-    KDialog::accept();
+    QDialog::accept();
 }
 
 EditShortcut::EditShortcut(QWidget* parent)
@@ -833,19 +843,25 @@ void EditShortcut::editShortcut()
 
 void EditShortcut::clearShortcut()
 {
-    shortcut->setText(QLatin1String(""));
+    shortcut->clear();
 }
 
 EditShortcutDialog::EditShortcutDialog(QWidget* parent, const char* name)
-    : KDialog(parent)
+    : QDialog(parent)
+    , widget(new EditShortcut(this))
 {
     setObjectName(name);
     setModal(true);
-    setCaption(i18n("Edit Shortcut"));
-    setButtons(Ok | Cancel);
+    setWindowTitle(i18n("Edit Shortcut"));
 
-    widget = new EditShortcut(this);
-    setMainWidget(widget);
+    setLayout(new QVBoxLayout);
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    connect(buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+
+    layout()->addWidget(buttons);
+    layout()->addWidget(widget);
 }
 
 void EditShortcutDialog::setShortcut(const QString& cut)
@@ -859,13 +875,20 @@ QString EditShortcutDialog::shortcut() const
 }
 
 ShortcutDialog::ShortcutDialog(const QKeySequence& cut, QWidget* parent)
-    : KDialog(parent)
+    : QDialog(parent)
     , widget(new KKeySequenceWidget(this))
 {
     widget->setKeySequence(cut);
     // It's a global shortcut so don't allow multikey shortcuts
     widget->setMultiKeyShortcutsAllowed(false);
-    setMainWidget(widget);
+
+    QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Close, this);
+    connect(buttons, SIGNAL(accepted()), SLOT(accept()));
+    connect(buttons, SIGNAL(rejected()), SLOT(reject()));
+
+    setLayout(new QVBoxLayout);
+    layout()->addWidget(widget);
+    layout()->addWidget(buttons);
 }
 
 void ShortcutDialog::accept()
@@ -880,11 +903,11 @@ void ShortcutDialog::accept()
                 || (seq[0] & Qt::KeyboardModifierMask) == 0) {
             // clear
             widget->clearKeySequence();
-            KDialog::accept();
+            QDialog::accept();
             return;
         }
     }
-    KDialog::accept();
+    QDialog::accept();
 }
 
 QKeySequence ShortcutDialog::shortcut() const

@@ -25,9 +25,10 @@
 #include <QPainter>
 
 #include <QDebug>
-#include <KUrl>
+#include <QMimeData>
 
 #include <Plasma/FrameSvg>
+#include <kurlmimedata.h>
 
 
 class ScreenPreviewWidgetPrivate
@@ -147,10 +148,10 @@ void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
 
 void ScreenPreviewWidget::dropEvent(QDropEvent *e)
 {
-    if (!KUrl::List::canDecode(e->mimeData()))
+    if (!e->mimeData()->hasUrls())
         return;
 
-    const KUrl::List uris(KUrl::List::fromMimeData(e->mimeData()));
+    QList<QUrl> uris(KUrlMimeData::urlsFromMimeData(e->mimeData()));
     if (!uris.isEmpty()) {
         // TODO: Download remote file
         if (uris.first().isLocalFile())
