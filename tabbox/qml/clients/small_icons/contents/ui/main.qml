@@ -25,7 +25,6 @@ Item {
     id: smallIconsTabBox
     property int screenWidth : 0
     property int screenHeight : 0
-    property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.leftMargin + background.bottomMargin
     property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.topMargin + background.bottomMargin + 40
     property bool canStretchX: false

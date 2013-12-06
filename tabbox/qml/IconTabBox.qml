@@ -24,7 +24,6 @@ import org.kde.qtextracomponents 2.0
 Item {
     id: iconsTabBox
     property int iconSize
-    property int imagePathPrefix: (new Date()).getTime()
     property alias count: iconsListView.count
     property alias margins: hoverItem.margins
     property alias currentItem: iconsListView.currentItem
@@ -34,11 +33,6 @@ Item {
 
     function setModel(model) {
         iconsListView.model = model;
-        iconsListView.imageId++;
-    }
-
-    function modelChanged() {
-        iconsListView.imageId++;
     }
 
     // just to get the margin sizes
@@ -57,14 +51,13 @@ Item {
             id: delegateItem
             width: iconSize + hoverItem.margins.left + hoverItem.margins.right
             height: iconSize + hoverItem.margins.top + hoverItem.margins.bottom
-            Image {
+            QIconItem {
                 property variant data: model
                 id: iconItem
-                source: "image://client/" + index + "/" + iconsTabBox.imagePathPrefix + "-" + iconsListView.imageId + (index == iconsListView.currentIndex ? "/selected" : "")
-                sourceSize {
-                    width: iconSize
-                    height: iconSize
-                }
+                icon: model.icon
+                width: iconSize
+                height: iconSize
+                state: index == listView.currentIndex ? QIconItem.ActiveState : QIconItem.DefaultState
                 anchors {
                     fill: parent
                     leftMargin: hoverItem.margins.left
@@ -87,8 +80,6 @@ Item {
         id: iconsListView
         objectName: "listView"
         orientation: ListView.Horizontal
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         width: Math.min(parent.width, (iconSize + margins.left + margins.right) * count)
         height: iconSize + margins.top + margins.bottom
         anchors {
