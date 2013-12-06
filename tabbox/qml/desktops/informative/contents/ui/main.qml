@@ -48,13 +48,11 @@ Item {
     function setModel(model) {
         listView.model = model;
         desktopClientModel.model = model;
-        desktopClientModel.imageId++;
         listView.maxRowWidth = listView.calculateMaxRowWidth();
     }
 
     function modelChanged() {
         listView.currentIndex = -1;
-        desktopClientModel.imageId++;
     }
 
     // just to get the margin sizes
@@ -153,8 +151,6 @@ Item {
         // the maximum text width + icon item width (32 + 4 margin) + margins for hover item + margins for background
         property int maxRowWidth: calculateMaxRowWidth()
         property int rowHeight: calcRowHeight()
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         anchors {
             top: parent.top
             left: parent.left
@@ -178,29 +174,20 @@ Item {
     }
     Component {
         id: clientIconDelegate
-        Image {
-            sourceSize {
-                width: 16
-                height: 16
-            }
+        QIconItem {
+            icon: model.icon
             width: 16
             height: 16
-            Component.onCompleted: {
-                source = "image://client/" + index + "/" + listView.currentIndex + "/" + desktopClientModel.imagePathPrefix + "-" + desktopClientModel.imageId;
-            }
         }
     }
     Item {
         id: clientArea
         VisualDataModel {
             property alias desktopIndex: listView.currentIndex
-            property int imagePathPrefix: (new Date()).getTime()
-            property int imageId: 0
             id: desktopClientModel
             model: clientModel
             delegate: clientIconDelegate
             onDesktopIndexChanged: {
-                desktopClientModel.imageId++;
                 desktopClientModel.rootIndex = desktopClientModel.parentModelIndex();
                 desktopClientModel.rootIndex = desktopClientModel.modelIndex(desktopClientModel.desktopIndex);
             }
