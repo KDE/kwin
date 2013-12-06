@@ -323,9 +323,16 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this, SLOT(slotReconfigure()));
     connect(&updateToolWindowsTimer, SIGNAL(timeout()), this, SLOT(slotUpdateToolWindows()));
 
-    connect(KGlobalSettings::self(), SIGNAL(appearanceChanged()), this, SLOT(reconfigure()));
     connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this, SLOT(slotSettingsChanged(int)));
     connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this, SLOT(slotBlockShortcuts(int)));
+
+    // TODO: do we really need to reconfigure everything when fonts change?
+    // maybe just reconfigure the decorations? Move this into libkdecoration?
+    QDBusConnection::sessionBus().connect(QString(),
+                                          QStringLiteral("/KDEPlatformTheme"),
+                                          QStringLiteral("org.kde.KDEPlatformTheme"),
+                                          QStringLiteral("refreshFonts"),
+                                          this, SLOT(reconfigure()));
 
     active_client = NULL;
     rootInfo->setActiveWindow(None);
