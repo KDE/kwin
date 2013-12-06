@@ -64,7 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KActionCollection>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
-#include <KDE/KGlobalSettings>
 #include <KDE/KLocalizedString>
 #include <KDE/KStartupInfo>
 #include <KDE/KWindowInfo>
@@ -322,8 +321,6 @@ void Workspace::init()
 
     connect(&reconfigureTimer, SIGNAL(timeout()), this, SLOT(slotReconfigure()));
     connect(&updateToolWindowsTimer, SIGNAL(timeout()), this, SLOT(slotUpdateToolWindows()));
-
-    connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this, SLOT(slotBlockShortcuts(int)));
 
     // TODO: do we really need to reconfigure everything when fonts change?
     // maybe just reconfigure the decorations? Move this into libkdecoration?
@@ -1374,26 +1371,18 @@ void Workspace::resetShowingDesktop(bool keep_hidden)
     --block_showing_desktop;
 }
 
-static bool pending_dfc = false;
-
 void Workspace::disableGlobalShortcutsForClient(bool disable)
 {
     if (global_shortcuts_disabled_for_client == disable)
         return;
-    if (disable)
-        pending_dfc = true;
-    KGlobalSettings::self()->emitChange(KGlobalSettings::BlockShortcuts, disable);
-    // KWin will get the kipc message too
-}
+    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kglobalaccel"),
+                                                          QStringLiteral("/kglobalaccel"),
+                                                          QStringLiteral("org.kde.KGlobalAccel"),
+                                                          QStringLiteral("blockGlobalShortcuts"));
+    message.setArguments(QList<QVariant>() << disable);
+    QDBusConnection::sessionBus().asyncCall(message);
 
-void Workspace::slotBlockShortcuts(int data)
-{
-    if (pending_dfc && data) {
-        global_shortcuts_disabled_for_client = true;
-        pending_dfc = false;
-    } else {
-        global_shortcuts_disabled_for_client = false;
-    }
+    global_shortcuts_disabled_for_client = disable;
     // Update also Alt+LMB actions etc.
     for (ClientList::ConstIterator it = clients.constBegin();
             it != clients.constEnd();
