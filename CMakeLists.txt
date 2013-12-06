@@ -244,7 +244,6 @@ set(kwin_QT_LIBS
 )
 
 set(kwin_KDE_LIBS
-    KF5::KDE4Support
     KF5::KDeclarative
     KF5::KConfigCore
     KF5::KCoreAddons
