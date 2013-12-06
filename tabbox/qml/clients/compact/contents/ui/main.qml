@@ -26,7 +26,6 @@ Item {
     property int screenWidth : 0
     property int screenHeight : 0
     property string longestCaption: ""
-    property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: compactListView.maxRowWidth
     property int optimalHeight: compactListView.rowHeight * compactListView.count + background.topMargin + background.bottomMargin
     property bool canStretchX: true
@@ -49,11 +48,6 @@ Item {
     function setModel(model) {
         compactListView.model = model;
         compactListView.maxRowWidth = compactListView.calculateMaxRowWidth();
-        compactListView.imageId++;
-    }
-
-    function modelChanged() {
-        compactListView.imageId++;
     }
 
     /**
@@ -91,15 +85,11 @@ Item {
             width: compactListView.width
             height: compactListView.rowHeight
             opacity: minimized ? 0.6 : 1.0
-            Image {
+            QIconItem {
                 id: iconItem
-                source: "image://client/" + index + "/" + compactTabBox.imagePathPrefix + "-" + compactListView.imageId + "/selected"
+                icon: model.icon
                 width: 16
                 height: 16
-                sourceSize {
-                    width: 16
-                    height: 16
-                }
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
@@ -173,8 +163,6 @@ Item {
         // the maximum text width + icon item width (32 + 4 margin) + margins for hover item + margins for background
         property int maxRowWidth: calculateMaxRowWidth()
         property int rowHeight: calcRowHeight()
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         anchors {
             fill: parent
             topMargin: background.topMargin
