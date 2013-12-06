@@ -91,9 +91,7 @@ NET::WindowType Bridge::windowType(unsigned long supported_types) const
 
 QIcon Bridge::icon() const
 {
-    QIcon ret(c->icon());
-    ret.addPixmap(c->miniIcon());
-    return ret;
+    return c->icon();
 }
 
 bool Bridge::isSetShade() const
@@ -277,10 +275,7 @@ long Bridge::tabId(int idx) const
 QIcon Bridge::icon(int idx) const
 {
     if (c->tabGroup()) {
-        Client *tabC = c->tabGroup()->clients().at(idx);
-        QIcon icon(tabC->icon());
-        icon.addPixmap(tabC->miniIcon());
-        return icon;
+        return c->tabGroup()->clients().at(idx)->icon();
     }
     return icon();
 }

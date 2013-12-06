@@ -370,8 +370,8 @@ public:
     virtual void setFont(const QFont& font);
     virtual const QRect& geometry() const;
     virtual void setGeometry(const QRect& geometry, bool force = false);
-    virtual const QPixmap& icon() const;
-    virtual void setIcon(const QPixmap& icon);
+    virtual const QIcon& icon() const override;
+    virtual void setIcon(const QIcon& icon) override;
     virtual const QSize& iconSize() const;
     virtual void setIconSize(const QSize& size);
     virtual void setPosition(const QPoint& point);
@@ -426,7 +426,7 @@ private:
     // Contents
     QString m_text;
     QFont m_font;
-    QPixmap m_icon;
+    QIcon m_icon;
     QSize m_iconSize;
     QRect m_selectionGeometry;
 

@@ -42,10 +42,7 @@ public:
     const Client* leaderClient() const;
     Client* leaderClient();
     const ClientList& members() const;
-    QPixmap icon() const;
-    QPixmap miniIcon() const;
-    QPixmap bigIcon() const;
-    QPixmap hugeIcon() const;
+    QIcon icon() const;
     void addMember(Client* member);
     void removeMember(Client* member);
     void gotLeader(Client* leader);

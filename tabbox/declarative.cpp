@@ -90,7 +90,7 @@ QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize
         s = requestedSize;
     }
     *size = s;
-    QPixmap icon = client->icon(s);
+    QPixmap icon = client->icon().pixmap(s);
     if (s.width() > icon.width() || s.height() > icon.height()) {
         // icon is smaller than what we requested - QML would scale it which looks bad
         QPixmap temp(s);

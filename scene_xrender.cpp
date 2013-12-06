@@ -899,7 +899,7 @@ void SceneXrender::EffectFrame::render(QRegion region, double opacity, double fr
         QPoint topLeft(m_effectFrame->geometry().x(), m_effectFrame->geometry().center().y() - m_effectFrame->iconSize().height() / 2);
 
         if (!m_iconPicture)   // lazy creation
-            m_iconPicture = new XRenderPicture(m_effectFrame->icon().toImage());
+            m_iconPicture = new XRenderPicture(m_effectFrame->icon().pixmap(m_effectFrame->iconSize()).toImage());
         QRect geom = QRect(topLeft, m_effectFrame->iconSize());
         xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *m_iconPicture, fill,
                              effects->xrenderBufferPicture(),

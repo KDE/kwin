@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects_export.h>
 #include <kwinglobals.h>
 
+#include <QIcon>
 #include <QPair>
 #include <QSet>
 #include <QRect>
@@ -1472,7 +1473,7 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      * management (moving, raising,...) on them.
      **/
     Q_PROPERTY(bool specialWindow READ isSpecialWindow)
-    Q_PROPERTY(QPixmap icon READ icon)
+    Q_PROPERTY(QIcon icon READ icon)
     /**
      * Whether the window should be excluded from window switching effects.
      **/
@@ -1597,7 +1598,7 @@ public:
     virtual void deleteProperty(long atom) const = 0;
 
     QString caption() const;
-    QPixmap icon() const;
+    QIcon icon() const;
     QString windowClass() const;
     QString windowRole() const;
     virtual const EffectWindowGroup* group() const = 0;
@@ -2648,8 +2649,8 @@ public:
     /**
      * Set the icon that will appear on the left-hand size of the frame.
      */
-    virtual void setIcon(const QPixmap& icon) = 0;
-    virtual const QPixmap& icon() const = 0;
+    virtual void setIcon(const QIcon& icon) = 0;
+    virtual const QIcon& icon() const = 0;
     virtual void setIconSize(const QSize& size) = 0;
     virtual const QSize& iconSize() const = 0;
 

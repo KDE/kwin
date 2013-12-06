@@ -429,6 +429,7 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
     winData->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
     winData->iconFrame->setAlignment(Qt::AlignRight | Qt::AlignBottom);
     winData->iconFrame->setIcon(w->icon());
+    winData->iconFrame->setIconSize(QSize(32, 32));
     if (isSelectableWindow(w)) {
         m_motionManager.manage(w);
         rearrangeWindows();
@@ -1520,6 +1521,7 @@ void PresentWindowsEffect::setActive(bool active)
             winData->iconFrame = effects->effectFrame(EffectFrameUnstyled, false);
             winData->iconFrame->setAlignment(Qt::AlignRight | Qt::AlignBottom);
             winData->iconFrame->setIcon(w->icon());
+            winData->iconFrame->setIconSize(QSize(32, 32));
         }
         // Filter out special windows such as panels and taskbars
         foreach (EffectWindow * w, effects->stackingOrder()) {

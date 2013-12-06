@@ -90,7 +90,7 @@ public:
     virtual ~TabBoxClientImpl();
 
     virtual QString caption() const;
-    virtual QPixmap icon(const QSize& size = QSize(32, 32)) const;
+    virtual QIcon icon() const override;
     virtual WId window() const;
     virtual bool isMinimized() const;
     virtual int x() const;

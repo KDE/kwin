@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <assert.h>
 #include <kstartupinfo.h>
+#include <KWindowSystem>
 #include <QDebug>
 #include <QX11Info>
 
@@ -217,52 +218,26 @@ Group::~Group()
     delete effect_group;
 }
 
-QPixmap Group::icon() const
+QIcon Group::icon() const
 {
     if (leader_client != NULL)
         return leader_client->icon();
     else if (leader_wid != None) {
-        QPixmap ic;
-        Client::readIcons(leader_wid, &ic, NULL, NULL, NULL);
+        QIcon ic;
+        auto readIcon = [&ic, this](int size, bool scale = true) {
+            const QPixmap pix = KWindowSystem::icon(leader_wid, size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints);
+            if (!pix.isNull()) {
+                ic.addPixmap(pix);
+            }
+        };
+        readIcon(16);
+        readIcon(32);
+        readIcon(48, false);
+        readIcon(64, false);
+        readIcon(128, false);
         return ic;
     }
-    return QPixmap();
-}
-
-QPixmap Group::miniIcon() const
-{
-    if (leader_client != NULL)
-        return leader_client->miniIcon();
-    else if (leader_wid != None) {
-        QPixmap ic;
-        Client::readIcons(leader_wid, NULL, &ic, NULL, NULL);
-        return ic;
-    }
-    return QPixmap();
-}
-
-QPixmap Group::bigIcon() const
-{
-    if (leader_client != NULL)
-        return leader_client->bigIcon();
-    else if (leader_wid != None) {
-        QPixmap ic;
-        Client::readIcons(leader_wid, NULL, NULL, &ic, NULL);
-        return ic;
-    }
-    return QPixmap();
-}
-
-QPixmap Group::hugeIcon() const
-{
-    if (leader_client != NULL)
-        return leader_client->hugeIcon();
-    else if (leader_wid != None) {
-        QPixmap ic;
-        Client::readIcons(leader_wid, NULL, NULL, NULL, &ic);
-        return ic;
-    }
-    return QPixmap();
+    return QIcon();
 }
 
 void Group::addMember(Client* member_P)

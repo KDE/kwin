@@ -2010,75 +2010,45 @@ void Client::getMotifHints()
         emit decoration->decorationButtonsChanged();
 }
 
-void Client::readIcons(xcb_window_t win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon)
-{
-    // Get the icons, allow scaling
-    if (icon != NULL)
-        *icon = KWindowSystem::icon(win, 32, 32, true, KWindowSystem::NETWM | KWindowSystem::WMHints);
-    if (miniicon != NULL) {
-        if (icon == NULL || !icon->isNull())
-            *miniicon = KWindowSystem::icon(win, 16, 16, true, KWindowSystem::NETWM | KWindowSystem::WMHints);
-        else
-            *miniicon = QPixmap();
-    }
-    if (bigicon != NULL) {
-        if (icon == NULL || !icon->isNull())
-            *bigicon = KWindowSystem::icon(win, 64, 64, false, KWindowSystem::NETWM | KWindowSystem::WMHints);
-        else
-            *bigicon = QPixmap();
-    }
-    if (hugeicon != NULL) {
-        if (icon == NULL || !icon->isNull())
-            *hugeicon = KWindowSystem::icon(win, 128, 128, false, KWindowSystem::NETWM | KWindowSystem::WMHints);
-        else
-            *hugeicon = QPixmap();
-    }
-}
-
 void Client::getIcons()
 {
     // First read icons from the window itself
-    readIcons(window(), &icon_pix, &miniicon_pix, &bigicon_pix, &hugeicon_pix);
-    if (icon_pix.isNull()) {
+    m_icon = QIcon();
+    auto readIcon = [this](int size, bool scale = true) {
+        const QPixmap pix = KWindowSystem::icon(window(), size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints);
+        if (!pix.isNull()) {
+            m_icon.addPixmap(pix);
+        }
+    };
+    readIcon(16);
+    readIcon(32);
+    readIcon(48, false);
+    readIcon(64, false);
+    readIcon(128, false);
+    if (m_icon.isNull()) {
         // Then try window group
-        icon_pix = group()->icon();
-        miniicon_pix = group()->miniIcon();
-        bigicon_pix = group()->bigIcon();
-        hugeicon_pix = group()->hugeIcon();
+        m_icon = group()->icon();
     }
-    if (icon_pix.isNull() && isTransient()) {
+    if (m_icon.isNull() && isTransient()) {
         // Then mainclients
         ClientList mainclients = mainClients();
         for (ClientList::ConstIterator it = mainclients.constBegin();
-                it != mainclients.constEnd() && icon_pix.isNull();
+                it != mainclients.constEnd() && m_icon.isNull();
                 ++it) {
-            icon_pix = (*it)->icon();
-            miniicon_pix = (*it)->miniIcon();
-            bigicon_pix = (*it)->bigIcon();
-            hugeicon_pix = (*it)->hugeIcon();
+            if (!(*it)->icon().isNull()) {
+                m_icon = (*it)->icon();
+                break;
+            }
         }
     }
-    if (icon_pix.isNull()) {
+    if (m_icon.isNull()) {
         // And if nothing else, load icon from classhint or xapp icon
-        icon_pix = KWindowSystem::icon(window(), 32, 32, true, KWindowSystem::ClassHint | KWindowSystem::XApp);
-        miniicon_pix = KWindowSystem::icon(window(), 16, 16, true, KWindowSystem::ClassHint | KWindowSystem::XApp);
-        bigicon_pix = KWindowSystem::icon(window(), 64, 64, false, KWindowSystem::ClassHint | KWindowSystem::XApp);
-        hugeicon_pix = KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp);
+        m_icon.addPixmap(KWindowSystem::icon(window(),  32,  32,  true, KWindowSystem::ClassHint | KWindowSystem::XApp));
+        m_icon.addPixmap(KWindowSystem::icon(window(),  16,  16,  true, KWindowSystem::ClassHint | KWindowSystem::XApp));
+        m_icon.addPixmap(KWindowSystem::icon(window(),  64,  64, false, KWindowSystem::ClassHint | KWindowSystem::XApp));
+        m_icon.addPixmap(KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp));
     }
     emit iconChanged();
-}
-
-QPixmap Client::icon(const QSize& size) const
-{
-    const int iconSize = qMin(size.width(), size.height());
-    if (iconSize <= 16)
-        return miniIcon();
-    else if (iconSize <= 32)
-        return icon();
-    if (iconSize <= 64)
-        return bigIcon();
-    else
-        return hugeIcon();
 }
 
 void Client::getWindowProtocols()

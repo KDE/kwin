@@ -2231,7 +2231,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
 
         if (!m_iconTexture) { // lazy creation
-            m_iconTexture = m_scene->createTexture(m_effectFrame->icon());
+            m_iconTexture = m_scene->createTexture(m_effectFrame->icon().pixmap(m_effectFrame->iconSize()));
         }
         m_iconTexture->bind();
         m_iconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));

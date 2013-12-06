@@ -37,7 +37,6 @@ TabGroup::TabGroup(Client *c)
     , m_pendingUpdates(TabGroup::None)
 {
     QIcon icon(c->icon());
-    icon.addPixmap(c->miniIcon());
     m_clients << c;
     c->setTabGroup(this);
     c->setClientShown(true);

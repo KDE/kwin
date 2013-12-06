@@ -760,7 +760,7 @@ WINDOW_HELPER_DEFAULT(bool, isUserResize, "resize", false)
 WINDOW_HELPER_DEFAULT(QRect, iconGeometry, "iconGeometry", QRect())
 WINDOW_HELPER_DEFAULT(bool, isSpecialWindow, "specialWindow", true)
 WINDOW_HELPER_DEFAULT(bool, acceptsFocus, "wantsInput", true) // We don't actually know...
-WINDOW_HELPER_DEFAULT(QPixmap, icon, "icon", QPixmap())
+WINDOW_HELPER_DEFAULT(QIcon, icon, "icon", QIcon())
 WINDOW_HELPER_DEFAULT(bool, isSkipSwitcher, "skipSwitcher", false)
 WINDOW_HELPER_DEFAULT(bool, isCurrentTab, "isCurrentTab", false)
 WINDOW_HELPER_DEFAULT(bool, decorationHasAlpha, "decorationHasAlpha", false)

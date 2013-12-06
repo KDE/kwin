@@ -373,7 +373,7 @@ public:
     * @param size Requested size of the icon
     * @return The icon of the client
     */
-    virtual QPixmap icon(const QSize& size = QSize(32, 32)) const = 0;
+    virtual QIcon icon() const = 0;
     /**
     * @return The window Id of the client
     */

@@ -1960,19 +1960,19 @@ void EffectFrameImpl::setGeometry(const QRect& geometry, bool force)
     free();
 }
 
-const QPixmap& EffectFrameImpl::icon() const
+const QIcon& EffectFrameImpl::icon() const
 {
     return m_icon;
 }
 
-void EffectFrameImpl::setIcon(const QPixmap& icon)
+void EffectFrameImpl::setIcon(const QIcon& icon)
 {
     m_icon = icon;
     if (isCrossFade()) {
         m_sceneFrame->crossFadeIcon();
     }
-    if (m_iconSize.isEmpty()) { // Set a size if we don't already have one
-        setIconSize(m_icon.size());
+    if (m_iconSize.isEmpty() && !m_icon.availableSizes().isEmpty()) { // Set a size if we don't already have one
+        setIconSize(m_icon.availableSizes().first());
     }
     m_sceneFrame->freeIconFrame();
 }

@@ -350,12 +350,12 @@ QString TabBoxClientImpl::caption() const
     return m_client->caption();
 }
 
-QPixmap TabBoxClientImpl::icon(const QSize& size) const
+QIcon TabBoxClientImpl::icon() const
 {
     if (m_client->isDesktop()) {
-        return QIcon::fromTheme(QStringLiteral("user-desktop")).pixmap(size);
+        return QIcon::fromTheme(QStringLiteral("user-desktop"));
     }
-    return m_client->icon(size);
+    return m_client->icon();
 }
 
 WId TabBoxClientImpl::window() const

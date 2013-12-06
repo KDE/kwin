@@ -206,8 +206,7 @@ class Client
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool wantsInput READ wantsInput)
-    // TODO: a QIcon with all icon sizes?
-    Q_PROPERTY(QPixmap icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     /**
      * Whether the Client should be excluded from window switching effects.
      **/
@@ -332,11 +331,7 @@ public:
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
 
-    QPixmap icon() const;
-    QPixmap icon(const QSize& size) const;
-    QPixmap miniIcon() const;
-    QPixmap bigIcon() const;
-    QPixmap hugeIcon() const;
+    const QIcon &icon() const;
 
     bool isActive() const;
     void setActive(bool);
@@ -511,7 +506,6 @@ public:
 
     static bool belongToSameApplication(const Client* c1, const Client* c2, bool active_hack = false);
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
-    static void readIcons(xcb_window_t win, QPixmap* icon, QPixmap* miniicon, QPixmap* bigicon, QPixmap* hugeicon);
 
     void setMinimized(bool set);
     void minimize(bool avoid_animation = false);
@@ -916,12 +910,8 @@ private:
     bool blocks_compositing;
     WindowRules client_rules;
     void getWMHints();
-    void readIcons();
     void getWindowProtocols();
-    QPixmap icon_pix;
-    QPixmap miniicon_pix;
-    QPixmap bigicon_pix;
-    QPixmap hugeicon_pix;
+    QIcon m_icon;
     Qt::CursorShape m_cursor;
     // DON'T reorder - Saved to config files !!!
     enum FullScreenMode {
@@ -1109,24 +1099,9 @@ inline ShadeMode Client::shadeMode() const
     return shade_mode;
 }
 
-inline QPixmap Client::icon() const
+inline const QIcon &Client::icon() const
 {
-    return icon_pix;
-}
-
-inline QPixmap Client::miniIcon() const
-{
-    return miniicon_pix;
-}
-
-inline QPixmap Client::bigIcon() const
-{
-    return bigicon_pix;
-}
-
-inline QPixmap Client::hugeIcon() const
-{
-    return hugeicon_pix;
+    return m_icon;
 }
 
 inline QRect Client::geometryRestore() const
