@@ -27,7 +27,6 @@ Item {
     property int screenWidth : 1
     property int screenHeight : 1
     property real screenFactor: screenWidth/screenHeight
-    property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right) * thumbnailListView.count + background.leftMargin + background.bottomMargin
     property int optimalHeight: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + hoverItem.margins.top + hoverItem.margins.bottom + background.topMargin + background.bottomMargin + 40
     property bool canStretchX: false
@@ -45,11 +44,6 @@ Item {
 
     function setModel(model) {
         thumbnailListView.model = model;
-        thumbnailListView.imageId++;
-    }
-
-    function modelChanged() {
-        thumbnailListView.imageId++;
     }
 
     ShadowedSvgItem {
@@ -69,8 +63,6 @@ Item {
         id: thumbnailListView
         objectName: "listView"
         orientation: ListView.Horizontal
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         property int thumbnailWidth: 300
         height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
         spacing: 5
@@ -134,15 +126,11 @@ Item {
             rightMargin: background.rightMargin
             bottomMargin: background.bottomMargin
         }
-        Image {
+        QIconItem {
             id: iconItem
-            source: "image://client/" + thumbnailListView.currentIndex + "/" + thumbnailTabBox.imagePathPrefix + "-" + thumbnailListView.imageId
+            icon: thumbnailListView.currentItem ? thumbnailListView.currentItem.data.icon : ""
             width: 32
             height: 32
-            sourceSize {
-                width: 32
-                height: 32
-            }
             anchors {
                 verticalCenter: parent.verticalCenter
                 right: textItem.left
