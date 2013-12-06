@@ -23,14 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtX11Extras/QX11Info>
 
-#include <kdemacros.h>
+#include <kwin_export.h>
 
 #include <xcb/xcb.h>
 
 #include <kwinconfig.h>
 
-#define KWIN_EXPORT KDE_EXPORT
 #define KWIN_QT5_PORTING 0
+#define KWIN_EXPORT KDEINIT_KWIN_EXPORT
 
 namespace KWin
 {

@@ -376,7 +376,7 @@ static const char version[] = KWIN_VERSION_STRING;
 static const char description[] = I18N_NOOP("KDE window manager");
 
 extern "C"
-KDE_EXPORT int kdemain(int argc, char * argv[])
+KWIN_EXPORT int kdemain(int argc, char * argv[])
 {
 #ifdef M_TRIM_THRESHOLD
     // Prevent fragmentation of the heap by malloc (glibc).

@@ -324,6 +324,7 @@ kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 target_link_libraries(kdeinit_kwin ${kwinLibs})
 set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
 set_target_properties(kdeinit_kwin PROPERTIES OUTPUT_NAME kdeinit4_${KWIN_NAME})
+generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
     if( KWIN_BUILD_OPENGL_1_COMPOSITING )
@@ -348,6 +349,7 @@ install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}.kcfg )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/${KWIN_NAME} RENAME ${KWIN_NAME}.notifyrc)
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 if( KWIN_BUILD_SCRIPTING )
     # Install the KWin/WindowSwitcher service type

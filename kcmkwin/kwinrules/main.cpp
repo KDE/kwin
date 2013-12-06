@@ -239,7 +239,7 @@ static int edit(Window wid, bool whole_app)
 } // namespace
 
 extern "C"
-KDE_EXPORT int kdemain(int argc, char* argv[])
+KWIN_EXPORT int kdemain(int argc, char* argv[])
 {
     QApplication app(argc, argv);
     app.setApplicationDisplayName(i18n("KWin"));
