@@ -28,7 +28,6 @@ Item {
     property int screenHeight : 1
     property int optimalWidth: 0.9*screenWidth
     property int optimalHeight: 0.9*screenHeight
-    property int imagePathPrefix: (new Date()).getTime()
     property int standardMargin: 2
     property string maskImagePath: background.maskImagePath
     property double maskWidth: background.centerWidth
@@ -41,11 +40,6 @@ Item {
 
     function setModel(model) {
         thumbnailListView.model = model;
-        thumbnailListView.imageId++;
-    }
-
-    function modelChanged() {
-        thumbnailListView.imageId++;
     }
 
     ShadowedSvgItem {
@@ -62,8 +56,6 @@ Item {
 
     GridView {
         signal currentIndexChanged(int index)
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         property int rows: Math.round(Math.sqrt(count))
         property int columns: (rows*rows < count) ? rows + 1 : rows
         id: thumbnailListView
@@ -108,15 +100,11 @@ Item {
                     bottomMargin: hoverItem.margins.bottom
                     rightMargin: hoverItem.margins.right
                 }
-                Image {
+                QIconItem {
                     id: iconItem
-                    source: "image://client/" + index + "/" + presentWindowsTabBox.imagePathPrefix + "-" + thumbnailListView.imageId
+                    icon: model.icon
                     width: 32
                     height: 32
-                    sourceSize {
-                        width: 32
-                        height: 32
-                    }
                     anchors {
                         bottom: parent.bottom
                         right: textItem.left
