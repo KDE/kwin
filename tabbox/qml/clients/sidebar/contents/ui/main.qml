@@ -30,7 +30,6 @@ Item {
     property int screenWidth : 1
     property int screenHeight : 1
     property real screenFactor: screenWidth/screenHeight
-    property int imagePathPrefix: (new Date()).getTime()
     property int alignment: Qt.AlignLeft|Qt.AlignVCenter
 
     property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right) + background.leftMargin + background.bottomMargin
@@ -50,11 +49,6 @@ Item {
 
     function setModel(model) {
         thumbnailListView.model = model;
-        thumbnailListView.imageId++;
-    }
-
-    function modelChanged() {
-        thumbnailListView.imageId++;
     }
 
     ShadowedSvgItem {
@@ -83,8 +77,6 @@ Item {
             id: thumbnailListView
             objectName: "listView"
             orientation: ListView.Vertical
-            // used for image provider URL to trick Qt into reloading icons when the model changes
-            property int imageId: 0
             property int thumbnailWidth: width
             height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
             spacing: 5
@@ -123,15 +115,11 @@ Item {
                         leftMargin: 8
                         bottomMargin: 8
                     }
-                    Image {
+                    QIconItem {
                         id: iconItem
-                        source: "image://client/" + index + "/" + thumbnailTabBox.imagePathPrefix + "-" + thumbnailListView.imageId
+                        icon: model.icon
                         width: 32
                         height: 32
-                        sourceSize {
-                            width: 32
-                            height: 32
-                        }
                     }
                     PlasmaComponents.Label {
                         text: model.caption
