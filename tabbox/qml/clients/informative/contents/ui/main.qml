@@ -27,7 +27,6 @@ Item {
     property int screenHeight : 0
     property bool allDesktops: true
     property string longestCaption: ""
-    property int imagePathPrefix: (new Date()).getTime()
     property int optimalWidth: listView.maxRowWidth
     property int optimalHeight: listView.rowHeight * listView.count + background.topMargin + background.bottomMargin
     property bool canStretchX: true
@@ -50,11 +49,6 @@ Item {
     function setModel(model) {
         listView.model = model;
         listView.maxRowWidth = listView.calculateMaxRowWidth();
-        listView.imageId++;
-    }
-
-    function modelChanged() {
-        listView.imageId++;
     }
 
     /**
@@ -91,15 +85,12 @@ Item {
             id: delegateItem
             width: listView.width
             height: listView.rowHeight
-            Image {
+            QIconItem {
                 id: iconItem
-                source: "image://client/" + index + "/" + informativeTabBox.imagePathPrefix + "-" + listView.imageId + (index == listView.currentIndex ? "/selected" : "/disabled")
+                icon: model.icon
                 width: 32
                 height: 32
-                sourceSize {
-                    width: 32
-                    height: 32
-                }
+                state: index == listView.currentIndex ? QIconItem.ActiveState : QIconItem.DisabledState
                 anchors {
                     verticalCenter: parent.verticalCenter
                     left: parent.left
@@ -189,8 +180,6 @@ Item {
         // the maximum text width + icon item width (32 + 4 margin) + margins for hover item + margins for background
         property int maxRowWidth: calculateMaxRowWidth()
         property int rowHeight: calcRowHeight()
-        // used for image provider URL to trick Qt into reloading icons when the model changes
-        property int imageId: 0
         anchors {
             fill: parent
             topMargin: background.topMargin
