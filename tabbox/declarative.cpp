@@ -34,8 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QStandardPaths>
 
 // include KDE
-#include <KDE/KIconEffect>
-#include <KDE/KIconLoader>
 #include <KDE/KServiceTypeTrader>
 #include <KDE/Plasma/FrameSvg>
 #include <KDE/Plasma/Theme>
@@ -52,66 +50,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
-ImageProvider::ImageProvider(QAbstractItemModel *model)
-    : QQuickImageProvider(QQuickImageProvider::Pixmap)
-    , m_model(model)
-{
-}
-
-QPixmap ImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-{
-    bool ok = false;
-    QStringList parts = id.split(QStringLiteral("/"));
-    const int row = parts.first().toInt(&ok);
-    if (!ok) {
-        return QPixmap();
-    }
-    QModelIndex parentIndex;
-    const int parentRow = parts.at(1).toInt(&ok);
-    if (ok) {
-        // we have parent index
-        parentIndex = m_model->index(parentRow, 0);
-        if (!parentIndex.isValid()) {
-            return QPixmap();
-        }
-    }
-    const QModelIndex index = m_model->index(row, 0, parentIndex);
-    if (!index.isValid()) {
-        return QPixmap();
-    }
-    TabBoxClient* client = static_cast< TabBoxClient* >(index.model()->data(index, ClientModel::ClientRole).value<void *>());
-    if (!client) {
-        return QPixmap();
-    }
-
-    QSize s(32, 32);
-    if (requestedSize.isValid()) {
-        s = requestedSize;
-    }
-    *size = s;
-    QPixmap icon = client->icon().pixmap(s);
-    if (s.width() > icon.width() || s.height() > icon.height()) {
-        // icon is smaller than what we requested - QML would scale it which looks bad
-        QPixmap temp(s);
-        temp.fill(Qt::transparent);
-        QPainter p(&temp);
-        p.drawPixmap(s.width()/2 - icon.width()/2, s.height()/2 - icon.height()/2, icon);
-        icon = temp;
-    }
-    if (parts.size() > 2) {
-        KIconEffect *effect = KIconLoader::global()->iconEffect();
-        KIconLoader::States state = KIconLoader::DefaultState;
-        if (parts.last() == QLatin1String("selected")) {
-            state = KIconLoader::ActiveState;
-        } else if (parts.last() == QLatin1String("disabled")) {
-            state = KIconLoader::DisabledState;
-        }
-        icon = effect->apply(icon, KIconLoader::Desktop, state);
-    }
-    return icon;
-}
-
 
 DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBoxMode mode, QQuickWindow *parent)
     : QQuickView(parent)
@@ -130,7 +68,6 @@ DeclarativeView::DeclarativeView(QAbstractItemModel *model, TabBoxConfig::TabBox
     } else {
         setResizeMode(QQuickView::SizeViewToRootObject);
     }
-    engine()->addImageProvider(QLatin1String("client"), new ImageProvider(model));
     KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
     kdeclarative.initialize();

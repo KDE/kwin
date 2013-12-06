@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_DECLARATIVE_H
 #define KWIN_TABBOX_DECLARATIVE_H
 // includes
-#include <QQuickImageProvider>
 #include <QQuickView>
 #include <KDE/KService>
 #include "tabboxconfig.h"
@@ -39,16 +38,6 @@ namespace KWin
 {
 namespace TabBox
 {
-
-class ImageProvider : public QQuickImageProvider
-{
-public:
-    explicit ImageProvider(QAbstractItemModel *model);
-    virtual QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
-
-private:
-    QAbstractItemModel *m_model;
-};
 
 class DeclarativeView : public QQuickView
 {

@@ -249,7 +249,6 @@ set(kwin_KDE_LIBS
     KF5::KCoreAddons
     KF5::KCrash
     KF5::KI18n
-    KF5::KIconThemes
     KF5::KNotifications
     KF5::KService
     KF5::Plasma
