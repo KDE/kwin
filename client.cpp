@@ -43,7 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "workspace.h"
 // KDE
-#include <KDE/KIconLoader>
 #include <KDE/KWindowSystem>
 #include <KDE/KColorScheme>
 // Qt
@@ -2350,14 +2349,6 @@ void Client::cancelAutoRaise()
 void Client::debug(QDebug& stream) const
 {
     print<QDebug>(stream);
-}
-
-QPixmap* kwin_get_menu_pix_hack()
-{
-    static QPixmap p;
-    if (p.isNull())
-        p = SmallIcon(QStringLiteral("bx2"));
-    return &p;
 }
 
 void Client::checkActivities()
