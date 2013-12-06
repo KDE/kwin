@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabboxconfig.h"
 #include "tabboxhandler.h"
 // Qt
+#include <QIcon>
 // TODO: remove with Qt 5, only for HTML escaping the caption
 #include <QTextDocument>
 #include <QTextStream>
@@ -44,6 +45,7 @@ ClientModel::ClientModel(QObject* parent)
     roles[MinimizedRole] = "minimized";
     roles[WIdRole] = "windowId";
     roles[CloseableRole] = "closeable";
+    roles[IconRole] = "icon";
     setRoleNames(roles);
 }
 
@@ -88,6 +90,8 @@ QVariant ClientModel::data(const QModelIndex& index, int role) const
     case CloseableRole:
         //clients that claim to be first are not closeable
         return client->isCloseable() && !client->isFirstInTabBox();
+    case IconRole:
+        return client->icon();
     default:
         return QVariant();
     }
