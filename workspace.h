@@ -357,8 +357,6 @@ public Q_SLOTS:
     void slotWindowToDesktopUp();
     void slotWindowToDesktopDown();
 
-    void slotSettingsChanged(int category);
-
     void reconfigure();
     void slotReconfigure();
 

@@ -323,7 +323,6 @@ void Workspace::init()
     connect(&reconfigureTimer, SIGNAL(timeout()), this, SLOT(slotReconfigure()));
     connect(&updateToolWindowsTimer, SIGNAL(timeout()), this, SLOT(slotUpdateToolWindows()));
 
-    connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)), this, SLOT(slotSettingsChanged(int)));
     connect(KGlobalSettings::self(), SIGNAL(blockShortcuts(int)), this, SLOT(slotBlockShortcuts(int)));
 
     // TODO: do we really need to reconfigure everything when fonts change?
@@ -793,13 +792,6 @@ bool Workspace::waitForCompositingSetup()
         return m_compositor->isActive();
     }
     return false;
-}
-
-void Workspace::slotSettingsChanged(int category)
-{
-    qDebug() << "Workspace::slotSettingsChanged()";
-    if (category == KGlobalSettings::SETTINGS_SHORTCUTS)
-        m_userActionsMenu->discard();
 }
 
 /**
