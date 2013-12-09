@@ -5,6 +5,7 @@ set(kwin_effect_OWN_LIBS
 set(kwin_effect_KDE_LIBS
     KF5::KConfigCore
     KF5::KConfigWidgets
+    KF5::GlobalAccel
     KF5::KI18n
     KF5::KWindowSystem
     KF5::Plasma # screenedge effect
@@ -86,6 +87,7 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         KF5::KCoreAddons
         KF5::KCompletion
         KF5::KConfigWidgets
+        KF5::GlobalAccel
         KF5::KI18n
         KF5::XmlGui
         )

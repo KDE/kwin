@@ -248,6 +248,7 @@ set(kwin_KDE_LIBS
     KF5::KConfigCore
     KF5::KCoreAddons
     KF5::KCrash
+    KF5::GlobalAccel
     KF5::KI18n
     KF5::KNotifications
     KF5::KService

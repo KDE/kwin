@@ -25,6 +25,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::KCMUtils
     KF5::KCompletion
     KF5::KDeclarative
+    KF5::GlobalAccel
     KF5::KI18n
     KF5::KIconThemes
     KF5::KService

@@ -10,6 +10,7 @@ target_link_libraries(kcm_kwindesktop
     Qt5::X11Extras
     KF5::KCMUtils
     KF5::KCompletion
+    KF5::GlobalAccel
     KF5::KI18n
     KF5::KWindowSystem
     KF5::XmlGui
