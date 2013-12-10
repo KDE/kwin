@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE includes
 #include <KDE/KConfig>
 
-class KActionCollection;
 class KLocalizedString;
 class NETRootInfo;
 
@@ -177,7 +176,7 @@ public:
      **/
     uint previous(uint id = 0, bool wrap = true) const;
 
-    void initShortcuts(KActionCollection *keys);
+    void initShortcuts();
 
     /**
      * @returns The maximum number of desktops that KWin supports.
@@ -328,29 +327,27 @@ private:
     /**
      * Creates all the global keyboard shortcuts for "Switch To Desktop n" actions.
      **/
-    void initSwitchToShortcuts(KActionCollection *keys);
+    void initSwitchToShortcuts();
     /**
      * Creates an action and connects it to the @p slot in this Manager. This method is
      * meant to be used for the case that an additional information needs to be stored in
      * the action and the label.
-     * @param keys The ActionCollection used to create the Action
      * @param name The name of the action to be created
      * @param label The localized name for the action to be created
      * @param value An additional value added to the label and to the created action
      * @param key The global shortcut for the action
      * @param slot The slot to invoke when the action is triggered
      **/
-    void addAction(KActionCollection *keys, const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, const char *slot);
+    void addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
     /**
      * Creates an action and connects it to the @p slot in this Manager.
      * Overloaded method for the case that no additional value needs to be passed to the action and
      * no global shortcut is defined by default.
-     * @param keys The ActionCollection used to create the Action
      * @param name The name of the action to be created
      * @param label The localized name for the action to be created
      * @param slot The slot to invoke when the action is triggered
      **/
-    void addAction(KActionCollection *keys, const QString &name, const QString &label, const char *slot);
+    void addAction(const QString &name, const QString &label, void (VirtualDesktopManager::*slot)());
 
     uint m_current;
     uint m_count;
