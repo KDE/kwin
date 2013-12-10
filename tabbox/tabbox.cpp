@@ -48,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QtDBus/QDBusConnection>
 // KDE
-#include <KActionCollection>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KDE/KGlobalAccel>
@@ -486,9 +485,10 @@ void TabBox::handlerReady()
 }
 
 template <typename Slot>
-void TabBox::key(KActionCollection *keys, const char *actionName, Slot slot, const QKeySequence &shortcut)
+void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut)
 {
-    QAction *a = keys->addAction(QString::fromUtf8(actionName));
+    QAction *a = new QAction(this);
+    a->setObjectName(QString::fromUtf8(actionName));
     a->setText(i18n(actionName));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
     connect(a, &QAction::triggered, TabBox::self(), slot);
@@ -509,20 +509,20 @@ static const char *s_desktopsRev    = I18N_NOOP("Walk Through Desktops (Reverse)
 static const char *s_desktopList    = I18N_NOOP("Walk Through Desktop List");
 static const char *s_desktopListRev = I18N_NOOP("Walk Through Desktop List (Reverse)");
 
-void TabBox::initShortcuts(KActionCollection* keys)
+void TabBox::initShortcuts()
 {
-    key(keys, s_windows,        &TabBox::slotWalkThroughWindows, Qt::ALT + Qt::Key_Tab);
-    key(keys, s_windowsRev,     &TabBox::slotWalkBackThroughWindows, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
-    key(keys, s_app,            &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT + Qt::Key_QuoteLeft);
-    key(keys, s_appRev,         &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT + Qt::Key_AsciiTilde);
-    key(keys, s_windowsAlt,     &TabBox::slotWalkThroughWindowsAlternative);
-    key(keys, s_windowsAltRev,  &TabBox::slotWalkBackThroughWindowsAlternative);
-    key(keys, s_appAlt,         &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
-    key(keys, s_appAltRev,      &TabBox::slotWalkBackThroughCurrentAppWindowsAlternative);
-    key(keys, s_desktops,       &TabBox::slotWalkThroughDesktops);
-    key(keys, s_desktopsRev,    &TabBox::slotWalkBackThroughDesktops);
-    key(keys, s_desktopList,    &TabBox::slotWalkThroughDesktopList);
-    key(keys, s_desktopListRev, &TabBox::slotWalkBackThroughDesktopList);
+    key(s_windows,        &TabBox::slotWalkThroughWindows, Qt::ALT + Qt::Key_Tab);
+    key(s_windowsRev,     &TabBox::slotWalkBackThroughWindows, Qt::ALT + Qt::SHIFT + Qt::Key_Backtab);
+    key(s_app,            &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT + Qt::Key_QuoteLeft);
+    key(s_appRev,         &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT + Qt::Key_AsciiTilde);
+    key(s_windowsAlt,     &TabBox::slotWalkThroughWindowsAlternative);
+    key(s_windowsAltRev,  &TabBox::slotWalkBackThroughWindowsAlternative);
+    key(s_appAlt,         &TabBox::slotWalkThroughCurrentAppWindowsAlternative);
+    key(s_appAltRev,      &TabBox::slotWalkBackThroughCurrentAppWindowsAlternative);
+    key(s_desktops,       &TabBox::slotWalkThroughDesktops);
+    key(s_desktopsRev,    &TabBox::slotWalkBackThroughDesktops);
+    key(s_desktopList,    &TabBox::slotWalkThroughDesktopList);
+    key(s_desktopListRev, &TabBox::slotWalkBackThroughDesktopList);
 
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, &TabBox::globalShortcutChanged);
 }

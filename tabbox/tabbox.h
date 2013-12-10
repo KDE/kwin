@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "tabbox/tabboxhandler.h"
 
-class KActionCollection;
 class KConfigGroup;
 class QAction;
 class QKeyEvent;
@@ -168,7 +167,7 @@ public:
         return m_tabGrab || m_desktopGrab;
     };
 
-    void initShortcuts(KActionCollection* keys);
+    void initShortcuts();
 
     Client* nextClientStatic(Client*) const;
     Client* previousClientStatic(Client*) const;
@@ -253,7 +252,7 @@ private:
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
     template <typename Slot>
-    void key(KActionCollection *keys, const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
+    void key(const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 
 private Q_SLOTS:
     void reconfigure();

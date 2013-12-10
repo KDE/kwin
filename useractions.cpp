@@ -962,7 +962,7 @@ void Workspace::initShortcuts()
 #define IN_KWIN
 #include "kwinbindings.cpp"
 #ifdef KWIN_BUILD_TABBOX
-    TabBox::TabBox::self()->initShortcuts(actionCollection);
+    TabBox::TabBox::self()->initShortcuts();
 #endif
     VirtualDesktopManager::self()->initShortcuts();
     m_userActionsMenu->discard(); // so that it's recreated next time
