@@ -24,17 +24,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // tabbox
 #include "clientmodel.h"
-#include "declarative.h"
 #include "desktopmodel.h"
 #include "tabboxconfig.h"
+#include "thumbnailitem.h"
+#include "switcheritem.h"
 // Qt
+#include <QApplication>
+#include <QDebug>
+#include <QDesktopWidget>
 #include <QKeyEvent>
 #include <QModelIndex>
 #include <QTimer>
+#include <QQmlContext>
+#include <QQmlComponent>
+#include <QQmlEngine>
+#include <QQuickItem>
+#include <QQuickWindow>
 #include <QX11Info>
 #include <X11/Xlib.h>
 // KDE
+#include <KLocalizedString>
 #include <KProcess>
+#include <KServiceTypeTrader>
 #include <KWindowSystem>
 
 namespace KWin
@@ -58,14 +69,23 @@ public:
     */
     void endHighlightWindows(bool abort = false);
 
+    void show();
+    QQuickWindow *window() const;
+#ifndef TABBOX_KCM
+    SwitcherItem *switcherItem() const;
+#endif
+
     ClientModel* clientModel() const;
     DesktopModel* desktopModel() const;
 
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
-    QScopedPointer<DeclarativeView> m_declarativeView;
-    QScopedPointer<DeclarativeView> m_declarativeDesktopView;
+    QScopedPointer<QQmlEngine> m_qmlEngine;
+    QScopedPointer<QQmlComponent> m_qmlComponent;
+    QObject *m_mainItem;
+    QMap<QString, QObject*> m_clientTabBoxes;
+    QMap<QString, QObject*> m_desktopTabBoxes;
     ClientModel* m_clientModel;
     DesktopModel* m_desktopModel;
     QModelIndex index;
@@ -79,11 +99,15 @@ public:
     QSize m_embeddedSize;
     Qt::Alignment m_embeddedAlignment;
     Xcb::Atom m_highlightWindowsAtom;
+
+private:
+    QObject *createSwitcherItem(bool desktopMode);
 };
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
-    : m_declarativeView(NULL)
-    , m_declarativeDesktopView(NULL)
+    : m_qmlEngine()
+    , m_qmlComponent()
+    , m_mainItem(nullptr)
     , m_embedded(0)
     , m_embeddedOffset(QPoint(0, 0))
     , m_embeddedSize(QSize(0, 0))
@@ -100,7 +124,39 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
 
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
+    for (auto it = m_clientTabBoxes.constBegin(); it != m_clientTabBoxes.constBegin(); ++it) {
+        delete it.value();
+    }
+    for (auto it = m_desktopTabBoxes.constBegin(); it != m_desktopTabBoxes.constBegin(); ++it) {
+        delete it.value();
+    }
 }
+
+QQuickWindow *TabBoxHandlerPrivate::window() const
+{
+    if (!m_mainItem) {
+        return nullptr;
+    }
+    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem)) {
+        return w;
+    }
+    return m_mainItem->findChild<QQuickWindow*>();
+}
+
+#ifndef TABBOX_KCM
+SwitcherItem *TabBoxHandlerPrivate::switcherItem() const
+{
+    if (!m_mainItem) {
+        return nullptr;
+    }
+    if (SwitcherItem *i = qobject_cast<SwitcherItem*>(m_mainItem)) {
+        return i;
+    } else if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem)) {
+        return w->contentItem()->findChild<SwitcherItem*>();
+    }
+    return m_mainItem->findChild<SwitcherItem*>();
+}
+#endif
 
 ClientModel* TabBoxHandlerPrivate::clientModel() const
 {
@@ -118,17 +174,14 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         return;
 
     TabBoxClient *currentClient = q->client(index);
-    QWindow *w = NULL;
-    if (m_declarativeView && m_declarativeView->isVisible()) {
-        w = m_declarativeView.data();
-    }
+    QWindow *w = window();
 
     if (q->isKWinCompositing()) {
         if (lastRaisedClient)
-            q->elevateClient(lastRaisedClient, m_declarativeView ? m_declarativeView->winId() : 0, false);
+            q->elevateClient(lastRaisedClient, w ? w->winId() : 0, false);
         lastRaisedClient = currentClient;
         if (currentClient)
-            q->elevateClient(currentClient, m_declarativeView ? m_declarativeView->winId() : 0, true);
+            q->elevateClient(currentClient, w ? w->winId() : 0, true);
     } else {
         if (lastRaisedClient) {
             if (lastRaisedClientSucc)
@@ -171,14 +224,118 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
 void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 {
     TabBoxClient *currentClient = q->client(index);
+    QWindow *w = window();
     if (currentClient)
-        q->elevateClient(currentClient, m_declarativeView ? m_declarativeView->winId() : 0, false);
+        q->elevateClient(currentClient, w ? w->winId() : 0, false);
     if (abort && lastRaisedClient && lastRaisedClientSucc)
         q->restack(lastRaisedClient, lastRaisedClientSucc);
     lastRaisedClient = 0;
     lastRaisedClientSucc = 0;
     // highlight windows
-    xcb_delete_property(connection(), config.isShowTabBox() && m_declarativeView ? m_declarativeView->winId() : rootWindow(), m_highlightWindowsAtom);
+    xcb_delete_property(connection(), config.isShowTabBox() && w ? w->winId() : rootWindow(), m_highlightWindowsAtom);
+}
+
+QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
+{
+    auto findSwitcher = [this, desktopMode] {
+        QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.layoutName());
+        const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
+        KService::List offers = KServiceTypeTrader::self()->query(type, constraint);
+        if (offers.isEmpty()) {
+            // load default
+            constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
+            offers = KServiceTypeTrader::self()->query(type, constraint);
+            if (offers.isEmpty()) {
+                qDebug() << "could not find default window switcher layout";
+                return KService::Ptr();
+            }
+        }
+        return offers.first();
+    };
+    KService::Ptr service = findSwitcher();
+    if (!service) {
+        return nullptr;
+    }
+    if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
+        qDebug() << "Window Switcher Layout is no declarativeappletscript";
+        return nullptr;
+    }
+    auto findScriptFile = [desktopMode, service] {
+        const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+        const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+        const QString type = desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/");
+        return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + type + pluginName + QStringLiteral("/contents/") + scriptName);
+    };
+    const QString file = findScriptFile();
+    if (file.isNull()) {
+        qDebug() << "Could not find QML file for window switcher";
+        return nullptr;
+    }
+    m_qmlComponent->loadUrl(QUrl::fromLocalFile(file));
+    if (m_qmlComponent->isError()) {
+        qDebug() << "Component failed to load: " << m_qmlComponent->errors();
+        QStringList args;
+        args << QStringLiteral("--passivepopup") << i18n("The Window Switcher installation is broken, resources are missing.\n"
+                                            "Contact your distribution about this.") << QStringLiteral("20");
+        KProcess::startDetached(QStringLiteral("kdialog"), args);
+    } else {
+        QObject *object = m_qmlComponent->create();
+        if (desktopMode) {
+            m_desktopTabBoxes.insert(config.layoutName(), object);
+        } else {
+            m_clientTabBoxes.insert(config.layoutName(), object);
+        }
+        return object;
+    }
+    return nullptr;
+}
+
+void TabBoxHandlerPrivate::show()
+{
+    if (m_qmlEngine.isNull()) {
+        m_qmlEngine.reset(new QQmlEngine);
+#ifndef TABBOX_KCM
+        qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
+        qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
+#endif
+        qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    }
+    if (m_qmlComponent.isNull()) {
+        m_qmlComponent.reset(new QQmlComponent(m_qmlEngine.data()));
+    }
+    const bool desktopMode = (config.tabBoxMode() == TabBoxConfig::DesktopTabBox);
+    auto findMainItem = [this](const QMap<QString, QObject *> &tabBoxes) -> QObject* {
+        auto it = tabBoxes.constFind(config.layoutName());
+        if (it != tabBoxes.constEnd()) {
+            return it.value();
+        }
+        return nullptr;
+    };
+    m_mainItem = nullptr;
+    m_mainItem = desktopMode ? findMainItem(m_desktopTabBoxes) : findMainItem(m_clientTabBoxes);
+    if (!m_mainItem) {
+        m_mainItem = createSwitcherItem(desktopMode);
+        if (!m_mainItem) {
+            return;
+        }
+    }
+#ifndef TABBOX_KCM
+    if (SwitcherItem *item = switcherItem()) {
+        if (!item->model()) {
+            QAbstractItemModel *model = nullptr;
+            if (desktopMode) {
+                model = desktopModel();
+            } else {
+                model = clientModel();
+            }
+            item->setModel(model);
+        }
+        item->setAllDesktops(config.clientDesktopMode() == TabBoxConfig::AllDesktopsClients);
+        item->setCurrentIndex(index.row());
+        // everything is prepared, so let's make the whole thing visible
+        item->setVisible(true);
+    }
+#endif
 }
 
 /***********************************************
@@ -214,30 +371,7 @@ void TabBoxHandler::show()
     d->lastRaisedClient = 0;
     d->lastRaisedClientSucc = 0;
     if (d->config.isShowTabBox()) {
-        DeclarativeView *dv(NULL);
-        if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
-            // use declarative view
-            if (!d->m_declarativeView) {
-                d->m_declarativeView.reset(new DeclarativeView(d->clientModel(), TabBoxConfig::ClientTabBox));
-            }
-            dv = d->m_declarativeView.data();
-        } else {
-            if (!d->m_declarativeDesktopView) {
-                d->m_declarativeDesktopView.reset(new DeclarativeView(d->desktopModel(), TabBoxConfig::DesktopTabBox));
-            }
-            dv = d->m_declarativeDesktopView.data();
-        }
-        if (dv->status() == QQuickView::Ready && dv->rootObject()) {
-            dv->show();
-            dv->setCurrentIndex(d->index, d->config.tabBoxMode() == TabBoxConfig::ClientTabBox);
-        } else {
-            QStringList args;
-            args << QStringLiteral("--passivepopup") << /*i18n*/QStringLiteral("The Window Switcher installation is broken, resources are missing.\n"
-                                                 "Contact your distribution about this.") << QStringLiteral("20");
-            KProcess::startDetached(QStringLiteral("kdialog"), args);
-            hide();
-            return;
-        }
+        d->show();
     }
     if (d->config.isHighlightWindows()) {
         Xcb::sync();
@@ -260,8 +394,16 @@ void TabBoxHandler::hide(bool abort)
     if (d->config.isHighlightWindows()) {
         d->endHighlightWindows(abort);
     }
-    d->m_declarativeView.reset();
-    d->m_declarativeDesktopView.reset();
+#ifndef TABBOX_KCM
+    if (SwitcherItem *item = d->switcherItem()) {
+        item->setVisible(false);
+    }
+#endif
+    if (QQuickWindow *w = d->window()) {
+        w->hide();
+        w->destroy();
+    }
+    d->m_mainItem = nullptr;
 }
 
 QModelIndex TabBoxHandler::nextPrev(bool forward) const
@@ -348,12 +490,6 @@ void TabBoxHandler::setCurrentIndex(const QModelIndex& index)
     if (!index.isValid()) {
         return;
     }
-    if (d->m_declarativeView) {
-        d->m_declarativeView->setCurrentIndex(index);
-    }
-    if (d->m_declarativeDesktopView) {
-        d->m_declarativeDesktopView->setCurrentIndex(index);
-    }
     d->index = index;
     if (d->config.tabBoxMode() == TabBoxConfig::ClientTabBox) {
         if (d->config.isHighlightWindows()) {
@@ -370,24 +506,22 @@ const QModelIndex& TabBoxHandler::currentIndex() const
 
 void TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
 {
-    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
-        d->m_declarativeView->sendKeyEvent(event);
-    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
-        d->m_declarativeDesktopView->sendKeyEvent(event);
+    if (!d->m_mainItem) {
+        return;
     }
+    QApplication::sendEvent(d->window(), event);
 }
 
 bool TabBoxHandler::containsPos(const QPoint& pos) const
 {
-    QWindow *w = NULL;
-    if (d->m_declarativeView && d->m_declarativeView->isVisible()) {
-        w = d->m_declarativeView.data();
-    } else if (d->m_declarativeDesktopView && d->m_declarativeDesktopView->isVisible()) {
-        w = d->m_declarativeDesktopView.data();
-    } else {
+    if (!d->m_mainItem) {
         return false;
     }
-    return w->geometry().contains(pos);
+    QWindow *w = d->window();
+    if (w) {
+        return w->geometry().contains(pos);
+    }
+    return false;
 }
 
 QModelIndex TabBoxHandler::index(QWeakPointer<KWin::TabBox::TabBoxClient> client) const

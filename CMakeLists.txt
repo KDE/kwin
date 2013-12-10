@@ -179,9 +179,9 @@ if(KWIN_BUILD_TABBOX)
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         tabbox/tabbox.cpp
         tabbox/clientmodel.cpp
-        tabbox/declarative.cpp
         tabbox/desktopchain.cpp
         tabbox/desktopmodel.cpp
+        tabbox/switcheritem.cpp
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp
   )
