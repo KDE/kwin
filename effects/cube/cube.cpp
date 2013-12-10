@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cube_inside.h"
 
 #include <QAction>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kwinconfig.h>
@@ -200,17 +199,19 @@ void CubeEffect::reconfigure(ReconfigureFlags)
 
     // do not connect the shortcut if we use cylinder or sphere
     if (!shortcutsRegistered) {
-        KActionCollection* actionCollection = new KActionCollection(this);
-        QAction* cubeAction = actionCollection->addAction(QStringLiteral("Cube"));
+        QAction* cubeAction = new QAction(this);
+        cubeAction->setObjectName(QStringLiteral("Cube"));
         cubeAction->setText(i18n("Desktop Cube"));
         KGlobalAccel::self()->setDefaultShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
         KGlobalAccel::self()->setShortcut(cubeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F11);
         cubeShortcut = KGlobalAccel::self()->shortcut(cubeAction);
-        QAction* cylinderAction = actionCollection->addAction(QStringLiteral("Cylinder"));
+        QAction* cylinderAction = new QAction(this);
+        cylinderAction->setObjectName(QStringLiteral("Cylinder"));
         cylinderAction->setText(i18n("Desktop Cylinder"));
         KGlobalAccel::self()->setShortcut(cylinderAction, QList<QKeySequence>());
         cylinderShortcut = KGlobalAccel::self()->shortcut(cylinderAction);
-        QAction* sphereAction = actionCollection->addAction(QStringLiteral("Sphere"));
+        QAction* sphereAction = new QAction(this);
+        sphereAction->setObjectName(QStringLiteral("Sphere"));
         sphereAction->setText(i18n("Desktop Sphere"));
         KGlobalAccel::self()->setShortcut(sphereAction, QList<QKeySequence>());
         sphereShortcut = KGlobalAccel::self()->shortcut(sphereAction);

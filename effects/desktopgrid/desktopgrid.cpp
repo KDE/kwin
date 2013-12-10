@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <QApplication>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <netwm_def.h>
@@ -67,8 +66,8 @@ DesktopGridEffect::DesktopGridEffect()
     , m_proxy(0)
 {
     // Load shortcuts
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* a = actionCollection->addAction(QStringLiteral("ShowDesktopGrid"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("ShowDesktopGrid"));
     a->setText(i18n("Show Desktop Grid"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F8);

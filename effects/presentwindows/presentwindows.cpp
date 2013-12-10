@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //KConfigSkeleton
 #include "presentwindowsconfig.h"
 #include <QAction>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <kdeclarative/kdeclarative.h>
@@ -74,20 +73,22 @@ PresentWindowsEffect::PresentWindowsEffect()
     m_atomDesktop = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_DESKTOP", this);
     m_atomWindows = effects->announceSupportProperty("_KDE_PRESENT_WINDOWS_GROUP", this);
 
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* exposeAction = actionCollection->addAction(QStringLiteral("Expose"));
+    QAction* exposeAction = new QAction(this);
+    exposeAction->setObjectName(QStringLiteral("Expose"));
     exposeAction->setText(i18n("Toggle Present Windows (Current desktop)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
     KGlobalAccel::self()->setShortcut(exposeAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F9);
     shortcut = KGlobalAccel::self()->shortcut(exposeAction);
     connect(exposeAction, SIGNAL(triggered(bool)), this, SLOT(toggleActive()));
-    QAction* exposeAllAction = actionCollection->addAction(QStringLiteral("ExposeAll"));
+    QAction* exposeAllAction = new QAction(this);
+    exposeAllAction->setObjectName(QStringLiteral("ExposeAll"));
     exposeAllAction->setText(i18n("Toggle Present Windows (All desktops)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
     KGlobalAccel::self()->setShortcut(exposeAllAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F10);
     shortcutAll = KGlobalAccel::self()->shortcut(exposeAllAction);
     connect(exposeAllAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveAllDesktops()));
-    QAction* exposeClassAction = actionCollection->addAction(QStringLiteral("ExposeClass"));
+    QAction* exposeClassAction = new QAction(this);
+    exposeClassAction->setObjectName(QStringLiteral("ExposeClass"));
     exposeClassAction->setText(i18n("Toggle Present Windows (Window class)"));
     KGlobalAccel::self()->setDefaultShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);
     KGlobalAccel::self()->setShortcut(exposeClassAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_F7);

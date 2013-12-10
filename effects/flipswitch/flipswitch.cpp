@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 
 #include <QAction>
-#include <KActionCollection>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
@@ -57,13 +56,14 @@ FlipSwitchEffect::FlipSwitchEffect()
     m_captionFont.setBold(true);
     m_captionFont.setPointSize(m_captionFont.pointSize() * 2);
 
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* flipSwitchCurrentAction = actionCollection->addAction(QStringLiteral("FlipSwitchCurrent"));
+    QAction* flipSwitchCurrentAction = new QAction(this);
+    flipSwitchCurrentAction->setObjectName(QStringLiteral("FlipSwitchCurrent"));
     flipSwitchCurrentAction->setText(i18n("Toggle Flip Switch (Current desktop)"));
     KGlobalAccel::self()->setShortcut(flipSwitchCurrentAction, QList<QKeySequence>());
     m_shortcutCurrent = KGlobalAccel::self()->shortcut(flipSwitchCurrentAction);
     connect(flipSwitchCurrentAction, SIGNAL(triggered(bool)), this, SLOT(toggleActiveCurrent()));
-    QAction* flipSwitchAllAction = actionCollection->addAction(QStringLiteral("FlipSwitchAll"));
+    QAction* flipSwitchAllAction = new QAction(this);
+    flipSwitchAllAction->setObjectName(QStringLiteral("FlipSwitchAll"));
     flipSwitchAllAction->setText(i18n("Toggle Flip Switch (All desktops)"));
     KGlobalAccel::self()->setShortcut(flipSwitchAllAction, QList<QKeySequence>());
     m_shortcutAll = KGlobalAccel::self()->shortcut(flipSwitchAllAction);

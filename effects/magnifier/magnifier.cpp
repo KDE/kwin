@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QAction>
 #include <kwinconfig.h>
-
-#include <kactioncollection.h>
 #include <kstandardaction.h>
 
 #include <kwinglutils.h>
@@ -55,17 +53,16 @@ MagnifierEffect::MagnifierEffect()
     , m_pixmap(XCB_PIXMAP_NONE)
 #endif
 {
-    KActionCollection* actionCollection = new KActionCollection(this);
     QAction* a;
-    a = actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn()));
+    a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
 
-    a = actionCollection->addAction(KStandardAction::ZoomOut, this, SLOT(zoomOut()));
+    a = KStandardAction::zoomOut(this, SLOT(zoomOut()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
 
-    a = actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle()));
+    a = KStandardAction::actualSize(this, SLOT(toggle()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
 

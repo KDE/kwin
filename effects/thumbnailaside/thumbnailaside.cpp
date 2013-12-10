@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailasideconfig.h"
 
 #include <QAction>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
@@ -35,8 +34,8 @@ KWIN_EFFECT(thumbnailaside, ThumbnailAsideEffect)
 
 ThumbnailAsideEffect::ThumbnailAsideEffect()
 {
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* a = actionCollection->addAction(QStringLiteral("ToggleCurrentThumbnail"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("ToggleCurrentThumbnail"));
     a->setText(i18n("Toggle Thumbnail for Current Window"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::CTRL + Qt::Key_T);

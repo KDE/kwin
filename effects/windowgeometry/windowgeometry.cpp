@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <kwindowsystem.h>
-#include <KActionCollection>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
@@ -60,8 +59,8 @@ WindowGeometry::WindowGeometry()
     myMeasure[1]->setAlignment(Qt::AlignCenter);
     myMeasure[2]->setAlignment(Qt::AlignRight | Qt::AlignBottom);
 
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* a = actionCollection->addAction(QStringLiteral("WindowGeometry"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle window geometry display (effect only)"));
 
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_F11);

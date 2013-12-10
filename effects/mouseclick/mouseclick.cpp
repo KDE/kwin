@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/render.h>
 #endif
 
-#include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
 #include <KDE/KGlobalAccel>
 
@@ -46,8 +45,8 @@ MouseClickEffect::MouseClickEffect()
 {
     m_enabled = false;
 
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* a = actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("ToggleMouseClick"));
     a->setText(i18n("Toggle Effect"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);

@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinxrenderutils.h>
 
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
@@ -57,8 +56,8 @@ TrackMouseEffect::TrackMouseEffect()
         m_angleBase = 90.0;
     m_mousePolling = false;
 
-    KActionCollection *actionCollection = new KActionCollection(this);
-    m_action = actionCollection->addAction(QStringLiteral("TrackMouse"));
+    m_action = new QAction(this);
+    m_action->setObjectName(QStringLiteral("TrackMouse"));
     m_action->setText(i18n("Track mouse"));
     KGlobalAccel::self()->setDefaultShortcut(m_action, QList<QKeySequence>());
     KGlobalAccel::self()->setShortcut(m_action, QList<QKeySequence>());

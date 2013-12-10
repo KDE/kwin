@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-class KActionCollection;
-
 namespace KWin
 {
 
@@ -72,7 +70,6 @@ private:
     bool polling; // Mouse polling
     int radius;
     int initialradius;
-    KActionCollection* actionCollection;
     GLTexture *m_texture;
     GLRenderTarget *m_fbo;
     GLVertexBuffer *m_vbo;

@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kwinconfig.h>
 #include <kwinglutils.h>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 
@@ -46,13 +45,14 @@ KWIN_EFFECT(mousemark, MouseMarkEffect)
 
 MouseMarkEffect::MouseMarkEffect()
 {
-    KActionCollection* actionCollection = new KActionCollection(this);
-    QAction* a = actionCollection->addAction(QStringLiteral("ClearMouseMarks"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("ClearMouseMarks"));
     a->setText(i18n("Clear All Mouse Marks"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F11);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(clear()));
-    a = actionCollection->addAction(QStringLiteral("ClearLastMouseMark"));
+    a = new QAction(this);
+    a->setObjectName(QStringLiteral("ClearLastMouseMark"));
     a->setText(i18n("Clear Last Mouse Mark"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::SHIFT + Qt::META + Qt::Key_F12);

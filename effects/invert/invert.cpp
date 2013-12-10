@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
-#include <kactioncollection.h>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <QStandardPaths>
@@ -43,15 +42,15 @@ InvertEffect::InvertEffect()
         m_shader(NULL),
         m_allWindows(false)
 {
-    KActionCollection* actionCollection = new KActionCollection(this);
-
-    QAction* a = actionCollection->addAction(QStringLiteral("Invert"));
+    QAction* a = new QAction(this);
+    a->setObjectName(QStringLiteral("Invert"));
     a->setText(i18n("Toggle Invert Effect"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_I);
     connect(a, SIGNAL(triggered(bool)), this, SLOT(toggleScreenInversion()));
 
-    QAction* b = actionCollection->addAction(QStringLiteral("InvertWindow"));
+    QAction* b = new QAction(this);
+    b->setObjectName(QStringLiteral("InvertWindow"));
     b->setText(i18n("Toggle Invert Effect on Window"));
     KGlobalAccel::self()->setDefaultShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);
     KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>() << Qt::CTRL + Qt::META + Qt::Key_U);

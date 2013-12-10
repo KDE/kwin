@@ -11,7 +11,6 @@ set(kwin_effect_KDE_LIBS
     KF5::Plasma # screenedge effect
     KF5::KIconThemes
     KF5::KService
-    KF5::XmlGui
 )
 
 set(kwin_effect_QT_LIBS

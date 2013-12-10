@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 
-#include <kactioncollection.h>
+#include <KDE/KStandardAction>
 #include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
 #include <QVector2D>
@@ -53,20 +53,16 @@ LookingGlassEffect::LookingGlassEffect()
     , m_enabled(false)
     , m_valid(false)
 {
-    actionCollection = new KActionCollection(this);
-    actionCollection->setConfigGlobal(true);
-    actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
-
     QAction* a;
-    a = actionCollection->addAction(KStandardAction::ZoomIn, this, SLOT(zoomIn()));
+    a = KStandardAction::zoomIn(this, SLOT(zoomIn()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Equal);
 
-    a = actionCollection->addAction(KStandardAction::ZoomOut, this, SLOT(zoomOut()));
+    a = KStandardAction::zoomOut(this, SLOT(zoomOut()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Minus);
 
-    a = actionCollection->addAction(KStandardAction::ActualSize, this, SLOT(toggle()));
+    a = KStandardAction::actualSize(this, SLOT(toggle()), this);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_0);
 
@@ -94,7 +90,6 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
     qCDebug(KWINEFFECTS) << QStringLiteral("Radius from config: %1").arg(radius) << endl;
-    actionCollection->readSettings();
     m_valid = loadData();
 }
 
