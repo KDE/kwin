@@ -191,9 +191,6 @@ public:
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
 
-    KActionCollection* actionCollection() const {
-        return keys;
-    }
     KActionCollection* clientKeys() const {
         return client_keys;
     }
@@ -507,7 +504,6 @@ private:
 
     void modalActionsSwitch(bool enabled);
 
-    KActionCollection* keys;
     KActionCollection* client_keys;
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;

@@ -420,7 +420,7 @@ void Compositor::toggleCompositing()
     slotToggleCompositing(); // TODO only operate on script level here?
     if (m_suspended) {
         // when disabled show a shortcut how the user can get back compositing
-        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->actionCollection()->action(QStringLiteral("Suspend Compositing")));
+        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
         if (!shortcuts.isEmpty()) {
             // display notification only if there is the shortcut
             const QString message = i18n("Desktop effects have been suspended by another application.<br/>"

@@ -183,8 +183,7 @@ void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Cl
     QStringList args;
     QString type;
     auto shortcut = [](const QString &name) {
-        KActionCollection *keys = Workspace::self()->actionCollection();
-        QAction* action = keys->action(name);
+        QAction* action = Workspace::self()->findChild<QAction*>(name);
         assert(action != NULL);
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
         return QStringLiteral("%1 (%2)").arg(action->text())
@@ -268,7 +267,7 @@ void UserActionsMenu::init()
     });
 
     auto setShortcut = [](QAction *action, const QString &actionName) {
-        const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->actionCollection()->action(actionName));
+        const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction*>(actionName));
         if (!shortcuts.isEmpty()) {
             action->setShortcut(shortcuts.first());
         }
@@ -940,7 +939,8 @@ void Workspace::closeActivePopup()
 template <typename Slot>
 void Workspace::initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut, Slot slot, const QVariant &data)
 {
-    QAction *a = keys->addAction(actionName);
+    QAction *a = new QAction(this);
+    a->setObjectName(actionName);
     a->setText(description);
     if (data.isValid()) {
         a->setData(data);
@@ -955,10 +955,6 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
  */
 void Workspace::initShortcuts()
 {
-    keys = new KActionCollection(this);
-    KActionCollection* actionCollection = keys;
-    QAction* a = 0L;
-
 #define IN_KWIN
 #include "kwinbindings.cpp"
 #ifdef KWIN_BUILD_TABBOX

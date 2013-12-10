@@ -37,17 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     initShortcut(QStringLiteral(name).arg(value), i18n(name, value), key, &Workspace::fnSlot, value);
 
 
-a = actionCollection->addAction(QStringLiteral("Program:kwin"));
-a->setText(i18n("System"));
-
-a = actionCollection->addAction(QStringLiteral("Group:Navigation"));
-a->setText(i18n("Navigation"));
 DEF(I18N_NOOP("Walk Through Window Tabs"),             0, slotActivateNextTab);
 DEF(I18N_NOOP("Walk Through Window Tabs (Reverse)"),   0, slotActivatePrevTab);
 DEF(I18N_NOOP("Remove Window From Group"),             0, slotUntab);
 
-a = actionCollection->addAction(QStringLiteral("Group:Windows"));
-a->setText(i18n("Windows"));
 DEF(I18N_NOOP("Window Operations Menu"),
     Qt::ALT + Qt::Key_F3, slotWindowOperations);
 DEF2("Window Close", I18N_NOOP("Close Window"),
@@ -125,8 +118,6 @@ DEF2("Increase Opacity", I18N_NOOP("Increase Opacity of Active Window by 5 %"),
 DEF2("Decrease Opacity", I18N_NOOP("Decrease Opacity of Active Window by 5 %"),
     0, slotLowerWindowOpacity);
 
-a = actionCollection->addAction(QStringLiteral("Group:Window Desktop"));
-a->setText(i18n("Window & Desktop"));
 DEF2("Window On All Desktops", I18N_NOOP("Keep Window on All Desktops"),
      0, slotWindowOnAllDesktops);
 
@@ -154,8 +145,6 @@ for (int i = 0; i < 8; ++i) {
 DEF(I18N_NOOP("Switch to Next Screen"),            0, slotSwitchToNextScreen);
 DEF(I18N_NOOP("Switch to Previous Screen"),        0, slotSwitchToPrevScreen);
 
-a = actionCollection->addAction(QStringLiteral("Group:Miscellaneous"));
-a->setText(i18n("Miscellaneous"));
 DEF(I18N_NOOP("Kill Window"),                      Qt::CTRL + Qt::ALT + Qt::Key_Escape, slotKillWindow);
 DEF(I18N_NOOP("Suspend Compositing"),              Qt::SHIFT + Qt::ALT + Qt::Key_F12, slotToggleCompositing);
 DEF(I18N_NOOP("Invert Screen Colors"),             0, slotInvertScreen);
