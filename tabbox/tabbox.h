@@ -252,7 +252,6 @@ private:
     void oneStepThroughDesktopList(bool forward);
     bool establishTabBoxGrab();
     void removeTabBoxGrab();
-    void modalActionsSwitch(bool enabled);
     template <typename Slot>
     void key(KActionCollection *keys, const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 

@@ -1086,16 +1086,6 @@ void TabBox::slotWalkBackThroughDesktopList()
     }
 }
 
-void TabBox::modalActionsSwitch(bool enabled)
-{
-    QList<KActionCollection*> collections;
-    collections.append(Workspace::self()->actionCollection());
-    collections.append(Workspace::self()->clientKeys());
-    foreach (KActionCollection * collection, collections)
-    foreach (QAction * action, collection->actions())
-    action->setEnabled(enabled);
-}
-
 bool TabBox::toggle(ElectricBorder eb)
 {
     if (!options->focusPolicyIsReasonable())
@@ -1172,7 +1162,6 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
     m_tabGrab = true;
     m_noModifierGrab = false;
     tabBox->resetEmbedded();
-    modalActionsSwitch(false);
     setMode(mode);
     reset();
     return true;
@@ -1184,7 +1173,6 @@ bool TabBox::startWalkThroughDesktops(TabBoxMode mode)
         return false;
     m_desktopGrab = true;
     m_noModifierGrab = false;
-    modalActionsSwitch(false);
     setMode(mode);
     reset();
     return true;
@@ -1456,7 +1444,6 @@ void TabBox::close(bool abort)
         removeTabBoxGrab();
     }
     hide(abort);
-    modalActionsSwitch(true);
     m_tabGrab = false;
     m_desktopGrab = false;
     m_noModifierGrab = false;
