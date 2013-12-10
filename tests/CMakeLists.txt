@@ -22,20 +22,20 @@ target_link_libraries( testWindowPaintData kwineffects Qt5::Widgets Qt5::Test )
 ########################################################
 # Test VirtualDesktopManager
 ########################################################
-set( testVirtualDesktops_SRCS
-     test_virtual_desktops.cpp
-     ../virtualdesktops.cpp
-)
-kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${testVirtualDesktops_SRCS} )
-
-target_link_libraries( testVirtualDesktops
-                       Qt5::Test
-                       Qt5::Widgets
-                       KF5::KI18n
-                       KF5::GlobalAccel
-                       KF5::KConfigCore
-                       KF5::KWindowSystem
-)
+# set( testVirtualDesktops_SRCS
+#      test_virtual_desktops.cpp
+#      ../virtualdesktops.cpp
+# )
+# kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${testVirtualDesktops_SRCS} )
+#
+# target_link_libraries( testVirtualDesktops
+#                        Qt5::Test
+#                        Qt5::Widgets
+#                        KF5::KI18n
+#                        KF5::GlobalAccel
+#                        KF5::KConfigCore
+#                        KF5::KWindowSystem
+# )
 
 ########################################################
 # Test ClientMachine
