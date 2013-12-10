@@ -32,7 +32,7 @@ target_link_libraries( testVirtualDesktops
                        Qt5::Test
                        Qt5::Widgets
                        KF5::KI18n
-                       KF5::XmlGui
+                       KF5::GlobalAccel
                        KF5::KWindowSystem
 )
 
