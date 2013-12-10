@@ -33,6 +33,7 @@ target_link_libraries( testVirtualDesktops
                        Qt5::Widgets
                        KF5::KI18n
                        KF5::GlobalAccel
+                       KF5::KConfigCore
                        KF5::KWindowSystem
 )
 
