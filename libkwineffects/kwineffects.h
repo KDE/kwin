@@ -49,7 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class KLibrary;
 class KConfigGroup;
-class KActionCollection;
 class QFont;
 class QGraphicsScale;
 class QKeyEvent;
