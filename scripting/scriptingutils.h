@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge.h"
 #endif
 
-#include <KDE/KAction>
-#include <KDE/KActionCollection>
+#include <KDE/KGlobalAccel>
 #include <KDE/KLocalizedString>
+#include <QAction>
 #include <QDebug>
 #include <QtScript/QScriptEngine>
 
@@ -114,12 +114,10 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
         qDebug() << "Incorrect number of arguments! Expected: title, text, keySequence, callback";
         return engine->undefinedValue();
     }
-    KActionCollection* actionCollection = new KActionCollection(script);
-    QAction* a = actionCollection->addAction(context->argument(0).toString());
+    QAction* a = new QAction(script);
+    a->setObjectName(context->argument(0).toString());
     a->setText(context->argument(1).toString());
-#if KWIN_QT5_PORTING
-    a->setGlobalShortcut(KShortcut(context->argument(2).toString()));
-#endif
+    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << QKeySequence(context->argument(2).toString()));
     script->registerShortcut(a, context->argument(3));
     return engine->newVariant(true);
 }
