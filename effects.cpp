@@ -229,6 +229,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(Cursor::self(), SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
+    connect(screens(), &Screens::countChanged, this, &EffectsHandler::numberScreensChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::self();
     connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));

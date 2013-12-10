@@ -668,7 +668,7 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     Q_PROPERTY(bool optionRollOverDesktops READ optionRollOverDesktops)
     Q_PROPERTY(int activeScreen READ activeScreen)
-    Q_PROPERTY(int numScreens READ numScreens)
+    Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
      * If configurable in the effect itself, the option should have also 'default'
@@ -1028,6 +1028,11 @@ Q_SIGNALS:
     * @since 4.7
     */
     void numberDesktopsChanged(uint old);
+    /**
+     * Signal emitted when the number of screens changed.
+     * @since 5.0
+     **/
+    void numberScreensChanged();
     /**
      * Signal emitted when a new window has been added to the Workspace.
      * @param w The added window

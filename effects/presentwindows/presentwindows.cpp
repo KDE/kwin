@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQuickView>
-#include <QDesktopWidget>
 #include <QGraphicsObject>
 #include <QTimer>
 #include <QElapsedTimer>
@@ -101,8 +100,7 @@ PresentWindowsEffect::PresentWindowsEffect()
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
     connect(effects, SIGNAL(propertyNotify(KWin::EffectWindow*,long)), this, SLOT(slotPropertyNotify(KWin::EffectWindow*,long)));
-
-    connect (qApp->desktop(), SIGNAL(screenCountChanged(int)), SLOT(screenCountChanged()));
+    connect(effects, &EffectsHandler::numberScreensChanged, this, &PresentWindowsEffect::screenCountChanged);
 }
 
 PresentWindowsEffect::~PresentWindowsEffect()
