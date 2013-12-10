@@ -72,7 +72,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QVBoxLayout>
 #include <kauthorized.h>
-#include <kactioncollection.h>
 
 #include "killwindow.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -1005,10 +1004,11 @@ void Workspace::setupWindowShortcutDone(bool ok)
 void Workspace::clientShortcutUpdated(Client* c)
 {
     QString key = QStringLiteral("_k_session:%1").arg(c->window());
-    QAction* action = client_keys->action(key);
+    QAction* action = findChild<QAction*>(key);
     if (!c->shortcut().isEmpty()) {
         if (action == NULL) { // new shortcut
-            action = client_keys->addAction(QString(key));
+            action = new QAction(this);
+            action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", c->caption()));
             connect(action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
         }

@@ -38,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class QStringList;
 class KConfig;
 class KConfigGroup;
-class KActionCollection;
 class KStartupInfo;
 class KStartupInfoId;
 class KStartupInfoData;
@@ -190,10 +189,6 @@ public:
     QVector< QRect > previousScreenSizes() const;
     int oldDisplayWidth() const;
     int oldDisplayHeight() const;
-
-    KActionCollection* clientKeys() const {
-        return client_keys;
-    }
 
     /**
      * Returns the list of clients sorted in stacking order, with topmost client
@@ -504,7 +499,6 @@ private:
 
     void modalActionsSwitch(bool enabled);
 
-    KActionCollection* client_keys;
     ShortcutDialog* client_keys_dialog;
     Client* client_keys_client;
     bool global_shortcuts_disabled_for_client;

@@ -61,7 +61,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include "main.h"
 // KDE
-#include <KDE/KActionCollection>
 #include <KDE/KConfig>
 #include <KDE/KConfigGroup>
 #include <KDE/KLocalizedString>
@@ -147,7 +146,6 @@ Workspace::Workspace(bool restore)
     , session_saving(false)
     , block_focus(0)
     , m_userActionsMenu(new UserActionsMenu(this))
-    , client_keys(NULL)
     , client_keys_dialog(NULL)
     , client_keys_client(NULL)
     , global_shortcuts_disabled_for_client(false)
@@ -238,8 +236,6 @@ Workspace::Workspace(bool restore)
 
     xcb_change_property(connection(), XCB_PROP_MODE_APPEND, rootWindow(), atoms->kwin_running,
                         atoms->kwin_running, 32, 1, &data);
-
-    client_keys = new KActionCollection(this);
 
     Outline::create(this);
 
