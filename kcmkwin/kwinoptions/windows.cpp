@@ -36,7 +36,6 @@
 #include <KButtonGroup>
 #include <KDE/KConfig>
 #include <KDE/KLocalizedString>
-#include <knuminput.h>
 #include <kdialog.h>
 
 #include <X11/X.h>

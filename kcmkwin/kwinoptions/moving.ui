@@ -44,7 +44,7 @@
       </widget>
      </item>
      <item row="6" column="2">
-      <widget class="KIntNumInput" name="centerSnap">
+      <widget class="QSpinBox" name="centerSnap">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -111,7 +111,7 @@
       </widget>
      </item>
      <item row="5" column="2">
-      <widget class="KIntNumInput" name="windowSnap">
+      <widget class="QSpinBox" name="windowSnap">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -139,7 +139,7 @@
       </widget>
      </item>
      <item row="4" column="2">
-      <widget class="KIntNumInput" name="borderSnap">
+      <widget class="QSpinBox" name="borderSnap">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -265,13 +265,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KIntNumInput</class>
-   <extends>QWidget</extends>
-   <header>knuminput.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

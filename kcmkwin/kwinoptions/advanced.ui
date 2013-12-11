@@ -210,7 +210,7 @@
        </widget>
       </item>
       <item row="3" column="2" colspan="3">
-       <widget class="KIntNumInput" name="shadeHover">
+       <widget class="QSpinBox" name="shadeHover">
         <property name="whatsThis">
          <string>Sets the time in milliseconds before the window unshades when the mouse pointer goes over the shaded window.</string>
         </property>
@@ -271,7 +271,7 @@
    <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>KIntNumInput</class>
+   <class>QSpinBox</class>
    <extends>QWidget</extends>
    <header>knuminput.h</header>
   </customwidget>

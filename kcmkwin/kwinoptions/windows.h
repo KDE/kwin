@@ -38,10 +38,9 @@ class QGroupBox;
 class QLabel;
 class QSlider;
 class KButtonGroup;
-// class QSpinBox;
+class QSpinBox;
 
 class KColorButton;
-class KIntNumInput;
 
 
 class KWinFocusConfigForm : public QWidget, public Ui::KWinFocusConfigForm
