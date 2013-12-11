@@ -39,7 +39,7 @@ class Screens : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)
-    Q_PROPERTY(int current READ current WRITE setCurrent)
+    Q_PROPERTY(int current READ current WRITE setCurrent NOTIFY currentChanged)
     Q_PROPERTY(bool currentFollowsMouse READ isCurrentFollowsMouse WRITE setCurrentFollowsMouse)
 
 public:
@@ -79,6 +79,7 @@ Q_SIGNALS:
      * Emitted whenever the screens are changed either count or geometry.
      **/
     void changed();
+    void currentChanged();
 
 protected Q_SLOTS:
     void setCount(int count);

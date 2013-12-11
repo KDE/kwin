@@ -80,6 +80,7 @@ void Screens::setCurrent(int current)
         return;
     }
     m_current = current;
+    emit currentChanged();
 }
 
 void Screens::setCurrent(const QPoint &pos)
