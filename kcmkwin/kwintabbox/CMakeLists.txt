@@ -23,16 +23,16 @@ target_link_libraries(kcm_kwintabbox
     Qt5::Quick
     Qt5::X11Extras
     KF5::KCMUtils
-    KF5::KCompletion
-    KF5::KDeclarative
+    KF5::Completion
+    KF5::Declarative
     KF5::GlobalAccel
-    KF5::KI18n
-    KF5::KIconThemes
-    KF5::KService
-    KF5::KWindowSystem
+    KF5::I18n
+    KF5::IconThemes
+    KF5::Service
+    KF5::WindowSystem
     KF5::Plasma
     KF5::XmlGui
-    KF5::KNewStuff
+    KF5::NewStuff
     ${XCB_XCB_LIBRARY})
 
 install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )

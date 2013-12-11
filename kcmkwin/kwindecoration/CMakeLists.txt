@@ -30,9 +30,9 @@ target_link_libraries(kcm_kwindecoration
     Qt5::Quick
     Qt5::UiTools
     KF5::KCMUtils
-    KF5::KCompletion
-    KF5::KI18n
-    KF5::KNewStuff
+    KF5::Completion
+    KF5::I18n
+    KF5::NewStuff
 )
 install(TARGETS kcm_kwindecoration  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

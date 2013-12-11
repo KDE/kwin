@@ -14,9 +14,9 @@ target_link_libraries(kcm_kwin_scripts
     Qt5::DBus
     KF5::KCMUtils
     KF5::KIOCore
-    KF5::KI18n
+    KF5::I18n
     KF5::Plasma
-    KF5::KNewStuff
+    KF5::NewStuff
 )
 
 install(TARGETS kcm_kwin_scripts DESTINATION ${PLUGIN_INSTALL_DIR})

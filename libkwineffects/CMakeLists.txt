@@ -15,7 +15,7 @@ set(kwineffects_QT_LIBS
 )
 
 set(kwineffects_KDE_LIBS
-    KF5::KConfigCore
+    KF5::ConfigCore
 )
 
 set(kwineffects_XCB_LIBS

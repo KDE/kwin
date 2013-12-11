@@ -3,14 +3,14 @@ set(kwin_effect_OWN_LIBS
 )
 
 set(kwin_effect_KDE_LIBS
-    KF5::KConfigCore
-    KF5::KConfigWidgets
+    KF5::ConfigCore
+    KF5::ConfigWidgets
     KF5::GlobalAccel
-    KF5::KI18n
-    KF5::KWindowSystem
+    KF5::I18n
+    KF5::WindowSystem
     KF5::Plasma # screenedge effect
-    KF5::KIconThemes
-    KF5::KService
+    KF5::IconThemes
+    KF5::Service
 )
 
 set(kwin_effect_QT_LIBS
@@ -83,11 +83,11 @@ macro( KWIN4_ADD_EFFECT_CONFIG name )
         Qt5::Widgets
         Qt5::Quick
         KF5::KIOWidgets # KUrlRequester
-        KF5::KCoreAddons
-        KF5::KCompletion
-        KF5::KConfigWidgets
+        KF5::CoreAddons
+        KF5::Completion
+        KF5::ConfigWidgets
         KF5::GlobalAccel
-        KF5::KI18n
+        KF5::I18n
         KF5::XmlGui
         )
     install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )

@@ -11,7 +11,7 @@ set(kwin_xml ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/org.kde.KWin.xml)
 set_source_files_properties(${kwin_xml} PROPERTIES INCLUDE "interface_util.h")
 qt5_add_dbus_interface(kcm_kwincompositing_PART_SRCS ${kwin_xml} kwin_interface)
 add_library(kcm_kwincompositing MODULE ${kcm_kwincompositing_PART_SRCS})
-target_link_libraries(kcm_kwincompositing KF5::KNewStuff ${KDE4_KCMUTILS_LIBS} ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES})
+target_link_libraries(kcm_kwincompositing KF5::NewStuff ${KDE4_KCMUTILS_LIBS} ${KDE4_KDEUI_LIBS} ${X11_LIBRARIES})
 install(TARGETS kcm_kwincompositing  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 

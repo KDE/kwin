@@ -9,10 +9,10 @@ add_library(kcm_kwindesktop MODULE ${kcm_kwindesktop_PART_SRCS})
 target_link_libraries(kcm_kwindesktop
     Qt5::X11Extras
     KF5::KCMUtils
-    KF5::KCompletion
+    KF5::Completion
     KF5::GlobalAccel
-    KF5::KI18n
-    KF5::KWindowSystem
+    KF5::I18n
+    KF5::WindowSystem
     KF5::XmlGui
     ${X11_LIBRARIES}
 )

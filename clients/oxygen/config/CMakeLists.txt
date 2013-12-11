@@ -26,7 +26,7 @@ add_library(kwin_oxygen_config MODULE
     ${kwin_oxygen_config_PART_FORMS_HEADERS})
 
 target_link_libraries(kwin_oxygen_config Qt5::Core Qt5::Gui Qt5::Widgets Qt5::DBus)
-target_link_libraries(kwin_oxygen_config KF5::KWindowSystem KF5::KCompletion)
+target_link_libraries(kwin_oxygen_config KF5::WindowSystem KF5::Completion)
 target_link_libraries(kwin_oxygen_config kdecorations oxygenstyle  oxygenstyleconfig)
 
 if(X11_FOUND)

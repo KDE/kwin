@@ -244,16 +244,16 @@ set(kwin_QT_LIBS
 )
 
 set(kwin_KDE_LIBS
-    KF5::KDeclarative
-    KF5::KConfigCore
-    KF5::KCoreAddons
-    KF5::KCrash
+    KF5::Declarative
+    KF5::ConfigCore
+    KF5::CoreAddons
+    KF5::Crash
     KF5::GlobalAccel
-    KF5::KI18n
-    KF5::KNotifications
-    KF5::KService
+    KF5::I18n
+    KF5::Notifications
+    KF5::Service
     KF5::Plasma
-    KF5::KWindowSystem
+    KF5::WindowSystem
     KF5::XmlGui
 )
 
