@@ -23,133 +23,127 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.qtextracomponents 2.0
-import org.kde.kwin 0.1 as KWin
+import org.kde.kwin 2.0 as KWin
 
-Item {
-    id: thumbnailTabBox
-    property int screenWidth : 1
-    property int screenHeight : 1
-    property real screenFactor: screenWidth/screenHeight
-    property int alignment: Qt.AlignLeft|Qt.AlignVCenter
+KWin.Switcher {
+    id: tabBox
+    property real screenFactor: screenGeometry.width/screenGeometry.height
 
-    property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right) + background.leftMargin + background.bottomMargin
-
-    property bool canStretchX: false
-    property bool canStretchY: false
-    property string maskImagePath: background.maskImagePath
-    property double maskWidth: background.centerWidth
-    property double maskHeight: background.centerHeight
-    property int maskTopMargin: background.centerTopMargin
-    property int maskLeftMargin: background.centerLeftMargin
-    width: Math.min(Math.max(screenWidth * 0.15, optimalWidth), screenWidth * 0.3)
-    height: screenHeight
-    clip: true
-    focus: true
-
-
-    function setModel(model) {
-        thumbnailListView.model = model;
-    }
-
-    ShadowedSvgItem {
-        id: background
-        anchors.fill: parent
-        enabledBorders: PlasmaCore.FrameSvg.RightBorder
-    }
-    // just to get the margin sizes
-    PlasmaCore.FrameSvgItem {
-        id: hoverItem
-        imagePath: "widgets/viewitem"
-        prefix: "hover"
-        visible: false
-    }
-
-    PlasmaExtras.ScrollArea {
-        anchors {
-            fill: parent
-            topMargin: background.topMargin
-            leftMargin: background.leftMargin
-            rightMargin: background.rightMargin
-            bottomMargin: background.bottomMargin
-        }
-        ListView {
-            signal currentIndexChanged(int index)
-            id: thumbnailListView
-            objectName: "listView"
-            orientation: ListView.Vertical
-            property int thumbnailWidth: width
-            height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
-            spacing: 5
-            highlightMoveDuration: 250
-            width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
-
-            clip: true
-            delegate: Item {
-                property alias data: thumbnailItem.data
-                id: delegateItem
-                width: thumbnailListView.thumbnailWidth
-                height: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + label.height + 30
-                KWin.ThumbnailItem {
-                    property variant data: model
-                    id: thumbnailItem
-                    wId: windowId
-                    anchors {
-                        centerIn: parent
-                    }
-                    width: thumbnailListView.thumbnailWidth
-                    height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        thumbnailListView.currentIndex = index;
-                        thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
-                    }
-                }
-                Row {
-                    id: label
-                    spacing: 4
-                    anchors {
-                        left: parent.left
-                        bottom: parent.bottom
-                        leftMargin: 8
-                        bottomMargin: 8
-                    }
-                    QIconItem {
-                        id: iconItem
-                        icon: model.icon
-                        width: 32
-                        height: 32
-                    }
-                    PlasmaComponents.Label {
-                        text: model.caption
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-                }
+    PlasmaCore.Dialog {
+        id: dialog
+        location: PlasmaCore.Types.Floating
+        visible: tabBox.visible
+        windowFlags: Qt.X11BypassWindowManagerHint
+        onVisibleChanged: {
+            if (visible) {
+                dialog.x = screenGeometry.x;
+                dialog.y = screenGeometry.y;
             }
-            highlight: PlasmaCore.FrameSvgItem {
-                id: highlightItem
+        }
+
+        mainItem: Item {
+            id: dialogMainItem
+            property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right)
+
+            property bool canStretchX: false
+            property bool canStretchY: false
+            width: Math.min(Math.max(tabBox.screenGeometry.width * 0.15, optimalWidth), tabBox.screenGeometry.width * 0.3)
+            height: tabBox.screenGeometry.height
+            clip: true
+            focus: true
+
+            // just to get the margin sizes
+            PlasmaCore.FrameSvgItem {
+                id: hoverItem
                 imagePath: "widgets/viewitem"
                 prefix: "hover"
-                width: thumbnailListView.thumbnailWidth
-                height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
+                visible: false
             }
-            boundsBehavior: Flickable.StopAtBounds
-        }
-    }
 
-    /*
-     * Key navigation on outer item for two reasons:
-     * @li we have to emit the change signal
-     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
-     **/
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Up) {
-            thumbnailListView.decrementCurrentIndex();
-            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
-        } else if (event.key == Qt.Key_Down) {
-            thumbnailListView.incrementCurrentIndex();
-            thumbnailListView.currentIndexChanged(thumbnailListView.currentIndex);
+            PlasmaExtras.ScrollArea {
+                anchors {
+                    fill: parent
+                }
+                ListView {
+                    id: thumbnailListView
+                    orientation: ListView.Vertical
+                    model: tabBox.model
+                    property int thumbnailWidth: width
+                    height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
+                    spacing: 5
+                    highlightMoveDuration: 250
+                    width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
+
+                    clip: true
+                    delegate: Item {
+                        property alias data: thumbnailItem.data
+                        id: delegateItem
+                        width: thumbnailListView.thumbnailWidth
+                        height: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + label.height + 30
+                        KWin.ThumbnailItem {
+                            property variant data: model
+                            id: thumbnailItem
+                            wId: windowId
+                            anchors {
+                                centerIn: parent
+                            }
+                            width: thumbnailListView.thumbnailWidth
+                            height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                thumbnailListView.currentIndex = index;
+                            }
+                        }
+                        Row {
+                            id: label
+                            spacing: 4
+                            anchors {
+                                left: parent.left
+                                bottom: parent.bottom
+                                leftMargin: 8
+                                bottomMargin: 8
+                            }
+                            QIconItem {
+                                id: iconItem
+                                icon: model.icon
+                                width: 32
+                                height: 32
+                            }
+                            PlasmaComponents.Label {
+                                text: model.caption
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+                    }
+                    highlight: PlasmaCore.FrameSvgItem {
+                        id: highlightItem
+                        imagePath: "widgets/viewitem"
+                        prefix: "hover"
+                        width: thumbnailListView.thumbnailWidth
+                        height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
+                    }
+                    boundsBehavior: Flickable.StopAtBounds
+                    Connections {
+                        target: tabBox
+                        onCurrentIndexChanged: {thumbnailListView.currentIndex = tabBox.currentIndex;}
+                    }
+                }
+            }
+
+            /*
+            * Key navigation on outer item for two reasons:
+            * @li we have to emit the change signal
+            * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
+            **/
+            Keys.onPressed: {
+                if (event.key == Qt.Key_Up) {
+                    thumbnailListView.decrementCurrentIndex();
+                } else if (event.key == Qt.Key_Down) {
+                    thumbnailListView.incrementCurrentIndex();
+                }
+            }
         }
     }
 }
