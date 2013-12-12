@@ -9,7 +9,6 @@ install( DIRECTORY clients/sidebar      DESTINATION ${DATA_INSTALL_DIR}/${KWIN_N
 install( DIRECTORY clients/small_icons  DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/text         DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/thumbnails   DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
-install( DIRECTORY clients/window_strip DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 
 install( DIRECTORY desktops/informative DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox )
 install( DIRECTORY desktops/previews DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox )
@@ -23,7 +22,6 @@ install( FILES clients/sidebar/metadata.desktop      DESTINATION ${SERVICES_INST
 install( FILES clients/small_icons/metadata.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_small_icons.desktop )
 install( FILES clients/text/metadata.desktop         DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_text.desktop )
 install( FILES clients/thumbnails/metadata.desktop   DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_thumbnails.desktop )
-install( FILES clients/window_strip/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_window_switcher_window_strip.desktop )
 
 install( FILES desktops/informative/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_informative.desktop )
 install( FILES desktops/previews/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_previews.desktop )
