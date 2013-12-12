@@ -114,6 +114,7 @@ ExampleClientModel::ExampleClientModel (QObject* parent)
     QHash<int, QByteArray> roles;
     roles[Qt::UserRole] = "caption";
     roles[Qt::UserRole+1] = "minimized";
+    roles[Qt::UserRole + 3] = "icon";
     roles[Qt::UserRole+2] = "desktopName";
     roles[Qt::UserRole+4] = "windowId";
     setRoleNames(roles);
@@ -151,7 +152,7 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
     case Qt::UserRole+2:
         return i18nc("An example Desktop Name", "Desktop 1");
     case Qt::UserRole+3:
-        return KDesktopFile(m_nameList.at(index.row())).readIcon();
+        return QIcon::fromTheme(KDesktopFile(m_nameList.at(index.row())).readIcon());
     case Qt::UserRole+4:
         const QString desktopFile = KDesktopFile(m_nameList.at(index.row())).fileName().split('/').last();
         if (desktopFile == "konqbrowser.desktop") {
