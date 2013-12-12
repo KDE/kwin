@@ -37,7 +37,7 @@ class KComboBox;
 class QGroupBox;
 class QLabel;
 class QSlider;
-class KButtonGroup;
+class QGroupBox;
 class QSpinBox;
 
 class KColorButton;

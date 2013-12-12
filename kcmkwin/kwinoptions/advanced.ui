@@ -38,7 +38,7 @@
     </spacer>
    </item>
    <item row="1" column="1">
-    <widget class="KButtonGroup" name="wtBox">
+    <widget class="QGroupBox" name="wtBox">
      <property name="title">
       <string>Window Tabbing</string>
      </property>
@@ -162,7 +162,7 @@
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="KButtonGroup" name="shBox">
+    <widget class="QGroupBox" name="shBox">
      <property name="title">
       <string>Shading</string>
      </property>
@@ -259,12 +259,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>KButtonGroup</class>
-   <extends>QGroupBox</extends>
-   <header>kbuttongroup.h</header>
-   <container>1</container>
-  </customwidget>
   <customwidget>
    <class>KComboBox</class>
    <extends>QComboBox</extends>

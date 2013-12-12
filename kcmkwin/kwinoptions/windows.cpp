@@ -32,8 +32,8 @@
 #include <QFormLayout>
 #include <QDesktopWidget>
 #include <QtDBus/QtDBus>
+#include <QGroupBox>
 
-#include <KButtonGroup>
 #include <KDE/KConfig>
 #include <KDE/KLocalizedString>
 #include <kdialog.h>
