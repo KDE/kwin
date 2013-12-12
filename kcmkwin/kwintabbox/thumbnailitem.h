@@ -31,6 +31,7 @@ class WindowThumbnailItem : public QQuickPaintedItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
+    Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 public:
     explicit WindowThumbnailItem(QQuickPaintedItem *parent = 0);
     virtual ~WindowThumbnailItem();
@@ -38,7 +39,11 @@ public:
     qulonglong wId() const {
         return m_wId;
     }
+    QQuickItem *clipTo() const {
+        return m_clipToItem;
+    }
     void setWId(qulonglong wId);
+    void setClipTo(QQuickItem *clip);
     virtual void paint(QPainter *painter) override;
 
     enum Thumbnail {
@@ -49,10 +54,12 @@ public:
     };
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
+    void clipToChanged();
 private:
     void findImage();
     qulonglong m_wId;
     QImage m_image;
+    QQuickItem *m_clipToItem;
 };
 
 } // KWin

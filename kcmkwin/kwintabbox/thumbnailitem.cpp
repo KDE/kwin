@@ -29,6 +29,7 @@ WindowThumbnailItem::WindowThumbnailItem(QQuickPaintedItem* parent)
     : QQuickPaintedItem(parent)
     , m_wId(0)
     , m_image()
+    , m_clipToItem(nullptr)
 {
 }
 
@@ -41,6 +42,15 @@ void WindowThumbnailItem::setWId(qulonglong wId)
     m_wId = wId;
     emit wIdChanged(wId);
     findImage();
+}
+
+void WindowThumbnailItem::setClipTo(QQuickItem *clip)
+{
+    if (m_clipToItem == clip) {
+        return;
+    }
+    m_clipToItem = clip;
+    emit clipToChanged();
 }
 
 void WindowThumbnailItem::findImage()
