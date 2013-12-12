@@ -1,5 +1,3 @@
-install( FILES tabbox.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
-
 # packages
 install( DIRECTORY clients/big_icons    DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
 install( DIRECTORY clients/compact      DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox )
@@ -26,14 +24,5 @@ install( FILES clients/thumbnails/metadata.desktop   DESTINATION ${SERVICES_INST
 install( FILES desktops/informative/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_informative.desktop )
 install( FILES desktops/previews/metadata.desktop DESTINATION ${SERVICES_INSTALL_DIR}/${KWIN_NAME} RENAME kwin4_desktop_switcher_previews.desktop )
 
-install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
-install (FILES IconTabBox.qml ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/compact/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/informative/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/present_windows/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/thumbnails/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/text/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/sidebar/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/informative/contents/ui)
-install (FILES ShadowedSvgItem.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/desktoptabbox/previews/contents/ui)
+install (FILES IconTabBox.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/big_icons/contents/ui)
+install (FILES IconTabBox.qml DESTINATION ${DATA_INSTALL_DIR}/${KWIN_NAME}/tabbox/small_icons/contents/ui)
