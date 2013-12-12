@@ -19,17 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_USERACTIONS_H
 #define KWIN_USERACTIONS_H
+#include "ui_shortcutdialog.h"
 
 // Qt
 #include <QDialog>
 #include <QObject>
-#include <QWeakPointer>
 
-class KKeySequenceWidget;
 class QAction;
-class QDialogButtonBox;
-class QLabel;
-class QMenu;
 class QRect;
 
 namespace KWin
@@ -269,16 +265,14 @@ public:
     virtual void accept();
     QKeySequence shortcut() const;
 public Q_SLOTS:
-    void keySequenceChanged(const QKeySequence &seq);
+    void keySequenceChanged();
 Q_SIGNALS:
     void dialogDone(bool ok);
 protected:
     virtual void done(int r);
 private:
-    KKeySequenceWidget* widget;
+    Ui::ShortcutDialog m_ui;
     QKeySequence _shortcut;
-    QLabel *warning;
-    QDialogButtonBox *m_buttons;
 };
 
 } // namespace

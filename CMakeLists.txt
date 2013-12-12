@@ -226,6 +226,10 @@ qt5_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
+kde4_add_ui_files(kwin_KDEINIT_SRCS
+    shortcutdialog.ui
+)
+
 ########### target link libraries ###############
 
 set(kwin_OWN_LIBS
@@ -244,6 +248,7 @@ set(kwin_QT_LIBS
 set(kwin_KDE_LIBS
     KF5::ConfigCore
     KF5::CoreAddons
+    KF5::ConfigWidgets
     KF5::Crash
     KF5::GlobalAccel
     KF5::I18n
@@ -251,7 +256,6 @@ set(kwin_KDE_LIBS
     KF5::Service
     KF5::Plasma
     KF5::WindowSystem
-    KF5::XmlGui
 )
 
 set(kwin_XLIB_LIBS
