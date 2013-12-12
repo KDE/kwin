@@ -61,7 +61,6 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(QWidget* parent)
 KWinTabBoxConfig::KWinTabBoxConfig(QWidget* parent, const QVariantList& args)
     : KCModule(parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
-    , m_layoutPreview(NULL)
 {
     QTabWidget* tabWidget = new QTabWidget(this);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(tabWidget);
@@ -475,12 +474,6 @@ void KWinTabBoxConfig::effectSelectionChanged(int index)
     if (!ui->showTabBox->isChecked())
         return;
     ui->highlightWindowCheck->setEnabled(index >= Layout);
-    if (m_layoutPreview && m_layoutPreview->isVisible()) {
-        if (index < Layout)
-            m_layoutPreview->hide();
-        else
-            m_layoutPreview->setLayout(ui->effectCombo->itemData(index, Qt::UserRole+1).toString(), ui->effectCombo->itemText(index));
-    }
 }
 
 void KWinTabBoxConfig::tabBoxToggled(bool on) {
@@ -496,13 +489,8 @@ void KWinTabBoxConfig::configureEffectClicked()
 
     const int effect = ui->effectCombo->currentIndex();
     if (effect >= Layout) {
-        if (!m_layoutPreview) {
-            m_layoutPreview = new LayoutPreview();
-            m_layoutPreview->setTitle(i18n("Tabbox layout preview"));
-            m_layoutPreview->setFlags(Qt::Dialog);
-        }
-        m_layoutPreview->setLayout(ui->effectCombo->itemData(effect, Qt::UserRole+1).toString(), ui->effectCombo->itemText(effect));
-        m_layoutPreview->show();
+        // TODO: here we need to show the preview
+        new LayoutPreview(ui->effectCombo->itemData(effect, Qt::UserRole+1).toString(), this);
     } else {
         QPointer<QDialog> configDialog = new QDialog(this);
         configDialog->setLayout(new QVBoxLayout);

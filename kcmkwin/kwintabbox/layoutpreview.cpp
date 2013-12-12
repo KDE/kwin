@@ -20,12 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "layoutpreview.h"
 #include "thumbnailitem.h"
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QQmlEngine>
 #include <QQmlContext>
 #include <QtCore/QStandardPaths>
 #include <KDE/KConfigGroup>
 #include <KDE/KDesktopFile>
-#include <KDE/KIconEffect>
-#include <KDE/KIconLoader>
 #include <KDE/KLocalizedString>
 #include <KDE/KService>
 
@@ -34,65 +35,77 @@ namespace KWin
 namespace TabBox
 {
 
-LayoutPreview::LayoutPreview(QWindow *parent)
-    : QQuickView(parent)
+LayoutPreview::LayoutPreview(const QString &path, QObject *parent)
+    : QObject(parent)
+    , m_item(nullptr)
 {
-    setColor(Qt::white);
-    setMinimumSize(QSize(480, 300));
-    setResizeMode(QQuickView::SizeRootObjectToView);
-    foreach (const QString &importPath, QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin/tabbox", QStandardPaths::LocateDirectory)) {
-        engine()->addImportPath(importPath);
+    QQmlEngine *engine = new QQmlEngine(this);
+    QQmlComponent *component = new QQmlComponent(engine, this);
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
+    component->loadUrl(QUrl::fromLocalFile(path));
+    QObject *item = component->create();
+    auto findSwitcher = [item]() -> SwitcherItem* {
+        if (!item) {
+            return nullptr;
+        }
+        if (SwitcherItem *i = qobject_cast<SwitcherItem*>(item)) {
+            return i;
+        } else if (QQuickWindow *w = qobject_cast<QQuickWindow*>(item)) {
+            return w->contentItem()->findChild<SwitcherItem*>();
+        }
+        return item->findChild<SwitcherItem*>();
+    };
+    if (SwitcherItem *switcher = findSwitcher()) {
+        m_item = switcher;
+        switcher->setVisible(true);
     }
-    ExampleClientModel *model = new ExampleClientModel(this);
-    engine()->addImageProvider(QLatin1String("client"), new TabBoxImageProvider(model));
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 0, 1, "ThumbnailItem");
-    rootContext()->setContextProperty("clientModel", model);
-    rootContext()->setContextProperty("sourcePath", QString());
-    rootContext()->setContextProperty("name", QString());
-    setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwintabbox/main.qml")));
+    auto findWindow = [item]() -> QQuickWindow* {
+        if (!item) {
+            return nullptr;
+        }
+        if (QQuickWindow *w = qobject_cast<QQuickWindow*>(item)) {
+            return w;
+        }
+        return item->findChild<QQuickWindow*>();
+    };
+    if (QQuickWindow *w = findWindow()) {
+        w->setKeyboardGrabEnabled(true);
+        w->setMouseGrabEnabled(true);
+        w->installEventFilter(this);
+    }
 }
 
 LayoutPreview::~LayoutPreview()
 {
 }
 
-void LayoutPreview::setLayout(const QString &path, const QString &name)
+bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
 {
-    rootContext()->setContextProperty("sourcePath", path);
-    rootContext()->setContextProperty("name", name);
-}
-
-TabBoxImageProvider::TabBoxImageProvider(QAbstractListModel* model)
-    : QQuickImageProvider(QQuickImageProvider::Pixmap)
-    , m_model(model)
-{
-}
-
-QPixmap TabBoxImageProvider::requestPixmap(const QString &id, QSize *size, const QSize &requestedSize)
-{
-    bool ok = false;
-    QStringList parts = id.split('/');
-    const int index = parts.first().toInt(&ok);
-    if (!ok) {
-        return QQuickImageProvider::requestPixmap(id, size, requestedSize);
-    }
-    QSize s(32, 32);
-    if (requestedSize.isValid()) {
-        s = requestedSize;
-    }
-    *size = s;
-    QPixmap icon(QIcon::fromTheme(m_model->data(m_model->index(index), Qt::UserRole+3).toString()).pixmap(s));
-    if (parts.size() > 2) {
-        KIconEffect *effect = KIconLoader::global()->iconEffect();
-        KIconLoader::States state = KIconLoader::DefaultState;
-        if (parts.at(2) == QLatin1String("selected")) {
-            state = KIconLoader::ActiveState;
-        } else if (parts.at(2) == QLatin1String("disabled")) {
-            state = KIconLoader::DisabledState;
+    if (event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = dynamic_cast<QKeyEvent*>(event);
+        if (keyEvent->key() == Qt::Key_Escape ||
+                keyEvent->key() == Qt::Key_Return ||
+                keyEvent->key() == Qt::Key_Enter ||
+                keyEvent->key() == Qt::Key_Space) {
+            object->deleteLater();
+            deleteLater();
         }
-        icon = effect->apply(icon, KIconLoader::Desktop, state);
+        if (m_item && keyEvent->key() == Qt::Key_Tab) {
+            m_item->incrementIndex();
+        }
+        if (m_item && keyEvent->key() == Qt::Key_Backtab) {
+            m_item->decrementIndex();
+        }
+    } else if (event->type() == QEvent::MouseButtonPress) {
+        if (QWindow *w = qobject_cast<QWindow*>(object)) {
+            if (!w->geometry().contains(static_cast<QMouseEvent*>(event)->globalPos())) {
+                object->deleteLater();
+                deleteLater();
+            }
+        }
     }
-    return icon;
+    return QObject::eventFilter(object, event);
 }
 
 ExampleClientModel::ExampleClientModel (QObject* parent)
@@ -159,6 +172,62 @@ int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
     return m_nameList.size();
+}
+
+SwitcherItem::SwitcherItem(QObject *parent)
+    : QObject(parent)
+    , m_model(new ExampleClientModel(this))
+    , m_item(nullptr)
+    , m_currentIndex(0)
+    , m_visible(false)
+{
+}
+
+SwitcherItem::~SwitcherItem()
+{
+}
+
+void SwitcherItem::setVisible(bool visible)
+{
+    if (m_visible == visible) {
+        return;
+    }
+    m_visible = visible;
+    emit visibleChanged();
+}
+
+void SwitcherItem::setItem(QObject *item)
+{
+    m_item = item;
+    emit itemChanged();
+}
+
+void SwitcherItem::setCurrentIndex(int index)
+{
+    if (m_currentIndex == index) {
+        return;
+    }
+    m_currentIndex = index;
+    emit currentIndexChanged(m_currentIndex);
+}
+
+QRect SwitcherItem::screenGeometry() const
+{
+    return qApp->desktop()->screenGeometry(qApp->desktop()->primaryScreen());
+}
+
+void SwitcherItem::incrementIndex()
+{
+    setCurrentIndex((m_currentIndex + 1) % m_model->rowCount());
+}
+
+void SwitcherItem::decrementIndex()
+{
+    int index = m_currentIndex -1;
+    if (index < 0) {
+        index = m_model->rowCount() -1;
+    }
+    setCurrentIndex(index);
 }
 
 } // namespace KWin

@@ -35,7 +35,6 @@ namespace KWin
 namespace TabBox
 {
 
-class LayoutPreview;
 }
 
 
@@ -87,7 +86,6 @@ private:
     KShortcutsEditor* m_editor;
     TabBox::TabBoxConfig m_tabBoxConfig;
     TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
-    TabBox::LayoutPreview *m_layoutPreview;
 
     bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
 };
