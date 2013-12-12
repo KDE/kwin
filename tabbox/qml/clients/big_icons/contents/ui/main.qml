@@ -20,93 +20,90 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.qtextracomponents 2.0
+import org.kde.kwin 2.0 as KWin
 
-Item {
-    id: bigIconsTabBox
-    property int screenWidth : 0
-    property int screenHeight : 0
-    property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count + background.leftMargin + background.bottomMargin
-    property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + background.topMargin + background.bottomMargin + 40
-    property bool canStretchX: false
-    property bool canStretchY: false
-    property string maskImagePath: background.maskImagePath
-    property double maskWidth: background.centerWidth
-    property double maskHeight: background.centerHeight
-    property int maskTopMargin: background.centerTopMargin
-    property int maskLeftMargin: background.centerLeftMargin
-    width: Math.min(Math.max(screenWidth * 0.3, optimalWidth), screenWidth * 0.9)
-    height: Math.min(Math.max(screenHeight * 0.05, optimalHeight), screenHeight * 0.5)
+KWin.Switcher {
+    id: tabBox
+    currentIndex: icons.currentIndex
 
-
-    function setModel(model) {
-        icons.setModel(model);
-    }
-
-    function modelChanged() {
-        icons.modelChanged();
-    }
-
-    ShadowedSvgItem {
-        id: background
-        anchors.fill: parent
-    }
-
-    IconTabBox {
-        id: icons
-        iconSize: 128
-        height: iconSize + background.topMargin + icons.margins.top + icons.margins.bottom
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-            topMargin: background.topMargin
-            rightMargin: background.rightMargin
-            leftMargin: background.leftMargin
+    PlasmaCore.Dialog {
+        id: dialog
+        location: PlasmaCore.Types.Floating
+        visible: tabBox.visible
+        windowFlags: Qt.X11BypassWindowManagerHint
+        onVisibleChanged: {
+            if (visible) {
+                dialog.x = tabBox.screenGeometry.x + tabBox.screenGeometry.width * 0.5 - dialogMainItem.width * 0.5;
+                dialog.y = tabBox.screenGeometry.y + tabBox.screenGeometry.height * 0.5 - dialogMainItem.height * 0.5;
+            }
         }
-    }
-    Item {
-        id: captionFrame
-        anchors {
-            top: icons.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-            leftMargin: background.leftMargin
-            rightMargin: background.rightMargin
-            bottomMargin: background.bottomMargin
-        }
-        Text {
-            function constrainWidth() {
-                if (textItem.width > textItem.maxWidth && textItem.width > 0 && textItem.maxWidth > 0) {
-                    textItem.width = textItem.maxWidth;
-                } else {
-                    textItem.width = undefined;
+
+        mainItem: Item {
+            id: dialogMainItem
+            property int optimalWidth: (icons.iconSize + icons.margins.left + icons.margins.right) * icons.count
+            property int optimalHeight: icons.iconSize + icons.margins.top + icons.margins.bottom + 40
+            property bool canStretchX: false
+            property bool canStretchY: false
+            width: Math.min(Math.max(tabBox.screenGeometry.width * 0.3, optimalWidth), tabBox.screenGeometry.width * 0.9)
+            height: Math.min(Math.max(tabBox.screenGeometry.height * 0.05, optimalHeight), tabBox.screenGeometry.height * 0.5)
+
+            IconTabBox {
+                id: icons
+                model: tabBox.model
+                iconSize: 128
+                height: iconSize + icons.margins.top + icons.margins.bottom
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                }
+                Connections {
+                    target: tabBox
+                    onCurrentIndexChanged: {icons.currentIndex = tabBox.currentIndex;}
                 }
             }
-            function calculateMaxWidth() {
-                textItem.maxWidth = bigIconsTabBox.width - captionFrame.anchors.leftMargin - captionFrame.anchors.rightMargin - captionFrame.anchors.rightMargin;
-            }
-            id: textItem
-            property int maxWidth: 0
-            text: icons.currentItem ? icons.currentItem.data.caption : ""
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            color: theme.textColor
-            elide: Text.ElideMiddle
-            font {
-                bold: true
-            }
-            anchors {
-                verticalCenter: parent.verticalCenter
-                horizontalCenter: parent.horizontalCenter
-            }
-            onTextChanged: textItem.constrainWidth()
-            Component.onCompleted: textItem.calculateMaxWidth()
-            Connections {
-                target: bigIconsTabBox
-                onWidthChanged: {
-                    textItem.calculateMaxWidth();
-                    textItem.constrainWidth();
+            Item {
+                id: captionFrame
+                anchors {
+                    top: icons.bottom
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                }
+                Text {
+                    function constrainWidth() {
+                        if (textItem.width > textItem.maxWidth && textItem.width > 0 && textItem.maxWidth > 0) {
+                            textItem.width = textItem.maxWidth;
+                        } else {
+                            textItem.width = undefined;
+                        }
+                    }
+                    function calculateMaxWidth() {
+                        textItem.maxWidth = dialogMainItem.width - captionFrame.anchors.leftMargin - captionFrame.anchors.rightMargin - captionFrame.anchors.rightMargin;
+                    }
+                    id: textItem
+                    property int maxWidth: 0
+                    text: icons.currentItem ? icons.currentItem.data.caption : ""
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    color: theme.textColor
+                    elide: Text.ElideMiddle
+                    font {
+                        bold: true
+                    }
+                    anchors {
+                        verticalCenter: parent.verticalCenter
+                        horizontalCenter: parent.horizontalCenter
+                    }
+                    onTextChanged: textItem.constrainWidth()
+                    Component.onCompleted: textItem.calculateMaxWidth()
+                    Connections {
+                        target: dialogMainItem
+                        onWidthChanged: {
+                            textItem.calculateMaxWidth();
+                            textItem.constrainWidth();
+                        }
+                    }
                 }
             }
         }

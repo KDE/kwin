@@ -27,13 +27,10 @@ Item {
     property alias count: iconsListView.count
     property alias margins: hoverItem.margins
     property alias currentItem: iconsListView.currentItem
+    property alias model: iconsListView.model
+    property alias currentIndex: iconsListView.currentIndex
     focus: true
     clip: true
-
-
-    function setModel(model) {
-        iconsListView.model = model;
-    }
 
     // just to get the margin sizes
     PlasmaCore.FrameSvgItem {
@@ -70,15 +67,12 @@ Item {
                 anchors.fill: parent
                 onClicked: {
                     iconsListView.currentIndex = index;
-                    iconsListView.currentIndexChanged(iconsListView.currentIndex);
                 }
             }
         }
     }
     ListView {
-        signal currentIndexChanged(int index)
         id: iconsListView
-        objectName: "listView"
         orientation: ListView.Horizontal
         width: Math.min(parent.width, (iconSize + margins.left + margins.right) * count)
         height: iconSize + margins.top + margins.bottom
@@ -106,10 +100,8 @@ Item {
     Keys.onPressed: {
         if (event.key == Qt.Key_Left) {
             iconsListView.decrementCurrentIndex();
-            iconsListView.currentIndexChanged(iconsListView.currentIndex);
         } else if (event.key == Qt.Key_Right) {
             iconsListView.incrementCurrentIndex();
-            iconsListView.currentIndexChanged(iconsListView.currentIndex);
         }
     }
 }
