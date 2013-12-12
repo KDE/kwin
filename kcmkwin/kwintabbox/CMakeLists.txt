@@ -2,8 +2,6 @@ include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox ${KDEBASE_WORKS
 
 ########### next target ###############
 
-add_definitions(-DTABBOX_KCM)
-
 set(kcm_kwintabbox_PART_SRCS
     main.cpp
     layoutpreview.cpp

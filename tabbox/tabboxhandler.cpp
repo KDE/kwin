@@ -71,9 +71,7 @@ public:
 
     void show();
     QQuickWindow *window() const;
-#ifndef TABBOX_KCM
     SwitcherItem *switcherItem() const;
-#endif
 
     ClientModel* clientModel() const;
     DesktopModel* desktopModel() const;
@@ -143,7 +141,6 @@ QQuickWindow *TabBoxHandlerPrivate::window() const
     return m_mainItem->findChild<QQuickWindow*>();
 }
 
-#ifndef TABBOX_KCM
 SwitcherItem *TabBoxHandlerPrivate::switcherItem() const
 {
     if (!m_mainItem) {
@@ -156,7 +153,6 @@ SwitcherItem *TabBoxHandlerPrivate::switcherItem() const
     }
     return m_mainItem->findChild<SwitcherItem*>();
 }
-#endif
 
 ClientModel* TabBoxHandlerPrivate::clientModel() const
 {
@@ -294,10 +290,8 @@ void TabBoxHandlerPrivate::show()
 {
     if (m_qmlEngine.isNull()) {
         m_qmlEngine.reset(new QQmlEngine);
-#ifndef TABBOX_KCM
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
         qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
-#endif
         qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     }
     if (m_qmlComponent.isNull()) {
@@ -319,7 +313,6 @@ void TabBoxHandlerPrivate::show()
             return;
         }
     }
-#ifndef TABBOX_KCM
     if (SwitcherItem *item = switcherItem()) {
         if (!item->model()) {
             QAbstractItemModel *model = nullptr;
@@ -335,7 +328,6 @@ void TabBoxHandlerPrivate::show()
         // everything is prepared, so let's make the whole thing visible
         item->setVisible(true);
     }
-#endif
 }
 
 /***********************************************
@@ -394,11 +386,9 @@ void TabBoxHandler::hide(bool abort)
     if (d->config.isHighlightWindows()) {
         d->endHighlightWindows(abort);
     }
-#ifndef TABBOX_KCM
     if (SwitcherItem *item = d->switcherItem()) {
         item->setVisible(false);
     }
-#endif
     if (QQuickWindow *w = d->window()) {
         w->hide();
         w->destroy();
