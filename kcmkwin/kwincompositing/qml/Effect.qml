@@ -182,32 +182,32 @@ Item {
                 }
             }
 
-            Button {
-                id: videoButton
-                anchors.right: effectConfig.effectUiConfigExists(model.ServiceNameRole) ? configureButton.left : aboutButton.left
-                visible: model.VideoRole.toString() !== ""
-                iconName: "video"
-                onClicked: videoItem.showHide()
-            }
-            Button {
-                id: configureButton
-                anchors.right: aboutButton.left
-                visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
-                enabled: effectStatusCheckBox.checked
-                iconName: "configure"
-                onClicked: {
-                    effectConfig.openConfig(model.NameRole);
-                }
-            }
-
-            Button {
-                id: aboutButton
+            RowLayout {
                 anchors.right: parent.right
-                iconName: "dialog-information"
-                onClicked: {
-                    animationAbout.running = true;
-                    animationAboutSpacing.running = true;
-                    desc.wrapDescription();
+                Button {
+                    id: videoButton
+                    visible: model.VideoRole.toString() !== ""
+                    iconName: "video"
+                    onClicked: videoItem.showHide()
+                }
+                Button {
+                    id: configureButton
+                    visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
+                    enabled: effectStatusCheckBox.checked
+                    iconName: "configure"
+                    onClicked: {
+                        effectConfig.openConfig(model.NameRole);
+                    }
+                }
+
+                Button {
+                    id: aboutButton
+                    iconName: "dialog-information"
+                    onClicked: {
+                        animationAbout.running = true;
+                        animationAboutSpacing.running = true;
+                        desc.wrapDescription();
+                    }
                 }
             }
 
