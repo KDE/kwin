@@ -20,7 +20,7 @@
 
 
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 import QtMultimedia 5.0 as Multimedia
@@ -150,6 +150,11 @@ Item {
                         width: 400
                         height: 400
                         anchors.bottom: parent.bottom
+                        BusyIndicator {
+                            anchors.centerIn: parent
+                            visible: videoItem.status == Multimedia.MediaPlayer.Loading
+                            running: true
+                        }
                         MouseArea {
                             // it's a mouse area with icon inside to not have an ugly button background
                             id: replayButton
