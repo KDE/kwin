@@ -19,7 +19,7 @@ find_package(ECM 0.0.8 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
 
-find_package(KCoreAddons REQUIRED NO_MODULE)
+find_package(KF5CoreAddons REQUIRED NO_MODULE)
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
@@ -41,10 +41,10 @@ set (QT_MIN_VERSION "5.2.0")
 
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
-find_package(KF5 CONFIG REQUIRED COMPONENTS KCoreAddons KConfig KI18n KService XmlGui KCMUtils)
+find_package(KF5 CONFIG REQUIRED COMPONENTS CoreAddons Config I18n Service XmlGui KCMUtils)
 
 
-find_package(KDeclarative REQUIRED NO_MODULE)
+find_package(KF5Declarative REQUIRED NO_MODULE)
 
 #########################################################################
 
@@ -74,13 +74,13 @@ target_link_libraries(kwincompositing
     Qt5::Quick
     Qt5::DBus
     Qt5::Widgets
-    KF5::KCoreAddons
-    KF5::KConfigCore
-    KF5::KDeclarative
-    KF5::KI18n
-    KF5::KService
+    KF5::CoreAddons
+    KF5::ConfigCore
+    KF5::Declarative
+    KF5::I18n
+    KF5::Service
     KF5::KCMUtils
-    KF5::KDeclarative
+    KF5::Declarative
 )
 
 
@@ -98,13 +98,13 @@ target_link_libraries(effectModelTest
     Qt5::DBus
     Qt5::Test
     Qt5::Widgets
-    KF5::KCoreAddons
-    KF5::KConfigCore
-    KF5::KDeclarative
-    KF5::KI18n
-    KF5::KService
+    KF5::CoreAddons
+    KF5::ConfigCore
+    KF5::Declarative
+    KF5::I18n
+    KF5::Service
     KF5::KCMUtils
-    KF5::KDeclarative)
+    KF5::Declarative)
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
