@@ -73,7 +73,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
-    tab = new KTabWidget(this);
+    tab = new QTabWidget(this);
     layout->addWidget(tab);
 
     mFocus = new KFocusConfig(false, mConfig, this);
@@ -186,7 +186,7 @@ KActionsOptions::KActionsOptions(QWidget *parent, const QVariantList &)
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
-    tab = new KTabWidget(this);
+    tab = new QTabWidget(this);
     layout->addWidget(tab);
 
     mTitleBarActions = new KTitleBarActionsConfig(false, mConfig, this);

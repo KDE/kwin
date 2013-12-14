@@ -25,7 +25,7 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#include <KTabWidget>
+#include <QTabWidget>
 #include <kcmodule.h>
 
 class KConfig;
@@ -57,7 +57,7 @@ protected Q_SLOTS:
 
 private:
 
-    KTabWidget   *tab;
+    QTabWidget   *tab;
 
     KFocusConfig *mFocus;
     KTitleBarActionsConfig *mTitleBarActions;
@@ -88,7 +88,7 @@ protected Q_SLOTS:
 
 private:
 
-    KTabWidget   *tab;
+    QTabWidget   *tab;
 
     KTitleBarActionsConfig *mTitleBarActions;
     KWindowActionsConfig *mWindowActions;
