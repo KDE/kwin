@@ -119,11 +119,10 @@ void KWinDecorationModule::init()
     }
     const QString mainQmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/kcm_kwindecoration/main.qml");
     if (mainQmlPath.isNull()) {
-        // TODO 4.11 i18n this
-        KMessageBox::error(this, "<h1>Installation error</h1>"
+        KMessageBox::error(this, i18n("<h1>Installation error</h1>"
         "The resource<h2>kwin/kcm_kwindecoration/main.qml</h2>could not be located in any application data path."
         "<h2>Please contact your distribution</h2>"
-        "The application will now abort", "Installation Error");
+        "The application will now abort"), i18n("Installation Error"));
         abort();
     }
     KConfigGroup style(kwinConfig, "Style");
