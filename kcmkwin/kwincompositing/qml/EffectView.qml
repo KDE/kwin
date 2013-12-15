@@ -34,6 +34,7 @@ Item {
     property alias glSwapStrategyIndex: glSwapStrategy.currentIndex
     property alias glColorCorrectionChecked: glColorCorrection.checked
     property alias compositingTypeIndex: openGLType.type
+    property bool compositingEnabledChecked: useCompositing.checked
 
     Component {
         id: sectionHeading
@@ -59,13 +60,31 @@ Item {
         id: row
         width: parent.width
         height: parent.height
+
+        CheckBox {
+            id: useCompositing
+            text: i18n("Enable desktop effects on startup")
+            checked: compositing.compositingEnabled
+            anchors {
+                top: parent.top
+                left: col.right
+                topMargin: col.height/8
+            }
+            Connections {
+                target: compositing
+                onCompositingEnabledChanged: {
+                    useCompositing.checked = compositing.compositingEnabled
+                }
+            }
+        }
+
         CheckBox {
             id: windowManagement
             text: i18n("Improved Window Management")
             checked: false
             anchors.left: col.right
-            anchors.top: parent.top
-            anchors.topMargin: col.height/4
+            anchors.top: useCompositing.bottom
+            //anchors.topMargin: col.height/8
             onClicked: searchModel.enableWidnowManagement(windowManagement.checked)
         }
 

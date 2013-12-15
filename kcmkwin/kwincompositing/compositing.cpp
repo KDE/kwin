@@ -44,6 +44,7 @@ Compositing::Compositing(QObject *parent)
     , m_glSwapStrategy(0)
     , m_glColorCorrection(false)
     , m_compositingType(0)
+    , m_compositingEnabled(true)
     , m_changed(false)
 {
     reset();
@@ -55,6 +56,7 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::glSwapStrategyChanged,       this, &Compositing::changed);
     connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
+    connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
 
     connect(this, &Compositing::changed, [this]{
         m_changed = true;
@@ -69,6 +71,7 @@ void Compositing::reset()
     setGlScaleFilter(kwinConfig.readEntry("GLTextureFilter", 2));
     setXrScaleFilter(kwinConfig.readEntry("XRenderSmoothScale", false));
     setUnredirectFullscreen(kwinConfig.readEntry("UnredirectFullscreen", false));
+    setCompositingEnabled(kwinConfig.readEntry("Enabled", true));
 
     auto swapStrategy = [&kwinConfig]() {
         const QString glSwapStrategyValue = kwinConfig.readEntry("GLPreferBufferSwap", "a");
@@ -189,6 +192,11 @@ int Compositing::compositingType() const
     return m_compositingType;
 }
 
+bool Compositing::compositingEnabled() const
+{
+    return m_compositingEnabled;
+}
+
 void Compositing::setAnimationSpeed(int speed)
 {
     if (speed == m_animationSpeed) {
@@ -261,6 +269,16 @@ void Compositing::setCompositingType(int index)
     emit compositingTypeChanged();
 }
 
+void Compositing::setCompositingEnabled(bool enabled)
+{
+    if (enabled == m_compositingEnabled) {
+        return;
+    }
+
+    m_compositingEnabled = enabled;
+    emit compositingEnabledChanged();
+}
+
 void Compositing::save()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), "Compositing");
@@ -269,6 +287,7 @@ void Compositing::save()
     kwinConfig.writeEntry("GLTextureFilter", glScaleFilter());
     kwinConfig.writeEntry("XRenderSmoothScale", xrScaleFilter());
     kwinConfig.writeEntry("UnredirectFullscreen", unredirectFullscreen());
+    kwinConfig.writeEntry("Enabled", compositingEnabled());
     auto swapStrategy = [this] {
         switch (glSwapStrategy()) {
             case 0:

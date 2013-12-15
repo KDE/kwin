@@ -78,6 +78,7 @@ Rectangle {
         glSwapStrategy: view.glSwapStrategyIndex
         glColorCorrection: view.glColorCorrectionChecked
         compositingType: view.compositingTypeIndex
+        compositingEnabled: view.compositingEnabledChecked
     }
     Connections {
         target: compositing

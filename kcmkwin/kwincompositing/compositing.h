@@ -40,6 +40,7 @@ class Compositing : public QObject
     Q_PROPERTY(int glSwapStrategy READ glSwapStrategy WRITE setGlSwapStrategy NOTIFY glSwapStrategyChanged)
     Q_PROPERTY(bool glColorCorrection READ glColorCorrection WRITE setGlColorCorrection NOTIFY glColorCorrectionChanged)
     Q_PROPERTY(int compositingType READ compositingType WRITE setCompositingType NOTIFY compositingTypeChanged)
+    Q_PROPERTY(bool compositingEnabled READ compositingEnabled WRITE setCompositingEnabled NOTIFY compositingEnabledChanged);
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -53,6 +54,7 @@ public:
     int glSwapStrategy() const;
     bool glColorCorrection() const;
     int compositingType() const;
+    bool compositingEnabled() const;
 
     void setAnimationSpeed(int speed);
     void setWindowThumbnail(int index);
@@ -62,6 +64,7 @@ public:
     void setGlSwapStrategy(int strategy);
     void setGlColorCorrection(bool correction);
     void setCompositingType(int index);
+    void setCompositingEnabled(bool enalbed);
 
     void save();
 
@@ -79,6 +82,7 @@ Q_SIGNALS:
     void glSwapStrategyChanged();
     void glColorCorrectionChanged();
     void compositingTypeChanged();
+    void compositingEnabledChanged();
 
 private:
     int m_animationSpeed;
@@ -89,7 +93,7 @@ private:
     int m_glSwapStrategy;
     bool m_glColorCorrection;
     int m_compositingType;
-
+    bool m_compositingEnabled;
     bool m_changed;
 };
 
