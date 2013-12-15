@@ -50,15 +50,6 @@
       <default>BorderTiny</default>
     </entry>
 
-    <entry name="BlendStyle" type = "Enum">
-      <choices>
-          <choice name="BlendNone" />
-          <choice name="BlendRadial" />
-          <choice name="BlendFromStyle" />
-      </choices>
-      <default>BlendFromStyle</default>
-    </entry>
-
     <entry name="drawSizeGrip" type = "Bool">
       <default>true</default>
     </entry>

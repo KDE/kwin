@@ -607,16 +607,8 @@ namespace Oxygen
     {
 
         // window background
-        if(
-            _configuration->blendStyle() == Configuration::BlendNone ||
-            ( _configuration->blendStyle() == Configuration::BlendFromStyle &&
-            !helper().hasBackgroundGradient( windowId() )
-            ) )
+        if( helper().hasBackgroundGradient( windowId() ) )
         {
-
-            painter->fillRect( rect, palette.color( QPalette::Window ) );
-
-        } else {
 
             int offset = layoutMetric( LM_OuterPaddingTop );
 
@@ -626,6 +618,10 @@ namespace Oxygen
 
             const QWidget* window( isPreview() ? this->widget() : widget->window() );
             helper().renderWindowBackground(painter, rect, widget, window, palette, offset, height );
+
+        } else {
+
+            painter->fillRect( rect, palette.color( QPalette::Window ) );
 
         }
 

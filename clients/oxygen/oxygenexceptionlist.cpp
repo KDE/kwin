@@ -60,7 +60,6 @@ namespace Oxygen
 
             // propagate all features found in mask to the output configuration
             if( exception.mask() & FrameBorder ) configuration->setFrameBorder( exception.frameBorder() );
-            if( exception.mask() & BlendColor ) configuration->setBlendStyle( exception.blendStyle() );
             if( exception.mask() & DrawSeparator ) configuration->setSeparatorMode( exception.separatorMode() );
             if( exception.mask() & TitleOutline ) configuration->setDrawTitleOutline( exception.drawTitleOutline() );
             if( exception.mask() & SizeGripMode ) configuration->setDrawSizeGrip( exception.drawSizeGrip() );
