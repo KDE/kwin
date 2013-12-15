@@ -83,6 +83,45 @@
       <string>Decoration Options</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
+      <item row="3" column="2">
+       <widget class="KComboBox" name="titleOutlineComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string comment="outline window title">Disabled</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string comment="outline window title">Enabled</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="KComboBox" name="separatorComboBox">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>Never Draw Separator</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Draw Separator When Window is Active</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Always Draw Separator</string>
+         </property>
+        </item>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="frameBorderCheckBox">
         <property name="text">
@@ -90,42 +129,35 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="2" column="0">
        <widget class="QCheckBox" name="sizeGripCheckBox">
         <property name="text">
          <string>Add handle to resize windows with no border</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="3" column="0">
        <widget class="QCheckBox" name="titleOutlineCheckBox">
         <property name="text">
          <string>Outline active window title:</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="4" column="0">
        <widget class="QCheckBox" name="separatorCheckBox">
         <property name="text">
          <string>Separator display:</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="blendColorCheckBox">
-        <property name="text">
-         <string>Background style:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0" colspan="3">
+      <item row="6" column="0" colspan="3">
        <widget class="QCheckBox" name="hideTitleBar">
         <property name="text">
          <string>Hide window title bar</string>
         </property>
        </widget>
       </item>
-      <item row="6" column="0" colspan="3">
+      <item row="5" column="0" colspan="3">
        <widget class="QFrame" name="frame">
         <property name="frameShape">
          <enum>QFrame::HLine</enum>
@@ -188,28 +220,6 @@
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="KComboBox" name="blendColorComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Solid Color</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Radial Gradient</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Follow Style Hint</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="3" column="2">
        <widget class="KComboBox" name="sizeGripComboBox">
         <property name="enabled">
          <bool>false</bool>
@@ -222,45 +232,6 @@
         <item>
          <property name="text">
           <string comment="Add handle to resize windows with no border">Enabled</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="KComboBox" name="titleOutlineComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string comment="outline window title">Disabled</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string comment="outline window title">Enabled</string>
-         </property>
-        </item>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="KComboBox" name="separatorComboBox">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Never Draw Separator</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Draw Separator When Window is Active</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Always Draw Separator</string>
          </property>
         </item>
        </widget>
@@ -339,22 +310,6 @@
     <hint type="destinationlabel">
      <x>316</x>
      <y>163</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>blendColorCheckBox</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>blendColorComboBox</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>136</x>
-     <y>188</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>333</x>
-     <y>189</y>
     </hint>
    </hints>
   </connection>

@@ -71,7 +71,6 @@ namespace Oxygen
         connect( ui.titleAlignment, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( ui.buttonSize, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( ui.frameBorder, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( ui.blendColor, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
 
         connect( ui.titleOutline, SIGNAL(clicked()), SLOT(updateChanged()) );
         connect( ui.drawSizeGrip, SIGNAL(clicked()), SLOT(updateChanged()) );
@@ -106,7 +105,6 @@ namespace Oxygen
         if( !_configuration ) return;
         ui.titleAlignment->setCurrentIndex( _configuration->titleAlignment() );
         ui.buttonSize->setCurrentIndex( _configuration->buttonSize() );
-        ui.blendColor->setCurrentIndex( _configuration->blendStyle() );
         ui.frameBorder->setCurrentIndex( _configuration->frameBorder() );
         ui.separatorMode->setCurrentIndex( _configuration->separatorMode() );
         ui.drawSizeGrip->setChecked( _configuration->drawSizeGrip() );
@@ -130,7 +128,6 @@ namespace Oxygen
         // apply modifications from ui
         _configuration->setTitleAlignment( ui.titleAlignment->currentIndex() );
         _configuration->setButtonSize( ui.buttonSize->currentIndex() );
-        _configuration->setBlendStyle( ui.blendColor->currentIndex() );
         _configuration->setFrameBorder( ui.frameBorder->currentIndex() );
         _configuration->setSeparatorMode( ui.separatorMode->currentIndex() );
         _configuration->setDrawSizeGrip( ui.drawSizeGrip->isChecked() );
@@ -231,7 +228,6 @@ namespace Oxygen
 
         if( ui.titleAlignment->currentIndex() != _configuration->titleAlignment() ) modified = true;
         else if( ui.buttonSize->currentIndex() != _configuration->buttonSize() ) modified = true;
-        else if( ui.blendColor->currentIndex() != _configuration->blendStyle() ) modified = true;
         else if( ui.frameBorder->currentIndex() != _configuration->frameBorder() ) modified = true;
         else if( ui.separatorMode->currentIndex() != _configuration->separatorMode() ) modified = true;
         else if( ui.drawSizeGrip->isChecked() != _configuration->drawSizeGrip() ) modified = true;

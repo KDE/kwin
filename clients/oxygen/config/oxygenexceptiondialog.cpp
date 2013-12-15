@@ -42,7 +42,6 @@ namespace Oxygen
 
         // store checkboxes from ui into list
         _checkBoxes.insert( FrameBorder, frameBorderCheckBox );
-        _checkBoxes.insert( BlendColor, blendColorCheckBox );
         _checkBoxes.insert( SizeGripMode, sizeGripCheckBox );
         _checkBoxes.insert( TitleOutline, titleOutlineCheckBox );
         _checkBoxes.insert( DrawSeparator, separatorCheckBox );
@@ -54,7 +53,6 @@ namespace Oxygen
         connect( exceptionType, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( exceptionEditor, SIGNAL(textChanged(QString)), SLOT(updateChanged()) );
         connect( frameBorderComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
-        connect( blendColorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( sizeGripComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( titleOutlineComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
         connect( separatorComboBox, SIGNAL(currentIndexChanged(int)), SLOT(updateChanged()) );
@@ -76,7 +74,6 @@ namespace Oxygen
         exceptionType->setCurrentIndex(_exception->exceptionType() );
         exceptionEditor->setText( _exception->exceptionPattern() );
         frameBorderComboBox->setCurrentIndex( _exception->frameBorder() );
-        blendColorComboBox->setCurrentIndex( _exception->blendStyle() );
         sizeGripComboBox->setCurrentIndex( _exception->drawSizeGrip() );
         separatorComboBox->setCurrentIndex( _exception->separatorMode() );
         titleOutlineComboBox->setCurrentIndex( _exception->drawTitleOutline() );
@@ -96,7 +93,6 @@ namespace Oxygen
         _exception->setExceptionType( exceptionType->currentIndex() );
         _exception->setExceptionPattern( exceptionEditor->text() );
         _exception->setFrameBorder( frameBorderComboBox->currentIndex() );
-        _exception->setBlendStyle( blendColorComboBox->currentIndex() );
         _exception->setDrawSizeGrip( sizeGripComboBox->currentIndex() );
         _exception->setSeparatorMode( separatorComboBox->currentIndex() );
         _exception->setDrawTitleOutline( titleOutlineComboBox->currentIndex() );
@@ -120,7 +116,6 @@ namespace Oxygen
         if( _exception->exceptionType() != exceptionType->currentIndex() ) modified = true;
         else if( _exception->exceptionPattern() != exceptionEditor->text() ) modified = true;
         else if( _exception->frameBorder() != frameBorderComboBox->currentIndex() ) modified = true;
-        else if( _exception->blendStyle() != blendColorComboBox->currentIndex() ) modified = true;
         else if( _exception->drawSizeGrip() != sizeGripComboBox->currentIndex() ) modified = true;
         else if( _exception->separatorMode() != separatorComboBox->currentIndex() ) modified = true;
         else if( _exception->drawTitleOutline() != titleOutlineComboBox->currentIndex() ) modified = true;

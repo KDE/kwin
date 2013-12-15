@@ -75,7 +75,6 @@ namespace Oxygen
         DrawSeparator = 1<<2,
         TitleOutline = 1<<3,
         FrameBorder = 1<<4,
-        BlendColor = 1<<5,
         SizeGripMode = 1<<6
     };
 
