@@ -2,10 +2,12 @@
 Name=Text Only
 Name[cs]=Pouze text
 Name[de]=Nur Text
+Name[es]=Solo texto
 Name[nl]=Alleen tekst
 Name[pt]=Apenas o Texto
 Name[pt_BR]=Apenas texto
 Name[sk]=Iba text
+Name[sl]=Samo besedilo
 Name[uk]=Лише текст
 Name[x-test]=xxText Onlyxx
 Comment=A window switcher layout only showing window captions
