@@ -77,6 +77,7 @@ Comment[sv]=Fönsterbytare med direkta miniatyrbilder vid skärmens kant
 Comment[tr]=Ekran kenarında canlı canlı küçük resimleri gösteren bir pencere değiştirici
 Comment[uk]=Засіб перемикання вікон з інтерактивними мініатюрами збоку на екрані
 Comment[x-test]=xxA window switcher with live thumbnails on the screen sidexx
+Comment[zh_CN]=一个在屏幕边缘显示实时预览的窗口切换器
 Comment[zh_TW]=螢幕邊緣視窗切換器，附即時縮圖
 
 Icon=preferences-system-windows-switcher-thumbnails
