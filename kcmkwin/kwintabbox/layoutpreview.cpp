@@ -43,6 +43,7 @@ LayoutPreview::LayoutPreview(const QString &path, QObject *parent)
     QQmlComponent *component = new QQmlComponent(engine, this);
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
+    qmlRegisterType<QAbstractItemModel>();
     component->loadUrl(QUrl::fromLocalFile(path));
     QObject *item = component->create();
     auto findSwitcher = [item]() -> SwitcherItem* {

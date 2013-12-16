@@ -293,6 +293,7 @@ void TabBoxHandlerPrivate::show()
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
         qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
         qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+        qmlRegisterType<QAbstractItemModel>();
     }
     if (m_qmlComponent.isNull()) {
         m_qmlComponent.reset(new QQmlComponent(m_qmlEngine.data()));
