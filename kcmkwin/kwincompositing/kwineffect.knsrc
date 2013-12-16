@@ -1,5 +1,0 @@
-[KNewStuff3]
-Categories=KWin Effects
-StandardResource=tmp
-InstallationCommand=plasmapkg -t kwineffect -i %f
-UninstallCommand=plasmapkg -t kwineffect -r %f
