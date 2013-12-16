@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 // KDE
 #include <KDE/KConfigGroup>
-#include <Plasma/ConfigLoader>
+#include <kconfigloader.h>
 // Qt
 #include <QDebug>
 #include <QFile>
@@ -404,7 +404,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     if (!kconfigXTFile.isNull()) {
         KConfigGroup cg = effects->effectConfig(m_effectName);
         QFile xmlFile(kconfigXTFile);
-        m_config = new Plasma::ConfigLoader(&cg, &xmlFile, this);
+        m_config = new KConfigLoader(cg, &xmlFile, this);
         m_config->readConfig();
     }
 

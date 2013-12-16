@@ -23,12 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwinanimationeffect.h>
 
+class KConfigLoader;
 class QScriptEngine;
 class QScriptValue;
-
-namespace Plasma {
-class ConfigLoader;
-}
 
 namespace KWin
 {
@@ -153,7 +150,7 @@ private:
     QString m_scriptFile;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
-    Plasma::ConfigLoader *m_config;
+    KConfigLoader *m_config;
 };
 
 }
