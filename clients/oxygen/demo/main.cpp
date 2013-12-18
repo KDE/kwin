@@ -3,7 +3,7 @@
 // oxygen-demo main
 // -------------------
 //
-// Copyright (c) 2010 Hugo Pereira Da Costa <hugo@oxygen-icons.org>
+// Copyright (c) 2010 Hugo Pereira Da Costa <hugo.pereira@free.fr>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
         KAboutData::License_GPL_V2,
         ki18n( "(c) 2011, Hugo Pereira Da Costa" ));
 
-    aboutData.addAuthor( ki18n( "Hugo Pereira Da Costa" ),KLocalizedString(), "hugo@oxygen-icons.org" );
+    aboutData.addAuthor( ki18n( "Hugo Pereira Da Costa" ),KLocalizedString(), "hugo.pereira@free.fr" );
 
     KCmdLineArgs::init( argc, argv, &aboutData );
     KApplication app;
