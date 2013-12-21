@@ -59,6 +59,7 @@ public:
     virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex& child) const;
     virtual QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
+    Q_INVOKABLE QString longestCaption() const;
 
     /**
     * Generates a new list of desktops based on the current config.

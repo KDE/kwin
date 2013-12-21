@@ -73,6 +73,18 @@ QVariant DesktopModel::data(const QModelIndex& index, int role) const
     }
 }
 
+QString DesktopModel::longestCaption() const
+{
+    QString caption;
+    for (int desktop : m_desktopList) {
+        QString desktopName = tabBox->desktopName(desktop);
+        if (desktopName.size() > caption.size()) {
+            caption = desktopName;
+        }
+    }
+    return caption;
+}
+
 int DesktopModel::columnCount(const QModelIndex& parent) const
 {
     Q_UNUSED(parent)
