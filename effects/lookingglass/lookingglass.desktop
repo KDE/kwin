@@ -158,3 +158,4 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Library=kwin4_effect_builtins
 X-KWin-Requires-OpenGL2=true
+X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/looking_glass.ogv
