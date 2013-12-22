@@ -170,6 +170,18 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
+QString ExampleClientModel::longestCaption() const
+{
+    QString caption;
+    for (QString item : m_nameList) {
+        QString name = KDesktopFile(item).readName();
+        if (name.size() > caption.size()) {
+            caption = name;
+        }
+    }
+    return caption;
+}
+
 int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)

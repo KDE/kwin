@@ -53,6 +53,7 @@ public:
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    Q_INVOKABLE QString longestCaption() const;
 
 private:
     void init();
