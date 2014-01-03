@@ -18,6 +18,7 @@ Name[sv]=Enbart text
 Name[uk]=Лише текст
 Name[x-test]=xxText Onlyxx
 Name[zh_CN]=只有文字
+Name[zh_TW]=只有文字
 Comment=A window switcher layout only showing window captions
 Comment[bs]=Izgled prozora Switcher samo pokazuje prozora naslove
 Comment[ca]=Una disposició del commutador de finestres que només mostra els títols de finestra
