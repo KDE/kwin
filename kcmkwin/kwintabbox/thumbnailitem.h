@@ -2,7 +2,7 @@
  KWin - the KDE window manager
  This file is part of the KDE project.
 
-Copyright (C) 2011 Martin Gräßlin <mgraesslin@kde.org>
+Copyright (C) 2011, 2014 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,15 +23,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QImage>
 #include <QQuickItem>
+#include <QSGTextureMaterial>
 
 namespace KWin
 {
+
+class BrightnessSaturationShader : public QSGMaterialShader
+{
+public:
+    BrightnessSaturationShader();
+    virtual const char* vertexShader() const override;
+    virtual const char* fragmentShader() const override;
+    virtual const char*const* attributeNames() const override;
+    virtual void updateState(const RenderState& state, QSGMaterial* newMaterial, QSGMaterial* oldMaterial) override;
+    virtual void initialize() override;
+private:
+    int m_id_matrix;
+    int m_id_opacity;
+    int m_id_saturation;
+    int m_id_brightness;
+};
+
+class BrightnessSaturationMaterial : public QSGTextureMaterial
+{
+public:
+    virtual QSGMaterialShader* createShader() const override {
+        return new BrightnessSaturationShader;
+    }
+    QSGMaterialType *type() const override {
+        static QSGMaterialType type;
+        return &type;
+    }
+    qreal brightness;
+    qreal saturation;
+};
 
 class WindowThumbnailItem : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
+    Q_PROPERTY(qreal brightness READ brightness WRITE setBrightness NOTIFY brightnessChanged)
+    Q_PROPERTY(qreal saturation READ saturation WRITE setSaturation NOTIFY saturationChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     virtual ~WindowThumbnailItem();
@@ -42,8 +75,12 @@ public:
     QQuickItem *clipTo() const {
         return m_clipToItem;
     }
+    qreal brightness() const;
+    qreal saturation() const;
     void setWId(qulonglong wId);
     void setClipTo(QQuickItem *clip);
+    void setBrightness(qreal brightness);
+    void setSaturation(qreal saturation);
     virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
 
     enum Thumbnail {
@@ -55,11 +92,15 @@ public:
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
     void clipToChanged();
+    void brightnessChanged();
+    void saturationChanged();
 private:
     void findImage();
     qulonglong m_wId;
     QImage m_image;
     QQuickItem *m_clipToItem;
+    qreal m_brightness;
+    qreal m_saturation;
 };
 
 } // KWin
