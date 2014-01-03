@@ -30,7 +30,7 @@ KWin.Switcher {
         id: dialog
         location: PlasmaCore.Types.Floating
         visible: tabBox.visible
-        windowFlags: Qt.X11BypassWindowManagerHint
+        flags: Qt.X11BypassWindowManagerHint
         onVisibleChanged: {
             if (visible) {
                 dialog.x = tabBox.screenGeometry.x + tabBox.screenGeometry.width * 0.5 - dialogMainItem.width * 0.5;

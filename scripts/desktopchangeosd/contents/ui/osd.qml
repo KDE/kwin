@@ -27,7 +27,7 @@ PlasmaCore.Dialog {
     id: dialog
     location: PlasmaCore.Types.Floating
     visible: false
-    windowFlags: Qt.X11BypassWindowManagerHint
+    flags: Qt.X11BypassWindowManagerHint
 
     mainItem: Item {
         function loadConfig() {
