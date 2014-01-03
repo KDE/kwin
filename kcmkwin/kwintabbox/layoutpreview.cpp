@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "layoutpreview.h"
 #include "thumbnailitem.h"
 #include <QApplication>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QQmlEngine>
 #include <QQmlContext>
@@ -45,6 +46,9 @@ LayoutPreview::LayoutPreview(const QString &path, QObject *parent)
     qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
     qmlRegisterType<QAbstractItemModel>();
     component->loadUrl(QUrl::fromLocalFile(path));
+    if (component->isError()) {
+        qDebug() << component->errorString();
+    }
     QObject *item = component->create();
     auto findSwitcher = [item]() -> SwitcherItem* {
         if (!item) {
