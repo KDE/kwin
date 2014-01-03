@@ -21,16 +21,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailitem.h"
 // Qt
 #include <QtCore/QStandardPaths>
-#include <QPainter>
+#include <QQuickWindow>
+#include <QSGSimpleTextureNode>
 
 namespace KWin
 {
-WindowThumbnailItem::WindowThumbnailItem(QQuickPaintedItem* parent)
-    : QQuickPaintedItem(parent)
+WindowThumbnailItem::WindowThumbnailItem(QQuickItem* parent)
+    : QQuickItem(parent)
     , m_wId(0)
     , m_image()
     , m_clipToItem(nullptr)
 {
+    setFlag(ItemHasContents);
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
@@ -80,14 +82,20 @@ void WindowThumbnailItem::findImage()
     }
 }
 
-void WindowThumbnailItem::paint(QPainter *painter)
+QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData)
 {
-    if (m_image.isNull()) {
-        return;
+    Q_UNUSED(updatePaintNodeData)
+    QSGSimpleTextureNode *node = static_cast<QSGSimpleTextureNode*>(oldNode);
+    if (!node) {
+        node = new QSGSimpleTextureNode();
+        node->setFiltering(QSGTexture::Linear);
+        node->setTexture(window()->createTextureFromImage(m_image));
     }
-    QSizeF difference(boundingRect().width() - m_image.width(), boundingRect().height() - m_image.height());
-    const QRectF drawRect(boundingRect().x() + difference.width()/2.0, boundingRect().y(), m_image.width(), m_image.height());
-    painter->drawImage(drawRect, m_image);
+    const QSize size(node->texture()->textureSize().scaled(boundingRect().size().toSize(), Qt::KeepAspectRatio));
+    const qreal x = boundingRect().x() + (boundingRect().width() - size.width())/2;
+    const qreal y = boundingRect().y() + (boundingRect().height() - size.height())/2;
+    node->setRect(QRectF(QPointF(x, y), size));
+    return node;
 }
 
 } // namespace KWin

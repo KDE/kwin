@@ -22,18 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_THUMBNAILITEM_H
 
 #include <QImage>
-#include <QQuickPaintedItem>
+#include <QQuickItem>
 
 namespace KWin
 {
 
-class WindowThumbnailItem : public QQuickPaintedItem
+class WindowThumbnailItem : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
     Q_PROPERTY(QQuickItem *clipTo READ clipTo WRITE setClipTo NOTIFY clipToChanged)
 public:
-    explicit WindowThumbnailItem(QQuickPaintedItem *parent = 0);
+    explicit WindowThumbnailItem(QQuickItem *parent = nullptr);
     virtual ~WindowThumbnailItem();
 
     qulonglong wId() const {
@@ -44,7 +44,7 @@ public:
     }
     void setWId(qulonglong wId);
     void setClipTo(QQuickItem *clip);
-    virtual void paint(QPainter *painter) override;
+    virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *updatePaintNodeData) override;
 
     enum Thumbnail {
         Konqueror = 1,
