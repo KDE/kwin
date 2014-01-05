@@ -1,5 +1,6 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
+ *   Copyright 2014 Marco Martin <mart@kde.org>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -34,7 +35,7 @@ using namespace KWin;
 
 
 ContrastShader::ContrastShader()
-    : shader(NULL), mValid(false)
+    : mValid(false), shader(NULL)
 {
 }
 
@@ -171,8 +172,8 @@ void ContrastShader::init()
     stream << "    gl_Position = modelViewProjectionMatrix * vertex;\n";
     stream << "}\n";
     stream.flush();
-    
-    
+
+
     // Fragment shader
     // ===================================================================
     QTextStream stream2(&fragmentSource);
@@ -191,14 +192,8 @@ void ContrastShader::init()
     stream2 << "{\n";
     stream2 << "    vec4 tex = " << texture2D << "(sampler, varyingTexCoords.st);\n";
 
-    QByteArray colorMatrix = "mat4(1.74631,  -0.448073, -0.0452333, 0.2685,\
-                               -0.133194,  1.43143,  -0.0452333, 0.2685,\
-                               -0.133194, -0.448073,  1.83427,   0.2685,\
-                                0, 0, 0, 1);\n";
+    stream2 << "    "  << fragColor << " = tex * colorMatrix;\n";
 
-    
-    stream2 << "    "  << fragColor << " = tex * colorMatrix;\n";// << colorMatrix;
-    
     stream2 << "}\n";
     stream2.flush();
 

@@ -1,5 +1,6 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
+ *   Copyright 2014 Marco Martin <mart@kde.org>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -43,8 +44,6 @@ public:
     static bool enabledByDefault();
 
     void reconfigure(ReconfigureFlags flags);
-    void prePaintScreen(ScreenPrePaintData &data, int time);
-    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
@@ -65,9 +64,6 @@ private:
 private:
     ContrastShader *shader;
     long net_wm_contrast_region;
-    QRegion m_damagedArea; // keeps track of the area which has been damaged (from bottom to top)
-    QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
-    QRegion m_currentContrast; // keeps track of the currently contrasted area of  windows(from bottom to top)
 };
 
 inline
