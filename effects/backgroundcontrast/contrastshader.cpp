@@ -34,48 +34,28 @@ using namespace KWin;
 
 
 ContrastShader::ContrastShader()
-    : mStrength(0), mValid(false)
+    : shader(NULL), mValid(false)
 {
 }
 
 ContrastShader::~ContrastShader()
 {
+    reset();
 }
 
 ContrastShader *ContrastShader::create()
 {
-    if (GLSLContrastShader::supported())
-        return new GLSLContrastShader();
+    if (ContrastShader::supported()) {
+        ContrastShader *s = new ContrastShader();
+        s->reset();
+        s->init();
+        return s;
+    }
 
     return NULL;
 }
 
-void ContrastShader::setStrength(int radius)
-{
-    const int r = qMax(radius, 2);
-
-    if (mStrength != r) {
-        mStrength = r;
-        reset();
-        init();
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-
-
-GLSLContrastShader::GLSLContrastShader()
-    : ContrastShader(), shader(NULL)
-{
-}
-
-GLSLContrastShader::~GLSLContrastShader()
-{
-    reset();
-}
-
-void GLSLContrastShader::reset()
+void ContrastShader::reset()
 {
     delete shader;
     shader = NULL;
@@ -83,7 +63,7 @@ void GLSLContrastShader::reset()
     setIsValid(false);
 }
 
-bool GLSLContrastShader::supported()
+bool ContrastShader::supported()
 {
     if (!GLPlatform::instance()->supports(GLSL))
         return false;
@@ -115,7 +95,7 @@ bool GLSLContrastShader::supported()
     return true;
 }
 
-void GLSLContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
+void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
 {
     if (!isValid())
         return;
@@ -125,7 +105,7 @@ void GLSLContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
     ShaderManager::instance()->popShader();
 }
 
-void GLSLContrastShader::setTextureMatrix(const QMatrix4x4 &matrix)
+void ContrastShader::setTextureMatrix(const QMatrix4x4 &matrix)
 {
     if (!isValid())
         return;
@@ -133,7 +113,7 @@ void GLSLContrastShader::setTextureMatrix(const QMatrix4x4 &matrix)
     shader->setUniform(textureMatrixLocation, matrix);
 }
 
-void GLSLContrastShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
+void ContrastShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
 {
     if (!isValid())
         return;
@@ -141,7 +121,7 @@ void GLSLContrastShader::setModelViewProjectionMatrix(const QMatrix4x4 &matrix)
     shader->setUniform(mvpMatrixLocation, matrix);
 }
 
-void GLSLContrastShader::bind()
+void ContrastShader::bind()
 {
     if (!isValid())
         return;
@@ -149,12 +129,12 @@ void GLSLContrastShader::bind()
     ShaderManager::instance()->pushShader(shader);
 }
 
-void GLSLContrastShader::unbind()
+void ContrastShader::unbind()
 {
     ShaderManager::instance()->popShader();
 }
 
-void GLSLContrastShader::init()
+void ContrastShader::init()
 {
 
 

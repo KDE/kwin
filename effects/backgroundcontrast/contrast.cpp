@@ -74,11 +74,6 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
 
-    ContrastConfig::self()->readConfig();
-    int strength = 4;
-    if (shader)
-        shader->setStrength(strength);
-
     if (!shader || !shader->isValid())
         XDeleteProperty(display(), rootWindow(), net_wm_contrast_region);
 }
@@ -136,7 +131,7 @@ bool ContrastEffect::enabledByDefault()
 
 bool ContrastEffect::supported()
 {
-    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && GLSLContrastShader::supported();
+    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && ContrastShader::supported();
 
     if (supported) {
         int maxTexSize;

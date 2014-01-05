@@ -39,57 +39,25 @@ public:
         return mValid;
     }
 
-    // Sets the radius in pixels
-    void setStrength(int strength);
-    int strength() const {
-        return mStrength;
-    }
-    
-    virtual void setColorMatrix(const QMatrix4x4 &matrix) = 0;
+    void setColorMatrix(const QMatrix4x4 &matrix);
 
-    virtual void setTextureMatrix(const QMatrix4x4 &matrix) = 0;
-    virtual void setModelViewProjectionMatrix(const QMatrix4x4 &matrix) = 0;
-
-    virtual void bind() = 0;
-    virtual void unbind() = 0;
-
-protected:
-    float gaussian(float x, float sigma) const;
-    void setIsValid(bool value) {
-        mValid = value;
-    }
-    virtual void init() = 0;
-    virtual void reset() = 0;
-
-private:
-    int mStrength;
-    bool mValid;
-};
-
-
-// ----------------------------------------------------------------------------
-
-
-
-class GLSLContrastShader : public ContrastShader
-{
-public:
-    GLSLContrastShader();
-    ~GLSLContrastShader();
+    void setTextureMatrix(const QMatrix4x4 &matrix);
+    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
 
     void bind();
     void unbind();
-    void setColorMatrix(const QMatrix4x4 &matrix);
-    void setTextureMatrix(const QMatrix4x4 &matrix);
-    void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
 
     static bool supported();
 
 protected:
-    void init();
-    void reset();
+    void setIsValid(bool value) {
+        mValid = value;
+    }
+    virtual void init();
+    virtual void reset();
 
 private:
+    bool mValid;
     GLShader *shader;
     int mvpMatrixLocation;
     int textureMatrixLocation;
