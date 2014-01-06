@@ -34,6 +34,8 @@ public:
     ContrastShader();
     virtual ~ContrastShader();
 
+    void init();
+
     static ContrastShader *create();
 
     bool isValid() const {
@@ -54,8 +56,7 @@ protected:
     void setIsValid(bool value) {
         mValid = value;
     }
-    virtual void init();
-    virtual void reset();
+    void reset();
 
 private:
     bool mValid;

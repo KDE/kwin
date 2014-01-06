@@ -1,6 +1,5 @@
 /*
  *   Copyright © 2010 Fredrik Höglund <fredrik@kde.org>
- *   Copyright 2014 Marco Martin <mart@kde.org>
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -43,7 +42,10 @@ public:
     static bool supported();
     static bool enabledByDefault();
 
+    static QMatrix4x4 colorMatrix(qreal contrast, qreal intensity, qreal saturation);
     void reconfigure(ReconfigureFlags flags);
+    void prePaintScreen(ScreenPrePaintData &data, int time);
+    void prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time);
     void drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data);
     void paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity);
 
@@ -51,6 +53,7 @@ public:
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
+    void slotPropertyNotify(KWin::EffectWindow *w, long atom);
     void slotScreenGeometryChanged();
 
 private:
@@ -64,6 +67,8 @@ private:
 private:
     ContrastShader *shader;
     long net_wm_contrast_region;
+    QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
+    QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
 };
 
 inline

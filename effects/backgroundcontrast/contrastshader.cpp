@@ -47,10 +47,7 @@ ContrastShader::~ContrastShader()
 ContrastShader *ContrastShader::create()
 {
     if (ContrastShader::supported()) {
-        ContrastShader *s = new ContrastShader();
-        s->reset();
-        s->init();
-        return s;
+        return new ContrastShader();
     }
 
     return NULL;
@@ -137,6 +134,7 @@ void ContrastShader::unbind()
 
 void ContrastShader::init()
 {
+    reset();
 
 
 #ifdef KWIN_HAVE_OPENGLES

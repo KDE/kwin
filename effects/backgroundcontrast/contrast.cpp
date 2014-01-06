@@ -22,7 +22,6 @@
 #include "contrast.h"
 #include "contrastshader.h"
 // KConfigSkeleton
-#include "contrastconfig.h"
 
 #include <X11/Xatom.h>
 
@@ -75,6 +74,9 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
 
+    if (shader)
+        shader->init();
+
     if (!shader || !shader->isValid())
         XDeleteProperty(display(), rootWindow(), net_wm_contrast_region);
 }
@@ -85,21 +87,22 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w) const
     float colorTransform[16];
 
     const QByteArray value = w->readProperty(net_wm_contrast_region, XA_CARDINAL, 32);
-    if (value.size() > 0 && !((value.size() - (16 * sizeof(float))) % ((4 * sizeof(long))))) {
-        const long *cardinals = reinterpret_cast<const long*>(value.constData());
+    if (value.size() > 0 && !((value.size() - (3 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
+        const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
+      qWarning()<<"GGG"<<cardinals;
         unsigned int i = 0;
-        for (; i < ((value.size() - (16 * sizeof(long)))) / sizeof(long);) {
+        for (; i < ((value.size() - (3 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
             int x = cardinals[i++];
             int y = cardinals[i++];
             int w = cardinals[i++];
             int h = cardinals[i++];
             region += QRect(x, y, w, h);
         }
-        for (unsigned int j = 0; j < 16; ++j) {
-             colorTransform[j] = (float)cardinals[i + j] / 100;
-        }
-        QMatrix4x4 colorMatrix(colorTransform);
-        shader->setColorMatrix(colorMatrix);
+        qreal contrast = ((qreal)cardinals[i++]) / 100;
+        qreal intensity = ((qreal)cardinals[i++]) / 100;
+        qreal saturation = ((qreal)cardinals[i++]) / 100;
+
+        shader->setColorMatrix(colorMatrix(contrast, intensity, saturation));
     }
 
     if (region.isEmpty() && !value.isNull()) {
@@ -114,6 +117,52 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w) const
 void ContrastEffect::slotWindowAdded(EffectWindow *w)
 {
     updateContrastRegion(w);
+}
+
+void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
+{
+    if (w && atom == net_wm_contrast_region) {
+        updateContrastRegion(w);
+    }
+}
+
+QMatrix4x4 ContrastEffect::colorMatrix(qreal contrast, qreal intensity, qreal saturation)
+{
+    QMatrix4x4 satMatrix; //saturation
+    QMatrix4x4 intMatrix; //intensity
+    QMatrix4x4 contMatrix; //contrast
+
+    //Saturation matrix
+    if (!qFuzzyCompare(saturation, 1.0)) {
+        const qreal rval = (1.0 - saturation) * .2126;
+        const qreal gval = (1.0 - saturation) * .7152;
+        const qreal bval = (1.0 - saturation) * .0722;
+
+        satMatrix = QMatrix4x4(rval + saturation, rval,     rval,     0.0,
+            gval,     gval + saturation, gval,     0.0,
+            bval,     bval,     bval + saturation, 0.0,
+            0,        0,        0,        1.0);
+    }
+
+    //IntensityMatrix
+    if (!qFuzzyCompare(intensity, 1.0)) {
+        intMatrix.scale(intensity, intensity, intensity);
+    }
+
+    //Contrast Matrix
+    if (!qFuzzyCompare(contrast, 1.0)) {
+        const float transl = (1.0 - contrast) / 2.0;
+
+        contMatrix = QMatrix4x4(contrast, 0,        0,        0.0,
+            0,        contrast, 0,        0.0,
+            0,        0,        contrast, 0.0,
+            transl,   transl,   transl,   1.0);
+    }
+
+    QMatrix4x4 colorMatrix = contMatrix * satMatrix * intMatrix;
+    //colorMatrix = colorMatrix.transposed();
+
+    return colorMatrix;
 }
 
 bool ContrastEffect::enabledByDefault()
@@ -207,6 +256,63 @@ void ContrastEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &region)
     };
 
     vbo->setAttribLayout(layout, 2, sizeof(QVector2D));
+}
+
+void ContrastEffect::prePaintScreen(ScreenPrePaintData &data, int time)
+{
+    m_paintedArea = QRegion();
+    m_currentContrast = QRegion();
+
+    effects->prePaintScreen(data, time);
+}
+
+void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int time)
+{
+    // this effect relies on prePaintWindow being called in the bottom to top order
+
+    effects->prePaintWindow(w, data, time);
+
+    if (!w->isPaintingEnabled()) {
+        return;
+    }
+    if (!shader || !shader->isValid()) {
+        return;
+    }
+
+    const QRegion oldPaint = data.paint;
+
+    // we don't have to blur a region we don't see
+    m_currentContrast -= data.clip;
+    // if we have to paint a non-opaque part of this window that intersects with the
+    // currently blurred region (which is not cached) we have to redraw the whole region
+    if ((data.paint-data.clip).intersects(m_currentContrast)) {
+        data.paint |= m_currentContrast;
+    }
+
+    // in case this window has regions to be blurred
+    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRegion contrastArea = contrastRegion(w).translated(w->pos()) & screen;
+
+    // we are not caching the window
+
+    // if this window or an window underneath the modified area is painted again we have to
+    // do everything
+    if (m_paintedArea.intersects(contrastArea) || data.paint.intersects(contrastArea)) {
+        data.paint |= contrastArea;
+
+        // we have to check again whether we do not damage a blurred area
+        // of a window we do not cache
+        if (contrastArea.intersects(m_currentContrast)) {
+            data.paint |= m_currentContrast;
+        }
+    }
+
+    m_currentContrast |= contrastArea;
+
+
+    // m_paintedArea keep track of all repainted areas
+    m_paintedArea -= data.clip;
+    m_paintedArea |= data.paint;
 }
 
 bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const WindowPaintData &data) const
