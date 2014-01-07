@@ -44,8 +44,8 @@ public:
     virtual ~GlxBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
-    virtual void prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage);
+    virtual QRegion prepareRenderingFrame();
+    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
 
@@ -66,6 +66,7 @@ private:
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
+    int m_bufferAge;
     bool haveSwapInterval, haveWaitSync;
     friend class GlxTexture;
 };

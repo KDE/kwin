@@ -117,7 +117,8 @@ public Q_SLOTS:
     virtual void windowClosed(KWin::Toplevel* c, KWin::Deleted* deleted) = 0;
 protected:
     // shared implementation, starts painting the screen
-    void paintScreen(int* mask, QRegion* region);
+    void paintScreen(int *mask, const QRegion &damage, const QRegion &repaint,
+                     QRegion *updateRegion, QRegion *validRegion);
     friend class EffectsHandlerImpl;
     // called after all effects had their paintScreen() called
     void finalPaintScreen(int mask, QRegion region, ScreenPaintData& data);
@@ -162,6 +163,10 @@ protected:
     // up all the way from paintSimpleScreen() up to paintScreen(), so save them here rather
     // than propagate them up in arguments.
     QRegion painted_region;
+    // Additional damage that needs to be repaired to bring a reused back buffer up to date
+    QRegion repaint_region;
+    // The dirty region before it was unioned with repaint_region
+    QRegion damaged_region;
     // time since last repaint
     int time_diff;
     QElapsedTimer last_time;

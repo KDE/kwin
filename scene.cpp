@@ -101,48 +101,62 @@ Scene::~Scene()
 }
 
 // returns mask and possibly modified region
-void Scene::paintScreen(int* mask, QRegion* region)
+void Scene::paintScreen(int* mask, const QRegion &damage, const QRegion &repaint,
+                        QRegion *updateRegion, QRegion *validRegion)
 {
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-    *mask = (*region == displayRegion) ? 0 : PAINT_SCREEN_REGION;
+    *mask = (damage == displayRegion) ? 0 : PAINT_SCREEN_REGION;
 
     updateTimeDiff();
     // preparation step
     static_cast<EffectsHandlerImpl*>(effects)->startPaint();
 
+    QRegion region = damage;
+
     ScreenPrePaintData pdata;
     pdata.mask = *mask;
-    pdata.paint = *region;
+    pdata.paint = region;
 
     effects->prePaintScreen(pdata, time_diff);
     *mask = pdata.mask;
-    *region = pdata.paint;
+    region = pdata.paint;
 
     if (*mask & (PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS)) {
         // Region painting is not possible with transformations,
         // because screen damage doesn't match transformed positions.
         *mask &= ~PAINT_SCREEN_REGION;
-        *region = infiniteRegion();
+        region = infiniteRegion();
     } else if (*mask & PAINT_SCREEN_REGION) {
         // make sure not to go outside visible screen
-        *region &= displayRegion;
+        region &= displayRegion;
     } else {
         // whole screen, not transformed, force region to be full
-        *region = displayRegion;
+        region = displayRegion;
     }
-    painted_region = *region;
+
+    painted_region = region;
+    repaint_region = repaint;
+
     if (*mask & PAINT_SCREEN_BACKGROUND_FIRST) {
-        paintBackground(*region);
+        paintBackground(region);
     }
+
     ScreenPaintData data;
-    effects->paintScreen(*mask, *region, data);
-    foreach (Window * w, stacking_order) {
+    effects->paintScreen(*mask, region, data);
+
+    foreach (Window *w, stacking_order) {
         effects->postPaintWindow(effectWindow(w));
     }
+
     effects->postPaintScreen();
-    *region |= painted_region;
+
     // make sure not to go outside of the screen area
-    *region &= displayRegion;
+    *updateRegion = damaged_region;
+    *validRegion = (region | painted_region) & displayRegion;
+
+    repaint_region = QRegion();
+    damaged_region = QRegion();
+
     // make sure all clipping is restored
     Q_ASSERT(!PaintClipper::clip());
 }
@@ -222,6 +236,8 @@ void Scene::paintGenericScreen(int orig_mask, ScreenPaintData)
     foreach (const Phase2Data & d, phase2) {
         paintWindow(d.window, d.mask, d.region, d.quads);
     }
+
+    damaged_region = QRegion(0, 0, displayWidth(), displayHeight());
 }
 
 // The optimized case without any transformations at all.
@@ -298,8 +314,13 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         w->suspendUnredirect(data.mask & PAINT_WINDOW_TRANSLUCENT);
     }
 
-    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    // Save the part of the repaint region that's exclusively rendered to
+    // bring a reused back buffer up to date. Then union the dirty region
+    // with the repaint region.
+    const QRegion repaintClip = repaint_region - dirtyArea;
+    dirtyArea |= repaint_region;
 
+    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
     bool fullRepaint(dirtyArea == displayRegion); // spare some expensive region operations
     if (!fullRepaint) {
         extendPaintRegion(dirtyArea, opaqueFullscreen);
@@ -307,6 +328,8 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
     }
 
     QRegion allclips, upperTranslucentDamage;
+    upperTranslucentDamage = repaint_region;
+
     // This is the occlusion culling pass
     for (int i = phase2data.count() - 1; i >= 0; --i) {
         QPair< Window*, Phase2Data > *entry = &phase2data[i];
@@ -351,10 +374,21 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
 
         paintWindow(data->window, data->mask, data->region, data->quads);
     }
-    if (fullRepaint)
+
+    if (fullRepaint) {
         painted_region = displayRegion;
-    else
+        damaged_region = displayRegion;
+    } else {
         painted_region |= paintedArea;
+
+        // Clip the repainted region from the damaged region.
+        // It's important that we don't add the union of the damaged region
+        // and the repainted region to the damage history. Otherwise the
+        // repaint region will grow with every frame until it eventually
+        // covers the whole back buffer, at which point we're always doing
+        // full repaints.
+        damaged_region = paintedArea - repaintClip;
+    }
 }
 
 static Scene::Window *s_recursionCheck = NULL;

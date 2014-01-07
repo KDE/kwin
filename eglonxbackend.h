@@ -34,8 +34,8 @@ public:
     virtual ~EglOnXBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
-    virtual void prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage);
+    virtual QRegion prepareRenderingFrame();
+    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
 
@@ -51,6 +51,7 @@ private:
     EGLSurface surface;
     EGLContext ctx;
     int surfaceHasSubPost;
+    int m_bufferAge;
     friend class EglTexture;
 };
 

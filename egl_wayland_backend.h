@@ -264,8 +264,8 @@ public:
     virtual ~EglWaylandBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
-    virtual void prepareRenderingFrame();
-    virtual void endRenderingFrame(const QRegion &damage);
+    virtual QRegion prepareRenderingFrame();
+    virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     Shm *shm();
 
 protected:

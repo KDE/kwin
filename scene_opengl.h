@@ -463,23 +463,29 @@ public:
     }
     virtual void screenGeometryChanged(const QSize &size) = 0;
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) = 0;
+
     /**
      * @brief Backend specific code to prepare the rendering of a frame including flushing the
      * previously rendered frame to the screen if the backend works this way.
+     *
+     * @return A region that if not empty will be repainted in addition to the damaged region
      **/
-    virtual void prepareRenderingFrame() = 0;
+    virtual QRegion prepareRenderingFrame() = 0;
+
     /**
      * @brief Backend specific code to handle the end of rendering a frame.
      *
-     * @param damage The actual updated region in this frame
+     * @param renderedRegion The possibly larger region that has been rendered
+     * @param damagedRegion The damaged region that should be posted
      **/
-    virtual void endRenderingFrame(const QRegion &damage) = 0;
+    virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) = 0;
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
     void idle();
+
     /**
      * @return bool Whether the scene needs to flush a frame.
      **/
@@ -540,6 +546,21 @@ public:
     bool isDirectRendering() const {
         return m_directRendering;
     }
+
+    bool supportsBufferAge() const {
+        return m_haveBufferAge;
+    }
+
+    /**
+     * Returns the damage that has accumulated since a buffer of the given age was presented.
+     */
+    QRegion accumulatedDamageHistory(int bufferAge) const;
+
+    /**
+     * Saves the given region to damage history.
+     */
+    void addToDamageHistory(const QRegion &region);
+
 protected:
     /**
      * @brief Backend specific flushing of frame to screen.
@@ -586,6 +607,11 @@ protected:
     void setIsDirectRendering(bool direct) {
         m_directRendering = direct;
     }
+
+    void setSupportsBufferAge(bool value) {
+        m_haveBufferAge = value;
+    }
+
     /**
      * @return const QRegion& Damage of previously rendered frame
      **/
@@ -624,6 +650,10 @@ private:
      **/
     bool m_directRendering;
     /**
+     * @brief Whether the backend supports GLX_EXT_buffer_age / EGL_EXT_buffer_age.
+     */
+    bool m_haveBufferAge;
+    /**
      * @brief Whether the initialization failed, of course default to @c false.
      **/
     bool m_failed;
@@ -631,6 +661,10 @@ private:
      * @brief Damaged region of previously rendered frame.
      **/
     QRegion m_lastDamage;
+    /**
+     * @brief The damage history for the past 10 frames.
+     */
+    QList<QRegion> m_damageHistory;
     /**
      * @brief Timer to measure how long a frame renders.
      **/

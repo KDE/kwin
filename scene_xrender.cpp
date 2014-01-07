@@ -191,12 +191,13 @@ qint64 SceneXrender::paint(QRegion damage, ToplevelList toplevels)
     }
 
     int mask = 0;
-    paintScreen(&mask, &damage);
+    QRegion updateRegion, validRegion;
+    paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
 
     if (m_overlayWindow->window())  // show the window only after the first pass, since
         m_overlayWindow->show();   // that pass may take long
 
-    present(mask, damage);
+    present(mask, updateRegion);
     // do cleanup
     stacking_order.clear();
 
