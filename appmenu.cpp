@@ -22,31 +22,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "appmenu.h"
 #include "client.h"
 #include "workspace.h"
-// Qt
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusPendingCall>
+#include <appmenu_interface.h>
 
 namespace KWin {
-
-static QString KDED_SERVICE = QStringLiteral("org.kde.kappmenu");
-static QString KDED_APPMENU_PATH = QStringLiteral("/KAppMenu");
-static QString KDED_INTERFACE = QStringLiteral("org.kde.kappmenu");
 
 KWIN_SINGLETON_FACTORY(ApplicationMenu)
 
 ApplicationMenu::ApplicationMenu(QObject *parent)
     : QObject(parent)
+    , m_appmenuInterface(new OrgKdeKappmenuInterface(QStringLiteral("org.kde.kappmenu"), QStringLiteral("/KAppMenu"), QDBusConnection::sessionBus(), this))
 {
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, QStringLiteral("showRequest"),
-                 this, SLOT(slotShowRequest(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, QStringLiteral("menuAvailable"),
-                 this, SLOT(slotMenuAvailable(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, QStringLiteral("menuHidden"),
-                 this, SLOT(slotMenuHidden(qulonglong)));
-    dbus.connect(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, QStringLiteral("clearMenus"),
-                 this, SLOT(slotClearMenus()));
+    connect(m_appmenuInterface, &OrgKdeKappmenuInterface::showRequest, this, &ApplicationMenu::slotShowRequest);
+    connect(m_appmenuInterface, &OrgKdeKappmenuInterface::menuAvailable, this, &ApplicationMenu::slotMenuAvailable);
+    connect(m_appmenuInterface, &OrgKdeKappmenuInterface::menuHidden, this, &ApplicationMenu::slotMenuHidden);
+    connect(m_appmenuInterface, &OrgKdeKappmenuInterface::clearMenus, this, &ApplicationMenu::slotClearMenus);
 }
 
 ApplicationMenu::~ApplicationMenu()
@@ -88,10 +77,7 @@ void ApplicationMenu::slotClearMenus()
 
 void ApplicationMenu::showApplicationMenu(const QPoint &p, const xcb_window_t id)
 {
-    QList<QVariant> args = QList<QVariant>() << p.x() << p.y() << qulonglong(id);
-    QDBusMessage method = QDBusMessage::createMethodCall(KDED_SERVICE, KDED_APPMENU_PATH, KDED_INTERFACE, QStringLiteral("showMenu"));
-    method.setArguments(args);
-    QDBusConnection::sessionBus().asyncCall(method);
+    m_appmenuInterface->showMenu(p.x(), p.y(), id);
 }
 
 } // namespace

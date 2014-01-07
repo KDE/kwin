@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xcb.h>
 
 class QPoint;
+class OrgKdeKappmenuInterface;
 
 namespace KWin
 {
@@ -51,6 +52,7 @@ private Q_SLOTS:
 
 private:
     QList<xcb_window_t> m_windowsMenu;
+    OrgKdeKappmenuInterface *m_appmenuInterface;
 
     KWIN_SINGLETON(ApplicationMenu)
 };

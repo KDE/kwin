@@ -199,6 +199,8 @@ if(KWIN_BUILD_KAPPMENU)
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         appmenu.cpp
     )
+    qt5_add_dbus_interface(kwin_KDEINIT_SRCS
+        ${KDEBASE_WORKSPACE_SOURCE_DIR}/appmenu/org.kde.kappmenu.xml appmenu_interface)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
