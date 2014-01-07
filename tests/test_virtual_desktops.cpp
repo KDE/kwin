@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../virtualdesktops.h"
 // KDE
-#include <KDE/KActionCollection>
 #include <KDE/KConfigGroup>
 
 #include <QAction>
@@ -274,9 +273,8 @@ void TestVirtualDesktops::testDirection(const QString &actionName)
     QCOMPARE(functor(0, wrap), result);
 
     vds->setNavigationWrappingAround(wrap);
-    QScopedPointer<KActionCollection> keys(new KActionCollection(this));
-    vds->initShortcuts(keys.data());
-    QAction *action = keys->action(actionName);
+    vds->initShortcuts();
+    QAction *action = vds->findChild<QAction*>(actionName);
     QVERIFY(action);
     action->trigger();
     QCOMPARE(vds->current(), result);
@@ -551,25 +549,19 @@ void TestVirtualDesktops::name()
 
 void TestVirtualDesktops::switchToShortcuts()
 {
-    QScopedPointer<KActionCollection> keys(new KActionCollection(this));
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     vds->setCount(vds->maximum());
     vds->setCurrent(vds->maximum());
     QCOMPARE(vds->current(), vds->maximum());
-    vds->initShortcuts(keys.data());
+    vds->initShortcuts();
     const QString toDesktop = QStringLiteral("Switch to Desktop %1");
     for (uint i=1; i<=vds->maximum(); ++i) {
         const QString desktop(toDesktop.arg(i));
-        QAction *action = keys->action(desktop);
+        QAction *action = vds->findChild<QAction*>(desktop);
         QVERIFY2(action, desktop.toUtf8().constData());
         action->trigger();
         QCOMPARE(vds->current(), i);
     }
-    // test switchTo with incorrect data in QAction
-    QAction *action = keys->addAction(QStringLiteral("wrong"), vds, SLOT(slotSwitchTo()));
-    action->trigger();
-    // should still be on max
-    QCOMPARE(vds->current(), vds->maximum());
     // invoke switchTo not from a QAction
     QMetaObject::invokeMethod(vds, "slotSwitchTo");
     // should still be on max
