@@ -54,7 +54,7 @@ class KWinDecorationConfigDialog : public QDialog, public KDecorationDefines
     Q_OBJECT
 public:
     KWinDecorationConfigDialog(QString decoLib, const QList<QVariant>& borderSizes,
-                               KDecorationDefines::BorderSize size, QWidget* parent = 0,
+                               KDecorationDefines::BorderSize size, QWidget* parent = nullptr,
                                Qt::WFlags flags = 0);
     ~KWinDecorationConfigDialog();
 

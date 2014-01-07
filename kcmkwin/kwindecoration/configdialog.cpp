@@ -74,8 +74,8 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     : QDialog(parent, flags)
     , m_borderSizes(borderSizes)
     , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
-    , m_pluginObject(0)
-    , m_pluginConfigWidget(0)
+    , m_pluginObject(nullptr)
+    , m_pluginConfigWidget(nullptr)
 {
     m_ui = new KWinDecorationConfigForm(this);
     setWindowTitle(i18n("Decoration Options"));
@@ -92,7 +92,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     KLibrary library(styleToConfigLib(deco));
     if (library.load()) {
         KLibrary::void_function_ptr alloc_ptr = library.resolveFunction("allocate_config");
-        if (alloc_ptr != NULL) {
+        if (alloc_ptr != nullptr) {
             allocatePlugin = (QObject * (*)(KConfigGroup & conf, QWidget * parent))alloc_ptr;
             KConfigGroup config(m_kwinConfig, "Style");
             m_pluginConfigWidget = new QWidget(this);

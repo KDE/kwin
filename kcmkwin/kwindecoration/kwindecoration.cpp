@@ -73,8 +73,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     : KCModule(parent)
     , kwinConfig(KSharedConfig::openConfig("kwinrc"))
     , m_showTooltips(false)
-    , m_model(NULL)
-    , m_proxyModel(NULL)
+    , m_model(nullptr)
+    , m_proxyModel(nullptr)
     , m_configLoaded(false)
     , m_decorationButtons(new DecorationButtons(this))
     , m_listView(new QQuickView())
@@ -381,7 +381,7 @@ void KWinDecorationModule::slotConfigureDecoration()
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
         form->closeWindowsDoubleClick->setChecked(index.data(DecorationModel::CloseOnDblClickRole).toBool());
         // in case of QmlDecoration look for a config.ui in the package structure
-        KConfigDialogManager *configManager = NULL;
+        KConfigDialogManager *configManager = nullptr;
         if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
             const QString packageName = index.data(DecorationModel::AuroraeNameRole).toString();
             const QString uiPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/decorations/" + packageName + "/contents/ui/config.ui");

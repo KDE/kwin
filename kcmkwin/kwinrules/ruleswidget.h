@@ -40,7 +40,7 @@ class RulesWidget
 {
     Q_OBJECT
 public:
-    explicit RulesWidget(QWidget* parent = NULL);
+    explicit RulesWidget(QWidget* parent = nullptr);
     void setRules(Rules* r);
     Rules* rules() const;
     bool finalCheck();
@@ -116,7 +116,7 @@ class RulesDialog
 {
     Q_OBJECT
 public:
-    explicit RulesDialog(QWidget* parent = NULL, const char* name = NULL);
+    explicit RulesDialog(QWidget* parent = nullptr, const char* name = nullptr);
     Rules* edit(Rules* r, WId window, bool show_hints);
 protected:
     virtual void accept();
@@ -132,7 +132,7 @@ class EditShortcut
 {
     Q_OBJECT
 public:
-    explicit EditShortcut(QWidget* parent = NULL);
+    explicit EditShortcut(QWidget* parent = nullptr);
 protected Q_SLOTS:
     void editShortcut();
     void clearShortcut();
@@ -143,7 +143,7 @@ class EditShortcutDialog
 {
     Q_OBJECT
 public:
-    explicit EditShortcutDialog(QWidget* parent = NULL, const char* name = NULL);
+    explicit EditShortcutDialog(QWidget* parent = nullptr, const char* name = nullptr);
     void setShortcut(const QString& cut);
     QString shortcut() const;
 private:
@@ -156,7 +156,7 @@ class ShortcutDialog
 {
     Q_OBJECT
 public:
-    explicit ShortcutDialog(const QKeySequence& cut, QWidget* parent = NULL);
+    explicit ShortcutDialog(const QKeySequence& cut, QWidget* parent = nullptr);
     virtual void accept();
     QKeySequence shortcut() const;
 private:

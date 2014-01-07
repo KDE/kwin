@@ -84,7 +84,7 @@ public:
     //       and an inactive window.
     enum Windows { Inactive = 0, Active, NumWindows };
 
-    explicit KDecorationPreview(QWidget* parent = NULL);
+    explicit KDecorationPreview(QWidget* parent = nullptr);
     virtual ~KDecorationPreview();
     void disablePreview();
     KDecorationFactory *factory() const;

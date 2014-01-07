@@ -72,20 +72,20 @@ void KCMRulesList::activeChanged()
     QListWidgetItem *item = rules_listbox->currentItem();
     int itemRow = rules_listbox->row(item);
 
-    if (item != NULL)   // make current==selected
+    if (item != nullptr)   // make current==selected
         rules_listbox->setCurrentItem(item, QItemSelectionModel::ClearAndSelect);
-    modify_button->setEnabled(item != NULL);
-    delete_button->setEnabled(item != NULL);
-    export_button->setEnabled(item != NULL);
-    moveup_button->setEnabled(item != NULL && itemRow > 0);
-    movedown_button->setEnabled(item != NULL && itemRow < (rules_listbox->count() - 1));
+    modify_button->setEnabled(item != nullptr);
+    delete_button->setEnabled(item != nullptr);
+    export_button->setEnabled(item != nullptr);
+    moveup_button->setEnabled(item != nullptr && itemRow > 0);
+    movedown_button->setEnabled(item != nullptr && itemRow < (rules_listbox->count() - 1));
 }
 
 void KCMRulesList::newClicked()
 {
     RulesDialog dlg(this);
-    Rules* rule = dlg.edit(NULL, 0, false);
-    if (rule == NULL)
+    Rules* rule = dlg.edit(nullptr, 0, false);
+    if (rule == nullptr)
         return;
     int pos = rules_listbox->currentRow() + 1;
     rules_listbox->insertItem(pos , rule->description);
@@ -191,7 +191,7 @@ void KCMRulesList::importClicked()
                 }
                 else
                     rules[i] = new_rule;
-                new_rule = 0;
+                new_rule = nullptr;
                 break;
             }
         }
@@ -199,7 +199,7 @@ void KCMRulesList::importClicked()
         // don't add "to be deleted" if not present
         if (remove) {
             delete new_rule;
-            new_rule = 0;
+            new_rule = nullptr;
         }
 
         // plain insertion
@@ -234,7 +234,7 @@ void KCMRulesList::load()
     if (rules.count() > 0)
         rules_listbox->setCurrentItem(rules_listbox->item(0));
     else
-        rules_listbox->setCurrentItem(NULL);
+        rules_listbox->setCurrentItem(nullptr);
     activeChanged();
 }
 

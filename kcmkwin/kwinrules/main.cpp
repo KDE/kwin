@@ -72,7 +72,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
                        NET::WMName | NET::WMWindowType,
                        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine);
     if (!info.valid())  // shouldn't really happen
-        return NULL;
+        return nullptr;
     ClientMachine clientMachine;
     clientMachine.resolve(info.win(), info.groupLeader());
     QByteArray wmclass_class = info.windowClassClass().toLower();
@@ -83,7 +83,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
                                            | NET::UtilityMask | NET::SplashMask);
     QString title = info.name();
     QByteArray machine = clientMachine.hostName();
-    Rules* best_match = NULL;
+    Rules* best_match = nullptr;
     int match_quality = 0;
     for (QList< Rules* >::ConstIterator it = rules.constBegin();
             it != rules.constEnd();
@@ -136,7 +136,7 @@ static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
             match_quality = quality;
         }
     }
-    if (best_match != NULL)
+    if (best_match != nullptr)
         return best_match;
     Rules* ret = new Rules;
     if (whole_app) {
@@ -215,7 +215,7 @@ static int edit(Window wid, bool whole_app)
         dlg.setWindowTitle(i18nc("Window caption for the application wide rules dialog", "Edit Application-Specific Settings"));
     // dlg.edit() creates new Rules instance if edited
     Rules* edited_rule = dlg.edit(orig_rule, wid, true);
-    if (edited_rule == NULL || edited_rule->isEmpty()) {
+    if (edited_rule == nullptr || edited_rule->isEmpty()) {
         rules.removeAll(orig_rule);
         delete orig_rule;
         if (orig_rule != edited_rule)

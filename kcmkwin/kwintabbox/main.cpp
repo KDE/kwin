@@ -461,7 +461,7 @@ void KWinTabBoxConfig::updateConfigFromUi(const KWin::KWinTabBoxConfigForm* ui, 
 
 #define CHECK_CURRENT_TABBOX_UI \
     Q_ASSERT(sender());\
-    KWinTabBoxConfigForm *ui = 0;\
+    KWinTabBoxConfigForm *ui = nullptr;\
     QObject *dad = sender();\
     while (!ui && (dad = dad->parent()))\
         ui = qobject_cast<KWinTabBoxConfigForm*>(dad);\

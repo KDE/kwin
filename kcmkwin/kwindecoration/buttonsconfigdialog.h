@@ -43,7 +43,7 @@ class KWinDecorationButtonsConfigDialog : public QDialog
 {
     Q_OBJECT
 public:
-    KWinDecorationButtonsConfigDialog(DecorationButtons const *buttons, bool showTooltips, QWidget* parent = 0, Qt::WFlags flags = 0);
+    KWinDecorationButtonsConfigDialog(DecorationButtons const *buttons, bool showTooltips, QWidget* parent = nullptr, Qt::WFlags flags = 0);
     ~KWinDecorationButtonsConfigDialog();
 
     bool customPositions() const;

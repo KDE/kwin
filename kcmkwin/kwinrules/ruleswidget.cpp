@@ -54,7 +54,7 @@ namespace KWin
     rule_##var->setWhatsThis( type##RuleDesc );
 
 RulesWidget::RulesWidget(QWidget* parent)
-    : detect_dlg(NULL)
+    : detect_dlg(nullptr)
 {
     Q_UNUSED(parent);
     QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\-+,xX:]*"), this);
@@ -426,7 +426,7 @@ static NET::WindowType comboToType(int val)
 void RulesWidget::setRules(Rules* rules)
 {
     Rules tmp;
-    if (rules == NULL)
+    if (rules == nullptr)
         rules = &tmp; // empty
     description->setText(rules->description);
     wmclass->setText(rules->wmclass);
@@ -634,7 +634,7 @@ STRING_MATCH_COMBO(machine)
 
 void RulesWidget::detectClicked()
 {
-    assert(detect_dlg == NULL);
+    assert(detect_dlg == nullptr);
     detect_dlg = new DetectDialog;
     connect(detect_dlg, SIGNAL(detectionDone(bool)), this, SLOT(detected(bool)));
     detect_dlg->detect(0, Ui::RulesWidgetBase::detection_delay->value());
@@ -675,7 +675,7 @@ void RulesWidget::detected(bool ok)
         prefillUnusedValues(info);
     }
     delete detect_dlg;
-    detect_dlg = NULL;
+    detect_dlg = nullptr;
     detect_dlg_ok = ok;
 }
 

@@ -112,7 +112,7 @@ class ButtonSource : public QListWidget
     Q_OBJECT
 
 public:
-    explicit ButtonSource(QWidget *parent = 0);
+    explicit ButtonSource(QWidget *parent = nullptr);
     virtual ~ButtonSource();
 
     QSize sizeHint() const;
@@ -143,7 +143,7 @@ class ButtonDropSite: public QFrame
     Q_OBJECT
 
 public:
-    explicit ButtonDropSite(QWidget* parent = 0);
+    explicit ButtonDropSite(QWidget* parent = nullptr);
     ~ButtonDropSite();
 
     // Allow external classes access our buttons - ensure buttons are
@@ -196,7 +196,7 @@ class ButtonPositionWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit ButtonPositionWidget(QWidget *parent = 0);
+    explicit ButtonPositionWidget(QWidget *parent = nullptr);
     ~ButtonPositionWidget();
 
     QList<KDecorationDefines::DecorationButton> buttonsLeft() const;

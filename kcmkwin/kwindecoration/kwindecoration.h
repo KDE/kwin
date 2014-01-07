@@ -58,7 +58,7 @@ class DecorationButtons : public QObject, public KDecorationDefines
     Q_OBJECT
     Q_PROPERTY(bool customButtonPositions READ customPositions WRITE setCustomPositions NOTIFY customPositionsChanged)
 public:
-    explicit DecorationButtons(QObject *parent = 0);
+    explicit DecorationButtons(QObject *parent = nullptr);
     virtual ~DecorationButtons();
 
     bool customPositions() const;

@@ -48,7 +48,7 @@ class ExampleClientModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ExampleClientModel(QObject *parent = NULL);
+    explicit ExampleClientModel(QObject *parent = nullptr);
     virtual ~ExampleClientModel();
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

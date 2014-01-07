@@ -59,8 +59,8 @@ KWinDesktopConfigForm::KWinDesktopConfigForm(QWidget* parent)
 KWinDesktopConfig::KWinDesktopConfig(QWidget* parent, const QVariantList& args)
     : KCModule(KAboutData::pluginData(QStringLiteral("kcm_kwindesktop")), parent, args)
     , m_config(KSharedConfig::openConfig("kwinrc"))
-    , m_actionCollection(NULL)
-    , m_switchDesktopCollection(NULL)
+    , m_actionCollection(nullptr)
+    , m_switchDesktopCollection(nullptr)
 {
     init();
 }
