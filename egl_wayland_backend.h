@@ -266,6 +266,8 @@ public:
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    virtual bool makeCurrent() override;
+    virtual void doneCurrent() override;
     Shm *shm();
 
 protected:
@@ -281,6 +283,7 @@ private:
     EGLConfig m_config;
     EGLSurface m_surface;
     EGLContext m_context;
+    int m_bufferAge;
     QScopedPointer<Wayland::WaylandBackend> m_wayland;
     QScopedPointer<Shm> m_shm;
     friend class EglWaylandTexture;

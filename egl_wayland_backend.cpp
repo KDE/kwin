@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QSocketNotifier>
 #include <QTemporaryFile>
+#include <QOpenGLContext>
 // xcb
 #include <xcb/xtest.h>
 // Wayland
@@ -627,6 +628,7 @@ void WaylandBackend::ping(uint32_t serial)
 EglWaylandBackend::EglWaylandBackend()
     : OpenGLBackend()
     , m_context(EGL_NO_CONTEXT)
+    , m_bufferAge(0)
     , m_wayland(new Wayland::WaylandBackend)
 {
     qDebug() << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
@@ -647,7 +649,7 @@ EglWaylandBackend::EglWaylandBackend()
 EglWaylandBackend::~EglWaylandBackend()
 {
     cleanupGL();
-    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    doneCurrent();
     eglDestroyContext(m_display, m_context);
     eglDestroySurface(m_display, m_surface);
     eglTerminate(m_display);
@@ -694,6 +696,15 @@ void EglWaylandBackend::init()
     glPlatform->detect(EglPlatformInterface);
     glPlatform->printResults();
     initGL(EglPlatformInterface);
+
+    setSupportsBufferAge(false);
+
+    if (hasGLExtension("EGL_EXT_buffer_age")) {
+        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
+
+        if (useBufferAge != "0")
+            setSupportsBufferAge(true);
+    }
 }
 
 bool EglWaylandBackend::initRenderingContext()
@@ -797,14 +808,19 @@ bool EglWaylandBackend::initBufferConfigs()
 
 void EglWaylandBackend::present()
 {
-    setLastDamage(QRegion());
     // need to dispatch pending events as eglSwapBuffers can block
     wl_display_dispatch_pending(m_wayland->display());
     wl_display_flush(m_wayland->display());
 
-    // a different context might have been current
-    eglMakeCurrent(m_display, m_surface, m_surface, m_context);
-    eglSwapBuffers(m_display, m_surface);
+    if (supportsBufferAge()) {
+        eglSwapBuffers(m_display, m_surface);
+        eglQuerySurface(m_display, m_surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+        setLastDamage(QRegion());
+        return;
+    } else {
+        eglSwapBuffers(m_display, m_surface);
+        setLastDamage(QRegion());
+    }
 }
 
 void EglWaylandBackend::screenGeometryChanged(const QSize &size)
@@ -812,6 +828,9 @@ void EglWaylandBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
     // no backend specific code needed
     // TODO: base implementation in OpenGLBackend
+
+    // The back buffer contents are now undefined
+    m_bufferAge = 0;
 }
 
 SceneOpenGL::TexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGL::Texture *texture)
@@ -819,20 +838,67 @@ SceneOpenGL::TexturePrivate *EglWaylandBackend::createBackendTexture(SceneOpenGL
     return new EglWaylandTexture(texture, this);
 }
 
-void EglWaylandBackend::prepareRenderingFrame()
+QRegion EglWaylandBackend::prepareRenderingFrame()
 {
     if (!lastDamage().isEmpty())
         present();
-    // different context might have been bound as present() can block
-    eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+    QRegion repaint;
+    if (supportsBufferAge())
+        repaint = accumulatedDamageHistory(m_bufferAge);
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
     startRenderTimer();
+    return repaint;
 }
 
-void EglWaylandBackend::endRenderingFrame(const QRegion &damage)
+void EglWaylandBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    setLastDamage(damage);
-    glFlush();
+    if (damagedRegion.isEmpty()) {
+        setLastDamage(QRegion());
+
+        // If the damaged region of a window is fully occluded, the only
+        // rendering done, if any, will have been to repair a reused back
+        // buffer, making it identical to the front buffer.
+        //
+        // In this case we won't post the back buffer. Instead we'll just
+        // set the buffer age to 1, so the repaired regions won't be
+        // rendered again in the next frame.
+        if (!renderedRegion.isEmpty())
+            glFlush();
+
+        m_bufferAge = 1;
+        return;
+    }
+
+    setLastDamage(renderedRegion);
+
+    if (!blocksForRetrace()) {
+        // This also sets lastDamage to empty which prevents the frame from
+        // being posted again when prepareRenderingFrame() is called.
+        present();
+    } else {
+        // Make sure that the GPU begins processing the command stream
+        // now and not the next time prepareRenderingFrame() is called.
+        glFlush();
+    }
+
+    // Save the damaged region to history
+    if (supportsBufferAge())
+        addToDamageHistory(damagedRegion);
+}
+
+bool EglWaylandBackend::makeCurrent()
+{
+    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
+        // Workaround to tell Qt that no QOpenGLContext is current
+        context->doneCurrent();
+    }
+    const bool current = eglMakeCurrent(m_display, m_surface, m_surface, m_context);
+    return current;
+}
+
+void EglWaylandBackend::doneCurrent()
+{
+    eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
 Shm *EglWaylandBackend::shm()
