@@ -22,11 +22,11 @@
 #include "effectconfig.h"
 #include "compositing.h"
 
-#include <KDE/KPluginInfo>
-#include <KDE/KService>
-#include <KDE/KServiceTypeTrader>
-#include <KDE/KSharedConfig>
-#include <KDE/KCModuleProxy>
+#include <KPluginInfo>
+#include <KService>
+#include <KServiceTypeTrader>
+#include <KSharedConfig>
+#include <KCModuleProxy>
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>

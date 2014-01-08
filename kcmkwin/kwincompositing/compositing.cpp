@@ -21,10 +21,10 @@
 
 #include "compositing.h"
 
-#include <KDE/KCModuleProxy>
-#include <kconfiggroup.h>
-#include <klocalizedstring.h>
-#include <KDE/KSharedConfig>
+#include <KCModuleProxy>
+#include <KConfigGroup>
+#include <KLocalizedString>
+#include <KSharedConfig>
 
 #include <QDBusInterface>
 #include <QDBusReply>

@@ -20,9 +20,9 @@
 
 #include "effectconfig.h"
 
-#include <KDE/KCModuleProxy>
-#include <KDE/KPluginInfo>
-#include <KDE/KServiceTypeTrader>
+#include <KCModuleProxy>
+#include <KPluginInfo>
+#include <KServiceTypeTrader>
 
 #include <QDialog>
 #include <QDialogButtonBox>

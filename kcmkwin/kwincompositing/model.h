@@ -22,8 +22,8 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <KDE/KColorScheme>
-#include <KDE/KSharedConfig>
+#include <KColorScheme>
+#include <KSharedConfig>
 #include <QAbstractItemModel>
 #include <QHash>
 #include <QList>
