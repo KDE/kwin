@@ -81,7 +81,7 @@ void TestClientMachine::initTestCase()
     addressHints.ai_family = PF_UNSPEC;
     addressHints.ai_socktype = SOCK_STREAM;
     addressHints.ai_flags |= AI_CANONNAME;
-    if (getaddrinfo(m_hostName.constData(), NULL, &addressHints, &res) == 0) {
+    if (getaddrinfo(m_hostName.constData(), nullptr, &addressHints, &res) == 0) {
         if (res->ai_canonname) {
             m_fqdn = QByteArray(res->ai_canonname);
         }

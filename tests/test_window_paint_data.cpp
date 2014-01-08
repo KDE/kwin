@@ -33,7 +33,7 @@ class MockEffectWindowHelper : public QObject
     Q_OBJECT
     Q_PROPERTY(qreal opacity READ opacity WRITE setOpacity)
 public:
-    MockEffectWindowHelper(QObject *parent = NULL);
+    MockEffectWindowHelper(QObject *parent = nullptr);
     double opacity() const {
         return m_opacity;
     }
@@ -54,7 +54,7 @@ class MockEffectWindow : public EffectWindow
 {
     Q_OBJECT
 public:
-    MockEffectWindow(QObject *parent = 0);
+    MockEffectWindow(QObject *parent = nullptr);
     virtual WindowQuadList buildQuads(bool force = false) const;
     virtual QVariant data(int role) const;
     virtual QRect decorationInnerRect() const;
@@ -113,12 +113,12 @@ void MockEffectWindow::enablePainting(int reason)
 
 EffectWindow *MockEffectWindow::findModal()
 {
-    return NULL;
+    return nullptr;
 }
 
 const EffectWindowGroup *MockEffectWindow::group() const
 {
-    return NULL;
+    return nullptr;
 }
 
 bool MockEffectWindow::isPaintingEnabled()

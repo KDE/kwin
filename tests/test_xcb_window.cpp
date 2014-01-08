@@ -143,7 +143,7 @@ void TestXcbWindow::destroy()
 
     window.create(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     // wId should now be invalid
-    xcb_generic_error_t *error = NULL;
+    xcb_generic_error_t *error = nullptr;
     ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(
         connection(),
         xcb_get_window_attributes(connection(), wId),
@@ -159,7 +159,7 @@ void TestXcbWindow::destroy()
         QVERIFY(scopedWindow.isValid());
         wId = scopedWindow;
     }
-    error = NULL;
+    error = nullptr;
     ScopedCPointer<xcb_get_window_attributes_reply_t> attribs2(xcb_get_window_attributes_reply(
         connection(),
         xcb_get_window_attributes(connection(), wId),
