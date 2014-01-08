@@ -208,10 +208,10 @@ glCopyBufferSubData_func glCopyBufferSubData;
 
 static glXFuncPtr getProcAddress(const char* name)
 {
-    glXFuncPtr ret = NULL;
-    if (glXGetProcAddress != NULL)
+    glXFuncPtr ret = nullptr;
+    if (glXGetProcAddress != nullptr)
         ret = glXGetProcAddress((const GLubyte*) name);
-    if (ret == NULL)
+    if (ret == nullptr)
         ret = (glXFuncPtr) dlsym(RTLD_DEFAULT, name);
     return ret;
 }
@@ -220,45 +220,45 @@ void glxResolveFunctions()
 {
     // handle OpenGL extensions functions
     glXGetProcAddress = (glXGetProcAddress_func) getProcAddress("glXGetProcAddress");
-    if (glXGetProcAddress == NULL)
+    if (glXGetProcAddress == nullptr)
         glXGetProcAddress = (glXGetProcAddress_func) getProcAddress("glXGetProcAddressARB");
     glXQueryDrawable = (glXQueryDrawable_func) getProcAddress("glXQueryDrawable");
     if (hasGLExtension(QStringLiteral("GLX_EXT_texture_from_pixmap"))) {
         glXBindTexImageEXT = (glXBindTexImageEXT_func) getProcAddress("glXBindTexImageEXT");
         glXReleaseTexImageEXT = (glXReleaseTexImageEXT_func) getProcAddress("glXReleaseTexImageEXT");
     } else {
-        glXBindTexImageEXT = NULL;
-        glXReleaseTexImageEXT = NULL;
+        glXBindTexImageEXT = nullptr;
+        glXReleaseTexImageEXT = nullptr;
     }
     if (hasGLExtension(QStringLiteral("GLX_MESA_copy_sub_buffer")))
         glXCopySubBuffer = (glXCopySubBuffer_func) getProcAddress("glXCopySubBufferMESA");
     else
-        glXCopySubBuffer = NULL;
+        glXCopySubBuffer = nullptr;
     if (hasGLExtension(QStringLiteral("GLX_SGI_video_sync"))) {
         glXGetVideoSync = (glXGetVideoSync_func) getProcAddress("glXGetVideoSyncSGI");
         glXWaitVideoSync = (glXWaitVideoSync_func) getProcAddress("glXWaitVideoSyncSGI");
     } else {
-        glXGetVideoSync = NULL;
-        glXWaitVideoSync = NULL;
+        glXGetVideoSync = nullptr;
+        glXWaitVideoSync = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GLX_SGI_swap_control")))
         glXSwapIntervalSGI = (glXSwapIntervalSGI_func) getProcAddress("glXSwapIntervalSGI");
     else
-        glXSwapIntervalSGI = NULL;
+        glXSwapIntervalSGI = nullptr;
     if (hasGLExtension(QStringLiteral("GLX_EXT_swap_control")))
         glXSwapIntervalEXT = (glXSwapIntervalEXT_func) getProcAddress("glXSwapIntervalEXT");
     else
-        glXSwapIntervalEXT = NULL;
+        glXSwapIntervalEXT = nullptr;
     if (hasGLExtension(QStringLiteral("GLX_MESA_swap_control")))
         glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
     else
-        glXSwapIntervalMESA = NULL;
+        glXSwapIntervalMESA = nullptr;
 
     if (hasGLExtension(QStringLiteral("GLX_ARB_create_context")))
         glXCreateContextAttribsARB = (glXCreateContextAttribsARB_func) getProcAddress("glXCreateContextAttribsARB");
     else
-        glXCreateContextAttribsARB = NULL;
+        glXCreateContextAttribsARB = nullptr;
 }
 
 #else
@@ -301,14 +301,14 @@ void eglResolveFunctions()
         eglCreateImageKHR = (eglCreateImageKHR_func)eglGetProcAddress("eglCreateImageKHR");
         eglDestroyImageKHR = (eglDestroyImageKHR_func)eglGetProcAddress("eglDestroyImageKHR");
     } else {
-        eglCreateImageKHR = NULL;
-        eglDestroyImageKHR = NULL;
+        eglCreateImageKHR = nullptr;
+        eglDestroyImageKHR = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("EGL_NV_post_sub_buffer"))) {
         eglPostSubBufferNV = (eglPostSubBufferNV_func)eglGetProcAddress("eglPostSubBufferNV");
     } else {
-        eglPostSubBufferNV = NULL;
+        eglPostSubBufferNV = nullptr;
     }
 }
 #endif
@@ -325,7 +325,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         // Get number of texture units
         glGetIntegerv(GL_MAX_TEXTURE_UNITS, &glTextureUnitsCount);
     } else {
-        glActiveTexture = NULL;
+        glActiveTexture = nullptr;
         glTextureUnitsCount = 0;
     }
 
@@ -384,23 +384,23 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 
         GL_RESOLVE_WITH_EXT(glGenerateMipmap, glGenerateMipmapEXT);
     } else {
-        glIsRenderbuffer = NULL;
-        glBindRenderbuffer = NULL;
-        glDeleteRenderbuffers = NULL;
-        glGenRenderbuffers = NULL;
-        glRenderbufferStorage = NULL;
-        glGetRenderbufferParameteriv = NULL;
-        glIsFramebuffer = NULL;
-        glBindFramebuffer = NULL;
-        glDeleteFramebuffers = NULL;
-        glGenFramebuffers = NULL;
-        glCheckFramebufferStatus = NULL;
-        glFramebufferTexture1D = NULL;
-        glFramebufferTexture2D = NULL;
-        glFramebufferTexture3D = NULL;
-        glFramebufferRenderbuffer = NULL;
-        glGetFramebufferAttachmentParameteriv = NULL;
-        glGenerateMipmap = NULL;
+        glIsRenderbuffer = nullptr;
+        glBindRenderbuffer = nullptr;
+        glDeleteRenderbuffers = nullptr;
+        glGenRenderbuffers = nullptr;
+        glRenderbufferStorage = nullptr;
+        glGetRenderbufferParameteriv = nullptr;
+        glIsFramebuffer = nullptr;
+        glBindFramebuffer = nullptr;
+        glDeleteFramebuffers = nullptr;
+        glGenFramebuffers = nullptr;
+        glCheckFramebufferStatus = nullptr;
+        glFramebufferTexture1D = nullptr;
+        glFramebufferTexture2D = nullptr;
+        glFramebufferTexture3D = nullptr;
+        glFramebufferRenderbuffer = nullptr;
+        glGetFramebufferAttachmentParameteriv = nullptr;
+        glGenerateMipmap = nullptr;
     }
 
     if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object"))) {
@@ -410,7 +410,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         // see http://www.opengl.org/registry/specs/EXT/framebuffer_blit.txt
         GL_RESOLVE_WITH_EXT(glBlitFramebuffer, glBlitFramebufferEXT);
     } else {
-        glBlitFramebuffer = NULL;
+        glBlitFramebuffer = nullptr;
     }
 
     if (hasGLVersion(2, 0)) {
@@ -469,32 +469,32 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE_WITH_EXT(glGetUniformLocation, glGetUniformLocationARB);
         GL_RESOLVE_WITH_EXT(glGetUniformfv, glGetUniformfvARB);
     } else {
-        glCreateShader = NULL;
-        glShaderSource = NULL;
-        glCompileShader = NULL;
-        glDeleteShader = NULL;
-        glCreateProgram = NULL;
-        glAttachShader = NULL;
-        glLinkProgram = NULL;
-        glUseProgram = NULL;
-        glDeleteProgram = NULL;
-        glGetShaderInfoLog = NULL;
-        glGetProgramInfoLog = NULL;
-        glGetProgramiv = NULL;
-        glGetShaderiv = NULL;
-        glUniform1f = NULL;
-        glUniform2f = NULL;
-        glUniform3f = NULL;
-        glUniform4f = NULL;
-        glUniform1i = NULL;
-        glUniform1fv = NULL;
-        glUniform2fv = NULL;
-        glUniform3fv = NULL;
-        glUniform4fv = NULL;
-        glUniformMatrix4fv = NULL;
-        glValidateProgram = NULL;
-        glGetUniformLocation = NULL;
-        glGetUniformfv = NULL;
+        glCreateShader = nullptr;
+        glShaderSource = nullptr;
+        glCompileShader = nullptr;
+        glDeleteShader = nullptr;
+        glCreateProgram = nullptr;
+        glAttachShader = nullptr;
+        glLinkProgram = nullptr;
+        glUseProgram = nullptr;
+        glDeleteProgram = nullptr;
+        glGetShaderInfoLog = nullptr;
+        glGetProgramInfoLog = nullptr;
+        glGetProgramiv = nullptr;
+        glGetShaderiv = nullptr;
+        glUniform1f = nullptr;
+        glUniform2f = nullptr;
+        glUniform3f = nullptr;
+        glUniform4f = nullptr;
+        glUniform1i = nullptr;
+        glUniform1fv = nullptr;
+        glUniform2fv = nullptr;
+        glUniform3fv = nullptr;
+        glUniform4fv = nullptr;
+        glUniformMatrix4fv = nullptr;
+        glValidateProgram = nullptr;
+        glGetUniformLocation = nullptr;
+        glGetUniformfv = nullptr;
     }
 
     if (hasGLVersion(2, 0)) {
@@ -513,12 +513,12 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE_WITH_EXT(glDisableVertexAttribArray, glDisableVertexAttribArrayARB);
         GL_RESOLVE_WITH_EXT(glVertexAttribPointer, glVertexAttribPointerARB);
     } else {
-        glVertexAttrib1f = NULL;
-        glBindAttribLocation = NULL;
-        glGetAttribLocation = NULL;
-        glEnableVertexAttribArray = NULL;
-        glDisableVertexAttribArray = NULL;
-        glVertexAttribPointer = NULL;
+        glVertexAttrib1f = nullptr;
+        glBindAttribLocation = nullptr;
+        glGetAttribLocation = nullptr;
+        glEnableVertexAttribArray = nullptr;
+        glDisableVertexAttribArray = nullptr;
+        glVertexAttribPointer = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GL_ARB_fragment_program")) && hasGLExtension(QStringLiteral("GL_ARB_vertex_program"))) {
@@ -530,12 +530,12 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glProgramLocalParameter4fARB);
         GL_RESOLVE(glGetProgramivARB);
     } else {
-        glProgramStringARB = NULL;
-        glBindProgramARB = NULL;
-        glDeleteProgramsARB = NULL;
-        glGenProgramsARB = NULL;
-        glProgramLocalParameter4fARB = NULL;
-        glGetProgramivARB = NULL;
+        glProgramStringARB = nullptr;
+        glBindProgramARB = nullptr;
+        glDeleteProgramsARB = nullptr;
+        glGenProgramsARB = nullptr;
+        glProgramLocalParameter4fARB = nullptr;
+        glGetProgramivARB = nullptr;
     }
 
     if (hasGLVersion(1, 5)) {
@@ -557,14 +557,14 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE_WITH_EXT(glMapBuffer, glMapBufferARB);
         GL_RESOLVE_WITH_EXT(glUnmapBuffer, glUnmapBufferARB);
     } else {
-        glGenBuffers = NULL;
-        glDeleteBuffers = NULL;
-        glBindBuffer = NULL;
-        glBufferData = NULL;
-        glBufferSubData = NULL;
-        glGetBufferSubData = NULL;
-        glMapBuffer = NULL;
-        glUnmapBuffer = NULL;
+        glGenBuffers = nullptr;
+        glDeleteBuffers = nullptr;
+        glBindBuffer = nullptr;
+        glBufferData = nullptr;
+        glBufferSubData = nullptr;
+        glGetBufferSubData = nullptr;
+        glMapBuffer = nullptr;
+        glUnmapBuffer = nullptr;
     }
 
     if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_vertex_array_object"))) {
@@ -574,10 +574,10 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glGenVertexArrays);
         GL_RESOLVE(glIsVertexArray);
     } else {
-        glBindVertexArray    = NULL;
-        glDeleteVertexArrays = NULL;
-        glGenVertexArrays    = NULL;
-        glIsVertexArray      = NULL;
+        glBindVertexArray    = nullptr;
+        glDeleteVertexArrays = nullptr;
+        glGenVertexArrays    = nullptr;
+        glIsVertexArray      = nullptr;
     }
 
     if (hasGLVersion(3, 0)) {
@@ -650,39 +650,39 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE_WITH_EXT(glUniform2uiv,          glUniform2uivEXT);
         GL_RESOLVE_WITH_EXT(glUniform3uiv,          glUniform3uivEXT);
     } else {
-        glVertexAttribI1i      = NULL;
-        glVertexAttribI2i      = NULL;
-        glVertexAttribI3i      = NULL;
-        glVertexAttribI4i      = NULL;
-        glVertexAttribI1ui     = NULL;
-        glVertexAttribI2ui     = NULL;
-        glVertexAttribI3ui     = NULL;
-        glVertexAttribI4ui     = NULL;
-        glVertexAttribI1iv     = NULL;
-        glVertexAttribI2iv     = NULL;
-        glVertexAttribI3iv     = NULL;
-        glVertexAttribI4iv     = NULL;
-        glVertexAttribI1uiv    = NULL;
-        glVertexAttribI2uiv    = NULL;
-        glVertexAttribI3uiv    = NULL;
-        glVertexAttribI4uiv    = NULL;
-        glVertexAttribI4bv     = NULL;
-        glVertexAttribI4sv     = NULL;
-        glVertexAttribI4ubv    = NULL;
-        glVertexAttribI4usv    = NULL;
-        glVertexAttribIPointer = NULL;
-        glGetVertexAttribIiv   = NULL;
-        glGetVertexAttribIuiv  = NULL;
-        glGetUniformuiv        = NULL;
-        glBindFragDataLocation = NULL;
-        glGetFragDataLocation  = NULL;
-        glUniform1ui           = NULL;
-        glUniform2ui           = NULL;
-        glUniform3ui           = NULL;
-        glUniform4ui           = NULL;
-        glUniform1uiv          = NULL;
-        glUniform2uiv          = NULL;
-        glUniform3uiv          = NULL;
+        glVertexAttribI1i      = nullptr;
+        glVertexAttribI2i      = nullptr;
+        glVertexAttribI3i      = nullptr;
+        glVertexAttribI4i      = nullptr;
+        glVertexAttribI1ui     = nullptr;
+        glVertexAttribI2ui     = nullptr;
+        glVertexAttribI3ui     = nullptr;
+        glVertexAttribI4ui     = nullptr;
+        glVertexAttribI1iv     = nullptr;
+        glVertexAttribI2iv     = nullptr;
+        glVertexAttribI3iv     = nullptr;
+        glVertexAttribI4iv     = nullptr;
+        glVertexAttribI1uiv    = nullptr;
+        glVertexAttribI2uiv    = nullptr;
+        glVertexAttribI3uiv    = nullptr;
+        glVertexAttribI4uiv    = nullptr;
+        glVertexAttribI4bv     = nullptr;
+        glVertexAttribI4sv     = nullptr;
+        glVertexAttribI4ubv    = nullptr;
+        glVertexAttribI4usv    = nullptr;
+        glVertexAttribIPointer = nullptr;
+        glGetVertexAttribIiv   = nullptr;
+        glGetVertexAttribIuiv  = nullptr;
+        glGetUniformuiv        = nullptr;
+        glBindFragDataLocation = nullptr;
+        glGetFragDataLocation  = nullptr;
+        glUniform1ui           = nullptr;
+        glUniform2ui           = nullptr;
+        glUniform3ui           = nullptr;
+        glUniform4ui           = nullptr;
+        glUniform1uiv          = nullptr;
+        glUniform2uiv          = nullptr;
+        glUniform3uiv          = nullptr;
     }
 
     if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"))) {
@@ -690,8 +690,8 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glMapBufferRange);
         GL_RESOLVE(glFlushMappedBufferRange);
     } else {
-        glMapBufferRange         = NULL;
-        glFlushMappedBufferRange = NULL;
+        glMapBufferRange         = nullptr;
+        glFlushMappedBufferRange = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GL_ARB_robustness"))) {
@@ -710,15 +710,15 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         GL_RESOLVE(glDrawElementsBaseVertex);
         GL_RESOLVE(glDrawElementsInstancedBaseVertex);
     } else {
-        glDrawElementsBaseVertex          = NULL;
-        glDrawElementsInstancedBaseVertex = NULL;
+        glDrawElementsBaseVertex          = nullptr;
+        glDrawElementsInstancedBaseVertex = nullptr;
     }
 
     if (hasGLVersion(3, 1) || hasGLExtension(QStringLiteral("GL_ARB_copy_buffer"))) {
         // See http://www.opengl.org/registry/specs/ARB/copy_buffer.txt
         GL_RESOLVE(glCopyBufferSubData);
     } else {
-        glCopyBufferSubData = NULL;
+        glCopyBufferSubData = nullptr;
     }
 
 #else
@@ -729,15 +729,15 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glUnmapBuffer       = (glUnmapBuffer_func)       eglGetProcAddress("glUnmapBufferOES");
         glGetBufferPointerv = (glGetBufferPointerv_func) eglGetProcAddress("glGetBufferPointervOES");
     } else {
-        glMapBuffer         = NULL;
-        glUnmapBuffer       = NULL;
-        glGetBufferPointerv = NULL;
+        glMapBuffer         = nullptr;
+        glUnmapBuffer       = nullptr;
+        glGetBufferPointerv = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GL_OES_texture_3D"))) {
         glTexImage3D = (glTexImage3DOES_func)eglGetProcAddress("glTexImage3DOES");
     } else {
-        glTexImage3D = NULL;
+        glTexImage3D = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"))) {
@@ -745,8 +745,8 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glMapBufferRange         = (glMapBufferRange_func)         eglGetProcAddress("glMapBufferRangeEXT");
         glFlushMappedBufferRange = (glFlushMappedBufferRange_func) eglGetProcAddress("glFlushMappedBufferRangeEXT");
     } else {
-        glMapBufferRange         = NULL;
-        glFlushMappedBufferRange = NULL;
+        glMapBufferRange         = nullptr;
+        glFlushMappedBufferRange = nullptr;
     }
 
     if (hasGLExtension(QStringLiteral("GL_EXT_robustness"))) {
@@ -767,7 +767,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         if (hasGLExtension(QStringLiteral("GL_OES_EGL_image"))) {
             glEGLImageTargetTexture2DOES = (glEGLImageTargetTexture2DOES_func)eglGetProcAddress("glEGLImageTargetTexture2DOES");
         } else {
-            glEGLImageTargetTexture2DOES = NULL;
+            glEGLImageTargetTexture2DOES = nullptr;
         }
     }
 #endif

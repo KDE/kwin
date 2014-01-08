@@ -46,7 +46,7 @@ class KWINGLUTILS_EXPORT ColorCorrection : public QObject
     Q_OBJECT
 
 public:
-    explicit ColorCorrection(QObject *parent = 0);
+    explicit ColorCorrection(QObject *parent = nullptr);
     virtual ~ColorCorrection();
 
     /**

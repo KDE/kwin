@@ -469,7 +469,7 @@ private:
 
 inline
 ShaderBinder::ShaderBinder(ShaderManager::ShaderType type, bool reset)
-    : m_shader(NULL)
+    : m_shader(nullptr)
 {
 #ifdef KWIN_HAVE_OPENGL_1
     if (!ShaderManager::instance()->isValid()) {

@@ -1527,7 +1527,7 @@ public:
         PAINT_DISABLED_BY_ACTIVITY     = 1 << 5
     };
 
-    explicit EffectWindow(QObject *parent = NULL);
+    explicit EffectWindow(QObject *parent = nullptr);
     virtual ~EffectWindow();
 
     virtual void enablePainting(int reason) = 0;

@@ -129,7 +129,7 @@ GLTexturePrivate::GLTexturePrivate()
     m_markedDirty = false;
     m_unnormalizeActive = 0;
     m_normalizeActive = 0;
-    m_vbo = 0;
+    m_vbo = nullptr;
     m_filterChanged = true;
     m_wrapModeChanged = false;
     ++s_textureObjectCounter;
@@ -137,7 +137,7 @@ GLTexturePrivate::GLTexturePrivate()
 
 GLTexturePrivate::~GLTexturePrivate()
 {
-    if (m_vbo != 0) {
+    if (m_vbo != nullptr) {
         delete m_vbo;
     }
     if (m_texture != 0) {
@@ -165,7 +165,7 @@ void GLTexturePrivate::initStatic()
     sFramebufferObjectSupported = hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"));
     sSaturationSupported = ((hasGLExtension(QStringLiteral("GL_ARB_texture_env_crossbar"))
                              && hasGLExtension(QStringLiteral("GL_ARB_texture_env_dot3"))) || hasGLVersion(1, 4))
-                           && (glTextureUnitsCount >= 4) && glActiveTexture != NULL;
+                           && (glTextureUnitsCount >= 4) && glActiveTexture != nullptr;
     sTextureFormat = GL_BGRA;
 #endif
 }

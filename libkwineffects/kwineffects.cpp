@@ -233,7 +233,7 @@ public:
 
 WindowPaintData::WindowPaintData(EffectWindow* w)
     : PaintData()
-    , shader(NULL)
+    , shader(nullptr)
     , d(new WindowPaintDataPrivate())
 {
     quads = w->buildQuads();
@@ -492,7 +492,7 @@ void Effect::reconfigure(ReconfigureFlags)
 
 void* Effect::proxy()
 {
-    return NULL;
+    return nullptr;
 }
 
 void Effect::windowInputMouseEvent(QEvent*)
@@ -655,7 +655,7 @@ KConfigGroup EffectsHandler::effectConfig(const QString& effectname)
     return kwinconfig->group(QStringLiteral("Effect-") + effectname);
 }
 
-EffectsHandler* effects = 0;
+EffectsHandler* effects = nullptr;
 
 
 //****************************************
@@ -1299,7 +1299,7 @@ bool WindowQuadList::isTransformed() const
  PaintClipper
 ***************************************************************/
 
-QStack< QRegion >* PaintClipper::areas = NULL;
+QStack< QRegion >* PaintClipper::areas = nullptr;
 
 PaintClipper::PaintClipper(const QRegion& allowed_area)
     : area(allowed_area)
@@ -1316,7 +1316,7 @@ void PaintClipper::push(const QRegion& allowed_area)
 {
     if (allowed_area == infiniteRegion())  // don't push these
         return;
-    if (areas == NULL)
+    if (areas == nullptr)
         areas = new QStack< QRegion >;
     areas->push(allowed_area);
 }
@@ -1325,23 +1325,23 @@ void PaintClipper::pop(const QRegion& allowed_area)
 {
     if (allowed_area == infiniteRegion())
         return;
-    Q_ASSERT(areas != NULL);
+    Q_ASSERT(areas != nullptr);
     Q_ASSERT(areas->top() == allowed_area);
     areas->pop();
     if (areas->isEmpty()) {
         delete areas;
-        areas = NULL;
+        areas = nullptr;
     }
 }
 
 bool PaintClipper::clip()
 {
-    return areas != NULL;
+    return areas != nullptr;
 }
 
 QRegion PaintClipper::paintArea()
 {
-    assert(areas != NULL);   // can be called only with clip() == true
+    assert(areas != nullptr);   // can be called only with clip() == true
     QRegion ret = QRegion(0, 0, displayWidth(), displayHeight());
     foreach (const QRegion & r, *areas)
     ret &= r;
@@ -1670,7 +1670,7 @@ EffectWindow* WindowMotionManager::windowAtPoint(QPoint point, bool useStackingO
         ++it;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 /***************************************************************

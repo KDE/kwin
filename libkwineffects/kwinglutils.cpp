@@ -385,7 +385,7 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
     QByteArray preparedSource = prepareSource(shaderType, source);
     const char* src = preparedSource.constData();
-    glShaderSource(shader, 1, &src, NULL);
+    glShaderSource(shader, 1, &src, nullptr);
 
     // Compile the shader
     glCompileShader(shader);
@@ -686,7 +686,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
 //****************************************
 // ShaderManager
 //****************************************
-ShaderManager *ShaderManager::s_shaderManager = NULL;
+ShaderManager *ShaderManager::s_shaderManager = nullptr;
 
 ShaderManager *ShaderManager::instance()
 {
@@ -712,7 +712,7 @@ void ShaderManager::disable()
 void ShaderManager::cleanup()
 {
     delete s_shaderManager;
-    s_shaderManager = NULL;
+    s_shaderManager = nullptr;
 }
 
 ShaderManager::ShaderManager()
@@ -738,7 +738,7 @@ ShaderManager::~ShaderManager()
 GLShader *ShaderManager::getBoundShader() const
 {
     if (m_boundShaders.isEmpty()) {
-        return NULL;
+        return nullptr;
     } else {
         return m_boundShaders.top();
     }
@@ -762,7 +762,7 @@ bool ShaderManager::isShaderDebug() const
 GLShader *ShaderManager::pushShader(ShaderType type, bool reset)
 {
     if (m_inited && !m_valid) {
-        return NULL;
+        return nullptr;
     }
 
     pushShader(m_shader[type]);
@@ -1451,7 +1451,7 @@ void IndexBuffer::accomodate(int count)
     GLuint buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
 
     // Use the GPU to copy the data from the old object to the new object,
     glBindBuffer(GL_COPY_READ_BUFFER, m_buffer);
@@ -1628,9 +1628,9 @@ public:
 bool GLVertexBufferPrivate::supported = false;
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
-GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = NULL;
+GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
 #ifndef KWIN_HAVE_OPENGLES
-IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = NULL;
+IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
 
 void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
@@ -1932,12 +1932,12 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
         count = count * 6 / 4;
 
         if (!hardwareClipping) {
-            glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, NULL, first);
+            glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
         } else {
             // Clip using scissoring
             foreach (const QRect &r, region.rects()) {
                 glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
-                glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, NULL, first);
+                glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
             }
         }
         return;
@@ -1998,7 +1998,7 @@ void GLVertexBuffer::initStatic()
     GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension(QStringLiteral("GL_ARB_vertex_buffer_object"));
     GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = glMapBufferRange && glCopyBufferSubData && glDrawElementsBaseVertex;
-    GLVertexBufferPrivate::s_indexBuffer = 0;
+    GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
 }
@@ -2007,7 +2007,7 @@ void GLVertexBuffer::cleanup()
 {
 #ifndef KWIN_HAVE_OPENGLES
     delete GLVertexBufferPrivate::s_indexBuffer;
-    GLVertexBufferPrivate::s_indexBuffer = 0;
+    GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
 }
 

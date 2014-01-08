@@ -82,7 +82,7 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
         return XCB_RENDER_PICTURE_NONE;
     static QHash<int, xcb_render_pictformat_t> s_renderFormats;
     if (!s_renderFormats.contains(depth)) {
-        xcb_render_query_pict_formats_reply_t *formats = xcb_render_query_pict_formats_reply(connection(), xcb_render_query_pict_formats_unchecked(connection()), NULL);
+        xcb_render_query_pict_formats_reply_t *formats = xcb_render_query_pict_formats_reply(connection(), xcb_render_query_pict_formats_unchecked(connection()), nullptr);
         if (!formats) {
             return XCB_RENDER_PICTURE_NONE;
         }
@@ -102,7 +102,7 @@ static xcb_render_picture_t createPicture(xcb_pixmap_t pix, int depth)
         return XCB_RENDER_PICTURE_NONE;
     }
     xcb_render_picture_t pic = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), pic, pix, it.value(), 0, NULL);
+    xcb_render_create_picture(connection(), pic, pix, it.value(), 0, nullptr);
     return pic;
 }
 
@@ -118,7 +118,7 @@ void XRenderPicture::fromImage(const QImage &img)
     xcb_create_pixmap(connection(), depth, xpix, rootWindow(), img.width(), img.height());
 
     xcb_gcontext_t cid = xcb_generate_id(connection());
-    xcb_create_gc(connection(), cid, xpix, 0, NULL);
+    xcb_create_gc(connection(), cid, xpix, 0, nullptr);
     xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
                   0, 0, 0, depth, img.byteCount(), img.constBits());
     xcb_free_gc(connection(), cid);
@@ -143,7 +143,7 @@ void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix)
 
 XRenderPicture *scene_xRenderOffscreenTarget()
 {
-    return s_scene_offscreenTargetStack.isEmpty() ? 0 : s_scene_offscreenTargetStack.top();
+    return s_scene_offscreenTargetStack.isEmpty() ? nullptr : s_scene_offscreenTargetStack.top();
 }
 
 void setXRenderOffscreen(bool b)

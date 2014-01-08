@@ -126,7 +126,7 @@ KWIN_EXPORT Display* display()
 inline
 KWIN_EXPORT xcb_connection_t *connection()
 {
-    static xcb_connection_t *s_con = NULL;
+    static xcb_connection_t *s_con = nullptr;
     if (!s_con) {
         s_con = QX11Info::connection();
     }
@@ -152,7 +152,7 @@ KWIN_EXPORT xcb_timestamp_t xTime()
 inline
 KWIN_EXPORT xcb_screen_t *defaultScreen()
 {
-    static xcb_screen_t *s_screen = NULL;
+    static xcb_screen_t *s_screen = nullptr;
     if (s_screen) {
         return s_screen;
     }
@@ -185,17 +185,17 @@ KWIN_EXPORT int displayHeight()
 
 #define KWIN_SINGLETON_VARIABLE(ClassName, variableName) \
 public: \
-    static ClassName *create(QObject *parent = 0);\
+    static ClassName *create(QObject *parent = nullptr);\
     static ClassName *self() { return variableName; }\
 protected: \
-    explicit ClassName(QObject *parent = 0); \
+    explicit ClassName(QObject *parent = nullptr); \
 private: \
     static ClassName *variableName;
 
 #define KWIN_SINGLETON(ClassName) KWIN_SINGLETON_VARIABLE(ClassName, s_self)
 
 #define KWIN_SINGLETON_FACTORY_VARIABLE_FACTORED(ClassName, FactoredClassName, variableName) \
-ClassName *ClassName::variableName = 0; \
+ClassName *ClassName::variableName = nullptr; \
 ClassName *ClassName::create(QObject *parent) \
 { \
     Q_ASSERT(!variableName); \
