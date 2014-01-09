@@ -189,7 +189,7 @@ Application::Application(int &argc, char **argv)
     , m_eventFilter(new XcbEventFilter())
     , m_replace(false)
     , m_configLock(false)
-    , m_operationMode(OperationModeWaylandAndX11)
+    , m_operationMode(OperationModeX11)
 {
 }
 
