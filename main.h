@@ -83,6 +83,11 @@ private:
     static int crashes;
 };
 
+inline static Application *kwinApp()
+{
+    return static_cast<Application*>(QCoreApplication::instance());
+}
+
 } // namespace
 
 #endif
