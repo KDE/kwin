@@ -29,7 +29,7 @@ find_package(Qt5Core REQUIRED NO_MODULE)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS DBus Quick Test Widgets)
 
 # check for Qt5Multimedia (runtime-only dependency)
-find_package(Qt5Multimedia)
+find_package(Qt5Multimedia QUIET)
 set_package_properties(Qt5Multimedia PROPERTIES
          PURPOSE "Runtime-only dependency for effect video playback"
          TYPE RUNTIME
@@ -118,4 +118,4 @@ INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kwincompositing.desktop  DESTINATION  ${SERVICES_INSTALL_DIR})
 ################# list the subdirectories #################
 
-feature_summary(WHAT ALL   FATAL_ON_MISSING_REQUIRED_PACKAGES)
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
