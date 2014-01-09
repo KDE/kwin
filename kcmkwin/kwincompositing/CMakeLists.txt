@@ -28,6 +28,13 @@ include(KDECompilerSettings)
 find_package(Qt5Core REQUIRED NO_MODULE)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS DBus Quick Test Widgets)
 
+# check for Qt5Multimedia (runtime-only dependency)
+find_package(Qt5Multimedia)
+set_package_properties(Qt5Multimedia PROPERTIES
+         PURPOSE "Runtime-only dependency for effect video playback"
+         TYPE RUNTIME
+         )
+
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0 -std=c++0x)
 
 if(KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
