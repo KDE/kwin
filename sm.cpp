@@ -121,7 +121,6 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
     cg.writeEntry(QString("sessionId") + n, c->sessionId().constData());
     cg.writeEntry(QString("windowRole") + n, c->windowRole().constData());
     cg.writeEntry(QString("wmCommand") + n, c->wmCommand().constData());
-    cg.writeEntry(QString("wmClientMachine") + n, c->wmClientMachine(true).constData());
     cg.writeEntry(QString("resourceName") + n, c->resourceName().constData());
     cg.writeEntry(QString("resourceClass") + n, c->resourceClass().constData());
     cg.writeEntry(QString("geometry") + n, QRect(c->calculateGravitation(true), c->clientSize()));   // FRAME
@@ -206,7 +205,6 @@ void Workspace::addSessionInfo(KConfigGroup &cg)
         info->sessionId = cg.readEntry(QString("sessionId") + n, QString()).toLatin1();
         info->windowRole = cg.readEntry(QString("windowRole") + n, QString()).toLatin1();
         info->wmCommand = cg.readEntry(QString("wmCommand") + n, QString()).toLatin1();
-        info->wmClientMachine = cg.readEntry(QString("wmClientMachine") + n, QString()).toLatin1();
         info->resourceName = cg.readEntry(QString("resourceName") + n, QString()).toLatin1();
         info->resourceClass = cg.readEntry(QString("resourceClass") + n, QString()).toLower().toLatin1();
         info->geometry = cg.readEntry(QString("geometry") + n, QRect());
@@ -256,7 +254,6 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
     QByteArray sessionId = c->sessionId();
     QByteArray windowRole = c->windowRole();
     QByteArray wmCommand = c->wmCommand();
-    QByteArray wmClientMachine = c->wmClientMachine(true);
     QByteArray resourceName = c->resourceName();
     QByteArray resourceClass = c->resourceClass();
 
@@ -289,7 +286,6 @@ SessionInfo* Workspace::takeSessionInfo(Client* c)
                 break;
             if (info->resourceName == resourceName
                     && info->resourceClass == resourceClass
-                    && info->wmClientMachine == wmClientMachine
                     && sessionInfoWindowTypeMatch(c, info)) {
                 if (wmCommand.isEmpty() || info->wmCommand == wmCommand) {
                     realInfo = info;
