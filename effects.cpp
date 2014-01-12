@@ -278,6 +278,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
             effect_libraries[ name ]->unload();
         }
     }
+    loaded_effects.clear();
 }
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
