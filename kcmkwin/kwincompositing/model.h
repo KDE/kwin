@@ -131,12 +131,12 @@ public:
     Q_INVOKABLE void updateEffectStatus(int rowIndex, bool effectState);
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE void enableWidnowManagement(bool enabled);
+    Q_INVOKABLE void load();
 
     QColor backgroundActiveColor() { return KColorScheme(QPalette::Active, KColorScheme::Selection, KSharedConfigPtr(0)).background(KColorScheme::LinkBackground).color(); };
     QColor backgroundNormalColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
     QColor backgroundAlternateColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::AlternateBackground).color(); };
 
-    void load();
     void defaults();
 
 public Q_SLOTS:

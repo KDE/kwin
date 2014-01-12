@@ -211,10 +211,6 @@ Item {
                 }
             }
 
-            EffectConfig {
-                id: effectConfig
-            }
-
         } //end Row
     } //end Rectangle
 } //end item

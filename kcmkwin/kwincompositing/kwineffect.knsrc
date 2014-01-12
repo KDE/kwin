@@ -1,0 +1,6 @@
+[KNewStuff3]
+ProvidersUrl=http://download.kde.org/ocs/providers.xml
+Categories=KWin Effects
+StandardResource=tmp
+InstallationCommand=plasmapkg -t kwineffect -i %f
+UninstallCommand=plasmapkg -t kwineffect -r %f

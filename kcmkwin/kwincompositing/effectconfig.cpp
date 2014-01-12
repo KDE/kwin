@@ -24,9 +24,12 @@
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 
+#include <KNS3/DownloadDialog>
+
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QPointer>
 #include <QStandardPaths>
 #include <QString>
 
@@ -81,5 +84,16 @@ void EffectConfig::openConfig(const QString &effectName)
         }
     }
 }
+
+void EffectConfig::openGHNS()
+{
+    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog(QStringLiteral("kwineffect.knsrc"));
+    if (downloadDialog->exec() == QDialog::Accepted) {
+        emit effectListChanged();
+    }
+
+    delete downloadDialog;
+}
+
 }//end namespace Compositing
 }//end namespace KWin

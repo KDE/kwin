@@ -38,6 +38,10 @@ public:
 
     Q_INVOKABLE bool effectUiConfigExists(const QString &effectName);
     Q_INVOKABLE void openConfig(const QString &effectName);
+    Q_INVOKABLE void openGHNS();
+
+Q_SIGNALS:
+    void effectListChanged();
 };
 }//end namespace Compositing
 }//end namespace KWin

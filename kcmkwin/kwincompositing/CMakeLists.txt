@@ -48,7 +48,7 @@ set (QT_MIN_VERSION "5.2.0")
 
 
 # Load CMake, Compiler and InstallDirs settings from KF5 and the following are already somewhat "done" tier1/tier2 libs from kdelibs:
-find_package(KF5 CONFIG REQUIRED COMPONENTS CoreAddons Config I18n Service XmlGui KCMUtils)
+find_package(KF5 CONFIG REQUIRED COMPONENTS CoreAddons Config I18n Service XmlGui KCMUtils NewStuff)
 
 
 find_package(KF5Declarative REQUIRED NO_MODULE)
@@ -87,6 +87,7 @@ target_link_libraries(kwincompositing
     KF5::I18n
     KF5::Service
     KF5::KCMUtils
+    KF5::NewStuff
     KF5::Declarative
 )
 
@@ -111,11 +112,13 @@ target_link_libraries(effectModelTest
     KF5::I18n
     KF5::Service
     KF5::KCMUtils
+    KF5::NewStuff
     KF5::Declarative)
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kwincompositing.desktop  DESTINATION  ${SERVICES_INSTALL_DIR})
+install(FILES kwineffect.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 ################# list the subdirectories #################
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

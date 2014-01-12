@@ -56,19 +56,37 @@ Item {
         id: compositingType
     }
 
+    EffectConfig {
+        id: effectConfig
+        onEffectListChanged: {
+            searchModel.load()
+        }
+    }
+
     RowLayout {
         id: row
         width: parent.width
         height: parent.height
+
+        Button {
+            id: ghnsButton
+            text: i18n("Get New Effects ...")
+            iconName: "get-hot-new-stuff"
+            anchors {
+                left: col.right
+                top: parent.top
+                topMargin: col.height/8
+            }
+            onClicked: effectConfig.openGHNS()
+        }
 
         CheckBox {
             id: useCompositing
             text: i18n("Enable desktop effects on startup")
             checked: compositing.compositingEnabled
             anchors {
-                top: parent.top
+                top: ghnsButton.bottom
                 left: col.right
-                topMargin: col.height/8
             }
             Connections {
                 target: compositing
@@ -84,7 +102,6 @@ Item {
             checked: false
             anchors.left: col.right
             anchors.top: useCompositing.bottom
-            //anchors.topMargin: col.height/8
             onClicked: searchModel.enableWidnowManagement(windowManagement.checked)
         }
 
