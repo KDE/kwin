@@ -334,7 +334,6 @@ kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${kwinLibs})
 set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
-set_target_properties(kdeinit_kwin PROPERTIES OUTPUT_NAME kdeinit4_${KWIN_NAME})
 generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
