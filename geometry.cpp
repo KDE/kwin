@@ -2331,6 +2331,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         if (!clientArea.contains(geom_restore.center()))    // Not restoring to the same screen
             Placement::self()->place(this, clientArea);
         info->setState(0, NET::Max);
+        quick_tile_mode = QuickTileNone;
         break;
     }
 
@@ -2788,11 +2789,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 
     // When doing a restricted move we must always keep 100px of the titlebar
     // visible to allow the user to be able to move it again.
-    int frameLeft, frameRight, frameTop, frameBottom;
-    if (decoration)
-        decoration->borders(frameLeft, frameRight, frameTop, frameBottom);
-    else
-        frameTop = 10;
+    const int frameTop = border_top;
     int titlebarArea = qMin(frameTop * 100, moveResizeGeom.width() * moveResizeGeom.height());
 
     bool update = false;
@@ -3123,14 +3120,12 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (!isResizable() && maximizeMode() != MaximizeFull)
         return;
 
-    if (mode == QuickTileMaximize)
-    {
+    if (mode == QuickTileMaximize) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
         quick_tile_mode = QuickTileNone;
-        if (maximizeMode() == MaximizeFull)
+        if (maximizeMode() == MaximizeFull) {
             setMaximize(false, false);
-        else
-        {
+        } else {
             setMaximize(true, true);
             QRect clientArea = workspace()->clientArea(MaximizeArea, this);
             if (geometry().top() != clientArea.top()) {
@@ -3171,27 +3166,13 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         return;
     }
 
-    // First, check if the requested tile negates the tile we're in now: move right when left or left when right
-    // is the same as explicitly untiling this window, so allow it.
-    if (mode == QuickTileNone || ((quick_tile_mode & QuickTileHorizontal) && (mode & QuickTileHorizontal))) {
-        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
-
-        quick_tile_mode = QuickTileNone;
-        // Untiling, so just restore geometry, and we're done.
-        if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
-            geom_restore = geometry();
-        // decorations may turn off some borders when tiled
-        const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
-        setGeometry(geom_restore, geom_mode);
-        checkWorkspacePosition(); // Just in case it's a different screen
-        return;
-    } else {
+    if (mode != QuickTileNone) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
 
         QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
-        // screen if it exists, otherwise ignore the request to prevent corrupting geom_restore.
+        // screen if it exists, otherwise toggle the mode (set QuickTileNone)
         if (quick_tile_mode == mode) {
             const int numScreens = screens()->count();
             const int curScreen = screen();
@@ -3200,32 +3181,37 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
             for (int i = 0; i < numScreens; ++i)   // Cache
                 screens[i] = Screens::self()->geometry(i);
             for (int i = 0; i < numScreens; ++i) {
+
                 if (i == curScreen)
                     continue;
-                if (((mode == QuickTileLeft &&
-                        screens[i].center().x() < screens[nextScreen].center().x()) ||
-                        (mode == QuickTileRight &&
-                         screens[i].center().x() > screens[nextScreen].center().x())) &&
-                        // Must be in horizontal line
-                        (screens[i].bottom() > screens[nextScreen].top() ||
-                         screens[i].top() < screens[nextScreen].bottom()))
-                    nextScreen = i;
+
+                if (screens[i].bottom() <= screens[curScreen].top() || screens[i].top() >= screens[curScreen].bottom())
+                    continue; // not in horizontal line
+
+                const int x = screens[i].center().x();
+                if ((mode & QuickTileHorizontal) == QuickTileLeft) {
+                    if (x >= screens[curScreen].center().x() || (curScreen != nextScreen && x <= screens[nextScreen].center().x()))
+                        continue; // not left of current or more left then found next
+                } else if ((mode & QuickTileHorizontal) == QuickTileRight) {
+                    if (x <= screens[curScreen].center().x() || (curScreen != nextScreen && x >= screens[nextScreen].center().x()))
+                        continue; // not right of current or more right then found next
+                }
+
+                nextScreen = i;
             }
-            if (nextScreen == curScreen)
-                return; // No other screens
 
-            // Move to other screen
-            geom_restore.translate(
-                screens[nextScreen].x() - screens[curScreen].x(),
-                screens[nextScreen].y() - screens[curScreen].y());
-            whichScreen = screens[nextScreen].center();
+            if (nextScreen == curScreen) {
+                mode = QuickTileNone; // No other screens, toggle tiling
+            } else {
+                // Move to other screen
+                geom_restore.translate(screens[nextScreen].topLeft() - screens[curScreen].topLeft());
+                whichScreen = screens[nextScreen].center();
 
-            // Swap sides
-            if (mode == QuickTileLeft)
-                mode = QuickTileRight;
-            else
-                mode = QuickTileLeft;
-        } else {
+                // Swap sides
+                mode = ~mode & QuickTileHorizontal;
+            }
+            setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
+        } else if (quick_tile_mode == QuickTileNone) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             geom_restore = geometry();
@@ -3243,6 +3229,82 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // Store the mode change
         quick_tile_mode = mode;
     }
+
+    if (mode == QuickTileNone) {
+        TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
+
+        quick_tile_mode = QuickTileNone;
+        // Untiling, so just restore geometry, and we're done.
+        if (!geom_restore.isValid()) // invalid if we started maximized and wait for placement
+            geom_restore = geometry();
+        // decorations may turn off some borders when tiled
+        const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
+        setGeometry(geom_restore, geom_mode);
+        checkWorkspacePosition(); // Just in case it's a different screen
+    }
+}
+
+void Client::sendToScreen(int newScreen)
+{
+    newScreen = rules()->checkScreen(newScreen);
+    if (isActive()) {
+        screens()->setCurrent(newScreen);
+        // might impact the layer of a fullscreen window
+        foreach (Client *cc, workspace()->clientList()) {
+            if (cc->isFullScreen() && cc->screen() == newScreen) {
+                cc->updateLayer();
+            }
+        }
+    }
+    if (screen() == newScreen)   // Don't use isOnScreen(), that's true even when only partially
+        return;
+
+    GeometryUpdatesBlocker blocker(this);
+
+    // operating on the maximized / quicktiled window would leave the old geom_restore behind,
+    // so we clear the state first
+    MaximizeMode maxMode = maximizeMode();
+    QuickTileMode qtMode = (QuickTileMode)quick_tile_mode;
+    maximize(MaximizeRestore);
+    setQuickTileMode(QuickTileNone);
+
+    QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
+    QRect screenArea = workspace()->clientArea(MaximizeArea, newScreen, desktop());
+    QRect oldGeom = geometry();
+    QRect newGeom = oldGeom;
+    // move the window to have the same relative position to the center of the screen
+    // (i.e. one near the middle of the right edge will also end up near the middle of the right edge)
+    QPoint center = newGeom.center() - oldScreenArea.center();
+    center.setX(center.x() * screenArea.width() / oldScreenArea.width());
+    center.setY(center.y() * screenArea.height() / oldScreenArea.height());
+    center += screenArea.center();
+    newGeom.moveCenter(center);
+    setGeometry(newGeom);
+    // align geom_restore - checkWorkspacePosition operates on it
+    geom_restore = newGeom;
+
+    // If the window was inside the old screen area, explicitly make sure its inside also the new screen area.
+    // Calling checkWorkspacePosition() should ensure that, but when moving to a small screen the window could
+    // be big enough to overlap outside of the new screen area, making struts from other screens come into effect,
+    // which could alter the resulting geometry.
+    if (oldScreenArea.contains(oldGeom))
+        keepInArea(screenArea);
+    checkWorkspacePosition(oldGeom);
+
+    // re-align geom_restore to contrained geometry
+    geom_restore = geometry();
+
+    // finally reset special states
+    // NOTICE that MaximizeRestore/QuickTileNone checks are required.
+    // eg. setting QuickTileNone would break maximization
+    if (maxMode != MaximizeRestore)
+        maximize(maxMode);
+    if (qtMode != QuickTileNone)
+        setQuickTileMode(qtMode);
+
+    ClientList tso = workspace()->ensureStackingOrder(transients());
+    for (ClientList::ConstIterator it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)
+        (*it)->sendToScreen(newScreen);
 }
 
 } // namespace

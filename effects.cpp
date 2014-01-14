@@ -221,6 +221,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     connect(ws, SIGNAL(currentDesktopChanged(int,KWin::Client*)), SLOT(slotDesktopChanged(int,KWin::Client*)));
+    connect(ws, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SLOT(slotDesktopPresenceChanged(KWin::Client*,int)));
     connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
     connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
     connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
@@ -648,6 +649,11 @@ void EffectsHandlerImpl::slotDesktopChanged(int old, Client *c)
         // TODO: remove in 4.10
         emit desktopChanged(old, newDesktop);
     }
+}
+
+void EffectsHandlerImpl::slotDesktopPresenceChanged(Client *c, int old)
+{
+    emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
 }
 
 void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)

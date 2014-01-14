@@ -1031,6 +1031,15 @@ Q_SIGNALS:
      */
     void desktopChanged(int oldDesktop, int newDesktop);
     /**
+     * Signal emitted when a window moved to another desktop
+     * NOTICE that this does NOT imply that the desktop has changed
+     * The @param window which is moved to the new desktop
+     * @param oldDesktop The previous desktop of the window
+     * @param newDesktop The new desktop of the window
+     * @since 4.11.4
+     */
+    void desktopPresenceChanged(KWin::EffectWindow *window, int oldDesktop, int newDesktop);
+    /**
     * Signal emitted when the number of currently existing desktops is changed.
     * @param old The previous number of desktops in used.
     * @see EffectsHandler::numberOfDesktops.

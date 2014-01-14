@@ -103,16 +103,8 @@ namespace KWin
 
 void Workspace::updateClientLayer(Client* c)
 {
-    if (c == NULL)
-        return;
-    if (c->layer() == c->belongsToLayer())
-        return;
-    StackingUpdatesBlocker blocker(this);
-    c->invalidateLayer(); // invalidate, will be updated when doing restacking
-    for (ClientList::ConstIterator it = c->transients().constBegin();
-            it != c->transients().constEnd();
-            ++it)
-        updateClientLayer(*it);
+    if (c)
+        c->updateLayer();
 }
 
 void Workspace::updateStackingOrder(bool propagate_new_clients)
@@ -846,6 +838,17 @@ Layer Client::belongsToLayer() const
     if (keepAbove())
         return AboveLayer;
     return NormalLayer;
+}
+
+void Client::updateLayer()
+{
+    if (layer() == belongsToLayer())
+        return;
+    StackingUpdatesBlocker blocker(workspace());
+    invalidateLayer(); // invalidate, will be updated when doing restacking
+    for (ClientList::ConstIterator it = transients().constBegin(),
+                                  end = transients().constEnd(); it != end; ++it)
+        (*it)->updateLayer();
 }
 
 bool rec_checkTransientOnTop(const ClientList &transients, const Client *topmost)

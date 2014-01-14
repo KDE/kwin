@@ -104,7 +104,7 @@ var dialogParentEffect = {
         windows = effects.stackingOrder;
         for (i = 0; i < windows.length; i += 1) {
             window = windows[i];
-            dialogParentEffect.cancelAnimation(window); 
+            dialogParentEffect.cancelAnimation(window);
             dialogParentEffect.restartAnimation(window);
         }
     },
@@ -131,6 +131,8 @@ var dialogParentEffect = {
         effects.windowUnminimized.connect(dialogParentEffect.restartAnimation);
         effects.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged)
         effects['desktopChanged(int,int)'].connect(dialogParentEffect.desktopChanged);
+        effects.desktopPresenceChanged.connect(dialogParentEffect.cancelAnimation);
+        effects.desktopPresenceChanged.connect(dialogParentEffect.restartAnimation);
 
         // start animation
         windows = effects.stackingOrder;

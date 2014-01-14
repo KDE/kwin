@@ -340,6 +340,8 @@ public:
     void setDesktop(int);
     void setOnAllDesktops(bool set);
 
+    void sendToScreen(int screen);
+
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);
     void setOnAllActivities(bool set);
@@ -399,6 +401,7 @@ public:
     virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
+    void updateLayer();
     int sessionStackingOrder() const;
 
     void setModal(bool modal);
@@ -717,6 +720,7 @@ Q_SIGNALS:
     void activeChanged();
     void captionChanged();
     void desktopChanged();
+    void desktopPresenceChanged(KWin::Client*, int); // to be forwarded by Workspace
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
