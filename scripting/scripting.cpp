@@ -543,7 +543,7 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-    KDeclarative kdeclarative;
+    KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_engine);
     kdeclarative.initialize();
     kdeclarative.setupBindings();
