@@ -49,7 +49,7 @@
 #include <KDialog>
 #include <KDE/KLocalizedString>
 #include <KMessageBox>
-#include <KNS3/DownloadDialog>
+#include <KNewStuff3/KNS3/DownloadDialog>
 #include <KDE/KConfigDialogManager>
 #include <KPluginFactory>
 
