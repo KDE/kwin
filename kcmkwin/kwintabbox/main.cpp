@@ -39,7 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KTitleWidget>
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
-#include <KNS3/DownloadDialog>
+#include <KNewStuff3/KNS3/DownloadDialog>
 
 // own
 #include "tabboxconfig.h"

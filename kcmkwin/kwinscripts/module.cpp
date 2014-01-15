@@ -34,7 +34,7 @@
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
 #include <Plasma/Package>
-#include <KNS3/DownloadDialog>
+#include <KNewStuff3/KNS3/DownloadDialog>
 
 #include "version.h"
 
