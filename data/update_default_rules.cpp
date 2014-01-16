@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kcomponentdata.h>
-#include <kaboutdata.h>
+#include <k4aboutdata.h>
 #include <kcmdlineargs.h>
 #include <kglobal.h>
 #include <QtDBus/QtDBus>
@@ -34,7 +34,7 @@ int main( int argc, char* argv[] )
     {
     if( argc != 2 )
         return 1;
-    KAboutData about( "kwin_update_default_rules", "kwin", KLocalizedString(), 0 );
+    K4AboutData about( "kwin_update_default_rules", "kwin", KLocalizedString(), 0 );
     KCmdLineArgs::init( argc, argv, &about );
     KComponentData inst( &about );
     Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated descriptions

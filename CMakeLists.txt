@@ -97,7 +97,7 @@ endif()
 if( KWIN_BUILD_DECORATIONS )
     add_subdirectory( clients )
 endif()
-# add_subdirectory( data )
+add_subdirectory( data )
 
 add_subdirectory( effects )
 add_subdirectory( scripts )
