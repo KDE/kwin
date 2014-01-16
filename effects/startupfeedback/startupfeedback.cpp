@@ -69,6 +69,7 @@ static const int FRAME_TO_BLINKING_COLOR[] = {
 static const QColor BLINKING_COLORS[] = {
     Qt::black, Qt::darkGray, Qt::lightGray, Qt::white, Qt::white
 };
+static const int s_startupDefaultTimeout = 5;
 
 StartupFeedbackEffect::StartupFeedbackEffect()
     : m_bounceSizesRatio(1.0)
@@ -118,7 +119,7 @@ void StartupFeedbackEffect::reconfigure(Effect::ReconfigureFlags flags)
     const bool busyCursor = c.readEntry("BusyCursor", true);
 
     c = conf.group("BusyCursorSettings");
-    m_startupInfo->setTimeout(c.readEntry("Timeout", 30));
+    m_startupInfo->setTimeout(c.readEntry("Timeout", s_startupDefaultTimeout));
     const bool busyBlinking = c.readEntry("Blinking", false);
     const bool busyBouncing = c.readEntry("Bouncing", true);
     if (!busyCursor)
