@@ -1,9 +1,0 @@
-# This update file removes the effects snow, shadow and sharpen
-# from the kconf settings
-
-Id=kwin4.7_effects
-File=kwinrc
-Group=Plugins
-RemoveKey=kwin4_effect_snowEnabled
-RemoveKey=kwin4_effect_shadowEnabled
-RemoveKey=kwin4_effect_sharpenEnabled
