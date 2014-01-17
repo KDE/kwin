@@ -29,10 +29,6 @@
 namespace KWin
 {
 
-KWIN_EFFECT(blur, BlurEffect)
-KWIN_EFFECT_SUPPORTED(blur, BlurEffect::supported())
-KWIN_EFFECT_ENABLEDBYDEFAULT(blur, BlurEffect::enabledByDefault())
-
 BlurEffect::BlurEffect()
 {
     shader = BlurShader::create();

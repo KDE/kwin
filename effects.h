@@ -265,6 +265,7 @@ private Q_SLOTS:
 private:
     typedef QVector< Effect*> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
+    Effect *loadBuiltInEffect(const QByteArray &name, bool checkDefault);
     EffectsList m_activeEffects;
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;

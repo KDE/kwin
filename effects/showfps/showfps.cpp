@@ -39,8 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(showfps, ShowFpsEffect)
-
 const int FPS_WIDTH = 10;
 const int MAX_TIME = 100;
 

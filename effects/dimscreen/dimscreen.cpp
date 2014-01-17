@@ -24,8 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(dimscreen, DimScreenEffect)
-
 DimScreenEffect::DimScreenEffect()
     : mActivated(false)
     , activateAnimation(false)

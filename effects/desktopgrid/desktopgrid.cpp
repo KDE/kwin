@@ -45,8 +45,6 @@ namespace KWin
 
 // WARNING, TODO: This effect relies on the desktop layout being EWMH-compliant.
 
-KWIN_EFFECT(desktopgrid, DesktopGridEffect)
-
 DesktopGridEffect::DesktopGridEffect()
     : activated(false)
     , timeline()

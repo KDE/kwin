@@ -32,9 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(screenshot, ScreenShotEffect)
-KWIN_EFFECT_SUPPORTED(screenshot, ScreenShotEffect::supported())
-
 bool ScreenShotEffect::supported()
 {
     return  effects->compositingType() == XRenderCompositing ||

@@ -35,8 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
-KWIN_EFFECT(screenedge, ScreenEdgeEffect)
-
 ScreenEdgeEffect::ScreenEdgeEffect()
     : Effect()
     , m_glow(new Plasma::Svg(this))

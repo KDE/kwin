@@ -48,8 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(presentwindows, PresentWindowsEffect)
-
 PresentWindowsEffect::PresentWindowsEffect()
     : m_proxy(this)
     , m_activated(false)

@@ -31,9 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(sheet, SheetEffect)
-KWIN_EFFECT_SUPPORTED(sheet, SheetEffect::supported())
-
 static const int IsSheetWindow = 0x22A982D5;
 
 SheetEffect::SheetEffect()

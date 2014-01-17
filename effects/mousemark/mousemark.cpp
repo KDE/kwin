@@ -43,8 +43,6 @@ namespace KWin
 
 #define NULL_POINT (QPoint( -1, -1 )) // null point is (0,0), which is valid :-/
 
-KWIN_EFFECT(mousemark, MouseMarkEffect)
-
 MouseMarkEffect::MouseMarkEffect()
 {
     QAction* a = new QAction(this);

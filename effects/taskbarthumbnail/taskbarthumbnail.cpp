@@ -30,8 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(taskbarthumbnail, TaskbarThumbnailEffect)
-
 TaskbarThumbnailEffect::TaskbarThumbnailEffect()
 {
     atom = effects->announceSupportProperty("_KDE_WINDOW_PREVIEW", this);

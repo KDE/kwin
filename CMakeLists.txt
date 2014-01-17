@@ -240,6 +240,7 @@ qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 set(kwin_OWN_LIBS
     kdecorations
     kwineffects
+    kwin4_effect_builtins
 )
 
 set(kwin_QT_LIBS

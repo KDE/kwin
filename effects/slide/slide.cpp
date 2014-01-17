@@ -26,8 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(slide, SlideEffect)
-
 SlideEffect::SlideEffect()
     : slide(false)
 {

@@ -50,8 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(kscreen, KscreenEffect)
-
 KscreenEffect::KscreenEffect()
     : Effect()
     , m_state(StateNormal)

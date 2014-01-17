@@ -33,8 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using namespace KWin;
 
-KWIN_EFFECT(windowgeometry, WindowGeometry)
-
 WindowGeometry::WindowGeometry()
 {
     iAmActivated = true;

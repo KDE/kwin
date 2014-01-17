@@ -33,9 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(invert, InvertEffect)
-KWIN_EFFECT_SUPPORTED(invert, InvertEffect::supported())
-
 InvertEffect::InvertEffect()
     :   m_inited(false),
         m_valid(true),

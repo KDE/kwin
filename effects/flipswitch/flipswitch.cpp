@@ -38,9 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(flipswitch, FlipSwitchEffect)
-KWIN_EFFECT_SUPPORTED(flipswitch, FlipSwitchEffect::supported())
-
 FlipSwitchEffect::FlipSwitchEffect()
     : m_currentAnimationShape(QTimeLine::EaseInOutCurve)
     , m_active(false)

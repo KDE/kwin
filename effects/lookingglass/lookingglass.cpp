@@ -38,10 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(lookingglass, LookingGlassEffect)
-KWIN_EFFECT_SUPPORTED(lookingglass, LookingGlassEffect::supported())
-
-
 LookingGlassEffect::LookingGlassEffect()
     : zoom(1.0f)
     , target_zoom(1.0f)

@@ -41,8 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(trackmouse, TrackMouseEffect)
-
 TrackMouseEffect::TrackMouseEffect()
     : m_active(false)
     , m_angle(0)

@@ -26,9 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(fallapart, FallApartEffect)
-KWIN_EFFECT_SUPPORTED(fallapart, FallApartEffect::supported())
-
 bool FallApartEffect::supported()
 {
     return effects->isOpenGLCompositing();

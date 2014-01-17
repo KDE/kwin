@@ -38,9 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(startupfeedback, StartupFeedbackEffect)
-KWIN_EFFECT_SUPPORTED(startupfeedback, StartupFeedbackEffect::supported())
-
 // number of key frames for bouncing animation
 static const int BOUNCE_FRAMES = 20;
 // duration between two key frames in msec

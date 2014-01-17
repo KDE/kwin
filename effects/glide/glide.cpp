@@ -34,9 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(glide, GlideEffect)
-KWIN_EFFECT_SUPPORTED(glide, GlideEffect::supported())
-
 static const int IsGlideWindow = 0x22A982D4;
 static Atom slideAtom;
 

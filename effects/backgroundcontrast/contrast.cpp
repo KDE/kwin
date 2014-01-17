@@ -32,10 +32,6 @@
 namespace KWin
 {
 
-KWIN_EFFECT(contrast, ContrastEffect)
-KWIN_EFFECT_SUPPORTED(contrast, ContrastEffect::supported())
-KWIN_EFFECT_ENABLEDBYDEFAULT(contrast, ContrastEffect::enabledByDefault())
-
 ContrastEffect::ContrastEffect()
 {
     shader = ContrastShader::create();
