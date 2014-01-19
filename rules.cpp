@@ -270,7 +270,7 @@ void Rules::write(KConfigGroup& cfg) const
     WRITE_SET_RULE(below,);
     WRITE_SET_RULE(fullscreen,);
     WRITE_SET_RULE(noborder,);
-    auto colorToString = [](const QString &value) {
+    auto colorToString = [](const QString &value) -> QString {
         if (value.endsWith(QStringLiteral(".colors"))) {
             return QFileInfo(value).baseName();
         } else {
