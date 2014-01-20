@@ -38,10 +38,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  as those are very special, and are stored in Workspace::desktops), in the order
  the clients were created.
 
- Every window has one layer assigned in which it is. There are 6 layers,
- from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer
+ Every window has one layer assigned in which it is. There are 7 layers,
+ from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer, NotificationLayer
  and ActiveLayer (see also NETWM sect.7.10.). The layer a window is in depends
- on the window type, and on other things like whether the window is active.
+ on the window type, and on other things like whether the window is active. We extend the layers
+ provided in NETWM by the NotificationLayer, which contains notification windows. Those are kept
+ above all windows except the active fullscreen window.
 
  NET::Splash clients belong to the Normal layer. NET::TopMenu clients
  belong to Dock layer. Clients that are both NET::Dock and NET::KeepBelow
@@ -515,7 +517,7 @@ ToplevelList Workspace::constrainedStackingOrder()
             // If a window is raised above some other window in the same window group
             // which is in the ActiveLayer (i.e. it's fulscreened), make sure it stays
             // above that window (see #95731).
-            if (*mLayer == ActiveLayer && (l == NormalLayer || l == AboveLayer))
+            if (*mLayer == ActiveLayer && (l > BelowLayer))
                 l = ActiveLayer;
             *mLayer = l;
         } else if (c) {
@@ -831,6 +833,8 @@ Layer Client::belongsToLayer() const
             return AboveLayer;
         return DockLayer;
     }
+    if (isNotification())
+        return NotificationLayer;
     if (keepBelow())
         return BelowLayer;
     if (isActiveFullScreen())
