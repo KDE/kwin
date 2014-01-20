@@ -22,10 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <kcomponentdata.h>
-#include <k4aboutdata.h>
-#include <kcmdlineargs.h>
-#include <kglobal.h>
 #include <QtDBus/QtDBus>
 #include <QtCore/QStandardPaths>
 #include <QDebug>
@@ -34,10 +30,9 @@ int main( int argc, char* argv[] )
     {
     if( argc != 2 )
         return 1;
-    K4AboutData about( "kwin_update_default_rules", "kwin", KLocalizedString(), 0 );
-    KCmdLineArgs::init( argc, argv, &about );
-    KComponentData inst( &about );
-    Q_UNUSED( KGlobal::locale() ); // jump-start locales to get to translated descriptions
+
+    QCoreApplication::setApplicationName ("kwin_update_default_rules");
+
     QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString( "kwin/default_rules/%1" ).arg(argv[ 1 ] ));
     if( file.isEmpty())
         {
