@@ -86,23 +86,26 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w) const
     QRegion region;
     float colorTransform[16];
 
-    const QByteArray value = w->readProperty(net_wm_contrast_region, XA_CARDINAL, 32);
-    if (value.size() > 0 && !((value.size() - (3 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
+    const QByteArray value = w->readProperty(net_wm_contrast_region, net_wm_contrast_region, 32);
+
+    if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
         const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
-      qWarning()<<"GGG"<<cardinals;
+        const float *floatCardinals = reinterpret_cast<const float*>(value.constData());
         unsigned int i = 0;
-        for (; i < ((value.size() - (3 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
+        for (; i < ((value.size() - (16 * sizeof(uint32_t)))) / sizeof(uint32_t);) {
             int x = cardinals[i++];
             int y = cardinals[i++];
             int w = cardinals[i++];
             int h = cardinals[i++];
             region += QRect(x, y, w, h);
         }
-        qreal contrast = ((qreal)cardinals[i++]) / 100;
-        qreal intensity = ((qreal)cardinals[i++]) / 100;
-        qreal saturation = ((qreal)cardinals[i++]) / 100;
 
-        shader->setColorMatrix(colorMatrix(contrast, intensity, saturation));
+        for (unsigned int j = 0; j < 16; ++j) {
+            colorTransform[j] = floatCardinals[i + j];
+        }
+
+        QMatrix4x4 colorMatrix(colorTransform);
+        shader->setColorMatrix(colorMatrix);
     }
 
     if (region.isEmpty() && !value.isNull()) {
@@ -201,22 +204,13 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     if (value.isValid()) {
         const QRegion appRegion = qvariant_cast<QRegion>(value);
         if (!appRegion.isEmpty()) {
-            if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
-                region = w->shape();
-                region -= w->decorationInnerRect();
-            }
             region |= appRegion.translated(w->contentsRect().topLeft()) &
                       w->decorationInnerRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
-            region = w->shape();
+            region = w->decorationInnerRect();
         }
-    } else if (w->decorationHasAlpha() && effects->decorationSupportsBlurBehind()) {
-        // If the client hasn't specified a blur region, we'll only enable
-        // the effect behind the decoration.
-        region = w->shape();
-        region -= w->decorationInnerRect();
     }
 
     return region;
