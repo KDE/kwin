@@ -645,6 +645,9 @@ void EffectsHandlerImpl::slotDesktopChanged(int old, Client *c)
 
 void EffectsHandlerImpl::slotDesktopPresenceChanged(Client *c, int old)
 {
+    if (!c->effectWindow()) {
+        return;
+    }
     emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
 }
 
