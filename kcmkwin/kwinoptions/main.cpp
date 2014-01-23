@@ -25,7 +25,6 @@
 
 #include <QtDBus/QtDBus>
 
-#include <kapplication.h>
 #include <kglobal.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
