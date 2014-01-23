@@ -356,12 +356,7 @@ void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, Windo
 
 void ContrastEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity)
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
-    bool valid = shader && shader->isValid();
-    QRegion shape = frame->geometry().adjusted(-5, -5, 5, 5) & screen;
-    if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
-        doContrast(shape, screen, opacity * frameOpacity);
-    }
+    //FIXME: this is a no-op for now, it should figure out the right contrast, intensity, saturation
     effects->paintEffectFrame(frame, region, opacity, frameOpacity);
 }
 
