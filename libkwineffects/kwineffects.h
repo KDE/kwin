@@ -213,6 +213,8 @@ enum DataRole {
     WindowUnminimizedGrabRole,
     WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
     WindowBlurBehindRole, ///< For single windows to blur behind
+    WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
+    WindowBackgroundContrastRole, ///< For single windows to enable Background contrast
     LanczosCacheRole
 };
 
@@ -348,7 +350,7 @@ public:
     };
 
     enum Feature {
-        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur
+        Nothing = 0, Resize, GeometryTip, Outline, ScreenInversion, Blur, Contrast
     };
 
     /**
