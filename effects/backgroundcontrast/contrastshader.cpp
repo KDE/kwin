@@ -35,7 +35,7 @@ using namespace KWin;
 
 
 ContrastShader::ContrastShader()
-    : mValid(false), shader(NULL)
+    : mValid(false), shader(NULL), m_opacity(1)
 {
 }
 
@@ -91,6 +91,20 @@ bool ContrastShader::supported()
         return false;
 
     return true;
+}
+
+void ContrastShader::setOpacity(float opacity)
+{
+    m_opacity = opacity;
+
+    ShaderManager::instance()->pushShader(shader);
+    shader->setUniform(opacityLocation, opacity);
+    ShaderManager::instance()->popShader();
+}
+
+float ContrastShader::opacity() const
+{
+    return m_opacity;
 }
 
 void ContrastShader::setColorMatrix(const QMatrix4x4 &matrix)
@@ -181,6 +195,7 @@ void ContrastShader::init()
 
     stream2 << "uniform mat4 colorMatrix;\n";
     stream2 << "uniform sampler2D sampler;\n";
+    stream2 << "uniform float opacity;\n";
     stream2 << "in vec4 varyingTexCoords;\n";
 
     if (glsl_140)
@@ -189,8 +204,16 @@ void ContrastShader::init()
     stream2 << "void main(void)\n";
     stream2 << "{\n";
     stream2 << "    vec4 tex = " << texture2D << "(sampler, varyingTexCoords.st);\n";
+    stream2 << "    mat4 identity = mat4(1.0, 0.0, 0.0, 0.0,\n";
+    stream2 << "                 0.0, 1.0, 0.0, 0.0,\n";
+    stream2 << "                 0.0, 0.0, 1.0, 0.0,\n";
+    stream2 << "                 0.0, 0.0, 0.0, 1.0);\n";
 
-    stream2 << "    "  << fragColor << " = tex * colorMatrix;\n";
+    stream2 << "    if (opacity >= 1.0) {\n";
+    stream2 << "        " << fragColor << " = tex * colorMatrix;\n";
+    stream2 << "    } else {\n";
+    stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1-opacity) * identity);\n";
+    stream2 << "    }\n";
 
     stream2 << "}\n";
     stream2.flush();
@@ -201,6 +224,7 @@ void ContrastShader::init()
         colorMatrixLocation = shader->uniformLocation("colorMatrix");
         textureMatrixLocation = shader->uniformLocation("textureMatrix");
         mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
+        opacityLocation       = shader->uniformLocation("opacity");
 
         QMatrix4x4 modelViewProjection;
         modelViewProjection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
@@ -208,6 +232,7 @@ void ContrastShader::init()
         shader->setUniform(colorMatrixLocation, QMatrix4x4());
         shader->setUniform(textureMatrixLocation, QMatrix4x4());
         shader->setUniform(mvpMatrixLocation, modelViewProjection);
+        shader->setUniform(opacityLocation, (float)1.0);
         ShaderManager::instance()->popShader();
     }
 

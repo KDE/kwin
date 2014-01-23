@@ -384,6 +384,8 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
 
     shader->bind();
 
+
+    shader->setOpacity(opacity);
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
 #ifdef KWIN_HAVE_OPENGL_1

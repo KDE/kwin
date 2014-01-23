@@ -52,6 +52,9 @@ public:
 
     static bool supported();
 
+    void setOpacity(float opacity);
+    float opacity() const;
+
 protected:
     void setIsValid(bool value) {
         mValid = value;
@@ -65,6 +68,8 @@ private:
     int textureMatrixLocation;
     int colorMatrixLocation;
     int pixelSizeLocation;
+    int opacityLocation;
+    float m_opacity;
 };
 
 
