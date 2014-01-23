@@ -176,7 +176,7 @@ void ContrastShader::init()
     stream << "uniform mat4 modelViewProjectionMatrix;\n";
     stream << "uniform mat4 textureMatrix;\n";
     stream << attribute << " vec4 vertex;\n\n";
-    stream << "out vec4 varyingTexCoords;\n";
+    stream << varying_out << " vec4 varyingTexCoords;\n";
     stream << "\n";
     stream << "void main(void)\n";
     stream << "{\n";
@@ -196,7 +196,7 @@ void ContrastShader::init()
     stream2 << "uniform mat4 colorMatrix;\n";
     stream2 << "uniform sampler2D sampler;\n";
     stream2 << "uniform float opacity;\n";
-    stream2 << "in vec4 varyingTexCoords;\n";
+    stream2 << varying_in << " vec4 varyingTexCoords;\n";
 
     if (glsl_140)
         stream2 << "out vec4 fragColor;\n\n";
@@ -204,15 +204,11 @@ void ContrastShader::init()
     stream2 << "void main(void)\n";
     stream2 << "{\n";
     stream2 << "    vec4 tex = " << texture2D << "(sampler, varyingTexCoords.st);\n";
-    stream2 << "    mat4 identity = mat4(1.0, 0.0, 0.0, 0.0,\n";
-    stream2 << "                 0.0, 1.0, 0.0, 0.0,\n";
-    stream2 << "                 0.0, 0.0, 1.0, 0.0,\n";
-    stream2 << "                 0.0, 0.0, 0.0, 1.0);\n";
 
     stream2 << "    if (opacity >= 1.0) {\n";
     stream2 << "        " << fragColor << " = tex * colorMatrix;\n";
     stream2 << "    } else {\n";
-    stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1-opacity) * identity);\n";
+    stream2 << "        " << fragColor << " = tex * (opacity * colorMatrix + (1.0 - opacity) * mat4(1.0));\n";
     stream2 << "    }\n";
 
     stream2 << "}\n";
