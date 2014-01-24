@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QStack>
 #include <QHash>
+#include <QQueue>
 #include <Plasma/FrameSvg>
 
 namespace Plasma {
@@ -51,6 +52,7 @@ class WindowThumbnailItem;
 class Client;
 class Compositor;
 class Deleted;
+class EffectLoader;
 class Unmanaged;
 class ScreenLockerWatcher;
 
@@ -282,6 +284,7 @@ private:
     int m_currentRenderedDesktop;
     Xcb::Window m_mouseInterceptionWindow;
     QList<Effect*> m_grabbedMouseEffects;
+    EffectLoader *m_effectLoader;
 };
 
 class EffectWindowImpl : public EffectWindow
@@ -460,6 +463,23 @@ private:
     OrgFreedesktopScreenSaverInterface *m_interface;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;
+};
+
+class EffectLoader : public QObject
+{
+    Q_OBJECT
+public:
+    explicit EffectLoader(EffectsHandlerImpl *parent);
+    virtual ~EffectLoader();
+
+    void queue(const QString &effect, bool checkDefault = false);
+private Q_SLOTS:
+    void dequeue();
+private:
+    void scheduleDequeue();
+    EffectsHandlerImpl *m_effects;
+    QQueue<QPair<QString, bool>> m_queue;
+    bool m_dequeueScheduled;
 };
 
 inline

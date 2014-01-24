@@ -167,6 +167,41 @@ void ScreenLockerWatcher::setLocked(bool activated)
     emit locked(m_locked);
 }
 
+EffectLoader::EffectLoader(EffectsHandlerImpl *parent)
+    : QObject(parent)
+    , m_effects(parent)
+    , m_dequeueScheduled(false)
+{
+}
+
+EffectLoader::~EffectLoader()
+{
+}
+
+void EffectLoader::queue(const QString &effect, bool checkDefault)
+{
+    m_queue.enqueue(qMakePair(effect, checkDefault));
+    scheduleDequeue();
+}
+
+void EffectLoader::dequeue()
+{
+    Q_ASSERT(!m_queue.isEmpty());
+    m_dequeueScheduled = false;
+    const auto pair = m_queue.dequeue();
+    m_effects->loadEffect(pair.first, pair.second);
+    scheduleDequeue();
+}
+
+void EffectLoader::scheduleDequeue()
+{
+    if (m_queue.isEmpty() || m_dequeueScheduled) {
+        return;
+    }
+    m_dequeueScheduled = true;
+    QMetaObject::invokeMethod(this, "dequeue", Qt::QueuedConnection);
+}
+
 //---------------------
 // Static
 
@@ -211,6 +246,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_screenLockerWatcher(new ScreenLockerWatcher(this))
     , m_desktopRendering(false)
     , m_currentRenderedDesktop(0)
+    , m_effectLoader(new EffectLoader(this))
 {
     new EffectsAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -354,8 +390,8 @@ void EffectsHandlerImpl::slotEffectsQueried()
     // Then load those that should be loaded
     for (const QString & effectName : effectsToBeLoaded) {
         if (!isEffectLoaded(effectName)) {
-            if (loadEffect(effectName, checkDefault.contains(effectName)))
-                newLoaded.append(effectName);
+            m_effectLoader->queue(effectName, checkDefault.contains(effectName));
+            newLoaded.append(effectName);
         }
     }
     for (const EffectPair & ep : loaded_effects) {
@@ -1587,7 +1623,7 @@ void EffectsHandlerImpl::reloadEffect(Effect *effect)
     }
     if (!effectName.isNull()) {
         unloadEffect(effectName);
-        loadEffect(effectName);
+        m_effectLoader->queue(effectName);
     }
 }
 
