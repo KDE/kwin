@@ -3143,6 +3143,8 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (!isResizable() && maximizeMode() != MaximizeFull)
         return;
 
+    GeometryUpdatesBlocker blocker(this);
+
     if (mode == QuickTileMaximize) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
         quick_tile_mode = QuickTileNone;
