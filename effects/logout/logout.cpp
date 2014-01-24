@@ -149,6 +149,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
     }
 
+    data.paint |= effects->clientArea(FullArea, 0, 0);
     effects->prePaintScreen(data, time);
 }
 
