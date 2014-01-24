@@ -163,6 +163,12 @@ class Toplevel
      * Whether the window has an own shape
      **/
     Q_PROPERTY(bool shaped READ shape NOTIFY shapedChanged)
+    /**
+     * Whether the window does not want to be animated on window close.
+     * There are legit reasons for this like a screenshot application which does not want it's
+     * window being captured.
+     **/
+    Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
 public:
     explicit Toplevel();
     Window frameId() const;
@@ -306,6 +312,9 @@ public:
      */
     void getDamageRegionReply();
 
+    bool skipsCloseAnimation() const;
+    void setSkipCloseAnimation(bool set);
+
 signals:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
@@ -333,6 +342,7 @@ signals:
      * @since 4.11
      **/
     void screenChanged();
+    void skipCloseAnimationChanged();
 
 protected Q_SLOTS:
     /**
@@ -367,6 +377,7 @@ protected:
 
     void getResourceClass();
     void getWindowRole();
+    void getSkipCloseAnimation();
     virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
     void disownDataPassedToDeleted();
@@ -408,6 +419,7 @@ private:
     QRegion opaque_region;
     xcb_xfixes_fetch_region_cookie_t m_regionCookie;
     int m_screen;
+    bool m_skipCloseAnimation;
     // when adding new data members, check also copyToDeleted()
 };
 

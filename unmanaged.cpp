@@ -80,6 +80,7 @@ bool Unmanaged::track(Window w)
         XShapeSelectInput(display(), w, ShapeNotifyMask);
     detectShape(w);
     getWmOpaqueRegion();
+    getSkipCloseAnimation();
     setupCompositing();
     ungrabXServer();
     if (effects)

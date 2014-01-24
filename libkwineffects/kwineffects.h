@@ -1440,6 +1440,13 @@ class KWIN_EXPORT EffectWindow : public QObject
      * @since 4.11
      **/
     Q_PROPERTY(bool visible READ isVisible)
+    /**
+     * Whether the window does not want to be animated on window close.
+     * In case this property is @c true it is not useful to start an animation on window close.
+     * The window will not be visible, but the animation hooks are executed.
+     * @since 5.0
+     **/
+    Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation)
 public:
     /**  Flags explaining why painting should be disabled  */
     enum {
@@ -1661,6 +1668,11 @@ public:
      * @since 4.11
      **/
     bool isVisible() const;
+
+    /**
+     * @since 5.0
+     **/
+    bool skipsCloseAnimation() const;
 
     /**
      * Can be used to by effects to store arbitrary data in the EffectWindow.

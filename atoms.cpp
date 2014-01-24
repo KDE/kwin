@@ -129,6 +129,9 @@ Atoms::Atoms()
     atoms[n] = &kde_first_in_window_list;
     names[n++] = (char*) "_KDE_FIRST_IN_WINDOWLIST";
 
+    atoms[n] = &kde_skip_close_animation;
+    names[n++] = (char*) "_KDE_NET_WM_SKIP_CLOSE_ANIMATION";
+
     assert(n <= max);
 
     XInternAtoms(display(), names, n, false, atoms_return);

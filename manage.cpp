@@ -129,6 +129,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     getWmNormalHints(); // Get xSizeHint
     getMotifHints();
     getWmOpaqueRegion();
+    getSkipCloseAnimation();
 
     // TODO: Try to obey all state information from info->state()
 
