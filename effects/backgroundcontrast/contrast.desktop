@@ -1,7 +1,23 @@
 [Desktop Entry]
 Name=Background contrast
+Name[de]=Hintergrundkontrast
+Name[nl]=Contrast in achtergrond
+Name[pt]=Contraste do fundo
+Name[pt_BR]=Contraste do plano de fundo
+Name[sk]=Kontrast pozadia
+Name[sv]=Bakgrundskontrast
+Name[uk]=Контрастність тла
+Name[x-test]=xxBackground contrastxx
 Icon=preferences-system-windows-effect-contrast
 Comment=Improve contrast and readability behind semi-transparent windows
+Comment[de]=Erhöht den Kontrast und verbessert die Lesbarkeit hinter halbtransparenten Fenster.
+Comment[nl]=Contrast en leesbaarheid verbeteren achter half-transparante vensters
+Comment[pt]=Melhorar o contraste e a legibilidade atrás das janelas semi-transparentes
+Comment[pt_BR]=Melhora o contraste e legibilidade por trás das janelas semitransparentes
+Comment[sk]=Zlepšiť kontrast a čitateľnosť za polopriehľadnými oknami
+Comment[sv]=Förbättra kontrast och läsbarhet bakom halvgenomskinliga fönster
+Comment[uk]=Покращення контрастності та придатності до читання тексту під напівпрозорими вікнами
+Comment[x-test]=xxImprove contrast and readability behind semi-transparent windowsxx
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
