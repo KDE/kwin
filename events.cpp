@@ -1570,6 +1570,8 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
             getShadow();
         else if (e->atom == atoms->net_wm_opaque_region)
             getWmOpaqueRegion();
+        else if (e->atom == atoms->kde_skip_close_animation)
+            getSkipCloseAnimation();
         break;
     }
     emit propertyNotify(this, e->atom);

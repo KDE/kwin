@@ -709,6 +709,7 @@ WINDOW_HELPER(bool, isDeleted, "deleted")
 WINDOW_HELPER(bool, hasOwnShape, "shaped")
 WINDOW_HELPER(QString, windowRole, "windowRole")
 WINDOW_HELPER(QStringList, activities, "activities")
+WINDOW_HELPER(bool, skipsCloseAnimation, "skipsCloseAnimation")
 
 QString EffectWindow::windowClass() const
 {

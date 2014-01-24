@@ -51,6 +51,7 @@ Toplevel::Toplevel()
     , unredirectSuspend(false)
     , m_damageReplyPending(false)
     , m_screen(0)
+    , m_skipCloseAnimation(false)
 {
     connect(this, SIGNAL(damaged(KWin::Toplevel*,QRect)), SIGNAL(needsRepaint()));
     connect(screens(), SIGNAL(changed()), SLOT(checkScreen()));
@@ -126,6 +127,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     window_role = c->windowRole();
     opaque_region = c->opaqueRegion();
     m_screen = c->m_screen;
+    m_skipCloseAnimation = c->m_skipCloseAnimation;
 }
 
 // before being deleted, remove references to everything that's now
@@ -462,6 +464,34 @@ pid_t Toplevel::pid() const
 xcb_window_t Toplevel::frameId() const
 {
     return m_client;
+}
+
+void Toplevel::getSkipCloseAnimation()
+{
+    auto cookie = xcb_get_property_unchecked(connection(), false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
+    ScopedCPointer<xcb_get_property_reply_t> reply(xcb_get_property_reply(connection(), cookie, nullptr));
+    bool newValue = false;
+    if (!reply.isNull()) {
+        if (reply->format == 32 && reply->type == XCB_ATOM_CARDINAL && reply->value_len == 1) {
+            const uint32_t value = *reinterpret_cast<uint32_t*>(xcb_get_property_value(reply.data()));
+            newValue = (value != 0);
+        }
+    }
+    setSkipCloseAnimation(newValue);
+}
+
+bool Toplevel::skipsCloseAnimation() const
+{
+    return m_skipCloseAnimation;
+}
+
+void Toplevel::setSkipCloseAnimation(bool set)
+{
+    if (set == m_skipCloseAnimation) {
+        return;
+    }
+    m_skipCloseAnimation = set;
+    emit skipCloseAnimationChanged();
 }
 
 } // namespace
