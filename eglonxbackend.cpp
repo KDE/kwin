@@ -279,15 +279,8 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    if (supportsBufferAge()) {
-        eglSwapBuffers(dpy, surface);
-        eglQuerySurface(dpy, surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
-        setLastDamage(QRegion());
-        return;
-    }
-
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-    const bool fullRepaint = (lastDamage() == displayRegion);
+    const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint || !surfaceHasSubPost) {
         if (gs_tripleBufferNeedsDetection) {
@@ -315,6 +308,9 @@ void EglOnXBackend::present()
                 setBlocksForRetrace(result == 'd');
             }
         }
+        if (supportsBufferAge()) {
+            eglQuerySurface(dpy, surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+        }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
         foreach (const QRect & r, lastDamage().rects()) {
@@ -323,8 +319,10 @@ void EglOnXBackend::present()
     }
 
     setLastDamage(QRegion());
-    eglWaitGL();
-    xcb_flush(connection());
+    if (!supportsBufferAge()) {
+        eglWaitGL();
+        xcb_flush(connection());
+    }
 }
 
 void EglOnXBackend::screenGeometryChanged(const QSize &size)

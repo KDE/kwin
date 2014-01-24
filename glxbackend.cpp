@@ -438,15 +438,8 @@ void GlxBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    if (supportsBufferAge()) {
-        glXSwapBuffers(display(), glxWindow);
-        glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
-        setLastDamage(QRegion());
-        return;
-    }
-
     const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
-    const bool fullRepaint = (lastDamage() == displayRegion);
+    const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint) {
         if (haveSwapInterval) {
@@ -478,6 +471,9 @@ void GlxBackend::present()
             waitSync();
             glXSwapBuffers(display(), glxWindow);
         }
+        if (supportsBufferAge()) {
+            glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
+        }
     } else if (glXCopySubBuffer) {
         foreach (const QRect & r, lastDamage().rects()) {
             // convert to OpenGL coordinates
@@ -490,9 +486,11 @@ void GlxBackend::present()
         glDrawBuffer(GL_BACK);
     }
 
-    glXWaitGL();
     setLastDamage(QRegion());
-    XFlush(display());
+    if (!supportsBufferAge()) {
+        glXWaitGL();
+        XFlush(display());
+    }
 }
 
 void GlxBackend::screenGeometryChanged(const QSize &size)
