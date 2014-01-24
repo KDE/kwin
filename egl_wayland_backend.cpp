@@ -647,6 +647,7 @@ EglWaylandBackend::EglWaylandBackend()
 EglWaylandBackend::~EglWaylandBackend()
 {
     cleanupGL();
+    checkGLError("Cleanup");
     eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroyContext(m_display, m_context);
     eglDestroySurface(m_display, m_surface);

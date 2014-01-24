@@ -46,6 +46,7 @@ EglOnXBackend::EglOnXBackend()
 EglOnXBackend::~EglOnXBackend()
 {
     cleanupGL();
+    checkGLError("Cleanup");
     eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
     eglDestroyContext(dpy, ctx);
     eglDestroySurface(dpy, surface);

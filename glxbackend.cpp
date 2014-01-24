@@ -57,6 +57,7 @@ GlxBackend::~GlxBackend()
     // TODO: cleanup in error case
     // do cleanup after initBuffer()
     cleanupGL();
+    checkGLError("Cleanup");
     glXMakeCurrent(display(), None, NULL);
 
     if (ctx)
@@ -69,7 +70,6 @@ GlxBackend::~GlxBackend()
         XDestroyWindow(display(), window);
 
     overlayWindow()->destroy();
-    checkGLError("Cleanup");
 }
 
 static bool gs_tripleBufferUndetected = true;

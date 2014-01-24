@@ -180,16 +180,15 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
 
 SceneOpenGL::~SceneOpenGL()
 {
-    if (init_ok) {
-        // backend might be still needed for a different scene
-        delete m_backend;
-    }
     foreach (Window * w, windows) {
         delete w;
     }
     // do cleanup after initBuffer()
     SceneOpenGL::EffectFrame::cleanup();
-    checkGLError("Cleanup");
+    if (init_ok) {
+        // backend might be still needed for a different scene
+        delete m_backend;
+    }
 }
 
 SceneOpenGL *SceneOpenGL::createScene()
