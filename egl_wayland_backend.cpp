@@ -81,6 +81,7 @@ EglWaylandBackend::EglWaylandBackend()
 EglWaylandBackend::~EglWaylandBackend()
 {
     cleanupGL();
+    checkGLError("Cleanup");
     doneCurrent();
     eglDestroyContext(m_display, m_context);
     eglDestroySurface(m_display, m_surface);

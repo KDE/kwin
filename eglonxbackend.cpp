@@ -51,6 +51,7 @@ EglOnXBackend::~EglOnXBackend()
         m_overlayWindow->destroy();
     }
     cleanupGL();
+    checkGLError("Cleanup");
     doneCurrent();
     eglDestroyContext(dpy, ctx);
     eglDestroySurface(dpy, surface);
