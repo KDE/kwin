@@ -127,14 +127,17 @@ QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
         return QByteArray();
     }
     char *data = static_cast<char*>(xcb_get_property_value(property.data()));
+    int length = property->value_len;
     if (data && separator) {
         for (uint32_t i = 0; i < property->value_len; ++i) {
             if (!data[i] && i + 1 < property->value_len) {
                 data[i] = separator;
+            } else {
+                length = i;
             }
         }
     }
-    return QByteArray(data, property->value_len);
+    return QByteArray(data, length);
 }
 
 #ifndef KCMRULES
