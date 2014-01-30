@@ -57,12 +57,12 @@ RulesWidget::RulesWidget(QWidget* parent)
     : detect_dlg(nullptr)
 {
     Q_UNUSED(parent);
+    setupUi(this);
     QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\-+,xX:]*"), this);
     maxsize->setValidator(validator);
     minsize->setValidator(validator);
     position->setValidator(validator);
     Ui::RulesWidgetBase::size->setValidator(validator);
-    setupUi(this);
 
     QString enableDesc =
         i18n("Enable this checkbox to alter this window property for the specified window(s).");
