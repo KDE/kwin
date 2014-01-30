@@ -77,13 +77,14 @@ private:
     QByteArray machine;
     DetectWidget* widget;
     QScopedPointer<QDialog> grabber;
-    KWindowInfo info;
+    QScopedPointer<KWindowInfo> info;
 };
 
 inline
 const KWindowInfo& DetectDialog::windowInfo() const
 {
-    return info;
+    Q_ASSERT(!info.isNull());
+    return *(info.data());
 }
 
 } // namespace

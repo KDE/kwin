@@ -78,19 +78,19 @@ void DetectDialog::readWindow(WId w)
         emit detectionDone(false);
         return;
     }
-    info = KWindowSystem::windowInfo(w, -1U, -1U);   // read everything
-    if (!info.valid()) {
+    info.reset(new KWindowInfo(w, -1U, -1U));   // read everything
+    if (!info->valid()) {
         emit detectionDone(false);
         return;
     }
-    wmclass_class = info.windowClassClass();
-    wmclass_name = info.windowClassName();
-    role = info.windowRole();
-    type = info.windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask
+    wmclass_class = info->windowClassClass();
+    wmclass_name = info->windowClassName();
+    role = info->windowRole();
+    type = info->windowType(NET::NormalMask | NET::DesktopMask | NET::DockMask
                            | NET::ToolbarMask | NET::MenuMask | NET::DialogMask | NET::OverrideMask | NET::TopMenuMask
                            | NET::UtilityMask | NET::SplashMask);
-    title = info.name();
-    machine = info.clientMachine();
+    title = info->name();
+    machine = info->clientMachine();
     executeDialog();
 }
 
