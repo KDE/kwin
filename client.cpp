@@ -709,7 +709,8 @@ void Client::updateShape()
     } else if (app_noborder) {
         xcb_shape_mask(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
-        app_noborder = noborder = rules()->checkNoBorder(noborder);
+        app_noborder = noborder;
+        noborder = rules()->checkNoBorder(noborder || motif_noborder);
         updateDecoration(true);
     }
 
