@@ -370,3 +370,4 @@ endif()
 ecm_install_icons( ${ICON_INSTALL_DIR} )
 
 add_subdirectory(autotests)
+add_subdirectory(tests)
