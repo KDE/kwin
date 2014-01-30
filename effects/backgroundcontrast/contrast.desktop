@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Background contrast
 Name[de]=Hintergrundkontrast
+Name[es]=Contraste del fondo
 Name[fi]=Taustan kontrasti
 Name[hu]=Háttér kontraszt
 Name[nl]=Contrast in achtergrond
@@ -18,6 +19,7 @@ Name[x-test]=xxBackground contrastxx
 Icon=preferences-system-windows-effect-contrast
 Comment=Improve contrast and readability behind semi-transparent windows
 Comment[de]=Erhöht den Kontrast und verbessert die Lesbarkeit hinter halbtransparenten Fenster.
+Comment[es]=Mejora el contraste y la legibilidad de las ventanas semitransparentes
 Comment[fi]=Parantaa puoliksi läpinäkyvien ikkunoiden taustan kontrastia ja luettavuutta
 Comment[hu]=Megnöveli a kontrasztot és az olvashatóságot a félig áttetsző ablakok mögött
 Comment[nl]=Contrast en leesbaarheid verbeteren achter half-transparante vensters
