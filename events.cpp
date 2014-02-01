@@ -177,7 +177,6 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         break;
     }
     case XCB_MOTION_NOTIFY: {
-        m_mouseMotionTimer->cancel();
         auto *mouseEvent = reinterpret_cast<xcb_motion_notify_event_t*>(e);
         const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
 #ifdef KWIN_BUILD_TABBOX
@@ -1301,30 +1300,21 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
         x = this->x(); // translate from grab window to local coords
         y = this->y();
     }
-    // mouse motion event compression: the event queue might have multiple motion events
-    // in that case we are only interested in the last event to not cause too much overhead
-    // by useless move/resize operations.
-    // The compression is done using a singleshot QTimer of 0 msec to just move the processing
-    // to the end of the event queue. In case there is another motion event in the queue it will
-    // be processed before the timer fires and the processing of the newer motion event cancels
-    // the running timer. Eventually this code path will be reached again and the timer is
-    // started again
-    workspace()->scheduleMouseMotionCompression([this, x, y, x_root, y_root]() {
-        const QRect oldGeo = geometry();
-        handleMoveResize(x, y, x_root, y_root);
-        if (!isFullScreen() && isMove()) {
-            if (quick_tile_mode != QuickTileNone && oldGeo != geometry()) {
-                GeometryUpdatesBlocker blocker(this);
-                setQuickTileMode(QuickTileNone);
-                moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
-                                    double(moveOffset.y()) / double(oldGeo.height()) * double(geom_restore.height()));
-                moveResizeGeom = geom_restore;
-                handleMoveResize(x, y, x_root, y_root); // fix position
-            } else if (quick_tile_mode == QuickTileNone && isResizable()) {
-                checkQuickTilingMaximizationZones(x_root, y_root);
-            }
+
+    const QRect oldGeo = geometry();
+    handleMoveResize(x, y, x_root, y_root);
+    if (!isFullScreen() && isMove()) {
+        if (quick_tile_mode != QuickTileNone && oldGeo != geometry()) {
+            GeometryUpdatesBlocker blocker(this);
+            setQuickTileMode(QuickTileNone);
+            moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
+                                double(moveOffset.y()) / double(oldGeo.height()) * double(geom_restore.height()));
+            moveResizeGeom = geom_restore;
+            handleMoveResize(x, y, x_root, y_root); // fix position
+        } else if (quick_tile_mode == QuickTileNone && isResizable()) {
+            checkQuickTilingMaximizationZones(x_root, y_root);
         }
-    });
+    }
     return true;
 }
 

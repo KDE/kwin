@@ -105,29 +105,6 @@ void ColorMapper::update()
     }
 }
 
-MouseMotionCompressionTimer::MouseMotionCompressionTimer(QObject *parent)
-    : QTimer(parent)
-{
-    setSingleShot(true);
-    setInterval(0);
-}
-
-MouseMotionCompressionTimer::~MouseMotionCompressionTimer()
-{
-}
-
-void MouseMotionCompressionTimer::cancel()
-{
-    disconnect(m_connection);
-}
-
-void MouseMotionCompressionTimer::schedule(const std::function< void () > &functor)
-{
-    cancel();
-    m_connection = connect(this, &MouseMotionCompressionTimer::timeout, functor);
-    start();
-}
-
 Workspace* Workspace::_self = 0;
 
 Workspace::Workspace(bool restore)
@@ -158,7 +135,6 @@ Workspace::Workspace(bool restore)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
     , forced_global_mouse_grab(false)
-    , m_mouseMotionTimer(new MouseMotionCompressionTimer(this))
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
