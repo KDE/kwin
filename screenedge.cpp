@@ -469,7 +469,7 @@ void WindowBasedEdge::createWindow()
     const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
     const uint32_t values[] = {
         true,
-        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION
     };
     m_window.create(geometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
     m_window.map();
@@ -490,7 +490,7 @@ void WindowBasedEdge::createApproachWindow()
     const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
     const uint32_t values[] = {
         true,
-        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW
+        XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW | XCB_EVENT_MASK_POINTER_MOTION
     };
     m_approachWindow.create(approachGeometry(), XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
     m_approachWindow.map();
@@ -964,6 +964,12 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
 void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack)
 {
     for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
+        if (!(*it)->isReserved()) {
+            continue;
+        }
+        if ((*it)->approachGeometry().contains(pos)) {
+            (*it)->startApproaching();
+        }
         (*it)->check(pos, now, forceNoPushBack);
     }
 }

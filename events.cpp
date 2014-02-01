@@ -193,6 +193,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 #ifdef KWIN_BUILD_SCREENEDGES
         if (QWidget::mouseGrabber()) {
             ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
+        } else {
+            ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(mouseEvent->time));
         }
 #endif
         break;
