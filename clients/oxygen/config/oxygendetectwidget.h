@@ -63,7 +63,7 @@ namespace Oxygen
 
         //! window information
         const KWindowInfo& windowInfo() const
-        { return _info; }
+        { return *(_info.data()); }
 
         //! exception type
         Configuration::EnumExceptionType exceptionType() const
@@ -99,7 +99,7 @@ namespace Oxygen
         QDialog* _grabber;
 
         //! current window information
-        KWindowInfo _info;
+        QScopedPointer<KWindowInfo> _info;
 
         //! wm state atom
         xcb_atom_t _wmStateAtom;

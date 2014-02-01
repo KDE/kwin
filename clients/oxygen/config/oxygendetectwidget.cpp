@@ -81,18 +81,18 @@ namespace Oxygen
             return;
         }
 
-        _info = KWindowSystem::windowInfo( window, -1U, -1U );
-        if( !_info.valid())
+        _info.reset(new KWindowInfo( window, -1U, -1U ));
+        if( !_info->valid())
         {
             emit detectionDone( false );
             return;
         }
 
-        const QString wmClassClass( QString::fromUtf8( _info.windowClassClass() ) );
-        const QString wmClassName( QString::fromUtf8( _info.windowClassName() ) );
+        const QString wmClassClass( QString::fromUtf8( _info->windowClassClass() ) );
+        const QString wmClassName( QString::fromUtf8( _info->windowClassName() ) );
 
         windowClass->setText( QStringLiteral( "%1 (%2 %3)" ).arg( wmClassClass ).arg( wmClassName ).arg( wmClassClass ) );
-        Ui::OxygenDetectWidget::windowTitle->setText( _info.name() );
+        Ui::OxygenDetectWidget::windowTitle->setText( _info->name() );
         emit detectionDone( exec() == QDialog::Accepted );
 
         return;
