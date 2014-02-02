@@ -1297,8 +1297,12 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
     int h1 = h;
     int width_inc = xSizeHint.width_inc;
     int height_inc = xSizeHint.height_inc;
-    int basew_inc = xSizeHint.min_width; // see getWmNormalHints()
-    int baseh_inc = xSizeHint.min_height;
+    int basew_inc = xSizeHint.base_width;
+    int baseh_inc = xSizeHint.base_height;
+    if (!(xSizeHint.flags & PBaseSize)) {
+        basew_inc = xSizeHint.min_width;
+        baseh_inc = xSizeHint.min_height;
+    }
     w = int((w - basew_inc) / width_inc) * width_inc + basew_inc;
     h = int((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
 // code for aspect ratios based on code from FVWM
