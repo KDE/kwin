@@ -66,11 +66,9 @@ bool Unmanaged::track(Window w)
     unsigned long properties[ 2 ];
     properties[ NETWinInfo::PROTOCOLS ] =
         NET::WMWindowType |
-        NET::WMPid |
-        0;
+        NET::WMPid;
     properties[ NETWinInfo::PROTOCOLS2 ] =
-        NET::WM2Opacity |
-        0;
+        NET::WM2Opacity;
     info = new NETWinInfo(connection(), w, rootWindow(), properties, 2);
     getResourceClass();
     getWindowRole();
@@ -153,7 +151,7 @@ NET::WindowType Unmanaged::windowType(bool direct, int supportedTypes) const
     if (supportedTypes == 0) {
         supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
     }
-    return info->windowType(supportedTypes);
+    return info->windowType(NET::WindowTypes(supportedTypes));
 }
 
 } // namespace

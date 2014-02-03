@@ -1020,8 +1020,8 @@ void Client::setShade(ShadeMode mode)
         if (isActive())
             workspace()->requestFocus(this);
     }
-    info->setState(isShade() ? NET::Shaded : 0, NET::Shaded);
-    info->setState(isShown(false) ? 0 : NET::Hidden, NET::Hidden);
+    info->setState(isShade() ? NET::Shaded : NET::States(0), NET::Shaded);
+    info->setState(isShown(false) ? NET::States(0) : NET::Hidden, NET::Hidden);
     discardWindowPixmap();
     updateVisibility();
     updateAllowedActions();
@@ -1398,7 +1398,7 @@ void Client::setSkipTaskbar(bool b, bool from_outside)
     if (b == skipTaskbar())
         return;
     skip_taskbar = b;
-    info->setState(b ? NET::SkipTaskbar : 0, NET::SkipTaskbar);
+    info->setState(b ? NET::SkipTaskbar : NET::States(0), NET::SkipTaskbar);
     updateWindowRules(Rules::SkipTaskbar);
     if (was_wants_tab_focus != wantsTabFocus())
         FocusChain::self()->update(this,
@@ -1412,7 +1412,7 @@ void Client::setSkipPager(bool b)
     if (b == skipPager())
         return;
     skip_pager = b;
-    info->setState(b ? NET::SkipPager : 0, NET::SkipPager);
+    info->setState(b ? NET::SkipPager : NET::States(0), NET::SkipPager);
     updateWindowRules(Rules::SkipPager);
     emit skipPagerChanged();
 }
@@ -2279,7 +2279,7 @@ void Client::updateAllowedActions(bool force)
 {
     if (!isManaged() && !force)
         return;
-    unsigned long old_allowed_actions = allowed_actions;
+    NET::Actions old_allowed_actions = NET::Actions(allowed_actions);
     allowed_actions = 0;
     if (isMovable())
         allowed_actions |= NET::ActionMove;
@@ -2303,7 +2303,7 @@ void Client::updateAllowedActions(bool force)
     info->setAllowedActions(allowed_actions);
 
     // ONLY if relevant features have changed (and the window didn't just get/loose moveresize for maximization state changes)
-    const unsigned long relevant = ~(NET::ActionMove|NET::ActionResize);
+    const NET::Actions relevant = ~(NET::ActionMove|NET::ActionResize);
     if (decoration && (allowed_actions & relevant) != (old_allowed_actions & relevant))
         emit decoration->decorationButtonsChanged();
 }
@@ -2461,7 +2461,7 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
     if (supportedTypes == 0) {
         supportedTypes = SUPPORTED_MANAGED_WINDOW_TYPES_MASK;
     }
-    NET::WindowType wt = info->windowType(supportedTypes);
+    NET::WindowType wt = info->windowType(NET::WindowTypes(supportedTypes));
     if (direct) {
         return wt;
     }

@@ -81,7 +81,7 @@ namespace Oxygen
             return;
         }
 
-        _info.reset(new KWindowInfo( window, -1U, -1U ));
+        _info.reset(new KWindowInfo( window, NET::WMAllProperties, NET::WM2AllProperties ));
         if( !_info->valid())
         {
             emit detectionDone( false );

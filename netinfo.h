@@ -81,7 +81,7 @@ public:
             xcb_window_t rwin, const unsigned long pr[], int pr_size);
     virtual void changeDesktop(int desktop) override;
     virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
-    virtual void changeState(unsigned long state, unsigned long mask) override;
+    virtual void changeState(NET::States state, NET::States mask) override;
     void disable();
 
 private:

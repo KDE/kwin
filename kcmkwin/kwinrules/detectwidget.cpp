@@ -78,7 +78,7 @@ void DetectDialog::readWindow(WId w)
         emit detectionDone(false);
         return;
     }
-    info.reset(new KWindowInfo(w, -1U, -1U));   // read everything
+    info.reset(new KWindowInfo(w, NET::WMAllProperties, NET::WM2AllProperties));   // read everything
     if (!info->valid()) {
         emit detectionDone(false);
         return;

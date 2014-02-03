@@ -940,7 +940,7 @@ private:
     qint64 m_killHelperPID;
     xcb_timestamp_t m_pingTimestamp;
     xcb_timestamp_t m_userTime;
-    unsigned long allowed_actions;
+    NET::Actions allowed_actions;
     QSize client_size;
     int block_geometry_updates; // > 0 = New geometry is remembered, but not actually set
     enum PendingGeometry_t {

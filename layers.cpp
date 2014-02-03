@@ -774,11 +774,11 @@ void Client::setKeepAbove(bool b)
     if (b == keepAbove()) {
         // force hint change if different
         if (bool(info->state() & NET::KeepAbove) != keepAbove())
-            info->setState(keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove);
+            info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
         return;
     }
     keep_above = b;
-    info->setState(keepAbove() ? NET::KeepAbove : 0, NET::KeepAbove);
+    info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Above);
 
@@ -796,11 +796,11 @@ void Client::setKeepBelow(bool b)
     if (b == keepBelow()) {
         // force hint change if different
         if (bool(info->state() & NET::KeepBelow) != keepBelow())
-            info->setState(keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow);
+            info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
         return;
     }
     keep_below = b;
-    info->setState(keepBelow() ? NET::KeepBelow : 0, NET::KeepBelow);
+    info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
     workspace()->updateClientLayer(this);
     updateWindowRules(Rules::Below);
 

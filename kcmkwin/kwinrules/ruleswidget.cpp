@@ -552,16 +552,16 @@ Rules* RulesWidget::rules() const
     if (all_types)   // if all types are selected, use AllTypesMask (for future expansion)
         rules->types = NET::AllTypesMask;
     else {
-        rules->types |= types->item(0)->isSelected() ? NET::NormalMask : 0U;
-        rules->types |= types->item(1)->isSelected() ? NET::DialogMask : 0U;
-        rules->types |= types->item(2)->isSelected() ? NET::UtilityMask : 0U;
-        rules->types |= types->item(3)->isSelected() ? NET::DockMask : 0U;
-        rules->types |= types->item(4)->isSelected() ? NET::ToolbarMask : 0U;
-        rules->types |= types->item(5)->isSelected() ? NET::MenuMask : 0U;
-        rules->types |= types->item(6)->isSelected() ? NET::SplashMask : 0U;
-        rules->types |= types->item(7)->isSelected() ? NET::DesktopMask : 0U;
-        rules->types |= types->item(8)->isSelected() ? NET::OverrideMask : 0U;
-        rules->types |= types->item(9)->isSelected() ? NET::TopMenuMask : 0U;
+        rules->types |= types->item(0)->isSelected() ? NET::NormalMask   : NET::WindowTypeMask(0);
+        rules->types |= types->item(1)->isSelected() ? NET::DialogMask   : NET::WindowTypeMask(0);
+        rules->types |= types->item(2)->isSelected() ? NET::UtilityMask  : NET::WindowTypeMask(0);
+        rules->types |= types->item(3)->isSelected() ? NET::DockMask     : NET::WindowTypeMask(0);
+        rules->types |= types->item(4)->isSelected() ? NET::ToolbarMask  : NET::WindowTypeMask(0);
+        rules->types |= types->item(5)->isSelected() ? NET::MenuMask     : NET::WindowTypeMask(0);
+        rules->types |= types->item(6)->isSelected() ? NET::SplashMask   : NET::WindowTypeMask(0);
+        rules->types |= types->item(7)->isSelected() ? NET::DesktopMask  : NET::WindowTypeMask(0);
+        rules->types |= types->item(8)->isSelected() ? NET::OverrideMask : NET::WindowTypeMask(0);
+        rules->types |= types->item(9)->isSelected() ? NET::TopMenuMask  : NET::WindowTypeMask(0);
     }
     rules->title = title->text();
     rules->titlematch = static_cast< Rules::StringMatch >(title_match->currentIndex());
@@ -762,7 +762,7 @@ bool RulesWidget::finalCheck()
 void RulesWidget::prepareWindowSpecific(WId window)
 {
     tabs->setCurrentIndex(1);   // geometry tab, skip tab for window identification
-    KWindowInfo info(window, -1U, -1U);   // read everything
+    KWindowInfo info(window, NET::WMAllProperties, NET::WM2AllProperties);   // read everything
     prefillUnusedValues(info);
 }
 

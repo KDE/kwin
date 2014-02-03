@@ -699,7 +699,7 @@ void Client::demandAttention(bool set)
     if (demands_attention == set)
         return;
     demands_attention = set;
-    info->setState(set ? NET::DemandsAttention : 0, NET::DemandsAttention);
+    info->setState(set ? NET::DemandsAttention : NET::States(0), NET::DemandsAttention);
     workspace()->clientAttentionChanged(this, set);
     emit demandsAttentionChanged();
 }

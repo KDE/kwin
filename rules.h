@@ -211,7 +211,7 @@ private:
     StringMatch titlematch;
     QByteArray clientmachine;
     StringMatch clientmachinematch;
-    unsigned long types; // types for matching
+    NET::WindowTypes types; // types for matching
     Placement::Policy placement;
     ForceRule placementrule;
     QPoint position;

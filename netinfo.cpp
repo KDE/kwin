@@ -86,9 +86,8 @@ RootInfo *RootInfo::create()
         NET::DialogMask |
         NET::OverrideMask |
         NET::UtilityMask |
-        NET::SplashMask |
+        NET::SplashMask
         // No compositing window types here unless we support them also as managed window types
-        0
         ,
         NET::Modal |
         //NET::Sticky | // Large desktops not supported (and probably never will be)
@@ -102,8 +101,7 @@ RootInfo *RootInfo::create()
         NET::Hidden |
         NET::FullScreen |
         NET::KeepBelow |
-        NET::DemandsAttention |
-        0
+        NET::DemandsAttention
         ,
         NET::WM2UserTime |
         NET::WM2StartupId |
@@ -116,8 +114,7 @@ RootInfo *RootInfo::create()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
-        NET::WM2KDEShadow |
-        0
+        NET::WM2KDEShadow
         ,
         NET::ActionMove |
         NET::ActionResize |
@@ -128,8 +125,7 @@ RootInfo *RootInfo::create()
         NET::ActionMaxHoriz |
         NET::ActionFullScreen |
         NET::ActionChangeDesktop |
-        NET::ActionClose |
-        0
+        NET::ActionClose
         ,
     };
 
@@ -265,7 +261,7 @@ void WinInfo::changeFullscreenMonitors(NETFullscreenMonitors topology)
     m_client->updateFullscreenMonitors(topology);
 }
 
-void WinInfo::changeState(unsigned long state, unsigned long mask)
+void WinInfo::changeState(NET::States state, NET::States mask)
 {
     mask &= ~NET::Sticky; // KWin doesn't support large desktops, ignore
     mask &= ~NET::Hidden; // clients are not allowed to change this directly

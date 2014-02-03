@@ -179,7 +179,7 @@ NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
     if (supportedTypes == 0) {
         supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
     }
-    return info->windowType(supportedTypes);
+    return info->windowType(NET::WindowTypes(supportedTypes));
 }
 
 void Deleted::mainClientClosed(Toplevel *client)

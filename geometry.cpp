@@ -2415,7 +2415,7 @@ void Client::setFullScreen(bool set, bool user)
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
     workspace()->updateClientLayer(this);   // active fullscreens get different layer
-    info->setState(isFullScreen() ? NET::FullScreen : 0, NET::FullScreen);
+    info->setState(isFullScreen() ? NET::FullScreen : NET::States(0), NET::FullScreen);
     updateDecoration(false, false);
     if (isFullScreen()) {
         if (info->fullscreenMonitors().isSet())

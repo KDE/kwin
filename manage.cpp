@@ -90,16 +90,14 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WMIconGeometry |
         NET::WMIcon |
         NET::WMPid |
-        NET::WMIconName |
-        0;
+        NET::WMIconName;
     properties[WinInfo::PROTOCOLS2] =
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
         NET::WM2Opacity |
         NET::WM2FullscreenMonitors |
-        NET::WM2FrameOverlap |
-        0;
+        NET::WM2FrameOverlap;
 
     info = new WinInfo(this, m_client, rootWindow(), properties, 2);
 
