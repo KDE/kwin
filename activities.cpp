@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 // KDE
 #include <KDE/KConfigGroup>
-#include <KDE/KDebug>
 #include <KActivities/Controller>
 // Qt
 #include <QtConcurrentRun>
@@ -221,14 +220,14 @@ typedef QPair<QString, QStringList> CurrentAndList;
 static AssignedList
 fetchActivityList(KActivities::Controller *controller, QStringList *target, bool running) // could be member function, but actually it's much simpler this way
 {
-    return AssignedList(target, running ? controller->listActivities(KActivities::Info::Running) :
-                                          controller->listActivities());
+    return AssignedList(target, running ? controller->activities(KActivities::Info::Running) :
+                                          controller->activities());
 }
 
 static CurrentAndList
 fetchActivityListAndCurrent(KActivities::Controller *controller)
 {
-    QStringList l   = controller->listActivities();
+    QStringList l   = controller->activities();
     QString c       = controller->currentActivity();
     return CurrentAndList(c, l);
 }

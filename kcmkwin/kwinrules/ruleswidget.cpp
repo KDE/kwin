@@ -31,7 +31,7 @@
 #include <QRegExp>
 
 #ifdef KWIN_BUILD_ACTIVITIES
-#include <KActivities/Consumer>
+#include <kactivities/consumer.h>
 #endif
 
 #include <assert.h>
@@ -152,8 +152,9 @@ RulesWidget::RulesWidget(QWidget* parent)
 
 #ifdef KWIN_BUILD_ACTIVITIES
     static KActivities::Consumer activities;
-    foreach (const QString & activityId, activities.listActivities()) {
-        activity->addItem(KActivities::Info::name(activityId), activityId);
+    foreach (const QString & activityId, activities.activities()) {
+        const KActivities::Info info(activityId);
+        activity->addItem(info.name(), activityId);
     }
     // cloned from kactivities/src/lib/core/consumer.cpp
     #define NULL_UUID "00000000-0000-0000-0000-000000000000"

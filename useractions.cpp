@@ -71,6 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLayout>
 #include <QMenu>
 #include <QVBoxLayout>
+#include <QWidgetAction>
 #include <kauthorized.h>
 
 #include "killwindow.h"

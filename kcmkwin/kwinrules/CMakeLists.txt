@@ -28,6 +28,10 @@ set(kcm_libs
     ${X11_LIBRARIES}
 )
 
+if(KWIN_BUILD_ACTIVITIES)
+    set(kcm_libs ${kcm_libs} KF5::KActivities)
+endif()
+
 target_link_libraries(kdeinit_kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})
 
 install(TARGETS kdeinit_kwin_rules_dialog ${INSTALL_TARGETS_DEFAULT_ARGS} )
