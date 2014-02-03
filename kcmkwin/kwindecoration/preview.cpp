@@ -255,14 +255,16 @@ QRegion KDecorationPreview::unobscuredRegion(bool active, const QRegion& r) cons
 }
 
 KDecorationPreviewBridge::KDecorationPreviewBridge(KDecorationPreview* p, bool a)
-    :   preview(p), active(a), m_previewItem(nullptr)
+    : preview(p)
+    , m_previewItem(nullptr)
+    , active(a)
 {
 }
 
 KDecorationPreviewBridge::KDecorationPreviewBridge(PreviewItem *p, bool a)
     : preview(nullptr)
-    , active(a)
     , m_previewItem(p)
+    , active(a)
 {
 }
 
