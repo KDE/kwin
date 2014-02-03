@@ -398,7 +398,7 @@ void ZoomEffect::zoomOut()
 {
     source_zoom = zoom;
     target_zoom /= zoomFactor;
-    if (target_zoom < 1) {
+    if ((zoomFactor > 1 && target_zoom < 1.01) || (zoomFactor < 1 && target_zoom > 0.99)) {
         target_zoom = 1;
         if (polling) {
             polling = false;
