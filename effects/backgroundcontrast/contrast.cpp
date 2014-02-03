@@ -27,7 +27,6 @@
 
 #include <QMatrix4x4>
 #include <QLinkedList>
-#include <KDebug>
 
 namespace KWin
 {
