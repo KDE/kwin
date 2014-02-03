@@ -39,11 +39,11 @@ Activities::Activities(QObject *parent)
     : QObject(parent)
     , m_controller(new KActivities::Controller(this))
 {
-    connect(m_controller, SIGNAL(activityRemoved(QString)), SLOT(slotRemoved(QString)));
-    connect(m_controller, SIGNAL(activityRemoved(QString)), SIGNAL(removed(QString)));
-    connect(m_controller, SIGNAL(activityAdded(QString)), SLOT(slotAdded(QString)));
-    connect(m_controller, SIGNAL(activityAdded(QString)), SIGNAL(added(QString)));
-    connect(m_controller, SIGNAL(currentActivityChanged(QString)), SLOT(slotCurrentChanged(QString)));
+    connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
+    connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
+    connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::slotAdded);
+    connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::added);
+    connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
 }
 
 Activities::~Activities()
