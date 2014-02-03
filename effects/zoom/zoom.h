@@ -112,6 +112,7 @@ private:
     MousePointerType mousePointer;
     int focusDelay;
     QPoint cursorPoint;
+    QPoint cursorHotSpot;
     QPoint focusPoint;
     QPoint prevPoint;
     QTime lastMouseEvent;

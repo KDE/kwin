@@ -182,6 +182,7 @@ void ZoomEffect::recreateTexture()
         // turn the XcursorImage into a QImage that will be used to create the GLTexture/XRenderPicture.
         imageWidth = ximg->width;
         imageHeight = ximg->height;
+        cursorHotSpot = QPoint(ximg->xhot, ximg->yhot);
         QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
         if (effects->isOpenGLCompositing())
             texture.reset(new GLTexture(img));
@@ -331,7 +332,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             w *= zoom;
             h *= zoom;
         }
-        const QPoint p = effects->cursorPos();
+        const QPoint p = effects->cursorPos() - cursorHotSpot;
         QRect rect(p.x() * zoom + data.xTranslation(), p.y() * zoom + data.yTranslation(), w, h);
 
         if (texture) {
