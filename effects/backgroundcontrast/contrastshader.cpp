@@ -27,7 +27,6 @@
 #include <QMatrix4x4>
 #include <QTextStream>
 #include <QVector2D>
-#include <KDebug>
 
 #include <cmath>
 
