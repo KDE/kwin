@@ -49,7 +49,7 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
     : KCModule(parent, args)
     , m_view(new KWin::Compositing::EffectView)
 {
-    KDeclarative kdeclarative;
+    KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_view->engine());
     kdeclarative.setupBindings();
     QVBoxLayout *vl = new QVBoxLayout(this);
