@@ -18,12 +18,10 @@
 
 #include "kcm.h"
 
-#include <kglobal.h>
 #include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <KDE/KLocalizedString>
-#include <kapplication.h>
 #include <kaboutdata.h>
 #include <QtDBus/QtDBus>
 
