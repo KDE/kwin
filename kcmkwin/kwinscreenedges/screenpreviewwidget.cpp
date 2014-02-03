@@ -126,6 +126,7 @@ void ScreenPreviewWidget::resizeEvent(QResizeEvent *e)
 
 void ScreenPreviewWidget::paintEvent(QPaintEvent *event)
 {
+    Q_UNUSED(event)
     if (d->monitorRect.size().isEmpty()) {
         return;
     }

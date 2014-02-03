@@ -842,6 +842,7 @@ region_creation:
 
 void AnimationEffect::_expandedGeometryChanged(KWin::EffectWindow *w, const QRect &old)
 {
+    Q_UNUSED(old)
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
     if (entry != d->m_animations.constEnd()) {
