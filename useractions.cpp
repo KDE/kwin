@@ -46,7 +46,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
-#include <KActivities/Info>
+#include <kactivities/info.h>
 #endif
 
 #include <KDE/KKeySequenceWidget>
