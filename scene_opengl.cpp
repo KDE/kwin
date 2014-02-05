@@ -398,7 +398,7 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
         glReadBuffer(GL_FRONT);
         copyPixels(displayRegion - validRegion);
         glReadBuffer(GL_BACK);
-        damage = displayRegion;
+        validRegion = displayRegion;
     }
 #endif
 
