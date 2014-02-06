@@ -676,6 +676,11 @@ void UserActionsMenu::activityPopupAboutToShow()
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
     action->setData(QString());
     action->setCheckable(true);
+    static QActionGroup *allActivitiesGroup = NULL;
+    if (!allActivitiesGroup) {
+        allActivitiesGroup = new QActionGroup(m_activityMenu);
+    }
+    allActivitiesGroup->addAction(action);
 
     if (!m_client.isNull() && m_client.data()->isOnAllActivities())
         action->setChecked(true);
@@ -787,7 +792,20 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
 
     Activities::self()->toggleClientOnActivity(m_client.data(), activity, false);
     if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
-        m_activityMenu->actions().at(0)->setChecked(m_client.data()->isOnAllActivities());
+        const bool isOnAll = m_client.data()->isOnAllActivities();
+        m_activityMenu->actions().at(0)->setChecked(isOnAll);
+        if (isOnAll) {
+            // toggleClientOnActivity interprets "on all" as "on none" and
+            // susequent toggling ("off") would move the client to only that activity.
+            // bug #330838 -> set all but "on all" off to "force proper usage"
+            for (int i = 1; i < m_activityMenu->actions().count(); ++i) {
+                if (QWidgetAction *qwa = qobject_cast<QWidgetAction*>(m_activityMenu->actions().at(i))) {
+                    if (QCheckBox *qcb = qobject_cast<QCheckBox*>(qwa->defaultWidget())) {
+                        qcb->setChecked(false);
+                    }
+                }
+            }
+        }
     }
 #endif
 }
