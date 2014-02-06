@@ -20,6 +20,7 @@ Name[x-test]=xxBackground contrastxx
 Icon=preferences-system-windows-effect-contrast
 Comment=Improve contrast and readability behind semi-transparent windows
 Comment[ca]=Millora el contrast i la llegibilitat darrere de les finestres semitransparents
+Comment[cs]=Vylepšit kontrast a čitelnost za poloprůhlednými okny
 Comment[de]=Erhöht den Kontrast und verbessert die Lesbarkeit hinter halbtransparenten Fenster.
 Comment[es]=Mejora el contraste y la legibilidad de las ventanas semitransparentes
 Comment[fi]=Parantaa puoliksi läpinäkyvien ikkunoiden taustan kontrastia ja luettavuutta
