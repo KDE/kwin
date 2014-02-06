@@ -30,7 +30,7 @@
 #include <KApplication>
 #include <KIcon>
 #include <KAboutData>
-#include <kdeversion.h>
+#include <config-workspace.h>
 
 #include <cassert>
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
         "oxygen-shadow-demo",
         "kstyle_config",
         ki18n( "Oxygen Shadow Demo" ),
-        KDE_VERSION_STRING,
+        WORKSPACE_VERSION_STRING,
         ki18n( "Oxygen decoration shadows demonstration" ),
         KAboutData::License_GPL_V2,
         ki18n( "(c) 2011, Hugo Pereira Da Costa" ));
