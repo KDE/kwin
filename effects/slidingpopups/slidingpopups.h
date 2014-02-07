@@ -76,6 +76,7 @@ private:
     QHash< const EffectWindow*, QTimeLine* > mAppearingWindows;
     QHash< const EffectWindow*, QTimeLine* > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
+    int mSlideLength;
     int mFadeInTime;
     int mFadeOutTime;
 };
