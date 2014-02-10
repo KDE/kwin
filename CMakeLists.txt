@@ -113,8 +113,15 @@ endif()
 
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
-                       TYPE REQUIRED
+                       TYPE RUNTIME
                        PURPOSE "Required to build KWin with EGL support"
+                      )
+
+find_package(epoxy)
+set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
+                       URL "http://github.com/anholt/libepoxy"
+                       TYPE REQUIRED
+                       PURPOSE "OpenGL dispatch library"
                       )
 
 find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
