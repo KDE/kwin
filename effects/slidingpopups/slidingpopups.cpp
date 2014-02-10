@@ -22,13 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDE/KConfigGroup>
 #include <QTimeLine>
+#include <QApplication>
 
 namespace KWin
 {
 
 SlidingPopupsEffect::SlidingPopupsEffect()
 {
-    mSlideLength = 100;
+    mSlideLength = QFontMetrics(qApp->font()).height() * 8;
+
     mAtom = effects->announceSupportProperty("_KDE_SLIDE", this);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
@@ -45,7 +47,7 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
     KConfigGroup conf = effects->effectConfig(QStringLiteral("SlidingPopups"));
-    mFadeInTime = animationTime(conf, QStringLiteral("SlideInTime"), 250);
+    mFadeInTime = animationTime(conf, QStringLiteral("SlideInTime"), 150);
     mFadeOutTime = animationTime(conf, QStringLiteral("SlideOutTime"), 250);
     QHash< const EffectWindow*, QTimeLine* >::iterator it = mAppearingWindows.begin();
     while (it != mAppearingWindows.end()) {
@@ -106,7 +108,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             // filter out window quads, but only if the window does not start from the edge
             switch(mWindowsData[ w ].from) {
             case West: {
-                const double splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start) + mSlideLength * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start) + qMin(geo.width(), mSlideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -118,7 +120,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 break;
             }
             case North: {
-                const double splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start) + mSlideLength * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start) + qMin(geo.height(), mSlideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -130,7 +132,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 break;
             }
             case East: {
-                const double splitPoint = screenRect.x() + screenRect.width() - geo.x() - start - mSlideLength * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = screenRect.x() + screenRect.width() - geo.x() - start - qMin(geo.width(), mSlideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -143,7 +145,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             }
             case South:
             default: {
-                const double splitPoint = screenRect.y() + screenRect.height() - geo.y() - start - mSlideLength * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = screenRect.y() + screenRect.height() - geo.y() - start - qMin(geo.height(), mSlideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -192,23 +194,23 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         const QRect geo = w->expandedGeometry();
         switch(mWindowsData[ w ].from) {
         case West:
-            data.translate(- mSlideLength * progress);
+            data.translate(- qMin(geo.width(), mSlideLength) * progress);
             splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start);
             region = QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
             break;
         case North:
-            data.translate(0.0, - mSlideLength * progress);
+            data.translate(0.0, - qMin(geo.height(), mSlideLength) * progress);
             splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start);
             region = QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
             break;
         case East:
-            data.translate(mSlideLength * progress);
+            data.translate(qMin(geo.width(), mSlideLength) * progress);
             splitPoint = screenRect.x() + screenRect.width() - geo.x() - start;
             region = QRegion(geo.x(), geo.y(), splitPoint, geo.height());
             break;
         case South:
         default:
-            data.translate(0.0, mSlideLength * progress);
+            data.translate(0.0, qMin(geo.height(), mSlideLength) * progress);
             splitPoint = screenRect.y() + screenRect.height() - geo.y() - start;
             region = QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
         }
