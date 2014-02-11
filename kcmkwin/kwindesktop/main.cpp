@@ -107,8 +107,11 @@ void KWinDesktopConfig::init()
     m_editor->addCollection(m_switchDesktopCollection, i18n("Desktop Switching"));
 
     // get number of desktops
-    NETRootInfo info(QX11Info::connection(), NET::NumberOfDesktops | NET::DesktopNames);
-    int n = info.numberOfDesktops();
+    int n = 1;
+    if (QX11Info::isPlatformX11()) {
+        NETRootInfo info(QX11Info::connection(), NET::NumberOfDesktops | NET::DesktopNames);
+        n = info.numberOfDesktops();
+    }
 
     for (int i = 1; i <= n; ++i) {
         QAction* a = m_actionCollection->addAction(QString("Switch to Desktop %1").arg(i));
@@ -241,16 +244,21 @@ void KWinDesktopConfig::load()
     // This method is called on reset(). So undo all changes.
     undo();
 
-    // get number of desktops
-    unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-    NETRootInfo info(QX11Info::connection(), properties, 2);
+    if (QX11Info::isPlatformX11()) {
+        // get number of desktops
+        unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
+        NETRootInfo info(QX11Info::connection(), properties, 2);
 
-    for (int i = 1; i <= maxDesktops; i++) {
-        QString name = QString::fromUtf8(info.desktopName(i));
-        m_desktopNames << name;
-        m_ui->desktopNames->setName(i, name);
+        for (int i = 1; i <= maxDesktops; i++) {
+            QString name = QString::fromUtf8(info.desktopName(i));
+            m_desktopNames << name;
+            m_ui->desktopNames->setName(i, name);
+        }
+        m_ui->rowsSpinBox->setValue(info.desktopLayoutColumnsRows().height());
+    } else {
+        // TODO: proper implementation
+        m_ui->rowsSpinBox->setValue(1);
     }
-    m_ui->rowsSpinBox->setValue(info.desktopLayoutColumnsRows().height());
 
     // Popup info
     KConfigGroup effectconfig(m_config, "Plugins");
@@ -289,31 +297,35 @@ void KWinDesktopConfig::load()
 void KWinDesktopConfig::save()
 {
     // TODO: plasma stuff
-    unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-    NETRootInfo info(QX11Info::connection(), properties, 2);
-    // set desktop names
-    for (int i = 1; i <= maxDesktops; i++) {
-        QString desktopName = m_desktopNames[ i -1 ];
-        if (i <= m_ui->numberSpinBox->value())
-            desktopName = m_ui->desktopNames->name(i);
-        info.setDesktopName(i, desktopName.toUtf8());
-        info.activate();
-    }
-    // set number of desktops
+
     const int numberDesktops = m_ui->numberSpinBox->value();
-    info.setNumberOfDesktops(numberDesktops);
-    info.activate();
-    int rows =m_ui->rowsSpinBox->value();
+    int rows = m_ui->rowsSpinBox->value();
     rows = qBound(1, rows, numberDesktops);
     // avoid weird cases like having 3 rows for 4 desktops, where the last row is unused
     int columns = numberDesktops / rows;
     if (numberDesktops % rows > 0) {
         columns++;
     }
-    info.setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
-    info.activate();
 
-    XSync(QX11Info::display(), false);
+    if (QX11Info::isPlatformX11()) {
+        unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
+        NETRootInfo info(QX11Info::connection(), properties, 2);
+        // set desktop names
+        for (int i = 1; i <= maxDesktops; i++) {
+            QString desktopName = m_desktopNames[ i -1 ];
+            if (i <= m_ui->numberSpinBox->value())
+                desktopName = m_ui->desktopNames->name(i);
+            info.setDesktopName(i, desktopName.toUtf8());
+            info.activate();
+        }
+        // set number of desktops
+        info.setNumberOfDesktops(numberDesktops);
+        info.activate();
+        info.setDesktopLayout(NET::OrientationHorizontal, columns, rows, NET::DesktopLayoutCornerTopLeft);
+        info.activate();
+
+        XSync(QX11Info::display(), false);
+    }
 
     // save the desktops
     QString groupname;
