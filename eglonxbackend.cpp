@@ -95,7 +95,7 @@ void EglOnXBackend::init()
     }
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
-    if (eglPostSubBufferNV) {
+    if (hasGLExtension(QStringLiteral("EGL_NV_post_sub_buffer"))) {
         if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {

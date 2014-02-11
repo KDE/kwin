@@ -239,6 +239,7 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
     , m_enabled(false)
     , m_hasError(false)
     , m_duringEnablingPhase(false)
+    , m_haveTexture3D(true)
     , m_ccTextureUnit(-1)
     , m_dummyCCTexture(0)
     , m_lastOutput(-1)
@@ -258,6 +259,10 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
 
     connect(m_csi, SIGNAL(updateSucceeded()), this, SLOT(colorServerUpdateSucceededSlot()));
     connect(m_csi, SIGNAL(updateFailed()), this, SLOT(colorServerUpdateFailedSlot()));
+
+#ifdef KWIN_HAVE_OPENGLES
+    m_haveTexture3D = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_OES_texture_3D"));
+#endif
 }
 
 ColorCorrectionPrivate::~ColorCorrectionPrivate()
@@ -285,7 +290,7 @@ bool ColorCorrection::setEnabled(bool enabled)
 
 #ifdef KWIN_HAVE_OPENGLES
     const GLPlatform *gl = GLPlatform::instance();
-    if (enabled && gl->isGLES() && glTexImage3D == 0) {
+    if (enabled && gl->isGLES() && !m_haveTexture3D) {
         qCritical() << "color correction is not supported on OpenGL ES without OES_texture_3D";
         d->m_hasError = true;
         return false;

@@ -73,6 +73,10 @@ private:
     GLXWindow glxWindow;
     GLXContext ctx;
     int m_bufferAge;
+    bool m_haveMESACopySubBuffer;
+    bool m_haveMESASwapControl;
+    bool m_haveEXTSwapControl;
+    bool m_haveSGISwapControl;
     bool haveSwapInterval, haveWaitSync;
     friend class GlxTexture;
 };

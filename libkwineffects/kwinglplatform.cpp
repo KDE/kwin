@@ -534,15 +534,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
 #ifndef KWIN_HAVE_OPENGLES
     if (m_glVersion >= kVersionNumber(3, 0)) {
-        PFNGLGETSTRINGIPROC glGetStringi;
-
-#ifdef KWIN_HAVE_EGL
-        if (platformInterface == EglPlatformInterface)
-            glGetStringi = (PFNGLGETSTRINGIPROC) eglGetProcAddress("glGetStringi");
-        else
-#endif
-            glGetStringi = (PFNGLGETSTRINGIPROC) glXGetProcAddress((const GLubyte *) "glGetStringi");
-
         int count;
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 

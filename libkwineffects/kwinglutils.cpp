@@ -105,15 +105,6 @@ void initGL(OpenGLPlatformInterface platformInterface)
 
     // Get list of supported OpenGL extensions
     if (hasGLVersion(3, 0)) {
-        PFNGLGETSTRINGIPROC glGetStringi;
-
-#ifdef KWIN_HAVE_EGL
-        if (platformInterface == EglPlatformInterface)
-            glGetStringi = (PFNGLGETSTRINGIPROC) eglGetProcAddress("glGetStringi");
-        else
-#endif
-            glGetStringi = (PFNGLGETSTRINGIPROC) glXGetProcAddress((const GLubyte *) "glGetStringi");
-
         int count;
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
@@ -395,7 +386,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
 #ifndef KWIN_HAVE_OPENGLES
-    if (glBindFragDataLocation)
+    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_EXT_gpu_shader4")))
         glBindFragDataLocation(mProgram, index, name);
 #else
     Q_UNUSED(name)
@@ -1878,8 +1869,12 @@ void GLVertexBuffer::initStatic()
     GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = false;
 #else
-    GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
-    GLVertexBufferPrivate::supportsIndexedQuads = glMapBufferRange && glCopyBufferSubData && glDrawElementsBaseVertex;
+    bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QStringLiteral("GL_ARB_draw_elements_base_vertex"));
+    bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QStringLiteral("GL_ARB_copy_buffer"));
+    bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
+
+    GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
+    GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);

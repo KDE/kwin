@@ -112,7 +112,12 @@ void GlxBackend::init()
     initGL(GlxPlatformInterface);
 
     // Check whether certain features are supported
-    haveSwapInterval = glXSwapIntervalMESA || glXSwapIntervalEXT || glXSwapIntervalSGI;
+    m_haveMESACopySubBuffer = hasGLExtension(QStringLiteral("GLX_MESA_copy_sub_buffer"));
+    m_haveMESASwapControl   = hasGLExtension(QStringLiteral("GLX_MESA_swap_control"));
+    m_haveEXTSwapControl    = hasGLExtension(QStringLiteral("GLX_EXT_swap_control"));
+    m_haveSGISwapControl    = hasGLExtension(QStringLiteral("GLX_SGI_swap_control"));
+
+    haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
     setSupportsBufferAge(false);
 
@@ -139,9 +144,9 @@ void GlxBackend::init()
                 gs_tripleBufferUndetected = false;
             }
             gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
-        } else if (glXGetVideoSync) {
+        } else if (hasGLExtension(QStringLiteral("GLX_SGI_video_sync"))) {
             unsigned int sync;
-            if (glXGetVideoSync(&sync) == 0 && glXWaitVideoSync(1, 0, &sync) == 0) {
+            if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
                 setSyncsToVBlank(true);
                 setBlocksForRetrace(true);
                 haveWaitSync = true;
@@ -170,7 +175,7 @@ bool GlxBackend::initRenderingContext()
     const bool direct = true;
 
     // Use glXCreateContextAttribsARB() when it's available
-    if (glXCreateContextAttribsARB) {
+    if (hasGLExtension(QStringLiteral("GLX_ARB_create_context"))) {
         const int attribs_31_core_robustness[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
             GLX_CONTEXT_MINOR_VERSION_ARB,               1,
@@ -414,11 +419,11 @@ bool GlxBackend::initDrawableConfigs()
 
 void GlxBackend::setSwapInterval(int interval)
 {
-    if (glXSwapIntervalEXT)
+    if (m_haveEXTSwapControl)
         glXSwapIntervalEXT(display(), glxWindow, interval);
-    else if (glXSwapIntervalMESA)
+    else if (m_haveMESASwapControl)
         glXSwapIntervalMESA(interval);
-    else if (glXSwapIntervalSGI)
+    else if (m_haveSGISwapControl)
         glXSwapIntervalSGI(interval);
 }
 
@@ -434,7 +439,7 @@ void GlxBackend::waitSync()
         glXGetVideoSync(&sync);
         glXWaitVideoSync(2, (sync + 1) % 2, &sync);
 #else
-        glXWaitVideoSync(1, 0, &sync);
+        glXWaitVideoSyncSGI(1, 0, &sync);
 #endif
     }
 }
@@ -480,11 +485,11 @@ void GlxBackend::present()
         if (supportsBufferAge()) {
             glXQueryDrawable(display(), glxWindow, GLX_BACK_BUFFER_AGE_EXT, (GLuint *) &m_bufferAge);
         }
-    } else if (glXCopySubBuffer) {
+    } else if (m_haveMESACopySubBuffer) {
         foreach (const QRect & r, lastDamage().rects()) {
             // convert to OpenGL coordinates
             int y = displayHeight() - r.y() - r.height();
-            glXCopySubBuffer(display(), glxWindow, r.x(), y, r.width(), r.height());
+            glXCopySubBufferMESA(display(), glxWindow, r.x(), y, r.width(), r.height());
         }
     } else { // Copy Pixels (horribly slow on Mesa)
         glDrawBuffer(GL_FRONT);

@@ -236,15 +236,7 @@ if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif()
 
-if(KWIN_BUILD_OPENGL)
-  include_directories(${OPENGL_INCLUDE_DIR})
-endif()
-
 set(KWIN_HAVE_EGL ${EGL_FOUND})
-
-if(KWIN_BUILD_OPENGLES)
-  include_directories(${OPENGLES_INCLUDE_DIR})
-endif()
 
 if (XKB_FOUND)
   include_directories(${XKB_INCLUDE_DIR})
@@ -488,8 +480,6 @@ set(kwin_WAYLAND_EGL_LIBS
     Wayland::Egl
 )
 
-set(kwin_OPENGL_LIBS )
-
 find_library(XF86VM_LIBRARY Xxf86vm)
 if (XF86VM_LIBRARY)
     set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${XF86VM_LIBRARY})
@@ -501,17 +491,12 @@ if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
 endif()
 
-if(KWIN_HAVE_EGL)
-    set(kwin_OPENGL_LIBS ${kwin_OPENGL_LIBS} EGL::EGL)
-endif()
-
 set(kwinLibs
     ${kwin_OWN_LIBS}
     ${kwin_QT_LIBS}
     ${kwin_KDE_LIBS}
     ${kwin_XLIB_LIBS}
     ${kwin_XCB_LIBS}
-    ${kwin_OPENGL_LIBS}
 )
 
 if(Wayland_Client_FOUND AND XKB_FOUND)
@@ -528,14 +513,14 @@ set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_INTERNAL_NAME_X11})
 generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
-  target_link_libraries(kdeinit_kwin kwinglutils ${OPENGL_gl_LIBRARY})
+  target_link_libraries(kdeinit_kwin kwinglutils ${epoxy_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
     target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
   endif()
 elseif(KWIN_BUILD_OPENGLES)
-  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${OPENGLES_LIBRARIES})
+  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
   set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
 endif()
 

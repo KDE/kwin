@@ -88,9 +88,6 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
     generate_export_header(${name} BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
     target_link_libraries(${name} PUBLIC Qt5::DBus Qt5::X11Extras XCB::XCB KF5::Service KF5::WindowSystem)
-    if(KWIN_HAVE_EGL)
-       target_link_libraries(${name} PRIVATE EGL::EGL)
-    endif()
     set_target_properties(${name} PROPERTIES
         VERSION ${KWINEFFECTS_VERSION_STRING}
         SOVERSION ${KWINEFFECTS_SOVERSION}
@@ -101,15 +98,15 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
 endmacro()
 
 if(KWIN_BUILD_OPENGLES)
-    kwin4_add_glutils_backend(kwinglesutils ${OPENGLES_INCLUDE_DIR} ${OPENGLES_LIBRARIES})
+    kwin4_add_glutils_backend(kwinglesutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
     set_target_properties(kwinglesutils PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGLES)
     set_target_properties(kwinglesutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glesutils)
 endif()
 if(KWIN_BUILD_OPENGL)
-    kwin4_add_glutils_backend(kwinglutils ${OPENGL_INCLUDE_DIR} ${OPENGL_gl_LIBRARY})
+    kwin4_add_glutils_backend(kwinglutils ${epoxy_INCLUDE_DIR} ${epoxy_LIBRARY})
     set_target_properties(kwinglutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}glutils)
 
-    target_link_libraries(kwinglutils PUBLIC ${OPENGL_gl_LIBRARY})
+    target_link_libraries(kwinglutils PUBLIC ${epoxy_LIBRARY})
     # -ldl used by OpenGL code
     find_library(DL_LIBRARY dl)
     if (DL_LIBRARY)

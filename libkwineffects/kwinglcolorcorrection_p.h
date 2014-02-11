@@ -93,6 +93,7 @@ public:
     bool m_enabled;
     bool m_hasError;
     bool m_duringEnablingPhase;
+    bool m_haveTexture3D;
     int m_ccTextureUnit;
 
     ColorServerInterface *m_csi;
