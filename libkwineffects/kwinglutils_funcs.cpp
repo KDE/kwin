@@ -75,7 +75,7 @@ static glXFuncPtr getProcAddress(const char* name)
 
 void glxResolveFunctions()
 {
-    if (hasGLExtension(QStringLiteral("GLX_MESA_swap_control")))
+    if (hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control")))
         glXSwapIntervalMESA = (glXSwapIntervalMESA_func) getProcAddress("glXSwapIntervalMESA");
     else
         glXSwapIntervalMESA = nullptr;
@@ -91,7 +91,7 @@ void eglResolveFunctions()
 void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 {
 #ifndef KWIN_HAVE_OPENGLES
-    if (hasGLExtension(QStringLiteral("GL_ARB_robustness"))) {
+    if (hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"))) {
         // See http://www.opengl.org/registry/specs/ARB/robustness.txt
         GL_RESOLVE_WITH_EXT(glGetGraphicsResetStatus, glGetGraphicsResetStatusARB);
         GL_RESOLVE_WITH_EXT(glReadnPixels,            glReadnPixelsARB);
@@ -102,7 +102,7 @@ void glResolveFunctions(OpenGLPlatformInterface platformInterface)
         glGetnUniformfv          = KWin::GetnUniformfv;
     }
 #else
-    if (hasGLExtension(QStringLiteral("GL_EXT_robustness"))) {
+    if (hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"))) {
         // See http://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
         glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func) eglGetProcAddress("glGetGraphicsResetStatusEXT");
         glReadnPixels            = (glReadnPixels_func)            eglGetProcAddress("glReadnPixelsEXT");

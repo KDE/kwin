@@ -112,16 +112,16 @@ void GlxBackend::init()
     initGL(GlxPlatformInterface);
 
     // Check whether certain features are supported
-    m_haveMESACopySubBuffer = hasGLExtension(QStringLiteral("GLX_MESA_copy_sub_buffer"));
-    m_haveMESASwapControl   = hasGLExtension(QStringLiteral("GLX_MESA_swap_control"));
-    m_haveEXTSwapControl    = hasGLExtension(QStringLiteral("GLX_EXT_swap_control"));
-    m_haveSGISwapControl    = hasGLExtension(QStringLiteral("GLX_SGI_swap_control"));
+    m_haveMESACopySubBuffer = hasGLExtension(QByteArrayLiteral("GLX_MESA_copy_sub_buffer"));
+    m_haveMESASwapControl   = hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
+    m_haveEXTSwapControl    = hasGLExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
+    m_haveSGISwapControl    = hasGLExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
 
     haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
     setSupportsBufferAge(false);
 
-    if (hasGLExtension("GLX_EXT_buffer_age")) {
+    if (hasGLExtension(QByteArrayLiteral("GLX_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
         if (useBufferAge != "0")
@@ -144,7 +144,7 @@ void GlxBackend::init()
                 gs_tripleBufferUndetected = false;
             }
             gs_tripleBufferNeedsDetection = gs_tripleBufferUndetected;
-        } else if (hasGLExtension(QStringLiteral("GLX_SGI_video_sync"))) {
+        } else if (hasGLExtension(QByteArrayLiteral("GLX_SGI_video_sync"))) {
             unsigned int sync;
             if (glXGetVideoSyncSGI(&sync) == 0 && glXWaitVideoSyncSGI(1, 0, &sync) == 0) {
                 setSyncsToVBlank(true);
@@ -175,7 +175,7 @@ bool GlxBackend::initRenderingContext()
     const bool direct = true;
 
     // Use glXCreateContextAttribsARB() when it's available
-    if (hasGLExtension(QStringLiteral("GLX_ARB_create_context"))) {
+    if (hasGLExtension(QByteArrayLiteral("GLX_ARB_create_context"))) {
         const int attribs_31_core_robustness[] = {
             GLX_CONTEXT_MAJOR_VERSION_ARB,               3,
             GLX_CONTEXT_MINOR_VERSION_ARB,               1,
@@ -202,7 +202,7 @@ bool GlxBackend::initRenderingContext()
             0
         };
 
-        const bool have_robustness = hasGLExtension(QStringLiteral("GLX_ARB_create_context_robustness"));
+        const bool have_robustness = hasGLExtension(QByteArrayLiteral("GLX_ARB_create_context_robustness"));
 
         // Try to create a 3.1 context first
         if (options->glCoreProfile()) {

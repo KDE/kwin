@@ -261,7 +261,7 @@ ColorCorrectionPrivate::ColorCorrectionPrivate(ColorCorrection *parent)
     connect(m_csi, SIGNAL(updateFailed()), this, SLOT(colorServerUpdateFailedSlot()));
 
 #ifdef KWIN_HAVE_OPENGLES
-    m_haveTexture3D = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_OES_texture_3D"));
+    m_haveTexture3D = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_texture_3D"));
 #endif
 }
 

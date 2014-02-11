@@ -74,9 +74,9 @@ void EglOnXBackend::init()
     }
 
     initEGL();
-    if (!hasGLExtension(QStringLiteral("EGL_KHR_image")) &&
-        (!hasGLExtension(QStringLiteral("EGL_KHR_image_base")) ||
-         !hasGLExtension(QStringLiteral("EGL_KHR_image_pixmap")))) {
+    if (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image")) &&
+        (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image_base")) ||
+         !hasGLExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
@@ -89,13 +89,13 @@ void EglOnXBackend::init()
         options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
     glPlatform->printResults();
     initGL(EglPlatformInterface);
-    if (!hasGLExtension(QStringLiteral("GL_OES_EGL_image"))) {
+    if (!hasGLExtension(QByteArrayLiteral("GL_OES_EGL_image"))) {
         setFailed(QStringLiteral("Required extension GL_OES_EGL_image not found, disabling compositing"));
         return;
     }
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
-    if (hasGLExtension(QStringLiteral("EGL_NV_post_sub_buffer"))) {
+    if (hasGLExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
         if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
@@ -109,7 +109,7 @@ void EglOnXBackend::init()
 
     setSupportsBufferAge(false);
 
-    if (hasGLExtension("EGL_EXT_buffer_age")) {
+    if (hasGLExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
         if (useBufferAge != "0")

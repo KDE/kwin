@@ -134,7 +134,7 @@ void EglWaylandBackend::init()
 
     setSupportsBufferAge(false);
 
-    if (hasGLExtension("EGL_EXT_buffer_age")) {
+    if (hasGLExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
         const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
 
         if (useBufferAge != "0")

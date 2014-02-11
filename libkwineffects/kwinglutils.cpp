@@ -56,9 +56,9 @@ static int glXVersion;
 // EGL version, use MAKE_GL_VERSION() macro for comparing with a specific version
 static int eglVersion;
 // List of all supported GL, EGL and GLX extensions
-static QStringList glExtensions;
-static QStringList glxExtensions;
-static QStringList eglExtension;
+static QList<QByteArray> glExtensions;
+static QList<QByteArray> glxExtensions;
+static QList<QByteArray> eglExtensions;
 
 int glTextureUnitsCount;
 
@@ -72,9 +72,8 @@ void initGLX()
     glXQueryVersion(display(), &major, &minor);
     glXVersion = MAKE_GL_VERSION(major, minor, 0);
     // Get list of supported GLX extensions
-    glxExtensions = QString::fromUtf8(glXQueryExtensionsString(
-                                display(), QX11Info::appScreen())).split(QStringLiteral(" "));
-
+    const QByteArray string = (const char *) glXQueryExtensionsString(display(), QX11Info::appScreen());
+    glxExtensions = string.split(' ');
     glxResolveFunctions();
 #endif
 }
@@ -86,8 +85,8 @@ void initEGL()
     int major, minor;
     eglInitialize(dpy, &major, &minor);
     eglVersion = MAKE_GL_VERSION(major, minor, 0);
-    eglExtension = QString::fromUtf8(eglQueryString(dpy, EGL_EXTENSIONS)).split(QStringLiteral(" "));
-
+    const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
+    eglExtensions = string.split(' ');
     eglResolveFunctions();
 #endif
 }
@@ -109,12 +108,12 @@ void initGL(OpenGLPlatformInterface platformInterface)
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
         for (int i = 0; i < count; i++) {
-            const char *name = (const char *) glGetStringi(GL_EXTENSIONS, i);
-            glExtensions << QString::fromUtf8(name);
+            const QByteArray name = (const char *) glGetStringi(GL_EXTENSIONS, i);
+            glExtensions << name;
         }
     } else
 #endif
-        glExtensions = QString::fromUtf8((const char*)glGetString(GL_EXTENSIONS)).split(QStringLiteral(" "));
+        glExtensions = QByteArray((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
     glResolveFunctions(platformInterface);
@@ -134,7 +133,7 @@ void cleanupGL()
 
     glExtensions.clear();
     glxExtensions.clear();
-    eglExtension.clear();
+    eglExtensions.clear();
 
     glVersion = 0;
     glXVersion = 0;
@@ -157,9 +156,9 @@ bool hasEGLVersion(int major, int minor, int release)
     return eglVersion >= MAKE_GL_VERSION(major, minor, release);
 }
 
-bool hasGLExtension(const QString& extension)
+bool hasGLExtension(const QByteArray &extension)
 {
-    return glExtensions.contains(extension) || glxExtensions.contains(extension) || eglExtension.contains(extension);
+    return glExtensions.contains(extension) || glxExtensions.contains(extension) || eglExtensions.contains(extension);
 }
 
 static QString formatGLError(GLenum err)
@@ -386,7 +385,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
 #ifndef KWIN_HAVE_OPENGLES
-    if (hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_EXT_gpu_shader4")))
+    if (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))
         glBindFragDataLocation(mProgram, index, name);
 #else
     Q_UNUSED(name)
@@ -921,8 +920,13 @@ void GLRenderTarget::initStatic()
     sSupported = true;
     s_blitSupported = false;
 #else
-    sSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"));
-    s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_blit"));
+    sSupported = hasGLVersion(3, 0) ||
+        hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
+        hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
+
+    s_blitSupported = hasGLVersion(3, 0) ||
+        hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
+        hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
 #endif
 }
 
@@ -1866,12 +1870,12 @@ void GLVertexBuffer::reset()
 void GLVertexBuffer::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"));
+    GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = false;
 #else
-    bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QStringLiteral("GL_ARB_draw_elements_base_vertex"));
-    bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QStringLiteral("GL_ARB_copy_buffer"));
-    bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
+    bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
+    bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
+    bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_map_buffer_range"));
 
     GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
     GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;

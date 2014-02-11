@@ -68,7 +68,7 @@ bool KWINGLUTILS_EXPORT hasGLVersion(int major, int minor, int release = 0);
 bool KWINGLUTILS_EXPORT hasGLXVersion(int major, int minor, int release = 0);
 bool KWINGLUTILS_EXPORT hasEGLVersion(int major, int minor, int release = 0);
 // use for both OpenGL and GLX extensions
-bool KWINGLUTILS_EXPORT hasGLExtension(const QString& extension);
+bool KWINGLUTILS_EXPORT hasGLExtension(const QByteArray &extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
 bool KWINGLUTILS_EXPORT checkGLError(const char* txt);

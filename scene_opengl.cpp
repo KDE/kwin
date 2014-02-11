@@ -157,8 +157,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     // perform Scene specific checks
     GLPlatform *glPlatform = GLPlatform::instance();
 #ifndef KWIN_HAVE_OPENGLES
-    if (!hasGLExtension(QStringLiteral("GL_ARB_texture_non_power_of_two"))
-            && !hasGLExtension(QStringLiteral("GL_ARB_texture_rectangle"))) {
+    if (!hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"))
+            && !hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rectangle"))) {
         qCritical() << "GL_ARB_texture_non_power_of_two and GL_ARB_texture_rectangle missing";
         init_ok = false;
         return; // error
@@ -627,7 +627,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
 
 #ifndef KWIN_HAVE_OPENGLES
     // It is not legal to not have a vertex array object bound in a core context
-    if (hasGLExtension(QStringLiteral("GL_ARB_vertex_array_object"))) {
+    if (hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &vao);
         glBindVertexArray(vao);
     }
