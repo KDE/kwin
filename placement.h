@@ -71,6 +71,7 @@ public:
     void placeZeroCornered(Client* c, const QRect& area, Policy next = Unknown);
     void placeDialog(Client* c, QRect& area, Policy next = Unknown);
     void placeUtility(Client* c, QRect& area, Policy next = Unknown);
+    void placeNotification(Client* c, QRect& area);
 
     void reinitCascading(int desktop);
 
