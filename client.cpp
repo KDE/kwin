@@ -600,6 +600,7 @@ void Client::detectNoBorder()
     case NET::Dock :
     case NET::TopMenu :
     case NET::Splash :
+    case NET::Notification :
         noborder = true;
         app_noborder = true;
         break;
