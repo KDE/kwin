@@ -497,7 +497,7 @@ void Workspace::addClient(Client* c)
 {
     Group* grp = findGroup(c->window());
 
-    KWindowInfo info = KWindowSystem::windowInfo(c->window(), -1U, NET::WM2WindowClass);
+    KWindowInfo info(c->window(), NET::WMAllProperties, NET::WM2WindowClass);
 
     emit clientAdded(c);
 
