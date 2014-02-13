@@ -106,9 +106,16 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
             const QRect geo = w->expandedGeometry();
             // filter out window quads, but only if the window does not start from the edge
+            int slideLength;
+            if (mWindowsData[ w ].slideLength > 0) {
+                slideLength = mWindowsData[ w ].slideLength;
+            } else {
+                slideLength = mSlideLength;
+            }
+
             switch(mWindowsData[ w ].from) {
             case West: {
-                const double splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start) + qMin(geo.width(), mSlideLength) * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start) + qMin(geo.width(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -120,7 +127,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 break;
             }
             case North: {
-                const double splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start) + qMin(geo.height(), mSlideLength) * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start) + qMin(geo.height(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -132,7 +139,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
                 break;
             }
             case East: {
-                const double splitPoint = screenRect.x() + screenRect.width() - geo.x() - start - qMin(geo.width(), mSlideLength) * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = screenRect.x() + screenRect.width() - geo.x() - start - qMin(geo.width(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtX(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -145,7 +152,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
             }
             case South:
             default: {
-                const double splitPoint = screenRect.y() + screenRect.height() - geo.y() - start - qMin(geo.height(), mSlideLength) * (appearing ? 1.0 - progress : progress);
+                const double splitPoint = screenRect.y() + screenRect.height() - geo.y() - start - qMin(geo.height(), slideLength) * (appearing ? 1.0 - progress : progress);
                 data.quads = data.quads.splitAtY(splitPoint);
                 WindowQuadList filtered;
                 foreach (const WindowQuad &quad, data.quads) {
@@ -187,30 +194,47 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         }
         const int start = mWindowsData[ w ].start;
 
-        data.setOpacity(1 - progress);
+        int slideLength;
+        if (mWindowsData[ w ].slideLength > 0) {
+            slideLength = mWindowsData[ w ].slideLength;
+        } else {
+            slideLength = mSlideLength;
+        }
 
         const QRect screenRect = effects->clientArea(FullScreenArea, w->screen(), w->desktop());
         int splitPoint = 0;
         const QRect geo = w->expandedGeometry();
         switch(mWindowsData[ w ].from) {
         case West:
-            data.translate(- qMin(geo.width(), mSlideLength) * progress);
+            if (slideLength < geo.width()) {
+                data.setOpacity(1 - progress);
+            }
+            data.translate(- qMin(geo.width(), slideLength) * progress);
             splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start);
             region = QRegion(geo.x() + splitPoint, geo.y(), geo.width() - splitPoint, geo.height());
             break;
         case North:
-            data.translate(0.0, - qMin(geo.height(), mSlideLength) * progress);
+            if (slideLength < geo.height()) {
+                data.setOpacity(1 - progress);
+            }
+            data.translate(0.0, - qMin(geo.height(), slideLength) * progress);
             splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start);
             region = QRegion(geo.x(), geo.y() + splitPoint, geo.width(), geo.height() - splitPoint);
             break;
         case East:
-            data.translate(qMin(geo.width(), mSlideLength) * progress);
+            if (slideLength < geo.width()) {
+                data.setOpacity(1 - progress);
+            }
+            data.translate(qMin(geo.width(), slideLength) * progress);
             splitPoint = screenRect.x() + screenRect.width() - geo.x() - start;
             region = QRegion(geo.x(), geo.y(), splitPoint, geo.height());
             break;
         case South:
         default:
-            data.translate(0.0, qMin(geo.height(), mSlideLength) * progress);
+            if (slideLength < geo.width()) {
+                data.setOpacity(1 - progress);
+            }
+            data.translate(0.0, qMin(geo.height(), slideLength) * progress);
             splitPoint = screenRect.y() + screenRect.height() - geo.y() - start;
             region = QRegion(geo.x(), geo.y(), geo.width(), splitPoint);
         }
@@ -286,12 +310,21 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     Data animData;
     animData.start = d[ 0 ];
     animData.from = (Position)d[ 1 ];
+    //custom duration
     if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
         animData.fadeInDuration = d[2];
         if (data.length() >= (int)(sizeof(uint32_t) * 4))
+            //custom fadein
             animData.fadeOutDuration = d[3];
         else
+            //custom fadeout
             animData.fadeOutDuration = d[2];
+
+        //do we want an actual slide?
+        if (data.length() >= (int)(sizeof(uint32_t) * 5))
+            animData.slideLength = d[5];
+        else
+            animData.slideLength = -1;
     } else {
         animData.fadeInDuration = animationTime(mFadeInTime);
         animData.fadeOutDuration = animationTime(mFadeOutTime);
