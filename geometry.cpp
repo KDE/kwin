@@ -3011,7 +3011,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         foreach (const QRect &r, strut.rects()) {
                             if (r.top() == 0 && r.width() > r.height() && // "top panel"
                                 r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
-                                newTitleTop = r.bottom();
+                                newTitleTop = r.bottom() + 1;
                                 break;
                             }
                         }
