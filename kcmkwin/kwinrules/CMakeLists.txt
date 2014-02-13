@@ -29,7 +29,7 @@ set(kcm_libs
 )
 
 if(KWIN_BUILD_ACTIVITIES)
-    set(kcm_libs ${kcm_libs} KF5::KActivities)
+    set(kcm_libs ${kcm_libs} KF5::Activities)
 endif()
 
 target_link_libraries(kdeinit_kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})

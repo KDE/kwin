@@ -11,7 +11,7 @@ option(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 option(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
-cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KActivities_FOUND" OFF)
+cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
 # Binary name of KWin
@@ -308,7 +308,7 @@ if(KWIN_BUILD_SCRIPTING)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
-    set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::KActivities)
+    set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
 endif()
 
 if(OPENGL_EGL_FOUND)
