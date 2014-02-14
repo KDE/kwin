@@ -207,7 +207,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         switch(mWindowsData[ w ].from) {
         case West:
             if (slideLength < geo.width()) {
-                data.setOpacity(1 - progress);
+                data.multiplyOpacity(1 - progress);
             }
             data.translate(- qMin(geo.width(), slideLength) * progress);
             splitPoint = geo.width() - (geo.x() + geo.width() - screenRect.x() - start);
@@ -215,7 +215,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
             break;
         case North:
             if (slideLength < geo.height()) {
-                data.setOpacity(1 - progress);
+                data.multiplyOpacity(1 - progress);
             }
             data.translate(0.0, - qMin(geo.height(), slideLength) * progress);
             splitPoint = geo.height() - (geo.y() + geo.height() - screenRect.y() - start);
@@ -223,7 +223,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
             break;
         case East:
             if (slideLength < geo.width()) {
-                data.setOpacity(1 - progress);
+                data.multiplyOpacity(1 - progress);
             }
             data.translate(qMin(geo.width(), slideLength) * progress);
             splitPoint = screenRect.x() + screenRect.width() - geo.x() - start;
@@ -232,7 +232,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
         case South:
         default:
             if (slideLength < geo.width()) {
-                data.setOpacity(1 - progress);
+                data.multiplyOpacity(1 - progress);
             }
             data.translate(0.0, qMin(geo.height(), slideLength) * progress);
             splitPoint = screenRect.y() + screenRect.height() - geo.y() - start;
@@ -324,7 +324,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         if (data.length() >= (int)(sizeof(uint32_t) * 5))
             animData.slideLength = d[5];
         else
-            animData.slideLength = -1;
+            animData.slideLength = 0;
     } else {
         animData.fadeInDuration = animationTime(mFadeInTime);
         animData.fadeOutDuration = animationTime(mFadeOutTime);
