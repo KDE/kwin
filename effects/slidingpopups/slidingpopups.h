@@ -71,11 +71,13 @@ private:
         Position from;
         int fadeInDuration;
         int fadeOutDuration;
+        int slideLength;
     };
     long mAtom;
     QHash< const EffectWindow*, QTimeLine* > mAppearingWindows;
     QHash< const EffectWindow*, QTimeLine* > mDisappearingWindows;
     QHash< const EffectWindow*, Data > mWindowsData;
+    int mSlideLength;
     int mFadeInTime;
     int mFadeOutTime;
 };
