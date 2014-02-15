@@ -33,9 +33,8 @@
 #include <QFormLayout>
 
 #include <kconfig.h>
-#include <kdialog.h>
+#include <kconfiggroup.h>
 #include <QDebug>
-#include <kglobalsettings.h>
 #include <kcolorscheme.h>
 #include <kseparator.h>
 #include <QtDBus/QtDBus>
@@ -181,7 +180,6 @@ KTitleBarActionsConfig::KTitleBarActionsConfig(bool _standAlone, KConfig *_confi
     connect(m_ui->leftClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
     connect(m_ui->middleClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
     connect(m_ui->rightClickMaximizeButton, SIGNAL(activated(int)), SLOT(changed()));
-    connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()), SLOT(paletteChanged()));
 
     load();
 }
@@ -380,6 +378,15 @@ void KTitleBarActionsConfig::showEvent(QShowEvent *ev)
     }
     KCModule::showEvent(ev);
 }
+
+void KTitleBarActionsConfig::changeEvent(QEvent *ev)
+{
+    if (ev->type() == QEvent::PaletteChange) {
+        paletteChanged();
+    }
+    ev->accept();
+}
+
 
 void KTitleBarActionsConfig::load()
 {

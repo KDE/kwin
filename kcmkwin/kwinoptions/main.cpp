@@ -25,11 +25,9 @@
 
 #include <QtDBus/QtDBus>
 
-#include <kglobal.h>
 #include <KDE/KLocalizedString>
 #include <kconfig.h>
 #include <kaboutdata.h>
-#include <kdialog.h>
 #include <KPluginFactory>
 #include <KPluginLoader>
 

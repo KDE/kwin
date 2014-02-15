@@ -62,6 +62,7 @@ public:
 
 protected:
     void showEvent(QShowEvent *ev);
+    void changeEvent(QEvent *ev);
 
 public Q_SLOTS:
     void changed() {
