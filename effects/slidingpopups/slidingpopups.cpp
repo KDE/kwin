@@ -231,7 +231,7 @@ void SlidingPopupsEffect::paintWindow(EffectWindow* w, int mask, QRegion region,
             break;
         case South:
         default:
-            if (slideLength < geo.width()) {
+            if (slideLength < geo.height()) {
                 data.multiplyOpacity(1 - progress);
             }
             data.translate(0.0, qMin(geo.height(), slideLength) * progress);
