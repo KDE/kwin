@@ -13,6 +13,7 @@ X-KDE-Weight=50
 
 Name=Desktop Effects
 Name[de]=Arbeitsflächen-Effekte
+Name[es]=Efectos de escritorio
 Name[hu]=Asztali hatások
 Name[nl]=Bureaubladeffecten
 Name[pt]=Efeitos do Ecrã
@@ -23,6 +24,7 @@ Name[uk]=Ефекти стільниці
 Name[x-test]=xxDesktop Effectsxx
 Comment=Configure desktop effects
 Comment[de]=Arbeitsflächen-Effekte einrichten
+Comment[es]=Configurar los efectos del escritorio
 Comment[hu]=Asztali hatások beállítása
 Comment[nl]=Desktopeffecten instellen
 Comment[pt]=Configurar os efeitos do ecrã
