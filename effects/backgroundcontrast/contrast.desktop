@@ -19,6 +19,7 @@ Name[sv]=Bakgrundskontrast
 Name[tr]=Arkaplan karşıtlığı
 Name[uk]=Контрастність тла
 Name[x-test]=xxBackground contrastxx
+Name[zh_TW]=背景對比
 Icon=preferences-system-windows-effect-contrast
 Comment=Improve contrast and readability behind semi-transparent windows
 Comment[ca]=Millora el contrast i la llegibilitat darrere de les finestres semitransparents
@@ -41,6 +42,7 @@ Comment[sv]=Förbättra kontrast och läsbarhet bakom halvgenomskinliga fönster
 Comment[tr]=Yarı şeffaf pencerelerin arkasındaki karşıtlık ve okunabilirliği iyileştir
 Comment[uk]=Покращення контрастності та придатності до читання тексту під напівпрозорими вікнами
 Comment[x-test]=xxImprove contrast and readability behind semi-transparent windowsxx
+Comment[zh_TW]=加強半透明視窗背景的對比以增進可讀性
 
 Type=Service
 X-KDE-ServiceTypes=KWin/Effect
