@@ -30,6 +30,10 @@ SlideEffect::SlideEffect()
     : slide(false)
 {
     connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
+    connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
+    connect(effects, &EffectsHandler::windowDeleted, [this](EffectWindow *w) {
+        m_backgroundContrastForcedBefore.removeAll(w);
+    });
     mTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
     reconfigure(ReconfigureAll);
 }
@@ -49,11 +53,15 @@ void SlideEffect::prePaintScreen(ScreenPrePaintData& data, int time)
         if (mTimeLine.currentValue() != 1)
             data.mask |= PAINT_SCREEN_TRANSFORMED | PAINT_SCREEN_BACKGROUND_FIRST;
         else {
-            slide = false;
-            mTimeLine.setCurrentTime(0);
             foreach (EffectWindow * w, effects->stackingOrder()) {
                 w->setData(WindowForceBlurRole, QVariant(false));
+                if (m_backgroundContrastForcedBefore.contains(w)) {
+                    w->setData(WindowForceBackgroundContrastRole, QVariant());
+                }
             }
+            m_backgroundContrastForcedBefore.clear();
+            slide = false;
+            mTimeLine.setCurrentTime(0);
             effects->setActiveFullScreenEffect(NULL);
         }
     }
@@ -231,6 +239,10 @@ void SlideEffect::slotDesktopChanged(int old, int current)
             slide_start_pos = rect.topLeft() - diffPos * 1 / (1 - mTimeLine.currentValue());
         } else {
             // at the end, stop
+            foreach (EffectWindow * w, m_backgroundContrastForcedBefore) {
+                w->setData(WindowForceBackgroundContrastRole, QVariant());
+            }
+            m_backgroundContrastForcedBefore.clear();
             slide = false;
             mTimeLine.setCurrentTime(0);
             effects->setActiveFullScreenEffect(NULL);
@@ -243,10 +255,31 @@ void SlideEffect::slotDesktopChanged(int old, int current)
         slide = true;
         foreach (EffectWindow * w, effects->stackingOrder()) {
             w->setData(WindowForceBlurRole, QVariant(true));
+            if (shouldForceBackgroundContrast(w)) {
+                m_backgroundContrastForcedBefore.append(w);
+                w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+            }
         }
         effects->setActiveFullScreenEffect(this);
     }
     effects->addRepaintFull();
+}
+
+void SlideEffect::windowAdded(EffectWindow *w)
+{
+    if (slide && shouldForceBackgroundContrast(w)) {
+        m_backgroundContrastForcedBefore.append(w);
+        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
+    }
+}
+
+bool SlideEffect::shouldForceBackgroundContrast(const EffectWindow *w) const
+{
+    // Windows that are docks, kept above (such as panel popups), and do not
+    // have the background contrast explicitely disabled should be forced on
+    // during the slide animation
+    const bool bgWindow = (w->hasAlpha() && w->isOnAllDesktops() && (w->isDock() || w->keepAbove()));
+    return bgWindow && (!w->data(WindowForceBackgroundContrastRole).isValid());
 }
 
 bool SlideEffect::isActive() const

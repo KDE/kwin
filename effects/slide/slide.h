@@ -47,6 +47,9 @@ private Q_SLOTS:
     void slotDesktopChanged(int old, int current);
 
 private:
+    void windowAdded(EffectWindow* w);
+    bool shouldForceBackgroundContrast(const EffectWindow* w) const;
+    QList< EffectWindow* > m_backgroundContrastForcedBefore;
     QRect desktopRect(int desktop) const;
     QTimeLine mTimeLine;
     int painting_desktop;
