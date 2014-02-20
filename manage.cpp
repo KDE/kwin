@@ -619,6 +619,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     updateCompositeBlocking(true);
     updateColorScheme();
+    updateShowOnScreenEdge();
 
     // TODO: there's a small problem here - isManaged() depends on the mapping state,
     // but this client is not yet in Workspace's client list at this point, will

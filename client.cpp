@@ -42,6 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox.h"
 #endif
 #include "workspace.h"
+#include "screenedge.h"
 // KDE
 #include <KDE/KWindowSystem>
 #include <KDE/KColorScheme>
@@ -2501,6 +2502,59 @@ void Client::cancelFocusOutTimer()
 xcb_window_t Client::frameId() const
 {
     return m_frame;
+}
+
+void Client::updateShowOnScreenEdge()
+{
+    auto cookie = xcb_get_property_unchecked(connection(), false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
+    ScopedCPointer<xcb_get_property_reply_t> reply(xcb_get_property_reply(connection(), cookie, nullptr));
+
+    auto restore = [this]() {
+        // TODO: add proper unreserve
+        ScreenEdges::self()->reserve(this, ElectricNone);
+        hideClient(false);
+    };
+
+    if (!reply.isNull()) {
+        if (reply->format == 32 && reply->type == XCB_ATOM_CARDINAL && reply->value_len == 1) {
+            const uint32_t value = *reinterpret_cast<uint32_t*>(xcb_get_property_value(reply.data()));
+            ElectricBorder border = ElectricNone;
+            switch (value) {
+            case 0:
+                border = ElectricTop;
+                break;
+            case 1:
+                border = ElectricRight;
+                break;
+            case 2:
+                border = ElectricBottom;
+                break;
+            case 3:
+                border = ElectricLeft;
+                break;
+            }
+            if (border != ElectricNone) {
+                hideClient(true);
+                ScreenEdges::self()->reserve(this, border);
+            } else {
+                // property value is incorrect, delete the property
+                // so that the client knows that it is not hidden
+                xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
+            }
+
+        } else if (reply->type == XCB_ATOM_NONE) {
+            // the property got deleted, show the client again
+            restore();
+        }
+    } else {
+        restore();
+    }
+}
+
+void Client::showOnScreenEdge()
+{
+    hideClient(false);
+    xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
 }
 
 } // namespace

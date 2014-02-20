@@ -67,6 +67,7 @@ public:
     Xcb::Atom kde_first_in_window_list;
     Xcb::Atom kde_color_sheme;
     Xcb::Atom kde_skip_close_animation;
+    Xcb::Atom kde_screen_edge_show;
 
     /**
      * @internal

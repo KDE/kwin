@@ -56,7 +56,8 @@ public:
     bool isCorner() const;
     bool isScreenEdge() const;
     bool triggersFor(const QPoint &cursorPos) const;
-    void check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack = false);
+    bool check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack = false);
+    void markAsTriggered(const QPoint &cursorPos, const QDateTime &triggerTime);
     bool isReserved() const;
     const QRect &approachGeometry() const;
 
@@ -65,6 +66,8 @@ public:
     const QHash<QObject *, QByteArray> &callBacks() const;
     void startApproaching();
     void stopApproaching();
+    void setClient(Client *client);
+    Client *client() const;
 
 public Q_SLOTS:
     void reserve();
@@ -108,6 +111,7 @@ private:
     bool m_approaching;
     int m_lastApproachingFactor;
     bool m_blocked;
+    Client *m_client;
 };
 
 class WindowBasedEdge : public Edge
@@ -243,6 +247,29 @@ public:
      */
     void unreserve(ElectricBorder border, QObject *object);
     /**
+     * Reserves an edge for the @p client. The idea behind this is to show the @p client if the
+     * screen edge which the @p client borders gets triggered.
+     *
+     * When first called it is tried to create an Edge for the client. This is only done if the
+     * client borders with a screen edge specified by @p border. If the client doesn't border the
+     * screen edge, no Edge gets created and the client is shown again. Otherwise there would not
+     * be a possibility to show the client again.
+     *
+     * On subsequent calls for the client no new Edge is created, but the existing one gets reused
+     * and if the client is already hidden, the Edge gets reserved.
+     *
+     * Once the Edge for the client triggers, the client gets shown again and the Edge unreserved.
+     * The idea is that the Edge can only get activated if the client is currently hidden.
+     *
+     * To make sure that the client can always be shown again the implementation also starts to
+     * track geometry changes and shows the Client again. The same for screen geometry changes.
+     *
+     * The Edge gets automatically destroyed if the client gets released.
+     * @param client The Client for which an Edge should be reserved
+     * @param border The border which the client wants to use, only proper borders are supported (no corners)
+     **/
+    void reserve(KWin::Client *client, ElectricBorder border);
+    /**
      * Reserve desktop switching for screen edges, if @p isToReserve is @c true. Unreserve otherwise.
      * @param reserve indicated weather desktop switching should be reserved or unreseved
      */
@@ -317,11 +344,14 @@ private:
     void setReActivationThreshold(int threshold);
     void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
     void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea);
-    WindowBasedEdge *createEdge(ElectricBorder border, int x, int y, int width, int height);
+    WindowBasedEdge *createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction = true);
     void setActionForBorder(ElectricBorder border, ElectricBorderAction *oldValue, ElectricBorderAction newValue);
     ElectricBorderAction actionForEdge(Edge *edge) const;
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
+    void createEdgeForClient(Client *client, ElectricBorder border);
+    void handleClientGeometryChanged();
+    void deleteEdgeForClient(Client *client);
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
     QSize m_cursorPushBackDistance;
@@ -431,6 +461,16 @@ inline const QHash< QObject *, QByteArray > &Edge::callBacks() const
 inline bool Edge::isBlocked() const
 {
     return m_blocked;
+}
+
+inline void Edge::setClient(Client *client)
+{
+    m_client = client;
+}
+
+inline Client *Edge::client() const
+{
+    return m_client;
 }
 
 /**********************************************************

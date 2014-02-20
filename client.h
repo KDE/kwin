@@ -648,6 +648,12 @@ public:
 
     QPalette palette() const;
 
+    /**
+     * Restores the Client after it had been hidden due to show on screen edge functionality.
+     * In addition the property gets deleted so that the Client knows that it is visible again.
+     **/
+    void showOnScreenEdge();
+
 public Q_SLOTS:
     void closeWindow();
     void updateCaption();
@@ -833,6 +839,12 @@ private:
     void updateInputWindow();
 
     bool tabTo(Client *other, bool behind, bool activate);
+
+    /**
+     * Reads the property and creates/destroys the screen edge if required
+     * and shows/hides the client.
+     **/
+    void updateShowOnScreenEdge();
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;

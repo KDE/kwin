@@ -803,6 +803,8 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
             updateFirstInTabBox();
         else if (e->atom == atoms->kde_color_sheme)
             updateColorScheme();
+        else if (e->atom == atoms->kde_screen_edge_show)
+            updateShowOnScreenEdge();
         break;
     }
 }

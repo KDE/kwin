@@ -59,6 +59,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_approaching(false)
     , m_lastApproachingFactor(0)
     , m_blocked(false)
+    , m_client(nullptr)
 {
 }
 
@@ -87,6 +88,7 @@ void Edge::unreserve()
     m_reserved--;
     if (m_reserved == 0) {
         // got deactivated
+        stopApproaching();
         deactivate();
     }
 }
@@ -122,20 +124,28 @@ bool Edge::triggersFor(const QPoint &cursorPos) const
     return true;
 }
 
-void Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack)
+bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack)
 {
     if (!triggersFor(cursorPos)) {
-        return;
+        return false;
     }
     // no pushback so we have to activate at once
     bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull();
     if (directActivate || canActivate(cursorPos, triggerTime)) {
-        m_lastTrigger = triggerTime;
-        m_lastReset = QDateTime(); // invalidate
+        markAsTriggered(cursorPos, triggerTime);
         handle(cursorPos);
+        return true;
     } else {
         pushCursorBack(cursorPos);
+        m_triggeredPoint = cursorPos;
     }
+    return false;
+}
+
+void Edge::markAsTriggered(const QPoint &cursorPos, const QDateTime &triggerTime)
+{
+    m_lastTrigger = triggerTime;
+    m_lastReset = QDateTime(); // invalidate
     m_triggeredPoint = cursorPos;
 }
 
@@ -164,6 +174,12 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
 
 void Edge::handle(const QPoint &cursorPos)
 {
+    if (m_client) {
+        pushCursorBack(cursorPos);
+        m_client->showOnScreenEdge();
+        unreserve();
+        return;
+    }
     if ((edges()->isDesktopSwitchingMovingClients() && Workspace::self()->getMovingClient()) ||
         (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
@@ -555,6 +571,12 @@ ScreenEdges::ScreenEdges(QObject *parent)
 {
     QWidget w;
     m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;
+
+    connect(workspace(), &Workspace::clientRemoved, [this](KWin::Client *client) {
+        deleteEdgeForClient(client);
+        QObject::disconnect(client, &Client::geometryChanged,
+                            ScreenEdges::self(), &ScreenEdges::handleClientGeometryChanged);
+    });
 }
 
 ScreenEdges::~ScreenEdges()
@@ -808,6 +830,11 @@ void ScreenEdges::recreateEdges()
                 oldIt != oldEdges.constEnd();
                 ++oldIt) {
             WindowBasedEdge *oldEdge = *oldIt;
+            if (oldEdge->client()) {
+                // show the client again and don't recreate the edge
+                oldEdge->client()->showOnScreenEdge();
+                continue;
+            }
             if (oldEdge->border() != edge->border()) {
                 continue;
             }
@@ -869,15 +896,17 @@ void ScreenEdges::createHorizontalEdge(ElectricBorder border, const QRect &scree
     m_edges << createEdge(border, x, y, width, 1);
 }
 
-WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height)
+WindowBasedEdge *ScreenEdges::createEdge(ElectricBorder border, int x, int y, int width, int height, bool createAction)
 {
     WindowBasedEdge *edge = new WindowBasedEdge(this);
     edge->setBorder(border);
     edge->setGeometry(QRect(x, y, width, height));
-    const ElectricBorderAction action = actionForEdge(edge);
-    if (action != KWin::ElectricActionNone) {
-        edge->reserve();
-        edge->setAction(action);
+    if (createAction) {
+        const ElectricBorderAction action = actionForEdge(edge);
+        if (action != KWin::ElectricActionNone) {
+            edge->reserve();
+            edge->setAction(action);
+        }
     }
     if (isDesktopSwitching()) {
         if (edge->isCorner()) {
@@ -961,8 +990,127 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
     }
 }
 
+void ScreenEdges::reserve(Client *client, ElectricBorder border)
+{
+    auto it = m_edges.begin();
+    while (it != m_edges.end()) {
+        if ((*it)->client() == client) {
+            if ((*it)->border() == border) {
+                if (client->isHiddenInternal() && !(*it)->isReserved()) {
+                    (*it)->reserve();
+                }
+                return;
+            } else {
+                delete *it;
+                it = m_edges.erase(it);
+            }
+        } else {
+            it++;
+        }
+    }
+    createEdgeForClient(client, border);
+
+    connect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged);
+}
+
+void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
+{
+    int y = 0;
+    int x = 0;
+    int width = 0;
+    int height = 0;
+    const QRect geo = client->geometry();
+    const QRect fullArea = workspace()->clientArea(FullArea, 0, 1);
+    for (int i = 0; i < screens()->count(); ++i) {
+        const QRect screen = screens()->geometry(i);
+        if (!screen.contains(geo)) {
+            // ignoring Clients having a geometry overlapping with multiple screens
+            // this would make the code more complex. If it's needed in future it can be added
+            continue;
+        }
+        const bool bordersTop = (screen.y() == geo.y());
+        const bool bordersLeft = (screen.x() == geo.x());
+        const bool bordersBottom = (screen.y() + screen.height() == geo.y() + geo.height());
+        const bool bordersRight = (screen.x() + screen.width() == geo.x() + geo.width());
+
+        if (bordersTop && border == ElectricTop) {
+            if (!isTopScreen(screen, fullArea)) {
+                continue;
+            }
+            y = geo.y();
+            x = geo.x();
+            height = 1;
+            width = geo.width();
+            break;
+        }
+        if (bordersBottom && border == ElectricBottom) {
+            if (!isBottomScreen(screen, fullArea)) {
+                continue;
+            }
+            y = geo.y() + geo.height() - 1;
+            x = geo.x();
+            height = 1;
+            width = geo.width();
+            break;
+        }
+        if (bordersLeft && border == ElectricLeft) {
+            if (!isLeftScreen(screen, fullArea)) {
+                continue;
+            }
+            x = geo.x();
+            y = geo.y();
+            width = 1;
+            height = geo.height();
+            break;
+        }
+        if (bordersRight && border == ElectricRight) {
+            if (!isRightScreen(screen, fullArea)) {
+                continue;
+            }
+            x = geo.x() + geo.width() - 1;
+            y = geo.y();
+            width = 1;
+            height = geo.height();
+            break;
+        }
+    }
+
+    if (width > 0 && height > 0) {
+        WindowBasedEdge *edge = createEdge(border, x, y, width, height, false);
+        edge->setClient(client);
+        m_edges.append(edge);
+        if (client->isHiddenInternal()) {
+            edge->reserve();
+        }
+    } else {
+        // we could not create an edge window, so don't allow the window to hide
+        client->showOnScreenEdge();
+    }
+}
+
+void ScreenEdges::handleClientGeometryChanged()
+{
+    Client *c = static_cast<Client*>(sender());
+    deleteEdgeForClient(c);
+    c->showOnScreenEdge();
+}
+
+void ScreenEdges::deleteEdgeForClient(Client* c)
+{
+    auto it = m_edges.begin();
+    while (it != m_edges.end()) {
+        if ((*it)->client() == c) {
+            delete *it;
+            it = m_edges.erase(it);
+        } else {
+            it++;
+        }
+    }
+}
+
 void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack)
 {
+    bool activatedForClient = false;
     for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
         if (!(*it)->isReserved()) {
             continue;
@@ -970,7 +1118,15 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
         if ((*it)->approachGeometry().contains(pos)) {
             (*it)->startApproaching();
         }
-        (*it)->check(pos, now, forceNoPushBack);
+        if ((*it)->client() != nullptr && activatedForClient) {
+            (*it)->markAsTriggered(pos, now);
+            continue;
+        }
+        if ((*it)->check(pos, now, forceNoPushBack)) {
+            if ((*it)->client()) {
+                activatedForClient = true;
+            }
+        }
     }
 }
 
@@ -992,14 +1148,21 @@ bool ScreenEdges::isEntered(xcb_client_message_event_t *event)
 
 bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp)
 {
+    bool activated = false;
+    bool activatedForClient = false;
     for (QList<WindowBasedEdge*>::iterator it = m_edges.begin(); it != m_edges.end(); ++it) {
         WindowBasedEdge *edge = *it;
         if (!edge->isReserved()) {
             continue;
         }
         if (edge->window() == window) {
-            edge->check(point, timestamp);
-            return true;
+            if (edge->check(point, timestamp)) {
+                if ((*it)->client()) {
+                    activatedForClient = true;
+                }
+            }
+            activated = true;
+            break;
         }
         if (edge->approachWindow() == window) {
             edge->startApproaching();
@@ -1007,7 +1170,14 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
             return true;
         }
     }
-    return false;
+    if (activatedForClient) {
+        for (auto it = m_edges.constBegin(); it != m_edges.constEnd(); ++it) {
+            if ((*it)->client()) {
+                (*it)->markAsTriggered(point, timestamp);
+            }
+        }
+    }
+    return activated;
 }
 
 bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
