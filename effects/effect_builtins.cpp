@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge/screenedgeeffect.h"
 #include "screenshot/screenshot.h"
 #include "slidingpopups/slidingpopups.h"
-#include "taskbarthumbnail/taskbarthumbnail.h"
 // Common effects only relevant to desktop
 #include "dashboard/dashboard.h"
 #include "desktopgrid/desktopgrid.h"
@@ -124,7 +123,6 @@ EffectLoader::EffectLoader()
     EFFECT(slidingpopups, SlidingPopupsEffect)
     EFFECT(snaphelper, SnapHelperEffect)
     EFFECT(startupfeedback, StartupFeedbackEffect)
-    EFFECT(taskbarthumbnail, TaskbarThumbnailEffect)
     EFFECT(thumbnailaside, ThumbnailAsideEffect)
     EFFECT(trackmouse, TrackMouseEffect)
     EFFECT(windowgeometry, WindowGeometry)
