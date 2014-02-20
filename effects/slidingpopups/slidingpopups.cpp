@@ -267,8 +267,9 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
         mAppearingWindows.insert(w, new QTimeLine(mWindowsData[ w ].fadeInDuration, this));
         mAppearingWindows[ w ]->setCurveShape(QTimeLine::EaseInOutCurve);
 
-        // Tell other windowAdded() effects to ignore this window
+        // Tell other windowAdded() and windowClosed() effects to ignore this window
         w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
+        w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
         w->setData(WindowForceBlurRole, true);
 
         w->addRepaintFull();
@@ -313,6 +314,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
 
     if (data.length() < 1) {
         // Property was removed, thus also remove the effect for window
+        w->setData(WindowClosedGrabRole, QVariant());
         delete mAppearingWindows.take(w);
         delete mDisappearingWindows.take(w);
         mWindowsData.remove(w);
@@ -379,6 +381,8 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     }
     animData.start = qMax<int>(animData.start, difference);
     mWindowsData[ w ] = animData;
+    // Grab the window, so other windowClosed effects will ignore it
+    w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void*>(this)));
 }
 
 bool SlidingPopupsEffect::isActive() const
