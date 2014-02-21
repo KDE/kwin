@@ -37,6 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 
+K_PLUGIN_FACTORY(AuroraePluginFactory,
+                 registerPlugin<Aurorae::AuroraeFactory>(QString(), &Aurorae::AuroraeFactory::createInstance);)
+K_EXPORT_PLUGIN_VERSION(KWIN_DECORATION_API_VERSION)
+
 namespace Aurorae
 {
 
@@ -156,6 +160,11 @@ AuroraeFactory *AuroraeFactory::instance()
     }
 
     return s_instance;
+}
+
+QObject *AuroraeFactory::createInstance(QWidget*, QObject*, const QList< QVariant >&)
+{
+    return instance();
 }
 
 void AuroraeFactory::updateConfiguration()
@@ -561,16 +570,5 @@ void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
 }
 
 } // namespace Aurorae
-
-extern "C"
-{
-    KDECORATIONS_EXPORT KDecorationFactory *create_factory() {
-        return Aurorae::AuroraeFactory::instance();
-    }
-    KDECORATIONS_EXPORT int decoration_version() {
-        return KWIN_DECORATION_API_VERSION;
-    }
-}
-
 
 #include "aurorae.moc"

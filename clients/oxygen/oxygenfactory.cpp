@@ -25,7 +25,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenfactory.h"
-#include "oxygenfactory.moc"
 #include "oxygenclient.h"
 #include "oxygenexceptionlist.h"
 
@@ -34,7 +33,7 @@
 #include <KWindowInfo>
 #include <kdeversion.h>
 
-KWIN_DECORATION(Oxygen::Factory)
+KWIN_DECORATION(OxygenPluginFactory, Oxygen::Factory)
 
 namespace Oxygen
 {
@@ -202,3 +201,5 @@ namespace Oxygen
     }
 
 }
+
+#include "oxygenfactory.moc"

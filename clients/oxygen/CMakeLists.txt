@@ -24,7 +24,7 @@ kconfig_add_kcfg_files(kwin_oxygen_SRCS oxygenconfiguration.kcfgc )
 
 add_library(kwin3_oxygen MODULE ${kwin_oxygen_SRCS})
 target_link_libraries(kwin3_oxygen Qt5::Widgets )
-target_link_libraries(kwin3_oxygen KF5::I18n KF5::WindowSystem KF5::Style)
+target_link_libraries(kwin3_oxygen KF5::I18n KF5::WindowSystem KF5::Style KF5::Service)
 
 target_link_libraries(kwin3_oxygen kdecorations)
 

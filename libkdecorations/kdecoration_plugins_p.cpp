@@ -29,6 +29,8 @@ DEALINGS IN THE SOFTWARE.
 #include <kconfig.h>
 #include <klocale.h>
 #include <klibrary.h>
+#include <KPluginFactory>
+#include <KPluginLoader>
 #include <kconfiggroup.h>
 #include <KDE/KLocalizedString>
 #include <assert.h>
@@ -40,10 +42,7 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecorationfactory.h"
 
 KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
-    :   create_ptr(nullptr),
-        library(nullptr),
-        fact(nullptr),
-        old_library(nullptr),
+    :   fact(nullptr),
         old_fact(nullptr),
         pluginStr(QStringLiteral("kwin3_undefined ")),
         config(cfg)
@@ -52,16 +51,8 @@ KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
 
 KDecorationPlugins::~KDecorationPlugins()
 {
-    if (library) {
-        assert(fact != nullptr);
-        delete fact;
-        library->unload();
-    }
-    if (old_library) {
-        assert(old_fact != nullptr);
-        delete old_fact;
-        old_library->unload();
-    }
+    delete fact;
+    delete old_fact;
 }
 
 QString KDecorationPlugins::currentPlugin()
@@ -95,90 +86,6 @@ KDecoration* KDecorationPlugins::createDecoration(KDecorationBridge* bridge)
     return nullptr;
 }
 
-// tests whether the plugin can be loaded
-bool KDecorationPlugins::canLoad(QString nameStr, KLibrary **loadedLib)
-{
-    if (nameStr.isEmpty())
-        return false; // we can't load that
-
-    // Check if this library is not already loaded.
-    if (pluginStr == nameStr) {
-        if (loadedLib) {
-            *loadedLib = library;
-        }
-        return true;
-    }
-
-    KConfigGroup group(config, QStringLiteral("Style"));
-    if (group.readEntry<bool>("NoPlugin", false)) {
-        error(i18n("Loading of window decoration plugin library disabled in configuration."));
-        return false;
-    }
-
-    KLibrary libToFind(nameStr);
-    QString path = libToFind.fileName();
-    qDebug() << "kwin : path " << path << " for " << nameStr;
-
-    if (path.isEmpty()) {
-        return false;
-    }
-
-    // Try loading the requested plugin
-    KLibrary *lib = new KLibrary(path);
-
-    if (!lib)
-        return false;
-
-    // TODO this would be a nice shortcut, but for "some" reason QtCurve with wrong ABI slips through
-    // TODO figure where it's loaded w/o being unloaded and check whether that can be fixed.
-#if 0
-    if (lib->isLoaded()) {
-        if (loadedLib) {
-            *loadedLib = lib;
-        }
-        return true;
-    }
-#endif
-    // so we check whether this lib was loaded before and don't unload it in case
-    bool wasLoaded = lib->isLoaded();
-
-    KDecorationFactory*(*cptr)() = nullptr;
-    int (*vptr)()  = nullptr;
-    int deco_version = 0;
-    KLibrary::void_function_ptr version_func = lib->resolveFunction("decoration_version");
-    if (version_func) {
-        vptr = (int(*)())version_func;
-        deco_version = vptr();
-    }
-    if (deco_version != KWIN_DECORATION_API_VERSION) {
-        if (version_func)
-            qWarning() << i18n("The library %1 has wrong API version %2", path, deco_version);
-        lib->unload();
-        delete lib;
-        return false;
-    }
-
-    KLibrary::void_function_ptr create_func = lib->resolveFunction("create_factory");
-    if (create_func)
-        cptr = (KDecorationFactory * (*)())create_func;
-
-    if (!cptr) {
-        qDebug() << i18n("The library %1 is not a KWin plugin.", path);
-        lib->unload();
-        delete lib;
-        return false;
-    }
-
-    if (loadedLib) {
-        *loadedLib = lib;
-    } else {
-        if (!wasLoaded)
-            lib->unload();
-        delete lib;
-    }
-    return true;
-}
-
 // returns true if plugin was loaded successfully
 bool KDecorationPlugins::loadPlugin(QString nameStr)
 {
@@ -191,30 +98,31 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     if (pluginStr == nameStr)
         return true;
 
-    KLibrary *oldLibrary = library;
-    KDecorationFactory* oldFactory = fact;
-
-    if (!canLoad(nameStr, &library)) {
-        // If that fails, fall back to the default plugin
-        nameStr = defaultPlugin;
-        if (!canLoad(nameStr, &library)) {
-            // big time trouble!
-            // -> exit kwin with an error message
-            error(i18n("The default decoration plugin is corrupt and could not be loaded."));
-            return false;
-        }
+    if (group.readEntry<bool>("NoPlugin", false)) {
+        error(i18n("Loading of window decoration plugin library disabled in configuration."));
+        return false;
     }
 
-    // guarded by "canLoad"
-    KLibrary::void_function_ptr create_func = library->resolveFunction("create_factory");
-    if (create_func)
-        create_ptr = (KDecorationFactory * (*)())create_func;
-    if (!create_ptr) {  // this means someone probably attempted to load "some" kwin plugin/lib as deco
-                        // and thus cheated on the "isLoaded" shortcut -> try the default and yell a warning
-        if (nameStr != defaultPlugin) {
-            qWarning() << i18n("The library %1 was attempted to be loaded as a decoration plugin but it is NOT", nameStr);
-            return loadPlugin(defaultPlugin);
+    auto createFactory = [](const QString &pluginName) -> KDecorationFactory* {
+        qDebug() << "Trying to load decoration plugin" << pluginName;
+        KPluginLoader loader(pluginName);
+        if (loader.pluginVersion() != KWIN_DECORATION_API_VERSION) {
+            qWarning() << i18n("The library %1 has wrong API version %2", loader.pluginName(), loader.pluginVersion());
+            return nullptr;
+        }
+        KPluginFactory *factory = loader.factory();
+        if (!factory) {
+            qWarning() << "Error loading decoration library: " << loader.errorString();
+            return nullptr;
         } else {
+            return factory->create<KDecorationFactory>();
+        }
+    };
+    KDecorationFactory *factory = createFactory(nameStr);
+    if (!factory) {
+        // If that fails, fall back to the default plugin
+        factory = createFactory(defaultPlugin);
+        if (!factory) {
             // big time trouble!
             // -> exit kwin with an error message
             error(i18n("The default decoration plugin is corrupt and could not be loaded."));
@@ -222,8 +130,7 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
         }
     }
 
-    fact = create_ptr();
-    fact->checkRequirements(this);   // let it check what is supported
+    factory->checkRequirements(this);   // let it check what is supported
 
     pluginStr = nameStr;
 
@@ -241,8 +148,8 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     KGlobal::locale()->insertCatalog("kwin_art_clients");
 #endif
 
-    old_library = oldLibrary; // save for delayed destroying
-    old_fact = oldFactory;
+    old_fact = fact;
+    fact = factory;
 
     return true;
 }
@@ -250,13 +157,8 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
 void KDecorationPlugins::destroyPreviousPlugin()
 {
     // Destroy the old plugin
-    if (old_library) {
-        delete old_fact;
-        old_fact = nullptr;
-        old_library->unload();
-        delete old_library;
-        old_library = nullptr;
-    }
+    delete old_fact;
+    old_fact = nullptr;
 }
 
 void KDecorationPlugins::error(const QString&)

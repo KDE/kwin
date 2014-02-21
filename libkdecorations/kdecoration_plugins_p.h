@@ -38,7 +38,6 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration.h"
 #include <kdecorations_export.h>
 
-class KLibrary;
 class KDecoration;
 class KDecorationBridge;
 class KDecorationFactory;
@@ -49,10 +48,6 @@ class KDECORATIONS_EXPORT KDecorationPlugins
 public:
     explicit KDecorationPlugins(const KSharedConfigPtr &cfg);
     virtual ~KDecorationPlugins();
-    /** Whether the plugin with @p name can be loaded
-     * if @p loadedLib is passed, the library is NOT unloaded and freed
-     * what is now your resposibility (intended for and used by below loadPlugin mainly) */
-    bool canLoad(QString name, KLibrary ** loadedLib = 0);
     bool loadPlugin(QString name);
     void destroyPreviousPlugin();
     KDecorationFactory* factory();
@@ -64,10 +59,7 @@ protected:
     virtual void error(const QString& error_msg);
     QString defaultPlugin; // FRAME normalne protected?
 private:
-    KDecorationFactory*(*create_ptr)();
-    KLibrary *library;
     KDecorationFactory* fact;
-    KLibrary *old_library;
     KDecorationFactory* old_fact;
     QString pluginStr;
     KSharedConfigPtr config;

@@ -33,19 +33,36 @@ DEALINGS IN THE SOFTWARE.
 #include <QtGui/QIcon>
 #include <netwm_def.h>
 #include <QtGui/QMouseEvent>
+#include <KPluginFactory>
 
 #define KWIN_DECORATION_API_VERSION 1
 
 /**
- * Defines the class to be used for decoration factory.
- * The class must be namespace complete.
- * E.g.  KWIN_EFFECT( Oxygen::Factory )
+ * Defines the KDecorationFactory implementation provided by the
+ * decoration plugin and  defines a KPluginFactory sub class.
+ * The KPluginFactory sub class returns a new instance of the specified KDecorationFactory.
+ *
+ * @param pluginfactoryname The name to be used for the KPluginFactory, passed to K_PLUGIN_FACTORY
+ * @param classname The class name of the KDecorationFactory subclass
+ *
+ * Example:
+ * @code
+ * KWIN_DECORATION(MyDecoPluginFactory, MyDeco::Factory)
+ * @endcode
+ *
+ * In case the decoration plugin wants to have more control over the created factory (e.g. a singleton)
+ * it is recommended to not use this convenience macro, but specify an own K_PLUGIN_FACTORY. In that
+ * case it is also required to add
+ * @code
+ * K_EXPORT_PLUGIN_VERSION(KWIN_DECORATION_API_VERSION)
+ * @endcode
+ *
+ * to add the correct plugin version. This is also handled by this macro in the default case.
  **/
-#define KWIN_DECORATION( classname ) \
-    extern "C" { \
-        KDECORATIONS_EXPORT KDecorationFactory* create_factory() { return new classname(); } \
-        KDECORATIONS_EXPORT int decoration_version() { return KWIN_DECORATION_API_VERSION; } \
-    }
+#define KWIN_DECORATION( pluginfactoryname, classname ) \
+    QObject *createDecorationFactory(QWidget *, QObject *, const QList<QVariant> &) { return new classname(); } \
+    K_PLUGIN_FACTORY(pluginfactoryname, registerPlugin<classname>(QString(), &createDecorationFactory);) \
+    K_EXPORT_PLUGIN_VERSION(KWIN_DECORATION_API_VERSION)
 
 #define KWIN_DECORATION_BRIDGE_API_VERSION 1
 extern "C" {

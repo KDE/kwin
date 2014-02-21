@@ -44,6 +44,7 @@ public:
     ~AuroraeFactory();
 
     static AuroraeFactory* instance();
+    static QObject *createInstance(QWidget *, QObject *, const QList<QVariant> &);
     KDecoration *createDecoration(KDecorationBridge*);
     bool supports(Ability ability) const;
     virtual QList< BorderSize > borderSizes() const;

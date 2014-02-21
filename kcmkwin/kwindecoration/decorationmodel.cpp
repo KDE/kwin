@@ -104,8 +104,6 @@ void DecorationModel::findDecorations()
                             findAuroraeThemes();
                             continue;
                         }
-                        if (!m_plugins->canLoad(libName))
-                            continue;
                         DecorationModelData data;
                         data.name = desktopFile.readName();
                         data.libraryName = libName;
