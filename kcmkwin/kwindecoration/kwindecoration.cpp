@@ -370,12 +370,12 @@ void KWinDecorationModule::slotConfigureDecoration()
         dlg->setWindowTitle(i18n("Decoration Options"));
         KWinAuroraeConfigForm *form = new KWinAuroraeConfigForm(dlg);
         form->enableNoSideBorderSupport(index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration);
-        setLayout(new QVBoxLayout);
+        dlg->setLayout(new QVBoxLayout);
         QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, dlg.data());
         connect(buttons, SIGNAL(accepted()), dlg, SLOT(accept()));
         connect(buttons, SIGNAL(rejected()), dlg, SLOT(reject()));
-        layout()->addWidget(form);
-        layout()->addWidget(buttons);
+        dlg->layout()->addWidget(form);
+        dlg->layout()->addWidget(buttons);
 
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
