@@ -85,7 +85,6 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     m_buttons->button(QDialogButtonBox::Reset)->setEnabled(false);
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(m_ui);
-    layout->addWidget(m_buttons);
     connect(m_buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(m_buttons, SIGNAL(rejected()), SLOT(reject()));
 
@@ -111,6 +110,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     if (m_pluginConfigWidget) {
         layout->addWidget(m_pluginConfigWidget);
     }
+    layout->addWidget(m_buttons);
 
     if (borderSizes.count() >= 2) {
         foreach (const QVariant & borderSize, borderSizes) {
