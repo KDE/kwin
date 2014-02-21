@@ -28,7 +28,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include "oxygenconfig.h"
-#include "oxygenconfig.moc"
 
 #include "oxygenanimationconfigwidget.h"
 #include "oxygenconfiguration.h"
@@ -41,19 +40,21 @@
 
 #include <KConfigGroup>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 //_______________________________________________________________________
-extern "C"
-{
-    KDE_EXPORT QObject* allocate_config( KConfig* conf, QWidget* parent )
-    { return ( new Oxygen::Config( conf, parent ) ); }
-}
+
+K_PLUGIN_FACTORY(OxygenConfigPlugin, registerPlugin<Oxygen::Config>(QString(), &Oxygen::Config::create); )
 
 namespace Oxygen
 {
+    QObject *Config::create(QWidget *parentWidget, QObject *, const QList<QVariant> &)
+    {
+        return new Config(parentWidget);
+    }
 
     //_______________________________________________________________________
-    Config::Config( KConfig*, QWidget* parent ):
+    Config::Config(QWidget* parent ):
         QObject( parent )
     {
 
@@ -174,3 +175,5 @@ namespace Oxygen
     }
 
 }
+
+#include "oxygenconfig.moc"

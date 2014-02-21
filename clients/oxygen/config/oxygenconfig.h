@@ -50,10 +50,12 @@ namespace Oxygen {
         public:
 
         //! constructor
-        Config( KConfig* conf, QWidget* parent );
+        Config( QWidget* parent );
 
         //! destructor
         ~Config();
+
+        static QObject *create(QWidget *parentWidget, QObject *parent, const QList<QVariant> &arguments);
 
         Q_SIGNALS:
 

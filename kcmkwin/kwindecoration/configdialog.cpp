@@ -22,10 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QDBusMessage>
 
-#include <KLibrary>
 #include <KSharedConfig>
 #include <KLocalizedString>
 #include <KConfigGroup>
+#include <KPluginFactory>
+#include <KPluginLoader>
 #include <QDialogButtonBox>
 #include <QPushButton>
 
@@ -88,23 +89,20 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     connect(m_buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(m_buttons, SIGNAL(rejected()), SLOT(reject()));
 
-    KLibrary library(styleToConfigLib(deco));
-    if (library.load()) {
-        KLibrary::void_function_ptr alloc_ptr = library.resolveFunction("allocate_config");
-        if (alloc_ptr != nullptr) {
-            allocatePlugin = (QObject * (*)(KConfigGroup & conf, QWidget * parent))alloc_ptr;
-            KConfigGroup config(m_kwinConfig, "Style");
-            m_pluginConfigWidget = new QWidget(this);
-            m_pluginConfigWidget->setLayout(new QVBoxLayout);
-            m_pluginObject = (QObject*)(allocatePlugin(config, m_pluginConfigWidget));
+    KPluginLoader loader(styleToConfigLib(deco));
+    KPluginFactory *factory = loader.factory();
+    if (factory) {
+        m_pluginConfigWidget = new QWidget(this);
+        m_pluginConfigWidget->setLayout(new QVBoxLayout);
+        m_pluginObject = factory->create<QObject>(m_pluginConfigWidget, m_pluginConfigWidget, QString(),
+                                                  QVariantList() << QStringLiteral("kwinrc") << QStringLiteral("Style"));
 
-            // connect required signals and slots together...
-            connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
-            connect(m_pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()));
-            connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup&)));
-            connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), m_pluginObject, SLOT(defaults()));
-            connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), SLOT(slotDefault()));
-        }
+        // connect required signals and slots together...
+        connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
+        connect(m_pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()));
+        connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup&)));
+        connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), m_pluginObject, SLOT(defaults()));
+        connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), SLOT(slotDefault()));
     }
 
     if (m_pluginConfigWidget) {
