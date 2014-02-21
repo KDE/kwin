@@ -1922,6 +1922,7 @@ void CubeEffect::setActive(bool active)
         verticalRotating = false;
         manualAngle = 0.0;
         manualVerticalAngle = 0.0;
+        desktopChangedWhileRotating = false;
         if (reflection) {
             QRect rect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
 #ifndef KWIN_HAVE_OPENGLES
