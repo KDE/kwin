@@ -453,7 +453,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                 init_minimize = false; // SELI TODO: Even e.g. for NET::Utility?
     }
     // If a dialog is shown for minimized window, minimize it too
-    if (!init_minimize && isTransient() && mainClients().count() > 0) {
+    if (!init_minimize && isTransient() && mainClients().count() > 0 && !workspace()->sessionSaving()) {
         bool visible_parent = false;
         // Use allMainClients(), to include also main clients of group transients
         // that have been optimized out in Client::checkGroupTransients()
@@ -568,6 +568,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                 for (ClientList::ConstIterator it = mainclients.constBegin();
                         it != mainclients.constEnd(); ++it) {
                     (*it)->setSessionInteract(true);
+                    (*it)->unminimize();
                 }
             } else if (allow) {
                 // also force if activation is allowed
