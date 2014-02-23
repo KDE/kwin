@@ -129,6 +129,9 @@ namespace Oxygen
         //! list of exceptiosn
         QList<ConfigurationPtr> _exceptions;
 
+        //! config object
+        KSharedConfigPtr _config;
+
     };
 
 }

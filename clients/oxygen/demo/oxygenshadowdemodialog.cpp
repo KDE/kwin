@@ -39,7 +39,7 @@ namespace Oxygen
     //_________________________________________________________
     ShadowDemoDialog::ShadowDemoDialog( QWidget* parent ):
         QDialog( parent ),
-        _helper(),
+        _helper( KSharedConfig::openConfig("oxygenrc") ),
         _cache( _helper )
     {
 

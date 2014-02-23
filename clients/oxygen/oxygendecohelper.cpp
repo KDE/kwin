@@ -30,8 +30,8 @@ namespace Oxygen
 {
 
     //______________________________________________________________________________
-    DecoHelper::DecoHelper():
-        Helper()
+    DecoHelper::DecoHelper(KSharedConfigPtr config):
+        Helper(config)
     {}
 
     //______________________________________________________________________________

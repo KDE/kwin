@@ -43,7 +43,8 @@ namespace Oxygen
     Factory::Factory(QObject *parent):
         KDecorationFactory(parent),
         _initialized( false ),
-        _helper(),
+        _config( KSharedConfig::openConfig( QStringLiteral("oxygenrc") ) ),
+        _helper( _config ),
         _shadowCache( _helper )
     {
         readConfig();
@@ -71,26 +72,23 @@ namespace Oxygen
     //___________________________________________________
     void Factory::readConfig()
     {
-
         /*
         always reload helper
         this is needed to properly handle
         color contrast settings changed
         */
+        _config->reparseConfiguration(); // could be skipped on startup
         helper().invalidateCaches();
-        helper().reloadConfig();
+        helper().loadConfig();
 
         // initialize default configuration and read
         if( !_defaultConfiguration ) _defaultConfiguration = ConfigurationPtr(new Configuration());
         _defaultConfiguration->setCurrentGroup( QStringLiteral("Windeco") );
         _defaultConfiguration->readConfig();
 
-        // create a config object
-        KSharedConfig::Ptr config( KSharedConfig::openConfig( QStringLiteral("oxygenrc") ) );
-
         // clear exceptions and read
         ExceptionList exceptions;
-        exceptions.readConfig( config );
+        exceptions.readConfig( _config );
         _exceptions = exceptions.get();
 
         // read shadowCache configuration
@@ -99,7 +97,7 @@ namespace Oxygen
 
         // background pixmap
         {
-            KConfigGroup group( config->group("Common") );
+            KConfigGroup group( _config->group("Common") );
             helper().setBackgroundPixmap( group.readEntry( "BackgroundPixmap", "" ) );
         }
 

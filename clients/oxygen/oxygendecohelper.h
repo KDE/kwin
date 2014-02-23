@@ -23,6 +23,7 @@
  */
 
 #include "oxygenhelper.h"
+#include <ksharedconfig.h>
 
 //! helper class
 /*! contains utility functions used at multiple places in oxygen style */
@@ -35,7 +36,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit DecoHelper();
+        explicit DecoHelper(KSharedConfigPtr config);
 
         //! destructor
         virtual ~DecoHelper()
