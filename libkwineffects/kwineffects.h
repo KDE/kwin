@@ -528,8 +528,6 @@ public:
      */
     virtual QString debug(const QString &parameter) const;
 
-    static int displayWidth();
-    static int displayHeight();
     static QPoint cursorPos();
 
     /**

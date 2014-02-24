@@ -584,16 +584,6 @@ void Effect::setPositionTransformations(WindowPaintData& data, QRect& region, Ef
     data.setYTranslation(y - w->y());
 }
 
-int Effect::displayWidth()
-{
-    return KWin::displayWidth();
-}
-
-int Effect::displayHeight()
-{
-    return KWin::displayHeight();
-}
-
 QPoint Effect::cursorPos()
 {
     return effects->cursorPos();

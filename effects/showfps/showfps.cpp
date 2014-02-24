@@ -68,14 +68,15 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
     alpha = ShowFpsConfig::alpha();
     x = ShowFpsConfig::x();
     y = ShowFpsConfig::y();
+    const QSize screenSize = effects->virtualScreenSize();
     if (x == -10000)   // there's no -0 :(
-        x = displayWidth() - 2 * NUM_PAINTS - FPS_WIDTH;
+        x = screenSize.width() - 2 * NUM_PAINTS - FPS_WIDTH;
     else if (x < 0)
-        x = displayWidth() - 2 * NUM_PAINTS - FPS_WIDTH - x;
+        x = screenSize.width() - 2 * NUM_PAINTS - FPS_WIDTH - x;
     if (y == -10000)
-        y = displayHeight() - MAX_TIME;
+        y = screenSize.height() - MAX_TIME;
     else if (y < 0)
-        y = displayHeight() - MAX_TIME - y;
+        y = screenSize.height() - MAX_TIME - y;
     fps_rect = QRect(x, y, FPS_WIDTH + 2 * NUM_PAINTS, MAX_TIME);
     m_noBenchmark->setPosition(fps_rect.bottomRight() + QPoint(-6, 6));
 
@@ -94,15 +95,15 @@ void ShowFpsEffect::reconfigure(ReconfigureFlags)
         textAlign = Qt::AlignTop | Qt::AlignLeft;
         break;
     case TOP_RIGHT:
-        fpsTextRect = QRect(displayWidth() - 100, 0, 100, 100);
+        fpsTextRect = QRect(screenSize.width() - 100, 0, 100, 100);
         textAlign = Qt::AlignTop | Qt::AlignRight;
         break;
     case BOTTOM_LEFT:
-        fpsTextRect = QRect(0, displayHeight() - 100, 100, 100);
+        fpsTextRect = QRect(0, screenSize.height() - 100, 100, 100);
         textAlign = Qt::AlignBottom | Qt::AlignLeft;
         break;
     case BOTTOM_RIGHT:
-        fpsTextRect = QRect(displayWidth() - 100, displayHeight() - 100, 100, 100);
+        fpsTextRect = QRect(screenSize.width() - 100, screenSize.height() - 100, 100, 100);
         textAlign = Qt::AlignBottom | Qt::AlignRight;
         break;
     case NOWHERE:

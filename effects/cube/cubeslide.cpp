@@ -524,25 +524,26 @@ void CubeSlideEffect::slotWindowStepUserMovedResized(EffectWindow* w)
         return;
     if (w->isUserResize())
         return;
+    const QSize screenSize = effects->virtualScreenSize();
     const QPoint cursor = effects->cursorPos();
-    const int horizontal = displayWidth() * 0.1;
-    const int vertical = displayHeight() * 0.1;
-    const QRect leftRect(0, displayHeight() * 0.1, horizontal, displayHeight() * 0.8);
-    const QRect rightRect(displayWidth() - horizontal, displayHeight() * 0.1, horizontal, displayHeight() * 0.8);
-    const QRect topRect(horizontal, 0, displayWidth() * 0.8, vertical);
-    const QRect bottomRect(horizontal, displayHeight() - vertical, displayWidth() - horizontal * 2, vertical);
+    const int horizontal = screenSize.width() * 0.1;
+    const int vertical = screenSize.height() * 0.1;
+    const QRect leftRect(0, screenSize.height() * 0.1, horizontal, screenSize.height() * 0.8);
+    const QRect rightRect(screenSize.width() - horizontal, screenSize.height() * 0.1, horizontal, screenSize.height() * 0.8);
+    const QRect topRect(horizontal, 0, screenSize.width() * 0.8, vertical);
+    const QRect bottomRect(horizontal, screenSize.height() - vertical, screenSize.width() - horizontal * 2, vertical);
     if (leftRect.contains(cursor)) {
         if (effects->desktopToLeft(effects->currentDesktop()) != effects->currentDesktop())
             windowMovingChanged(0.3 *(float)(horizontal - cursor.x()) / (float)horizontal, Left);
     } else if (rightRect.contains(cursor)) {
         if (effects->desktopToRight(effects->currentDesktop()) != effects->currentDesktop())
-            windowMovingChanged(0.3 *(float)(cursor.x() - displayWidth() + horizontal) / (float)horizontal, Right);
+            windowMovingChanged(0.3 *(float)(cursor.x() - screenSize.width() + horizontal) / (float)horizontal, Right);
     } else if (topRect.contains(cursor)) {
         if (effects->desktopAbove(effects->currentDesktop()) != effects->currentDesktop())
             windowMovingChanged(0.3 *(float)(vertical - cursor.y()) / (float)vertical, Upwards);
     } else if (bottomRect.contains(cursor)) {
         if (effects->desktopBelow(effects->currentDesktop()) != effects->currentDesktop())
-            windowMovingChanged(0.3 *(float)(cursor.y() - displayHeight() + vertical) / (float)vertical, Downwards);
+            windowMovingChanged(0.3 *(float)(cursor.y() - screenSize.height() + vertical) / (float)vertical, Downwards);
     } else {
         // not in one of the areas
         windowMoving = false;

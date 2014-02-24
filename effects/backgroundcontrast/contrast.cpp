@@ -184,7 +184,8 @@ bool ContrastEffect::supported()
         int maxTexSize;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 
-        if (displayWidth() > maxTexSize || displayHeight() > maxTexSize)
+        const QSize screenSize = effects->virtualScreenSize();
+        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize)
             supported = false;
     }
     return supported;
@@ -278,7 +279,7 @@ void ContrastEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, i
     }
 
     // in case this window has regions to be blurred
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     const QRegion contrastArea = contrastRegion(w).translated(w->pos()) & screen;
 
     // we are not caching the window
@@ -328,7 +329,7 @@ bool ContrastEffect::shouldContrast(const EffectWindow *w, int mask, const Windo
 
 void ContrastEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     if (shouldContrast(w, mask, data)) {
         QRegion shape = region & contrastRegion(w).translated(w->pos()) & screen;
 

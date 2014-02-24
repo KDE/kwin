@@ -35,7 +35,7 @@ BlurEffect::BlurEffect()
 
     // Offscreen texture that's used as the target for the horizontal blur pass
     // and the source for the vertical pass.
-    tex = GLTexture(displayWidth(), displayHeight());
+    tex = GLTexture(effects->virtualScreenSize());
     tex.setFilter(GL_LINEAR);
     tex.setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -134,7 +134,7 @@ void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
         updateBlurRegion(w);
         CacheEntry it = windows.find(w);
         if (it != windows.end()) {
-            const QRect screen(0, 0, displayWidth(), displayHeight());
+            const QRect screen = effects->virtualScreenGeometry();
             it->damagedRegion = expand(blurRegion(w).translated(w->pos())) & screen;
         }
     }
@@ -167,7 +167,8 @@ bool BlurEffect::supported()
         int maxTexSize;
         glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
 
-        if (displayWidth() > maxTexSize || displayHeight() > maxTexSize)
+        const QSize screenSize = effects->virtualScreenSize();
+        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize)
             supported = false;
     }
     return supported;
@@ -298,7 +299,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     }
 
     // in case this window has regions to be blurred
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     const QRegion blurArea = blurRegion(w).translated(w->pos()) & screen;
     const QRegion expandedBlur = expand(blurArea) & screen;
 
@@ -397,7 +398,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
 
 void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     if (shouldBlur(w, mask, data)) {
         QRegion shape = region & blurRegion(w).translated(w->pos()) & screen;
 
@@ -423,7 +424,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
 
 void BlurEffect::paintEffectFrame(EffectFrame *frame, QRegion region, double opacity, double frameOpacity)
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     bool valid = target->valid() && shader && shader->isValid();
     QRegion shape = frame->geometry().adjusted(-5, -5, 5, 5) & screen;
     if (valid && !shape.isEmpty() && region.intersects(shape.boundingRect()) && frame->style() != EffectFrameNone) {
@@ -522,7 +523,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
 void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const float opacity)
 {
-    const QRect screen(0, 0, displayWidth(), displayHeight());
+    const QRect screen = effects->virtualScreenGeometry();
     const QRegion blurredRegion = blurRegion(w).translated(w->pos()) & screen;
     const QRegion expanded = expand(blurredRegion) & screen;
     const QRect r = expanded.boundingRect();
@@ -670,7 +671,8 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     }
 
     modelViewProjectionMatrix.setToIdentity();
-    modelViewProjectionMatrix.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+    const QSize screenSize = effects->virtualScreenSize();
+    modelViewProjectionMatrix.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
     loadMatrix(modelViewProjectionMatrix);
     shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
 

@@ -545,16 +545,17 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
 
                 // Calculation of correct area
                 area = effects->clientArea(FullScreenArea, activeScreen, effects->currentDesktop());
-                scaleFactor = (zPosition + 1100) * 2.0 * tan(60.0 * M_PI / 360.0f) / displayWidth();
-                if (displayWidth() - area.width() != 0) {
+                const QSize screenSize = effects->virtualScreenSize();
+                scaleFactor = (zPosition + 1100) * 2.0 * tan(60.0 * M_PI / 360.0f) / screenSize.width();
+                if (screenSize.width() - area.width() != 0) {
                     // one of the screens is smaller than the other (horizontal)
-                    if (area.width() < displayWidth() - area.width())
-                        scaleFactor *= (float)area.width() / (float)(displayWidth() - area.width());
-                    else if (area.width() != displayWidth() - area.width()) {
+                    if (area.width() < screenSize.width() - area.width())
+                        scaleFactor *= (float)area.width() / (float)(screenSize.width() - area.width());
+                    else if (area.width() != screenSize.width() - area.width()) {
                         // vertical layout with different width
                         // but we don't want to catch screens with same width and different height
-                        if (displayHeight() != area.height())
-                            scaleFactor *= (float)area.width() / (float)(displayWidth());
+                        if (screenSize.height() != area.height())
+                            scaleFactor *= (float)area.width() / (float)(screenSize.width());
                     }
                 }
 
@@ -778,10 +779,11 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
     }
     if (animation) {
       float distance = 0.0;
+      const QSize screenSize = effects->virtualScreenSize();
       if (direction == Right) {
             // move to right
             distance = -frontWindow->geometry().width() * 0.5f + area.width() * 0.5f +
-                       (((float)displayWidth() * 0.5 * scaleFactor) - (float)area.width() * 0.5f) / rightWindows;
+                       (((float)screenSize.width() * 0.5 * scaleFactor) - (float)area.width() * 0.5f) / rightWindows;
             data.translate(distance * timeLine.currentValue());
             data.setRotationAxis(Qt::YAxis);
             data.setRotationAngle(-angle * timeLine.currentValue());
@@ -789,7 +791,7 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
         } else {
             // move to left
             distance = frontWindow->geometry().width() * 0.5f - area.width() * 0.5f +
-                       ((float)width * 0.5f - ((float)displayWidth() * 0.5 * scaleFactor)) / leftWindows;
+                       ((float)width * 0.5f - ((float)screenSize.width() * 0.5 * scaleFactor)) / leftWindows;
             float factor = 1.0;
             if (specialHandlingForward)
                 factor = 2.0;
@@ -816,9 +818,10 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
         rotateFactor = -1;
     }
 
-    float xTranslate = -((float)(width) * 0.5f - ((float)displayWidth() * 0.5 * scaleFactor));
+    const QSize screenSize = effects->virtualScreenSize();
+    float xTranslate = -((float)(width) * 0.5f - ((float)screenSize.width() * 0.5 * scaleFactor));
     if (!left)
-        xTranslate = ((float)displayWidth() * 0.5 * scaleFactor) - (float)width * 0.5f;
+        xTranslate = ((float)screenSize.width() * 0.5 * scaleFactor) - (float)width * 0.5f;
     // handling for additional window from other side
     // has to appear on this side after half of the time
     if (animation && timeLine.currentValue() >= 0.5 && additionalWindow != NULL) {

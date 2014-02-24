@@ -73,14 +73,14 @@ QScriptValue kwinEffectDisplayWidth(QScriptContext *context, QScriptEngine *engi
 {
     Q_UNUSED(context)
     Q_UNUSED(engine)
-    return Effect::displayWidth();
+    return displayWidth();
 }
 
 QScriptValue kwinEffectDisplayHeight(QScriptContext *context, QScriptEngine *engine)
 {
     Q_UNUSED(context)
     Q_UNUSED(engine)
-    return Effect::displayHeight();
+    return displayHeight();
 }
 
 QScriptValue kwinScriptGlobalShortcut(QScriptContext *context, QScriptEngine *engine)

@@ -117,8 +117,7 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             diffPos.setY(diffPos.y() + h);
     }
     QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
-    QSize displaySize(displayWidth(), displayHeight());
-    QRegion currentRegion = QRect(currentPos, displaySize);
+    QRegion currentRegion = QRect(currentPos, effects->virtualScreenSize());
     if (effects->optionRollOverDesktops()) {
         currentRegion |= (currentRegion & QRect(-w, 0, w, h)).translated(w, 0);
         currentRegion |= (currentRegion & QRect(0, -h, w, h)).translated(0, h);
@@ -150,14 +149,15 @@ void SlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             slide_painting_sticky = do_sticky;
             slide_painting_keep_above = (last_desktop == desktop);
             slide_painting_diff = rect.topLeft() - currentPos;
+            const QSize screenSize = effects->virtualScreenSize();
             if (effects->optionRollOverDesktops()) {
-                if (slide_painting_diff.x() > displayWidth())
+                if (slide_painting_diff.x() > screenSize.width())
                     slide_painting_diff.setX(slide_painting_diff.x() - w);
-                if (slide_painting_diff.x() < -displayWidth())
+                if (slide_painting_diff.x() < -screenSize.width())
                     slide_painting_diff.setX(slide_painting_diff.x() + w);
-                if (slide_painting_diff.y() > displayHeight())
+                if (slide_painting_diff.y() > screenSize.height())
                     slide_painting_diff.setY(slide_painting_diff.y() - h);
-                if (slide_painting_diff.y() < -displayHeight())
+                if (slide_painting_diff.y() < -screenSize.height())
                     slide_painting_diff.setY(slide_painting_diff.y() + h);
             }
             do_sticky = false; // paint on-all-desktop windows only once
@@ -188,7 +188,7 @@ void SlideEffect::postPaintScreen()
 // Gives a position of the given desktop when all desktops are arranged in a grid
 QRect SlideEffect::desktopRect(int desktop) const
 {
-    QRect rect(0, 0, displayWidth(), displayHeight());
+    QRect rect = effects->virtualScreenGeometry();
     rect.translate(effects->desktopCoords(desktop));
     return rect;
 }
@@ -216,7 +216,8 @@ void SlideEffect::slotDesktopChanged(int old, int current)
                 diffPos.setY(diffPos.y() + h);
         }
         QPoint currentPos = slide_start_pos + mTimeLine.currentValue() * diffPos;
-        QRegion currentRegion = QRect(currentPos, QSize(displayWidth(), displayHeight()));
+        const QSize screenSize = effects->virtualScreenSize();
+        QRegion currentRegion = QRect(currentPos, screenSize);
         if (effects->optionRollOverDesktops()) {
             currentRegion |= (currentRegion & QRect(-w, 0, w, h)).translated(w, 0);
             currentRegion |= (currentRegion & QRect(0, -h, w, h)).translated(0, h);
@@ -228,9 +229,9 @@ void SlideEffect::slotDesktopChanged(int old, int current)
             // current position is in new current desktop (e.g. quickly changing back),
             // don't do full progress
             if (abs(currentPos.x() - rect.x()) > abs(currentPos.y() - rect.y()))
-                mTimeLine.setCurrentTime((1.0 - abs(currentPos.x() - rect.x()) / double(displayWidth()))*(qreal)mTimeLine.currentValue());
+                mTimeLine.setCurrentTime((1.0 - abs(currentPos.x() - rect.x()) / double(screenSize.width()))*(qreal)mTimeLine.currentValue());
             else
-                mTimeLine.setCurrentTime((1.0 - abs(currentPos.y() - rect.y()) / double(displayHeight()))*(qreal)mTimeLine.currentValue());
+                mTimeLine.setCurrentTime((1.0 - abs(currentPos.y() - rect.y()) / double(screenSize.height()))*(qreal)mTimeLine.currentValue());
         } else // current position is not on current desktop, do full progress
             mTimeLine.setCurrentTime(0);
         diffPos = rect.topLeft() - currentPos;

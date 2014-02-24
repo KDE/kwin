@@ -323,7 +323,8 @@ void GLSLBlurShader::init()
         mvpMatrixLocation     = shader->uniformLocation("modelViewProjectionMatrix");
 
         QMatrix4x4 modelViewProjection;
-        modelViewProjection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        const QSize screenSize = effects->virtualScreenSize();
+        modelViewProjection.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
         ShaderManager::instance()->pushShader(shader);
         shader->setUniform(textureMatrixLocation, QMatrix4x4());
         shader->setUniform(mvpMatrixLocation, modelViewProjection);

@@ -285,6 +285,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 {
     if (zoom != 1.0) {
         data *= QVector2D(zoom, zoom);
+        const QSize screenSize = effects->virtualScreenSize();
 
         // mouse-tracking allows navigation of the zoom-area using the mouse.
         switch(mouseTracking) {
@@ -297,8 +298,8 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             prevPoint = cursorPoint;
             // fall through
         case MouseTrackingDisabled:
-            data.setXTranslation(qMin(0, qMax(int(displayWidth() - displayWidth() * zoom), int(displayWidth() / 2 - prevPoint.x() * zoom))));
-            data.setYTranslation(qMin(0, qMax(int(displayHeight() - displayHeight() * zoom), int(displayHeight() / 2 - prevPoint.y() * zoom))));
+            data.setXTranslation(qMin(0, qMax(int(screenSize.width() - screenSize.width() * zoom), int(screenSize.width() / 2 - prevPoint.x() * zoom))));
+            data.setYTranslation(qMin(0, qMax(int(screenSize.height() - screenSize.height() * zoom), int(screenSize.height() / 2 - prevPoint.y() * zoom))));
             break;
         case MouseTrackingPush: {
                 // touching an edge of the screen moves the zoom-area in that direction.
@@ -308,16 +309,16 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 xMove = yMove = 0;
                 if (x < threshold)
                     xMove = (x - threshold) / zoom;
-                else if (x + threshold > displayWidth())
-                    xMove = (x + threshold - displayWidth()) / zoom;
+                else if (x + threshold > screenSize.width())
+                    xMove = (x + threshold - screenSize.width()) / zoom;
                 if (y < threshold)
                     yMove = (y - threshold) / zoom;
-                else if (y + threshold > displayHeight())
-                    yMove = (y + threshold - displayHeight()) / zoom;
+                else if (y + threshold > screenSize.height())
+                    yMove = (y + threshold - screenSize.height()) / zoom;
                 if (xMove)
-                    prevPoint.setX(qMax(0, qMin(displayWidth(), prevPoint.x() + xMove)));
+                    prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
                 if (yMove)
-                    prevPoint.setY(qMax(0, qMin(displayHeight(), prevPoint.y() + yMove)));
+                    prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
                 data.setXTranslation(- int(prevPoint.x() * (zoom - 1.0)));
                 data.setYTranslation(- int(prevPoint.y() * (zoom - 1.0)));
                 break;
@@ -444,8 +445,9 @@ void ZoomEffect::actualSize()
 
 void ZoomEffect::timelineFrameChanged(int /* frame */)
 {
-    prevPoint.setX(qMax(0, qMin(displayWidth(), prevPoint.x() + xMove)));
-    prevPoint.setY(qMax(0, qMin(displayHeight(), prevPoint.y() + yMove)));
+    const QSize screenSize = effects->virtualScreenSize();
+    prevPoint.setX(qMax(0, qMin(screenSize.width(), prevPoint.x() + xMove)));
+    prevPoint.setY(qMax(0, qMin(screenSize.height(), prevPoint.y() + yMove)));
     cursorPoint = prevPoint;
     effects->addRepaintFull();
 }
@@ -455,17 +457,18 @@ void ZoomEffect::moveZoom(int x, int y)
     if (timeline.state() == QTimeLine::Running)
         timeline.stop();
 
+    const QSize screenSize = effects->virtualScreenSize();
     if (x < 0)
-        xMove = - qMax(1.0, displayWidth() / zoom / moveFactor);
+        xMove = - qMax(1.0, screenSize.width() / zoom / moveFactor);
     else if (x > 0)
-        xMove = qMax(1.0, displayWidth() / zoom  / moveFactor);
+        xMove = qMax(1.0, screenSize.width() / zoom  / moveFactor);
     else
         xMove = 0;
 
     if (y < 0)
-        yMove = - qMax(1.0, displayHeight() / zoom / moveFactor);
+        yMove = - qMax(1.0, screenSize.height() / zoom / moveFactor);
     else if (y > 0)
-        yMove = qMax(1.0, displayHeight() / zoom / moveFactor);
+        yMove = qMax(1.0, screenSize.height() / zoom / moveFactor);
     else
         yMove = 0;
 
@@ -499,7 +502,7 @@ void ZoomEffect::moveMouseToFocus()
 
 void ZoomEffect::moveMouseToCenter()
 {
-    QRect r(0, 0, displayWidth(), displayHeight());
+    const QRect r = effects->virtualScreenGeometry();
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
 
@@ -519,7 +522,8 @@ void ZoomEffect::focusChanged(int px, int py, int rx, int ry, int rwidth, int rh
 {
     if (zoom == 1.0)
         return;
-    focusPoint = (px >= 0 && py >= 0) ? QPoint(px, py) : QPoint(rx + qMax(0, (qMin(displayWidth(), rwidth) / 2) - 60), ry + qMax(0, (qMin(displayHeight(), rheight) / 2) - 60));
+    const QSize screenSize = effects->virtualScreenSize();
+    focusPoint = (px >= 0 && py >= 0) ? QPoint(px, py) : QPoint(rx + qMax(0, (qMin(screenSize.width(), rwidth) / 2) - 60), ry + qMax(0, (qMin(screenSize.height(), rheight) / 2) - 60));
     if (enableFocusTracking) {
         lastFocusEvent = QTime::currentTime();
         effects->addRepaintFull();

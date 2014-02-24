@@ -88,7 +88,7 @@ void MinimizeAnimationEffect::paintWindow(EffectWindow* w, int mask, QRegion reg
         QRect icon = w->iconGeometry();
         // If there's no icon geometry, minimize to the center of the screen
         if (!icon.isValid())
-            icon = QRect(displayWidth() / 2, displayHeight() / 2, 0, 0);
+            icon = QRect(effects->virtualScreenGeometry().center(), QSize(0, 0));
 
         data *= QVector2D(interpolate(1.0, icon.width() / (double)geo.width(), progress),
                           interpolate(1.0, icon.height() / (double)geo.height(), progress));

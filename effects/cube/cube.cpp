@@ -332,7 +332,8 @@ bool CubeEffect::loadShader()
         QMatrix4x4 modelview;
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
         modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+        const QSize screenSize = effects->virtualScreenSize();
+        modelview.scale((xmax - xmin)*scaleFactor / screenSize.width(), -(ymax - ymin)*scaleFactor / screenSize.height(), 0.001);
         cylinderShader->setUniform(GLShader::ModelViewMatrix, modelview);
         const QMatrix4x4 identity;
         cylinderShader->setUniform(GLShader::ScreenTransformation, identity);
@@ -361,7 +362,8 @@ bool CubeEffect::loadShader()
         QMatrix4x4 modelview;
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
         modelview.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        modelview.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+        const QSize screenSize = effects->virtualScreenSize();
+        modelview.scale((xmax - xmin)*scaleFactor / screenSize.width(), -(ymax - ymin)*scaleFactor / screenSize.height(), 0.001);
         sphereShader->setUniform(GLShader::ModelViewMatrix, modelview);
         const QMatrix4x4 identity;
         sphereShader->setUniform(GLShader::ScreenTransformation, identity);
@@ -1985,7 +1987,7 @@ void CubeEffect::windowInputMouseEvent(QEvent* e)
             if (deltaX == 0) {
                 if (pos.x() == 0)
                     deltaDegrees = 5.0f;
-                if (pos.x() == displayWidth() - 1)
+                if (pos.x() == rect.width() - 1)
                     deltaDegrees = -5.0f;
             }
             if (invertMouse)

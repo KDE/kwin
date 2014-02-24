@@ -94,8 +94,9 @@ bool LookingGlassEffect::loadData()
     // If NPOT textures are not supported, use nearest power-of-two sized
     //  texture. It wastes memory, but it's possible to support systems without
     //  NPOT textures that way
-    int texw = displayWidth();
-    int texh = displayHeight();
+    const QSize screenSize = effects->virtualScreenSize();
+    int texw = screenSize.width();
+    int texh = screenSize.height();
     if (!GLTexture::NPOTTextureSupported()) {
         qWarning() << "NPOT textures not supported, wasting some memory" ;
         texw = nearestPowerOfTwo(texw);
@@ -123,7 +124,7 @@ bool LookingGlassEffect::loadData()
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::SimpleShader, fragmentshader);
     if (m_shader->isValid()) {
         ShaderBinder binder(m_shader);
-        m_shader->setUniform("u_textureSize", QVector2D(displayWidth(), displayHeight()));
+        m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
     } else {
         qCritical() << "The shader failed to load!" << endl;
         return false;
@@ -132,18 +133,18 @@ bool LookingGlassEffect::loadData()
     m_vbo = new GLVertexBuffer(GLVertexBuffer::Static);
     QVector<float> verts;
     QVector<float> texcoords;
-    texcoords << displayWidth() << 0.0;
-    verts << displayWidth() << 0.0;
+    texcoords << screenSize.width() << 0.0;
+    verts << screenSize.width() << 0.0;
     texcoords << 0.0 << 0.0;
     verts << 0.0 << 0.0;
-    texcoords << 0.0 << displayHeight();
-    verts << 0.0 << displayHeight();
-    texcoords << 0.0 << displayHeight();
-    verts << 0.0 << displayHeight();
-    texcoords << displayWidth() << displayHeight();
-    verts << displayWidth() << displayHeight();
-    texcoords << displayWidth() << 0.0;
-    verts << displayWidth() << 0.0;
+    texcoords << 0.0 << screenSize.height();
+    verts << 0.0 << screenSize.height();
+    texcoords << 0.0 << screenSize.height();
+    verts << 0.0 << screenSize.height();
+    texcoords << screenSize.width() << screenSize.height();
+    verts << screenSize.width() << screenSize.height();
+    texcoords << screenSize.width() << 0.0;
+    verts << screenSize.width() << 0.0;
     m_vbo->setData(6, 2, verts.constData(), texcoords.constData());
     return true;
 }

@@ -254,7 +254,7 @@ void ScreenShotEffect::screenshotForWindow(qulonglong winid, int mask)
 
 QString ScreenShotEffect::screenshotFullscreen()
 {
-    return blitScreenshot(QRect(0, 0, displayWidth(), displayHeight()));
+    return blitScreenshot(effects->virtualScreenGeometry());
 }
 
 QString ScreenShotEffect::screenshotScreen(int screen)

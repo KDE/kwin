@@ -116,7 +116,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target
-            blurTexture = new GLTexture(displayWidth(), displayHeight());
+            blurTexture = new GLTexture(effects->virtualScreenSize());
             blurTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
             blurTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -401,7 +401,7 @@ void LogoutEffect::renderBlurTexture()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     blurTexture->bind();
-    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+    blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
     blurTexture->unbind();
     glDisable(GL_BLEND);
     checkGLError("Render blur texture");
@@ -413,7 +413,7 @@ void LogoutEffect::renderBlurTextureLegacy()
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
     // Unmodified base image
     blurTexture->bind();
-    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+    blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
 
     // Blurred image
     GLfloat bias[1];
@@ -424,7 +424,7 @@ void LogoutEffect::renderBlurTextureLegacy()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor4f(1.0f, 1.0f, 1.0f, progress * 0.4);
 
-    blurTexture->render(infiniteRegion(), QRect(0, 0, displayWidth(), displayHeight()));
+    blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
 
     glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0]);
     blurTexture->unbind();
