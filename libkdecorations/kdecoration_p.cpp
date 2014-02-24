@@ -44,7 +44,7 @@ KDecorationOptionsPrivate::KDecorationOptionsPrivate(KDecorationOptions *parent)
     , opMaxButtonLeftClick(HMaximizeOp)
 {
     for (int i = 0; i < NUM_COLORS * 2; ++i)
-        pal[i] = NULL;
+        pal[i] = nullptr;
 }
 
 KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
@@ -53,7 +53,7 @@ KDecorationOptionsPrivate::~KDecorationOptionsPrivate()
     for (i = 0; i < NUM_COLORS * 2; ++i) {
         if (pal[i]) {
             delete pal[i];
-            pal[i] = NULL;
+            pal[i] = nullptr;
         }
     }
 }
@@ -217,7 +217,7 @@ void KDecorationOptionsPrivate::updateSettings(KConfig* config)
     for (i = 0; i < NUM_COLORS * 2; ++i) {
         if (pal[i]) {
             delete pal[i];
-            pal[i] = NULL;
+            pal[i] = nullptr;
         }
     }
 

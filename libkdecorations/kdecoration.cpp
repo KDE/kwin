@@ -722,7 +722,7 @@ bool KDecorationOptions::showTooltips() const
 
 KDecorationOptions::BorderSize KDecorationOptions::preferredBorderSize(KDecorationFactory* factory) const
 {
-    assert(factory != NULL);
+    assert(factory != nullptr);
     if (d->cached_border_size == BordersCount)   // invalid
         d->cached_border_size = d->findPreferredBorderSize(d->border_size,
                                 factory->borderSizes());

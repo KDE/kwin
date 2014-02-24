@@ -393,7 +393,7 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QList<De
         return;
     }
     for (auto button : buttons) {
-        KCommonDecorationButton *btn = 0;
+        KCommonDecorationButton *btn = nullptr;
         switch(button) {
         case DecorationButtonMenu:
             if (!d->button[MenuButton]) {
@@ -743,20 +743,20 @@ void KCommonDecoration::slotKeepBelow()
     setKeepBelow(!keepBelow());
 }
 
-static QBasicTimer* timer = NULL;
+static QBasicTimer* timer = nullptr;
 void KCommonDecoration::menuButtonPressed()
 {
     if (decorationBehaviour(DB_MenuClose)) {
-        if (timer == NULL) {
+        if (timer == nullptr) {
             timer = new QBasicTimer();
         }
         if (!timer->isActive()) {
             timer->start(150, this);
         }
         // double click behavior
-        static QTime* t = NULL;
-        static KCommonDecoration* lastClient = NULL;
-        if (t == NULL) {
+        static QTime* t = nullptr;
+        static KCommonDecoration* lastClient = nullptr;
+        if (t == nullptr) {
             t = new QTime;
         }
         if (lastClient == this && t->elapsed() <= QApplication::doubleClickInterval()) {
@@ -1083,7 +1083,7 @@ KCommonDecorationButtonPrivate::KCommonDecorationButtonPrivate(ButtonType t, KCo
 }
 
 KCommonDecorationButton::KCommonDecorationButton(ButtonType type, KCommonDecoration *parent)
-    : QAbstractButton(parent ? parent->widget() : 0),
+    : QAbstractButton(parent ? parent->widget() : nullptr),
       d(new KCommonDecorationButtonPrivate(type, parent))
 {
     setCursor(Qt::ArrowCursor);
