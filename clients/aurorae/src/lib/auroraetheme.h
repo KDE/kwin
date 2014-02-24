@@ -114,7 +114,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment NOTIFY themeChanged)
 public:
-    explicit AuroraeTheme(QObject* parent = 0);
+    explicit AuroraeTheme(QObject* parent = nullptr);
     virtual ~AuroraeTheme();
     // TODO: KSharedConfigPtr
     void loadTheme(const QString &name, const KConfig &config);

@@ -146,7 +146,7 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
 
 AuroraeFactory::~AuroraeFactory()
 {
-    s_instance = NULL;
+    s_instance = nullptr;
 }
 
 AuroraeFactory *AuroraeFactory::instance()
@@ -227,14 +227,14 @@ QQuickItem *AuroraeFactory::createQmlDecoration(Aurorae::AuroraeClient *client)
     return qobject_cast< QQuickItem* >(m_component->create(context));
 }
 
-AuroraeFactory *AuroraeFactory::s_instance = NULL;
+AuroraeFactory *AuroraeFactory::s_instance = nullptr;
 
 /*******************************************************
 * Client
 *******************************************************/
 AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *factory)
     : KDecoration(bridge, factory)
-    , m_view(NULL)
+    , m_view(nullptr)
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
     , m_mutex(new QMutex(QMutex::Recursive))
 {
@@ -319,7 +319,7 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    QObject *borders = NULL;
+    QObject *borders = nullptr;
     if (maximizeMode() == MaximizeFull) {
         borders = m_item->findChild<QObject*>(QStringLiteral("maximizedBorders"));
     } else {
@@ -439,7 +439,7 @@ void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons button
                                          cursor, button, buttons, Qt::NoModifier);
     processMousePressEvent(event);
     delete event;
-    event = 0;
+    event = nullptr;
 }
 
 void AuroraeClient::themeChanged()

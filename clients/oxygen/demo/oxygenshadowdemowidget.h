@@ -47,7 +47,7 @@ namespace Oxygen
         public:
 
         //! constructor
-        explicit ShadowDemoWidget( QWidget* parent = 0 ):
+        explicit ShadowDemoWidget( QWidget* parent = nullptr ):
             QWidget( parent ),
             _drawBackground( true ),
             _square( false ),

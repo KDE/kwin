@@ -137,7 +137,7 @@ public:
          */
         DecorationButtonExplicitSpacer
     };
-    explicit DecorationOptions(QObject *parent = 0);
+    explicit DecorationOptions(QObject *parent = nullptr);
     virtual ~DecorationOptions();
 
     QColor titleBarColor() const;
@@ -174,7 +174,7 @@ class Borders : public QObject
     Q_PROPERTY(int top READ top WRITE setTop NOTIFY topChanged)
     Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
 public:
-    Borders(QObject *parent = NULL);
+    Borders(QObject *parent = nullptr);
     virtual ~Borders();
     int left() const;
     int right() const;

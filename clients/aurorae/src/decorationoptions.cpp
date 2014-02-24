@@ -23,7 +23,7 @@ namespace KWin
 DecorationOptions::DecorationOptions(QObject *parent)
     : QObject(parent)
     , m_active(true)
-    , m_decoration(NULL)
+    , m_decoration(nullptr)
 {
     connect(this, SIGNAL(decorationChanged()), SLOT(slotActiveChanged()));
     connect(this, SIGNAL(decorationChanged()), SIGNAL(colorsChanged()));

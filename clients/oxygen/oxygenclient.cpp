@@ -53,7 +53,7 @@ namespace Oxygen
     Client::Client(KDecorationBridge *b, Factory *f):
         KCommonDecoration(b, f),
         _factory( f ),
-        _sizeGrip( 0 ),
+        _sizeGrip( nullptr ),
         _glowAnimation( new Animation( 200, this ) ),
         _titleAnimationData( new TitleAnimationData( this ) ),
         _glowIntensity(0),
@@ -249,7 +249,7 @@ namespace Oxygen
 
         }
 
-        return NULL;
+        return nullptr;
 
     }
 
