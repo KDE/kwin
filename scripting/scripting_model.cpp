@@ -251,7 +251,7 @@ Client *ClientLevel::clientForId(quint32 child) const
 {
     QMap<quint32, Client*>::const_iterator it = m_clients.constFind(child);
     if (it == m_clients.constEnd()) {
-        return NULL;
+        return nullptr;
     }
     return it.value();
 }
@@ -273,7 +273,7 @@ const AbstractLevel *ClientLevel::levelForId(quint32 id) const
     if (id == AbstractLevel::id()) {
         return this;
     }
-    return NULL;
+    return nullptr;
 }
 
 AbstractLevel *ClientLevel::parentForId(quint32 child) const
@@ -284,7 +284,7 @@ AbstractLevel *ClientLevel::parentForId(quint32 child) const
     if (m_clients.contains(child)) {
         return const_cast<ClientLevel*>(this);
     }
-    return NULL;
+    return nullptr;
 }
 
 AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction > &restrictions, ClientModel::LevelRestrictions parentRestrictions, ClientModel *model, AbstractLevel *parent)
@@ -321,7 +321,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
         }
         break;
 #else
-        return NULL;
+        return nullptr;
 #endif
     }
     case ClientModel::ScreenRestriction:
@@ -346,7 +346,7 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
         break;
     default:
         // invalid
-        return NULL;
+        return nullptr;
     }
 
     return currentLevel;
@@ -580,7 +580,7 @@ const AbstractLevel *ForkLevel::levelForId(quint32 id) const
         }
     }
     // not found
-    return NULL;
+    return nullptr;
 }
 
 AbstractLevel *ForkLevel::parentForId(quint32 child) const
@@ -594,7 +594,7 @@ AbstractLevel *ForkLevel::parentForId(quint32 child) const
         }
     }
     // not found
-    return NULL;
+    return nullptr;
 }
 
 int ForkLevel::rowForId(quint32 child) const
@@ -626,12 +626,12 @@ Client *ForkLevel::clientForId(quint32 child) const
         }
     }
     // not found
-    return NULL;
+    return nullptr;
 }
 
 ClientModel::ClientModel(QObject *parent)
     : QAbstractItemModel(parent)
-    , m_root(NULL)
+    , m_root(nullptr)
     , m_exclusions(NoExclusion)
 {
     QHash<int, QByteArray> roleNames;
@@ -826,7 +826,7 @@ CLIENT_MODEL_WRAPPER(ClientModelByScreenAndDesktop, QList<LevelRestriction>() <<
 
 ClientFilterModel::ClientFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
-    , m_clientModel(NULL)
+    , m_clientModel(nullptr)
 {
 }
 

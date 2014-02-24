@@ -367,7 +367,7 @@ QAction *KWin::AbstractScript::scriptValueToAction(QScriptValue &value, QMenu *p
 
     if (!titleValue.isValid()) {
         // title not specified - does not make any sense to include
-        return NULL;
+        return nullptr;
     }
     const QString title = titleValue.toString();
     const bool checkable = checkableValue.isValid() && checkableValue.toBool();
@@ -376,19 +376,19 @@ QAction *KWin::AbstractScript::scriptValueToAction(QScriptValue &value, QMenu *p
     if (itemsValue.isValid()) {
         if (!itemsValue.isArray()) {
             // not an array, so cannot be a menu
-            return NULL;
+            return nullptr;
         }
         QScriptValue lengthValue = itemsValue.property(QStringLiteral("length"));
         if (!lengthValue.isValid() || !lengthValue.isNumber() || lengthValue.toInteger() == 0) {
             // length property missing
-            return NULL;
+            return nullptr;
         }
         return createMenu(title, itemsValue, parent);
     } else if (triggeredValue.isValid()) {
         // normal item
         return createAction(title, checkable, checked, triggeredValue, parent);
     }
-    return NULL;
+    return nullptr;
 }
 
 QAction *KWin::AbstractScript::createAction(const QString &title, bool checkable, bool checked, QScriptValue &callback, QMenu *parent)
@@ -605,7 +605,7 @@ void KWin::JSEngineGlobalMethodsWrapper::registerWindow(QQuickWindow *window)
     });
 }
 
-KWin::Scripting *KWin::Scripting::s_self = NULL;
+KWin::Scripting *KWin::Scripting::s_self = nullptr;
 
 KWin::Scripting *KWin::Scripting::create(QObject *parent)
 {
@@ -781,7 +781,7 @@ KWin::Scripting::~Scripting()
 {
     QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Scripting"));
     QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin.Scripting"));
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)

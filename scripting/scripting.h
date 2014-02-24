@@ -55,7 +55,7 @@ class AbstractScript : public QObject
 {
     Q_OBJECT
 public:
-    AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
+    AbstractScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     ~AbstractScript();
     QString fileName() const {
         return m_scriptFile.fileName();
@@ -221,7 +221,7 @@ class Script : public AbstractScript
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
 
-    Script(int id, QString scriptName, QString pluginName, QObject *parent = NULL);
+    Script(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     virtual ~Script();
     QScriptEngine *engine() {
         return m_engine;
@@ -271,7 +271,7 @@ class DeclarativeScript : public AbstractScript
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Scripting")
 public:
-    explicit DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent = 0);
+    explicit DeclarativeScript(int id, QString scriptName, QString pluginName, QObject *parent = nullptr);
     virtual ~DeclarativeScript();
 
 public Q_SLOTS:

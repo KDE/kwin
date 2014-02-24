@@ -152,7 +152,7 @@ public:
     virtual void setVirtualDesktop(uint virtualDesktop);
     virtual void setActivity(const QString &activity);
 
-    static AbstractLevel *create(const QList<ClientModel::LevelRestriction> &restrictions, ClientModel::LevelRestrictions parentRestrictions, ClientModel *model, AbstractLevel *parent = NULL);
+    static AbstractLevel *create(const QList<ClientModel::LevelRestriction> &restrictions, ClientModel::LevelRestrictions parentRestrictions, ClientModel *model, AbstractLevel *parent = nullptr);
 
 Q_SIGNALS:
     void beginInsert(int rowStart, int rowEnd, quint32 parentId);
@@ -248,7 +248,7 @@ class SimpleClientModel : public ClientModel
 {
     Q_OBJECT
 public:
-    SimpleClientModel(QObject *parent = NULL);
+    SimpleClientModel(QObject *parent = nullptr);
     virtual ~SimpleClientModel();
 };
 
@@ -256,7 +256,7 @@ class ClientModelByScreen : public ClientModel
 {
     Q_OBJECT
 public:
-    ClientModelByScreen(QObject *parent = NULL);
+    ClientModelByScreen(QObject *parent = nullptr);
     virtual ~ClientModelByScreen();
 };
 
@@ -264,7 +264,7 @@ class ClientModelByScreenAndDesktop : public ClientModel
 {
     Q_OBJECT
 public:
-    ClientModelByScreenAndDesktop(QObject *parent = NULL);
+    ClientModelByScreenAndDesktop(QObject *parent = nullptr);
     virtual ~ClientModelByScreenAndDesktop();
 };
 
@@ -278,7 +278,7 @@ class ClientFilterModel : public QSortFilterProxyModel
     Q_PROPERTY(KWin::ScriptingClientModel::ClientModel *clientModel READ clientModel WRITE setClientModel NOTIFY clientModelChanged)
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
 public:
-    ClientFilterModel(QObject *parent = 0);
+    ClientFilterModel(QObject *parent = nullptr);
     virtual ~ClientFilterModel();
     ClientModel *clientModel() const;
     const QString &filter() const;

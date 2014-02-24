@@ -250,7 +250,7 @@ QScriptValue kwinEffectAnimate(QScriptContext *context, QScriptEngine *engine)
                                     setting.duration,
                                     setting.to,
                                     setting.from,
-                                    NULL,
+                                    nullptr,
                                     setting.curve,
                                     setting.delay));
     }
@@ -279,7 +279,7 @@ QScriptValue kwinEffectSet(QScriptContext *context, QScriptEngine *engine)
                                setting.duration,
                                setting.to,
                                setting.from,
-                               NULL,
+                               nullptr,
                                setting.curve,
                                setting.delay));
     }
@@ -371,7 +371,7 @@ ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString&
     ScriptedEffect *effect = new ScriptedEffect();
     if (!effect->init(effectName, pathToScript)) {
         delete effect;
-        return NULL;
+        return nullptr;
     }
     return effect;
 }
@@ -380,7 +380,7 @@ ScriptedEffect::ScriptedEffect()
     : AnimationEffect()
     , m_engine(new QScriptEngine(this))
     , m_scriptFile(QString())
-    , m_config(NULL)
+    , m_config(nullptr)
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
 }
