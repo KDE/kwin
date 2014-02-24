@@ -16,6 +16,7 @@ option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
 # Binary name of KWin
 set(KWIN_NAME "kwin")
+set(KWIN_VERSION ${KDE4WORKSPACE_VERSION})
 
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)

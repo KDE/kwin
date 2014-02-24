@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+# Required components to use this library
+find_dependency(KF5Config "@KF5Config_VERSION@")
+find_dependency(KF5Service "@KF5Service_VERSION@")
+find_dependency(KF5WindowSystem "@KF5WindowSystem_VERSION@")
+
+include("${CMAKE_CURRENT_LIST_DIR}/KDecorationsTargets.cmake")
