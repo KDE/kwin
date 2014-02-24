@@ -213,7 +213,7 @@ void ClientModel::createClientList(int desktop, bool partialReset)
                 }
             }
             if (index >= stacking.size() - 1) {
-                c = NULL;
+                c = nullptr;
             } else {
                 c = stacking[++index].data();
             }

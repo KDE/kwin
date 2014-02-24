@@ -249,7 +249,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
     if (!client) {
         return QWeakPointer<TabBoxClient>();
     }
-    Client* ret = NULL;
+    Client* ret = nullptr;
     Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
 
     bool addClient = checkDesktop(client, desktop)
@@ -261,7 +261,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
     if (addClient) {
         // don't add windows that have modal dialogs
         Client* modal = current->findModal();
-        if (modal == NULL || modal == current)
+        if (modal == nullptr || modal == current)
             ret = current;
         else if (!clientList().contains(modal->tabBoxClient()))
             ret = modal;
@@ -405,7 +405,7 @@ bool TabBoxClientImpl::isFirstInTabBox() const
 /*********************************************************
 * TabBox
 *********************************************************/
-TabBox *TabBox::s_self = NULL;
+TabBox *TabBox::s_self = nullptr;
 
 TabBox *TabBox::create(QObject *parent)
 {
@@ -474,7 +474,7 @@ TabBox::TabBox(QObject *parent)
 TabBox::~TabBox()
 {
     QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/TabBox"));
-    s_self = NULL;
+    s_self = nullptr;
 }
 
 void TabBox::handlerReady()
@@ -635,10 +635,10 @@ Client* TabBox::currentClient()
 {
     if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_tabBox->currentIndex()))) {
         if (!Workspace::self()->hasClient(client->client()))
-            return NULL;
+            return nullptr;
         return client->client();
     } else
-        return NULL;
+        return nullptr;
 }
 
 /*!
@@ -1202,7 +1202,7 @@ void TabBox::walkThroughDesktops(bool forward)
 
 void TabBox::CDEWalkThroughWindows(bool forward)
 {
-    Client* c = NULL;
+    Client* c = nullptr;
 // this function find the first suitable client for unreasonable focus
 // policies - the topmost one, with some exceptions (can't be keepabove/below,
 // otherwise it gets stuck on them)
@@ -1225,7 +1225,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
         options_traverse_all = group.readEntry("TraverseAll", false);
     }
 
-    Client* firstClient = 0;
+    Client* firstClient = nullptr;
     do {
         nc = forward ? nextClientStatic(nc) : previousClientStatic(nc);
         if (!firstClient) {
@@ -1234,7 +1234,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             firstClient = nc;
         } else if (nc == firstClient) {
             // No candidates found.
-            nc = 0;
+            nc = nullptr;
             break;
         }
     } while (nc && nc != c &&
@@ -1581,7 +1581,7 @@ bool TabBox::establishTabBoxGrab()
     // the active client, which may not have it.
     assert(!m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = true;
-    if (Workspace::self()->activeClient() != NULL)
+    if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();
     return true;
 }
@@ -1592,7 +1592,7 @@ void TabBox::removeTabBoxGrab()
     ungrabXKeyboard();
     assert(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
-    if (Workspace::self()->activeClient() != NULL)
+    if (Workspace::self()->activeClient() != nullptr)
         Workspace::self()->activeClient()->updateMouseGrab();
 }
 } // namespace TabBox

@@ -113,8 +113,8 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
 {
     this->q = q;
     isShown = false;
-    lastRaisedClient = 0;
-    lastRaisedClientSucc = 0;
+    lastRaisedClient = nullptr;
+    lastRaisedClientSucc = nullptr;
     config = TabBoxConfig();
     m_clientModel = new ClientModel(q);
     m_desktopModel = new DesktopModel(q);
@@ -197,7 +197,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
                     break;
                 }
             }
-            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).data() : 0;
+            lastRaisedClientSucc = (succIdx < order.count()) ? order.at(succIdx).data() : nullptr;
             q->raiseClient(lastRaisedClient);
         }
     }
@@ -225,8 +225,8 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
         q->elevateClient(currentClient, w ? w->winId() : 0, false);
     if (abort && lastRaisedClient && lastRaisedClientSucc)
         q->restack(lastRaisedClient, lastRaisedClientSucc);
-    lastRaisedClient = 0;
-    lastRaisedClientSucc = 0;
+    lastRaisedClient = nullptr;
+    lastRaisedClientSucc = nullptr;
     // highlight windows
     xcb_delete_property(connection(), config.isShowTabBox() && w ? w->winId() : rootWindow(), m_highlightWindowsAtom);
 }
@@ -361,8 +361,8 @@ void TabBoxHandler::setConfig(const TabBoxConfig& config)
 void TabBoxHandler::show()
 {
     d->isShown = true;
-    d->lastRaisedClient = 0;
-    d->lastRaisedClientSucc = 0;
+    d->lastRaisedClient = nullptr;
+    d->lastRaisedClientSucc = nullptr;
     if (d->config.isShowTabBox()) {
         d->show();
     }
@@ -531,7 +531,7 @@ TabBoxClient* TabBoxHandler::client(const QModelIndex& index) const
 {
     if ((!index.isValid()) ||
             (d->config.tabBoxMode() != TabBoxConfig::ClientTabBox))
-        return NULL;
+        return nullptr;
     TabBoxClient* c = static_cast< TabBoxClient* >(
                           d->clientModel()->data(index, ClientModel::ClientRole).value<void *>());
     return c;
@@ -558,9 +558,9 @@ void TabBoxHandler::createModel(bool partialReset)
             }
         }
         if (d->lastRaisedClient && !lastRaised)
-            d->lastRaisedClient = 0;
+            d->lastRaisedClient = nullptr;
         if (d->lastRaisedClientSucc && !lastRaisedSucc)
-            d->lastRaisedClientSucc = 0;
+            d->lastRaisedClientSucc = nullptr;
         break;
     }
     case TabBoxConfig::DesktopTabBox:
@@ -637,7 +637,7 @@ void TabBoxHandler::resetEmbedded()
     emit embeddedChanged(false);
 }
 
-TabBoxHandler* tabBox = 0;
+TabBoxHandler* tabBox = nullptr;
 
 TabBoxClient::TabBoxClient()
 {

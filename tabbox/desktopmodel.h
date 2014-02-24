@@ -51,7 +51,7 @@ public:
         DesktopNameRole = Qt::UserRole + 1, ///< Desktop name
         ClientModelRole = Qt::UserRole + 2 ///< Clients on this desktop
     };
-    explicit DesktopModel(QObject* parent = 0);
+    explicit DesktopModel(QObject* parent = nullptr);
     ~DesktopModel();
 
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;

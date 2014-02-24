@@ -57,7 +57,7 @@ public:
         MinimizedRole = Qt::UserRole + 6, ///< TabBoxClient is minimized
         CloseableRole = Qt::UserRole + 7 ///< TabBoxClient can be closed
     };
-    explicit ClientModel(QObject* parent = 0);
+    explicit ClientModel(QObject* parent = nullptr);
     ~ClientModel();
     virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;

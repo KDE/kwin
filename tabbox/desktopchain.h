@@ -88,7 +88,7 @@ class DesktopChainManager : public QObject
     Q_OBJECT
 
 public:
-    explicit DesktopChainManager(QObject *parent = 0);
+    explicit DesktopChainManager(QObject *parent = nullptr);
     virtual ~DesktopChainManager();
 
     /**
