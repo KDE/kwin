@@ -62,10 +62,6 @@ endif()
 
 include_directories(${XCB_INCLUDE_DIR})
 
-if(WAYLAND_FOUND)
-    include_directories(${WAYLAND_INCLUDE_DIR})
-endif()
-
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
@@ -212,9 +208,9 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(WAYLAND_FOUND)
+if(Wayland_Client_FOUND)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} wayland_backend.cpp)
-    if(KWIN_HAVE_EGL)
+    if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
     endif()
 endif()
@@ -283,12 +279,12 @@ set(kwin_XCB_LIBS
 )
 
 set(kwin_WAYLAND_LIBS
-    ${WAYLAND_CLIENT_LIBRARIES}
+    Wayland::Client
     ${XCB_XTEST_LIBRARY}
 )
 
 set(kwin_WAYLAND_EGL_LIBS
-    ${WAYLAND_EGL_LIBRARIES}
+    Wayland::Egl
 )
 
 set(kwin_OPENGL_LIBS )
@@ -321,9 +317,9 @@ set(kwinLibs
     ${kwin_OPENGL_LIBS}
 )
 
-if(WAYLAND_FOUND)
+if(Wayland_Client_FOUND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
-    if(KWIN_HAVE_EGL)
+    if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
     endif()
 endif()
