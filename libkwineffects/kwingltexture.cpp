@@ -108,6 +108,11 @@ GLTexture::GLTexture(int width, int height)
     }
 }
 
+GLTexture::GLTexture(const QSize &size)
+    : GLTexture(size.width(), size.height())
+{
+}
+
 GLTexture::~GLTexture()
 {
 }

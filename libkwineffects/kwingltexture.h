@@ -56,6 +56,7 @@ public:
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString& fileName);
     GLTexture(int width, int height);
+    explicit GLTexture(const QSize &size);
     virtual ~GLTexture();
 
     GLTexture & operator = (const GLTexture& tex);
