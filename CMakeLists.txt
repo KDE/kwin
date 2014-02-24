@@ -54,10 +54,7 @@ if(KWIN_BUILD_OPENGL)
   include_directories(${OPENGL_INCLUDE_DIR})
 endif()
 
-if(OPENGL_EGL_FOUND)
-    include_directories(${OPENGLES_EGL_INCLUDE_DIR})
-    set(KWIN_HAVE_EGL 1)
-endif()
+set(KWIN_HAVE_EGL ${EGL_FOUND})
 
 if(KWIN_BUILD_OPENGLES)
   include_directories(${OPENGLES_INCLUDE_DIR})
@@ -311,8 +308,8 @@ if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
 endif()
 
-if(OPENGL_EGL_FOUND)
-    set(kwin_OPENGL_LIBS ${kwin_OPENGL_LIBS} ${OPENGLES_EGL_LIBRARY})
+if(KWIN_HAVE_EGL)
+    set(kwin_OPENGL_LIBS ${kwin_OPENGL_LIBS} EGL::EGL)
 endif()
 
 set(kwinLibs
