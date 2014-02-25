@@ -835,8 +835,6 @@ QString Compositor::compositingType() const
     switch (m_scene->compositingType()) {
     case XRenderCompositing:
         return QStringLiteral("xrender");
-    case OpenGL1Compositing:
-            return QStringLiteral("gl1");
     case OpenGL2Compositing:
 #ifdef KWIN_HAVE_OPENGLES
         return QStringLiteral("gles");

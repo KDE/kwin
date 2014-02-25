@@ -192,42 +192,14 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
                 useShader = true;
                 ShaderManager::instance()->pushShader(m_blinkingShader);
                 m_blinkingShader->setUniform("u_color", blinkingColor);
-            } else {
-#ifdef KWIN_HAVE_OPENGL_1
-                // texture transformation
-                float color[4] = { static_cast<float>(blinkingColor.redF()), static_cast<float>(blinkingColor.greenF()),
-                                   static_cast<float>(blinkingColor.blueF()), 1.0f };
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-                glColor4fv(color);
-                glActiveTexture(GL_TEXTURE1);
-                texture->bind();
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
-                glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color);
-                glActiveTexture(GL_TEXTURE0);
-                glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-#endif
             }
-        } else if (effects->compositingType() == OpenGL2Compositing) {
+        } else {
             useShader = true;
             ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         }
         texture->render(m_currentGeometry, m_currentGeometry);
         if (useShader) {
             ShaderManager::instance()->popShader();
-        }
-        if (m_type == BlinkingFeedback && !useShader) {
-#ifdef KWIN_HAVE_OPENGL_1
-            // resture states
-            glActiveTexture(GL_TEXTURE1);
-            texture->unbind();
-            glActiveTexture(GL_TEXTURE0);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-            glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-#endif
         }
         texture->unbind();
         glDisable(GL_BLEND);

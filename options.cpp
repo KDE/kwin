@@ -145,7 +145,6 @@ Options::Options(QObject *parent)
     , m_vBlankTime(Options::defaultVBlankTime())
     , m_glStrictBinding(Options::defaultGlStrictBinding())
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
-    , m_glLegacy(Options::defaultGlLegacy())
     , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
@@ -724,15 +723,6 @@ void Options::setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver)
     emit glStrictBindingFollowsDriverChanged();
 }
 
-void Options::setGlLegacy(bool glLegacy)
-{
-    if (m_glLegacy == glLegacy) {
-        return;
-    }
-    m_glLegacy = glLegacy;
-    emit glLegacyChanged();
-}
-
 void Options::setGLCoreProfile(bool value)
 {
     if (m_glCoreProfile == value) {
@@ -940,7 +930,6 @@ void Options::reloadCompositingSettings(bool force)
     if (!isGlStrictBindingFollowsDriver()) {
         setGlStrictBinding(config.readEntry("GLStrictBinding", Options::defaultGlStrictBinding()));
     }
-    setGlLegacy(config.readEntry("GLLegacy", Options::defaultGlLegacy()));
     setGLCoreProfile(config.readEntry("GLCore", Options::defaultGLCoreProfile()));
 
     char c = 0;

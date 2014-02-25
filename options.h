@@ -187,10 +187,6 @@ class Options : public KDecorationOptions
      * If @c false @link glStrictBinding is set from a config value and not updated during scene initialization.
      **/
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
-    /**
-     * Whether legacy OpenGL should be used or OpenGL (ES) 2
-     **/
-    Q_PROPERTY(bool glLegacy READ isGlLegacy WRITE setGlLegacy NOTIFY glLegacyChanged)
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
 public:
@@ -541,9 +537,6 @@ public:
     bool isGlStrictBindingFollowsDriver() const {
         return m_glStrictBindingFollowsDriver;
     }
-    bool isGlLegacy() const {
-        return m_glLegacy;
-    }
     bool glCoreProfile() const {
         return m_glCoreProfile;
     }
@@ -610,7 +603,6 @@ public:
     void setVBlankTime(qint64 vBlankTime);
     void setGlStrictBinding(bool glStrictBinding);
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
-    void setGlLegacy(bool glLegacy);
     void setGLCoreProfile(bool glCoreProfile);
     void setGlPreferBufferSwap(char glPreferBufferSwap);
 
@@ -714,9 +706,6 @@ public:
     static bool defaultGlStrictBindingFollowsDriver() {
         return true;
     }
-    static bool defaultGlLegacy() {
-        return false;
-    }
     static bool defaultGLCoreProfile() {
         return false;
     }
@@ -798,7 +787,6 @@ Q_SIGNALS:
     void vBlankTimeChanged();
     void glStrictBindingChanged();
     void glStrictBindingFollowsDriverChanged();
-    void glLegacyChanged();
     void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
 
@@ -847,7 +835,6 @@ private:
     qint64 m_vBlankTime;
     bool m_glStrictBinding;
     bool m_glStrictBindingFollowsDriver;
-    bool m_glLegacy;
     bool m_glCoreProfile;
     GlSwapStrategy m_glPreferBufferSwap;
 

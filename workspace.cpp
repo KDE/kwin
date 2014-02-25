@@ -1416,7 +1416,6 @@ QString Workspace::supportInformation() const
     if (effects) {
         support.append(QStringLiteral("Compositing is active\n"));
         switch (effects->compositingType()) {
-        case OpenGL1Compositing:
         case OpenGL2Compositing:
         case OpenGLCompositing: {
 #ifdef KWIN_HAVE_OPENGLES
@@ -1490,11 +1489,7 @@ QString Workspace::supportInformation() const
                 support.append(QStringLiteral(" no\n"));
             }
 
-            if (effects->compositingType() == OpenGL2Compositing) {
-                support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
-            } else {
-                support.append(QStringLiteral("OpenGL 2 Shaders are not used. Legacy OpenGL 1.x code path is used.\n"));
-            }
+            support.append(QStringLiteral("OpenGL 2 Shaders are used\n"));
             support.append(QStringLiteral("Painting blocks for vertical retrace: "));
             if (m_compositor->scene()->blocksForRetrace())
                 support.append(QStringLiteral(" yes\n"));

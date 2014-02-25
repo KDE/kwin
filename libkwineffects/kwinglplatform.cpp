@@ -778,8 +778,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             // fallback to XRender for R100 and R200
             m_recommendedCompositor = XRenderCompositing;
         } else if (m_chipClass < R600) {
-            // OpenGL 1 due to NPOT limitations not supported by KWin's shaders
-            m_recommendedCompositor = OpenGL1Compositing;
+            // XRender due to NPOT limitations not supported by KWin's shaders
+            m_recommendedCompositor = XRenderCompositing;
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
         }
@@ -799,10 +799,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_preferBufferSubData = true;
         }
 
-        if (m_chipClass < NV20) {
+        if (m_chipClass < NV40) {
             m_recommendedCompositor = XRenderCompositing;
-        } else if (m_chipClass < NV40) {
-            m_recommendedCompositor = OpenGL1Compositing;
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
         }
@@ -819,7 +817,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_looseBinding = true;
 
         if (m_chipClass < I965) {
-            m_recommendedCompositor = OpenGL1Compositing;
+            m_recommendedCompositor = XRenderCompositing;
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
         }

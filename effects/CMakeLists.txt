@@ -49,11 +49,7 @@ endmacro()
 # Adds effect plugin with given name. Sources are given after the name
 macro( KWIN4_ADD_EFFECT name )
     kwin4_add_effect_backend(kwin4_effect_${name} ${ARGN})
-    if(KWIN_BUILD_OPENGL)
-        if( KWIN_BUILD_OPENGL_1_COMPOSITING )
-            set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
-        endif()
-    elseif(KWIN_BUILD_OPENGLES)
+    if(KWIN_BUILD_OPENGLES)
         set_target_properties(kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
     endif()
 

@@ -116,36 +116,6 @@ private:
     int pixelSizeLocation;
 };
 
-
-
-// ----------------------------------------------------------------------------
-
-
-#ifdef KWIN_HAVE_OPENGL_1
-class ARBBlurShader : public BlurShader
-{
-public:
-    ARBBlurShader();
-    ~ARBBlurShader();
-
-    void setPixelDistance(float val);
-    void bind();
-    void unbind();
-    void setTextureMatrix(const QMatrix4x4 &) {}
-    void setModelViewProjectionMatrix(const QMatrix4x4 &) {}
-
-    static bool supported();
-
-protected:
-    void init();
-    void reset();
-    int maxKernelSize() const;
-
-private:
-    GLuint program;
-};
-#endif
-
 } // namespace KWin
 
 #endif

@@ -239,22 +239,12 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             projection.frustum(xmin * xminFactor, xmax * xmaxFactor, ymin * yminFactor, ymax * ymaxFactor, zNear, zFar);
             QMatrix4x4 modelview;
             modelview.translate(xTranslate, yTranslate, 0.0);
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderBinder binder(ShaderManager::GenericShader);
-                GLShader *shader = binder.shader();
-                origProjection = shader->getUniformMatrix4x4("projection");
-                origModelview = shader->getUniformMatrix4x4("modelview");
-                shader->setUniform("projection", projection);
-                shader->setUniform("modelview", origModelview * modelview);
-            } else {
-#ifdef KWIN_HAVE_OPENGL_1
-                glMatrixMode(GL_PROJECTION);
-                pushMatrix();
-                loadMatrix(projection);
-                glMatrixMode(GL_MODELVIEW);
-                pushMatrix(modelview);
-#endif
-            }
+            ShaderBinder binder(ShaderManager::GenericShader);
+            GLShader *shader = binder.shader();
+            origProjection = shader->getUniformMatrix4x4("projection");
+            origModelview = shader->getUniformMatrix4x4("modelview");
+            shader->setUniform("projection", projection);
+            shader->setUniform("modelview", origModelview * modelview);
         }
 
         int winMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
@@ -351,20 +341,10 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         }
 
         if (effects->numScreens() > 1) {
-            if (effects->compositingType() == OpenGL2Compositing)  {
-                ShaderBinder binder(ShaderManager::GenericShader);
-                GLShader *shader = binder.shader();
-                shader->setUniform("projection", origProjection);
-                shader->setUniform("modelview", origModelview);
-            } else {
-#ifdef KWIN_HAVE_OPENGL_1
-                popMatrix();
-                // revert change of projection matrix
-                glMatrixMode(GL_PROJECTION);
-                popMatrix();
-                glMatrixMode(GL_MODELVIEW);
-#endif
-            }
+            ShaderBinder binder(ShaderManager::GenericShader);
+            GLShader *shader = binder.shader();
+            shader->setUniform("projection", origProjection);
+            shader->setUniform("modelview", origModelview);
         }
 
         if (m_windowTitle) {

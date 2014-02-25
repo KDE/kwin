@@ -168,10 +168,6 @@ bool ContrastEffect::enabledByDefault()
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge)
         return false;
-    if (gl->driver() == Driver_Catalyst && effects->compositingType() == OpenGL1Compositing) {
-        // fglrx supports only ARB shaders and those tend to crash KWin (see Bug #270818 and #286795)
-        return false;
-    }
 
     return true;
 }
@@ -383,16 +379,9 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
     shader->setOpacity(opacity);
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        glMatrixMode(GL_TEXTURE);
-        pushMatrix();
-    }
-#endif
     QMatrix4x4 textureMatrix;
     textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
     textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
-    loadMatrix(textureMatrix);
     shader->setTextureMatrix(textureMatrix);
 
     vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
@@ -401,13 +390,6 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
     scratch.discard();
 
     vbo->unbindArrays();
-
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        popMatrix();
-        glMatrixMode(GL_MODELVIEW);
-    }
-#endif
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);

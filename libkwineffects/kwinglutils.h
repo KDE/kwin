@@ -83,48 +83,6 @@ inline bool KWINGLUTILS_EXPORT isPowerOfTwo(int x)
  **/
 int KWINGLUTILS_EXPORT nearestPowerOfTwo(int x);
 
-/**
- * Push a new matrix on the GL matrix stack.
- * In GLES this method is a noop. This method should be preferred over glPushMatrix
- * as it also handles GLES.
- * @since 4.7
- **/
-KWINGLUTILS_EXPORT void pushMatrix();
-/**
- * Multiplies current matrix on GL stack with @p matrix and pushes the result on the matrix stack.
- * This method is the same as pushMatrix followed by multiplyMatrix.
- * In GLES this method is a noop. This method should be preferred over glPushMatrix
- * as it also handles GLES.
- * @param matrix The matrix the current matrix on the stack should be multiplied with.
- * @see pushMatrix
- * @see multiplyMatrix
- * @since 4.7
- **/
-KWINGLUTILS_EXPORT void pushMatrix(const QMatrix4x4 &matrix);
-/**
- * Multiplies the current matrix on GL stack with @p matrix.
- * In GLES this method is a noop. This method should be preferred over glMultMatrix
- * as it also handles GLES.
- * @param matrix The matrix the current matrix on the stack should be multiplied with.
- * @since 4.7
- **/
-KWINGLUTILS_EXPORT void multiplyMatrix(const QMatrix4x4 &matrix);
-/**
- * Replaces the current matrix on GL stack with @p matrix.
- * In GLES this method is a no-op. This method should be preferred over glLoadMatrix
- * as it also handles GLES.
- * @param matrix The new matrix to replace the existing one on the GL stack.
- * @since 4.7
- **/
-KWINGLUTILS_EXPORT void loadMatrix(const QMatrix4x4 &matrix);
-/**
- * Pops the current matrix from the GL matrix stack.
- * In GLES this method is a noop. This method should be preferred over glPopMatrix
- * as it also handles GLES.
- * @since 4.7
- **/
-KWINGLUTILS_EXPORT void popMatrix();
-
 class KWINGLUTILS_EXPORT GLShader
 {
 public:
@@ -304,10 +262,6 @@ public:
      * Allows to query whether Shaders are supported by the compositor, that is
      * whether the Shaders compiled successfully.
      *
-     * With OpenGL 1 compositing this method will always return @c false.
-     *
-     * Do not use this method to check whether the compositor uses OpenGL 1 or 2,
-     * use @link EffectsHandler::compositingType instead.
      * @return @c true if the built-in shaders are valid, @c false otherwise
      **/
     bool isValid() const;
@@ -386,15 +340,6 @@ public:
      * @return a pointer to the ShaderManager instance
      **/
     static ShaderManager *instance();
-    /**
-     * @brief Ensures that the ShaderManager is disabled.
-     *
-     * Used only by an OpenGL 1 Scene which does not use OpenGL 2 Shaders.
-     *
-     * @internal
-     * @since 4.10
-     **/
-    static void disable();
 
     /**
      * @internal
@@ -433,9 +378,6 @@ private:
  * // here the Shader is automatically popped as helper does no longer exist.
  * @endcode
  *
- * This class takes care for the case that the Compositor uses OpenGL 1 and the ShaderManager is
- * not valid. In that case the helper does not do anything. So this helper can be used to simplify
- * the code to remove checks for OpenGL 1/2.
  * @since 4.10
  **/
 class KWINGLUTILS_EXPORT ShaderBinder
@@ -459,7 +401,7 @@ public:
     ~ShaderBinder();
 
     /**
-     * @return The Shader pushed to the Stack. On OpenGL 1 this returns a @c null pointer.
+     * @return The Shader pushed to the Stack.
      **/
     GLShader *shader();
 
@@ -471,11 +413,6 @@ inline
 ShaderBinder::ShaderBinder(ShaderManager::ShaderType type, bool reset)
     : m_shader(nullptr)
 {
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!ShaderManager::instance()->isValid()) {
-        return;
-    }
-#endif
     m_shader = ShaderManager::instance()->pushShader(type, reset);
 }
 
@@ -483,22 +420,12 @@ inline
 ShaderBinder::ShaderBinder(GLShader *shader)
     : m_shader(shader)
 {
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!ShaderManager::instance()->isValid()) {
-        return;
-    }
-#endif
     ShaderManager::instance()->pushShader(shader);
 }
 
 inline
 ShaderBinder::~ShaderBinder()
 {
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!ShaderManager::instance()->isValid()) {
-        return;
-    }
-#endif
     ShaderManager::instance()->popShader();
 }
 
@@ -791,13 +718,6 @@ public:
      * @internal
      */
     static void cleanup();
-
-    /**
-     * Returns true if VBOs are supported, it is save to use this class even if VBOs are not
-     * supported.
-     * @returns true if vertex buffer objects are supported
-     */
-    static bool isSupported();
 
     /**
      * Returns true if indexed quad mode is supported, and false otherwise.

@@ -64,27 +64,8 @@ bool ContrastShader::supported()
 {
     if (!GLPlatform::instance()->supports(GLSL))
         return false;
-    if (effects->compositingType() == OpenGL1Compositing)
-        return false;
 
     (void) glGetError(); // Clear the error state
-
-#ifdef KWIN_HAVE_OPENGL_1
-    // These are the minimum values the implementation is required to support
-    int value = 0;
-
-    glGetIntegerv(GL_MAX_VARYING_FLOATS, &value);
-    if (value < 32)
-        return false;
-
-    glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &value);
-    if (value < 64)
-        return false;
-
-    glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &value);
-    if (value < 512)
-        return false;
-#endif
 
     if (glGetError() != GL_NO_ERROR)
         return false;

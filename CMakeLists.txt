@@ -8,7 +8,6 @@ option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
-option(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
@@ -317,9 +316,6 @@ set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
 generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
-    if( KWIN_BUILD_OPENGL_1_COMPOSITING )
-        set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS -DKWIN_HAVE_OPENGL_1)
-    endif()
   target_link_libraries(kdeinit_kwin kwinglutils ${OPENGL_gl_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)

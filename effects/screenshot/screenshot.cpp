@@ -187,40 +187,20 @@ void ScreenShotEffect::setMatrix(int width, int height)
     QMatrix4x4 projection;
     QMatrix4x4 identity;
     projection.ortho(QRect(0, 0, width, height));
-    if (effects->compositingType() == OpenGL2Compositing) {
-        ShaderBinder binder(ShaderManager::GenericShader);
-        GLShader *shader = binder.shader();
-        s_origProjection = shader->getUniformMatrix4x4("projection");
-        s_origModelview = shader->getUniformMatrix4x4("modelview");
-        shader->setUniform(GLShader::ProjectionMatrix, projection);
-        shader->setUniform(GLShader::ModelViewMatrix, identity);
-    } else if (effects->compositingType() == OpenGL1Compositing) {
-#ifdef KWIN_HAVE_OPENGL_1
-        glMatrixMode(GL_PROJECTION);
-        glPushMatrix();
-        loadMatrix(projection);
-        glMatrixMode(GL_MODELVIEW);
-        glPushMatrix();
-        glLoadIdentity();
-#endif
-    }
+    ShaderBinder binder(ShaderManager::GenericShader);
+    GLShader *shader = binder.shader();
+    s_origProjection = shader->getUniformMatrix4x4("projection");
+    s_origModelview = shader->getUniformMatrix4x4("modelview");
+    shader->setUniform(GLShader::ProjectionMatrix, projection);
+    shader->setUniform(GLShader::ModelViewMatrix, identity);
 }
 
 void ScreenShotEffect::restoreMatrix()
 {
-    if (effects->compositingType() == OpenGL2Compositing) {
-        ShaderBinder binder(ShaderManager::GenericShader);
-        GLShader *shader = binder.shader();
-        shader->setUniform(GLShader::ProjectionMatrix, s_origProjection);
-        shader->setUniform(GLShader::ModelViewMatrix, s_origModelview);
-    } else if (effects->compositingType() == OpenGL1Compositing) {
-#ifdef KWIN_HAVE_OPENGL_1
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        glPopMatrix();
-#endif
-    }
+    ShaderBinder binder(ShaderManager::GenericShader);
+    GLShader *shader = binder.shader();
+    shader->setUniform(GLShader::ProjectionMatrix, s_origProjection);
+    shader->setUniform(GLShader::ModelViewMatrix, s_origModelview);
 }
 
 void ScreenShotEffect::screenshotWindowUnderCursor(int mask)

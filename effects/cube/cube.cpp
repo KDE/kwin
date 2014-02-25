@@ -441,7 +441,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             } else {
                 m_reflectionMatrix.translate(0.0, sin(fabs(manualAngle) * M_PI / 360.0f * float(effects->numberOfDesktops())) * addedHeight2 + addedHeight1 - float(rect.height()), 0.0);
             }
-            pushMatrix(m_reflectionMatrix);
 
 #ifndef KWIN_HAVE_OPENGLES
             // TODO: find a solution for GLES
@@ -453,25 +452,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
             // cube
             glCullFace(GL_BACK);
-            pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
-            popMatrix();
-
-            // call the inside cube effects
-#ifdef KWIN_HAVE_OPENGL_1
-            foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
-                pushMatrix(m_rotationMatrix);
-                glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
-                glRotatef((1 - frontDesktop) * 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-                inside->paint();
-                popMatrix();
-            }
-#endif
 
             glCullFace(GL_FRONT);
-            pushMatrix(m_rotationMatrix);
             paintCube(mask, region, data);
-            popMatrix();
 
             paintCap(false, -point - zTranslate);
             glDisable(GL_CULL_FACE);
@@ -480,7 +464,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             // TODO: find a solution for GLES
             glDisable(GL_CLIP_PLANE0);
 #endif
-            popMatrix();
 
             const float width = rect.width();
             const float height = rect.height();
@@ -499,7 +482,7 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             ShaderManager *shaderManager = ShaderManager::instance();
-            if (shaderManager->isValid() && m_reflectionShader && m_reflectionShader->isValid()) {
+            if (m_reflectionShader && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
                 ShaderBinder binder(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
@@ -526,22 +509,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 vbo->reset();
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
-            } else {
-#ifdef KWIN_HAVE_OPENGL_1
-                glColor4f(0.0, 0.0, 0.0, alpha);
-                glPushMatrix();
-                glTranslatef(rect.x() + rect.width() * 0.5f, 0.0, 0.0);
-                glBegin(GL_POLYGON);
-                glVertex3f(vertices[0], vertices[1], vertices[2]);
-                glVertex3f(vertices[3], vertices[4], vertices[5]);
-                // rearground
-                alpha = -1.0;
-                glColor4f(0.0, 0.0, 0.0, alpha);
-                glVertex3f(vertices[6], vertices[7], vertices[8]);
-                glVertex3f(vertices[9], vertices[10], vertices[11]);
-                glEnd();
-                glPopMatrix();
-#endif
             }
             glDisable(GL_BLEND);
         }
@@ -551,26 +518,10 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 
         // cube
         glCullFace(GL_FRONT);
-        pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
-        popMatrix();
-
-
-        // call the inside cube effects
-#ifdef KWIN_HAVE_OPENGL_1
-        foreach (CubeInsideEffect * inside, m_cubeInsideEffects) {
-            pushMatrix(m_rotationMatrix);
-            glTranslatef(rect.width() / 2, rect.height() / 2, -point - zTranslate);
-            glRotatef((1 - frontDesktop) * 360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-            inside->paint();
-            popMatrix();
-        }
-#endif
 
         glCullFace(GL_BACK);
-        pushMatrix(m_rotationMatrix);
         paintCube(mask, region, data);
-        popMatrix();
 
         // cap
         paintCap(true, -point - zTranslate);
@@ -806,41 +757,6 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
             capTexture->bind();
         }
-    } else {
-#ifdef KWIN_HAVE_OPENGL_1
-        pushMatrix(m_rotationMatrix * capMatrix);
-
-        glMatrixMode(GL_TEXTURE);
-        pushMatrix();
-        loadMatrix(m_textureMirrorMatrix);
-        glMatrixMode(GL_MODELVIEW);
-
-        glColor4f(capColor.redF(), capColor.greenF(), capColor.blueF(), cubeOpacity);
-        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
-            // modulate the cap texture: cap color should be background for translucent pixels
-            // cube opacity should be used for all pixels
-            // blend with cap color
-            float color[4] = { static_cast<float>(capColor.redF()), static_cast<float>(capColor.greenF()),
-                               static_cast<float>(capColor.blueF()), cubeOpacity };
-            glActiveTexture(GL_TEXTURE0);
-            capTexture->bind();
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-            glColor4fv(color);
-
-            // set Opacity to cube opacity
-            // TODO: change opacity during start/stop animation
-            glActiveTexture(GL_TEXTURE1);
-            capTexture->bind();
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
-            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, color);
-            glActiveTexture(GL_TEXTURE0);
-            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-        }
-#endif
     }
 
     glEnable(GL_BLEND);
@@ -854,14 +770,6 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
     if (capShader) {
         m_capShader->setUniform("windowTransformation", capMatrix);
         m_capShader->setUniform("u_mirror", 0);
-    } else {
-#ifndef KWIN_HAVE_OPENGLES
-        glMatrixMode(GL_TEXTURE);
-        popMatrix();
-        glMatrixMode(GL_MODELVIEW);
-#endif
-        popMatrix();
-        pushMatrix(m_rotationMatrix * capMatrix);
     }
     glCullFace(secondCull);
     m_cubeCapBuffer->render(GL_TRIANGLES);
@@ -871,18 +779,6 @@ void CubeEffect::paintCap(bool frontFirst, float zOffset)
         ShaderManager::instance()->popShader();
         if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
             capTexture->unbind();
-        }
-    } else {
-        popMatrix();
-        if (texturedCaps && effects->numberOfDesktops() > 3 && capTexture) {
-#ifndef KWIN_HAVE_OPENGLES
-            glActiveTexture(GL_TEXTURE1);
-            glDisable(capTexture->target());
-            glActiveTexture(GL_TEXTURE0);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-            glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-            capTexture->unbind();
-#endif
         }
     }
 }
@@ -1361,9 +1257,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         int next_desktop = painting_desktop + 1;
         if (next_desktop > effects->numberOfDesktops())
             next_desktop = 1;
-        if (!shader) {
-            pushMatrix();
-        }
         if (w->isOnDesktop(prev_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
             QRect rect = effects->clientArea(FullArea, activeScreen, prev_desktop);
             WindowQuadList new_quads;
@@ -1375,17 +1268,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             data.quads = new_quads;
             if (shader) {
                 data.setXTranslation(-rect.width());
-            } else {
-                data.setRotationAxis(Qt::YAxis);
-                data.setRotationOrigin(QVector3D(rect.width() - w->x(), 0.0, 0.0));
-                data.setRotationAngle(-360.0f / effects->numberOfDesktops());
-                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
-                float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
-                QMatrix4x4 matrix;
-                matrix.translate(rect.width() / 2, 0.0, -point);
-                matrix.rotate(-360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-                matrix.translate(-rect.width() / 2, 0.0, point);
-                multiplyMatrix(matrix);
             }
         }
         if (w->isOnDesktop(next_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
@@ -1399,17 +1281,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             data.quads = new_quads;
             if (shader) {
                 data.setXTranslation(rect.width());
-            } else {
-                data.setRotationAxis(Qt::YAxis);
-                data.setRotationOrigin(QVector3D(-w->x(), 0.0, 0.0));
-                data.setRotationAngle(-360.0f / effects->numberOfDesktops());
-                float cubeAngle = (float)((float)(effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 180.0f);
-                float point = rect.width() / 2 * tan(cubeAngle * 0.5f * M_PI / 180.0f);
-                QMatrix4x4 matrix;
-                matrix.translate(rect.width() / 2, 0.0, -point);
-                matrix.rotate(360.0f / effects->numberOfDesktops(), 0.0, 1.0, 0.0);
-                matrix.translate(-rect.width() / 2, 0.0, point);
-                multiplyMatrix(matrix);
             }
         }
         QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
@@ -1586,9 +1457,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 }
                 glDisable(GL_BLEND);
             }
-        }
-        if (!shader) {
-            popMatrix();
         }
     }
 }

@@ -296,10 +296,6 @@ bool LogoutEffect::isLogoutDialog(EffectWindow* w)
 
 void LogoutEffect::renderVignetting()
 {
-    if (effects->compositingType() == OpenGL1Compositing) {
-        renderVignettingLegacy();
-        return;
-    }
     if (!m_vignettingShader) {
         m_vignettingShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::ColorShader,
                                                                            QStandardPaths::locate(QStandardPaths::GenericDataLocation,
@@ -346,41 +342,8 @@ void LogoutEffect::renderVignetting()
     glDisable(GL_BLEND);
 }
 
-void LogoutEffect::renderVignettingLegacy()
-{
-#ifdef KWIN_HAVE_OPENGL_1
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
-    glEnable(GL_BLEND);   // If not already (Such as when rendered straight to the screen)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    for (int screen = 0; screen < effects->numScreens(); screen++) {
-        QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
-        glScissor(screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
-                  screenGeom.width(), screenGeom.height());  // GL coords are flipped
-        glEnable(GL_SCISSOR_TEST);   // Geom must be set before enable
-        const float cenX = screenGeom.x() + screenGeom.width() / 2;
-        const float cenY = screenGeom.y() + screenGeom.height() / 2;
-        const float a = M_PI / 16.0f; // Angle of increment
-        const float r = float((screenGeom.width() > screenGeom.height())
-                              ? screenGeom.width() : screenGeom.height()) * 0.8f;  // Radius
-        glBegin(GL_TRIANGLE_FAN);
-        glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
-        glVertex3f(cenX, cenY, 0.0f);
-        glColor4f(0.0f, 0.0f, 0.0f, progress * 0.9f);
-        for (float i = 0.0f; i <= M_PI * 2.01f; i += a)
-            glVertex3f(cenX + r * cos(i), cenY + r * sin(i), 0.0f);
-        glEnd();
-        glDisable(GL_SCISSOR_TEST);
-    }
-    glPopAttrib();
-#endif
-}
-
 void LogoutEffect::renderBlurTexture()
 {
-    if (effects->compositingType() == OpenGL1Compositing) {
-        renderBlurTextureLegacy();
-        return;
-    }
     if (!m_blurShader) {
         m_blurShader = ShaderManager::instance()->loadFragmentShader(KWin::ShaderManager::SimpleShader,
                                                                      QStandardPaths::locate(QStandardPaths::GenericDataLocation,
@@ -405,31 +368,6 @@ void LogoutEffect::renderBlurTexture()
     blurTexture->unbind();
     glDisable(GL_BLEND);
     checkGLError("Render blur texture");
-}
-
-void LogoutEffect::renderBlurTextureLegacy()
-{
-#ifdef KWIN_HAVE_OPENGL_1
-    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TEXTURE_BIT);
-    // Unmodified base image
-    blurTexture->bind();
-    blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
-
-    // Blurred image
-    GLfloat bias[1];
-    glGetTexEnvfv(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias);
-    glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, 1.75);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor4f(1.0f, 1.0f, 1.0f, progress * 0.4);
-
-    blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
-
-    glTexEnvf(GL_TEXTURE_FILTER_CONTROL, GL_TEXTURE_LOD_BIAS, bias[0]);
-    blurTexture->unbind();
-    glPopAttrib();
-#endif
 }
 
 void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)

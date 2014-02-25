@@ -301,10 +301,6 @@ void GLTexture::discard()
 
 void GLTexturePrivate::bind()
 {
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!ShaderManager::instance()->isValid())
-        glEnable(m_target);
-#endif
     glBindTexture(m_target, m_texture);
 }
 
@@ -351,10 +347,6 @@ void GLTexture::bind()
 void GLTexturePrivate::unbind()
 {
     glBindTexture(m_target, 0);
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!ShaderManager::instance()->isValid())
-        glDisable(m_target);
-#endif
 }
 
 void GLTexture::unbind()
@@ -397,20 +389,11 @@ void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
     }
     QMatrix4x4 translation;
     translation.translate(rect.x(), rect.y());
-    if (ShaderManager::instance()->isShaderBound()) {
-        GLShader *shader = ShaderManager::instance()->getBoundShader();
-        shader->setUniform(GLShader::Offset, QVector2D(rect.x(), rect.y()));
-        shader->setUniform(GLShader::WindowTransformation, translation);
-    } else {
-        pushMatrix(translation);
-    }
+    GLShader *shader = ShaderManager::instance()->getBoundShader();
+    shader->setUniform(GLShader::Offset, QVector2D(rect.x(), rect.y()));
+    shader->setUniform(GLShader::WindowTransformation, translation);
     d->m_vbo->render(region, GL_TRIANGLE_STRIP, hardwareClipping);
-    if (ShaderManager::instance()->isShaderBound()) {
-        GLShader *shader = ShaderManager::instance()->getBoundShader();
-        shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
-    } else {
-        popMatrix();
-    }
+    shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
 }
 
 GLuint GLTexture::texture() const

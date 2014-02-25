@@ -91,18 +91,10 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             texture->bind();
-            if (effects->compositingType() == OpenGL2Compositing) {
-                ShaderBinder binder(ShaderManager::SimpleShader);
-                const QVector4D constant(opacity, opacity, opacity, opacity);
-                binder.shader()->setUniform(GLShader::ModulationConstant, constant);
-                texture->render(infiniteRegion(), (*it)->geometry);
-            } else if (effects->compositingType() == OpenGL1Compositing) {
-#ifdef KWIN_HAVE_OPENGL_1
-                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                glColor4f(1.0, 1.0, 1.0, opacity);
-                texture->render(infiniteRegion(), (*it)->geometry);
-#endif
-            }
+            ShaderBinder binder(ShaderManager::SimpleShader);
+            const QVector4D constant(opacity, opacity, opacity, opacity);
+            binder.shader()->setUniform(GLShader::ModulationConstant, constant);
+            texture->render(infiniteRegion(), (*it)->geometry);
             texture->unbind();
             glDisable(GL_BLEND);
         } else if (effects->compositingType() == XRenderCompositing) {

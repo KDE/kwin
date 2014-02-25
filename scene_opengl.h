@@ -137,31 +137,6 @@ private:
     GLuint vao;
 };
 
-#ifdef KWIN_HAVE_OPENGL_1
-class SceneOpenGL1 : public SceneOpenGL
-{
-public:
-    explicit SceneOpenGL1(OpenGLBackend *backend);
-    virtual ~SceneOpenGL1();
-    virtual void screenGeometryChanged(const QSize &size);
-    virtual qint64 paint(QRegion damage, ToplevelList windows);
-    virtual CompositingType compositingType() const {
-        return OpenGL1Compositing;
-    }
-
-    static bool supported(OpenGLBackend *backend);
-
-protected:
-    virtual void paintGenericScreen(int mask, ScreenPaintData data);
-    virtual void doPaintBackground(const QVector< float >& vertices);
-    virtual Scene::Window *createWindow(Toplevel *t);
-
-private:
-    void setupModelViewProjectionMatrix();
-    bool m_resetModelViewProjectionMatrix;
-};
-#endif
-
 class SceneOpenGL::TexturePrivate
     : public GLTexturePrivate
 {
@@ -319,23 +294,6 @@ private:
      **/
     bool m_blendingEnabled;
 };
-
-#ifdef KWIN_HAVE_OPENGL_1
-class SceneOpenGL1Window : public SceneOpenGL::Window
-{
-public:
-    explicit SceneOpenGL1Window(Toplevel *c);
-    virtual ~SceneOpenGL1Window();
-
-protected:
-    virtual void performPaint(int mask, QRegion region, WindowPaintData data);
-    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
-    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
-private:
-    void paintContent(SceneOpenGL::Texture* content, const QRegion& region, int mask, qreal opacity,
-                      const WindowPaintData& data, const WindowQuadList &contentQuads, bool normalized);
-};
-#endif
 
 class OpenGLWindowPixmap : public WindowPixmap
 {

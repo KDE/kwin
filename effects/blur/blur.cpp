@@ -146,10 +146,6 @@ bool BlurEffect::enabledByDefault()
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge)
         return false;
-    if (gl->driver() == Driver_Catalyst && effects->compositingType() == OpenGL1Compositing) {
-        // fglrx supports only ARB shaders and those tend to crash KWin (see Bug #270818 and #286795)
-        return false;
-    }
 
     return true;
 }
@@ -157,11 +153,6 @@ bool BlurEffect::enabledByDefault()
 bool BlurEffect::supported()
 {
     bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && GLSLBlurShader::supported();
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && ARBBlurShader::supported();
-    }
-#endif
 
     if (supported) {
         int maxTexSize;
@@ -463,16 +454,9 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        glMatrixMode(GL_TEXTURE);
-        pushMatrix();
-    }
-#endif
     QMatrix4x4 textureMatrix;
     textureMatrix.scale(1.0 / scratch.width(), -1.0 / scratch.height(), 1);
     textureMatrix.translate(-r.x(), -scratch.height() - r.y(), 0);
-    loadMatrix(textureMatrix);
     shader->setTextureMatrix(textureMatrix);
 
     vbo->draw(GL_TRIANGLES, 0, expanded.rectCount() * 6);
@@ -500,18 +484,10 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     textureMatrix.setToIdentity();
     textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
     textureMatrix.translate(0, -tex.height(), 0);
-    loadMatrix(textureMatrix);
     shader->setTextureMatrix(textureMatrix);
 
     vbo->draw(GL_TRIANGLES, expanded.rectCount() * 6, shape.rectCount() * 6);
     vbo->unbindArrays();
-
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        popMatrix();
-        glMatrixMode(GL_MODELVIEW);
-    }
-#endif
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);
@@ -553,17 +529,6 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     shader->bind();
     QMatrix4x4 textureMatrix;
     QMatrix4x4 modelViewProjectionMatrix;
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        glMatrixMode(GL_MODELVIEW);
-        pushMatrix();
-        glLoadIdentity();
-        glMatrixMode(GL_TEXTURE);
-        pushMatrix();
-        glMatrixMode(GL_PROJECTION);
-        pushMatrix();
-    }
-#endif
 
     /**
      * Which part of the background texture can be updated ?
@@ -632,20 +597,12 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
 
         modelViewProjectionMatrix.ortho(0, r.width(), r.height(), 0 , 0, 65535);
         modelViewProjectionMatrix.translate(-r.x(), -r.y(), 0);
-        loadMatrix(modelViewProjectionMatrix);
         shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
 
         // Set up the texture matrix to transform from screen coordinates
         // to texture coordinates.
         textureMatrix.scale(1.0 / tex.width(), -1.0 / tex.height(), 1);
         textureMatrix.translate(-updateRect.x(), -updateRect.height() - updateRect.y(), 0);
-#ifdef KWIN_HAVE_OPENGL_1
-        if (effects->compositingType() == OpenGL1Compositing) {
-            glMatrixMode(GL_TEXTURE);
-            loadMatrix(textureMatrix);
-            glMatrixMode(GL_PROJECTION);
-        }
-#endif
         shader->setTextureMatrix(textureMatrix);
 
         vbo->draw(GL_TRIANGLES, horizontalOffset, horizontalCount);
@@ -673,7 +630,6 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     modelViewProjectionMatrix.setToIdentity();
     const QSize screenSize = effects->virtualScreenSize();
     modelViewProjectionMatrix.ortho(0, screenSize.width(), screenSize.height(), 0, 0, 65535);
-    loadMatrix(modelViewProjectionMatrix);
     shader->setModelViewProjectionMatrix(modelViewProjectionMatrix);
 
     // Set the up the texture matrix to transform from screen coordinates
@@ -681,27 +637,10 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     textureMatrix.setToIdentity();
     textureMatrix.scale(1.0 / targetTexture.width(), -1.0 / targetTexture.height(), 1);
     textureMatrix.translate(-r.x(), -targetTexture.height() - r.y(), 0);
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        glMatrixMode(GL_TEXTURE);
-        loadMatrix(textureMatrix);
-        glMatrixMode(GL_PROJECTION);
-    }
-#endif
     shader->setTextureMatrix(textureMatrix);
 
     vbo->draw(GL_TRIANGLES, verticalOffset, verticalCount);
     vbo->unbindArrays();
-
-#ifdef KWIN_HAVE_OPENGL_1
-    if (effects->compositingType() == OpenGL1Compositing) {
-        popMatrix();
-        glMatrixMode(GL_TEXTURE);
-        popMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        popMatrix();
-    }
-#endif
 
     if (opacity < 1.0) {
         glDisable(GL_BLEND);

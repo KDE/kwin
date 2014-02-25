@@ -87,13 +87,9 @@ void CubeSlideEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
     if (!slideRotations.empty()) {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
-        pushMatrix();
         paintSlideCube(mask, region, data);
-        popMatrix();
         glCullFace(GL_BACK);
-        pushMatrix();
         paintSlideCube(mask, region, data);
-        popMatrix();
         glDisable(GL_CULL_FACE);
 
         if (dontSlidePanels) {

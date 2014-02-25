@@ -373,9 +373,7 @@ void MouseClickEffect::drawCircleQPainter(const QColor &color, float cx, float c
 
 void MouseClickEffect::paintScreenSetupGl(int, QRegion, ScreenPaintData&)
 {
-    if (ShaderManager::instance()->isValid()) {
-        ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
-    }
+    ShaderManager::instance()->pushShader(ShaderManager::ColorShader);
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);
@@ -386,9 +384,7 @@ void MouseClickEffect::paintScreenFinishGl(int, QRegion, ScreenPaintData&)
 {
     glDisable(GL_BLEND);
 
-    if (ShaderManager::instance()->isValid()) {
-        ShaderManager::instance()->popShader();
-    }
+    ShaderManager::instance()->popShader();
 }
 
 } // namespace

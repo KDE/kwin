@@ -124,10 +124,11 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
     if ( effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
         ShaderBinder binder(ShaderManager::GenericShader);
         GLShader *shader(binder.shader());
-        QMatrix4x4 modelview;
-        if (shader) {
-            modelview = shader->getUniformMatrix4x4("modelview");
+        if (!shader) {
+            return;
         }
+        QMatrix4x4 modelview;
+        modelview = shader->getUniformMatrix4x4("modelview");
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         QMatrix4x4 matrix(modelview);
@@ -136,22 +137,15 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             matrix.translate(p.x(), p.y(), 0.0);
             matrix.rotate(i ? -2*m_angle : m_angle, 0, 0, 1.0);
             matrix.translate(-p.x(), -p.y(), 0.0);
-            if (shader) {
-                shader->setUniform(GLShader::ModelViewMatrix, matrix);
-                shader->setUniform(GLShader::Saturation, 1.0);
-                shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
-            } else
-                pushMatrix(matrix);
+            shader->setUniform(GLShader::ModelViewMatrix, matrix);
+            shader->setUniform(GLShader::Saturation, 1.0);
+            shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
             m_texture[i]->bind();
             m_texture[i]->render(region, m_lastRect[i]);
             m_texture[i]->unbind();
-            if (!shader)
-                popMatrix();
         }
         glDisable(GL_BLEND);
-        if (shader) {
-            shader->setUniform(GLShader::ModelViewMatrix, modelview);
-        }
+        shader->setUniform(GLShader::ModelViewMatrix, modelview);
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if ( effects->compositingType() == XRenderCompositing && m_picture[0] && m_picture[1]) {

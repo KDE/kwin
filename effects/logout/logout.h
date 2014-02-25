@@ -70,9 +70,7 @@ private:
     EffectWindowList ignoredWindows;
 
     void renderVignetting();
-    void renderVignettingLegacy();
     void renderBlurTexture();
-    void renderBlurTextureLegacy();
     int frameDelay;
     bool blurSupported, useBlur;
     GLTexture* blurTexture;

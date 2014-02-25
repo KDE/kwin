@@ -204,78 +204,6 @@ int nearestPowerOfTwo(int x)
     return 1 << last;
 }
 
-void pushMatrix()
-{
-#ifdef KWIN_HAVE_OPENGL_1
-    if (ShaderManager::instance()->isValid()) {
-        return;
-    }
-    glPushMatrix();
-#endif
-}
-
-void pushMatrix(const QMatrix4x4 &matrix)
-{
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(matrix)
-#else
-    if (ShaderManager::instance()->isValid()) {
-        return;
-    }
-    glPushMatrix();
-    multiplyMatrix(matrix);
-#endif
-}
-
-void multiplyMatrix(const QMatrix4x4 &matrix)
-{
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(matrix)
-#else
-    if (ShaderManager::instance()->isValid()) {
-        return;
-    }
-    GLfloat m[16];
-    const auto *data = matrix.constData();
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m[i*4+j] = data[i*4+j];
-        }
-    }
-    glMultMatrixf(m);
-#endif
-}
-
-void loadMatrix(const QMatrix4x4 &matrix)
-{
-#ifndef KWIN_HAVE_OPENGL_1
-    Q_UNUSED(matrix)
-#else
-    if (ShaderManager::instance()->isValid()) {
-        return;
-    }
-    GLfloat m[16];
-    const auto *data = matrix.constData();
-    for (int i = 0; i < 4; ++i) {
-        for (int j = 0; j < 4; ++j) {
-            m[i*4+j] = data[i*4+j];
-        }
-    }
-    glLoadMatrixf(m);
-#endif
-}
-
-void popMatrix()
-{
-#ifdef KWIN_HAVE_OPENGL_1
-    if (ShaderManager::instance()->isValid()) {
-        return;
-    }
-    glPopMatrix();
-#endif
-}
-
-
 //****************************************
 // GLShader
 //****************************************
@@ -696,17 +624,6 @@ ShaderManager *ShaderManager::instance()
         s_shaderManager->m_inited = true;
     }
     return s_shaderManager;
-}
-
-void ShaderManager::disable()
-{
-    // for safety do a Cleanup first
-    ShaderManager::cleanup();
-
-    // create a new ShaderManager and set it to inited without calling init
-    // that will ensure that the ShaderManager is not valid
-    s_shaderManager = new ShaderManager();
-    s_shaderManager->m_inited = true;
 }
 
 void ShaderManager::cleanup()
@@ -1576,8 +1493,7 @@ public:
         , nextOffset(0)
         , baseAddress(0)
     {
-        if (GLVertexBufferPrivate::supported)
-            glGenBuffers(1, &buffer);
+        glGenBuffers(1, &buffer);
 
         switch(usageHint) {
         case GLVertexBuffer::Dynamic:
@@ -1593,8 +1509,7 @@ public:
     }
 
     ~GLVertexBufferPrivate() {
-        if (GLVertexBufferPrivate::supported)
-            glDeleteBuffers(1, &buffer);
+        glDeleteBuffers(1, &buffer);
     }
 
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
@@ -1607,7 +1522,6 @@ public:
     GLenum usage;
     int stride;
     int vertexCount;
-    static bool supported;
     static GLVertexBuffer *streamingBuffer;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
@@ -1625,7 +1539,6 @@ public:
 #endif
 };
 
-bool GLVertexBufferPrivate::supported = false;
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
@@ -1676,63 +1589,27 @@ void GLVertexBufferPrivate::interleaveArrays(float *dst, int dim,
 
 void GLVertexBufferPrivate::bindArrays()
 {
-#ifndef KWIN_HAVE_OPENGLES
-    if (ShaderManager::instance()->isShaderBound()) {
-#endif
-        if (useColor) {
-            GLShader *shader = ShaderManager::instance()->getBoundShader();
-            shader->setUniform(GLShader::Color, color);
-        }
-
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-        BitfieldIterator it(enabledArrays);
-        while (it.hasNext()) {
-            const int index = it.next();
-            glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
-                                 (const GLvoid *) (baseAddress + attrib[index].offset));
-            glEnableVertexAttribArray(index);
-        }
-#ifndef KWIN_HAVE_OPENGLES
-    } else {
-        if (GLVertexBufferPrivate::supported)
-            glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-        // FIXME Is there any good reason to not leave this array permanently enabled?
-        //       When do we not use it in the GL 1.x path?
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glVertexPointer(attrib[VA_Position].size, attrib[VA_Position].type, stride,
-                        (const GLvoid *) (baseAddress + attrib[VA_Position].offset));
-
-        if (enabledArrays[VA_TexCoord]) {
-            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glTexCoordPointer(attrib[VA_TexCoord].size, attrib[VA_TexCoord].type, stride,
-                              (const GLvoid *) (baseAddress + attrib[VA_TexCoord].offset));
-        }
-
-        if (useColor)
-            glColor4f(color.x(), color.y(), color.z(), color.w());
+    if (useColor) {
+        GLShader *shader = ShaderManager::instance()->getBoundShader();
+        shader->setUniform(GLShader::Color, color);
     }
-#endif
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+    BitfieldIterator it(enabledArrays);
+    while (it.hasNext()) {
+        const int index = it.next();
+        glVertexAttribPointer(index, attrib[index].size, attrib[index].type, GL_FALSE, stride,
+                                (const GLvoid *) (baseAddress + attrib[index].offset));
+        glEnableVertexAttribArray(index);
+    }
 }
 
 void GLVertexBufferPrivate::unbindArrays()
 {
-#ifndef KWIN_HAVE_OPENGLES
-    if (ShaderManager::instance()->isShaderBound()) {
-#endif
-        BitfieldIterator it(enabledArrays);
-        while (it.hasNext())
-            glDisableVertexAttribArray(it.next());
-#ifndef KWIN_HAVE_OPENGLES
-    } else {
-        // Assume that the conventional arrays were enabled
-        glDisableClientState(GL_VERTEX_ARRAY);
-
-        if (enabledArrays[VA_TexCoord])
-            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    }
-#endif
+    BitfieldIterator it(enabledArrays);
+    while (it.hasNext())
+        glDisableVertexAttribArray(it.next());
 }
 
 void GLVertexBufferPrivate::reallocateBuffer(size_t size)
@@ -1808,8 +1685,7 @@ GLvoid *GLVertexBuffer::map(size_t size)
 {
     d->mappedSize = size;
 
-    if (GLVertexBufferPrivate::supported)
-        glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
@@ -1834,7 +1710,7 @@ void GLVertexBuffer::unmap()
 
         d->baseAddress = d->nextOffset;
         d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
-    } else if (GLVertexBufferPrivate::supported) {
+    } else {
         // Upload the data from local memory to the buffer object
         if (preferBufferSubData) {
             if ((d->nextOffset + d->mappedSize) > d->bufferSize) {
@@ -1855,10 +1731,6 @@ void GLVertexBuffer::unmap()
         if (d->usage == GL_STATIC_DRAW)
             d->dataStore = QByteArray();
 
-    } else {
-        // If buffer objects aren't supported we just need to update
-        // the client memory pointer and we're done.
-        d->baseAddress = intptr_t(d->dataStore.data());
     }
 
     d->mappedSize = 0;
@@ -1955,11 +1827,6 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     }
 }
 
-bool GLVertexBuffer::isSupported()
-{
-    return GLVertexBufferPrivate::supported;
-}
-
 bool GLVertexBuffer::supportsIndexedQuads()
 {
     return GLVertexBufferPrivate::supportsIndexedQuads;
@@ -1991,11 +1858,9 @@ void GLVertexBuffer::reset()
 void GLVertexBuffer::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
-    GLVertexBufferPrivate::supported = true;
     GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QStringLiteral("GL_EXT_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = false;
 #else
-    GLVertexBufferPrivate::supported = hasGLVersion(1, 5) || hasGLExtension(QStringLiteral("GL_ARB_vertex_buffer_object"));
     GLVertexBufferPrivate::hasMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = glMapBufferRange && glCopyBufferSubData && glDrawElementsBaseVertex;
     GLVertexBufferPrivate::s_indexBuffer = nullptr;

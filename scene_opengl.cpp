@@ -254,15 +254,6 @@ SceneOpenGL *SceneOpenGL::createScene()
             return scene;
         }
     }
-#ifdef KWIN_HAVE_OPENGL_1
-    if (SceneOpenGL1::supported(backend)) {
-        scene = new SceneOpenGL1(backend);
-        if (scene->initFailed()) {
-            delete scene;
-            scene = NULL;
-        }
-    }
-#endif
     if (!scene) {
         if (GLPlatform::instance()->recommendedCompositor() == XRenderCompositing) {
             qCritical() << "OpenGL driver recommends XRender based compositing. Falling back to XRender.";
@@ -622,10 +613,6 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
         return false;
 #endif
     }
-    if (options->isGlLegacy()) {
-        qDebug() << "OpenGL 2 disabled by config option";
-        return false;
-    }
     return true;
 }
 
@@ -777,116 +764,6 @@ void SceneOpenGL2::slotColorCorrectedChanged(bool recreateShaders)
     }
     Compositor::self()->addRepaintFull();
 }
-
-
-//****************************************
-// SceneOpenGL1
-//****************************************
-#ifdef KWIN_HAVE_OPENGL_1
-bool SceneOpenGL1::supported(OpenGLBackend *backend)
-{
-    Q_UNUSED(backend)
-    const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
-    if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O1") == 0) {
-            qDebug() << "OpenGL 1 compositing enforced by environment variable";
-            return true;
-        } else {
-            // OpenGL 1 disabled by environment variable
-            return false;
-        }
-    }
-    if (GLPlatform::instance()->recommendedCompositor() < OpenGL1Compositing) {
-        qDebug() << "Driver does not recommend OpenGL 1 compositing";
-        return false;
-    }
-    return true;
-}
-
-SceneOpenGL1::SceneOpenGL1(OpenGLBackend *backend)
-    : SceneOpenGL(Workspace::self(), backend)
-    , m_resetModelViewProjectionMatrix(true)
-{
-    if (!init_ok) {
-        // base ctor already failed
-        return;
-    }
-    ShaderManager::disable();
-    setupModelViewProjectionMatrix();
-    if (checkGLError("Init")) {
-        qCritical() << "OpenGL 1 compositing setup failed";
-        init_ok = false;
-        return; // error
-    }
-
-    qDebug() << "OpenGL 1 compositing successfully initialized";
-}
-
-SceneOpenGL1::~SceneOpenGL1()
-{
-}
-
-qint64 SceneOpenGL1::paint(QRegion damage, ToplevelList windows)
-{
-    if (m_resetModelViewProjectionMatrix) {
-        // reset model view projection matrix if required
-        setupModelViewProjectionMatrix();
-    }
-    return SceneOpenGL::paint(damage, windows);
-}
-
-void SceneOpenGL1::paintGenericScreen(int mask, ScreenPaintData data)
-{
-    pushMatrix(transformation(mask, data));
-    Scene::paintGenericScreen(mask, data);
-    popMatrix();
-}
-
-void SceneOpenGL1::doPaintBackground(const QVector< float >& vertices)
-{
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setUseColor(true);
-    vbo->setData(vertices.count() / 2, 2, vertices.data(), NULL);
-    vbo->render(GL_TRIANGLES);
-}
-
-void SceneOpenGL1::setupModelViewProjectionMatrix()
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    float fovy = 60.0f;
-    float aspect = 1.0f;
-    float zNear = 0.1f;
-    float zFar = 100.0f;
-    float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-    float ymin = -ymax;
-    float xmin =  ymin * aspect;
-    float xmax = ymax * aspect;
-    // swap top and bottom to have OpenGL coordinate system match X system
-    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
-    glTranslatef(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-    glScalef((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
-    m_resetModelViewProjectionMatrix = false;
-}
-
-void SceneOpenGL1::screenGeometryChanged(const QSize &size)
-{
-    SceneOpenGL::screenGeometryChanged(size);
-    m_resetModelViewProjectionMatrix = true;
-}
-
-Scene::Window *SceneOpenGL1::createWindow(Toplevel *t)
-{
-    SceneOpenGL1Window *w = new SceneOpenGL1Window(t);
-    w->setScene(this);
-    return w;
-}
-
-#endif
 
 //****************************************
 // SceneOpenGL::Texture
@@ -1595,251 +1472,6 @@ void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal br
     }
 }
 
-//***************************************
-// SceneOpenGL1Window
-//***************************************
-#ifdef KWIN_HAVE_OPENGL_1
-SceneOpenGL1Window::SceneOpenGL1Window(Toplevel *c)
-    : SceneOpenGL::Window(c)
-{
-}
-
-SceneOpenGL1Window::~SceneOpenGL1Window()
-{
-}
-
-// paint the window
-void SceneOpenGL1Window::performPaint(int mask, QRegion region, WindowPaintData data)
-{
-    if (!beginRenderWindow(mask, region, data))
-        return;
-
-    pushMatrix(transformation(mask, data));
-
-    // shadow
-    if (m_shadow) {
-        paintShadow(region, data);
-    }
-    // decorations
-    paintDecorations(data, region);
-
-    // paint the content
-    OpenGLWindowPixmap *previous = previousWindowPixmap<OpenGLWindowPixmap>();
-    const WindowQuadList contentQuads = data.quads.select(WindowQuadContents);
-    if (previous && data.crossFadeProgress() != 1.0) {
-        // TODO: ARGB crsoofading is atm. a hack, playing on opacities for two dumb SrcOver operations
-        // Will require a caching texture or sth. else 1.2 compliant
-        float opacity = data.opacity();
-        if (opacity < 0.95f || toplevel->hasAlpha()) {
-            opacity = 1 - data.crossFadeProgress();
-            opacity = data.opacity() * (1 - pow(opacity, 1.0f + 2.0f * data.opacity()));
-        }
-        paintContent(s_frameTexture, region, mask, opacity, data, contentQuads, false);
-        previous->texture()->setFilter(filter == Scene::ImageFilterGood ? GL_LINEAR : GL_NEAREST);
-        WindowQuadList oldContents;
-        const QRect &oldGeometry = previous->contentsRect();
-        for (const WindowQuad &quad : contentQuads) {
-            // we need to create new window quads with normalize texture coordinates
-            // normal quads divide the x/y position by width/height. This would not work as the texture
-            // is larger than the visible content in case of a decorated Client resulting in garbage being shown.
-            // So we calculate the normalized texture coordinate in the Client's new content space and map it to
-            // the previous Client's content space.
-            WindowQuad newQuad(WindowQuadContents);
-            for (int i = 0; i < 4; ++i) {
-                const qreal xFactor = qreal(quad[i].textureX() - toplevel->clientPos().x())/qreal(toplevel->clientSize().width());
-                const qreal yFactor = qreal(quad[i].textureY() - toplevel->clientPos().y())/qreal(toplevel->clientSize().height());
-                WindowVertex vertex(quad[i].x(), quad[i].y(),
-                                    (xFactor * oldGeometry.width() + oldGeometry.x())/qreal(previous->size().width()),
-                                    (yFactor * oldGeometry.height() + oldGeometry.y())/qreal(previous->size().height()));
-                newQuad[i] = vertex;
-            }
-            oldContents.append(newQuad);
-        }
-        opacity = data.opacity() * (1.0 - data.crossFadeProgress());
-        paintContent(previous->texture(), region, mask, opacity, data, oldContents, true);
-    } else {
-        paintContent(s_frameTexture, region, mask, data.opacity(), data, contentQuads, false);
-    }
-
-    popMatrix();
-
-    endRenderWindow();
-}
-
-void SceneOpenGL1Window::paintContent(SceneOpenGL::Texture* content, const QRegion& region, int mask,
-                                      qreal opacity, const WindowPaintData& data, const WindowQuadList &contentQuads, bool normalized)
-{
-    if (contentQuads.isEmpty()) {
-        return;
-    }
-    content->bind();
-    prepareStates(Content, opacity, data.brightness(), data.saturation(), data.screen());
-    renderQuads(mask, region, contentQuads, content, normalized);
-    restoreStates(Content, opacity, data.brightness(), data.saturation());
-    content->unbind();
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug()) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(mask, region, contentQuads, content, normalized);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-#endif
-}
-
-void SceneOpenGL1Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)
-{
-    Q_UNUSED(screen)
-
-    GLTexture *tex = textureForType(type);
-    bool alpha = false;
-    bool opaque = true;
-    if (type == Content) {
-        alpha = toplevel->hasAlpha();
-        opaque = isOpaque() && opacity == 1.0;
-    } else {
-        alpha = true;
-        opaque = false;
-    }
-    // setup blending of transparent windows
-    glPushAttrib(GL_ENABLE_BIT);
-    if (!opaque) {
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-    }
-    if (saturation != 1.0 && tex->saturationSupported()) {
-        // First we need to get the color from [0; 1] range to [0.5; 1] range
-        glActiveTexture(GL_TEXTURE0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-        const float scale_constant[] = { 1.0, 1.0, 1.0, 0.5};
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, scale_constant);
-        tex->bind();
-
-        // Then we take dot product of the result of previous pass and
-        //  saturation_constant. This gives us completely unsaturated
-        //  (greyscale) image
-        // Note that both operands have to be in range [0.5; 1] since opengl
-        //  automatically substracts 0.5 from them
-        glActiveTexture(GL_TEXTURE1);
-        float saturation_constant[] = { 0.5 + 0.5 * 0.30, 0.5 + 0.5 * 0.59, 0.5 + 0.5 * 0.11,
-                                        static_cast<float>(saturation) };
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_DOT3_RGB);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant);
-        tex->bind();
-
-        // Finally we need to interpolate between the original image and the
-        //  greyscale image to get wanted level of saturation
-        glActiveTexture(GL_TEXTURE2);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_INTERPOLATE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE0);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PREVIOUS);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE2_RGB, GL_CONSTANT);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND2_RGB, GL_SRC_ALPHA);
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, saturation_constant);
-        // Also replace alpha by primary color's alpha here
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PRIMARY_COLOR);
-        glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-        // And make primary color contain the wanted opacity
-        glColor4f(opacity, opacity, opacity, opacity);
-        tex->bind();
-
-        if (alpha || !opaque || brightness != 1.0f) {
-            glActiveTexture(GL_TEXTURE3);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_PREVIOUS);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_PRIMARY_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            // The color has to be multiplied by both opacity and brightness
-            float opacityByBrightness = opacity * brightness;
-            glColor4f(opacityByBrightness, opacityByBrightness, opacityByBrightness, opacity);
-            if (alpha) {
-                // Multiply original texture's alpha by our opacity
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_MODULATE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_TEXTURE0);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_ALPHA, GL_PRIMARY_COLOR);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_ALPHA, GL_SRC_ALPHA);
-            } else {
-                // Alpha will be taken from previous stage
-                glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-                glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_PREVIOUS);
-                glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_ALPHA, GL_SRC_ALPHA);
-            }
-            tex->bind();
-        }
-
-        glActiveTexture(GL_TEXTURE0);
-    } else if (opacity != 1.0 || brightness != 1.0) {
-        // the window is additionally configured to have its opacity adjusted,
-        // do it
-        float opacityByBrightness = opacity * brightness;
-        if (alpha) {
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-            glColor4f(opacityByBrightness, opacityByBrightness, opacityByBrightness,
-                      opacity);
-        } else {
-            // Multiply color by brightness and replace alpha by opacity
-            float constant[] = { opacityByBrightness, opacityByBrightness, opacityByBrightness,
-                                 static_cast<float>(opacity) };
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_MODULATE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND0_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE1_RGB, GL_CONSTANT);
-            glTexEnvi(GL_TEXTURE_ENV, GL_OPERAND1_RGB, GL_SRC_COLOR);
-            glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-            glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
-            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant);
-        }
-    } else if (!alpha && opaque) {
-        float constant[] = { 1.0, 1.0, 1.0, 1.0 };
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_RGB, GL_REPLACE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_RGB, GL_TEXTURE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_COMBINE_ALPHA, GL_REPLACE);
-        glTexEnvi(GL_TEXTURE_ENV, GL_SOURCE0_ALPHA, GL_CONSTANT);
-        glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, constant);
-    }
-}
-
-void SceneOpenGL1Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation)
-{
-    GLTexture *tex = textureForType(type);
-    if (opacity != 1.0 || saturation != 1.0 || brightness != 1.0f) {
-        if (saturation != 1.0 && tex->saturationSupported()) {
-            glActiveTexture(GL_TEXTURE3);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE2);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE1);
-            glDisable(tex->target());
-            glActiveTexture(GL_TEXTURE0);
-        }
-    }
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glColor4f(0, 0, 0, 0);
-
-    glPopAttrib();  // ENABLE_BIT
-}
-#endif
-
 //****************************************
 // OpenGLWindowPixmap
 //****************************************
@@ -1980,7 +1612,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
     GLShader* shader = m_effectFrame->shader();
     bool sceneShader = false;
-    if (!shader && ShaderManager::instance()->isValid()) {
+    if (!shader) {
         shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
         sceneShader = true;
     } else if (shader) {
@@ -1997,10 +1629,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-#ifdef KWIN_HAVE_OPENGL_1
-    if (!shader)
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-#endif
 
     // Render the actual frame
     if (m_effectFrame->style() == EffectFrameUnstyled) {
@@ -2114,10 +1742,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             const float a = opacity * frameOpacity;
             shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
         }
-#ifdef KWIN_HAVE_OPENGL_1
-        else
-            glColor4f(0.0, 0.0, 0.0, opacity * frameOpacity);
-#endif
 
         m_unstyledTexture->bind();
         const QPoint pt = m_effectFrame->geometry().topLeft();
@@ -2128,16 +1752,12 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             translation.translate(pt.x(), pt.y());
             if (shader) {
                 shader->setUniform(GLShader::WindowTransformation, translation);
-            } else {
-                pushMatrix(translation);
             }
         }
         m_unstyledVBO->render(region, GL_TRIANGLES);
         if (!sceneShader) {
             if (shader) {
                 shader->setUniform(GLShader::WindowTransformation, QMatrix4x4());
-            } else {
-                popMatrix();
             }
         }
         m_unstyledTexture->unbind();
@@ -2149,10 +1769,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
             const float a = opacity * frameOpacity;
             shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
         }
-#ifdef KWIN_HAVE_OPENGL_1
-        else
-            glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
-#endif
         m_texture->bind();
         qreal left, top, right, bottom;
         m_effectFrame->frame().getMargins(left, top, right, bottom);   // m_geometry is the inner geometry
@@ -2171,10 +1787,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * frameOpacity;
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
-    #ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity * frameOpacity);
-    #endif
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
             m_selectionTexture->bind();
             m_selectionTexture->render(region, m_effectFrame->selection());
@@ -2193,10 +1805,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity * (1.0 - m_effectFrame->crossFadeProgress()));
-#endif
 
             m_oldIconTexture->bind();
             m_oldIconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
@@ -2205,19 +1813,11 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * m_effectFrame->crossFadeProgress();
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
-#endif
         } else {
             if (shader) {
                 const QVector4D constant(opacity, opacity, opacity, opacity);
                 shader->setUniform(GLShader::ModulationConstant, constant);
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity);
-#endif
         }
 
         if (!m_iconTexture) { // lazy creation
@@ -2235,10 +1835,6 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * (1.0 - m_effectFrame->crossFadeProgress());
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity *(1.0 - m_effectFrame->crossFadeProgress()));
-#endif
 
             m_oldTextTexture->bind();
             m_oldTextTexture->render(region, m_effectFrame->geometry());
@@ -2247,19 +1843,11 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
                 const float a = opacity * m_effectFrame->crossFadeProgress();
                 shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity * m_effectFrame->crossFadeProgress());
-#endif
         } else {
             if (shader) {
                 const QVector4D constant(opacity, opacity, opacity, opacity);
                 shader->setUniform(GLShader::ModulationConstant, constant);
             }
-#ifdef KWIN_HAVE_OPENGL_1
-            else
-                glColor4f(1.0, 1.0, 1.0, opacity);
-#endif
         }
         if (!m_textTexture)   // Lazy creation
             updateTextTexture();
