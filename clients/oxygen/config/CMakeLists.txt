@@ -30,7 +30,7 @@ target_link_libraries(kwin_oxygen_config KF5::WindowSystem KF5::Completion)
 target_link_libraries(kwin_oxygen_config kdecorations oxygenstyle  oxygenstyleconfig)
 
 if(X11_FOUND)
-  target_link_libraries(kwin_oxygen_config ${XCB_LIBRARIES})
+  target_link_libraries(kwin_oxygen_config XCB::XCB)
   target_link_libraries(kwin_oxygen_config Qt5::X11Extras)
 endif()
 

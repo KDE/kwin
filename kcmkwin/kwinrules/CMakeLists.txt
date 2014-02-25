@@ -12,8 +12,8 @@ set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 kf5_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 
 set(kwin_kcm_rules_XCB_LIBS
-    ${XCB_XCB_LIBRARIES}
-    ${XCB_XFIXES_LIBRARY}
+    XCB::XCB
+    XCB::XFIXES
     ${X11_Xcursor_LIB}
 )
 

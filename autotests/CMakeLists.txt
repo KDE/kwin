@@ -50,8 +50,8 @@ target_link_libraries( testClientMachine
                        Qt5::X11Extras
                        Qt5::Widgets
                        KF5::WindowSystem
-                       ${XCB_XCB_LIBRARY}
-                       ${XCB_XFIXES_LIBRARY}
+                       XCB::XCB
+                       XCB::XFIXES
                        ${X11_X11_LIB} # to make jenkins happy
                        ${X11_Xcursor_LIB}
 )
@@ -68,7 +68,7 @@ target_link_libraries( testXcbWrapper
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
-                       ${XCB_XCB_LIBRARY}
+                       XCB::XCB
 )
 
 ########################################################
@@ -83,5 +83,5 @@ target_link_libraries( testXcbWindow
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
-                       ${XCB_XCB_LIBRARY}
+                       XCB::XCB
 )

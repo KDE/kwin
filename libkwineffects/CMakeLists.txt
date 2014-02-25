@@ -19,9 +19,9 @@ set(kwineffects_KDE_LIBS
 )
 
 set(kwineffects_XCB_LIBS
-    ${XCB_XCB_LIBRARY}
-    ${XCB_XFIXES_LIBRARY}
-    ${XCB_RENDER_LIBRARY}
+    XCB::XCB
+    XCB::XFIXES
+    XCB::RENDER
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -49,7 +49,7 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     include_directories(${glinclude})
     add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
     generate_export_header(kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
-    target_link_libraries(${name} PUBLIC Qt5::DBus Qt5::X11Extras ${XCB_XCB_LIBRARY})
+    target_link_libraries(${name} PUBLIC Qt5::DBus Qt5::X11Extras XCB::XCB)
     if(KWIN_HAVE_EGL)
        target_link_libraries(${name} PRIVATE EGL::EGL)
     endif()

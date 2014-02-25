@@ -21,7 +21,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::I18n
     KF5::Service
     KF5::NewStuff
-    ${XCB_XCB_LIBRARY})
+    XCB::XCB)
 
 install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

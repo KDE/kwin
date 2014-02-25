@@ -31,7 +31,7 @@ target_link_libraries(kwin3_oxygen kdecorations)
 target_link_libraries(kwin3_oxygen oxygenstyle)
 
 if(X11_FOUND)
-  target_link_libraries(kwin3_oxygen ${XCB_XCB_LIBRARIES})
+  target_link_libraries(kwin3_oxygen XCB::XCB)
 endif()
 
 install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR})

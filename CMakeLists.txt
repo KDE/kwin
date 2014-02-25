@@ -60,8 +60,6 @@ if(KWIN_BUILD_OPENGLES)
   include_directories(${OPENGLES_INCLUDE_DIR})
 endif()
 
-include_directories(${XCB_INCLUDE_DIR})
-
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
@@ -266,21 +264,21 @@ set(kwin_XLIB_LIBS
 )
 
 set(kwin_XCB_LIBS
-    ${XCB_XCB_LIBRARY}
-    ${XCB_XFIXES_LIBRARY}
-    ${XCB_DAMAGE_LIBRARY}
-    ${XCB_COMPOSITE_LIBRARY}
-    ${XCB_SHAPE_LIBRARY}
-    ${XCB_SYNC_LIBRARY}
-    ${XCB_RENDER_LIBRARY}
-    ${XCB_RANDR_LIBRARY}
-    ${XCB_KEYSYMS_LIBRARY}
-    ${XCB_SHM_LIBRARY}
+    XCB::XCB
+    XCB::XFIXES
+    XCB::DAMAGE
+    XCB::COMPOSITE
+    XCB::SHAPE
+    XCB::SYNC
+    XCB::RENDER
+    XCB::RANDR
+    XCB::KEYSYMS
+    XCB::SHM
 )
 
 set(kwin_WAYLAND_LIBS
     Wayland::Client
-    ${XCB_XTEST_LIBRARY}
+    XCB::XTEST
 )
 
 set(kwin_WAYLAND_EGL_LIBS

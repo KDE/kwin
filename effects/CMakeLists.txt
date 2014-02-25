@@ -26,13 +26,13 @@ set(kwin_effect_XLIB_LIBS
 )
 
 set(kwin_effect_XCB_LIBS
-    ${XCB_XCB_LIBRARY}
-    ${XCB_IMAGE_LIBRARY}
-    ${XCB_XFIXES_LIBRARY}
+    XCB::XCB
+    XCB::IMAGE
+    XCB::XFIXES
 )
 
 if( KWIN_HAVE_XRENDER_COMPOSITING )
-    set(kwin_effect_XCB_LIBS ${kwin_effect_XCB_LIBS} ${XCB_RENDER_LIBRARIES})
+    set(kwin_effect_XCB_LIBS ${kwin_effect_XCB_LIBS} XCB::RENDER)
 endif()
 
 if(KWIN_BUILD_OPENGL)
