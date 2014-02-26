@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KConfigGroup>
 #include <KDE/KPluginInfo>
 #include <KDE/KServiceTypeTrader>
-#include <kdeclarative/kdeclarative.h>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
@@ -543,10 +542,6 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-    KDeclarative::KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(m_engine);
-    kdeclarative.initialize();
-    kdeclarative.setupBindings();
     qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
     qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
     qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");

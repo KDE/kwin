@@ -242,7 +242,6 @@ set(kwin_QT_LIBS
 )
 
 set(kwin_KDE_LIBS
-    KF5::Declarative
     KF5::ConfigCore
     KF5::CoreAddons
     KF5::Crash
