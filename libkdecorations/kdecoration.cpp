@@ -583,6 +583,11 @@ bool KDecoration::isOnAllDesktops() const
     return desktop() == NET::OnAllDesktops;
 }
 
+bool KDecoration::isOnAllDesktopsAvailable() const
+{
+    return d->bridge->isOnAllDesktopsAvailable();
+}
+
 int KDecoration::width() const
 {
     return geometry().width();

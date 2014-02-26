@@ -213,6 +213,12 @@ Client::Client()
     connect(clientMachine(), SIGNAL(localhostChanged()), SLOT(updateCaption()));
     connect(options, SIGNAL(condensedTitleChanged()), SLOT(updateCaption()));
 
+    m_connections << connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, [this]() {
+        if (decoration) {
+            decoration->onAllDesktopsAvailableChanged();
+        }
+    });
+
     // SELI TODO: Initialize xsizehints??
 }
 
@@ -236,6 +242,9 @@ Client::~Client()
     assert(block_geometry_updates == 0);
     assert(!check_active_modal);
     delete bridge;
+    for (auto it = m_connections.constBegin(); it != m_connections.constEnd(); ++it) {
+        disconnect(*it);
+    }
 }
 
 // Use destroyClient() or releaseWindow(), Client instances cannot be deleted directly

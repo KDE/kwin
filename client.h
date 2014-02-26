@@ -1004,6 +1004,7 @@ private:
     QTimer *m_focusOutTimer;
 
     QPalette m_palette;
+    QList<QMetaObject::Connection> m_connections;
 };
 
 /**

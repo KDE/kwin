@@ -40,6 +40,7 @@ public:
     virtual bool isMinimizable() const override;
     virtual bool providesContextHelp() const override;
     virtual int desktop() const override;
+    bool isOnAllDesktopsAvailable() const override;
     virtual bool isModal() const override;
     virtual bool isShadeable() const override;
     virtual bool isShade() const override;

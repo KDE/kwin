@@ -313,6 +313,11 @@ int KDecorationPreviewBridge::desktop() const
     return 1;
 }
 
+bool KDecorationPreviewBridge::isOnAllDesktopsAvailable() const
+{
+    return true;
+}
+
 bool KDecorationPreviewBridge::isModal() const
 {
     return false;

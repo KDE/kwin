@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include "composite.h"
 #include "paintredirector.h"
+#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <QDebug>
@@ -362,6 +363,11 @@ void Bridge::closeTabGroup()
 }
 
 //END TABBING
+
+bool Bridge::isOnAllDesktopsAvailable() const
+{
+    return VirtualDesktopManager::self()->count() > 1;
+}
 
 KDecoration::WindowOperation Bridge::buttonToWindowOperation(Qt::MouseButtons button)
 {

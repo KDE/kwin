@@ -46,6 +46,7 @@ public:
     virtual bool isMinimizable() const = 0;
     virtual bool providesContextHelp() const = 0;
     virtual int desktop() const = 0;
+    virtual bool isOnAllDesktopsAvailable() const = 0;
     virtual bool isModal() const = 0;
     virtual bool isShadeable() const = 0;
     virtual bool isShade() const = 0;

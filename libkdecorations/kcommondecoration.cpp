@@ -93,6 +93,12 @@ KCommonDecoration::KCommonDecoration(KDecorationBridge* bridge, KDecorationFacto
     connect(d->wrapper, &KDecoration::shadeChanged, this, &KCommonDecoration::shadeChange);
     connect(d->wrapper, &KDecoration::iconChanged, this, &KCommonDecoration::iconChange);
     connect(d->wrapper, &KDecoration::maximizeChanged, this, &KCommonDecoration::maximizeChange);
+    connect(d->wrapper, &KDecoration::onAllDesktopsAvailableChanged, [this]() {
+        if (d->button[OnAllDesktopsButton]) {
+            d->button[OnAllDesktopsButton]->setVisible(d->wrapper->isOnAllDesktopsAvailable());
+            updateLayout();
+        }
+    });
 }
 
 KCommonDecoration::~KCommonDecoration()
@@ -564,6 +570,8 @@ void KCommonDecoration::addButtons(ButtonContainer &btnContainer, const QList<De
             // will be shown later on window registration
             if (btn->type() == AppMenuButton && !isPreview() && !d->wrapper->menuAvailable()) {
                 btn->hide();
+            } else if (btn->type() == OnAllDesktopsButton && !isPreview() && !d->wrapper->isOnAllDesktopsAvailable()) {
+                btn->hide();
             } else {
                 btn->show();
             }
@@ -607,8 +615,11 @@ void KCommonDecoration::calcHiddenButtons()
             if (! btnArray[i]->isHidden())
                 break; // all buttons shown...
 
-            if (btnArray[i]->type() != AppMenuButton || d->wrapper->menuAvailable())
-                btnArray[i]->show();
+            if (btnArray[i]->type() == AppMenuButton && !d->wrapper->menuAvailable())
+                continue;
+            if (btnArray[i]->type() == OnAllDesktopsButton && !d->wrapper->isOnAllDesktopsAvailable())
+                continue;
+            btnArray[i]->show();
         }
     }
 }

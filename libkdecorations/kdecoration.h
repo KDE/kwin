@@ -550,6 +550,7 @@ class KDECORATIONS_EXPORT KDecoration
     Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizeChanged)
     Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
+    Q_PROPERTY(bool onAllDesktopsAvailable READ isOnAllDesktopsAvailable NOTIFY onAllDesktopsAvailableChanged)
 public:
     /**
      * Constructs a KDecoration object. Both the arguments are passed from
@@ -626,6 +627,12 @@ public:
      * virtual desktops.
      */
     bool isOnAllDesktops() const; // convenience
+    /**
+     * @returns @c true if the decorated window can be put on all desktops
+     * @since 5.0
+     * @see onAllDesktopsAvailableChanged()
+     **/
+    bool isOnAllDesktopsAvailable() const;
     /**
      * Returns @a true if the decoration window is modal (usually a modal dialog).
      */
@@ -997,6 +1004,14 @@ Q_SIGNALS:
      * @since 4.10
      **/
     void alphaEnabledChanged(bool enabled);
+    /**
+     * This signal is emitted whenever the decorated window can be put on all desktops or no
+     * longer be put on all desktops.
+     *
+     * @see isOnAllDesktopsAvailable()
+     * @since 5.0
+     **/
+    void onAllDesktopsAvailableChanged();
 
 public:
     /**
