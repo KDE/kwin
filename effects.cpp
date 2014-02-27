@@ -1077,16 +1077,6 @@ WindowQuadType EffectsHandlerImpl::newWindowQuadType()
     return WindowQuadType(next_window_quad_type++);
 }
 
-int EffectsHandlerImpl::displayWidth() const
-{
-    return KWin::displayWidth();
-}
-
-int EffectsHandlerImpl::displayHeight() const
-{
-    return KWin::displayHeight();
-}
-
 EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 {
     if (Client* w = Workspace::self()->findClient(WindowMatchPredicate(id)))

@@ -111,8 +111,6 @@ public:
     QString desktopName(int desktop) const override;
     bool optionRollOverDesktops() const override;
 
-    virtual int displayWidth() const;
-    virtual int displayHeight() const;
     QPoint cursorPos() const override;
     bool grabKeyboard(Effect* effect) override;
     void ungrabKeyboard() override;
