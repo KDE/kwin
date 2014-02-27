@@ -292,27 +292,27 @@ public:
     explicit EffectWindowImpl(Toplevel *toplevel);
     virtual ~EffectWindowImpl();
 
-    virtual void enablePainting(int reason);
-    virtual void disablePainting(int reason);
-    virtual bool isPaintingEnabled();
+    void enablePainting(int reason) override;
+    void disablePainting(int reason) override;
+    bool isPaintingEnabled() override;
 
-    virtual void refWindow();
-    virtual void unrefWindow();
+    void refWindow() override;
+    void unrefWindow() override;
 
-    virtual const EffectWindowGroup* group() const;
+    const EffectWindowGroup* group() const override;
 
-    virtual QRegion shape() const;
-    virtual QRect decorationInnerRect() const;
-    virtual QByteArray readProperty(long atom, long type, int format) const;
-    virtual void deleteProperty(long atom) const;
+    QRegion shape() const override;
+    QRect decorationInnerRect() const override;
+    QByteArray readProperty(long atom, long type, int format) const override;
+    void deleteProperty(long atom) const override;
 
-    virtual EffectWindow* findModal();
-    virtual EffectWindowList mainWindows() const;
+    EffectWindow* findModal() override;
+    EffectWindowList mainWindows() const override;
 
-    virtual WindowQuadList buildQuads(bool force = false) const;
+    WindowQuadList buildQuads(bool force = false) const override;
 
-    virtual void referencePreviousWindowPixmap();
-    virtual void unreferencePreviousWindowPixmap();
+    void referencePreviousWindowPixmap() override;
+    void unreferencePreviousWindowPixmap() override;
 
     const Toplevel* window() const;
     Toplevel* window();
@@ -352,7 +352,7 @@ class EffectWindowGroupImpl
 {
 public:
     explicit EffectWindowGroupImpl(Group* g);
-    virtual EffectWindowList members() const;
+    EffectWindowList members() const override;
 private:
     Group* group;
 };
