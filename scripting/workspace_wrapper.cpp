@@ -55,6 +55,8 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(activities, SIGNAL(removed(QString)), SIGNAL(activitiesChanged(QString)));
     connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
 #endif
+    connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
+    connect(screens(), &Screens::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
     connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SIGNAL(numberScreensChanged(int)));
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
     foreach (KWin::Client *client, ws->clientList()) {
@@ -295,6 +297,16 @@ int WorkspaceWrapper::numScreens() const
 int WorkspaceWrapper::activeScreen() const
 {
     return screens()->current();
+}
+
+QRect WorkspaceWrapper::virtualScreenGeometry() const
+{
+    return screens()->geometry();
+}
+
+QSize WorkspaceWrapper::virtualScreenSize() const
+{
+    return screens()->size();
 }
 
 } // KWin

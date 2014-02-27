@@ -53,20 +53,35 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(int desktops READ numberOfDesktops WRITE setNumberOfDesktops NOTIFY numberDesktopsChanged)
     /**
      * The same of the display, that is all screens.
+     * @deprecated since 5.0 use virtualScreenSize
      **/
     Q_PROPERTY(QSize displaySize READ displaySize)
     /**
      * The width of the display, that is width of all combined screens.
+     * @deprecated since 5.0 use virtualScreenSize
      **/
     Q_PROPERTY(int displayWidth READ displayWidth)
     /**
      * The height of the display, that is height of all combined screens.
+     * @deprecated since 5.0 use virtualScreenSize
      **/
     Q_PROPERTY(int displayHeight READ displayHeight)
     Q_PROPERTY(int activeScreen READ activeScreen)
     Q_PROPERTY(int numScreens READ numScreens NOTIFY numberScreensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
+    /**
+     * The bounding size of all screens combined. Overlapping areas
+     * are not counted multiple times.
+     * @see virtualScreenGeometry
+     **/
+    Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
+    /**
+     * The bounding geometry of all outputs combined. Always starts at (0,0) and has
+     * virtualScreenSize as it's size.
+     * @see virtualScreenSize
+     **/
+    Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -134,6 +149,18 @@ Q_SIGNALS:
      * @param id id of the removed activity
      */
     void activityRemoved(const QString &id);
+    /**
+     * Emitted whenever the virtualScreenSize changes.
+     * @see virtualScreenSize()
+     * @since 5.0
+     **/
+    void virtualScreenSizeChanged();
+    /**
+     * Emitted whenever the virtualScreenGeometry changes.
+     * @see virtualScreenGeometry()
+     * @since 5.0
+     **/
+    void virtualScreenGeometryChanged();
 
 public:
 //------------------------------------------------------------------
@@ -191,6 +218,8 @@ void setter( rettype val );
     int numScreens() const;
     QString currentActivity() const;
     QStringList activityList() const;
+    QSize virtualScreenSize() const;
+    QRect virtualScreenGeometry() const;
 
     /**
      * List of Clients currently managed by KWin.

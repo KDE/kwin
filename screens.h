@@ -64,6 +64,27 @@ public:
     bool isCurrentFollowsMouse() const;
     void setCurrentFollowsMouse(bool follows);
     virtual QRect geometry(int screen) const = 0;
+    /**
+     * The bounding geometry of all screens combined. Overlapping areas
+     * are not counted multiple times.
+     * @see geometryChanged()
+     **/
+    QRect geometry() const;
+    /**
+     * @returns size of the @p screen.
+     *
+     * To get the size of all screens combined use size().
+     * @see size()
+     **/
+    virtual QSize size(int screen) const = 0;
+    /**
+     * The bounding size of all screens combined. Overlapping areas
+     * are not counted multiple times.
+     *
+     * @see geometry()
+     * @see sizeChanged()
+     **/
+    QSize size() const;
     virtual int number(const QPoint &pos) const = 0;
 
     inline bool isChanging() { return m_changedTimer->isActive(); }
@@ -80,11 +101,34 @@ Q_SIGNALS:
      **/
     void changed();
     void currentChanged();
+    /**
+     * Emitted when the geometry of all screens combined changes.
+     * Not emitted when the geometry of an individual screen changes.
+     * @see geometry()
+     **/
+    void geometryChanged();
+    /**
+     * Emitted when the size of all screens combined changes.
+     * Not emitted when the size of an individual screen changes.
+     * @see size()
+     **/
+    void sizeChanged();
 
 protected Q_SLOTS:
     void setCount(int count);
     void startChangedTimer();
     virtual void updateCount() = 0;
+
+protected:
+    /**
+     * Called once the singleton instance has been created.
+     * Any initialization code should go into this method. Overriding classes have to call
+     * the base implementation first.
+     **/
+    virtual void init();
+
+private Q_SLOTS:
+    void updateSize();
 
 private:
     int m_count;
@@ -92,6 +136,7 @@ private:
     bool m_currentFollowsMouse;
     QTimer *m_changedTimer;
     KSharedConfig::Ptr m_config;
+    QSize m_boundingSize;
 
     KWIN_SINGLETON(Screens)
 };
@@ -102,8 +147,10 @@ class DesktopWidgetScreens : public Screens
 public:
     DesktopWidgetScreens(QObject *parent);
     virtual ~DesktopWidgetScreens();
+    void init() override;
     virtual QRect geometry(int screen) const;
     virtual int number(const QPoint &pos) const;
+    QSize size(int screen) const override;
 protected Q_SLOTS:
     void updateCount();
 
@@ -133,6 +180,18 @@ inline
 void Screens::startChangedTimer()
 {
     m_changedTimer->start();
+}
+
+inline
+QSize Screens::size() const
+{
+    return m_boundingSize;
+}
+
+inline
+QRect Screens::geometry() const
+{
+    return QRect(QPoint(0,0), size());
 }
 
 inline

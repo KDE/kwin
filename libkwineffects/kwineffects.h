@@ -690,6 +690,8 @@ class KWINEFFECTS_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(bool decorationSupportsBlurBehind READ decorationSupportsBlurBehind)
     Q_PROPERTY(CompositingType compositingType READ compositingType CONSTANT)
     Q_PROPERTY(QPoint cursorPos READ cursorPos)
+    Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
+    Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     friend class Effect;
 public:
     explicit EffectsHandler(CompositingType type);
@@ -841,6 +843,25 @@ public:
     virtual QRect clientArea(clientAreaOption, int screen, int desktop) const = 0;
     virtual QRect clientArea(clientAreaOption, const EffectWindow* c) const = 0;
     virtual QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const = 0;
+
+    /**
+     * The bounding size of all screens combined. Overlapping areas
+     * are not counted multiple times.
+     *
+     * @see virtualScreenGeometry()
+     * @see virtualScreenSizeChanged()
+     * @since 5.0
+     **/
+    virtual QSize virtualScreenSize() const = 0;
+    /**
+     * The bounding geometry of all outputs combined. Always starts at (0,0) and has
+     * virtualScreenSize as it's size.
+     *
+     * @see virtualScreenSize()
+     * @see virtualScreenGeometryChanged()
+     * @since 5.0
+     **/
+    virtual QRect virtualScreenGeometry() const = 0;
     /**
      * Factor by which animation speed in the effect should be modified (multiplied).
      * If configurable in the effect itself, the option should have also 'default'
@@ -1316,6 +1337,18 @@ Q_SIGNALS:
      * @since 4.11
      **/
     void screenEdgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
+    /**
+     * Emitted whenever the virtualScreenSize changes.
+     * @see virtualScreenSize()
+     * @since 5.0
+     **/
+    void virtualScreenSizeChanged();
+    /**
+     * Emitted whenever the virtualScreenGeometry changes.
+     * @see virtualScreenGeometry()
+     * @since 5.0
+     **/
+    void virtualScreenGeometryChanged();
 
 protected:
     QVector< EffectPair > loaded_effects;

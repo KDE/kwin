@@ -266,6 +266,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
     connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
     connect(screens(), &Screens::countChanged, this, &EffectsHandler::numberScreensChanged);
+    connect(screens(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
+    connect(screens(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::self();
     connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
@@ -1234,6 +1236,16 @@ QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const EffectWindow* c
 QRect EffectsHandlerImpl::clientArea(clientAreaOption opt, const QPoint& p, int desktop) const
 {
     return Workspace::self()->clientArea(opt, p, desktop);
+}
+
+QRect EffectsHandlerImpl::virtualScreenGeometry() const
+{
+    return screens()->geometry();
+}
+
+QSize EffectsHandlerImpl::virtualScreenSize() const
+{
+    return screens()->size();
 }
 
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)

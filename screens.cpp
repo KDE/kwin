@@ -30,7 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_SINGLETON_FACTORY_FACTORED(Screens, DesktopWidgetScreens)
+Screens *Screens::s_self = nullptr;
+Screens *Screens::create(QObject *parent)
+{
+    Q_ASSERT(!s_self);
+    s_self = new DesktopWidgetScreens(parent);
+    s_self->init();
+    return s_self;
+}
 
 Screens::Screens(QObject *parent)
     : QObject(parent)
@@ -39,19 +46,26 @@ Screens::Screens(QObject *parent)
     , m_currentFollowsMouse(false)
     , m_changedTimer(new QTimer(this))
 {
-    m_changedTimer->setSingleShot(true);
-    m_changedTimer->setInterval(100);
-    connect(m_changedTimer, SIGNAL(timeout()), SLOT(updateCount()));
-    connect(m_changedTimer, SIGNAL(timeout()), SIGNAL(changed()));
-
-    Settings settings;
-    settings.setDefaults();
-    m_currentFollowsMouse = settings.activeMouseScreen();
 }
 
 Screens::~Screens()
 {
     s_self = NULL;
+}
+
+void Screens::init()
+{
+    m_changedTimer->setSingleShot(true);
+    m_changedTimer->setInterval(100);
+    connect(m_changedTimer, SIGNAL(timeout()), SLOT(updateCount()));
+    connect(m_changedTimer, SIGNAL(timeout()), SIGNAL(changed()));
+    connect(this, &Screens::countChanged, this, &Screens::changed);
+    connect(this, &Screens::changed, this, &Screens::updateSize);
+    connect(this, &Screens::sizeChanged, this, &Screens::geometryChanged);
+
+    Settings settings;
+    settings.setDefaults();
+    m_currentFollowsMouse = settings.activeMouseScreen();
 }
 
 void Screens::reconfigure()
@@ -62,6 +76,18 @@ void Screens::reconfigure()
     Settings settings(m_config);
     settings.readConfig();
     setCurrentFollowsMouse(settings.activeMouseScreen());
+}
+
+void Screens::updateSize()
+{
+    QRect bounding;
+    for (int i = 0; i < count(); ++i) {
+        bounding = bounding.united(geometry(i));
+    }
+    if (m_boundingSize != bounding.size()) {
+        m_boundingSize = bounding.size();
+        emit sizeChanged();
+    }
 }
 
 void Screens::setCount(int count)
@@ -133,13 +159,18 @@ DesktopWidgetScreens::DesktopWidgetScreens(QObject *parent)
     : Screens(parent)
     , m_desktop(QApplication::desktop())
 {
-    connect(m_desktop, SIGNAL(screenCountChanged(int)), SLOT(startChangedTimer()));
-    connect(m_desktop, SIGNAL(resized(int)), SLOT(startChangedTimer()));
-    updateCount();
 }
 
 DesktopWidgetScreens::~DesktopWidgetScreens()
 {
+}
+
+void DesktopWidgetScreens::init()
+{
+    Screens::init();
+    connect(m_desktop, SIGNAL(screenCountChanged(int)), SLOT(startChangedTimer()));
+    connect(m_desktop, SIGNAL(resized(int)), SLOT(startChangedTimer()));
+    updateCount();
 }
 
 QRect DesktopWidgetScreens::geometry(int screen) const
@@ -147,6 +178,11 @@ QRect DesktopWidgetScreens::geometry(int screen) const
     if (Screens::self()->isChanging())
         const_cast<DesktopWidgetScreens*>(this)->updateCount();
     return m_desktop->screenGeometry(screen);
+}
+
+QSize DesktopWidgetScreens::size(int screen) const
+{
+    return geometry(screen).size();
 }
 
 int DesktopWidgetScreens::number(const QPoint &pos) const
