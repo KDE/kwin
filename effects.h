@@ -153,7 +153,7 @@ public:
     void defineCursor(Qt::CursorShape shape) override;
     bool checkInputWindowEvent(xcb_button_press_event_t *e);
     bool checkInputWindowEvent(xcb_motion_notify_event_t *e);
-    virtual void checkInputWindowStacking();
+    void checkInputWindowStacking();
 
     void reserveElectricBorder(ElectricBorder border, Effect *effect) override;
     void unreserveElectricBorder(ElectricBorder border, Effect *effect) override;
