@@ -47,8 +47,8 @@ KWinDecorationButtonsConfigDialog::KWinDecorationButtonsConfigDialog(DecorationB
     m_buttonBox->button(QDialogButtonBox::RestoreDefaults)->setEnabled(false);
 
     QVBoxLayout* layout = new QVBoxLayout;
-    layout->addWidget(m_buttonBox);
     layout->addWidget(m_ui);
+    layout->addWidget(m_buttonBox);
     m_ui->buttonPositionWidget->setEnabled(buttons->customPositions());
 
     setLayout(layout);
