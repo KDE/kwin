@@ -366,22 +366,22 @@ public:
                              Qt::Alignment alignment = Qt::AlignCenter);
     virtual ~EffectFrameImpl();
 
-    virtual void free();
-    virtual void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0);
-    virtual Qt::Alignment alignment() const;
-    virtual void setAlignment(Qt::Alignment alignment);
-    virtual const QFont& font() const;
-    virtual void setFont(const QFont& font);
-    virtual const QRect& geometry() const;
-    virtual void setGeometry(const QRect& geometry, bool force = false);
-    virtual const QIcon& icon() const override;
-    virtual void setIcon(const QIcon& icon) override;
-    virtual const QSize& iconSize() const;
-    virtual void setIconSize(const QSize& size);
-    virtual void setPosition(const QPoint& point);
-    virtual const QString& text() const;
-    virtual void setText(const QString& text);
-    virtual EffectFrameStyle style() const {
+    void free() override;
+    void render(QRegion region = infiniteRegion(), double opacity = 1.0, double frameOpacity = 1.0) override;
+    Qt::Alignment alignment() const override;
+    void setAlignment(Qt::Alignment alignment) override;
+    const QFont& font() const override;
+    void setFont(const QFont& font) override;
+    const QRect& geometry() const override;
+    void setGeometry(const QRect& geometry, bool force = false) override;
+    const QIcon& icon() const override;
+    void setIcon(const QIcon& icon) override;
+    const QSize& iconSize() const override;
+    void setIconSize(const QSize& size) override;
+    void setPosition(const QPoint& point) override;
+    const QString& text() const override;
+    void setText(const QString& text) override;
+    EffectFrameStyle style() const override {
         return m_style;
     };
     Plasma::FrameSvg& frame() {
@@ -391,13 +391,13 @@ public:
         return m_static;
     };
     void finalRender(QRegion region, double opacity, double frameOpacity) const;
-    virtual void setShader(GLShader* shader) {
+    void setShader(GLShader* shader) override {
         m_shader = shader;
     }
-    virtual GLShader* shader() const {
+    GLShader* shader() const override {
         return m_shader;
     }
-    virtual void setSelection(const QRect& selection);
+    void setSelection(const QRect& selection) override;
     const QRect& selection() const {
         return m_selectionGeometry;
     }
