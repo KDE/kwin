@@ -22,13 +22,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outline.h"
 // KWin
 #include "composite.h"
+#include "scripting/scripting.h"
 // KWin libs
 #include <kwinxrenderutils.h>
 #include "workspace.h"
-// Plasma
-#include <Plasma/FrameSvg>
 // Qt
-#include <QPainter>
+#include <QDebug>
+#include <QQmlComponent>
+#include <QQmlContext>
+#include <QQmlEngine>
+#include <QQuickWindow>
+#include <QStandardPaths>
 // xcb
 #include <xcb/render.h>
 
@@ -50,6 +54,7 @@ Outline::~Outline()
 void Outline::show()
 {
     m_active = true;
+    emit activeChanged();
     if (m_visual.isNull()) {
         createHelper();
     }
@@ -66,6 +71,7 @@ void Outline::hide()
         return;
     }
     m_active = false;
+    emit activeChanged();
     if (m_visual.isNull()) {
         return;
     }
@@ -80,7 +86,11 @@ void Outline::show(const QRect& outlineGeometry)
 
 void Outline::setGeometry(const QRect& outlineGeometry)
 {
+    if (m_outlineGeometry == outlineGeometry) {
+        return;
+    }
     m_outlineGeometry = outlineGeometry;
+    emit geometryChanged();
 }
 
 void Outline::createHelper()
@@ -113,17 +123,11 @@ OutlineVisual::~OutlineVisual()
 }
 
 CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
-    : QWidget(NULL, Qt::X11BypassWindowManagerHint)
-    , OutlineVisual(outline)
-    , m_background(new Plasma::FrameSvg(this))
+    : OutlineVisual(outline)
+    , m_qmlContext()
+    , m_qmlComponent()
+    , m_mainItem(nullptr)
 {
-    setAttribute(Qt::WA_TranslucentBackground);
-    QPalette pal = palette();
-    pal.setColor(backgroundRole(), Qt::transparent);
-    setPalette(pal);
-    m_background->setImagePath(QStringLiteral("widgets/translucentbackground"));
-    m_background->setCacheAllRenderedFrames(true);
-    m_background->setEnabledBorders(Plasma::FrameSvg::AllBorders);
 }
 
 CompositedOutlineVisual::~CompositedOutlineVisual()
@@ -132,56 +136,33 @@ CompositedOutlineVisual::~CompositedOutlineVisual()
 
 void CompositedOutlineVisual::hide()
 {
-    QWidget::hide();
+    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem)) {
+        w->hide();
+        w->destroy();
+    }
 }
 
 void CompositedOutlineVisual::show()
 {
-    const QRect &outlineGeometry = outline()->geometry();
-    m_background->resizeFrame(outlineGeometry.size());
-    setGeometry(outlineGeometry);
-
-    // check which borders to enable
-    bool left, right, top, bottom;
-    left = right = top = bottom = false;
-    const QRect maximizedArea = Workspace::self()->clientArea(MaximizeArea, outlineGeometry.center(), 1);
-    if (outlineGeometry.x() == maximizedArea.x()) {
-        left = true;
+    if (m_qmlContext.isNull()) {
+        m_qmlContext.reset(new QQmlContext(Scripting::self()->qmlEngine()));
+        m_qmlContext->setContextProperty(QStringLiteral("outline"), outline());
     }
-    if (outlineGeometry.y() == maximizedArea.y()) {
-        top = true;
+    if (m_qmlComponent.isNull()) {
+        m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
+        // TODO: fileName should be configurable
+        const QString fileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/outline/plasma/outline.qml"));
+        if (fileName.isEmpty()) {
+            qDebug() << "Could not locate outline.qml";
+            return;
+        }
+        m_qmlComponent->loadUrl(QUrl::fromLocalFile(fileName));
+        if (m_qmlComponent->isError()) {
+            qDebug() << "Component failed to load: " << m_qmlComponent->errors();
+        } else {
+            m_mainItem = m_qmlComponent->create(m_qmlContext.data());
+        }
     }
-    if (outlineGeometry.right() == maximizedArea.right()) {
-        right = true;
-    }
-    if (outlineGeometry.bottom() == maximizedArea.bottom()) {
-        bottom = true;
-    }
-    Plasma::FrameSvg::EnabledBorders borders = Plasma::FrameSvg::AllBorders;
-    if (left) {
-        borders = borders & ~Plasma::FrameSvg::LeftBorder;
-    }
-    if (right) {
-        borders = borders & ~Plasma::FrameSvg::RightBorder;
-    }
-    if (top) {
-        borders = borders & ~Plasma::FrameSvg::TopBorder;
-    }
-    if (bottom) {
-        borders = borders & ~Plasma::FrameSvg::BottomBorder;
-    }
-    if (left && right && bottom && top) {
-        borders = Plasma::FrameSvg::AllBorders;
-    }
-    m_background->setEnabledBorders(borders);
-    QWidget::show();
-}
-
-void CompositedOutlineVisual::paintEvent(QPaintEvent *)
-{
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    m_background->paintFrame(&painter);
 }
 
 NonCompositedOutlineVisual::NonCompositedOutlineVisual(Outline *outline)

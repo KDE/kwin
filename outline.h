@@ -25,9 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QWidget>
 
-namespace Plasma {
-class FrameSvg;
-}
+class QQmlContext;
+class QQmlComponent;
 
 namespace KWin {
 class OutlineVisual;
@@ -45,6 +44,8 @@ class OutlineVisual;
  */
 class Outline : public QObject {
     Q_OBJECT
+    Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 public:
     ~Outline();
 
@@ -80,8 +81,14 @@ public:
 
     const QRect &geometry() const;
 
+    bool isActive() const;
+
 private Q_SLOTS:
     void compositingChanged();
+
+Q_SIGNALS:
+    void activeChanged();
+    void geometryChanged();
 
 private:
     void createHelper();
@@ -105,17 +112,17 @@ private:
     Outline *m_outline;
 };
 
-class CompositedOutlineVisual : public QWidget, public OutlineVisual
+class CompositedOutlineVisual : public OutlineVisual
 {
 public:
     CompositedOutlineVisual(Outline *outline);
     virtual ~CompositedOutlineVisual();
     virtual void show();
     virtual void hide();
-protected:
-    virtual void paintEvent(QPaintEvent *);
 private:
-    Plasma::FrameSvg *m_background;
+    QScopedPointer<QQmlContext> m_qmlContext;
+    QScopedPointer<QQmlComponent> m_qmlComponent;
+    QObject *m_mainItem;
 };
 
 class NonCompositedOutlineVisual : public OutlineVisual
@@ -136,6 +143,12 @@ private:
     Xcb::Window m_bottomOutline;
     Xcb::Window m_leftOutline;
 };
+
+inline
+bool Outline::isActive() const
+{
+    return m_active;
+}
 
 inline
 const QRect &Outline::geometry() const
