@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtScript/QScriptEngineAgent>
 
 class QQmlComponent;
+class QQmlContext;
 class QQmlEngine;
 class QAction;
 class QDBusPendingCallWatcher;
@@ -163,10 +164,6 @@ protected:
         return m_scriptId;
     }
 
-    WorkspaceWrapper *workspace() {
-        return m_workspace;
-    }
-
 private:
     /**
      * @brief Parses the @p value to either a QMenu or QAction.
@@ -204,7 +201,6 @@ private:
     QFile m_scriptFile;
     QString m_pluginName;
     bool m_running;
-    WorkspaceWrapper *m_workspace;
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
     QHash<int, QScriptValue> m_callbacks;
@@ -281,7 +277,7 @@ private Q_SLOTS:
     void createComponent();
 
 private:
-    QQmlEngine *m_engine;
+    QQmlContext *m_context;
     QQmlComponent *m_component;
 };
 
@@ -357,6 +353,10 @@ public:
      **/
     QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
 
+    QQmlEngine *qmlEngine() const;
+    QQmlEngine *qmlEngine();
+    WorkspaceWrapper *workspaceWrapper() const;
+
     static Scripting *self();
     static Scripting *create(QObject *parent);
 
@@ -368,9 +368,30 @@ private Q_SLOTS:
     void slotScriptsQueried();
 
 private:
+    void init();
     LoadScriptList queryScriptsToLoad();
     static Scripting *s_self;
+    QQmlEngine *m_qmlEngine;
+    WorkspaceWrapper *m_workspaceWrapper;
 };
+
+inline
+QQmlEngine *Scripting::qmlEngine() const
+{
+    return m_qmlEngine;
+}
+
+inline
+QQmlEngine *Scripting::qmlEngine()
+{
+    return m_qmlEngine;
+}
+
+inline
+WorkspaceWrapper *Scripting::workspaceWrapper() const
+{
+    return m_workspaceWrapper;
+}
 
 inline
 Scripting *Scripting::self()

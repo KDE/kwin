@@ -216,7 +216,6 @@ KWin::AbstractScript::AbstractScript(int id, QString scriptName, QString pluginN
     , m_scriptId(id)
     , m_pluginName(pluginName)
     , m_running(false)
-    , m_workspace(new WorkspaceWrapper(this))
 {
     m_scriptFile.setFileName(scriptName);
     if (m_pluginName.isNull()) {
@@ -295,7 +294,7 @@ void KWin::Script::installScriptFunctions(QScriptEngine* engine)
     engine->globalObject().setProperty(QStringLiteral("assertNotNull"), assertNotNullFunc);
     // global properties
     engine->globalObject().setProperty(QStringLiteral("KWin"), engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
-    QScriptValue workspace = engine->newQObject(AbstractScript::workspace(), QScriptEngine::QtOwnership,
+    QScriptValue workspace = engine->newQObject(Scripting::self()->workspaceWrapper(), QScriptEngine::QtOwnership,
                                                 QScriptEngine::ExcludeSuperClassContents | QScriptEngine::ExcludeDeleteLater);
     engine->globalObject().setProperty(QStringLiteral("workspace"), workspace, QScriptValue::Undeletable);
     // install meta functions
@@ -528,9 +527,10 @@ void KWin::ScriptUnloaderAgent::scriptUnload(qint64 id)
 
 KWin::DeclarativeScript::DeclarativeScript(int id, QString scriptName, QString pluginName, QObject* parent)
     : AbstractScript(id, scriptName, pluginName, parent)
-    , m_engine(new QQmlEngine(this))
-    , m_component(new QQmlComponent(m_engine, this))
+    , m_context(new QQmlContext(Scripting::self()->qmlEngine(), this))
+    , m_component(new QQmlComponent(Scripting::self()->qmlEngine(), this))
 {
+    m_context->setContextProperty(QStringLiteral("KWin"), new JSEngineGlobalMethodsWrapper(this));
 }
 
 KWin::DeclarativeScript::~DeclarativeScript()
@@ -542,21 +542,6 @@ void KWin::DeclarativeScript::run()
     if (running()) {
         return;
     }
-    qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
-    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
-    qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
-    qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
-    qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
-    qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
-    qmlRegisterType<KWin::Client>();
-    qmlRegisterType<QQuickWindow>();
-
-    m_engine->rootContext()->setContextProperty(QStringLiteral("workspace"), AbstractScript::workspace());
-    m_engine->rootContext()->setContextProperty(QStringLiteral("options"), options);
-    m_engine->rootContext()->setContextProperty(QStringLiteral("KWin"), new JSEngineGlobalMethodsWrapper(this));
 
     m_component->loadUrl(QUrl::fromLocalFile(scriptFile().fileName()));
     if (m_component->isLoading()) {
@@ -571,7 +556,7 @@ void KWin::DeclarativeScript::createComponent()
     if (m_component->isError()) {
         qDebug() << "Component failed to load: " << m_component->errors();
     } else {
-        m_component->create();
+        m_component->create(m_context);
     }
     setRunning(true);
 }
@@ -612,11 +597,32 @@ KWin::Scripting *KWin::Scripting::create(QObject *parent)
 KWin::Scripting::Scripting(QObject *parent)
     : QObject(parent)
     , m_scriptsLock(new QMutex(QMutex::Recursive))
+    , m_qmlEngine(new QQmlEngine(this))
+    , m_workspaceWrapper(new WorkspaceWrapper(this))
 {
+    init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.Scripting"));
     connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
     connect(Workspace::self(), SIGNAL(workspaceInitialized()), SLOT(start()));
+}
+
+void KWin::Scripting::init()
+{
+    qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
+    qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
+    qmlRegisterType<DBusCall>("org.kde.kwin", 2, 0, "DBusCall");
+    qmlRegisterType<ScreenEdgeItem>("org.kde.kwin", 2, 0, "ScreenEdgeItem");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModel>();
+    qmlRegisterType<KWin::ScriptingClientModel::SimpleClientModel>("org.kde.kwin", 2, 0, "ClientModel");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreen>("org.kde.kwin", 2, 0, "ClientModelByScreen");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientModelByScreenAndDesktop>("org.kde.kwin", 2, 0, "ClientModelByScreenAndDesktop");
+    qmlRegisterType<KWin::ScriptingClientModel::ClientFilterModel>("org.kde.kwin", 2, 0, "ClientFilterModel");
+    qmlRegisterType<KWin::Client>();
+    qmlRegisterType<QQuickWindow>();
+
+    m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("workspace"), m_workspaceWrapper);
+    m_qmlEngine->rootContext()->setContextProperty(QStringLiteral("options"), options);
 }
 
 void KWin::Scripting::start()
