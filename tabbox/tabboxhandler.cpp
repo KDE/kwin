@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "desktopmodel.h"
 #include "tabboxconfig.h"
 #include "thumbnailitem.h"
+#include "scripting/scripting.h"
 #include "switcheritem.h"
 // Qt
 #include <QApplication>
@@ -79,7 +80,7 @@ public:
     TabBoxHandler *q; // public pointer
     // members
     TabBoxConfig config;
-    QScopedPointer<QQmlEngine> m_qmlEngine;
+    QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;
     QObject *m_mainItem;
     QMap<QString, QObject*> m_clientTabBoxes;
@@ -103,7 +104,7 @@ private:
 };
 
 TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
-    : m_qmlEngine()
+    : m_qmlContext()
     , m_qmlComponent()
     , m_mainItem(nullptr)
     , m_embedded(0)
@@ -275,7 +276,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                                             "Contact your distribution about this.") << QStringLiteral("20");
         KProcess::startDetached(QStringLiteral("kdialog"), args);
     } else {
-        QObject *object = m_qmlComponent->create();
+        QObject *object = m_qmlComponent->create(m_qmlContext.data());
         if (desktopMode) {
             m_desktopTabBoxes.insert(config.layoutName(), object);
         } else {
@@ -288,15 +289,12 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
 
 void TabBoxHandlerPrivate::show()
 {
-    if (m_qmlEngine.isNull()) {
-        m_qmlEngine.reset(new QQmlEngine);
+    if (m_qmlContext.isNull()) {
         qmlRegisterType<SwitcherItem>("org.kde.kwin", 2, 0, "Switcher");
-        qmlRegisterType<DesktopThumbnailItem>("org.kde.kwin", 2, 0, "DesktopThumbnailItem");
-        qmlRegisterType<WindowThumbnailItem>("org.kde.kwin", 2, 0, "ThumbnailItem");
-        qmlRegisterType<QAbstractItemModel>();
+        m_qmlContext.reset(new QQmlContext(Scripting::self()->qmlEngine()));
     }
     if (m_qmlComponent.isNull()) {
-        m_qmlComponent.reset(new QQmlComponent(m_qmlEngine.data()));
+        m_qmlComponent.reset(new QQmlComponent(Scripting::self()->qmlEngine()));
     }
     const bool desktopMode = (config.tabBoxMode() == TabBoxConfig::DesktopTabBox);
     auto findMainItem = [this](const QMap<QString, QObject *> &tabBoxes) -> QObject* {
