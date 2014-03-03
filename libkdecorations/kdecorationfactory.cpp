@@ -45,8 +45,8 @@ KDecorationFactory::KDecorationFactory(QObject *parent)
 
 KDecorationFactory::~KDecorationFactory()
 {
-    delete d;
     assert(d->decorations.count() == 0);
+    delete d;
 }
 
 void KDecorationFactory::checkRequirements(KDecorationProvides*)
