@@ -246,8 +246,8 @@ void RootInfo::changeShowingDesktop(bool showing)
 // ****************************************
 
 WinInfo::WinInfo(Client * c, xcb_window_t window,
-                 xcb_window_t rwin, const unsigned long pr[], int pr_size)
-    : NETWinInfo(connection(), window, rwin, pr, pr_size, NET::WindowManager), m_client(c)
+                 xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2)
+    : NETWinInfo(connection(), window, rwin, properties, properties2, NET::WindowManager), m_client(c)
 {
 }
 

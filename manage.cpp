@@ -80,8 +80,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (isMapped)
         init_minimize = false; // If it's already mapped, ignore hint
 
-    unsigned long properties[2];
-    properties[WinInfo::PROTOCOLS] =
+    const NET::Properties properties =
         NET::WMDesktop |
         NET::WMState |
         NET::WMWindowType |
@@ -91,7 +90,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WMIcon |
         NET::WMPid |
         NET::WMIconName;
-    properties[WinInfo::PROTOCOLS2] =
+    const NET::Properties2 properties2 =
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
@@ -99,7 +98,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2FullscreenMonitors |
         NET::WM2FrameOverlap;
 
-    info = new WinInfo(this, m_client, rootWindow(), properties, 2);
+    info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     m_colormap = attr.colormap;
 

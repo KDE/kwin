@@ -78,7 +78,7 @@ private:
 
 public:
     WinInfo(Client* c, xcb_window_t window,
-            xcb_window_t rwin, const unsigned long pr[], int pr_size);
+            xcb_window_t rwin, NET::Properties properties, NET::Properties2 properties2);
     virtual void changeDesktop(int desktop) override;
     virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) override;
     virtual void changeState(NET::States state, NET::States mask) override;

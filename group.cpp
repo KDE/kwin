@@ -204,9 +204,8 @@ Group::Group(Window leader_P)
 {
     if (leader_P != None) {
         leader_client = workspace()->findClient(WindowMatchPredicate(leader_P));
-        unsigned long properties[ 2 ] = { 0, NET::WM2StartupId };
         leader_info = new NETWinInfo(connection(), leader_P, rootWindow(),
-                                      properties, 2);
+                                      0, NET::WM2StartupId);
     }
     effect_group = new EffectWindowGroupImpl(this);
     workspace()->addGroup(this);

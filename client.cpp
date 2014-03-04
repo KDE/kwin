@@ -2258,8 +2258,7 @@ void Client::updateCursor()
 void Client::updateCompositeBlocking(bool readProperty)
 {
     if (readProperty) {
-        const unsigned long properties[2] = {0, NET::WM2BlockCompositing};
-        NETWinInfo i(connection(), window(), rootWindow(), properties, 2);
+        NETWinInfo i(connection(), window(), rootWindow(), 0, NET::WM2BlockCompositing);
         setBlockingCompositing(i.isBlockingCompositing());
     }
     else
