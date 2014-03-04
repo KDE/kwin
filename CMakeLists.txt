@@ -6,7 +6,6 @@ option(KWIN_BUILD_OXYGEN "Enable building of default decoration Oxygen" ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
-option(KWIN_BUILD_SCRIPTING "Enable building of KWin with scripting support" ON)
 option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 option(KWIN_BUILD_OPENGL_1_COMPOSITING "Enable support for OpenGL 1.x, automatically disabled when building for OpenGL ES 2.0" ON)
@@ -21,7 +20,6 @@ if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
     set(KWIN_BUILD_SCREENEDGES OFF)
-    set(KWIN_BUILD_SCRIPTING ON)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
     set(KWIN_BUILD_WITH_OPENGLES ON)
     set(KWIN_NAME "kwinactive")
@@ -92,10 +90,7 @@ add_subdirectory( data )
 add_subdirectory( effects )
 add_subdirectory( scripts )
 add_subdirectory( tabbox )
-
-if(KWIN_BUILD_SCRIPTING)
-    add_subdirectory(scripting)
-endif()
+add_subdirectory(scripting)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1212)
 
@@ -148,22 +143,16 @@ set(kwin_KDEINIT_SRCS
    paintredirector.cpp
    virtualdesktops.cpp
    xcbutils.cpp
+    scripting/scripting.cpp
+    scripting/workspace_wrapper.cpp
+    scripting/meta.cpp
+    scripting/scriptedeffect.cpp
+    scripting/scriptingutils.cpp
+    scripting/timer.cpp
+    scripting/scripting_model.cpp
+    scripting/dbuscall.cpp
+    scripting/screenedgeitem.cpp
    )
-
-if(KWIN_BUILD_SCRIPTING)
-    set(
-        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        scripting/scripting.cpp
-        scripting/workspace_wrapper.cpp
-        scripting/meta.cpp
-        scripting/scriptedeffect.cpp
-        scripting/scriptingutils.cpp
-        scripting/timer.cpp
-        scripting/scripting_model.cpp
-        scripting/dbuscall.cpp
-        scripting/screenedgeitem.cpp
-    )
-endif()
 
 if(KWIN_BUILD_TABBOX)
     set(
@@ -241,6 +230,7 @@ set(kwin_QT_LIBS
     Qt5::Concurrent
     Qt5::DBus
     Qt5::Quick
+    Qt5::Script
     Qt5::X11Extras
 )
 
@@ -294,10 +284,6 @@ if (XF86VM_LIBRARY)
     set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${XF86VM_LIBRARY})
 else()
     add_definitions(-DKWIN_NO_XF86VM)
-endif()
-
-if(KWIN_BUILD_SCRIPTING)
-    set(kwin_QT_LIBS ${kwin_QT_LIBS} Qt5::Script)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
@@ -355,10 +341,8 @@ install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/${KWIN_NAME} RENA
 install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
-if( KWIN_BUILD_SCRIPTING )
-    # Install the KWin/WindowSwitcher service type
-    install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
-endif()
+# Install the KWin/Script service type
+install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
 ecm_install_icons( ${ICON_INSTALL_DIR} )
 

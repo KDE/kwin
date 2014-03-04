@@ -51,10 +51,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QProcess>
 #include <QStandardPaths>
-#ifdef KWIN_BUILD_SCRIPTING
 #include <QScriptEngine>
 #include <QScriptProgram>
-#endif
 #include <QWhatsThis>
 // XLib
 #include <X11/extensions/sync.h>
@@ -1753,7 +1751,6 @@ void Client::setCaption(const QString& _s, bool force)
         if (!s[i].isPrint())
             s[i] = QChar(u' ');
     cap_normal = s;
-#ifdef KWIN_BUILD_SCRIPTING
     if (options->condensedTitle()) {
         static QScriptEngine engine;
         static QScriptProgram stripTitle;
@@ -1776,7 +1773,6 @@ void Client::setCaption(const QString& _s, bool force)
         args << _s << QString::fromUtf8(resourceName()) << QString::fromUtf8(resourceClass());
         s = script.call(QScriptValue(), args).toString();
     }
-#endif
     if (!force && s == cap_deco)
         return;
     cap_deco = s;

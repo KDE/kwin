@@ -39,10 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "screens.h"
 #include "virtualdesktops.h"
-
-#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scripting.h"
-#endif
 
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -85,9 +82,7 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_activityMenu(NULL)
     , m_addTabsMenu(NULL)
     , m_switchToTabMenu(NULL)
-#ifdef KWIN_BUILD_SCRIPTING
     , m_scriptsMenu(NULL)
-#endif
     , m_resizeOperation(NULL)
     , m_moveOperation(NULL)
     , m_maximizeOperation(NULL)
@@ -233,9 +228,7 @@ QStringList configModules(bool controlCenter)
 #ifdef KWIN_BUILD_SCREENEDGES
              << QStringLiteral("kwinscreenedges")
 #endif
-#ifdef KWIN_BUILD_SCRIPTING
              << QStringLiteral("kwinscripts")
-#endif
              ;
     return args;
 }
@@ -374,9 +367,7 @@ void UserActionsMenu::discard()
     m_activityMenu = NULL;
     m_switchToTabMenu = NULL;
     m_addTabsMenu = NULL;
-#ifdef KWIN_BUILD_SCRIPTING
     m_scriptsMenu = NULL;
-#endif
 }
 
 void UserActionsMenu::menuAboutToShow()
@@ -424,7 +415,6 @@ void UserActionsMenu::menuAboutToShow()
         m_addTabsMenu = 0;
     }
 
-#ifdef KWIN_BUILD_SCRIPTING
     // drop the existing scripts menu
     delete m_scriptsMenu;
     m_scriptsMenu = NULL;
@@ -443,7 +433,6 @@ void UserActionsMenu::menuAboutToShow()
         delete m_scriptsMenu;
         m_scriptsMenu = NULL;
     }
-#endif
 }
 
 void UserActionsMenu::showHideActivityMenu()

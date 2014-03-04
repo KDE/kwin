@@ -39,9 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
 #endif
-#ifdef KWIN_BUILD_SCRIPTING
 #include "scripting/scriptedeffect.h"
-#endif
 #include "screens.h"
 #include "thumbnailitem.h"
 #include "virtualdesktops.h"
@@ -1526,7 +1524,6 @@ Effect *EffectsHandlerImpl::loadBuiltInEffect(const QByteArray &name, bool check
 
 bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *service)
 {
-#ifdef KWIN_BUILD_SCRIPTING
     const KDesktopFile df(QStandardPaths::GenericDataLocation, QStringLiteral("kde5/services/") + service->entryPath());
     const QString scriptName = df.desktopGroup().readEntry<QString>(QStringLiteral("X-Plasma-MainScript"), QString());
     if (scriptName.isEmpty()) {
@@ -1546,11 +1543,6 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
     effect_order.insert(service->property(QStringLiteral("X-KDE-Ordering")).toInt(), EffectPair(name, effect));
     effectsChanged();
     return true;
-#else
-    Q_UNUSED(name)
-    Q_UNUSED(service)
-    return false;
-#endif
 }
 
 void EffectsHandlerImpl::unloadEffect(const QString& name)
