@@ -117,6 +117,9 @@ namespace Oxygen
         //! initialization flag
         bool _initialized;
 
+        //! config object
+        KSharedConfigPtr _config;
+
         //! helper
         DecoHelper _helper;
 
@@ -128,9 +131,6 @@ namespace Oxygen
 
         //! list of exceptiosn
         QList<ConfigurationPtr> _exceptions;
-
-        //! config object
-        KSharedConfigPtr _config;
 
     };
 
