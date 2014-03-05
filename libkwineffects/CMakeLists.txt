@@ -48,7 +48,7 @@ set(kwin_GLUTILSLIB_SRCS
 macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     include_directories(${glinclude})
     add_library(${name} SHARED ${kwin_GLUTILSLIB_SRCS})
-    generate_export_header(kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
+    generate_export_header(${name} BASE_NAME kwinglutils EXPORT_FILE_NAME kwinglutils_export.h)
     target_link_libraries(${name} PUBLIC Qt5::DBus Qt5::X11Extras XCB::XCB)
     if(KWIN_HAVE_EGL)
        target_link_libraries(${name} PRIVATE EGL::EGL)
