@@ -230,7 +230,6 @@ void Compositor::slotCompositingOptionsInitialized()
     }
     if (m_scene == NULL || m_scene->initFailed()) {
         qCritical() << "Failed to initialize compositing, compositing disabled";
-        qCritical() << "Consult http://techbase.kde.org/Projects/KWin/4.0-release-notes#Setting_up";
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
