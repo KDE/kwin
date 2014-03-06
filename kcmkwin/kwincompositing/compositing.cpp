@@ -93,13 +93,10 @@ void Compositing::reset()
 
     auto type = [&kwinConfig]{
         const QString backend = kwinConfig.readEntry("Backend", "OpenGL");
-        const bool glLegacy = kwinConfig.readEntry("GLLegacy", false);
         const bool glCore = kwinConfig.readEntry("GLCore", false);
 
         if (backend == QStringLiteral("OpenGL")) {
-            if (glLegacy) {
-                return CompositingType::OPENGL12_INDEX;
-            } else if (glCore) {
+            if (glCore) {
                 return CompositingType::OPENGL31_INDEX;
             } else {
                 return CompositingType::OPENGL20_INDEX;
@@ -306,32 +303,22 @@ void Compositing::save()
     kwinConfig.writeEntry("GLPreferBufferSwap", swapStrategy());
     kwinConfig.writeEntry("GLColorCorrection", glColorCorrection());
     QString backend;
-    bool glLegacy = false;
     bool glCore = false;
     switch (compositingType()) {
     case CompositingType::OPENGL31_INDEX:
         backend = "OpenGL";
-        glLegacy = false;
         glCore = true;
         break;
     case CompositingType::OPENGL20_INDEX:
         backend = "OpenGL";
-        glLegacy = false;
-        glCore = false;
-        break;
-    case CompositingType::OPENGL12_INDEX:
-        backend = "OpenGL";
-        glLegacy = true;
         glCore = false;
         break;
     case CompositingType::XRENDER_INDEX:
         backend = "XRender";
-        glLegacy = false;
         glCore = false;
         break;
     }
     kwinConfig.writeEntry("Backend", backend);
-    kwinConfig.writeEntry("GLLegacy", glLegacy);
     kwinConfig.writeEntry("GLCore", glCore);
     kwinConfig.sync();
 
@@ -357,7 +344,6 @@ void CompositingType::generateCompositing()
 
     compositingTypes[i18n("OpenGL 3.1")] = CompositingType::OPENGL31_INDEX;
     compositingTypes[i18n("OpenGL 2.0")] = CompositingType::OPENGL20_INDEX;
-    compositingTypes[i18n("OpenGL 1.2")] = CompositingType::OPENGL12_INDEX;
     compositingTypes[i18n("XRender")] = CompositingType::XRENDER_INDEX;
 
     CompositingData data;

@@ -111,7 +111,6 @@ public:
     enum CompositingTypeIndex {
         OPENGL31_INDEX = 0,
         OPENGL20_INDEX,
-        OPENGL12_INDEX,
         XRENDER_INDEX
     };
 
