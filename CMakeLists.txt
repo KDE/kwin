@@ -338,7 +338,14 @@ install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES kwin.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} RENAME ${KWIN_NAME}.kcfg )
 install( FILES kwin.notifyrc  DESTINATION  ${DATA_INSTALL_DIR}/${KWIN_NAME} RENAME ${KWIN_NAME}.notifyrc)
-install( FILES org.kde.KWin.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
+install(
+    FILES
+        org.kde.KWin.xml
+        org.kde.kwin.Compositing.xml
+        org.kde.kwin.Effects.xml
+    DESTINATION
+        ${DBUS_INTERFACES_INSTALL_DIR}
+)
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 # Install the KWin/Script service type
