@@ -117,7 +117,7 @@ target_link_libraries(effectModelTest
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwincompositing.desktop  DESTINATION  ${SERVICES_INSTALL_DIR})
+install(FILES kwincompositing.desktop kcmkwineffects.desktop  DESTINATION  ${SERVICES_INSTALL_DIR})
 install(FILES kwineffect.knsrc DESTINATION ${CONFIG_INSTALL_DIR})
 ################# list the subdirectories #################
 

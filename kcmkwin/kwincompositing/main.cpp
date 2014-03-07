@@ -33,7 +33,6 @@ class KWinCompositingKCM : public KCModule
 {
     Q_OBJECT
 public:
-    explicit KWinCompositingKCM(QWidget* parent = 0, const QVariantList& args = QVariantList());
     virtual ~KWinCompositingKCM();
 
 public Q_SLOTS:
@@ -41,13 +40,33 @@ public Q_SLOTS:
     void load() override;
     void defaults() override;
 
+protected:
+    explicit KWinCompositingKCM(QWidget* parent, const QVariantList& args,
+                                KWin::Compositing::EffectView::ViewType viewType);
+
 private:
     QScopedPointer<KWin::Compositing::EffectView> m_view;
 };
 
-KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args)
+class KWinDesktopEffects : public KWinCompositingKCM
+{
+    Q_OBJECT
+public:
+    explicit KWinDesktopEffects(QWidget* parent = 0, const QVariantList& args = QVariantList())
+        : KWinCompositingKCM(parent, args, KWin::Compositing::EffectView::DesktopEffectsView) {}
+};
+
+class KWinCompositingSettings : public KWinCompositingKCM
+{
+    Q_OBJECT
+public:
+    explicit KWinCompositingSettings(QWidget* parent = 0, const QVariantList& args = QVariantList())
+        : KWinCompositingKCM(parent, args, KWin::Compositing::EffectView::CompositingSettingsView) {}
+};
+
+KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args, KWin::Compositing::EffectView::ViewType viewType)
     : KCModule(parent, args)
-    , m_view(new KWin::Compositing::EffectView)
+    , m_view(new KWin::Compositing::EffectView(viewType))
 {
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(m_view->engine());
@@ -88,7 +107,8 @@ void KWinCompositingKCM::defaults()
 }
 
 K_PLUGIN_FACTORY(KWinCompositingConfigFactory,
-                 registerPlugin<KWinCompositingKCM>();
+                 registerPlugin<KWinDesktopEffects>("effects");
+                 registerPlugin<KWinCompositingSettings>("compositing");
                 )
 
 #include "main.moc"

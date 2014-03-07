@@ -102,7 +102,11 @@ class EffectView : public QQuickView
     Q_OBJECT
 
 public:
-    EffectView(QWindow *parent = 0);
+    enum ViewType {
+        DesktopEffectsView,
+        CompositingSettingsView
+    };
+    EffectView(ViewType type, QWindow *parent = 0);
 
     Q_INVOKABLE QColor backgroundViewColor() { return KColorScheme(QPalette::Active, KColorScheme::Window, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
 
@@ -113,7 +117,7 @@ public:
 Q_SIGNALS:
     void changed();
 private:
-    void init();
+    void init(ViewType type);
 };
 
 

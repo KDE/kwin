@@ -1,0 +1,18 @@
+[Desktop Entry]
+Exec=kcmshell5 kwineffects
+Icon=preferences-desktop
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=kcontrol/kwincompositing/index.html
+
+X-KDE-Library=kwincompositing
+X-KDE-PluginKeyword=effects
+X-KDE-ParentApp=kcontrol
+
+X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
+X-KDE-Weight=50
+
+Name=Desktop Effects
+Comment=Configure desktop effects
+
+X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,animations,various animations,window management effects,window switching effect,desktop switching effect,animations,animation speed,desktop animations,drivers,driver settings,rendering,render,invert effect,looking glass effect,magnifier effect,snap helper effect,track mouse effect,zoom effect,blur effect,dashboard effect,explosion effect,fade effect,fade desktop effect,fall apart effect,glide effect,highlight window effect,login effect,logout effect,magic lamp effect,minimize animation effect,mouse mark effect,scale in effect,screenshot effect,sheet effect,slide effect,sliding popups effect,taskbar thumbnails effect,thumbnail aside effect,translucency,translucency effect,transparency,window geometry effect,wobbly windows effect,startup feedback effect,dialog parent effect,dim inactive effect,dim screen effect,slide back effect,eye candy,candy,show FPS effect,show paint effect,box switch effect,cover switch effect,desktop cube effect,desktop cube animation effect,desktop grid effect,flip switch effect,outline effect,present windows effect,resize window effect

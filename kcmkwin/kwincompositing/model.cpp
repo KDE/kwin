@@ -383,19 +383,28 @@ void EffectFilterModel::defaults()
     m_effectModel->defaults();
 }
 
-EffectView::EffectView(QWindow *parent)
+EffectView::EffectView(ViewType type, QWindow *parent)
     : QQuickView(parent)
 {
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
     qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
     qmlRegisterType<Compositing>("org.kde.kwin.kwincompositing", 1, 0, "Compositing");
     qmlRegisterType<CompositingType>("org.kde.kwin.kwincompositing", 1, 0, "CompositingType");
-    init();
+    init(type);
 }
 
-void EffectView::init()
+void EffectView::init(ViewType type)
 {
-    QString mainFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwincompositing/qml/main.qml", QStandardPaths::LocateFile);
+    QString path;
+    switch (type) {
+    case CompositingSettingsView:
+        path = QStringLiteral("kwincompositing/qml/main-compositing.qml");
+        break;
+    case DesktopEffectsView:
+        path = QStringLiteral("kwincompositing/qml/main.qml");
+        break;
+    }
+    QString mainFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, path, QStandardPaths::LocateFile);
     setResizeMode(QQuickView::SizeRootObjectToView);
     rootContext()->setContextProperty("engine", this);
     setSource(QUrl(mainFile));

@@ -21,42 +21,26 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import org.kde.kwin.kwincompositing 1.0
+// for i18n
+import org.kde.plasma.core 2.0
 
-
-Rectangle {
-    id: window
-    width: 780
-    height: 480
-    color: engine.backgroundViewColor()
-    property bool openGLBrokeState: true
-    signal changed
-
-    OpenGLErrorView {
-        visible: window.openGLBrokeState
-        anchors.fill: parent
-        onActivated: window.openGLBrokeState = compositing.OpenGLIsBroken();
-    }
-
-    EffectView{
-        id: view
-        anchors.fill: parent
-        visible: !window.openGLBrokeState
-        onChanged: {
-            window.changed()
+Item {
+    id: openGLErrorView
+    signal activated
+    ColumnLayout {
+        Text {
+            id: openGLErrorText
+            text: i18n("OpenGL compositing (the default) has crashed KWin in the past.\n" +
+                    "This was most likely due to a driver bug.\n" +
+                    "If you think that you have meanwhile upgraded to a stable driver,\n" +
+                    "you can reset this protection but be aware that this might result in an immediate crash!\n" +
+                    "Alternatively, you might want to use the XRender backend instead.")
         }
-    }
 
-    Compositing {
-        id: compositing
-    }
-    Connections {
-        target: compositing
-        onChanged: window.changed()
-    }
-
-    Component.onCompleted: {
-        openGLBrokeState = compositing.OpenGLIsUnsafe()
-        compositing.reset();
+        Button {
+            id: openGLButton
+            text: i18n("Re-enable OpenGL detection")
+            onClicked: openGLErrorView.activated()
+        }
     }
 }

@@ -38,7 +38,7 @@ Rectangle {
         onActivated: window.openGLBrokeState = compositing.OpenGLIsBroken();
     }
 
-    EffectView{
+    CompositingView {
         id: view
         anchors.fill: parent
         visible: !window.openGLBrokeState
@@ -49,6 +49,16 @@ Rectangle {
 
     Compositing {
         id: compositing
+        objectName: "compositing"
+        animationSpeed: view.animationSpeedValue
+        windowThumbnail: view.windowThumbnailIndex
+        glScaleFilter: view.glScaleFilterIndex
+        xrScaleFilter: view.xrScaleFilterChecked
+        unredirectFullscreen: view.unredirectFullScreenChecked
+        glSwapStrategy: view.glSwapStrategyIndex
+        glColorCorrection: view.glColorCorrectionChecked
+        compositingType: view.compositingTypeIndex
+        compositingEnabled: view.compositingEnabledChecked
     }
     Connections {
         target: compositing
