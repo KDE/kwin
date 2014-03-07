@@ -20,6 +20,7 @@
 **************************************************************************/
 
 #include "compositing.h"
+#include <kwin_compositing_interface.h>
 
 #include <KCModuleProxy>
 #include <KConfigGroup>
@@ -130,15 +131,16 @@ bool Compositing::OpenGLIsUnsafe() const
 
 bool Compositing::OpenGLIsBroken()
 {
-    QDBusInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Compositor"));
+    OrgKdeKwinCompositingInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Compositor"),
+                                             QDBusConnection::sessionBus());
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
 
     QString oldBackend = kwinConfig.readEntry("Backend", "OpenGL");
     kwinConfig.writeEntry("Backend", "OpenGL");
     kwinConfig.sync();
-    QDBusReply<bool> OpenGLIsBrokenReply = interface.call("OpenGLIsBroken");
 
-    if (OpenGLIsBrokenReply.value()) {
+    if (interface.openGLIsBroken()) {
         kwinConfig.writeEntry("Backend", oldBackend);
         kwinConfig.sync();
         return true;

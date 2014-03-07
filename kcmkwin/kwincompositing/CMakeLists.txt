@@ -53,6 +53,13 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS CoreAddons Config I18n Service XmlGu
 
 find_package(KF5Declarative REQUIRED NO_MODULE)
 
+# Required for KWin's DBus interfaces
+find_package(KDE4Workspace REQUIRED NO_MODULE)
+set_package_properties(KDE4Workspace PROPERTIES
+                       TYPE REQUIRED
+                       PURPOSE "Required for DBus interfaces to KWin"
+                      )
+
 #########################################################################
 
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
@@ -74,6 +81,10 @@ set(kwincomposing_SRC
     compositing.cpp
     effectconfig.cpp)
 
+qt5_add_dbus_interface( kwincomposing_SRC
+  ${KDE4WORKSPACE_DBUS_INTERFACES_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface)
+qt5_add_dbus_interface( kwincomposing_SRC
+  ${KDE4WORKSPACE_DBUS_INTERFACES_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
@@ -98,6 +109,11 @@ set(modelTest_SRC
     compositing.cpp
     test/effectmodeltest.cpp
     test/modeltest.cpp)
+
+qt5_add_dbus_interface( modelTest_SRC
+  ${KDE4WORKSPACE_DBUS_INTERFACES_DIR}/org.kde.kwin.Compositing.xml kwin_compositing_interface)
+qt5_add_dbus_interface( modelTest_SRC
+  ${KDE4WORKSPACE_DBUS_INTERFACES_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 add_executable(effectModelTest ${modelTest_SRC})
 

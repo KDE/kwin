@@ -21,6 +21,7 @@
 #include "model.h"
 #include "effectconfig.h"
 #include "compositing.h"
+#include <kwin_effects_interface.h>
 
 #include <KPluginInfo>
 #include <KService>
@@ -235,13 +236,15 @@ int EffectModel::findRowByServiceName(const QString &serviceName)
 
 void EffectModel::syncEffectsToKWin()
 {
-    QDBusInterface interface(QStringLiteral("org.kde.KWin"), QStringLiteral("/Effects"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Effects"),
+                                             QDBusConnection::sessionBus());
     for (int it = 0; it < m_effectsList.size(); it++) {
         if (m_effectsList.at(it).effectStatus != m_effectsChanged.at(it).effectStatus) {
             if (m_effectsList.at(it).effectStatus) {
-                interface.asyncCall("loadEffect", m_effectsList.at(it).serviceName);
+                interface.loadEffect(m_effectsList.at(it).serviceName);
             } else {
-                interface.asyncCall("unloadEffect", m_effectsList.at(it).serviceName);
+                interface.unloadEffect(m_effectsList.at(it).serviceName);
             }
         }
     }
