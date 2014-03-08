@@ -751,11 +751,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_driverVersion = parseVersionString(versionTokens.at(index + 1));
         else
             m_driverVersion = 0;
-
-        if (qgetenv("QT_OPENGL_NO_SANITY_CHECK").isNull()) {
-            // workaround for QTBUG-34898
-            m_recommendedCompositor = XRenderCompositing;
-        }
     }
 
 
@@ -827,10 +822,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_recommendedCompositor = OpenGL1Compositing;
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
-        }
-        if (m_chipClass == SandyBridge && m_renderer.contains("Mobile") && qgetenv("QT_OPENGL_NO_SANITY_CHECK").isNull()) {
-            // workaround for QTBUG-34898
-            m_recommendedCompositor = XRenderCompositing;
         }
     }
 
