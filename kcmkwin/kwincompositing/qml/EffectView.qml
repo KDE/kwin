@@ -76,6 +76,21 @@ Item {
             }
 
             Button {
+                iconName: "configure"
+                tooltip: "Configure filter"
+                menu: Menu {
+                    MenuItem {
+                        text: i18n("Filter only on Desktop Effects supported by the Compositor")
+                        checkable: true
+                        checked: searchModel.filterOnSupported
+                        onTriggered: {
+                            searchModel.filterOnSupported = !searchModel.filterOnSupported;
+                        }
+                    }
+                }
+            }
+
+            Button {
                 id: ghnsButton
                 text: i18n("Get New Effects ...")
                 iconName: "get-hot-new-stuff"

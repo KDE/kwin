@@ -46,6 +46,7 @@ struct EffectData {
     bool effectStatus;
     bool enabledByDefault;
     QUrl video;
+    bool supported;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -65,7 +66,8 @@ public:
         ServiceNameRole,
         EffectStatusRole,
         WindowManagementRole,
-        VideoRole
+        VideoRole,
+        SupportedRole
     };
 
     explicit EffectModel(QObject *parent = 0);
@@ -125,6 +127,11 @@ class EffectFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(QString filter READ filter WRITE setFilter NOTIFY filterChanged)
+    /**
+     * If @c true not supported effects are excluded, if @c false no restriction on supported.
+     * Default value is @c true.
+     **/
+    Q_PROPERTY(bool filterOnSupported READ isFilterOnSupported WRITE setFilterOnSupported NOTIFY filterOnSupportedChanged)
     Q_PROPERTY(QColor backgroundActiveColor READ backgroundActiveColor CONSTANT);
     Q_PROPERTY(QColor backgroundNormalColor READ backgroundNormalColor CONSTANT);
     Q_PROPERTY(QColor backgroundAlternateColor READ backgroundAlternateColor CONSTANT);
@@ -148,6 +155,11 @@ public:
         return color;
     }
 
+    void setFilterOnSupported(bool supported);
+    bool isFilterOnSupported() const {
+        return m_supported;
+    }
+
     void defaults();
 
 public Q_SLOTS:
@@ -159,10 +171,12 @@ protected:
 Q_SIGNALS:
     void effectModelChanged();
     void filterChanged();
+    void filterOnSupportedChanged();
 
 private:
     EffectModel *m_effectModel;
     QString m_filter;
+    bool m_supported;
 };
 }
 }

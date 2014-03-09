@@ -65,6 +65,7 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     roleNames[ServiceNameRole] = "ServiceNameRole";
     roleNames[EffectStatusRole] = "EffectStatusRole";
     roleNames[VideoRole] = "VideoRole";
+    roleNames[SupportedRole] = "SupportedRole";
     return roleNames;
 }
 
@@ -127,6 +128,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).effectStatus;
         case VideoRole:
             return m_effectsList.at(index.row()).video;
+        case SupportedRole:
+            return m_effectsList.at(index.row()).supported;
         default:
             return QVariant();
     }
@@ -184,6 +187,7 @@ void EffectModel::loadEffects()
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault());
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.video = service->property(QStringLiteral("X-KWin-Video-Url"), QVariant::Url).toUrl();
+        effect.supported = true;
 
         m_effectsList << effect;
     }
@@ -191,6 +195,45 @@ void EffectModel::loadEffects()
     qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
         return a.category < b.category;
     });
+
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Effects"),
+                                             QDBusConnection::sessionBus());
+    if (interface.isValid()) {
+        QStringList effectNames;
+        std::for_each(m_effectsList.constBegin(), m_effectsList.constEnd(), [&effectNames](const EffectData &data) {
+            effectNames << data.serviceName;
+        });
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(interface.areEffectsSupported(effectNames), this);
+        watcher->setProperty("effectNames", effectNames);
+        connect(watcher, &QDBusPendingCallWatcher::finished, [this](QDBusPendingCallWatcher *self) {
+            const QStringList effectNames = self->property("effectNames").toStringList();
+            const QDBusPendingReply< QList< bool > > reply = *self;
+            QList< bool> supportValues;
+            if (reply.isValid()) {
+                supportValues.append(reply.value());
+            }
+            if (effectNames.size() == supportValues.size()) {
+                for (int i = 0; i < effectNames.size(); ++i) {
+                    const bool supportedValue = supportValues.at(i);
+                    const QString &effectName = effectNames.at(i);
+                    auto it = std::find_if(m_effectsList.begin(), m_effectsList.end(), [effectName](const EffectData &data) {
+                        return data.serviceName == effectName;
+                    });
+                    if (it != m_effectsList.end()) {
+                        if ((*it).supported != supportedValue) {
+                            (*it).supported = supportedValue;
+                            QModelIndex i = index(findRowByServiceName(effectName), 0);
+                            if (i.isValid()) {
+                                emit dataChanged(i, i, QVector<int>() << SupportedRole);
+                            }
+                        }
+                    }
+                }
+            }
+            self->deleteLater();
+        });
+    }
 
     m_effectsChanged = m_effectsList;
     endResetModel();
@@ -307,8 +350,9 @@ void EffectModel::defaults()
 }
 
 EffectFilterModel::EffectFilterModel(QObject *parent)
-    :QSortFilterProxyModel(parent),
-    m_effectModel( new EffectModel(this))
+    : QSortFilterProxyModel(parent)
+    , m_effectModel(new EffectModel(this))
+    , m_supported(true)
 {
     setSourceModel(m_effectModel);
 }
@@ -329,19 +373,37 @@ void EffectFilterModel::setFilter(const QString &filter)
     invalidateFilter();
 }
 
+void EffectFilterModel::setFilterOnSupported(bool supported)
+{
+    if (m_supported == supported) {
+        return;
+    }
+
+    m_supported = supported;
+    emit filterOnSupportedChanged();
+    invalidateFilter();
+}
+
 bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (!m_effectModel) {
         return false;
     }
 
-    if (m_filter.isEmpty()) {
-        return true;
-    }
-
     QModelIndex index = m_effectModel->index(source_row, 0, source_parent);
     if (!index.isValid()) {
         return false;
+    }
+
+    if (m_supported) {
+        bool supported = index.data(EffectModel::SupportedRole).toBool();
+        if (!supported) {
+            return false;
+        }
+    }
+
+    if (m_filter.isEmpty()) {
+        return true;
     }
 
     QVariant data = index.data();
