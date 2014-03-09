@@ -185,7 +185,7 @@ int Application::crashes = 0;
 
 Application::Application(int &argc, char **argv)
     : QApplication(argc, argv)
-    , owner(screen_number)
+    , owner()
     , m_eventFilter(new XcbEventFilter())
     , m_replace(false)
     , m_configLock(false)
@@ -237,12 +237,13 @@ void Application::start()
     if (screen_number == -1)
         screen_number = QX11Info::appScreen();
 
-    connect(&owner, &KSelectionOwner::failedToClaimOwnership, []{
+    owner.reset(new KWinSelectionOwner(screen_number));
+    connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, []{
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     });
-    connect(&owner, SIGNAL(lostOwnership()), SLOT(lostSelection()));
-    connect(&owner, &KSelectionOwner::claimedOwnership, [this]{
+    connect(owner.data(), SIGNAL(lostOwnership()), SLOT(lostSelection()));
+    connect(owner.data(), &KSelectionOwner::claimedOwnership, [this]{
         // we want all QQuickWindows with an alpha buffer
         QQuickWindow::setDefaultAlphaBuffer(true);
 
@@ -284,7 +285,7 @@ void Application::start()
     crashChecking();
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();
-    owner.claim(m_replace, true);
+    owner->claim(m_replace, true);
 
     atoms = new Atoms;
 }
@@ -292,7 +293,7 @@ void Application::start()
 Application::~Application()
 {
     delete Workspace::self();
-    if (owner.ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
+    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     delete options;
     delete atoms;
@@ -478,6 +479,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     // for several bug reports about high CPU usage (bug #239963)
     setenv("QT_NO_GLIB", "1", true);
 
+    // enforce xcb plugin, unfortunately command line switch has precedence
+    setenv("QT_QPA_PLATFORM", "xcb", true);
+
     org::kde::KSMServerInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QDBusConnection::sessionBus());
     ksmserver.suspendStartup(QStringLiteral(KWIN_NAME));
     KWin::Application a(argc, argv);
@@ -517,6 +521,18 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::Application::setCrashCount(parser.value(crashesOption).toInt());
     a.setConfigLock(parser.isSet(lockOption));
     a.setReplace(parser.isSet(replaceOption));
+
+    // perform sanity checks
+    if (a.platformName().toLower() != QStringLiteral("xcb")) {
+        fprintf(stderr, "%s: FATAL ERROR expecting platform xcb but got platform %s\n",
+                argv[0], qPrintable(a.platformName()));
+        exit(1);
+    }
+    if (!KWin::display()) {
+        fprintf(stderr, "%s: FATAL ERROR KWin requires Xlib support in the xcb plugin. Do not configure Qt with -no-xcb-xlib\n",
+                argv[0]);
+        exit(1);
+    }
 
     a.start();
 

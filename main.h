@@ -102,7 +102,7 @@ private Q_SLOTS:
 
 private:
     void crashChecking();
-    KWinSelectionOwner owner;
+    QScopedPointer<KWinSelectionOwner> owner;
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_replace;
     bool m_configLock;
