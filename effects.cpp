@@ -1395,6 +1395,21 @@ QStringList EffectsHandlerImpl::listOfEffects() const
     return listOfModules;
 }
 
+KService::Ptr EffectsHandlerImpl::findEffectService(const QString &internalName) const
+{
+    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalName);
+    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Effect"), constraint);
+    if (offers.isEmpty()) {
+        return KService::Ptr();
+    }
+    return offers.first();
+}
+
+bool EffectsHandlerImpl::isScriptedEffect(KService::Ptr service) const
+{
+    return service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("javascript");
+}
+
 bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 {
     makeOpenGLContextCurrent();
@@ -1415,15 +1430,13 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
     qDebug() << "Trying to load " << name;
     QString internalname = name.toLower();
 
-    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
-    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Effect"), constraint);
-    if (offers.isEmpty()) {
+    KService::Ptr service = findEffectService(internalname);
+    if (!service) {
         qCritical() << "Couldn't find effect " << name << endl;
         return false;
     }
-    KService::Ptr service = offers.first();
 
-    if (service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("javascript")) {
+    if (isScriptedEffect(service)) {
         // this is a scripted effect - use different loader
         return loadScriptedEffect(name, service.data());
     }
@@ -1604,6 +1617,69 @@ bool EffectsHandlerImpl::isEffectLoaded(const QString& name) const
             return true;
 
     return false;
+}
+
+bool EffectsHandlerImpl::isEffectSupported(const QString &name)
+{
+    // if the effect is loaded, it is obviously supported
+    auto it = std::find_if(loaded_effects.constBegin(), loaded_effects.constEnd(), [name](const EffectPair &pair) {
+        return pair.first == name;
+    });
+    if (it != loaded_effects.constEnd()) {
+        return true;
+    }
+
+    const QString internalName = name.toLower();
+    KService::Ptr service = findEffectService(name.toLower());
+    if (!service) {
+        // effect not found
+        return false;
+    }
+
+    if (isScriptedEffect(service)) {
+        // scripted effects are generally supported
+        return true;
+    }
+
+    // next checks might require a context
+    makeOpenGLContextCurrent();
+    m_compositor->addRepaintFull();
+
+    // try builtin effects
+    const QByteArray builtInName = internalName.mid(13).toUtf8(); // drop kwin4_effect_
+    if (BuiltInEffects::available(builtInName)) {
+        return BuiltInEffects::supported(builtInName);
+    }
+
+    // try remaining effects
+    KLibrary* library = findEffectLibrary(service.data());
+    if (!library) {
+        return false;
+    }
+
+    const QString supported_symbol = QStringLiteral("effect_supported_") + name;
+    KLibrary::void_function_ptr supported_func = library->resolveFunction(supported_symbol.toAscii().data());
+
+    bool supported = true;
+
+    if (supported_func) {
+        typedef bool (*t_supportedfunc)();
+        t_supportedfunc supportedFunction = reinterpret_cast<t_supportedfunc>(supported_func);
+        supported = supportedFunction();
+    }
+
+    library->unload();
+
+    return supported;
+}
+
+QList< bool > EffectsHandlerImpl::areEffectsSupported(const QStringList &names)
+{
+    QList< bool > retList;
+    for (const QString &name : names) {
+        retList << isEffectSupported(name);
+    }
+    return retList;
 }
 
 void EffectsHandlerImpl::reloadEffect(Effect *effect)

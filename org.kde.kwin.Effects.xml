@@ -26,6 +26,15 @@
       <arg type="b" direction="out"/>
       <arg name="name" type="s" direction="in"/>
     </method>
+    <method name="isEffectSupported">
+      <arg type="b" direction="out"/>
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="areEffectsSupported">
+      <arg type="ab" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QList&lt;bool&gt;"/>
+      <arg name="names" type="as" direction="in"/>
+    </method>
     <method name="supportInformation">
       <arg type="s" direction="out"/>
       <arg name="name" type="s" direction="in"/>

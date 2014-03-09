@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QQueue>
 #include <Plasma/FrameSvg>
+#include <KService>
 
 namespace Plasma {
 class Theme;
@@ -220,6 +221,8 @@ public Q_SLOTS:
     Q_SCRIPTABLE void toggleEffect(const QString& name);
     Q_SCRIPTABLE void unloadEffect(const QString& name);
     Q_SCRIPTABLE bool isEffectLoaded(const QString& name) const;
+    Q_SCRIPTABLE bool isEffectSupported(const QString& name);
+    Q_SCRIPTABLE QList<bool> areEffectsSupported(const QStringList &names);
     Q_SCRIPTABLE QString supportInformation(const QString& name) const;
     Q_SCRIPTABLE QString debug(const QString& name, const QString& parameter = QString()) const;
 
@@ -265,6 +268,8 @@ private Q_SLOTS:
     void slotEffectsQueried();
 
 private:
+    KService::Ptr findEffectService(const QString &internalName) const;
+    bool isScriptedEffect(KService::Ptr service) const;
     typedef QVector< Effect*> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
     Effect *loadBuiltInEffect(const QByteArray &name, bool checkDefault);
