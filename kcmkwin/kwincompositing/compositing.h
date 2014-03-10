@@ -104,6 +104,7 @@ class CompositingType : public QAbstractItemModel
 {
 
     Q_OBJECT
+    Q_ENUMS(CompositingTypeIndex)
 
 public:
 

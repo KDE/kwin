@@ -34,7 +34,7 @@ Item {
     property alias unredirectFullScreenChecked: unredirectFullScreen.checked
     property alias glSwapStrategyIndex: glSwapStrategy.currentIndex
     property alias glColorCorrectionChecked: glColorCorrection.checked
-    property alias compositingTypeIndex: openGLType.type
+    property alias compositingTypeIndex: backend.type
     property bool compositingEnabledChecked: useCompositing.checked
 
     CompositingType {
@@ -78,14 +78,11 @@ Item {
             Layout.alignment: Qt.AlignRight
         }
         ComboBox {
-            id: openGLType
+            id: backend
             property int type: 0
             model: compositingType
             textRole: "NameRole"
             onCurrentIndexChanged: {
-                glScaleFilter.visible = currentIndex != 3;
-                xrScaleFilter.visible = currentIndex == 3;
-                glColorCorrection.enabled = currentIndex !=3 && glColorCorrection !=4;
                 type = compositingType.compositingTypeForIndex(currentIndex);
             }
             Component.onCompleted: {
@@ -94,7 +91,7 @@ Item {
             Connections {
                 target: compositing
                 onCompositingTypeChanged: {
-                    openGLType.currentIndex = compositingType.indexForCompositingType(compositing.compositingType)
+                    backend.currentIndex = compositingType.indexForCompositingType(compositing.compositingType)
                 }
             }
             Layout.fillWidth: true
@@ -110,7 +107,7 @@ Item {
         ComboBox {
             id: glScaleFilter
             model: [i18n("Crisp"), i18n("Smooth"), i18n("Accurate")]
-            visible: openGLType.currentIndex != 3
+            visible: backend.type != CompositingType.XRENDER_INDEX
             currentIndex: compositing.glScaleFilter
             Layout.fillWidth: true
         }
@@ -124,7 +121,7 @@ Item {
         ComboBox {
             id: xrScaleFilter
             model: [i18n("Crisp"), i18n("Smooth (slower)")]
-            visible: openGLType.currentIndex == 3
+            visible: backend.type == CompositingType.XRENDER_INDEX
             currentIndex: compositing.xrScaleFilter ? 1 : 0
             Layout.fillWidth: true
         }
@@ -180,7 +177,7 @@ Item {
         CheckBox {
             id: glColorCorrection
             checked: compositing.glColorCorrection
-            enabled: openGLType.currentIndex != 3 && openGLType.currentIndex != 4
+            enabled: backend.type == CompositingType.OPENGL31_INDEX || backend.type == CompositingType.OPENGL20_INDEX
             text: i18n("Enable color correction")
             Connections {
                 target: compositing
@@ -196,7 +193,7 @@ Item {
         }
     }
     Connections {
-        target: openGLType
+        target: backend
         onCurrentIndexChanged: changed()
     }
 }//End item
