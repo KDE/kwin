@@ -336,7 +336,14 @@ void PresentWindowsEffect::paintWindow(EffectWindow *w, int mask, QRegion region
                 QRect area = effects->clientArea(FullScreenArea, w);
 
                 QSizeF effSize(w->width()*data.xScale(), w->height()*data.yScale());
-                float tScale = sqrt((area.width()*area.height()) / (16.0*effSize.width()*effSize.height()));
+                const float xr = area.width()/effSize.width();
+                const float yr = area.height()/effSize.height();
+                float tScale = 0.0;
+                if (xr < yr) {
+                    tScale = qMax(xr/4.0, yr/32.0);
+                } else {
+                    tScale = qMax(xr/32.0, yr/4.0);
+                }
                 if (tScale < 1.05) {
                     tScale = 1.05;
                 }

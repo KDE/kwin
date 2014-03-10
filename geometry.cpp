@@ -2992,7 +2992,7 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
                         foreach (const QRect &r, strut.rects()) {
                             if (r.top() == 0 && r.width() > r.height() && // "top panel"
                                 r.intersects(moveResizeGeom) && moveResizeGeom.top() < r.bottom()) {
-                                newTitleTop = r.bottom();
+                                newTitleTop = r.bottom() + 1;
                                 break;
                             }
                         }
@@ -3271,11 +3271,20 @@ void Client::sendToScreen(int newScreen)
     // so we clear the state first
     MaximizeMode maxMode = maximizeMode();
     QuickTileMode qtMode = (QuickTileMode)quick_tile_mode;
-    maximize(MaximizeRestore);
-    setQuickTileMode(QuickTileNone);
+    if (maxMode != MaximizeRestore)
+        maximize(MaximizeRestore);
+    if (qtMode != QuickTileNone)
+        setQuickTileMode(QuickTileNone, true);
 
     QRect oldScreenArea = workspace()->clientArea(MaximizeArea, this);
     QRect screenArea = workspace()->clientArea(MaximizeArea, newScreen, desktop());
+
+    // the window can have its center so that the position correction moves the new center onto
+    // the old screen, what will tile it where it is. Ie. the screen is not changed
+    // this happens esp. with electric border quicktiling
+    if (qtMode != QuickTileNone)
+        keepInArea(oldScreenArea);
+
     QRect oldGeom = geometry();
     QRect newGeom = oldGeom;
     // move the window to have the same relative position to the center of the screen
@@ -3305,8 +3314,8 @@ void Client::sendToScreen(int newScreen)
     // eg. setting QuickTileNone would break maximization
     if (maxMode != MaximizeRestore)
         maximize(maxMode);
-    if (qtMode != QuickTileNone)
-        setQuickTileMode(qtMode);
+    if (qtMode != QuickTileNone && qtMode != quick_tile_mode)
+        setQuickTileMode(qtMode, true);
 
     ClientList tso = workspace()->ensureStackingOrder(transients());
     for (ClientList::ConstIterator it = tso.constBegin(), end = tso.constEnd(); it != end; ++it)

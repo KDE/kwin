@@ -258,7 +258,7 @@ void HighlightWindowEffect::finishHighlighting()
 
 bool HighlightWindowEffect::isActive() const
 {
-    return !m_windowOpacity.isEmpty();
+    return !(m_windowOpacity.isEmpty() || effects->isScreenLocked());
 }
 
 } // namespace
