@@ -93,20 +93,15 @@ Item {
 
         ScrollView {
             id: scroll
+            frameVisible: true
             highlightOnFocus: true
             Layout.fillWidth: true
             Layout.fillHeight: true
-            anchors {
-                top: searchField.bottom
-                left: parent.left
-                bottom: parent.bottom
-            }
             ListView {
                 id: effectView
                 property color backgroundActiveColor: searchModel.backgroundActiveColor
                 property color backgroundNormalColor: searchModel.backgroundNormalColor
                 property color backgroundAlternateColor: searchModel.backgroundAlternateColor
-                Layout.fillWidth: true
                 anchors.fill: parent
                 model: searchModel
                 delegate: Effect{
