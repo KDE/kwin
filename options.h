@@ -697,9 +697,6 @@ public:
     static uint defaultVBlankTime() {
         return 6000; // 6ms
     }
-    static bool defaultGlDirect() {
-        return true;
-    }
     static bool defaultGlStrictBinding() {
         return true;
     }
