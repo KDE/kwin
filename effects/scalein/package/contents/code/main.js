@@ -19,10 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 /*global effect, effects, animate, animationTime, Effect, QEasingCurve */
 var scaleInEffect = {
-    duration: animationTime(250),
+    duration: animationTime(150),
     loadConfig: function () {
         "use strict";
-        scaleInEffect.duration = animationTime(250);
+        scaleInEffect.duration = animationTime(150);
     },
     isScaleWindow: function (window) {
         "use strict";
@@ -44,7 +44,7 @@ var scaleInEffect = {
                 to: 1.0
             }, {
                 type: Effect.Scale,
-                from: 0.0,
+                from: 0.75,
                 to: 1.0
             }]
         });
