@@ -87,6 +87,7 @@ Rectangle {
             id: effectItem
             Text {
                 text: model.NameRole
+                font.bold: true
             }
             Text {
                 id: desc
