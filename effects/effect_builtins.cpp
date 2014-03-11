@@ -47,6 +47,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // OpenGL-specific effects for desktop
 #include "coverswitch/coverswitch.h"
 #include "cube/cube.h"
+#include "cube/cubeslide.h"
 #include "flipswitch/flipswitch.h"
 #include "glide/glide.h"
 #include "invert/invert.h"
@@ -94,6 +95,7 @@ EffectLoader::EffectLoader()
     EFFECT(contrast, ContrastEffect)
     EFFECT(coverswitch, CoverSwitchEffect)
     EFFECT(cube, CubeEffect)
+    EFFECT(cubeslide, CubeSlideEffect)
     EFFECT(dashboard, DashboardEffect)
     EFFECT(desktopgrid, DesktopGridEffect)
     EFFECT(diminactive, DimInactiveEffect)
@@ -137,6 +139,7 @@ EffectLoader::EffectLoader()
     SUPPORTED(contrast, ContrastEffect::supported)
     SUPPORTED(coverswitch, CoverSwitchEffect::supported)
     SUPPORTED(cube, CubeEffect::supported)
+    SUPPORTED(cubeslide, CubeSlideEffect::supported)
     SUPPORTED(fallapart, FallApartEffect::supported)
     SUPPORTED(flipswitch, FlipSwitchEffect::supported)
     SUPPORTED(glide, GlideEffect::supported)

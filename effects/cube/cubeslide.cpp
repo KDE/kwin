@@ -32,9 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-KWIN_EFFECT(cubeslide, CubeSlideEffect)
-KWIN_EFFECT_SUPPORTED(cubeslide, CubeSlideEffect::supported())
-
 CubeSlideEffect::CubeSlideEffect()
     : windowMoving(false)
     , desktopChangedWhileMoving(false)
