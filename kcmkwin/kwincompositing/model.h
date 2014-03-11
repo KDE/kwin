@@ -128,6 +128,7 @@ class EffectFilterModel : public QSortFilterProxyModel
     Q_PROPERTY(QColor backgroundActiveColor READ backgroundActiveColor CONSTANT);
     Q_PROPERTY(QColor backgroundNormalColor READ backgroundNormalColor CONSTANT);
     Q_PROPERTY(QColor backgroundAlternateColor READ backgroundAlternateColor CONSTANT);
+    Q_PROPERTY(QColor sectionColor READ sectionColor CONSTANT)
 public:
     EffectFilterModel(QObject *parent = 0);
     const QString &filter() const;
@@ -140,6 +141,12 @@ public:
     QColor backgroundActiveColor() { return KColorScheme(QPalette::Active, KColorScheme::Selection, KSharedConfigPtr(0)).background(KColorScheme::LinkBackground).color(); };
     QColor backgroundNormalColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::NormalBackground).color(); };
     QColor backgroundAlternateColor() { return KColorScheme(QPalette::Active, KColorScheme::View, KSharedConfigPtr(0)).background(KColorScheme::AlternateBackground).color(); };
+
+    QColor sectionColor() const {
+        QColor color = KColorScheme(QPalette::Active).foreground().color();
+        color.setAlphaF(0.6);
+        return color;
+    }
 
     void defaults();
 

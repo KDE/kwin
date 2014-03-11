@@ -31,14 +31,17 @@ Item {
         id: sectionHeading
         Rectangle {
             width: parent.width
-            height:25
-            color: "white"
+            implicitHeight: sectionText.implicitHeight + 2 * col.spacing
+            color: searchModel.backgroundNormalColor
 
             Text {
+                id: sectionText
+                x: col.spacing
+                y: col.spacing
                 text: section
                 font.bold: true
-                font.pointSize: 16
-                color: "gray"
+                color: searchModel.sectionColor
+                anchors.horizontalCenter: parent.horizontalCenter
             }
         }
     }
