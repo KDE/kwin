@@ -133,7 +133,7 @@ void DecorationModel::findDecorations()
         KConfigGroup config(m_config, data.auroraeName);
         data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >("BorderSize", KDecorationDefines::BorderNormal);
         data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >("ButtonSize", KDecorationDefines::BorderNormal);
-        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", true);
+        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", false);
         data.comment = service->comment();
         KPluginInfo info(service);
         data.author = info.author();
@@ -184,7 +184,7 @@ void DecorationModel::findAuroraeThemes()
         KConfigGroup config(m_config, data.auroraeName);
         data.borderSize = (KDecorationDefines::BorderSize)config.readEntry< int >("BorderSize", KDecorationDefines::BorderNormal);
         data.buttonSize = (KDecorationDefines::BorderSize)config.readEntry< int >("ButtonSize", KDecorationDefines::BorderNormal);
-        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", true);
+        data.closeDblClick = config.readEntry< bool >("CloseOnDoubleClickMenuButton", false);
         metaData(data, df);
         m_decorations.append(data);
     }

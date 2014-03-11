@@ -19,7 +19,7 @@ import org.kde.qtextracomponents 2.0 as QtExtra
 import org.kde.kwin.decoration 0.1
 
 DecorationButton {
-    property bool closeOnDoubleClick: true
+    property bool closeOnDoubleClick: false
     id: menuButton
     buttonType: DecorationOptions.DecorationButtonMenu
     QtExtra.QIconItem {
@@ -75,12 +75,12 @@ DecorationButton {
         }
     }
     Component.onCompleted: {
-        menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", true);
+        menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", false);
     }
     Connections {
         target: decoration
         onConfigChanged: {
-            menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", true);
+            menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", false);
         }
     }
 }
