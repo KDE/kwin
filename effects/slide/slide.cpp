@@ -31,7 +31,7 @@ SlideEffect::SlideEffect()
 {
     connect(effects, SIGNAL(desktopChanged(int,int)), this, SLOT(slotDesktopChanged(int,int)));
     connect(effects, &EffectsHandler::windowAdded, this, &SlideEffect::windowAdded);
-    connect(effects, &EffectsHandler::windowDeleted, [this](EffectWindow *w) {
+    connect(effects, &EffectsHandler::windowDeleted, this, [this](EffectWindow *w) {
         m_backgroundContrastForcedBefore.removeAll(w);
     });
     mTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
