@@ -380,6 +380,15 @@ void KWinDecorationModule::slotConfigureDecoration()
         form->borderSizesCombo->setCurrentIndex(index.data(DecorationModel::BorderSizeRole).toInt());
         form->buttonSizesCombo->setCurrentIndex(index.data(DecorationModel::ButtonSizeRole).toInt());
         form->closeWindowsDoubleClick->setChecked(index.data(DecorationModel::CloseOnDblClickRole).toBool());
+        form->doubleClickMessage->setCloseButtonVisible(true);
+        form->doubleClickMessage->setText(i18n("Close by double clicking:\n To open the menu, keep the button pressed until it appears."));
+        form->doubleClickMessage->setVisible(false);
+        connect(form->closeWindowsDoubleClick, &QCheckBox::toggled, [form](bool toggled) {
+            if (!toggled) {
+                return;
+            }
+            form->doubleClickMessage->animatedShow();
+        });
         // in case of QmlDecoration look for a config.ui in the package structure
         KConfigDialogManager *configManager = nullptr;
         if (index.data(DecorationModel::TypeRole).toInt() == DecorationModelData::QmlDecoration) {
