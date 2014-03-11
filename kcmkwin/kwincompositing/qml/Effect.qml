@@ -30,7 +30,7 @@ Rectangle {
     height: childrenRect.height
     color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
     signal changed()
-    property alias checked: effectStatusCheckBox.checked
+    property bool checked: model.EffectStatusRole
 
     MouseArea {
         anchors.fill: parent
@@ -43,18 +43,36 @@ Rectangle {
         id: rowEffect
         width: parent.width - 2 * spacing
         x: spacing
-        CheckBox {
-            function isDesktopSwitching() {
-                if (model.ServiceNameRole == "kwin4_effect_slide") {
-                    return true;
-                } else if (model.ServiceNameRole == "kwin4_effect_fadedesktop") {
-                    return true;
-                } else if (model.ServiceNameRole == "kwin4_effect_cubeslide") {
-                    return true;
-                } else {
-                    return false;
+
+        RadioButton {
+            id: exclusiveGroupButton
+            property bool exclusive: model.ExclusiveRole != ""
+            visible: exclusive
+            checked: model.EffectStatusRole
+            property bool actuallyChanged: true
+            property bool initiallyChecked: false
+            exclusiveGroup: exclusive ? effectView.exclusiveGroupForCategory(model.ExclusiveRole) : null
+            onCheckedChanged: {
+                if (!visible) {
+                    return;
                 }
+                actuallyChanged = true;
+                item.checked = exclusiveGroupButton.checked
+                item.changed();
             }
+            onClicked: {
+                if (!actuallyChanged || initiallyChecked) {
+                    checked = false;
+                }
+                actuallyChanged = false;
+                initiallyChecked = false;
+            }
+            Component.onCompleted: {
+                exclusiveGroupButton.initiallyChecked = model.EffectStatusRole;
+            }
+        }
+
+        CheckBox {
             function isWindowManagementEnabled() {
                 if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
                     windowManagementEnabled = effectStatusCheckBox.checked;
@@ -72,9 +90,15 @@ Rectangle {
             id: effectStatusCheckBox
             property bool windowManagementEnabled;
             checked: model.EffectStatusRole
-            exclusiveGroup: isDesktopSwitching() ? desktopSwitching : null
+            visible: model.ExclusiveRole == ""
 
-            onCheckedChanged: item.changed()
+            onCheckedChanged: {
+                if (!visible) {
+                    return;
+                }
+                item.checked = effectStatusCheckBox.checked;
+                item.changed();
+            }
             Connections {
                 target: searchModel
                 onDataChanged: {

@@ -66,6 +66,7 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     roleNames[EffectStatusRole] = "EffectStatusRole";
     roleNames[VideoRole] = "VideoRole";
     roleNames[SupportedRole] = "SupportedRole";
+    roleNames[ExclusiveRole] = "ExclusiveRole";
     return roleNames;
 }
 
@@ -130,6 +131,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).video;
         case SupportedRole:
             return m_effectsList.at(index.row()).supported;
+        case ExclusiveRole:
+            return m_effectsList.at(index.row()).exclusiveGroup;
         default:
             return QVariant();
     }
@@ -141,17 +144,24 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
         return QAbstractItemModel::setData(index, value, role);
 
     if (role == EffectModel::EffectStatusRole) {
-        m_effectsList[index.row()].effectStatus = value.toBool();
-
-        const QString effectServiceName = m_effectsList[index.row()].serviceName;
-        if (effectServiceName == "kwin4_effect_slide") {
-            handleDesktopSwitching(index.row());
-        } else if (effectServiceName == "kwin4_effect_fadedesktop") {
-            handleDesktopSwitching(index.row());
-        } else if (effectServiceName == "kwin4_effect_cubeslide") {
-            handleDesktopSwitching(index.row());
-        }
+        EffectData &data = m_effectsList[index.row()];
+        data.effectStatus = value.toBool();
         emit dataChanged(index, index);
+
+        if (data.effectStatus && !data.exclusiveGroup.isEmpty()) {
+            // need to disable all other exclusive effects in the same category
+            for (int i = 0; i < m_effectsList.size(); ++i) {
+                if (i == index.row()) {
+                    continue;
+                }
+                EffectData &otherData = m_effectsList[i];
+                if (otherData.exclusiveGroup == data.exclusiveGroup) {
+                    otherData.effectStatus = false;
+                    emit dataChanged(this->index(i, 0), this->index(i, 0));
+                }
+            }
+        }
+
         return true;
     } else if (role == EffectModel::WindowManagementRole) {
         bool enabled = value.toBool();
@@ -188,6 +198,7 @@ void EffectModel::loadEffects()
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
         effect.video = service->property(QStringLiteral("X-KWin-Video-Url"), QVariant::Url).toUrl();
         effect.supported = true;
+        effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
 
         m_effectsList << effect;
     }
@@ -237,27 +248,6 @@ void EffectModel::loadEffects()
 
     m_effectsChanged = m_effectsList;
     endResetModel();
-}
-
-void EffectModel::handleDesktopSwitching(int row)
-{
-    //Q: Why do we need the handleDesktopSwitching?
-    //A: Because of the setData, when we enable the effect
-    //and then we scroll, our model is being updated,
-    //so the setData is being called again, and as a result
-    //of that we have multiple effects enabled for the desktop switching.
-    const QString currentEffect = m_effectsList[row].serviceName;
-    for (int it = 0; it < m_effectsList.size(); it++) {
-        EffectData effect = m_effectsList.at(it);
-
-        if (effect.serviceName == "kwin4_effect_slide" && currentEffect != effect.serviceName && effect.effectStatus) {
-            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
-        } else if (effect.serviceName == "kwin4_effect_cubeslide" && currentEffect != effect.serviceName && effect.effectStatus) {
-            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
-        } else if (effect.serviceName == "kwin4_effect_fadedesktop" && currentEffect != effect.serviceName && effect.effectStatus) {
-            m_effectsList[it].effectStatus = !m_effectsList[it].effectStatus;
-        }
-    }
 }
 
 void EffectModel::handleWindowManagement(int row, bool enabled)

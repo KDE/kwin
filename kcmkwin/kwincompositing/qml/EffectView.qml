@@ -116,7 +116,24 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             ListView {
+                function exclusiveGroupForCategory(category) {
+                    for (var i = 0; i < effectView.exclusiveGroups.length; ++i) {
+                        var item = effectView.exclusiveGroups[i];
+                        if (item.category == category) {
+                            return item.group;
+                        }
+                    }
+                    var newGroup = Qt.createQmlObject('import QtQuick 2.1; import QtQuick.Controls 1.1; ExclusiveGroup {}',
+                                                      effectView,
+                                                      "dynamicExclusiveGroup" + effectView.exclusiveGroups.length);
+                    effectView.exclusiveGroups[effectView.exclusiveGroups.length] = {
+                        'category': category,
+                        'group': newGroup
+                    };
+                    return newGroup;
+                }
                 id: effectView
+                property var exclusiveGroups: []
                 property color backgroundActiveColor: searchModel.backgroundActiveColor
                 property color backgroundNormalColor: searchModel.backgroundNormalColor
                 property color backgroundAlternateColor: searchModel.backgroundAlternateColor
@@ -137,12 +154,6 @@ Item {
                 section.property: "CategoryRole"
                 section.delegate: sectionHeading
             }
-        }
-
-        ExclusiveGroup {
-            id: desktopSwitching
-            //Our ExclusiveGroup must me outside of the
-            //ListView, otherwise it will not work
         }
 
     }//End ColumnLayout

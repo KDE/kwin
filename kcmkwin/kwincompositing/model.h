@@ -47,6 +47,7 @@ struct EffectData {
     bool enabledByDefault;
     QUrl video;
     bool supported;
+    QString exclusiveGroup;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -67,7 +68,8 @@ public:
         EffectStatusRole,
         WindowManagementRole,
         VideoRole,
-        SupportedRole
+        SupportedRole,
+        ExclusiveRole
     };
 
     explicit EffectModel(QObject *parent = 0);
@@ -90,7 +92,6 @@ public:
     void defaults();
 
 private:
-    void handleDesktopSwitching(int row);
     void handleWindowManagement(int row, bool enabled);
     int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
