@@ -100,3 +100,6 @@ Type=bool
 
 [PropertyDef::X-KWin-Video-Url]
 Type=Url
+
+[PropertyDef::X-KWin-Exclusive-Category]
+Type=QString
