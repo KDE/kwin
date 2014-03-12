@@ -48,10 +48,10 @@ namespace Oxygen
     {
         readConfig();
         setInitialized( true );
-        connect(options(), &KDecorationOptions::colorsChanged, [this]() {
+        connect(options(), &KDecorationOptions::colorsChanged, this, [this]() {
             _shadowCache.invalidateCaches();
         });
-        connect(options(), &KDecorationOptions::configChanged, [this]() {
+        connect(options(), &KDecorationOptions::configChanged, this, [this]() {
             // read in the configuration
             setInitialized( false );
             readConfig();
