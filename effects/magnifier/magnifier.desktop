@@ -168,3 +168,4 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=false
 X-KDE-Library=kwin4_effect_builtins
 X-KWin-Video-Url=http://files.kde.org/plasma/kwin/effect-videos/magnifier.ogv
+X-KWin-Exclusive-Category=magnifiers
