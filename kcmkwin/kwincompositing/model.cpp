@@ -204,6 +204,12 @@ void EffectModel::loadEffects()
     }
 
     qSort(m_effectsList.begin(), m_effectsList.end(), [](const EffectData &a, const EffectData &b) {
+        if (a.category == b.category) {
+            if (a.exclusiveGroup == b.exclusiveGroup) {
+                return a.name < b.name;
+            }
+            return a.exclusiveGroup < b.exclusiveGroup;
+        }
         return a.category < b.category;
     });
 
