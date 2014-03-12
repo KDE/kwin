@@ -394,6 +394,9 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
     } else if (m_effectModel->data(index, EffectModel::DescriptionRole).toString().contains(m_filter, Qt::CaseInsensitive)) {
         return true;
     }
+    if (index.data(EffectModel::CategoryRole).toString().contains(m_filter, Qt::CaseInsensitive)) {
+        return true;
+    }
 
     return false;
 }
