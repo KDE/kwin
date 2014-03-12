@@ -103,3 +103,6 @@ Type=Url
 
 [PropertyDef::X-KWin-Exclusive-Category]
 Type=QString
+
+[PropertyDef::X-KWin-Internal]
+Type=bool

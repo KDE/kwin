@@ -94,3 +94,4 @@ X-KDE-Library=kwin4_effect_builtins
 X-KDE-Ordering=99
 X-KWin-Requires-OpenGL=false
 X-KWin-Requires-Shaders=false
+X-KWin-Internal=true

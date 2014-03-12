@@ -148,3 +148,4 @@ X-KDE-PluginInfo-License=GPL
 X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-Ordering=70
 X-KDE-Library=kwin4_effect_builtins
+X-KWin-Internal=true
