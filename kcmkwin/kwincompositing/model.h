@@ -87,7 +87,6 @@ public:
     void updateEffectStatus(const QModelIndex &rowIndex, bool effectState);
     void syncEffectsToKWin();
     void syncConfig();
-    void enableWidnowManagement(bool enabled);
     void loadEffects();
     void defaults();
 
@@ -143,7 +142,6 @@ public:
 
     Q_INVOKABLE void updateEffectStatus(int rowIndex, bool effectState);
     Q_INVOKABLE void syncConfig();
-    Q_INVOKABLE void enableWidnowManagement(bool enabled);
     Q_INVOKABLE void load();
 
     QColor backgroundActiveColor() { return KColorScheme(QPalette::Active, KColorScheme::Selection, KSharedConfigPtr(0)).background(KColorScheme::LinkBackground).color(); };

@@ -73,22 +73,7 @@ Rectangle {
         }
 
         CheckBox {
-            function isWindowManagementEnabled() {
-                if (model.ServiceNameRole == "kwin4_effect_dialogparent") {
-                    windowManagementEnabled = effectStatusCheckBox.checked;
-                    return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                } else if (model.ServiceNameRole == "kwin4_effect_desktopgrid") {
-                    windowManagementEnabled = effectStatusCheckBox.checked;
-                    return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                } else if (model.ServiceNameRole == "kwin4_effect_presentwindows") {
-                    windowManagementEnabled = effectStatusCheckBox.checked;
-                    return windowManagementEnabled = effectStatusCheckBox.checked && windowManagementEnabled;
-                }
-                return windowManagementEnabled;
-            }
-
             id: effectStatusCheckBox
-            property bool windowManagementEnabled;
             checked: model.EffectStatusRole
             visible: model.ExclusiveRole == ""
 

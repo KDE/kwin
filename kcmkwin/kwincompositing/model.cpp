@@ -310,25 +310,6 @@ void EffectModel::syncConfig()
     syncEffectsToKWin();
 }
 
-void EffectModel::enableWidnowManagement(bool enabled)
-{
-    //Make sure that our effects are being installed properly
-    if (m_effectsList.size() <= 0)
-        return;
-
-    int desktopGridRow = findRowByServiceName("kwin4_effect_desktopgrid");
-    const QModelIndex desktopGridIndex = createIndex(desktopGridRow, 0);
-    setData(desktopGridIndex, enabled, EffectModel::WindowManagementRole);
-
-    int dialogParentRow = findRowByServiceName("kwin4_effect_dialogparent");
-    const QModelIndex dialogParentIndex = createIndex(dialogParentRow, 0);
-    setData(dialogParentIndex, enabled, EffectModel::WindowManagementRole);
-
-    int presentWindowsRow = findRowByServiceName("kwin4_effect_presentwindows");
-    const QModelIndex presentWindowsIndex = createIndex(presentWindowsRow, 0);
-    setData(presentWindowsIndex, enabled, EffectModel::WindowManagementRole);
-}
-
 void EffectModel::defaults()
 {
     for (int i = 0; i < m_effectsList.count(); ++i) {
@@ -421,11 +402,6 @@ void EffectFilterModel::updateEffectStatus(int rowIndex, bool effectState)
 void EffectFilterModel::syncConfig()
 {
     m_effectModel->syncConfig();
-}
-
-void EffectFilterModel::enableWidnowManagement(bool enabled)
-{
-    m_effectModel->enableWidnowManagement(enabled);
 }
 
 void EffectFilterModel::load()
