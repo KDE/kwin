@@ -104,7 +104,7 @@ Rectangle {
             }
             Text {
                 id:aboutItem
-                text: "Author: " + model.AuthorNameRole + "\n" + "License: " + model.LicenseRole
+                text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
                 font.bold: true
                 visible: false
             }
