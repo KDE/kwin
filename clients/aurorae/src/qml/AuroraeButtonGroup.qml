@@ -54,13 +54,7 @@ Item {
         createButtons();
     }
     anchors {
-        top: parent.top
+        top: root.top
         topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop + root.padding.top) + auroraeTheme.buttonMarginTop
-    }
-    Behavior on anchors.topMargin {
-        enabled: group.animate
-        NumberAnimation {
-            duration: auroraeTheme.animationTime
-        }
     }
 }

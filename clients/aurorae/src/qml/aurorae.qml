@@ -129,14 +129,8 @@ Decoration {
         width: childrenRect.width
         animate: root.animate
         anchors {
-            left: parent.left
+            left: root.left
             leftMargin: decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.padding.left)
-        }
-        Behavior on anchors.leftMargin {
-            enabled: root.animate
-            NumberAnimation {
-                duration: auroraeTheme.animationTime
-            }
         }
     }
     AuroraeButtonGroup {
@@ -145,14 +139,8 @@ Decoration {
         width: childrenRect.width
         animate: root.animate
         anchors {
-            right: parent.right
+            right: root.right
             rightMargin: decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.padding.right)
-        }
-        Behavior on anchors.rightMargin {
-            enabled: root.animate
-            NumberAnimation {
-                duration: auroraeTheme.animationTime
-            }
         }
     }
     Text {
@@ -188,12 +176,6 @@ Decoration {
         Behavior on color {
             enabled: root.animate
             ColorAnimation {
-                duration: auroraeTheme.animationTime
-            }
-        }
-        Behavior on anchors.topMargin {
-            enabled: root.animate
-            NumberAnimation {
                 duration: auroraeTheme.animationTime
             }
         }
