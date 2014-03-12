@@ -25,8 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KSharedConfig>
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KPluginFactory>
-#include <KPluginLoader>
+#include <KPluginTrader>
 #include <QDialogButtonBox>
 #include <QPushButton>
 
@@ -89,25 +88,24 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
     connect(m_buttons, SIGNAL(accepted()), SLOT(accept()));
     connect(m_buttons, SIGNAL(rejected()), SLOT(reject()));
 
-    KPluginLoader loader(styleToConfigLib(deco));
-    KPluginFactory *factory = loader.factory();
-    if (factory) {
-        m_pluginConfigWidget = new QWidget(this);
-        m_pluginConfigWidget->setLayout(new QVBoxLayout);
-        m_pluginObject = factory->create<QObject>(m_pluginConfigWidget, m_pluginConfigWidget, QString(),
-                                                  QVariantList() << QStringLiteral("kwinrc") << QStringLiteral("Style"));
-
+    m_pluginConfigWidget = new QWidget(this);
+    m_pluginConfigWidget->setLayout(new QVBoxLayout);
+    m_pluginObject = KPluginTrader::self()->createInstanceFromQuery<QObject>(QStringLiteral("kf5/kwin/kdecorations/config"),
+                                                                              QString(),
+                                                                              QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(deco),
+                                                                              m_pluginConfigWidget,
+                                                                              m_pluginConfigWidget,
+                                                                              QVariantList() << QStringLiteral("kwinrc") << QStringLiteral("Style"));
+    if (m_pluginObject) {
         // connect required signals and slots together...
         connect(this, SIGNAL(accepted()), this, SLOT(slotAccepted()));
         connect(m_pluginObject, SIGNAL(changed()), this, SLOT(slotSelectionChanged()));
         connect(this, SIGNAL(pluginSave(KConfigGroup&)), m_pluginObject, SLOT(save(KConfigGroup&)));
         connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), m_pluginObject, SLOT(defaults()));
         connect(m_buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), SLOT(slotDefault()));
-    }
-
-    if (m_pluginConfigWidget) {
         layout->addWidget(m_pluginConfigWidget);
     }
+
     layout->addWidget(m_buttons);
 
     if (borderSizes.count() >= 2) {
@@ -158,14 +156,6 @@ void KWinDecorationConfigDialog::slotAccepted()
 void KWinDecorationConfigDialog::slotSelectionChanged()
 {
     m_buttons->button(QDialogButtonBox::Reset)->setEnabled(true);
-}
-
-QString KWinDecorationConfigDialog::styleToConfigLib(const QString& styleLib) const
-{
-    if (styleLib.startsWith(QLatin1String("kwin3_")))
-        return "kwin_" + styleLib.mid(6) + "_config";
-    else
-        return styleLib + "_config";
 }
 
 void KWinDecorationConfigDialog::slotDefault()

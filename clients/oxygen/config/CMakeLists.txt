@@ -34,4 +34,4 @@ if(X11_FOUND)
   target_link_libraries(kwin_oxygen_config Qt5::X11Extras)
 endif()
 
-install(TARGETS kwin_oxygen_config DESTINATION ${QT_PLUGIN_INSTALL_DIR}/kf5)
+install(TARGETS kwin_oxygen_config DESTINATION ${QT_PLUGIN_INSTALL_DIR}/kf5/kwin/kdecorations/config)

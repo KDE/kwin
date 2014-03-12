@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDE/KLocalizedString>
 #include <KServiceTypeTrader>
 #include <KPluginInfo>
+#include <KPluginTrader>
 #include "kwindecoration.h"
 
 /* WARNING -------------------------------------------------------------------------
@@ -46,6 +47,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * BEFORE the following destroyPreviousPlugin() destroys the factory for the current m_preview->deco->factory
 * (which is invoked on deco deconstruction)
 * WARNING ------------------------------------------------------------------------ */
+
+static const QString s_auroraePluginName = QStringLiteral("aurorae");
 
 namespace KWin
 {
@@ -87,41 +90,33 @@ void DecorationModel::reload()
 void DecorationModel::findDecorations()
 {
     beginResetModel();
-    const QStringList dirList = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, "kwin", QStandardPaths::LocateDirectory);
-
-    foreach (const QString & dir, dirList) {
-        QDir d(dir);
-        if (d.exists()) {
-            foreach (const QFileInfo & fi, d.entryInfoList()) {
-                const QString filename(fi.absoluteFilePath());
-                if (KDesktopFile::isDesktopFile(filename)) {
-                    const KDesktopFile desktopFile(filename);
-                    const QString libName = desktopFile.desktopGroup().readEntry("X-KDE-Library");
-
-                    if (!libName.isEmpty() && libName.startsWith(QLatin1String("kwin3_"))) {
-                        if (libName == "kwin3_aurorae") {
-                            // read the Aurorae themes
-                            findAuroraeThemes();
-                            continue;
-                        }
-                        DecorationModelData data;
-                        data.name = desktopFile.readName();
-                        data.libraryName = libName;
-                        data.type = DecorationModelData::NativeDecoration;
-                        data.borderSize = KDecorationDefines::BorderNormal;
-                        data.closeDblClick = false;
-                        metaData(data, desktopFile);
-                        m_decorations.append(data);
-                    }
-                }
-            }
+    const auto decorations = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/kdecorations"));
+    for (const KPluginInfo &plugin : decorations) {
+        if (plugin.pluginName() == s_auroraePluginName) {
+            // read the Aurorae themes
+            findAuroraeThemes();
+            continue;
         }
+        DecorationModelData data;
+        data.name = plugin.name();
+        data.pluginName = plugin.pluginName();
+        data.type = DecorationModelData::NativeDecoration;
+        data.borderSize = KDecorationDefines::BorderNormal;
+        data.closeDblClick = false;
+        data.comment = plugin.comment();
+        data.author = plugin.author();
+        data.email = plugin.email();
+        data.version = plugin.version();
+        data.license = plugin.license();
+        data.website = plugin.website();
+        m_decorations.append(data);
     }
+
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Decoration");
     foreach (KService::Ptr service, offers) {
         DecorationModelData data;
         data.name = service->name();
-        data.libraryName = "kwin3_aurorae";
+        data.pluginName = s_auroraePluginName;
         data.type = DecorationModelData::QmlDecoration;
         data.auroraeName = service->property("X-KDE-PluginInfo-Name").toString();
         QString scriptName = service->property("X-Plasma-MainScript").toString();
@@ -178,7 +173,7 @@ void DecorationModel::findAuroraeThemes()
 
         DecorationModelData data;
         data.name = name;
-        data.libraryName = "kwin3_aurorae";
+        data.pluginName = s_auroraePluginName;
         data.type = DecorationModelData::AuroraeDecoration;
         data.auroraeName = packageName;
         KConfigGroup config(m_config, data.auroraeName);
@@ -216,7 +211,7 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
     case NameRole:
         return m_decorations[ index.row()].name;
     case LibraryNameRole:
-        return m_decorations[ index.row()].libraryName;
+        return m_decorations[ index.row()].pluginName;
     case TypeRole:
         return m_decorations[ index.row()].type;
     case AuroraeNameRole:
@@ -238,7 +233,7 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
     case BorderSizesRole: {
         QList< QVariant > sizes;
         const bool mustDisablePreview = m_plugins->factory() && m_plugins->factory() == m_preview->factory();
-        if (m_plugins->loadPlugin(m_decorations[index.row()].libraryName) && m_plugins->factory()) {
+        if (m_plugins->loadPlugin(m_decorations[index.row()].pluginName) && m_plugins->factory()) {
             foreach (KDecorationDefines::BorderSize size, m_plugins->factory()->borderSizes())   // krazy:exclude=foreach
                 sizes << int(size);
             if (mustDisablePreview) // it's nuked with destroyPreviousPlugin()
@@ -321,7 +316,7 @@ void DecorationModel::setButtons(bool custom, const QList<KDecorationDefines::De
 QModelIndex DecorationModel::indexOfLibrary(const QString& libraryName) const
 {
     for (int i = 0; i < m_decorations.count(); i++) {
-        if (m_decorations.at(i).libraryName.compare(libraryName) == 0)
+        if (m_decorations.at(i).pluginName.compare(libraryName) == 0)
             return index(i);
     }
     return QModelIndex();

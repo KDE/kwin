@@ -70,7 +70,6 @@ private Q_SLOTS:
 
 private:
     int borderSizeToIndex(KDecorationDefines::BorderSize size, const QList<QVariant>& sizes);
-    QString styleToConfigLib(const QString& styleLib) const;
 
 private:
     KWinDecorationConfigForm* m_ui;

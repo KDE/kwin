@@ -43,12 +43,16 @@ DEALINGS IN THE SOFTWARE.
  * The KPluginFactory sub class returns a new instance of the specified KDecorationFactory.
  *
  * @param pluginfactoryname The name to be used for the KPluginFactory, passed to K_PLUGIN_FACTORY
+ * @param jsonFile Name of the json file to be compiled into the decoration plugin as metadata
  * @param classname The class name of the KDecorationFactory subclass
  *
  * Example:
  * @code
- * KWIN_DECORATION(MyDecoPluginFactory, MyDeco::Factory)
+ * KWIN_DECORATION(MyDecoPluginFactory, "mydeco.json", MyDeco::Factory)
  * @endcode
+ *
+ * Please refer to the documentation of K_PLUGIN_FACTORY_WITH_JSON in KF5::Service for how to
+ * create and use the json file.
  *
  * In case the decoration plugin wants to have more control over the created factory (e.g. a singleton)
  * it is recommended to not use this convenience macro, but specify an own K_PLUGIN_FACTORY. In that
@@ -59,9 +63,9 @@ DEALINGS IN THE SOFTWARE.
  *
  * to add the correct plugin version. This is also handled by this macro in the default case.
  **/
-#define KWIN_DECORATION( pluginfactoryname, classname ) \
+#define KWIN_DECORATION( pluginfactoryname, json, classname ) \
     QObject *createDecorationFactory(QWidget *, QObject *, const QList<QVariant> &) { return new classname(); } \
-    K_PLUGIN_FACTORY(pluginfactoryname, registerPlugin<classname>(QString(), &createDecorationFactory);) \
+    K_PLUGIN_FACTORY_WITH_JSON(pluginfactoryname, json, registerPlugin<classname>(QString(), &createDecorationFactory);) \
     K_EXPORT_PLUGIN_VERSION(KWIN_DECORATION_API_VERSION)
 
 #define KWIN_DECORATION_BRIDGE_API_VERSION 1

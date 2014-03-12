@@ -30,11 +30,10 @@ target_link_libraries(kwin3_oxygen kdecorations)
 
 target_link_libraries(kwin3_oxygen oxygenstyle)
 
+kservice_desktop_to_json(kwin3_oxygen oxygenclient.desktop)
+
 if(X11_FOUND)
   target_link_libraries(kwin3_oxygen XCB::XCB)
 endif()
 
-install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR})
-
-########### install files ###############
-install(FILES oxygenclient.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin/)
+install(TARGETS kwin3_oxygen  DESTINATION ${PLUGIN_INSTALL_DIR}/kwin/kdecorations)

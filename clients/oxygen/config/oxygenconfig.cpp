@@ -44,7 +44,9 @@
 
 //_______________________________________________________________________
 
-K_PLUGIN_FACTORY(OxygenConfigPlugin, registerPlugin<Oxygen::Config>(QString(), &Oxygen::Config::create); )
+K_PLUGIN_FACTORY_WITH_JSON(OxygenConfigPlugin,
+                           "config.json",
+                           registerPlugin<Oxygen::Config>(QString(), &Oxygen::Config::create); )
 
 namespace Oxygen
 {

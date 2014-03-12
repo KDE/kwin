@@ -45,7 +45,7 @@ public:
         QmlDecoration = 2
     };
     QString name;
-    QString libraryName;
+    QString pluginName;
     DecorationType type;
     QString comment;
     QString author;

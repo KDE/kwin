@@ -65,4 +65,4 @@ Name[wa]=Moteur di tinme di gåyotaedje Aurorae
 Name[x-test]=xxAurorae Decoration Theme Enginexx
 Name[zh_CN]=Aurorae 装饰主题引擎
 Name[zh_TW]=Aurorae 裝飾主題引擎
-X-KDE-Library=kwin3_aurorae
+X-KDE-PluginInfo-Name=aurorae

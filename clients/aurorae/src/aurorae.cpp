@@ -37,8 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginInfo>
 #include <KServiceTypeTrader>
 
-K_PLUGIN_FACTORY(AuroraePluginFactory,
-                 registerPlugin<Aurorae::AuroraeFactory>(QString(), &Aurorae::AuroraeFactory::createInstance);)
+K_PLUGIN_FACTORY_WITH_JSON(AuroraePluginFactory,
+                           "aurorae.json",
+                           registerPlugin<Aurorae::AuroraeFactory>(QString(), &Aurorae::AuroraeFactory::createInstance);)
 K_EXPORT_PLUGIN_VERSION(KWIN_DECORATION_API_VERSION)
 
 namespace Aurorae

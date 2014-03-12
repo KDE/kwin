@@ -33,7 +33,7 @@
 #include <KWindowInfo>
 #include <kdeversion.h>
 
-KWIN_DECORATION(OxygenPluginFactory, Oxygen::Factory)
+KWIN_DECORATION(OxygenPluginFactory, "oxygenclient.json", Oxygen::Factory)
 
 namespace Oxygen
 {

@@ -39,9 +39,9 @@ DecorationPlugin::DecorationPlugin(QObject *parent)
     , KDecorationPlugins(KSharedConfig::openConfig())
     , m_disabled(false)
 {
-    defaultPlugin = QStringLiteral("kwin3_oxygen");
+    defaultPlugin = QStringLiteral("Oxygen");
 #ifndef KWIN_BUILD_OXYGEN
-    defaultPlugin = QStringLiteral("kwin3_aurorae");
+    defaultPlugin = QStringLiteral("aurorae");
 #endif
 #ifdef KWIN_BUILD_DECORATIONS
     loadPlugin(QString());   // load the plugin specified in cfg file

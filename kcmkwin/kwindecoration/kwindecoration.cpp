@@ -62,6 +62,8 @@ K_PLUGIN_FACTORY(KWinDecoFactory,
 namespace KWin
 {
 
+static const QString s_defaultPluginName = QStringLiteral("Oxygen");
+
 KWinDecorationForm::KWinDecorationForm(QWidget* parent)
     : QWidget(parent)
 {
@@ -183,18 +185,18 @@ void KWinDecorationModule::readConfig(const KConfigGroup & conf)
     // Find the corresponding decoration name to that of
     // the current plugin library name
 
-    QString libraryName = conf.readEntry("PluginLib", "kwin3_oxygen");
+    QString libraryName = conf.readEntry("PluginLib", s_defaultPluginName);
 
     if (libraryName.isEmpty()) {
         // Selected decoration doesn't exist, use the default
-        libraryName = "kwin3_oxygen";
+        libraryName = s_defaultPluginName;
     }
 
     const int bsize = conf.readEntry("BorderSize", (int)BorderNormal);
     BorderSize borderSize = BorderNormal;
     if (bsize >= BorderTiny && bsize < BordersCount)
         borderSize = static_cast< BorderSize >(bsize);
-    if (libraryName == "kwin3_aurorae") {
+    if (libraryName == "aurorae") {
         KConfig auroraeConfig("auroraerc");
         KConfigGroup group(&auroraeConfig, "Engine");
         const QString themeName = group.readEntry("ThemeName", "example-deco");

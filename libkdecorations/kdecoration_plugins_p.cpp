@@ -31,6 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #include <klibrary.h>
 #include <KPluginFactory>
 #include <KPluginLoader>
+#include <KPluginTrader>
 #include <kconfiggroup.h>
 #include <KDE/KLocalizedString>
 #include <assert.h>
@@ -44,7 +45,7 @@ DEALINGS IN THE SOFTWARE.
 KDecorationPlugins::KDecorationPlugins(const KSharedConfigPtr &cfg)
     :   fact(nullptr),
         old_fact(nullptr),
-        pluginStr(QStringLiteral("kwin3_undefined ")),
+        pluginStr(QStringLiteral("undefined ")),
         config(cfg)
 {
 }
@@ -105,7 +106,13 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
 
     auto createFactory = [](const QString &pluginName) -> KDecorationFactory* {
         qDebug() << "Trying to load decoration plugin" << pluginName;
-        KPluginLoader loader(pluginName);
+        const QString query = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(pluginName);
+        const auto offers = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/kdecorations"), QString(), query);
+        if (offers.isEmpty()) {
+            qDebug() << "Decoration plugin not found";
+            return nullptr;
+        }
+        KPluginLoader loader(offers.first().libraryPath());
         if (loader.pluginVersion() != KWIN_DECORATION_API_VERSION) {
             qWarning() << i18n("The library %1 has wrong API version %2", loader.pluginName(), loader.pluginVersion());
             return nullptr;

@@ -22,7 +22,9 @@ target_link_libraries(kwin3_aurorae
     kdecorations
 )
 
-install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR} )
+kservice_desktop_to_json(kwin3_aurorae aurorae.desktop)
+
+install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR}/kwin/kdecorations )
 
 set(decoration_plugin_SRCS
     decorationplugin.cpp
@@ -41,7 +43,6 @@ install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/dec
 
 ########### install files ###############
 
-install( FILES aurorae.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 install( FILES aurorae.knsrc  DESTINATION  ${CONFIG_INSTALL_DIR} )
 install( FILES
     qml/aurorae.qml
