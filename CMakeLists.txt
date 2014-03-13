@@ -196,7 +196,7 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(Wayland_Client_FOUND)
+if(Wayland_Client_FOUND AND XKB_FOUND)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} wayland_backend.cpp)
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
@@ -274,6 +274,7 @@ set(kwin_WAYLAND_LIBS
     Wayland::Client
     Wayland::Cursor
     XCB::XTEST
+    XKB::XKB
 )
 
 set(kwin_WAYLAND_EGL_LIBS
@@ -306,7 +307,7 @@ set(kwinLibs
     ${kwin_OPENGL_LIBS}
 )
 
-if(Wayland_Client_FOUND)
+if(Wayland_Client_FOUND AND XKB_FOUND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
