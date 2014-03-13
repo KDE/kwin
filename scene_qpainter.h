@@ -100,7 +100,7 @@ private:
     bool m_failed;
 };
 
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 namespace Wayland {
 class Buffer;
 }

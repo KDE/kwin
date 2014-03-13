@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
 
@@ -256,7 +256,7 @@ bool X11XRenderBackend::usesOverlayWindow() const
 //****************************************
 // WaylandXRenderBackend
 //****************************************
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
 {
     Q_UNUSED(data)
@@ -367,7 +367,7 @@ bool WaylandXRenderBackend::usesOverlayWindow() const
 SceneXrender* SceneXrender::createScene()
 {
     QScopedPointer<XRenderBackend> backend;
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         backend.reset(new WaylandXRenderBackend);
         if (backend->isFailed()) {

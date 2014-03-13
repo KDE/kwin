@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eglonxbackend.h"
 // for Wayland
 #include "config-workspace.h"
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #endif
 #endif
@@ -224,7 +224,7 @@ SceneOpenGL *SceneOpenGL::createScene()
         break;
     case EglPlatformInterface:
 #ifdef KWIN_HAVE_EGL
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND_EGL
         if (kwinApp()->shouldUseWaylandForCompositing()) {
             backend = new EglWaylandBackend();
         } else {

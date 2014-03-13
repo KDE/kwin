@@ -59,6 +59,8 @@ endif()
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
+set(HAVE_WAYLAND ${Wayland_Client_FOUND})
+set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND} AND ${Wayland_Client_FOUND})
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
 

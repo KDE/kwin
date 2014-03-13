@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "virtualdesktops.h"
 #include <config-workspace.h>
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
 #include "xcbutils.h"
@@ -150,7 +150,7 @@ Workspace::Workspace(bool restore)
     InputRedirection::create(this);
 
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
     Wayland::WaylandBackend::create(this);
 #endif
     // start the cursor support

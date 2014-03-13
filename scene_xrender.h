@@ -152,7 +152,7 @@ private:
     xcb_render_pictformat_t m_format;
 };
 
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 class WaylandXRenderBackend : public XRenderBackend
 {
 public:

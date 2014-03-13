@@ -66,7 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "composite.h"
 #include "xcbutils.h"
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
 
@@ -771,7 +771,7 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
         return;
     }
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
         if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
             w->installCursorImage(shape);
         }
@@ -1265,7 +1265,7 @@ QSize EffectsHandlerImpl::virtualScreenSize() const
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
     if (!m_mouseInterceptionWindow.isValid()) {
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
         if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
             w->installCursorImage(shape);
         }

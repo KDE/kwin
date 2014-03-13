@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "paintredirector.h"
 #include "toplevel.h"
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
 #include "workspace.h"
@@ -75,7 +75,7 @@ void QPainterBackend::setFailed(const QString &reason)
     m_failed = true;
 }
 
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
 //****************************************
 // WaylandQPainterBackend
 //****************************************
@@ -209,7 +209,7 @@ bool WaylandQPainterBackend::needsFullRepaint() const
 SceneQPainter *SceneQPainter::createScene()
 {
     QScopedPointer<QPainterBackend> backend;
-#ifdef WAYLAND_FOUND
+#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         backend.reset(new WaylandQPainterBackend);
         if (backend->isFailed()) {
