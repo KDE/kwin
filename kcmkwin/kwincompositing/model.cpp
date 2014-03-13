@@ -133,6 +133,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).supported;
         case ExclusiveRole:
             return m_effectsList.at(index.row()).exclusiveGroup;
+        case InternalRole:
+            return m_effectsList.at(index.row()).internal;
         default:
             return QVariant();
     }
@@ -199,6 +201,7 @@ void EffectModel::loadEffects()
         effect.video = service->property(QStringLiteral("X-KWin-Video-Url"), QVariant::Url).toUrl();
         effect.supported = true;
         effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
+        effect.internal = service->property(QStringLiteral("X-KWin-Internal"), QVariant::Bool).toBool();
 
         m_effectsList << effect;
     }
@@ -329,9 +332,12 @@ void EffectModel::defaults()
 EffectFilterModel::EffectFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)
     , m_effectModel(new EffectModel(this))
-    , m_supported(true)
+    , m_filterOutUnsupported(true)
+    , m_filterOutInternal(true)
 {
     setSourceModel(m_effectModel);
+    connect(this, &EffectFilterModel::filterOutUnsupportedChanged, this, &EffectFilterModel::invalidateFilter);
+    connect(this, &EffectFilterModel::filterOutInternalChanged, this, &EffectFilterModel::invalidateFilter);
 }
 
 const QString &EffectFilterModel::filter() const
@@ -350,17 +356,6 @@ void EffectFilterModel::setFilter(const QString &filter)
     invalidateFilter();
 }
 
-void EffectFilterModel::setFilterOnSupported(bool supported)
-{
-    if (m_supported == supported) {
-        return;
-    }
-
-    m_supported = supported;
-    emit filterOnSupportedChanged();
-    invalidateFilter();
-}
-
 bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     if (!m_effectModel) {
@@ -372,9 +367,14 @@ bool EffectFilterModel::filterAcceptsRow(int source_row, const QModelIndex &sour
         return false;
     }
 
-    if (m_supported) {
-        bool supported = index.data(EffectModel::SupportedRole).toBool();
-        if (!supported) {
+    if (m_filterOutUnsupported) {
+        if (!index.data(EffectModel::SupportedRole).toBool()) {
+            return false;
+        }
+    }
+
+    if (m_filterOutInternal) {
+        if (index.data(EffectModel::InternalRole).toBool()) {
             return false;
         }
     }

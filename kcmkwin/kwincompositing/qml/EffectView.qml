@@ -80,11 +80,19 @@ Item {
                 tooltip: "Configure filter"
                 menu: Menu {
                     MenuItem {
-                        text: i18n("Filter only on Desktop Effects supported by the Compositor")
+                        text: i18n("Exclude Desktop Effects not supported by the Compositor")
                         checkable: true
-                        checked: searchModel.filterOnSupported
+                        checked: searchModel.filterOutUnsupported
                         onTriggered: {
-                            searchModel.filterOnSupported = !searchModel.filterOnSupported;
+                            searchModel.filterOutUnsupported = !searchModel.filterOutUnsupported;
+                        }
+                    }
+                    MenuItem {
+                        text: i18n("Exclude internal Desktop Effects")
+                        checkable: true
+                        checked: searchModel.filterOutInternal
+                        onTriggered: {
+                            searchModel.filterOutInternal = !searchModel.filterOutInternal
                         }
                     }
                 }
