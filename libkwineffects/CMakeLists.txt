@@ -6,6 +6,7 @@ set(kwin_XRENDERUTILS_SRCS
     )
 
 add_library(kwinxrenderutils SHARED ${kwin_XRENDERUTILS_SRCS})
+generate_export_header(kwinxrenderutils EXPORT_FILE_NAME kwinxrenderutils_export.h)
 target_link_libraries(kwinxrenderutils
     PUBLIC
         Qt5::Core
@@ -111,6 +112,7 @@ install( FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kwinconfig.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwineffects_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/kwinglutils_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kwinxrenderutils_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 add_subdirectory(autotests)

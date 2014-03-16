@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_XRENDERUTILS_H
 
 // KWin
-#include <kwineffects_export.h>
+#include <kwinxrenderutils_export.h>
 // Qt
 #include <QExplicitlySharedDataPointer>
 #include <QRegion>
@@ -41,10 +41,10 @@ namespace KWin
 /**
  * dumps a QColor into a xcb_render_color_t
  */
-KWINEFFECTS_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
+KWINXRENDERUTILS_EXPORT xcb_render_color_t preMultiply(const QColor &c, float opacity = 1.0);
 
 /** @internal */
-class KWINEFFECTS_EXPORT XRenderPictureData
+class KWINXRENDERUTILS_EXPORT XRenderPictureData
     : public QSharedData
 {
 public:
@@ -63,7 +63,7 @@ private:
  * convenience constructors and freeing of resources.
  * It should otherwise act exactly like the Picture type.
  */
-class KWINEFFECTS_EXPORT XRenderPicture
+class KWINXRENDERUTILS_EXPORT XRenderPicture
 {
 public:
     explicit XRenderPicture(xcb_render_picture_t pic = XCB_RENDER_PICTURE_NONE);
@@ -75,7 +75,7 @@ private:
     QExplicitlySharedDataPointer< XRenderPictureData > d;
 };
 
-class KWINEFFECTS_EXPORT XFixesRegion
+class KWINXRENDERUTILS_EXPORT XFixesRegion
 {
 public:
     explicit XFixesRegion(const QRegion &region);
@@ -120,12 +120,12 @@ XFixesRegion::operator xcb_xfixes_region_t()
  * Static 1x1 picture used to deliver a black pixel with given opacity (for blending performance)
  * Call and Use, the PixelPicture will stay, but may change it's opacity meanwhile. It's NOT threadsafe either
  */
-KWINEFFECTS_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
+KWINXRENDERUTILS_EXPORT XRenderPicture xRenderBlendPicture(double opacity);
 /**
  * Creates a 1x1 Picture filled with c
  */
-KWINEFFECTS_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
-KWINEFFECTS_EXPORT XRenderPicture xRenderFill(const QColor &c);
+KWINXRENDERUTILS_EXPORT XRenderPicture xRenderFill(const xcb_render_color_t &c);
+KWINXRENDERUTILS_EXPORT XRenderPicture xRenderFill(const QColor &c);
 
 /**
  * Allows to render a window into a (transparent) pixmap
@@ -133,7 +133,7 @@ KWINEFFECTS_EXPORT XRenderPicture xRenderFill(const QColor &c);
  * NOTICE: it may be 0
  * NOTICE: when done call setXRenderWindowOffscreen(false) to continue normal render process
  */
-KWINEFFECTS_EXPORT void setXRenderOffscreen(bool b);
+KWINXRENDERUTILS_EXPORT void setXRenderOffscreen(bool b);
 
 /**
  * Allows to define a persistent effect member as render target
@@ -141,34 +141,34 @@ KWINEFFECTS_EXPORT void setXRenderOffscreen(bool b);
  * NOTICE: do NOT call setXRenderOffscreen(true) in addition!
  * NOTICE: do not forget to xRenderPopTarget once you're done to continue the normal render process
  */
-KWINEFFECTS_EXPORT void xRenderPushTarget(XRenderPicture *pic);
-KWINEFFECTS_EXPORT void xRenderPopTarget();
+KWINXRENDERUTILS_EXPORT void xRenderPushTarget(XRenderPicture *pic);
+KWINXRENDERUTILS_EXPORT void xRenderPopTarget();
 
 /**
  * Whether windows are currently rendered into an offscreen target buffer
  */
-KWINEFFECTS_EXPORT bool xRenderOffscreen();
+KWINXRENDERUTILS_EXPORT bool xRenderOffscreen();
 /**
  * The offscreen buffer as set by the renderer because of setXRenderWindowOffscreen(true)
  */
-KWINEFFECTS_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
+KWINXRENDERUTILS_EXPORT xcb_render_picture_t xRenderOffscreenTarget();
 
 /**
  * NOTICE: HANDS OFF!!!
  * scene_setXRenderWindowOffscreenTarget() is ONLY to be used by the renderer - DO NOT TOUCH!
  */
-KWINEFFECTS_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
+KWINXRENDERUTILS_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix);
 /**
  * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
  */
-KWINEFFECTS_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
+KWINXRENDERUTILS_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
 
 namespace XRenderUtils
 {
 /**
  * @internal
  **/
-KWINEFFECTS_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
+KWINXRENDERUTILS_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
 }
 
 } // namespace
