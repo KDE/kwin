@@ -1451,11 +1451,6 @@ QString Workspace::supportInformation() const
                 support.append(QStringLiteral("Linux kernel version: ") + GLPlatform::versionToString(platform->kernelVersion()) + QStringLiteral("\n"));
 
             support.append(QStringLiteral("Direct rendering: "));
-            if (platform->isDirectRendering()) {
-                support.append(QStringLiteral("yes\n"));
-            } else {
-                support.append(QStringLiteral("no\n"));
-            }
             support.append(QStringLiteral("Requires strict binding: "));
             if (!platform->isLooseBinding()) {
                 support.append(QStringLiteral("yes\n"));

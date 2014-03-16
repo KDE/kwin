@@ -504,7 +504,6 @@ GLPlatform::GLPlatform()
       m_mesaVersion(0),
       m_galliumVersion(0),
       m_looseBinding(false),
-      m_directRendering(false),
       m_supportsGLSL(false),
       m_limitedGLSL(false),
       m_textureNPOT(false),
@@ -563,7 +562,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     if (platformInterface == EglPlatformInterface) {
-        m_directRendering = true;
 #ifdef KWIN_HAVE_OPENGLES
         m_supportsGLSL = true;
         m_textureNPOT = true;
@@ -576,11 +574,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 #endif
     } else if (platformInterface == GlxPlatformInterface) {
 #ifndef KWIN_HAVE_OPENGLES
-        GLXContext ctx = glXGetCurrentContext();
-        m_directRendering = glXIsDirect(display(), ctx);
-
-        m_supportsGLSL = m_directRendering &&
-                         m_extensions.contains("GL_ARB_shader_objects") &&
+        m_supportsGLSL = m_extensions.contains("GL_ARB_shader_objects") &&
                          m_extensions.contains("GL_ARB_fragment_shader") &&
                          m_extensions.contains("GL_ARB_vertex_shader");
 
@@ -893,7 +887,6 @@ void GLPlatform::printResults() const
     if (kernelVersion() > 0)
         print(QStringLiteral("Linux kernel version:"), versionToString(m_kernelVersion));
 
-    print(QStringLiteral("Direct rendering:"), m_directRendering ? QStringLiteral("yes") : QStringLiteral("no"));
     print(QStringLiteral("Requires strict binding:"), !m_looseBinding ? QStringLiteral("yes") : QStringLiteral("no"));
     print(QStringLiteral("GLSL shaders:"), m_supportsGLSL ? (m_limitedGLSL ? QStringLiteral("limited") : QStringLiteral("yes")) : QStringLiteral("no"));
     print(QStringLiteral("Texture NPOT support:"), m_textureNPOT ? (m_limitedNPOT ? QStringLiteral("limited") : QStringLiteral("yes")) : QStringLiteral("no"));
@@ -1029,11 +1022,6 @@ const QByteArray &GLPlatform::glVersionString() const
 const QByteArray &GLPlatform::glShadingLanguageVersionString() const
 {
     return m_glsl_version;
-}
-
-bool GLPlatform::isDirectRendering() const
-{
-    return m_directRendering;
 }
 
 bool GLPlatform::isLooseBinding() const

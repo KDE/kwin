@@ -287,11 +287,6 @@ public:
      **/
     const QByteArray &glShadingLanguageVersionString() const;
     /**
-     * @returns Whether a direct rendering OpenGL context is used.
-     * @since 4.9
-     **/
-    bool isDirectRendering() const;
-    /**
      * @returns Whether the driver supports loose texture binding.
      * @since 4.9
      **/
@@ -361,7 +356,6 @@ private:
     qint64 m_serverVersion;
     qint64 m_kernelVersion;
     bool m_looseBinding: 1;
-    bool m_directRendering: 1;
     bool m_supportsGLSL: 1;
     bool m_limitedGLSL: 1;
     bool m_textureNPOT: 1;
