@@ -84,7 +84,6 @@ class PresentWindowsEffect
     Q_PROPERTY(int leftButtonDesktop READ leftButtonDesktop)
     Q_PROPERTY(int middleButtonDesktop READ middleButtonDesktop)
     Q_PROPERTY(int rightButtonDesktop READ rightButtonDesktop)
-    Q_PROPERTY(bool dragToClose READ isDragToClose)
     // TODO: electric borders
 private:
     // Structures
@@ -193,9 +192,6 @@ public:
     }
     int rightButtonDesktop() const {
         return m_rightButtonDesktop;
-    }
-    bool isDragToClose() const {
-        return m_dragToClose;
     }
 public Q_SLOTS:
     void setActive(bool active);
@@ -328,14 +324,6 @@ private:
     CloseWindowView* m_closeView;
     EffectWindow* m_closeWindow;
     Qt::Corner m_closeButtonCorner;
-
-    // drag to close
-    QPoint m_dragStart;
-    bool m_dragInProgress;
-    EffectWindow *m_dragWindow;
-    QList<EffectFrame*> m_dropTargets;
-    EffectFrame *m_highlightedDropTarget;
-    bool m_dragToClose;
 };
 
 } // namespace
