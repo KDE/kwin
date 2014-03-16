@@ -164,7 +164,7 @@ void ShowFpsEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     if (effects->compositingType() == XRenderCompositing) {
         paintXrender(fps);
-        XSync(display(), False);   // make sure all rendering is done
+        xcb_flush(connection());   // make sure all rendering is done
     }
 #endif
     if (effects->compositingType() == QPainterCompositing) {

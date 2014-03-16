@@ -77,6 +77,7 @@ private:
     FeedbackType m_type;
     QRect m_currentGeometry, m_dirtyRect;
     GLShader *m_blinkingShader;
+    int m_cursorSize;
 };
 } // namespace
 

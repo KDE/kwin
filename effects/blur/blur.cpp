@@ -29,6 +29,8 @@
 namespace KWin
 {
 
+static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEHIND_REGION");
+
 BlurEffect::BlurEffect()
 {
     shader = BlurShader::create();
@@ -46,7 +48,7 @@ BlurEffect::BlurEffect()
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid() && target->valid()) {
-        net_wm_blur_region = effects->announceSupportProperty("_KDE_NET_WM_BLUR_BEHIND_REGION", this);
+        net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
     } else {
         net_wm_blur_region = 0;
     }
@@ -88,7 +90,7 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
     windows.clear();
 
     if (!shader || !shader->isValid())
-        XDeleteProperty(display(), rootWindow(), net_wm_blur_region);
+        effects->removeSupportProperty(s_blurAtomName, this);
 }
 
 void BlurEffect::updateBlurRegion(EffectWindow *w) const

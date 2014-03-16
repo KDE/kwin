@@ -26,21 +26,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimeLine>
 
-#include <X11/Xlib.h>
-#include <fixx11h.h>
-
 // Effect is based on fade effect by Philip Falkner
 
 namespace KWin
 {
 
 static const int IsGlideWindow = 0x22A982D4;
-static Atom slideAtom;
+static xcb_atom_t slideAtom;
+static const QByteArray s_slideAtomName = QByteArrayLiteral("_KDE_SLIDE");
 
 GlideEffect::GlideEffect()
 {
-    slideAtom = XInternAtom( display(), "_KDE_SLIDE", False );
-    effects->registerPropertyType( slideAtom, true );
+    slideAtom = XCB_ATOM_NONE;
+    xcb_connection_t *c = connection();
+    const auto cookie = xcb_intern_atom(c, false, s_slideAtomName.length(), s_slideAtomName.constData());
+    QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c, cookie, nullptr));
+    if (atom) {
+        slideAtom = atom->atom;
+        effects->registerPropertyType( slideAtom, true );
+    }
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
     connect(effects, SIGNAL(windowClosed(KWin::EffectWindow*)), this, SLOT(slotWindowClosed(KWin::EffectWindow*)));
@@ -49,7 +53,9 @@ GlideEffect::GlideEffect()
 
 GlideEffect::~GlideEffect()
 {
-    effects->registerPropertyType( slideAtom, false );
+    if (slideAtom) {
+        effects->registerPropertyType( slideAtom, false );
+    }
 }
 
 bool GlideEffect::supported()
@@ -213,7 +219,7 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
         return false;
     if (w->data(IsGlideWindow).toBool())
         return true;
-    if (!w->readProperty( slideAtom, slideAtom, 32 ).isNull())
+    if (slideAtom && !w->readProperty( slideAtom, slideAtom, 32 ).isNull())
         return false;
     if (w->hasDecoration())
         return true;

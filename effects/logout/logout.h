@@ -65,7 +65,7 @@ private:
     bool logoutWindowPassed;
 
     // Persistent effect
-    long logoutAtom;
+    xcb_atom_t logoutAtom;
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 

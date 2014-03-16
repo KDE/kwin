@@ -19,7 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "startupfeedback.h"
 // Qt
+#include <QApplication>
 #include <QSize>
+#include <QStyle>
 #include <QtCore/QStandardPaths>
 #include <QtGui/QPainter>
 // KDE
@@ -29,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KSelectionOwner>
 // KWin
 #include <kwinglutils.h>
-// X11
-#include <X11/Xcursor/Xcursor.h>
 
 // based on StartupId in KRunner by Lubos Lunak
 // Copyright (C) 2001 Lubos Lunak <l.lunak@kde.org>
@@ -78,6 +78,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_texture(0)
     , m_type(BouncingFeedback)
     , m_blinkingShader(0)
+    , m_cursorSize(0)
 {
     for (int i = 0; i < 5; ++i) {
         m_bouncingTextures[i] = 0;
@@ -280,6 +281,19 @@ void StartupFeedbackEffect::start(const QString& icon)
     if (iconPixmap.isNull())
         iconPixmap = SmallIcon(QStringLiteral("system-run"));
     prepareTextures(iconPixmap);
+    auto readCursorSize = []() -> int {
+        // read details about the mouse-cursor theme define per default
+        KConfigGroup mousecfg(KSharedConfig::openConfig(QStringLiteral("kcminputrc")), "Mouse");
+        QString size  = mousecfg.readEntry("cursorSize", QString());
+
+        // fetch a reasonable size for the cursor-theme image
+        bool ok;
+        int cursorSize = size.toInt(&ok);
+        if (!ok)
+            cursorSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
+        return cursorSize;
+    };
+    m_cursorSize = readCursorSize();
     m_dirtyRect = m_currentGeometry = feedbackRect();
     effects->addRepaint(m_dirtyRect);
 }
@@ -348,14 +362,12 @@ QImage StartupFeedbackEffect::scalePixmap(const QPixmap& pm, const QSize& size) 
 
 QRect StartupFeedbackEffect::feedbackRect() const
 {
-    int cursorSize = 0;
-    cursorSize = XcursorGetDefaultSize(QX11Info::display());
     int xDiff;
-    if (cursorSize <= 16)
+    if (m_cursorSize <= 16)
         xDiff = 8 + 7;
-    else if (cursorSize <= 32)
+    else if (m_cursorSize <= 32)
         xDiff = 16 + 7;
-    else if (cursorSize <= 48)
+    else if (m_cursorSize <= 48)
         xDiff = 24 + 7;
     else
         xDiff = 32 + 7;

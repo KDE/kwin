@@ -23,13 +23,13 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
-#include <X11/Xatom.h>
-
 #include <QMatrix4x4>
 #include <QLinkedList>
 
 namespace KWin
 {
+
+static const QByteArray s_contrastAtomName = QByteArrayLiteral("_KDE_NET_WM_BACKGROUND_CONTRAST_REGION");
 
 ContrastEffect::ContrastEffect()
 {
@@ -40,7 +40,7 @@ ContrastEffect::ContrastEffect()
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (shader && shader->isValid()) {
-        net_wm_contrast_region = effects->announceSupportProperty("_KDE_NET_WM_BACKGROUND_CONTRAST_REGION", this);
+        net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
     } else {
         net_wm_contrast_region = 0;
     }
@@ -72,7 +72,7 @@ void ContrastEffect::reconfigure(ReconfigureFlags flags)
         shader->init();
 
     if (!shader || !shader->isValid())
-        XDeleteProperty(display(), rootWindow(), net_wm_contrast_region);
+        effects->removeSupportProperty(s_contrastAtomName, this);
 }
 
 void ContrastEffect::updateContrastRegion(EffectWindow *w) const
