@@ -1,11 +1,30 @@
 ########### next target ###############
 
+### xrenderutils lib ###
+set(kwin_XRENDERUTILS_SRCS
+    kwinxrenderutils.cpp
+    )
+
+add_library(kwinxrenderutils SHARED ${kwin_XRENDERUTILS_SRCS})
+target_link_libraries(kwinxrenderutils
+    PUBLIC
+        Qt5::Core
+        Qt5::Gui
+        XCB::XCB
+        XCB::XFIXES
+        XCB::RENDER
+    )
+
+set_target_properties(kwinxrenderutils PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
+
+install(TARGETS kwinxrenderutils EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
 ###  effects lib  ###
 set(kwin_EFFECTSLIB_SRCS
     kwineffects.cpp
     anidata.cpp
     kwinanimationeffect.cpp
-    kwinxrenderutils.cpp
     )
 
 set(kwineffects_QT_LIBS
@@ -22,8 +41,6 @@ set(kwineffects_KDE_LIBS
 
 set(kwineffects_XCB_LIBS
     XCB::XCB
-    XCB::XFIXES
-    XCB::RENDER
 )
 
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
@@ -34,6 +51,9 @@ PUBLIC
     ${kwineffects_KDE_LIBS}
     ${kwineffects_XCB_LIBS}
 )
+if( KWIN_HAVE_XRENDER_COMPOSITING )
+    target_link_libraries(kwineffects PRIVATE kwinxrenderutils XCB::XFIXES)
+endif()
 set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 

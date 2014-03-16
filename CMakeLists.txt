@@ -373,6 +373,7 @@ qt5_wrap_ui(kwin_KDEINIT_SRCS
 set(kwin_OWN_LIBS
     kdecorations
     kwineffects
+    kwinxrenderutils
     kwin4_effect_builtins
 )
 

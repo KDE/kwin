@@ -2,6 +2,10 @@ set(kwin_effect_OWN_LIBS
     kwineffects
 )
 
+if( KWIN_HAVE_XRENDER_COMPOSITING )
+    set(kwin_effect_OWN_LIBS ${kwin_effect_OWN_LIBS} kwinxrenderutils)
+endif()
+
 set(kwin_effect_KDE_LIBS
     KF5::ConfigGui
     KF5::ConfigWidgets
