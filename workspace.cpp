@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin libs
 #include <kdecorationfactory.h>
 #include <kwinglplatform.h>
+#include <kwinxrenderutils.h>
 // kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -211,6 +212,8 @@ Workspace::Workspace(bool restore)
     TabBox::TabBox::create(this);
 #endif
 
+    // init XRenderUtils
+    XRenderUtils::init(connection(), rootWindow());
     m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
     connect(m_compositor, &Compositor::compositingToggled, decorationPlugin(), &DecorationPlugin::compositingToggled);

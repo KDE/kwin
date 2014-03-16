@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_XRENDERUTILS_H
 
 // KWin
-#include <kwinglobals.h>
 #include <kwineffects_export.h>
 // Qt
 #include <QExplicitlySharedDataPointer>
@@ -94,13 +93,6 @@ XRenderPictureData::XRenderPictureData(xcb_render_picture_t pic)
 }
 
 inline
-XRenderPictureData::~XRenderPictureData()
-{
-    if (picture != XCB_RENDER_PICTURE_NONE)
-        xcb_render_free_picture(connection(), picture);
-}
-
-inline
 xcb_render_picture_t XRenderPictureData::value()
 {
     return picture;
@@ -116,32 +108,6 @@ inline
 XRenderPicture::operator xcb_render_picture_t()
 {
     return d->value();
-}
-
-inline
-XFixesRegion::XFixesRegion(const QRegion &region)
-{
-    m_region = xcb_generate_id(connection());
-    QVector< QRect > rects = region.rects();
-    QVector< xcb_rectangle_t > xrects(rects.count());
-    for (int i = 0;
-            i < rects.count();
-            ++i) {
-        const QRect &rect = rects.at(i);
-        xcb_rectangle_t xrect;
-        xrect.x = rect.x();
-        xrect.y = rect.y();
-        xrect.width = rect.width();
-        xrect.height = rect.height();
-        xrects[i] = xrect;
-    }
-    xcb_xfixes_create_region(connection(), m_region, xrects.count(), xrects.constData());
-}
-
-inline
-XFixesRegion::~XFixesRegion()
-{
-    xcb_xfixes_destroy_region(connection(), m_region);
 }
 
 inline
@@ -196,6 +162,14 @@ KWINEFFECTS_EXPORT void scene_setXRenderOffscreenTarget(xcb_render_picture_t pix
  * scene_xRenderWindowOffscreenTarget() is used by the scene to figure the target set by an effect
  */
 KWINEFFECTS_EXPORT XRenderPicture *scene_xRenderOffscreenTarget();
+
+namespace XRenderUtils
+{
+/**
+ * @internal
+ **/
+KWINEFFECTS_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
+}
 
 } // namespace
 
