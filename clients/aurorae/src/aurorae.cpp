@@ -126,7 +126,6 @@ void AuroraeFactory::initQML(const KConfigGroup &group)
         return;
     }
     KService::Ptr service = offers.first();
-    KPluginInfo plugininfo(service);
     const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
     const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
     const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
