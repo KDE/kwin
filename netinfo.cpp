@@ -53,8 +53,7 @@ RootInfo *RootInfo::create()
         qDebug() << "Error occurred while lowering support window: " << error->error_code;
     }
 
-    unsigned long protocols[5] = {
-        NET::Supported |
+    const NET::Properties properties = NET::Supported |
         NET::SupportingWMCheck |
         NET::ClientList |
         NET::ClientListStacking |
@@ -76,9 +75,8 @@ RootInfo *RootInfo::create()
         NET::WMPid |
         NET::WMMoveResize |
         NET::WMFrameExtents |
-        NET::WMPing
-        ,
-        NET::NormalMask |
+        NET::WMPing;
+    const NET::WindowTypes types = NET::NormalMask |
         NET::DesktopMask |
         NET::DockMask |
         NET::ToolbarMask |
@@ -86,10 +84,8 @@ RootInfo *RootInfo::create()
         NET::DialogMask |
         NET::OverrideMask |
         NET::UtilityMask |
-        NET::SplashMask
-        // No compositing window types here unless we support them also as managed window types
-        ,
-        NET::Modal |
+        NET::SplashMask; // No compositing window types here unless we support them also as managed window types
+    const NET::States states = NET::Modal |
         //NET::Sticky | // Large desktops not supported (and probably never will be)
         NET::MaxVert |
         NET::MaxHoriz |
@@ -101,9 +97,8 @@ RootInfo *RootInfo::create()
         NET::Hidden |
         NET::FullScreen |
         NET::KeepBelow |
-        NET::DemandsAttention
-        ,
-        NET::WM2UserTime |
+        NET::DemandsAttention;
+    NET::Properties2 properties2 = NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2AllowedActions |
         NET::WM2RestackWindow |
@@ -114,9 +109,8 @@ RootInfo *RootInfo::create()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
-        NET::WM2KDEShadow
-        ,
-        NET::ActionMove |
+        NET::WM2KDEShadow;
+    const NET::Actions actions = NET::ActionMove |
         NET::ActionResize |
         NET::ActionMinimize |
         NET::ActionShade |
@@ -125,15 +119,13 @@ RootInfo *RootInfo::create()
         NET::ActionMaxHoriz |
         NET::ActionFullScreen |
         NET::ActionChangeDesktop |
-        NET::ActionClose
-        ,
-    };
+        NET::ActionClose;
 
     DecorationPlugin *deco = DecorationPlugin::self();
     if (!deco->isDisabled() && deco->factory()->supports(KDecorationDefines::AbilityExtendIntoClientArea))
-        protocols[ NETRootInfo::PROTOCOLS2 ] |= NET::WM2FrameOverlap;
+        properties2 |= NET::WM2FrameOverlap;
 
-    s_self = new RootInfo(supportWindow, "KWin", protocols, 5, screen_number);
+    s_self = new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number);
     return s_self;
 }
 
@@ -146,8 +138,9 @@ void RootInfo::destroy()
     xcb_destroy_window(connection(), supportWindow);
 }
 
-RootInfo::RootInfo(xcb_window_t w, const char *name, unsigned long pr[], int pr_num, int scr)
-    : NETRootInfo(connection(), w, name, pr, pr_num, scr)
+RootInfo::RootInfo(xcb_window_t w, const char *name, NET::Properties properties, NET::WindowTypes types,
+                   NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr)
+    : NETRootInfo(connection(), w, name, properties, types, states, properties2, actions, scr)
 {
 }
 

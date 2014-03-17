@@ -57,8 +57,8 @@ protected:
     virtual void changeShowingDesktop(bool showing) override;
 
 private:
-    RootInfo(xcb_window_t w, const char* name, unsigned long pr[],
-             int pr_num, int scr = -1);
+    RootInfo(xcb_window_t w, const char* name, NET::Properties properties, NET::WindowTypes types,
+             NET::States states, NET::Properties2 properties2, NET::Actions actions, int scr = -1);
     static RootInfo *s_self;
     friend RootInfo *rootInfo();
 };

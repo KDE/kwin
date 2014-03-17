@@ -246,8 +246,7 @@ void KWinDesktopConfig::load()
 
     if (QX11Info::isPlatformX11()) {
         // get number of desktops
-        unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-        NETRootInfo info(QX11Info::connection(), properties, 2);
+        NETRootInfo info(QX11Info::connection(), NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout);
 
         for (int i = 1; i <= maxDesktops; i++) {
             QString name = QString::fromUtf8(info.desktopName(i));
@@ -308,8 +307,7 @@ void KWinDesktopConfig::save()
     }
 
     if (QX11Info::isPlatformX11()) {
-        unsigned long properties[] = {NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout };
-        NETRootInfo info(QX11Info::connection(), properties, 2);
+        NETRootInfo info(QX11Info::connection(), NET::NumberOfDesktops | NET::DesktopNames, NET::WM2DesktopLayout);
         // set desktop names
         for (int i = 1; i <= maxDesktops; i++) {
             QString desktopName = m_desktopNames[ i -1 ];
