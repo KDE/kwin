@@ -28,6 +28,7 @@
 #include <KServiceTypeTrader>
 #include <KSharedConfig>
 #include <KCModuleProxy>
+#include <KPluginTrader>
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -67,6 +68,7 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     roleNames[VideoRole] = "VideoRole";
     roleNames[SupportedRole] = "SupportedRole";
     roleNames[ExclusiveRole] = "ExclusiveRole";
+    roleNames[ConfigurableRole] = "ConfigurableRole";
     return roleNames;
 }
 
@@ -135,6 +137,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).exclusiveGroup;
         case InternalRole:
             return m_effectsList.at(index.row()).internal;
+        case ConfigurableRole:
+            return m_effectsList.at(index.row()).configurable;
         default:
             return QVariant();
     }
@@ -184,6 +188,7 @@ void EffectModel::loadEffects()
     m_effectsChanged.clear();
     m_effectsList.clear();
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
+    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/effects/configs/"));
     for(KService::Ptr service : offers) {
         const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
         KPluginInfo plugin(effectPluginPath);
@@ -202,6 +207,11 @@ void EffectModel::loadEffects()
         effect.supported = true;
         effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
         effect.internal = service->property(QStringLiteral("X-KWin-Internal"), QVariant::Bool).toBool();
+
+        auto it = std::find_if(configs.begin(), configs.end(), [&plugin](const KPluginInfo &info) {
+            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == plugin.pluginName();
+        });
+        effect.configurable = it != configs.end();
 
         m_effectsList << effect;
     }

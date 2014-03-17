@@ -49,6 +49,7 @@ struct EffectData {
     bool supported;
     QString exclusiveGroup;
     bool internal;
+    bool configurable;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -71,7 +72,8 @@ public:
         VideoRole,
         SupportedRole,
         ExclusiveRole,
-        InternalRole
+        InternalRole,
+        ConfigurableRole
     };
 
     explicit EffectModel(QObject *parent = 0);

@@ -20,9 +20,8 @@
 
 #include "effectconfig.h"
 
-#include <KCModuleProxy>
-#include <KPluginInfo>
-#include <KServiceTypeTrader>
+#include <KCModule>
+#include <KPluginTrader>
 
 #include <KNS3/DownloadDialog>
 
@@ -41,48 +40,33 @@ EffectConfig::EffectConfig(QObject *parent)
 {
 }
 
-bool EffectConfig::effectUiConfigExists(const QString &serviceName)
-{
-
-    //Our effect UI config is something like showfps_config.desktop
-    QString tmp = serviceName;
-    const QString effectConfig = tmp.remove("kwin4_effect_") + "_config.desktop";
-    QString effectConfigFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/kwin/" + effectConfig , QStandardPaths::LocateFile);
-    return !effectConfigFile.isEmpty();
-}
-
-void EffectConfig::openConfig(const QString &effectName)
+void EffectConfig::openConfig(const QString &serviceName)
 {
     //setup the UI
     QDialog dialog;
-    QVBoxLayout layout;
-    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+
+    // create the KCModule through the plugintrader
+    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
+                                                                     QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(serviceName),
+                                                                     &dialog);
+    if (!kcm) {
+        return;
+    }
+
+    connect(&dialog, &QDialog::accepted, kcm, &KCModule::save);
+
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
 
     buttons->setCenterButtons(true);
 
     //Here we connect our buttons with the dialog
-    connect(buttons, SIGNAL(QDialogButtonBox::accepted), &dialog, SLOT(QDialog::accept));
-    connect(buttons, SIGNAL(rejected()), &dialog, SLOT(reject()));
+    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
 
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
-    for(KService::Ptr service : offers) {
-        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
-        KPluginInfo plugin(effectPluginPath);
-        if (plugin.name() == effectName) {
-            QString effectConfig = effectName.toLower().remove(" ") + "_config";
-            KCModuleProxy *proxy = new KCModuleProxy(effectConfig);
-
-            //setup the Layout of our UI
-            layout.addWidget(proxy);
-            layout.addWidget(buttons);
-            dialog.setLayout(&layout);
-
-            //open the dialog
-            if (dialog.exec() == QDialog::Accepted) {
-                proxy->save();
-            }
-        }
-    }
+    QVBoxLayout *layout = new QVBoxLayout(&dialog);
+    layout->addWidget(kcm);
+    layout->addWidget(buttons);
+    dialog.exec();
 }
 
 void EffectConfig::openGHNS()

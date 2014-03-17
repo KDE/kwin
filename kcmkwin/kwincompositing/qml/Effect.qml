@@ -126,11 +126,11 @@ Rectangle {
         }
         Button {
             id: configureButton
-            visible: effectConfig.effectUiConfigExists(model.ServiceNameRole)
+            visible: ConfigurableRole
             enabled: effectStatusCheckBox.checked
             iconName: "configure"
             onClicked: {
-                effectConfig.openConfig(model.NameRole);
+                effectConfig.openConfig(model.ServiceNameRole);
             }
         }
 
