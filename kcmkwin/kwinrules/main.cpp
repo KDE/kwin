@@ -68,7 +68,7 @@ static void saveRules(const QList< Rules* >& rules)
 
 static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
 {
-    KWindowInfo info = KWindowSystem::windowInfo(wid,
+    KWindowInfo info = KWindowInfo(wid,
                        NET::WMName | NET::WMWindowType,
                        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine);
     if (!info.valid())  // shouldn't really happen

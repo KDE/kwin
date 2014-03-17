@@ -152,11 +152,12 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
 
     if (eventType == XCB_PROPERTY_NOTIFY || eventType == XCB_CLIENT_MESSAGE) {
-        unsigned long dirty[ NETRootInfo::PROPERTIES_SIZE ];
-        rootInfo()->event(e, dirty, NETRootInfo::PROPERTIES_SIZE);
-        if (dirty[ NETRootInfo::PROTOCOLS ] & NET::DesktopNames)
+        NET::Properties dirtyProtocols;
+        NET::Properties2 dirtyProtocols2;
+        rootInfo()->event(e, &dirtyProtocols, &dirtyProtocols2);
+        if (dirtyProtocols & NET::DesktopNames)
             VirtualDesktopManager::self()->save();
-        if (dirty[ NETRootInfo::PROTOCOLS2 ] & NET::WM2DesktopLayout)
+        if (dirtyProtocols2 & NET::WM2DesktopLayout)
             VirtualDesktopManager::self()->updateLayout();
     }
 
@@ -482,40 +483,41 @@ bool Workspace::workspaceEvent(QEvent* e)
 bool Client::windowEvent(xcb_generic_event_t *e)
 {
     if (findEventWindow(e) == window()) { // avoid doing stuff on frame or wrapper
-        unsigned long dirty[ 2 ];
+        NET::Properties dirtyProperties;
+        NET::Properties2 dirtyProperties2;
         double old_opacity = opacity();
-        info->event(e, dirty, 2);   // pass through the NET stuff
+        info->event(e, &dirtyProperties, &dirtyProperties2);   // pass through the NET stuff
 
-        if ((dirty[ NETWinInfo::PROTOCOLS ] & NET::WMName) != 0)
+        if ((dirtyProperties & NET::WMName) != 0)
             fetchName();
-        if ((dirty[ NETWinInfo::PROTOCOLS ] & NET::WMIconName) != 0)
+        if ((dirtyProperties & NET::WMIconName) != 0)
             fetchIconicName();
-        if ((dirty[ NETWinInfo::PROTOCOLS ] & NET::WMStrut) != 0
-                || (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2ExtendedStrut) != 0) {
+        if ((dirtyProperties & NET::WMStrut) != 0
+                || (dirtyProperties2 & NET::WM2ExtendedStrut) != 0) {
             workspace()->updateClientArea();
         }
-        if ((dirty[ NETWinInfo::PROTOCOLS ] & NET::WMIcon) != 0)
+        if ((dirtyProperties & NET::WMIcon) != 0)
             getIcons();
         // Note there's a difference between userTime() and info->userTime()
         // info->userTime() is the value of the property, userTime() also includes
         // updates of the time done by KWin (ButtonPress on windowrapper etc.).
-        if ((dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2UserTime) != 0) {
+        if ((dirtyProperties2 & NET::WM2UserTime) != 0) {
             workspace()->setWasUserInteraction();
             updateUserTime(info->userTime());
         }
-        if ((dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2StartupId) != 0)
+        if ((dirtyProperties2 & NET::WM2StartupId) != 0)
             startupIdChanged();
-        if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
+        if (dirtyProperties2 & NET::WM2Opacity) {
             if (compositing()) {
                 addRepaintFull();
                 emit opacityChanged(this, old_opacity);
             } else {
                 // forward to the frame if there's possibly another compositing manager running
-                NETWinInfo i(connection(), frameId(), rootWindow(), 0);
+                NETWinInfo i(connection(), frameId(), rootWindow(), 0, 0);
                 i.setOpacity(info->opacity());
             }
         }
-        if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2FrameOverlap) {
+        if (dirtyProperties2 & NET::WM2FrameOverlap) {
             // ### Inform the decoration
         }
     }
@@ -1494,9 +1496,10 @@ void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
 bool Unmanaged::windowEvent(xcb_generic_event_t *e)
 {
     double old_opacity = opacity();
-    unsigned long dirty[ 2 ];
-    info->event(e, dirty, 2);   // pass through the NET stuff
-    if (dirty[ NETWinInfo::PROTOCOLS2 ] & NET::WM2Opacity) {
+    NET::Properties dirtyProperties;
+    NET::Properties2 dirtyProperties2;
+    info->event(e, &dirtyProperties, &dirtyProperties2);   // pass through the NET stuff
+    if (dirtyProperties2 & NET::WM2Opacity) {
         if (compositing()) {
             addRepaintFull();
             emit opacityChanged(this, old_opacity);
