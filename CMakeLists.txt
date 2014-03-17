@@ -194,7 +194,7 @@ if(KWIN_BUILD_KAPPMENU)
         appmenu.cpp
     )
     qt5_add_dbus_interface(kwin_KDEINIT_SRCS
-        ${KDEBASE_WORKSPACE_SOURCE_DIR}/appmenu/org.kde.kappmenu.xml appmenu_interface)
+        ${KDEBASE_WORKSPACE_SOURCE_DIR}/plasma-workspace/appmenu/org.kde.kappmenu.xml appmenu_interface)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
@@ -224,7 +224,7 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin:
 # TODO: we need a better way to find the dbus interfaces provided by ksmserver
 set(KSMSERVER_SOURCE_DIR ${KWIN_SOURCE_DIR}/../ksmserver/)
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS
-  ${KSMSERVER_SOURCE_DIR}/org.kde.KSMServerInterface.xml ksmserver_interface)
+    ${KSMSERVER_SOURCE_DIR}/org.kde.KSMServerInterface.xml ksmserver_interface)
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS
     ${KSMSERVER_SOURCE_DIR}/screenlocker/dbus/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
