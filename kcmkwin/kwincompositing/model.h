@@ -50,6 +50,7 @@ struct EffectData {
     QString exclusiveGroup;
     bool internal;
     bool configurable;
+    bool scripted;
 };
 
 class EffectModel : public QAbstractItemModel
@@ -73,7 +74,8 @@ public:
         SupportedRole,
         ExclusiveRole,
         InternalRole,
-        ConfigurableRole
+        ConfigurableRole,
+        ScriptedRole
     };
 
     explicit EffectModel(QObject *parent = 0);

@@ -36,7 +36,7 @@ public:
     explicit EffectConfig(QObject *parent = 0);
     QString serviceName(const QString &serviceName);
 
-    Q_INVOKABLE void openConfig(const QString &effectName);
+    Q_INVOKABLE void openConfig(const QString &effectName, bool scripted);
     Q_INVOKABLE void openGHNS();
 
 Q_SIGNALS:

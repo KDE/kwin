@@ -32,6 +32,8 @@
 #include <QStandardPaths>
 #include <QString>
 
+static const QString s_pluginDir = QStringLiteral("kf5/kwin/effects/configs/");
+
 namespace KWin {
 namespace Compositing {
 
@@ -40,15 +42,30 @@ EffectConfig::EffectConfig(QObject *parent)
 {
 }
 
-void EffectConfig::openConfig(const QString &serviceName)
+void EffectConfig::openConfig(const QString &serviceName, bool scripted)
 {
     //setup the UI
     QDialog dialog;
 
     // create the KCModule through the plugintrader
-    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
-                                                                     QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(serviceName),
-                                                                     &dialog);
+    KCModule *kcm = nullptr;
+    if (scripted) {
+        // try generic module for scripted
+        const auto offers = KPluginTrader::self()->query(s_pluginDir, QString(),
+                                                         QStringLiteral("[X-KDE-Library] == 'kcm_kwin4_genericscripted'"));
+        if (!offers.isEmpty()) {
+            const KPluginInfo &generic = offers.first();
+            KPluginLoader loader(generic.libraryPath());
+            KPluginFactory *factory = loader.factory();
+            if (factory) {
+                kcm = factory->create<KCModule>(serviceName, &dialog);
+            }
+        }
+    } else {
+        kcm = KPluginTrader::createInstanceFromQuery<KCModule>(s_pluginDir, QString(),
+                                                               QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(serviceName),
+                                                               &dialog);
+    }
     if (!kcm) {
         return;
     }

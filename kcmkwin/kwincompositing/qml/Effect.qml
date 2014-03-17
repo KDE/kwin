@@ -130,7 +130,7 @@ Rectangle {
             enabled: effectStatusCheckBox.checked
             iconName: "configure"
             onClicked: {
-                effectConfig.openConfig(model.ServiceNameRole);
+                effectConfig.openConfig(model.ServiceNameRole, model.ScriptedRole);
             }
         }
 

@@ -69,6 +69,7 @@ QHash< int, QByteArray > EffectModel::roleNames() const
     roleNames[SupportedRole] = "SupportedRole";
     roleNames[ExclusiveRole] = "ExclusiveRole";
     roleNames[ConfigurableRole] = "ConfigurableRole";
+    roleNames[ScriptedRole] = QByteArrayLiteral("ScriptedRole");
     return roleNames;
 }
 
@@ -139,6 +140,8 @@ QVariant EffectModel::data(const QModelIndex &index, int role) const
             return m_effectsList.at(index.row()).internal;
         case ConfigurableRole:
             return m_effectsList.at(index.row()).configurable;
+        case ScriptedRole:
+            return m_effectsList.at(index.row()).scripted;
         default:
             return QVariant();
     }
@@ -207,11 +210,16 @@ void EffectModel::loadEffects()
         effect.supported = true;
         effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
         effect.internal = service->property(QStringLiteral("X-KWin-Internal"), QVariant::Bool).toBool();
+        effect.scripted = service->property(QStringLiteral("X-Plasma-API"), QVariant::String).toString().toLower() == QStringLiteral("javascript");
 
         auto it = std::find_if(configs.begin(), configs.end(), [&plugin](const KPluginInfo &info) {
             return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == plugin.pluginName();
         });
         effect.configurable = it != configs.end();
+        if (!effect.configurable && effect.scripted && !service->pluginKeyword().isEmpty()) {
+            // scripted effects have their pluginName() as the keyword
+            effect.configurable = service->property(QStringLiteral("X-KDE-ParentComponents")).toString() == service->pluginKeyword();
+        }
 
         m_effectsList << effect;
     }
