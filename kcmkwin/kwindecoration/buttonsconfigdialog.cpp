@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kdecoration.h>
 
 namespace KWin

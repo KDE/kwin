@@ -26,10 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kwineffects.h>
 
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KActionCollection>
-#include <KDE/KAboutData>
+#include <KAboutData>
 
 #include <QVBoxLayout>
 

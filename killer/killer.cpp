@@ -22,9 +22,9 @@ DEALINGS IN THE SOFTWARE.
 
 ****************************************************************************/
 
-#include <KDE/KMessageBox>
-#include <KDE/KLocalizedString>
-#include <KDE/KAuth/Action>
+#include <KMessageBox>
+#include <KLocalizedString>
+#include <KAuth/Action>
 #include <QApplication>
 #include <qcommandlineparser.h>
 #include <QDebug>

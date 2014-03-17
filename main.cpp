@@ -32,11 +32,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <ksmserver_interface.h>
 
 // KDE
-#include <KDE/KAboutData>
-#include <KDE/KConfig>
-#include <KDE/KConfigGroup>
-#include <KDE/KCrash>
-#include <KDE/KLocalizedString>
+#include <KAboutData>
+#include <KConfig>
+#include <KConfigGroup>
+#include <KCrash>
+#include <KLocalizedString>
 // Qt
 #include <qplatformdefs.h>
 #include <QDebug>

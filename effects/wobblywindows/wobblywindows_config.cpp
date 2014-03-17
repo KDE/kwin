@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#include <KDE/KLocalizedString>
-#include <KDE/KAboutData>
+#include <KLocalizedString>
+#include <KAboutData>
 #include <kconfiggroup.h>
 
 namespace KWin

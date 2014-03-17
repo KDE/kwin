@@ -25,10 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kwineffects.h>
 #include <KActionCollection>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <kconfiggroup.h>
-#include <KDE/KAboutData>
+#include <KAboutData>
 
 namespace KWin
 {

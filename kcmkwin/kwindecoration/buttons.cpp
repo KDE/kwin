@@ -42,7 +42,7 @@
 #include <QMimeData>
 #include <QScrollBar>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 
 #ifdef KWIN_BUILD_KAPPMENU
 #include <KConfigGroup>

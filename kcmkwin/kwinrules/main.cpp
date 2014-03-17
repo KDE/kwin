@@ -19,7 +19,7 @@
 #include <QCommandLineParser>
 #include <QApplication>
 #include <kconfig.h>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kwindowsystem.h>
 #include <QtDBus/QtDBus>
 #include <X11/Xlib.h>

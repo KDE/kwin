@@ -47,10 +47,10 @@
 #include <KAboutData>
 #include <kconfigloader.h>
 #include <KDialog>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KNewStuff3/KNS3/DownloadDialog>
-#include <KDE/KConfigDialogManager>
+#include <KConfigDialogManager>
 #include <KPluginFactory>
 
 // KCModule plugin interface

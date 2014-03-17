@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglobals.h>
 // KDE
-#include <KDE/KSelectionOwner>
+#include <KSelectionOwner>
 // Qt
 #include <QObject>
 #include <QElapsedTimer>

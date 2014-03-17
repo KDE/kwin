@@ -22,7 +22,7 @@
 #include "blurconfig.h"
 
 #include <kwineffects.h>
-#include <KDE/KAboutData>
+#include <KAboutData>
 
 namespace KWin
 {

@@ -46,8 +46,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kactivities/info.h>
 #endif
 
-#include <KDE/KProcess>
-#include <KDE/KToolInvocation>
+#include <KProcess>
+#include <KToolInvocation>
 
 #ifndef KWIN_NO_XF86VM
 #include <X11/extensions/xf86vmode.h>
@@ -58,8 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtConcurrentRun>
 #include <QPushButton>
 
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <kconfig.h>
 #include <QRegExp>
 #include <QMenu>

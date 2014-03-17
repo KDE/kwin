@@ -34,8 +34,8 @@
 #include <QtDBus/QtDBus>
 #include <QGroupBox>
 
-#include <KDE/KConfig>
-#include <KDE/KLocalizedString>
+#include <KConfig>
+#include <KLocalizedString>
 #include <kdialog.h>
 
 #include <X11/X.h>

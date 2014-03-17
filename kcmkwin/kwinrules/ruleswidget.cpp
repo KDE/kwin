@@ -27,7 +27,7 @@
 #include <QFileInfo>
 #include <QLabel>
 #include <kwindowsystem.h>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <QRegExp>
 
 #ifdef KWIN_BUILD_ACTIVITIES

@@ -23,10 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QStandardPaths>
 #include <QtGui/QPainter>
 // KDE
-#include <KDE/KConfigGroup>
-#include <KDE/KIconLoader>
-#include <KDE/KStartupInfo>
-#include <KDE/KSelectionOwner>
+#include <KConfigGroup>
+#include <KIconLoader>
+#include <KStartupInfo>
+#include <KSelectionOwner>
 // KWin
 #include <kwinglutils.h>
 // X11

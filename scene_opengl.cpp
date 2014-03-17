@@ -67,8 +67,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector4D>
 #include <QMatrix4x4>
 
-#include <KDE/KLocalizedString>
-#include <KDE/KNotification>
+#include <KLocalizedString>
+#include <KNotification>
 #include <KProcess>
 
 namespace KWin

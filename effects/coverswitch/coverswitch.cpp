@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QIcon>
 #include <QMatrix4x4>
 #include <QMouseEvent>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kcolorscheme.h>
 
 #include <kwinglutils.h>

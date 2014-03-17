@@ -20,7 +20,7 @@
 
 #include "preview.h"
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kconfig.h>
 #include <QApplication>
 #include <QPainter>

@@ -32,7 +32,7 @@
 #include <QButtonGroup>
 #include <QHoverEvent>
 #include <QTextStream>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 
 namespace Oxygen
 {

@@ -55,12 +55,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusPendingCallWatcher>
 #include <QStandardPaths>
 
-#include <KDE/KLibrary>
-#include <KDE/KDesktopFile>
-#include <KDE/KConfigGroup>
-#include <KDE/KService>
-#include <KDE/KServiceTypeTrader>
-#include <KDE/KPluginInfo>
+#include <KLibrary>
+#include <KDesktopFile>
+#include <KConfigGroup>
+#include <KService>
+#include <KServiceTypeTrader>
+#include <KPluginInfo>
 #include <Plasma/Theme>
 
 #include <assert.h>

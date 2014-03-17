@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge.h"
 #endif
 
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <QAction>
 #include <QDebug>
 #include <QtScript/QScriptEngine>

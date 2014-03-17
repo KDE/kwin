@@ -25,9 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <kwineffects.h>
 
-#include <KDE/KActionCollection>
-#include <KDE/KAboutData>
-#include <KDE/KGlobalAccel>
+#include <KActionCollection>
+#include <KAboutData>
+#include <KGlobalAccel>
 
 #include <QWidget>
 

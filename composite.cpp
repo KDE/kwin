@@ -47,10 +47,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimerEvent>
 #include <QDateTime>
 #include <QDBusConnection>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
-#include <KDE/KNotification>
-#include <KDE/KSelectionWatcher>
+#include <KGlobalAccel>
+#include <KLocalizedString>
+#include <KNotification>
+#include <KSelectionWatcher>
 
 #include <xcb/composite.h>
 #include <xcb/damage.h>

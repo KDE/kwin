@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAIN_H
 #define MAIN_H
 
-#include <KDE/KSelectionWatcher>
+#include <KSelectionWatcher>
 // Qt
 #include <QApplication>
 #include <QAbstractNativeEventFilter>

@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 #include <xcb/render.h>
 #endif
-#include <KDE/KGlobalAccel>
+#include <KGlobalAccel>
 
 namespace KWin
 {

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QLabel>
 #include <QGridLayout>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <KLineEdit>
 
 namespace KWin

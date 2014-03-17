@@ -27,12 +27,12 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusPendingCall>
 
-#include <KDE/KAboutData>
-#include <KDE/KPluginFactory>
-#include <KDE/KMessageBox>
-#include <KDE/KMessageWidget>
-#include <KDE/KPluginInfo>
-#include <KDE/KServiceTypeTrader>
+#include <KAboutData>
+#include <KPluginFactory>
+#include <KMessageBox>
+#include <KMessageWidget>
+#include <KPluginInfo>
+#include <KServiceTypeTrader>
 #include <Plasma/Package>
 #include <KNewStuff3/KNS3/DownloadDialog>
 

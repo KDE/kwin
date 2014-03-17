@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 
 #include <QAction>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <kwinglutils.h>
 

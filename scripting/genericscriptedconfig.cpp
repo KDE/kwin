@@ -20,8 +20,8 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
-#include <KDE/KAboutData>
-#include <KDE/KLocalizedString>
+#include <KAboutData>
+#include <KLocalizedString>
 #include <kconfigloader.h>
 
 #include <QDBusConnection>

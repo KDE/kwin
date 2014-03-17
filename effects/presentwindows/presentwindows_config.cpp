@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
-#include <KDE/KAboutData>
-#include <KDE/KGlobalAccel>
+#include <KAboutData>
+#include <KGlobalAccel>
 
 #include <QVBoxLayout>
 

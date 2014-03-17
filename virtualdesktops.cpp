@@ -20,10 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "virtualdesktops.h"
 // KDE
-#include <KDE/KConfigGroup>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
-#include <KDE/NETRootInfo>
+#include <KConfigGroup>
+#include <KGlobalAccel>
+#include <KLocalizedString>
+#include <NETRootInfo>
 // Qt
 #include <QAction>
 

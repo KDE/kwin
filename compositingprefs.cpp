@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglplatform.h"
 
 #include <kconfiggroup.h>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kdeversion.h>
 #include <ksharedconfig.h>
 

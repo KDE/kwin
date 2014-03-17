@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include <kdecorationfactory.h>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <stdlib.h>
 #include <QPixmap>
 

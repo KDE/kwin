@@ -19,8 +19,8 @@
 #ifndef MODULE_H
 #define MODULE_H
 
-#include <KDE/KCModule>
-#include <KDE/KSharedConfig>
+#include <KCModule>
+#include <KSharedConfig>
 
 namespace Ui
 {

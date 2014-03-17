@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "xcbutils.h"
 // KDE
-#include <KDE/NETWinInfo>
+#include <NETWinInfo>
 // Qt
 #include <QPixmap>
 #include <QWindow>

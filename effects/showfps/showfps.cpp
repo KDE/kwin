@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/render.h>
 #endif
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <math.h>
 #include <QPainter>
 #include <QVector2D>

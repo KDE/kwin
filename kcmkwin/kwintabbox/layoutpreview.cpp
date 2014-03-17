@@ -26,10 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QtCore/QStandardPaths>
-#include <KDE/KConfigGroup>
-#include <KDE/KDesktopFile>
-#include <KDE/KLocalizedString>
-#include <KDE/KService>
+#include <KConfigGroup>
+#include <KDesktopFile>
+#include <KLocalizedString>
+#include <KService>
 
 namespace KWin
 {

@@ -25,7 +25,7 @@
 
 #include <QtDBus/QtDBus>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kconfig.h>
 #include <kaboutdata.h>
 #include <KPluginFactory>

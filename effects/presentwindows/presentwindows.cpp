@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //KConfigSkeleton
 #include "presentwindowsconfig.h"
 #include <QAction>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <kwinglutils.h>
 

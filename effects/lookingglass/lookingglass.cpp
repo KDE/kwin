@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglutils.h>
 #include <kwinglplatform.h>
 
-#include <KDE/KStandardAction>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KStandardAction>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 #include <QVector2D>
 
 #include <kmessagebox.h>

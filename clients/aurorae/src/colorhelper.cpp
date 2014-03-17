@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "colorhelper.h"
 
-#include <KDE/KColorScheme>
+#include <KColorScheme>
 
 ColorHelper::ColorHelper(QObject *parent)
     : QObject(parent)

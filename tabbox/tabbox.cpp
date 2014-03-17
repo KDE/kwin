@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KDE/KGlobalAccel>
+#include <KGlobalAccel>
 #include <KLocalizedString>
 #include <kkeyserver.h>
 // X11

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../screenedge.h"
 #endif
 // KDE
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <kconfigloader.h>
 // Qt
 #include <QDebug>

@@ -19,7 +19,7 @@
 #include "detectwidget.h"
 #include "../../cursor.h"
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <QDebug>
 #include <kwindowsystem.h>
 #include <QLabel>

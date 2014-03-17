@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "monitor.h"
 
 #include <QDebug>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <qgraphicsitem.h>
 #include <qgraphicsview.h>
 #include <qgraphicsscene.h>

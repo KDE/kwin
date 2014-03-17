@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "slidingpopups.h"
 
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <QTimeLine>
 #include <QApplication>
 

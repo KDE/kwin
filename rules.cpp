@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <fixx11h.h>
 #include <kconfig.h>
-#include <KDE/KXMessages>
+#include <KXMessages>
 #include <QRegExp>
 #include <QTemporaryFile>
 #include <QFile>

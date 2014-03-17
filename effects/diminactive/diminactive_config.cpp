@@ -24,9 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwineffects.h>
 
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <kconfiggroup.h>
-#include <KDE/KAboutData>
+#include <KAboutData>
 
 #include <QWidget>
 #include <QVBoxLayout>

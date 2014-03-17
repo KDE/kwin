@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin includes
 #include <kwinglobals.h>
 // KDE includes
-#include <KDE/KConfig>
+#include <KConfig>
 // Qt includes
 #include <QObject>
 #include <QRect>

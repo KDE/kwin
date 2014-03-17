@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kwinglobals.h>
 // KDE
-#include <KDE/NET>
+#include <NET>
 // Qt
 #include <QList>
 #include <QPoint>

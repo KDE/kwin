@@ -35,7 +35,7 @@
 #include <QWidget>
 
 #include "kdecorationfactory.h"
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 
 #include "kcommondecoration.moc"
 

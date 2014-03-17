@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KIcon>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <KServiceTypeTrader>
 #include <KPluginInfo>
 #include <KPluginTrader>

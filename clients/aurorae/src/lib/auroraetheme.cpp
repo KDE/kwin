@@ -25,8 +25,8 @@
 #include <QHash>
 #include <QStandardPaths>
 // KDE
-#include <KDE/KConfig>
-#include <KDE/KConfigGroup>
+#include <KConfig>
+#include <KConfigGroup>
 
 Q_LOGGING_CATEGORY(AURORAE, "aurorae")
 

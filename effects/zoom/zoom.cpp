@@ -29,9 +29,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QVector2D>
 #include <QtDBus/QDBusConnection>
 #include <kstandardaction.h>
-#include <KDE/KConfigGroup>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KConfigGroup>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <kwinglutils.h>
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING

@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 #include <KPluginLoader>
 #include <KPluginTrader>
 #include <kconfiggroup.h>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 #include <assert.h>
 
 #include <QDebug>

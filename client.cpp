@@ -44,8 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "screenedge.h"
 // KDE
-#include <KDE/KWindowSystem>
-#include <KDE/KColorScheme>
+#include <KWindowSystem>
+#include <KColorScheme>
 // Qt
 #include <QApplication>
 #include <QDebug>

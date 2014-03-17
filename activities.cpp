@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "workspace.h"
 // KDE
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <kactivities/controller.h>
 // Qt
 #include <QtConcurrentRun>

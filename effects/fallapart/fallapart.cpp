@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "fallapart.h"
 #include <assert.h>
 #include <math.h>
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 
 namespace KWin
 {

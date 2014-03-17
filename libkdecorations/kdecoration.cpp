@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #include <QApplication>
 #include <QMenu>
 #include <QWindow>
-#include <KDE/KConfigGroup>
+#include <KConfigGroup>
 #include <assert.h>
 #include <X11/Xlib.h>
 #include <fixx11h.h>

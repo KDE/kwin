@@ -32,9 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../options.h"
 #include "../workspace.h"
 // KDE
-#include <KDE/KConfigGroup>
-#include <KDE/KPluginInfo>
-#include <KDE/KServiceTypeTrader>
+#include <KConfigGroup>
+#include <KPluginInfo>
+#include <KServiceTypeTrader>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>

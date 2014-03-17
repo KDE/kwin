@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fixx11h.h>
 #include <kstartupinfo.h>
 #include <kstringhandler.h>
-#include <KDE/KLocalizedString>
+#include <KLocalizedString>
 
 #include "atoms.h"
 #include "group.h"

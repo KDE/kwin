@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
 #include <kwindowsystem.h>
-#include <KDE/KGlobalAccel>
-#include <KDE/KLocalizedString>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 
 using namespace KWin;
 
