@@ -1,0 +1,7 @@
+{
+    "Type": "Service",
+    "X-KDE-Library": "kcm_kwin4_genericscripted",
+    "X-KDE-ServiceTypes": [
+        "KCModule"
+    ]
+}

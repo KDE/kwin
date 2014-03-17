@@ -30,11 +30,13 @@ namespace KWin
 class GenericScriptedConfigFactory : public KPluginFactory
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.kde.KPluginFactory"  FILE "genericscriptedconfig.json" )
+    Q_INTERFACES(KPluginFactory)
 public:
     GenericScriptedConfigFactory();
 
 protected:
-    virtual QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword);
+    QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword) override;
 };
 
 class GenericScriptedConfig : public KCModule
