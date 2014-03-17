@@ -29,14 +29,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 #include <QColor>
 
+K_PLUGIN_FACTORY_WITH_JSON(CubeEffectConfigFactory,
+                           "cube_config.json",
+                           registerPlugin<KWin::CubeEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 CubeEffectConfigForm::CubeEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -107,4 +110,4 @@ void CubeEffectConfig::capsSelectionChanged()
 
 } // namespace
 
-#include "moc_cube_config.cpp"
+#include "cube_config.moc"

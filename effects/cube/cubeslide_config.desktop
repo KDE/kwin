@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_cubeslide_config
 X-KDE-ParentComponents=kwin4_effect_cubeslide
-X-KDE-PluginKeyword=cubeslide
 
 Name=Desktop Cube Animation
 Name[ar]=تحريك مكعب سطح المكتب

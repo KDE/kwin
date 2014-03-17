@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_wobblywindows_config
 X-KDE-ParentComponents=kwin4_effect_wobblywindows
-X-KDE-PluginKeyword=wobblywindows
 
 Name=Wobbly Windows
 Name[af]=Wobbly Windows

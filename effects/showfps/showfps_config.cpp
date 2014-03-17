@@ -30,10 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KAboutData>
 
+K_PLUGIN_FACTORY_WITH_JSON(ShowFpsEffectConfigFactory,
+                           "showfps_config.json",
+                           registerPlugin<KWin::ShowFpsEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 ShowFpsEffectConfig::ShowFpsEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(KAboutData::pluginData(QStringLiteral("showfps")), parent, args)
@@ -59,4 +61,4 @@ void ShowFpsEffectConfig::save()
 
 } // namespace
 
-#include "moc_showfps_config.cpp"
+#include "showfps_config.moc"

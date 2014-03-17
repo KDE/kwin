@@ -1,30 +1,29 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    diminactive/diminactive.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources diminactive/diminactiveconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    diminactive/diminactive.desktop
+    diminactive.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_diminactive_config_SRCS diminactive_config.cpp)
+qt5_wrap_ui(kwin_diminactive_config_SRCS diminactive_config.ui)
+kconfig_add_kcfg_files(kwin_diminactive_config_SRCS diminactiveconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    diminactive/diminactive_config.cpp
-    diminactive/diminactive_config.ui
-    )
+add_library(kwin_diminactive_config MODULE ${kwin_diminactive_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources diminactive/diminactiveconfig.kcfgc)
+target_link_libraries(kwin_diminactive_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-# .desktop files
-install( FILES
-    diminactive/diminactive_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_diminactive_config diminactive_config.desktop)
+
+install(
+    TARGETS
+        kwin_diminactive_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

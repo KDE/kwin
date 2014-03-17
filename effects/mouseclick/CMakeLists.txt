@@ -1,30 +1,33 @@
 ##########################
 ## mouse click effect
 ##########################
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    mouseclick/mouseclick.cpp
-    )
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources mouseclick/mouseclickconfig.kcfgc)
-
-# .desktop files
 install( FILES 
-         mouseclick/mouseclick.desktop
+         mouseclick.desktop
          DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 ##########################
 ## configurtion dialog 
 ##########################
+set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)
+qt5_wrap_ui(kwin_mouseclick_config_SRCS mouseclick_config.ui)
+kconfig_add_kcfg_files(kwin_mouseclick_config_SRCS mouseclickconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    mouseclick/mouseclick_config.cpp
-    mouseclick/mouseclick_config.ui
-    )
+add_library(kwin_mouseclick_config MODULE ${kwin_mouseclick_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources mouseclick/mouseclickconfig.kcfgc)
+target_link_libraries(kwin_mouseclick_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-install( FILES 
-         mouseclick/mouseclick_config.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_mouseclick_config mouseclick_config.desktop)
+
+install(
+    TARGETS
+        kwin_mouseclick_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

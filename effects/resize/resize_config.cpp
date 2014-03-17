@@ -28,10 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(ResizeEffectConfigFactory,
+                           "resize_config.json",
+                           registerPlugin<KWin::ResizeEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 ResizeEffectConfigForm::ResizeEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -60,4 +62,4 @@ void ResizeEffectConfig::save()
 
 } // namespace
 
-#include "moc_resize_config.cpp"
+#include "resize_config.moc"

@@ -36,10 +36,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(LookingGlassEffectConfigFactory,
+                           "lookingglass_config.json",
+                           registerPlugin<KWin::LookingGlassEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 LookingGlassEffectConfigForm::LookingGlassEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -107,4 +109,4 @@ void LookingGlassEffectConfig::defaults()
 
 } // namespace
 
-#include "moc_lookingglass_config.cpp"
+#include "lookingglass_config.moc"

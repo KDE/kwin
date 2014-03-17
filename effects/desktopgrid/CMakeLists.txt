@@ -1,34 +1,37 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    desktopgrid/desktopgrid.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources desktopgrid/desktopgridconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    desktopgrid/desktopgrid.desktop
+    desktopgrid.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 install( FILES
-    desktopgrid/main.qml
+    main.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/
 )
 
 #######################################
 # Config
+set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)
+qt5_wrap_ui(kwin_desktopgrid_config_SRCS desktopgrid_config.ui)
+kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    desktopgrid/desktopgrid_config.cpp
-    desktopgrid/desktopgrid_config.ui
-    )
+add_library(kwin_desktopgrid_config MODULE ${kwin_desktopgrid_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources desktopgrid/desktopgridconfig.kcfgc)
+target_link_libraries(kwin_desktopgrid_config
+    kwineffects
+    Qt5::Quick
+    KF5::Completion
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    desktopgrid/desktopgrid_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_desktopgrid_config desktopgrid_config.desktop)
+
+install(
+    TARGETS
+        kwin_desktopgrid_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

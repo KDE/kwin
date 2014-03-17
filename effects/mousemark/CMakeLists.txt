@@ -1,30 +1,31 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    mousemark/mousemark.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources mousemark/mousemarkconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    mousemark/mousemark.desktop
+    mousemark.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_mousemark_config_SRCS mousemark_config.cpp)
+qt5_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)
+kconfig_add_kcfg_files(kwin_mousemark_config_SRCS mousemarkconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    mousemark/mousemark_config.cpp
-    mousemark/mousemark_config.ui
-    )
+add_library(kwin_mousemark_config MODULE ${kwin_mousemark_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources mousemark/mousemarkconfig.kcfgc)
+target_link_libraries(kwin_mousemark_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    mousemark/mousemark_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_mousemark_config mousemark_config.desktop)
+
+install(
+    TARGETS
+        kwin_mousemark_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

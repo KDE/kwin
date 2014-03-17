@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_resize_config
 X-KDE-ParentComponents=kwin4_effect_resize
-X-KDE-PluginKeyword=resize
 
 Name=Resize Window
 Name[ar]=غير حجم النافذة

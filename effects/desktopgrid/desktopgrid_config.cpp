@@ -30,13 +30,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(DesktopGridEffectConfigFactory,
+                           "desktopgrid_config.json",
+                           registerPlugin<KWin::DesktopGridEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 DesktopGridEffectConfigForm::DesktopGridEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -131,4 +134,4 @@ void DesktopGridEffectConfig::defaults()
 
 } // namespace
 
-#include "moc_desktopgrid_config.cpp"
+#include "desktopgrid_config.moc"

@@ -28,10 +28,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(MagicLampEffectConfigFactory,
+                           "magiclamp_config.json",
+                           registerPlugin<KWin::MagicLampEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 MagicLampEffectConfigForm::MagicLampEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -60,4 +62,4 @@ void MagicLampEffectConfig::save()
 
 } // namespace
 
-#include "moc_magiclamp_config.cpp"
+#include "magiclamp_config.moc"

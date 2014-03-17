@@ -1,29 +1,29 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    resize/resize.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources resize/resizeconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    resize/resize.desktop
+    resize.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_resize_config_SRCS resize_config.cpp)
+qt5_wrap_ui(kwin_resize_config_SRCS resize_config.ui)
+kconfig_add_kcfg_files(kwin_resize_config_SRCS resizeconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    resize/resize_config.cpp
-    resize/resize_config.ui
-    )
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources resize/resizeconfig.kcfgc)
+add_library(kwin_resize_config MODULE ${kwin_resize_config_SRCS})
 
-# .desktop files
-install( FILES
-    resize/resize_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+target_link_libraries(kwin_resize_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
+
+kservice_desktop_to_json(kwin_resize_config resize_config.desktop)
+
+install(
+    TARGETS
+        kwin_resize_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

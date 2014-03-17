@@ -1,30 +1,30 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    showfps/showfps.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources showfps/showfpsconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    showfps/showfps.desktop
+    showfps.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_showfps_config_SRCS showfps_config.cpp)
+qt5_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)
+kconfig_add_kcfg_files(kwin_showfps_config_SRCS showfpsconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    showfps/showfps_config.cpp
-    showfps/showfps_config.ui
-    )
+add_library(kwin_showfps_config MODULE ${kwin_showfps_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources showfps/showfpsconfig.kcfgc)
+target_link_libraries(kwin_showfps_config
+    kwineffects
+    KF5::Completion
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-# .desktop files
-install( FILES
-    showfps/showfps_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_showfps_config showfps_config.desktop)
+
+install(
+    TARGETS
+        kwin_showfps_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

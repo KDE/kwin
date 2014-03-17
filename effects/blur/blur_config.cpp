@@ -24,10 +24,12 @@
 #include <kwineffects.h>
 #include <KAboutData>
 
+K_PLUGIN_FACTORY_WITH_JSON(BlurEffectConfigFactory,
+                           "blur_config.json",
+                           registerPlugin<KWin::BlurEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 BlurEffectConfig::BlurEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(KAboutData::pluginData(QStringLiteral("blur")), parent, args)
@@ -51,4 +53,4 @@ void BlurEffectConfig::save()
 
 } // namespace KWin
 
-#include "moc_blur_config.cpp"
+#include "blur_config.moc"

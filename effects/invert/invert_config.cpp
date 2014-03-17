@@ -31,10 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(InvertEffectConfigFactory,
+                           "invert_config.json",
+                           registerPlugin<KWin::InvertEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args) :
     KCModule(KAboutData::pluginData(QStringLiteral("invert")), parent, args)
@@ -97,4 +99,4 @@ void InvertEffectConfig::defaults()
 
 } // namespace
 
-#include "moc_invert_config.cpp"
+#include "invert_config.moc"

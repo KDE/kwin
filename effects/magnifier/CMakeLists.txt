@@ -1,29 +1,31 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    magnifier/magnifier.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources magnifier/magnifierconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    magnifier/magnifier.desktop
+    magnifier.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_magnifier_config_SRCS magnifier_config.cpp)
+qt5_wrap_ui(kwin_magnifier_config_SRCS magnifier_config.ui)
+kconfig_add_kcfg_files(kwin_magnifier_config_SRCS magnifierconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    magnifier/magnifier_config.cpp
-    magnifier/magnifier_config.ui
-    )
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources magnifier/magnifierconfig.kcfgc)
+add_library(kwin_magnifier_config MODULE ${kwin_magnifier_config_SRCS})
 
-# .desktop files
-install( FILES
-    magnifier/magnifier_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+target_link_libraries(kwin_magnifier_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
+
+kservice_desktop_to_json(kwin_magnifier_config magnifier_config.desktop)
+
+install(
+    TARGETS
+        kwin_magnifier_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

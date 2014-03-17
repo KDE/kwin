@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_magiclamp_config
 X-KDE-ParentComponents=kwin4_effect_magiclamp
-X-KDE-PluginKeyword=magiclamp
 
 Name=Magic Lamp
 Name[ar]=المصباح السحري

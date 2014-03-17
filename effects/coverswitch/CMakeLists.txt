@@ -1,37 +1,37 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    coverswitch/coverswitch.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources coverswitch/coverswitchconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    coverswitch/coverswitch.desktop
+    coverswitch.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 install( FILES
-    coverswitch/shaders/1.10/coverswitch-reflection.glsl
+    shaders/1.10/coverswitch-reflection.glsl
     DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
 install( FILES
-    coverswitch/shaders/1.40/coverswitch-reflection.glsl
+    shaders/1.40/coverswitch-reflection.glsl
     DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
 
 
 #######################################
 # Config
+set(kwin_coverswitch_config_SRCS coverswitch_config.cpp)
+qt5_wrap_ui(kwin_coverswitch_config_SRCS coverswitch_config.ui)
+kconfig_add_kcfg_files(kwin_coverswitch_config_SRCS coverswitchconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    coverswitch/coverswitch_config.cpp
-    coverswitch/coverswitch_config.ui
-    )
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources coverswitch/coverswitchconfig.kcfgc)
+add_library(kwin_coverswitch_config MODULE ${kwin_coverswitch_config_SRCS})
 
-# .desktop files
-install( FILES
-    coverswitch/coverswitch_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+target_link_libraries(kwin_coverswitch_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
+
+kservice_desktop_to_json(kwin_coverswitch_config coverswitch_config.desktop)
+
+install(
+    TARGETS
+        kwin_coverswitch_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

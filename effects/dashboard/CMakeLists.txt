@@ -1,28 +1,29 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-     dashboard/dashboard.cpp
-     dashboard/dashboard.cpp )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources dashboard/dashboardconfig.kcfgc)
-
-# .desktop files
 install( FILES
-         dashboard/dashboard.desktop
+         dashboard.desktop
          DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_dashboard_config_SRCS dashboard_config.cpp)
+qt5_wrap_ui(kwin_dashboard_config_SRCS dashboard_config.ui)
+kconfig_add_kcfg_files(kwin_dashboard_config_SRCS dashboardconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-     dashboard/dashboard_config.cpp
-     dashboard/dashboard_config.ui )
+add_library(kwin_dashboard_config MODULE ${kwin_dashboard_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources dashboard/dashboardconfig.kcfgc)
+target_link_libraries(kwin_dashboard_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-install( FILES
-         dashboard/dashboard_config.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_dashboard_config dashboard_config.desktop)
+
+install(
+    TARGETS
+        kwin_dashboard_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

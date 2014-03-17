@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_desktopgrid_config
 X-KDE-ParentComponents=kwin4_effect_desktopgrid
-X-KDE-PluginKeyword=desktopgrid
 
 Name=Desktop Grid
 Name[af]=Werkskerm rooster

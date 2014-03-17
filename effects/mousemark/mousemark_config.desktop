@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_mousemark_config
 X-KDE-ParentComponents=kwin4_effect_mousemark
-X-KDE-PluginKeyword=mousemark
 
 Name=Mouse Mark
 Name[af]=Muismerk

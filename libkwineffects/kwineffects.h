@@ -613,33 +613,6 @@ public Q_SLOTS:
         KWINEFFECTS_EXPORT bool effect_enabledbydefault_kwin4_effect_##name() { return function; } \
     }
 
-/**
- * Defines the function used to retrieve an effect's config widget
- * E.g.  KWIN_EFFECT_CONFIG( flames, MyFlameEffectConfig )
- **/
-#define KWIN_EFFECT_CONFIG( name, classname ) \
-    K_PLUGIN_FACTORY(EffectFactory, registerPlugin<classname>(#name);)
-
-/**
- * Defines the function used to retrieve multiple effects' config widget
- * E.g.  KWIN_EFFECT_CONFIG_MULTIPLE( flames,
- *           KWIN_EFFECT_CONFIG_SINGLE( flames, MyFlameEffectConfig )
- *           KWIN_EFFECT_CONFIG_SINGLE( fire, MyFireEffectConfig )
- *           )
- **/
-#define KWIN_EFFECT_CONFIG_MULTIPLE( name, singles ) \
-    K_PLUGIN_FACTORY(EffectFactory, singles)
-
-/**
- * @see KWIN_EFFECT_CONFIG_MULTIPLE
- */
-#define KWIN_EFFECT_CONFIG_SINGLE( name, classname ) \
-    registerPlugin<classname>(QStringLiteral(#name));
-/**
- * The declaration of the factory to export the effect
- */
-#define KWIN_EFFECT_CONFIG_FACTORY K_PLUGIN_FACTORY_DECLARATION(EffectFactory)
-
 
 /**
  * @short Manager class that handles all the effects.

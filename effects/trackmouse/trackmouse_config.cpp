@@ -35,10 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "trackmouseconfig.h"
 
+K_PLUGIN_FACTORY_WITH_JSON(TrackMouseEffectConfigFactory,
+                           "trackmouse_config.json",
+                           registerPlugin<KWin::TrackMouseEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 TrackMouseEffectConfigForm::TrackMouseEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -117,4 +119,4 @@ void TrackMouseEffectConfig::shortcutChanged(const QKeySequence &seq)
 
 } // namespace
 
-#include "moc_trackmouse_config.cpp"
+#include "trackmouse_config.moc"

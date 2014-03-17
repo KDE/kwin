@@ -25,10 +25,12 @@
 #include <kwineffects.h>
 #include <KAboutData>
 
+K_PLUGIN_FACTORY_WITH_JSON(GlideEffectConfigFactory,
+                           "glide_config.json",
+                           registerPlugin<KWin::GlideEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 GlideEffectConfig::GlideEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(KAboutData::pluginData(QStringLiteral("glide")), parent, args)
@@ -48,4 +50,4 @@ void GlideEffectConfig::save()
     EffectsHandler::sendReloadMessage(QStringLiteral("glide"));
 }
 } // namespace KWin
-#include "moc_glide_config.cpp"
+#include "glide_config.moc"

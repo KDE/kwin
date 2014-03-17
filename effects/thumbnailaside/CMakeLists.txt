@@ -1,30 +1,31 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    thumbnailaside/thumbnailaside.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources thumbnailaside/thumbnailasideconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    thumbnailaside/thumbnailaside.desktop
+    thumbnailaside.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_thumbnailaside_config_SRCS thumbnailaside_config.cpp)
+qt5_wrap_ui(kwin_thumbnailaside_config_SRCS thumbnailaside_config.ui)
+kconfig_add_kcfg_files(kwin_thumbnailaside_config_SRCS thumbnailasideconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    thumbnailaside/thumbnailaside_config.cpp
-    thumbnailaside/thumbnailaside_config.ui
-    )
+add_library(kwin_thumbnailaside_config MODULE ${kwin_thumbnailaside_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources thumbnailaside/thumbnailasideconfig.kcfgc)
+target_link_libraries(kwin_thumbnailaside_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    thumbnailaside/thumbnailaside_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_thumbnailaside_config thumbnailaside_config.desktop)
+
+install(
+    TARGETS
+        kwin_thumbnailaside_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

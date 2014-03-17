@@ -24,10 +24,12 @@
 #include <kwineffects.h>
 #include <KAboutData>
 
+K_PLUGIN_FACTORY_WITH_JSON(DashboardEffectConfigFactory,
+                           "dashboard_config.json",
+                           registerPlugin<KWin::DashboardEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 DashboardEffectConfig::DashboardEffectConfig(QWidget *parent, const QVariantList &args)
     : KCModule(KAboutData::pluginData(QStringLiteral("dashboard")), parent, args)
@@ -52,3 +54,4 @@ void DashboardEffectConfig::save()
 
 } // namespace KWin
 
+#include "dashboard_config.moc"

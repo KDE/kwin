@@ -30,9 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kconfiggroup.h>
 #include <KAboutData>
 
+K_PLUGIN_FACTORY_WITH_JSON(WindowGeometryEffectConfigFactory,
+                           "windowgeometry_config.json",
+                           registerPlugin<KWin::WindowGeometryConfig>();)
+
 namespace KWin
 {
-KWIN_EFFECT_CONFIG_FACTORY
 
 WindowGeometryConfigForm::WindowGeometryConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -82,4 +85,4 @@ void WindowGeometryConfig::defaults()
 }
 
 } //namespace
-#include "moc_windowgeometry_config.cpp"
+#include "windowgeometry_config.moc"

@@ -1,36 +1,39 @@
 #######################################
 # Effect
 
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    trackmouse/trackmouse.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources trackmouse/trackmouseconfig.kcfgc)
-
 # .desktop files
 install( FILES
-    trackmouse/trackmouse.desktop
+    trackmouse.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 # Data files
 install( FILES
-    trackmouse/data/tm_inner.png
-    trackmouse/data/tm_outer.png
+    data/tm_inner.png
+    data/tm_outer.png
     DESTINATION ${DATA_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_trackmouse_config_SRCS trackmouse_config.cpp)
+qt5_wrap_ui(kwin_trackmouse_config_SRCS trackmouse_config.ui)
+kconfig_add_kcfg_files(kwin_trackmouse_config_SRCS trackmouseconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    trackmouse/trackmouse_config.cpp
-    trackmouse/trackmouse_config.ui
-    )
+add_library(kwin_trackmouse_config MODULE ${kwin_trackmouse_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources trackmouse/trackmouseconfig.kcfgc)
+target_link_libraries(kwin_trackmouse_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    trackmouse/trackmouse_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_trackmouse_config trackmouse_config.desktop)
+
+install(
+    TARGETS
+        kwin_trackmouse_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

@@ -34,10 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(ThumbnailAsideEffectConfigFactory,
+                           "thumbnailaside_config.json",
+                           registerPlugin<KWin::ThumbnailAsideEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 ThumbnailAsideEffectConfigForm::ThumbnailAsideEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -88,4 +90,4 @@ void ThumbnailAsideEffectConfig::save()
 
 } // namespace
 
-#include "moc_thumbnailaside_config.cpp"
+#include "thumbnailaside_config.moc"

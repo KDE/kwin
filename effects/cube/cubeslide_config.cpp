@@ -27,10 +27,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutData>
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(CubeSlideEffectConfigFactory,
+                           "cubeslide_config.json",
+                           registerPlugin<KWin::CubeSlideEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 CubeSlideEffectConfigForm::CubeSlideEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -59,4 +61,4 @@ void CubeSlideEffectConfig::save()
 
 } // namespace
 
-#include "moc_cubeslide_config.cpp"
+#include "cubeslide_config.moc"

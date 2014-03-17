@@ -35,10 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(MagnifierEffectConfigFactory,
+                           "magnifier_config.json",
+                           registerPlugin<KWin::MagnifierEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 MagnifierEffectConfigForm::MagnifierEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -108,4 +110,4 @@ void MagnifierEffectConfig::defaults()
 
 } // namespace
 
-#include "moc_magnifier_config.cpp"
+#include "magnifier_config.moc"

@@ -1,30 +1,31 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    flipswitch/flipswitch.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources flipswitch/flipswitchconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    flipswitch/flipswitch.desktop
+    flipswitch.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_flipswitch_config_SRCS flipswitch_config.cpp)
+qt5_wrap_ui(kwin_flipswitch_config_SRCS flipswitch_config.ui)
+kconfig_add_kcfg_files(kwin_flipswitch_config_SRCS flipswitchconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    flipswitch/flipswitch_config.cpp
-    flipswitch/flipswitch_config.ui
-    )
+add_library(kwin_flipswitch_config MODULE ${kwin_flipswitch_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources flipswitch/flipswitchconfig.kcfgc)
+target_link_libraries(kwin_flipswitch_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    flipswitch/flipswitch_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_flipswitch_config flipswitch_config.desktop)
+
+install(
+    TARGETS
+        kwin_flipswitch_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

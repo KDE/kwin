@@ -1,30 +1,30 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    glide/glide.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources glide/glideconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    glide/glide.desktop
+    glide.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_glide_config_SRCS glide_config.cpp)
+qt5_wrap_ui(kwin_glide_config_SRCS glide_config.ui)
+kconfig_add_kcfg_files(kwin_glide_config_SRCS glideconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-     glide/glide_config.cpp
-     glide/glide_config.ui )
+add_library(kwin_glide_config MODULE ${kwin_glide_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources glide/glideconfig.kcfgc)
+target_link_libraries(kwin_glide_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-# .desktop files
-install( FILES
-         glide/glide_config.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_glide_config glide_config.desktop)
+
+install(
+    TARGETS
+        kwin_glide_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)
 

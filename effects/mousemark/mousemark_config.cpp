@@ -34,10 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QWidget>
 
+K_PLUGIN_FACTORY_WITH_JSON(MouseMarkEffectConfigFactory,
+                           "mousemark_config.json",
+                           registerPlugin<KWin::MouseMarkEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 MouseMarkEffectConfigForm::MouseMarkEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -96,4 +98,4 @@ void MouseMarkEffectConfig::save()
 
 } // namespace
 
-#include "moc_mousemark_config.cpp"
+#include "mousemark_config.moc"

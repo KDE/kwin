@@ -28,13 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QWidget>
 
+K_PLUGIN_FACTORY_WITH_JSON(MouseClickEffectConfigFactory,
+                           "mouseclick_config.json",
+                           registerPlugin<KWin::MouseClickEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 MouseClickEffectConfigForm::MouseClickEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -81,4 +84,4 @@ void MouseClickEffectConfig::save()
 
 } // namespace
 
-#include "moc_mouseclick_config.cpp"
+#include "mouseclick_config.moc"

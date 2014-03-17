@@ -28,13 +28,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(FlipSwitchEffectConfigFactory,
+                           "flipswitch_config.json",
+                           registerPlugin<KWin::FlipSwitchEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 FlipSwitchEffectConfigForm::FlipSwitchEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -84,4 +87,4 @@ void FlipSwitchEffectConfig::save()
 
 } // namespace
 
-#include "moc_flipswitch_config.cpp"
+#include "flipswitch_config.moc"

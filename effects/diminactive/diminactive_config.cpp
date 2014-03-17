@@ -31,10 +31,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWidget>
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(DimInactiveEffectConfigFactory,
+                           "diminactive_config.json",
+                           registerPlugin<KWin::DimInactiveEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 DimInactiveEffectConfigForm::DimInactiveEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -63,4 +65,4 @@ void DimInactiveEffectConfig::save()
 
 } // namespace
 
-#include "moc_diminactive_config.cpp"
+#include "diminactive_config.moc"

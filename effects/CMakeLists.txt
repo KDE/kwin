@@ -59,45 +59,67 @@ macro( KWIN4_ADD_EFFECT name )
 
 endmacro()
 
-macro( KWIN4_ADD_EFFECT_CONFIG name )
-    set( kwin4_effect_ui ) # Initially empty
-    set( kwin4_effect_src ) # Initially empty
-
-    foreach( file ${ARGN} )
-        if( file MATCHES \\.ui )
-            set( kwin4_effect_ui ${kwin4_effect_ui} ${file} )
-        else()
-            set( kwin4_effect_src ${kwin4_effect_src} ${file} )
-        endif()
-    endforeach()
-
-    kde4_add_ui_files( kwin4_effect_src ${kwin4_effect_ui} )
-    add_library( kcm_kwin4_effect_${name} MODULE ${kwin4_effect_src} )
-    if(OPENGLES_FOUND)
-        set_target_properties(kcm_kwin4_effect_${name} PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
-    endif()
-    target_link_libraries( kcm_kwin4_effect_${name}
-        kwineffects
-        Qt5::Widgets
-        Qt5::Quick
-        KF5::KIOWidgets # KUrlRequester
-        KF5::CoreAddons
-        KF5::Completion
-        KF5::ConfigWidgets
-        KF5::GlobalAccel
-        KF5::I18n
-        KF5::XmlGui
-        )
-    install( TARGETS kcm_kwin4_effect_${name} DESTINATION ${PLUGIN_INSTALL_DIR} )
-endmacro()
-
 # Install the KWin/Effect service type
 install( FILES kwineffect.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
 # Create initial variables
-set( kwin4_effect_builtins_sources logging.cpp effect_builtins.cpp)
-set( kwin4_effect_builtins_config_sources configs_builtins.cpp )
 set( kwin4_effect_include_directories )
+
+set( kwin4_effect_builtins_sources
+    logging.cpp
+    effect_builtins.cpp
+    blur/blur.cpp
+    blur/blurshader.cpp
+    cube/cube.cpp
+    cube/cube_proxy.cpp
+    cube/cubeslide.cpp
+    coverswitch/coverswitch.cpp
+    dashboard/dashboard.cpp
+    desktopgrid/desktopgrid.cpp
+    diminactive/diminactive.cpp
+    flipswitch/flipswitch.cpp
+    glide/glide.cpp
+    invert/invert.cpp
+    lookingglass/lookingglass.cpp
+    magiclamp/magiclamp.cpp
+    magnifier/magnifier.cpp
+    mouseclick/mouseclick.cpp
+    mousemark/mousemark.cpp
+    presentwindows/presentwindows.cpp
+    presentwindows/presentwindows_proxy.cpp
+    resize/resize.cpp
+    showfps/showfps.cpp
+    thumbnailaside/thumbnailaside.cpp
+    trackmouse/trackmouse.cpp
+    windowgeometry/windowgeometry.cpp
+    wobblywindows/wobblywindows.cpp
+    zoom/zoom.cpp
+    )
+
+kconfig_add_kcfg_files(kwin4_effect_builtins_sources
+    blur/blurconfig.kcfgc
+    cube/cubeslideconfig.kcfgc
+    cube/cubeconfig.kcfgc
+    coverswitch/coverswitchconfig.kcfgc
+    dashboard/dashboardconfig.kcfgc
+    desktopgrid/desktopgridconfig.kcfgc
+    diminactive/diminactiveconfig.kcfgc
+    flipswitch/flipswitchconfig.kcfgc
+    glide/glideconfig.kcfgc
+    lookingglass/lookingglassconfig.kcfgc
+    magiclamp/magiclampconfig.kcfgc
+    magnifier/magnifierconfig.kcfgc
+    mouseclick/mouseclickconfig.kcfgc
+    mousemark/mousemarkconfig.kcfgc
+    presentwindows/presentwindowsconfig.kcfgc
+    resize/resizeconfig.kcfgc
+    showfps/showfpsconfig.kcfgc
+    thumbnailaside/thumbnailasideconfig.kcfgc
+    trackmouse/trackmouseconfig.kcfgc
+    windowgeometry/windowgeometryconfig.kcfgc
+    wobblywindows/wobblywindowsconfig.kcfgc
+    zoom/zoomconfig.kcfgc
+    )
 
 # scripted effects
 add_subdirectory( dialogparent )
@@ -112,49 +134,48 @@ add_subdirectory( translucency )
 # Built-in effects go here
 
 # Common effects
-include( dashboard/CMakeLists.txt )
-include( desktopgrid/CMakeLists.txt )
-include( diminactive/CMakeLists.txt )
+add_subdirectory( dashboard )
+add_subdirectory( desktopgrid )
+add_subdirectory( diminactive )
 include( dimscreen/CMakeLists.txt )
 include( fallapart/CMakeLists.txt )
 include( highlightwindow/CMakeLists.txt )
 include( kscreen/CMakeLists.txt )
-include( magiclamp/CMakeLists.txt )
+add_subdirectory( magiclamp )
 include( minimizeanimation/CMakeLists.txt )
-include( presentwindows/CMakeLists.txt )
-include( resize/CMakeLists.txt )
+add_subdirectory( presentwindows )
+add_subdirectory( resize )
 include( screenedge/CMakeLists.txt )
-include( showfps/CMakeLists.txt )
+add_subdirectory( showfps )
 include( showpaint/CMakeLists.txt )
 include( slide/CMakeLists.txt )
 include( slideback/CMakeLists.txt )
 include( slidingpopups/CMakeLists.txt )
-include( thumbnailaside/CMakeLists.txt )
-include( windowgeometry/CMakeLists.txt )
-include( zoom/CMakeLists.txt )
+add_subdirectory( thumbnailaside )
+add_subdirectory( windowgeometry )
+add_subdirectory( zoom )
 include( logout/CMakeLists.txt )
 
 # OpenGL-specific effects
-include( blur/CMakeLists.txt )
+add_subdirectory( blur )
 include( backgroundcontrast/CMakeLists.txt )
-include( coverswitch/CMakeLists.txt )
-include( cube/CMakeLists.txt )
-include( flipswitch/CMakeLists.txt )
-include( glide/CMakeLists.txt )
-include( invert/CMakeLists.txt )
-include( lookingglass/CMakeLists.txt )
-include( magnifier/CMakeLists.txt )
-include( mouseclick/CMakeLists.txt )
-include( mousemark/CMakeLists.txt )
+add_subdirectory( coverswitch )
+add_subdirectory( cube )
+add_subdirectory( flipswitch )
+add_subdirectory( glide )
+add_subdirectory( invert )
+add_subdirectory( lookingglass )
+add_subdirectory( magnifier )
+add_subdirectory( mouseclick )
+add_subdirectory( mousemark )
 include( screenshot/CMakeLists.txt )
 include( sheet/CMakeLists.txt )
 include( snaphelper/CMakeLists.txt )
 include( startupfeedback/CMakeLists.txt )
-include( trackmouse/CMakeLists.txt )
-include( wobblywindows/CMakeLists.txt )
+add_subdirectory( trackmouse )
+add_subdirectory( wobblywindows )
 
 ###############################################################################
 
 # Add the builtins plugin
 kwin4_add_effect( builtins ${kwin4_effect_builtins_sources} )
-kwin4_add_effect_config( builtins ${kwin4_effect_builtins_config_sources} )

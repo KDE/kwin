@@ -1,30 +1,31 @@
 #######################################
 # Effect
 
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-     blur/blur.cpp
-     blur/blurshader.cpp )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources blur/blurconfig.kcfgc)
-
 # .desktop files
 install( FILES
-         blur/blur.desktop
+         blur.desktop
          DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_blur_config_SRCS blur_config.cpp)
+qt5_wrap_ui(kwin_blur_config_SRCS blur_config.ui)
+kconfig_add_kcfg_files(kwin_blur_config_SRCS blurconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-     blur/blur_config.cpp
-     blur/blur_config.ui )
+add_library(kwin_blur_config MODULE ${kwin_blur_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources blur/blurconfig.kcfgc)
+target_link_libraries(kwin_blur_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-# .desktop files
-install( FILES
-         blur/blur_config.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_blur_config blur_config.desktop)
 
+install(
+    TARGETS
+        kwin_blur_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

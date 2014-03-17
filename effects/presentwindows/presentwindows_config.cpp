@@ -29,13 +29,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
 
+K_PLUGIN_FACTORY_WITH_JSON(PresentWindowsEffectConfigFactory,
+                           "presentwindows_config.json",
+                           registerPlugin<KWin::PresentWindowsEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 PresentWindowsEffectConfigForm::PresentWindowsEffectConfigForm(QWidget* parent) : QWidget(parent)
 {
@@ -105,4 +108,4 @@ void PresentWindowsEffectConfig::defaults()
 
 } // namespace
 
-#include "moc_presentwindows_config.cpp"
+#include "presentwindows_config.moc"

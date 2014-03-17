@@ -1,38 +1,41 @@
 #######################################
 # Effect
 
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    lookingglass/lookingglass.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources lookingglass/lookingglassconfig.kcfgc)
-
 # .desktop files
 install( FILES
-    lookingglass/lookingglass.desktop
+    lookingglass.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 # Data files
 install( FILES
-    lookingglass/data/1.10/lookingglass.frag
+    data/1.10/lookingglass.frag
     DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
 install( FILES
-    lookingglass/data/1.40/lookingglass.frag
+    data/1.40/lookingglass.frag
     DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.40 )
 
 #######################################
 # Config
+set(kwin_lookingglass_config_SRCS lookingglass_config.cpp)
+qt5_wrap_ui(kwin_lookingglass_config_SRCS lookingglass_config.ui)
+kconfig_add_kcfg_files(kwin_lookingglass_config_SRCS lookingglassconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    lookingglass/lookingglass_config.cpp
-    lookingglass/lookingglass_config.ui
-    )
+add_library(kwin_lookingglass_config MODULE ${kwin_lookingglass_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources lookingglass/lookingglassconfig.kcfgc)
+target_link_libraries(kwin_lookingglass_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::GlobalAccel
+    KF5::I18n
+    KF5::Service
+    KF5::XmlGui
+)
 
-# .desktop files
-install( FILES
-    lookingglass/lookingglass_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_lookingglass_config lookingglass_config.desktop)
+
+install(
+    TARGETS
+        kwin_lookingglass_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

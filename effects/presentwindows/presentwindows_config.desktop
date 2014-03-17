@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_presentwindows_config
 X-KDE-ParentComponents=kwin4_effect_presentwindows
-X-KDE-PluginKeyword=presentwindows
 
 Name=Present Windows
 Name[af]=Wys vensters

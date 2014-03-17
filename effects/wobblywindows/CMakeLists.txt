@@ -1,30 +1,29 @@
 #######################################
 # Effect
-
-# Source files
-set( kwin4_effect_builtins_sources ${kwin4_effect_builtins_sources}
-    wobblywindows/wobblywindows.cpp
-    )
-
-kconfig_add_kcfg_files(kwin4_effect_builtins_sources wobblywindows/wobblywindowsconfig.kcfgc)
-
-# .desktop files
 install( FILES
-    wobblywindows/wobblywindows.desktop
+    wobblywindows.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
 
 #######################################
 # Config
+set(kwin_wobblywindows_config_SRCS wobblywindows_config.cpp)
+qt5_wrap_ui(kwin_wobblywindows_config_SRCS wobblywindows_config.ui)
+kconfig_add_kcfg_files(kwin_wobblywindows_config_SRCS wobblywindowsconfig.kcfgc)
 
-# Source files
-set( kwin4_effect_builtins_config_sources ${kwin4_effect_builtins_config_sources}
-    wobblywindows/wobblywindows_config.cpp
-    wobblywindows/wobblywindows_config.ui
-    )
+add_library(kwin_wobblywindows_config MODULE ${kwin_wobblywindows_config_SRCS})
 
-kconfig_add_kcfg_files(kwin4_effect_builtins_config_sources wobblywindows/wobblywindowsconfig.kcfgc)
+target_link_libraries(kwin_wobblywindows_config
+    kwineffects
+    KF5::ConfigWidgets
+    KF5::I18n
+    KF5::Service
+)
 
-# .desktop files
-install( FILES
-    wobblywindows/wobblywindows_config.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
+kservice_desktop_to_json(kwin_wobblywindows_config wobblywindows_config.desktop)
+
+install(
+    TARGETS
+        kwin_wobblywindows_config
+    DESTINATION
+        ${PLUGIN_INSTALL_DIR}/kwin/effects/configs
+)

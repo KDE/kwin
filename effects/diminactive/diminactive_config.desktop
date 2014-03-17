@@ -2,9 +2,8 @@
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
-X-KDE-Library=kcm_kwin4_effect_builtins
+X-KDE-Library=kwin_diminactive_config
 X-KDE-ParentComponents=kwin4_effect_diminactive
-X-KDE-PluginKeyword=diminactive
 
 Name=Dim Inactive
 Name[af]=Verdof wanneer onaktief

@@ -29,10 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutData>
 #include <kconfiggroup.h>
 
+K_PLUGIN_FACTORY_WITH_JSON(WobblyWindowsEffectConfigFactory,
+                           "wobblywindows_config.json",
+                           registerPlugin<KWin::WobblyWindowsEffectConfig>();)
+
 namespace KWin
 {
-
-KWIN_EFFECT_CONFIG_FACTORY
 
 //-----------------------------------------------------------------------------
 // WARNING: This is (kinda) copied from wobblywindows.cpp
@@ -110,4 +112,4 @@ void WobblyWindowsEffectConfig::wobblinessChanged()
 
 } // namespace
 
-#include "moc_wobblywindows_config.cpp"
+#include "wobblywindows_config.moc"
