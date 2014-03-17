@@ -481,7 +481,6 @@ void CubeEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 alpha = 0.3 + 0.4 * (1.0 - timeLine.currentValue());
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            ShaderManager *shaderManager = ShaderManager::instance();
             if (m_reflectionShader && m_reflectionShader->isValid()) {
                 // ensure blending is enabled - no attribute stack
                 ShaderBinder binder(m_reflectionShader);
