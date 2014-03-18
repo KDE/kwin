@@ -33,8 +33,8 @@
 #include <QGroupBox>
 
 #include <KConfig>
+#include <KConfigGroup>
 #include <KLocalizedString>
-#include <kdialog.h>
 
 #include <X11/X.h>
 #include <X11/Xlib.h>
