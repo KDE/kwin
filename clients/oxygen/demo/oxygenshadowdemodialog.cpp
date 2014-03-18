@@ -30,7 +30,6 @@
 #include <QDialogButtonBox>
 #include <QDBusConnection>
 
-#include <KPushButton>
 #include <KLocalizedString>
 
 namespace Oxygen

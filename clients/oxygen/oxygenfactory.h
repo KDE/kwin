@@ -34,7 +34,6 @@
 
 #include <QObject>
 #include <kdecorationfactory.h>
-#include <kdeversion.h>
 
 namespace Oxygen
 {

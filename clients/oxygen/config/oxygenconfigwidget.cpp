@@ -26,8 +26,6 @@
 #include "oxygenconfigwidget.h"
 #include "oxygenanimationconfigwidget.h"
 
-#include <kdeversion.h>
-
 #include <QGroupBox>
 #include <QIcon>
 #include <QLabel>

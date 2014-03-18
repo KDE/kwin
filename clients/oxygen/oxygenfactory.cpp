@@ -31,7 +31,6 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KWindowInfo>
-#include <KPluginFactory>
 
 KWIN_DECORATION(OxygenPluginFactory, "oxygenclient.json", Oxygen::Factory)
 

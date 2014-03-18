@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwineffects.h"
 #include "kwinglplatform.h"
 
-#include <KConfig>
-#include <KConfigGroup>
 
 #include <QDebug>
 #include <QPixmap>
