@@ -33,7 +33,6 @@ DEALINGS IN THE SOFTWARE.
 #include <QtGui/QIcon>
 #include <netwm_def.h>
 #include <QtGui/QMouseEvent>
-#include <KPluginFactory>
 
 #define KWIN_DECORATION_API_VERSION 1
 
