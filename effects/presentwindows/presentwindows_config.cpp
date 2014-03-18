@@ -22,14 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "presentwindows_config.h"
 // KConfigSkeleton
 #include "presentwindowsconfig.h"
+#include <kwineffects_interface.h>
 #include <QAction>
-#include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -97,7 +98,10 @@ void PresentWindowsEffectConfig::save()
 {
     KCModule::save();
     m_ui->shortcutEditor->save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("presentwindows"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("presentwindows"));
 }
 
 void PresentWindowsEffectConfig::defaults()

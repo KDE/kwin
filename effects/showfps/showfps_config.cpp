@@ -22,13 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KConfigSkeleton
 #include "showfpsconfig.h"
-
-#include "showfps.h"
-
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <KLocalizedString>
 #include <KAboutData>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(ShowFpsEffectConfigFactory,
                            "showfps_config.json",
@@ -56,7 +54,10 @@ ShowFpsEffectConfig::~ShowFpsEffectConfig()
 void ShowFpsEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("showfps"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_showfps"));
 }
 
 } // namespace

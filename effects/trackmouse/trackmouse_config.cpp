@@ -20,12 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include <QAction>
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 #include <QLabel>
@@ -98,7 +99,10 @@ void TrackMouseEffectConfig::save()
 {
     KCModule::save();
     m_actionCollection->writeSettings();
-    EffectsHandler::sendReloadMessage(QStringLiteral("trackmouse"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_trackmouse"));
 }
 
 void TrackMouseEffectConfig::defaults()

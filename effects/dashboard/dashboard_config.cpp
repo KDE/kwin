@@ -21,8 +21,9 @@
 // KConfigSkeleton
 #include "dashboardconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(DashboardEffectConfigFactory,
                            "dashboard_config.json",
@@ -49,7 +50,10 @@ void DashboardEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("dashboard"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_dashboard"));
 }
 
 } // namespace KWin

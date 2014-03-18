@@ -21,8 +21,9 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(BlurEffectConfigFactory,
                            "blur_config.json",
@@ -48,7 +49,10 @@ void BlurEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("blur"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_blur"));
 }
 
 } // namespace KWin

@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cube_config.h"
 // KConfigSkeleton
 #include "cubeconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <kcolorscheme.h>
@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 #include <QColor>
@@ -90,7 +91,10 @@ void CubeEffectConfig::save()
 {
     KCModule::save();
     m_ui->editor->save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("cube"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_cube"));
 }
 
 void CubeEffectConfig::capsSelectionChanged()

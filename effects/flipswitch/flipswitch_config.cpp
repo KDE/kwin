@@ -20,15 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "flipswitch_config.h"
 // KConfigSkeleton
 #include "flipswitchconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -81,7 +82,10 @@ void FlipSwitchEffectConfig::save()
     KCModule::save();
     m_ui->shortcutEditor->save();
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("flipswitch"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_flipswitch"));
 }
 
 

@@ -22,11 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "diminactiveconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -60,7 +61,10 @@ DimInactiveEffectConfig::DimInactiveEffectConfig(QWidget* parent, const QVariant
 void DimInactiveEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("diminactive"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_diminactive"));
 }
 
 } // namespace

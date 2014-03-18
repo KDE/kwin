@@ -8,12 +8,13 @@ install( FILES
 # Config
 set(kwin_dashboard_config_SRCS dashboard_config.cpp)
 qt5_wrap_ui(kwin_dashboard_config_SRCS dashboard_config.ui)
+qt5_add_dbus_interface(kwin_dashboard_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_dashboard_config_SRCS dashboardconfig.kcfgc)
 
 add_library(kwin_dashboard_config MODULE ${kwin_dashboard_config_SRCS})
 
 target_link_libraries(kwin_dashboard_config
-    kwineffects
+    Qt5::DBus
     KF5::ConfigWidgets
     KF5::I18n
     KF5::Service

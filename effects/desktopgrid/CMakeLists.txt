@@ -12,6 +12,7 @@ install( FILES
 # Config
 set(kwin_desktopgrid_config_SRCS desktopgrid_config.cpp)
 qt5_wrap_ui(kwin_desktopgrid_config_SRCS desktopgrid_config.ui)
+qt5_add_dbus_interface(kwin_desktopgrid_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_desktopgrid_config_SRCS desktopgridconfig.kcfgc)
 
 add_library(kwin_desktopgrid_config MODULE ${kwin_desktopgrid_config_SRCS})

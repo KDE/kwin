@@ -21,14 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "windowgeometry_config.h"
 // KConfigSkeleton
 #include "windowgeometryconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 #include <KActionCollection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(WindowGeometryEffectConfigFactory,
                            "windowgeometry_config.json",
@@ -75,7 +76,10 @@ void WindowGeometryConfig::save()
 {
     KCModule::save();
     myUi->shortcuts->save();   // undo() will restore to this state from now on
-    EffectsHandler::sendReloadMessage(QStringLiteral("windowgeometry"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_windowgeometry"));
 }
 
 void WindowGeometryConfig::defaults()

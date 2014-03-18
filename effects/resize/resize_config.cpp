@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "resize_config.h"
 // KConfigSkeleton
 #include "resizeconfig.h"
-
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <kconfiggroup.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -57,7 +57,10 @@ ResizeEffectConfig::ResizeEffectConfig(QWidget* parent, const QVariantList& args
 void ResizeEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("resize"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_resize"));
 }
 
 } // namespace

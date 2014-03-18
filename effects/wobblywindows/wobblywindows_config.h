@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 
 #include "ui_wobblywindows_config.h"
-#include "wobblywindows.h"
 
 
 namespace KWin

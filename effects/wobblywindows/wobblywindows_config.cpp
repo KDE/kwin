@@ -22,12 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wobblywindows_config.h"
 // KConfigSkeleton
 #include "wobblywindowsconfig.h"
-
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <KLocalizedString>
 #include <KAboutData>
 #include <kconfiggroup.h>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(WobblyWindowsEffectConfigFactory,
                            "wobblywindows_config.json",
@@ -98,7 +98,10 @@ void WobblyWindowsEffectConfig::save()
 {
     KCModule::save();
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("wobblywindows"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_wobblywindows"));
 }
 
 void WobblyWindowsEffectConfig::wobblinessChanged()

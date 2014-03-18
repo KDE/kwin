@@ -17,11 +17,11 @@ install( FILES
 #######################################
 # Config
 set(kwin_invert_config_SRCS invert_config.cpp)
+qt5_add_dbus_interface(kwin_invert_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 
 add_library(kwin_invert_config MODULE ${kwin_invert_config_SRCS})
 
 target_link_libraries(kwin_invert_config
-    kwineffects
     KF5::ConfigWidgets
     KF5::GlobalAccel
     KF5::I18n

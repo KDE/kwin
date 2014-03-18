@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #include "config-kwin.h"
 
-#include <QtDBus/QtDBus>
+#include <qmath.h>
 #include <QVariant>
 #include <QList>
 #include <QTimeLine>
@@ -627,16 +627,6 @@ CompositingType EffectsHandler::compositingType() const
 bool EffectsHandler::isOpenGLCompositing() const
 {
     return compositing_type & OpenGLCompositing;
-}
-
-void EffectsHandler::sendReloadMessage(const QString& effectname)
-{
-    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin"),
-                                                          QStringLiteral("/KWin"),
-                                                          QStringLiteral("org.kde.KWin"),
-                                                          QStringLiteral("reconfigureEffect"));
-    message << QString(QStringLiteral("kwin4_effect_") + effectname);
-    QDBusConnection::sessionBus().send(message);
 }
 
 KConfigGroup EffectsHandler::effectConfig(const QString& effectname)

@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kcmodule.h>
 
 #include "ui_presentwindows_config.h"
-#include "presentwindows.h"
 
 namespace KWin
 {

@@ -22,8 +22,9 @@
 // KConfigSkeleton
 #include "glideconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 K_PLUGIN_FACTORY_WITH_JSON(GlideEffectConfigFactory,
                            "glide_config.json",
@@ -47,7 +48,10 @@ GlideEffectConfig::~GlideEffectConfig()
 void GlideEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("glide"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_glide"));
 }
 } // namespace KWin
 #include "glide_config.moc"

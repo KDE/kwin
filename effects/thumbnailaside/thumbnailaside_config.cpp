@@ -21,15 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailaside_config.h"
 // KConfigSkeleton
 #include "thumbnailasideconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KPluginFactory>
 
 #include <QWidget>
 #include <QVBoxLayout>
@@ -85,7 +86,10 @@ ThumbnailAsideEffectConfig::~ThumbnailAsideEffectConfig()
 void ThumbnailAsideEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("thumbnailaside"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_thumbnailaside"));
 }
 
 } // namespace

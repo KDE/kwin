@@ -21,15 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "magnifier_config.h"
 // KConfigSkeleton
 #include "magnifierconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QDebug>
 #include <QWidget>
@@ -99,7 +100,10 @@ void MagnifierEffectConfig::save()
 
     m_ui->editor->save();   // undo() will restore to this state from now on
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("magnifier"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_magnifier"));
 }
 
 void MagnifierEffectConfig::defaults()

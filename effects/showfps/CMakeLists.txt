@@ -8,12 +8,13 @@ install( FILES
 # Config
 set(kwin_showfps_config_SRCS showfps_config.cpp)
 qt5_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)
+qt5_add_dbus_interface(kwin_showfps_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_showfps_config_SRCS showfpsconfig.kcfgc)
 
 add_library(kwin_showfps_config MODULE ${kwin_showfps_config_SRCS})
 
 target_link_libraries(kwin_showfps_config
-    kwineffects
+    Qt5::DBus
     KF5::Completion
     KF5::ConfigWidgets
     KF5::I18n

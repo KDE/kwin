@@ -21,8 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "coverswitchconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -53,7 +54,10 @@ CoverSwitchEffectConfig::CoverSwitchEffectConfig(QWidget* parent, const QVariant
 void CoverSwitchEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("coverswitch"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_coverswitch"));
 }
 
 } // namespace

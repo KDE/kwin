@@ -22,15 +22,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "desktopgrid_config.h"
 // KConfigSkeleton
 #include "desktopgridconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <kconfiggroup.h>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -106,7 +107,10 @@ void DesktopGridEffectConfig::save()
     conf.writeEntry("DesktopNameAlignment", DesktopGridConfig::desktopNameAlignment());
     conf.sync();
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("desktopgrid"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_desktopgrid"));
 }
 
 void DesktopGridEffectConfig::load()

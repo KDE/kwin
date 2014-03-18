@@ -19,15 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "invert_config.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KShortcutsEditor>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -86,7 +87,10 @@ void InvertEffectConfig::save()
     mShortcutEditor->save();    // undo() will restore to this state from now on
 
     emit changed(false);
-    EffectsHandler::sendReloadMessage(QStringLiteral("invert"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_invert"));
 }
 
 void InvertEffectConfig::defaults()

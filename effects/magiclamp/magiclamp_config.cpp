@@ -21,10 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KConfigSkeleton
 #include "magiclampconfig.h"
 
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <kconfiggroup.h>
 #include <KAboutData>
+#include <KPluginFactory>
 
 #include <QVBoxLayout>
 
@@ -57,7 +58,10 @@ MagicLampEffectConfig::MagicLampEffectConfig(QWidget* parent, const QVariantList
 void MagicLampEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("magiclamp"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_magiclamp"));
 }
 
 } // namespace

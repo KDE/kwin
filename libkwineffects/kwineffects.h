@@ -1024,12 +1024,6 @@ public:
     virtual void doneOpenGLContextCurrent() = 0;
 
     /**
-     * Sends message over DCOP to reload given effect.
-     * @param effectname effect's name without "kwin4_effect_" prefix.
-     * Can be called from effect's config module to apply config changes.
-     **/
-    static void sendReloadMessage(const QString& effectname);
-    /**
      * @return @ref KConfigGroup which holds given effect's config options
      **/
     static KConfigGroup effectConfig(const QString& effectname);

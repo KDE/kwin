@@ -22,14 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KConfigSkeleton
 #include "mousemarkconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <KLocalizedString>
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
+#include <KPluginFactory>
 
 #include <QDebug>
 #include <QWidget>
@@ -93,7 +94,10 @@ void MouseMarkEffectConfig::save()
     m_actionCollection->writeSettings();
     m_ui->editor->save();   // undo() will restore to this state from now on
 
-    EffectsHandler::sendReloadMessage(QStringLiteral("mousemark"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_mousemark"));
 }
 
 } // namespace

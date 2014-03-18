@@ -21,14 +21,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mouseclick_config.h"
 // KConfigSkeleton
 #include "mouseclickconfig.h"
+#include <kwineffects_interface.h>
 
 #include <QAction>
-#include <kwineffects.h>
 
 #include <KActionCollection>
 #include <KAboutData>
 #include <KGlobalAccel>
 #include <KLocalizedString>
+#include <KPluginFactory>
 
 #include <QWidget>
 
@@ -79,7 +80,10 @@ void MouseClickEffectConfig::save()
 {
     KCModule::save();
     m_ui->editor->save();   // undo() will restore to this state from now on
-    EffectsHandler::sendReloadMessage(QStringLiteral("mouseclick"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_mouseclick"));
 }
 
 } // namespace

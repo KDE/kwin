@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cubeslide_config.h"
 // KConfigSkeleton
 #include "cubeslideconfig.h"
-
-#include <kwineffects.h>
+#include <kwineffects_interface.h>
 
 #include <kconfiggroup.h>
 #include <KAboutData>
+#include <KPluginFactory>
 #include <QVBoxLayout>
 
 K_PLUGIN_FACTORY_WITH_JSON(CubeSlideEffectConfigFactory,
@@ -56,7 +56,10 @@ CubeSlideEffectConfig::CubeSlideEffectConfig(QWidget* parent, const QVariantList
 void CubeSlideEffectConfig::save()
 {
     KCModule::save();
-    EffectsHandler::sendReloadMessage(QStringLiteral("cubeslide"));
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(QStringLiteral("kwin4_effect_cubeslide"));
 }
 
 } // namespace
