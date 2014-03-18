@@ -7,4 +7,4 @@ endif()
 # next target
 set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
 add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
-target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras ${XCB_XCB_LIBRARY})
+target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras KF5::WindowSystem ${XCB_XCB_LIBRARY})

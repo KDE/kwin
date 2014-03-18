@@ -75,6 +75,7 @@ target_link_libraries( testXcbWrapper
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
+                       KF5::WindowSystem
                        XCB::XCB
 )
 add_test(kwin-testXcbWrapper testXcbWrapper)
@@ -92,6 +93,7 @@ target_link_libraries( testXcbWindow
                        Qt5::Test
                        Qt5::X11Extras
                        Qt5::Widgets
+                       KF5::WindowSystem
                        XCB::XCB
 )
 add_test(kwin-testXcbWindow testXcbWindow)
