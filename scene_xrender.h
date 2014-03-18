@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 #include "shadow.h"
-#include <config-workspace.h>
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 

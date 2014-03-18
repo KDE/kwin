@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"
 // for Wayland
-#include "config-workspace.h"
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #endif

@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
-#include <config-workspace.h>
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
