@@ -6,7 +6,7 @@ set(
     monitor.cpp
     screenpreviewwidget.cpp
     )
-kde4_add_ui_files( kcm_kwinscreenedges_PART_SRCS main.ui )
+qt5_wrap_ui( kcm_kwinscreenedges_PART_SRCS main.ui )
 add_library( kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS} )
 target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
     Qt5::DBus

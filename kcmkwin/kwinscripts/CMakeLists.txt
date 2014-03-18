@@ -6,7 +6,7 @@ set(kcm_SRCS
     module.cpp
 )
 
-kde4_add_ui_files(kcm_SRCS module.ui)
+qt5_wrap_ui(kcm_SRCS module.ui)
 
 add_library(kcm_kwin_scripts MODULE ${kcm_SRCS})
 

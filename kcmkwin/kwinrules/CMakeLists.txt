@@ -5,7 +5,7 @@ set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h ../../cursor.h)
 qt4_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 
-kde4_add_ui_files(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
+qt5_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
 
 set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 

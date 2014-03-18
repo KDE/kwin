@@ -16,7 +16,7 @@ set(kcm_kwindecoration_PART_SRCS
     ${AURORAE_SOURCE_DIR}/themeconfig.cpp
 )
 
-kde4_add_ui_files(kcm_kwindecoration_PART_SRCS
+qt5_wrap_ui(kcm_kwindecoration_PART_SRCS
     auroraeconfig.ui
     buttons.ui
     config.ui

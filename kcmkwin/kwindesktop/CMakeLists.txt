@@ -2,7 +2,7 @@
 ########### next target ###############
 
 set(kcm_kwindesktop_PART_SRCS main.cpp desktopnameswidget.cpp)
-kde4_add_ui_files(kcm_kwindesktop_PART_SRCS main.ui)
+qt5_wrap_ui(kcm_kwindesktop_PART_SRCS main.ui)
 
 add_library(kcm_kwindesktop MODULE ${kcm_kwindesktop_PART_SRCS})
 

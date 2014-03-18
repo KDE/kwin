@@ -28,6 +28,7 @@
 #include <QtDBus/QDBusPendingCall>
 
 #include <KAboutData>
+#include <KLocalizedString>
 #include <KPluginFactory>
 #include <KMessageBox>
 #include <KMessageWidget>

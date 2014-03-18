@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KActionCollection>
 #include <KCModuleProxy>
 #include <KGlobalAccel>
+#include <KLocalizedString>
 #include <KPluginInfo>
 #include <KPluginFactory>
 #include <KConfigGroup>

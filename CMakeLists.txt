@@ -227,7 +227,7 @@ qt5_add_dbus_interface( kwin_KDEINIT_SRCS
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-kde4_add_ui_files(kwin_KDEINIT_SRCS
+qt5_wrap_ui(kwin_KDEINIT_SRCS
     shortcutdialog.ui
 )
 
