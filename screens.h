@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglobals.h>
 // KDE includes
 #include <KConfig>
+#include <KSharedConfig>
 // Qt includes
 #include <QObject>
 #include <QRect>

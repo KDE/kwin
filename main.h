@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAIN_H
 
 #include <KSelectionWatcher>
+#include <KSelectionOwner>
 // Qt
 #include <QApplication>
 #include <QAbstractNativeEventFilter>

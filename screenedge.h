@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // KDE includes
 #include <KConfig>
+#include <KSharedConfig>
 // Qt
 #include <QObject>
 #include <QVector>

@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KCrash>
 #include <KLocalizedString>
+#include <KSharedConfig>
 // Qt
 #include <qplatformdefs.h>
 #include <QDebug>

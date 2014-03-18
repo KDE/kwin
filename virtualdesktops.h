@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 // KDE includes
 #include <KConfig>
+#include <KSharedConfig>
 
 class KLocalizedString;
 class NETRootInfo;

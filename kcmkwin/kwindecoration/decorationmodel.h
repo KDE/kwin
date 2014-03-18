@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractListModel>
 #include <QPixmap>
 #include <KConfig>
+#include <KSharedConfig>
 #include <kdecoration.h>
 
 class QWidget;
