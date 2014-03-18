@@ -221,10 +221,12 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::D
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml composite.h KWin::Compositor )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin::EffectsHandlerImpl )
 
+# TODO: we need a better way to find the dbus interfaces provided by ksmserver
+set(KSMSERVER_SOURCE_DIR ${KWIN_SOURCE_DIR}/../ksmserver/)
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS
-  ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/org.kde.KSMServerInterface.xml ksmserver_interface)
+  ${KSMSERVER_SOURCE_DIR}/org.kde.KSMServerInterface.xml ksmserver_interface)
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/ksmserver/screenlocker/dbus/org.freedesktop.ScreenSaver.xml screenlocker_interface)
+    ${KSMSERVER_SOURCE_DIR}/screenlocker/dbus/org.freedesktop.ScreenSaver.xml screenlocker_interface)
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
