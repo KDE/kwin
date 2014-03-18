@@ -9,7 +9,7 @@ set(kcm_kwintabbox_PART_SRCS
     ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/tabboxconfig.cpp
 )
 
-kde4_add_ui_files( kcm_kwintabbox_PART_SRCS main.ui )
+qt5_wrap_ui( kcm_kwintabbox_PART_SRCS main.ui )
 
 add_library(kcm_kwintabbox MODULE ${kcm_kwintabbox_PART_SRCS})
 
