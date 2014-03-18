@@ -51,15 +51,6 @@ LogoutEffect::LogoutEffect()
     logoutAtom = XInternAtom(display(), "_KDE_LOGGING_OUT", False);
     effects->registerPropertyType(logoutAtom, true);
 
-    // Block KSMServer's effect
-    char net_wm_cm_name[ 100 ];
-    sprintf(net_wm_cm_name, "_NET_WM_CM_S%d", DefaultScreen(display()));
-    Atom net_wm_cm = XInternAtom(display(), net_wm_cm_name, False);
-    Window sel = XGetSelectionOwner(display(), net_wm_cm);
-    Atom hack = XInternAtom(display(), "_KWIN_LOGOUT_EFFECT", False);
-    XChangeProperty(display(), sel, hack, hack, 8, PropModeReplace, (unsigned char*)&hack, 1);
-    // the atom is not removed when effect is destroyed, this is temporary anyway
-
     blurTexture = NULL;
     blurTarget = NULL;
     reconfigure(ReconfigureAll);
