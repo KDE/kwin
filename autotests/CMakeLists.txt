@@ -3,7 +3,7 @@
 ########################################################
 set( testScreenPaintData_SRCS test_screen_paint_data.cpp )
 add_executable(testScreenPaintData ${testScreenPaintData_SRCS})
-target_link_libraries( testScreenPaintData kwineffects Qt5::Test Qt5::Widgets)
+target_link_libraries( testScreenPaintData kwineffects Qt5::Test Qt5::Widgets KF5::WindowSystem)
 add_test(kwin-testScreenPaintData testScreenPaintData)
 ecm_mark_as_test(testScreenPaintData)
 
@@ -55,6 +55,7 @@ target_link_libraries( testClientMachine
                        Qt5::Widgets
                        KF5::ConfigCore
                        KF5::WindowSystem
+                       KF5::Service
                        XCB::XCB
                        XCB::XFIXES
                        ${X11_X11_LIB} # to make jenkins happy

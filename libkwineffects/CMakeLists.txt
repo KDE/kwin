@@ -29,6 +29,7 @@ set(kwineffects_XCB_LIBS
 add_library(kwineffects SHARED ${kwin_EFFECTSLIB_SRCS})
 generate_export_header(kwineffects EXPORT_FILE_NAME kwineffects_export.h)
 target_link_libraries(kwineffects
+PUBLIC
     ${kwineffects_QT_LIBS}
     ${kwineffects_KDE_LIBS}
     ${kwineffects_XCB_LIBS}
