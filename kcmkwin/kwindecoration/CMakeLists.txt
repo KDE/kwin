@@ -29,8 +29,8 @@ target_link_libraries(kcm_kwindecoration
     Qt5::DBus
     Qt5::Quick
     Qt5::UiTools
-    KF5::KCMUtils
     KF5::Completion
+    KF5::ConfigWidgets
     KF5::I18n
     KF5::NewStuff
 )

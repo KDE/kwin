@@ -20,9 +20,10 @@ set(kwin_kcm_rules_XCB_LIBS
 set(kcm_libs
     Qt5::Concurrent
     Qt5::X11Extras
-    KF5::KCMUtils
     KF5::Completion
+    KF5::ConfigWidgets
     KF5::I18n
+    KF5::Service
     KF5::WindowSystem
     KF5::XmlGui
     ${X11_LIBRARIES}
