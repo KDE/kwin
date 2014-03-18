@@ -21,8 +21,6 @@
  *
  */
 
-#include <config-workspace.h>
-
 #include <QApplication>
 #include <QCheckBox>
 #include <QRadioButton>

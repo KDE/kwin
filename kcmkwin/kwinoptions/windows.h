@@ -24,7 +24,6 @@
 
 #include <QWidget>
 #include <kcmodule.h>
-#include <config-workspace.h>
 
 #include "ui_advanced.h"
 #include "ui_focus.h"
