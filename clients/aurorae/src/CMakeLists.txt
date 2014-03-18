@@ -3,7 +3,6 @@ include_directories(
         ./lib
         ${CMAKE_CURRENT_BINARY_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}
-	${KDE4_INCLUDES}
 )
 
 set(kwin3_aurorae_PART_SRCS
@@ -12,7 +11,7 @@ set(kwin3_aurorae_PART_SRCS
     lib/themeconfig.cpp
 )
 
-kde4_add_plugin(kwin3_aurorae ${kwin3_aurorae_PART_SRCS})
+add_library(kwin3_aurorae MODULE ${kwin3_aurorae_PART_SRCS})
 
 target_link_libraries(kwin3_aurorae
     KF5::ConfigCore
