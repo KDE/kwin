@@ -11,3 +11,9 @@
 #cmakedefine01 HAVE_WAYLAND
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_XKB
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#cmakedefine HAVE_UNISTD_H 1
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#cmakedefine HAVE_MALLOC_H 1

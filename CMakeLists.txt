@@ -66,6 +66,9 @@ if(${HAVE_WAYLAND})
 else()
     set(HAVE_XKB FALSE)
 endif()
+
+check_include_files(unistd.h HAVE_UNISTD_H)
+check_include_files(malloc.h HAVE_MALLOC_H)
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
 
 
