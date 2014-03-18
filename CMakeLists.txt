@@ -280,6 +280,7 @@ set(kwin_XCB_LIBS
     XCB::RANDR
     XCB::KEYSYMS
     XCB::SHM
+    XCB::XTEST
 )
 
 set(kwin_WAYLAND_LIBS
