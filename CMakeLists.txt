@@ -1,3 +1,133 @@
+project(KWIN)
+
+cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+set(QT_MIN_VERSION "5.2.0")
+
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+# TODO: this includes the cmake modules from kde-workspace. Need to move those to KWin
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/modules ${CMAKE_MODULE_PATH} )
+
+find_package(ECM 0.0.11 REQUIRED NO_MODULE)
+
+include(FeatureSummary)
+include(WriteBasicConfigVersionFile)
+
+# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
+
+include(ECMInstallIcons)
+
+find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
+    Concurrent
+    Core
+    DBus
+    Quick
+    Script
+    Test
+    UiTools
+    Widgets
+    X11Extras
+)
+add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
+
+
+# required frameworks by Core
+find_package(KF5 CONFIG REQUIRED COMPONENTS
+    Config
+    ConfigWidgets
+    CoreAddons
+    Crash
+    GlobalAccel
+    I18n
+    Notifications
+    Service
+    Plasma
+    WidgetsAddons
+    WindowSystem
+)
+# required frameworks by config modules
+find_package(KF5 CONFIG REQUIRED COMPONENTS
+    Completion
+    KCMUtils
+    KIO
+    NewStuff
+    XmlGui
+)
+
+# optional frameworks
+find_package(KF5 CONFIG COMPONENTS Activities)
+
+# TODO: remove once the build system is completely cleaned
+find_package(KF5KDE4Support REQUIRED NO_MODULE)
+
+if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
+    find_package(OpenGL)
+    set_package_properties(OpenGL PROPERTIES DESCRIPTION "The OpenGL libraries"
+                        URL "http://www.opengl.org"
+                        TYPE REQUIRED
+                        )
+else()
+    find_package(OpenGLES)
+    set_package_properties(OpenGLES PROPERTIES DESCRIPTION "The OpenGLES libraries"
+                        URL "http://www.khronos.org/opengles"
+                        TYPE REQUIRED
+                        )
+endif()
+
+find_package(EGL)
+set_package_properties(EGL PROPERTIES
+                       TYPE REQUIRED
+                       PURPOSE "Required to build KWin with EGL support"
+                      )
+
+find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
+set_package_properties(Wayland PROPERTIES
+                       TYPE OPTIONAL
+                       PURPOSE "Required for building KWin with Wayland support"
+                      )
+add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
+add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
+
+find_package(XKB)
+set_package_properties(XKB PROPERTIES
+                       TYPE OPTIONAL
+                       PURPOSE "Required for building KWin with Wayland support"
+                      )
+
+find_package(X11)
+set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
+                        URL "http://www.x.org"
+                        TYPE REQUIRED
+                    )
+set(HAVE_X11 ${X11_FOUND})
+
+# All the required XCB components
+find_package(XCB REQUIRED COMPONENTS
+    XCB
+    XFIXES
+    DAMAGE
+    COMPOSITE
+    SHAPE
+    SYNC
+    RENDER
+    RANDR
+    KEYSYMS
+    IMAGE
+    SHM
+    XTEST
+)
+set_package_properties(XCB PROPERTIES TYPE REQUIRED)
+
+# and the optional XCB dependencies
+find_package(XCB COMPONENTS ICCCM)
+add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
 ########### configure tests ###############
 include(CMakeDependentOption)
 
@@ -18,6 +148,10 @@ set(KWIN_VERSION_MINOR 90)
 set(KWIN_VERSION_PATCH 1)
 set(KWIN_VERSION ${KWIN_VERSION_MAJOR}.${KWIN_VERSION_MINOR}.${KWIN_VERSION_PATCH} )
 set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(GENERIC_LIB_SOVERSION ${KWIN_VERSION_MAJOR})
+
+set(GENERIC_LIB_VERSION "${KWIN_VERSION_MAJOR}.${KWIN_VERSION_MINOR}.${KWIN_VERSION_PATCH}")
 
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
@@ -71,6 +205,7 @@ else()
     set(HAVE_XKB FALSE)
 endif()
 
+include(CheckIncludeFiles)
 check_include_files(unistd.h HAVE_UNISTD_H)
 check_include_files(malloc.h HAVE_MALLOC_H)
 configure_file(config-kwin.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kwin.h )
