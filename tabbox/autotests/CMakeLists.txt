@@ -42,8 +42,10 @@ set( testTabBoxConfig_SRCS
     test_tabbox_config.cpp
 )
 
-kde4_add_unit_test( testTabBoxConfig TESTNAME kwin-testTabBoxConfig ${testTabBoxConfig_SRCS} )
+add_executable( testTabBoxConfig ${testTabBoxConfig_SRCS} )
 target_link_libraries( testTabBoxConfig Qt5::Core Qt5::Test )
+add_test(kwin-testTabBoxConfig testTabBoxConfig)
+ecm_mark_as_test(testTabBoxConfig)
 
 
 ########################################################
@@ -54,5 +56,7 @@ set( testDesktopChain_SRCS
     test_desktopchain.cpp
 )
 
-kde4_add_unit_test( testDesktopChain TESTNAME kwin-testDesktopChain ${testDesktopChain_SRCS} )
+add_executable( testDesktopChain ${testDesktopChain_SRCS} )
 target_link_libraries( testDesktopChain Qt5::Core Qt5::Test )
+add_test(kwin-testDesktopChain testDesktopChain)
+ecm_mark_as_test(testDesktopChain)

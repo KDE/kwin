@@ -2,17 +2,19 @@
 # Test ScreenPaintData
 ########################################################
 set( testScreenPaintData_SRCS test_screen_paint_data.cpp )
-kde4_add_unit_test( testScreenPaintData TESTNAME kwin-TestScreenPaintData ${testScreenPaintData_SRCS} )
-
+add_executable(testScreenPaintData ${testScreenPaintData_SRCS})
 target_link_libraries( testScreenPaintData kwineffects Qt5::Test Qt5::Widgets)
+add_test(kwin-testScreenPaintData testScreenPaintData)
+ecm_mark_as_test(testScreenPaintData)
 
 ########################################################
 # Test WindowPaintData
 ########################################################
 set( testWindowPaintData_SRCS test_window_paint_data.cpp )
-kde4_add_unit_test( testWindowPaintData TESTNAME kwin-TestWindowPaintData ${testWindowPaintData_SRCS} )
-
+add_executable(testWindowPaintData ${testWindowPaintData_SRCS})
 target_link_libraries( testWindowPaintData kwineffects Qt5::Widgets Qt5::Test )
+add_test(kwin-testWindowPaintData testWindowPaintData)
+ecm_mark_as_test(testWindowPaintData)
 
 ########################################################
 # Test VirtualDesktopManager
@@ -21,7 +23,7 @@ set( testVirtualDesktops_SRCS
      test_virtual_desktops.cpp
      ../virtualdesktops.cpp
 )
-kde4_add_unit_test( testVirtualDesktops TESTNAME kwin-TestVirtualDesktops ${testVirtualDesktops_SRCS} )
+add_executable(testVirtualDesktops ${testVirtualDesktops_SRCS})
 
 target_link_libraries( testVirtualDesktops
                        Qt5::Test
@@ -31,6 +33,8 @@ target_link_libraries( testVirtualDesktops
                        KF5::ConfigCore
                        KF5::WindowSystem
 )
+add_test(kwin-testVirtualDesktops testVirtualDesktops)
+ecm_mark_as_test(testVirtualDesktops)
 
 ########################################################
 # Test ClientMachine
@@ -42,7 +46,7 @@ set( testClientMachine_SRCS
      ../atoms.cpp # needed by utils.cpp
      ../cursor.cpp # needed by utils.cpp
 )
-kde4_add_unit_test( testClientMachine TESTNAME kwin-TestClientMachine ${testClientMachine_SRCS} )
+add_executable( testClientMachine ${testClientMachine_SRCS} )
 
 target_link_libraries( testClientMachine
                        Qt5::Concurrent
@@ -56,6 +60,8 @@ target_link_libraries( testClientMachine
                        ${X11_X11_LIB} # to make jenkins happy
                        ${X11_Xcursor_LIB}
 )
+add_test(kwin-testClientMachine testClientMachine)
+ecm_mark_as_test(testClientMachine)
 
 ########################################################
 # Test XcbWrapper
@@ -63,7 +69,7 @@ target_link_libraries( testClientMachine
 set( testXcbWrapper_SRCS
      test_xcb_wrapper.cpp
 )
-kde4_add_unit_test( testXcbWrapper TESTNAME kwin-TestXcbWrapper ${testXcbWrapper_SRCS} )
+add_executable( testXcbWrapper ${testXcbWrapper_SRCS} )
 
 target_link_libraries( testXcbWrapper
                        Qt5::Test
@@ -71,6 +77,8 @@ target_link_libraries( testXcbWrapper
                        Qt5::Widgets
                        XCB::XCB
 )
+add_test(kwin-testXcbWrapper testXcbWrapper)
+ecm_mark_as_test(testXcbWrapper)
 
 ########################################################
 # Test XcbWindow
@@ -78,7 +86,7 @@ target_link_libraries( testXcbWrapper
 set( testXcbWindow_SRCS
      test_xcb_window.cpp
 )
-kde4_add_unit_test( testXcbWindow TESTNAME kwin-TestXcbWindow ${testXcbWindow_SRCS} )
+add_executable( testXcbWindow ${testXcbWindow_SRCS} )
 
 target_link_libraries( testXcbWindow
                        Qt5::Test
@@ -86,3 +94,5 @@ target_link_libraries( testXcbWindow
                        Qt5::Widgets
                        XCB::XCB
 )
+add_test(kwin-testXcbWindow testXcbWindow)
+ecm_mark_as_test(testXcbWindow)
