@@ -20,8 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "compositingadaptor.h"
 
-#include <config-X11.h>
-
 #include "utils.h"
 #include <QTextStream>
 #include "workspace.h"
