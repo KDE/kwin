@@ -27,9 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KAboutData>
 #include <KAboutApplicationDialog>
 #include <KActionCollection>
-#include <KAction>
 #include <KCModuleProxy>
-#include <KDialog>
 #include <KGlobalAccel>
 #include <KPluginInfo>
 #include <KPluginFactory>

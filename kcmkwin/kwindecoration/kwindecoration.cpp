@@ -46,7 +46,6 @@
 // KDE
 #include <KAboutData>
 #include <kconfigloader.h>
-#include <KDialog>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KNewStuff3/KNS3/DownloadDialog>
@@ -321,7 +320,7 @@ QString KWinDecorationModule::quickHelp() const
 void KWinDecorationModule::slotConfigureButtons()
 {
     QPointer< KWinDecorationButtonsConfigDialog > configDialog = new KWinDecorationButtonsConfigDialog(m_decorationButtons, m_showTooltips, this);
-    if (configDialog->exec() == KDialog::Accepted) {
+    if (configDialog->exec() == QDialog::Accepted) {
         m_decorationButtons->setCustomPositions(configDialog->customPositions());
         m_showTooltips = configDialog->showTooltips();
         m_decorationButtons->setLeftButtons(configDialog->buttonsLeft());
@@ -336,7 +335,7 @@ void KWinDecorationModule::slotConfigureButtons()
 void KWinDecorationModule::slotGHNSClicked()
 {
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog("aurorae.knsrc", this);
-    if (downloadDialog->exec() == KDialog::Accepted) {
+    if (downloadDialog->exec() == QDialog::Accepted) {
         if (!downloadDialog->changedEntries().isEmpty()) {
             const QModelIndex index = m_proxyModel->mapToSource(m_proxyModel->index(m_listView->rootObject()->property("currentIndex").toInt(), 0));
             const QString libraryName = m_model->data(index, DecorationModel::LibraryNameRole).toString();
