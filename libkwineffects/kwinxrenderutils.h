@@ -24,9 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglobals.h>
 #include <kwineffects_export.h>
-// KDE
-#include <KSharedPtr>
 // Qt
+#include <QExplicitlySharedDataPointer>
 #include <QRegion>
 #include <QVector>
 // XCB
@@ -74,7 +73,7 @@ public:
     operator xcb_render_picture_t();
 private:
     void fromImage(const QImage &img);
-    KSharedPtr< XRenderPictureData > d;
+    QExplicitlySharedDataPointer< XRenderPictureData > d;
 };
 
 class KWINEFFECTS_EXPORT XFixesRegion

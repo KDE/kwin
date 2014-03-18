@@ -35,7 +35,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginFactory>
 #include <KPluginInfo>
 #include <KPluginLoader>
-#include <KTabWidget>
 #include <KTitleWidget>
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>

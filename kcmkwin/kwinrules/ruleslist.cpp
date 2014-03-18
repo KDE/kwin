@@ -18,8 +18,6 @@
 
 #include "ruleslist.h"
 
-#include <klistwidget.h>
-#include <kpushbutton.h>
 #include <assert.h>
 #include <QDebug>
 #include <kconfig.h>

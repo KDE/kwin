@@ -19,11 +19,9 @@
 #include "ruleswidget.h"
 
 #include <klineedit.h>
-#include <krestrictedline.h>
 #include <kcombobox.h>
 #include <kcolorschememanager.h>
 #include <QCheckBox>
-#include <kpushbutton.h>
 #include <QFileInfo>
 #include <QLabel>
 #include <kwindowsystem.h>

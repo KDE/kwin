@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KAuth/Action>
+#include <KAuth/KAuthAction>
 #include <QApplication>
 #include <qcommandlineparser.h>
 #include <QDebug>

@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfigGroup>
 #include <KDesktopFile>
-#include <KIcon>
 #include <KLocalizedString>
 #include <KServiceTypeTrader>
 #include <KPluginInfo>

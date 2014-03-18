@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kconfiggroup.h>
 #include <KLocalizedString>
-#include <kdeversion.h>
 #include <ksharedconfig.h>
 
 #include <QDebug>
