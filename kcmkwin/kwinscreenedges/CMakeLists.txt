@@ -1,5 +1,3 @@
-include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin )
-
 set(
     kcm_kwinscreenedges_PART_SRCS
     main.cpp

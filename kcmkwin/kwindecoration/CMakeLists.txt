@@ -1,9 +1,9 @@
 # need a header file from Aurorae sources
 include_directories(
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/lib
+    ${KWIN_SOURCE_DIR}/clients/aurorae/src/lib
 )
 
-set(AURORAE_SOURCE_DIR ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/clients/aurorae/src/lib/)
+set(AURORAE_SOURCE_DIR ${KWIN_SOURCE_DIR}/clients/aurorae/src/lib/)
 
 set(kcm_kwindecoration_PART_SRCS
     kwindecoration.cpp

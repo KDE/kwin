@@ -1,4 +1,4 @@
-include_directories( ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/)
+include_directories( ${KWIN_SOURCE_DIR}/tabbox ${KWIN_SOURCE_DIR})
 
 ########### next target ###############
 
@@ -6,7 +6,7 @@ set(kcm_kwintabbox_PART_SRCS
     main.cpp
     layoutpreview.cpp
     thumbnailitem.cpp
-    ${KDEBASE_WORKSPACE_SOURCE_DIR}/kwin/tabbox/tabboxconfig.cpp
+    ${KWIN_SOURCE_DIR}/tabbox/tabboxconfig.cpp
 )
 
 qt5_wrap_ui( kcm_kwintabbox_PART_SRCS main.ui )
