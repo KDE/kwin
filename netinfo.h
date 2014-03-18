@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_NETINFO_H
 #define KWIN_NETINFO_H
 
-#include <NETRootInfo>
+#include <NETWM>
 
 #include <xcb/xcb.h>
 

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kwinglobals.h>
 // KDE
-#include <NET>
+#include <netwm_def.h>
 // Qt
 #include <QList>
 #include <QPoint>

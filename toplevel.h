@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtualdesktops.h"
 #include "xcbutils.h"
 // KDE
-#include <NETWinInfo>
+#include <NETWM>
 // Qt
 #include <QObject>
 // xcb

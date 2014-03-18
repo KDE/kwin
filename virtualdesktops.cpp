@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KLocalizedString>
-#include <NETRootInfo>
+#include <NETWM>
 // Qt
 #include <QAction>
 

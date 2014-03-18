@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 #include "toplevel.h"
 #include "xcbutils.h"
-// KDE
-#include <NETWinInfo>
 // Qt
 #include <QPixmap>
 #include <QWindow>
