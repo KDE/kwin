@@ -1010,16 +1010,16 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         Cursor::setPos(c->geometry().bottomRight());
     switch(op) {
     case Options::MoveOp:
-        c->performMouseCommand(Options::MouseMove, cursorPos());
+        c->performMouseCommand(Options::MouseMove, Cursor::pos());
         break;
     case Options::UnrestrictedMoveOp:
-        c->performMouseCommand(Options::MouseUnrestrictedMove, cursorPos());
+        c->performMouseCommand(Options::MouseUnrestrictedMove, Cursor::pos());
         break;
     case Options::ResizeOp:
-        c->performMouseCommand(Options::MouseResize, cursorPos());
+        c->performMouseCommand(Options::MouseResize, Cursor::pos());
         break;
     case Options::UnrestrictedResizeOp:
-        c->performMouseCommand(Options::MouseUnrestrictedResize, cursorPos());
+        c->performMouseCommand(Options::MouseUnrestrictedResize, Cursor::pos());
         break;
     case Options::CloseOp:
         QMetaObject::invokeMethod(c, "closeWindow", Qt::QueuedConnection);
@@ -1041,7 +1041,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         c->minimize();
         break;
     case Options::ShadeOp:
-        c->performMouseCommand(Options::MouseShade, cursorPos());
+        c->performMouseCommand(Options::MouseShade, Cursor::pos());
         break;
     case Options::OnAllDesktopsOp:
         c->setOnAllDesktops(!c->isOnAllDesktops());
@@ -1069,7 +1069,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         break;
     }
     case Options::OperationsOp:
-        c->performMouseCommand(Options::MouseShade, cursorPos());
+        c->performMouseCommand(Options::MouseShade, Cursor::pos());
         break;
     case Options::WindowRulesOp:
         RuleBook::self()->edit(c, false);

@@ -2161,7 +2161,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 
     QRect clientArea;
     if (isElectricBorderMaximizing())
-        clientArea = workspace()->clientArea(MaximizeArea, cursorPos(), desktop());
+        clientArea = workspace()->clientArea(MaximizeArea, Cursor::pos(), desktop());
     else
         clientArea = workspace()->clientArea(MaximizeArea, this);
 
@@ -3079,7 +3079,7 @@ void Client::setElectricBorderMaximizing(bool maximizing)
 {
     electricMaximizing = maximizing;
     if (maximizing)
-        outline()->show(electricBorderMaximizeGeometry(cursorPos(), desktop()));
+        outline()->show(electricBorderMaximizeGeometry(Cursor::pos(), desktop()));
     else
         outline()->hide();
     elevate(maximizing);
@@ -3153,7 +3153,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
             // decorations may turn off some borders when tiled
             const ForceGeometry_t geom_mode = decoration && checkBorderSizes(false) ? ForceGeometrySet : NormalGeometrySet;
             quick_tile_mode = QuickTileNone; // Temporary, so the maximize code doesn't get all confused
-            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : cursorPos(), desktop()), geom_mode);
+            setGeometry(electricBorderMaximizeGeometry(keyboard ? geometry().center() : Cursor::pos(), desktop()), geom_mode);
         }
         // Store the mode change
         quick_tile_mode = mode;
@@ -3164,7 +3164,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (mode != QuickTileNone) {
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry);
 
-        QPoint whichScreen = keyboard ? geometry().center() : cursorPos();
+        QPoint whichScreen = keyboard ? geometry().center() : Cursor::pos();
 
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen if it exists, otherwise toggle the mode (set QuickTileNone)

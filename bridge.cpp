@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "bridge.h"
 
 #include "client.h"
+#include "cursor.h"
 #include "options.h"
 
 #include <kconfiggroup.h>
@@ -170,7 +171,7 @@ void Bridge::titlebarDblClickOperation()
 
 void Bridge::titlebarMouseWheelOperation(int delta)
 {
-    c->performMouseCommand(options->operationTitlebarMouseWheel(delta), cursorPos());
+    c->performMouseCommand(options->operationTitlebarMouseWheel(delta), Cursor::pos());
 }
 
 void Bridge::setShade(bool set)

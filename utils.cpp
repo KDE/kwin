@@ -40,7 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 
 #include "atoms.h"
-#include "cursor.h"
 #include "workspace.h"
 
 #endif
@@ -164,10 +163,6 @@ void ungrabXKeyboard()
     xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);
 }
 
-QPoint cursorPos()
-{
-    return Cursor::self()->pos();
-}
 #endif
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states

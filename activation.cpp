@@ -240,7 +240,7 @@ void Workspace::setActiveClient(Client* c)
     }
     StackingUpdatesBlocker blocker(this);
     ++set_active_client_recursion;
-    updateFocusMousePosition(cursorPos());
+    updateFocusMousePosition(Cursor::pos());
     if (active_client != NULL) {
         // note that this may call setActiveClient( NULL ), therefore the recursion counter
         active_client->setActive(false);

@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "testutils.h"
 // KWin
 #include "../atoms.h" // needed for utils to compile
-#include "../cursor.h" // needed for utils to compile
 #include "../client_machine.h"
 #include "../utils.h"
 #include "../xcbutils.h"
@@ -38,12 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin {
 // just to make the linker of utils happy
 Atoms* atoms;
-
-Cursor *Cursor::s_self = nullptr;
-QPoint Cursor::pos()
-{
-    return QPoint();
-}
 
 }
 

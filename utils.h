@@ -156,8 +156,6 @@ public:
 #define UrgencyHint XUrgencyHint
 #endif
 
-QPoint cursorPos();
-
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
 int qtToX11Button(Qt::MouseButton button);
 Qt::MouseButton x11ToQtMouseButton(int button);

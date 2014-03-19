@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecoration.h>
 #include "workspace.h"
 #include "client.h"
+#include "cursor.h"
 #include "options.h"
 #include "rules.h"
 #include "screens.h"
@@ -501,7 +502,7 @@ void Placement::placeUnderMouse(Client* c, QRect& area, Policy /*next*/)
 {
     area = checkArea(c, area);
     QRect geom = c->geometry();
-    geom.moveCenter(cursorPos());
+    geom.moveCenter(Cursor::pos());
     c->move(geom.topLeft());
     c->keepInArea(area);   // make sure it's kept inside workarea
 }
