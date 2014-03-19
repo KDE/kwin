@@ -49,6 +49,8 @@ Cursor *Cursor::create(QObject *parent)
     } else {
         s_self = new InputRedirectionCursor(parent);
     }
+#else
+    Q_UNUSED(parent)
 #endif
     return s_self;
 }
