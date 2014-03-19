@@ -122,6 +122,8 @@ void Bridge::showApplicationMenu(const QPoint &p)
 {
 #ifdef KWIN_BUILD_KAPPMENU
     c->showApplicationMenu(p);
+#else
+    Q_UNUSED(p)
 #endif
 }
 
