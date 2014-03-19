@@ -66,56 +66,6 @@ StrutRect::StrutRect(const StrutRect& other)
 {
 }
 
-//************************************
-// Motif
-//************************************
-
-void Motif::readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
-                      bool& resize, bool& move, bool& minimize, bool& maximize, bool& close)
-{
-    Atom type;
-    int format;
-    unsigned long length, after;
-    unsigned char* data;
-    MwmHints* hints = 0;
-    if (XGetWindowProperty(display(), w, atoms->motif_wm_hints, 0, 5,
-                          false, atoms->motif_wm_hints, &type, &format,
-                          &length, &after, &data) == Success) {
-        if (data)
-            hints = (MwmHints*) data;
-    }
-    got_noborder = false;
-    noborder = false;
-    resize = true;
-    move = true;
-    minimize = true;
-    maximize = true;
-    close = true;
-    if (hints) {
-        // To quote from Metacity 'We support those MWM hints deemed non-stupid'
-        if (hints->flags & MWM_HINTS_FUNCTIONS) {
-            // if MWM_FUNC_ALL is set, other flags say what to turn _off_
-            bool set_value = ((hints->functions & MWM_FUNC_ALL) == 0);
-            resize = move = minimize = maximize = close = !set_value;
-            if (hints->functions & MWM_FUNC_RESIZE)
-                resize = set_value;
-            if (hints->functions & MWM_FUNC_MOVE)
-                move = set_value;
-            if (hints->functions & MWM_FUNC_MINIMIZE)
-                minimize = set_value;
-            if (hints->functions & MWM_FUNC_MAXIMIZE)
-                maximize = set_value;
-            if (hints->functions & MWM_FUNC_CLOSE)
-                close = set_value;
-        }
-        if (hints->flags & MWM_HINTS_DECORATIONS) {
-            got_noborder = true;
-            noborder = !hints->decorations;
-        }
-        XFree(data);
-    }
-}
-
 #endif
 
 QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)

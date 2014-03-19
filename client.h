@@ -430,6 +430,7 @@ public:
 
     void updateShape();
 
+    enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);

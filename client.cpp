@@ -69,6 +69,96 @@ namespace KWin
 
 bool Client::s_haveResizeEffect = false;
 
+const long ClientWinMask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE |
+                           XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE |
+                           XCB_EVENT_MASK_KEYMAP_STATE |
+                           XCB_EVENT_MASK_BUTTON_MOTION |
+                           XCB_EVENT_MASK_POINTER_MOTION | // need this, too!
+                           XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW |
+                           XCB_EVENT_MASK_FOCUS_CHANGE |
+                           XCB_EVENT_MASK_EXPOSURE |
+                           XCB_EVENT_MASK_STRUCTURE_NOTIFY |
+                           XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
+
+//************************************
+// Motif
+//************************************
+class Motif
+{
+public:
+    // Read a window's current settings from its _MOTIF_WM_HINTS
+    // property.  If it explicitly requests that decorations be shown
+    // or hidden, 'got_noborder' is set to true and 'noborder' is set
+    // appropriately.
+    static void readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
+                          bool& resize, bool& move, bool& minimize, bool& maximize,
+                          bool& close);
+    struct MwmHints {
+        ulong flags;
+        ulong functions;
+        ulong decorations;
+        long input_mode;
+        ulong status;
+    };
+    enum {
+        MWM_HINTS_FUNCTIONS = (1L << 0),
+        MWM_HINTS_DECORATIONS = (1L << 1),
+
+        MWM_FUNC_ALL = (1L << 0),
+        MWM_FUNC_RESIZE = (1L << 1),
+        MWM_FUNC_MOVE = (1L << 2),
+        MWM_FUNC_MINIMIZE = (1L << 3),
+        MWM_FUNC_MAXIMIZE = (1L << 4),
+        MWM_FUNC_CLOSE = (1L << 5)
+    };
+};
+
+void Motif::readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
+                      bool& resize, bool& move, bool& minimize, bool& maximize, bool& close)
+{
+    Atom type;
+    int format;
+    unsigned long length, after;
+    unsigned char* data;
+    MwmHints* hints = 0;
+    if (XGetWindowProperty(display(), w, atoms->motif_wm_hints, 0, 5,
+                          false, atoms->motif_wm_hints, &type, &format,
+                          &length, &after, &data) == Success) {
+        if (data)
+            hints = (MwmHints*) data;
+    }
+    got_noborder = false;
+    noborder = false;
+    resize = true;
+    move = true;
+    minimize = true;
+    maximize = true;
+    close = true;
+    if (hints) {
+        // To quote from Metacity 'We support those MWM hints deemed non-stupid'
+        if (hints->flags & MWM_HINTS_FUNCTIONS) {
+            // if MWM_FUNC_ALL is set, other flags say what to turn _off_
+            bool set_value = ((hints->functions & MWM_FUNC_ALL) == 0);
+            resize = move = minimize = maximize = close = !set_value;
+            if (hints->functions & MWM_FUNC_RESIZE)
+                resize = set_value;
+            if (hints->functions & MWM_FUNC_MOVE)
+                move = set_value;
+            if (hints->functions & MWM_FUNC_MINIMIZE)
+                minimize = set_value;
+            if (hints->functions & MWM_FUNC_MAXIMIZE)
+                maximize = set_value;
+            if (hints->functions & MWM_FUNC_CLOSE)
+                close = set_value;
+        }
+        if (hints->flags & MWM_HINTS_DECORATIONS) {
+            got_noborder = true;
+            noborder = !hints->decorations;
+        }
+        XFree(data);
+    }
+}
+
 // Creating a client:
 //  - only by calling Workspace::createClient()
 //      - it creates a new client and calls manage() for it
