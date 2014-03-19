@@ -208,11 +208,12 @@ endif()
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
 set(HAVE_WAYLAND ${Wayland_Client_FOUND})
-set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND} AND ${Wayland_Client_FOUND})
 if(${HAVE_WAYLAND})
     set(HAVE_XKB ${XKB_FOUND})
+    set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
 else()
     set(HAVE_XKB FALSE)
+    set(HAVE_WAYLAND_EGL FALSE)
 endif()
 
 include(CheckIncludeFiles)
