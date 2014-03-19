@@ -20,12 +20,11 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
+#include <kwineffects_interface.h>
 #include <KAboutData>
 #include <KLocalizedString>
 #include <kconfigloader.h>
 
-#include <QDBusConnection>
-#include <QDBusMessage>
 #include <QFile>
 #include <QLabel>
 #include <QUiLoader>
@@ -127,12 +126,10 @@ KConfigGroup ScriptedEffectConfig::configGroup()
 
 void ScriptedEffectConfig::reload()
 {
-    QDBusMessage message = QDBusMessage::createMethodCall(QStringLiteral("org.kde.kwin"),
-                                                          QStringLiteral("/KWin"),
-                                                          QStringLiteral("org.kde.KWin"),
-                                                          QStringLiteral("reconfigureEffect"));
-    message << QString(packageName());
-    QDBusConnection::sessionBus().send(message);
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    interface.reconfigureEffect(packageName());
 }
 
 ScriptingConfig::ScriptingConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
