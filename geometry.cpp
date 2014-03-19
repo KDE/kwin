@@ -1863,13 +1863,8 @@ bool Client::isResizable() const
  */
 bool Client::isMaximizable() const
 {
-    {
-        // isMovable() and isResizable() may be false for maximized windows
-        // with moving/resizing maximized windows disabled
-        TemporaryAssign< MaximizeMode > tmp(max_mode, MaximizeRestore);
-        if (!isResizable() || isToolbar())  // SELI isToolbar() ?
-            return false;
-    }
+    if (!isResizable() || isToolbar())  // SELI isToolbar() ?
+        return false;
     if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore && rules()->checkMaximize(MaximizeFull) != MaximizeRestore)
         return true;
     return false;
@@ -2161,14 +2156,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     if (changeMaximizeRecursion)
         return;
 
-    // sic! codeblock for TemporaryAssign
-    {
-        // isMovable() and isResizable() may be false for maximized windows
-        // with moving/resizing maximized windows disabled
-        TemporaryAssign< MaximizeMode > tmp(max_mode, MaximizeRestore);
-        if (!isResizable() || isToolbar())  // SELI isToolbar() ?
-            return;
-    }
+    if (!isResizable() || isToolbar())  // SELI isToolbar() ?
+        return;
 
     QRect clientArea;
     if (isElectricBorderMaximizing())
