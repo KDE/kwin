@@ -772,7 +772,6 @@ bool Workspace::waitForCompositingSetup()
 /**
  * Reread settings
  */
-KWIN_PROCEDURE(CheckBorderSizesProcedure, Client, cl->checkBorderSizes(true));
 
 void Workspace::slotReconfigure()
 {
@@ -794,9 +793,10 @@ void Workspace::slotReconfigure()
         deco->destroyPreviousPlugin();
         connect(deco->factory(), &KDecorationFactory::recreateDecorations, deco, &DecorationPlugin::recreateDecorations);
     } else {
-        forEachClient(CheckBorderSizesProcedure());
-        foreach (Client * c, clients)
+        foreach (Client * c, clients) {
+            c->checkBorderSizes(true);
             c->triggerDecorationRepaint();
+        }
     }
 
     RuleBook::self()->load();

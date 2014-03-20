@@ -73,8 +73,6 @@ public:
     bool hasClient(const Client*);
 
     template<typename T> Client* findClient(T predicate) const;
-    template<typename T1, typename T2> void forEachClient(T1 procedure, T2 predicate);
-    template<typename T> void forEachClient(T procedure);
     void forEachClient(std::function<void (Client*)> func);
     Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
     /**
@@ -671,28 +669,12 @@ inline Client* Workspace::findClient(T predicate) const
     return NULL;
 }
 
-template< typename T1, typename T2 >
-inline void Workspace::forEachClient(T1 procedure, T2 predicate)
-{
-    for (ClientList::ConstIterator it = clients.constBegin(); it != clients.constEnd(); ++it)
-        if (predicate(const_cast<const Client*>(*it)))
-            procedure(*it);
-    for (ClientList::ConstIterator it = desktops.constBegin(); it != desktops.constEnd(); ++it)
-        if (predicate(const_cast<const Client*>(*it)))
-            procedure(*it);
-}
 
 inline
 void Workspace::forEachClient(std::function< void (Client*) > func)
 {
     std::for_each(clients.constBegin(), clients.constEnd(), func);
     std::for_each(desktops.constBegin(), desktops.constEnd(), func);
-}
-
-template< typename T >
-inline void Workspace::forEachClient(T procedure)
-{
-    return forEachClient(procedure, TruePredicate());
 }
 
 inline
