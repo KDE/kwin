@@ -120,12 +120,7 @@ enum ShadeMode {
     ShadeActivated // "shaded", but visible due to alt+tab to the window
 };
 
-template <typename T>
-class ScopedCPointer : public QScopedPointer<T, QScopedPointerPodDeleter>
-{
-public:
-    ScopedCPointer(T *p = 0) : QScopedPointer<T, QScopedPointerPodDeleter>(p) {}
-};
+template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator = 0);
 void updateXTime();
