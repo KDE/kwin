@@ -596,8 +596,8 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     // level == 2 // normal
     Time user_time = ac->userTime();
     qDebug() << "Activation, compared:" << c << ":" << time << ":" << user_time
-                 << ":" << (timestampCompare(time, user_time) >= 0) << endl;
-    return timestampCompare(time, user_time) >= 0;   // time >= user_time
+                 << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
+    return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
 
 // basically the same like allowClientActivation(), this time allowing
@@ -628,8 +628,8 @@ bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t ti
         return false;
     xcb_timestamp_t user_time = ac->userTime();
     qDebug() << "Raising, compared:" << time << ":" << user_time
-                 << ":" << (timestampCompare(time, user_time) >= 0) << endl;
-    return timestampCompare(time, user_time) >= 0;   // time >= user_time
+                 << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
+    return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
 
 // called from Client after FocusIn that wasn't initiated by KWin and the client
@@ -674,7 +674,7 @@ void Client::updateUserTime(xcb_timestamp_t time)
         time = xTime();
     if (time != -1U
             && (m_userTime == XCB_TIME_CURRENT_TIME
-                || timestampCompare(time, m_userTime) > 0)) {    // time > user_time
+                || NET::timestampCompare(time, m_userTime) > 0)) {    // time > user_time
         m_userTime = time;
         shade_below = NULL; // do not hover re-shade a window after it got interaction
     }
@@ -723,10 +723,10 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
     if (asn_data != NULL && time != 0) {
         // prefer timestamp from ASN id (timestamp from data is obsolete way)
         if (asn_id->timestamp() != 0
-                && (time == -1U || timestampCompare(asn_id->timestamp(), time) > 0)) {
+                && (time == -1U || NET::timestampCompare(asn_id->timestamp(), time) > 0)) {
             time = asn_id->timestamp();
         } else if (asn_data->timestamp() != -1U
-                  && (time == -1U || timestampCompare(asn_data->timestamp(), time) > 0)) {
+                  && (time == -1U || NET::timestampCompare(asn_data->timestamp(), time) > 0)) {
             time = asn_data->timestamp();
         }
     }
@@ -786,7 +786,7 @@ xcb_timestamp_t Client::userTime() const
     assert(group() != NULL);
     if (time == -1U
             || (group()->userTime() != -1U
-                && timestampCompare(group()->userTime(), time) > 0))
+                && NET::timestampCompare(group()->userTime(), time) > 0))
         time = group()->userTime();
     return time;
 }
@@ -886,10 +886,10 @@ void Group::startupIdChanged()
     if (!asn_valid)
         return;
     if (asn_id.timestamp() != 0 && user_time != -1U
-            && timestampCompare(asn_id.timestamp(), user_time) > 0) {
+            && NET::timestampCompare(asn_id.timestamp(), user_time) > 0) {
         user_time = asn_id.timestamp();
     } else if (asn_data.timestamp() != -1U && user_time != -1U
-              && timestampCompare(asn_data.timestamp(), user_time) > 0) {
+              && NET::timestampCompare(asn_data.timestamp(), user_time) > 0) {
         user_time = asn_data.timestamp();
     }
 }
@@ -901,7 +901,7 @@ void Group::updateUserTime(Time time)
         time = xTime();
     if (time != -1U
             && (user_time == CurrentTime
-                || timestampCompare(time, user_time) > 0))    // time > user_time
+                || NET::timestampCompare(time, user_time) > 0))    // time > user_time
         user_time = time;
 }
 

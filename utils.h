@@ -207,18 +207,6 @@ Unmanaged* findUnmanagedInList(const UnmanagedList& list, T predicate)
     return NULL;
 }
 
-inline
-int timestampCompare(xcb_timestamp_t time1, xcb_timestamp_t time2)   // like strcmp()
-{
-    return NET::timestampCompare(time1, time2);
-}
-
-inline
-xcb_timestamp_t timestampDiff(xcb_timestamp_t time1, xcb_timestamp_t time2)   // returns time2 - time1
-{
-    return NET::timestampDiff(time1, time2);
-}
-
 QPoint cursorPos();
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states
