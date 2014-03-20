@@ -114,6 +114,11 @@ set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         TYPE REQUIRED
                     )
 
+
+if(NOT OPENGL_FOUND AND NOT OPENGLES_FOUND)
+    message(FATAL_ERROR "Either OpenGL or OpenGL ES 2.0 are required for Compositing support in KWin.")
+endif()
+
 # All the required XCB components
 find_package(XCB REQUIRED COMPONENTS
     XCB
