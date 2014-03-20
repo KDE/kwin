@@ -1,6 +1,3 @@
-include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
-
-########### next target ###############
 set(oxygen_shadow_demo_SOURCES
     oxygenshadowdemodialog.cpp
     oxygenshadowdemowidget.cpp

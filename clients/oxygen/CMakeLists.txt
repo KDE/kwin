@@ -6,8 +6,6 @@ add_subdirectory(config)
 add_subdirectory(demo)
 add_subdirectory(data)
 
-include_directories(${KDEBASE_WORKSPACE_SOURCE_DIR}/libs/oxygen)
-
 ########### next target ###############
 set(kwin_oxygen_SRCS
      oxygenbutton.cpp
