@@ -84,8 +84,6 @@ public:
      * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
-    template<typename T1, typename T2> void forEachUnmanaged(T1 procedure, T2 predicate);
-    template<typename T> void forEachUnmanaged(T procedure);
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
 
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
@@ -695,20 +693,6 @@ template< typename T >
 inline void Workspace::forEachClient(T procedure)
 {
     return forEachClient(procedure, TruePredicate());
-}
-
-template< typename T1, typename T2 >
-inline void Workspace::forEachUnmanaged(T1 procedure, T2 predicate)
-{
-    for (UnmanagedList::ConstIterator it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it)
-        if (predicate(const_cast<const Unmanaged*>(*it)))
-            procedure(*it);
-}
-
-template< typename T >
-inline void Workspace::forEachUnmanaged(T procedure)
-{
-    return forEachUnmanaged(procedure, TruePredicate());
 }
 
 inline
