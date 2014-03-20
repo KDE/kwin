@@ -113,7 +113,6 @@ set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         URL "http://www.x.org"
                         TYPE REQUIRED
                     )
-set(HAVE_X11 ${X11_FOUND})
 
 # All the required XCB components
 find_package(XCB REQUIRED COMPONENTS
