@@ -105,8 +105,13 @@ public:
 
     void activateClient(Client*, bool force = false);
     void requestFocus(Client* c, bool force = false);
-    void takeActivity(Client* c, int flags, bool handled);   // Flags are ActivityFlags
-    void handleTakeActivity(Client* c, xcb_timestamp_t timestamp, int flags);   // Flags are ActivityFlags
+    enum ActivityFlag {
+        ActivityFocus = 1 << 0, // focus the window
+        ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
+        ActivityRaise = 1 << 2 // raise the window
+    };
+    Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
+    void takeActivity(Client* c, ActivityFlags flags);
     bool allowClientActivation(const Client* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     void restoreFocus();
@@ -235,7 +240,6 @@ public:
     bool showingDesktop() const;
 
     void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
-    void sendTakeActivity(Client* c, xcb_timestamp_t timestamp, long flags);   // Called from Client::takeActivity()
 
     void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
     void setActiveClient(Client*);
@@ -457,7 +461,6 @@ private:
     Client* last_active_client;
     Client* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     Client* movingClient;
-    Client* pending_take_activity;
 
     // Delay(ed) window focus timer and client
     QTimer* delayFocusTimer;
@@ -726,5 +729,6 @@ inline Workspace *workspace()
 }
 
 } // namespace
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Workspace::ActivityFlags)
 
 #endif

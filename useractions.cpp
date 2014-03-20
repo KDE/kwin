@@ -1088,7 +1088,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         break;
     case Options::RemoveTabFromGroupOp:
         if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
-             takeActivity(c, ActivityFocus | ActivityRaise, true);
+             takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::ActivateNextTabOp:
         if (c->tabGroup())
@@ -1133,7 +1133,7 @@ Options::WindowOperation Client::mouseButtonToWindowOperation(Qt::MouseButtons b
 /*!
   Performs a mouse command on this client (see options.h)
  */
-bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos, bool handled)
+bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &globalPos)
 {
     bool replay = false;
     switch(command) {
@@ -1184,7 +1184,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
                 mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->geometry().intersects(geometry()));
             }
         }
-        workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled && replay);
+        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
         screens()->setCurrent(globalPos);
         replay = replay || mustReplay;
         break;
@@ -1197,17 +1197,17 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         break;
     case Options::MouseActivate:
         replay = isActive(); // for clickraise mode
-        workspace()->takeActivity(this, ActivityFocus, handled && replay);
+        workspace()->takeActivity(this, Workspace::ActivityFocus);
         screens()->setCurrent(globalPos);
         replay = replay || !rules()->checkAcceptFocus(input);
         break;
     case Options::MouseActivateRaiseAndPassClick:
-        workspace()->takeActivity(this, ActivityFocus | ActivityRaise, handled);
+        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
         screens()->setCurrent(globalPos);
         replay = true;
         break;
     case Options::MouseActivateAndPassClick:
-        workspace()->takeActivity(this, ActivityFocus, handled);
+        workspace()->takeActivity(this, Workspace::ActivityFocus);
         screens()->setCurrent(globalPos);
         replay = true;
         break;

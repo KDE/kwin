@@ -193,13 +193,6 @@ void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t abo
     }
 }
 
-void RootInfo::gotTakeActivity(xcb_window_t w, xcb_timestamp_t timestamp, long flags)
-{
-    Workspace *workspace = Workspace::self();
-    if (Client* c = workspace->findClient(WindowMatchPredicate(w)))
-        workspace->handleTakeActivity(c, timestamp, flags);
-}
-
 void RootInfo::closeWindow(xcb_window_t w)
 {
     Client* c = Workspace::self()->findClient(WindowMatchPredicate(w));

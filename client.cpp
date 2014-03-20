@@ -273,7 +273,6 @@ Client::Client()
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
-    Ptakeactivity = 0;
     Pcontexthelp = 0;
     Pping = 0;
     input = false;
@@ -1732,36 +1731,6 @@ void Client::setOnAllActivities(bool on)
 }
 
 /**
- * Performs activation and/or raising of the window
- */
-void Client::takeActivity(int flags, bool handled)
-{
-    if (!handled || !Ptakeactivity) {
-        if (flags & ActivityFocus)
-            takeFocus();
-        if (flags & ActivityRaise)
-            workspace()->raiseClient(this);
-        return;
-    }
-
-#ifndef NDEBUG
-    static Time previous_activity_timestamp;
-    static Client* previous_client;
-
-    //if ( previous_activity_timestamp == xTime() && previous_client != this )
-    //    {
-    //    qDebug() << "Repeated use of the same X timestamp for activity";
-    //    qDebug() << kBacktrace();
-    //    }
-
-    previous_activity_timestamp = xTime();
-    previous_client = this;
-#endif
-
-    workspace()->sendTakeActivity(this, xTime(), flags);
-}
-
-/**
  * Performs the actual focusing of the window using XSetInputFocus and WM_TAKE_FOCUS
  */
 void Client::takeFocus()
@@ -2160,7 +2129,6 @@ void Client::getWindowProtocols()
 
     Pdeletewindow = 0;
     Ptakefocus = 0;
-    Ptakeactivity = 0;
     Pcontexthelp = 0;
     Pping = 0;
 
@@ -2170,8 +2138,6 @@ void Client::getWindowProtocols()
                 Pdeletewindow = 1;
             else if (p[i] == atoms->wm_take_focus)
                 Ptakefocus = 1;
-            else if (p[i] == atoms->net_wm_take_activity)
-                Ptakeactivity = 1;
             else if (p[i] == atoms->net_wm_context_help)
                 Pcontexthelp = 1;
             else if (p[i] == atoms->net_wm_ping)

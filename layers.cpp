@@ -384,7 +384,6 @@ void Workspace::raiseClient(Client* c, bool nogroup)
 
     if (!c->isSpecialWindow()) {
         most_recently_raised = c;
-        pending_take_activity = NULL;
     }
 }
 

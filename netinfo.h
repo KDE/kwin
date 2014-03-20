@@ -53,7 +53,6 @@ protected:
     virtual void moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height) override;
     virtual void gotPing(xcb_window_t w, xcb_timestamp_t timestamp) override;
     virtual void restackWindow(xcb_window_t w, RequestSource source, xcb_window_t above, int detail, xcb_timestamp_t timestamp) override;
-    virtual void gotTakeActivity(xcb_window_t w, xcb_timestamp_t timestamp, long flags) override;
     virtual void changeShowingDesktop(bool showing) override;
 
 private:

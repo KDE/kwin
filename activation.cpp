@@ -262,7 +262,6 @@ void Workspace::setActiveClient(Client* c)
             }
         }
     }
-    pending_take_activity = NULL;
 
     updateToolWindows(false);
     if (c)
@@ -336,10 +335,10 @@ void Workspace::activateClient(Client* c, bool force)
  */
 void Workspace::requestFocus(Client* c, bool force)
 {
-    takeActivity(c, ActivityFocus | (force ? ActivityFocusForce : 0), false);
+    takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
 }
 
-void Workspace::takeActivity(Client* c, int flags, bool handled)
+void Workspace::takeActivity(Client* c, ActivityFlags flags)
 {
     // the 'if ( c == active_client ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (c != active_client))
@@ -365,7 +364,6 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
             if (flags & ActivityRaise)
                 raiseClient(c);
             c = modal;
-            handled = false;
         }
         cancelDelayFocus();
     }
@@ -378,7 +376,6 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
             focusToNull();
         }
         flags &= ~ActivityFocus;
-        handled = false; // no point, can't get clicks
     }
     if (c->tabGroup() && c->tabGroup()->current() != c)
         c->tabGroup()->setCurrent(c);
@@ -386,20 +383,14 @@ void Workspace::takeActivity(Client* c, int flags, bool handled)
         qWarning() << "takeActivity: not shown" ;
         return;
     }
-    c->takeActivity(flags, handled);
+
+    if (flags & ActivityFocus)
+        c->takeFocus();
+    if (flags & ActivityRaise)
+        workspace()->raiseClient(c);
+
     if (!c->isOnActiveScreen())
         screens()->setCurrent(c->screen());
-}
-
-void Workspace::handleTakeActivity(KWin::Client *c, xcb_timestamp_t /*timestamp*/, int flags)
-{
-    if (pending_take_activity != c)   // pending_take_activity is reset when doing restack or activation
-        return;
-    if ((flags & ActivityRaise) != 0)
-        raiseClient(c);
-    if ((flags & ActivityFocus) != 0 && c->isShown(false))
-        c->takeFocus();
-    pending_take_activity = NULL;
 }
 
 /*!

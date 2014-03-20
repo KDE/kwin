@@ -1066,7 +1066,6 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
 
         Options::MouseCommand com = Options::MouseNothing;
         bool was_action = false;
-        bool perform_handled = false;
         if (bModKeyHeld) {
             was_action = true;
             switch(button) {
@@ -1088,7 +1087,6 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
             // inactive inner window
             if (!isActive() && w == wrapperId() && button < 6) {
                 was_action = true;
-                perform_handled = true;
                 switch(button) {
                 case XCB_BUTTON_INDEX_1:
                     com = options->commandWindow1();
@@ -1110,11 +1108,10 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
                     && options->isClickRaise() && button < 4) { // exclude wheel
                 com = Options::MouseActivateRaiseAndPassClick;
                 was_action = true;
-                perform_handled = true;
             }
         }
         if (was_action) {
-            bool replay = performMouseCommand(com, QPoint(x_root, y_root), perform_handled);
+            bool replay = performMouseCommand(com, QPoint(x_root, y_root));
 
             if (isSpecialWindow())
                 replay = true;

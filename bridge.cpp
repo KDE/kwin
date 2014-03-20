@@ -347,7 +347,7 @@ void Bridge::untab(long id, const QRect& newGeom)
     if (Client* client = clientForId(id))
     if (client->untab(newGeom)) {
         if (options->focusPolicyIsReasonable())
-            workspace()->takeActivity(client, ActivityFocus | ActivityRaise, true);
+            workspace()->takeActivity(client, Workspace::ActivityFocus | Workspace::ActivityRaise);
         workspace()->raiseClient(client);
     }
 }

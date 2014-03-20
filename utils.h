@@ -89,13 +89,6 @@ inline void operator++(Layer& lay)
     lay = static_cast< Layer >(lay + 1);
 }
 
-// for Client::takeActivity()
-enum ActivityFlags {
-    ActivityFocus = 1 << 0, // focus the window
-    ActivityFocusForce = 1 << 1, // focus even if Dock etc.
-    ActivityRaise = 1 << 2 // raise the window
-};
-
 enum StrutArea {
     StrutAreaInvalid = 0, // Null
     StrutAreaTop     = 1 << 0,

@@ -115,7 +115,6 @@ Workspace::Workspace(bool restore)
     , last_active_client(0)
     , most_recently_raised(0)
     , movingClient(0)
-    , pending_take_activity(NULL)
     , delayfocus_client(0)
     , force_restacking(false)
     , x_stacking_dirty(true)
@@ -591,8 +590,6 @@ void Workspace::removeClient(Client* c)
     Q_ASSERT(c != active_client);
     if (c == last_active_client)
         last_active_client = 0;
-    if (c == pending_take_activity)
-        pending_take_activity = NULL;
     if (c == delayfocus_client)
         cancelDelayFocus();
 
@@ -1201,12 +1198,6 @@ void Workspace::sendClientToScreen(Client* c, int screen)
 void Workspace::sendPingToWindow(xcb_window_t window, xcb_timestamp_t timestamp)
 {
     rootInfo()->sendPing(window, timestamp);
-}
-
-void Workspace::sendTakeActivity(KWin::Client *c, xcb_timestamp_t timestamp, long int flags)
-{
-    rootInfo()->takeActivity(c->window(), timestamp, flags);
-    pending_take_activity = c;
 }
 
 /**

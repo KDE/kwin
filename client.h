@@ -414,7 +414,6 @@ public:
     bool isMovableAcrossScreens() const;
     bool isCloseable() const; ///< May be closed by the user (May have a close button)
 
-    void takeActivity(int flags, bool handled);   // Takes ActivityFlags as arg (in utils.h)
     void takeFocus();
     bool isDemandingAttention() const {
         return demands_attention;
@@ -465,7 +464,7 @@ public:
     void setShortcut(const QString& cut);
 
     WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
-    bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos, bool handled = false);
+    bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos);
 
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
 
@@ -907,7 +906,6 @@ private:
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
     uint Pdeletewindow : 1; ///< Does the window understand the DeleteWindow protocol?
     uint Ptakefocus : 1;///< Does the window understand the TakeFocus protocol?
-    uint Ptakeactivity : 1; ///< Does it support _NET_WM_TAKE_ACTIVITY
     uint Pcontexthelp : 1; ///< Does the window understand the ContextHelp protocol?
     uint Pping : 1; ///< Does it support _NET_WM_PING?
     uint input : 1; ///< Does the window want input in its wm_hints
