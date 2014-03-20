@@ -190,16 +190,6 @@ Client* findClientInList(const ClientList& list, T predicate)
     return NULL;
 }
 
-template< typename T >
-Unmanaged* findUnmanagedInList(const UnmanagedList& list, T predicate)
-{
-    for (UnmanagedList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-        if (predicate(const_cast< const Unmanaged* >(*it)))
-            return *it;
-    }
-    return NULL;
-}
-
 QPoint cursorPos();
 
 // converting between X11 mouse/keyboard state mask and Qt button/keyboard states

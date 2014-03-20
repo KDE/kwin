@@ -327,6 +327,18 @@ public:
     virtual void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta);
     virtual void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state);
 
+    /**
+     * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
+     *
+     * The method is templated to operate on either a list of Toplevels or on a list of
+     * a subclass type of Toplevel.
+     * @param list The list to search in
+     * @param func The condition function (compare std::find_if)
+     * @return T* The found Toplevel or @c null if there is no matching Toplevel
+     */
+    template <class T>
+    static T *findInList(const QList<T*> &list, std::function<bool (const T*)> func);
+
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
     void damaged(KWin::Toplevel* toplevel, const QRect& damage);
@@ -658,6 +670,16 @@ inline bool Toplevel::unredirected() const
 inline const ClientMachine *Toplevel::clientMachine() const
 {
     return m_clientMachine;
+}
+
+template <class T>
+inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const T*)> func)
+{
+    const auto it = std::find_if(list.begin(), list.end(), func);
+    if (it == list.end()) {
+        return nullptr;
+    }
+    return *it;
 }
 
 QDebug& operator<<(QDebug& stream, const Toplevel*);

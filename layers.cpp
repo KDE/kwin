@@ -677,7 +677,7 @@ ToplevelList Workspace::xStackingOrder() const
     for (unsigned int i = 0;
             i < tree->children_len;
             ++i) {
-        if (Unmanaged* c = findUnmanaged(WindowMatchPredicate(windows[ i ])))
+        if (Unmanaged* c = findUnmanaged(windows[i]))
             x_stacking.append(c);
     }
     if (m_compositor) {

@@ -307,7 +307,7 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
 {
     Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
     cl->elevate(b);
-    if (Unmanaged *w = Workspace::self()->findUnmanaged(WindowMatchPredicate(tabbox)))
+    if (Unmanaged *w = Workspace::self()->findUnmanaged(tabbox))
         w->elevate(b);
 }
 

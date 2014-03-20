@@ -76,7 +76,14 @@ public:
     template<typename T1, typename T2> void forEachClient(T1 procedure, T2 predicate);
     template<typename T> void forEachClient(T procedure);
     void forEachClient(std::function<void (Client*)> func);
-    template<typename T> Unmanaged* findUnmanaged(T predicate) const;
+    Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
+    /**
+     * @brief Finds the Unmanaged with the given window id.
+     *
+     * @param w The window id to search for
+     * @return KWin::Unmanaged* Found Unmanaged or @c null if there is no Unmanaged with given Id.
+     */
+    Unmanaged *findUnmanaged(xcb_window_t w) const;
     template<typename T1, typename T2> void forEachUnmanaged(T1 procedure, T2 predicate);
     template<typename T> void forEachUnmanaged(T procedure);
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
@@ -688,12 +695,6 @@ template< typename T >
 inline void Workspace::forEachClient(T procedure)
 {
     return forEachClient(procedure, TruePredicate());
-}
-
-template< typename T >
-inline Unmanaged* Workspace::findUnmanaged(T predicate) const
-{
-    return findUnmanagedInList(unmanaged, predicate);
 }
 
 template< typename T1, typename T2 >

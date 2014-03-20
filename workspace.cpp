@@ -1527,6 +1527,18 @@ void Workspace::slotToggleCompositing()
     }
 }
 
+Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const
+{
+    return Toplevel::findInList(unmanaged, func);
+}
+
+Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
+{
+    return findUnmanaged([w](const Unmanaged *u) {
+        return u->window() == w;
+    });
+}
+
 } // namespace
 
 #include "workspace.moc"

@@ -1114,7 +1114,7 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 {
     if (Client* w = Workspace::self()->findClient(WindowMatchPredicate(id)))
         return w->effectWindow();
-    if (Unmanaged* w = Workspace::self()->findUnmanaged(WindowMatchPredicate(id)))
+    if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
     return NULL;
 }
