@@ -1112,7 +1112,7 @@ WindowQuadType EffectsHandlerImpl::newWindowQuadType()
 
 EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
 {
-    if (Client* w = Workspace::self()->findClient(WindowMatchPredicate(id)))
+    if (Client* w = Workspace::self()->findClient(Predicate::WindowMatch, id))
         return w->effectWindow();
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();

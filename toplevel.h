@@ -685,9 +685,6 @@ inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const 
 QDebug& operator<<(QDebug& stream, const Toplevel*);
 QDebug& operator<<(QDebug& stream, const ToplevelList&);
 
-KWIN_COMPARE_PREDICATE(WindowMatchPredicate, Toplevel, Window, cl->window() == value);
-KWIN_COMPARE_PREDICATE(FrameIdMatchPredicate, Toplevel, Window, cl->frameId() == value);
-
 } // namespace
 Q_DECLARE_METATYPE(KWin::Toplevel*)
 

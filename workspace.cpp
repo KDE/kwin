@@ -381,7 +381,7 @@ void Workspace::init()
     Client* new_active_client = NULL;
     if (!qApp->isSessionRestored()) {
         --block_focus;
-        new_active_client = findClient(WindowMatchPredicate(client_info.activeWindow()));
+        new_active_client = findClient(Predicate::WindowMatch, client_info.activeWindow());
     }
     if (new_active_client == NULL
             && activeClient() == NULL && should_get_focus.count() == 0) {
@@ -1527,6 +1527,17 @@ void Workspace::slotToggleCompositing()
     }
 }
 
+Client *Workspace::findClient(std::function<bool (const Client*)> func) const
+{
+    if (Client *ret = Toplevel::findInList(clients, func)) {
+        return ret;
+    }
+    if (Client *ret = Toplevel::findInList(desktops, func)) {
+        return ret;
+    }
+    return nullptr;
+}
+
 Unmanaged *Workspace::findUnmanaged(std::function<bool (const Unmanaged*)> func) const
 {
     return Toplevel::findInList(unmanaged, func);
@@ -1537,6 +1548,29 @@ Unmanaged *Workspace::findUnmanaged(xcb_window_t w) const
     return findUnmanaged([w](const Unmanaged *u) {
         return u->window() == w;
     });
+}
+
+Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
+{
+    switch (predicate) {
+    case Predicate::WindowMatch:
+        return findClient([w](const Client *c) {
+            return c->window() == w;
+        });
+    case Predicate::WrapperIdMatch:
+        return findClient([w](const Client *c) {
+            return c->wrapperId() == w;
+        });
+    case Predicate::FrameIdMatch:
+        return findClient([w](const Client *c) {
+            return c->frameId() == w;
+        });
+    case Predicate::InputIdMatch:
+        return findClient([w](const Client *c) {
+            return c->inputId() == w;
+        });
+    }
+    return nullptr;
 }
 
 } // namespace

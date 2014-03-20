@@ -261,7 +261,7 @@ void WorkspaceWrapper::hideOutline()
 
 Client *WorkspaceWrapper::getClient(qulonglong windowId)
 {
-    return Workspace::self()->findClient(WindowMatchPredicate(windowId));
+    return Workspace::self()->findClient(Predicate::WindowMatch, windowId);
 }
 
 QSize WorkspaceWrapper::desktopGridSize() const

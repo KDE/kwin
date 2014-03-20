@@ -138,7 +138,7 @@ void WindowThumbnailItem::setWId(qulonglong wId)
     }
     m_wId = wId;
     if (m_wId != 0) {
-        setClient(Workspace::self()->findClient(WindowMatchPredicate(m_wId)));
+        setClient(Workspace::self()->findClient(Predicate::WindowMatch, m_wId));
     } else if (m_client) {
         m_client = NULL;
         emit clientChanged();
@@ -165,7 +165,7 @@ void WindowThumbnailItem::paint(QPainter *painter)
     if (effects) {
         return;
     }
-    Client *client = Workspace::self()->findClient(WindowMatchPredicate(m_wId));
+    Client *client = Workspace::self()->findClient(Predicate::WindowMatch, m_wId);
     if (!client) {
         return;
     }

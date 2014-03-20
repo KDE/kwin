@@ -50,13 +50,13 @@ bool ApplicationMenu::hasMenu(xcb_window_t window)
 
 void ApplicationMenu::slotShowRequest(qulonglong wid)
 {
-    if (Client *c = Workspace::self()->findClient(WindowMatchPredicate(wid)))
+    if (Client *c = Workspace::self()->findClient(Predicate::WindowMatch, wid))
         c->emitShowRequest();
 }
 
 void ApplicationMenu::slotMenuAvailable(qulonglong wid)
 {
-    if (Client *c = Workspace::self()->findClient(WindowMatchPredicate(wid)))
+    if (Client *c = Workspace::self()->findClient(Predicate::WindowMatch, wid))
         c->setAppMenuAvailable();
     else
         m_windowsMenu.append(wid);
@@ -64,7 +64,7 @@ void ApplicationMenu::slotMenuAvailable(qulonglong wid)
 
 void ApplicationMenu::slotMenuHidden(qulonglong wid)
 {
-    if (Client *c = Workspace::self()->findClient(WindowMatchPredicate(wid)))
+    if (Client *c = Workspace::self()->findClient(Predicate::WindowMatch, wid))
         c->emitMenuHidden();
 }
 

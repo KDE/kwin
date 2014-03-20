@@ -695,13 +695,6 @@ void Client::demandAttention(bool set)
     emit demandsAttentionChanged();
 }
 
-// TODO I probably shouldn't be lazy here and do it without the macro, so that people can read it
-KWIN_COMPARE_PREDICATE(SameApplicationActiveHackPredicate, Client, const Client*,
-                       // ignore already existing splashes, toolbars, utilities and menus,
-                       // as the app may show those before the main window
-                       !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
-                       && Client::belongToSameApplication(cl, value, true) && cl != value);
-
 xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                                  bool session) const
 {
@@ -733,17 +726,23 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
         Client* act = workspace()->mostRecentlyActivatedClient();
         if (act != NULL && !belongToSameApplication(act, this, true)) {
             bool first_window = true;
+            auto sameApplicationActiveHackPredicate = [this](const Client *cl) {
+                // ignore already existing splashes, toolbars, utilities and menus,
+                // as the app may show those before the main window
+                return !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
+                        && cl != this && Client::belongToSameApplication(cl, this, true);
+            };
             if (isTransient()) {
                 if (act->hasTransient(this, true))
                     ; // is transient for currently active window, even though it's not
                 // the same app (e.g. kcookiejar dialog) -> allow activation
                 else if (groupTransient() &&
-                        findClientInList(mainClients(), SameApplicationActiveHackPredicate(this)) == NULL)
+                        findInList<Client>(mainClients(), sameApplicationActiveHackPredicate) == NULL)
                     ; // standalone transient
                 else
                     first_window = false;
             } else {
-                if (workspace()->findClient(SameApplicationActiveHackPredicate(this)))
+                if (workspace()->findClient(sameApplicationActiveHackPredicate))
                     first_window = false;
             }
             // don't refuse if focus stealing prevention is turned off

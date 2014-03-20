@@ -55,6 +55,7 @@ class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
 class Compositor;
+enum class Predicate;
 
 class Workspace : public QObject, public KDecorationDefines
 {
@@ -72,7 +73,44 @@ public:
 
     bool hasClient(const Client*);
 
-    template<typename T> Client* findClient(T predicate) const;
+    /**
+     * @brief Finds the first Client matching the condition expressed by passed in @p func.
+     *
+     * Internally findClient uses the std::find_if algorithm and that determines how the function
+     * needs to be implemented. An example usage for finding a Client with a matching windowId
+     * @code
+     * xcb_window_t w; // our test window
+     * Client *client = findClient([w](const Client *c) -> bool {
+     *     return c->window() == w;
+     * });
+     * @endcode
+     *
+     * For the standard cases of matching the window id with one of the Client's windows use
+     * the simplified overload method findClient(Predicate, xcb_window_t). Above example
+     * can be simplified to:
+     * @code
+     * xcb_window_t w; // our test window
+     * Client *client = findClient(Predicate::WindowMatch, w);
+     * @endcode
+     *
+     * @param func Unary function that accepts a Client* as argument and
+     * returns a value convertible to bool. The value returned indicates whether the
+     * Client* is considered a match in the context of this function.
+     * The function shall not modify its argument.
+     * This can either be a function pointer or a function object.
+     * @return KWin::Client* The found Client or @c null
+     * @see findClient(Predicate, xcb_window_t)
+     */
+    Client *findClient(std::function<bool (const Client*)> func) const;
+    /**
+     * @brief Finds the Client matching the given match @p predicate for the given window.
+     *
+     * @param predicate Which window should be compared
+     * @param w The window id to test against
+     * @return KWin::Client* The found Client or @c null
+     * @see findClient(std::function<bool (const Client*)>)
+     */
+    Client *findClient(Predicate predicate, xcb_window_t w) const;
     void forEachClient(std::function<void (Client*)> func);
     Unmanaged *findUnmanaged(std::function<bool (const Unmanaged*)> func) const;
     /**
@@ -659,17 +697,6 @@ inline QPoint Workspace::focusMousePosition() const
     return focusMousePos;
 }
 
-template< typename T >
-inline Client* Workspace::findClient(T predicate) const
-{
-    if (Client* ret = findClientInList(clients, predicate))
-        return ret;
-    if (Client* ret = findClientInList(desktops, predicate))
-        return ret;
-    return NULL;
-}
-
-
 inline
 void Workspace::forEachClient(std::function< void (Client*) > func)
 {
@@ -683,11 +710,11 @@ void Workspace::forEachUnmanaged(std::function< void (Unmanaged*) > func)
     std::for_each(unmanaged.constBegin(), unmanaged.constEnd(), func);
 }
 
-KWIN_COMPARE_PREDICATE(ClientMatchPredicate, Client, const Client*, cl == value);
-
 inline bool Workspace::hasClient(const Client* c)
 {
-    return findClient(ClientMatchPredicate(c));
+    return findClient([c](const Client *test) {
+        return test == c;
+    });
 }
 
 inline Workspace *workspace()

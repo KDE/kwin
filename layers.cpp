@@ -694,7 +694,7 @@ void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource sr
 {
     Client *other = 0;
     if (detail == XCB_STACK_MODE_OPPOSITE) {
-        other = workspace()->findClient(WindowMatchPredicate(above));
+        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (!other) {
             workspace()->raiseOrLowerClient(this);
             return;
@@ -713,20 +713,20 @@ void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource sr
         }
     }
     else if (detail == XCB_STACK_MODE_TOP_IF) {
-        other = workspace()->findClient(WindowMatchPredicate(above));
+        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (other && other->geometry().intersects(geometry()))
             workspace()->raiseClientRequest(this, src, timestamp);
         return;
     }
     else if (detail == XCB_STACK_MODE_BOTTOM_IF) {
-        other = workspace()->findClient(WindowMatchPredicate(above));
+        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (other && other->geometry().intersects(geometry()))
             workspace()->lowerClientRequest(this, src, timestamp);
         return;
     }
 
     if (!other)
-        other = workspace()->findClient(WindowMatchPredicate(above));
+        other = workspace()->findClient(Predicate::WindowMatch, above);
 
     if (other && detail == XCB_STACK_MODE_ABOVE) {
         ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),

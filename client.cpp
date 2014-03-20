@@ -1800,8 +1800,6 @@ QString Client::readName() const
         return KWindowSystem::readNameProperty(window(), XCB_ATOM_WM_NAME);
 }
 
-KWIN_COMPARE_PREDICATE(FetchNameInternalPredicate, Client, const Client*, (!cl->isSpecialWindow() || cl->isToolbar()) && cl != value && cl->caption() == value->caption());
-
 // The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
 QChar LRM(0x200E);
 QChar RLM(0x200F);
@@ -1856,12 +1854,16 @@ void Client::setCaption(const QString& _s, bool force)
     }
     QString shortcut_suffix = !shortcut().isEmpty() ? (QStringLiteral(" {") + shortcut().toString() + QStringLiteral("}")) : QString();
     cap_suffix = machine_suffix + shortcut_suffix;
-    if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(FetchNameInternalPredicate(this))) {
+    auto fetchNameInternalPredicate = [this](const Client *cl) {
+        return (!cl->isSpecialWindow() || cl->isToolbar()) &&
+                cl != this && cl->caption() == caption();
+    };
+    if ((!isSpecialWindow() || isToolbar()) && workspace()->findClient(fetchNameInternalPredicate)) {
         int i = 2;
         do {
             cap_suffix = machine_suffix + QStringLiteral(" <") + QString::number(i) + QStringLiteral(">") + LRM;
             i++;
-        } while (workspace()->findClient(FetchNameInternalPredicate(this)));
+        } while (workspace()->findClient(fetchNameInternalPredicate));
         info->setVisibleName(caption().toUtf8().constData());
         reset_name = false;
     }

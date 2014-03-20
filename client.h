@@ -55,6 +55,19 @@ class TabBoxClientImpl;
 class Bridge;
 class PaintRedirector;
 
+
+/**
+ * @brief Defines Predicates on how to search for a Client.
+ *
+ * Used by Workspace::findClient.
+ */
+enum class Predicate {
+    WindowMatch,
+    WrapperIdMatch,
+    FrameIdMatch,
+    InputIdMatch
+};
+
 class Client
     : public Toplevel
 {
@@ -978,7 +991,6 @@ private:
     static bool check_active_modal; ///< \see Client::checkActiveModal()
     QKeySequence _shortcut;
     int sm_stacking_order;
-    friend struct FetchNameInternalPredicate;
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
     PaintRedirector* paintRedirector;
@@ -1268,9 +1280,6 @@ inline void Client::print(T &stream) const
     stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";
 }
-
-KWIN_COMPARE_PREDICATE(WrapperIdMatchPredicate, Client, Window, cl->wrapperId() == value);
-KWIN_COMPARE_PREDICATE(InputIdMatchPredicate, Client, Window, cl->inputId() == value);
 
 } // namespace
 Q_DECLARE_METATYPE(KWin::Client*)

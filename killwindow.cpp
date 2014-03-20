@@ -203,7 +203,7 @@ void KillWindow::killWindowId(xcb_window_t window_to_kill)
     xcb_window_t window = window_to_kill;
     Client* client = NULL;
     while (true) {
-        client = Workspace::self()->findClient(FrameIdMatchPredicate(window));
+        client = Workspace::self()->findClient(Predicate::FrameIdMatch, window);
         if (client) {
             break; // Found the client
         }

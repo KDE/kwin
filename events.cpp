@@ -234,16 +234,16 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 
     const xcb_window_t eventWindow = findEventWindow(e);
     if (eventWindow != XCB_WINDOW_NONE) {
-        if (Client* c = findClient(WindowMatchPredicate(eventWindow))) {
+        if (Client* c = findClient(Predicate::WindowMatch, eventWindow)) {
             if (c->windowEvent(e))
                 return true;
-        } else if (Client* c = findClient(WrapperIdMatchPredicate(eventWindow))) {
+        } else if (Client* c = findClient(Predicate::WrapperIdMatch, eventWindow)) {
             if (c->windowEvent(e))
                 return true;
-        } else if (Client* c = findClient(FrameIdMatchPredicate(eventWindow))) {
+        } else if (Client* c = findClient(Predicate::FrameIdMatch, eventWindow)) {
             if (c->windowEvent(e))
                 return true;
-        } else if (Client *c = findClient(InputIdMatchPredicate(eventWindow))) {
+        } else if (Client *c = findClient(Predicate::InputIdMatch, eventWindow)) {
             if (c->windowEvent(e))
                 return true;
         } else if (Unmanaged* c = findUnmanaged(eventWindow)) {
@@ -300,7 +300,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         updateXTime();
 
         const auto *event = reinterpret_cast<xcb_map_request_event_t*>(e);
-        if (Client* c = findClient(WindowMatchPredicate(event->window))) {
+        if (Client* c = findClient(Predicate::WindowMatch, event->window)) {
             // e->xmaprequest.window is different from e->xany.window
             // TODO this shouldn't be necessary now
             c->windowEvent(e);
@@ -350,7 +350,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             break;
         // TODO is this cliente ever found, given that client events are searched above?
         const auto *event = reinterpret_cast<xcb_leave_notify_event_t*>(e);
-        Client* c = findClient(FrameIdMatchPredicate(event->event));
+        Client* c = findClient(Predicate::FrameIdMatch, event->event);
         if (c && event->detail != XCB_NOTIFY_DETAIL_INFERIOR)
             QWhatsThis::leaveWhatsThisMode();
         break;

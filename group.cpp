@@ -203,7 +203,7 @@ Group::Group(Window leader_P)
         refcount(0)
 {
     if (leader_P != None) {
-        leader_client = workspace()->findClient(WindowMatchPredicate(leader_P));
+        leader_client = workspace()->findClient(Predicate::WindowMatch, leader_P);
         leader_info = new NETWinInfo(connection(), leader_P, rootWindow(),
                                       0, NET::WM2StartupId);
     }
@@ -583,7 +583,7 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
         transient_for = NULL;
         m_transientForId = new_transient_for_id;
         if (m_transientForId != XCB_WINDOW_NONE && !groupTransient()) {
-            transient_for = workspace()->findClient(WindowMatchPredicate(m_transientForId));
+            transient_for = workspace()->findClient(Predicate::WindowMatch, m_transientForId);
             assert(transient_for != NULL);   // verifyTransient() had to check this
             transient_for->addTransient(this);
         } // checkGroup() will check 'check_active_modal'
@@ -755,14 +755,14 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     xcb_window_t before_search = new_transient_for;
     while (new_transient_for != XCB_WINDOW_NONE
             && new_transient_for != rootWindow()
-            && !workspace()->findClient(WindowMatchPredicate(new_transient_for))) {
+            && !workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         Xcb::Tree tree(new_transient_for);
         if (tree.isNull()) {
             break;
         }
         new_transient_for = tree->parent;
     }
-    if (Client* new_transient_for_client = workspace()->findClient(WindowMatchPredicate(new_transient_for))) {
+    if (Client* new_transient_for_client = workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         if (new_transient_for != before_search) {
             qDebug() << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
                          << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
@@ -776,7 +776,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     int count = 20;
     xcb_window_t loop_pos = new_transient_for;
     while (loop_pos != XCB_WINDOW_NONE && loop_pos != rootWindow()) {
-        Client* pos = workspace()->findClient(WindowMatchPredicate(loop_pos));
+        Client* pos = workspace()->findClient(Predicate::WindowMatch, loop_pos);
         if (pos == NULL)
             break;
         loop_pos = pos->m_transientForId;
@@ -786,7 +786,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
         }
     }
     if (new_transient_for != rootWindow()
-            && workspace()->findClient(WindowMatchPredicate(new_transient_for)) == NULL) {
+            && workspace()->findClient(Predicate::WindowMatch, new_transient_for) == NULL) {
         // it's transient for a specific window, but that window is not mapped
         new_transient_for = rootWindow();
     }
