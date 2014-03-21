@@ -79,8 +79,8 @@ public:
     bool hasEffect(const QByteArray &name) const;
     bool supported(const QByteArray &name) const;
     bool supported(BuiltInEffect effect) const;
-    bool enabledByDefault(const QByteArray &name) const;
-    bool enabledByDefault(BuiltInEffect effect) const;
+    bool checkEnabledByDefault(const QByteArray &name) const;
+    bool checkEnabledByDefault(BuiltInEffect effect) const;
     QList<QByteArray> availableEffectNames() const;
     QList<BuiltInEffect> availableEffects() const;
     BuiltInEffect builtInForName(const QByteArray &name) const;
@@ -92,7 +92,7 @@ private:
     QHash<QByteArray, BuiltInEffect> m_effects;
     QMap<BuiltInEffect, CreateInstanceFunction> m_createHash;
     QMap<BuiltInEffect, SupportedFunction> m_supportedHash;
-    QMap<BuiltInEffect, SupportedFunction> m_enabledHash;
+    QMap<BuiltInEffect, SupportedFunction> m_checkEnabledHash;
 };
 
 EffectLoader::EffectLoader()
@@ -163,12 +163,12 @@ EffectLoader::EffectLoader()
 
 #undef SUPPORTED
 
-#define ENABLED(name, method) \
-    m_enabledHash.insert(BuiltInEffect::name, &method);
-    ENABLED(Blur, BlurEffect::enabledByDefault)
-    ENABLED(Contrast, ContrastEffect::enabledByDefault)
+#define CHECKENABLED(name, method) \
+    m_checkEnabledHash.insert(BuiltInEffect::name, &method);
+    CHECKENABLED(Blur, BlurEffect::enabledByDefault)
+    CHECKENABLED(Contrast, ContrastEffect::enabledByDefault)
 
-#undef ENABLED
+#undef CHECKENABLED
 }
 
 Effect *EffectLoader::create(const QByteArray &name)
@@ -207,15 +207,15 @@ bool EffectLoader::supported(BuiltInEffect effect) const
     return true;
 }
 
-bool EffectLoader::enabledByDefault(const QByteArray &name) const
+bool EffectLoader::checkEnabledByDefault(const QByteArray &name) const
 {
-    return enabledByDefault(builtInForName(name));
+    return checkEnabledByDefault(builtInForName(name));
 }
 
-bool EffectLoader::enabledByDefault(BuiltInEffect effect) const
+bool EffectLoader::checkEnabledByDefault(BuiltInEffect effect) const
 {
-    auto it = m_enabledHash.constFind(effect);
-    if (it != m_enabledHash.constEnd()) {
+    auto it = m_checkEnabledHash.constFind(effect);
+    if (it != m_checkEnabledHash.constEnd()) {
         return it.value()();
     }
     return true;
@@ -275,14 +275,14 @@ bool supported(BuiltInEffect effect)
     return s_effectLoader->supported(effect);
 }
 
-bool enabledByDefault(const QByteArray &name)
+bool checkEnabledByDefault(const QByteArray &name)
 {
-    return s_effectLoader->enabledByDefault(name);
+    return s_effectLoader->checkEnabledByDefault(name);
 }
 
-bool enabledByDefault(BuiltInEffect effect)
+bool checkEnabledByDefault(BuiltInEffect effect)
 {
-    return s_effectLoader->enabledByDefault(effect);
+    return s_effectLoader->checkEnabledByDefault(effect);
 }
 
 QList< QByteArray > availableEffectNames()

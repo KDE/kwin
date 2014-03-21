@@ -1580,7 +1580,7 @@ Effect *EffectsHandlerImpl::loadBuiltInEffect(const QByteArray &name, bool check
         return nullptr;
     }
     if (checkDefault) {
-        if (!BuiltInEffects::enabledByDefault(name)) {
+        if (!BuiltInEffects::checkEnabledByDefault(name)) {
             return nullptr;
         }
     }
