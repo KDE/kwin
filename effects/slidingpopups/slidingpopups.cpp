@@ -326,6 +326,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
     animData.start = d[ 0 ];
     animData.from = (Position)d[ 1 ];
     //custom duration
+    animData.slideLength = 0;
     if (data.length() >= (int)(sizeof(uint32_t) * 3)) {
         animData.fadeInDuration = d[2];
         if (data.length() >= (int)(sizeof(uint32_t) * 4))
@@ -338,8 +339,6 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow* w, long a)
         //do we want an actual slide?
         if (data.length() >= (int)(sizeof(uint32_t) * 5))
             animData.slideLength = d[5];
-        else
-            animData.slideLength = 0;
     } else {
         animData.fadeInDuration = animationTime(mFadeInTime);
         animData.fadeOutDuration = animationTime(mFadeOutTime);
