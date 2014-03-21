@@ -85,6 +85,7 @@ KWINEFFECTS_EXPORT bool supported(const QByteArray &name);
 KWINEFFECTS_EXPORT bool supported(BuiltInEffect effect);
 KWINEFFECTS_EXPORT bool checkEnabledByDefault(const QByteArray &name);
 KWINEFFECTS_EXPORT bool checkEnabledByDefault(BuiltInEffect effect);
+KWINEFFECTS_EXPORT bool enabledByDefault(BuiltInEffect effect);
 KWINEFFECTS_EXPORT QByteArray nameForEffect(BuiltInEffect effect);
 KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QByteArray &name);
 KWINEFFECTS_EXPORT QList<QByteArray> availableEffectNames();

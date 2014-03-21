@@ -81,6 +81,7 @@ public:
     bool supported(BuiltInEffect effect) const;
     bool checkEnabledByDefault(const QByteArray &name) const;
     bool checkEnabledByDefault(BuiltInEffect effect) const;
+    bool enabledByDefault(BuiltInEffect effect) const;
     QList<QByteArray> availableEffectNames() const;
     QList<BuiltInEffect> availableEffects() const;
     BuiltInEffect builtInForName(const QByteArray &name) const;
@@ -93,52 +94,54 @@ private:
     QMap<BuiltInEffect, CreateInstanceFunction> m_createHash;
     QMap<BuiltInEffect, SupportedFunction> m_supportedHash;
     QMap<BuiltInEffect, SupportedFunction> m_checkEnabledHash;
+    QMap<BuiltInEffect, bool> m_enabledByDefault;
 };
 
 EffectLoader::EffectLoader()
 {
-#define EFFECT(name, className) \
+#define EFFECT(name, className, enabled) \
     m_effects.insert(QByteArrayLiteral(#name).toLower(), BuiltInEffect::name);\
-    m_createHash.insert(BuiltInEffect::name, &createHelper< className >);
-    EFFECT(Blur, BlurEffect)
-    EFFECT(Contrast, ContrastEffect)
-    EFFECT(CoverSwitch, CoverSwitchEffect)
-    EFFECT(Cube, CubeEffect)
-    EFFECT(CubeSlide, CubeSlideEffect)
-    EFFECT(Dashboard, DashboardEffect)
-    EFFECT(DesktopGrid, DesktopGridEffect)
-    EFFECT(DimInactive, DimInactiveEffect)
-    EFFECT(DimScreen, DimScreenEffect)
-    EFFECT(FallApart, FallApartEffect)
-    EFFECT(FlipSwitch, FlipSwitchEffect)
-    EFFECT(Glide, GlideEffect)
-    EFFECT(HighlightWindow, HighlightWindowEffect)
-    EFFECT(Invert, InvertEffect)
-    EFFECT(Kscreen, KscreenEffect)
-    EFFECT(Logout, LogoutEffect)
-    EFFECT(LookingGlass, LookingGlassEffect)
-    EFFECT(MagicLamp, MagicLampEffect)
-    EFFECT(Magnifier, MagnifierEffect)
-    EFFECT(MinimizeAnimation, MinimizeAnimationEffect)
-    EFFECT(MouseClick, MouseClickEffect)
-    EFFECT(MouseMark, MouseMarkEffect)
-    EFFECT(PresentWindows, PresentWindowsEffect)
-    EFFECT(Resize, ResizeEffect)
-    EFFECT(ScreenEdge, ScreenEdgeEffect)
-    EFFECT(ScreenShot, ScreenShotEffect)
-    EFFECT(Sheet, SheetEffect)
-    EFFECT(ShowFps, ShowFpsEffect)
-    EFFECT(ShowPaint, ShowPaintEffect)
-    EFFECT(Slide, SlideEffect)
-    EFFECT(SlideBack, SlideBackEffect)
-    EFFECT(SlidingPopups, SlidingPopupsEffect)
-    EFFECT(SnapHelper, SnapHelperEffect)
-    EFFECT(StartupFeedback, StartupFeedbackEffect)
-    EFFECT(ThumbnailAside, ThumbnailAsideEffect)
-    EFFECT(TrackMouse, TrackMouseEffect)
-    EFFECT(WindowGeometry, WindowGeometry)
-    EFFECT(WobblyWindows, WobblyWindowsEffect)
-    EFFECT(Zoom, ZoomEffect)
+    m_createHash.insert(BuiltInEffect::name, &createHelper< className >); \
+    m_enabledByDefault.insert(BuiltInEffect::name, enabled);
+    EFFECT(Blur, BlurEffect, true)
+    EFFECT(Contrast, ContrastEffect, true)
+    EFFECT(CoverSwitch, CoverSwitchEffect, false)
+    EFFECT(Cube, CubeEffect, false)
+    EFFECT(CubeSlide, CubeSlideEffect, false)
+    EFFECT(Dashboard, DashboardEffect, true)
+    EFFECT(DesktopGrid, DesktopGridEffect, true)
+    EFFECT(DimInactive, DimInactiveEffect, false)
+    EFFECT(DimScreen, DimScreenEffect, false)
+    EFFECT(FallApart, FallApartEffect, false)
+    EFFECT(FlipSwitch, FlipSwitchEffect, false)
+    EFFECT(Glide, GlideEffect, false)
+    EFFECT(HighlightWindow, HighlightWindowEffect, true)
+    EFFECT(Invert, InvertEffect, false)
+    EFFECT(Kscreen, KscreenEffect, true)
+    EFFECT(Logout, LogoutEffect, true)
+    EFFECT(LookingGlass, LookingGlassEffect, false)
+    EFFECT(MagicLamp, MagicLampEffect, false)
+    EFFECT(Magnifier, MagnifierEffect, false)
+    EFFECT(MinimizeAnimation, MinimizeAnimationEffect, true)
+    EFFECT(MouseClick, MouseClickEffect, false)
+    EFFECT(MouseMark, MouseMarkEffect, false)
+    EFFECT(PresentWindows, PresentWindowsEffect, true)
+    EFFECT(Resize, ResizeEffect, false)
+    EFFECT(ScreenEdge, ScreenEdgeEffect, true)
+    EFFECT(ScreenShot, ScreenShotEffect, true)
+    EFFECT(Sheet, SheetEffect, false)
+    EFFECT(ShowFps, ShowFpsEffect, false)
+    EFFECT(ShowPaint, ShowPaintEffect, false)
+    EFFECT(Slide, SlideEffect, true)
+    EFFECT(SlideBack, SlideBackEffect, false)
+    EFFECT(SlidingPopups, SlidingPopupsEffect, true)
+    EFFECT(SnapHelper, SnapHelperEffect, false)
+    EFFECT(StartupFeedback, StartupFeedbackEffect, true)
+    EFFECT(ThumbnailAside, ThumbnailAsideEffect, false)
+    EFFECT(TrackMouse, TrackMouseEffect, false)
+    EFFECT(WindowGeometry, WindowGeometry, false)
+    EFFECT(WobblyWindows, WobblyWindowsEffect, false)
+    EFFECT(Zoom, ZoomEffect, true)
 
 #undef EFFECT
 
@@ -221,6 +224,15 @@ bool EffectLoader::checkEnabledByDefault(BuiltInEffect effect) const
     return true;
 }
 
+bool EffectLoader::enabledByDefault(BuiltInEffect effect) const
+{
+    auto it = m_enabledByDefault.constFind(effect);
+    if (it != m_enabledByDefault.constEnd()) {
+        return it.value();
+    }
+    return false;
+}
+
 QList< QByteArray > EffectLoader::availableEffectNames() const
 {
     return m_effects.keys();
@@ -283,6 +295,11 @@ bool checkEnabledByDefault(const QByteArray &name)
 bool checkEnabledByDefault(BuiltInEffect effect)
 {
     return s_effectLoader->checkEnabledByDefault(effect);
+}
+
+bool enabledByDefault(BuiltInEffect effect)
+{
+    return s_effectLoader->enabledByDefault(effect);
 }
 
 QList< QByteArray > availableEffectNames()
