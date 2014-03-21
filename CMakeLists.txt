@@ -516,3 +516,8 @@ ecm_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(qml)
 add_subdirectory(autotests)
 add_subdirectory(tests)
+
+configure_file(KWinDBusInterfaceConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake" @ONLY)
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
+    DESTINATION ${CMAKECONFIG_INSTALL_DIR})
