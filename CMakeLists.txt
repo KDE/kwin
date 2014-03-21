@@ -135,7 +135,9 @@ set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 find_package(XCB COMPONENTS ICCCM)
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
 
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
 
 ########### configure tests ###############
 include(CMakeDependentOption)
