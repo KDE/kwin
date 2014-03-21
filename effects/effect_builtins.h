@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EFFECT_BUILTINS_H
 #define KWIN_EFFECT_BUILTINS_H
 #include <kwineffects_export.h>
+#include <QList>
 
 class QByteArray;
 
@@ -27,13 +28,67 @@ namespace KWin
 {
 class Effect;
 
+/**
+ * Defines all the built in effects.
+ **/
+enum class BuiltInEffect
+{
+    Invalid, ///< not a valid Effect
+    Blur,
+    Contrast,
+    CoverSwitch,
+    Cube,
+    CubeSlide,
+    Dashboard,
+    DesktopGrid,
+    DimInactive,
+    DimScreen,
+    FallApart,
+    FlipSwitch,
+    Glide,
+    HighlightWindow,
+    Invert,
+    Kscreen,
+    Logout,
+    LookingGlass,
+    MagicLamp,
+    Magnifier,
+    MinimizeAnimation,
+    MouseClick,
+    MouseMark,
+    PresentWindows,
+    Resize,
+    ScreenEdge,
+    ScreenShot,
+    Sheet,
+    ShowFps,
+    ShowPaint,
+    Slide,
+    SlideBack,
+    SlidingPopups,
+    SnapHelper,
+    StartupFeedback,
+    ThumbnailAside,
+    TrackMouse,
+    WindowGeometry,
+    WobblyWindows,
+    Zoom
+};
+
 namespace BuiltInEffects
 {
 
 KWINEFFECTS_EXPORT Effect *create(const QByteArray &name);
+KWINEFFECTS_EXPORT Effect *create(BuiltInEffect effect);
 KWINEFFECTS_EXPORT bool available(const QByteArray &name);
 KWINEFFECTS_EXPORT bool supported(const QByteArray &name);
+KWINEFFECTS_EXPORT bool supported(BuiltInEffect effect);
 KWINEFFECTS_EXPORT bool enabledByDefault(const QByteArray &name);
+KWINEFFECTS_EXPORT bool enabledByDefault(BuiltInEffect effect);
+KWINEFFECTS_EXPORT QByteArray nameForEffect(BuiltInEffect effect);
+KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QByteArray &name);
+KWINEFFECTS_EXPORT QList<QByteArray> availableEffectNames();
+KWINEFFECTS_EXPORT QList<BuiltInEffect> availableEffects();
 }
 
 }

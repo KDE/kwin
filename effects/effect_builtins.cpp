@@ -75,96 +75,110 @@ class EffectLoader
 public:
     EffectLoader();
     Effect *create(const QByteArray &name);
+    Effect *create(BuiltInEffect effect);
     bool hasEffect(const QByteArray &name) const;
     bool supported(const QByteArray &name) const;
+    bool supported(BuiltInEffect effect) const;
     bool enabledByDefault(const QByteArray &name) const;
+    bool enabledByDefault(BuiltInEffect effect) const;
+    QList<QByteArray> availableEffectNames() const;
+    QList<BuiltInEffect> availableEffects() const;
+    BuiltInEffect builtInForName(const QByteArray &name) const;
+    QByteArray nameForEffect(BuiltInEffect effect) const;
 
 private:
     typedef Effect *(*CreateInstanceFunction)();
     typedef bool (*SupportedFunction)();
-    QHash<QByteArray, CreateInstanceFunction> m_createHash;
-    QHash<QByteArray, SupportedFunction> m_supportedHash;
-    QHash<QByteArray, SupportedFunction> m_enabledHash;
+    QHash<QByteArray, BuiltInEffect> m_effects;
+    QMap<BuiltInEffect, CreateInstanceFunction> m_createHash;
+    QMap<BuiltInEffect, SupportedFunction> m_supportedHash;
+    QMap<BuiltInEffect, SupportedFunction> m_enabledHash;
 };
 
 EffectLoader::EffectLoader()
 {
 #define EFFECT(name, className) \
-    m_createHash.insert(QByteArrayLiteral(#name), &createHelper< className >);
-    EFFECT(blur, BlurEffect)
-    EFFECT(contrast, ContrastEffect)
-    EFFECT(coverswitch, CoverSwitchEffect)
-    EFFECT(cube, CubeEffect)
-    EFFECT(cubeslide, CubeSlideEffect)
-    EFFECT(dashboard, DashboardEffect)
-    EFFECT(desktopgrid, DesktopGridEffect)
-    EFFECT(diminactive, DimInactiveEffect)
-    EFFECT(dimscreen, DimScreenEffect)
-    EFFECT(fallapart, FallApartEffect)
-    EFFECT(flipswitch, FlipSwitchEffect)
-    EFFECT(glide, GlideEffect)
-    EFFECT(highlightwindow, HighlightWindowEffect)
-    EFFECT(invert, InvertEffect)
-    EFFECT(kscreen, KscreenEffect)
-    EFFECT(logout, LogoutEffect)
-    EFFECT(lookingglass, LookingGlassEffect)
-    EFFECT(magiclamp, MagicLampEffect)
-    EFFECT(magnifier, MagnifierEffect)
-    EFFECT(minimizeanimation, MinimizeAnimationEffect)
-    EFFECT(mouseclick, MouseClickEffect)
-    EFFECT(mousemark, MouseMarkEffect)
-    EFFECT(presentwindows, PresentWindowsEffect)
-    EFFECT(resize, ResizeEffect)
-    EFFECT(screenedge, ScreenEdgeEffect)
-    EFFECT(screenshot, ScreenShotEffect)
-    EFFECT(sheet, SheetEffect)
-    EFFECT(showfps, ShowFpsEffect)
-    EFFECT(showpaint, ShowPaintEffect)
-    EFFECT(slide, SlideEffect)
-    EFFECT(slideback, SlideBackEffect)
-    EFFECT(slidingpopups, SlidingPopupsEffect)
-    EFFECT(snaphelper, SnapHelperEffect)
-    EFFECT(startupfeedback, StartupFeedbackEffect)
-    EFFECT(thumbnailaside, ThumbnailAsideEffect)
-    EFFECT(trackmouse, TrackMouseEffect)
-    EFFECT(windowgeometry, WindowGeometry)
-    EFFECT(wobblywindows, WobblyWindowsEffect)
-    EFFECT(zoom, ZoomEffect)
+    m_effects.insert(QByteArrayLiteral(#name).toLower(), BuiltInEffect::name);\
+    m_createHash.insert(BuiltInEffect::name, &createHelper< className >);
+    EFFECT(Blur, BlurEffect)
+    EFFECT(Contrast, ContrastEffect)
+    EFFECT(CoverSwitch, CoverSwitchEffect)
+    EFFECT(Cube, CubeEffect)
+    EFFECT(CubeSlide, CubeSlideEffect)
+    EFFECT(Dashboard, DashboardEffect)
+    EFFECT(DesktopGrid, DesktopGridEffect)
+    EFFECT(DimInactive, DimInactiveEffect)
+    EFFECT(DimScreen, DimScreenEffect)
+    EFFECT(FallApart, FallApartEffect)
+    EFFECT(FlipSwitch, FlipSwitchEffect)
+    EFFECT(Glide, GlideEffect)
+    EFFECT(HighlightWindow, HighlightWindowEffect)
+    EFFECT(Invert, InvertEffect)
+    EFFECT(Kscreen, KscreenEffect)
+    EFFECT(Logout, LogoutEffect)
+    EFFECT(LookingGlass, LookingGlassEffect)
+    EFFECT(MagicLamp, MagicLampEffect)
+    EFFECT(Magnifier, MagnifierEffect)
+    EFFECT(MinimizeAnimation, MinimizeAnimationEffect)
+    EFFECT(MouseClick, MouseClickEffect)
+    EFFECT(MouseMark, MouseMarkEffect)
+    EFFECT(PresentWindows, PresentWindowsEffect)
+    EFFECT(Resize, ResizeEffect)
+    EFFECT(ScreenEdge, ScreenEdgeEffect)
+    EFFECT(ScreenShot, ScreenShotEffect)
+    EFFECT(Sheet, SheetEffect)
+    EFFECT(ShowFps, ShowFpsEffect)
+    EFFECT(ShowPaint, ShowPaintEffect)
+    EFFECT(Slide, SlideEffect)
+    EFFECT(SlideBack, SlideBackEffect)
+    EFFECT(SlidingPopups, SlidingPopupsEffect)
+    EFFECT(SnapHelper, SnapHelperEffect)
+    EFFECT(StartupFeedback, StartupFeedbackEffect)
+    EFFECT(ThumbnailAside, ThumbnailAsideEffect)
+    EFFECT(TrackMouse, TrackMouseEffect)
+    EFFECT(WindowGeometry, WindowGeometry)
+    EFFECT(WobblyWindows, WobblyWindowsEffect)
+    EFFECT(Zoom, ZoomEffect)
 
 #undef EFFECT
 
 #define SUPPORTED(name, method) \
-    m_supportedHash.insert(QByteArrayLiteral(#name), &method);
-    SUPPORTED(blur, BlurEffect::supported)
-    SUPPORTED(contrast, ContrastEffect::supported)
-    SUPPORTED(coverswitch, CoverSwitchEffect::supported)
-    SUPPORTED(cube, CubeEffect::supported)
-    SUPPORTED(cubeslide, CubeSlideEffect::supported)
-    SUPPORTED(fallapart, FallApartEffect::supported)
-    SUPPORTED(flipswitch, FlipSwitchEffect::supported)
-    SUPPORTED(glide, GlideEffect::supported)
-    SUPPORTED(invert, InvertEffect::supported)
-    SUPPORTED(lookingglass, LookingGlassEffect::supported)
-    SUPPORTED(magiclamp, MagicLampEffect::supported)
-    SUPPORTED(magnifier, MagnifierEffect::supported)
-    SUPPORTED(screenshot, ScreenShotEffect::supported)
-    SUPPORTED(sheet, SheetEffect::supported)
-    SUPPORTED(startupfeedback, StartupFeedbackEffect::supported)
-    SUPPORTED(wobblywindows, WobblyWindowsEffect::supported)
+    m_supportedHash.insert(BuiltInEffect::name, &method);
+    SUPPORTED(Blur, BlurEffect::supported)
+    SUPPORTED(Contrast, ContrastEffect::supported)
+    SUPPORTED(CoverSwitch, CoverSwitchEffect::supported)
+    SUPPORTED(Cube, CubeEffect::supported)
+    SUPPORTED(CubeSlide, CubeSlideEffect::supported)
+    SUPPORTED(FallApart, FallApartEffect::supported)
+    SUPPORTED(FlipSwitch, FlipSwitchEffect::supported)
+    SUPPORTED(Glide, GlideEffect::supported)
+    SUPPORTED(Invert, InvertEffect::supported)
+    SUPPORTED(LookingGlass, LookingGlassEffect::supported)
+    SUPPORTED(MagicLamp, MagicLampEffect::supported)
+    SUPPORTED(Magnifier, MagnifierEffect::supported)
+    SUPPORTED(ScreenShot, ScreenShotEffect::supported)
+    SUPPORTED(Sheet, SheetEffect::supported)
+    SUPPORTED(StartupFeedback, StartupFeedbackEffect::supported)
+    SUPPORTED(WobblyWindows, WobblyWindowsEffect::supported)
 
 #undef SUPPORTED
 
 #define ENABLED(name, method) \
-    m_enabledHash.insert(QByteArrayLiteral(#name), &method);
-    ENABLED(blur, BlurEffect::enabledByDefault)
-    ENABLED(contrast, ContrastEffect::enabledByDefault)
+    m_enabledHash.insert(BuiltInEffect::name, &method);
+    ENABLED(Blur, BlurEffect::enabledByDefault)
+    ENABLED(Contrast, ContrastEffect::enabledByDefault)
 
 #undef ENABLED
 }
 
 Effect *EffectLoader::create(const QByteArray &name)
 {
-    auto it = m_createHash.constFind(name);
+    return create(builtInForName(name));
+}
+
+Effect *EffectLoader::create(BuiltInEffect effect)
+{
+    auto it = m_createHash.constFind(effect);
     if (it == m_createHash.constEnd()) {
         return nullptr;
     }
@@ -173,12 +187,20 @@ Effect *EffectLoader::create(const QByteArray &name)
 
 bool EffectLoader::hasEffect(const QByteArray &name) const
 {
-    return m_createHash.contains(name);
+    return m_effects.contains(name);
 }
 
 bool EffectLoader::supported(const QByteArray &name) const
 {
-    auto it = m_supportedHash.constFind(name);
+    return supported(builtInForName(name));
+}
+
+bool EffectLoader::supported(BuiltInEffect effect) const
+{
+    if (effect == BuiltInEffect::Invalid) {
+        return false;
+    }
+    auto it = m_supportedHash.constFind(effect);
     if (it != m_supportedHash.constEnd()) {
         return it.value()();
     }
@@ -187,11 +209,40 @@ bool EffectLoader::supported(const QByteArray &name) const
 
 bool EffectLoader::enabledByDefault(const QByteArray &name) const
 {
-    auto it = m_enabledHash.constFind(name);
+    return enabledByDefault(builtInForName(name));
+}
+
+bool EffectLoader::enabledByDefault(BuiltInEffect effect) const
+{
+    auto it = m_enabledHash.constFind(effect);
     if (it != m_enabledHash.constEnd()) {
         return it.value()();
     }
     return true;
+}
+
+QList< QByteArray > EffectLoader::availableEffectNames() const
+{
+    return m_effects.keys();
+}
+
+QList< BuiltInEffect > EffectLoader::availableEffects() const
+{
+    return m_effects.values();
+}
+
+BuiltInEffect EffectLoader::builtInForName(const QByteArray &name) const
+{
+    auto it = m_effects.find(name);
+    if (it == m_effects.end()) {
+        return BuiltInEffect::Invalid;
+    }
+    return it.value();
+}
+
+QByteArray EffectLoader::nameForEffect(BuiltInEffect effect) const
+{
+    return m_effects.key(effect);
 }
 
 Q_GLOBAL_STATIC(EffectLoader, s_effectLoader)
@@ -204,6 +255,11 @@ Effect *create(const QByteArray &name)
     return s_effectLoader->create(name);
 }
 
+Effect *create(BuiltInEffect effect)
+{
+    return s_effectLoader->create(effect);
+}
+
 bool available(const QByteArray &name)
 {
     return s_effectLoader->hasEffect(name);
@@ -214,9 +270,39 @@ bool supported(const QByteArray &name)
     return s_effectLoader->supported(name);
 }
 
+bool supported(BuiltInEffect effect)
+{
+    return s_effectLoader->supported(effect);
+}
+
 bool enabledByDefault(const QByteArray &name)
 {
     return s_effectLoader->enabledByDefault(name);
+}
+
+bool enabledByDefault(BuiltInEffect effect)
+{
+    return s_effectLoader->enabledByDefault(effect);
+}
+
+QList< QByteArray > availableEffectNames()
+{
+    return s_effectLoader->availableEffectNames();
+}
+
+QList< BuiltInEffect > availableEffects()
+{
+    return s_effectLoader->availableEffects();
+}
+
+BuiltInEffect builtInForName(const QByteArray &name)
+{
+    return s_effectLoader->builtInForName(name);
+}
+
+QByteArray nameForEffect(BuiltInEffect effect)
+{
+    return s_effectLoader->nameForEffect(effect);
 }
 
 } // BuiltInEffects
