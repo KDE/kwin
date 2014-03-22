@@ -290,6 +290,7 @@ set(kwin_KDEINIT_SRCS
    lanczosfilter.cpp
    deleted.cpp
    effects.cpp
+   effectloader.cpp
    compositingprefs.cpp
    paintredirector.cpp
    virtualdesktops.cpp

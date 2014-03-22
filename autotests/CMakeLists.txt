@@ -1,3 +1,4 @@
+add_definitions(-DKWIN_UNIT_TEST)
 ########################################################
 # Test ScreenPaintData
 ########################################################
@@ -98,3 +99,22 @@ target_link_libraries( testXcbWindow
 )
 add_test(kwin-testXcbWindow testXcbWindow)
 ecm_mark_as_test(testXcbWindow)
+
+########################################################
+# Test BuiltInEffectLoader
+########################################################
+set( testBuiltInEffectLoader_SRCS
+    test_builtin_effectloader.cpp
+    mock_effectshandler.cpp
+    ../effectloader.cpp
+)
+add_executable( testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
+
+target_link_libraries(testBuiltInEffectLoader
+    Qt5::Test
+    kwineffects
+    kwin4_effect_builtins
+)
+
+add_test(kwin-testBuiltInEffectLoader testBuiltInEffectLoader)
+ecm_mark_as_test(testBuiltInEffectLoader)
