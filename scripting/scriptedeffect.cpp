@@ -411,7 +411,9 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
     m_engine->globalObject().setProperty(QStringLiteral("effects"), effectsObject, QScriptValue::Undeletable);
     m_engine->globalObject().setProperty(QStringLiteral("Effect"), m_engine->newQMetaObject(&ScriptedEffect::staticMetaObject));
+#ifndef KWIN_UNIT_TEST
     m_engine->globalObject().setProperty(QStringLiteral("KWin"), m_engine->newQMetaObject(&WorkspaceWrapper::staticMetaObject));
+#endif
     m_engine->globalObject().setProperty(QStringLiteral("QEasingCurve"), m_engine->newQMetaObject(&QEasingCurve::staticMetaObject));
     m_engine->globalObject().setProperty(QStringLiteral("effect"), m_engine->newQObject(this, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater), QScriptValue::Undeletable);
     m_engine->globalObject().setProperty(QStringLiteral("AnimationData"), m_engine->scriptValueFromQMetaObject<AnimationData>());

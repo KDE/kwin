@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../effectloader.h"
 #include "../effects/effect_builtins.h"
 #include "mock_effectshandler.h"
+#include "../scripting/scriptedeffect.h" // for mocking ScriptedEffect::create
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -31,6 +32,16 @@ Q_DECLARE_METATYPE(KWin::LoadEffectFlag)
 Q_DECLARE_METATYPE(KWin::LoadEffectFlags)
 Q_DECLARE_METATYPE(KWin::BuiltInEffect)
 Q_DECLARE_METATYPE(KWin::Effect*)
+
+namespace KWin
+{
+
+ScriptedEffect *ScriptedEffect::create(const QString &, const QString &)
+{
+    return nullptr;
+}
+
+}
 
 class TestBuiltInEffectLoader : public QObject
 {

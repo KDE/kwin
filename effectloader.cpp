@@ -20,12 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "effectloader.h"
 // KWin
+#include <config-kwin.h>
 #include <kwineffects.h>
 #include "effects/effect_builtins.h"
+#include "scripting/scriptedeffect.h"
 // KDE
 #include <KConfigGroup>
+#include <KServiceTypeTrader>
 // Qt
+#include <QtConcurrentRun>
 #include <QDebug>
+#include <QFutureWatcher>
 #include <QMap>
 #include <QStringList>
 
@@ -180,6 +185,126 @@ QByteArray BuiltInEffectLoader::internalName(const QString& name) const
         internalName = internalName.mid(13);
     }
     return internalName.toUtf8();
+}
+
+static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");
+static const QString s_jsConstraint = QStringLiteral("[X-Plasma-API] == 'javascript'");
+static const QString s_serviceType = QStringLiteral("KWin/Effect");
+
+ScriptedEffectLoader::ScriptedEffectLoader(QObject *parent)
+    : AbstractEffectLoader(parent)
+    , m_queue(new EffectLoadQueue<ScriptedEffectLoader, KService::Ptr>(this))
+{
+}
+
+ScriptedEffectLoader::~ScriptedEffectLoader()
+{
+}
+
+bool ScriptedEffectLoader::hasEffect(const QString &name) const
+{
+    return findEffect(name);
+}
+
+bool ScriptedEffectLoader::isEffectSupported(const QString &name) const
+{
+    // scripted effects are in general supported
+    return hasEffect(name);
+}
+
+QStringList ScriptedEffectLoader::listOfKnownEffects() const
+{
+    const KService::List effects = findAllEffects();
+    QStringList result;
+    for (KService::Ptr service : effects) {
+        result << service->property(s_nameProperty).toString();
+    }
+    return result;
+}
+
+bool ScriptedEffectLoader::loadEffect(const QString &name)
+{
+    KService::Ptr effect = findEffect(name);
+    if (!effect) {
+        return false;
+    }
+    return loadEffect(effect, LoadEffectFlag::Load);
+}
+
+bool ScriptedEffectLoader::loadEffect(KService::Ptr effect, LoadEffectFlags flags)
+{
+    const QString name = effect->property(s_nameProperty).toString();
+    if (!flags.testFlag(LoadEffectFlag::Load)) {
+        qDebug() << "Loading flags disable effect: " << name;
+        return false;
+    }
+    if (m_loadedEffects.contains(name)) {
+        qDebug() << name << "already loaded";
+        return false;
+    }
+
+    const QString scriptName = effect->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    if (scriptName.isEmpty()) {
+        qDebug() << "X-Plasma-MainScript not set";
+        return false;
+    }
+    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                      QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
+    if (scriptFile.isNull()) {
+        qDebug() << "Could not locate the effect script";
+        return false;
+    }
+    ScriptedEffect *e = ScriptedEffect::create(name, scriptFile);
+    if (!e) {
+        qDebug() << "Could not initialize scripted effect: " << name;
+        return false;
+    }
+    connect(e, &ScriptedEffect::destroyed, this,
+        [this, name]() {
+            m_loadedEffects.removeAll(name);
+        }
+    );
+
+    qDebug() << "Successfully loaded scripted effect: " << name;
+    emit effectLoaded(e, name);
+    m_loadedEffects << name;
+    return true;
+}
+
+void ScriptedEffectLoader::queryAndLoadAll()
+{
+    // perform querying for the services in a thread
+    QFutureWatcher<KService::List> *watcher = new QFutureWatcher<KService::List>(this);
+    connect(watcher, &QFutureWatcher<KService::List>::finished, this,
+        [this, watcher]() {
+            const KService::List effects = watcher->result();
+            for (KService::Ptr effect : effects) {
+                const LoadEffectFlags flags = readConfig(effect->property(s_nameProperty).toString(),
+                                                        effect->property(QStringLiteral("X-KDE-PluginInfo-EnabledByDefault")).toBool());
+                if (flags.testFlag(LoadEffectFlag::Load)) {
+                    m_queue->enqueue(qMakePair(effect, flags));
+                }
+            }
+            watcher->deleteLater();
+        },
+        Qt::QueuedConnection);
+    watcher->setFuture(QtConcurrent::run(this, &ScriptedEffectLoader::findAllEffects));
+}
+
+KService::List ScriptedEffectLoader::findAllEffects() const
+{
+    return KServiceTypeTrader::self()->query(s_serviceType, s_jsConstraint);
+}
+
+KService::Ptr ScriptedEffectLoader::findEffect(const QString &name) const
+{
+    const QString constraint = QStringLiteral("%1 and [%2] == '%3'").arg(s_jsConstraint).arg(s_nameProperty).arg(name.toLower());
+    const KService::List services = KServiceTypeTrader::self()->query(s_serviceType,
+                                                                      constraint);
+    if (!services.isEmpty()) {
+        return services.first();
+    }
+    return KService::Ptr();
 }
 
 } // namespace KWin

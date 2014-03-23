@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_EFFECT_LOADER_H
 // KDE
 #include <KSharedConfig>
+#include <KService>
 // Qt
 #include <QObject>
 #include <QFlags>
@@ -281,6 +282,32 @@ private:
     QByteArray internalName(const QString &name) const;
     EffectLoadQueue<BuiltInEffectLoader, BuiltInEffect> *m_queue;
     QMap<BuiltInEffect, Effect*> m_loadedEffects;
+};
+
+/**
+ * @brief Can load scripted Effects
+ *
+ */
+class ScriptedEffectLoader : public AbstractEffectLoader
+{
+    Q_OBJECT
+public:
+    explicit ScriptedEffectLoader(QObject* parent = nullptr);
+    ~ScriptedEffectLoader() override;
+
+    bool hasEffect(const QString &name) const override;
+    bool isEffectSupported(const QString &name) const override;
+    QStringList listOfKnownEffects() const override;
+
+    void queryAndLoadAll() override;
+    bool loadEffect(const QString &name) override;
+    bool loadEffect(KService::Ptr effect, LoadEffectFlags flags);
+
+private:
+    KService::List findAllEffects() const;
+    KService::Ptr findEffect(const QString &name) const;
+    QStringList m_loadedEffects;
+    EffectLoadQueue< ScriptedEffectLoader, KService::Ptr > *m_queue;
 };
 
 }

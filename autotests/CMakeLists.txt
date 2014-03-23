@@ -111,6 +111,7 @@ set( testBuiltInEffectLoader_SRCS
 add_executable( testBuiltInEffectLoader ${testBuiltInEffectLoader_SRCS})
 
 target_link_libraries(testBuiltInEffectLoader
+    Qt5::Concurrent
     Qt5::Test
     kwineffects
     kwin4_effect_builtins
@@ -118,3 +119,30 @@ target_link_libraries(testBuiltInEffectLoader
 
 add_test(kwin-testBuiltInEffectLoader testBuiltInEffectLoader)
 ecm_mark_as_test(testBuiltInEffectLoader)
+
+########################################################
+# Test ScriptedEffectLoader
+########################################################
+include_directories(${KWIN_SOURCE_DIR})
+set( testScriptedEffectLoader_SRCS
+    test_scripted_effectloader.cpp
+    mock_effectshandler.cpp
+    ../effectloader.cpp
+    ../scripting/scriptedeffect.cpp
+    ../scripting/scriptingutils.cpp
+)
+add_executable( testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
+
+target_link_libraries(testScriptedEffectLoader
+    Qt5::Concurrent
+    Qt5::Script
+    Qt5::Test
+    KF5::ConfigGui
+    KF5::GlobalAccel
+    KF5::I18n
+    kwineffects
+    kwin4_effect_builtins
+)
+
+add_test(kwin-testScriptedEffectLoader testScriptedEffectLoader)
+ecm_mark_as_test(testScriptedEffectLoader)
