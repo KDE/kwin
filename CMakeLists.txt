@@ -67,10 +67,8 @@ find_package(KF5KDE4Support REQUIRED NO_MODULE)
 # HACK: remove after split
 if("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     # screensaver and ksmserver dbus interface
-    find_package(KSMServerDBusInterface CONFIG REQUIRED)
     find_package(ScreenSaverDBusInterface CONFIG REQUIRED)
 else()
-    set(KSMSERVER_DBUS_INTERFACE ${ksmserver_SOURCE_DIR}/org.kde.KSMServerInterface.xml)
     set(SCREENSAVER_DBUS_INTERFACE ${ksmserver_SOURCE_DIR}/screenlocker/dbus/org.freedesktop.ScreenSaver.xml)
 endif()
 
@@ -371,7 +369,6 @@ qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::D
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Compositing.xml composite.h KWin::Compositor )
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.kwin.Effects.xml effects.h KWin::EffectsHandlerImpl )
 
-qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${KSMSERVER_DBUS_INTERFACE} ksmserver_interface)
 qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${SCREENSAVER_DBUS_INTERFACE} screenlocker_interface)
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )

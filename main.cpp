@@ -28,9 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "xcbutils.h"
 
-// KDE workspace
-#include <ksmserver_interface.h>
-
 // KDE
 #include <KAboutData>
 #include <KConfig>
@@ -483,8 +480,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     // enforce xcb plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
-    org::kde::KSMServerInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QDBusConnection::sessionBus());
-    ksmserver.suspendStartup(QStringLiteral(KWIN_NAME));
     KWin::Application a(argc, argv);
 
     a.setApplicationName(QStringLiteral(KWIN_NAME));
@@ -537,7 +532,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     a.start();
 
-    ksmserver.resumeStartup(QStringLiteral(KWIN_NAME));
 #warning SessionManager needs porting
 #if KWIN_QT5_PORTING
     KWin::SessionManager weAreIndeed;
