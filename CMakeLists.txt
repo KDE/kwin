@@ -133,7 +133,6 @@ endif()
 include(CMakeDependentOption)
 
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
-option(KWIN_BUILD_OXYGEN "Enable building of default decoration Oxygen" ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
