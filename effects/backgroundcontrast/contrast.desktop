@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Background contrast
 Name[ca]=Contrast del fons
+Name[ca@valencia]=Contrast del fons
 Name[da]=Baggrundskontrast
 Name[de]=Hintergrundkontrast
 Name[el]=Αντίθεση φόντου
@@ -31,6 +32,7 @@ Name[zh_TW]=背景對比
 Icon=preferences-system-windows-effect-contrast
 Comment=Improve contrast and readability behind semi-transparent windows
 Comment[ca]=Millora el contrast i la llegibilitat darrere de les finestres semitransparents
+Comment[ca@valencia]=Millora el contrast i la llegibilitat darrere de les finestres semitransparents
 Comment[cs]=Vylepšit kontrast a čitelnost za poloprůhlednými okny
 Comment[da]=Forøg kontrast og læsbarhed bag halvgennemsigtige vinduer
 Comment[de]=Erhöht den Kontrast und verbessert die Lesbarkeit hinter halbtransparenten Fenster.
