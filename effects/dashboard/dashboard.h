@@ -43,6 +43,10 @@ public:
     virtual void reconfigure(ReconfigureFlags);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 85;
+    }
+
     // for properties
     qreal configuredBrightness() const {
         return brightness;

@@ -43,6 +43,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     static bool supported();
 
     // for properties

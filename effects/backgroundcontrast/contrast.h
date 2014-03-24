@@ -52,6 +52,10 @@ public:
 
     virtual bool provides(Feature feature);
 
+    int requestedEffectChainPosition() const override {
+        return 76;
+    }
+
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);

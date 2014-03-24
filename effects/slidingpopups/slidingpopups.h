@@ -44,6 +44,10 @@ public:
     virtual void postPaintWindow(EffectWindow* w);
     virtual void reconfigure(ReconfigureFlags flags);
     virtual bool isActive() const;
+
+    int requestedEffectChainPosition() const override {
+        return 40;
+    }
     // TODO react also on virtual desktop changes
 
     // for properties

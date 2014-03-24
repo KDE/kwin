@@ -49,6 +49,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     static bool supported();
 
     // for properties

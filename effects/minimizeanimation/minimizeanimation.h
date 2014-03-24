@@ -45,6 +45,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
 public Q_SLOTS:
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotWindowMinimized(KWin::EffectWindow *w);

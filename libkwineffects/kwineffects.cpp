@@ -603,6 +603,11 @@ double Effect::animationTime(int defaultTime)
     return qMax(defaultTime * effects->animationTimeFactor(), 1.);
 }
 
+int Effect::requestedEffectChainPosition() const
+{
+    return 0;
+}
+
 //****************************************
 // EffectsHandler
 //****************************************

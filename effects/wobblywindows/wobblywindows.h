@@ -53,6 +53,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 45;
+    }
+
     // Wobbly model parameters
     void setStiffness(qreal stiffness);
     void setDrag(qreal drag);

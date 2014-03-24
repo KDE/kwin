@@ -39,6 +39,11 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData &data, int time);
     virtual void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     virtual bool isActive() const;
+
+    int requestedEffectChainPosition() const override {
+        return 90;
+    }
+
 private Q_SLOTS:
     void edgeApproaching(ElectricBorder border, qreal factor, const QRect &geometry);
     void cleanup();

@@ -57,6 +57,10 @@ public:
     }
     virtual bool provides(Feature feature);
 
+    int requestedEffectChainPosition() const override {
+        return 75;
+    }
+
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);

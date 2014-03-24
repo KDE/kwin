@@ -380,16 +380,17 @@ ScriptedEffect *ScriptedEffect::create(KService::Ptr effect)
         qDebug() << "Could not locate the effect script";
         return nullptr;
     }
-    return ScriptedEffect::create(name, scriptFile);
+    return ScriptedEffect::create(name, scriptFile, effect->property(QStringLiteral("X-KDE-Ordering")).toInt());
 }
 
-ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript)
+ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript, int chainPosition)
 {
     ScriptedEffect *effect = new ScriptedEffect();
     if (!effect->init(effectName, pathToScript)) {
         delete effect;
         return nullptr;
     }
+    effect->m_chainPosition = chainPosition;
     return effect;
 }
 
@@ -398,6 +399,7 @@ ScriptedEffect::ScriptedEffect()
     , m_engine(new QScriptEngine(this))
     , m_scriptFile(QString())
     , m_config(nullptr)
+    , m_chainPosition(0)
 {
     connect(m_engine, SIGNAL(signalHandlerException(QScriptValue)), SLOT(signalHandlerException(QScriptValue)));
 }

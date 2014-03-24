@@ -104,10 +104,13 @@ public:
         return m_scriptFile;
     }
     virtual void reconfigure(ReconfigureFlags flags);
+    int requestedEffectChainPosition() const override {
+        return m_chainPosition;
+    }
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
     static ScriptedEffect *create(KService::Ptr effect);
-    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript);
+    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition);
     virtual ~ScriptedEffect();
     /**
      * Whether another effect has grabbed the @p w with the given @p grabRole.
@@ -155,6 +158,7 @@ private:
     QHash<QAction*, QScriptValue> m_shortcutCallbacks;
     QHash<int, QList<QScriptValue> > m_screenEdgeCallbacks;
     KConfigLoader *m_config;
+    int m_chainPosition;
 };
 
 }

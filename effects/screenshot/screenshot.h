@@ -42,6 +42,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     static bool supported();
     static void convertFromGLImage(QImage &img, int w, int h);
 public Q_SLOTS:

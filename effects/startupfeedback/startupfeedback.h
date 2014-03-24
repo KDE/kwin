@@ -43,6 +43,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 90;
+    }
+
     static bool supported();
 
 private Q_SLOTS:

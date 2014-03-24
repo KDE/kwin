@@ -44,6 +44,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual void reconfigure(ReconfigureFlags);
 
+    int requestedEffectChainPosition() const override {
+        return 60;
+    }
+
     bool isTextureScale() const {
         return m_features & TextureScale;
     }

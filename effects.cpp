@@ -1482,7 +1482,7 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
     }
 
     if (Effect *e = loadBuiltInEffect(internalname.remove(QStringLiteral("kwin4_effect_")).toUtf8(), checkDefault)) {
-        effect_order.insert(service->property(QStringLiteral("X-KDE-Ordering")).toInt(), EffectPair(name, e));
+        effect_order.insert(e->requestedEffectChainPosition(), EffectPair(name, e));
         effectsChanged();
         return true;
     }
@@ -1563,7 +1563,7 @@ bool EffectsHandlerImpl::loadEffect(const QString& name, bool checkDefault)
 
     Effect* e = create();
 
-    effect_order.insert(service->property(QStringLiteral("X-KDE-Ordering")).toInt(), EffectPair(name, e));
+    effect_order.insert(e->requestedEffectChainPosition(), EffectPair(name, e));
     effectsChanged();
     effect_libraries[ name ] = library;
 
@@ -1600,12 +1600,12 @@ bool EffectsHandlerImpl::loadScriptedEffect(const QString& name, KService *servi
         qDebug() << "Could not locate the effect script";
         return false;
     }
-    ScriptedEffect *effect = ScriptedEffect::create(name, scriptFile);
+    ScriptedEffect *effect = ScriptedEffect::create(name, scriptFile, service->property(QStringLiteral("X-KDE-Ordering")).toInt());
     if (!effect) {
         qDebug() << "Could not initialize scripted effect: " << name;
         return false;
     }
-    effect_order.insert(service->property(QStringLiteral("X-KDE-Ordering")).toInt(), EffectPair(name, effect));
+    effect_order.insert(effect->requestedEffectChainPosition(), EffectPair(name, effect));
     effectsChanged();
     return true;
 }

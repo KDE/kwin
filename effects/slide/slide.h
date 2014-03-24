@@ -43,6 +43,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
 private Q_SLOTS:
     void slotDesktopChanged(int old, int current);
 

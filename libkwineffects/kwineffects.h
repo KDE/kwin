@@ -528,6 +528,20 @@ public:
      */
     virtual QString debug(const QString &parameter) const;
 
+    /**
+     * Reimplement this method to indicate where in the Effect chain the Effect should be placed.
+     *
+     * A low number indicates early chain position, thus before other Effects got called, a high
+     * number indicates a late position. The returned number should be in the interval [0, 100].
+     * The default value is 0.
+     *
+     * In KWin4 this information was provided in the Effect's desktop file as property
+     * X-KDE-Ordering. In the case of Scripted Effects this property is still used.
+     *
+     * @since 5.0
+     **/
+    virtual int requestedEffectChainPosition() const;
+
     static QPoint cursorPos();
 
     /**

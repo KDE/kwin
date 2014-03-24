@@ -42,6 +42,10 @@ public:
     void paintScreen(int mask, QRegion region, ScreenPaintData &data);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 90;
+    }
+
     // for properties
     bool isHandlesMoves() const {
         return iHandleMoves;

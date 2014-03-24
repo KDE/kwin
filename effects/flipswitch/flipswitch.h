@@ -53,6 +53,10 @@ public:
     virtual void windowInputMouseEvent(QEvent* e);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     static bool supported();
 
     // for properties

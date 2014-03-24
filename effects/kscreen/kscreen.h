@@ -43,6 +43,10 @@ public:
     void reconfigure(ReconfigureFlags flags);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 99;
+    }
+
 private Q_SLOTS:
     void propertyNotify(KWin::EffectWindow *window, long atom);
 

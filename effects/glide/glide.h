@@ -47,6 +47,10 @@ public:
     virtual void postPaintWindow(EffectWindow* w);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     static bool supported();
 
     // for properties

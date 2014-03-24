@@ -40,6 +40,10 @@ public:
     virtual void postPaintScreen();
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 70;
+    }
+
     // for properties
     int configuredBlockSize() const {
         return blockSize;

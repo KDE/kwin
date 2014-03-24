@@ -124,6 +124,10 @@ public:
     virtual void grabbedKeyboardEvent(QKeyEvent *e);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 70;
+    }
+
     enum { LayoutNatural, LayoutRegularGrid, LayoutFlexibleGrid }; // Layout modes
     enum PresentWindowsMode {
         ModeAllDesktops, // Shows windows of all desktops

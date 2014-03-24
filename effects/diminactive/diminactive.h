@@ -45,6 +45,10 @@ public:
     virtual void prePaintScreen(ScreenPrePaintData& data, int time);
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     // for properties
     bool isDimPanels() const {
         return dim_panels;

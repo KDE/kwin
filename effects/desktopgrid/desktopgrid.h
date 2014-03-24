@@ -70,6 +70,10 @@ public:
     virtual bool borderActivated(ElectricBorder border);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
     enum { LayoutPager, LayoutAutomatic, LayoutCustom }; // Layout modes
 
     // for properties

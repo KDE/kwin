@@ -91,6 +91,10 @@ public:
         return secondaryTabBox;
     }
 
+    int requestedEffectChainPosition() const override {
+        return 50;
+    }
+
 public Q_SLOTS:
     void slotWindowClosed(KWin::EffectWindow *c);
     void slotTabBoxAdded(int mode);

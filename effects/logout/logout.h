@@ -47,6 +47,10 @@ public:
     virtual void paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data);
     virtual bool isActive() const;
 
+    int requestedEffectChainPosition() const override {
+        return 85;
+    }
+
     // for properties
     bool isUseBlur() const {
         return useBlur;
