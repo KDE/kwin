@@ -243,18 +243,7 @@ bool ScriptedEffectLoader::loadEffect(KService::Ptr effect, LoadEffectFlags flag
         return false;
     }
 
-    const QString scriptName = effect->property(QStringLiteral("X-Plasma-MainScript")).toString();
-    if (scriptName.isEmpty()) {
-        qDebug() << "X-Plasma-MainScript not set";
-        return false;
-    }
-    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                                      QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
-    if (scriptFile.isNull()) {
-        qDebug() << "Could not locate the effect script";
-        return false;
-    }
-    ScriptedEffect *e = ScriptedEffect::create(name, scriptFile);
+    ScriptedEffect *e = ScriptedEffect::create(effect);
     if (!e) {
         qDebug() << "Could not initialize scripted effect: " << name;
         return false;

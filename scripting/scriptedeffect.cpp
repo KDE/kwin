@@ -366,6 +366,23 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
     }
 }
 
+ScriptedEffect *ScriptedEffect::create(KService::Ptr effect)
+{
+    const QString name = effect->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+    const QString scriptName = effect->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    if (scriptName.isEmpty()) {
+        qDebug() << "X-Plasma-MainScript not set";
+        return nullptr;
+    }
+    const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                      QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
+    if (scriptFile.isNull()) {
+        qDebug() << "Could not locate the effect script";
+        return nullptr;
+    }
+    return ScriptedEffect::create(name, scriptFile);
+}
+
 ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript)
 {
     ScriptedEffect *effect = new ScriptedEffect();

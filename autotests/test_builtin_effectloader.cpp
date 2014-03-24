@@ -36,7 +36,7 @@ Q_DECLARE_METATYPE(KWin::Effect*)
 namespace KWin
 {
 
-ScriptedEffect *ScriptedEffect::create(const QString &, const QString &)
+ScriptedEffect *ScriptedEffect::create(KService::Ptr)
 {
     return nullptr;
 }

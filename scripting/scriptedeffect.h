@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTEDEFFECT_H
 
 #include <kwinanimationeffect.h>
+#include <KService>
 
 class KConfigLoader;
 class QScriptEngine;
@@ -105,6 +106,7 @@ public:
     virtual void reconfigure(ReconfigureFlags flags);
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
+    static ScriptedEffect *create(KService::Ptr effect);
     static ScriptedEffect *create(const QString &effectName, const QString &pathToScript);
     virtual ~ScriptedEffect();
     /**
