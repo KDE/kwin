@@ -27,9 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "xcbutils.h"
 
-#include <QStack>
 #include <QHash>
-#include <QQueue>
 #include <Plasma/FrameSvg>
 #include <KService>
 
@@ -221,7 +219,7 @@ public Q_SLOTS:
 
     // slots for D-Bus interface
     Q_SCRIPTABLE void reconfigureEffect(const QString& name);
-    Q_SCRIPTABLE bool loadEffect(const QString& name, bool checkDefault = false);
+    Q_SCRIPTABLE bool loadEffect(const QString& name);
     Q_SCRIPTABLE void toggleEffect(const QString& name);
     Q_SCRIPTABLE void unloadEffect(const QString& name);
     Q_SCRIPTABLE bool isEffectLoaded(const QString& name) const;
@@ -243,8 +241,6 @@ protected Q_SLOTS:
     void slotPropertyNotify(KWin::Toplevel *t, long atom);
 
 protected:
-    bool loadScriptedEffect(const QString &name, KService *service);
-    KLibrary* findEffectLibrary(KService* service);
     void effectsChanged();
     void setupClientConnections(KWin::Client *c);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
@@ -256,15 +252,9 @@ protected:
     QHash< long, int > registered_atoms;
     int next_window_quad_type;
 
-private Q_SLOTS:
-    void slotEffectsQueried();
-
 private:
-    KService::Ptr findEffectService(const QString &internalName) const;
-    bool isScriptedEffect(KService::Ptr service) const;
     typedef QVector< Effect*> EffectsList;
     typedef EffectsList::const_iterator EffectsIterator;
-    Effect *loadBuiltInEffect(const QByteArray &name, bool checkDefault);
     EffectsList m_activeEffects;
     EffectsIterator m_currentDrawWindowIterator;
     EffectsIterator m_currentPaintWindowIterator;
@@ -460,23 +450,6 @@ private:
     OrgFreedesktopScreenSaverInterface *m_interface;
     QDBusServiceWatcher *m_serviceWatcher;
     bool m_locked;
-};
-
-class EffectLoader : public QObject
-{
-    Q_OBJECT
-public:
-    explicit EffectLoader(EffectsHandlerImpl *parent);
-    virtual ~EffectLoader();
-
-    void queue(const QString &effect, bool checkDefault = false);
-private Q_SLOTS:
-    void dequeue();
-private:
-    void scheduleDequeue();
-    EffectsHandlerImpl *m_effects;
-    QQueue<QPair<QString, bool>> m_queue;
-    bool m_dequeueScheduled;
 };
 
 inline

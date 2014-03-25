@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <limits.h>
 #include <netwm.h>
 
-class KLibrary;
 class KConfigGroup;
 class QFont;
 class QGraphicsScale;
@@ -1397,7 +1396,6 @@ Q_SIGNALS:
 
 protected:
     QVector< EffectPair > loaded_effects;
-    QHash< QString, KLibrary* > effect_libraries;
     //QHash< QString, EffectFactory* > effect_factories;
     CompositingType compositing_type;
 };

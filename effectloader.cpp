@@ -453,4 +453,69 @@ void PluginEffectLoader::setPluginSubDirectory(const QString &directory)
     m_pluginSubDirectory = directory;
 }
 
+EffectLoader::EffectLoader(QObject *parent)
+    : AbstractEffectLoader(parent)
+{
+    m_loaders << new BuiltInEffectLoader(this)
+              << new ScriptedEffectLoader(this)
+              << new PluginEffectLoader(this);
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        connect(*it, &AbstractEffectLoader::effectLoaded, this, &AbstractEffectLoader::effectLoaded);
+    }
+}
+
+EffectLoader::~EffectLoader()
+{
+}
+
+#define BOOL_MERGE( method ) \
+    bool EffectLoader::method(const QString &name) const \
+    { \
+        for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) { \
+            if ((*it)->method(name)) { \
+                return true; \
+            } \
+        } \
+        return false; \
+    }
+
+BOOL_MERGE(hasEffect)
+BOOL_MERGE(isEffectSupported)
+
+#undef BOOL_MERGE
+
+QStringList EffectLoader::listOfKnownEffects() const
+{
+    QStringList result;
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        result << (*it)->listOfKnownEffects();
+    }
+    return result;
+}
+
+bool EffectLoader::loadEffect(const QString &name)
+{
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        if ((*it)->loadEffect(name)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void EffectLoader::queryAndLoadAll()
+{
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        (*it)->queryAndLoadAll();
+    }
+}
+
+void EffectLoader::setConfig(KSharedConfig::Ptr config)
+{
+    AbstractEffectLoader::setConfig(config);
+    for (auto it = m_loaders.constBegin(); it != m_loaders.constEnd(); ++it) {
+        (*it)->setConfig(config);
+    }
+}
+
 } // namespace KWin

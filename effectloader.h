@@ -339,6 +339,23 @@ private:
     QString m_pluginSubDirectory;
 };
 
+class EffectLoader : public AbstractEffectLoader
+{
+    Q_OBJECT
+public:
+    explicit EffectLoader(QObject *parent = nullptr);
+    ~EffectLoader() override;
+    bool hasEffect(const QString &name) const override;
+    bool isEffectSupported(const QString &name) const override;
+    QStringList listOfKnownEffects() const override;
+    bool loadEffect(const QString &name) override;
+    void queryAndLoadAll() override;
+    void setConfig(KSharedConfig::Ptr config) override;
+
+private:
+    QList<AbstractEffectLoader*> m_loaders;
+};
+
 }
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::LoadEffectFlags)
 

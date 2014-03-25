@@ -10,11 +10,6 @@
     <method name="loadEffect">
       <arg type="b" direction="out"/>
       <arg name="name" type="s" direction="in"/>
-      <arg name="checkDefault" type="b" direction="in"/>
-    </method>
-    <method name="loadEffect">
-      <arg type="b" direction="out"/>
-      <arg name="name" type="s" direction="in"/>
     </method>
     <method name="toggleEffect">
       <arg name="name" type="s" direction="in"/>
