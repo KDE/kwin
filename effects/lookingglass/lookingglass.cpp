@@ -85,7 +85,7 @@ bool LookingGlassEffect::supported()
 
 void LookingGlassEffect::reconfigure(ReconfigureFlags)
 {
-    LookingGlassConfig::self()->readConfig();
+    LookingGlassConfig::self()->read();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
     qCDebug(KWINEFFECTS) << QStringLiteral("Radius from config: %1").arg(radius) << endl;

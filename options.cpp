@@ -776,7 +776,7 @@ void Options::updateSettings()
 
 void Options::loadConfig()
 {
-    m_settings->readConfig();
+    m_settings->load();
     KDecorationOptions::updateSettings(m_settings->config());   // read decoration settings
 
     syncFromKcfgc();

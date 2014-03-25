@@ -80,7 +80,7 @@ WindowGeometry::~WindowGeometry()
 
 void WindowGeometry::reconfigure(ReconfigureFlags)
 {
-    WindowGeometryConfiguration::self()->readConfig();
+    WindowGeometryConfiguration::self()->read();
     iHandleMoves = WindowGeometryConfiguration::move();
     iHandleResizes = WindowGeometryConfiguration::resize();
 }

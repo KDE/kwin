@@ -48,7 +48,7 @@ bool SheetEffect::supported()
 
 void SheetEffect::reconfigure(ReconfigureFlags)
 {
-    SheetConfig::self()->readConfig();
+    SheetConfig::self()->read();
     duration = animationTime(SheetConfig::animationTime() != 0 ? SheetConfig::animationTime() : 500);
 }
 

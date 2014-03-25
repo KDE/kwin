@@ -50,7 +50,7 @@ DashboardEffect::~DashboardEffect()
 
 void DashboardEffect::reconfigure(ReconfigureFlags)
 {
-    DashboardConfig::self()->readConfig();
+    DashboardConfig::self()->read();
     brightness = DashboardConfig::brightness()/ 100.0;
     saturation = DashboardConfig::saturation()/ 100.0;
     blur = DashboardConfig::blur();

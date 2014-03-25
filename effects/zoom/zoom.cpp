@@ -225,7 +225,7 @@ void ZoomEffect::recreateTexture()
 
 void ZoomEffect::reconfigure(ReconfigureFlags)
 {
-    ZoomConfig::self()->readConfig();
+    ZoomConfig::self()->read();
     // On zoom-in and zoom-out change the zoom by the defined zoom-factor.
     zoomFactor = qMax(0.1, ZoomConfig::zoomFactor());
     // Visibility of the mouse-pointer.

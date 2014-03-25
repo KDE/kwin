@@ -60,7 +60,7 @@ bool GlideEffect::supported()
 void GlideEffect::reconfigure(ReconfigureFlags)
 {
     // Fetch config with KConfigXT
-    GlideConfig::self()->readConfig();
+    GlideConfig::self()->read();
     duration = animationTime<GlideConfig>(350);
     effect = (EffectStyle) GlideConfig::glideEffect();
     angle = GlideConfig::glideAngle();

@@ -41,7 +41,7 @@ DimInactiveEffect::DimInactiveEffect()
 
 void DimInactiveEffect::reconfigure(ReconfigureFlags)
 {
-    DimInactiveConfig::self()->readConfig();
+    DimInactiveConfig::self()->read();
     dim_panels = DimInactiveConfig::dimPanels();
     dim_desktop = DimInactiveConfig::dimDesktop();
     dim_keepabove = DimInactiveConfig::dimKeepAbove();

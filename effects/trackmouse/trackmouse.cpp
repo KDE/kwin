@@ -84,7 +84,7 @@ TrackMouseEffect::~TrackMouseEffect()
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
     m_modifiers = 0;
-    TrackMouseConfig::self()->readConfig();
+    TrackMouseConfig::self()->read();
     if (TrackMouseConfig::shift())
         m_modifiers |= Qt::ShiftModifier;
     if (TrackMouseConfig::alt())

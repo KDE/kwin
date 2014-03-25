@@ -86,7 +86,7 @@ void Screens::reconfigure()
         return;
     }
     Settings settings(m_config);
-    settings.readConfig();
+    settings.read();
     setCurrentFollowsMouse(settings.activeMouseScreen());
 }
 

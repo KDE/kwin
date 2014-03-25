@@ -135,7 +135,7 @@ void ResizeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, Window
 void ResizeEffect::reconfigure(ReconfigureFlags)
 {
     m_features = 0;
-    ResizeConfig::self()->readConfig();
+    ResizeConfig::self()->read();
     if (ResizeConfig::textureScale())
         m_features |= TextureScale;
     if (ResizeConfig::outline())

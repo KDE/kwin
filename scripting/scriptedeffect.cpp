@@ -405,7 +405,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
         KConfigGroup cg = effects->effectConfig(m_effectName);
         QFile xmlFile(kconfigXTFile);
         m_config = new KConfigLoader(cg, &xmlFile, this);
-        m_config->readConfig();
+        m_config->load();
     }
 
     QScriptValue effectsObject = m_engine->newQObject(effects, QScriptEngine::QtOwnership, QScriptEngine::ExcludeDeleteLater);
@@ -527,7 +527,7 @@ void ScriptedEffect::reconfigure(ReconfigureFlags flags)
 {
     AnimationEffect::reconfigure(flags);
     if (m_config) {
-        m_config->readConfig();
+        m_config->read();
     }
     emit configChanged();
 }

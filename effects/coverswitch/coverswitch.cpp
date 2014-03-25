@@ -93,7 +93,7 @@ bool CoverSwitchEffect::supported()
 
 void CoverSwitchEffect::reconfigure(ReconfigureFlags)
 {
-    CoverSwitchConfig::self()->readConfig();
+    CoverSwitchConfig::self()->read();
     animationDuration = animationTime<CoverSwitchConfig>(200);
     animateSwitch     = CoverSwitchConfig::animateSwitch();
     animateStart      = CoverSwitchConfig::animateStart();

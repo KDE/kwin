@@ -88,7 +88,7 @@ bool FlipSwitchEffect::supported()
 
 void FlipSwitchEffect::reconfigure(ReconfigureFlags)
 {
-    FlipSwitchConfig::self()->readConfig();
+    FlipSwitchConfig::self()->read();
     m_tabbox = FlipSwitchConfig::tabBox();
     m_tabboxAlternative = FlipSwitchConfig::tabBoxAlternative();
     const int duration = animationTime<FlipSwitchConfig>(200);

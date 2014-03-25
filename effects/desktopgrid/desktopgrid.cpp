@@ -95,7 +95,7 @@ DesktopGridEffect::~DesktopGridEffect()
 
 void DesktopGridEffect::reconfigure(ReconfigureFlags)
 {
-    DesktopGridConfig::self()->readConfig();
+    DesktopGridConfig::self()->read();
 
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border, this);

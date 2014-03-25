@@ -78,7 +78,7 @@ LogoutEffect::~LogoutEffect()
 
 void LogoutEffect::reconfigure(ReconfigureFlags)
 {
-    LogoutConfig::self()->readConfig();
+    LogoutConfig::self()->read();
     frameDelay = 0;
     useBlur = LogoutConfig::useBlur();
     delete blurTexture;

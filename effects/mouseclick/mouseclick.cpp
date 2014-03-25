@@ -76,7 +76,7 @@ MouseClickEffect::~MouseClickEffect()
 
 void MouseClickEffect::reconfigure(ReconfigureFlags)
 {
-    MouseClickConfig::self()->readConfig();
+    MouseClickConfig::self()->read();
     m_colors[0] = MouseClickConfig::color1();
     m_colors[1] = MouseClickConfig::color2();
     m_colors[2] = MouseClickConfig::color3();

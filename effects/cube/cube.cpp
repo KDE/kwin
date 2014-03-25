@@ -130,7 +130,7 @@ bool CubeEffect::supported()
 
 void CubeEffect::reconfigure(ReconfigureFlags)
 {
-    CubeConfig::self()->readConfig();
+    CubeConfig::self()->read();
     foreach (ElectricBorder border, borderActivate) {
         effects->unreserveElectricBorder(border, this);
     }

@@ -104,7 +104,7 @@ bool MagnifierEffect::supported()
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)
 {
-    MagnifierConfig::self()->readConfig();
+    MagnifierConfig::self()->read();
     int width, height;
     width = MagnifierConfig::width();
     height = MagnifierConfig::height();

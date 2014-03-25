@@ -49,7 +49,7 @@ ThumbnailAsideEffect::ThumbnailAsideEffect()
 
 void ThumbnailAsideEffect::reconfigure(ReconfigureFlags)
 {
-    ThumbnailAsideConfig::self()->readConfig();
+    ThumbnailAsideConfig::self()->read();
     maxwidth = ThumbnailAsideConfig::maxWidth();
     spacing = ThumbnailAsideConfig::spacing();
     opacity = ThumbnailAsideConfig::opacity()/100.0;

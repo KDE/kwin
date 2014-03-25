@@ -64,7 +64,7 @@ ShowFpsEffect::ShowFpsEffect()
 
 void ShowFpsEffect::reconfigure(ReconfigureFlags)
 {
-    ShowFpsConfig::self()->readConfig();
+    ShowFpsConfig::self()->read();
     alpha = ShowFpsConfig::alpha();
     x = ShowFpsConfig::x();
     y = ShowFpsConfig::y();

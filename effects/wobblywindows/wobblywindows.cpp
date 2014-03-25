@@ -170,7 +170,7 @@ WobblyWindowsEffect::~WobblyWindowsEffect()
 
 void WobblyWindowsEffect::reconfigure(ReconfigureFlags)
 {
-    WobblyWindowsConfig::self()->readConfig();
+    WobblyWindowsConfig::self()->read();
 
     QString settingsMode = WobblyWindowsConfig::settings();
     if (settingsMode != QStringLiteral("Custom")) {

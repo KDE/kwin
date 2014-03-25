@@ -48,7 +48,7 @@ bool MagicLampEffect::supported()
 
 void MagicLampEffect::reconfigure(ReconfigureFlags)
 {
-    MagicLampConfig::self()->readConfig();
+    MagicLampConfig::self()->read();
     // TODO: rename animationDuration to duration
     mAnimationDuration = animationTime(MagicLampConfig::animationDuration() != 0 ? MagicLampConfig::animationDuration() : 250);
 

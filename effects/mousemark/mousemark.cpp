@@ -76,7 +76,7 @@ MouseMarkEffect::~MouseMarkEffect()
 static int width_2 = 1;
 void MouseMarkEffect::reconfigure(ReconfigureFlags)
 {
-    MouseMarkConfig::self()->readConfig();
+    MouseMarkConfig::self()->read();
     width = MouseMarkConfig::lineWidth();
     width_2 = width / 2;
     color = MouseMarkConfig::color();

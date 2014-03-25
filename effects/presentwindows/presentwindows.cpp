@@ -107,7 +107,7 @@ PresentWindowsEffect::~PresentWindowsEffect()
 
 void PresentWindowsEffect::reconfigure(ReconfigureFlags)
 {
-    PresentWindowsConfig::self()->readConfig();
+    PresentWindowsConfig::self()->read();
     foreach (ElectricBorder border, m_borderActivate) {
         effects->unreserveElectricBorder(border, this);
     }

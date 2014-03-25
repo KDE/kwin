@@ -67,7 +67,7 @@ void KscreenEffect::reconfigure(ReconfigureFlags flags)
 {
     Q_UNUSED(flags)
 
-    KscreenConfig::self()->readConfig();
+    KscreenConfig::self()->read();
     m_timeLine.setDuration(animationTime<KscreenConfig>(250));
 }
 
