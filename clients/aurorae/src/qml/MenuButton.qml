@@ -15,14 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
-import org.kde.qtextracomponents 2.0 as QtExtra
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 import org.kde.kwin.decoration 0.1
 
 DecorationButton {
     property bool closeOnDoubleClick: false
     id: menuButton
     buttonType: DecorationOptions.DecorationButtonMenu
-    QtExtra.QIconItem {
+    KQuickControlsAddons.QIconItem {
         icon: decoration.icon
         anchors.fill: parent
     }

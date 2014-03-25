@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import QtQuick 2.0;
 import org.kde.plasma.core 2.0 as PlasmaCore;
 import org.kde.plasma.components 2.0 as Plasma;
-import org.kde.qtextracomponents 2.0 as QtExtra;
+import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
 import org.kde.kwin 2.0;
 
 PlasmaCore.Dialog {
@@ -120,12 +120,12 @@ PlasmaCore.Dialog {
                     Item {
                         id: arrowsContainer
                         anchors.fill: parent
-                        QtExtra.QIconItem {
+                        KQuickControlsAddons.QIconItem {
                             anchors.fill: parent
                             icon: "go-up"
                             visible: false
                         }
-                        QtExtra.QIconItem {
+                        KQuickControlsAddons.QIconItem {
                             anchors.fill: parent
                             icon: "go-down"
                             visible: {
@@ -151,7 +151,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        QtExtra.QIconItem {
+                        KQuickControlsAddons.QIconItem {
                             anchors.fill: parent
                             icon: "go-up"
                             visible: {
@@ -177,7 +177,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        QtExtra.QIconItem {
+                        KQuickControlsAddons.QIconItem {
                             anchors.fill: parent
                             icon: "go-next"
                             visible: {
@@ -211,7 +211,7 @@ PlasmaCore.Dialog {
                                 return false;
                             }
                         }
-                        QtExtra.QIconItem {
+                        KQuickControlsAddons.QIconItem {
                             anchors.fill: parent
                             icon: "go-previous"
                             visible: {
