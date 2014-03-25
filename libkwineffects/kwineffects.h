@@ -101,15 +101,11 @@ typedef QList< KWin::EffectWindow* > EffectWindowList;
  *  @ref KWin::Effect. In that class you can reimplement various virtual
  *  methods to control how and where the windows are drawn.
  *
- * @subsection creating-macro KWIN_EFFECT macro
- * To make KWin aware of your new effect, you first need to use the
- *  @ref KWIN_EFFECT macro to connect your effect's class to it's internal
- *  name. The internal name is used by KWin to identify your effect. It can be
- *  freely chosen (although it must be a single word), must be unique and won't
- * be shown to the user. For our example, you would use the macro like this:
- * @code
- * KWIN_EFFECT(cooleffect, CoolEffect)
- * @endcode
+ * @subsection creating-macro KWIN_EFFECT_FACTORY macro
+ * This library provides a specialized KPluginFactory subclass and macros to
+ * create a sub class. This subclass of KPluginFactory has to be used, otherwise
+ * KWin won't load the plugin. Use the @ref KWIN_EFFECT_FACTORY macro to create the
+ * plugin factory.
  *
  * @subsection creating-buildsystem Buildsystem
  * To build the effect, you can use the KWIN_ADD_EFFECT() cmake macro which
@@ -586,46 +582,92 @@ public Q_SLOTS:
 
 
 /**
- * Defines the class to be used for effect with given name.
- * The name must be same as effect's X-KDE-PluginInfo-Name values in .desktop
- *  file, but without the "kwin4_effect_" prefix.
- * E.g.  KWIN_EFFECT( flames, MyFlameEffect )
- * In this case object of MyFlameEffect class would be created when effect
- *  "flames" (which has X-KDE-PluginInfo-Name=kwin4_effect_flames in .desktop
- *  file) is loaded.
- **/
-#define KWIN_EFFECT( name, classname ) \
-    extern "C" { \
-        KWINEFFECTS_EXPORT Effect* effect_create_kwin4_effect_##name() { return new classname; } \
-        KWINEFFECTS_EXPORT int effect_version_kwin4_effect_##name() { return KWIN_EFFECT_API_VERSION; } \
-    }
+ * Prefer the KWIN_EFFECT_FACTORY macros.
+ */
+class KWINEFFECTS_EXPORT EffectPluginFactory : public KPluginFactory
+{
+    Q_OBJECT
+public:
+    explicit EffectPluginFactory(const char *componentName = nullptr, QObject *parent = nullptr);
+    virtual ~EffectPluginFactory();
+    /**
+     * Returns whether the Effect is supported.
+     *
+     * An Effect can implement this method to determine at runtime whether the Effect is supported.
+     *
+     * If the current compositing backend is not supported it should return @c false.
+     *
+     * This method is optional, by default @c true is returned.
+     */
+    virtual bool isSupported() const;
+    /**
+     * Returns whether the Effect should get enabled by default.
+     *
+     * This function provides a way for an effect to override the default at runtime,
+     * e.g. based on the capabilities of the hardware.
+     *
+     * This method is optional; the effect doesn't have to provide it.
+     *
+     * Note that this function is only called if the supported() function returns true,
+     * and if X-KDE-PluginInfo-EnabledByDefault is set to true in the .desktop file.
+     *
+     * This method is optional, by default @c true is returned.
+     */
+    virtual bool enabledByDefault() const;
+    /**
+     * This method returns the created Effect.
+     */
+    virtual KWin::Effect *createEffect() const = 0;
+};
 
 /**
- * Defines the function used to check whether an effect is supported
- * E.g.  KWIN_EFFECT_SUPPORTED( flames, MyFlameEffect::supported() )
+ * Defines an EffectPluginFactory sub class with customized isSupported and enabledByDefault methods.
+ *
+ * If the Effect to be created does not need the isSupported or enabledByDefault methods prefer
+ * the simplified KWIN_EFFECT_FACTORY, KWIN_EFFECT_FACTORY_SUPPORTED or KWIN_EFFECT_FACTORY_ENABLED
+ * macros which create an EffectPluginFactory with a useable default value.
+ *
+ * The macro also adds a useable K_EXPORT_PLUGIN_VERSION to the definition. KWin will not load
+ * any Effect with a non-matching plugin version. This API is not providing binary compatibility
+ * and thus the effect plugin must be compiled against the same kwineffects library version as
+ * KWin.
+ *
+ * @param factoryName The name to be used for the EffectPluginFactory
+ * @param className The class name of the Effect sub class which is to be created by the factory
+ * @param jsonFile Name of the json file to be compiled into the plugin as metadata
+ * @param supported Source code to go into the isSupported() method, must return a boolean
+ * @param enabled Source code to go into the enabledByDefault() method, must return a boolean
  **/
-#define KWIN_EFFECT_SUPPORTED( name, function ) \
-    extern "C" { \
-        KWINEFFECTS_EXPORT bool effect_supported_kwin4_effect_##name() { return function; } \
-    }
+#define KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, supported, enabled ) \
+    class factoryName : public KWin::EffectPluginFactory \
+    { \
+        Q_OBJECT \
+        Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE jsonFile) \
+        Q_INTERFACES(KPluginFactory) \
+    public: \
+        explicit factoryName(const char *a = 0, QObject *b = 0) : KWin::EffectPluginFactory(a, b) {} \
+        ~factoryName() {} \
+        bool isSupported() const override { \
+            supported \
+        } \
+        bool enabledByDefault() const override { \
+            enabled \
+        } \
+        KWin::Effect *createEffect() const override { \
+            return new className(); \
+        } \
+    }; \
+    K_EXPORT_PLUGIN_VERSION(quint32(KWIN_EFFECT_API_VERSION))
 
-/**
- * Defines the function used to check whether an effect should be enabled by default
- *
- * This function provides a way for an effect to override the default at runtime,
- * e.g. based on the capabilities of the hardware.
- *
- * This function is optional; the effect doesn't have to provide it.
- *
- * Note that this function is only called if the supported() function returns true,
- * and if X-KDE-PluginInfo-EnabledByDefault is set to true in the .desktop file.
- *
- * Example:  KWIN_EFFECT_ENABLEDBYDEFAULT(flames, MyFlameEffect::enabledByDefault())
- **/
-#define KWIN_EFFECT_ENABLEDBYDEFAULT(name, function) \
-    extern "C" { \
-        KWINEFFECTS_EXPORT bool effect_enabledbydefault_kwin4_effect_##name() { return function; } \
-    }
+#define KWIN_EFFECT_FACTORY_ENABLED( factoryName, className, jsonFile, enabled ) \
+    KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, return true;, enabled )
+
+#define KWIN_EFFECT_FACTORY_SUPPORTED( factoryName, classname, jsonFile, supported ) \
+    KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, supported, return true; )
+
+#define KWIN_EFFECT_FACTORY( factoryName, classname, jsonFile ) \
+    KWIN_EFFECT_FACTORY_SUPPORTED_ENABLED( factoryName, className, jsonFile, return true;, return true; )
+
 
 
 /**

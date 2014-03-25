@@ -609,6 +609,28 @@ int Effect::requestedEffectChainPosition() const
 }
 
 //****************************************
+// EffectFactory
+//****************************************
+EffectPluginFactory::EffectPluginFactory(const char *componentName, QObject *parent)
+    : KPluginFactory(componentName, parent)
+{
+}
+
+EffectPluginFactory::~EffectPluginFactory()
+{
+}
+
+bool EffectPluginFactory::enabledByDefault() const
+{
+    return true;
+}
+
+bool EffectPluginFactory::isSupported() const
+{
+    return true;
+}
+
+//****************************************
 // EffectsHandler
 //****************************************
 
