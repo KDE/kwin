@@ -56,7 +56,7 @@ RulesWidget::RulesWidget(QWidget* parent)
 {
     Q_UNUSED(parent);
     setupUi(this);
-    QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\-+,xX:]*"), this);
+    QRegularExpressionValidator* validator = new QRegularExpressionValidator(QRegularExpression("[0-9\\-+,xX:]*"), this);
     maxsize->setValidator(validator);
     minsize->setValidator(validator);
     position->setValidator(validator);
