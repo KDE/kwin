@@ -146,3 +146,37 @@ target_link_libraries(testScriptedEffectLoader
 
 add_test(kwin-testScriptedEffectLoader testScriptedEffectLoader)
 ecm_mark_as_test(testScriptedEffectLoader)
+
+########################################################
+# Test PluginEffectLoader
+########################################################
+set( testPluginEffectLoader_SRCS
+    test_plugin_effectloader.cpp
+    mock_effectshandler.cpp
+    ../effectloader.cpp
+)
+add_executable( testPluginEffectLoader ${testPluginEffectLoader_SRCS})
+
+target_link_libraries(testPluginEffectLoader
+    Qt5::Concurrent
+    Qt5::Test
+    kwineffects
+    kwin4_effect_builtins
+)
+
+add_test(kwin-testPluginEffectLoader testPluginEffectLoader)
+ecm_mark_as_test(testPluginEffectLoader)
+
+########################################################
+# FakeEffectPlugin
+########################################################
+add_library(fakeeffectplugin MODULE fakeeffectplugin.cpp)
+set_target_properties(fakeeffectplugin PROPERTIES PREFIX "")
+target_link_libraries(fakeeffectplugin kwineffects)
+
+########################################################
+# FakeEffectPlugin-Version
+########################################################
+add_library(effectversionplugin MODULE fakeeffectplugin_version.cpp)
+set_target_properties(effectversionplugin PROPERTIES PREFIX "")
+target_link_libraries(effectversionplugin kwineffects)

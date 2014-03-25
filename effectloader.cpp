@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scripting/scriptedeffect.h"
 // KDE
 #include <KConfigGroup>
+#include <KPluginTrader>
 #include <KServiceTypeTrader>
 // Qt
 #include <QtConcurrentRun>
@@ -294,6 +295,162 @@ KService::Ptr ScriptedEffectLoader::findEffect(const QString &name) const
         return services.first();
     }
     return KService::Ptr();
+}
+
+
+PluginEffectLoader::PluginEffectLoader(QObject *parent)
+    : AbstractEffectLoader(parent)
+    , m_queue(new EffectLoadQueue< PluginEffectLoader, KPluginInfo>(this))
+    , m_pluginSubDirectory(QStringLiteral("kwin/effects/plugins/"))
+{
+}
+
+PluginEffectLoader::~PluginEffectLoader()
+{
+}
+
+bool PluginEffectLoader::hasEffect(const QString &name) const
+{
+    KPluginInfo info = findEffect(name);
+    return info.isValid();
+}
+
+KPluginInfo PluginEffectLoader::findEffect(const QString &name) const
+{
+    const QString constraint = QStringLiteral("[%1] == '%2'").arg(s_nameProperty).arg(name.toLower());
+    KPluginInfo::List plugins = KPluginTrader::self()->query(m_pluginSubDirectory, s_serviceType, constraint);
+    if (plugins.isEmpty()) {
+        return KPluginInfo();
+    }
+    return plugins.first();
+}
+
+bool PluginEffectLoader::isEffectSupported(const QString &name) const
+{
+    if (EffectPluginFactory *effectFactory = factory(findEffect(name))) {
+        return effectFactory->isSupported();
+    }
+    return false;
+}
+
+EffectPluginFactory *PluginEffectLoader::factory(const KPluginInfo &info) const
+{
+    if (!info.isValid()) {
+        return nullptr;
+    }
+    KPluginLoader loader(info.libraryPath());
+    if (loader.pluginVersion() != KWIN_EFFECT_API_VERSION) {
+        qDebug() << info.pluginName() << " has not matching plugin version, expected " << KWIN_EFFECT_API_VERSION << "got " << loader.pluginVersion();
+        return nullptr;
+    }
+    KPluginFactory *factory = loader.factory();
+    if (!factory) {
+        qDebug() << "Did not get KPluginFactory for " << info.pluginName();
+        return nullptr;
+    }
+    return dynamic_cast< EffectPluginFactory* >(factory);
+}
+
+QStringList PluginEffectLoader::listOfKnownEffects() const
+{
+    const KPluginInfo::List plugins = findAllEffects();
+    QStringList result;
+    for (const KPluginInfo &plugin : plugins) {
+        result << plugin.pluginName();
+    }
+    return result;
+}
+
+bool PluginEffectLoader::loadEffect(const QString &name)
+{
+    KPluginInfo info = findEffect(name);
+    if (!info.isValid()) {
+        return false;
+    }
+    return loadEffect(info, LoadEffectFlag::Load);
+}
+
+bool PluginEffectLoader::loadEffect(const KPluginInfo &info, LoadEffectFlags flags)
+{
+    if (!info.isValid()) {
+        qDebug() << "Plugin info is not valid";
+        return false;
+    }
+    const QString name = info.pluginName();
+    if (!flags.testFlag(LoadEffectFlag::Load)) {
+        qDebug() << "Loading flags disable effect: " << name;
+        return false;
+    }
+    if (m_loadedEffects.contains(name)) {
+        qDebug() << name << " already loaded";
+        return false;
+    }
+    EffectPluginFactory *effectFactory = factory(info);
+    if (!effectFactory) {
+        qDebug() << "Couldn't get an EffectPluginFactory for: " << name;
+        return false;
+    }
+
+#ifndef KWIN_UNIT_TEST
+    effects->makeOpenGLContextCurrent();
+#endif
+    if (!effectFactory->isSupported()) {
+        qDebug() << "Effect is not supported: " << name;
+        return false;
+    }
+
+    if (flags.testFlag(LoadEffectFlag::CheckDefaultFunction)) {
+        if (!effectFactory->enabledByDefault()) {
+            qDebug() << "Enabled by default function disables effect: " << name;
+            return false;
+        }
+    }
+
+    // ok, now we can try to create the Effect
+    Effect *e = effectFactory->createEffect();
+    if (!e) {
+        qDebug() << "Failed to create effect: " << name;
+        return false;
+    }
+    // insert in our loaded effects
+    m_loadedEffects << name;
+    connect(e, &Effect::destroyed, this,
+        [this, name]() {
+            m_loadedEffects.removeAll(name);
+        }
+    );
+    qDebug() << "Successfully loaded plugin effect: " << name;
+    emit effectLoaded(e, name);
+    return true;
+}
+
+void PluginEffectLoader::queryAndLoadAll()
+{
+    // perform querying for the services in a thread
+    QFutureWatcher<KPluginInfo::List> *watcher = new QFutureWatcher<KPluginInfo::List>(this);
+    connect(watcher, &QFutureWatcher<KPluginInfo::List>::finished, this,
+        [this, watcher]() {
+            const KPluginInfo::List effects = watcher->result();
+            for (const KPluginInfo &effect : effects) {
+                const LoadEffectFlags flags = readConfig(effect.pluginName(), effect.isPluginEnabledByDefault());
+                if (flags.testFlag(LoadEffectFlag::Load)) {
+                    m_queue->enqueue(qMakePair(effect, flags));
+                }
+            }
+            watcher->deleteLater();
+        },
+        Qt::QueuedConnection);
+    watcher->setFuture(QtConcurrent::run(this, &PluginEffectLoader::findAllEffects));
+}
+
+KPluginInfo::List PluginEffectLoader::findAllEffects() const
+{
+    return KPluginTrader::self()->query(m_pluginSubDirectory, s_serviceType);
+}
+
+void PluginEffectLoader::setPluginSubDirectory(const QString &directory)
+{
+    m_pluginSubDirectory = directory;
 }
 
 } // namespace KWin
