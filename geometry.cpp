@@ -2548,6 +2548,8 @@ bool Client::startMoveResize()
     stopDelayedMoveResize();
     if (QApplication::activePopupWidget() != NULL)
         return false; // popups have grab
+    if (isFullScreen() && (screens()->count() < 2 || !isMovableAcrossScreens()))
+        return false;
     bool has_grab = false;
     // This reportedly improves smoothness of the moveresize operation,
     // something with Enter/LeaveNotify events, looks like XFree performance problem or something *shrug*
