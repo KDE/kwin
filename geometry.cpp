@@ -2400,8 +2400,10 @@ void Client::setFullScreen(bool set, bool user)
     fullscreen_mode = set ? FullScreenNormal : FullScreenNone;
     if (was_fs == isFullScreen())
         return;
-    if (set)
+    if (set) {
+        untab();
         workspace()->raiseClient(this);
+    }
     StackingUpdatesBlocker blocker1(workspace());
     GeometryUpdatesBlocker blocker2(this);
     workspace()->updateClientLayer(this);   // active fullscreens get different layer

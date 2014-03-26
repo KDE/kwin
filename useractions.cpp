@@ -549,6 +549,7 @@ void UserActionsMenu::initTabbingPopups()
         m_menu->insertMenu(m_removeFromTabGroup, m_addTabsMenu);
     }
 
+    m_addTabsMenu->menuAction()->setEnabled(!m_client.data()->isFullScreen());
     m_removeFromTabGroup->setVisible(needTabManagers);
     m_closeTabGroup->setVisible(needTabManagers);
 }
