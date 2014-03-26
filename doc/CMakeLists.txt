@@ -1,0 +1,7 @@
+add_subdirectory(desktop)
+add_subdirectory(kwincompositing)
+add_subdirectory(kwindecoration)
+add_subdirectory(kwinscreenedges)
+add_subdirectory(kwintabbox)
+add_subdirectory(windowbehaviour)
+add_subdirectory(windowspecific)

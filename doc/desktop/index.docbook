@@ -1,0 +1,141 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE" > <!-- change language only here -->
+]>
+
+<article id="desktop" lang="&language;">
+<title>Virtual Desktops</title>
+<articleinfo>
+
+<authorgroup>
+<author>&Mike.McBride; &Mike.McBride.mail;</author>
+<author>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<date>2013-06-02</date>
+<releaseinfo>4.11</releaseinfo>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>Systemsettings</keyword>
+<keyword>desktop</keyword>
+</keywordset>
+</articleinfo>
+
+<!--not in kde 4
+<sect1 id="desktop">
+
+<title>Desktop</title>
+
+<sect2 id="desktop-appearance">
+<title><guilabel>Appearance Tab</guilabel></title>
+
+<para>Here you can configure how icons on your desktop appear.</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Standard font:</guilabel></term>
+<listitem><para>This option can be used to change the typeface used on the
+desktop.  Simply select your typeface from the dropdown box.</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Font size:</guilabel></term>
+<listitem><para>You can change the relative size of the text on the Desktop.
+</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Normal text color:</guilabel></term>
+<listitem><para>This option lets you select the color of normal (or
+unhighlighted) text.</para></listitem>
+</varlistentry>
+<varlistentry><term><guilabel>Text background color:</guilabel></term>
+<listitem><para>This option lets you select the background color of
+normal text.  If left unchecked, the text has a transparent
+background.  If selected, you can choose the color by pressing the button.
+</para></listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Underline filenames:</guilabel></term>
+<listitem><para>Determines if file names are underlined on the
+Desktop.</para></listitem>
+</varlistentry>
+</variablelist>
+</sect2>
+-->
+<sect1 id="virtual-desktops">
+
+<title>Virtual Desktops</title>
+
+<sect2 id="desktop-number">
+<title><guilabel>Desktops</guilabel></title>
+
+<para>&kde; offers you the possibility to have several virtual
+desktops. In this tab you can configure the number of desktops, the number of rows in the <guilabel>Pager</guilabel> icon
+as well as their names. Just use the input box to adjust the number of
+desktops. You can assign names to the desktops by entering text into the
+text fields below.</para> 
+
+<para>Enable <guilabel>Different widgets for each desktop</guilabel> 
+to use independent widgets and wallpapers on each individual desktop.
+</para>
+<!--not in kde4
+<para>If you enable <guilabel>Mouse wheel over desktop switches
+desktop</guilabel> then scrolling the wheel over an empty space on the
+desktop will change to the next virtual desktop numerically, in the
+direction you scrolled (either up or down).</para>
+-->
+</sect2>
+
+<sect2 id="desktop-switching">
+<title><guilabel>Switching</guilabel></title>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Desktop navigation wraps around</guilabel></term>
+<listitem><para>Enable this option if you want keyboard or active desktop border navigation 
+beyond the edge of a desktop to take you to the opposite edge of the new desktop.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Desktop Effect Animation</guilabel></term>
+<listitem><para>Select <guilabel>No Animation</guilabel>, <guilabel>Slide</guilabel>, 
+<guilabel>Desktop Cube Animation</guilabel> or <guilabel>Fade Desktop</guilabel>
+from the drop down box. If the selected animation has settings options, click on the 
+tools icon on the right of the drop down box to launch a configuration dialog. 
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Desktop Switch On-Screen Display</guilabel></term>
+<listitem><para>Enable this option if you want to have an on-screen display for desktop switching. 
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Show desktop layout indicators</guilabel></term>
+<listitem><para>Enabling this option will show a small preview of the desktop layout 
+indicating the selected desktop.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Shortcuts</guilabel></term>
+<listitem><para>This section displays the configured shortcuts for switching the desktops 
+and allows you to edit them.
+</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>Scrolling the mouse wheel over an empty space on the
+desktop or on the <guilabel>Pager</guilabel> icon in the panel will change to the next 
+virtual desktop numerically, in the direction you scrolled (either up or down).</para>
+
+</sect2>
+</sect1>
+
+</article>
