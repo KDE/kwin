@@ -258,37 +258,79 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    connect(ws, SIGNAL(currentDesktopChanged(int,KWin::Client*)), SLOT(slotDesktopChanged(int,KWin::Client*)));
-    connect(ws, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SLOT(slotDesktopPresenceChanged(KWin::Client*,int)));
-    connect(ws, SIGNAL(clientAdded(KWin::Client*)), this, SLOT(slotClientAdded(KWin::Client*)));
-    connect(ws, SIGNAL(unmanagedAdded(KWin::Unmanaged*)), this, SLOT(slotUnmanagedAdded(KWin::Unmanaged*)));
-    connect(ws, SIGNAL(clientActivated(KWin::Client*)), this, SLOT(slotClientActivated(KWin::Client*)));
-    connect(ws, SIGNAL(deletedRemoved(KWin::Deleted*)), this, SLOT(slotDeletedRemoved(KWin::Deleted*)));
-    connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
-    connect(Cursor::self(), SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)),
-            SIGNAL(mouseChanged(QPoint,QPoint,Qt::MouseButtons,Qt::MouseButtons,Qt::KeyboardModifiers,Qt::KeyboardModifiers)));
-    connect(ws, SIGNAL(propertyNotify(long)), this, SLOT(slotPropertyNotify(long)));
-    connect(screens(), &Screens::countChanged, this, &EffectsHandler::numberScreensChanged);
-    connect(screens(), &Screens::sizeChanged, this, &EffectsHandler::virtualScreenSizeChanged);
+    connect(ws, &Workspace::currentDesktopChanged, this,
+        [this](int old, Client *c) {
+            const int newDesktop = VirtualDesktopManager::self()->current();
+            if (old != 0 && newDesktop != old) {
+                emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);
+                // TODO: remove in 4.10
+                emit desktopChanged(old, newDesktop);
+            }
+        }
+    );
+    connect(ws, &Workspace::desktopPresenceChanged, this,
+        [this](Client *c, int old) {
+            if (!c->effectWindow()) {
+                return;
+            }
+            emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
+        }
+    );
+    connect(ws, &Workspace::clientAdded, this,
+        [this](Client *c) {
+            if (c->readyForPainting())
+                slotClientShown(c);
+            else
+                connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotClientShown);
+        }
+    );
+    connect(ws, &Workspace::unmanagedAdded, this,
+        [this](Unmanaged *u) {
+            // it's never initially ready but has synthetic 50ms delay
+            connect(u, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotUnmanagedShown);
+        }
+    );
+    connect(ws, &Workspace::clientActivated, this,
+        [this](KWin::Client *c) {
+            emit windowActivated(c ? c->effectWindow() : nullptr);
+        }
+    );
+    connect(ws, &Workspace::deletedRemoved, this,
+        [this](KWin::Deleted *d) {
+            emit windowDeleted(d->effectWindow());
+            elevated_windows.removeAll(d->effectWindow());
+        }
+    );
+    connect(vds, &VirtualDesktopManager::countChanged, this, &EffectsHandler::numberDesktopsChanged);
+    connect(Cursor::self(), &Cursor::mouseChanged, this, &EffectsHandler::mouseChanged);
+    connect(ws, &Workspace::propertyNotify, this,
+        [this](long int atom) {
+            if (!registered_atoms.contains(atom))
+                return;
+            emit propertyNotify(nullptr, atom);
+        }
+    );
+    connect(screens(), &Screens::countChanged,    this, &EffectsHandler::numberScreensChanged);
+    connect(screens(), &Screens::sizeChanged,     this, &EffectsHandler::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::self();
-    connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
-    connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
-    connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+    connect(activities, &Activities::added,          this, &EffectsHandler::activityAdded);
+    connect(activities, &Activities::removed,        this, &EffectsHandler::activityRemoved);
+    connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
 #endif
-    connect(ws, SIGNAL(stackingOrderChanged()), SIGNAL(stackingOrderChanged()));
+    connect(ws, &Workspace::stackingOrderChanged, this, &EffectsHandler::stackingOrderChanged);
 #ifdef KWIN_BUILD_TABBOX
     TabBox::TabBox *tabBox = TabBox::TabBox::self();
-    connect(tabBox, SIGNAL(tabBoxAdded(int)), SIGNAL(tabBoxAdded(int)));
-    connect(tabBox, SIGNAL(tabBoxUpdated()), SIGNAL(tabBoxUpdated()));
-    connect(tabBox, SIGNAL(tabBoxClosed()), SIGNAL(tabBoxClosed()));
-    connect(tabBox, SIGNAL(tabBoxKeyEvent(QKeyEvent*)), SIGNAL(tabBoxKeyEvent(QKeyEvent*)));
+    connect(tabBox, &TabBox::TabBox::tabBoxAdded,    this, &EffectsHandler::tabBoxAdded);
+    connect(tabBox, &TabBox::TabBox::tabBoxUpdated,  this, &EffectsHandler::tabBoxUpdated);
+    connect(tabBox, &TabBox::TabBox::tabBoxClosed,   this, &EffectsHandler::tabBoxClosed);
+    connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
 #ifdef KWIN_BUILD_SCREENEDGES
-    connect(ScreenEdges::self(), SIGNAL(approaching(ElectricBorder,qreal,QRect)), SIGNAL(screenEdgeApproaching(ElectricBorder,qreal,QRect)));
+    connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
 #endif
-    connect(m_screenLockerWatcher, SIGNAL(locked(bool)), SIGNAL(screenLockingChanged(bool)));
+    connect(m_screenLockerWatcher, &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     // connect all clients
     for (Client *c : ws->clientList()) {
         setupClientConnections(c);
@@ -324,29 +366,56 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 
 void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
-    connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), this, SLOT(slotWindowClosed(KWin::Toplevel*)));
-    connect(c, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), this, SLOT(slotClientMaximized(KWin::Client*,KDecorationDefines::MaximizeMode)));
-    connect(c, SIGNAL(clientStartUserMovedResized(KWin::Client*)), this, SLOT(slotClientStartUserMovedResized(KWin::Client*)));
-    connect(c, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), this, SLOT(slotClientStepUserMovedResized(KWin::Client*,QRect)));
-    connect(c, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), this, SLOT(slotClientFinishUserMovedResized(KWin::Client*)));
-    connect(c, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
-    connect(c, SIGNAL(clientMinimized(KWin::Client*,bool)), this, SLOT(slotClientMinimized(KWin::Client*,bool)));
-    connect(c, SIGNAL(clientUnminimized(KWin::Client*,bool)), this, SLOT(slotClientUnminimized(KWin::Client*,bool)));
-    connect(c, SIGNAL(modalChanged()), this, SLOT(slotClientModalityChanged()));
-    connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
-    connect(c, SIGNAL(paddingChanged(KWin::Toplevel*,QRect)), this, SLOT(slotPaddingChanged(KWin::Toplevel*,QRect)));
-    connect(c, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
-    connect(c, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
+    connect(c, &Client::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(c, static_cast<void (Client::*)(KWin::Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged),
+            this, &EffectsHandlerImpl::slotClientMaximized);
+    connect(c, &Client::clientStartUserMovedResized, this,
+        [this](Client *c) {
+            emit windowStartUserMovedResized(c->effectWindow());
+        }
+    );
+    connect(c, &Client::clientStepUserMovedResized, this,
+        [this](Client *c, const QRect &geometry) {
+            emit windowStepUserMovedResized(c->effectWindow(), geometry);
+        }
+    );
+    connect(c, &Client::clientFinishUserMovedResized, this,
+        [this](Client *c) {
+            emit windowFinishUserMovedResized(c->effectWindow());
+        }
+    );
+    connect(c, &Client::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
+    connect(c, &Client::clientMinimized, this,
+        [this](Client *c, bool animate) {
+            // TODO: notify effects even if it should not animate?
+            if (animate) {
+                emit windowMinimized(c->effectWindow());
+            }
+        }
+    );
+    connect(c, &Client::clientUnminimized, this,
+        [this](Client* c, bool animate) {
+            // TODO: notify effects even if it should not animate?
+            if (animate) {
+                emit windowUnminimized(c->effectWindow());
+            }
+        }
+    );
+    connect(c, &Client::modalChanged,         this, &EffectsHandlerImpl::slotClientModalityChanged);
+    connect(c, &Client::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    connect(c, &Client::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
+    connect(c, &Client::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(c, &Client::propertyNotify,       this, &EffectsHandlerImpl::slotPropertyNotify);
 }
 
 void EffectsHandlerImpl::setupUnmanagedConnections(Unmanaged* u)
 {
-    connect(u, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), this, SLOT(slotWindowClosed(KWin::Toplevel*)));
-    connect(u, SIGNAL(opacityChanged(KWin::Toplevel*,qreal)), this, SLOT(slotOpacityChanged(KWin::Toplevel*,qreal)));
-    connect(u, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), this, SLOT(slotGeometryShapeChanged(KWin::Toplevel*,QRect)));
-    connect(u, SIGNAL(paddingChanged(KWin::Toplevel*,QRect)), this, SLOT(slotPaddingChanged(KWin::Toplevel*,QRect)));
-    connect(u, SIGNAL(damaged(KWin::Toplevel*,QRect)), this, SLOT(slotWindowDamaged(KWin::Toplevel*,QRect)));
-    connect(u, SIGNAL(propertyNotify(KWin::Toplevel*,long)), this, SLOT(slotPropertyNotify(KWin::Toplevel*,long)));
+    connect(u, &Unmanaged::windowClosed,         this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(u, &Unmanaged::opacityChanged,       this, &EffectsHandlerImpl::slotOpacityChanged);
+    connect(u, &Unmanaged::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    connect(u, &Unmanaged::paddingChanged,       this, &EffectsHandlerImpl::slotPaddingChanged);
+    connect(u, &Unmanaged::damaged,              this, &EffectsHandlerImpl::slotWindowDamaged);
+    connect(u, &Unmanaged::propertyNotify,       this, &EffectsHandlerImpl::slotPropertyNotify);
 }
 
 void EffectsHandlerImpl::reconfigure()
@@ -574,41 +643,12 @@ void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, KDecorationDefines
     }
 }
 
-void EffectsHandlerImpl::slotClientStartUserMovedResized(Client *c)
-{
-    emit windowStartUserMovedResized(c->effectWindow());
-}
-
-void EffectsHandlerImpl::slotClientFinishUserMovedResized(Client *c)
-{
-    emit windowFinishUserMovedResized(c->effectWindow());
-}
-
-void EffectsHandlerImpl::slotClientStepUserMovedResized(Client* c, const QRect& geometry)
-{
-    emit windowStepUserMovedResized(c->effectWindow(), geometry);
-}
-
 void EffectsHandlerImpl::slotOpacityChanged(Toplevel *t, qreal oldOpacity)
 {
     if (t->opacity() == oldOpacity || !t->effectWindow()) {
         return;
     }
     emit windowOpacityChanged(t->effectWindow(), oldOpacity, (qreal)t->opacity());
-}
-
-void EffectsHandlerImpl::slotClientAdded(Client *c)
-{
-    if (c->readyForPainting())
-        slotClientShown(c);
-    else
-        connect(c, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotClientShown(KWin::Toplevel*)));
-}
-
-void EffectsHandlerImpl::slotUnmanagedAdded(Unmanaged *u)
-{
-    // it's never initially ready but has synthetic 50ms delay
-    connect(u, SIGNAL(windowShown(KWin::Toplevel*)), SLOT(slotUnmanagedShown(KWin::Toplevel*)));
 }
 
 void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
@@ -628,37 +668,10 @@ void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
     emit windowAdded(u->effectWindow());
 }
 
-void EffectsHandlerImpl::slotDeletedRemoved(KWin::Deleted *d)
-{
-    emit windowDeleted(d->effectWindow());
-    elevated_windows.removeAll(d->effectWindow());
-}
-
 void EffectsHandlerImpl::slotWindowClosed(KWin::Toplevel *c)
 {
     c->disconnect(this);
     emit windowClosed(c->effectWindow());
-}
-
-void EffectsHandlerImpl::slotClientActivated(KWin::Client *c)
-{
-    emit windowActivated(c ? c->effectWindow() : NULL);
-}
-
-void EffectsHandlerImpl::slotClientMinimized(Client *c, bool animate)
-{
-    // TODO: notify effects even if it should not animate?
-    if (animate) {
-        emit windowMinimized(c->effectWindow());
-    }
-}
-
-void EffectsHandlerImpl::slotClientUnminimized(Client* c, bool animate)
-{
-    // TODO: notify effects even if it should not animate?
-    if (animate) {
-        emit windowUnminimized(c->effectWindow());
-    }
 }
 
 void EffectsHandlerImpl::slotClientModalityChanged()
@@ -679,24 +692,6 @@ void EffectsHandlerImpl::slotTabAdded(EffectWindow* w, EffectWindow* to)
 void EffectsHandlerImpl::slotTabRemoved(EffectWindow *w, EffectWindow* leaderOfFormerGroup)
 {
     emit tabRemoved(w, leaderOfFormerGroup);
-}
-
-void EffectsHandlerImpl::slotDesktopChanged(int old, Client *c)
-{
-    const int newDesktop = VirtualDesktopManager::self()->current();
-    if (old != 0 && newDesktop != old) {
-        emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);
-        // TODO: remove in 4.10
-        emit desktopChanged(old, newDesktop);
-    }
-}
-
-void EffectsHandlerImpl::slotDesktopPresenceChanged(Client *c, int old)
-{
-    if (!c->effectWindow()) {
-        return;
-    }
-    emit desktopPresenceChanged(c->effectWindow(), old, c->desktop());
 }
 
 void EffectsHandlerImpl::slotWindowDamaged(Toplevel* t, const QRect& r)
@@ -876,13 +871,6 @@ void EffectsHandlerImpl::slotPropertyNotify(Toplevel* t, long int atom)
     if (!registered_atoms.contains(atom))
         return;
     emit propertyNotify(t->effectWindow(), atom);
-}
-
-void EffectsHandlerImpl::slotPropertyNotify(long int atom)
-{
-    if (!registered_atoms.contains(atom))
-        return;
-    emit propertyNotify(NULL, atom);
 }
 
 void EffectsHandlerImpl::registerPropertyType(long atom, bool reg)

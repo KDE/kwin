@@ -231,28 +231,16 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString& name, const QString& parameter = QString()) const;
 
 protected Q_SLOTS:
-    void slotDesktopChanged(int old, KWin::Client *withClient);
-    void slotDesktopPresenceChanged(KWin::Client *c, int old);
-    void slotClientAdded(KWin::Client *c);
     void slotClientShown(KWin::Toplevel*);
-    void slotUnmanagedAdded(KWin::Unmanaged *u);
     void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c);
-    void slotClientActivated(KWin::Client *c);
-    void slotDeletedRemoved(KWin::Deleted *d);
     void slotClientMaximized(KWin::Client *c, KDecorationDefines::MaximizeMode maxMode);
-    void slotClientStartUserMovedResized(KWin::Client *c);
-    void slotClientStepUserMovedResized(KWin::Client *c, const QRect &geometry);
-    void slotClientFinishUserMovedResized(KWin::Client *c);
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
-    void slotClientMinimized(KWin::Client *c, bool animate);
-    void slotClientUnminimized(KWin::Client *c, bool animate);
     void slotClientModalityChanged();
     void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);
     void slotPaddingChanged(KWin::Toplevel *t, const QRect &old);
     void slotWindowDamaged(KWin::Toplevel *t, const QRect& r);
     void slotPropertyNotify(KWin::Toplevel *t, long atom);
-    void slotPropertyNotify(long atom);
 
 protected:
     bool loadScriptedEffect(const QString &name, KService *service);
