@@ -26,13 +26,14 @@ import org.kde.kwin.kwincompositing 1.0
 
 Rectangle {
     id: window
-    width: 780
-    height: 480
+    implicitWidth: openGLBrokeState ? glError.implicitWidth : view.implicitWidth
+    implicitHeight: openGLBrokeState ? glError.implicitHeight : view.implicitHeight
     color: engine.backgroundViewColor()
     property bool openGLBrokeState: true
     signal changed
 
     OpenGLErrorView {
+        id: glError
         visible: window.openGLBrokeState
         anchors.fill: parent
         onActivated: window.openGLBrokeState = compositing.OpenGLIsBroken();

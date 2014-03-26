@@ -26,6 +26,8 @@ import org.kde.plasma.core 2.0
 
 Item {
     signal changed
+    implicitWidth: col.implicitWidth
+    implicitHeight: col.implicitHeight
 
     Component {
         id: sectionHeading

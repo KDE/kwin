@@ -124,6 +124,9 @@ public:
 
 Q_SIGNALS:
     void changed();
+
+private Q_SLOTS:
+    void slotImplicitSizeChanged();
 private:
     void init(ViewType type);
 };

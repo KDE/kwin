@@ -467,6 +467,9 @@ void EffectView::init(ViewType type)
     rootContext()->setContextProperty("engine", this);
     setSource(QUrl(mainFile));
     connect(rootObject(), SIGNAL(changed()), this, SIGNAL(changed()));
+    setMinimumSize(initialSize());
+    connect(rootObject(), SIGNAL(implicitWidthChanged()), this, SLOT(slotImplicitSizeChanged()));
+    connect(rootObject(), SIGNAL(implicitHeightChanged()), this, SLOT(slotImplicitSizeChanged()));
 }
 
 void EffectView::save()
@@ -497,6 +500,12 @@ void EffectView::defaults()
     if (auto *compositing = rootObject()->findChild<Compositing*>(QStringLiteral("compositing"))) {
         compositing->defaults();
     }
+}
+
+void EffectView::slotImplicitSizeChanged()
+{
+    setMinimumSize(QSize(rootObject()->property("implicitWidth").toInt(),
+                         rootObject()->property("implicitHeight").toInt()));
 }
 
 }//end namespace Compositing

@@ -27,7 +27,11 @@ import org.kde.plasma.core 2.0
 Item {
     id: openGLErrorView
     signal activated
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
+
     ColumnLayout {
+        id: mainLayout
         Text {
             id: openGLErrorText
             text: i18n("OpenGL compositing (the default) has crashed KWin in the past.\n" +

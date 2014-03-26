@@ -37,11 +37,15 @@ Item {
     property alias compositingTypeIndex: backend.type
     property bool compositingEnabledChecked: useCompositing.checked
 
+    implicitWidth: mainLayout.implicitWidth
+    implicitHeight: mainLayout.implicitHeight
+
     CompositingType {
         id: compositingType
     }
 
     GridLayout {
+        id: mainLayout
         columns: 2
         anchors.fill: parent
 
