@@ -3,9 +3,10 @@ project(KWIN)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.2.0")
 
-# where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
-# TODO: this includes the cmake modules from kde-workspace. Need to move those to KWin
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../cmake/modules ${CMAKE_MODULE_PATH} )
+# TODO: remove if once we are split
+if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+    set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH} )
+endif()
 
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 
