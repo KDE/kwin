@@ -22,7 +22,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.0
 import QtMultimedia 5.0 as Multimedia
-import org.kde.qtextracomponents 2.0 as QtExtra
+import org.kde.kquickcontrolsaddons 2.0 as QtExtra
 
 Multimedia.Video {
     id: videoItem
