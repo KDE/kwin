@@ -79,6 +79,7 @@ DesktopGridEffect::DesktopGridEffect()
     connect(effects, SIGNAL(windowDeleted(KWin::EffectWindow*)), this, SLOT(slotWindowDeleted(KWin::EffectWindow*)));
     connect(effects, SIGNAL(numberDesktopsChanged(uint)), this, SLOT(slotNumberDesktopsChanged(uint)));
     connect(effects, SIGNAL(windowGeometryShapeChanged(KWin::EffectWindow*,QRect)), this, SLOT(slotWindowGeometryShapeChanged(KWin::EffectWindow*,QRect)));
+    connect(effects, &EffectsHandler::numberScreensChanged, this, &DesktopGridEffect::setup);
 
     // Load all other configuration details
     reconfigure(ReconfigureAll);
@@ -1060,9 +1061,13 @@ void DesktopGridEffect::setActive(bool active)
 
 void DesktopGridEffect::setup()
 {
-    keyboardGrab = effects->grabKeyboard(this);
-    effects->startMouseInterception(this, Qt::PointingHandCursor);
-    effects->setActiveFullScreenEffect(this);
+    if (!isActive())
+        return;
+    if (!keyboardGrab) {
+        keyboardGrab = effects->grabKeyboard(this);
+        effects->startMouseInterception(this, Qt::PointingHandCursor);
+        effects->setActiveFullScreenEffect(this);
+    }
     setHighlightedDesktop(effects->currentDesktop());
 
     // Soft highlighting
