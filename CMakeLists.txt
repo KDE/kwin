@@ -331,7 +331,7 @@ if(KWIN_BUILD_KAPPMENU)
         appmenu.cpp
     )
     qt5_add_dbus_interface(kwin_KDEINIT_SRCS
-        ${KDEBASE_WORKSPACE_SOURCE_DIR}/plasma-workspace/appmenu/org.kde.kappmenu.xml appmenu_interface)
+        ${CMAKE_SOURCE_DIR}/plasma-workspace/appmenu/org.kde.kappmenu.xml appmenu_interface)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)
