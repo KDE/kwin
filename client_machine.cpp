@@ -94,10 +94,8 @@ void GetAddrInfo::resolve()
     m_addressHints->ai_socktype = SOCK_STREAM;
     m_addressHints->ai_flags |= AI_CANONNAME;
 
-    // TODO: C++11 nullptr
-    const char* nullPtr = NULL;
-    m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName.constData(), nullPtr, m_addressHints, &m_address));
-    m_ownAddressWatcher->setFuture(QtConcurrent::run(getaddrinfo, getHostName().constData(), nullPtr, m_addressHints, &m_ownAddress));
+    m_watcher->setFuture(QtConcurrent::run(getaddrinfo, m_hostName.constData(), nullptr, m_addressHints, &m_address));
+    m_ownAddressWatcher->setFuture(QtConcurrent::run(getaddrinfo, getHostName().constData(), nullptr, m_addressHints, &m_ownAddress));
 }
 
 void GetAddrInfo::slotResolved()
