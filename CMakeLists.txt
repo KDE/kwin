@@ -507,7 +507,9 @@ add_subdirectory(autotests)
 add_subdirectory(tests)
 add_subdirectory(doc)
 
-configure_file(KWinDBusInterfaceConfig.cmake.in "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake" @ONLY)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
+ecm_configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
+    INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
