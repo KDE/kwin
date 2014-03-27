@@ -57,6 +57,10 @@ public:
         return m_themeName;
     }
 
+    QMutex *mutex() {
+        return m_mutex.data();
+    }
+
 private:
     enum EngineType {
         AuroraeEngine,
@@ -83,6 +87,7 @@ private:
     QQmlComponent *m_component;
     EngineType m_engineType;
     QString m_themeName;
+    QScopedPointer<QMutex> m_mutex;
 };
 
 class AuroraeClient : public KDecoration
@@ -162,7 +167,6 @@ private:
     QScopedPointer<QQuickItem> m_item;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
-    QScopedPointer<QMutex> m_mutex;
 };
 
 }

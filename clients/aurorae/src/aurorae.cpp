@@ -51,6 +51,7 @@ AuroraeFactory::AuroraeFactory(QObject *parent)
         , m_engine(new QQmlEngine(this))
         , m_component(new QQmlComponent(m_engine, this))
         , m_engineType(AuroraeEngine)
+        , m_mutex(new QMutex(QMutex::Recursive))
 {
     init();
     connect(options(), &KDecorationOptions::buttonsChanged, this, &AuroraeFactory::buttonsChanged);
@@ -245,7 +246,6 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     : KDecoration(bridge, factory)
     , m_view(nullptr)
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
-    , m_mutex(new QMutex(QMutex::Recursive))
 {
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
@@ -282,7 +282,7 @@ void AuroraeClient::init()
             m_view->setRenderTarget(m_fbo.data());
         });
         connect(m_view, &QQuickWindow::afterRendering, [this]{
-            QMutexLocker locker(m_mutex.data());
+            QMutexLocker locker(AuroraeFactory::instance()->mutex());
             m_buffer = m_fbo->toImage();
         });
         connect(m_view, &QQuickWindow::afterRendering, this,
@@ -563,7 +563,7 @@ bool AuroraeClient::animationsSupported() const
 
 void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
 {
-    QMutexLocker locker(m_mutex.data());
+    QMutexLocker locker(AuroraeFactory::instance()->mutex());
     QPainter painter(device);
     painter.setClipRegion(sourceRegion);
     painter.drawImage(QPoint(0, 0), m_buffer);
