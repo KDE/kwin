@@ -234,21 +234,14 @@ QStringList configModules(bool controlCenter)
     return args;
 }
 
-void UserActionsMenu::configureWM()
-{
-    QStringList args;
-    args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
-    KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args);
-}
-
 void UserActionsMenu::init()
 {
     if (m_menu) {
         return;
     }
     m_menu = new QMenu;
-    connect(m_menu, SIGNAL(aboutToShow()), this, SLOT(menuAboutToShow()));
-    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(slotWindowOperation(QAction*)), Qt::QueuedConnection);
+    connect(m_menu, &QMenu::aboutToShow, this, &UserActionsMenu::menuAboutToShow);
+    connect(m_menu, &QMenu::triggered, this, &UserActionsMenu::slotWindowOperation, Qt::QueuedConnection);
 
     QMenu *advancedMenu = new QMenu(m_menu);
     connect(advancedMenu, &QMenu::aboutToShow, [this, advancedMenu]() {
@@ -318,7 +311,14 @@ void UserActionsMenu::init()
         action = advancedMenu->addAction(i18nc("Entry in context menu of window decoration to open the configuration module of KWin",
                                         "Window &Manager Settings..."));
         action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-        connect(action, SIGNAL(triggered()), this, SLOT(configureWM()));
+        connect(action, &QAction::triggered, this,
+            []() {
+                // opens the KWin configuration
+                QStringList args;
+                args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
+                KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args);
+            }
+        );
     }
 
     m_minimizeOperation = m_menu->addAction(i18n("Mi&nimize"));
@@ -531,8 +531,8 @@ void UserActionsMenu::initTabbingPopups()
         needTabManagers = true;
         if (!m_switchToTabMenu) {
             m_switchToTabMenu = new QMenu(i18n("Switch to Tab"), m_menu);
-            connect(m_switchToTabMenu, SIGNAL(triggered(QAction*)), SLOT(selectPopupClientTab(QAction*)));
-            connect(m_switchToTabMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabListPopup()));
+            connect(m_switchToTabMenu, &QMenu::triggered,   this, &UserActionsMenu::selectPopupClientTab);
+            connect(m_switchToTabMenu, &QMenu::aboutToShow, this, &UserActionsMenu::rebuildTabListPopup);
             m_menu->insertMenu(m_removeFromTabGroup, m_switchToTabMenu);
         }
     } else {
@@ -542,8 +542,8 @@ void UserActionsMenu::initTabbingPopups()
 
     if (!m_addTabsMenu) {
         m_addTabsMenu = new QMenu(i18n("&Attach as tab to"), m_menu);
-        connect(m_addTabsMenu, SIGNAL(triggered(QAction*)), SLOT(entabPopupClient(QAction*)));
-        connect(m_addTabsMenu, SIGNAL(aboutToShow()), SLOT(rebuildTabGroupPopup()));
+        connect(m_addTabsMenu, &QMenu::triggered,   this, &UserActionsMenu::entabPopupClient);
+        connect(m_addTabsMenu, &QMenu::aboutToShow, this, &UserActionsMenu::rebuildTabGroupPopup);
         m_menu->insertMenu(m_removeFromTabGroup, m_addTabsMenu);
     }
 
@@ -557,8 +557,8 @@ void UserActionsMenu::initDesktopPopup()
         return;
 
     m_desktopMenu = new QMenu(m_menu);
-    connect(m_desktopMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToDesktop(QAction*)));
-    connect(m_desktopMenu, SIGNAL(aboutToShow()), SLOT(desktopPopupAboutToShow()));
+    connect(m_desktopMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToDesktop);
+    connect(m_desktopMenu, &QMenu::aboutToShow, this, &UserActionsMenu::desktopPopupAboutToShow);
 
     QAction *action = m_desktopMenu->menuAction();
     // set it as the first item
@@ -573,8 +573,8 @@ void UserActionsMenu::initScreenPopup()
     }
 
     m_screenMenu = new QMenu(m_menu);
-    connect(m_screenMenu, SIGNAL(triggered(QAction*)), SLOT(slotSendToScreen(QAction*)));
-    connect(m_screenMenu, SIGNAL(aboutToShow()), SLOT(screenPopupAboutToShow()));
+    connect(m_screenMenu, &QMenu::triggered,   this, &UserActionsMenu::slotSendToScreen);
+    connect(m_screenMenu, &QMenu::aboutToShow, this, &UserActionsMenu::screenPopupAboutToShow);
 
     QAction *action = m_screenMenu->menuAction();
     // set it as the first item after desktop
@@ -588,10 +588,8 @@ void UserActionsMenu::initActivityPopup()
         return;
 
     m_activityMenu = new QMenu(m_menu);
-    connect(m_activityMenu, SIGNAL(triggered(QAction*)),
-            this, SLOT(slotToggleOnActivity(QAction*)));
-    connect(m_activityMenu, SIGNAL(aboutToShow()),
-            this, SLOT(activityPopupAboutToShow()));
+    connect(m_activityMenu, &QMenu::triggered, this,   &UserActionsMenu::slotToggleOnActivity);
+    connect(m_activityMenu, &QMenu::aboutToShow, this, &UserActionsMenu::activityPopupAboutToShow);
 
     QAction *action = m_activityMenu->menuAction();
     // set it as the first item
@@ -694,7 +692,7 @@ void UserActionsMenu::activityPopupAboutToShow()
         box->setBackgroundRole(m_activityMenu->backgroundRole());
         box->setForegroundRole(m_activityMenu->foregroundRole());
         box->setPalette(m_activityMenu->palette());
-        connect (box, SIGNAL(clicked(bool)), action, SIGNAL(triggered(bool)));
+        connect(box, &QCheckBox::clicked, action, &QAction::triggered);
         m_activityMenu->addAction(action);
         action->setData(id);
 
@@ -948,7 +946,7 @@ void Workspace::setupWindowShortcut(Client* c)
     //client_keys->setEnabled( false );
     client_keys_dialog = new ShortcutDialog(c->shortcut());
     client_keys_client = c;
-    connect(client_keys_dialog, SIGNAL(dialogDone(bool)), SLOT(setupWindowShortcutDone(bool)));
+    connect(client_keys_dialog, &ShortcutDialog::dialogDone, this, &Workspace::setupWindowShortcutDone);
     QRect r = clientArea(ScreenArea, c);
     QSize size = client_keys_dialog->sizeHint();
     QPoint pos = c->pos() + c->clientPos();
@@ -986,7 +984,11 @@ void Workspace::clientShortcutUpdated(Client* c)
             action = new QAction(this);
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", c->caption()));
-            connect(action, SIGNAL(triggered(bool)), c, SLOT(shortcutActivated()));
+            connect(action, &QAction::triggered, c,
+                [c]() {
+                    workspace()->activateClient(c, true);
+                }
+            );
         }
 
         // no autoloading, since it's configured explicitly here and is not meant to be reused

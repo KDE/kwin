@@ -677,7 +677,6 @@ private Q_SLOTS:
     void autoRaise();
     void shadeHover();
     void shadeUnhover();
-    void shortcutActivated();
     void delayedMoveResize();
 
 private:

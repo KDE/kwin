@@ -169,10 +169,6 @@ private Q_SLOTS:
      * @param action Invoked Action containing the Window Operation to perform for the Client
      **/
     void slotWindowOperation(QAction *action);
-    /**
-     * Invokes the kcmshell with the Window Manager related config modules.
-     **/
-    void configureWM();
 
 private:
     /**

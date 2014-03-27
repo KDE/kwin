@@ -859,11 +859,6 @@ void Client::updateUrgency()
         demandAttention();
 }
 
-void Client::shortcutActivated()
-{
-    workspace()->activateClient(this, true);   // force
-}
-
 //****************************************
 // Group
 //****************************************
