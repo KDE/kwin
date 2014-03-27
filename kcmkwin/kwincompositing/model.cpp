@@ -23,6 +23,7 @@
 #include "compositing.h"
 #include <kwin_effects_interface.h>
 
+#include <KLocalizedString>
 #include <KPluginInfo>
 #include <KService>
 #include <KServiceTypeTrader>
@@ -46,6 +47,35 @@
 
 namespace KWin {
 namespace Compositing {
+
+static QString translatedCategory(const QString &category)
+{
+    static const QVector<QString> knownCategories  = {
+        QStringLiteral("Accessibility"),
+        QStringLiteral("Appearance"),
+        QStringLiteral("Candy"),
+        QStringLiteral("Focus"),
+        QStringLiteral("Tools"),
+        QStringLiteral("Virtual Desktop Switching Animation"),
+        QStringLiteral("Window Management")
+    };
+
+    static const QVector<QString> translatedCategories = {
+        i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
+        i18nc("Category of Desktop Effects, used as section header", "Appearance"),
+        i18nc("Category of Desktop Effects, used as section header", "Candy"),
+        i18nc("Category of Desktop Effects, used as section header", "Focus"),
+        i18nc("Category of Desktop Effects, used as section header", "Tools"),
+        i18nc("Category of Desktop Effects, used as section header", "Virtual Desktop Switching Animation"),
+        i18nc("Category of Desktop Effects, used as section header", "Window Management")
+    };
+    const int index = knownCategories.indexOf(category);
+    if (index == -1) {
+        qDebug() << "Unknown category '" << category << "' and thus not translated";
+        return category;
+    }
+    return translatedCategories[index];
+}
 
 EffectModel::EffectModel(QObject *parent)
     : QAbstractItemModel(parent) {
@@ -202,7 +232,7 @@ void EffectModel::loadEffects()
         effect.authorEmail = plugin.email();
         effect.license = plugin.license();
         effect.version = plugin.version();
-        effect.category = plugin.category();
+        effect.category = translatedCategory(plugin.category());
         effect.serviceName = plugin.pluginName();
         effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", plugin.isPluginEnabledByDefault());
         effect.enabledByDefault = plugin.isPluginEnabledByDefault();
