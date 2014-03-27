@@ -29,6 +29,7 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QPointer>
+#include <QPushButton>
 #include <QStandardPaths>
 #include <QString>
 
@@ -72,13 +73,26 @@ void EffectConfig::openConfig(const QString &serviceName, bool scripted)
 
     connect(&dialog, &QDialog::accepted, kcm, &KCModule::save);
 
-    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok |
+                                                     QDialogButtonBox::Cancel |
+                                                     QDialogButtonBox::Apply |
+                                                     QDialogButtonBox::RestoreDefaults |
+                                                     QDialogButtonBox::Reset,
+                                                     &dialog);
 
-    buttons->setCenterButtons(true);
-
+    QPushButton *apply = buttons->button(QDialogButtonBox::Apply);
+    QPushButton *reset = buttons->button(QDialogButtonBox::Reset);
+    apply->setEnabled(false);
+    reset->setEnabled(false);
     //Here we connect our buttons with the dialog
     connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    connect(apply, &QPushButton::clicked, kcm, &KCModule::save);
+    connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
+    auto changedSignal = static_cast<void(KCModule::*)(bool)>(&KCModule::changed);
+    connect(kcm, changedSignal, apply, &QPushButton::setEnabled);
+    connect(kcm, changedSignal, reset, &QPushButton::setEnabled);
+    connect(buttons->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
     layout->addWidget(kcm);
