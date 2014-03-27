@@ -1656,6 +1656,8 @@ void EffectsHandlerImpl::reconfigureEffect(const QString& name)
 {
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         if ((*it).first == name) {
+            KSharedConfig::Ptr config = KSharedConfig::openConfig(QStringLiteral(KWIN_CONFIG));
+            config->reparseConfiguration();
             makeOpenGLContextCurrent();
             (*it).second->reconfigure(Effect::ReconfigureAll);
             return;
