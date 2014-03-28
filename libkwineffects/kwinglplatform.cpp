@@ -810,7 +810,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
         m_looseBinding = true;
 
-        if (m_chipClass < I965) {
+        if (m_chipClass < I915) {
             m_recommendedCompositor = XRenderCompositing;
         } else {
             m_recommendedCompositor = OpenGL2Compositing;
