@@ -30,6 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 // TODO: remove xtest
 #include <xcb/xtest.h>
+#if HAVE_XKB
+#include <xkbcommon/xkbcommon.h>
+#endif
 // system
 #include <linux/input.h>
 #include <sys/mman.h>

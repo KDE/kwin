@@ -26,12 +26,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QEvent>
 #include <QWeakPointer>
 #include <config-kwin.h>
-#if HAVE_XKB
-#include <xkbcommon/xkbcommon.h>
-#endif
 
 class QAction;
 class QKeySequence;
+
+struct xkb_context;
+struct xkb_keymap;
+struct xkb_state;
+typedef uint32_t xkb_mod_index_t;
+typedef uint32_t xkb_keysym_t;
 
 namespace KWin
 {
