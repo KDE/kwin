@@ -38,7 +38,7 @@ class FakeEffectPluginFactory : public KWin::EffectPluginFactory
     Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "fakeeffectplugin_version.json")
     Q_INTERFACES(KPluginFactory)
 public:
-    explicit FakeEffectPluginFactory(const char *a = 0, QObject *b = 0) : KWin::EffectPluginFactory(a, b) {}
+    FakeEffectPluginFactory() {}
     ~FakeEffectPluginFactory() {}
     KWin::Effect *createEffect() const override {
         return new KWin::FakeVersionEffect();

@@ -611,8 +611,7 @@ int Effect::requestedEffectChainPosition() const
 //****************************************
 // EffectFactory
 //****************************************
-EffectPluginFactory::EffectPluginFactory(const char *componentName, QObject *parent)
-    : KPluginFactory(componentName, parent)
+EffectPluginFactory::EffectPluginFactory()
 {
 }
 

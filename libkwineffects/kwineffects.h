@@ -587,7 +587,7 @@ class KWINEFFECTS_EXPORT EffectPluginFactory : public KPluginFactory
 {
     Q_OBJECT
 public:
-    explicit EffectPluginFactory(const char *componentName = nullptr, QObject *parent = nullptr);
+    EffectPluginFactory();
     virtual ~EffectPluginFactory();
     /**
      * Returns whether the Effect is supported.
@@ -644,7 +644,7 @@ public:
         Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE jsonFile) \
         Q_INTERFACES(KPluginFactory) \
     public: \
-        explicit factoryName(const char *a = 0, QObject *b = 0) : KWin::EffectPluginFactory(a, b) {} \
+        explicit factoryName() {} \
         ~factoryName() {} \
         bool isSupported() const override { \
             supported \

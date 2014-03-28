@@ -33,19 +33,14 @@
 
 namespace KWin {
 
-GenericScriptedConfigFactory::GenericScriptedConfigFactory()
-    : KPluginFactory("kcm_kwin4_genericscripted")
-{
-}
-
 QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword)
 {
     Q_UNUSED(iface)
     Q_UNUSED(parent)
     if (keyword.startsWith(QStringLiteral("kwin4_effect_"))) {
-        return new ScriptedEffectConfig(componentName(), keyword, parentWidget, args);
+        return new ScriptedEffectConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
     } else {
-        return new ScriptingConfig(componentName(), keyword, parentWidget, args);
+        return new ScriptingConfig(QStringLiteral("kcm_kwin4_genericscripted"), keyword, parentWidget, args);
     }
 }
 
