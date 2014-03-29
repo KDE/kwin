@@ -27,7 +27,6 @@ DEALINGS IN THE SOFTWARE.
 #include "kdecoration_plugins_p.h"
 
 #include <kconfig.h>
-#include <klibrary.h>
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <KPluginTrader>

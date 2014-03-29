@@ -13,7 +13,7 @@ target_link_libraries(kdecorations
     PUBLIC
         Qt5::Widgets
         KF5::ConfigCore
-        KF5::Service # KLibrary
+        KF5::Service # KPluginLoader
         KF5::WindowSystem # NETWM defines
     PRIVATE
         KF5::I18n
