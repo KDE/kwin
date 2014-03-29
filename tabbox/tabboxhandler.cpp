@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDesktopWidget>
 #include <QKeyEvent>
 #include <QModelIndex>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QQmlContext>
 #include <QQmlComponent>

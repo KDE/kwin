@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtGui/QPainter>
 // KDE
 #include <KConfigGroup>
+#include <KSharedConfig>
 #include <KIconLoader>
 #include <KStartupInfo>
 #include <KSelectionOwner>

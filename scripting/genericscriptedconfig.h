@@ -23,6 +23,7 @@
 
 #include <KCModule>
 #include <KPluginFactory>
+#include <KConfigGroup>
 
 namespace KWin
 {
