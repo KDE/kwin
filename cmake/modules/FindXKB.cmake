@@ -33,11 +33,9 @@ if(NOT WIN32)
 
     find_path(XKB_INCLUDE_DIR
         NAMES
-            xkbcommon.h
+            xkbcommon/xkbcommon.h
         HINTS
             ${PKG_XKB_INCLUDE_DIRS}
-        PATH_SUFFIXES
-            xkbcommon
     )
     find_library(XKB_LIBRARY
         NAMES

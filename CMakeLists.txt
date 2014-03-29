@@ -192,6 +192,10 @@ if(KWIN_BUILD_OPENGLES)
   include_directories(${OPENGLES_INCLUDE_DIR})
 endif()
 
+if (XKB_FOUND)
+  include_directories(${XKB_INCLUDE_DIR})
+endif()
+
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
