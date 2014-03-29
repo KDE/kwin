@@ -50,7 +50,7 @@ Cursor *Cursor::create(QObject *parent)
         s_self = new InputRedirectionCursor(parent);
     }
 #else
-    Q_UNUSED(parent)
+    s_self = new X11Cursor(parent);
 #endif
     return s_self;
 }
