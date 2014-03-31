@@ -40,9 +40,6 @@ DecorationPlugin::DecorationPlugin(QObject *parent)
     , m_disabled(false)
 {
     defaultPlugin = QStringLiteral("Oxygen");
-#ifndef KWIN_BUILD_OXYGEN
-    defaultPlugin = QStringLiteral("aurorae");
-#endif
 #ifdef KWIN_BUILD_DECORATIONS
     loadPlugin(QString());   // load the plugin specified in cfg file
     connect(factory(), &KDecorationFactory::recreateDecorations, this, &DecorationPlugin::recreateDecorations);
