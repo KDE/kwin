@@ -705,13 +705,9 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
     // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
     // helps e.g. with konqy reusing
     if (asn_data != NULL && time != 0) {
-        // prefer timestamp from ASN id (timestamp from data is obsolete way)
         if (asn_id->timestamp() != 0
                 && (time == -1U || NET::timestampCompare(asn_id->timestamp(), time) > 0)) {
             time = asn_id->timestamp();
-        } else if (asn_data->timestamp() != -1U
-                  && (time == -1U || NET::timestampCompare(asn_data->timestamp(), time) > 0)) {
-            time = asn_data->timestamp();
         }
     }
     qDebug() << "User timestamp, ASN:" << time;
@@ -840,8 +836,6 @@ void Client::startupIdChanged()
     if (asn_data.xinerama() != -1)
         workspace()->sendClientToScreen(this, asn_data.xinerama());
     Time timestamp = asn_id.timestamp();
-    if (timestamp == 0 && asn_data.timestamp() != -1U)
-        timestamp = asn_data.timestamp();
     if (timestamp != 0) {
         bool activate = workspace()->allowClientActivation(this, timestamp);
         if (asn_data.desktop() != 0 && !isOnCurrentDesktop())
@@ -873,9 +867,6 @@ void Group::startupIdChanged()
     if (asn_id.timestamp() != 0 && user_time != -1U
             && NET::timestampCompare(asn_id.timestamp(), user_time) > 0) {
         user_time = asn_id.timestamp();
-    } else if (asn_data.timestamp() != -1U && user_time != -1U
-              && NET::timestampCompare(asn_data.timestamp(), user_time) > 0) {
-        user_time = asn_data.timestamp();
     }
 }
 
