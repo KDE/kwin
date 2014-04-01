@@ -661,6 +661,162 @@ ShaderManager::~ShaderManager()
 
     for (int i = 0; i < 3; i++)
         delete m_shader[i];
+
+    qDeleteAll(m_shaderHash);
+    m_shaderHash.clear();
+}
+
+QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
+{
+    QByteArray source;
+    QTextStream stream(&source);
+
+    GLPlatform * const gl = GLPlatform::instance();
+    QByteArray attribute, varying;
+
+    if (!gl->isGLES()) {
+        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
+
+        attribute = glsl_140 ? QByteArrayLiteral("in")  : QByteArrayLiteral("attribute");
+        varying   = glsl_140 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
+
+        if (glsl_140)
+            stream << "#version 140\n\n";
+    } else {
+        const bool glsl_es_300 = gl->glslVersion() >= kVersionNumber(3, 0);
+
+        attribute = glsl_es_300 ? QByteArrayLiteral("in")  : QByteArrayLiteral("attribute");
+        varying   = glsl_es_300 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
+
+        if (glsl_es_300)
+            stream << "#version 300 es\n\n";
+    }
+
+    stream << attribute << " vec4 position;\n";
+    if (traits & ShaderTrait::MapTexture) {
+        stream << attribute << " vec4 texcoord;\n\n";
+        stream << varying << " vec2 texcoord0;\n\n";
+    } else
+        stream << "\n";
+
+    stream << "uniform mat4 modelViewProjectionMatrix;\n\n";
+
+    stream << "void main()\n{\n";
+    if (traits & ShaderTrait::MapTexture)
+        stream << "    texcoord0 = texcoord.st;\n";
+
+    stream << "    gl_Position = modelViewProjectionMatrix * position;\n";
+    stream << "}\n";
+
+    stream.flush();
+    return source;
+}
+
+QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
+{
+    QByteArray source;
+    QTextStream stream(&source);
+
+    GLPlatform * const gl = GLPlatform::instance();
+    QByteArray varying, output, textureLookup;
+
+    if (!gl->isGLES()) {
+        const bool glsl_140 = gl->glslVersion() >= kVersionNumber(1, 40);
+
+        if (glsl_140)
+            stream << "#version 140\n\n";
+
+        varying       = glsl_140 ? QByteArrayLiteral("in")         : QByteArrayLiteral("varying");
+        textureLookup = glsl_140 ? QByteArrayLiteral("texture")    : QByteArrayLiteral("texture2D");
+        output        = glsl_140 ? QByteArrayLiteral("fragColor")  : QByteArrayLiteral("gl_FragColor");
+    } else {
+        const bool glsl_es_300 = GLPlatform::instance()->glslVersion() >= kVersionNumber(3, 0);
+
+        if (glsl_es_300)
+            stream << "#version 300 es\n\n";
+
+        // From the GLSL ES specification:
+        //
+        //     "The fragment language has no default precision qualifier for floating point types."
+        stream << "precision highp float;\n\n";
+
+        varying       = glsl_es_300 ? QByteArrayLiteral("in")         : QByteArrayLiteral("varying");
+        textureLookup = glsl_es_300 ? QByteArrayLiteral("texture")    : QByteArrayLiteral("texture2D");
+        output        = glsl_es_300 ? QByteArrayLiteral("fragColor")  : QByteArrayLiteral("gl_FragColor");
+    }
+
+    if (traits & ShaderTrait::MapTexture) {
+        stream << "uniform sampler2D sampler;\n";
+
+        if (traits & ShaderTrait::Modulate)
+            stream << "uniform vec4 modulation;\n";
+        if (traits & ShaderTrait::AdjustSaturation)
+            stream << "uniform float saturation;\n";
+
+        stream << "\n" << varying << " vec2 texcoord0;\n";
+
+    } else if (traits & ShaderTrait::UniformColor)
+        stream << "uniform vec4 geometryColor;\n";
+
+    if (output != QByteArrayLiteral("gl_FragColor"))
+        stream << "\nout vec4 " << output << ";\n";
+
+    stream << "\nvoid main(void)\n{\n";
+    if (traits & ShaderTrait::MapTexture) {
+        if (traits & (ShaderTrait::Modulate | ShaderTrait::AdjustSaturation)) {
+            stream << "    vec4 texel = " << textureLookup << "(sampler, texcoord0);\n";
+
+            if (traits & ShaderTrait::Modulate)
+                stream << "    texel *= modulation;\n";
+            if (traits & ShaderTrait::AdjustSaturation)
+                stream << "    texel.rgb = mix(vec3(dot(texel.rgb, vec3(0.2126, 0.7152, 0.0722))), texel.rgb, saturation);\n";
+
+            stream << "    " << output << " = texel;\n";
+        } else {
+            stream << "    " << output << " = " << textureLookup << "(sampler, texcoord0);\n";
+        }
+    } else if (traits & ShaderTrait::UniformColor)
+        stream << "    " << output << " = geometryColor;\n";
+
+    stream << "}";
+    stream.flush();
+    return source;
+}
+
+GLShader *ShaderManager::generateShader(ShaderTraits traits)
+{
+    const QByteArray vertex   = generateVertexSource(traits);
+    const QByteArray fragment = generateFragmentSource(traits);
+
+#if 0
+    qDebug() << "**************";
+    qDebug() << vertex;
+    qDebug() << "**************";
+    qDebug() << fragment;
+    qDebug() << "**************";
+#endif
+
+    GLShader *shader = new GLShader(GLShader::ExplicitLinking);
+    shader->load(vertex, fragment);
+
+    shader->bindAttributeLocation("position", VA_Position);
+    shader->bindAttributeLocation("texcoord", VA_TexCoord);
+    shader->bindFragDataLocation("fragColor", 0);
+
+    shader->link();
+    return shader;
+}
+
+GLShader *ShaderManager::shader(ShaderTraits traits)
+{
+    GLShader *shader = m_shaderHash.value(traits);
+
+    if (!shader) {
+        shader = generateShader(traits);
+        m_shaderHash.insert(traits, shader);
+    }
+
+    return shader;
 }
 
 GLShader *ShaderManager::getBoundShader() const
@@ -685,6 +841,13 @@ bool ShaderManager::isValid() const
 bool ShaderManager::isShaderDebug() const
 {
     return m_debug;
+}
+
+GLShader *ShaderManager::pushShader(ShaderTraits traits)
+{
+    GLShader *shader = this->shader(traits);
+    pushShader(shader);
+    return shader;
 }
 
 GLShader *ShaderManager::pushShader(ShaderType type, bool reset)

@@ -201,6 +201,17 @@ private:
     friend class ShaderManager;
 };
 
+
+enum class ShaderTrait {
+    MapTexture       = (1 << 0),
+    UniformColor     = (1 << 1),
+    Modulate         = (1 << 2),
+    AdjustSaturation = (1 << 3),
+};
+
+Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
+
+
 /**
  * @short Manager for Shaders.
  *
@@ -250,6 +261,11 @@ public:
     };
 
     /**
+     * Returns a shader with the given traits, creating it if necessary.
+     */
+    GLShader *shader(ShaderTraits traits);
+
+    /**
      * @return The currently bound shader or @c null if no shader is bound.
      **/
     GLShader *getBoundShader() const;
@@ -282,6 +298,13 @@ public:
      * @see popShader
      **/
     GLShader *pushShader(ShaderType type, bool reset = false);
+
+    /**
+     * Pushes the current shader onto the stack and binds a shader
+     * with the given traits.
+     */
+    GLShader *pushShader(ShaderTraits traits);
+
     /**
      * Binds the @p shader.
      * To unbind the shader use @link popShader. A previous bound shader will be rebound.
@@ -363,8 +386,13 @@ private:
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
+    QByteArray generateVertexSource(ShaderTraits traits) const;
+    QByteArray generateFragmentSource(ShaderTraits traits) const;
+    GLShader *generateShader(ShaderTraits traits);
+
     QStack<GLShader*> m_boundShaders;
     GLShader *m_shader[3];
+    QHash<ShaderTraits, GLShader *> m_shaderHash;
     bool m_inited;
     bool m_valid;
     bool m_debug;
@@ -778,6 +806,8 @@ private:
 };
 
 } // namespace
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ShaderTraits)
 
 /** @} */
 
