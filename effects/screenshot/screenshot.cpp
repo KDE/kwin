@@ -128,9 +128,13 @@ void ScreenShotEffect::postPaintScreen()
                 glClearColor(0.0, 0.0, 0.0, 0.0);
                 glClear(GL_COLOR_BUFFER_BIT);
                 glClearColor(0.0, 0.0, 0.0, 1.0);
-                setMatrix(offscreenTexture->width(), offscreenTexture->height());
+
+                QMatrix4x4 projection;
+                projection.ortho(QRect(0, 0, offscreenTexture->width(), offscreenTexture->height()));
+                d.setProjectionMatrix(projection);
+
                 effects->drawWindow(m_scheduledScreenshot, mask, infiniteRegion(), d);
-                restoreMatrix();
+
                 // copy content from framebuffer into image
                 img = QImage(QSize(width, height), QImage::Format_ARGB32);
                 glReadnPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, img.byteCount(), (GLvoid*)img.bits());
@@ -172,30 +176,6 @@ void ScreenShotEffect::postPaintScreen()
         }
         m_scheduledScreenshot = NULL;
     }
-}
-
-static QMatrix4x4 s_origProjection;
-static QMatrix4x4 s_origModelview;
-
-void ScreenShotEffect::setMatrix(int width, int height)
-{
-    QMatrix4x4 projection;
-    QMatrix4x4 identity;
-    projection.ortho(QRect(0, 0, width, height));
-    ShaderBinder binder(ShaderManager::GenericShader);
-    GLShader *shader = binder.shader();
-    s_origProjection = shader->getUniformMatrix4x4("projection");
-    s_origModelview = shader->getUniformMatrix4x4("modelview");
-    shader->setUniform(GLShader::ProjectionMatrix, projection);
-    shader->setUniform(GLShader::ModelViewMatrix, identity);
-}
-
-void ScreenShotEffect::restoreMatrix()
-{
-    ShaderBinder binder(ShaderManager::GenericShader);
-    GLShader *shader = binder.shader();
-    shader->setUniform(GLShader::ProjectionMatrix, s_origProjection);
-    shader->setUniform(GLShader::ModelViewMatrix, s_origModelview);
 }
 
 void ScreenShotEffect::screenshotWindowUnderCursor(int mask)

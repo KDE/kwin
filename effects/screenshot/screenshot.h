@@ -84,8 +84,6 @@ private Q_SLOTS:
 private:
     void grabPointerImage(QImage& snapshot, int offsetx, int offsety);
     QString blitScreenshot(const QRect &geometry);
-    void setMatrix(int width, int height);
-    void restoreMatrix();
     EffectWindow *m_scheduledScreenshot;
     ScreenShotType m_type;
 };
