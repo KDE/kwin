@@ -1354,7 +1354,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (stop)
                 factor = timeLine.currentValue();
             cylinderShader->setUniform("timeLine", factor);
-            data.shader = cylinderShader;
             currentShader = cylinderShader;
         }
         if (mode == Sphere) {
@@ -1367,7 +1366,6 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             if (stop)
                 factor = timeLine.currentValue();
             sphereShader->setUniform("timeLine", factor);
-            data.shader = sphereShader;
             currentShader = sphereShader;
         }
         if (reflectionPainting) {
@@ -1375,6 +1373,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
         } else {
             currentShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix*origMatrix);
         }
+        data.shader = currentShader;
     }
     effects->paintWindow(w, mask, region, data);
     if (activated && cube_painting) {
