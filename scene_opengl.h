@@ -124,8 +124,11 @@ public:
     static bool supported(OpenGLBackend *backend);
 
     ColorCorrection *colorCorrection();
+    QMatrix4x4 projectionMatrix() const { return m_projectionMatrix; }
+    QMatrix4x4 screenProjectionMatrix() const { return m_screenProjectionMatrix; }
 
 protected:
+    virtual void paintSimpleScreen(int mask, QRegion region);
     virtual void paintGenericScreen(int mask, ScreenPaintData data);
     virtual void doPaintBackground(const QVector< float >& vertices);
     virtual Scene::Window *createWindow(Toplevel *t);
@@ -138,10 +141,13 @@ private Q_SLOTS:
 
 private:
     void performPaintWindow(EffectWindowImpl* w, int mask, QRegion region, WindowPaintData& data);
+    QMatrix4x4 createProjectionMatrix() const;
 
 private:
     LanczosFilter *m_lanczosFilter;
     QScopedPointer<ColorCorrection> m_colorCorrection;
+    QMatrix4x4 m_projectionMatrix;
+    QMatrix4x4 m_screenProjectionMatrix;
     GLuint vao;
 };
 

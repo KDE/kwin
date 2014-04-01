@@ -951,11 +951,57 @@ SceneOpenGL2::~SceneOpenGL2()
 {
 }
 
+QMatrix4x4 SceneOpenGL2::createProjectionMatrix() const
+{
+    // Create a perspective projection with a 60° field-of-view,
+    // and an aspect ratio of 1.0.
+    const float fovY   =   60.0f;
+    const float aspect =    1.0f;
+    const float zNear  =    0.1f;
+    const float zFar   =  100.0f;
+
+    const float yMax   =  zNear * std::tan(fovY * M_PI / 360.0f);
+    const float yMin   = -yMax;
+    const float xMin   =  yMin * aspect;
+    const float xMax   =  yMax * aspect;
+
+    QMatrix4x4 projection;
+    projection.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
+
+    // Create a second matrix that transforms screen coordinates
+    // to world coordinates.
+    const float scaleFactor = 1.1 * std::tan(fovY * M_PI / 360.0f) / yMax;
+    const QSize size = screens()->size();
+
+    QMatrix4x4 matrix;
+    matrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    matrix.scale( (xMax - xMin) * scaleFactor / size.width(),
+                 -(yMax - yMin) * scaleFactor / size.height(),
+                  0.001);
+
+    // Combine the matrices
+    return projection * matrix;
+}
+
+void SceneOpenGL2::paintSimpleScreen(int mask, QRegion region)
+{
+    m_projectionMatrix = createProjectionMatrix();
+    m_screenProjectionMatrix = m_projectionMatrix;
+
+    Scene::paintSimpleScreen(mask, region);
+}
+
 void SceneOpenGL2::paintGenericScreen(int mask, ScreenPaintData data)
 {
-    ShaderBinder binder(ShaderManager::GenericShader);
+    const QMatrix4x4 screenMatrix = transformation(mask, data);
+    const QMatrix4x4 pMatrix = createProjectionMatrix();
 
-    binder.shader()->setUniform(GLShader::ScreenTransformation, transformation(mask, data));
+    m_projectionMatrix = pMatrix;
+    m_screenProjectionMatrix = pMatrix * screenMatrix;
+
+    // ### Remove the following two lines when there are no more users of the old shader API
+    ShaderBinder binder(ShaderManager::GenericShader);
+    binder.shader()->setUniform(GLShader::ScreenTransformation, screenMatrix);
 
     Scene::paintGenericScreen(mask, data);
 }
@@ -1337,21 +1383,36 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     if (!beginRenderWindow(mask, region, data))
         return;
 
+    SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
+
+    const QMatrix4x4 windowMatrix = transformation(mask, data);
+    QMatrix4x4 mvpMatrix;
+
+    if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
+        mvpMatrix = scene->screenModelViewProjectionMatrix() * windowMatrix;
+    else
+        mvpMatrix = scene->modelViewProjectionMatrix() * windowMatrix;
+
     GLShader *shader = data.shader;
     if (!shader) {
-        if ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)) {
-            shader = ShaderManager::instance()->pushShader(ShaderManager::GenericShader);
-        } else {
-            shader = ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
-            shader->setUniform(GLShader::Offset, QVector2D(x(), y()));
-        }
+        ShaderTraits traits = ShaderTrait::MapTexture;
+
+        if (data.opacity() != 1.0 || data.brightness() != 1.0)
+            traits |= ShaderTrait::Modulate;
+
+        if (data.saturation() != 1.0)
+            traits |= ShaderTrait::AdjustSaturation;
+
+        shader = ShaderManager::instance()->pushShader(traits);
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvpMatrix);
     }
 
-    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
+    if (ColorCorrection *cc = scene->colorCorrection()) {
         cc->setupForOutput(data.screen());
     }
 
-    shader->setUniform(GLShader::WindowTransformation, transformation(mask, data));
+    // ### Remove the following line when there are no more users of the old shader API
+    shader->setUniform(GLShader::WindowTransformation, windowMatrix);
     shader->setUniform(GLShader::Saturation, data.saturation());
 
     const GLenum filter = (mask & (Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_SCREEN_TRANSFORMED))
