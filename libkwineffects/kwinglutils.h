@@ -133,6 +133,7 @@ public:
         TextureMatrix = 0,
         ProjectionMatrix,
         ModelViewMatrix,
+        ModelViewProjectionMatrix,
         WindowTransformation,
         ScreenTransformation,
         MatrixCount
