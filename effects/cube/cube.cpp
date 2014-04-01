@@ -1268,9 +1268,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 }
             }
             data.quads = new_quads;
-            if (shader) {
-                data.setXTranslation(-rect.width());
-            }
+            data.setXTranslation(-rect.width());
         }
         if (w->isOnDesktop(next_desktop) && (mask & PAINT_WINDOW_TRANSFORMED)) {
             QRect rect = effects->clientArea(FullArea, activeScreen, next_desktop);
@@ -1281,9 +1279,7 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
                 }
             }
             data.quads = new_quads;
-            if (shader) {
-                data.setXTranslation(rect.width());
-            }
+            data.setXTranslation(rect.width());
         }
         QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
 
@@ -1346,52 +1342,48 @@ void CubeEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPa
             }
             data.quads = new_quads;
         }
-        if (shader) {
-            origMatrix = shader->getUniformMatrix4x4("screenTransformation");
-            GLShader *currentShader = shader;
-            if (mode == Cylinder) {
-                shaderManager->pushShader(cylinderShader);
-                cylinderShader->setUniform("xCoord", (float)w->x());
-                cylinderShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
-                float factor = 0.0f;
-                if (start)
-                    factor = 1.0f - timeLine.currentValue();
-                if (stop)
-                    factor = timeLine.currentValue();
-                cylinderShader->setUniform("timeLine", factor);
-                data.shader = cylinderShader;
-                currentShader = cylinderShader;
-            }
-            if (mode == Sphere) {
-                shaderManager->pushShader(sphereShader);
-                sphereShader->setUniform("u_offset", QVector2D(w->x(), w->y()));
-                sphereShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
-                float factor = 0.0f;
-                if (start)
-                    factor = 1.0f - timeLine.currentValue();
-                if (stop)
-                    factor = timeLine.currentValue();
-                sphereShader->setUniform("timeLine", factor);
-                data.shader = sphereShader;
-                currentShader = sphereShader;
-            }
-            if (reflectionPainting) {
-                currentShader->setUniform(GLShader::ScreenTransformation, m_reflectionMatrix * m_rotationMatrix * origMatrix);
-            } else {
-                currentShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix*origMatrix);
-            }
+        origMatrix = shader->getUniformMatrix4x4("screenTransformation");
+        GLShader *currentShader = shader;
+        if (mode == Cylinder) {
+            shaderManager->pushShader(cylinderShader);
+            cylinderShader->setUniform("xCoord", (float)w->x());
+            cylinderShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
+            float factor = 0.0f;
+            if (start)
+                factor = 1.0f - timeLine.currentValue();
+            if (stop)
+                factor = timeLine.currentValue();
+            cylinderShader->setUniform("timeLine", factor);
+            data.shader = cylinderShader;
+            currentShader = cylinderShader;
+        }
+        if (mode == Sphere) {
+            shaderManager->pushShader(sphereShader);
+            sphereShader->setUniform("u_offset", QVector2D(w->x(), w->y()));
+            sphereShader->setUniform("cubeAngle", (effects->numberOfDesktops() - 2) / (float)effects->numberOfDesktops() * 90.0f);
+            float factor = 0.0f;
+            if (start)
+                factor = 1.0f - timeLine.currentValue();
+            if (stop)
+                factor = timeLine.currentValue();
+            sphereShader->setUniform("timeLine", factor);
+            data.shader = sphereShader;
+            currentShader = sphereShader;
+        }
+        if (reflectionPainting) {
+            currentShader->setUniform(GLShader::ScreenTransformation, m_reflectionMatrix * m_rotationMatrix * origMatrix);
+        } else {
+            currentShader->setUniform(GLShader::ScreenTransformation, m_rotationMatrix*origMatrix);
         }
     }
     effects->paintWindow(w, mask, region, data);
     if (activated && cube_painting) {
-        if (shader) {
-            if (mode == Cylinder || mode == Sphere) {
-                shaderManager->popShader();
-            } else {
-                shader->setUniform(GLShader::ScreenTransformation, origMatrix);
-            }
+        if (mode == Cylinder || mode == Sphere) {
             shaderManager->popShader();
+        } else {
+            shader->setUniform(GLShader::ScreenTransformation, origMatrix);
         }
+        shaderManager->popShader();
         if (w->isDesktop() && effects->numScreens() > 1 && paintCaps) {
             QRect rect = effects->clientArea(FullArea, activeScreen, painting_desktop);
             QRegion paint = QRegion(rect);
