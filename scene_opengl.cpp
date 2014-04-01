@@ -927,7 +927,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     }
 
     // push one shader on the stack so that one is always bound
-    ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+    ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
     if (checkGLError("Init")) {
         qCritical() << "OpenGL 2 compositing setup failed";
         init_ok = false;
