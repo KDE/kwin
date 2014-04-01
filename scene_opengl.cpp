@@ -1378,6 +1378,30 @@ void SceneOpenGL2Window::setupLeafNodes(LeafNode *nodes, const WindowQuadList *q
     }
 }
 
+QMatrix4x4 SceneOpenGL2Window::modelViewProjectionMatrix(int mask, const WindowPaintData &data) const
+{
+    SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
+
+    const QMatrix4x4 pMatrix = data.projectionMatrix();
+    const QMatrix4x4 mvMatrix = data.modelViewMatrix();
+
+    // An effect may want to override the default projection matrix in some cases,
+    // such as when it is rendering a window on a render target that doesn't have
+    // the same dimensions as the default framebuffer.
+    //
+    // Note that the screen transformation is not applied here.
+    if (!pMatrix.isIdentity())
+        return pMatrix * mvMatrix;
+
+    // If an effect has specified a model-view matrix, we multiply that matrix
+    // with the default projection matrix.  If the effect hasn't specified a
+    // model-view matrix, mvMatrix will be the identity matrix.
+    if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
+        return scene->screenProjectionMatrix() * mvMatrix;
+
+    return scene->projectionMatrix() * mvMatrix;
+}
+
 void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData data)
 {
     if (!beginRenderWindow(mask, region, data))
@@ -1386,12 +1410,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     SceneOpenGL2 *scene = static_cast<SceneOpenGL2 *>(m_scene);
 
     const QMatrix4x4 windowMatrix = transformation(mask, data);
-    QMatrix4x4 mvpMatrix;
-
-    if (mask & Scene::PAINT_SCREEN_TRANSFORMED)
-        mvpMatrix = scene->screenModelViewProjectionMatrix() * windowMatrix;
-    else
-        mvpMatrix = scene->modelViewProjectionMatrix() * windowMatrix;
+    const QMatrix4x4 mvpMatrix = modelViewProjectionMatrix(mask, data) * windowMatrix;
 
     GLShader *shader = data.shader;
     if (!shader) {

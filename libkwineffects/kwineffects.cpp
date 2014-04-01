@@ -230,6 +230,8 @@ public:
     qreal brightness;
     int screen;
     qreal crossFadeProgress;
+    QMatrix4x4 pMatrix;
+    QMatrix4x4 mvMatrix;
 };
 
 WindowPaintData::WindowPaintData(EffectWindow* w)
@@ -263,6 +265,8 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setBrightness(other.brightness());
     setScreen(other.screen());
     setCrossFadeProgress(other.crossFadeProgress());
+    setProjectionMatrix(other.projectionMatrix());
+    setModelViewMatrix(other.modelViewMatrix());
 }
 
 WindowPaintData::~WindowPaintData()
@@ -336,6 +340,36 @@ qreal WindowPaintData::multiplyBrightness(qreal factor)
 {
     d->brightness *= factor;
     return d->brightness;
+}
+
+void WindowPaintData::setProjectionMatrix(const QMatrix4x4 &matrix)
+{
+    d->pMatrix = matrix;
+}
+
+QMatrix4x4 WindowPaintData::projectionMatrix() const
+{
+    return d->pMatrix;
+}
+
+QMatrix4x4 &WindowPaintData::rprojectionMatrix()
+{
+    return d->pMatrix;
+}
+
+void WindowPaintData::setModelViewMatrix(const QMatrix4x4 &matrix)
+{
+    d->mvMatrix = matrix;
+}
+
+QMatrix4x4 WindowPaintData::modelViewMatrix() const
+{
+    return d->mvMatrix;
+}
+
+QMatrix4x4 &WindowPaintData::rmodelViewMatrix()
+{
+    return d->mvMatrix;
 }
 
 WindowPaintData &WindowPaintData::operator*=(qreal scale)

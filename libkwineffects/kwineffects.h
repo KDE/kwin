@@ -2314,11 +2314,54 @@ public:
      * @see setCrossFadeProgress
      */
     qreal crossFadeProgress() const;
+
+    /**
+     * Sets the projection matrix that will be used when painting the window.
+     *
+     * The default projection matrix can be overridden by setting this matrix
+     * to a non-identity matrix.
+     */
+    void setProjectionMatrix(const QMatrix4x4 &matrix);
+
+    /**
+     * Returns the current projection matrix.
+     *
+     * The default value for this matrix is the identity matrix.
+     */
+    QMatrix4x4 projectionMatrix() const;
+
+    /**
+     * Returns a reference to the projection matrix.
+     */
+    QMatrix4x4 &rprojectionMatrix();
+
+    /**
+     * Sets the model-view matrix that will be used when painting the window.
+     *
+     * The default model-view matrix can be overridden by setting this matrix
+     * to a non-identity matrix.
+     */
+    void setModelViewMatrix(const QMatrix4x4 &matrix);
+
+    /**
+     * Returns the current model-view matrix.
+     *
+     * The default value for this matrix is the identity matrix.
+     */
+    QMatrix4x4 modelViewMatrix() const;
+
+    /**
+     * Returns a reference to the model-view matrix.
+     */
+    QMatrix4x4 &rmodelViewMatrix();
+
     WindowQuadList quads;
+
     /**
      * Shader to be used for rendering, if any.
      */
     GLShader* shader;
+
 private:
     WindowPaintDataPrivate * const d;
 };
