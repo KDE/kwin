@@ -88,6 +88,7 @@ void Compositing::reset()
         } else if (glSwapStrategyValue == "c") {
             return 4;
         }
+        return 0;
     };
     setGlSwapStrategy(swapStrategy());
     setGlColorCorrection(kwinConfig.readEntry("GLColorCorrection", false));

@@ -32,6 +32,12 @@ find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
 )
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
+find_package(Qt5Multimedia QUIET)
+set_package_properties(Qt5Multimedia PROPERTIES
+         PURPOSE "Runtime-only dependency for effect video playback"
+         TYPE RUNTIME
+         )
+
 
 # required frameworks by Core
 find_package(KF5 CONFIG REQUIRED COMPONENTS
@@ -50,6 +56,7 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
 # required frameworks by config modules
 find_package(KF5 CONFIG REQUIRED COMPONENTS
     Completion
+    Declarative
     KCMUtils
     KIO
     NewStuff
