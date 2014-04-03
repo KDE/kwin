@@ -743,9 +743,6 @@ void EffectsHandlerImpl::registerAxisShortcut(Qt::KeyboardModifiers modifiers, P
 
 void* EffectsHandlerImpl::getProxy(QString name)
 {
-    // All effects start with "kwin4_effect_", prepend it to the name
-    name.prepend(QStringLiteral("kwin4_effect_"));
-
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it)
         if ((*it).first == name)
             return (*it).second->proxy();
