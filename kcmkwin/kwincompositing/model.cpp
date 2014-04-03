@@ -21,7 +21,9 @@
 #include "model.h"
 #include "effectconfig.h"
 #include "compositing.h"
+#include <config-kwin.h>
 #include <kwin_effects_interface.h>
+#include <effect_builtins.h>
 
 #include <KLocalizedString>
 #include <KPluginInfo>
@@ -214,17 +216,44 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
 
 void EffectModel::loadEffects()
 {
-    EffectData effect;
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
     beginResetModel();
     m_effectsChanged.clear();
     m_effectsList.clear();
-    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/effects/configs/"));
+    const auto builtins = BuiltInEffects::availableEffects();
+    for (auto builtin : builtins) {
+        const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtin);
+        EffectData effect;
+        effect.name = data.displayName;
+        effect.description = data.comment;
+        effect.authorName = i18n("KWin development team");
+        effect.authorEmail = QString(); // not used at all
+        effect.license = QStringLiteral("GPL");
+        effect.version = QStringLiteral(KWIN_VERSION_STRING);
+        effect.category = translatedCategory(data.category);
+        effect.serviceName = data.name;
+        effect.enabledByDefault = data.enabled;
+        effect.effectStatus = kwinConfig.readEntry(QStringLiteral("kwin4_effect_") + effect.serviceName + "Enabled", effect.enabledByDefault);
+        effect.video = data.video;
+        effect.supported = true;
+        effect.exclusiveGroup = data.exclusiveCategory;
+        effect.internal = data.internal;
+        effect.scripted = false;
+
+        auto it = std::find_if(configs.begin(), configs.end(), [data](const KPluginInfo &info) {
+            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == QStringLiteral("kwin4_effect_") + data.name;
+        });
+        effect.configurable = it != configs.end();
+
+        m_effectsList << effect;
+    }
+    KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect", QStringLiteral("[X-Plasma-API] == 'javascript'"));
     for(KService::Ptr service : offers) {
         const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kservices5/"+ service->entryPath(), QStandardPaths::LocateFile);
         KPluginInfo plugin(effectPluginPath);
+        EffectData effect;
 
         effect.name = plugin.name();
         effect.description = plugin.comment();
@@ -240,15 +269,13 @@ void EffectModel::loadEffects()
         effect.supported = true;
         effect.exclusiveGroup = service->property(QStringLiteral("X-KWin-Exclusive-Category"), QVariant::String).toString();
         effect.internal = service->property(QStringLiteral("X-KWin-Internal"), QVariant::Bool).toBool();
-        effect.scripted = service->property(QStringLiteral("X-Plasma-API"), QVariant::String).toString().toLower() == QStringLiteral("javascript");
+        effect.scripted = true;
 
-        auto it = std::find_if(configs.begin(), configs.end(), [&plugin](const KPluginInfo &info) {
-            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == plugin.pluginName();
-        });
-        effect.configurable = it != configs.end();
-        if (!effect.configurable && effect.scripted && !service->pluginKeyword().isEmpty()) {
+        if (!service->pluginKeyword().isEmpty()) {
             // scripted effects have their pluginName() as the keyword
             effect.configurable = service->property(QStringLiteral("X-KDE-ParentComponents")).toString() == service->pluginKeyword();
+        } else {
+            effect.configurable = false;
         }
 
         m_effectsList << effect;
@@ -351,15 +378,21 @@ void EffectModel::syncConfig()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
-        EffectData effect = *(it);
+    for (auto it = m_effectsList.constBegin(); it != m_effectsList.constEnd(); it++) {
+        const EffectData &effect = *(it);
 
-        bool effectConfigStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", false);
+        QString key = effect.serviceName + QStringLiteral("Enabled");
+        // HACK: workaround for built-in effects, needs to be removed once everything is transited to new names
+        if (!key.startsWith(QStringLiteral("kwin4_effect_"))) {
+            key = QStringLiteral("kwin4_effect_") + key;
+        }
 
-        if (effect.effectStatus) {
-            kwinConfig.writeEntry(effect.serviceName + "Enabled", effect.effectStatus);
-        } else if (effect.effectStatus != effectConfigStatus) {
-            kwinConfig.writeEntry(effect.serviceName + "Enabled", effect.effectStatus);
+        const bool effectConfigStatus = kwinConfig.readEntry(key, effect.enabledByDefault);
+
+        if (effect.effectStatus != effectConfigStatus) {
+            kwinConfig.writeEntry(key, effect.effectStatus);
+        } else {
+            kwinConfig.deleteEntry(key);
         }
     }
 

@@ -5,6 +5,8 @@ add_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 
 remove_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_STRICT_ITERATORS -DQT_NO_CAST_FROM_BYTEARRAY)
 
+include_directories(${KWIN_SOURCE_DIR}/effects)
+
 ################# configure checks and create the configured files #################
 
 # now create config headers
@@ -36,6 +38,7 @@ target_link_libraries(kwincompositing
     KF5::KCMUtils
     KF5::NewStuff
     KF5::Declarative
+    kwin4_effect_builtins
 )
 
 
@@ -66,7 +69,9 @@ target_link_libraries(effectModelTest
     KF5::Service
     KF5::KCMUtils
     KF5::NewStuff
-    KF5::Declarative)
+    KF5::Declarative
+    kwin4_effect_builtins
+)
 
 INSTALL(DIRECTORY qml DESTINATION ${DATA_INSTALL_DIR}/kwincompositing)
 INSTALL(TARGETS kwincompositing DESTINATION ${PLUGIN_INSTALL_DIR})

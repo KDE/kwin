@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_EFFECT_BUILTINS_H
 #include <kwineffects_export.h>
 #include <QStringList>
+#include <QUrl>
 
 namespace KWin
 {
@@ -76,6 +77,20 @@ enum class BuiltInEffect
 namespace BuiltInEffects
 {
 
+struct EffectData {
+    QString name;
+    QString displayName;
+    QString comment;
+    QString category;
+    QString exclusiveCategory;
+    QUrl video;
+    bool enabled;
+    bool internal;
+    std::function<Effect*()> createFunction;
+    std::function<bool()> supportedFunction;
+    std::function<bool()> enabledFunction;
+};
+
 KWINEFFECTS_EXPORT Effect *create(BuiltInEffect effect);
 KWINEFFECTS_EXPORT bool available(const QString &name);
 KWINEFFECTS_EXPORT bool supported(BuiltInEffect effect);
@@ -85,6 +100,7 @@ KWINEFFECTS_EXPORT QString nameForEffect(BuiltInEffect effect);
 KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QString &name);
 KWINEFFECTS_EXPORT QStringList availableEffectNames();
 KWINEFFECTS_EXPORT QList<BuiltInEffect> availableEffects();
+KWINEFFECTS_EXPORT const EffectData &effectData(BuiltInEffect effect);
 }
 
 }
