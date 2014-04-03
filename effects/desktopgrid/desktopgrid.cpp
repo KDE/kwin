@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "desktopgridconfig.h"
 
 #include "../presentwindows/presentwindows_proxy.h"
+#include "../effect_builtins.h"
 
 #include <math.h>
 
@@ -1092,7 +1093,7 @@ void DesktopGridEffect::setup()
 
     // setup the motion managers
     if (m_usePresentWindows)
-        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(QStringLiteral("presentwindows")));
+        m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows)));
     if (isUsingPresentWindows()) {
         for (int i = 1; i <= effects->numberOfDesktops(); i++) {
             for (int j = 0; j < effects->numScreens(); j++) {
