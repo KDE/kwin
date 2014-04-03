@@ -9,6 +9,7 @@ find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
+include(GenerateExportHeader)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
@@ -47,6 +48,7 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
     Crash
     GlobalAccel
     I18n
+    Init
     Notifications
     Service
     Plasma
@@ -64,10 +66,7 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
 )
 
 # optional frameworks
-find_package(KF5 CONFIG COMPONENTS Activities)
-
-# TODO: remove once the build system is completely cleaned
-find_package(KF5KDE4Support REQUIRED NO_MODULE)
+find_package(KF5 CONFIG COMPONENTS Activities DocTools)
 
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     find_package(OpenGL)
@@ -515,7 +514,10 @@ ecm_install_icons( ${ICON_INSTALL_DIR} )
 add_subdirectory(qml)
 add_subdirectory(autotests)
 add_subdirectory(tests)
-add_subdirectory(doc)
+
+if (KF5DocTools_FOUND)
+    add_subdirectory(doc)
+endif()
 
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
 ecm_configure_package_config_file(KWinDBusInterfaceConfig.cmake.in

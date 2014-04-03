@@ -2,7 +2,7 @@ add_definitions(-DKCMRULES)
 ########### next target ###############
 
 set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h ../../cursor.h)
-qt4_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
+qt5_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 
 qt5_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
