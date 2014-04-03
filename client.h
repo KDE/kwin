@@ -720,8 +720,6 @@ protected:
 private Q_SLOTS:
     void delayedSetShortcut();
     void performMoveResize();
-    void removeSyncSupport();
-    void pingTimeout();
 
     //Signals for the scripting interface
     //Signals make an excellent way for communication

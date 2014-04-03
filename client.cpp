@@ -292,16 +292,17 @@ Client::Client()
     client_size = QSize(100, 100);
     ready_for_painting = false; // wait for first damage or sync reply
 
-    connect(this, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), SIGNAL(geometryChanged()));
-    connect(this, SIGNAL(clientMaximizedStateChanged(KWin::Client*,KDecorationDefines::MaximizeMode)), SIGNAL(geometryChanged()));
-    connect(this, SIGNAL(clientStepUserMovedResized(KWin::Client*,QRect)), SIGNAL(geometryChanged()));
-    connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
-    connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SIGNAL(moveResizedChanged()));
-    connect(this, SIGNAL(clientStartUserMovedResized(KWin::Client*)), SLOT(removeCheckScreenConnection()));
-    connect(this, SIGNAL(clientFinishUserMovedResized(KWin::Client*)), SLOT(setupCheckScreenConnection()));
+    connect(this, &Client::geometryShapeChanged, this, &Client::geometryChanged);
+    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged);
+    connect(this, signalMaximizeChanged, this, &Client::geometryChanged);
+    connect(this, &Client::clientStepUserMovedResized,   this, &Client::geometryChanged);
+    connect(this, &Client::clientStartUserMovedResized,  this, &Client::moveResizedChanged);
+    connect(this, &Client::clientFinishUserMovedResized, this, &Client::moveResizedChanged);
+    connect(this, &Client::clientStartUserMovedResized,  this, &Client::removeCheckScreenConnection);
+    connect(this, &Client::clientFinishUserMovedResized, this, &Client::setupCheckScreenConnection);
 
-    connect(clientMachine(), SIGNAL(localhostChanged()), SLOT(updateCaption()));
-    connect(options, SIGNAL(condensedTitleChanged()), SLOT(updateCaption()));
+    connect(clientMachine(), &ClientMachine::localhostChanged, this, &Client::updateCaption);
+    connect(options, &Options::condensedTitleChanged, this, &Client::updateCaption);
 
     m_connections << connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, [this]() {
         if (decoration) {
@@ -537,10 +538,12 @@ void Client::createDecoration(const QRect& oldgeom)
     connect(this, &Client::desktopChanged, decoration, &KDecoration::desktopChanged);
     connect(this, &Client::captionChanged, decoration, &KDecoration::captionChanged);
     connect(this, &Client::activeChanged, decoration, &KDecoration::activeChanged);
-    connect(this, static_cast<void (Client::*)(Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged),
-            decoration, &KDecoration::maximizeChanged);
-    connect(this, SIGNAL(keepAboveChanged(bool)), decoration, SIGNAL(keepAboveChanged(bool)));
-    connect(this, SIGNAL(keepBelowChanged(bool)), decoration, SIGNAL(keepBelowChanged(bool)));
+    auto signalMaximizeChanged = static_cast<void (Client::*)(Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged);
+    connect(this, signalMaximizeChanged, decoration, &KDecoration::maximizeChanged);
+    auto slotKeepAbove = static_cast<void(KDecoration::*)(bool)>(&KDecoration::keepAboveChanged);
+    connect(this, &Client::keepAboveChanged, decoration, slotKeepAbove);
+    auto slotKeepBelow = static_cast<void(KDecoration::*)(bool)>(&KDecoration::keepBelowChanged);
+    connect(this, &Client::keepBelowChanged, decoration, slotKeepBelow);
 #ifdef KWIN_BUILD_KAPPMENU
     connect(this, SIGNAL(showRequest()), decoration, SIGNAL(showRequest()));
     connect(this, SIGNAL(appMenuAvailable()), decoration, SIGNAL(appMenuAvailable()));
@@ -1431,7 +1434,14 @@ void Client::pingWindow()
     if (ping_timer != NULL)
         return; // Pinging already
     ping_timer = new QTimer(this);
-    connect(ping_timer, SIGNAL(timeout()), SLOT(pingTimeout()));
+    connect(ping_timer, &QTimer::timeout, this,
+        [this]() {
+            qDebug() << "Ping timeout:" << caption();
+            ping_timer->deleteLater();
+            ping_timer = nullptr;
+            killProcess(true, m_pingTimestamp);
+        }
+    );
     ping_timer->setSingleShot(true);
     ping_timer->start(options->killPingTimeout());
     m_pingTimestamp = xTime();
@@ -1449,14 +1459,6 @@ void Client::gotPing(xcb_timestamp_t timestamp)
         ::kill(m_killHelperPID, SIGTERM);
         m_killHelperPID = 0;
     }
-}
-
-void Client::pingTimeout()
-{
-    qDebug() << "Ping timeout:" << caption();
-    ping_timer->deleteLater();
-    ping_timer = NULL;
-    killProcess(true, m_pingTimestamp);
 }
 
 void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
@@ -2205,7 +2207,21 @@ void Client::sendSyncRequest()
 
     if (!syncRequest.failsafeTimeout) {
         syncRequest.failsafeTimeout = new QTimer(this);
-        connect(syncRequest.failsafeTimeout, SIGNAL(timeout()), SLOT(removeSyncSupport()));
+        connect(syncRequest.failsafeTimeout, &QTimer::timeout, this,
+            [this]() {
+                // client does not respond to XSYNC requests in reasonable time, remove support
+                if (!ready_for_painting) {
+                    // failed on initial pre-show request
+                    setReadyForPainting();
+                    return;
+                }
+                // failed during resize
+                syncRequest.isPending = false;
+                syncRequest.counter = syncRequest.alarm = XCB_NONE;
+                delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
+                syncRequest.timeout = syncRequest.failsafeTimeout = nullptr;
+            }
+        );
         syncRequest.failsafeTimeout->setSingleShot(true);
     }
     // if there's no response within 10 seconds, sth. went wrong and we remove XSYNC support from this client.
@@ -2235,18 +2251,6 @@ void Client::sendSyncRequest()
     syncRequest.isPending = true;
     XSendEvent(display(), window(), False, NoEventMask, &ev);
     Xcb::sync();
-}
-
-void Client::removeSyncSupport()
-{
-    if (!ready_for_painting) {
-        setReadyForPainting();
-        return;
-    }
-    syncRequest.isPending = false;
-    syncRequest.counter = syncRequest.alarm = XCB_NONE;
-    delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
-    syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
 }
 
 bool Client::wantsTabFocus() const
