@@ -89,17 +89,12 @@ bool BuiltInEffectLoader::hasEffect(const QString &name) const
 
 bool BuiltInEffectLoader::isEffectSupported(const QString &name) const
 {
-    return BuiltInEffects::supported(internalName(name));
+    return BuiltInEffects::supported(BuiltInEffects::builtInForName(internalName(name)));
 }
 
 QStringList BuiltInEffectLoader::listOfKnownEffects() const
 {
-    const QList<QByteArray> availableEffects = BuiltInEffects::availableEffectNames();
-    QStringList result;
-    for (const QByteArray name : availableEffects) {
-        result << QString::fromUtf8(name);
-    }
-    return result;
+    return BuiltInEffects::availableEffectNames();
 }
 
 bool BuiltInEffectLoader::loadEffect(const QString &name)
@@ -117,7 +112,7 @@ void BuiltInEffectLoader::queryAndLoadAll()
         }
         // as long as the KCM uses kwin4_effect_ we need to add it, TODO remove
         const QString key = QStringLiteral("kwin4_effect_") +
-                            QString::fromUtf8(BuiltInEffects::nameForEffect(effect));
+                            BuiltInEffects::nameForEffect(effect);
         const LoadEffectFlags flags = readConfig(key, BuiltInEffects::enabledByDefault(effect));
         if (flags.testFlag(LoadEffectFlag::Load)) {
             m_queue->enqueue(qMakePair(effect, flags));
@@ -127,7 +122,7 @@ void BuiltInEffectLoader::queryAndLoadAll()
 
 bool BuiltInEffectLoader::loadEffect(BuiltInEffect effect, LoadEffectFlags flags)
 {
-    return loadEffect(QString::fromUtf8(BuiltInEffects::nameForEffect(effect)), effect, flags);
+    return loadEffect(BuiltInEffects::nameForEffect(effect), effect, flags);
 }
 
 bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, LoadEffectFlags flags)
@@ -178,14 +173,14 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
     return true;
 }
 
-QByteArray BuiltInEffectLoader::internalName(const QString& name) const
+QString BuiltInEffectLoader::internalName(const QString& name) const
 {
     QString internalName = name.toLower();
     // as long as the KCM uses kwin4_effect_ we need to add it, TODO remove
     if (internalName.startsWith(QStringLiteral("kwin4_effect_"))) {
         internalName = internalName.mid(13);
     }
-    return internalName.toUtf8();
+    return internalName;
 }
 
 static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");

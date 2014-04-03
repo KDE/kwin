@@ -64,262 +64,358 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+namespace BuiltInEffects
+{
+
 template <class T>
 inline Effect *createHelper()
 {
     return new T();
 }
 
-class EffectLoader
-{
-public:
-    EffectLoader();
-    Effect *create(const QByteArray &name);
-    Effect *create(BuiltInEffect effect);
-    bool hasEffect(const QByteArray &name) const;
-    bool supported(const QByteArray &name) const;
-    bool supported(BuiltInEffect effect) const;
-    bool checkEnabledByDefault(const QByteArray &name) const;
-    bool checkEnabledByDefault(BuiltInEffect effect) const;
-    bool enabledByDefault(BuiltInEffect effect) const;
-    QList<QByteArray> availableEffectNames() const;
-    QList<BuiltInEffect> availableEffects() const;
-    BuiltInEffect builtInForName(const QByteArray &name) const;
-    QByteArray nameForEffect(BuiltInEffect effect) const;
-
-private:
-    typedef Effect *(*CreateInstanceFunction)();
-    typedef bool (*SupportedFunction)();
-    QHash<QByteArray, BuiltInEffect> m_effects;
-    QMap<BuiltInEffect, CreateInstanceFunction> m_createHash;
-    QMap<BuiltInEffect, SupportedFunction> m_supportedHash;
-    QMap<BuiltInEffect, SupportedFunction> m_checkEnabledHash;
-    QMap<BuiltInEffect, bool> m_enabledByDefault;
+struct EffectData {
+    QString name;
+    bool enabled;
+    std::function<Effect*()> createFunction;
+    std::function<bool()> supportedFunction;
+    std::function<bool()> enabledFunction;
 };
 
-EffectLoader::EffectLoader()
-{
-#define EFFECT(name, className, enabled) \
-    m_effects.insert(QByteArrayLiteral(#name).toLower(), BuiltInEffect::name);\
-    m_createHash.insert(BuiltInEffect::name, &createHelper< className >); \
-    m_enabledByDefault.insert(BuiltInEffect::name, enabled);
-    EFFECT(Blur, BlurEffect, true)
-    EFFECT(Contrast, ContrastEffect, true)
-    EFFECT(CoverSwitch, CoverSwitchEffect, false)
-    EFFECT(Cube, CubeEffect, false)
-    EFFECT(CubeSlide, CubeSlideEffect, false)
-    EFFECT(Dashboard, DashboardEffect, true)
-    EFFECT(DesktopGrid, DesktopGridEffect, true)
-    EFFECT(DimInactive, DimInactiveEffect, false)
-    EFFECT(DimScreen, DimScreenEffect, false)
-    EFFECT(FallApart, FallApartEffect, false)
-    EFFECT(FlipSwitch, FlipSwitchEffect, false)
-    EFFECT(Glide, GlideEffect, false)
-    EFFECT(HighlightWindow, HighlightWindowEffect, true)
-    EFFECT(Invert, InvertEffect, false)
-    EFFECT(Kscreen, KscreenEffect, true)
-    EFFECT(Logout, LogoutEffect, true)
-    EFFECT(LookingGlass, LookingGlassEffect, false)
-    EFFECT(MagicLamp, MagicLampEffect, false)
-    EFFECT(Magnifier, MagnifierEffect, false)
-    EFFECT(MinimizeAnimation, MinimizeAnimationEffect, true)
-    EFFECT(MouseClick, MouseClickEffect, false)
-    EFFECT(MouseMark, MouseMarkEffect, false)
-    EFFECT(PresentWindows, PresentWindowsEffect, true)
-    EFFECT(Resize, ResizeEffect, false)
-    EFFECT(ScreenEdge, ScreenEdgeEffect, true)
-    EFFECT(ScreenShot, ScreenShotEffect, true)
-    EFFECT(Sheet, SheetEffect, false)
-    EFFECT(ShowFps, ShowFpsEffect, false)
-    EFFECT(ShowPaint, ShowPaintEffect, false)
-    EFFECT(Slide, SlideEffect, true)
-    EFFECT(SlideBack, SlideBackEffect, false)
-    EFFECT(SlidingPopups, SlidingPopupsEffect, true)
-    EFFECT(SnapHelper, SnapHelperEffect, false)
-    EFFECT(StartupFeedback, StartupFeedbackEffect, true)
-    EFFECT(ThumbnailAside, ThumbnailAsideEffect, false)
-    EFFECT(TrackMouse, TrackMouseEffect, false)
-    EFFECT(WindowGeometry, WindowGeometry, false)
-    EFFECT(WobblyWindows, WobblyWindowsEffect, false)
-    EFFECT(Zoom, ZoomEffect, true)
-
-#undef EFFECT
-
-#define SUPPORTED(name, method) \
-    m_supportedHash.insert(BuiltInEffect::name, &method);
-    SUPPORTED(Blur, BlurEffect::supported)
-    SUPPORTED(Contrast, ContrastEffect::supported)
-    SUPPORTED(CoverSwitch, CoverSwitchEffect::supported)
-    SUPPORTED(Cube, CubeEffect::supported)
-    SUPPORTED(CubeSlide, CubeSlideEffect::supported)
-    SUPPORTED(FallApart, FallApartEffect::supported)
-    SUPPORTED(FlipSwitch, FlipSwitchEffect::supported)
-    SUPPORTED(Glide, GlideEffect::supported)
-    SUPPORTED(Invert, InvertEffect::supported)
-    SUPPORTED(LookingGlass, LookingGlassEffect::supported)
-    SUPPORTED(MagicLamp, MagicLampEffect::supported)
-    SUPPORTED(Magnifier, MagnifierEffect::supported)
-    SUPPORTED(ScreenShot, ScreenShotEffect::supported)
-    SUPPORTED(Sheet, SheetEffect::supported)
-    SUPPORTED(StartupFeedback, StartupFeedbackEffect::supported)
-    SUPPORTED(WobblyWindows, WobblyWindowsEffect::supported)
-
-#undef SUPPORTED
-
-#define CHECKENABLED(name, method) \
-    m_checkEnabledHash.insert(BuiltInEffect::name, &method);
-    CHECKENABLED(Blur, BlurEffect::enabledByDefault)
-    CHECKENABLED(Contrast, ContrastEffect::enabledByDefault)
-
-#undef CHECKENABLED
-}
-
-Effect *EffectLoader::create(const QByteArray &name)
-{
-    return create(builtInForName(name));
-}
-
-Effect *EffectLoader::create(BuiltInEffect effect)
-{
-    auto it = m_createHash.constFind(effect);
-    if (it == m_createHash.constEnd()) {
-        return nullptr;
+static const QVector<EffectData> s_effectData = {
+    {
+        QString(),
+        false,
+        nullptr,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("blur"),
+        true,
+        &createHelper<BlurEffect>,
+        &BlurEffect::supported,
+        &BlurEffect::enabledByDefault
+    }, {
+        QStringLiteral("contrast"),
+        true,
+        &createHelper<ContrastEffect>,
+        &ContrastEffect::supported,
+        &ContrastEffect::enabledByDefault
+    }, {
+        QStringLiteral("coverswitch"),
+        false,
+        &createHelper<CoverSwitchEffect>,
+        &CoverSwitchEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("cube"),
+        false,
+        &createHelper<CubeEffect>,
+        &CubeEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("cubeslide"),
+        false,
+        &createHelper<CubeSlideEffect>,
+        &CubeSlideEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("dashboard"),
+        true,
+        &createHelper<DashboardEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("desktopgrid"),
+        true,
+        &createHelper<DesktopGridEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("diminactive"),
+        false,
+        &createHelper<DimInactiveEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("dimscreen"),
+        false,
+        &createHelper<DimScreenEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("fallapart"),
+        false,
+        &createHelper<FallApartEffect>,
+        &FallApartEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("flipswitch"),
+        false,
+        &createHelper<FlipSwitchEffect>,
+        &FlipSwitchEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("glide"),
+        false,
+        &createHelper<GlideEffect>,
+        &GlideEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("highlightwindow"),
+        true,
+        &createHelper<HighlightWindowEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("invert"),
+        false,
+        &createHelper<InvertEffect>,
+        &InvertEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("kscreen"),
+        true,
+        &createHelper<KscreenEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("logout"),
+        true,
+        &createHelper<LogoutEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("lookingglass"),
+        false,
+        &createHelper<LookingGlassEffect>,
+        &LookingGlassEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("magiclamp"),
+        false,
+        &createHelper<MagicLampEffect>,
+        &MagicLampEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("magnifier"),
+        false,
+        &createHelper<MagnifierEffect>,
+        &MagnifierEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("minimizeanimation"),
+        true,
+        &createHelper<MinimizeAnimationEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("mouseclick"),
+        false,
+        &createHelper<MouseClickEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("mousemark"),
+        false,
+        &createHelper<MouseMarkEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("presentwindows"),
+        true,
+        &createHelper<PresentWindowsEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("resize"),
+        false,
+        &createHelper<ResizeEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("screenedge"),
+        true,
+        &createHelper<ScreenEdgeEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("screenshot"),
+        true,
+        &createHelper<ScreenShotEffect>,
+        &ScreenShotEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("sheet"),
+        false,
+        &createHelper<SheetEffect>,
+        &SheetEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("showfps"),
+        false,
+        &createHelper<ShowFpsEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("showpaint"),
+        false,
+        &createHelper<ShowPaintEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("slide"),
+        true,
+        &createHelper<SlideEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("slideback"),
+        false,
+        &createHelper<SlideBackEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("slidingpopups"),
+        true,
+        &createHelper<SlidingPopupsEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("snaphelper"),
+        false,
+        &createHelper<SnapHelperEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("startupfeedback"),
+        true,
+        &createHelper<StartupFeedbackEffect>,
+        &StartupFeedbackEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("thumbnailaside"),
+        false,
+        &createHelper<ThumbnailAsideEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("trackmouse"),
+        false,
+        &createHelper<TrackMouseEffect>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("windowgeometry"),
+        false,
+        &createHelper<WindowGeometry>,
+        nullptr,
+        nullptr
+    }, {
+        QStringLiteral("wobblywindows"),
+        false,
+        &createHelper<WobblyWindowsEffect>,
+        &WobblyWindowsEffect::supported,
+        nullptr
+    }, {
+        QStringLiteral("zoom"),
+        true,
+        &createHelper<ZoomEffect>,
+        nullptr,
+        nullptr
     }
-    return it.value()();
-}
+};
 
-bool EffectLoader::hasEffect(const QByteArray &name) const
+static inline int index(BuiltInEffect effect)
 {
-    return m_effects.contains(name);
-}
-
-bool EffectLoader::supported(const QByteArray &name) const
-{
-    return supported(builtInForName(name));
-}
-
-bool EffectLoader::supported(BuiltInEffect effect) const
-{
-    if (effect == BuiltInEffect::Invalid) {
-        return false;
-    }
-    auto it = m_supportedHash.constFind(effect);
-    if (it != m_supportedHash.constEnd()) {
-        return it.value()();
-    }
-    return true;
-}
-
-bool EffectLoader::checkEnabledByDefault(const QByteArray &name) const
-{
-    return checkEnabledByDefault(builtInForName(name));
-}
-
-bool EffectLoader::checkEnabledByDefault(BuiltInEffect effect) const
-{
-    auto it = m_checkEnabledHash.constFind(effect);
-    if (it != m_checkEnabledHash.constEnd()) {
-        return it.value()();
-    }
-    return true;
-}
-
-bool EffectLoader::enabledByDefault(BuiltInEffect effect) const
-{
-    auto it = m_enabledByDefault.constFind(effect);
-    if (it != m_enabledByDefault.constEnd()) {
-        return it.value();
-    }
-    return false;
-}
-
-QList< QByteArray > EffectLoader::availableEffectNames() const
-{
-    return m_effects.keys();
-}
-
-QList< BuiltInEffect > EffectLoader::availableEffects() const
-{
-    return m_effects.values();
-}
-
-BuiltInEffect EffectLoader::builtInForName(const QByteArray &name) const
-{
-    auto it = m_effects.find(name);
-    if (it == m_effects.end()) {
-        return BuiltInEffect::Invalid;
-    }
-    return it.value();
-}
-
-QByteArray EffectLoader::nameForEffect(BuiltInEffect effect) const
-{
-    return m_effects.key(effect);
-}
-
-Q_GLOBAL_STATIC(EffectLoader, s_effectLoader)
-
-namespace BuiltInEffects
-{
-
-Effect *create(const QByteArray &name)
-{
-    return s_effectLoader->create(name);
+    return static_cast<int>(effect);
 }
 
 Effect *create(BuiltInEffect effect)
 {
-    return s_effectLoader->create(effect);
+    const EffectData &effectData = s_effectData.at(index(effect));
+    if (effectData.createFunction == nullptr) {
+        return nullptr;
+    }
+    return effectData.createFunction();
 }
 
-bool available(const QByteArray &name)
+bool available(const QString &name)
 {
-    return s_effectLoader->hasEffect(name);
-}
-
-bool supported(const QByteArray &name)
-{
-    return s_effectLoader->supported(name);
+    auto it = std::find_if(s_effectData.begin(), s_effectData.end(),
+        [name](const EffectData &data) {
+            return data.name == name;
+        }
+    );
+    return it != s_effectData.end();
 }
 
 bool supported(BuiltInEffect effect)
 {
-    return s_effectLoader->supported(effect);
-}
-
-bool checkEnabledByDefault(const QByteArray &name)
-{
-    return s_effectLoader->checkEnabledByDefault(name);
+    if (effect == BuiltInEffect::Invalid) {
+        return false;
+    }
+    const EffectData &effectData = s_effectData.at(index(effect));
+    if (effectData.supportedFunction == nullptr) {
+        return true;
+    }
+    return effectData.supportedFunction();
 }
 
 bool checkEnabledByDefault(BuiltInEffect effect)
 {
-    return s_effectLoader->checkEnabledByDefault(effect);
+    if (effect == BuiltInEffect::Invalid) {
+        return false;
+    }
+    const EffectData &effectData = s_effectData.at(index(effect));
+    if (effectData.enabledFunction == nullptr) {
+        return true;
+    }
+    return effectData.enabledFunction();
 }
 
 bool enabledByDefault(BuiltInEffect effect)
 {
-    return s_effectLoader->enabledByDefault(effect);
+    const EffectData &effectData = s_effectData.at(index(effect));
+    return effectData.enabled;
 }
 
-QList< QByteArray > availableEffectNames()
+QStringList availableEffectNames()
 {
-    return s_effectLoader->availableEffectNames();
+    QStringList result;
+    for (const EffectData &data : s_effectData) {
+        if (data.name.isEmpty()) {
+            continue;
+        }
+        result << data.name;
+    }
+    return result;
 }
 
 QList< BuiltInEffect > availableEffects()
 {
-    return s_effectLoader->availableEffects();
+    QList<BuiltInEffect> result;
+    for (int i = index(BuiltInEffect::Invalid) + 1; i <= index(BuiltInEffect::Zoom); ++i) {
+        result << BuiltInEffect(i);
+    }
+    return result;
 }
 
-BuiltInEffect builtInForName(const QByteArray &name)
+BuiltInEffect builtInForName(const QString &name)
 {
-    return s_effectLoader->builtInForName(name);
+    auto it = std::find_if(s_effectData.begin(), s_effectData.end(),
+        [name](const EffectData &data) {
+            return data.name == name;
+        }
+    );
+    if (it == s_effectData.end()) {
+        return BuiltInEffect::Invalid;
+    }
+    return BuiltInEffect(std::distance(s_effectData.begin(), it));
 }
 
-QByteArray nameForEffect(BuiltInEffect effect)
+QString nameForEffect(BuiltInEffect effect)
 {
-    return s_effectLoader->nameForEffect(effect);
+    return s_effectData.at(index(effect)).name;
 }
 
 } // BuiltInEffects

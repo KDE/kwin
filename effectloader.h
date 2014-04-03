@@ -282,7 +282,7 @@ public:
 
 private:
     bool loadEffect(const QString &name, BuiltInEffect effect, LoadEffectFlags flags);
-    QByteArray internalName(const QString &name) const;
+    QString internalName(const QString &name) const;
     EffectLoadQueue<BuiltInEffectLoader, BuiltInEffect> *m_queue;
     QMap<BuiltInEffect, Effect*> m_loadedEffects;
 };

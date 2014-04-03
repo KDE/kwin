@@ -20,9 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EFFECT_BUILTINS_H
 #define KWIN_EFFECT_BUILTINS_H
 #include <kwineffects_export.h>
-#include <QList>
-
-class QByteArray;
+#include <QStringList>
 
 namespace KWin
 {
@@ -78,17 +76,14 @@ enum class BuiltInEffect
 namespace BuiltInEffects
 {
 
-KWINEFFECTS_EXPORT Effect *create(const QByteArray &name);
 KWINEFFECTS_EXPORT Effect *create(BuiltInEffect effect);
-KWINEFFECTS_EXPORT bool available(const QByteArray &name);
-KWINEFFECTS_EXPORT bool supported(const QByteArray &name);
+KWINEFFECTS_EXPORT bool available(const QString &name);
 KWINEFFECTS_EXPORT bool supported(BuiltInEffect effect);
-KWINEFFECTS_EXPORT bool checkEnabledByDefault(const QByteArray &name);
 KWINEFFECTS_EXPORT bool checkEnabledByDefault(BuiltInEffect effect);
 KWINEFFECTS_EXPORT bool enabledByDefault(BuiltInEffect effect);
-KWINEFFECTS_EXPORT QByteArray nameForEffect(BuiltInEffect effect);
-KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QByteArray &name);
-KWINEFFECTS_EXPORT QList<QByteArray> availableEffectNames();
+KWINEFFECTS_EXPORT QString nameForEffect(BuiltInEffect effect);
+KWINEFFECTS_EXPORT BuiltInEffect builtInForName(const QString &name);
+KWINEFFECTS_EXPORT QStringList availableEffectNames();
 KWINEFFECTS_EXPORT QList<BuiltInEffect> availableEffects();
 }
 
