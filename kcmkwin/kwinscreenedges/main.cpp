@@ -20,14 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "main.h"
-
-#include <kservicetypetrader.h>
+#include <effect_builtins.h>
 
 #include <KAboutData>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <QtDBus/QtDBus>
 
 K_PLUGIN_FACTORY(KWinScreenEdgesConfigFactory, registerPlugin<KWin::KWinScreenEdgesConfig>();)
@@ -156,14 +154,10 @@ void KWinScreenEdgesConfig::sanitizeCooldown()
 }
 
 // Copied from kcmkwin/kwincompositing/main.cpp
-bool KWinScreenEdgesConfig::effectEnabled(const QString& effect, const KConfigGroup& cfg) const
+bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
 {
-    KService::List services = KServiceTypeTrader::self()->query(
-                                  "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
-    if (services.isEmpty())
-        return false;
-    QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
-    return cfg.readEntry("kwin4_effect_" + effect + "Enabled", v.toBool());
+    // HACK: remove kwin4_effect_
+    return cfg.readEntry("kwin4_effect_" + BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
 
 //-----------------------------------------------------------------------------
@@ -194,40 +188,16 @@ void KWinScreenEdgesConfig::monitorInit()
     m_ui->monitor->setEdgeItemEnabled(int(Monitor::Right), 4, false);
     m_ui->monitor->setEdgeItemEnabled(int(Monitor::Bottom), 4, false);
 
-    // Search the effect names
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services;
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_presentwindows'");
-    if (services.isEmpty()) {
-        // adding empty strings in case the effect is not found
-        // TODO: after string freeze add a info that the effect is missing
-        monitorAddItem(QString());
-        monitorAddItem(QString());
-    } else {
-        monitorAddItem(services.first()->name() + " - " + i18n("All Desktops"));
-        monitorAddItem(services.first()->name() + " - " + i18n("Current Desktop"));
-        monitorAddItem(services.first()->name() + " - " + i18n("Current Application"));
-    }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_desktopgrid'");
-    if (services.isEmpty()) {
-        // adding empty strings in case the effect is not found
-        // TODO: after string freeze add a info that the effect is missing
-        monitorAddItem(QString());
-    } else {
-        monitorAddItem(services.first()->name());
-    }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cube'");
-    if (services.isEmpty()) {
-        // adding empty strings in case the effect is not found
-        // TODO: after string freeze add a info that the effect is missing
-        monitorAddItem(QString());
-        monitorAddItem(QString());
-        monitorAddItem(QString());
-    } else {
-        monitorAddItem(services.first()->name() + " - " + i18n("Cube"));
-        monitorAddItem(services.first()->name() + " - " + i18n("Cylinder"));
-        monitorAddItem(services.first()->name() + " - " + i18n("Sphere"));
-    }
+    // Add the effects
+    const QString presentWindowsName = BuiltInEffects::effectData(BuiltInEffect::PresentWindows).displayName;
+    monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
+    monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
+    monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
+    monitorAddItem(BuiltInEffects::effectData(BuiltInEffect::DesktopGrid).displayName);
+    const QString cubeName = BuiltInEffects::effectData(BuiltInEffect::Cube).displayName;
+    monitorAddItem(i18n("%1 - Cube", cubeName));
+    monitorAddItem(i18n("%1 - Cylinder", cubeName));
+    monitorAddItem(i18n("%1 - Sphere", cubeName));
 
     monitorAddItem(i18n("Toggle window switching"));
     monitorAddItem(i18n("Toggle alternative window switching"));
@@ -421,16 +391,16 @@ void KWinScreenEdgesConfig::monitorShowEvent()
         config = KConfigGroup(m_config, "Plugins");
 
         // Present Windows
-        bool enabled = effectEnabled("presentwindows", config);
+        bool enabled = effectEnabled(BuiltInEffect::PresentWindows, config);
         monitorItemSetEnabled(int(PresentWindowsCurrent), enabled);
         monitorItemSetEnabled(int(PresentWindowsAll), enabled);
 
         // Desktop Grid
-        enabled = effectEnabled("desktopgrid", config);
+        enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
         monitorItemSetEnabled(int(DesktopGrid), enabled);
 
         // Desktop Cube
-        enabled = effectEnabled("cube", config);
+        enabled = effectEnabled(BuiltInEffect::Cube, config);
         monitorItemSetEnabled(int(Cube), enabled);
         monitorItemSetEnabled(int(Cylinder), enabled);
         monitorItemSetEnabled(int(Sphere), enabled);

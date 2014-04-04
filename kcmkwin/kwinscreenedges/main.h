@@ -32,6 +32,7 @@ class QShowEvent;
 
 namespace KWin
 {
+enum class BuiltInEffect;
 
 class KWinScreenEdgesConfigForm : public QWidget, public Ui::KWinScreenEdgesConfigForm
 {
@@ -74,7 +75,7 @@ private:
         TabBoxAlternative
     };
 
-    bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
+    bool effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const;
 
     void monitorAddItem(const QString& item);
     void monitorItemSetEnabled(int index, bool enabled);
