@@ -439,19 +439,32 @@ RasterXRenderPaintRedirector::~RasterXRenderPaintRedirector()
 
 xcb_render_picture_t RasterXRenderPaintRedirector::picture(PaintRedirector::DecorationPixmap border) const
 {
-    return *m_pictures[border];
+    XRenderPicture *picture = m_pictures[border];
+    if (!picture) {
+        return XCB_RENDER_PICTURE_NONE;
+    }
+    return *picture;
 }
 
 void RasterXRenderPaintRedirector::resize(PaintRedirector::DecorationPixmap border, const QSize &size)
 {
     if (m_sizes[border] != size) {
+        m_sizes[border] = size;
         if (m_pixmaps[border] != XCB_PIXMAP_NONE) {
             xcb_free_pixmap(connection(), m_pixmaps[border]);
         }
-        m_pixmaps[border] = xcb_generate_id(connection());
-        xcb_create_pixmap(connection(), 32, m_pixmaps[border], rootWindow(), size.width(), size.height());
         delete m_pictures[border];
-        m_pictures[border] = new XRenderPicture(m_pixmaps[border], 32);
+        if (!size.isEmpty()) {
+            m_pixmaps[border] = xcb_generate_id(connection());
+            xcb_create_pixmap(connection(), 32, m_pixmaps[border], rootWindow(), size.width(), size.height());
+            m_pictures[border] = new XRenderPicture(m_pixmaps[border], 32);
+        } else {
+            m_pixmaps[border] = XCB_PIXMAP_NONE;
+            m_pictures[border] = nullptr;
+        }
+    }
+    if (!m_pictures[border]) {
+        return;
     }
     // fill transparent
     xcb_rectangle_t rect = {0, 0, uint16_t(size.width()), uint16_t(size.height())};

@@ -845,23 +845,25 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
                 transformed_shape = QRegion();
         }
 
-#define RENDER_DECO_PART(_PART_, _RECT_) \
-xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, _PART_, decorationAlpha, renderTarget,\
-                 0, 0, 0, 0, _RECT_.x(), _RECT_.y(), _RECT_.width(), _RECT_.height())
-
         if (client || deleted) {
             if (!noBorder) {
                 xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity() * data.decorationOpacity());
-                RENDER_DECO_PART(top, dtr);
-                RENDER_DECO_PART(left, dlr);
-                RENDER_DECO_PART(right, drr);
-                RENDER_DECO_PART(bottom, dbr);
+                auto renderDeco = [decorationAlpha, renderTarget](xcb_render_picture_t deco, const QRect &rect) {
+                    if (deco == XCB_RENDER_PICTURE_NONE) {
+                        return;
+                    }
+                    xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, deco, decorationAlpha, renderTarget,
+                                         0, 0, 0, 0, rect.x(), rect.y(), rect.width(), rect.height());
+                };
+                renderDeco(top, dtr);
+                renderDeco(left, dlr);
+                renderDeco(right, drr);
+                renderDeco(bottom, dbr);
             }
             if (redirector) {
                 redirector->markAsRepainted();
             }
         }
-#undef RENDER_DECO_PART
 
         if (data.brightness() != 1.0) {
             // fake brightness change by overlaying black
