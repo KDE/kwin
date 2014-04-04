@@ -143,6 +143,13 @@ option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Comp
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
+option(KWIN_BUILD_COVERAGE "Build KWin with gcov support" OFF)
+
+if(KWIN_BUILD_COVERAGE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov")
+endif()
+
 # Binary name of KWin
 set(KWIN_NAME "kwin")
 set(KWIN_VERSION_MAJOR 4)
