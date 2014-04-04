@@ -1477,7 +1477,6 @@ void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal br
 
 OpenGLWindowPixmap::OpenGLWindowPixmap(Scene::Window *window, SceneOpenGL* scene)
     : WindowPixmap(window)
-    , m_scene(scene)
     , m_texture(scene->createTexture())
 {
 }
@@ -2063,7 +2062,6 @@ bool SceneOpenGLShadow::prepareBackend()
     const QSize top(shadowPixmap(ShadowElementTop).size());
     const QSize topRight(shadowPixmap(ShadowElementTopRight).size());
     const QSize right(shadowPixmap(ShadowElementRight).size());
-    const QSize bottomRight(shadowPixmap(ShadowElementBottomRight).size());
     const QSize bottom(shadowPixmap(ShadowElementBottom).size());
     const QSize bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
     const QSize left(shadowPixmap(ShadowElementLeft).size());

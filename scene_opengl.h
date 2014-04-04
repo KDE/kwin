@@ -303,7 +303,6 @@ public:
     SceneOpenGL::Texture *texture() const;
     bool bind();
 private:
-    SceneOpenGL *m_scene;
     QScopedPointer<SceneOpenGL::Texture> m_texture;
 };
 
