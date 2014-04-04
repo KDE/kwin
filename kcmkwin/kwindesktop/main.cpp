@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "main.h"
+#include <effect_builtins.h>
+#include <config-kwin.h>
 
 #include <QDBusMessage>
 #include <QDBusConnection>
@@ -32,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedString>
 #include <KPluginInfo>
 #include <KPluginFactory>
+#include <KPluginTrader>
 #include <KConfigGroup>
 #include <KService>
 #include <KServiceTypeTrader>
@@ -129,23 +132,14 @@ void KWinDesktopConfig::init()
     // search the effect names
     // TODO: way to recognize if a effect is not found
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services;
-    QString slide;
-    QString cube;
     QString fadedesktop;
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_slide'");
-    if (!services.isEmpty())
-        slide = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_cubeslide'");
-    if (!services.isEmpty())
-        cube = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_fadedesktop'");
+    KService::List services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_fadedesktop'");
     if (!services.isEmpty())
         fadedesktop = services.first()->name();
 
     m_ui->effectComboBox->addItem(i18n("No Animation"));
-    m_ui->effectComboBox->addItem(slide);
-    m_ui->effectComboBox->addItem(cube);
+    m_ui->effectComboBox->addItem(BuiltInEffects::effectData(BuiltInEffect::Slide).displayName);
+    m_ui->effectComboBox->addItem(BuiltInEffects::effectData(BuiltInEffect::CubeSlide).displayName);
     m_ui->effectComboBox->addItem(fadedesktop);
 
     // effect config and info button
@@ -271,10 +265,14 @@ void KWinDesktopConfig::load()
     // Effect for desktop switching
     // Set current option to "none" if no plugin is activated.
     m_ui->effectComboBox->setCurrentIndex(0);
-    if (effectEnabled("slide", effectconfig))
-        m_ui->effectComboBox->setCurrentIndex(1);
-    if (effectEnabled("cubeslide", effectconfig))
-        m_ui->effectComboBox->setCurrentIndex(2);
+    auto enableBuiltInEffect = [&effectconfig,this](BuiltInEffect effect, int index) {
+        const QString key = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(effect) + QStringLiteral("Enabled");
+        if (effectconfig.readEntry(key, BuiltInEffects::enabledByDefault(effect))) {
+            m_ui->effectComboBox->setCurrentIndex(index);
+        }
+    };
+    enableBuiltInEffect(BuiltInEffect::Slide, 1);
+    enableBuiltInEffect(BuiltInEffect::CubeSlide, 2);
     if (effectEnabled("fadedesktop", effectconfig))
         m_ui->effectComboBox->setCurrentIndex(3);
     slotEffectSelectionChanged(m_ui->effectComboBox->currentIndex());
@@ -514,52 +512,71 @@ bool KWinDesktopConfig::effectEnabled(const QString& effect, const KConfigGroup&
 
 void KWinDesktopConfig::slotAboutEffectClicked()
 {
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services;
     QString effect;
+    bool fromKService = false;
+    BuiltInEffect builtIn = BuiltInEffect::Invalid;
     switch(m_ui->effectComboBox->currentIndex()) {
     case 1:
-        effect = "slide";
+        builtIn = BuiltInEffect::Slide;
         break;
     case 2:
-        effect = "cubeslide";
+        builtIn = BuiltInEffect::CubeSlide;
         break;
     case 3:
         effect = "fadedesktop";
+        fromKService = true;
         break;
     default:
         return;
     }
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
-    if (services.isEmpty())
-        return;
-    KPluginInfo pluginInfo(services.first());
+    auto showDialog = [this](const KAboutData &aboutData) {
+        QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog(aboutData, this);
+        aboutPlugin->exec();
+        delete aboutPlugin;
+    };
+    if (fromKService) {
+        KServiceTypeTrader* trader = KServiceTypeTrader::self();
+        KService::List services;
+        services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
+        if (services.isEmpty())
+            return;
+        KPluginInfo pluginInfo(services.first());
 
-    const QString name    = pluginInfo.name();
-    const QString comment = pluginInfo.comment();
-    const QString author  = pluginInfo.author();
-    const QString email   = pluginInfo.email();
-    const QString website = pluginInfo.website();
-    const QString version = pluginInfo.version();
-    const QString license = pluginInfo.license();
-    const QString icon    = pluginInfo.icon();
+        const QString name    = pluginInfo.name();
+        const QString comment = pluginInfo.comment();
+        const QString author  = pluginInfo.author();
+        const QString email   = pluginInfo.email();
+        const QString website = pluginInfo.website();
+        const QString version = pluginInfo.version();
+        const QString license = pluginInfo.license();
+        const QString icon    = pluginInfo.icon();
 
-    KAboutData aboutData(name, name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
-    aboutData.setProgramIconName(icon);
-    const QStringList authors = author.split(',');
-    const QStringList emails = email.split(',');
-    int i = 0;
-    if (authors.count() == emails.count()) {
-        foreach (const QString & author, authors) {
-            if (!author.isEmpty()) {
-                aboutData.addAuthor(i18n(author.toUtf8()), QString(), emails[i]);
+        KAboutData aboutData(name, name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
+        aboutData.setProgramIconName(icon);
+        const QStringList authors = author.split(',');
+        const QStringList emails = email.split(',');
+        int i = 0;
+        if (authors.count() == emails.count()) {
+            foreach (const QString & author, authors) {
+                if (!author.isEmpty()) {
+                    aboutData.addAuthor(i18n(author.toUtf8()), QString(), emails[i]);
+                }
+                i++;
             }
-            i++;
         }
+        showDialog(aboutData);
+    } else {
+        const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtIn);
+        KAboutData aboutData(data.name,
+                             QString(),
+                             data.displayName,
+                             QStringLiteral(KWIN_VERSION_STRING),
+                             data.comment,
+                             KAboutData::License_GPL_V2);
+        aboutData.setProgramIconName(QStringLiteral("preferences-system-windows"));
+        aboutData.addAuthor(i18n("KWin development team"));
+        showDialog(aboutData);
     }
-    QPointer<KAboutApplicationDialog> aboutPlugin = new KAboutApplicationDialog(aboutData, this);
-    aboutPlugin->exec();
-    delete aboutPlugin;
 }
 
 void KWinDesktopConfig::slotConfigureEffectClicked()
@@ -567,31 +584,39 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
     QString effect;
     switch(m_ui->effectComboBox->currentIndex()) {
     case 2:
-        effect = "cubeslide_config";
+        // HACK: kwin4_effect_ needs to be removed
+        effect = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide);
         break;
     default:
         return;
     }
-    KCModuleProxy* proxy = new KCModuleProxy(effect);
+
     QPointer<QDialog> configDialog = new QDialog(this);
+    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
+                                                                     QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(effect),
+                                                                     configDialog);
+    if (!kcm) {
+        delete configDialog;
+        return;
+    }
     configDialog->setWindowTitle(m_ui->effectComboBox->currentText());
     configDialog->setLayout(new QVBoxLayout);
     QDialogButtonBox* buttons = new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel|QDialogButtonBox::RestoreDefaults, configDialog);
     connect(buttons, SIGNAL(accepted()), configDialog, SLOT(accept()));
     connect(buttons, SIGNAL(rejected()), configDialog, SLOT(reject()));
-    connect(buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), proxy, SLOT(defaults()));
+    connect(buttons->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)), kcm, SLOT(defaults()));
 
     QWidget *showWidget = new QWidget(configDialog);
     QVBoxLayout *layout = new QVBoxLayout;
     showWidget->setLayout(layout);
-    layout->addWidget(proxy);
+    layout->addWidget(kcm);
     configDialog->layout()->addWidget(showWidget);
     configDialog->layout()->addWidget(buttons);
 
     if (configDialog->exec() == QDialog::Accepted) {
-        proxy->save();
+        kcm->save();
     } else {
-        proxy->load();
+        kcm->load();
     }
     delete configDialog;
 }

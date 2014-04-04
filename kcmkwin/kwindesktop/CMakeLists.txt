@@ -1,5 +1,6 @@
 
 ########### next target ###############
+include_directories(${KWIN_SOURCE_DIR}/effects)
 
 set(kcm_kwindesktop_PART_SRCS main.cpp desktopnameswidget.cpp)
 qt5_wrap_ui(kcm_kwindesktop_PART_SRCS main.ui)
@@ -15,6 +16,7 @@ target_link_libraries(kcm_kwindesktop
     KF5::WindowSystem
     KF5::XmlGui
     ${X11_LIBRARIES}
+    kwin4_effect_builtins
 )
 
 install(TARGETS kcm_kwindesktop  DESTINATION ${PLUGIN_INSTALL_DIR} )
