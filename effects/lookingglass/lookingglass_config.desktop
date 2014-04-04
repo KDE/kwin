@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_lookingglass_config
-X-KDE-ParentComponents=kwin4_effect_lookingglass
+X-KDE-ParentComponents=lookingglass
 
 Name=Looking Glass
 Name[uk]=Збільшувальне скло

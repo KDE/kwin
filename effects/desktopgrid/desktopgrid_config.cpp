@@ -110,7 +110,7 @@ void DesktopGridEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_desktopgrid"));
+    interface.reconfigureEffect(QStringLiteral("desktopgrid"));
 }
 
 void DesktopGridEffectConfig::load()

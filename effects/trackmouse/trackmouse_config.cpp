@@ -102,7 +102,7 @@ void TrackMouseEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_trackmouse"));
+    interface.reconfigureEffect(QStringLiteral("trackmouse"));
 }
 
 void TrackMouseEffectConfig::defaults()

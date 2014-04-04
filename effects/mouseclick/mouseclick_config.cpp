@@ -83,7 +83,7 @@ void MouseClickEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_mouseclick"));
+    interface.reconfigureEffect(QStringLiteral("mouseclick"));
 }
 
 } // namespace

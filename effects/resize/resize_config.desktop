@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_resize_config
-X-KDE-ParentComponents=kwin4_effect_resize
+X-KDE-ParentComponents=resize
 
 Name=Resize Window
 Name[uk]=Зміна розмірів вікон

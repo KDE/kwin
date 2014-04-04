@@ -1484,7 +1484,7 @@ bool EffectsHandlerImpl::isScreenLocked() const
 
 QString EffectsHandlerImpl::debug(const QString& name, const QString& parameter) const
 {
-    QString internalName = name.startsWith(QStringLiteral("kwin4_effect_")) ? name : QStringLiteral("kwin4_effect_") + name;
+    QString internalName = name.toLower();;
     for (QVector< EffectPair >::const_iterator it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
         if ((*it).first == internalName) {
             return it->second->debug(parameter);

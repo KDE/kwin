@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_wobblywindows_config
-X-KDE-ParentComponents=kwin4_effect_wobblywindows
+X-KDE-ParentComponents=wobblywindows
 
 Name=Wobbly Windows
 Name[uk]=Желейні вікна

@@ -103,7 +103,7 @@ void MagnifierEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_magnifier"));
+    interface.reconfigureEffect(QStringLiteral("magnifier"));
 }
 
 void MagnifierEffectConfig::defaults()

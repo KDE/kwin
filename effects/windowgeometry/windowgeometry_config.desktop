@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_windowgeometry_config
-X-KDE-ParentComponents=kwin4_effect_windowgeometry
+X-KDE-ParentComponents=windowgeometry
 
 Name=WindowGeometry
 Name[uk]=Розміри вікна

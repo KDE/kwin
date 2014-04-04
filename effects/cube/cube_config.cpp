@@ -94,7 +94,7 @@ void CubeEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_cube"));
+    interface.reconfigureEffect(QStringLiteral("cube"));
 }
 
 void CubeEffectConfig::capsSelectionChanged()

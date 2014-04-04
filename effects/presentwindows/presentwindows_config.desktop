@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_presentwindows_config
-X-KDE-ParentComponents=kwin4_effect_presentwindows
+X-KDE-ParentComponents=presentwindows
 
 Name=Present Windows
 Name[uk]=Показ вікон

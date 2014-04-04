@@ -110,9 +110,7 @@ void BuiltInEffectLoader::queryAndLoadAll()
         if (m_loadedEffects.contains(effect)) {
             continue;
         }
-        // as long as the KCM uses kwin4_effect_ we need to add it, TODO remove
-        const QString key = QStringLiteral("kwin4_effect_") +
-                            BuiltInEffects::nameForEffect(effect);
+        const QString key = BuiltInEffects::nameForEffect(effect);
         const LoadEffectFlags flags = readConfig(key, BuiltInEffects::enabledByDefault(effect));
         if (flags.testFlag(LoadEffectFlag::Load)) {
             m_queue->enqueue(qMakePair(effect, flags));
@@ -175,12 +173,7 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
 
 QString BuiltInEffectLoader::internalName(const QString& name) const
 {
-    QString internalName = name.toLower();
-    // as long as the KCM uses kwin4_effect_ we need to add it, TODO remove
-    if (internalName.startsWith(QStringLiteral("kwin4_effect_"))) {
-        internalName = internalName.mid(13);
-    }
-    return internalName;
+    return name.toLower();
 }
 
 static const QString s_nameProperty = QStringLiteral("X-KDE-PluginInfo-Name");

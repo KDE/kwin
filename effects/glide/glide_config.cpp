@@ -51,7 +51,7 @@ void GlideEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_glide"));
+    interface.reconfigureEffect(QStringLiteral("glide"));
 }
 } // namespace KWin
 #include "glide_config.moc"

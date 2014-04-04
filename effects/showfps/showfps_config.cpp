@@ -57,7 +57,7 @@ void ShowFpsEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_showfps"));
+    interface.reconfigureEffect(QStringLiteral("showfps"));
 }
 
 } // namespace

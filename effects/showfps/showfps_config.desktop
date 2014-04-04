@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_showfps_config
-X-KDE-ParentComponents=kwin4_effect_showfps
+X-KDE-ParentComponents=showfps
 
 Name=Show FPS
 Name[uk]=Показ частоти кадрів

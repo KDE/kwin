@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_magnifier_config
-X-KDE-ParentComponents=kwin4_effect_magnifier
+X-KDE-ParentComponents=magnifier
 
 Name=Magnifier
 Name[uk]=Лупа

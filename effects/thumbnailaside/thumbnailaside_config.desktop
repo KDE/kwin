@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_thumbnailaside_config
-X-KDE-ParentComponents=kwin4_effect_thumbnailaside
+X-KDE-ParentComponents=thumbnailaside
 
 Name=Thumbnail Aside
 Name[uk]=Мініатюри збоку

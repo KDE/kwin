@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_blur_config
-X-KDE-ParentComponents=kwin4_effect_blur
+X-KDE-ParentComponents=blur
 
 Name=Blur
 Name[uk]=Розмивання

@@ -156,8 +156,7 @@ void KWinScreenEdgesConfig::sanitizeCooldown()
 // Copied from kcmkwin/kwincompositing/main.cpp
 bool KWinScreenEdgesConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
 {
-    // HACK: remove kwin4_effect_
-    return cfg.readEntry("kwin4_effect_" + BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
+    return cfg.readEntry(BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
 
 //-----------------------------------------------------------------------------

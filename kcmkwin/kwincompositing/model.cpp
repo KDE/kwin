@@ -235,7 +235,7 @@ void EffectModel::loadEffects()
         effect.category = translatedCategory(data.category);
         effect.serviceName = data.name;
         effect.enabledByDefault = data.enabled;
-        effect.effectStatus = kwinConfig.readEntry(QStringLiteral("kwin4_effect_") + effect.serviceName + "Enabled", effect.enabledByDefault);
+        effect.effectStatus = kwinConfig.readEntry(effect.serviceName + "Enabled", effect.enabledByDefault);
         effect.video = data.video;
         effect.supported = true;
         effect.exclusiveGroup = data.exclusiveCategory;
@@ -243,7 +243,7 @@ void EffectModel::loadEffects()
         effect.scripted = false;
 
         auto it = std::find_if(configs.begin(), configs.end(), [data](const KPluginInfo &info) {
-            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == QStringLiteral("kwin4_effect_") + data.name;
+            return info.property(QStringLiteral("X-KDE-ParentComponents")).toString() == data.name;
         });
         effect.configurable = it != configs.end();
 
@@ -382,11 +382,6 @@ void EffectModel::syncConfig()
         const EffectData &effect = *(it);
 
         QString key = effect.serviceName + QStringLiteral("Enabled");
-        // HACK: workaround for built-in effects, needs to be removed once everything is transited to new names
-        if (!key.startsWith(QStringLiteral("kwin4_effect_"))) {
-            key = QStringLiteral("kwin4_effect_") + key;
-        }
-
         const bool effectConfigStatus = kwinConfig.readEntry(key, effect.enabledByDefault);
 
         if (effect.effectStatus != effectConfigStatus) {

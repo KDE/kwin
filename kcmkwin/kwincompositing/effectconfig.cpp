@@ -66,13 +66,6 @@ void EffectConfig::openConfig(const QString &serviceName, bool scripted)
         kcm = KPluginTrader::createInstanceFromQuery<KCModule>(s_pluginDir, QString(),
                                                                QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(serviceName),
                                                                &dialog);
-        if (!kcm) {
-            // HACK: try again with "kwin4_effect_"<serviceName>
-            const QString name = QStringLiteral("kwin4_effect_") + serviceName;
-            kcm = KPluginTrader::createInstanceFromQuery<KCModule>(s_pluginDir, QString(),
-                                                                   QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(name),
-                                                                   &dialog);
-        }
     }
     if (!kcm) {
         return;

@@ -57,7 +57,7 @@ void CoverSwitchEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_coverswitch"));
+    interface.reconfigureEffect(QStringLiteral("coverswitch"));
 }
 
 } // namespace

@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_invert_config
-X-KDE-ParentComponents=kwin4_effect_invert
+X-KDE-ParentComponents=invert
 
 Name=Invert
 Name[uk]=Інверсія

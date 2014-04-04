@@ -79,7 +79,7 @@ void WindowGeometryConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_windowgeometry"));
+    interface.reconfigureEffect(QStringLiteral("windowgeometry"));
 }
 
 void WindowGeometryConfig::defaults()

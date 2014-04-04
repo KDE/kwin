@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_trackmouse_config
-X-KDE-ParentComponents=kwin4_effect_trackmouse
+X-KDE-ParentComponents=trackmouse
 
 Name=Track Mouse
 Name[uk]=Сліди мишки

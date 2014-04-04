@@ -89,7 +89,7 @@ void ThumbnailAsideEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_thumbnailaside"));
+    interface.reconfigureEffect(QStringLiteral("thumbnailaside"));
 }
 
 } // namespace

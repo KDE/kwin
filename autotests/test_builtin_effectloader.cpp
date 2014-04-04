@@ -65,7 +65,7 @@ void TestBuiltInEffectLoader::testHasEffect_data()
     QTest::addColumn<bool>("expected");
 
     QTest::newRow("blur")                           << QStringLiteral("blur")              << true;
-    QTest::newRow("with kwin4_effect_ prefix")      << QStringLiteral("kwin4_effect_blur") << true;
+    QTest::newRow("with kwin4_effect_ prefix")      << QStringLiteral("kwin4_effect_blur") << false;
     QTest::newRow("case sensitive")                 << QStringLiteral("BlUR")              << true;
     QTest::newRow("Contrast")                       << QStringLiteral("contrast")          << true;
     QTest::newRow("CoverSwitch")                    << QStringLiteral("coverswitch")       << true;
@@ -318,7 +318,7 @@ void TestBuiltInEffectLoader::testLoadEffect_data()
 //     QTest::newRow("WindowGeometry")                 << QStringLiteral("windowgeometry")    << true  << xc;
     QTest::newRow("WobblyWindows")                  << QStringLiteral("wobblywindows")     << false << xc;
     QTest::newRow("WobblyWindows-GL")               << QStringLiteral("wobblywindows")     << true  << oc;
-    QTest::newRow("Zoom")                           << QStringLiteral("kwin4_effect_zoom") << true  << xc;
+    QTest::newRow("Zoom")                           << QStringLiteral("zoom")              << true  << xc;
     QTest::newRow("Non Existing")                   << QStringLiteral("InvalidName")       << false << xc;
     QTest::newRow("Fade - Scripted")                << QStringLiteral("fade")              << false << xc;
     QTest::newRow("Fade - Scripted + kwin4_effect") << QStringLiteral("kwin4_effect_fade") << false << xc;
@@ -471,26 +471,23 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
 
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
 
-    // TODO: remove once the KCM doesn't use this prefix
-    const QString kwin4 = QStringLiteral("kwin4_effect_");
-
     // prepare the configuration to hard enable/disable the effects we want to load
     KConfigGroup plugins = config->group("Plugins");
-    plugins.writeEntry(kwin4 + QStringLiteral("dashboardEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("desktopgridEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("highlightwindowEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("kscreenEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("logoutEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("minimizeanimationEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("presentwindowsEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("screenedgeEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("screenshotEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("slideEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("slidingpopupsEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("startupfeedbackEnabled"), false);
-    plugins.writeEntry(kwin4 + QStringLiteral("zoomEnabled"), false);
+    plugins.writeEntry(QStringLiteral("dashboardEnabled"), false);
+    plugins.writeEntry(QStringLiteral("desktopgridEnabled"), false);
+    plugins.writeEntry(QStringLiteral("highlightwindowEnabled"), false);
+    plugins.writeEntry(QStringLiteral("kscreenEnabled"), false);
+    plugins.writeEntry(QStringLiteral("logoutEnabled"), false);
+    plugins.writeEntry(QStringLiteral("minimizeanimationEnabled"), false);
+    plugins.writeEntry(QStringLiteral("presentwindowsEnabled"), false);
+    plugins.writeEntry(QStringLiteral("screenedgeEnabled"), false);
+    plugins.writeEntry(QStringLiteral("screenshotEnabled"), false);
+    plugins.writeEntry(QStringLiteral("slideEnabled"), false);
+    plugins.writeEntry(QStringLiteral("slidingpopupsEnabled"), false);
+    plugins.writeEntry(QStringLiteral("startupfeedbackEnabled"), false);
+    plugins.writeEntry(QStringLiteral("zoomEnabled"), false);
     // enable lookingglass as it's not supported
-    plugins.writeEntry(kwin4 + QStringLiteral("lookingglassEnabled"), true);
+    plugins.writeEntry(QStringLiteral("lookingglassEnabled"), true);
     plugins.sync();
 
     loader.setConfig(config);
@@ -511,7 +508,7 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
     QVERIFY(!spy.wait(10));
 
     // now let's prepare a config which has one effect explicitly enabled
-    plugins.writeEntry(kwin4 + QStringLiteral("mouseclickEnabled"), true);
+    plugins.writeEntry(QStringLiteral("mouseclickEnabled"), true);
     plugins.sync();
 
     loader.queryAndLoadAll();
@@ -528,7 +525,7 @@ void TestBuiltInEffectLoader::testLoadAllEffects()
     spy.clear();
 
     // let's delete one of the default entries
-    plugins.deleteEntry(kwin4 + QStringLiteral("kscreenEnabled"));
+    plugins.deleteEntry(QStringLiteral("kscreenEnabled"));
     plugins.sync();
 
     QVERIFY(spy.isEmpty());

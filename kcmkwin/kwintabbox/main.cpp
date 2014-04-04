@@ -313,11 +313,11 @@ void KWinTabBoxConfig::save()
     // activate effects if not active
     KConfigGroup effectconfig(m_config, "Plugins");
     if (coverSwitch || coverSwitchAlternative)
-        effectconfig.writeEntry("kwin4_effect_coverswitchEnabled", true);
+        effectconfig.writeEntry("coverswitchEnabled", true);
     if (flipSwitch || flipSwitchAlternative)
-        effectconfig.writeEntry("kwin4_effect_flipswitchEnabled", true);
+        effectconfig.writeEntry("flipswitchEnabled", true);
     if (highlightWindows)
-        effectconfig.writeEntry("kwin4_effect_highlightwindowEnabled", true);
+        effectconfig.writeEntry("highlightwindowEnabled", true);
     effectconfig.sync();
     KConfigGroup coverswitchconfig(m_config, "Effect-CoverSwitch");
     coverswitchconfig.writeEntry("TabBox", coverSwitch);
@@ -387,8 +387,7 @@ void KWinTabBoxConfig::defaults()
 
 bool KWinTabBoxConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
 {
-    // HACK: remove kwin4_effect_
-    return cfg.readEntry("kwin4_effect_" + BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
+    return cfg.readEntry(BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
 
 void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm* ui, const KWin::TabBox::TabBoxConfig& config)
@@ -488,8 +487,7 @@ void KWinTabBoxConfig::configureEffectClicked()
         connect(buttonBox, SIGNAL(accepted()), configDialog, SLOT(accept()));
         connect(buttonBox, SIGNAL(rejected()), configDialog, SLOT(reject()));
 
-        // HACK: kwin4_effect_ needs to be removed
-        const QString name = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(effect == CoverSwitch ? BuiltInEffect::CoverSwitch : BuiltInEffect::FlipSwitch);
+        const QString name = BuiltInEffects::nameForEffect(effect == CoverSwitch ? BuiltInEffect::CoverSwitch : BuiltInEffect::FlipSwitch);
 
         KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
                                                                         QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(name),

@@ -585,7 +585,7 @@ void KMovingConfig::save(void)
     cg.writeEntry(KWM_CNTR_SNAP_ZONE, getCenterSnapZone());
     cg.writeEntry("SnapOnlyWhenOverlapping", m_ui->OverlapSnap->isChecked());
 
-    KConfigGroup(config, "Plugins").writeEntry("kwin4_effect_windowgeometryEnabled", getGeometryTip());
+    KConfigGroup(config, "Plugins").writeEntry("windowgeometryEnabled", getGeometryTip());
 
     if (standAlone) {
         config->sync();

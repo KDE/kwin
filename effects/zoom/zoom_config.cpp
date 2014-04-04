@@ -139,7 +139,7 @@ void ZoomEffectConfig::save()
     OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
-    interface.reconfigureEffect(QStringLiteral("kwin4_effect_zoom"));
+    interface.reconfigureEffect(QStringLiteral("zoom"));
 }
 
 } // namespace

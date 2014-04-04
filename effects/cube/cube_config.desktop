@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_cube_config
-X-KDE-ParentComponents=kwin4_effect_cube
+X-KDE-ParentComponents=cube
 
 Name=Desktop Cube
 Name[uk]=Куб стільниць

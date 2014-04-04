@@ -266,7 +266,7 @@ void KWinDesktopConfig::load()
     // Set current option to "none" if no plugin is activated.
     m_ui->effectComboBox->setCurrentIndex(0);
     auto enableBuiltInEffect = [&effectconfig,this](BuiltInEffect effect, int index) {
-        const QString key = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(effect) + QStringLiteral("Enabled");
+        const QString key = BuiltInEffects::nameForEffect(effect) + QStringLiteral("Enabled");
         if (effectconfig.readEntry(key, BuiltInEffects::enabledByDefault(effect))) {
             m_ui->effectComboBox->setCurrentIndex(index);
         }
@@ -339,26 +339,26 @@ void KWinDesktopConfig::save()
     switch(desktopSwitcher) {
     case 0:
         // no effect
-        effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_cubeslideEnabled", false);
+        effectconfig.writeEntry("slideEnabled", false);
+        effectconfig.writeEntry("cubeslideEnabled", false);
         effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
         break;
     case 1:
         // slide
-        effectconfig.writeEntry("kwin4_effect_slideEnabled", true);
-        effectconfig.writeEntry("kwin4_effect_cubeslideEnabled", false);
+        effectconfig.writeEntry("slideEnabled", true);
+        effectconfig.writeEntry("cubeslideEnabled", false);
         effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
         break;
     case 2:
         // cube
-        effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_cubeslideEnabled", true);
+        effectconfig.writeEntry("slideEnabled", false);
+        effectconfig.writeEntry("cubeslideEnabled", true);
         effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
         break;
     case 3:
         // fadedesktop
-        effectconfig.writeEntry("kwin4_effect_slideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_cubeslideEnabled", false);
+        effectconfig.writeEntry("slideEnabled", false);
+        effectconfig.writeEntry("cubeslideEnabled", false);
         effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", true);
         break;
     }
@@ -584,8 +584,7 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
     QString effect;
     switch(m_ui->effectComboBox->currentIndex()) {
     case 2:
-        // HACK: kwin4_effect_ needs to be removed
-        effect = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide);
+        effect = BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide);
         break;
     default:
         return;

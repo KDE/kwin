@@ -3,7 +3,7 @@ Type=Service
 X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kwin_coverswitch_config
-X-KDE-ParentComponents=kwin4_effect_coverswitch
+X-KDE-ParentComponents=coverswitch
 
 Name=Cover Switch
 Name[uk]=Перемикач обкладинок
