@@ -1,4 +1,4 @@
-include_directories( ${KWIN_SOURCE_DIR}/tabbox ${KWIN_SOURCE_DIR})
+include_directories( ${KWIN_SOURCE_DIR}/effects ${KWIN_SOURCE_DIR}/tabbox ${KWIN_SOURCE_DIR})
 
 ########### next target ###############
 
@@ -21,7 +21,9 @@ target_link_libraries(kcm_kwintabbox
     KF5::I18n
     KF5::Service
     KF5::NewStuff
-    XCB::XCB)
+    XCB::XCB
+    kwin4_effect_builtins
+)
 
 install(TARGETS kcm_kwintabbox  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

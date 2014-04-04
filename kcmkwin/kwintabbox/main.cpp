@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "main.h"
+#include <effect_builtins.h>
 
 // Qt
 #include <QtDBus/QtDBus>
@@ -35,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginFactory>
 #include <KPluginInfo>
 #include <KPluginLoader>
+#include <KPluginTrader>
 #include <KTitleWidget>
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
@@ -158,18 +160,10 @@ KWinTabBoxConfig::~KWinTabBoxConfig()
 void KWinTabBoxConfig::initLayoutLists()
 {
     // search the effect names
-    // TODO: way to recognize if a effect is not found
-    KServiceTypeTrader* trader = KServiceTypeTrader::self();
-    KService::List services;
-    QString coverswitch;
-    QString flipswitch;
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_coverswitch'");
-    if (!services.isEmpty())
-        coverswitch = services.first()->name();
-    services = trader->query("KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_flipswitch'");
-    if (!services.isEmpty())
-        flipswitch = services.first()->name();
+    QString coverswitch = BuiltInEffects::effectData(BuiltInEffect::CoverSwitch).displayName;
+    QString flipswitch = BuiltInEffects::effectData(BuiltInEffect::FlipSwitch).displayName;
 
+    KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List offers = trader->query("KWin/WindowSwitcher");
     QStringList layoutNames, layoutPlugins, layoutPaths;
     foreach (KService::Ptr service, offers) {
@@ -227,9 +221,9 @@ void KWinTabBoxConfig::load()
         updateUiFromConfig(ui[i], *(tabBoxConfig[i]));
 
         KConfigGroup effectconfig(m_config, "Plugins");
-        if (effectEnabled("coverswitch", effectconfig) && KConfigGroup(m_config, "Effect-CoverSwitch").readEntry(group[i], false))
+        if (effectEnabled(BuiltInEffect::CoverSwitch, effectconfig) && KConfigGroup(m_config, "Effect-CoverSwitch").readEntry(group[i], false))
             ui[i]->effectCombo->setCurrentIndex(CoverSwitch);
-        else if (effectEnabled("flipswitch", effectconfig) && KConfigGroup(m_config, "Effect-FlipSwitch").readEntry(group[i], false))
+        else if (effectEnabled(BuiltInEffect::FlipSwitch, effectconfig) && KConfigGroup(m_config, "Effect-FlipSwitch").readEntry(group[i], false))
             ui[i]->effectCombo->setCurrentIndex(FlipSwitch);
 
         QString action;
@@ -391,14 +385,10 @@ void KWinTabBoxConfig::defaults()
     emit changed(true);
 }
 
-bool KWinTabBoxConfig::effectEnabled(const QString& effect, const KConfigGroup& cfg) const
+bool KWinTabBoxConfig::effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const
 {
-    KService::List services = KServiceTypeTrader::self()->query(
-                                  "KWin/Effect", "[X-KDE-PluginInfo-Name] == 'kwin4_effect_" + effect + '\'');
-    if (services.isEmpty())
-        return false;
-    QVariant v = services.first()->property("X-KDE-PluginInfo-EnabledByDefault");
-    return cfg.readEntry("kwin4_effect_" + effect + "Enabled", v.toBool());
+    // HACK: remove kwin4_effect_
+    return cfg.readEntry("kwin4_effect_" + BuiltInEffects::nameForEffect(effect) + "Enabled", BuiltInEffects::enabledByDefault(effect));
 }
 
 void KWinTabBoxConfig::updateUiFromConfig(KWinTabBoxConfigForm* ui, const KWin::TabBox::TabBoxConfig& config)
@@ -498,20 +488,30 @@ void KWinTabBoxConfig::configureEffectClicked()
         connect(buttonBox, SIGNAL(accepted()), configDialog, SLOT(accept()));
         connect(buttonBox, SIGNAL(rejected()), configDialog, SLOT(reject()));
 
-        KCModuleProxy* proxy = new KCModuleProxy(effect == CoverSwitch ? "coverswitch_config" : "flipswitch_config");
-        connect(configDialog, SIGNAL(defaultClicked()), proxy, SLOT(defaults()));
+        // HACK: kwin4_effect_ needs to be removed
+        const QString name = QStringLiteral("kwin4_effect_") + BuiltInEffects::nameForEffect(effect == CoverSwitch ? BuiltInEffect::CoverSwitch : BuiltInEffect::FlipSwitch);
+
+        KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
+                                                                        QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(name),
+                                                                        configDialog);
+        if (!kcm) {
+            delete configDialog;
+            return;
+        }
+
+        connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, kcm, &KCModule::defaults);
 
         QWidget *showWidget = new QWidget(configDialog);
         QVBoxLayout *layout = new QVBoxLayout;
         showWidget->setLayout(layout);
-        layout->addWidget(proxy);
+        layout->addWidget(kcm);
         configDialog->layout()->addWidget(showWidget);
         configDialog->layout()->addWidget(buttonBox);
 
         if (configDialog->exec() == QDialog::Accepted) {
-            proxy->save();
+            kcm->save();
         } else {
-            proxy->load();
+            kcm->load();
         }
         delete configDialog;
     }

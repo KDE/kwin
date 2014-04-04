@@ -32,6 +32,7 @@ class KActionCollection;
 
 namespace KWin
 {
+enum class BuiltInEffect;
 namespace TabBox
 {
 
@@ -87,7 +88,7 @@ private:
     TabBox::TabBoxConfig m_tabBoxConfig;
     TabBox::TabBoxConfig m_tabBoxAlternativeConfig;
 
-    bool effectEnabled(const QString& effect, const KConfigGroup& cfg) const;
+    bool effectEnabled(const BuiltInEffect& effect, const KConfigGroup& cfg) const;
 };
 
 } // namespace
