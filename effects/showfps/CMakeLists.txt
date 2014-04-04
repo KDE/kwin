@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    showfps.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_showfps_config_SRCS showfps_config.cpp)
 qt5_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)

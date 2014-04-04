@@ -1,12 +1,4 @@
 #######################################
-# Effect
-
-# .desktop files
-install( FILES
-         blur.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_blur_config_SRCS blur_config.cpp)
 qt5_wrap_ui(kwin_blur_config_SRCS blur_config.ui)

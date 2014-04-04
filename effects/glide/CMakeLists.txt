@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    glide.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_glide_config_SRCS glide_config.cpp)
 qt5_wrap_ui(kwin_glide_config_SRCS glide_config.ui)

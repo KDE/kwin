@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    flipswitch.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_flipswitch_config_SRCS flipswitch_config.cpp)
 qt5_wrap_ui(kwin_flipswitch_config_SRCS flipswitch_config.ui)

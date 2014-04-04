@@ -1,10 +1,6 @@
 #######################################
 # Effect
 install( FILES
-    coverswitch.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-install( FILES
     shaders/1.10/coverswitch-reflection.glsl
     DESTINATION ${DATA_INSTALL_DIR}/kwin/shaders/1.10 )
 install( FILES

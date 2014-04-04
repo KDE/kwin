@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    mousemark.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_mousemark_config_SRCS mousemark_config.cpp)
 qt5_wrap_ui(kwin_mousemark_config_SRCS mousemark_config.ui)

@@ -1,11 +1,6 @@
 #######################################
 # Effect
 
-# .desktop files
-install( FILES
-    invert.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
 # Data files
 install( FILES
     data/1.10/invert.frag

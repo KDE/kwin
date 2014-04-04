@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    wobblywindows.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_wobblywindows_config_SRCS wobblywindows_config.cpp)
 qt5_wrap_ui(kwin_wobblywindows_config_SRCS wobblywindows_config.ui)

@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-         dashboard.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_dashboard_config_SRCS dashboard_config.cpp)
 qt5_wrap_ui(kwin_dashboard_config_SRCS dashboard_config.ui)

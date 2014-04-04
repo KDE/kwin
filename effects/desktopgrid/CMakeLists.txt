@@ -1,9 +1,6 @@
 #######################################
 # Effect
 install( FILES
-    desktopgrid.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-install( FILES
     main.qml
     DESTINATION ${DATA_INSTALL_DIR}/kwin/effects/desktopgrid/
 )

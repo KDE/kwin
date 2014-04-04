@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    windowgeometry.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_windowgeometry_config_SRCS windowgeometry_config.cpp)
 qt5_wrap_ui(kwin_windowgeometry_config_SRCS windowgeometry_config.ui)

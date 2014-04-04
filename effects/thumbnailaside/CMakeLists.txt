@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    thumbnailaside.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_thumbnailaside_config_SRCS thumbnailaside_config.cpp)
 qt5_wrap_ui(kwin_thumbnailaside_config_SRCS thumbnailaside_config.ui)

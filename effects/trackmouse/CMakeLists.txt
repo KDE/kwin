@@ -1,11 +1,5 @@
 #######################################
 # Effect
-
-# .desktop files
-install( FILES
-    trackmouse.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
 # Data files
 install( FILES
     data/tm_inner.png

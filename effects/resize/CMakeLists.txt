@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    resize.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_resize_config_SRCS resize_config.cpp)
 qt5_wrap_ui(kwin_resize_config_SRCS resize_config.ui)

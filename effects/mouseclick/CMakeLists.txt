@@ -1,11 +1,4 @@
 ##########################
-## mouse click effect
-##########################
-install( FILES 
-         mouseclick.desktop
-         DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-##########################
 ## configurtion dialog 
 ##########################
 set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)

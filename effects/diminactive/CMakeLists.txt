@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    diminactive.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_diminactive_config_SRCS diminactive_config.cpp)
 qt5_wrap_ui(kwin_diminactive_config_SRCS diminactive_config.ui)

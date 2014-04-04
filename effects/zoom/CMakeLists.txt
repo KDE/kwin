@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    zoom.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_zoom_config_SRCS zoom_config.cpp)
 qt5_wrap_ui(kwin_zoom_config_SRCS zoom_config.ui)

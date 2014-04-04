@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    magnifier.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_magnifier_config_SRCS magnifier_config.cpp)
 qt5_wrap_ui(kwin_magnifier_config_SRCS magnifier_config.ui)

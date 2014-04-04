@@ -1,10 +1,4 @@
 #######################################
-# Effect
-install( FILES
-    magiclamp.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kwin )
-
-#######################################
 # Config
 set(kwin_magiclamp_config_SRCS magiclamp_config.cpp)
 qt5_wrap_ui(kwin_magiclamp_config_SRCS magiclamp_config.ui)
