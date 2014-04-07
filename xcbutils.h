@@ -341,6 +341,8 @@ public:
     int majorOpcode;
     bool present;
     QByteArray name;
+    QVector<QByteArray> opCodes;
+    QVector<QByteArray> errorCodes;
 };
 
 class Extensions

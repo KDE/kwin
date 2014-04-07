@@ -135,12 +135,61 @@ static xcb_window_t findEventWindow(xcb_generic_event_t *event)
     }
 }
 
+QVector<QByteArray> s_xcbEerrors({
+    QByteArrayLiteral("Success"),
+    QByteArrayLiteral("BadRequest"),
+    QByteArrayLiteral("BadValue"),
+    QByteArrayLiteral("BadWindow"),
+    QByteArrayLiteral("BadPixmap"),
+    QByteArrayLiteral("BadAtom"),
+    QByteArrayLiteral("BadCursor"),
+    QByteArrayLiteral("BadFont"),
+    QByteArrayLiteral("BadMatch"),
+    QByteArrayLiteral("BadDrawable"),
+    QByteArrayLiteral("BadAccess"),
+    QByteArrayLiteral("BadAlloc"),
+    QByteArrayLiteral("BadColor"),
+    QByteArrayLiteral("BadGC"),
+    QByteArrayLiteral("BadIDChoice"),
+    QByteArrayLiteral("BadName"),
+    QByteArrayLiteral("BadLength"),
+    QByteArrayLiteral("BadImplementation"),
+    QByteArrayLiteral("Unknown")});
 /*!
   Handles workspace specific XCB event
  */
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
     const uint8_t eventType = e->response_type & ~0x80;
+    if (!eventType) {
+        // let's check whether it's an error from one of the extensions KWin uses
+        xcb_generic_error_t *error = reinterpret_cast<xcb_generic_error_t*>(e);
+        const QVector<Xcb::ExtensionData> extensions = Xcb::Extensions::self()->extensions();
+        for (const auto &extension : extensions) {
+            if (error->major_code == extension.majorOpcode) {
+                QByteArray errorName;
+                if (error->error_code < s_xcbEerrors.size()) {
+                    errorName = s_xcbEerrors.at(error->error_code);
+                } else if (error->error_code >= extension.errorBase) {
+                    const int index = error->error_code - extension.errorBase;
+                    if (index >= 0 && index < extension.errorCodes.size()) {
+                        errorName = extension.errorCodes.at(index);
+                    }
+                }
+                if (errorName.isEmpty()) {
+                    errorName = QByteArrayLiteral("Unknown");
+                }
+                qWarning("XCB error: %d (%s), sequence: %d, resource id: %d, major code: %d (%s), minor code: %d (%s)",
+                         int(error->error_code), errorName.constData(),
+                         int(error->sequence), int(error->resource_id),
+                         int(error->major_code), extension.name.constData(),
+                         int(error->minor_code),
+                         extension.opCodes.size() > error->minor_code ? extension.opCodes.at(error->minor_code).constData() : "Unknown");
+                return true;
+            }
+        }
+        return false;
+    }
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()
