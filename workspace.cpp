@@ -438,7 +438,7 @@ Workspace::~Workspace()
         desktops.removeAll(c);
     }
     for (UnmanagedList::iterator it = unmanaged.begin(), end = unmanaged.end(); it != end; ++it)
-        (*it)->release(true);
+        (*it)->release(ReleaseReason::KWinShutsDown);
     xcb_delete_property(connection(), rootWindow(), atoms->kwin_running);
 
     delete RuleBook::self();

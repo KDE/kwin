@@ -426,7 +426,7 @@ void Client::destroyClient()
     if (moveResizeMode)
         emit clientFinishUserMovedResized(this);
     emit windowClosed(this, del);
-    finishCompositing();
+    finishCompositing(ReleaseReason::Destroyed);
     RuleBook::self()->discardUsed(this, true);   // Remove ForceTemporarily rules
     StackingUpdatesBlocker blocker(workspace());
     if (moveResizeMode)

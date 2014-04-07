@@ -490,7 +490,7 @@ public:
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     virtual bool setupCompositing();
-    virtual void finishCompositing();
+    void finishCompositing(ReleaseReason releaseReason = ReleaseReason::Release) override;
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
 

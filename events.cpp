@@ -1566,10 +1566,30 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     }
     const uint8_t eventType = e->response_type & ~0x80;
     switch (eventType) {
-    case XCB_UNMAP_NOTIFY:
-        workspace()->updateFocusMousePosition(Cursor::pos());
-        release();
+    case XCB_DESTROY_NOTIFY:
+        release(ReleaseReason::Destroyed);
         break;
+    case XCB_UNMAP_NOTIFY:{
+        workspace()->updateFocusMousePosition(Cursor::pos());
+
+        // unmap notify might have been emitted due to a destroy notify
+        // but unmap notify gets emitted before the destroy notify, nevertheless at this
+        // point the window is already destroyed. This means any XCB request with the window
+        // will cause an error.
+        // To not run into these errors we try to wait for the destroy notify. For this we
+        // generate a round trip to the X server and wait a very short time span before
+        // handling the release.
+        updateXTime();
+        // using 1 msec to not just move it at the end of the event loop but add an very short
+        // timespan to cover cases like unmap() followed by destroy(). The only other way to
+        // ensure that the window is not destroyed when we do the release handling is to grab
+        // the XServer which we do not want to do for an Unmanaged. The timespan of 1 msec is
+        // short enough to not cause problems in the close window animations.
+        // It's of course still possible that we miss the destroy in which case non-fatal
+        // X errors are reported to the event loop and logged by Qt.
+        QTimer::singleShot(1, this, SLOT(release()));
+        break;
+    }
     case XCB_CONFIGURE_NOTIFY:
         configureNotifyEvent(reinterpret_cast<xcb_configure_notify_event_t*>(e));
         break;

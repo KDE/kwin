@@ -35,7 +35,6 @@ class Unmanaged
 public:
     explicit Unmanaged();
     bool windowEvent(xcb_generic_event_t *e);
-    void release(bool on_shutdown = false);
     bool track(Window w);
     static void deleteUnmanaged(Unmanaged* c);
     virtual int desktop() const;
@@ -51,6 +50,8 @@ public:
     void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
     void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
     void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state) override;
+public Q_SLOTS:
+    void release(ReleaseReason releaseReason = ReleaseReason::Release);
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;

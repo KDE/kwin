@@ -897,7 +897,7 @@ bool Toplevel::setupCompositing()
     return true;
 }
 
-void Toplevel::finishCompositing()
+void Toplevel::finishCompositing(ReleaseReason releaseReason)
 {
     if (damage_handle == XCB_NONE)
         return;
@@ -907,7 +907,9 @@ void Toplevel::finishCompositing()
         delete effect_window;
     }
 
-    xcb_damage_destroy(connection(), damage_handle);
+    if (releaseReason != ReleaseReason::Destroyed) {
+        xcb_damage_destroy(connection(), damage_handle);
+    }
 
     damage_handle = XCB_NONE;
     damage_region = QRegion();
@@ -1153,9 +1155,9 @@ bool Client::setupCompositing()
     return true;
 }
 
-void Client::finishCompositing()
+void Client::finishCompositing(ReleaseReason releaseReason)
 {
-    Toplevel::finishCompositing();
+    Toplevel::finishCompositing(releaseReason);
     updateVisibility();
     if (!deleting) {
         // only recreate the decoration if we are not shutting down completely

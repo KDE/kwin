@@ -84,20 +84,20 @@ bool Unmanaged::track(Window w)
     return true;
 }
 
-void Unmanaged::release(bool on_shutdown)
+void Unmanaged::release(ReleaseReason releaseReason)
 {
     Deleted* del = NULL;
-    if (!on_shutdown) {
+    if (releaseReason != ReleaseReason::KWinShutsDown) {
         del = Deleted::create(this);
     }
     emit windowClosed(this, del);
-    finishCompositing();
-    if (!QWidget::find(window())) { // don't affect our own windows
+    finishCompositing(releaseReason);
+    if (!QWidget::find(window()) && releaseReason != ReleaseReason::Destroyed) { // don't affect our own windows
         if (Xcb::Extensions::self()->isShapeAvailable())
             xcb_shape_select_input(connection(), window(), false);
         Xcb::selectInput(window(), XCB_EVENT_MASK_NO_EVENT);
     }
-    if (!on_shutdown) {
+    if (releaseReason != ReleaseReason::KWinShutsDown) {
         workspace()->removeUnmanaged(this);
         addWorkspaceRepaint(del->visibleRect());
         disownDataPassedToDeleted();
