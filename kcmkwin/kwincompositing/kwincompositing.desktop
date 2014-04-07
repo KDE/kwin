@@ -13,6 +13,7 @@ X-KDE-System-Settings-Parent-Category=hardware
 X-KDE-Weight=50
 
 Name=Compositor
+Name[ca]=Compositor
 Name[cs]=Kompozitor
 Name[de]=Compositor
 Name[es]=Compositor
@@ -31,6 +32,7 @@ Name[tr]=Birleştirici
 Name[uk]=Засіб композиції
 Name[x-test]=xxCompositorxx
 Comment=Configure compositor settings for the Desktop effects
+Comment[ca]=Configuració de l'arranjament del compositor pels efectes d'escriptori
 Comment[cs]=Upravit nastavení kompozitoru pro efekty pracovní plochy
 Comment[de]=Compositor-Einstellungen für Arbeitsflächen-Effekte einrichten
 Comment[es]=Configurar las preferencias del compositor para los efectos del escritorio
@@ -50,6 +52,7 @@ Comment[uk]=Налаштувати параметри засобу композ�
 Comment[x-test]=xxConfigure compositor settings for the Desktop effectsxx
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
+X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes d'escriptori
 X-KDE-Keywords[de]=kwin,Fenstermanager,Fensterverwaltung,Effekt,Fenster,Compositing,3D-Effekte,2D-Effekte,OpenGL,XRender,Video-Einstellungen,Grafikeffekte,Arbeitsflächeneffekte
 X-KDE-Keywords[es]=kwin,ventana,gestor,composición,efecto,efectos 3D,efectos 2D,OpenGL,XRender,preferencias de vídeo,efectos gráficos,efectos del escritorio
 X-KDE-Keywords[fi]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,ikkunointiohjelma,ikkunaohjelma,ikkunanhallinta,tehoste,3D-tehosteet,2D-tehosteet,videoasetukset,graafiset tehosteet,työpöytätehosteet
