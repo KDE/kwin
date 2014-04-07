@@ -41,7 +41,6 @@ Screens *Screens::create(QObject *parent)
 #if HAVE_WAYLAND
     if (kwinApp()->operationMode() == Application::OperationModeWaylandAndX11) {
         s_self = new WaylandScreens(parent);
-        return s_self;
     }
 #endif
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
@@ -279,6 +278,7 @@ void WaylandScreens::updateCount()
         setCount(1);
         return;
     }
+    setCount(m_geometries.count());
     updateXRandr();
     emit changed();
 }
