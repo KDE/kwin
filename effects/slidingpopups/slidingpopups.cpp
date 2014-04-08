@@ -278,7 +278,6 @@ void SlidingPopupsEffect::slotWindowAdded(EffectWindow *w)
 
 void SlidingPopupsEffect::slotWindowClosed(EffectWindow* w)
 {
-    slotPropertyNotify(w, mAtom);
     if (w->isOnCurrentDesktop() && !w->isMinimized() && mWindowsData.contains(w)) {
         w->refWindow();
         delete mAppearingWindows.take(w);
