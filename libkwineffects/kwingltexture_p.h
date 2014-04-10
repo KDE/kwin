@@ -77,6 +77,8 @@ public:
     static uint s_fbo;
     static uint s_textureObjectCounter;
 private:
+    friend void KWin::cleanupGL();
+    static void cleanup();
     Q_DISABLE_COPY(GLTexturePrivate)
 };
 

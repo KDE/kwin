@@ -511,6 +511,8 @@ protected:
 
 
 private:
+    friend void KWin::cleanupGL();
+    static void cleanup();
     static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;

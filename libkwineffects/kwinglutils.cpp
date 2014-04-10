@@ -136,8 +136,19 @@ void initGL(OpenGLPlatformInterface platformInterface)
 void cleanupGL()
 {
     ShaderManager::cleanup();
+    GLTexturePrivate::cleanup();
+    GLRenderTarget::cleanup();
     GLVertexBuffer::cleanup();
     GLPlatform::cleanup();
+
+    glExtensions.clear();
+    glxExtensions.clear();
+    eglExtension.clear();
+
+    glVersion = 0;
+    glXVersion = 0;
+    eglVersion = 0;
+    glTextureUnitsCount = 0;
 }
 
 bool hasGLVersion(int major, int minor, int release)
@@ -922,6 +933,13 @@ void GLRenderTarget::initStatic()
     sSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_object"));
     s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QStringLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QStringLiteral("GL_EXT_framebuffer_blit"));
 #endif
+}
+
+void GLRenderTarget::cleanup()
+{
+    Q_ASSERT(s_renderTargets.isEmpty());
+    sSupported = false;
+    s_blitSupported = false;
 }
 
 bool GLRenderTarget::isRenderTargetBound()
@@ -1873,6 +1891,10 @@ void GLVertexBuffer::cleanup()
     delete GLVertexBufferPrivate::s_indexBuffer;
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
+    GLVertexBufferPrivate::hasMapBufferRange = false;
+    GLVertexBufferPrivate::supportsIndexedQuads = false;
+    delete GLVertexBufferPrivate::streamingBuffer;
+    GLVertexBufferPrivate::streamingBuffer = nullptr;
 }
 
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()

@@ -175,6 +175,14 @@ void GLTexturePrivate::initStatic()
 #endif
 }
 
+void GLTexturePrivate::cleanup()
+{
+    sNPOTTextureSupported = false;
+    sFramebufferObjectSupported = false;
+    sSaturationSupported = false;
+    sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+}
+
 bool GLTexture::isNull() const
 {
     Q_D(const GLTexture);
