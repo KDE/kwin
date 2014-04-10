@@ -411,9 +411,6 @@ void Workspace::checkTransients(xcb_window_t w)
 // all resource classes are forced to be lowercase
 bool Toplevel::resourceMatch(const Toplevel* c1, const Toplevel* c2)
 {
-    // xv has "xv" as resource name, and different strings starting with "XV" as resource class
-    if (qstrncmp(c1->resourceClass().constData(), "xv", 2) == 0 && c1->resourceName() == "xv")
-        return qstrncmp(c2->resourceClass().constData(), "xv", 2) == 0 && c2->resourceName() == "xv";
     return c1->resourceClass() == c2->resourceClass();
 }
 
