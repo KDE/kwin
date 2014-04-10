@@ -91,6 +91,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WMPid |
         NET::WMIconName;
     const NET::Properties2 properties2 =
+        NET::WM2WindowRole |
         NET::WM2UserTime |
         NET::WM2StartupId |
         NET::WM2ExtendedStrut |
@@ -103,7 +104,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     m_colormap = attr.colormap;
 
     getResourceClass();
-    getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
     getSyncCounter();

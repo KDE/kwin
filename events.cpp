@@ -520,6 +520,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2 & NET::WM2FrameOverlap) {
             // ### Inform the decoration
         }
+        if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
+            emit windowRoleChanged();
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -1502,6 +1505,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             emit opacityChanged(this, old_opacity);
         }
     }
+    if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
+        emit windowRoleChanged();
+    }
     const uint8_t eventType = e->response_type & ~0x80;
     switch (eventType) {
     case XCB_UNMAP_NOTIFY:
@@ -1558,8 +1564,6 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
     default:
         if (e->atom == atoms->wm_client_leader)
             getWmClientLeader();
-        else if (e->atom == atoms->wm_window_role)
-            getWindowRole();
         else if (e->atom == atoms->kde_net_wm_shadow)
             getShadow();
         else if (e->atom == atoms->net_wm_opaque_region)

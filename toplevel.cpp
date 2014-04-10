@@ -124,7 +124,6 @@ void Toplevel::copyToDeleted(Toplevel* c)
     m_clientMachine = c->m_clientMachine;
     m_clientMachine->setParent(this);
     wmClientLeaderWin = c->wmClientLeader();
-    window_role = c->windowRole();
     opaque_region = c->opaqueRegion();
     m_screen = c->m_screen;
     m_skipCloseAnimation = c->m_skipCloseAnimation;
@@ -144,11 +143,6 @@ QRect Toplevel::visibleRect() const
         r |= shadow()->shadowRegion().boundingRect();
     }
     return r.translated(geometry().topLeft());
-}
-
-void Toplevel::getWindowRole()
-{
-    window_role = getStringProperty(window(), atoms->wm_window_role).toLower();
 }
 
 /*!

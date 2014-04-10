@@ -65,9 +65,8 @@ bool Unmanaged::track(Window w)
     vis = attr.visual;
     bit_depth = attr.depth;
     info = new NETWinInfo(connection(), w, rootWindow(),
-                          NET::WMWindowType | NET::WMPid, NET::WM2Opacity);
+                          NET::WMWindowType | NET::WMPid, NET::WM2Opacity | NET::WM2WindowRole);
     getResourceClass();
-    getWindowRole();
     getWmClientLeader();
     getWmClientMachine();
     if (Xcb::Extensions::self()->isShapeAvailable())

@@ -75,7 +75,7 @@ class Toplevel
     Q_PROPERTY(QSize clientSize READ clientSize)
     Q_PROPERTY(QByteArray resourceName READ resourceName)
     Q_PROPERTY(QByteArray resourceClass READ resourceClass)
-    Q_PROPERTY(QByteArray windowRole READ windowRole)
+    Q_PROPERTY(QByteArray windowRole READ windowRole NOTIFY windowRoleChanged)
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
      * See _NET_WM_WINDOW_TYPE_DESKTOP at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
@@ -367,6 +367,11 @@ Q_SIGNALS:
      **/
     void screenChanged();
     void skipCloseAnimationChanged();
+    /**
+     * Emitted whenever the window role of the window changes.
+     * @since 5.0
+     **/
+    void windowRoleChanged();
 
 protected Q_SLOTS:
     /**
@@ -400,7 +405,6 @@ protected:
     void getWmOpaqueRegion();
 
     void getResourceClass();
-    void getWindowRole();
     void getSkipCloseAnimation();
     virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);
@@ -433,7 +437,6 @@ private:
     QByteArray resource_class;
     ClientMachine *m_clientMachine;
     WId wmClientLeaderWin;
-    QByteArray window_role;
     bool unredirect;
     bool unredirectSuspend; // when unredirected, but pixmap is needed temporarily
     bool m_damageReplyPending;
@@ -659,7 +662,7 @@ inline QByteArray Toplevel::resourceClass() const
 
 inline QByteArray Toplevel::windowRole() const
 {
-    return window_role;
+    return QByteArray(info->windowRole());
 }
 
 inline bool Toplevel::unredirected() const
