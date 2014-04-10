@@ -146,22 +146,6 @@ QRect Toplevel::visibleRect() const
 }
 
 /*!
-  Returns SM_CLIENT_ID property for a given window.
- */
-QByteArray Toplevel::staticSessionId(xcb_window_t w)
-{
-    return getStringProperty(w, atoms->sm_client_id);
-}
-
-/*!
-  Returns WM_COMMAND property for a given window.
- */
-QByteArray Toplevel::staticWmCommand(xcb_window_t w)
-{
-    return getStringProperty(w, XCB_ATOM_WM_COMMAND, ' ');
-}
-
-/*!
   Returns WM_CLIENT_LEADER property for a given window.
  */
 xcb_window_t Toplevel::staticWmClientLeader(xcb_window_t w)
@@ -187,9 +171,9 @@ void Toplevel::getWmClientLeader()
  */
 QByteArray Toplevel::sessionId() const
 {
-    QByteArray result = staticSessionId(window());
+    QByteArray result = getStringProperty(window(), atoms->sm_client_id);
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
-        result = staticSessionId(wmClientLeaderWin);
+        result = getStringProperty(wmClientLeaderWin, atoms->sm_client_id);
     return result;
 }
 
@@ -199,9 +183,9 @@ QByteArray Toplevel::sessionId() const
  */
 QByteArray Toplevel::wmCommand()
 {
-    QByteArray result = staticWmCommand(window());
+    QByteArray result = getStringProperty(window(), XCB_ATOM_WM_COMMAND, ' ');
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
-        result = staticWmCommand(wmClientLeaderWin);
+        result = getStringProperty(wmClientLeaderWin, XCB_ATOM_WM_COMMAND, ' ');
     return result;
 }
 

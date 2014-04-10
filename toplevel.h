@@ -424,8 +424,6 @@ protected:
     bool m_isDamaged;
 
 private:
-    static QByteArray staticSessionId(xcb_window_t);
-    static QByteArray staticWmCommand(xcb_window_t);
     static xcb_window_t staticWmClientLeader(xcb_window_t);
     // when adding new data members, check also copyToDeleted()
     Xcb::Window m_client;
