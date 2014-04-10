@@ -414,9 +414,6 @@ bool Toplevel::resourceMatch(const Toplevel* c1, const Toplevel* c2)
     // xv has "xv" as resource name, and different strings starting with "XV" as resource class
     if (qstrncmp(c1->resourceClass().constData(), "xv", 2) == 0 && c1->resourceName() == "xv")
         return qstrncmp(c2->resourceClass().constData(), "xv", 2) == 0 && c2->resourceName() == "xv";
-    // Mozilla has "Mozilla" as resource name, and different strings as resource class
-    if (c1->resourceName() == "mozilla")
-        return c2->resourceName() == "mozilla";
     return c1->resourceClass() == c2->resourceClass();
 }
 
@@ -499,11 +496,7 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
     }
     int pos1 = c1->windowRole().indexOf('#');
     int pos2 = c2->windowRole().indexOf('#');
-    if ((pos1 >= 0 && pos2 >= 0)
-            ||
-            // hacks here
-            // Mozilla has resourceName() and resourceClass() swapped
-            (c1->resourceName() == "mozilla" && c2->resourceName() == "mozilla")) {
+    if ((pos1 >= 0 && pos2 >= 0)) {
         if (!active_hack)     // without the active hack for focus stealing prevention,
             return c1 == c2; // different mainwindows are always different apps
         if (!c1->isActive() && !c2->isActive())
