@@ -102,11 +102,22 @@ public:
         getReply();
         return m_reply == NULL;
     }
+    inline bool isNull() const {
+        const_cast<Wrapper*>(this)->getReply();
+        return m_reply == NULL;
+    }
     inline operator bool() {
+        return !isNull();
+    }
+    inline operator bool() const {
         return !isNull();
     }
     inline const Reply *data() {
         getReply();
+        return m_reply;
+    }
+    inline const Reply *data() const {
+        const_cast<Wrapper*>(this)->getReply();
         return m_reply;
     }
     inline WindowId window() const {

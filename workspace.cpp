@@ -351,7 +351,7 @@ void Workspace::init()
                     createUnmanaged(wins[i]);
             } else if (attr->map_state != XCB_MAP_STATE_UNMAPPED) {
                 if (Application::wasCrash()) {
-                    fixPositionAfterCrash(wins[i], windowGeometries[i].data());
+                    fixPositionAfterCrash(wins[i], windowGeometries.at(i).data());
                 }
 
                 // ### This will request the attributes again
