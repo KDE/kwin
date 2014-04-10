@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "client_machine.h"
-// KWin
-#include "utils.h"
+// KF5
+#include <KWindowInfo>
 // Qt
 #include <QtConcurrentRun>
 #include <QFutureWatcher>
@@ -173,9 +173,9 @@ void ClientMachine::resolve(xcb_window_t window, xcb_window_t clientLeader)
     if (m_resolved) {
         return;
     }
-    QByteArray name = getStringProperty(window, XCB_ATOM_WM_CLIENT_MACHINE);
+    QByteArray name = KWindowInfo(window, NET::Properties(), NET::WM2ClientMachine).clientMachine();
     if (name.isEmpty() && clientLeader && clientLeader != window) {
-        name = getStringProperty(clientLeader, XCB_ATOM_WM_CLIENT_MACHINE);
+        name = KWindowInfo(clientLeader, NET::Properties(), NET::WM2ClientMachine).clientMachine();
     }
     if (name.isEmpty()) {
         name = localhost();

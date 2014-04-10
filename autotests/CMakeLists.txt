@@ -43,8 +43,6 @@ ecm_mark_as_test(testVirtualDesktops)
 set( testClientMachine_SRCS
      test_client_machine.cpp
      ../client_machine.cpp
-     ../utils.cpp
-     ../atoms.cpp # needed by utils.cpp
 )
 add_executable( testClientMachine ${testClientMachine_SRCS} )
 
