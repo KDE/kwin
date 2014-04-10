@@ -1053,5 +1053,11 @@ bool GLPlatform::isGLES() const
 #endif
 }
 
+void GLPlatform::cleanup()
+{
+    delete s_platform;
+    s_platform = nullptr;
+}
+
 } // namespace KWin
 

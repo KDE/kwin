@@ -337,6 +337,8 @@ public:
 
 private:
     GLPlatform();
+    friend void KWin::cleanupGL();
+    static void cleanup();
 
 private:
     QByteArray m_renderer;

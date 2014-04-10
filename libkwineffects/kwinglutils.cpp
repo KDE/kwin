@@ -137,6 +137,7 @@ void cleanupGL()
 {
     ShaderManager::cleanup();
     GLVertexBuffer::cleanup();
+    GLPlatform::cleanup();
 }
 
 bool hasGLVersion(int major, int minor, int release)
