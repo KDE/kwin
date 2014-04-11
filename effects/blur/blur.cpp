@@ -154,7 +154,7 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    bool supported = GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && GLSLBlurShader::supported();
+    bool supported = effects->isOpenGLCompositing() && GLRenderTarget::supported() && GLTexture::NPOTTextureSupported() && GLSLBlurShader::supported();
 
     if (supported) {
         int maxTexSize;
