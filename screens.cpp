@@ -285,10 +285,8 @@ void WaylandScreens::updateCount()
 
 namespace RandR
 {
-typedef Xcb::Wrapper<xcb_randr_get_screen_resources_current_reply_t,
-                     xcb_randr_get_screen_resources_current_cookie_t,
-                     &xcb_randr_get_screen_resources_current_reply,
-                     &xcb_randr_get_screen_resources_current_unchecked> CurrentResources;
+using namespace Xcb;
+XCB_WRAPPER(CurrentResources, xcb_randr_get_screen_resources_current, xcb_window_t)
 }
 
 static bool setNewScreenSize(const QSize &size)

@@ -47,39 +47,197 @@ static void moveWindow(xcb_window_t window, uint32_t x, uint32_t y);
 static void lowerWindow(xcb_window_t window);
 static void selectInput(xcb_window_t window, uint32_t events);
 
+/**
+* @brief Variadic template to wrap an xcb request.
+*
+* This struct is part of the generic implementation to wrap xcb requests
+* and fetching their reply. Each request is represented by two templated
+* elements: WrapperData and Wrapper.
+*
+* The WrapperData defines the following types:
+* @li reply_type of the xcb request
+* @li cookie_type of the xcb request
+* @li function pointer type for the xcb request
+* @li function pointer type for the reply
+* This uses variadic template arguments thus it can be used to specify any
+* xcb request.
+*
+* As the WrapperData does not specify the actual function pointers one needs
+* to derive another struct which specifies the function pointer requestFunc and
+* the function pointer replyFunc as static constexpr of type reply_func and
+* reply_type respectively. E.g. for the command xcb_get_geometry:
+* @code
+* struct GeometryData : public WrapperData< xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, xcb_drawable_t >
+* {
+*    static constexpr request_func requestFunc = &xcb_get_geometry_unchecked;
+*    static constexpr reply_func replyFunc = &xcb_get_geometry_reply;
+* };
+* @endcode
+*
+* To simplify this definition the macro XCB_WRAPPER_DATA is provided.
+* For the same xcb command this looks like this:
+* @code
+* XCB_WRAPPER_DATA(GeometryData, xcb_get_geometry, xcb_drawable_t)
+* @endcode
+*
+* The derived WrapperData has to be passed as first template argument to Wrapper. The other
+* template arguments of Wrapper are the same variadic template arguments as passed into
+* WrapperData. This is ensured at compile time and will cause a compile error in case there
+* is a mismatch of the variadic template arguments passed to WrapperData and Wrapper.
+* Passing another type than a struct derived from WrapperData to Wrapper will result in a
+* compile error. The following code snippets won't compile:
+* @code
+* XCB_WRAPPER_DATA(GeometryData, xcb_get_geometry, xcb_drawable_t)
+* // fails with "static assertion failed: Argument miss-match between Wrapper and WrapperData"
+* class IncorrectArguments : public Wrapper<GeometryData, uint8_t>
+* {
+* public:
+*     IncorrectArguments() = default;
+*     IncorrectArguments(xcb_window_t window) : Wrapper<GeometryData, uint8_t>(window) {}
+* };
+*
+* // fails with "static assertion failed: Data template argument must be derived from WrapperData"
+* class WrapperDataDirectly : public Wrapper<WrapperData<xcb_get_geometry_reply_t, xcb_get_geometry_request_t, xcb_drawable_t>, xcb_drawable_t>
+* {
+* public:
+*     WrapperDataDirectly() = default;
+*     WrapperDataDirectly(xcb_window_t window) : Wrapper<WrapperData<xcb_get_geometry_reply_t, xcb_get_geometry_request_t, xcb_drawable_t>, xcb_drawable_t>(window) {}
+* };
+*
+* // fails with "static assertion failed: Data template argument must be derived from WrapperData"
+* struct FakeWrapperData
+* {
+*     typedef xcb_get_geometry_reply_t reply_type;
+*     typedef xcb_get_geometry_cookie_t cookie_type;
+*     typedef std::tuple<xcb_drawable_t> argument_types;
+*     typedef cookie_type (*request_func)(xcb_connection_t*, xcb_drawable_t);
+*     typedef reply_type *(*reply_func)(xcb_connection_t*, cookie_type, xcb_generic_error_t**);
+*     static constexpr std::size_t argumentCount = 1;
+*     static constexpr request_func requestFunc = &xcb_get_geometry_unchecked;
+*     static constexpr reply_func replyFunc = &xcb_get_geometry_reply;
+* };
+* class NotDerivedFromWrapperData : public Wrapper<FakeWrapperData, xcb_drawable_t>
+* {
+* public:
+*     NotDerivedFromWrapperData() = default;
+*     NotDerivedFromWrapperData(xcb_window_t window) : Wrapper<FakeWrapperData, xcb_drawable_t>(window) {}
+* };
+* @endcode
+*
+* The Wrapper provides an easy to use RAII API which calls the WrapperData's requestFunc in
+* the ctor and fetches the reply the first time it is used. In addition the dtor takes care
+* of freeing the reply if it got fetched, otherwise it discards the reply. The Wrapper can
+* be used as if it were the reply_type directly.
+*
+* There are several command wrappers defined which either subclass Wrapper to add methods to
+* simplify the usage of the result_type or use a typedef. To add a new typedef one can use the
+* macro XCB_WRAPPER which creates the WrapperData struct as XCB_WRAPPER_DATA does and the
+* typedef. E.g:
+* @code
+* XCB_WRAPPER(Geometry, xcb_get_geometry, xcb_drawable_t)
+* @endcode
+*
+* creates a typedef Geometry and the struct GeometryData.
+*
+* Overall this allows to simplify the Xcb usage. For example consider the
+* following xcb code snippet:
+* @code
+* xcb_window_t w; // some window
+* xcb_connection_t *c = connection();
+* const xcb_get_geometry_cookie_t cookie = xcb_get_geometry_unchecked(c, w);
+* // do other stuff
+* xcb_get_geometry_reply_t *reply = xcb_get_geometry_reply(c, cookie, nullptr);
+* if (reply) {
+*     reply->x; // do something with the geometry
+* }
+* free(reply);
+* @endcode
+*
+* With the help of the Wrapper class this can be simplified to:
+* @code
+* xcb_window_t w; // some window
+* Xcb::Geometry geo(w);
+* if (!geo.isNull()) {
+*     geo->x; // do something with the geometry
+* }
+* @endcode
+*
+* @see XCB_WRAPPER_DATA
+* @see XCB_WRAPPER
+* @see Wrapper
+* @see WindowAttributes
+* @see OverlayWindow
+* @see WindowGeometry
+* @see Tree
+* @see CurrentInput
+* @see TransientFor
+*/
 template <typename Reply,
-    typename Cookie,
-    Reply *(*replyFunc)(xcb_connection_t*, Cookie, xcb_generic_error_t**),
-    Cookie (*requestFunc)(xcb_connection_t*, xcb_window_t)>
-class Wrapper
+          typename Cookie,
+          typename... Args>
+struct WrapperData
+{
+    /**
+     * @brief The type returned by the xcb reply function.
+     */
+    typedef Reply reply_type;
+    /**
+     * @brief The type returned by the xcb request function.
+     */
+    typedef Cookie cookie_type;
+    /**
+     * @brief Variadic arguments combined as a std::tuple.
+     * @internal Used for verifying the arguments.
+     */
+    typedef std::tuple<Args...> argument_types;
+    /**
+     * @brief The function pointer definition for the xcb request function.
+     */
+    typedef Cookie (*request_func)(xcb_connection_t*, Args...);
+    /**
+     * @brief The function pointer definition for the xcb reply function.
+     */
+    typedef Reply *(*reply_func)(xcb_connection_t*, Cookie, xcb_generic_error_t**);
+    /**
+     * @brief Number of variadic arguments.
+     * @internal Used for verifying the arguments.
+     */
+    static constexpr std::size_t argumentCount = sizeof...(Args);
+};
+
+/**
+ * @brief Partial template specialization for WrapperData with no further arguments.
+ *
+ * This will be used for xcb requests just taking the xcb_connection_t* argument.
+ **/
+template <typename Reply,
+          typename Cookie>
+struct WrapperData<Reply, Cookie>
+{
+    typedef Reply reply_type;
+    typedef Cookie cookie_type;
+    typedef std::tuple<> argument_types;
+    typedef Cookie (*request_func)(xcb_connection_t*);
+    typedef Reply *(*reply_func)(xcb_connection_t*, Cookie, xcb_generic_error_t**);
+    static constexpr std::size_t argumentCount = 0;
+};
+
+/**
+ * @brief Abstract base class for the wrapper.
+ *
+ * This class contains the complete functionality of the Wrapper. It's only an abstract
+ * base class to provide partial template specialization for more specific constructors.
+ */
+template<typename Data>
+class AbstractWrapper
 {
 public:
-    Wrapper()
-        : m_retrieved(false)
-        , m_window(XCB_WINDOW_NONE)
-        , m_reply(NULL)
-        {
-            m_cookie.sequence = 0;
-        }
-    explicit Wrapper(WindowId window)
-        : m_retrieved(false)
-        , m_cookie(requestFunc(connection(), window))
-        , m_window(window)
-        , m_reply(NULL)
-    {
-    }
-    explicit Wrapper(const Wrapper &other)
-        : m_retrieved(other.m_retrieved)
-        , m_cookie(other.m_cookie)
-        , m_window(other.m_window)
-        , m_reply(NULL)
-    {
-        takeFromOther(const_cast<Wrapper&>(other));
-    }
-    virtual ~Wrapper() {
+    typedef typename Data::cookie_type Cookie;
+    typedef typename Data::reply_type Reply;
+    virtual ~AbstractWrapper() {
         cleanup();
     }
-    inline Wrapper &operator=(const Wrapper &other) {
+    inline AbstractWrapper &operator=(const AbstractWrapper &other) {
         if (this != &other) {
             // if we had managed a reply, free it
             cleanup();
@@ -89,7 +247,7 @@ public:
             m_window = other.m_window;
             m_reply = other.m_reply;
             // take over the responsibility for the reply pointer
-            takeFromOther(const_cast<Wrapper&>(other));
+            takeFromOther(const_cast<AbstractWrapper&>(other));
         }
         return *this;
     }
@@ -103,7 +261,7 @@ public:
         return m_reply == NULL;
     }
     inline bool isNull() const {
-        const_cast<Wrapper*>(this)->getReply();
+        const_cast<AbstractWrapper*>(this)->getReply();
         return m_reply == NULL;
     }
     inline operator bool() {
@@ -117,7 +275,7 @@ public:
         return m_reply;
     }
     inline const Reply *data() const {
-        const_cast<Wrapper*>(this)->getReply();
+        const_cast<AbstractWrapper*>(this)->getReply();
         return m_reply;
     }
     inline WindowId window() const {
@@ -142,11 +300,33 @@ public:
     }
 
 protected:
+    AbstractWrapper()
+        : m_retrieved(false)
+        , m_window(XCB_WINDOW_NONE)
+        , m_reply(NULL)
+    {
+        m_cookie.sequence = 0;
+    }
+    explicit AbstractWrapper(WindowId window, Cookie cookie)
+        : m_retrieved(false)
+        , m_cookie(cookie)
+        , m_window(window)
+        , m_reply(NULL)
+    {
+    }
+    explicit AbstractWrapper(const AbstractWrapper &other)
+        : m_retrieved(other.m_retrieved)
+        , m_cookie(other.m_cookie)
+        , m_window(other.m_window)
+        , m_reply(NULL)
+    {
+        takeFromOther(const_cast<AbstractWrapper&>(other));
+    }
     void getReply() {
         if (m_retrieved || !m_cookie.sequence) {
             return;
         }
-        m_reply = replyFunc(connection(), m_cookie, NULL);
+        m_reply = Data::replyFunc(connection(), m_cookie, nullptr);
         m_retrieved = true;
     }
 
@@ -158,7 +338,7 @@ private:
             free(m_reply);
         }
     }
-    inline void takeFromOther(Wrapper &other) {
+    inline void takeFromOther(AbstractWrapper &other) {
         if (m_retrieved) {
             m_reply = other.take();
         } else {
@@ -171,6 +351,102 @@ private:
     Cookie m_cookie;
     WindowId m_window;
     Reply *m_reply;
+};
+
+/**
+ * @brief Template to compare the arguments of two std::tuple.
+ *
+ * @internal Used by static_assert in Wrapper
+ */
+template <typename T1, typename T2, std::size_t I>
+struct tupleCompare
+{
+    typedef typename std::tuple_element<I, T1>::type tuple1Type;
+    typedef typename std::tuple_element<I, T2>::type tuple2Type;
+    /**
+     * @c true if both tuple have the same arguments, @c false otherwise.
+     *
+     */
+    static constexpr bool value = std::is_same< tuple1Type, tuple2Type >::value && tupleCompare<T1, T2, I-1>::value;
+};
+
+/**
+ * @brief Recursive template case for first tuple element.
+ */
+template <typename T1, typename T2>
+struct tupleCompare<T1, T2, 0>
+{
+    typedef typename std::tuple_element<0, T1>::type tuple1Type;
+    typedef typename std::tuple_element<0, T2>::type tuple2Type;
+    static constexpr bool value = std::is_same< tuple1Type, tuple2Type >::value;
+};
+
+/**
+ * @brief Wrapper taking a WrapperData as first template argument and xcb request args as variadic args.
+ */
+template<typename Data, typename... Args>
+class Wrapper : public AbstractWrapper<Data>
+{
+public:
+    static_assert(!std::is_same<Data, Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type, Args...> >::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(std::is_base_of<Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type, Args...>, Data>::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(sizeof...(Args) == Data::argumentCount,
+                    "Wrapper and WrapperData need to have same template argument count");
+    static_assert(tupleCompare<std::tuple<Args...>, typename Data::argument_types, sizeof...(Args) - 1>::value,
+                    "Argument miss-match between Wrapper and WrapperData");
+    Wrapper() = default;
+    explicit Wrapper(Args... args)
+        : AbstractWrapper<Data>(XCB_WINDOW_NONE, Data::requestFunc(connection(), args...))
+    {
+    }
+    explicit Wrapper(xcb_window_t w, Args... args)
+        : AbstractWrapper<Data>(w, Data::requestFunc(connection(), args...))
+    {
+    }
+};
+
+/**
+ * @brief Template specialization for xcb_window_t being first variadic argument.
+ **/
+template<typename Data, typename... Args>
+class Wrapper<Data, xcb_window_t, Args...> : public AbstractWrapper<Data>
+{
+public:
+    static_assert(!std::is_same<Data, Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type, xcb_window_t, Args...> >::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(std::is_base_of<Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type, xcb_window_t, Args...>, Data>::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(sizeof...(Args) + 1 == Data::argumentCount,
+                    "Wrapper and WrapperData need to have same template argument count");
+    static_assert(tupleCompare<std::tuple<xcb_window_t, Args...>, typename Data::argument_types, sizeof...(Args)>::value,
+                    "Argument miss-match between Wrapper and WrapperData");
+    Wrapper() = default;
+    explicit Wrapper(xcb_window_t w, Args... args)
+        : AbstractWrapper<Data>(w, Data::requestFunc(connection(), w, args...))
+    {
+    }
+};
+
+/**
+ * @brief Template specialization for no variadic arguments.
+ *
+ * It's needed to prevent ambiguous constructors being generated.
+ **/
+template<typename Data>
+class Wrapper<Data> : public AbstractWrapper<Data>
+{
+public:
+    static_assert(!std::is_same<Data, Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type> >::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(std::is_base_of<Xcb::WrapperData<typename Data::reply_type, typename Data::cookie_type>, Data>::value,
+                  "Data template argument must be derived from WrapperData");
+    static_assert(Data::argumentCount == 0, "Wrapper for no arguments constructed with WrapperData with arguments");
+    explicit Wrapper()
+        : AbstractWrapper<Data>(XCB_WINDOW_NONE, Data::requestFunc(connection()))
+    {
+    }
 };
 
 class Atom
@@ -218,15 +494,56 @@ private:
     QByteArray m_name;
 };
 
-typedef Wrapper<xcb_get_window_attributes_reply_t, xcb_get_window_attributes_cookie_t, &xcb_get_window_attributes_reply, &xcb_get_window_attributes_unchecked> WindowAttributes;
-typedef Wrapper<xcb_composite_get_overlay_window_reply_t, xcb_composite_get_overlay_window_cookie_t, &xcb_composite_get_overlay_window_reply, &xcb_composite_get_overlay_window_unchecked> OverlayWindow;
+/**
+ * @brief Macro to create the WrapperData subclass.
+ *
+ * Creates a struct with name @p __NAME__ for the xcb request identified by @p __REQUEST__.
+ * The variadic arguments are used to pass as template arguments to the WrapperData.
+ *
+ * The @p __REQUEST__ is the common prefix of the cookie type, reply type, request function and
+ * reply function. E.g. "xcb_get_geometry" is used to create:
+ * @li cookie type xcb_get_geometry_cookie_t
+ * @li reply type xcb_get_geometry_reply_t
+ * @li request function pointer xcb_get_geometry_unchecked
+ * @li reply function pointer xcb_get_geometry_reply
+ *
+ * @param __NAME__ The name of the WrapperData subclass
+ * @param __REQUEST__ The name of the xcb request, e.g. xcb_get_geometry
+ * @param __VA_ARGS__ The variadic template arguments, e.g. xcb_drawable_t
+ * @see XCB_WRAPPER
+ **/
+#define XCB_WRAPPER_DATA( __NAME__, __REQUEST__, ... ) \
+    struct __NAME__ : public WrapperData< __REQUEST__##_reply_t, __REQUEST__##_cookie_t, __VA_ARGS__ > \
+    { \
+        static constexpr request_func requestFunc = &__REQUEST__##_unchecked; \
+        static constexpr reply_func replyFunc = &__REQUEST__##_reply; \
+    };
 
+/**
+ * @brief Macro to create Wrapper typedef and WrapperData.
+ *
+ * This macro expands the XCB_WRAPPER_DATA macro and creates an additional
+ * typedef for Wrapper with name @p __NAME__. The created WrapperData is also derived
+ * from @p __NAME__ with "Data" as suffix.
+ *
+ * @param __NAME__ The name for the Wrapper typedef
+ * @param __REQUEST__ The name of the xcb request, passed to XCB_WRAPPER_DATA
+ * @param __VA_ARGS__ The variadic template arguments for Wrapper and WrapperData
+ * @see XCB_WRAPPER_DATA
+ **/
+#define XCB_WRAPPER( __NAME__, __REQUEST__, ... ) \
+    XCB_WRAPPER_DATA( __NAME__##Data, __REQUEST__, __VA_ARGS__ ) \
+    typedef Wrapper< __NAME__##Data, __VA_ARGS__ > __NAME__;
 
-class WindowGeometry : public Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>
+XCB_WRAPPER(WindowAttributes, xcb_get_window_attributes, xcb_window_t)
+XCB_WRAPPER(OverlayWindow, xcb_composite_get_overlay_window, xcb_window_t)
+
+XCB_WRAPPER_DATA(GeometryData, xcb_get_geometry, xcb_drawable_t)
+class WindowGeometry : public Wrapper<GeometryData, xcb_window_t>
 {
 public:
-    WindowGeometry() : Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>() {}
-    explicit WindowGeometry(xcb_window_t window) : Wrapper<xcb_get_geometry_reply_t, xcb_get_geometry_cookie_t, &xcb_get_geometry_reply, &xcb_get_geometry_unchecked>(window) {}
+    WindowGeometry() : Wrapper<GeometryData, xcb_window_t>() {}
+    explicit WindowGeometry(xcb_window_t window) : Wrapper<GeometryData, xcb_window_t>(window) {}
 
     inline QRect rect() {
         const xcb_get_geometry_reply_t *geometry = data();
@@ -237,10 +554,11 @@ public:
     }
 };
 
-class Tree : public Wrapper<xcb_query_tree_reply_t, xcb_query_tree_cookie_t, &xcb_query_tree_reply, &xcb_query_tree_unchecked>
+XCB_WRAPPER_DATA(TreeData, xcb_query_tree, xcb_window_t)
+class Tree : public Wrapper<TreeData, xcb_window_t>
 {
 public:
-    explicit Tree(WindowId window) : Wrapper<xcb_query_tree_reply_t, xcb_query_tree_cookie_t, &xcb_query_tree_reply, &xcb_query_tree_unchecked>(window) {}
+    explicit Tree(WindowId window) : Wrapper<TreeData, xcb_window_t>(window) {}
 
     inline WindowId *children() {
         if (data()->children_len == 0) {
@@ -255,13 +573,16 @@ public:
     }
 };
 
-inline xcb_get_input_focus_cookie_t get_input_focus(xcb_connection_t *c, xcb_window_t) {
-    return xcb_get_input_focus(c);
-}
-class CurrentInput : public Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>
+struct CurrentInputData : public WrapperData< xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t >
+{
+    static constexpr request_func requestFunc = &xcb_get_input_focus_unchecked;
+    static constexpr reply_func replyFunc = &xcb_get_input_focus_reply;
+};
+
+class CurrentInput : public Wrapper<CurrentInputData>
 {
 public:
-    CurrentInput() : Wrapper<xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t, &xcb_get_input_focus_reply, &get_input_focus>(XCB_WINDOW_NONE) {}
+    CurrentInput() : Wrapper<CurrentInputData>() {}
 
     inline xcb_window_t window() {
         if (isNull())
@@ -270,15 +591,14 @@ public:
     }
 };
 
-inline xcb_get_property_cookie_t get_transient_for(xcb_connection_t *c, xcb_window_t window)
-{
-    return xcb_get_property_unchecked(c, 0, window, XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 0, 1);
-}
-
-class TransientFor : public Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &get_transient_for>
+XCB_WRAPPER_DATA(PropertyData, xcb_get_property, uint8_t, xcb_window_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t)
+class TransientFor : public Wrapper<PropertyData, uint8_t, xcb_window_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t>
 {
 public:
-    explicit TransientFor(WindowId window) : Wrapper<xcb_get_property_reply_t, xcb_get_property_cookie_t, &xcb_get_property_reply, &get_transient_for>(window) {}
+    explicit TransientFor(WindowId window)
+        : Wrapper<PropertyData, uint8_t, xcb_window_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t>(window, 0, window, XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 0, 1)
+    {
+    }
 
     /**
      * @brief Fill given window pointer with the WM_TRANSIENT_FOR property of a window.
@@ -301,12 +621,13 @@ public:
 
 namespace RandR
 {
-typedef Wrapper<xcb_randr_get_screen_info_reply_t, xcb_randr_get_screen_info_cookie_t, &xcb_randr_get_screen_info_reply, &xcb_randr_get_screen_info_unchecked> ScreenInfo;
+XCB_WRAPPER(ScreenInfo, xcb_randr_get_screen_info, xcb_window_t)
 
-class ScreenResources : public Wrapper<xcb_randr_get_screen_resources_reply_t, xcb_randr_get_screen_resources_cookie_t, &xcb_randr_get_screen_resources_reply, &xcb_randr_get_screen_resources_unchecked>
+XCB_WRAPPER_DATA(ScreenResourcesData, xcb_randr_get_screen_resources, xcb_window_t)
+class ScreenResources : public Wrapper<ScreenResourcesData, xcb_window_t>
 {
 public:
-    explicit ScreenResources(WindowId window) : Wrapper<xcb_randr_get_screen_resources_reply_t, xcb_randr_get_screen_resources_cookie_t, &xcb_randr_get_screen_resources_reply, &xcb_randr_get_screen_resources_unchecked>(window) {}
+    explicit ScreenResources(WindowId window) : Wrapper<ScreenResourcesData, xcb_window_t>(window) {}
 
     inline xcb_randr_crtc_t *crtcs() {
         if (isNull()) {
@@ -316,10 +637,11 @@ public:
     }
 };
 
-class CrtcGamma : public Wrapper<xcb_randr_get_crtc_gamma_reply_t, xcb_randr_get_crtc_gamma_cookie_t, &xcb_randr_get_crtc_gamma_reply, &xcb_randr_get_crtc_gamma_unchecked>
+XCB_WRAPPER_DATA(CrtcGammaData, xcb_randr_get_crtc_gamma, xcb_randr_crtc_t)
+class CrtcGamma : public Wrapper<CrtcGammaData, xcb_randr_crtc_t>
 {
 public:
-    explicit CrtcGamma(xcb_randr_crtc_t c) : Wrapper<xcb_randr_get_crtc_gamma_reply_t, xcb_randr_get_crtc_gamma_cookie_t, &xcb_randr_get_crtc_gamma_reply, &xcb_randr_get_crtc_gamma_unchecked>(c) {}
+    explicit CrtcGamma(xcb_randr_crtc_t c) : Wrapper<CrtcGammaData, xcb_randr_crtc_t>(c) {}
 
     inline uint16_t *red() {
         return xcb_randr_get_crtc_gamma_red(data());
