@@ -51,7 +51,7 @@
              <string>Here you can set how many virtual desktops you want on your KDE desktop.</string>
             </property>
             <property name="text">
-             <string>Number of desktops:</string>
+             <string>&amp;Number of desktops:</string>
             </property>
             <property name="buddy">
              <cstring>numberSpinBox</cstring>
@@ -80,7 +80,7 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Number of rows:</string>
+             <string>N&amp;umber of rows:</string>
             </property>
             <property name="buddy">
              <cstring>rowsSpinBox</cstring>
@@ -91,13 +91,6 @@
            <widget class="QSpinBox" name="rowsSpinBox">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QCheckBox" name="activityCheckBox">
-            <property name="text">
-             <string>Different widgets for each desktop</string>
             </property>
            </widget>
           </item>
