@@ -73,8 +73,8 @@ class Toplevel
     Q_PROPERTY(QRect rect READ rect)
     Q_PROPERTY(QPoint clientPos READ clientPos)
     Q_PROPERTY(QSize clientSize READ clientSize)
-    Q_PROPERTY(QByteArray resourceName READ resourceName)
-    Q_PROPERTY(QByteArray resourceClass READ resourceClass)
+    Q_PROPERTY(QByteArray resourceName READ resourceName NOTIFY windowClassChanged)
+    Q_PROPERTY(QByteArray resourceClass READ resourceClass NOTIFY windowClassChanged)
     Q_PROPERTY(QByteArray windowRole READ windowRole NOTIFY windowRoleChanged)
     /**
      * Returns whether the window is a desktop background window (the one with wallpaper).
@@ -372,6 +372,11 @@ Q_SIGNALS:
      * @since 5.0
      **/
     void windowRoleChanged();
+    /**
+     * Emitted whenever the window class name or resource name of the window changes.
+     * @since 5.0
+     **/
+    void windowClassChanged();
 
 protected Q_SLOTS:
     /**

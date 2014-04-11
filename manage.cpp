@@ -91,6 +91,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WMPid |
         NET::WMIconName;
     const NET::Properties2 properties2 =
+        NET::WM2WindowClass |
         NET::WM2WindowRole |
         NET::WM2UserTime |
         NET::WM2StartupId |

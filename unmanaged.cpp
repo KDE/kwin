@@ -65,7 +65,10 @@ bool Unmanaged::track(Window w)
     vis = attr.visual;
     bit_depth = attr.depth;
     info = new NETWinInfo(connection(), w, rootWindow(),
-                          NET::WMWindowType | NET::WMPid, NET::WM2Opacity | NET::WM2WindowRole);
+                          NET::WMWindowType | NET::WMPid,
+                          NET::WM2Opacity |
+                          NET::WM2WindowRole |
+                          NET::WM2WindowClass);
     getResourceClass();
     getWmClientLeader();
     getWmClientMachine();

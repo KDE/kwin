@@ -224,17 +224,9 @@ Window Toplevel::wmClientLeader() const
 
 void Toplevel::getResourceClass()
 {
-    XClassHint classHint;
-    if (XGetClassHint(display(), window(), &classHint)) {
-        // Qt3.2 and older had this all lowercase, Qt3.3 capitalized resource class.
-        // Force lowercase, so that workarounds listing resource classes still work.
-        resource_name = QByteArray(classHint.res_name).toLower();
-        resource_class = QByteArray(classHint.res_class).toLower();
-        XFree(classHint.res_name);
-        XFree(classHint.res_class);
-    } else {
-        resource_name = resource_class = QByteArray();
-    }
+    resource_name  = QByteArray(info->windowClassName()).toLower();
+    resource_class = QByteArray(info->windowClassClass()).toLower();
+    emit windowClassChanged();
 }
 
 double Toplevel::opacity() const

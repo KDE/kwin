@@ -523,6 +523,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
             emit windowRoleChanged();
         }
+        if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
+            getResourceClass();
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -1507,6 +1510,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     }
     if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
         emit windowRoleChanged();
+    }
+    if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
+        getResourceClass();
     }
     const uint8_t eventType = e->response_type & ~0x80;
     switch (eventType) {
