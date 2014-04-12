@@ -255,24 +255,30 @@ void Edge::switchDesktop(const QPoint &cursorPos)
 {
     QPoint pos(cursorPos);
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    uint desktop = vds->current();
     const uint oldDesktop = vds->current();
+    uint desktop = oldDesktop;
     const int OFFSET = 2;
     if (isLeft()) {
+        const uint interimDesktop = desktop;
         desktop = vds->toLeft(desktop, vds->isNavigationWrappingAround());
-        pos.setX(displayWidth() - 1 - OFFSET);
-    }
-    if (isRight()) {
+        if (desktop != interimDesktop)
+            pos.setX(displayWidth() - 1 - OFFSET);
+    } else if (isRight()) {
+        const uint interimDesktop = desktop;
         desktop = vds->toRight(desktop, vds->isNavigationWrappingAround());
-        pos.setX(OFFSET);
+        if (desktop != interimDesktop)
+            pos.setX(OFFSET);
     }
     if (isTop()) {
+        const uint interimDesktop = desktop;
         desktop = vds->above(desktop, vds->isNavigationWrappingAround());
-        pos.setY(displayHeight() - 1 - OFFSET);
-    }
-    if (isBottom()) {
+        if (desktop != interimDesktop)
+            pos.setY(displayHeight() - 1 - OFFSET);
+    } else if (isBottom()) {
+        const uint interimDesktop = desktop;
         desktop = vds->below(desktop, vds->isNavigationWrappingAround());
-        pos.setY(OFFSET);
+        if (desktop != interimDesktop)
+            pos.setY(OFFSET);
     }
     if (Client *c = Workspace::self()->getMovingClient()) {
         if (c->rules()->checkDesktop(desktop) != int(desktop)) {
