@@ -173,7 +173,6 @@ public:
 
 protected:
     void findTarget();
-    virtual bool load(xcb_pixmap_t pix, const QSize &size, int depth, const QRegion &region);
     virtual bool load(xcb_pixmap_t pix, const QSize &size, int depth);
 
     Texture(TexturePrivate& dd);

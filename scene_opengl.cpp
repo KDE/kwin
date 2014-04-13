@@ -780,8 +780,11 @@ bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
     if (pix == XCB_NONE)
         return false;
 
-    return load(pix, size, depth,
-                QRegion(0, 0, size.width(), size.height()));
+    // decrease the reference counter for the old texture
+    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
+
+    Q_D(Texture);
+    return d->loadTexture(pix, size, depth);
 }
 
 bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
@@ -803,17 +806,6 @@ void SceneOpenGL::Texture::findTarget()
 {
     Q_D(Texture);
     d->findTarget();
-}
-
-bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
-                                int depth, const QRegion &region)
-{
-    Q_UNUSED(region)
-    // decrease the reference counter for the old texture
-    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
-
-    Q_D(Texture);
-    return d->loadTexture(pix, size, depth);
 }
 
 bool SceneOpenGL::Texture::update(const QRegion &damage)
@@ -1236,7 +1228,7 @@ bool OpenGLWindowPixmap::bind()
         return false;
     }
 
-    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->depth(), toplevel()->damage());
+    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->depth());
 
     if (success)
         toplevel()->resetDamage();
