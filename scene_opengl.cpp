@@ -793,12 +793,6 @@ void SceneOpenGL::Texture::findTarget()
     d->findTarget();
 }
 
-bool SceneOpenGL::Texture::update(const QRegion &damage)
-{
-    Q_D(Texture);
-    return d->update(damage);
-}
-
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
@@ -808,12 +802,6 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
-}
-
-bool SceneOpenGL::TexturePrivate::update(const QRegion &damage)
-{
-    Q_UNUSED(damage)
-    return true;
 }
 
 //****************************************
@@ -1201,11 +1189,9 @@ bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
         if (!toplevel()->damage().isEmpty()) {
-            const bool success = m_texture->update(toplevel()->damage());
             // mipmaps need to be updated
             m_texture->setDirty();
             toplevel()->resetDamage();
-            return success;
         }
         return true;
     }
