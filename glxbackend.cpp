@@ -32,11 +32,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>
 // system
 #include <unistd.h>
+
+#include <tuple>
 
 namespace KWin
 {
@@ -100,6 +103,7 @@ void GlxBackend::init()
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
+
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
@@ -417,6 +421,109 @@ bool GlxBackend::initDrawableConfigs()
     return true;
 }
 
+FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
+{
+    FBConfigInfo *&info = m_fbconfigHash[visual];
+
+    if (info)
+        return info;
+
+    info = new FBConfigInfo;
+    info->fbconfig            = nullptr;
+    info->bind_texture_format = 0;
+    info->texture_targets     = 0;
+    info->y_inverted          = 0;
+    info->mipmap              = 0;
+
+    const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
+    const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
+
+    if (!direct) {
+        qCritical().nospace() << "Could not find a picture format for visual 0x" << hex << visual;
+        return info;
+    }
+
+    const int red_bits   = bitCount(direct->red_mask);
+    const int green_bits = bitCount(direct->green_mask);
+    const int blue_bits  = bitCount(direct->blue_mask);
+    const int alpha_bits = bitCount(direct->alpha_mask);
+
+    const auto rgb_sizes = std::tie(red_bits, green_bits, blue_bits);
+
+    const int attribs[] = {
+        GLX_RENDER_TYPE,    GLX_RGBA_BIT,
+        GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
+        GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
+        GLX_X_RENDERABLE,   True,
+        GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
+        GLX_BUFFER_SIZE,    red_bits + green_bits + blue_bits + alpha_bits,
+        GLX_RED_SIZE,       red_bits,
+        GLX_GREEN_SIZE,     green_bits,
+        GLX_BLUE_SIZE,      blue_bits,
+        GLX_ALPHA_SIZE,     alpha_bits,
+        GLX_STENCIL_SIZE,   0,
+        GLX_DEPTH_SIZE,     0,
+        0
+    };
+
+    int count = 0;
+    GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
+
+    if (count < 1) {
+        qCritical().nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
+        return info;
+    }
+
+    for (int i = 0; i < count; i++) {
+        int red, green, blue;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_RED_SIZE,   &red);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_GREEN_SIZE, &green);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE,  &blue);
+
+        if (std::tie(red, green, blue) != rgb_sizes)
+            continue;
+
+        int bind_rgb, bind_rgba;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGB_EXT,  &bind_rgb);
+
+        if (!bind_rgb && !bind_rgba)
+            continue;
+
+        int texture_format;
+        if (alpha_bits)
+            texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
+        else
+            texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
+
+        int y_inverted, texture_targets;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_Y_INVERTED_EXT, &y_inverted);
+
+        info->fbconfig            = configs[i];
+        info->bind_texture_format = texture_format;
+        info->texture_targets     = texture_targets;
+        info->y_inverted          = y_inverted;
+        info->mipmap              = 0;
+        break;
+    }
+
+    if (count > 0)
+        XFree(configs);
+
+    if (info->fbconfig) {
+        int fbc_id = 0;
+        int visual_id = 0;
+
+        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
+        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
+
+        qDebug().nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
+    }
+
+    return info;
+}
+
 void GlxBackend::setSwapInterval(int interval)
 {
     if (m_haveEXTSwapControl)
@@ -673,6 +780,53 @@ void GlxTexture::findTarget()
     default:
         abort();
     }
+}
+
+bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visualid_t visual)
+{
+    if (pixmap == XCB_NONE || size.isEmpty() || visual == XCB_NONE)
+        return false;
+
+    const FBConfigInfo *info = m_backend->infoForVisual(visual);
+    if (!info || info->fbconfig == nullptr)
+        return false;
+
+    if ((info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
+            (GLTexture::NPOTTextureSupported() ||
+              (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
+        m_target = GL_TEXTURE_2D;
+        m_scale.setWidth(1.0f / m_size.width());
+        m_scale.setHeight(1.0f / m_size.height());
+    } else {
+        assert(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
+
+        m_target = GL_TEXTURE_RECTANGLE;
+        m_scale.setWidth(1.0f);
+        m_scale.setHeight(1.0f);
+    }
+
+    const int attrs[] = {
+        GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
+        GLX_MIPMAP_TEXTURE_EXT, info->mipmap,
+        GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
+        0
+    };
+
+    m_glxpixmap     = glXCreatePixmap(display(), info->fbconfig, pixmap, attrs);
+    m_size          = size;
+    m_yInverted     = info->y_inverted ? true : false;
+    m_canUseMipmaps = info->mipmap;
+
+    glGenTextures(1, &m_texture);
+
+    q->setDirty();
+    q->setFilter(info->mipmap > 0 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
+
+    glBindTexture(m_target, m_texture);
+    glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, nullptr);
+
+    updateMatrix();
+    return true;
 }
 
 bool GlxTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)

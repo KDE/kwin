@@ -787,6 +787,19 @@ bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
     return d->loadTexture(pix, size, depth);
 }
 
+bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
+                                xcb_visualid_t visual)
+{
+    if (pix == XCB_NONE)
+        return false;
+
+    // decrease the reference counter for the old texture
+    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
+
+    Q_D(Texture);
+    return d->loadTexture(pix, size, visual);
+}
+
 void SceneOpenGL::Texture::findTarget()
 {
     Q_D(Texture);
@@ -1199,7 +1212,7 @@ bool OpenGLWindowPixmap::bind()
         return false;
     }
 
-    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->depth());
+    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->visual());
 
     if (success)
         toplevel()->resetDamage();

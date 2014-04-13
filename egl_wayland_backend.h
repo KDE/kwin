@@ -104,12 +104,14 @@ public:
     virtual ~EglWaylandTexture();
     virtual void findTarget();
     virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth);
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
     virtual OpenGLBackend *backend();
     virtual bool update(const QRegion &damage);
 
 private:
     friend class EglWaylandBackend;
     EglWaylandTexture(SceneOpenGL::Texture *texture, EglWaylandBackend *backend);
+    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
     SceneOpenGL::Texture *q;
     EglWaylandBackend *m_backend;
     /**

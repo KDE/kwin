@@ -63,6 +63,8 @@ private:
     bool initFbConfig();
     void setSwapInterval(int interval);
 
+    FBConfigInfo *infoForVisual(xcb_visualid_t visual);
+
     /**
      * @brief The OverlayWindow used by this Backend.
      **/
@@ -72,6 +74,7 @@ private:
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
+    QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
     int m_bufferAge;
     bool m_haveMESACopySubBuffer;
     bool m_haveMESASwapControl;
@@ -91,6 +94,7 @@ public:
     virtual void onDamage();
     virtual void findTarget();
     virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth);
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
     virtual OpenGLBackend *backend();
 
 private:
