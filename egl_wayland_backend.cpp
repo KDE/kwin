@@ -387,8 +387,10 @@ void EglWaylandTexture::findTarget()
     }
 }
 
-bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
+bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
 {
+    Q_UNUSED(visual)
+
     // HACK: egl wayland platform doesn't support texture from X11 pixmap through the KHR_image_pixmap
     // extension. To circumvent this problem we copy the pixmap content into a SHM image and from there
     // to the OpenGL texture. This is a temporary solution. In future we won't need to get the content
@@ -428,20 +430,6 @@ bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
     m_size = size;
     updateMatrix();
     return true;
-}
-
-bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)
-{
-    Q_UNUSED(depth)
-
-    return loadTexture(pix, size);
-}
-
-bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
-{
-    Q_UNUSED(visual)
-
-    return loadTexture(pix, size);
 }
 
 bool EglWaylandTexture::update(const QRegion &damage)

@@ -466,8 +466,10 @@ void EglTexture::findTarget()
     }
 }
 
-bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
+bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
 {
+    Q_UNUSED(visual)
+
     if (pix == XCB_NONE)
         return false;
 
@@ -495,20 +497,6 @@ bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
     m_size = size;
     updateMatrix();
     return true;
-}
-
-bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)
-{
-    Q_UNUSED(depth)
-
-    return loadTexture(pix, size);
-}
-
-bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
-{
-    Q_UNUSED(visual)
-
-    return loadTexture(pix, size);
 }
 
 void KWin::EglTexture::onDamage()

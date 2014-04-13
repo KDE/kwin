@@ -775,18 +775,6 @@ void SceneOpenGL::Texture::discard()
     d_ptr = d_func()->backend()->createBackendTexture(this);
 }
 
-bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
-{
-    if (pix == XCB_NONE)
-        return false;
-
-    // decrease the reference counter for the old texture
-    d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
-
-    Q_D(Texture);
-    return d->loadTexture(pix, size, depth);
-}
-
 bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
                                 xcb_visualid_t visual)
 {

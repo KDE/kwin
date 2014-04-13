@@ -144,7 +144,6 @@ public:
     virtual ~TexturePrivate();
 
     virtual void findTarget() = 0;
-    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth) = 0;
     virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) = 0;
     virtual OpenGLBackend *backend() = 0;
 
@@ -170,7 +169,6 @@ public:
 
 protected:
     void findTarget();
-    virtual bool load(xcb_pixmap_t pix, const QSize &size, int depth);
     virtual bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
 
     Texture(TexturePrivate& dd);

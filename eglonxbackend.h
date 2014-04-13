@@ -70,13 +70,10 @@ public:
     virtual ~EglTexture();
     virtual void onDamage();
     virtual void findTarget();
-    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth);
     virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
     virtual OpenGLBackend *backend();
 
 private:
-    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
-
     friend class EglOnXBackend;
     EglTexture(SceneOpenGL::Texture *texture, EglOnXBackend *backend);
     SceneOpenGL::Texture *q;
