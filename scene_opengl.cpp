@@ -787,13 +787,6 @@ bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
     return d->loadTexture(pix, size, depth);
 }
 
-bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
-{
-    if (image.isNull())
-        return false;
-    return load(QPixmap::fromImage(image), target);
-}
-
 bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
 {
     if (pixmap.isNull())
