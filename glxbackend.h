@@ -57,7 +57,6 @@ protected:
 private:
     void init();
     bool initBuffer();
-    bool initDrawableConfigs();
     void waitSync();
     bool initRenderingContext();
     bool initFbConfig();
@@ -70,7 +69,6 @@ private:
      **/
     OverlayWindow *m_overlayWindow;
     Window window;
-    FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;

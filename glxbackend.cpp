@@ -91,10 +91,6 @@ void GlxBackend::init()
         setFailed(QStringLiteral("Requires at least GLX 1.3"));
         return;
     }
-    if (!initDrawableConfigs()) {
-        setFailed(QStringLiteral("Could not initialize the drawable configs"));
-        return;
-    }
     if (!initBuffer()) {
         setFailed(QStringLiteral("Could not initialize the buffer"));
         return;
@@ -303,119 +299,6 @@ bool GlxBackend::initFbConfig()
     if (fbconfig == NULL) {
         qCritical() << "Failed to find a usable framebuffer configuration";
         return false;
-    }
-
-    return true;
-}
-
-bool GlxBackend::initDrawableConfigs()
-{
-    const int attribs[] = {
-        GLX_RENDER_TYPE,    GLX_RGBA_BIT,
-        GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
-        GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
-        GLX_X_RENDERABLE,   True,
-        GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
-        GLX_RED_SIZE,       5,
-        GLX_GREEN_SIZE,     5,
-        GLX_BLUE_SIZE,      5,
-        GLX_ALPHA_SIZE,     0,
-        GLX_STENCIL_SIZE,   0,
-        GLX_DEPTH_SIZE,     0,
-        0
-    };
-
-    int count = 0;
-    GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
-
-    if (count < 1) {
-        qCritical() << "Could not find any usable framebuffer configurations.";
-        return false;
-    }
-
-    for (int i = 0; i <= 32; i++) {
-        fbcdrawableinfo[i].fbconfig            = NULL;
-        fbcdrawableinfo[i].bind_texture_format = 0;
-        fbcdrawableinfo[i].texture_targets     = 0;
-        fbcdrawableinfo[i].y_inverted          = 0;
-        fbcdrawableinfo[i].mipmap              = 0;
-    }
-
-    // Find the first usable framebuffer configuration for each depth.
-    // Single-buffered ones will appear first in the list.
-    const int depths[] = { 15, 16, 24, 30, 32 };
-    for (unsigned int i = 0; i < sizeof(depths) / sizeof(depths[0]); i++) {
-        const int depth = depths[i];
-
-        for (int j = 0; j < count; j++) {
-            int alpha_size, buffer_size;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_ALPHA_SIZE,  &alpha_size);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BUFFER_SIZE, &buffer_size);
-
-            if (buffer_size != depth && (buffer_size - alpha_size) != depth)
-                continue;
-
-            if (depth == 32 && alpha_size != 8)
-                continue;
-
-            XVisualInfo *vi = glXGetVisualFromFBConfig(display(), configs[j]);
-            if (vi == NULL)
-                continue;
-
-            int visual_depth = vi->depth;
-            XFree(vi);
-
-            if (visual_depth != depth)
-                continue;
-
-            int bind_rgb, bind_rgba;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_RGB_EXT,  &bind_rgb);
-
-            // Skip this config if it cannot be bound to a texture
-            if (!bind_rgb && !bind_rgba)
-                continue;
-
-            int texture_format;
-            if (depth == 32)
-                texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
-            else
-                texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
-
-            int y_inverted, texture_targets;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_Y_INVERTED_EXT, &y_inverted);
-
-            fbcdrawableinfo[depth].fbconfig            = configs[j];
-            fbcdrawableinfo[depth].bind_texture_format = texture_format;
-            fbcdrawableinfo[depth].texture_targets     = texture_targets;
-            fbcdrawableinfo[depth].y_inverted          = y_inverted;
-            fbcdrawableinfo[depth].mipmap              = 0;
-            break;
-        }
-    }
-
-    if (count)
-        XFree(configs);
-
-    if (fbcdrawableinfo[DefaultDepth(display(), DefaultScreen(display()))].fbconfig == NULL) {
-        qCritical() << "Could not find a framebuffer configuration for the default depth.";
-        return false;
-    }
-
-    if (fbcdrawableinfo[32].fbconfig == NULL) {
-        qCritical() << "Could not find a framebuffer configuration for depth 32.";
-        return false;
-    }
-
-    for (int i = 0; i <= 32; i++) {
-        if (fbcdrawableinfo[i].fbconfig == NULL)
-            continue;
-
-        int vis_drawable = 0;
-        glXGetFBConfigAttrib(display(), fbcdrawableinfo[i].fbconfig, GLX_VISUAL_ID, &vis_drawable);
-
-        qDebug() << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
     }
 
     return true;
