@@ -166,7 +166,6 @@ public:
     Texture & operator = (const Texture& tex);
 
     using GLTexture::load;
-    virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
     bool update(const QRegion &damage);
 

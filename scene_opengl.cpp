@@ -757,7 +757,7 @@ SceneOpenGL::Texture::Texture(OpenGLBackend *backend)
 SceneOpenGL::Texture::Texture(OpenGLBackend *backend, const QPixmap &pix, GLenum target)
     : GLTexture(*backend->createBackendTexture(this))
 {
-    load(pix, target);
+    GLTexture::load(pix.toImage(), target);
 }
 
 SceneOpenGL::Texture::~Texture()
@@ -785,14 +785,6 @@ bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
 
     Q_D(Texture);
     return d->loadTexture(pix, size, depth);
-}
-
-bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
-{
-    if (pixmap.isNull())
-        return false;
-
-    return GLTexture::load(pixmap.toImage(), target);
 }
 
 void SceneOpenGL::Texture::findTarget()
