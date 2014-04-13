@@ -90,7 +90,7 @@ public:
     virtual ~GlxTexture();
     virtual void onDamage();
     virtual void findTarget();
-    virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth);
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth);
     virtual OpenGLBackend *backend();
 
 private:

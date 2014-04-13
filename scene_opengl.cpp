@@ -775,11 +775,11 @@ void SceneOpenGL::Texture::discard()
     d_ptr = d_func()->backend()->createBackendTexture(this);
 }
 
-bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
-                                int depth)
+bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size, int depth)
 {
-    if (pix == None)
+    if (pix == XCB_NONE)
         return false;
+
     return load(pix, size, depth,
                 QRegion(0, 0, size.width(), size.height()));
 }
@@ -805,8 +805,8 @@ void SceneOpenGL::Texture::findTarget()
     d->findTarget();
 }
 
-bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
-                                int depth, QRegion region)
+bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
+                                int depth, const QRegion &region)
 {
     Q_UNUSED(region)
     // decrease the reference counter for the old texture

@@ -675,7 +675,7 @@ void GlxTexture::findTarget()
     }
 }
 
-bool GlxTexture::loadTexture(const Pixmap& pix, const QSize& size, int depth)
+bool GlxTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)
 {
 #ifdef CHECK_GL_ERROR
     checkGLError("TextureLoad1");

@@ -387,7 +387,7 @@ void EglWaylandTexture::findTarget()
     }
 }
 
-bool EglWaylandTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
+bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)
 {
     // HACK: egl wayland platform doesn't support texture from X11 pixmap through the KHR_image_pixmap
     // extension. To circumvent this problem we copy the pixmap content into a SHM image and from there

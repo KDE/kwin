@@ -466,7 +466,7 @@ void EglTexture::findTarget()
     }
 }
 
-bool EglTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
+bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, int depth)
 {
     Q_UNUSED(depth)
     if (pix == None)

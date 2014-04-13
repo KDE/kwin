@@ -103,7 +103,7 @@ class EglWaylandTexture : public SceneOpenGL::TexturePrivate
 public:
     virtual ~EglWaylandTexture();
     virtual void findTarget();
-    virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth);
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, int depth);
     virtual OpenGLBackend *backend();
     virtual bool update(const QRegion &damage);
 
