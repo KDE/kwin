@@ -92,7 +92,6 @@ class GlxTexture : public SceneOpenGL::TexturePrivate
 public:
     virtual ~GlxTexture();
     virtual void onDamage();
-    virtual void findTarget();
     virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
     virtual OpenGLBackend *backend();
 

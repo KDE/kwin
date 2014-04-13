@@ -380,13 +380,6 @@ OpenGLBackend *EglWaylandTexture::backend()
     return m_backend;
 }
 
-void EglWaylandTexture::findTarget()
-{
-    if (m_target != GL_TEXTURE_2D) {
-        m_target = GL_TEXTURE_2D;
-    }
-}
-
 bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
 {
     Q_UNUSED(visual)

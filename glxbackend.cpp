@@ -750,38 +750,6 @@ void GlxTexture::onDamage()
     GLTexturePrivate::onDamage();
 }
 
-void GlxTexture::findTarget()
-{
-    unsigned int new_target = 0;
-    if (glXQueryDrawable && m_glxpixmap != None)
-        glXQueryDrawable(display(), m_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
-    // HACK: this used to be a hack for Xgl.
-    // without this hack the NVIDIA blob aborts when trying to bind a texture from
-    // a pixmap icon
-    if (new_target == 0) {
-        if (GLTexture::NPOTTextureSupported() ||
-            (isPowerOfTwo(m_size.width()) && isPowerOfTwo(m_size.height()))) {
-            new_target = GLX_TEXTURE_2D_EXT;
-        } else {
-            new_target = GLX_TEXTURE_RECTANGLE_EXT;
-        }
-    }
-    switch(new_target) {
-    case GLX_TEXTURE_2D_EXT:
-        m_target = GL_TEXTURE_2D;
-        m_scale.setWidth(1.0f / m_size.width());
-        m_scale.setHeight(1.0f / m_size.height());
-        break;
-    case GLX_TEXTURE_RECTANGLE_EXT:
-        m_target = GL_TEXTURE_RECTANGLE_ARB;
-        m_scale.setWidth(1.0f);
-        m_scale.setHeight(1.0f);
-        break;
-    default:
-        abort();
-    }
-}
-
 bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visualid_t visual)
 {
     if (pixmap == XCB_NONE || size.isEmpty() || visual == XCB_NONE)

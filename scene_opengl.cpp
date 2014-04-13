@@ -788,12 +788,6 @@ bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
     return d->loadTexture(pix, size, visual);
 }
 
-void SceneOpenGL::Texture::findTarget()
-{
-    Q_D(Texture);
-    d->findTarget();
-}
-
 //****************************************
 // SceneOpenGL::Texture
 //****************************************
