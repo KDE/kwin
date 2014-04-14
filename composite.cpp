@@ -175,6 +175,12 @@ void Compositor::slotCompositingOptionsInitialized()
         cm_selection->claim(true);   // force claiming
         cm_selection->owning = true;
     }
+
+    // There might still be a deleted around, needs to be cleared before creating the scene (BUG 333275)
+    while (!Workspace::self()->deletedList().isEmpty()) {
+        Workspace::self()->deletedList().first()->discard();
+    }
+
     switch(options->compositingMode()) {
     case OpenGLCompositing: {
         qDebug() << "Initializing OpenGL compositing";
