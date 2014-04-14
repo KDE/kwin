@@ -46,6 +46,7 @@ private Q_SLOTS:
     void discard();
     void testQueryTree();
     void testCurrentInput();
+    void testTransientFor();
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -263,6 +264,30 @@ void TestXcbWrapper::testCurrentInput()
     CurrentInput input2(input);
     QCOMPARE(input2.window(), m_testWindow);
     QCOMPARE(input.window(), xcb_window_t(XCB_WINDOW_NONE));
+}
+
+void TestXcbWrapper::testTransientFor()
+{
+    m_testWindow = createWindow();
+    TransientFor transient(m_testWindow);
+    QCOMPARE(transient.window(), m_testWindow);
+    // our m_testWindow doesn't have a transient for hint
+    xcb_window_t compareWindow = XCB_WINDOW_NONE;
+    QVERIFY(!transient.getTransientFor(&compareWindow));
+    QCOMPARE(compareWindow, xcb_window_t(XCB_WINDOW_NONE));
+
+    // Create a Window with a transient for hint
+    Window transientWindow(createWindow());
+    transientWindow.changeProperty(XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 32, 1, &m_testWindow);
+
+    // let's get another transient object
+    TransientFor realTransient(transientWindow);
+    QVERIFY(realTransient.getTransientFor(&compareWindow));
+    QCOMPARE(compareWindow, m_testWindow);
+
+    // test for a not existing window
+    TransientFor doesntExist(XCB_WINDOW_NONE);
+    QVERIFY(!doesntExist.getTransientFor(&compareWindow));
 }
 
 KWIN_TEST_MAIN(TestXcbWrapper)
