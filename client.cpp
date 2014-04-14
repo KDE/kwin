@@ -2318,16 +2318,6 @@ void Client::updateCursor()
     }
 }
 
-void Client::updateCompositeBlocking(bool readProperty)
-{
-    if (readProperty) {
-        NETWinInfo i(connection(), window(), rootWindow(), 0, NET::WM2BlockCompositing);
-        setBlockingCompositing(i.isBlockingCompositing());
-    }
-    else
-        setBlockingCompositing(blocks_compositing);
-}
-
 void Client::setBlockingCompositing(bool block)
 {
     const bool usedToBlock = blocks_compositing;

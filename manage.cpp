@@ -91,6 +91,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WMPid |
         NET::WMIconName;
     const NET::Properties2 properties2 =
+        NET::WM2BlockCompositing |
         NET::WM2WindowClass |
         NET::WM2WindowRole |
         NET::WM2UserTime |
@@ -618,7 +619,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     RuleBook::self()->discardUsed(this, false);   // Remove ApplyNow rules
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
-    updateCompositeBlocking(true);
+    setBlockingCompositing(info->isBlockingCompositing());
     updateColorScheme();
     updateShowOnScreenEdge();
 

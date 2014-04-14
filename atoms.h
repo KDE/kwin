@@ -60,7 +60,6 @@ public:
     Xcb::Atom kde_net_wm_frame_strut;
     Xcb::Atom net_wm_sync_request_counter;
     Xcb::Atom net_wm_sync_request;
-    Xcb::Atom kde_net_wm_block_compositing;
     Xcb::Atom kde_net_wm_shadow;
     Xcb::Atom net_wm_opaque_region;
     Xcb::Atom kde_net_wm_tab_group;

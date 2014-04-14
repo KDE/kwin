@@ -493,7 +493,6 @@ public:
     virtual void finishCompositing();
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
-    void updateCompositeBlocking(bool readProperty = false);
 
     QString caption(bool full = true, bool stripped = false) const;
 

@@ -526,6 +526,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2.testFlag(NET::WM2WindowClass)) {
             getResourceClass();
         }
+        if (dirtyProperties2.testFlag(NET::WM2BlockCompositing)) {
+            setBlockingCompositing(info->isBlockingCompositing());
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -805,8 +808,6 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
             getSyncCounter();
         else if (e->atom == atoms->activities)
             checkActivities();
-        else if (e->atom == atoms->kde_net_wm_block_compositing)
-            updateCompositeBlocking(true);
         else if (e->atom == atoms->kde_first_in_window_list)
             updateFirstInTabBox();
         else if (e->atom == atoms->kde_color_sheme)
