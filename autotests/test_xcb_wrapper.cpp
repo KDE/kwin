@@ -45,6 +45,7 @@ private Q_SLOTS:
     void assignmentAfterRetrieve();
     void discard();
     void testQueryTree();
+    void testCurrentInput();
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -242,6 +243,26 @@ void TestXcbWrapper::testQueryTree()
     QCOMPARE(doesntExist.parent(), xcb_window_t(XCB_WINDOW_NONE));
     QVERIFY(doesntExist.isNull());
     QVERIFY(doesntExist.isRetrieved());
+}
+
+void TestXcbWrapper::testCurrentInput()
+{
+    m_testWindow = createWindow();
+    xcb_connection_t *c = QX11Info::connection();
+    xcb_map_window(c, m_testWindow);
+    QX11Info::setAppTime(QX11Info::getTimestamp());
+
+    // let's set the input focus
+    xcb_set_input_focus(c, XCB_INPUT_FOCUS_PARENT, m_testWindow, QX11Info::appTime());
+    xcb_flush(c);
+
+    CurrentInput input;
+    QCOMPARE(input.window(), m_testWindow);
+
+    // creating a copy should make the input object have no window any more
+    CurrentInput input2(input);
+    QCOMPARE(input2.window(), m_testWindow);
+    QCOMPARE(input.window(), xcb_window_t(XCB_WINDOW_NONE));
 }
 
 KWIN_TEST_MAIN(TestXcbWrapper)
