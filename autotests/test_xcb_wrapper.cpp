@@ -44,6 +44,7 @@ private Q_SLOTS:
     void assignmentBeforeRetrieve();
     void assignmentAfterRetrieve();
     void discard();
+    void testQueryTree();
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -208,6 +209,39 @@ void TestXcbWrapper::discard()
     geometry = new WindowGeometry(m_testWindow);
     QVERIFY(geometry->data());
     delete geometry;
+}
+
+void TestXcbWrapper::testQueryTree()
+{
+    m_testWindow = createWindow();
+    QVERIFY(m_testWindow != noneWindow());
+    Tree tree(m_testWindow);
+    // should have root as parent
+    QCOMPARE(tree.parent(), static_cast<xcb_window_t>(QX11Info::appRootWindow()));
+    // shouldn't have any children
+    QCOMPARE(tree->children_len, uint16_t(0));
+    QVERIFY(!tree.children());
+
+    // query for root
+    Tree root(QX11Info::appRootWindow());
+    // shouldn't have a parent
+    QCOMPARE(root.parent(), xcb_window_t(XCB_WINDOW_NONE));
+    QVERIFY(root->children_len > 0);
+    xcb_window_t *children = root.children();
+    bool found = false;
+    for (int i = 0; i < xcb_query_tree_children_length(root.data()); ++i) {
+        if (children[i] == tree.window()) {
+            found = true;
+            break;
+        }
+    }
+    QVERIFY(found);
+
+    // query for not existing window
+    Tree doesntExist(XCB_WINDOW_NONE);
+    QCOMPARE(doesntExist.parent(), xcb_window_t(XCB_WINDOW_NONE));
+    QVERIFY(doesntExist.isNull());
+    QVERIFY(doesntExist.isRetrieved());
 }
 
 KWIN_TEST_MAIN(TestXcbWrapper)

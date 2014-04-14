@@ -243,6 +243,9 @@ public:
     explicit Tree(WindowId window) : Wrapper<xcb_query_tree_reply_t, xcb_query_tree_cookie_t, &xcb_query_tree_reply, &xcb_query_tree_unchecked>(window) {}
 
     inline WindowId *children() {
+        if (data()->children_len == 0) {
+            return nullptr;
+        }
         return xcb_query_tree_children(data());
     }
     inline xcb_window_t parent() {
