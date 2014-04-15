@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QApplication>
 #include <QtTest/QtTest>
+#include <netwm.h>
 // xcb
 #include <xcb/xcb.h>
 
@@ -47,6 +48,8 @@ private Q_SLOTS:
     void testQueryTree();
     void testCurrentInput();
     void testTransientFor();
+    void testPropertyByteArray();
+    void testPropertyBool();
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -275,6 +278,12 @@ void TestXcbWrapper::testTransientFor()
     xcb_window_t compareWindow = XCB_WINDOW_NONE;
     QVERIFY(!transient.getTransientFor(&compareWindow));
     QCOMPARE(compareWindow, xcb_window_t(XCB_WINDOW_NONE));
+    bool ok = true;
+    QCOMPARE(transient.value<xcb_window_t>(32, XCB_ATOM_WINDOW, XCB_WINDOW_NONE, &ok), xcb_window_t(XCB_WINDOW_NONE));
+    QVERIFY(!ok);
+    ok = true;
+    QCOMPARE(transient.value<xcb_window_t>(XCB_WINDOW_NONE, &ok), xcb_window_t(XCB_WINDOW_NONE));
+    QVERIFY(!ok);
 
     // Create a Window with a transient for hint
     Window transientWindow(createWindow());
@@ -284,10 +293,94 @@ void TestXcbWrapper::testTransientFor()
     TransientFor realTransient(transientWindow);
     QVERIFY(realTransient.getTransientFor(&compareWindow));
     QCOMPARE(compareWindow, m_testWindow);
+    ok = false;
+    QCOMPARE(realTransient.value<xcb_window_t>(32, XCB_ATOM_WINDOW, XCB_WINDOW_NONE, &ok), m_testWindow);
+    QVERIFY(ok);
+    ok = false;
+    QCOMPARE(realTransient.value<xcb_window_t>(XCB_WINDOW_NONE, &ok), m_testWindow);
+    QVERIFY(ok);
+    ok = false;
+    QCOMPARE(realTransient.value<xcb_window_t>(), m_testWindow);
+    QCOMPARE(realTransient.value<xcb_window_t*>(nullptr, &ok)[0], m_testWindow);
+    QVERIFY(ok);
+    QCOMPARE(realTransient.value<xcb_window_t*>()[0], m_testWindow);
 
     // test for a not existing window
     TransientFor doesntExist(XCB_WINDOW_NONE);
     QVERIFY(!doesntExist.getTransientFor(&compareWindow));
+}
+
+void TestXcbWrapper::testPropertyByteArray()
+{
+    Window testWindow(createWindow());
+    Property prop(false, testWindow, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 0, 100000);
+    QCOMPARE(prop.toByteArray(), QByteArray());
+    bool ok = true;
+    QCOMPARE(prop.toByteArray(&ok), QByteArray());
+    QVERIFY(!ok);
+    ok = true;
+    QVERIFY(!prop.value<const char*>());
+    QCOMPARE(prop.value<const char*>("bar", &ok), "bar");
+    QVERIFY(!ok);
+    QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
+
+    testWindow.changeProperty(XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, 3, "foo");
+    prop = Property(false, testWindow, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 0, 100000);
+    QCOMPARE(prop.toByteArray(), QByteArrayLiteral("foo"));
+    QCOMPARE(prop.toByteArray(&ok), QByteArrayLiteral("foo"));
+    QVERIFY(ok);
+    QCOMPARE(prop.value<const char*>(nullptr, &ok), "foo");
+    QVERIFY(ok);
+    QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArrayLiteral("foo"));
+
+    // verify incorrect format and type
+    QCOMPARE(prop.toByteArray(32), QByteArray());
+    QCOMPARE(prop.toByteArray(8, XCB_ATOM_CARDINAL), QByteArray());
+
+    // verify empty property
+    testWindow.changeProperty(XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 8, 0, nullptr);
+    prop = Property(false, testWindow, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 0, 100000);
+    QCOMPARE(prop.toByteArray(), QByteArray());
+    QCOMPARE(prop.toByteArray(&ok), QByteArray());
+    QVERIFY(!ok);
+    QVERIFY(!prop.value<const char*>());
+    QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
+}
+
+void TestXcbWrapper::testPropertyBool()
+{
+    Window testWindow(createWindow());
+    Atom blockCompositing(QByteArrayLiteral("_KDE_NET_WM_BLOCK_COMPOSITING"));
+    QVERIFY(blockCompositing != XCB_ATOM_NONE);
+    NETWinInfo info(QX11Info::connection(), testWindow, QX11Info::appRootWindow(), NET::Properties(), NET::WM2BlockCompositing);
+
+    Property prop(false, testWindow, blockCompositing, XCB_ATOM_CARDINAL, 0, 100000);
+    bool ok = true;
+    QVERIFY(!prop.toBool());
+    QVERIFY(!prop.toBool(&ok));
+    QVERIFY(!ok);
+
+    info.setBlockingCompositing(true);
+    xcb_flush(QX11Info::connection());
+    prop = Property(false, testWindow, blockCompositing, XCB_ATOM_CARDINAL, 0, 100000);
+    QVERIFY(prop.toBool());
+    QVERIFY(prop.toBool(&ok));
+    QVERIFY(ok);
+
+    // incorrect type and format
+    QVERIFY(!prop.toBool(8));
+    QVERIFY(!prop.toBool(32, blockCompositing));
+    QVERIFY(!prop.toBool(32, blockCompositing, &ok));
+    QVERIFY(!ok);
+
+    // incorrect value:
+    uint32_t d[] = {1, 0};
+    testWindow.changeProperty(blockCompositing, XCB_ATOM_CARDINAL, 32, 2, d);
+    prop = Property(false, testWindow, blockCompositing, XCB_ATOM_CARDINAL, 0, 100000);
+    QVERIFY(!prop.toBool());
+    ok = true;
+    QVERIFY(!prop.toBool(&ok));
+    QVERIFY(!ok);
 }
 
 KWIN_TEST_MAIN(TestXcbWrapper)

@@ -63,12 +63,9 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
 QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
 {
     QVector<uint32_t> ret;
-    xcb_connection_t *c = connection();
-    const auto cookie = xcb_get_property_unchecked(c, false, id, atoms->kde_net_wm_shadow,
-                                                   XCB_ATOM_CARDINAL, 0, 12);
-    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
-    if (!prop.isNull() && prop->type == XCB_ATOM_CARDINAL && prop->format == 32 ) {
-        uint32_t* shadow = reinterpret_cast< uint32_t* >(xcb_get_property_value(prop.data()));
+    Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
+    uint32_t *shadow = property.value<uint32_t*>();
+    if (shadow) {
         ret.reserve(12);
         for (int i=0; i<12; ++i) {
             ret << shadow[i];

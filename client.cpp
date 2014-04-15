@@ -2388,7 +2388,7 @@ void Client::checkActivities()
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList;
-    QByteArray prop = getStringProperty(window(), atoms->activities);
+    QByteArray prop = Xcb::StringProperty(window(), atoms->activities);
     activitiesDefined = !prop.isEmpty();
     if (QString::fromUtf8(prop) == Activities::nullUuid()) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
@@ -2456,36 +2456,20 @@ KDecorationDefines::Position Client::titlebarPosition() const
 void Client::updateFirstInTabBox()
 {
     // TODO: move into KWindowInfo
-    xcb_connection_t *c = connection();
-    const auto cookie = xcb_get_property_unchecked(c, false, m_client, atoms->kde_first_in_window_list,
-                                                   atoms->kde_first_in_window_list, 0, 1);
-    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
-    if (!prop.isNull() && prop->format == 32 && prop->value_len == 1) {
-        setFirstInTabBox(true);
-    } else {
-        setFirstInTabBox(false);
-    }
+    Xcb::Property property(false, m_client, atoms->kde_first_in_window_list,
+                           atoms->kde_first_in_window_list, 0, 1);
+    setFirstInTabBox(property.toBool(32, atoms->kde_first_in_window_list));
 }
 
 void Client::updateColorScheme()
 {
     // TODO: move into KWindowInfo
-    xcb_connection_t *c = connection();
-    const auto cookie = xcb_get_property_unchecked(c, false, m_client, atoms->kde_color_sheme,
-                                                   XCB_ATOM_STRING, 0, 10000);
-    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
-    auto resetToDefault = [this]() {
-        m_palette = QApplication::palette();
-    };
-    QString path;
-    if (!prop.isNull() && prop->format == 8 && prop->value_len > 0) {
-        path = QString::fromUtf8(static_cast<const char*>(xcb_get_property_value(prop.data())));
-    }
+    QString path = QString::fromUtf8(Xcb::StringProperty(m_client, atoms->kde_color_sheme));
     path = rules()->checkDecoColor(path);
     if (!path.isNull()) {
         m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
     } else {
-        resetToDefault();
+        m_palette = QApplication::palette();
     }
     triggerDecorationRepaint();
 }
@@ -2563,48 +2547,35 @@ xcb_window_t Client::frameId() const
 
 void Client::updateShowOnScreenEdge()
 {
-    auto cookie = xcb_get_property_unchecked(connection(), false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
-    ScopedCPointer<xcb_get_property_reply_t> reply(xcb_get_property_reply(connection(), cookie, nullptr));
-
-    auto restore = [this]() {
+    Xcb::Property property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
+    const uint32_t value = property.value<uint32_t>(ElectricNone);
+    ElectricBorder border = ElectricNone;
+    switch (value) {
+    case 0:
+        border = ElectricTop;
+        break;
+    case 1:
+        border = ElectricRight;
+        break;
+    case 2:
+        border = ElectricBottom;
+        break;
+    case 3:
+        border = ElectricLeft;
+        break;
+    }
+    if (border != ElectricNone) {
+        hideClient(true);
+        ScreenEdges::self()->reserve(this, border);
+    } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
+        // property value is incorrect, delete the property
+        // so that the client knows that it is not hidden
+        xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
+    } else {
+        // restore
         // TODO: add proper unreserve
         ScreenEdges::self()->reserve(this, ElectricNone);
         hideClient(false);
-    };
-
-    if (!reply.isNull()) {
-        if (reply->format == 32 && reply->type == XCB_ATOM_CARDINAL && reply->value_len == 1) {
-            const uint32_t value = *reinterpret_cast<uint32_t*>(xcb_get_property_value(reply.data()));
-            ElectricBorder border = ElectricNone;
-            switch (value) {
-            case 0:
-                border = ElectricTop;
-                break;
-            case 1:
-                border = ElectricRight;
-                break;
-            case 2:
-                border = ElectricBottom;
-                break;
-            case 3:
-                border = ElectricLeft;
-                break;
-            }
-            if (border != ElectricNone) {
-                hideClient(true);
-                ScreenEdges::self()->reserve(this, border);
-            } else {
-                // property value is incorrect, delete the property
-                // so that the client knows that it is not hidden
-                xcb_delete_property(connection(), window(), atoms->kde_screen_edge_show);
-            }
-
-        } else if (reply->type == XCB_ATOM_NONE) {
-            // the property got deleted, show the client again
-            restore();
-        }
-    } else {
-        restore();
     }
 }
 

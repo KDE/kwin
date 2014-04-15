@@ -438,7 +438,6 @@ protected:
     bool m_isDamaged;
 
 private:
-    static xcb_window_t staticWmClientLeader(xcb_window_t);
     // when adding new data members, check also copyToDeleted()
     Xcb::Window m_client;
     xcb_damage_damage_t damage_handle;

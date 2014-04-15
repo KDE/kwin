@@ -145,24 +145,10 @@ QRect Toplevel::visibleRect() const
     return r.translated(geometry().topLeft());
 }
 
-/*!
-  Returns WM_CLIENT_LEADER property for a given window.
- */
-xcb_window_t Toplevel::staticWmClientLeader(xcb_window_t w)
-{
-    xcb_connection_t *c = connection();
-    auto cookie = xcb_get_property_unchecked(c, false, w, atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
-    ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
-    if (prop.isNull() || prop->value_len <= 0) {
-        return w;
-    }
-    return static_cast<xcb_window_t*>(xcb_get_property_value(prop.data()))[0];
-}
-
-
 void Toplevel::getWmClientLeader()
 {
-    wmClientLeaderWin = staticWmClientLeader(window());
+    Xcb::Property prop(false, window(), atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
+    wmClientLeaderWin = prop.value<xcb_window_t>(window());
 }
 
 /*!
@@ -171,9 +157,9 @@ void Toplevel::getWmClientLeader()
  */
 QByteArray Toplevel::sessionId() const
 {
-    QByteArray result = getStringProperty(window(), atoms->sm_client_id);
+    QByteArray result = Xcb::StringProperty(window(), atoms->sm_client_id);
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
-        result = getStringProperty(wmClientLeaderWin, atoms->sm_client_id);
+        result = Xcb::StringProperty(wmClientLeaderWin, atoms->sm_client_id);
     return result;
 }
 
@@ -183,9 +169,10 @@ QByteArray Toplevel::sessionId() const
  */
 QByteArray Toplevel::wmCommand()
 {
-    QByteArray result = getStringProperty(window(), XCB_ATOM_WM_COMMAND, ' ');
+    QByteArray result = Xcb::StringProperty(window(), XCB_ATOM_WM_COMMAND);
     if (result.isEmpty() && wmClientLeaderWin && wmClientLeaderWin != window())
-        result = getStringProperty(wmClientLeaderWin, XCB_ATOM_WM_COMMAND, ' ');
+        result = Xcb::StringProperty(wmClientLeaderWin, XCB_ATOM_WM_COMMAND);
+    result.replace(0, ' ');
     return result;
 }
 
@@ -438,16 +425,8 @@ xcb_window_t Toplevel::frameId() const
 
 void Toplevel::getSkipCloseAnimation()
 {
-    auto cookie = xcb_get_property_unchecked(connection(), false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
-    ScopedCPointer<xcb_get_property_reply_t> reply(xcb_get_property_reply(connection(), cookie, nullptr));
-    bool newValue = false;
-    if (!reply.isNull()) {
-        if (reply->format == 32 && reply->type == XCB_ATOM_CARDINAL && reply->value_len == 1) {
-            const uint32_t value = *reinterpret_cast<uint32_t*>(xcb_get_property_value(reply.data()));
-            newValue = (value != 0);
-        }
-    }
-    setSkipCloseAnimation(newValue);
+    Xcb::Property property(false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
+    setSkipCloseAnimation(property.toBool());
 }
 
 bool Toplevel::skipsCloseAnimation() const

@@ -122,7 +122,6 @@ enum ShadeMode {
 
 template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
-QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator = 0);
 void updateXTime();
 void grabXServer();
 void ungrabXServer();

@@ -674,13 +674,8 @@ void Client::updateUserTime(xcb_timestamp_t time)
 
 xcb_timestamp_t Client::readUserCreationTime() const
 {
-    const xcb_get_property_cookie_t cookie = xcb_get_property_unchecked(connection(), false, window(),
-        atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 10000);
-    ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(), cookie, NULL));
-    if (property.isNull() || xcb_get_property_value_length(property.data()) == 0) {
-        return -1;
-    }
-    return *(reinterpret_cast<xcb_timestamp_t*>(xcb_get_property_value(property.data())));
+    Xcb::Property prop(false, window(), atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 1);
+    return prop.value<xcb_timestamp_t>(-1);
 }
 
 void Client::demandAttention(bool set)

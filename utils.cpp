@@ -67,28 +67,6 @@ StrutRect::StrutRect(const StrutRect& other)
 
 #endif
 
-QByteArray getStringProperty(xcb_window_t w, xcb_atom_t prop, char separator)
-{
-    const xcb_get_property_cookie_t c = xcb_get_property_unchecked(connection(), false, w, prop,
-                                                                   XCB_ATOM_STRING, 0, 10000);
-    ScopedCPointer<xcb_get_property_reply_t> property(xcb_get_property_reply(connection(), c, NULL));
-    if (property.isNull() || property->type == XCB_ATOM_NONE) {
-        return QByteArray();
-    }
-    char *data = static_cast<char*>(xcb_get_property_value(property.data()));
-    int length = property->value_len;
-    if (data && separator) {
-        for (uint32_t i = 0; i < property->value_len; ++i) {
-            if (!data[i] && i + 1 < property->value_len) {
-                data[i] = separator;
-            } else {
-                length = i;
-            }
-        }
-    }
-    return QByteArray(data, length);
-}
-
 #ifndef KCMRULES
 /*
  Updates xTime(). This used to simply fetch current timestamp from the server,

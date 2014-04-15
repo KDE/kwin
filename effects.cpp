@@ -166,10 +166,8 @@ void ScreenLockerWatcher::setLocked(bool activated)
 static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom_t type, int format)
 {
     uint32_t len = 32768;
-    xcb_connection_t *c = connection();
     for (;;) {
-        const auto cookie = xcb_get_property_unchecked(c, false, win, atom, XCB_ATOM_ANY, 0, len);
-        ScopedCPointer<xcb_get_property_reply_t> prop(xcb_get_property_reply(c, cookie, nullptr));
+        Xcb::Property prop(false, win, atom, XCB_ATOM_ANY, 0, len);
         if (prop.isNull()) {
             // get property failed
             return QByteArray();
@@ -178,12 +176,7 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
             len *= 2;
             continue;
         }
-        if (prop->type == type && prop->format == format) {
-            return QByteArray(reinterpret_cast< const char* >(xcb_get_property_value(prop.data())),
-                              xcb_get_property_value_length(prop.data()));
-        } else {
-            return QByteArray();
-        }
+        return prop.toByteArray(format, type);
     }
 }
 
