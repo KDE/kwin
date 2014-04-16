@@ -52,6 +52,7 @@ qt5_add_dbus_interface( modelTest_SRC
   ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 add_executable(effectModelTest ${modelTest_SRC})
+ecm_mark_as_test(effectModelTest)
 
 target_link_libraries(effectModelTest
     Qt5::Quick
