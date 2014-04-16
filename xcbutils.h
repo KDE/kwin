@@ -472,6 +472,14 @@ public:
         (const_cast<Atom*>(this))->getReply();
         return m_atom;
     }
+    bool isValid() {
+        getReply();
+        return m_atom != XCB_ATOM_NONE;
+    }
+    bool isValid() const {
+        (const_cast<Atom*>(this))->getReply();
+        return m_atom != XCB_ATOM_NONE;
+    }
 
     inline const QByteArray &name() const {
         return m_name;

@@ -32,18 +32,13 @@ namespace KWin
 {
 
 static const int IsGlideWindow = 0x22A982D4;
-static xcb_atom_t slideAtom;
-static const QByteArray s_slideAtomName = QByteArrayLiteral("_KDE_SLIDE");
 
 GlideEffect::GlideEffect()
+    : Effect()
+    , m_atom(QByteArrayLiteral("_KDE_SLIDE"))
 {
-    slideAtom = XCB_ATOM_NONE;
-    xcb_connection_t *c = xcbConnection();
-    const auto cookie = xcb_intern_atom(c, false, s_slideAtomName.length(), s_slideAtomName.constData());
-    QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c, cookie, nullptr));
-    if (atom) {
-        slideAtom = atom->atom;
-        effects->registerPropertyType( slideAtom, true );
+    if (m_atom.isValid()) {
+        effects->registerPropertyType( m_atom, true );
     }
     reconfigure(ReconfigureAll);
     connect(effects, SIGNAL(windowAdded(KWin::EffectWindow*)), this, SLOT(slotWindowAdded(KWin::EffectWindow*)));
@@ -53,8 +48,8 @@ GlideEffect::GlideEffect()
 
 GlideEffect::~GlideEffect()
 {
-    if (slideAtom) {
-        effects->registerPropertyType( slideAtom, false );
+    if (m_atom.isValid()) {
+        effects->registerPropertyType( m_atom, false );
     }
 }
 
@@ -219,7 +214,7 @@ bool GlideEffect::isGlideWindow(EffectWindow* w)
         return false;
     if (w->data(IsGlideWindow).toBool())
         return true;
-    if (slideAtom && !w->readProperty( slideAtom, slideAtom, 32 ).isNull())
+    if (m_atom.isValid() && !w->readProperty( m_atom, m_atom, 32 ).isNull())
         return false;
     if (w->hasDecoration())
         return true;

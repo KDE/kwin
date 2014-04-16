@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_LOGOUT_H
 
 #include <kwineffects.h>
+#include <xcbutils.h>
 
 
 namespace KWin
@@ -69,7 +70,7 @@ private:
     bool logoutWindowPassed;
 
     // Persistent effect
-    xcb_atom_t logoutAtom;
+    Xcb::Atom logoutAtom;
     bool canDoPersistent;
     EffectWindowList ignoredWindows;
 

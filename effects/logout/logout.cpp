@@ -41,20 +41,15 @@ LogoutEffect::LogoutEffect()
     , logoutWindow(NULL)
     , logoutWindowClosed(true)
     , logoutWindowPassed(false)
-    , logoutAtom(XCB_ATOM_NONE)
+    , logoutAtom(QByteArrayLiteral("_KDE_LOGGING_OUT"))
     , canDoPersistent(false)
     , ignoredWindows()
     , m_vignettingShader(NULL)
     , m_blurShader(NULL)
     , m_shadersDir(QStringLiteral("kwin/shaders/1.10/"))
 {
-    xcb_connection_t *c = xcbConnection();
-    const QByteArray &name = QByteArrayLiteral("_KDE_LOGGING_OUT");
-    const auto cookie = xcb_intern_atom(c, false, name.length(), name.constData());
-    QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c, cookie, nullptr));
-    if (atom) {
+    if (logoutAtom.isValid()) {
         // Persistent effect
-        logoutAtom = atom->atom;
         effects->registerPropertyType(logoutAtom, true);
     }
 

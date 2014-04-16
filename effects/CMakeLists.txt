@@ -1,3 +1,5 @@
+include_directories(${KWIN_SOURCE_DIR}) # for xcbutils.h
+
 set(kwin_effect_OWN_LIBS
     kwineffects
 )
