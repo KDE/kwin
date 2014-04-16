@@ -90,7 +90,7 @@ void MagnifierEffect::destroyPixmap()
     }
     m_picture.reset();
     if (m_pixmap != XCB_PIXMAP_NONE) {
-        xcb_free_pixmap(connection(), m_pixmap);
+        xcb_free_pixmap(xcbConnection(), m_pixmap);
         m_pixmap = XCB_PIXMAP_NONE;
     }
 #endif
@@ -196,9 +196,9 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (m_pixmap == XCB_PIXMAP_NONE || m_pixmapSize != srcArea.size()) {
                 destroyPixmap();
-                m_pixmap = xcb_generate_id(connection());
+                m_pixmap = xcb_generate_id(xcbConnection());
                 m_pixmapSize = srcArea.size();
-                xcb_create_pixmap(connection(), 32, m_pixmap, rootWindow(), m_pixmapSize.width(), m_pixmapSize.height());
+                xcb_create_pixmap(xcbConnection(), 32, m_pixmap, x11RootWindow(), m_pixmapSize.width(), m_pixmapSize.height());
                 m_picture.reset(new XRenderPicture(m_pixmap, 32));
             }
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
@@ -212,25 +212,25 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
             };
-            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), 0, *m_picture,
+            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), 0, *m_picture,
                                 srcArea.x(), srcArea.y(), 0, 0, 0, 0, srcArea.width(), srcArea.height());
-            xcb_flush(connection());
+            xcb_flush(xcbConnection());
             xform.matrix11 = DOUBLE_TO_FIXED(1.0/zoom);
             xform.matrix22 = DOUBLE_TO_FIXED(1.0/zoom);
 #undef DOUBLE_TO_FIXED
-            xcb_render_set_picture_transform(connection(), *m_picture, xform);
-            xcb_render_set_picture_filter(connection(), *m_picture, 4, const_cast<char*>("good"), 0, NULL);
-            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, *m_picture, 0, effects->xrenderBufferPicture(),
+            xcb_render_set_picture_transform(xcbConnection(), *m_picture, xform);
+            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("good"), 0, NULL);
+            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_SRC, *m_picture, 0, effects->xrenderBufferPicture(),
                                  0, 0, 0, 0, area.x(), area.y(), area.width(), area.height() );
-            xcb_render_set_picture_filter(connection(), *m_picture, 4, const_cast<char*>("fast"), 0, NULL);
-            xcb_render_set_picture_transform(connection(), *m_picture, identity);
+            xcb_render_set_picture_filter(xcbConnection(), *m_picture, 4, const_cast<char*>("fast"), 0, NULL);
+            xcb_render_set_picture_transform(xcbConnection(), *m_picture, identity);
             const xcb_rectangle_t rects[4] = {
                 { int16_t(area.x()+FRAME_WIDTH), int16_t(area.y()), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
                 { int16_t(area.right()-FRAME_WIDTH), int16_t(area.y()+FRAME_WIDTH), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)},
                 { int16_t(area.x()), int16_t(area.bottom()-FRAME_WIDTH), uint16_t(area.width()-FRAME_WIDTH), uint16_t(FRAME_WIDTH)},
                 { int16_t(area.x()), int16_t(area.y()), uint16_t(FRAME_WIDTH), uint16_t(area.height()-FRAME_WIDTH)}
             };
-            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(),
+            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(),
                                        preMultiply(QColor(0,0,0,255)), 4, rects);
 #endif
         }

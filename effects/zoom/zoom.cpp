@@ -154,7 +154,7 @@ void ZoomEffect::showCursor()
 {
     if (isMouseHidden) {
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
-        xcb_xfixes_show_cursor(connection(), rootWindow());
+        xcb_xfixes_show_cursor(xcbConnection(), x11RootWindow());
         texture.reset();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         xrenderPicture.reset();
@@ -179,7 +179,7 @@ void ZoomEffect::hideCursor()
 #endif
         }
         if (shouldHide) {
-            xcb_xfixes_hide_cursor(connection(), rootWindow());
+            xcb_xfixes_hide_cursor(xcbConnection(), x11RootWindow());
             isMouseHidden = true;
         }
     }
@@ -386,18 +386,18 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
             };
             if (mousePointer == MousePointerScale) {
-                xcb_render_set_picture_filter(connection(), *xrenderPicture, 4, const_cast<char*>("good"), 0, NULL);
+                xcb_render_set_picture_filter(xcbConnection(), *xrenderPicture, 4, const_cast<char*>("good"), 0, NULL);
                 const xcb_render_transform_t xform = {
                     DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
                     DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1.0 / zoom), DOUBLE_TO_FIXED(0),
                     DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
                 };
-                xcb_render_set_picture_transform(connection(), *xrenderPicture, xform);
+                xcb_render_set_picture_transform(xcbConnection(), *xrenderPicture, xform);
             }
-            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *xrenderPicture, XCB_RENDER_PICTURE_NONE,
+            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, *xrenderPicture, XCB_RENDER_PICTURE_NONE,
                                  effects->xrenderBufferPicture(), 0, 0, 0, 0, rect.x(), rect.y(), rect.width(), rect.height());
             if (mousePointer == MousePointerScale)
-                xcb_render_set_picture_transform(connection(), *xrenderPicture, xrenderIdentity);
+                xcb_render_set_picture_transform(xcbConnection(), *xrenderPicture, xrenderIdentity);
 #undef DOUBLE_TO_FIXED
         }
 #endif

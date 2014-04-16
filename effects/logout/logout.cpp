@@ -48,7 +48,7 @@ LogoutEffect::LogoutEffect()
     , m_blurShader(NULL)
     , m_shadersDir(QStringLiteral("kwin/shaders/1.10/"))
 {
-    xcb_connection_t *c = connection();
+    xcb_connection_t *c = xcbConnection();
     const QByteArray &name = QByteArrayLiteral("_KDE_LOGGING_OUT");
     const auto cookie = xcb_intern_atom(c, false, name.length(), name.constData());
     QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c, cookie, nullptr));

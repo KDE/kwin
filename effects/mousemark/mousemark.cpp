@@ -101,7 +101,7 @@ void MouseMarkEffect::addRect(const QPoint &p1, const QPoint &p2, xcb_rectangle_
             rects[i-1].y = p1.y() + i*h/n;
             rects[i-1].width = rects[i-1].height = width;
         }
-        xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), *c, n - 1, rects);
+        xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), *c, n - 1, rects);
         delete [] rects;
         r->x = p1.x();
         r->y = p1.y();
@@ -159,7 +159,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
                 for (int j = 0; j < marks[i].count()-1; ++j) {
                     addRect(marks[i][j], marks[i][j+1], &rects[j], &c);
                 }
-                xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
+                xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
                 delete [] rects;
             }
         }
@@ -168,7 +168,7 @@ void MouseMarkEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
             xcb_rectangle_t *rects = new xcb_rectangle_t[n];
             for (int i = 0; i < n; ++i)
                 addRect(drawing[i], drawing[i+1], &rects[i], &c);
-            xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
+            xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_SRC, effects->xrenderBufferPicture(), c, n, rects);
             delete [] rects;
         }
     }

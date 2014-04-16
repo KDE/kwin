@@ -120,7 +120,7 @@ void ScreenEdgeEffect::paintScreen(int mask, QRegion region, ScreenPaintData &da
                     // nothing
                     break;
             }
-            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, *(*it)->picture.data(),
+            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, *(*it)->picture.data(),
                                  xRenderBlendPicture(opacity), effects->xrenderBufferPicture(),
                                  0, 0, 0, 0, x, y, width, height);
 #endif

@@ -154,7 +154,7 @@ void SnapHelperEffect::postPaintScreen()
                 rects[5].width = 4;
                 rects[5].height = 2*halfHeight - 4;
 
-                xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(),
+                xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(),
                                            preMultiply(QColor(128, 128, 128, m_timeline.currentValue()*128)), 6, rects);
             }
 #endif

@@ -186,6 +186,9 @@ public:
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
 
+    xcb_connection_t *xcbConnection() const override;
+    xcb_window_t x11RootWindow() const override;
+
     // internal (used by kwin core or compositing code)
     void startPaint();
     void grabbedKeyboardEvent(QKeyEvent* e);
@@ -458,6 +461,17 @@ QList<EffectWindow*> EffectsHandlerImpl::elevatedWindows() const
     return elevated_windows;
 }
 
+inline
+xcb_window_t EffectsHandlerImpl::x11RootWindow() const
+{
+    return rootWindow();
+}
+
+inline
+xcb_connection_t *EffectsHandlerImpl::xcbConnection() const
+{
+    return connection();
+}
 
 inline
 EffectWindowGroupImpl::EffectWindowGroupImpl(Group* g)

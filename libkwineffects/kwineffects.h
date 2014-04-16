@@ -577,6 +577,10 @@ public:
 
 public Q_SLOTS:
     virtual bool borderActivated(ElectricBorder border);
+
+protected:
+    xcb_connection_t *xcbConnection() const;
+    xcb_window_t x11RootWindow() const;
 };
 
 
@@ -1077,6 +1081,9 @@ public:
      * There is normally no reason for an Effect to call this method.
      */
     virtual void doneOpenGLContextCurrent() = 0;
+
+    virtual xcb_connection_t *xcbConnection() const = 0;
+    virtual xcb_window_t x11RootWindow() const = 0;
 
     /**
      * @return @ref KConfigGroup which holds given effect's config options

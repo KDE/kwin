@@ -38,7 +38,7 @@ static const QByteArray s_slideAtomName = QByteArrayLiteral("_KDE_SLIDE");
 GlideEffect::GlideEffect()
 {
     slideAtom = XCB_ATOM_NONE;
-    xcb_connection_t *c = connection();
+    xcb_connection_t *c = xcbConnection();
     const auto cookie = xcb_intern_atom(c, false, s_slideAtomName.length(), s_slideAtomName.constData());
     QScopedPointer<xcb_intern_atom_reply_t, QScopedPointerPodDeleter> atom(xcb_intern_atom_reply(c, cookie, nullptr));
     if (atom) {

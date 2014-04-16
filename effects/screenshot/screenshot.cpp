@@ -55,16 +55,17 @@ ScreenShotEffect::~ScreenShotEffect()
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 static QImage xPictureToImage(xcb_render_picture_t srcPic, const QRect &geometry, xcb_image_t **xImage)
 {
-    xcb_pixmap_t xpix = xcb_generate_id(connection());
-    xcb_create_pixmap(connection(), 32, xpix, rootWindow(), geometry.width(), geometry.height());
+    xcb_connection_t *c = effects->xcbConnection();
+    xcb_pixmap_t xpix = xcb_generate_id(c);
+    xcb_create_pixmap(c, 32, xpix, effects->x11RootWindow(), geometry.width(), geometry.height());
     XRenderPicture pic(xpix, 32);
-    xcb_render_composite(connection(), XCB_RENDER_PICT_OP_SRC, srcPic, XCB_RENDER_PICTURE_NONE, pic,
+    xcb_render_composite(c, XCB_RENDER_PICT_OP_SRC, srcPic, XCB_RENDER_PICTURE_NONE, pic,
                          geometry.x(), geometry.y(), 0, 0, 0, 0, geometry.width(), geometry.height());
-    xcb_flush(connection());
-    *xImage = xcb_image_get(connection(), xpix, 0, 0, geometry.width(), geometry.height(), ~0, XCB_IMAGE_FORMAT_Z_PIXMAP);
+    xcb_flush(c);
+    *xImage = xcb_image_get(c, xpix, 0, 0, geometry.width(), geometry.height(), ~0, XCB_IMAGE_FORMAT_Z_PIXMAP);
     QImage img((*xImage)->data, (*xImage)->width, (*xImage)->height, (*xImage)->stride, QImage::Format_ARGB32_Premultiplied);
     // TODO: byte order might need swapping
-    xcb_free_pixmap(connection(), xpix);
+    xcb_free_pixmap(c, xpix);
     return img;
 }
 #endif
@@ -159,15 +160,15 @@ void ScreenShotEffect::postPaintScreen()
             }
 
             const int depth = img.depth();
-            xcb_pixmap_t xpix = xcb_generate_id(connection());
-            xcb_create_pixmap(connection(), depth, xpix, rootWindow(), img.width(), img.height());
+            xcb_pixmap_t xpix = xcb_generate_id(xcbConnection());
+            xcb_create_pixmap(xcbConnection(), depth, xpix, x11RootWindow(), img.width(), img.height());
 
-            xcb_gcontext_t cid = xcb_generate_id(connection());
-            xcb_create_gc(connection(), cid, xpix, 0, NULL);
-            xcb_put_image(connection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
+            xcb_gcontext_t cid = xcb_generate_id(xcbConnection());
+            xcb_create_gc(xcbConnection(), cid, xpix, 0, NULL);
+            xcb_put_image(xcbConnection(), XCB_IMAGE_FORMAT_Z_PIXMAP, xpix, cid, img.width(), img.height(),
                         0, 0, 0, depth, img.byteCount(), img.constBits());
-            xcb_free_gc(connection(), cid);
-            xcb_flush(connection());
+            xcb_free_gc(xcbConnection(), cid);
+            xcb_flush(xcbConnection());
             emit screenshotCreated(xpix);
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
             if (xImage) {
@@ -301,8 +302,8 @@ void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offse
 // Uses the X11_EXTENSIONS_XFIXES_H extension to grab the pointer image, and overlays it onto the snapshot.
 {
     QScopedPointer<xcb_xfixes_get_cursor_image_reply_t, QScopedPointerPodDeleter> cursor(
-        xcb_xfixes_get_cursor_image_reply(connection(),
-                                          xcb_xfixes_get_cursor_image_unchecked(connection()),
+        xcb_xfixes_get_cursor_image_reply(xcbConnection(),
+                                          xcb_xfixes_get_cursor_image_unchecked(xcbConnection()),
                                           NULL));
     if (cursor.isNull())
         return;

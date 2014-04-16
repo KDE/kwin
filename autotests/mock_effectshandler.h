@@ -217,5 +217,11 @@ public:
     long unsigned int xrenderBufferPicture() override {
         return 0;
     }
+    xcb_connection_t *xcbConnection() const override {
+        return QX11Info::connection();
+    }
+    xcb_window_t x11RootWindow() const override {
+        return QX11Info::appRootWindow();
+    }
 };
 #endif

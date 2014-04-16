@@ -164,10 +164,10 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
                 DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 0.0 ), DOUBLE_TO_FIXED( 1.0 )
             };
 #undef DOUBLE_TO_FIXED
-            xcb_render_set_picture_transform(connection(), picture, xform);
-            xcb_render_set_picture_filter(connection(), picture, 8, "bilinear", 0, NULL);
+            xcb_render_set_picture_transform(xcbConnection(), picture, xform);
+            xcb_render_set_picture_filter(xcbConnection(), picture, 8, "bilinear", 0, NULL);
             const QRect &rect = m_lastRect[i];
-            xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
+            xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
                                  effects->xrenderBufferPicture(), 0, 0, 0, 0,
                                  rect.x(), rect.y(), rect.width(), rect.height());
         }

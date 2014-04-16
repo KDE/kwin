@@ -113,7 +113,7 @@ void ShowPaintEffect::paintXrender()
         xcb_rectangle_t rect = {int16_t(r.x()), int16_t(r.y()), uint16_t(r.width()), uint16_t(r.height())};
         rects << rect;
     }
-    xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
+    xcb_render_fill_rectangles(xcbConnection(), XCB_RENDER_PICT_OP_OVER, effects->xrenderBufferPicture(), col, rects.count(), rects.constData());
 #endif
 }
 

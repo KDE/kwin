@@ -351,7 +351,7 @@ void MouseClickEffect::drawCircleXr(const QColor& color, float cx, float cy, flo
     strip << point;
 
     XRenderPicture fill = xRenderFill(color);
-    xcb_render_tri_strip(connection(), XCB_RENDER_PICT_OP_OVER,
+    xcb_render_tri_strip(xcbConnection(), XCB_RENDER_PICT_OP_OVER,
                           fill, effects->xrenderBufferPicture(), 0,
                           0, 0, strip.count(), strip.constData());
 #undef DOUBLE_TO_FIXED
