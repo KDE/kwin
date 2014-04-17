@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // own
 #include "tabboxhandler.h"
+#include <config-kwin.h>
 #include <kwinglobals.h>
 #include "xcbutils.h"
 // tabbox

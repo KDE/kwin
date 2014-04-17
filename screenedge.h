@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin {
 
+class Client;
 class ScreenEdges;
 
 class Edge : public QObject

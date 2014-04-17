@@ -21,10 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_XCB_UTILS_H
 
 #include <kwinglobals.h>
-#include "utils.h"
 
 #include <QRect>
 #include <QRegion>
+#include <QScopedPointer>
 #include <QVector>
 
 #include <xcb/xcb.h>
@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/shm.h>
 
 namespace KWin {
+
+template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 namespace Xcb {
 
