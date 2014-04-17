@@ -861,6 +861,38 @@ public:
     }
 };
 
+XCB_WRAPPER_DATA(CrtcInfoData, xcb_randr_get_crtc_info, xcb_randr_crtc_t, xcb_timestamp_t)
+class CrtcInfo : public Wrapper<CrtcInfoData, xcb_randr_crtc_t, xcb_timestamp_t>
+{
+public:
+    CrtcInfo() = default;
+    CrtcInfo(const CrtcInfo&) = default;
+    explicit CrtcInfo(xcb_randr_crtc_t c, xcb_timestamp_t t) : Wrapper<CrtcInfoData, xcb_randr_crtc_t, xcb_timestamp_t>(c, t) {}
+
+    inline QRect rect() {
+        const CrtcInfoData::reply_type *info = data();
+        if (!info || info->num_outputs == 0 || info->mode == XCB_NONE || info->status != XCB_RANDR_SET_CONFIG_SUCCESS) {
+            return QRect();
+        }
+        return QRect(info->x, info->y, info->width, info->height);
+    }
+};
+
+XCB_WRAPPER_DATA(CurrentResourcesData, xcb_randr_get_screen_resources_current, xcb_window_t)
+class CurrentResources : public Wrapper<CurrentResourcesData, xcb_window_t>
+{
+public:
+    explicit CurrentResources(WindowId window) : Wrapper<CurrentResourcesData, xcb_window_t>(window) {}
+
+    inline xcb_randr_crtc_t *crtcs() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_current_crtcs(data());
+    }
+};
+
+XCB_WRAPPER(SetCrtcConfig, xcb_randr_set_crtc_config, xcb_randr_crtc_t, xcb_timestamp_t, xcb_timestamp_t, int16_t, int16_t, xcb_randr_mode_t, uint16_t, uint32_t, const xcb_randr_output_t*)
 }
 
 class ExtensionData

@@ -1,8 +1,8 @@
 /********************************************************************
- KWin - the KDE window manager
- This file is part of the KDE project.
+KWin - the KDE window manager
+This file is part of the KDE project.
 
-Copyright (C) 2014 Fredrik Höglund <fredrik@kde.org>
+Copyright (C) 2014 Martin Gräßlin <mgraesslin@kde.org>
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,24 +17,40 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-
+#ifndef KWIN_SCREENS_XRANDR_H
+#define KWIN_SCREENS_XRANDR_H
+// kwin
+#include "screens.h"
 #include "x11eventfilter.h"
-#include <workspace.h>
+// Qt
+#include <QVector>
 
 namespace KWin
 {
 
-X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
-    : m_eventType(eventType), m_extension(opcode), m_genericEventType(genericEventType)
+class XRandRScreens : public Screens, public X11EventFilter
 {
-    Workspace::self()->registerEventFilter(this);
-}
+    Q_OBJECT
+public:
+    XRandRScreens(QObject *parent);
+    virtual ~XRandRScreens();
+    void init() override;
+    QRect geometry(int screen) const override;
+    int number(const QPoint& pos) const override;
+    QSize size(int screen) const override;
 
-X11EventFilter::~X11EventFilter()
-{
-    if (auto w = Workspace::self()) {
-        w->unregisterEventFilter(this);
-    }
-}
+    using QObject::event;
+    bool event(xcb_generic_event_t *event) override;
 
-}
+protected Q_SLOTS:
+    void updateCount() override;
+
+private:
+    template <typename T>
+    void update();
+    QVector<QRect> m_geometries;
+};
+
+} // namespace
+
+#endif

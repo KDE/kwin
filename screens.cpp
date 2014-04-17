@@ -23,16 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "settings.h"
 #include <workspace.h>
 #include <config-kwin.h>
+#include "screens_xrandr.h"
 #if HAVE_WAYLAND
 #include "screens_wayland.h"
 #endif
 #ifdef KWIN_UNIT_TEST
 #include <mock_screens.h>
 #endif
-
-#include <QApplication>
-#include <QDesktopWidget>
-#include <QTimer>
 
 namespace KWin
 {
@@ -50,7 +47,7 @@ Screens *Screens::create(QObject *parent)
     }
 #endif
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
-        s_self = new DesktopWidgetScreens(parent);
+        s_self = new XRandRScreens(parent);
     }
 #endif
     s_self->init();
@@ -171,48 +168,6 @@ int Screens::intersecting(const QRect &r) const
         }
     }
     return cnt;
-}
-
-DesktopWidgetScreens::DesktopWidgetScreens(QObject *parent)
-    : Screens(parent)
-    , m_desktop(QApplication::desktop())
-{
-}
-
-DesktopWidgetScreens::~DesktopWidgetScreens()
-{
-}
-
-void DesktopWidgetScreens::init()
-{
-    Screens::init();
-    connect(m_desktop, SIGNAL(screenCountChanged(int)), SLOT(startChangedTimer()));
-    connect(m_desktop, SIGNAL(resized(int)), SLOT(startChangedTimer()));
-    updateCount();
-}
-
-QRect DesktopWidgetScreens::geometry(int screen) const
-{
-    if (Screens::self()->isChanging())
-        const_cast<DesktopWidgetScreens*>(this)->updateCount();
-    return m_desktop->screenGeometry(screen);
-}
-
-QSize DesktopWidgetScreens::size(int screen) const
-{
-    return geometry(screen).size();
-}
-
-int DesktopWidgetScreens::number(const QPoint &pos) const
-{
-    if (Screens::self()->isChanging())
-        const_cast<DesktopWidgetScreens*>(this)->updateCount();
-    return m_desktop->screenNumber(pos);
-}
-
-void DesktopWidgetScreens::updateCount()
-{
-    setCount(m_desktop->screenCount());
 }
 
 } // namespace

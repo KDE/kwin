@@ -76,5 +76,15 @@ QRect MockWorkspace::clientArea(clientAreaOption, int screen, int desktop) const
     return QRect();
 }
 
+void MockWorkspace::registerEventFilter(X11EventFilter *filter)
+{
+    Q_UNUSED(filter)
+}
+
+void MockWorkspace::unregisterEventFilter(X11EventFilter *filter)
+{
+    Q_UNUSED(filter)
+}
+
 }
 

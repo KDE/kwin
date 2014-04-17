@@ -30,9 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QRect>
 #include <QTimer>
 
-
-class QDesktopWidget;
-
 namespace KWin
 {
 class Client;
@@ -141,23 +138,6 @@ private:
     QSize m_boundingSize;
 
     KWIN_SINGLETON(Screens)
-};
-
-class DesktopWidgetScreens : public Screens
-{
-    Q_OBJECT
-public:
-    DesktopWidgetScreens(QObject *parent);
-    virtual ~DesktopWidgetScreens();
-    void init() override;
-    virtual QRect geometry(int screen) const;
-    virtual int number(const QPoint &pos) const;
-    QSize size(int screen) const override;
-protected Q_SLOTS:
-    void updateCount();
-
-private:
-    QDesktopWidget *m_desktop;
 };
 
 inline

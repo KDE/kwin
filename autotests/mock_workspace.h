@@ -27,6 +27,7 @@ namespace KWin
 {
 
 class Client;
+class X11EventFilter;
 
 class MockWorkspace;
 typedef MockWorkspace Workspace;
@@ -45,6 +46,9 @@ public:
 
     void setActiveClient(Client *c);
     void setMovingClient(Client *c);
+
+    void registerEventFilter(X11EventFilter *filter);
+    void unregisterEventFilter(X11EventFilter *filter);
 
     static Workspace *self();
 
