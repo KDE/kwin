@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+// forward declare method
+void cleanupGL();
 
 inline qint64 kVersionNumber(qint64 major, qint64 minor, qint64 patch = 0)
 {
