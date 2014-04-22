@@ -189,6 +189,7 @@ class Options : public KDecorationOptions
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
+    Q_PROPERTY(OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
 public:
 
     explicit Options(QObject *parent = NULL);
@@ -540,6 +541,9 @@ public:
     bool glCoreProfile() const {
         return m_glCoreProfile;
     }
+    OpenGLPlatformInterface glPlatformInterface() const {
+        return m_glPlatformInterface;
+    }
 
     enum GlSwapStrategy { NoSwapEncourage = 0, CopyFrontBuffer = 'c', PaintFullScreen = 'p', ExtendDamage = 'e', AutoSwapStrategy = 'a' };
     GlSwapStrategy glPreferBufferSwap() const {
@@ -605,6 +609,7 @@ public:
     void setGlStrictBindingFollowsDriver(bool glStrictBindingFollowsDriver);
     void setGLCoreProfile(bool glCoreProfile);
     void setGlPreferBufferSwap(char glPreferBufferSwap);
+    void setGlPlatformInterface(OpenGLPlatformInterface interface);
 
     // default values
     static WindowOperation defaultOperationTitlebarDblClick() {
@@ -709,6 +714,9 @@ public:
     static GlSwapStrategy defaultGlPreferBufferSwap() {
         return AutoSwapStrategy;
     }
+    static OpenGLPlatformInterface defaultGlPlatformInterface() {
+        return kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
+    };
     static int defaultAnimationSpeed() {
         return 3;
     }
@@ -786,6 +794,7 @@ Q_SIGNALS:
     void glStrictBindingFollowsDriverChanged();
     void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
+    void glPlatformInterfaceChanged();
 
 public Q_SLOTS:
     void setColorCorrected(bool colorCorrected = false);
@@ -834,6 +843,7 @@ private:
     bool m_glStrictBindingFollowsDriver;
     bool m_glCoreProfile;
     GlSwapStrategy m_glPreferBufferSwap;
+    OpenGLPlatformInterface m_glPlatformInterface;
 
     WindowOperation OpTitlebarDblClick;
 

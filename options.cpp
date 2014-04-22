@@ -147,6 +147,7 @@ Options::Options(QObject *parent)
     , m_glStrictBindingFollowsDriver(Options::defaultGlStrictBindingFollowsDriver())
     , m_glCoreProfile(Options::defaultGLCoreProfile())
     , m_glPreferBufferSwap(Options::defaultGlPreferBufferSwap())
+    , m_glPlatformInterface(Options::defaultGlPlatformInterface())
     , OpTitlebarDblClick(Options::defaultOperationTitlebarDblClick())
     , CmdActiveTitlebar1(Options::defaultCommandActiveTitlebar1())
     , CmdActiveTitlebar2(Options::defaultCommandActiveTitlebar2())
@@ -750,6 +751,41 @@ void Options::setGlPreferBufferSwap(char glPreferBufferSwap)
     emit glPreferBufferSwapChanged();
 }
 
+void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
+{
+    // check environment variable
+    const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
+    if (!envOpenGLInterface.isEmpty()) {
+        if (qstrcmp(envOpenGLInterface, "egl") == 0) {
+            qDebug() << "Forcing EGL native interface through environment variable";
+            interface = EglPlatformInterface;
+        } else if (qstrcmp(envOpenGLInterface, "glx") == 0) {
+            qDebug() << "Forcing GLX native interface through environment variable";
+            interface = GlxPlatformInterface;
+        }
+    }
+    if (kwinApp()->shouldUseWaylandForCompositing() && interface == GlxPlatformInterface) {
+        // Glx is impossible on Wayland, enforce egl
+        qDebug() << "Forcing EGL native interface for Wayland mode";
+        interface = EglPlatformInterface;
+    }
+#ifdef KWIN_HAVE_OPENGLES
+    qDebug() << "Forcing EGL native interface as compiled against OpenGL ES";
+    interface = EglPlatformInterface;
+#else
+#ifndef KWIN_HAVE_EGL
+    qDebug() << "Forcing GLX native interface as compiled without EGL support";
+    interface = GlxPlatformInterface;
+#endif
+#endif
+
+    if (m_glPlatformInterface == interface) {
+        return;
+    }
+    m_glPlatformInterface = interface;
+    emit glPlatformInterfaceChanged();
+}
+
 void Options::reparseConfiguration()
 {
     m_settings->config()->reparseConfiguration();
@@ -958,6 +994,26 @@ void Options::reloadCompositingSettings(bool force)
     setUnredirectFullscreen(config.readEntry("UnredirectFullscreen", Options::defaultUnredirectFullscreen()));
     // TOOD: add setter
     animationSpeed = qBound(0, config.readEntry("AnimationSpeed", Options::defaultAnimationSpeed()), 6);
+
+    auto interfaceToKey = [](OpenGLPlatformInterface interface) {
+        switch (interface) {
+        case GlxPlatformInterface:
+            return QStringLiteral("glx");
+        case EglPlatformInterface:
+            return QStringLiteral("egl");
+        default:
+            return QString();
+        }
+    };
+    auto keyToInterface = [](const QString &key) {
+        if (key == QStringLiteral("glx")) {
+            return GlxPlatformInterface;
+        } else if (key == QStringLiteral("egl")) {
+            return EglPlatformInterface;
+        }
+        return defaultGlPlatformInterface();
+    };
+    setGlPlatformInterface(keyToInterface(config.readEntry("GLPlatformInterface", interfaceToKey(m_glPlatformInterface))));
 }
 
 // restricted should be true for operations that the user may not be able to repeat

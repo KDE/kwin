@@ -265,6 +265,9 @@
             <min>0</min>
             <max>6</max>
         </entry>
+        <entry name="GLPlatformInterface" type="String">
+            <default>glx</default>
+        </entry>
     </group>
     <group name="TabBox">
         <entry name="ShowDelay" type="Bool">

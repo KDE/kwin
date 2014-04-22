@@ -194,26 +194,7 @@ SceneOpenGL::~SceneOpenGL()
 SceneOpenGL *SceneOpenGL::createScene()
 {
     OpenGLBackend *backend = NULL;
-    OpenGLPlatformInterface platformInterface = NoOpenGLPlatformInterface;
-    // should we use glx?
-#ifndef KWIN_HAVE_OPENGLES
-    // on OpenGL we default to glx on X11 and to egl on Wayland
-    platformInterface = kwinApp()->shouldUseWaylandForCompositing() ? EglPlatformInterface : GlxPlatformInterface;
-#endif
-
-    const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
-#ifdef KWIN_HAVE_EGL
-#ifdef KWIN_HAVE_OPENGLES
-    // for OpenGL ES we need to use the Egl Backend
-    platformInterface = EglPlatformInterface;
-#else
-    // check environment variable
-    if (qstrcmp(envOpenGLInterface, "egl") == 0) {
-        qDebug() << "Forcing EGL native interface through environment variable";
-        platformInterface = EglPlatformInterface;
-    }
-#endif
-#endif
+    OpenGLPlatformInterface platformInterface = options->glPlatformInterface();
 
     switch (platformInterface) {
     case GlxPlatformInterface:
