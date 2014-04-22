@@ -313,6 +313,12 @@ public:
     bool preferBufferSubData() const;
 
     /**
+     * @returns The OpenGLPlatformInterface currently used
+     * @since 5.0
+     **/
+    OpenGLPlatformInterface platformInterface() const;
+
+    /**
      * @returns a human readable form of the @p version.
      * @since 4.9
      * @see glVersion
@@ -366,6 +372,7 @@ private:
     bool m_limitedNPOT: 1;
     bool m_virtualMachine: 1;
     bool m_preferBufferSubData: 1;
+    OpenGLPlatformInterface m_platformInterface;
     static GLPlatform *s_platform;
 };
 

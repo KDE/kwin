@@ -508,7 +508,8 @@ GLPlatform::GLPlatform()
       m_limitedGLSL(false),
       m_textureNPOT(false),
       m_limitedNPOT(false),
-      m_virtualMachine(false)
+      m_virtualMachine(false),
+      m_platformInterface(NoOpenGLPlatformInterface)
 {
 }
 
@@ -518,6 +519,8 @@ GLPlatform::~GLPlatform()
 
 void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 {
+    m_platformInterface = platformInterface;
+
     m_vendor       = (const char*)glGetString(GL_VENDOR);
     m_renderer     = (const char*)glGetString(GL_RENDERER);
     m_version      = (const char*)glGetString(GL_VERSION);
@@ -1042,6 +1045,11 @@ CompositingType GLPlatform::recommendedCompositor() const
 bool GLPlatform::preferBufferSubData() const
 {
     return m_preferBufferSubData;
+}
+
+OpenGLPlatformInterface GLPlatform::platformInterface() const
+{
+    return m_platformInterface;
 }
 
 bool GLPlatform::isGLES() const
