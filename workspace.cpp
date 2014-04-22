@@ -1417,6 +1417,18 @@ QString Workspace::supportInformation() const
             support.append(QStringLiteral("OpenGL vendor string: ") +   QString::fromUtf8(platform->glVendorString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL renderer string: ") + QString::fromUtf8(platform->glRendererString()) + QStringLiteral("\n"));
             support.append(QStringLiteral("OpenGL version string: ") +  QString::fromUtf8(platform->glVersionString()) + QStringLiteral("\n"));
+            support.append(QStringLiteral("OpenGL platform interface: "));
+            switch (platform->platformInterface()) {
+            case GlxPlatformInterface:
+                support.append(QStringLiteral("GLX"));
+                break;
+            case EglPlatformInterface:
+                support.append(QStringLiteral("EGL"));
+                break;
+            default:
+                support.append(QStringLiteral("UNKNOWN"));
+            }
+            support.append(QStringLiteral("\n"));
 
             if (platform->supports(LimitedGLSL) || platform->supports(GLSL))
                 support.append(QStringLiteral("OpenGL shading language version string: ") + QString::fromUtf8(platform->glShadingLanguageVersionString()) + QStringLiteral("\n"));
