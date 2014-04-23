@@ -79,6 +79,16 @@ class Compositor : public QObject {
      * @li @c gles OpenGL ES 2
      **/
     Q_PROPERTY(QString compositingType READ compositingType)
+    /**
+     * @brief All currently supported OpenGLPlatformInterfaces.
+     *
+     * Possible values:
+     * @li glx
+     * @li egl
+     *
+     * Values depend on operation mode and compile time options.
+     **/
+    Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
 public:
     enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1<<0, BlockRuleSuspend = 1<<1, ScriptSuspend = 1<<2, AllReasonSuspend = 0xff };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
@@ -158,6 +168,7 @@ public:
     QString compositingNotPossibleReason() const;
     bool isOpenGLBroken() const;
     QString compositingType() const;
+    QStringList supportedOpenGLPlatformInterfaces() const;
 
 public Q_SLOTS:
     void addRepaintFull();

@@ -862,6 +862,22 @@ QString Compositor::compositingType() const
     }
 }
 
+QStringList Compositor::supportedOpenGLPlatformInterfaces() const
+{
+    QStringList interfaces;
+    bool supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
+#ifdef KWIN_HAVE_OPENGLES
+    supportsGlx = false;
+#endif
+    if (supportsGlx) {
+        interfaces << QStringLiteral("glx");
+    }
+#ifdef KWIN_HAVE_EGL
+    interfaces << QStringLiteral("egl");
+#endif
+    return interfaces;
+}
+
 /*****************************************************
  * Workspace
  ****************************************************/
