@@ -35,7 +35,7 @@ var loginEffect = {
         if (windowClass === "ksplashsimple ksplashsimple") {
             return true;
         }
-        if (windowClass === "qt-subapplication ksplashqml") {
+        if (windowClass === "ksplashqml ksplashqml") {
             return true;
         }
         return false;
