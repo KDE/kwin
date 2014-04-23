@@ -502,6 +502,7 @@ void EffectFilterModel::defaults()
 EffectView::EffectView(ViewType type, QWindow *parent)
     : QQuickView(parent)
 {
+    qRegisterMetaType<OpenGLPlatformInterfaceModel*>();
     qmlRegisterType<EffectConfig>("org.kde.kwin.kwincompositing", 1, 0, "EffectConfig");
     qmlRegisterType<EffectFilterModel>("org.kde.kwin.kwincompositing", 1, 0, "EffectFilterModel");
     qmlRegisterType<Compositing>("org.kde.kwin.kwincompositing", 1, 0, "Compositing");

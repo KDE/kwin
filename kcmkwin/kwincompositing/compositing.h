@@ -28,6 +28,8 @@
 namespace KWin {
 namespace Compositing {
 
+class OpenGLPlatformInterfaceModel;
+
 class Compositing : public QObject
 {
 
@@ -41,6 +43,8 @@ class Compositing : public QObject
     Q_PROPERTY(bool glColorCorrection READ glColorCorrection WRITE setGlColorCorrection NOTIFY glColorCorrectionChanged)
     Q_PROPERTY(int compositingType READ compositingType WRITE setCompositingType NOTIFY compositingTypeChanged)
     Q_PROPERTY(bool compositingEnabled READ compositingEnabled WRITE setCompositingEnabled NOTIFY compositingEnabledChanged);
+    Q_PROPERTY(KWin::Compositing::OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel READ openGLPlatformInterfaceModel CONSTANT)
+    Q_PROPERTY(int openGLPlatformInterface READ openGLPlatformInterface WRITE setOpenGLPlatformInterface NOTIFY openGLPlatformInterfaceChanged)
 public:
     explicit Compositing(QObject *parent = 0);
 
@@ -55,6 +59,9 @@ public:
     bool glColorCorrection() const;
     int compositingType() const;
     bool compositingEnabled() const;
+    int openGLPlatformInterface() const;
+
+    OpenGLPlatformInterfaceModel *openGLPlatformInterfaceModel() const;
 
     void setAnimationSpeed(int speed);
     void setWindowThumbnail(int index);
@@ -65,6 +72,7 @@ public:
     void setGlColorCorrection(bool correction);
     void setCompositingType(int index);
     void setCompositingEnabled(bool enalbed);
+    void setOpenGLPlatformInterface(int interface);
 
     void save();
 
@@ -83,6 +91,7 @@ Q_SIGNALS:
     void glColorCorrectionChanged();
     void compositingTypeChanged();
     void compositingEnabledChanged();
+    void openGLPlatformInterfaceChanged();
 
 private:
     int m_animationSpeed;
@@ -95,6 +104,8 @@ private:
     int m_compositingType;
     bool m_compositingEnabled;
     bool m_changed;
+    OpenGLPlatformInterfaceModel *m_openGLPlatformInterfaceModel;
+    int m_openGLPlatformInterface;
 };
 
 
@@ -143,7 +154,26 @@ struct CompositingData {
     CompositingType::CompositingTypeIndex type;
 };
 
+class OpenGLPlatformInterfaceModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    explicit OpenGLPlatformInterfaceModel(QObject *parent = nullptr);
+    virtual ~OpenGLPlatformInterfaceModel();
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QModelIndex indexForKey(const QString &key) const;
+
+    QHash< int, QByteArray > roleNames() const override;
+
+private:
+    QStringList m_keys;
+    QStringList m_names;
+};
 
 }//end namespace Compositing
 }//end namespace KWin
+
+Q_DECLARE_METATYPE(KWin::Compositing::OpenGLPlatformInterfaceModel*)
 #endif

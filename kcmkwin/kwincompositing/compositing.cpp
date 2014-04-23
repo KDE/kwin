@@ -47,6 +47,8 @@ Compositing::Compositing(QObject *parent)
     , m_compositingType(0)
     , m_compositingEnabled(true)
     , m_changed(false)
+    , m_openGLPlatformInterfaceModel(new OpenGLPlatformInterfaceModel(this))
+    , m_openGLPlatformInterface(0)
 {
     reset();
     connect(this, &Compositing::animationSpeedChanged,       this, &Compositing::changed);
@@ -58,6 +60,7 @@ Compositing::Compositing(QObject *parent)
     connect(this, &Compositing::glColorCorrectionChanged,    this, &Compositing::changed);
     connect(this, &Compositing::compositingTypeChanged,      this, &Compositing::changed);
     connect(this, &Compositing::compositingEnabledChanged,   this, &Compositing::changed);
+    connect(this, &Compositing::openGLPlatformInterfaceChanged, this, &Compositing::changed);
 
     connect(this, &Compositing::changed, [this]{
         m_changed = true;
@@ -108,6 +111,10 @@ void Compositing::reset()
         }
     };
     setCompositingType(type());
+
+    const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(kwinConfig.readEntry("GLPlatformInterface", "glx"));
+    setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
+
     m_changed = false;
 }
 
@@ -121,6 +128,8 @@ void Compositing::defaults()
     setGlSwapStrategy(1);
     setGlColorCorrection(false);
     setCompositingType(CompositingType::OPENGL20_INDEX);
+    const QModelIndex index = m_openGLPlatformInterfaceModel->indexForKey(QStringLiteral("glx"));
+    setOpenGLPlatformInterface(index.isValid() ? index.row() : 0);
     m_changed = true;
 }
 
@@ -323,6 +332,10 @@ void Compositing::save()
     }
     kwinConfig.writeEntry("Backend", backend);
     kwinConfig.writeEntry("GLCore", glCore);
+    const QModelIndex glIndex = m_openGLPlatformInterfaceModel->index(m_openGLPlatformInterface);
+    if (glIndex.isValid()) {
+        kwinConfig.writeEntry("GLPlatformInterface", glIndex.data(Qt::UserRole).toString());
+    }
     kwinConfig.sync();
 
     if (m_changed) {
@@ -333,6 +346,25 @@ void Compositing::save()
         QDBusConnection::sessionBus().send(message);
         m_changed = false;
     }
+}
+
+OpenGLPlatformInterfaceModel *Compositing::openGLPlatformInterfaceModel() const
+{
+    return m_openGLPlatformInterfaceModel;
+}
+
+int Compositing::openGLPlatformInterface() const
+{
+    return m_openGLPlatformInterface;
+}
+
+void Compositing::setOpenGLPlatformInterface(int interface)
+{
+    if (m_openGLPlatformInterface == interface) {
+        return;
+    }
+    m_openGLPlatformInterface = interface;
+    emit openGLPlatformInterfaceChanged();
 }
 
 CompositingType::CompositingType(QObject *parent)
@@ -434,6 +466,68 @@ int CompositingType::indexForCompositingType(int type) const
         }
     }
     return -1;
+}
+
+OpenGLPlatformInterfaceModel::OpenGLPlatformInterfaceModel(QObject *parent)
+    : QAbstractListModel(parent)
+{
+    beginResetModel();
+    OrgKdeKwinCompositingInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Compositor"),
+                                             QDBusConnection::sessionBus());
+    m_keys << interface.supportedOpenGLPlatformInterfaces();
+    for (const QString &key : m_keys) {
+        if (key == QStringLiteral("egl")) {
+            m_names << i18nc("OpenGL Platform Interface", "EGL");
+        } else if (key == QStringLiteral("glx")) {
+            m_names << i18nc("OpenGL Platform Interface", "GLX");
+        } else {
+            m_names << key;
+        }
+    }
+    endResetModel();
+}
+
+OpenGLPlatformInterfaceModel::~OpenGLPlatformInterfaceModel() = default;
+
+int OpenGLPlatformInterfaceModel::rowCount(const QModelIndex &parent) const
+{
+    if (parent.isValid()) {
+        return 0;
+    }
+    return m_keys.count();
+}
+
+QHash< int, QByteArray > OpenGLPlatformInterfaceModel::roleNames() const
+{
+    return QHash<int, QByteArray>({
+        {Qt::DisplayRole, QByteArrayLiteral("display")},
+        {Qt::UserRole, QByteArrayLiteral("openglPlatformInterface")}
+    });
+}
+
+QVariant OpenGLPlatformInterfaceModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid() || index.row() < 0 || index.row() >= m_keys.size() || index.column() != 0) {
+        return QVariant();
+    }
+    switch (role) {
+    case Qt::DisplayRole:
+        return m_names.at(index.row());
+    case Qt::UserRole:
+        return m_keys.at(index.row());
+    default:
+        return QVariant();
+    }
+}
+
+QModelIndex OpenGLPlatformInterfaceModel::indexForKey(const QString &key) const
+{
+    const int keyIndex = m_keys.indexOf(key);
+    if (keyIndex < 0) {
+        return QModelIndex();
+    }
+    return createIndex(keyIndex, 0);
 }
 
 }//end namespace Compositing

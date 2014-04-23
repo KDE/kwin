@@ -60,6 +60,7 @@ Rectangle {
         glColorCorrection: view.glColorCorrectionChecked
         compositingType: view.compositingTypeIndex
         compositingEnabled: view.compositingEnabledChecked
+        openGLPlatformInterface: view.openGLPlatformInterfaceIndex
     }
     Connections {
         target: compositing

@@ -36,6 +36,7 @@ Item {
     property alias glColorCorrectionChecked: glColorCorrection.checked
     property alias compositingTypeIndex: backend.type
     property bool compositingEnabledChecked: useCompositing.checked
+    property alias openGLPlatformInterfaceIndex: openGLPlatformInterface.currentIndex
 
     implicitWidth: mainLayout.implicitWidth
     implicitHeight: mainLayout.implicitHeight
@@ -153,6 +154,21 @@ Item {
             id: windowThumbnail
             model: [i18n("Always (Breaks Animations)"), i18n("Only for Shown Windows"), i18n("Never")]
             currentIndex: compositing.windowThumbnail
+            Layout.fillWidth: true
+        }
+
+        Label {
+            text: i18n("OpenGL Platform Interface:")
+            visible: backend.type != CompositingType.XRENDER_INDEX
+            Layout.alignment: Qt.AlignRight
+        }
+
+        ComboBox {
+            id: openGLPlatformInterface
+            model: compositing.openGLPlatformInterfaceModel
+            currentIndex: compositing.openGLPlatformInterface
+            textRole: "display"
+            visible: backend.type != CompositingType.XRENDER_INDEX
             Layout.fillWidth: true
         }
 
