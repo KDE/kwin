@@ -28,7 +28,7 @@ function isFadeWindow(w) {
 }
 
 function isLoginWindow(w) {
-    return w.windowClass == "ksplashx ksplashx" || w.windowClass == "ksplashsimple ksplashsimple" || w.windowClass == "qt-subapplication ksplashqml";
+    return w.windowClass == "ksplashx ksplashx" || w.windowClass == "ksplashsimple ksplashsimple" || w.windowClass == "ksplashqml ksplashqml";
 }
 
 var fadeInTime, fadeOutTime, fadeWindows;
