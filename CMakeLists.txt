@@ -76,7 +76,19 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
 )
 
 # optional frameworks
-find_package(KF5 CONFIG COMPONENTS Activities DocTools)
+find_package(KF5Activities CONFIG)
+set_package_properties(KF5Activities PROPERTIES
+         PURPOSE "Enable building of KWin with kactivities support"
+         TYPE OPTIONAL
+         )
+add_feature_info("KF5Activities" KF5Activities_FOUND "Enable building of KWin with kactivities support")
+
+find_package(KF5DocTools CONFIG)
+set_package_properties(KF5DocTools PROPERTIES
+         PURPOSE "Enable building documentation"
+         TYPE OPTIONAL
+         )
+add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     find_package(OpenGL)
