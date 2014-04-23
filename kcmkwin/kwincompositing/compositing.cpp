@@ -330,7 +330,7 @@ void Compositing::save()
         QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/Compositor"),
                                                           QStringLiteral("org.kde.kwin.Compositing"),
                                                           QStringLiteral("reinit"));
-        QDBusConnection::sessionBus().asyncCall(message);
+        QDBusConnection::sessionBus().send(message);
         m_changed = false;
     }
 }
