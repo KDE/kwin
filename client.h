@@ -978,6 +978,7 @@ private:
         xcb_sync_counter_t counter;
         xcb_sync_int64_t value;
         xcb_sync_alarm_t alarm;
+        xcb_timestamp_t lastTimestamp;
         QTimer *timeout, *failsafeTimeout;
         bool isPending;
     } syncRequest;

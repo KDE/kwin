@@ -236,6 +236,7 @@ Client::Client()
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
     syncRequest.timeout = syncRequest.failsafeTimeout = NULL;
+    syncRequest.lastTimestamp = xTime();
     syncRequest.isPending = false;
 
     // Set the initial mapping state
@@ -2220,6 +2221,7 @@ void Client::sendSyncRequest()
                 syncRequest.counter = syncRequest.alarm = XCB_NONE;
                 delete syncRequest.timeout; delete syncRequest.failsafeTimeout;
                 syncRequest.timeout = syncRequest.failsafeTimeout = nullptr;
+                syncRequest.lastTimestamp = XCB_CURRENT_TIME;
             }
         );
         syncRequest.failsafeTimeout->setSingleShot(true);
@@ -2236,6 +2238,9 @@ void Client::sendSyncRequest()
     if (oldLo > syncRequest.value.lo) {
         syncRequest.value.hi++;
     }
+    if (syncRequest.lastTimestamp >= xTime()) {
+        updateXTime();
+    }
 
     // Send the message to client
     XEvent ev;
@@ -2249,6 +2254,7 @@ void Client::sendSyncRequest()
     ev.xclient.data.l[3] = syncRequest.value.hi;
     ev.xclient.data.l[4] = 0;
     syncRequest.isPending = true;
+    syncRequest.lastTimestamp = xTime();
     XSendEvent(display(), window(), False, NoEventMask, &ev);
     Xcb::sync();
 }
