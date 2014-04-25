@@ -37,7 +37,7 @@ namespace KWin
 {
 
 Toplevel::Toplevel()
-    : vis(NULL)
+    : m_visual(XCB_NONE)
     , info(NULL)
     , ready_for_painting(true)
     , m_isDamaged(false)
@@ -107,7 +107,7 @@ void Toplevel::detectShape(Window id)
 void Toplevel::copyToDeleted(Toplevel* c)
 {
     geom = c->geom;
-    vis = c->vis;
+    m_visual = c->m_visual;
     bit_depth = c->bit_depth;
     info = c->info;
     m_client.reset(c->m_client, false);

@@ -66,7 +66,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     embedClient(w, attr);
 
-    vis = attr.visual;
+    m_visual = attr.visual->visualid;
     bit_depth = attr.depth;
 
     // SELI TODO: Order all these things in some sane manner

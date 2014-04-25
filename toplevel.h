@@ -249,7 +249,7 @@ public:
     static bool resourceMatch(const Toplevel* c1, const Toplevel* c2);
 
     bool readyForPainting() const; // true if the window has been already painted its contents
-    Visual* visual() const;
+    xcb_visualid_t visual() const;
     bool shape() const;
     void setOpacity(double opacity);
     double opacity() const;
@@ -429,7 +429,7 @@ protected:
     void deleteEffectWindow();
     virtual bool shouldUnredirect() const = 0;
     QRect geom;
-    Visual* vis;
+    xcb_visualid_t m_visual;
     int bit_depth;
     NETWinInfo* info;
     bool ready_for_painting;
@@ -521,9 +521,9 @@ inline bool Toplevel::readyForPainting() const
     return ready_for_painting;
 }
 
-inline Visual* Toplevel::visual() const
+inline xcb_visualid_t Toplevel::visual() const
 {
-    return vis;
+    return m_visual;
 }
 
 inline bool Toplevel::isDesktop() const
