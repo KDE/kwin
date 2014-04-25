@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "main.h"
 #include "utils.h"
+#include "xcbutils.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -228,9 +229,8 @@ void X11Cursor::doGetPos()
         return;
     }
     m_timeStamp = QX11Info::appTime();
-    ScopedCPointer<xcb_query_pointer_reply_t> pointer(xcb_query_pointer_reply(connection(),
-        xcb_query_pointer_unchecked(connection(), rootWindow()), NULL));
-    if (!pointer) {
+    Xcb::Pointer pointer(rootWindow());
+    if (pointer.isNull()) {
         return;
     }
     m_buttonMask = pointer->mask;

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "cursor.h"
 #include "workspace.h"
+#include "xcbutils.h"
 // Qt
 #include <QCursor>
 // XLib
@@ -181,8 +182,7 @@ void KillWindow::handleKeyPress(xcb_keycode_t keycode, uint16_t state)
 
 void KillWindow::performKill()
 {
-    xcb_connection_t *c = connection();
-    ScopedCPointer<xcb_query_pointer_reply_t> pointer(xcb_query_pointer_reply(c, xcb_query_pointer_unchecked(c, rootWindow()), NULL));
+    Xcb::Pointer pointer(rootWindow());
     if (!pointer.isNull() && pointer->child != XCB_WINDOW_NONE) {
         killWindowId(pointer->child);
     }

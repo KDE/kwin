@@ -581,6 +581,8 @@ public:
     }
 };
 
+XCB_WRAPPER(Pointer, xcb_query_pointer, xcb_window_t)
+
 struct CurrentInputData : public WrapperData< xcb_get_input_focus_reply_t, xcb_get_input_focus_cookie_t >
 {
     static constexpr request_func requestFunc = &xcb_get_input_focus_unchecked;

@@ -934,13 +934,11 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
         // if this window is another client, but not if it's a popup ... maybe after KDE3.1 :(
         // (repeat after me 'AARGHL!')
         if (!lostMouse && e->detail != XCB_NOTIFY_DETAIL_INFERIOR) {
-            // TODO: port to XCB
-            int d1, d2, d3, d4;
-            unsigned int d5;
-            Window w, child;
-            if (XQueryPointer(display(), frameId(), &w, &child, &d1, &d2, &d3, &d4, &d5) == False
-                    || child == XCB_WINDOW_NONE)
-                lostMouse = true; // really lost the mouse
+            Xcb::Pointer pointer(frameId());
+            if (!pointer || !pointer->same_screen || pointer->child == XCB_WINDOW_NONE) {
+                // really lost the mouse
+                lostMouse = true;
+            }
         }
         if (lostMouse) {
             cancelAutoRaise();
