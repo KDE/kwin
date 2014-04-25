@@ -2158,16 +2158,10 @@ void Client::getSyncCounter()
     if (!Xcb::Extensions::self()->isSyncAvailable())
         return;
 
-    Atom retType;
-    unsigned long nItemRet;
-    unsigned long byteRet;
-    int formatRet;
-    unsigned char* propRet;
-    int ret = XGetWindowProperty(display(), window(), atoms->net_wm_sync_request_counter,
-                                 0, 1, false, XCB_ATOM_CARDINAL, &retType, &formatRet, &nItemRet, &byteRet, &propRet);
-
-    if (ret == Success && formatRet == 32) {
-        syncRequest.counter = *(xcb_sync_counter_t*)(propRet);
+    Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
+    const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>(XCB_NONE);
+    if (counter != XCB_NONE) {
+        syncRequest.counter = counter;
         syncRequest.value.hi = 0;
         syncRequest.value.lo = 0;
         auto *c = connection();
@@ -2193,9 +2187,6 @@ void Client::getSyncCounter()
             }
         }
     }
-
-    if (ret == Success)
-        XFree(propRet);
 }
 
 /**
