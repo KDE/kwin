@@ -133,6 +133,8 @@ void ungrabXKeyboard();
  * Small helper class which performs @link grabXServer in the ctor and
  * @link ungrabXServer in the dtor. Use this class to ensure that grab and
  * ungrab are matched.
+ *
+ * To simplify usage consider using the macro GRAB_SERVER_DURING_CONTEXT
  **/
 class XServerGrabber
 {
@@ -144,6 +146,8 @@ public:
         ungrabXServer();
     }
 };
+
+#define GRAB_SERVER_DURING_CONTEXT XServerGrabber xserverGrabber;
 
 // the docs say it's UrgencyHint, but it's often #defined as XUrgencyHint
 #ifndef UrgencyHint

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "effects.h"
 #include "deleted.h"
+#include "utils.h"
 #include "xcbutils.h"
 
 #include <QTimer>
@@ -48,22 +49,24 @@ Unmanaged::~Unmanaged()
 
 bool Unmanaged::track(Window w)
 {
-    XWindowAttributes attr;
-    grabXServer();
-    if (!XGetWindowAttributes(display(), w, &attr) || attr.map_state != IsViewable) {
-        ungrabXServer();
+    GRAB_SERVER_DURING_CONTEXT
+    Xcb::WindowAttributes attr(w);
+    Xcb::WindowGeometry geo(w);
+    if (attr.isNull() || attr->map_state != XCB_MAP_STATE_VIEWABLE) {
         return false;
     }
-    if (attr.c_class == InputOnly) {
-        ungrabXServer();
+    if (attr->_class == XCB_WINDOW_CLASS_INPUT_ONLY) {
+        return false;
+    }
+    if (geo.isNull()) {
         return false;
     }
     setWindowHandles(w);   // the window is also the frame
-    Xcb::selectInput(w, attr.your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
-    geom = QRect(attr.x, attr.y, attr.width, attr.height);
+    Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
+    geom = geo.rect();
     checkScreen();
-    m_visual = attr.visual->visualid;
-    bit_depth = attr.depth;
+    m_visual = attr->visual;
+    bit_depth = geo->depth;
     info = new NETWinInfo(connection(), w, rootWindow(),
                           NET::WMWindowType | NET::WMPid,
                           NET::WM2Opacity |
@@ -78,7 +81,6 @@ bool Unmanaged::track(Window w)
     getWmOpaqueRegion();
     getSkipCloseAnimation();
     setupCompositing();
-    ungrabXServer();
     if (effects)
         static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowStacking();
     return true;
