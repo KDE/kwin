@@ -843,54 +843,44 @@ public:
     ~ObscuringWindows();
     void create(Client* c);
 private:
-    QList<Window> obscuring_windows;
-    static QList<Window>* cached;
+    QList<xcb_window_t> obscuring_windows;
+    static QList<xcb_window_t>* cached;
     static unsigned int max_cache_size;
 };
 
-QList<Window>* ObscuringWindows::cached = 0;
+QList<xcb_window_t>* ObscuringWindows::cached = nullptr;
 unsigned int ObscuringWindows::max_cache_size = 0;
 
 void ObscuringWindows::create(Client* c)
 {
-    if (cached == 0)
-        cached = new QList<Window>;
-    Window obs_win;
-    XWindowChanges chngs;
-    int mask = CWSibling | CWStackMode;
+    if (!cached)
+        cached = new QList<xcb_window_t>;
+    Xcb::Window obs_win(XCB_WINDOW_NONE, false);
     if (cached->count() > 0) {
-        cached->removeAll(obs_win = cached->first());
-        chngs.x = c->x();
-        chngs.y = c->y();
-        chngs.width = c->width();
-        chngs.height = c->height();
-        mask |= CWX | CWY | CWWidth | CWHeight;
+        obs_win.reset(cached->first(), false);
+        cached->removeAll(obs_win);
+        obs_win.setGeometry(c->geometry());
     } else {
-        XSetWindowAttributes a;
-        a.background_pixmap = None;
-        a.override_redirect = True;
-        obs_win = XCreateWindow(display(), rootWindow(), c->x(), c->y(),
-                                c->width(), c->height(), 0, CopyFromParent, InputOutput,
-                                CopyFromParent, CWBackPixmap | CWOverrideRedirect, &a);
+        uint32_t values[] = {XCB_PIXMAP_NONE, true};
+        obs_win.create(c->geometry(), XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_CW_BACK_PIXMAP | XCB_CW_OVERRIDE_REDIRECT, values);
     }
-    chngs.sibling = c->frameId();
-    chngs.stack_mode = Below;
-    XConfigureWindow(display(), obs_win, mask, &chngs);
-    XMapWindow(display(), obs_win);
+    uint32_t values[] = {c->frameId(), XCB_STACK_MODE_BELOW};
+    xcb_configure_window(connection(), obs_win, XCB_CONFIG_WINDOW_SIBLING | XCB_CONFIG_WINDOW_STACK_MODE, values);
+    obs_win.map();
     obscuring_windows.append(obs_win);
 }
 
 ObscuringWindows::~ObscuringWindows()
 {
     max_cache_size = qMax(int(max_cache_size), obscuring_windows.count() + 4) - 1;
-    for (QList<Window>::ConstIterator it = obscuring_windows.constBegin();
+    for (auto it = obscuring_windows.constBegin();
             it != obscuring_windows.constEnd();
             ++it) {
-        XUnmapWindow(display(), *it);
+        xcb_unmap_window(connection(), *it);
         if (cached->count() < int(max_cache_size))
             cached->prepend(*it);
         else
-            XDestroyWindow(display(), *it);
+            xcb_destroy_window(connection(), *it);
     }
 }
 
