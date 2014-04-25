@@ -54,8 +54,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     grabXServer();
 
-    XWindowAttributes attr;
-    if (!XGetWindowAttributes(display(), w, &attr)) {
+    Xcb::WindowAttributes attr(w);
+    Xcb::WindowGeometry windowGeometry(w);
+    if (attr.isNull() || windowGeometry.isNull()) {
         ungrabXServer();
         return false;
     }
@@ -64,10 +65,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     block_geometry_updates = 1;
     pending_geometry_update = PendingGeometryForced; // Force update when finishing with geometry changes
 
-    embedClient(w, attr);
+    embedClient(w, attr->visual, attr->colormap, windowGeometry->depth);
 
-    m_visual = attr.visual->visualid;
-    bit_depth = attr.depth;
+    m_visual = attr->visual;
+    bit_depth = windowGeometry->depth;
 
     // SELI TODO: Order all these things in some sane manner
 
@@ -103,7 +104,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
-    m_colormap = attr.colormap;
+    m_colormap = attr->colormap;
 
     getResourceClass();
     getWmClientLeader();
@@ -230,7 +231,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (!activitiesList.isEmpty())
         setOnActivities(activitiesList.split(QStringLiteral(",")));
 
-    QRect geom(attr.x, attr.y, attr.width, attr.height);
+    QRect geom(windowGeometry.rect());
     bool placementDone = false;
 
     if (session)
@@ -631,14 +632,13 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 }
 
 // Called only from manage()
-void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
+void Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth)
 {
     assert(m_client == XCB_WINDOW_NONE);
     assert(frameId() == XCB_WINDOW_NONE);
     assert(m_wrapper == XCB_WINDOW_NONE);
     m_client.reset(w, false);
 
-    const xcb_visualid_t visualid = XVisualIDFromVisual(attr.visual);
     const uint32_t zero_value = 0;
 
     xcb_connection_t *conn = connection();
@@ -654,7 +654,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
     const uint32_t cw_values[] = {
         0,                                // back_pixmap
         0,                                // border_pixel
-        static_cast<uint32_t>(attr.colormap),                    // colormap
+        colormap,                    // colormap
         Cursor::x11Cursor(Qt::ArrowCursor)
     };
 
@@ -680,7 +680,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
 
     // Create the frame window
     xcb_window_t frame = xcb_generate_id(conn);
-    xcb_create_window(conn, attr.depth, frame, rootWindow(), 0, 0, 1, 1, 0,
+    xcb_create_window(conn, depth, frame, rootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_frame.reset(frame);
 
@@ -688,7 +688,7 @@ void Client::embedClient(xcb_window_t w, const XWindowAttributes& attr)
 
     // Create the wrapper window
     xcb_window_t wrapperId = xcb_generate_id(conn);
-    xcb_create_window(conn, attr.depth, wrapperId, frame, 0, 0, 1, 1, 0,
+    xcb_create_window(conn, depth, wrapperId, frame, 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_wrapper.reset(wrapperId);
 
