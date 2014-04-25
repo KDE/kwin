@@ -407,18 +407,26 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_CONFIGURE_REQUEST: {
         const auto *event = reinterpret_cast<xcb_configure_request_event_t*>(e);
         if (event->parent == rootWindow()) {
-            // TODO: this should be ported to xcb
-            XWindowChanges wc;
-            wc.border_width = event->border_width;
-            wc.x = event->x;
-            wc.y = event->y;
-            wc.width = event->width;
-            wc.height = event->height;
-            wc.sibling = XCB_WINDOW_NONE;
-            wc.stack_mode = XCB_STACK_MODE_ABOVE;
-            unsigned int value_mask = event->value_mask
-                                      & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH);
-            XConfigureWindow(display(), event->window, value_mask, &wc);
+            uint32_t values[5] = { 0, 0, 0, 0, 0};
+            const uint32_t value_mask = event->value_mask
+                                        & (XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT | XCB_CONFIG_WINDOW_BORDER_WIDTH);
+            int i = 0;
+            if (value_mask & XCB_CONFIG_WINDOW_X) {
+                values[i++] = event->x;
+            }
+            if (value_mask & XCB_CONFIG_WINDOW_Y) {
+                values[i++] = event->y;
+            }
+            if (value_mask & XCB_CONFIG_WINDOW_WIDTH) {
+                values[i++] = event->width;
+            }
+            if (value_mask & XCB_CONFIG_WINDOW_HEIGHT) {
+                values[i++] = event->height;
+            }
+            if (value_mask & XCB_CONFIG_WINDOW_BORDER_WIDTH) {
+                values[i++] = event->border_width;
+            }
+            xcb_configure_window(connection(), event->window, value_mask, values);
             return true;
         }
         break;
