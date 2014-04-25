@@ -73,7 +73,7 @@ void initGLX()
     glXVersion = MAKE_GL_VERSION(major, minor, 0);
     // Get list of supported GLX extensions
     glxExtensions = QString::fromUtf8(glXQueryExtensionsString(
-                                display(), DefaultScreen(display()))).split(QStringLiteral(" "));
+                                display(), QX11Info::appScreen())).split(QStringLiteral(" "));
 
     glxResolveFunctions();
 #endif

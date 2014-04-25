@@ -83,7 +83,7 @@ KWinSelectionOwner::KWinSelectionOwner(int screen_P)
 xcb_atom_t KWinSelectionOwner::make_selection_atom(int screen_P)
 {
     if (screen_P < 0)
-        screen_P = DefaultScreen(display());
+        screen_P = QX11Info::appScreen();
     QByteArray screen(QByteArrayLiteral("WM_S"));
     screen.append(QByteArray::number(screen_P));
     ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
