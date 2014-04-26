@@ -223,7 +223,7 @@ void EffectModel::loadEffects()
     KService::List offers = KServiceTypeTrader::self()->query("KWin/Effect");
     const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/effects/configs/"));
     for(KService::Ptr service : offers) {
-        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kde5/services/"+ service->entryPath(), QStandardPaths::LocateFile);
+        const QString effectPluginPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kservices5/"+ service->entryPath(), QStandardPaths::LocateFile);
         KPluginInfo plugin(effectPluginPath);
 
         effect.name = plugin.name();
