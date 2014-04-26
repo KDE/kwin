@@ -51,7 +51,7 @@ set_package_properties(Qt5Multimedia PROPERTIES
 
 
 # required frameworks by Core
-find_package(KF5 CONFIG REQUIRED COMPONENTS
+find_package(KF5 REQUIRED COMPONENTS
     Config
     ConfigWidgets
     CoreAddons
@@ -66,7 +66,7 @@ find_package(KF5 CONFIG REQUIRED COMPONENTS
     WindowSystem
 )
 # required frameworks by config modules
-find_package(KF5 CONFIG REQUIRED COMPONENTS
+find_package(KF5 REQUIRED COMPONENTS
     Completion
     Declarative
     KCMUtils
