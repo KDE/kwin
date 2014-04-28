@@ -105,7 +105,7 @@ bool KDecorationPlugins::loadPlugin(QString nameStr)
     auto createFactory = [](const QString &pluginName) -> KDecorationFactory* {
         qDebug() << "Trying to load decoration plugin" << pluginName;
         const QString query = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(pluginName);
-        const auto offers = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/kdecorations"), QString(), query);
+        const auto offers = KPluginTrader::self()->query(QStringLiteral("kwin/kdecorations"), QString(), query);
         if (offers.isEmpty()) {
             qDebug() << "Decoration plugin not found";
             return nullptr;

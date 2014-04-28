@@ -89,7 +89,7 @@ void DecorationModel::reload()
 void DecorationModel::findDecorations()
 {
     beginResetModel();
-    const auto decorations = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/kdecorations"));
+    const auto decorations = KPluginTrader::self()->query(QStringLiteral("kwin/kdecorations"));
     for (const KPluginInfo &plugin : decorations) {
         if (plugin.pluginName() == s_auroraePluginName) {
             // read the Aurorae themes

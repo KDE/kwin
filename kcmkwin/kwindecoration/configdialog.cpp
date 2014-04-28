@@ -90,7 +90,7 @@ KWinDecorationConfigDialog::KWinDecorationConfigDialog(QString deco, const QList
 
     m_pluginConfigWidget = new QWidget(this);
     m_pluginConfigWidget->setLayout(new QVBoxLayout);
-    m_pluginObject = KPluginTrader::self()->createInstanceFromQuery<QObject>(QStringLiteral("kf5/kwin/kdecorations/config"),
+    m_pluginObject = KPluginTrader::self()->createInstanceFromQuery<QObject>(QStringLiteral("kwin/kdecorations/config"),
                                                                               QString(),
                                                                               QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(deco),
                                                                               m_pluginConfigWidget,
