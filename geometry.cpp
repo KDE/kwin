@@ -2723,10 +2723,19 @@ void Client::checkUnrestrictedMoveResize()
 // activated only after moving by several pixels, but that looks bad.
 void Client::startDelayedMoveResize()
 {
-    delete delayedMoveResizeTimer;
+    Q_ASSERT(!delayedMoveResizeTimer);
     delayedMoveResizeTimer = new QTimer(this);
-    connect(delayedMoveResizeTimer, SIGNAL(timeout()), this, SLOT(delayedMoveResize()));
     delayedMoveResizeTimer->setSingleShot(true);
+    connect(delayedMoveResizeTimer, &QTimer::timeout, this,
+        [this]() {
+            assert(buttonDown);
+            if (!startMoveResize()) {
+                buttonDown = false;
+            }
+            updateCursor();
+            stopDelayedMoveResize();
+        }
+    );
     delayedMoveResizeTimer->start(QApplication::startDragTime());
 }
 
@@ -2734,15 +2743,6 @@ void Client::stopDelayedMoveResize()
 {
     delete delayedMoveResizeTimer;
     delayedMoveResizeTimer = NULL;
-}
-
-void Client::delayedMoveResize()
-{
-    assert(buttonDown);
-    if (!startMoveResize())
-        buttonDown = false;
-    updateCursor();
-    stopDelayedMoveResize();
 }
 
 void Client::handleMoveResize(int x, int y, int x_root, int y_root)

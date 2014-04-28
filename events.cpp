@@ -1195,8 +1195,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
     }
     if (w == decorationId()) {
-        // New API processes core events FIRST and only passes unused ones to the decoration
-        return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
+        return false;
     }
     if (w == frameId())
         processDecorationButtonPress(button, state, x, y, x_root, y_root);

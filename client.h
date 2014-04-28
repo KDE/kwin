@@ -676,7 +676,6 @@ private Q_SLOTS:
     void autoRaise();
     void shadeHover();
     void shadeUnhover();
-    void delayedMoveResize();
 
 private:
     friend class Bridge; // FRAME
