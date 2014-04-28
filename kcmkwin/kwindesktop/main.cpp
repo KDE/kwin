@@ -591,7 +591,7 @@ void KWinDesktopConfig::slotConfigureEffectClicked()
     }
 
     QPointer<QDialog> configDialog = new QDialog(this);
-    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kf5/kwin/effects/configs/"), QString(),
+    KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kwin/effects/configs/"), QString(),
                                                                      QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(effect),
                                                                      configDialog);
     if (!kcm) {

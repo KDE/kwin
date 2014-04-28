@@ -221,7 +221,7 @@ void EffectModel::loadEffects()
     beginResetModel();
     m_effectsChanged.clear();
     m_effectsList.clear();
-    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kf5/kwin/effects/configs/"));
+    const KPluginInfo::List configs = KPluginTrader::self()->query(QStringLiteral("kwin/effects/configs/"));
     const auto builtins = BuiltInEffects::availableEffects();
     for (auto builtin : builtins) {
         const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtin);

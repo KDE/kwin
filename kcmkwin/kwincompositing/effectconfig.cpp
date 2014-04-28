@@ -33,7 +33,7 @@
 #include <QStandardPaths>
 #include <QString>
 
-static const QString s_pluginDir = QStringLiteral("kf5/kwin/effects/configs/");
+static const QString s_pluginDir = QStringLiteral("kwin/effects/configs/");
 
 namespace KWin {
 namespace Compositing {
