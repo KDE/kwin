@@ -342,6 +342,11 @@ void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t
     if (oldMods != keyboardModifiers()) {
         emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
     }
+#else
+    Q_UNUSED(modsDepressed)
+    Q_UNUSED(modsLatched)
+    Q_UNUSED(modsLocked)
+    Q_UNUSED(group)
 #endif
 }
 
@@ -350,6 +355,9 @@ void InputRedirection::processKeymapChange(int fd, uint32_t size)
     // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
 #if HAVE_XKB
     m_xkb->installKeymap(fd, size);
+#else
+    Q_UNUSED(fd)
+    Q_UNUSED(size)
 #endif
 }
 
