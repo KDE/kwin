@@ -46,6 +46,7 @@ if(NOT WIN32)
 
     set(XKB_LIBRARIES ${XKB_LIBRARY})
     set(XKB_INCLUDE_DIRS ${XKB_INCLUDE_DIR})
+    set(XKB_VERSION ${PKG_XKB_VERSION})
 
     include(FindPackageHandleStandardArgs)
     find_package_handle_standard_args(XKB
@@ -54,6 +55,8 @@ if(NOT WIN32)
         REQUIRED_VARS
             XKB_LIBRARY
             XKB_INCLUDE_DIR
+        VERSION_VAR
+            XKB_VERSION
     )
 
     if(XKB_FOUND AND NOT TARGET XKB::XKB)

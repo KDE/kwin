@@ -118,7 +118,7 @@ set_package_properties(Wayland PROPERTIES
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
 
-find_package(XKB)
+find_package(XKB 0.4.1)
 set_package_properties(XKB PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
