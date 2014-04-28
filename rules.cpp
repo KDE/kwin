@@ -545,12 +545,6 @@ bool Rules::update(Client* c, int selection)
         updated = updated || noborder != c->noBorder();
         noborder = c->noBorder();
     }
-    if NOW_REMEMBER(OpacityActive, opacityactive) {
-        // TODO
-    }
-    if NOW_REMEMBER(OpacityInactive, opacityinactive) {
-        // TODO
-    }
     return updated;
 }
 
