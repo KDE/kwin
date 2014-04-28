@@ -2234,20 +2234,9 @@ void Client::sendSyncRequest()
     }
 
     // Send the message to client
-    XEvent ev;
-    ev.xclient.type = ClientMessage;
-    ev.xclient.window = window();
-    ev.xclient.format = 32;
-    ev.xclient.message_type = atoms->wm_protocols;
-    ev.xclient.data.l[0] = atoms->net_wm_sync_request;
-    ev.xclient.data.l[1] = xTime();
-    ev.xclient.data.l[2] = syncRequest.value.lo;
-    ev.xclient.data.l[3] = syncRequest.value.hi;
-    ev.xclient.data.l[4] = 0;
+    sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request, syncRequest.value.lo, syncRequest.value.hi);
     syncRequest.isPending = true;
     syncRequest.lastTimestamp = xTime();
-    XSendEvent(display(), window(), False, NoEventMask, &ev);
-    Xcb::sync();
 }
 
 bool Client::wantsTabFocus() const
