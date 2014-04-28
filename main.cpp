@@ -487,7 +487,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     a.setApplicationDisplayName(i18n("KWin"));
 
     KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
-                         QString(),                          // The message catalog name. If null, program name is used instead
                          i18n("KWin"),                       // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
                          i18n(description),                  // Short description of what the app does

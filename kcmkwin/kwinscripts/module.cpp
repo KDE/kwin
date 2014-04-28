@@ -46,7 +46,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
     ui(new Ui::Module),
     m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
 {
-    KAboutData *about = new KAboutData("kwin-scripts", QString(),
+    KAboutData *about = new KAboutData("kwin-scripts",
                                        i18n("KWin Scripts"),
                                        global_s_versionStringFull,
                                        i18n("Configure KWin scripts"),

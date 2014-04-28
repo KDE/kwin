@@ -551,7 +551,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
         const QString license = pluginInfo.license();
         const QString icon    = pluginInfo.icon();
 
-        KAboutData aboutData(name, name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
+        KAboutData aboutData(name, name, version, comment, KAboutLicense::byKeyword(license).key(), QString(), QString(), website.toLatin1());
         aboutData.setProgramIconName(icon);
         const QStringList authors = author.split(',');
         const QStringList emails = email.split(',');
@@ -568,7 +568,6 @@ void KWinDesktopConfig::slotAboutEffectClicked()
     } else {
         const BuiltInEffects::EffectData &data = BuiltInEffects::effectData(builtIn);
         KAboutData aboutData(data.name,
-                             QString(),
                              data.displayName,
                              QStringLiteral(KWIN_VERSION_STRING),
                              data.comment,

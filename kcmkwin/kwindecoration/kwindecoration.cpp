@@ -93,7 +93,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     layout->addWidget(m_ui);
 
     KAboutData *about =
-        new KAboutData(i18n("kcmkwindecoration"), QString(),
+        new KAboutData(QStringLiteral("kcmkwindecoration"),
                        i18n("Window Decoration Control Module"),
                        QString(), QString(), KAboutData::License_GPL,
                        i18n("(c) 2001 Karol Szwed"));
