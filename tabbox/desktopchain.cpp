@@ -51,7 +51,7 @@ uint DesktopChain::next(uint indexDesktop) const
 
 void DesktopChain::resize(uint previousSize, uint newSize)
 {
-    Q_ASSERT(previousSize == m_chain.size());
+    Q_ASSERT(int(previousSize) == m_chain.size());
     m_chain.resize(newSize);
 
     if (newSize >= previousSize) {
