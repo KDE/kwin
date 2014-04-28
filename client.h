@@ -824,7 +824,7 @@ private:
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
     void updateUrgency();
     static void sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol,
-                                  long data1 = 0, long data2 = 0, long data3 = 0);
+                                  uint32_t data1 = 0, uint32_t data2 = 0, uint32_t data3 = 0);
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();

@@ -1362,7 +1362,7 @@ void Client::updateHiddenPreview()
     }
 }
 
-void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, long data1, long data2, long data3)
+void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
 {
     xcb_client_message_event_t ev;
     memset(&ev, 0, sizeof(ev));
