@@ -36,6 +36,7 @@ DEALINGS IN THE SOFTWARE.
 
 int main(int argc, char* argv[])
 {
+    KLocalizedString::setApplicationDomain("kwin");
     QApplication app(argc, argv);
     QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));

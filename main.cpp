@@ -413,6 +413,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     mallopt(M_TRIM_THRESHOLD, 5*pagesize);
 #endif // M_TRIM_THRESHOLD
 
+    KLocalizedString::setApplicationDomain("kwin");
     QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true\n") +
                                      QStringLiteral("kwineffects.debug = true"));
 
@@ -536,12 +537,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::SessionManager weAreIndeed;
 #endif
     KWin::SessionSaveDoneHelper helper;
-#warning insertCatalog needs porting
-#if KWIN_QT5_PORTING
-    KGlobal::locale()->insertCatalog("kwin_effects");
-    KGlobal::locale()->insertCatalog("kwin_scripts");
-    KGlobal::locale()->insertCatalog("kwin_scripting");
-#endif
 
     QString appname;
     if (KWin::screen_number == 0)
