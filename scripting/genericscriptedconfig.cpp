@@ -22,6 +22,7 @@
 #include "config-kwin.h"
 #include <kwineffects_interface.h>
 #include <KAboutData>
+#define TRANSLATION_DOMAIN "kwin_scripting"
 #include <KLocalizedString>
 #include <kconfigloader.h>
 
