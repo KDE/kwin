@@ -1,7 +1,7 @@
 #######################################
 # Config
 set(kwin_wobblywindows_config_SRCS wobblywindows_config.cpp)
-qt5_wrap_ui(kwin_wobblywindows_config_SRCS wobblywindows_config.ui)
+ki18n_wrap_ui(kwin_wobblywindows_config_SRCS wobblywindows_config.ui)
 qt5_add_dbus_interface(kwin_wobblywindows_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_wobblywindows_config_SRCS wobblywindowsconfig.kcfgc)
 

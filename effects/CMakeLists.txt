@@ -1,3 +1,6 @@
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"kwin_effects\")
+
 include_directories(${KWIN_SOURCE_DIR}) # for xcbutils.h
 
 set(kwin_effect_OWN_LIBS

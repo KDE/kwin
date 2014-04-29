@@ -1,7 +1,7 @@
 #######################################
 # Config
 set(kwin_dashboard_config_SRCS dashboard_config.cpp)
-qt5_wrap_ui(kwin_dashboard_config_SRCS dashboard_config.ui)
+ki18n_wrap_ui(kwin_dashboard_config_SRCS dashboard_config.ui)
 qt5_add_dbus_interface(kwin_dashboard_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_dashboard_config_SRCS dashboardconfig.kcfgc)
 

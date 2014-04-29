@@ -11,7 +11,7 @@ install( FILES
 #######################################
 # Config
 set(kwin_coverswitch_config_SRCS coverswitch_config.cpp)
-qt5_wrap_ui(kwin_coverswitch_config_SRCS coverswitch_config.ui)
+ki18n_wrap_ui(kwin_coverswitch_config_SRCS coverswitch_config.ui)
 qt5_add_dbus_interface(kwin_coverswitch_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_coverswitch_config_SRCS coverswitchconfig.kcfgc)
 

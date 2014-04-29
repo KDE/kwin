@@ -27,7 +27,7 @@ install( FILES
 
 # cube
 set(kwin_cube_config_SRCS cube_config.cpp)
-qt5_wrap_ui(kwin_cube_config_SRCS cube_config.ui)
+ki18n_wrap_ui(kwin_cube_config_SRCS cube_config.ui)
 qt5_add_dbus_interface(kwin_cube_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_cube_config_SRCS cubeconfig.kcfgc)
 
@@ -46,7 +46,7 @@ kservice_desktop_to_json(kwin_cube_config cube_config.desktop)
 
 # cube slide
 set(kwin_cubeslide_config_SRCS cubeslide_config.cpp)
-qt5_wrap_ui(kwin_cubeslide_config_SRCS cubeslide_config.ui)
+ki18n_wrap_ui(kwin_cubeslide_config_SRCS cubeslide_config.ui)
 qt5_add_dbus_interface(kwin_cubeslide_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_cubeslide_config_SRCS cubeslideconfig.kcfgc)
 

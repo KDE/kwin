@@ -1,7 +1,7 @@
 #######################################
 # Config
 set(kwin_resize_config_SRCS resize_config.cpp)
-qt5_wrap_ui(kwin_resize_config_SRCS resize_config.ui)
+ki18n_wrap_ui(kwin_resize_config_SRCS resize_config.ui)
 qt5_add_dbus_interface(kwin_resize_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_resize_config_SRCS resizeconfig.kcfgc)
 

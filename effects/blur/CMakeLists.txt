@@ -1,7 +1,7 @@
 #######################################
 # Config
 set(kwin_blur_config_SRCS blur_config.cpp)
-qt5_wrap_ui(kwin_blur_config_SRCS blur_config.ui)
+ki18n_wrap_ui(kwin_blur_config_SRCS blur_config.ui)
 qt5_add_dbus_interface(kwin_blur_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_blur_config_SRCS blurconfig.kcfgc)
 

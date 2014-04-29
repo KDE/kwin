@@ -2,7 +2,7 @@
 ## configurtion dialog 
 ##########################
 set(kwin_mouseclick_config_SRCS mouseclick_config.cpp)
-qt5_wrap_ui(kwin_mouseclick_config_SRCS mouseclick_config.ui)
+ki18n_wrap_ui(kwin_mouseclick_config_SRCS mouseclick_config.ui)
 qt5_add_dbus_interface(kwin_mouseclick_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_mouseclick_config_SRCS mouseclickconfig.kcfgc)
 

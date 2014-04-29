@@ -12,7 +12,7 @@ install( FILES
 #######################################
 # Config
 set(kwin_lookingglass_config_SRCS lookingglass_config.cpp)
-qt5_wrap_ui(kwin_lookingglass_config_SRCS lookingglass_config.ui)
+ki18n_wrap_ui(kwin_lookingglass_config_SRCS lookingglass_config.ui)
 qt5_add_dbus_interface(kwin_lookingglass_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_lookingglass_config_SRCS lookingglassconfig.kcfgc)
 

@@ -1,7 +1,7 @@
 #######################################
 # Config
 set(kwin_showfps_config_SRCS showfps_config.cpp)
-qt5_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)
+ki18n_wrap_ui(kwin_showfps_config_SRCS showfps_config.ui)
 qt5_add_dbus_interface(kwin_showfps_config_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 kconfig_add_kcfg_files(kwin_showfps_config_SRCS showfpsconfig.kcfgc)
 
