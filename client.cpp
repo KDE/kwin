@@ -555,6 +555,8 @@ void Client::createDecoration(const QRect& oldgeom)
     decoration->init();
     if (decoration->widget()) {
         decoration->widget()->installEventFilter(this);
+    } else if (decoration->window()) {
+        decoration->window()->installEventFilter(this);
     }
     xcb_reparent_window(connection(), decoration->window()->winId(), frameId(), 0, 0);
     decoration->window()->lower();

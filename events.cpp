@@ -1041,9 +1041,9 @@ void Client::updateMouseGrab()
 bool Client::eventFilter(QObject* o, QEvent* e)
 {
     if (decoration == NULL
-            || o != decoration->widget())
+            || (o != decoration->widget() && o != decoration->window()))
         return false;
-    if (e->type() == QEvent::MouseButtonPress) {
+    if (e->type() == QEvent::MouseButtonPress && decoration->widget()) {
         QMouseEvent* ev = static_cast< QMouseEvent* >(e);
         return buttonPressEvent(decorationId(), qtToX11Button(ev->button()), qtToX11State(ev->buttons(), ev->modifiers()),
                                 ev->x(), ev->y(), ev->globalX(), ev->globalY());
@@ -1066,7 +1066,7 @@ bool Client::eventFilter(QObject* o, QEvent* e)
                                     ev->x(), ev->y(), ev->globalX(), ev->globalY());
         return r;
     }
-    if (e->type() == QEvent::Resize) {
+    if (e->type() == QEvent::Resize && decoration->widget()) {
         QResizeEvent* ev = static_cast< QResizeEvent* >(e);
         // Filter out resize events that inform about size different than frame size.
         // This will ensure that decoration->width() etc. and decoration->widget()->width() will be in sync.
