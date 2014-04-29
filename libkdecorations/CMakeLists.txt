@@ -1,3 +1,6 @@
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"libkdecorations\")
+
 # kdecorations library
 set(kdecorations_LIB_SRCS
    kdecoration.cpp
