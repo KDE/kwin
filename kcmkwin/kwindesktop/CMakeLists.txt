@@ -1,9 +1,12 @@
 
 ########### next target ###############
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwindesktop\")
+
 include_directories(${KWIN_SOURCE_DIR}/effects)
 
 set(kcm_kwindesktop_PART_SRCS main.cpp desktopnameswidget.cpp)
-qt5_wrap_ui(kcm_kwindesktop_PART_SRCS main.ui)
+ki18n_wrap_ui(kcm_kwindesktop_PART_SRCS main.ui)
 
 add_library(kcm_kwindesktop MODULE ${kcm_kwindesktop_PART_SRCS})
 

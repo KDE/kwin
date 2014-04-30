@@ -1,3 +1,6 @@
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwinscreenedges\")
+
 include_directories(${KWIN_SOURCE_DIR}/effects)
 set(
     kcm_kwinscreenedges_PART_SRCS
@@ -5,7 +8,7 @@ set(
     monitor.cpp
     screenpreviewwidget.cpp
     )
-qt5_wrap_ui( kcm_kwinscreenedges_PART_SRCS main.ui )
+ki18n_wrap_ui( kcm_kwinscreenedges_PART_SRCS main.ui )
 add_library( kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS} )
 target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
     Qt5::DBus

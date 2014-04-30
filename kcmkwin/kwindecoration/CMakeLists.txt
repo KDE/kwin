@@ -1,3 +1,6 @@
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwindecoration\")
+
 # need a header file from Aurorae sources
 include_directories(
     ${KWIN_SOURCE_DIR}/clients/aurorae/src/lib
@@ -16,7 +19,7 @@ set(kcm_kwindecoration_PART_SRCS
     ${AURORAE_SOURCE_DIR}/themeconfig.cpp
 )
 
-qt5_wrap_ui(kcm_kwindecoration_PART_SRCS
+ki18n_wrap_ui(kcm_kwindecoration_PART_SRCS
     auroraeconfig.ui
     buttons.ui
     config.ui

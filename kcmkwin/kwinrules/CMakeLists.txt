@@ -1,3 +1,5 @@
+# KI18N Translation Domain for this library
+add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwinrules\")
 add_definitions(-DKCMRULES)
 ########### next target ###############
 
@@ -5,7 +7,7 @@ set (kwinrules_MOC_HDRS yesnobox.h ../../client_machine.h ../../cursor.h)
 qt5_wrap_cpp(kwinrules_MOC_SRCS ${kwinrules_MOC_HDRS})
 set(kwinrules_SRCS ruleswidget.cpp ruleslist.cpp kwinsrc.cpp detectwidget.cpp ${kwinrules_MOC_SRCS})
 
-qt5_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
+ki18n_wrap_ui(kwinrules_SRCS ruleslist.ui detectwidget.ui editshortcut.ui ruleswidgetbase.ui)
 
 set(kwin_rules_dialog_KDEINIT_SRCS main.cpp ${kwinrules_SRCS})
 
