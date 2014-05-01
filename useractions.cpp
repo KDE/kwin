@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAction>
 #include <QCheckBox>
 #include <QtConcurrentRun>
+#include <QPointer>
 #include <QPushButton>
 
 #include <KGlobalAccel>
@@ -677,7 +678,7 @@ void UserActionsMenu::activityPopupAboutToShow()
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
     action->setData(QString());
     action->setCheckable(true);
-    static QActionGroup *allActivitiesGroup = NULL;
+    static QPointer<QActionGroup> allActivitiesGroup;
     if (!allActivitiesGroup) {
         allActivitiesGroup = new QActionGroup(m_activityMenu);
     }
