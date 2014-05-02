@@ -510,7 +510,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
             dialog.asyncCall(QStringLiteral("warn"), message, details, QString());
         } else {
             const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") + QString::fromUtf8(details.toLocal8Bit().toBase64());
-            KProcess::startDetached(QStringLiteral("kcmshell4"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
+            KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
         return false;
@@ -542,7 +542,7 @@ bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
         } else {
             const QString args = QStringLiteral("warn ") + QString::fromUtf8(message.toLocal8Bit().toBase64()) + QStringLiteral(" details ") +
                                  QString::fromUtf8(details.toLocal8Bit().toBase64()) + QStringLiteral(" dontagain kwin_dialogsrc:max_tex_warning");
-            KProcess::startDetached(QStringLiteral("kcmshell4"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
+            KProcess::startDetached(QStringLiteral("kcmshell5"), QStringList() << QStringLiteral("kwincompositing") << QStringLiteral("--args") << args);
         }
         QDBusConnection::sessionBus().interface()->setTimeout(oldTimeout);
     }
