@@ -6,5 +6,6 @@ X-KDE-Library=kwin_showfps_config
 X-KDE-ParentComponents=showfps
 
 Name=Show FPS
+Name[nl]=FPS tonen
 Name[uk]=Показ частоти кадрів
 Name[x-test]=xxShow FPSxx

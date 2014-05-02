@@ -12,13 +12,16 @@ X-KDE-System-Settings-Parent-Category=workspace-behavior
 X-KDE-Weight=65
 
 Name=Screen Edges
+Name[nl]=Schermranden
 Name[uk]=Краї екрана
 Name[x-test]=xxScreen Edgesxx
 
 Comment=Configure active screen edges
+Comment[nl]=Actieve schermranden configureren
 Comment[uk]=Налаштування активних країв екрана
 Comment[x-test]=xxConfigure active screen edgesxx
 
 X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords[nl]=kwin,venster,beheerder,effect,kant,rand,actie,omschakelen,bureaublad,schermranden van kwin,bureaubladkanten,schermkanten,vensters maximaliseren,venster schuin achter elkaar,zijkant van het scherm,schermgedrag,bureaublad omschakelen,virtueel bureaublad,schermhoeken
 X-KDE-Keywords[uk]=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,вікно,керування,край,межа,сторона,бік,дія,перемикання,стільниця,краї екрана,максимізація,мозаїка,плитка,край екрана,поведінка екрана,перемикання стільниць,віртуальна стільниця
 X-KDE-Keywords[x-test]=xxkwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen cornersxx

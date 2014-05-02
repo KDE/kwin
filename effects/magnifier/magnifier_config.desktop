@@ -6,5 +6,6 @@ X-KDE-Library=kwin_magnifier_config
 X-KDE-ParentComponents=magnifier
 
 Name=Magnifier
+Name[nl]=Vergrootglas
 Name[uk]=Лупа
 Name[x-test]=xxMagnifierxx

@@ -12,12 +12,15 @@ X-KDE-System-Settings-Parent-Category=workspace-behavior
 X-KDE-Weight=60
 
 Name=Virtual Desktops
+Name[nl]=Virtuele bureaubladen
 Name[uk]=Віртуальні стільниці
 Name[x-test]=xxVirtual Desktopsxx
 
 Comment=You can configure how many virtual desktops there are.
+Comment[nl]=U kunt hier bepalen hoeveel virtuele bureaubladen u wilt gebruiken.
 Comment[uk]=Налаштування кількості віртуальних стільниць.
 Comment[x-test]=xxYou can configure how many virtual desktops there are.xx
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
+X-KDE-Keywords[nl]=bureaublad,bureaubladen,aantal,virtueel bureaublad,meervoudige bureaubladen,pager,pager-widget,pager-applet,pagerinstellingen
 X-KDE-Keywords[uk]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача
 X-KDE-Keywords[x-test]=xxdesktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settingsxx

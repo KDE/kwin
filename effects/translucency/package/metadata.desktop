@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Translucency
+Name[nl]=Transparatie
 Name[uk]=Прозорість
 Name[x-test]=xxTranslucencyxx
 Icon=preferences-system-windows-effect-translucency
 Comment=Make windows translucent under different conditions
+Comment[nl]=Maakt vensters doorschijnend onder andere condities
 Comment[uk]=Додавання прозорості до вікон за різних умов
 Comment[x-test]=xxMake windows translucent under different conditionsxx
 

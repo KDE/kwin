@@ -1,23 +1,28 @@
 [Global]
 IconName=kwin
 Comment=KWin Window Manager
+Comment[nl]=KWin vensterbeheerder
 Comment[uk]=Керування вікнами KWin
 Comment[x-test]=xxKWin Window Managerxx
 
 [Event/compositingsuspendeddbus]
 Name=Compositing has been suspended
+Name[nl]=Compositing is uitgesteld
 Name[uk]=Композитний показ було тимчасово вимкнено
 Name[x-test]=xxCompositing has been suspendedxx
 Comment=Another application has requested to suspend compositing.
+Comment[nl]=Een andere applicatie heeft verzocht compositing uit te stellen.
 Comment[uk]=Ще одна програма надіслала запит на вимикання композитного режиму.
 Comment[x-test]=xxAnother application has requested to suspend compositing.xx
 Action=Popup
 
 [Event/graphicsreset]
 Name=Graphics Reset
+Name[nl]=Grafische reset
 Name[uk]=Скидання графіки
 Name[x-test]=xxGraphics Resetxx
 Comment=A graphics reset event occurred
+Comment[nl]=Een gebeurtenis van een grafische reset deed zich voor
 Comment[uk]=Сталася подія відновлення початкового стану графіки
 Comment[x-test]=xxA graphics reset event occurredxx
 Action=Popup

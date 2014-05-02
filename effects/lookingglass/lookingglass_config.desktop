@@ -6,5 +6,6 @@ X-KDE-Library=kwin_lookingglass_config
 X-KDE-ParentComponents=lookingglass
 
 Name=Looking Glass
+Name[nl]=Vergrootglas
 Name[uk]=Збільшувальне скло
 Name[x-test]=xxLooking Glassxx

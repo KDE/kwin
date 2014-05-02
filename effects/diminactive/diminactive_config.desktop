@@ -6,5 +6,6 @@ X-KDE-Library=kwin_diminactive_config
 X-KDE-ParentComponents=diminactive
 
 Name=Dim Inactive
+Name[nl]=Inactief dimmen
 Name[uk]=Затемнення неактивних
 Name[x-test]=xxDim Inactivexx

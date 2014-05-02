@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Text Only
+Name[nl]=Alleen tekst
 Name[uk]=Лише текст
 Name[x-test]=xxText Onlyxx
 Comment=A window switcher layout only showing window captions
+Comment[nl]=Een indeling van de vensterwisselaar die alleen bijschriften van vensters toont
 Comment[uk]=Компонування засобу перемикання вікон з показом лише підписів вікон
 Comment[x-test]=xxA window switcher layout only showing window captionsxx
 Icon=preferences-system-windows-switcher-text

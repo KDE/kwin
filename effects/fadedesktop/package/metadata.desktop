@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Fade Desktop
+Name[nl]=Bureaublad op laten komen
 Name[uk]=Затемнення стільниці
 Name[x-test]=xxFade Desktopxx
 Icon=preferences-system-windows-effect-fadedesktop
 Comment=Fade between virtual desktops when switching between them
+Comment[nl]=Laat virtuele bureaubladen vervagen en opkomen bij het wisselen
 Comment[uk]=Затемнення перед час перемикання між віртуальними стільницями
 Comment[x-test]=xxFade between virtual desktops when switching between themxx
 

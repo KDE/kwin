@@ -11,11 +11,14 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=60
 
 Name=Task Switcher
+Name[nl]=Taakschakelaar
 Name[uk]=Перемикання задач
 Name[x-test]=xxTask Switcherxx
 Comment=Configure the behavior for navigating through windows
+Comment[nl]=Het gedrag voor het door vensters wandelen configureren
 Comment[uk]=Налаштування поведінки системи під час навігації вікнами
 Comment[x-test]=xxConfigure the behavior for navigating through windowsxx
 X-KDE-Keywords=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab
+X-KDE-Keywords[nl]=venster,vensters,schakelaar,vensterwisselaar,wisseling,vensterwisseling,alttab,alt-tab,alt+tab,alt tab
 X-KDE-Keywords[uk]=window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,вікно,вікна,перемикач,перемикач вікон,перемикання,перемикання вікон,альттаб,альт-таб,альт+таб
 X-KDE-Keywords[x-test]=xxwindow,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tabxx

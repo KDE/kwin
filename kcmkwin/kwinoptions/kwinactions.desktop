@@ -10,13 +10,16 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinactions
 
 Name=Actions
+Name[nl]=Acties
 Name[uk]=Дії
 Name[x-test]=xxActionsxx
 
 Comment=Configure mouse actions on windows
+Comment[nl]=Muisacties op vensters instellen
 Comment[uk]=Налаштування дій за допомогою миші над вікнами
 Comment[x-test]=xxConfigure mouse actions on windowsxx
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
+X-KDE-Keywords[nl]=verdonkeren,maximaliseren,minimaliseren,naar onderen,bedieningsmenu,titelbalk,grootte wijzigen
 X-KDE-Keywords[uk]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize,тінь,максимізувати,розгорнути,згорнути,нижче,меню дій,заголовок,смужка заголовка,розмір,розміри,зміна розмірів
 X-KDE-Keywords[x-test]=xxshade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resizexx

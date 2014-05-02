@@ -6,5 +6,6 @@ X-KDE-Library=kwin_glide_config
 X-KDE-ParentComponents=glide
 
 Name=Glide
+Name[nl]=Schuiven
 Name[uk]=Плин
 Name[x-test]=xxGlidexx

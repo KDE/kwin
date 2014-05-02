@@ -6,5 +6,6 @@ X-KDE-Library=kwin_mousemark_config
 X-KDE-ParentComponents=mousemark
 
 Name=Mouse Mark
+Name[nl]=Muismarkering
 Name[uk]=Позначки мишкою
 Name[x-test]=xxMouse Markxx

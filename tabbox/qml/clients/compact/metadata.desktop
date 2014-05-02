@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Compact
+Name[nl]=Compact
 Name[uk]=Компактне
 Name[x-test]=xxCompactxx
 Comment=A compact window switcher layout
+Comment[nl]=Een compacte indeling van de vensterwisselaar
 Comment[uk]=Компактне компонування засобу перемикання вікон
 Comment[x-test]=xxA compact window switcher layoutxx
 Icon=preferences-system-windows-switcher-compact

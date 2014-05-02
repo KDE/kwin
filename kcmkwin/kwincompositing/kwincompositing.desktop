@@ -13,12 +13,15 @@ X-KDE-System-Settings-Parent-Category=hardware
 X-KDE-Weight=50
 
 Name=Compositor
+Name[nl]=Compositor
 Name[uk]=Засіб композиції
 Name[x-test]=xxCompositorxx
 Comment=Configure compositor settings for the Desktop effects
+Comment[nl]=Instellingen van compositor configureren voor de bureaubladeffecten
 Comment[uk]=Налаштувати параметри засобу композиції для ефектів стільниці
 Comment[x-test]=xxConfigure compositor settings for the Desktop effectsxx
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
+X-KDE-Keywords[nl]=kwin,window,manager,beheerder,compositing,effecten,3D-effecten,2D-effecten,OpenGL,XRender,video-instellingen,grafische effecten,bureaubladeffecten
 X-KDE-Keywords[uk]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects,вікно,керування,композитне,композиція,ефект,просторовий,ефекти,плоскі,параметри відео,графічні ефекти,ефекти стільниці
 X-KDE-Keywords[x-test]=xxkwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effectsxx

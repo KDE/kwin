@@ -6,5 +6,6 @@ X-KDE-Library=kwin_trackmouse_config
 X-KDE-ParentComponents=trackmouse
 
 Name=Track Mouse
+Name[nl]=Muis volgen
 Name[uk]=Сліди мишки
 Name[x-test]=xxTrack Mousexx

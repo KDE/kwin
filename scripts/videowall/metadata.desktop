@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Video Wall
+Name[nl]=Videomuur
 Name[uk]=Відеостіна
 Name[x-test]=xxVideo Wallxx
 Comment=Spans fullscreen video player over all attached screens to create a Video Wall
+Comment[nl]=Verdeelt de videospeler in modus volledig scherm over alle aangesloten schermen om een Videomuur te creëren
 Comment[uk]=Розподіл зображення відеопрогравача у повноекранному режимі на всі екрани з метою створення відеостіни
 Comment[x-test]=xxSpans fullscreen video player over all attached screens to create a Video Wallxx
 Icon=preferences-system-windows-script-test

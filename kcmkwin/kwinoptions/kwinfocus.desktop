@@ -9,13 +9,16 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinfocus
 
 Name=Focus
+Name[nl]=Focus
 Name[uk]=Фокус
 Name[x-test]=xxFocusxx
 
 Comment=Configure the window focus policy
+Comment[nl]=Hier kunt u het vensterfocusbeleid instellen
 Comment[uk]=Налаштування поведінку фокусу вікна
 Comment[x-test]=xxConfigure the window focus policyxx
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
+X-KDE-Keywords[nl]=focus,plaatsing,automatisch omhoog komen,omhoog komen,omhoog komen bij klikken,toetsenbord,CDE,alt-tab,alle bureaubladen,focus volgt muis,voorkomen van focus,focus stelen,focusbeleid,focusgedrag in venster,gedrag van vensterscherm
 X-KDE-Keywords[uk]=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior,фокус,фокусування,розташування,автопідняття,підняття,клацання,клавіатура,альт-таб,всі стільниці,фокус за мишею,запобігання,перехід фокуса,правила фокусування,поведінка вікон
 X-KDE-Keywords[x-test]=xxfocus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behaviorxx

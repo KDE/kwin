@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Small Icons
+Name[nl]=Kleine pictogrammen
 Name[uk]=Малі піктограми
 Name[x-test]=xxSmall Iconsxx
 Comment=A window switcher layout using small icons to represent the window
+Comment[nl]=Een indeling van de vensterwisselaar die kleine pictogrammen gebruikt om vensters te representeren
 Comment[uk]=Компонування засобу перемикання вікон з малими піктограмами вікон
 Comment[x-test]=xxA window switcher layout using small icons to represent the windowxx
 Icon=preferences-system-windows-switcher-small-icons

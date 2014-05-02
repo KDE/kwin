@@ -6,5 +6,6 @@ X-KDE-Library=kwin_desktopgrid_config
 X-KDE-ParentComponents=desktopgrid
 
 Name=Desktop Grid
+Name[nl]=Bureaubladraster
 Name[uk]=Таблиця стільниць
 Name[x-test]=xxDesktop Gridxx

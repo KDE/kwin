@@ -6,5 +6,6 @@ X-KDE-Library=kwin_thumbnailaside_config
 X-KDE-ParentComponents=thumbnailaside
 
 Name=Thumbnail Aside
+Name[nl]=Miniatuur ernaast
 Name[uk]=Мініатюри збоку
 Name[x-test]=xxThumbnail Asidexx

@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Script
 
 Comment=KWin Script
+Comment[nl]=KWin-scripts
 Comment[uk]=Скрипт KWin
 Comment[x-test]=xxKWin Scriptxx
 

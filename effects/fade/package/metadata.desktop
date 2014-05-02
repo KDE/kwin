@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Fade
+Name[nl]=In-/uitvagen
 Name[uk]=Згасання
 Name[x-test]=xxFadexx
 Icon=preferences-system-windows-effect-fade
 Comment=Make windows smoothly fade in and out when they are shown or hidden
+Comment[nl]=Laat vensters vloeiend in/uitvagen als ze worden weergegeven of verborgen
 Comment[uk]=Плавна поява або зникнення вікон
 Comment[x-test]=xxMake windows smoothly fade in and out when they are shown or hiddenxx
 

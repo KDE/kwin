@@ -6,5 +6,6 @@ X-KDE-Library=kwin_coverswitch_config
 X-KDE-ParentComponents=coverswitch
 
 Name=Cover Switch
+Name[nl]=Omslagtonen
 Name[uk]=Перемикач обкладинок
 Name[x-test]=xxCover Switchxx

@@ -12,14 +12,17 @@ X-KDE-System-Settings-Parent-Category=desktop-appearance
 X-KDE-Weight=90
 
 Name=Window Decorations
+Name[nl]=Vensterdecoraties
 Name[uk]=Обрамлення вікон
 Name[x-test]=xxWindow Decorationsxx
 
 Comment=Configure the look and feel of window titles
+Comment[nl]=Hier kunt u het uiterlijk en gedrag van venstertitels instellen
 Comment[uk]=Налаштування вигляду та поведінки заголовків вікон
 Comment[x-test]=xxConfigure the look and feel of window titlesxx
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
+X-KDE-Keywords[nl]=kwin,venster,beheerder,grens,stijl,thema,look,feel,indeling,knop,handel,rand,kwm,decoratie
 X-KDE-Keywords[uk]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення
 X-KDE-Keywords[x-test]=xxkwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decorationxx
 

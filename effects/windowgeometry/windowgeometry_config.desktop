@@ -6,5 +6,6 @@ X-KDE-Library=kwin_windowgeometry_config
 X-KDE-ParentComponents=windowgeometry
 
 Name=WindowGeometry
+Name[nl]=VensterGeometry
 Name[uk]=Розміри вікна
 Name[x-test]=xxWindowGeometryxx

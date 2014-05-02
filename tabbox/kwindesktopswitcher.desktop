@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/DesktopSwitcher
 
 Comment=KWin Desktop Switcher Layout
+Comment[nl]=KWin indeling van bureaubladwisselaar
 Comment[uk]=Компонування засобу перемикання стільниць KWin
 Comment[x-test]=xxKWin Desktop Switcher Layoutxx
 

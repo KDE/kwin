@@ -6,5 +6,6 @@ X-KDE-Library=kwin_cube_config
 X-KDE-ParentComponents=cube
 
 Name=Desktop Cube
+Name[nl]=Bureaubladkubus
 Name[uk]=Куб стільниць
 Name[x-test]=xxDesktop Cubexx

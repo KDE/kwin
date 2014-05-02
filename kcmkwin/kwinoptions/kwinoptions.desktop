@@ -13,14 +13,17 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=90
 
 Name=Window Behavior
+Name[nl]=Venstergedrag
 Name[uk]=Поведінка вікон
 Name[x-test]=xxWindow Behaviorxx
 
 Comment=Configure the window behavior
+Comment[nl]=Het venstergedrag instellen
 Comment[uk]=Налаштування поведінки вікна
 Comment[x-test]=xxConfigure the window behaviorxx
 
 X-KDE-Keywords=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick
+X-KDE-Keywords[nl]=focus,plaatsing,venstegedrag,animatie,omhoog,automatisch omhoog,vensters,frame,titelbalk,dubbelklik
 X-KDE-Keywords[uk]=focus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclick,фокус,розташування,місце,вікно,поведінка,поведінка вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне
 X-KDE-Keywords[x-test]=xxfocus,placement,window behavior,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
 

@@ -12,13 +12,16 @@ X-KDE-System-Settings-Parent-Category=window-behaviour
 X-KDE-Weight=120
 
 Name=Window Rules
+Name[nl]=Vensterregels
 Name[uk]=Правила вікон
 Name[x-test]=xxWindow Rulesxx
 
 Comment=Configure settings specifically for a window
+Comment[nl]=Hier kunt u instellingen kiezen specifiek voor één venster
 Comment[uk]=Налаштування параметрів для окремого типу вікон
 Comment[x-test]=xxConfigure settings specifically for a windowxx
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
+X-KDE-Keywords[nl]=grootte,positie,status,venstergedrag,vensters,specifiek,er omheen gewerkt,herinneren,regels
 X-KDE-Keywords[uk]=size,position,state,window behavior,windows,specific,workarounds,remember,rules,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила
 X-KDE-Keywords[x-test]=xxsize,position,state,window behavior,windows,specific,workarounds,remember,rulesxx

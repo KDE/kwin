@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Dialog Parent
+Name[nl]=Dialoogeigenaar
 Name[uk]=Батьківське вікно
 Name[x-test]=xxDialog Parentxx
 Icon=preferences-system-windows-effect-dialog-parent
 Comment=Darkens the parent window of the currently active dialog
+Comment[nl]=Maakt het venster dat bij de ouder van de actieve dialoog hoort donkerder
 Comment[uk]=Затемнення батьківських вікон активних діалогових вікон
 Comment[x-test]=xxDarkens the parent window of the currently active dialogxx
 

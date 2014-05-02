@@ -6,6 +6,7 @@ X-KDE-Library=kwin_wobblywindows_config
 X-KDE-ParentComponents=wobblywindows
 
 Name=Wobbly Windows
+Name[nl]=Wiebelende vensters
 Name[uk]=Желейні вікна
 Name[x-test]=xxWobbly Windowsxx
 

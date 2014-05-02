@@ -10,13 +10,16 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinmoving
 
 Name=Moving
+Name[nl]=Verplaatsing
 Name[uk]=Пересування
 Name[x-test]=xxMovingxx
 
 Comment=Configure the way that windows are moved
+Comment[nl]=Hier kunt u de wijze waarop vensters worden verplaatst instellen
 Comment[uk]=Тут можна налаштувати поведінку при пересуванні вікон
 Comment[x-test]=xxConfigure the way that windows are movedxx
 
 X-KDE-Keywords=moving,smart,cascade,maximize,maximise,snap zone,snap,border
+X-KDE-Keywords[nl]=verplaatsen,smart,cascade,maximaliseren,zone vastzetten,vastzetten,grens
 X-KDE-Keywords[uk]=moving,smart,cascade,maximize,maximise,snap zone,snap,border,пересування,кмітливе,каскадом,максимізувати,розгорнути,прилипання,зона прилипання,межа
 X-KDE-Keywords[x-test]=xxmoving,smart,cascade,maximize,maximise,snap zone,snap,borderxx

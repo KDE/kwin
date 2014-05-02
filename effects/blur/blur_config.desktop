@@ -6,6 +6,7 @@ X-KDE-Library=kwin_blur_config
 X-KDE-ParentComponents=blur
 
 Name=Blur
+Name[nl]=Vervagen
 Name[uk]=Розмивання
 Name[x-test]=xxBlurxx
 

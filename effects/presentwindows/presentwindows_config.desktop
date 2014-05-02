@@ -6,5 +6,6 @@ X-KDE-Library=kwin_presentwindows_config
 X-KDE-ParentComponents=presentwindows
 
 Name=Present Windows
+Name[nl]=Vensters presenteren
 Name[uk]=Показ вікон
 Name[x-test]=xxPresent Windowsxx

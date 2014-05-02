@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Previews
+Name[nl]=Voorbeelden
 Name[uk]=Ескізи
 Name[x-test]=xxPreviewsxx
 Comment=A desktop switcher layout with previews of the desktops
+Comment[nl]=Een indeling van bureaubladwisselaar met voorbeelden op de bureaubladen
 Comment[uk]=Компонування перемикача стільниць з ескізами стільниць
 Comment[x-test]=xxA desktop switcher layout with previews of the desktopsxx
 Icon=preferences-system-desktop-switcher-previews

@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Decoration
 
 Comment=KWin Window Decoration
+Comment[nl]=KWin vensterdecoratie
 Comment[uk]=Обрамлення вікон KWin
 Comment[x-test]=xxKWin Window Decorationxx
 

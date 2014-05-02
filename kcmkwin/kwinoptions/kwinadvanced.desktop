@@ -9,13 +9,16 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinadvanced
 
 Name=Advanced
+Name[nl]=Geavanceerd
 Name[uk]=Додатково
 Name[x-test]=xxAdvancedxx
 
 Comment=Configure advanced window management features
+Comment[nl]=Hier kunt u de geavanceerde vensterbeheermogelijkheden instellen
 Comment[uk]=Налаштування додаткових можливостей керування вікнами
 Comment[x-test]=xxConfigure advanced window management featuresxx
 
 X-KDE-Keywords=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
+X-KDE-Keywords[nl]=verduisteren,rand,overzweven,actieve randen,schuin achter elkaar,tabbladen,met tabbladen werken,vensterwisseling,verstergroepering,vensters schuin achter elkaar,vensterplaatsing,plaatsing van vensters,geavanceerd gedrag van vensters
 X-KDE-Keywords[uk]=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior,тіні,границі,межі,краї,активні краї,плитка,тайлінґ,вкладки,мозаїка,вікно з вкладками,групування вікон,розташування вікон, додаткові ефекти поведінки
 X-KDE-Keywords[x-test]=xxshading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behaviorxx

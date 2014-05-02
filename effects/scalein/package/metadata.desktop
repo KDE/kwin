@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Scale In
+Name[nl]=Inschalen
 Name[uk]=Збільшення
 Name[x-test]=xxScale Inxx
 Icon=preferences-system-windows-effect-scale-in
 Comment=Animate the appearing of windows
+Comment[nl]=Voorziet het verschijnen van vensters van een animatie
 Comment[uk]=Анімація появи вікон
 Comment[x-test]=xxAnimate the appearing of windowsxx
 

@@ -6,5 +6,6 @@ X-KDE-Library=kwin_flipswitch_config
 X-KDE-ParentComponents=flipswitch
 
 Name=Flip Switch
+Name[nl]=Flip Switch
 Name[uk]=Тасування карток
 Name[x-test]=xxFlip Switchxx

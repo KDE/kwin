@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Informative
+Name[nl]=Informatief
 Name[uk]=Інформативне
 Name[x-test]=xxInformativexx
 Comment=An informative window switcher layout including desktop name
+Comment[nl]=Een informatieve indeling van de vensterwisselaar inclusief de naam van het bureaublad
 Comment[uk]=Інформативне компонування засобу перемикання вікон з назвами стільниць
 Comment[x-test]=xxAn informative window switcher layout including desktop namexx
 Icon=preferences-system-windows-switcher-informative

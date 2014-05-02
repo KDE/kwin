@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Synchronize Skip Switcher with Taskbar
+Name[nl]=Overslaanschakelaar met taakbalk synchroniseren
 Name[uk]=Синхронізувати виключення вікон у перемикачі з панеллю задач
 Name[x-test]=xxSynchronize Skip Switcher with Taskbarxx
 Comment=Hides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)
+Comment[nl]=Verbergt alle vensters gemarkeerd als Taakbalkoverslaan om ook te worden uitgesloten van vensterschakelaars (bijv. Alt+Tab)
 Comment[uk]=Приховує всі вікна, позначені як такі, що не показуються на панелі задач, так, щоб їх не було показано у списках перемикання вікон (наприклад Alt+Tab)
 Comment[x-test]=xxHides all windows marked as Skip Taskbar to be also excluded from window switchers (e.g. Alt+Tab)xx
 Icon=preferences-system-windows-script-synchronizeskipswitcher

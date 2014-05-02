@@ -6,5 +6,6 @@ X-KDE-Library=kwin_cubeslide_config
 X-KDE-ParentComponents=cubeslide
 
 Name=Desktop Cube Animation
+Name[nl]=Animatie met bureaubladkubus
 Name[uk]=Анімація куба стільниць
 Name[x-test]=xxDesktop Cube Animationxx

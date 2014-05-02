@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KWin/Effect
 
 Comment=KWin Effect
+Comment[nl]=KWin-effect
 Comment[uk]=Ефект KWin
 Comment[x-test]=xxKWin Effectxx
 

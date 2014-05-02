@@ -6,5 +6,6 @@ X-KDE-Library=kwin_magiclamp_config
 X-KDE-ParentComponents=magiclamp
 
 Name=Magic Lamp
+Name[nl]=Magische lamp
 Name[uk]=Чарівна лампа
 Name[x-test]=xxMagic Lampxx

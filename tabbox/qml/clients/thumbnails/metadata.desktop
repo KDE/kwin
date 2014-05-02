@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Thumbnails
+Name[nl]=Miniaturen
 Name[uk]=Мініатюри
 Name[x-test]=xxThumbnailsxx
 Comment=A window switcher layout using live thumbnails
+Comment[nl]=Een indeling van de vensterwisselaar met levende miniaturen
 Comment[uk]=Компонування засобу перемикання вікон з мініатюрами поточного стану вікон
 Comment[x-test]=xxA window switcher layout using live thumbnailsxx
 Icon=preferences-system-windows-switcher-thumbnails

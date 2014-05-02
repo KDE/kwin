@@ -6,5 +6,6 @@ X-KDE-Library=kwin_dashboard_config
 X-KDE-ParentComponents=dashboard
 
 Name=Dashboard
+Name[nl]=Dashboard
 Name[uk]=Панель приладів
 Name[x-test]=xxDashboardxx

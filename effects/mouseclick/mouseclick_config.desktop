@@ -6,5 +6,6 @@ X-KDE-Library=kwin_mouseclick_config
 X-KDE-ParentComponents=mouseclick
 
 Name=Mouse Click Animation
+Name[nl]=Animatie van muisklik
 Name[uk]=Анімація за клацанням миші
 Name[x-test]=xxMouse Click Animationxx

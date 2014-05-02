@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Login
+Name[nl]=Aanmelden
 Name[uk]=Вхід
 Name[x-test]=xxLoginxx
 Icon=preferences-system-windows-effect-login
 Comment=Smoothly fade to the desktop when logging in
+Comment[nl]=Laat het opstartscherm uitvagen naar het bureaublad tijdens het aanmelden
 Comment[uk]=Плавна поява стільниці під час входу
 Comment[x-test]=xxSmoothly fade to the desktop when logging inxx
 

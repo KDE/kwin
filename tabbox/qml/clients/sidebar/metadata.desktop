@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Sidebar
+Name[nl]=Zijbalk
 Name[uk]=Бічна панель
 Name[x-test]=xxSidebarxx
 Comment=A window switcher with live thumbnails on the screen side
+Comment[nl]=Een vensterwisselaar met levende miniaturen aan kant van het scherm
 Comment[uk]=Засіб перемикання вікон з інтерактивними мініатюрами збоку на екрані
 Comment[x-test]=xxA window switcher with live thumbnails on the screen sidexx
 
