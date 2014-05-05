@@ -10,6 +10,5 @@ install(TARGETS kwin_update_default_rules DESTINATION ${LIB_INSTALL_DIR}/kconf_u
 
 ########### install files ###############
 
-install( FILES pop.wav  DESTINATION  ${SOUND_INSTALL_DIR} )
 install( FILES stripTitle.js  DESTINATION  ${DATA_INSTALL_DIR}/kwin )
 
