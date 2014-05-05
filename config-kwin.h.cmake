@@ -7,6 +7,7 @@
 #define KWIN_NAME "${KWIN_NAME}"
 #define KWIN_CONFIG "${KWIN_NAME}rc"
 #define KWIN_VERSION_STRING "${KWIN_VERSION}"
+#define KWIN_KILLER_BIN "${CMAKE_INSTALL_PREFIX}/${LIBEXEC_INSTALL_DIR}/kwin_killer_helper"
 #cmakedefine01 HAVE_WAYLAND
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_XKB

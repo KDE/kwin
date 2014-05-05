@@ -1482,7 +1482,7 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
             ::kill(pid, SIGTERM);
     } else {
         QString hostname = clientMachine()->isLocal() ? QStringLiteral("localhost") : QString::fromUtf8(clientMachine()->hostName());
-        QProcess::startDetached(QStandardPaths::findExecutable(QStringLiteral("kwin_killer_helper")),
+        QProcess::startDetached(QStringLiteral(KWIN_KILLER_BIN),
                                 QStringList() << QStringLiteral("--pid") << QString::number(unsigned(pid)) << QStringLiteral("--hostname") << hostname
                                 << QStringLiteral("--windowname") << caption()
                                 << QStringLiteral("--applicationname") << QString::fromUtf8(resourceClass())
