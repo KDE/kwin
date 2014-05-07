@@ -1,4 +1,12 @@
 ########### next target ###############
+include(ECMSetupVersion)
+
+ecm_setup_version(${KWIN_VERSION}
+                  VARIABLE_PREFIX KWINEFFECTS
+                  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kwineffects_version.h"
+                  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
+                  SOVERSION 5
+)
 
 ### xrenderutils lib ###
 set(kwin_XRENDERUTILS_SRCS
@@ -16,7 +24,10 @@ target_link_libraries(kwinxrenderutils
         XCB::RENDER
     )
 
-set_target_properties(kwinxrenderutils PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwinxrenderutils PROPERTIES
+    VERSION ${KWINEFFECTS_VERSION_STRING}
+    SOVERSION ${KWINEFFECTS_SOVERSION}
+)
 set_target_properties(kwinxrenderutils PROPERTIES OUTPUT_NAME ${KWIN_NAME}xrenderutils)
 
 install(TARGETS kwinxrenderutils EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -55,7 +66,10 @@ PUBLIC
 if( KWIN_HAVE_XRENDER_COMPOSITING )
     target_link_libraries(kwineffects PRIVATE kwinxrenderutils XCB::XFIXES)
 endif()
-set_target_properties(kwineffects PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwineffects PROPERTIES
+    VERSION ${KWINEFFECTS_VERSION_STRING}
+    SOVERSION ${KWINEFFECTS_SOVERSION}
+)
 set_target_properties(kwineffects PROPERTIES OUTPUT_NAME ${KWIN_NAME}effects)
 
 install(TARGETS kwineffects EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -77,7 +91,10 @@ macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )
     if(KWIN_HAVE_EGL)
        target_link_libraries(${name} PRIVATE EGL::EGL)
     endif()
-    set_target_properties(${name} PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+    set_target_properties(${name} PROPERTIES
+        VERSION ${KWINEFFECTS_VERSION_STRING}
+        SOVERSION ${KWINEFFECTS_SOVERSION}
+    )
     target_link_libraries(${name} PUBLIC ${ARGN})
 
     install(TARGETS ${name} EXPORT kdeworkspaceLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
