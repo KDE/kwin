@@ -23,12 +23,6 @@ target_link_libraries(kdecorations
 )
 # target_link_libraries(kdecorations LINK_INTERFACE_LIBRARIES ${KDE4_KDEUI_LIBS})
 
-set_target_properties(kdecorations PROPERTIES
-   VERSION ${GENERIC_LIB_VERSION}
-   SOVERSION ${GENERIC_LIB_SOVERSION}
-   )
-install(TARGETS kdecorations EXPORT kdecorationsTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
 # create a Config.cmake and a ConfigVersion.cmake file and install them
 include(ECMPackageConfigHelpers)
 include(ECMSetupVersion)
@@ -37,7 +31,14 @@ ecm_setup_version(${KWIN_VERSION}
                   VARIABLE_PREFIX KDECORATIONS
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdecorations_version.h"
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KDecorationsConfigVersion.cmake"
+                  SOVERSION 5
 )
+
+set_target_properties(kdecorations PROPERTIES
+   VERSION ${KDECORATIONS_VERSION_STRING}
+   SOVERSION ${KDECORATIONS_SOVERSION}
+   )
+install(TARGETS kdecorations EXPORT kdecorationsTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KDecorations")
 
