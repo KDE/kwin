@@ -75,12 +75,12 @@ KWin.Switcher {
                     height: listView.thumbnailWidth*(1.0/screenFactor)
                 }
                 delegate: Item {
-                    property alias data: thumbnailItem.data
+                    property alias caption: thumbnailItem.caption
                     width: listView.thumbnailWidth
                     height: listView.thumbnailWidth*(1.0/screenFactor)
                     KWin.DesktopThumbnailItem {
                         id: thumbnailItem
-                        property variant data: model
+                        property variant caption: model.caption
                         clip: true
                         clipTo: listView
                         desktop: model.desktop
@@ -129,7 +129,7 @@ KWin.Switcher {
                     }
                     id: textItem
                     property int maxWidth: 0
-                    text: listView.currentItem ? listView.currentItem.data.caption : ""
+                    text: listView.currentItem ? listView.currentItem.caption : ""
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: theme.textColor

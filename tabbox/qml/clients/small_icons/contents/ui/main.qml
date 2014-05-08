@@ -67,7 +67,7 @@ KWin.Switcher {
                 }
                 Text {
                     id: textItem
-                    text: icons.currentItem ? icons.currentItem.data.caption : ""
+                    text: icons.currentItem ? icons.currentItem.caption : ""
                     height: paintedHeight
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter

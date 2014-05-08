@@ -44,12 +44,12 @@ Item {
     Component {
         id: listDelegate
         Item {
-            property alias data: iconItem.data
+            property alias caption: iconItem.caption
             id: delegateItem
             width: iconSize + hoverItem.margins.left + hoverItem.margins.right
             height: iconSize + hoverItem.margins.top + hoverItem.margins.bottom
             QIconItem {
-                property variant data: model
+                property variant caption: model.caption
                 id: iconItem
                 icon: model.icon
                 width: iconSize

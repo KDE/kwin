@@ -79,7 +79,7 @@ KWin.Switcher {
                     }
                     id: textItem
                     property int maxWidth: 0
-                    text: icons.currentItem ? icons.currentItem.data.caption : ""
+                    text: icons.currentItem ? icons.currentItem.caption : ""
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: theme.textColor

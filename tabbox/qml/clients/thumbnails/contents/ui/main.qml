@@ -68,12 +68,14 @@ KWin.Switcher {
                 }
                 clip: true
                 delegate: Item {
-                    property alias data: thumbnailItem.data
+                    property alias caption: thumbnailItem.caption
+                    property alias icon: thumbnailItem.icon
                     id: delegateItem
                     width: thumbnailListView.thumbnailWidth
                     height: thumbnailListView.thumbnailWidth*(1.0/dialogMainItem.screenFactor)
                     KWin.ThumbnailItem {
-                        property variant data: model
+                        property variant caption: model.caption
+                        property variant icon: model.icon
                         id: thumbnailItem
                         wId: windowId
                         clip: true
@@ -118,7 +120,7 @@ KWin.Switcher {
                 }
                 QIconItem {
                     id: iconItem
-                    icon: thumbnailListView.currentItem ? thumbnailListView.currentItem.data.icon : ""
+                    icon: thumbnailListView.currentItem ? thumbnailListView.currentItem.icon : ""
                     width: 32
                     height: 32
                     anchors {
@@ -140,7 +142,7 @@ KWin.Switcher {
                     }
                     id: textItem
                     property int maxWidth: 0
-                    text: thumbnailListView.currentItem ? thumbnailListView.currentItem.data.caption : ""
+                    text: thumbnailListView.currentItem ? thumbnailListView.currentItem.caption : ""
                     horizontalAlignment: Text.AlignHCenter
                     verticalAlignment: Text.AlignVCenter
                     color: theme.textColor
