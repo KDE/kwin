@@ -66,11 +66,8 @@ KWin.Switcher {
                 delegate: Item {
                     width: thumbnailListView.cellWidth
                     height: thumbnailListView.cellHeight
-                    KWin.ThumbnailItem {
+                    Item {
                         id: thumbnailItem
-                        wId: windowId
-                        clip: true
-                        clipTo: thumbnailListView
                         anchors {
                             top: parent.top
                             left: parent.left
@@ -80,6 +77,12 @@ KWin.Switcher {
                             rightMargin: hoverItem.margins.right
                             topMargin: hoverItem.margins.top
                             bottomMargin: dialogMainItem.standardMargin
+                        }
+                        KWin.ThumbnailItem {
+                            wId: windowId
+                            clip: true
+                            clipTo: thumbnailListView
+                            anchors.fill: parent
                         }
                     }
                     RowLayout {

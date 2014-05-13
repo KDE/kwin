@@ -73,19 +73,22 @@ KWin.Switcher {
                     id: delegateItem
                     width: thumbnailListView.thumbnailWidth
                     height: thumbnailListView.thumbnailWidth*(1.0/dialogMainItem.screenFactor)
-                    KWin.ThumbnailItem {
+                    Item {
                         property variant caption: model.caption
                         property variant icon: model.icon
                         id: thumbnailItem
-                        wId: windowId
-                        clip: true
-                        clipTo: thumbnailListView
                         anchors {
                             fill: parent
                             leftMargin: hoverItem.margins.left
                             rightMargin: hoverItem.margins.right
                             topMargin: hoverItem.margins.top
                             bottomMargin: hoverItem.margins.bottom
+                        }
+                        KWin.ThumbnailItem {
+                            wId: windowId
+                            clip: true
+                            clipTo: thumbnailListView
+                            anchors.fill: parent
                         }
                     }
                     MouseArea {
