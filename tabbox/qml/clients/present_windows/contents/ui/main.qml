@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.kquickcontrolsaddons 2.0
 import org.kde.kwin 2.0 as KWin
@@ -81,60 +82,34 @@ KWin.Switcher {
                             bottomMargin: dialogMainItem.standardMargin
                         }
                     }
-                    Item {
+                    RowLayout {
                         id: captionItem
                         height: childrenRect.height
+                        property int maximumWidth: parent.width - hoverItem.margins.left - dialogMainItem.standardMargin - hoverItem.margins.right
+                        Layout.maximumWidth: captionItem.maximumWidth
                         anchors {
-                            left: parent.left
-                            right: parent.right
                             bottom: parent.bottom
-                            leftMargin: hoverItem.margins.left + dialogMainItem.standardMargin
                             bottomMargin: hoverItem.margins.bottom
-                            rightMargin: hoverItem.margins.right
+                            horizontalCenter: parent.horizontalCenter
                         }
                         QIconItem {
                             id: iconItem
                             icon: model.icon
-                            width: 32
-                            height: 32
-                            anchors {
-                                bottom: parent.bottom
-                                right: textItem.left
-                            }
+                            property int iconSize: 32
+                            width: iconSize
+                            height: iconSize
+                            Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                            Layout.preferredWidth: iconSize
+                            Layout.preferredHeight: iconSize
                         }
-                        Item {
-                            id: textItem
-                            property int maxWidth: parent.width - iconItem.width - parent.anchors.leftMargin - parent.anchors.rightMargin - anchors.leftMargin - dialogMainItem.standardMargin * 2
-                            width: (textElementSelected.implicitWidth >= maxWidth) ? maxWidth : textElementSelected.implicitWidth
-                            anchors {
-                                top: parent.top
-                                bottom: parent.bottom
-                                horizontalCenter: parent.horizontalCenter
-                                leftMargin: dialogMainItem.standardMargin
-                            }
-                            Text {
-                                id: textElementSelected
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: caption
-                                font.italic: minimized
-                                font.bold: true
-                                visible: index == thumbnailListView.currentIndex
-                                color: theme.textColor
-                                elide: Text.ElideMiddle
-                                anchors.fill: parent
-                            }
-                            Text {
-                                id: textElementNormal
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                text: caption
-                                font.italic: minimized
-                                visible: index != thumbnailListView.currentIndex
-                                color: theme.textColor
-                                elide: Text.ElideMiddle
-                                anchors.fill: parent
-                            }
+                        Text {
+                            text: caption
+                            font.italic: minimized
+                            font.bold: index == thumbnailListView.currentIndex
+                            color: theme.textColor
+                            elide: Text.ElideMiddle
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: captionItem.maximumWidth - iconItem.iconSize - captionItem.spacing * 2
                         }
                     }
                     MouseArea {
