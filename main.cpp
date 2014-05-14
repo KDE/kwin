@@ -496,7 +496,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                          i18n("KWin"),                       // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
                          i18n(description),                  // Short description of what the app does
-                         KAboutData::License_GPL,            // The license this code is released under
+                         KAboutLicense::GPL,            // The license this code is released under
                          i18n("(c) 1999-2013, The KDE Developers"));   // Copyright Statement
 
     aboutData.addAuthor(i18n("Matthias Ettrich"), QString(), QStringLiteral("ettrich@kde.org"));

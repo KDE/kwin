@@ -48,7 +48,7 @@ KCMRules::KCMRules(QWidget *parent, const QVariantList &)
     connect(widget, SIGNAL(changed(bool)), SLOT(moduleChanged(bool)));
     KAboutData *about = new KAboutData(QStringLiteral("kcmkwinrules"),
                                        i18n("Window-Specific Settings Configuration Module"),
-                                       QString(), QString(), KAboutData::License_GPL, i18n("(c) 2004 KWin and KControl Authors"));
+                                       QString(), QString(), KAboutLicense::GPL, i18n("(c) 2004 KWin and KControl Authors"));
     about->addAuthor(i18n("Lubos Lunak"), QString(), "l.lunak@kde.org");
     setAboutData(about);
 }

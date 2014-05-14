@@ -50,7 +50,7 @@ Module::Module(QWidget *parent, const QVariantList &args) :
                                        i18n("KWin Scripts"),
                                        global_s_versionStringFull,
                                        i18n("Configure KWin scripts"),
-                                       KAboutData::License_GPL_V2);
+                                       KAboutLicense::GPL_V2);
 
     about->addAuthor(i18n("Tamás Krutki"));
     setAboutData(about);

@@ -100,7 +100,7 @@ KWinOptions::KWinOptions(QWidget *parent, const QVariantList &)
 
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwinoptions"), i18n("Window Behavior Configuration Module"),
-                       QString(), QString(), KAboutData::License_GPL,
+                       QString(), QString(), KAboutLicense::GPL,
                        i18n("(c) 1997 - 2002 KWin and KControl Authors"));
 
     about->addAuthor(i18n("Matthias Ettrich"), QString(), "ettrich@kde.org");

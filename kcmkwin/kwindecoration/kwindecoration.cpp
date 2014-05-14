@@ -95,7 +95,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     KAboutData *about =
         new KAboutData(QStringLiteral("kcmkwindecoration"),
                        i18n("Window Decoration Control Module"),
-                       QString(), QString(), KAboutData::License_GPL,
+                       QString(), QString(), KAboutLicense::GPL,
                        i18n("(c) 2001 Karol Szwed"));
     about->addAuthor(i18n("Karol Szwed"), QString(), "gallium@kde.org");
     setAboutData(about);

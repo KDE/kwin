@@ -571,7 +571,7 @@ void KWinDesktopConfig::slotAboutEffectClicked()
                              data.displayName,
                              QStringLiteral(KWIN_VERSION_STRING),
                              data.comment,
-                             KAboutData::License_GPL_V2);
+                             KAboutLicense::GPL_V2);
         aboutData.setProgramIconName(QStringLiteral("preferences-system-windows"));
         aboutData.addAuthor(i18n("KWin development team"));
         showDialog(aboutData);
