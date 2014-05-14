@@ -43,6 +43,13 @@ include(ECMInstallIcons)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
+# require at least gcc 4.8
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
+        message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
+    endif()
+endif()
+
 find_package(Qt5Multimedia QUIET)
 set_package_properties(Qt5Multimedia PROPERTIES
          PURPOSE "Runtime-only dependency for effect video playback"
