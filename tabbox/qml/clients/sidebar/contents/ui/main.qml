@@ -72,12 +72,10 @@ KWin.Switcher {
 
                     clip: true
                     delegate: Item {
-                        property alias data: thumbnailItem.data
                         id: delegateItem
                         width: thumbnailListView.thumbnailWidth
                         height: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + label.height + 30
                         KWin.ThumbnailItem {
-                            property variant data: model
                             id: thumbnailItem
                             wId: windowId
                             anchors {
