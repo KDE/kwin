@@ -210,7 +210,7 @@ bool Edge::handleAction()
 {
     switch (m_action) {
     case ElectricActionDashboard: { // Display Plasma dashboard
-        QDBusInterface plasmaApp(QStringLiteral("org.kde.plasma-desktop"), QStringLiteral("/App"));
+        QDBusInterface plasmaApp(QStringLiteral("org.kde.plasmashell"), QStringLiteral("/PlasmaShell"));
         plasmaApp.asyncCall(QStringLiteral("toggleDashboard"));
         return true;
     }
