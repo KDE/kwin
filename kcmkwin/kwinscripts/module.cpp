@@ -118,7 +118,7 @@ void Module::save()
 {
     ui->scriptSelector->save();
     m_kwinConfig->sync();
-    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.kwin", "/Scripting", "org.kde.kwin.Scripting", "start");
+    QDBusMessage message = QDBusMessage::createMethodCall("org.kde.KWin", "/Scripting", "org.kde.kwin.Scripting", "start");
     QDBusConnection::sessionBus().asyncCall(message);
 
     emit changed(false);
