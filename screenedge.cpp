@@ -40,6 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
+// DBus generated
+#include "screenlocker_interface.h"
 // Qt
 #include <QTimer>
 #include <QVector>
@@ -219,8 +221,12 @@ bool Edge::handleAction()
         return true;
     }
     case ElectricActionLockScreen: { // Lock the screen
-        QDBusInterface screenSaver(QStringLiteral("org.kde.screensaver"), QStringLiteral("/ScreenSaver"));
-        screenSaver.asyncCall(QStringLiteral("Lock"));
+        OrgFreedesktopScreenSaverInterface interface(QStringLiteral("org.freedesktop.ScreenSaver"),
+                                                     QStringLiteral("/ScreenSaver"),
+                                                     QDBusConnection::sessionBus());
+        if (interface.isValid()) {
+            interface.Lock();
+        }
         return true;
     }
     default:
