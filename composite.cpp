@@ -143,7 +143,17 @@ void Compositor::setup()
     if (hasScene())
         return;
     if (m_suspended) {
-        qDebug() << "Compositing is suspended, reason:" << m_suspended;
+        QStringList reasons;
+        if (m_suspended & UserSuspend) {
+            reasons << QStringLiteral("Disabled by User");
+        }
+        if (m_suspended & BlockRuleSuspend) {
+            reasons << QStringLiteral("Disabled by Window");
+        }
+        if (m_suspended & ScriptSuspend) {
+            reasons << QStringLiteral("Disabled by Script");
+        }
+        qDebug() << "Compositing is suspended, reason:" << reasons;
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
         qCritical() << "Compositing is not possible";
