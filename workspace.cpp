@@ -1351,6 +1351,7 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Wayland and X11"));
         break;
     }
+    support.append(QStringLiteral("\n\n"));
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();
