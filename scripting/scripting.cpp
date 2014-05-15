@@ -602,7 +602,6 @@ KWin::Scripting::Scripting(QObject *parent)
 {
     init();
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Scripting"), this, QDBusConnection::ExportScriptableContents | QDBusConnection::ExportScriptableInvokables);
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kwin.Scripting"));
     connect(Workspace::self(), SIGNAL(configChanged()), SLOT(start()));
     connect(Workspace::self(), SIGNAL(workspaceInitialized()), SLOT(start()));
 }
@@ -782,7 +781,6 @@ int KWin::Scripting::loadDeclarativeScript(const QString& filePath, const QStrin
 KWin::Scripting::~Scripting()
 {
     QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/Scripting"));
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin.Scripting"));
     s_self = nullptr;
 }
 
