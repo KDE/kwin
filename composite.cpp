@@ -95,7 +95,6 @@ Compositor::Compositor(QObject* workspace)
     new CompositingAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Compositor"), this);
-    dbus.registerService(QStringLiteral("org.kde.kwin.Compositing"));
     dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"),
                  QStringLiteral("reinit"), this, SLOT(slotReinitialize()));
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
