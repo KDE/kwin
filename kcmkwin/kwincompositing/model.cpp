@@ -381,10 +381,9 @@ void EffectModel::syncConfig()
     for (auto it = m_effectsList.constBegin(); it != m_effectsList.constEnd(); it++) {
         const EffectData &effect = *(it);
 
-        QString key = effect.serviceName + QStringLiteral("Enabled");
-        const bool effectConfigStatus = kwinConfig.readEntry(key, effect.enabledByDefault);
+        const QString key = effect.serviceName + QStringLiteral("Enabled");
 
-        if (effect.effectStatus != effectConfigStatus) {
+        if (effect.effectStatus != effect.enabledByDefault) {
             kwinConfig.writeEntry(key, effect.effectStatus);
         } else {
             kwinConfig.deleteEntry(key);
