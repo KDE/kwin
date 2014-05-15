@@ -54,7 +54,7 @@ Item {
                 icon: model.icon
                 width: iconSize
                 height: iconSize
-                state: index == listView.currentIndex ? QIconItem.ActiveState : QIconItem.DefaultState
+                state: index == iconsListView.currentIndex ? QIconItem.ActiveState : QIconItem.DefaultState
                 anchors {
                     fill: parent
                     leftMargin: hoverItem.margins.left
