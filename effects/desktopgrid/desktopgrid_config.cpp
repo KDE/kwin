@@ -107,7 +107,7 @@ void DesktopGridEffectConfig::save()
     conf.writeEntry("DesktopNameAlignment", DesktopGridConfig::desktopNameAlignment());
     conf.sync();
 
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("desktopgrid"));

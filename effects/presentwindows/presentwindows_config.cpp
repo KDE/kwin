@@ -98,7 +98,7 @@ void PresentWindowsEffectConfig::save()
 {
     KCModule::save();
     m_ui->shortcutEditor->save();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("presentwindows"));

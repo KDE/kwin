@@ -100,7 +100,7 @@ void MagnifierEffectConfig::save()
 
     m_ui->editor->save();   // undo() will restore to this state from now on
     KCModule::save();
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(QStringLiteral("magnifier"));

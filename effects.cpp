@@ -210,7 +210,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     new EffectsAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Effects"), this);
-    dbus.registerService(QStringLiteral("org.kde.kwin.Effects"));
     // init is important, otherwise causes crashes when quads are build before the first painting pass start
     m_currentBuildQuadsIterator = m_activeEffects.constEnd();
 

@@ -122,7 +122,7 @@ KConfigGroup ScriptedEffectConfig::configGroup()
 
 void ScriptedEffectConfig::reload()
 {
-    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.kwin.Effects"),
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
     interface.reconfigureEffect(packageName());
