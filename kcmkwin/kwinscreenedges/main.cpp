@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "main.h"
 #include <effect_builtins.h>
+#include <kwin_effects_interface.h>
 
 #include <KAboutData>
 #include <KConfigGroup>
@@ -123,6 +124,13 @@ void KWinScreenEdgesConfig::save()
     // Reload KWin.
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
+    // and reconfigure the effects
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Effects"),
+                                             QDBusConnection::sessionBus());
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows));
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::DesktopGrid));
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Cube));
 
     emit changed(false);
 }

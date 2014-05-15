@@ -9,6 +9,8 @@ set(
     screenpreviewwidget.cpp
     )
 ki18n_wrap_ui( kcm_kwinscreenedges_PART_SRCS main.ui )
+qt5_add_dbus_interface( kcm_kwinscreenedges_PART_SRCS
+    ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 add_library( kcm_kwinscreenedges MODULE ${kcm_kwinscreenedges_PART_SRCS} )
 target_link_libraries( kcm_kwinscreenedges ${X11_LIBRARIES}
     Qt5::DBus
