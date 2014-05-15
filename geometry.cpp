@@ -1528,9 +1528,9 @@ QSize Client::basicUnit() const
  */
 void Client::sendSyntheticConfigureNotify()
 {
-    XConfigureEvent c;
-    c.type = ConfigureNotify;
-    c.send_event = True;
+    xcb_configure_notify_event_t c;
+    memset(&c, 0, sizeof(c));
+    c.response_type = XCB_CONFIGURE_NOTIFY;
     c.event = window();
     c.window = window();
     c.x = x() + clientPos().x();
@@ -1538,9 +1538,10 @@ void Client::sendSyntheticConfigureNotify()
     c.width = clientSize().width();
     c.height = clientSize().height();
     c.border_width = 0;
-    c.above = None;
+    c.above_sibling = XCB_WINDOW_NONE;
     c.override_redirect = 0;
-    XSendEvent(display(), c.event, true, StructureNotifyMask, (XEvent*)&c);
+    xcb_send_event(connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char*>(&c));
+    xcb_flush(connection());
 }
 
 const QPoint Client::calculateGravitation(bool invert, int gravity) const
