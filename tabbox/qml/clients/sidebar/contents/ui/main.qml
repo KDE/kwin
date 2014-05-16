@@ -69,11 +69,11 @@ KWin.Switcher {
                 delegate: Item {
                     id: delegateItem
                     width: thumbnailListView.delegateWidth
-                    height: thumbnailItem.height + label.height + 30
+                    height: Math.round(thumbnailItem.height + label.height + 30)
                     Item {
                         id: thumbnailItem
                         width: parent.width - hoverItem.margins.left - hoverItem.margins.right
-                        height: thumbnailListView.delegateWidth*(1.0/screenFactor) - hoverItem.margins.top
+                        height: Math.round(thumbnailListView.delegateWidth*(1.0/screenFactor) - hoverItem.margins.top)
                         anchors {
                             top: parent.top
                             left: parent.left
