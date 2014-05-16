@@ -90,12 +90,13 @@ KWin.Switcher {
                     RowLayout {
                         id: label
                         spacing: 4
-                        property int maximumWidth: thumbnailListView.delegateWidth
-                        Layout.maximumWidth: maximumWidth
+
                         anchors {
                             left: parent.left
+                            right: parent.right
                             bottom: parent.bottom
                             leftMargin: hoverItem.margins.left
+                            rightMargin: hoverItem.margins.right
                             bottomMargin: hoverItem.margins.bottom
                         }
                         QIconItem {
@@ -110,6 +111,7 @@ KWin.Switcher {
                         PlasmaComponents.Label {
                             text: model.caption
                             elide: Text.ElideMiddle
+
                             Layout.fillWidth: true
                             Layout.maximumWidth: label.maximumWidth - iconItem.iconSize - label.spacing * 2
                         }
