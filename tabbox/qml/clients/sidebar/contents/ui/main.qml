@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 import QtQuick 2.0
+import QtQuick.Layouts 1.1
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
@@ -29,6 +30,14 @@ KWin.Switcher {
     id: tabBox
     property real screenFactor: screenGeometry.width/screenGeometry.height
 
+    // just to get the margin sizes
+    PlasmaCore.FrameSvgItem {
+        id: hoverItem
+        imagePath: "widgets/viewitem"
+        prefix: "hover"
+        visible: false
+    }
+
     PlasmaCore.Dialog {
         id: dialog
         location: PlasmaCore.Types.Floating
@@ -37,92 +46,91 @@ KWin.Switcher {
         x: screenGeometry.x
         y: screenGeometry.y
 
-        mainItem: Item {
+        mainItem: PlasmaExtras.ScrollArea {
             id: dialogMainItem
-            property int optimalWidth: (thumbnailListView.thumbnailWidth + hoverItem.margins.left + hoverItem.margins.right)
 
             property bool canStretchX: false
             property bool canStretchY: false
-            width: Math.min(Math.max(tabBox.screenGeometry.width * 0.15, optimalWidth), tabBox.screenGeometry.width * 0.3)
+            width: tabBox.screenGeometry.width * 0.15
             height: tabBox.screenGeometry.height
             clip: true
             focus: true
 
-            // just to get the margin sizes
-            PlasmaCore.FrameSvgItem {
-                id: hoverItem
-                imagePath: "widgets/viewitem"
-                prefix: "hover"
-                visible: false
-            }
+            ListView {
+                id: thumbnailListView
+                orientation: ListView.Vertical
+                model: tabBox.model
+                anchors.fill: parent
+                property int delegateWidth: thumbnailListView.width
+                spacing: 5
+                highlightMoveDuration: 250
 
-            PlasmaExtras.ScrollArea {
-                anchors {
-                    fill: parent
-                }
-                ListView {
-                    id: thumbnailListView
-                    orientation: ListView.Vertical
-                    model: tabBox.model
-                    property int thumbnailWidth: width
-                    height: thumbnailWidth * (1.0/screenFactor) + hoverItem.margins.bottom + hoverItem.margins.top
-                    spacing: 5
-                    highlightMoveDuration: 250
-                    width: Math.min(parent.width - (anchors.leftMargin + anchors.rightMargin) - (hoverItem.margins.left + hoverItem.margins.right), thumbnailWidth * count + 5 * (count - 1))
-
-                    clip: true
-                    delegate: Item {
-                        id: delegateItem
-                        width: thumbnailListView.thumbnailWidth
-                        height: thumbnailListView.thumbnailWidth*(1.0/screenFactor) + label.height + 30
+                clip: true
+                delegate: Item {
+                    id: delegateItem
+                    width: thumbnailListView.delegateWidth
+                    height: thumbnailItem.height + label.height + 30
+                    Item {
+                        id: thumbnailItem
+                        width: parent.width - hoverItem.margins.left - hoverItem.margins.right
+                        height: thumbnailListView.delegateWidth*(1.0/screenFactor) - hoverItem.margins.top
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            leftMargin: hoverItem.margins.left
+                            rightMargin: hoverItem.margins.right
+                            topMargin: hoverItem.margins.top
+                        }
                         KWin.ThumbnailItem {
-                            id: thumbnailItem
                             wId: windowId
-                            anchors {
-                                centerIn: parent
-                            }
-                            width: thumbnailListView.thumbnailWidth
-                            height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
-                        }
-                        MouseArea {
                             anchors.fill: parent
-                            onClicked: {
-                                thumbnailListView.currentIndex = index;
-                            }
-                        }
-                        Row {
-                            id: label
-                            spacing: 4
-                            anchors {
-                                left: parent.left
-                                bottom: parent.bottom
-                                leftMargin: 8
-                                bottomMargin: 8
-                            }
-                            QIconItem {
-                                id: iconItem
-                                icon: model.icon
-                                width: 32
-                                height: 32
-                            }
-                            PlasmaComponents.Label {
-                                text: model.caption
-                                anchors.verticalCenter: parent.verticalCenter
-                            }
                         }
                     }
-                    highlight: PlasmaCore.FrameSvgItem {
-                        id: highlightItem
-                        imagePath: "widgets/viewitem"
-                        prefix: "hover"
-                        width: thumbnailListView.thumbnailWidth
-                        height: thumbnailListView.thumbnailWidth*(1.0/screenFactor)
+                    RowLayout {
+                        id: label
+                        spacing: 4
+                        property int maximumWidth: thumbnailListView.delegateWidth
+                        Layout.maximumWidth: maximumWidth
+                        anchors {
+                            left: parent.left
+                            bottom: parent.bottom
+                            leftMargin: hoverItem.margins.left
+                            bottomMargin: hoverItem.margins.bottom
+                        }
+                        QIconItem {
+                            id: iconItem
+                            icon: model.icon
+                            property int iconSize: 32
+                            width: iconSize
+                            height: iconSize
+                            Layout.preferredHeight: iconSize
+                            Layout.preferredWidth: iconSize
+                        }
+                        PlasmaComponents.Label {
+                            text: model.caption
+                            elide: Text.ElideMiddle
+                            Layout.fillWidth: true
+                            Layout.maximumWidth: label.maximumWidth - iconItem.iconSize - label.spacing * 2
+                        }
                     }
-                    boundsBehavior: Flickable.StopAtBounds
-                    Connections {
-                        target: tabBox
-                        onCurrentIndexChanged: {thumbnailListView.currentIndex = tabBox.currentIndex;}
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            thumbnailListView.currentIndex = index;
+                        }
                     }
+                }
+                highlight: PlasmaCore.FrameSvgItem {
+                    id: highlightItem
+                    imagePath: "widgets/viewitem"
+                    prefix: "hover"
+                    width: thumbnailListView.currentItem.width
+                    height: thumbnailListView.currentItem.height
+                }
+                boundsBehavior: Flickable.StopAtBounds
+                Connections {
+                    target: tabBox
+                    onCurrentIndexChanged: {thumbnailListView.currentIndex = tabBox.currentIndex;}
                 }
             }
 
