@@ -859,6 +859,8 @@ private:
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
+    // wrapper around m_frame to use as a parent for the decoration
+    QScopedPointer<QWindow> m_frameWrapper;
     KDecoration* decoration;
     Bridge* bridge;
     int desk;

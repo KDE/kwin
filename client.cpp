@@ -558,7 +558,7 @@ void Client::createDecoration(const QRect& oldgeom)
     } else if (decoration->window()) {
         decoration->window()->installEventFilter(this);
     }
-    xcb_reparent_window(connection(), decoration->window()->winId(), frameId(), 0, 0);
+    decoration->window()->setParent(m_frameWrapper.data());
     decoration->window()->lower();
     decoration->borders(border_left, border_right, border_top, border_bottom);
     padding_left = padding_right = padding_top = padding_bottom = 0;

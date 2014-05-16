@@ -683,6 +683,7 @@ void Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t
     xcb_create_window(conn, depth, frame, rootWindow(), 0, 0, 1, 1, 0,
                       XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_frame.reset(frame);
+    m_frameWrapper.reset(QWindow::fromWinId(m_frame));
 
     setWindowHandles(m_client);
 
