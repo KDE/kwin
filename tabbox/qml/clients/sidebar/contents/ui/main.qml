@@ -29,6 +29,7 @@ import org.kde.kwin 2.0 as KWin
 KWin.Switcher {
     id: tabBox
     property real screenFactor: screenGeometry.width/screenGeometry.height
+    currentIndex: thumbnailListView.currentIndex
 
     // just to get the margin sizes
     PlasmaCore.FrameSvgItem {
