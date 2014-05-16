@@ -316,7 +316,10 @@ void UserActionsMenu::init()
                 // opens the KWin configuration
                 QStringList args;
                 args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
-                KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args);
+                QString error;
+                if (KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args, &error) != 0) {
+                    qDebug() << "Failed to start kcmshell5: " << error;
+                }
             }
         );
     }
