@@ -763,24 +763,7 @@ void Client::clientMessageEvent(xcb_client_message_event_t *e)
     if (e->window != window())
         return; // ignore frame/wrapper
     // WM_STATE
-    if (e->type == atoms->kde_wm_change_state) {
-        bool avoid_animation = (e->data.data32[ 1 ]);
-        if (e->data.data32[ 0 ] == XCB_ICCCM_WM_STATE_ICONIC)
-            minimize();
-        else if (e->data.data32[ 0 ] == XCB_ICCCM_WM_STATE_NORMAL) {
-            // copied from mapRequest()
-            if (isMinimized())
-                unminimize(avoid_animation);
-            if (isShade())
-                setShade(ShadeNone);
-            if (!isOnCurrentDesktop()) {
-                if (workspace()->allowClientActivation(this))
-                    workspace()->activateClient(this);
-                else
-                    demandAttention();
-            }
-        }
-    } else if (e->type == atoms->wm_change_state) {
+    if (e->type == atoms->wm_change_state) {
         if (e->data.data32[0] == XCB_ICCCM_WM_STATE_ICONIC)
             minimize();
         return;

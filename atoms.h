@@ -48,7 +48,6 @@ public:
     Xcb::Atom motif_wm_hints;
     Xcb::Atom net_wm_context_help;
     Xcb::Atom net_wm_ping;
-    Xcb::Atom kde_wm_change_state;
     Xcb::Atom net_wm_user_time;
     Xcb::Atom kde_net_wm_user_creation_time;
     Xcb::Atom kde_system_tray_embedding;
