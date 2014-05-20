@@ -41,72 +41,85 @@ Rectangle {
 
     RowLayout {
         id: rowEffect
-        width: parent.width - 2 * spacing
+        property int maximumWidth: parent.width - 2 * spacing
+        width: maximumWidth
+        Layout.maximumWidth: maximumWidth
         x: spacing
 
-        RadioButton {
-            id: exclusiveGroupButton
-            property bool exclusive: model.ExclusiveRole != ""
-            visible: exclusive
-            checked: model.EffectStatusRole
-            property bool actuallyChanged: true
-            property bool initiallyChecked: false
-            exclusiveGroup: exclusive ? effectView.exclusiveGroupForCategory(model.ExclusiveRole) : null
-            onCheckedChanged: {
-                if (!visible) {
-                    return;
+        RowLayout {
+            id: checkBoxLayout
+            RadioButton {
+                id: exclusiveGroupButton
+                property bool exclusive: model.ExclusiveRole != ""
+                visible: exclusive
+                checked: model.EffectStatusRole
+                property bool actuallyChanged: true
+                property bool initiallyChecked: false
+                exclusiveGroup: exclusive ? effectView.exclusiveGroupForCategory(model.ExclusiveRole) : null
+                onCheckedChanged: {
+                    if (!visible) {
+                        return;
+                    }
+                    actuallyChanged = true;
+                    item.checked = exclusiveGroupButton.checked
+                    item.changed();
                 }
-                actuallyChanged = true;
-                item.checked = exclusiveGroupButton.checked
-                item.changed();
-            }
-            onClicked: {
-                if (!actuallyChanged || initiallyChecked) {
-                    checked = false;
+                onClicked: {
+                    if (!actuallyChanged || initiallyChecked) {
+                        checked = false;
+                    }
+                    actuallyChanged = false;
+                    initiallyChecked = false;
                 }
-                actuallyChanged = false;
-                initiallyChecked = false;
+                Component.onCompleted: {
+                    exclusiveGroupButton.initiallyChecked = model.EffectStatusRole;
+                }
             }
-            Component.onCompleted: {
-                exclusiveGroupButton.initiallyChecked = model.EffectStatusRole;
-            }
-        }
 
-        CheckBox {
-            id: effectStatusCheckBox
-            checked: model.EffectStatusRole
-            visible: model.ExclusiveRole == ""
+            CheckBox {
+                id: effectStatusCheckBox
+                checked: model.EffectStatusRole
+                visible: model.ExclusiveRole == ""
 
-            onCheckedChanged: {
-                if (!visible) {
-                    return;
+                onCheckedChanged: {
+                    if (!visible) {
+                        return;
+                    }
+                    item.checked = effectStatusCheckBox.checked;
+                    item.changed();
                 }
-                item.checked = effectStatusCheckBox.checked;
-                item.changed();
-            }
-            Connections {
-                target: searchModel
-                onDataChanged: {
-                    effectStatusCheckBox.checked = model.EffectStatusRole;
+                Connections {
+                    target: searchModel
+                    onDataChanged: {
+                        effectStatusCheckBox.checked = model.EffectStatusRole;
+                    }
                 }
             }
         }
 
         ColumnLayout {
             id: effectItem
+            property int maximumWidth: parent.maximumWidth - checkBoxLayout.width - (videoButton.width + configureButton.width + aboutButton.width) - parent.spacing * 5
+            Layout.maximumWidth: maximumWidth
             Text {
                 text: model.NameRole
                 font.bold: true
+                wrapMode: Text.Wrap
+                Layout.maximumWidth: parent.maximumWidth
             }
             Text {
                 id: desc
                 text: model.DescriptionRole
+                wrapMode: Text.Wrap
+                Layout.maximumWidth: parent.maximumWidth
             }
             Text {
                 id:aboutItem
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
                 font.bold: true
                 visible: false
+                wrapMode: Text.Wrap
+                Layout.maximumWidth: parent.maximumWidth
             }
             Video {
                 id: videoItem
