@@ -125,6 +125,10 @@ Item {
             highlightOnFocus: true
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Rectangle {
+                color: effectView.backgroundNormalColor
+                anchors.fill: parent
+            }
             ListView {
                 function exclusiveGroupForCategory(category) {
                     for (var i = 0; i < effectView.exclusiveGroups.length; ++i) {
@@ -163,6 +167,7 @@ Item {
 
                 section.property: "CategoryRole"
                 section.delegate: sectionHeading
+                spacing: col.spacing
             }
         }
 

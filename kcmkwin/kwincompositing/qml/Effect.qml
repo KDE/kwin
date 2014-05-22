@@ -27,7 +27,7 @@ import org.kde.kwin.kwincompositing 1.0
 Rectangle {
     id: item
     width: parent.width
-    height: rowEffect.implicitHeight + rowEffect.spacing
+    height: rowEffect.implicitHeight
     color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
     signal changed()
     property bool checked: model.EffectStatusRole
