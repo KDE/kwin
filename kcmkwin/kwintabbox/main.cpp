@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "main.h"
 #include <effect_builtins.h>
+#include <kwin_effects_interface.h>
 
 // Qt
 #include <QtDBus/QtDBus>
@@ -331,6 +332,12 @@ void KWinTabBoxConfig::save()
     // Reload KWin.
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
+    // and reconfigure the effects
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                             QStringLiteral("/Effects"),
+                                             QDBusConnection::sessionBus());
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::CoverSwitch));
+    interface.reconfigureEffect(BuiltInEffects::nameForEffect(BuiltInEffect::FlipSwitch));
 
     emit changed(false);
 }
