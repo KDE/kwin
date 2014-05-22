@@ -545,7 +545,17 @@ install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kwin_export.h DESTINATION ${INCLUDE_I
 # Install the KWin/Script service type
 install( FILES scripting/kwinscript.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR} )
 
-ecm_install_icons( ${ICON_INSTALL_DIR} )
+ecm_install_icons(
+    ICONS
+        16-apps-kwin.png
+        32-apps-kwin.png
+        48-apps-kwin.png
+        sc-apps-kwin.svgz
+    DESTINATION
+        ${ICON_INSTALL_DIR}
+    THEME
+        oxygen
+)
 
 add_subdirectory(qml)
 add_subdirectory(autotests)
