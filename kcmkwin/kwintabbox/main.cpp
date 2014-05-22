@@ -364,7 +364,7 @@ void KWinTabBoxConfig::defaults()
         CONFIGURE(showDesktop, ShowDesktop, ==, ShowDesktopClient);
 #undef CONFIGURE
         // effects
-        ui[i]->effectCombo->setCurrentIndex(ui[i]->effectCombo->findData("thumbnails"));
+        ui[i]->effectCombo->setCurrentIndex(ui[i]->effectCombo->findData("sidebar"));
     }
 
     QString action;
