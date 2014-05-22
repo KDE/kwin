@@ -101,19 +101,19 @@ Rectangle {
             id: effectItem
             property int maximumWidth: parent.maximumWidth - checkBoxLayout.width - (videoButton.width + configureButton.width + aboutButton.width) - parent.spacing * 5
             Layout.maximumWidth: maximumWidth
-            Text {
+            Label {
                 text: model.NameRole
                 font.bold: true
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
             }
-            Text {
+            Label {
                 id: desc
                 text: model.DescriptionRole
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
             }
-            Text {
+            Label {
                 id:aboutItem
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
                 font.bold: true

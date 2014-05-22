@@ -32,7 +32,7 @@ Item {
 
     ColumnLayout {
         id: mainLayout
-        Text {
+        Label {
             id: openGLErrorText
             text: i18n("OpenGL compositing (the default) has crashed KWin in the past.\n" +
                     "This was most likely due to a driver bug.\n" +

@@ -36,7 +36,7 @@ Item {
             implicitHeight: sectionText.implicitHeight + 2 * col.spacing
             color: searchModel.backgroundNormalColor
 
-            Text {
+            Label {
                 id: sectionText
                 x: col.spacing
                 y: col.spacing
