@@ -176,6 +176,10 @@ public:
     void keyPress(int key);
     void keyRelease(const xcb_key_release_event_t *ev);
 
+    bool forcedGlobalMouseGrab() const {
+        return m_forcedGlobalMouseGrab;
+    }
+
     static TabBox *self();
     static TabBox *create(QObject *parent);
 

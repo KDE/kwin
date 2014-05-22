@@ -1014,7 +1014,7 @@ void Client::updateMouseGrab()
             grabButton(XCB_NONE);
         return;
     }
-    if (isActive() && !workspace()->forcedGlobalMouseGrab()) { // see Workspace::establishTabBoxGrab()
+    if (isActive() && !TabBox::TabBox::self()->forcedGlobalMouseGrab()) { // see TabBox::establishTabBoxGrab()
         // first grab all modifier combinations
         m_wrapper.grabButton(XCB_GRAB_MODE_SYNC, XCB_GRAB_MODE_ASYNC);
         // remove the grab for no modifiers only if the window

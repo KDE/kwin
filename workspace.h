@@ -297,7 +297,6 @@ public:
 
     void focusToNull(); // SELI TODO: Public?
 
-    bool forcedGlobalMouseGrab() const;
     void clientShortcutUpdated(Client* c);
     bool shortcutAvailable(const QKeySequence &cut, Client* ignore = NULL) const;
     bool globalShortcutsDisabled() const;
@@ -570,7 +569,6 @@ private:
     int block_stacking_updates; // When > 0, stacking updates are temporarily disabled
     bool blocked_propagating_new_clients; // Propagate also new clients after enabling stacking updates?
     QScopedPointer<Xcb::Window> m_nullFocus;
-    bool forced_global_mouse_grab;
     friend class StackingUpdatesBlocker;
 
     QScopedPointer<KillWindow> m_windowKiller;
@@ -664,11 +662,6 @@ inline void Workspace::sessionSaveStarted()
 inline bool Workspace::sessionSaving() const
 {
     return session_saving;
-}
-
-inline bool Workspace::forcedGlobalMouseGrab() const
-{
-    return forced_global_mouse_grab;
 }
 
 inline bool Workspace::showingDesktop() const

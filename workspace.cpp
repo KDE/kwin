@@ -132,7 +132,6 @@ Workspace::Workspace(bool restore)
     , startup(0)
     , set_active_client_recursion(0)
     , block_stacking_updates(0)
-    , forced_global_mouse_grab(false)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
