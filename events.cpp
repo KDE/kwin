@@ -1011,7 +1011,7 @@ void Client::updateMouseGrab()
         // keep grab for the simple click without modifiers if needed (see below)
         bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
         if (!(!options->isClickRaise() || not_obscured))
-            grabButton(None);
+            grabButton(XCB_NONE);
         return;
     }
     if (isActive() && !workspace()->forcedGlobalMouseGrab()) { // see Workspace::establishTabBoxGrab()
@@ -1023,12 +1023,12 @@ void Client::updateMouseGrab()
         // the most recently raised window)
         bool not_obscured = workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(), -1, true, false) == this;
         if (!options->isClickRaise() || not_obscured)
-            ungrabButton(None);
+            ungrabButton(XCB_NONE);
         else
-            grabButton(None);
-        ungrabButton(ShiftMask);
-        ungrabButton(ControlMask);
-        ungrabButton(ControlMask | ShiftMask);
+            grabButton(XCB_NONE);
+        ungrabButton(XCB_MOD_MASK_SHIFT);
+        ungrabButton(XCB_MOD_MASK_CONTROL);
+        ungrabButton(XCB_MOD_MASK_CONTROL | XCB_MOD_MASK_SHIFT);
     } else {
         m_wrapper.ungrabButton();
         // simply grab all modifier combinations
