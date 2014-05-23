@@ -168,6 +168,7 @@ Item {
                 section.property: "CategoryRole"
                 section.delegate: sectionHeading
                 spacing: col.spacing
+                focus: true
             }
         }
 
