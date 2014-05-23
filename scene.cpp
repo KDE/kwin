@@ -492,8 +492,10 @@ static void adjustClipRegion(AbstractThumbnailItem *item, QRegion &clippingRegio
                 offset.setY(anchorsObject->property("topMargin").toReal());
             }
         }
-        const QRectF rect = parentItem->mapRectToScene(QRectF(parentItem->position() - offset,
-                                                                QSizeF(parentItem->width(), parentItem->height())));
+        QRectF rect = QRectF(parentItem->position() - offset, QSizeF(parentItem->width(), parentItem->height()));
+        if (QQuickItem *p = parentItem->parentItem()) {
+            rect = p->mapRectToScene(rect);
+        }
         clippingRegion &= rect.adjusted(0,0,-1,-1).translated(item->window()->position()).toRect();
     }
 }
