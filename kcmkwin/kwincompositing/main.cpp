@@ -20,8 +20,9 @@
  **************************************************************************/
 
 
-
+#include "compositing.h"
 #include "model.h"
+#include "ui_compositing.h"
 #include <QApplication>
 #include <QLayout>
 
@@ -55,13 +56,133 @@ public:
         : KWinCompositingKCM(parent, args, KWin::Compositing::EffectView::DesktopEffectsView) {}
 };
 
-class KWinCompositingSettings : public KWinCompositingKCM
+class KWinCompositingSettings : public KCModule
 {
     Q_OBJECT
 public:
-    explicit KWinCompositingSettings(QWidget* parent = 0, const QVariantList& args = QVariantList())
-        : KWinCompositingKCM(parent, args, KWin::Compositing::EffectView::CompositingSettingsView) {}
+    explicit KWinCompositingSettings(QWidget *parent = 0, const QVariantList &args = QVariantList());
+
+public Q_SLOTS:
+    void load() override;
+    void save() override;
+    void defaults() override;
+
+private:
+    void init();
+    KWin::Compositing::Compositing *m_compositing;
+    Ui_CompositingForm m_form;
 };
+
+KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
+    , m_compositing(new KWin::Compositing::Compositing(this))
+{
+    m_form.setupUi(this);
+
+    init();
+}
+
+void KWinCompositingSettings::init()
+{
+    using namespace KWin::Compositing;
+    auto currentIndexChangedSignal = static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged);
+
+    connect(m_compositing, &Compositing::changed, this, static_cast<void(KCModule::*)()>(&KWinCompositingSettings::changed));
+
+    // enabled check box
+    m_form.compositingEnabled->setChecked(m_compositing->compositingEnabled());
+    connect(m_compositing, &Compositing::compositingEnabledChanged, m_form.compositingEnabled, &QCheckBox::setChecked);
+    connect(m_form.compositingEnabled, &QCheckBox::toggled, m_compositing, &Compositing::setCompositingEnabled);
+
+    // animation speed
+    m_form.animationSpeed->setValue(m_compositing->animationSpeed());
+    connect(m_compositing, &Compositing::animationSpeedChanged, m_form.animationSpeed, &QSlider::setValue);
+    connect(m_form.animationSpeed, &QSlider::valueChanged, m_compositing, &Compositing::setAnimationSpeed);
+
+    // gl scale filter
+    m_form.glScaleFilter->setCurrentIndex(m_compositing->glScaleFilter());
+    connect(m_compositing, &Compositing::glScaleFilterChanged, m_form.glScaleFilter, &QComboBox::setCurrentIndex);
+    connect(m_form.glScaleFilter, currentIndexChangedSignal, m_compositing, &Compositing::setGlScaleFilter);
+
+    // xrender scale filter
+    m_form.xrScaleFilter->setCurrentIndex(m_compositing->xrScaleFilter());
+    connect(m_compositing, &Compositing::xrScaleFilterChanged, m_form.xrScaleFilter, &QComboBox::setCurrentIndex);
+    connect(m_form.xrScaleFilter, currentIndexChangedSignal, m_compositing, &Compositing::setXrScaleFilter);
+
+    // tearing prevention
+    m_form.tearingPrevention->setCurrentIndex(m_compositing->glSwapStrategy());
+    connect(m_compositing, &Compositing::glSwapStrategyChanged, m_form.tearingPrevention, &QComboBox::setCurrentIndex);
+    connect(m_form.tearingPrevention, currentIndexChangedSignal, m_compositing, &Compositing::setGlSwapStrategy);
+
+    // windowThumbnail
+    m_form.windowThumbnail->setCurrentIndex(m_compositing->windowThumbnail());
+    connect(m_compositing, &Compositing::windowThumbnailChanged, m_form.windowThumbnail, &QComboBox::setCurrentIndex);
+    connect(m_form.windowThumbnail, currentIndexChangedSignal, m_compositing, &Compositing::setWindowThumbnail);
+
+    // openglPlatformInterface
+    m_form.openGLPlatformInterface->setModel(m_compositing->openGLPlatformInterfaceModel());
+    m_form.openGLPlatformInterface->setCurrentIndex(m_compositing->openGLPlatformInterface());
+    connect(m_compositing, &Compositing::openGLPlatformInterfaceChanged, m_form.openGLPlatformInterface, &QComboBox::setCurrentIndex);
+    connect(m_form.openGLPlatformInterface, currentIndexChangedSignal, m_compositing, &Compositing::setOpenGLPlatformInterface);
+
+    // unredirect fullscreen
+    m_form.unredirectFullscreen->setChecked(m_compositing->unredirectFullscreen());
+    connect(m_compositing, &Compositing::unredirectFullscreenChanged, m_form.unredirectFullscreen, &QCheckBox::setChecked);
+    connect(m_form.unredirectFullscreen, &QCheckBox::toggled, m_compositing, &Compositing::setUnredirectFullscreen);
+
+    // color correction
+    m_form.colorCorrection->setChecked(m_compositing->glColorCorrection());
+    connect(m_compositing, &Compositing::glColorCorrectionChanged, m_form.colorCorrection, &QCheckBox::setChecked);
+    connect(m_form.colorCorrection, &QCheckBox::toggled, m_compositing, &Compositing::setGlColorCorrection);
+
+    // compositing type
+    CompositingType *type = new CompositingType(this);
+    m_form.type->setModel(type);
+    auto updateCompositingType = [this, type]() {
+        m_form.type->setCurrentIndex(type->indexForCompositingType(m_compositing->compositingType()));
+    };
+    updateCompositingType();
+    connect(m_compositing, &Compositing::compositingTypeChanged,
+        [updateCompositingType]() {
+            updateCompositingType();
+        }
+    );
+    auto showHideBasedOnType = [this, type]() {
+        const int currentType = type->compositingTypeForIndex(m_form.type->currentIndex());
+        m_form.glScaleFilter->setVisible(currentType != CompositingType::XRENDER_INDEX);
+        m_form.glScaleFilterLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
+        m_form.xrScaleFilter->setVisible(currentType == CompositingType::XRENDER_INDEX);
+        m_form.xrScaleFilterLabel->setVisible(currentType == CompositingType::XRENDER_INDEX);
+        m_form.openGLPlatformInterface->setVisible(currentType != CompositingType::XRENDER_INDEX);
+        m_form.openGLPlatformInterfaceLabel->setVisible(currentType != CompositingType::XRENDER_INDEX);
+        m_form.colorCorrection->setEnabled(currentType == CompositingType::OPENGL31_INDEX || currentType == CompositingType::OPENGL20_INDEX);
+    };
+    showHideBasedOnType();
+    connect(m_form.type, currentIndexChangedSignal,
+        [this, type, showHideBasedOnType]() {
+            m_compositing->setCompositingType(type->compositingTypeForIndex(m_form.type->currentIndex()));
+            showHideBasedOnType();
+        }
+    );
+}
+
+void KWinCompositingSettings::load()
+{
+    KCModule::load();
+    m_compositing->reset();
+}
+
+void KWinCompositingSettings::defaults()
+{
+    KCModule::defaults();
+    m_compositing->defaults();
+}
+
+void KWinCompositingSettings::save()
+{
+    KCModule::save();
+    m_compositing->save();
+}
 
 KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args, KWin::Compositing::EffectView::ViewType viewType)
     : KCModule(parent, args)

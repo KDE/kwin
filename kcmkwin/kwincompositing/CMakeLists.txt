@@ -26,6 +26,8 @@ qt5_add_dbus_interface( kwincomposing_SRC
 qt5_add_dbus_interface( kwincomposing_SRC
   ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
+ki18n_wrap_ui(kwincomposing_SRC compositing.ui)
+
 add_library(kwincompositing MODULE ${kwincomposing_SRC})
 
 target_link_libraries(kwincompositing
