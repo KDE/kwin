@@ -82,6 +82,7 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
     connect(m_view.data(), &KWin::Compositing::EffectView::changed, [this]{
         emit changed(true);
     });
+    w->setFocusPolicy(Qt::StrongFocus);
 }
 
 KWinCompositingKCM::~KWinCompositingKCM()
