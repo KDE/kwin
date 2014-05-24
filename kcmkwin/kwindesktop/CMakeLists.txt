@@ -7,6 +7,8 @@ include_directories(${KWIN_SOURCE_DIR}/effects)
 
 set(kcm_kwindesktop_PART_SRCS main.cpp desktopnameswidget.cpp)
 ki18n_wrap_ui(kcm_kwindesktop_PART_SRCS main.ui)
+qt5_add_dbus_interface( kcm_kwindesktop_PART_SRCS
+    ${KWIN_SOURCE_DIR}/org.kde.kwin.Effects.xml kwin_effects_interface)
 
 add_library(kcm_kwindesktop MODULE ${kcm_kwindesktop_PART_SRCS})
 

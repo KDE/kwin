@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include <effect_builtins.h>
 #include <config-kwin.h>
+#include <kwin_effects_interface.h>
 
 #include <QDBusMessage>
 #include <QDBusConnection>
@@ -336,32 +337,27 @@ void KWinDesktopConfig::save()
 
     // Effect desktop switching
     int desktopSwitcher = m_ui->effectComboBox->currentIndex();
+    bool slideEnabled = false;
+    bool cubeSlideEnabled = false;
+    bool fadeEnabled = false;
     switch(desktopSwitcher) {
-    case 0:
-        // no effect
-        effectconfig.writeEntry("slideEnabled", false);
-        effectconfig.writeEntry("cubeslideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
-        break;
     case 1:
         // slide
-        effectconfig.writeEntry("slideEnabled", true);
-        effectconfig.writeEntry("cubeslideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
+        slideEnabled = true;
         break;
     case 2:
         // cube
-        effectconfig.writeEntry("slideEnabled", false);
-        effectconfig.writeEntry("cubeslideEnabled", true);
-        effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", false);
+        cubeSlideEnabled = true;
         break;
     case 3:
         // fadedesktop
-        effectconfig.writeEntry("slideEnabled", false);
-        effectconfig.writeEntry("cubeslideEnabled", false);
-        effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", true);
+        fadeEnabled = true;
         break;
     }
+
+    effectconfig.writeEntry("slideEnabled", slideEnabled);
+    effectconfig.writeEntry("cubeslideEnabled", cubeSlideEnabled);
+    effectconfig.writeEntry("kwin4_effect_fadedesktopEnabled", fadeEnabled);
 
     m_editor->save();
 
@@ -369,6 +365,25 @@ void KWinDesktopConfig::save()
     // Send signal to all kwin instances
     QDBusMessage message = QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
     QDBusConnection::sessionBus().send(message);
+    // and reconfigure the effects
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    if (slideEnabled) {
+        interface.loadEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Slide));
+    } else {
+        interface.unloadEffect(BuiltInEffects::nameForEffect(BuiltInEffect::Slide));
+    }
+    if (cubeSlideEnabled) {
+        interface.loadEffect(BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide));
+    } else {
+        interface.unloadEffect(BuiltInEffects::nameForEffect(BuiltInEffect::CubeSlide));
+    }
+    if (fadeEnabled) {
+        interface.loadEffect(QStringLiteral("kwin4_effect_fadedesktop"));
+    } else {
+        interface.unloadEffect(QStringLiteral("kwin4_effect_fadedesktop"));
+    }
 
     emit changed(false);
 }
