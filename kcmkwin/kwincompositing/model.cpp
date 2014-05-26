@@ -32,6 +32,7 @@
 #include <KSharedConfig>
 #include <KCModuleProxy>
 #include <KPluginTrader>
+#include <kdeclarative/kdeclarative.h>
 
 #include <QAbstractItemModel>
 #include <QDBusConnection>
@@ -511,6 +512,9 @@ EffectView::EffectView(ViewType type, QWindow *parent)
 
 void EffectView::init(ViewType type)
 {
+    KDeclarative::KDeclarative kdeclarative;
+    kdeclarative.setDeclarativeEngine(engine());
+    kdeclarative.setupBindings();
     QString path;
     switch (type) {
     case CompositingSettingsView:

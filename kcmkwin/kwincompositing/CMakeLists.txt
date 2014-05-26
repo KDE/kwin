@@ -39,7 +39,6 @@ target_link_libraries(kwincompositing
     KF5::Service
     KF5::KCMUtils
     KF5::NewStuff
-    KF5::Declarative
     kwin4_effect_builtins
 )
 
@@ -71,7 +70,6 @@ target_link_libraries(effectModelTest
     KF5::Service
     KF5::KCMUtils
     KF5::NewStuff
-    KF5::Declarative
     kwin4_effect_builtins
 )
 

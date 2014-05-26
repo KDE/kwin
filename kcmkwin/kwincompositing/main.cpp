@@ -27,7 +27,6 @@
 
 #include <kcmodule.h>
 #include <kservice.h>
-#include <kdeclarative/kdeclarative.h>
 
 class KWinCompositingKCM : public KCModule
 {
@@ -68,9 +67,6 @@ KWinCompositingKCM::KWinCompositingKCM(QWidget* parent, const QVariantList& args
     : KCModule(parent, args)
     , m_view(new KWin::Compositing::EffectView(viewType))
 {
-    KDeclarative::KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(m_view->engine());
-    kdeclarative.setupBindings();
     QVBoxLayout *vl = new QVBoxLayout(this);
 
     QWidget *w = QWidget::createWindowContainer(m_view.data(), this);
