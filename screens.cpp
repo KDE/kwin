@@ -70,7 +70,7 @@ void Screens::init()
     m_changedTimer->setInterval(100);
     connect(m_changedTimer, SIGNAL(timeout()), SLOT(updateCount()));
     connect(m_changedTimer, SIGNAL(timeout()), SIGNAL(changed()));
-    connect(this, &Screens::countChanged, this, &Screens::changed);
+    connect(this, &Screens::countChanged, this, &Screens::changed, Qt::QueuedConnection);
     connect(this, &Screens::changed, this, &Screens::updateSize);
     connect(this, &Screens::sizeChanged, this, &Screens::geometryChanged);
 
