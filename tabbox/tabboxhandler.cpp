@@ -334,8 +334,8 @@ void TabBoxHandlerPrivate::show()
 * TabBoxHandler
 ***********************************************/
 
-TabBoxHandler::TabBoxHandler()
-    : QObject()
+TabBoxHandler::TabBoxHandler(QObject *parent)
+    : QObject(parent)
 {
     KWin::TabBox::tabBox = this;
     d = new TabBoxHandlerPrivate(this);

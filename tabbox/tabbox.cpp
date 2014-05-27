@@ -67,7 +67,7 @@ namespace TabBox
 {
 
 TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
-    : TabBoxHandler()
+    : TabBoxHandler(tabBox)
     , m_tabBox(tabBox)
     , m_desktopFocusChain(new DesktopChainManager(this))
 {

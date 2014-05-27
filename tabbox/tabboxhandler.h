@@ -95,7 +95,7 @@ class TabBoxHandler : public QObject
 {
     Q_OBJECT
 public:
-    TabBoxHandler();
+    TabBoxHandler(QObject *parent);
     virtual ~TabBoxHandler();
 
     /**
