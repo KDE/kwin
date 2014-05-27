@@ -488,10 +488,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     KWin::Application a(argc, argv);
 
-    a.setApplicationName(QStringLiteral(KWIN_NAME));
-    a.setApplicationVersion(QStringLiteral(KWIN_VERSION_STRING));
-    a.setApplicationDisplayName(i18n("KWin"));
-
     KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
                          i18n("KWin"),                       // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
@@ -504,6 +500,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     aboutData.addAuthor(i18n("Daniel M. Duley"),  QString(), QStringLiteral("mosfet@kde.org"));
     aboutData.addAuthor(i18n("Luboš Luňák"),      QString(), QStringLiteral("l.lunak@kde.org"));
     aboutData.addAuthor(i18n("Martin Gräßlin"),   i18n("Maintainer"), QStringLiteral("mgraesslin@kde.org"));
+    KAboutData::setApplicationData(aboutData);
 
     QCommandLineOption lockOption(QStringLiteral("lock"), i18n("Disable configuration options"));
     QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
