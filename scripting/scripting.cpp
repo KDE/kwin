@@ -556,7 +556,9 @@ void KWin::DeclarativeScript::createComponent()
     if (m_component->isError()) {
         qDebug() << "Component failed to load: " << m_component->errors();
     } else {
-        m_component->create(m_context);
+        if (QObject *object = m_component->create(m_context)) {
+            object->setParent(this);
+        }
     }
     setRunning(true);
 }
