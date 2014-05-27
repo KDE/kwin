@@ -74,7 +74,7 @@ Name[x-test]=xxWindow Rulesxx
 Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
-Comment=Configure settings specifically for a window
+Comment=Individual Window Behavior
 Comment[af]=Stel spesifieke venster instellings op
 Comment[ar]=اضبط الإعدادات الخاصة بنافذة معينة
 Comment[ast]=Configurar preferencies específicamente pa una ventana

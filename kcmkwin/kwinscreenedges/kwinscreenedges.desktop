@@ -81,7 +81,7 @@ Name[x-test]=xxScreen Edgesxx
 Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
-Comment=Configure active screen edges
+Comment=Active Screen Corners and Edges
 Comment[ar]=اضبط حواف الشاشة النشطة
 Comment[ast]=Configurar berbesos de pantalla activos
 Comment[bg]=Настройки на активните краища на екрана
@@ -150,7 +150,7 @@ Comment[x-test]=xxConfigure active screen edgesxx
 Comment[zh_CN]=配置活动窗口边缘
 Comment[zh_TW]=設定作用的螢幕邊緣
 
-X-KDE-Keywords=kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,efekt,ivica,granica,akcija,zamjena,podloga,kwin ivice ekrana,ivice podloge,ivice ekrana,uvećati prozor,ploča prozora,strana ekrana,ponašanje ekrana,zamjena podloge,virtuelna podloga,kutovi ekrana
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla
 X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,efecte,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla

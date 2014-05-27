@@ -97,7 +97,7 @@ Name[x-test]=xxFocusxx
 Name[zh_CN]=焦点
 Name[zh_TW]=焦點
 
-Comment=Configure the window focus policy
+Comment=Active Window Policy
 Comment[af]=Konfigureer die vensterfokusbeleid
 Comment[ar]=اضبط سياسة التركيز على النوافذ
 Comment[ast]=Configuración de la política d'enfocáu de ventanes

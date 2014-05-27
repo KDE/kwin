@@ -75,7 +75,7 @@ Name[x-test]=xxVirtual Desktopsxx
 Name[zh_CN]=虚拟桌面
 Name[zh_TW]=虛擬桌面
 
-Comment=You can configure how many virtual desktops there are.
+Comment=Navigation, Number and Layout of Virtual Desktops
 Comment[af]=Jy kan opstel hoeveel virtuele werkskerms daar is.
 Comment[ar]=تستطيع ضبط عدد أسطح المكتب الافتراضية
 Comment[ast]=Configuración del númberu d'escritorios virtuales.

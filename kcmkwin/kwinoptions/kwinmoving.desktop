@@ -97,7 +97,7 @@ Name[x-test]=xxMovingxx
 Name[zh_CN]=移动
 Name[zh_TW]=移動
 
-Comment=Configure the way that windows are moved
+Comment=Window Moving
 Comment[af]=Konfigureer die weg wat vensters word verskuif
 Comment[ar]=إعداد الطريقة التي تتحرك فيها النوافذ
 Comment[ast]=Configuración del mou de movimientu de les ventanes
