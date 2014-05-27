@@ -124,10 +124,10 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
 
 TabBoxHandlerPrivate::~TabBoxHandlerPrivate()
 {
-    for (auto it = m_clientTabBoxes.constBegin(); it != m_clientTabBoxes.constBegin(); ++it) {
+    for (auto it = m_clientTabBoxes.constBegin(); it != m_clientTabBoxes.constEnd(); ++it) {
         delete it.value();
     }
-    for (auto it = m_desktopTabBoxes.constBegin(); it != m_desktopTabBoxes.constBegin(); ++it) {
+    for (auto it = m_desktopTabBoxes.constBegin(); it != m_desktopTabBoxes.constEnd(); ++it) {
         delete it.value();
     }
 }
