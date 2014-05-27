@@ -513,8 +513,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     parser.addOption(lockOption);
     parser.addOption(replaceOption);
     parser.addOption(crashesOption);
+    aboutData.setupCommandLine(&parser);
 
     parser.process(a);
+    aboutData.processCommandLine(&parser);
 
     KWin::Application::setCrashCount(parser.value(crashesOption).toInt());
     a.setConfigLock(parser.isSet(lockOption));
