@@ -398,7 +398,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             // Window is too large for the screen, maximize in the
             // directions necessary
             const QSize ss = workspace()->clientArea(ScreenArea, area.center(), desktop()).size();
-            const QSize fs = workspace()->clientArea(FullArea, geom.center(), desktop()).size();
+            const QRect fsa = workspace()->clientArea(FullArea, geom.center(), desktop());
             const QSize cs = clientSize();
             int pseudo_max = Client::MaximizeRestore;
             if (width() >= area.width())
@@ -414,10 +414,15 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             // i intended a second check on cs < area.size() ("the managed client ("minus border") is smaller
             // than the workspace") but gtk / gimp seems to store it's size including the decoration,
             // thus a former maximized window wil become non-maximized
-            if (width() < fs.width() && (cs.width() > ss.width()+1))
+            bool keepInFsArea = false;
+            if (width() < fsa.width() && (cs.width() > ss.width()+1)) {
                 pseudo_max &= ~Client::MaximizeHorizontal;
-            if (height() < fs.height() && (cs.height() > ss.height()+1))
+                keepInFsArea = true;
+            }
+            if (height() < fsa.height() && (cs.height() > ss.height()+1)) {
                 pseudo_max &= ~Client::MaximizeVertical;
+                keepInFsArea = true;
+            }
 
             if (pseudo_max != Client::MaximizeRestore) {
                 maximize((MaximizeMode)pseudo_max);
@@ -433,6 +438,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                     geom_restore.setWidth(width());
                 }
             }
+            if (keepInFsArea)
+                keepInArea(fsa, partial_keep_in_area);
         }
     }
 
