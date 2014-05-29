@@ -31,6 +31,10 @@ var maximizeEffect = {
         var oldGeometry, newGeometry;
         oldGeometry = window.oldGeometry;
         newGeometry = window.geometry;
+        if (oldGeometry.width == newGeometry.width && oldGeometry.height == newGeometry.height)
+            oldGeometry = window.olderGeometry;
+        window.olderGeometry = window.oldGeometry;
+        window.oldGeometry = newGeometry;
         animate({
             window: window,
             duration: maximizeEffect.duration,
@@ -63,7 +67,8 @@ var maximizeEffect = {
     },
     geometryChange: function (window, oldGeometry) {
         "use strict";
-        window.oldGeometry = oldGeometry;
+        window.oldGeometry = window.geometry;
+        window.olderGeometry = oldGeometry;
     },
     init: function () {
         "use strict";
