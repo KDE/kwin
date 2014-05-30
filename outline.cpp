@@ -126,7 +126,7 @@ CompositedOutlineVisual::CompositedOutlineVisual(Outline *outline)
     : OutlineVisual(outline)
     , m_qmlContext()
     , m_qmlComponent()
-    , m_mainItem(nullptr)
+    , m_mainItem()
 {
 }
 
@@ -136,7 +136,7 @@ CompositedOutlineVisual::~CompositedOutlineVisual()
 
 void CompositedOutlineVisual::hide()
 {
-    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem)) {
+    if (QQuickWindow *w = qobject_cast<QQuickWindow*>(m_mainItem.data())) {
         w->hide();
         w->destroy();
     }
@@ -160,7 +160,7 @@ void CompositedOutlineVisual::show()
         if (m_qmlComponent->isError()) {
             qDebug() << "Component failed to load: " << m_qmlComponent->errors();
         } else {
-            m_mainItem = m_qmlComponent->create(m_qmlContext.data());
+            m_mainItem.reset(m_qmlComponent->create(m_qmlContext.data()));
         }
     }
 }

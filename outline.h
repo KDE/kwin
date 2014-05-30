@@ -122,7 +122,7 @@ public:
 private:
     QScopedPointer<QQmlContext> m_qmlContext;
     QScopedPointer<QQmlComponent> m_qmlComponent;
-    QObject *m_mainItem;
+    QScopedPointer<QObject> m_mainItem;
 };
 
 class NonCompositedOutlineVisual : public OutlineVisual
