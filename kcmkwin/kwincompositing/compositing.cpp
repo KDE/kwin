@@ -212,7 +212,7 @@ void Compositing::setAnimationSpeed(int speed)
         return;
     }
     m_animationSpeed = speed;
-    emit animationSpeedChanged();
+    emit animationSpeedChanged(speed);
 }
 
 void Compositing::setGlColorCorrection(bool correction)
@@ -221,7 +221,7 @@ void Compositing::setGlColorCorrection(bool correction)
         return;
     }
     m_glColorCorrection = correction;
-    emit glColorCorrectionChanged();
+    emit glColorCorrectionChanged(correction);
 }
 
 void Compositing::setGlScaleFilter(int index)
@@ -230,7 +230,7 @@ void Compositing::setGlScaleFilter(int index)
         return;
     }
     m_glScaleFilter = index;
-    emit glScaleFilterChanged();
+    emit glScaleFilterChanged(index);
 }
 
 void Compositing::setGlSwapStrategy(int strategy)
@@ -239,7 +239,7 @@ void Compositing::setGlSwapStrategy(int strategy)
         return;
     }
     m_glSwapStrategy = strategy;
-    emit glSwapStrategyChanged();
+    emit glSwapStrategyChanged(strategy);
 }
 
 void Compositing::setUnredirectFullscreen(bool unredirect)
@@ -248,7 +248,7 @@ void Compositing::setUnredirectFullscreen(bool unredirect)
         return;
     }
     m_unredirectFullscreen = unredirect;
-    emit unredirectFullscreenChanged();
+    emit unredirectFullscreenChanged(unredirect);
 }
 
 void Compositing::setWindowThumbnail(int index)
@@ -257,7 +257,7 @@ void Compositing::setWindowThumbnail(int index)
         return;
     }
     m_windowThumbnail = index;
-    emit windowThumbnailChanged();
+    emit windowThumbnailChanged(index);
 }
 
 void Compositing::setXrScaleFilter(bool filter)
@@ -266,7 +266,7 @@ void Compositing::setXrScaleFilter(bool filter)
         return;
     }
     m_xrScaleFilter = filter;
-    emit xrScaleFilterChanged();
+    emit xrScaleFilterChanged(filter);
 }
 
 void Compositing::setCompositingType(int index)
@@ -275,7 +275,7 @@ void Compositing::setCompositingType(int index)
         return;
     }
     m_compositingType = index;
-    emit compositingTypeChanged();
+    emit compositingTypeChanged(index);
 }
 
 void Compositing::setCompositingEnabled(bool enabled)
@@ -285,7 +285,7 @@ void Compositing::setCompositingEnabled(bool enabled)
     }
 
     m_compositingEnabled = enabled;
-    emit compositingEnabledChanged();
+    emit compositingEnabledChanged(enabled);
 }
 
 void Compositing::save()
@@ -364,7 +364,7 @@ void Compositing::setOpenGLPlatformInterface(int interface)
         return;
     }
     m_openGLPlatformInterface = interface;
-    emit openGLPlatformInterfaceChanged();
+    emit openGLPlatformInterfaceChanged(interface);
 }
 
 CompositingType::CompositingType(QObject *parent)

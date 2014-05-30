@@ -82,16 +82,16 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void changed();
-    void animationSpeedChanged();
-    void windowThumbnailChanged();
-    void glScaleFilterChanged();
-    void xrScaleFilterChanged();
-    void unredirectFullscreenChanged();
-    void glSwapStrategyChanged();
-    void glColorCorrectionChanged();
-    void compositingTypeChanged();
-    void compositingEnabledChanged();
-    void openGLPlatformInterfaceChanged();
+    void animationSpeedChanged(int);
+    void windowThumbnailChanged(int);
+    void glScaleFilterChanged(int);
+    void xrScaleFilterChanged(int);
+    void unredirectFullscreenChanged(bool);
+    void glSwapStrategyChanged(int);
+    void glColorCorrectionChanged(bool);
+    void compositingTypeChanged(int);
+    void compositingEnabledChanged(bool);
+    void openGLPlatformInterfaceChanged(int);
 
 private:
     int m_animationSpeed;
