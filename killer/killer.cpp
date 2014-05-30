@@ -38,7 +38,7 @@ int main(int argc, char* argv[])
 {
     KLocalizedString::setApplicationDomain("kwin");
     QApplication app(argc, argv);
-    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("kwin")));
+    QApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
     QCoreApplication::setApplicationName(QStringLiteral("kwin_killer_helper"));
     QCoreApplication::setOrganizationDomain(QStringLiteral("kde.org"));
     QApplication::setApplicationDisplayName(i18n("Window Manager"));
