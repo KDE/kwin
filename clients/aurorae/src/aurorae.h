@@ -164,7 +164,7 @@ private Q_SLOTS:
 private:
     void sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const;
     QQuickWindow *m_view;
-    QScopedPointer<QQuickItem> m_item;
+    QQuickItem *m_item;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
 };

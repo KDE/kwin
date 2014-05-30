@@ -251,7 +251,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(titleFontChanged()), SIGNAL(fontChanged()));
-    connect(m_item.data(), SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
+    connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     connect(this, SIGNAL(appMenuAvailable()), SIGNAL(appMenuAvailableChanged()));
     connect(this, SIGNAL(appMenuUnavailable()), SIGNAL(appMenuAvailableChanged()));
 }
@@ -291,6 +291,7 @@ void AuroraeClient::init()
     }
     if (m_item) {
         m_item->setParentItem(m_view->contentItem());
+        m_item->setParent(m_view);
     }
     slotAlphaChanged();
 
@@ -454,13 +455,15 @@ void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons button
 
 void AuroraeClient::themeChanged()
 {
-    m_item.reset(AuroraeFactory::instance()->createQmlDecoration(this));
+    m_item->deleteLater();
+    m_item = AuroraeFactory::instance()->createQmlDecoration(this);
     if (!m_item) {
         return;
     }
 
     m_item->setParentItem(m_view->contentItem());
-    connect(m_item.data(), SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
+    m_item->setParent(m_view);
+    connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     slotAlphaChanged();
 }
 
