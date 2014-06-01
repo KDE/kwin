@@ -851,7 +851,7 @@ void TabBox::delayedShow()
 
 bool TabBox::handleMouseEvent(xcb_button_press_event_t *e)
 {
-    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, xTime());
+    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
@@ -881,7 +881,7 @@ bool TabBox::handleMouseEvent(xcb_button_press_event_t *e)
 
 bool TabBox::handleMouseEvent(xcb_motion_notify_event_t *e)
 {
-    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, xTime());
+    xcb_allow_events(connection(), XCB_ALLOW_ASYNC_POINTER, XCB_CURRENT_TIME);
     if (!m_isShown && isDisplayed()) {
         // tabbox has been replaced, check effects
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(e))
