@@ -47,8 +47,8 @@ public:
     void removeMember(Client* member);
     void gotLeader(Client* leader);
     void lostLeader();
-    void updateUserTime(Time time = CurrentTime);
-    Time userTime() const;
+    void updateUserTime(xcb_timestamp_t time);
+    xcb_timestamp_t userTime() const;
     void ref();
     void deref();
     EffectWindowGroupImpl* effectGroup();
@@ -58,7 +58,7 @@ private:
     Client* leader_client;
     Window leader_wid;
     NETWinInfo* leader_info;
-    Time user_time;
+    xcb_timestamp_t user_time;
     int refcount;
     EffectWindowGroupImpl* effect_group;
 };
@@ -83,7 +83,7 @@ inline const ClientList& Group::members() const
     return _members;
 }
 
-inline Time Group::userTime() const
+inline xcb_timestamp_t Group::userTime() const
 {
     return user_time;
 }

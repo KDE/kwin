@@ -496,7 +496,7 @@ public:
 
     QString caption(bool full = true, bool stripped = false) const;
 
-    void keyPressEvent(uint key_code);   // FRAME ??
+    void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??
     void updateMouseGrab();
     xcb_window_t moveResizeGrabWindow() const;
 
@@ -701,7 +701,7 @@ private:
     void focusOutEvent(xcb_focus_out_event_t *e);
     virtual void damageNotifyEvent();
 
-    bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
+    bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
     bool motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root);
     void checkQuickTilingMaximizationZones(int xroot, int yroot);

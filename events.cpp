@@ -252,10 +252,11 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_KEY_PRESS: {
         was_user_interaction = true;
         int keyQt;
-        KKeyServer::xcbKeyPressEventToQt(reinterpret_cast<xcb_key_press_event_t*>(e), &keyQt);
+        xcb_key_press_event_t *event = reinterpret_cast<xcb_key_press_event_t*>(e);
+        KKeyServer::xcbKeyPressEventToQt(event, &keyQt);
 //            qDebug() << "Workspace::keyPress( " << keyQt << " )";
         if (movingClient) {
-            movingClient->keyPressEvent(keyQt);
+            movingClient->keyPressEvent(keyQt, event->time);
             return true;
         }
 #ifdef KWIN_BUILD_TABBOX
@@ -606,15 +607,15 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
     case XCB_KEY_PRESS:
-        updateUserTime();
+        updateUserTime(reinterpret_cast<xcb_key_press_event_t*>(e)->time);
         workspace()->setWasUserInteraction();
         break;
     case XCB_BUTTON_PRESS: {
         const auto *event = reinterpret_cast<xcb_button_press_event_t*>(e);
-        updateUserTime();
+        updateUserTime(event->time);
         workspace()->setWasUserInteraction();
         buttonPressEvent(event->event, event->detail, event->state,
-                         event->event_x, event->event_y, event->root_x, event->root_y);
+                         event->event_x, event->event_y, event->root_x, event->root_y, event->time);
         break;
     }
     case XCB_KEY_RELEASE:
@@ -1086,7 +1087,7 @@ static bool modKeyDown(int state) {
 
 
 // return value matters only when filtering events before decoration gets them
-bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
+bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time)
 {
     if (buttonDown) {
         if (w == wrapperId())
@@ -1096,7 +1097,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
 
     if (w == wrapperId() || w == frameId() || w == decorationId() || w == inputId()) {
         // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
-        updateUserTime();
+        updateUserTime(time);
         workspace()->setWasUserInteraction();
         const bool bModKeyHeld = modKeyDown(state);
 
@@ -1473,9 +1474,9 @@ void Client::NETMoveResize(int x_root, int y_root, NET::Direction direction)
     }
 }
 
-void Client::keyPressEvent(uint key_code)
+void Client::keyPressEvent(uint key_code, xcb_timestamp_t time)
 {
-    updateUserTime();
+    updateUserTime(time);
     if (!isMove() && !isResize())
         return;
     bool is_control = key_code & Qt::CTRL;

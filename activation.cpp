@@ -661,8 +661,10 @@ void Workspace::clientAttentionChanged(Client* c, bool set)
 void Client::updateUserTime(xcb_timestamp_t time)
 {
     // copied in Group::updateUserTime
-    if (time == XCB_TIME_CURRENT_TIME)
+    if (time == XCB_TIME_CURRENT_TIME) {
+        updateXTime();
         time = xTime();
+    }
     if (time != -1U
             && (m_userTime == XCB_TIME_CURRENT_TIME
                 || NET::timestampCompare(time, m_userTime) > 0)) {    // time > user_time
@@ -865,13 +867,15 @@ void Group::startupIdChanged()
     }
 }
 
-void Group::updateUserTime(Time time)
+void Group::updateUserTime(xcb_timestamp_t time)
 {
     // copy of Client::updateUserTime
-    if (time == CurrentTime)
+    if (time == XCB_CURRENT_TIME) {
+        updateXTime();
         time = xTime();
+    }
     if (time != -1U
-            && (user_time == CurrentTime
+            && (user_time == XCB_CURRENT_TIME
                 || NET::timestampCompare(time, user_time) > 0))    // time > user_time
         user_time = time;
 }
