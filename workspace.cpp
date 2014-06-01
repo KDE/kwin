@@ -295,9 +295,6 @@ void Workspace::init()
     }
     if (!VirtualDesktopManager::self()->setCurrent(initial_desktop))
         VirtualDesktopManager::self()->setCurrent(1);
-#ifdef KWIN_BUILD_ACTIVITIES
-    Activities::self()->update(false, true);
-#endif
 
     reconfigureTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);

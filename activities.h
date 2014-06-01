@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QObject>
 #include <QStringList>
 
+#include <kactivities/controller.h>
+
 namespace KActivities {
 class Controller;
 }
@@ -42,7 +44,6 @@ public:
 
     bool stop(const QString &id);
     bool start(const QString &id);
-    void update(bool running, bool updateCurrent, QObject *target = NULL, QString slot = QString());
     void setCurrent(const QString &activity);
     /**
     * Adds/removes client \a c to/from \a activity.
@@ -51,8 +52,8 @@ public:
     */
     void toggleClientOnActivity(Client* c, const QString &activity, bool dont_activate);
 
-    const QStringList &running() const;
-    const QStringList &all() const;
+    QStringList running() const;
+    QStringList all() const;
     const QString &current() const;
     const QString &previous() const;
 
@@ -79,25 +80,21 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void slotRemoved(const QString &activity);
-    void slotAdded(const QString &activity);
     void slotCurrentChanged(const QString &newActivity);
     void reallyStop(const QString &id);   //dbus deadlocks suck
-    void handleReply();
 
 private:
-    QStringList m_running;
-    QStringList m_all;
-    QString m_current;
     QString m_previous;
+    QString m_current;
     KActivities::Controller *m_controller;
 
     KWIN_SINGLETON(Activities)
 };
 
 inline
-const QStringList &Activities::all() const
+QStringList Activities::all() const
 {
-    return m_all;
+    return m_controller->activities();
 }
 
 inline
@@ -113,9 +110,9 @@ const QString &Activities::previous() const
 }
 
 inline
-const QStringList &Activities::running() const
+QStringList Activities::running() const
 {
-    return m_running;
+    return m_controller->activities(KActivities::Info::Running);
 }
 
 inline

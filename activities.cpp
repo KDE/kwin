@@ -41,7 +41,6 @@ Activities::Activities(QObject *parent)
 {
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
-    connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::slotAdded);
     connect(m_controller, &KActivities::Controller::activityAdded,   this, &Activities::added);
     connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
 }
@@ -66,14 +65,8 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     emit currentChanged(newActivity);
 }
 
-void Activities::slotAdded(const QString &activity)
-{
-    m_all << activity;
-}
-
 void Activities::slotRemoved(const QString &activity)
 {
-    m_all.removeOne(activity);
     foreach (Client * client, Workspace::self()->clientList()) {
         client->setOnActivity(activity, false);
     }
@@ -122,7 +115,7 @@ bool Activities::start(const QString &id)
         return false; //ksmserver doesn't queue requests (yet)
     }
 
-    if (!m_all.contains(id)) {
+    if (!all().contains(id)) {
         return false; //bogus id
     }
 
@@ -146,7 +139,6 @@ bool Activities::stop(const QString &id)
     }
 
     //ugly hack to avoid dbus deadlocks
-    update(true, false);
     QMetaObject::invokeMethod(this, "reallyStop", Qt::QueuedConnection, Q_ARG(QString, id));
     //then lie and assume it worked.
     return true;
@@ -184,7 +176,7 @@ void Activities::reallyStop(const QString &id)
         foreach (const QString & activityId, activities) {
             if (activityId == id) {
                 saveSessionIds << sessionId;
-            } else if (m_running.contains(activityId)) {
+            } else if (running().contains(activityId)) {
                 dontCloseSessionIds << sessionId;
             }
         }
@@ -212,73 +204,5 @@ void Activities::reallyStop(const QString &id)
         qDebug() << "couldn't get ksmserver interface";
     }
 }
-
-//BEGIN threaded activity list fetching
-typedef QPair<QStringList*, QStringList> AssignedList;
-typedef QPair<QString, QStringList> CurrentAndList;
-
-static AssignedList
-fetchActivityList(KActivities::Controller *controller, QStringList *target, bool running) // could be member function, but actually it's much simpler this way
-{
-    return AssignedList(target, running ? controller->activities(KActivities::Info::Running) :
-                                          controller->activities());
-}
-
-static CurrentAndList
-fetchActivityListAndCurrent(KActivities::Controller *controller)
-{
-    QStringList l   = controller->activities();
-    QString c       = controller->currentActivity();
-    return CurrentAndList(c, l);
-}
-
-void Activities::update(bool running, bool updateCurrent, QObject *target, QString slot)
-{
-    if (updateCurrent) {
-        QFutureWatcher<CurrentAndList>* watcher = new QFutureWatcher<CurrentAndList>;
-        connect( watcher, SIGNAL(finished()), SLOT(handleReply()) );
-        if (!slot.isEmpty()) {
-            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
-            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
-        }
-        watcher->setFuture(QtConcurrent::run(fetchActivityListAndCurrent, m_controller));
-    } else {
-        QFutureWatcher<AssignedList>* watcher = new QFutureWatcher<AssignedList>;
-        connect(watcher, SIGNAL(finished()), SLOT(handleReply()));
-        if (!slot.isEmpty()) {
-            watcher->setProperty("activityControllerCallback", slot); // "activity reply trigger"
-            watcher->setProperty("activityControllerCallbackTarget", qVariantFromValue((void*)target));
-        }
-        QStringList *target = running ? &m_running : &m_all;
-        watcher->setFuture(QtConcurrent::run(fetchActivityList, m_controller, target, running));
-    }
-}
-
-void Activities::handleReply()
-{
-    QObject *watcherObject = 0;
-    if (QFutureWatcher<AssignedList>* watcher = dynamic_cast< QFutureWatcher<AssignedList>* >(sender())) {
-        // we carry over the to-be-updated StringList member as pointer in the threaded return
-        *(watcher->result().first) = watcher->result().second;
-        watcherObject = watcher;
-    }
-
-    if (!watcherObject) {
-        if (QFutureWatcher<CurrentAndList>* watcher = dynamic_cast< QFutureWatcher<CurrentAndList>* >(sender())) {
-            m_all = watcher->result().second;
-            slotCurrentChanged(watcher->result().first);
-            watcherObject = watcher;
-        }
-    }
-
-    if (watcherObject) {
-        QString slot = watcherObject->property("activityControllerCallback").toString();
-        QObject *target = static_cast<QObject*>(watcherObject->property("activityControllerCallbackTarget").value<void*>());
-        watcherObject->deleteLater(); // has done it's job
-        if (!slot.isEmpty())
-            QMetaObject::invokeMethod(target, slot.toAscii().data(), Qt::DirectConnection);
-    }
-}
-//END threaded activity list fetching
 
 } // namespace

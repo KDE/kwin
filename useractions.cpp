@@ -391,9 +391,6 @@ void UserActionsMenu::menuAboutToShow()
     } else {
         initScreenPopup();
     }
-#ifdef KWIN_BUILD_ACTIVITIES
-    Activities::self()->update(true, false, this, "showHideActivityMenu");
-#endif
 
     m_menu->setPalette(m_client.data()->palette());
     m_resizeOperation->setEnabled(m_client.data()->isResizable());
@@ -437,6 +434,8 @@ void UserActionsMenu::menuAboutToShow()
         delete m_scriptsMenu;
         m_scriptsMenu = NULL;
     }
+
+    showHideActivityMenu();
 }
 
 void UserActionsMenu::showHideActivityMenu()
