@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class Compositor;
+
 /**
  * @brief This class is a wrapper for the org.kde.KWin D-Bus interface.
  *
@@ -65,6 +67,96 @@ public Q_SLOTS: // METHODS
 
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
+};
+
+class CompositorDBusInterface : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Compositing")
+    /**
+     * @brief Whether the Compositor is active. That is a Scene is present and the Compositor is
+     * not shutting down itself.
+     **/
+    Q_PROPERTY(bool active READ isActive)
+    /**
+     * @brief Whether compositing is possible. Mostly means whether the required X extensions
+     * are available.
+     **/
+    Q_PROPERTY(bool compositingPossible READ isCompositingPossible)
+    /**
+     * @brief The reason why compositing is not possible. Empty String if compositing is possible.
+     **/
+    Q_PROPERTY(QString compositingNotPossibleReason READ compositingNotPossibleReason)
+    /**
+     * @brief Whether OpenGL has failed badly in the past (crash) and is considered as broken.
+     **/
+    Q_PROPERTY(bool openGLIsBroken READ isOpenGLBroken)
+    /**
+     * The type of the currently used Scene:
+     * @li @c none No Compositing
+     * @li @c xrender XRender
+     * @li @c gl1 OpenGL 1
+     * @li @c gl2 OpenGL 2
+     * @li @c gles OpenGL ES 2
+     **/
+    Q_PROPERTY(QString compositingType READ compositingType)
+    /**
+     * @brief All currently supported OpenGLPlatformInterfaces.
+     *
+     * Possible values:
+     * @li glx
+     * @li egl
+     *
+     * Values depend on operation mode and compile time options.
+     **/
+    Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
+public:
+    explicit CompositorDBusInterface(Compositor *parent);
+    virtual ~CompositorDBusInterface() = default;
+
+    bool isActive() const;
+    bool isCompositingPossible() const;
+    QString compositingNotPossibleReason() const;
+    bool isOpenGLBroken() const;
+    QString compositingType() const;
+    QStringList supportedOpenGLPlatformInterfaces() const;
+
+public Q_SLOTS:
+    /**
+     * @brief Suspends the Compositor if it is currently active.
+     *
+     * Note: it is possible that the Compositor is not able to suspend. Use @link isActive to check
+     * whether the Compositor has been suspended.
+     *
+     * @return void
+     * @see resume
+     * @see isActive
+     **/
+    void suspend();
+    /**
+     * @brief Resumes the Compositor if it is currently suspended.
+     *
+     * Note: it is possible that the Compositor cannot be resumed, that is there might be Clients
+     * blocking the usage of Compositing or the Scene might be broken. Use @link isActive to check
+     * whether the Compositor has been resumed. Also check @link isCompositingPossible and
+     * @link isOpenGLBroken.
+     *
+     * Note: The starting of the Compositor can require some time and is partially done threaded.
+     * After this method returns the setup may not have been completed.
+     *
+     * @return void
+     * @see suspend
+     * @see isActive
+     * @see isCompositingPossible
+     * @see isOpenGLBroken
+     **/
+    void resume();
+
+Q_SIGNALS:
+    void compositingToggled(bool active);
+
+private:
+    Compositor *m_compositor;
 };
 
 } // namespace

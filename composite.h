@@ -51,44 +51,6 @@ private Q_SLOTS:
 
 class Compositor : public QObject {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.Compositing")
-    /**
-     * @brief Whether the Compositor is active. That is a Scene is present and the Compositor is
-     * not shutting down itself.
-     **/
-    Q_PROPERTY(bool active READ isActive)
-    /**
-     * @brief Whether compositing is possible. Mostly means whether the required X extensions
-     * are available.
-     **/
-    Q_PROPERTY(bool compositingPossible READ isCompositingPossible)
-    /**
-     * @brief The reason why compositing is not possible. Empty String if compositing is possible.
-     **/
-    Q_PROPERTY(QString compositingNotPossibleReason READ compositingNotPossibleReason)
-    /**
-     * @brief Whether OpenGL has failed badly in the past (crash) and is considered as broken.
-     **/
-    Q_PROPERTY(bool openGLIsBroken READ isOpenGLBroken)
-    /**
-     * The type of the currently used Scene:
-     * @li @c none No Compositing
-     * @li @c xrender XRender
-     * @li @c gl1 OpenGL 1
-     * @li @c gl2 OpenGL 2
-     * @li @c gles OpenGL ES 2
-     **/
-    Q_PROPERTY(QString compositingType READ compositingType)
-    /**
-     * @brief All currently supported OpenGLPlatformInterfaces.
-     *
-     * Possible values:
-     * @li glx
-     * @li egl
-     *
-     * Values depend on operation mode and compile time options.
-     **/
-    Q_PROPERTY(QStringList supportedOpenGLPlatformInterfaces READ supportedOpenGLPlatformInterfaces)
 public:
     enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1<<0, BlockRuleSuspend = 1<<1, ScriptSuspend = 1<<2, AllReasonSuspend = 0xff };
     Q_DECLARE_FLAGS(SuspendReasons, SuspendReason)
@@ -163,23 +125,8 @@ public:
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
 
-    // D-Bus: getters for Properties, see documentation on the property
-    bool isCompositingPossible() const;
-    QString compositingNotPossibleReason() const;
-    bool isOpenGLBroken() const;
-    QString compositingType() const;
-    QStringList supportedOpenGLPlatformInterfaces() const;
-
 public Q_SLOTS:
     void addRepaintFull();
-    /**
-     * Called from the D-Bus interface. Does the same as slotToggleCompositing with the
-     * addition to show a notification on how to revert the compositing state.
-     * @see resume
-     * @see suspend
-     * @deprecated Use suspend or resume instead
-     **/
-    Q_SCRIPTABLE void toggleCompositing();
     /**
      * @brief Suspends the Compositor if it is currently active.
      *
@@ -190,7 +137,6 @@ public Q_SLOTS:
      * @see resume
      * @see isActive
      **/
-    Q_SCRIPTABLE inline void suspend() { suspend(ScriptSuspend); }
     void suspend(Compositor::SuspendReason reason);
     /**
      * @brief Resumes the Compositor if it is currently suspended.
@@ -209,36 +155,7 @@ public Q_SLOTS:
      * @see isCompositingPossible
      * @see isOpenGLBroken
      **/
-    Q_SCRIPTABLE inline void resume() { resume(ScriptSuspend); }
     void resume(Compositor::SuspendReason reason);
-    /**
-     * @brief Tries to suspend or resume the Compositor based on @p active.
-     *
-     * In case the Compositor is already in the asked for state this method is doing nothing. In
-     * case it does not match it is tried to either resume or suspend the Compositor.
-     *
-     * Note: these operations may fail. There is no guarantee that after calling this method to
-     * enable/disable the Compositor, it actually changes to the state. Use @link isActive to check
-     * the actual state of the Compositor.
-     *
-     * Note: The starting of the Compositor can require some time and is partially done threaded.
-     * After this method returns the setup may not have been completed.
-     *
-     * Note: This function only impacts whether compositing is suspended or resumed by scripts
-     * or dbus calls. Compositing may be suspended for user will or a window rule - no matter how
-     * often you call this function!
-     *
-     * @param active Whether the Compositor should be resumed (@c true) or suspended (@c false)
-     * @return void
-     * @see suspend
-     * @see resume
-     * @see isActive
-     * @see isCompositingPossible
-     * @see isOpenGLBroken
-     **/
-    // NOTICE this is atm. for script usage *ONLY* and needs to be extended like resume / suspend are
-    // if intended to be used from within KWin code!
-    Q_SCRIPTABLE void setCompositing(bool active);
     /**
      * Actual slot to perform the toggling compositing.
      * That is if the Compositor is suspended it will be resumed and if the Compositor is active
@@ -261,10 +178,8 @@ public Q_SLOTS:
     void updateCompositeBlocking();
     void updateCompositeBlocking(KWin::Client* c);
 
-    // For the D-Bus interface
-
 Q_SIGNALS:
-    Q_SCRIPTABLE void compositingToggled(bool active);
+    void compositingToggled(bool active);
 
 protected:
     void timerEvent(QTimerEvent *te);

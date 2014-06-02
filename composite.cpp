@@ -18,8 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "composite.h"
-#include "compositingadaptor.h"
 
+#include "dbusinterface.h"
 #include "utils.h"
 #include <QTextStream>
 #include "workspace.h"
@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMenu>
 #include <QTimerEvent>
 #include <QDateTime>
-#include <QDBusConnection>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <KNotification>
@@ -92,11 +91,6 @@ Compositor::Compositor(QObject* workspace)
     , m_waitingForFrameRendered(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
-    new CompositingAdaptor(this);
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject(QStringLiteral("/Compositor"), this);
-    dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"),
-                 QStringLiteral("reinit"), this, SLOT(slotReinitialize()));
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
     connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
@@ -127,6 +121,9 @@ Compositor::Compositor(QObject* workspace)
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
     QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
+
+    // register DBus
+    new CompositorDBusInterface(this);
 }
 
 Compositor::~Compositor()
@@ -455,22 +452,6 @@ void Compositor::slotToggleCompositing()
     }
 }
 
-// for the dbus call
-void Compositor::toggleCompositing()
-{
-    slotToggleCompositing(); // TODO only operate on script level here?
-    if (m_suspended) {
-        // when disabled show a shortcut how the user can get back compositing
-        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
-        if (!shortcuts.isEmpty()) {
-            // display notification only if there is the shortcut
-            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
-                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
-            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
-        }
-    }
-}
-
 void Compositor::updateCompositeBlocking()
 {
     updateCompositeBlocking(NULL);
@@ -508,6 +489,16 @@ void Compositor::suspend(Compositor::SuspendReason reason)
     }
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended |= reason;
+    if (reason & KWin::Compositor::ScriptSuspend) {
+        // when disabled show a shortcut how the user can get back compositing
+        const auto shortcuts = KGlobalAccel::self()->shortcut(workspace()->findChild<QAction*>(QStringLiteral("Suspend Compositing")));
+        if (!shortcuts.isEmpty()) {
+            // display notification only if there is the shortcut
+            const QString message = i18n("Desktop effects have been suspended by another application.<br/>"
+                                         "You can resume using the '%1' shortcut.", shortcuts.first().toString(QKeySequence::NativeText));
+            KNotification::event(QStringLiteral("compositingsuspendeddbus"), message);
+        }
+    }
     finish();
 }
 
@@ -516,18 +507,6 @@ void Compositor::resume(Compositor::SuspendReason reason)
     Q_ASSERT(reason != NoReasonSuspend);
     m_suspended &= ~reason;
     setup(); // signal "toggled" is eventually emitted from within setup
-}
-
-void Compositor::setCompositing(bool active)
-{
-    if (kwinApp()->requiresCompositing()) {
-        return;
-    }
-    if (active) {
-        resume(ScriptSuspend);
-    } else {
-        suspend(ScriptSuspend);
-    }
 }
 
 void Compositor::restart()
@@ -833,59 +812,6 @@ void Compositor::setOverlayWindowVisibility(bool visible)
     if (hasScene() && m_scene->overlayWindow()) {
         m_scene->overlayWindow()->setVisibility(visible);
     }
-}
-
-bool Compositor::isCompositingPossible() const
-{
-    return CompositingPrefs::compositingPossible();
-}
-
-QString Compositor::compositingNotPossibleReason() const
-{
-    return CompositingPrefs::compositingNotPossibleReason();
-}
-
-bool Compositor::isOpenGLBroken() const
-{
-    return CompositingPrefs::openGlIsBroken();
-}
-
-QString Compositor::compositingType() const
-{
-    if (!hasScene()) {
-        return QStringLiteral("none");
-    }
-    switch (m_scene->compositingType()) {
-    case XRenderCompositing:
-        return QStringLiteral("xrender");
-    case OpenGL2Compositing:
-#ifdef KWIN_HAVE_OPENGLES
-        return QStringLiteral("gles");
-#else
-        return QStringLiteral("gl2");
-#endif
-    case QPainterCompositing:
-        return "qpainter";
-    case NoCompositing:
-    default:
-        return QStringLiteral("none");
-    }
-}
-
-QStringList Compositor::supportedOpenGLPlatformInterfaces() const
-{
-    QStringList interfaces;
-    bool supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
-#ifdef KWIN_HAVE_OPENGLES
-    supportsGlx = false;
-#endif
-    if (supportsGlx) {
-        interfaces << QStringLiteral("glx");
-    }
-#ifdef KWIN_HAVE_EGL
-    interfaces << QStringLiteral("egl");
-#endif
-    return interfaces;
 }
 
 /*****************************************************

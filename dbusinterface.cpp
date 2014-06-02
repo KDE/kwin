@@ -20,10 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // own
 #include "dbusinterface.h"
+#include "compositingadaptor.h"
 
 // kwin
+#include "composite.h"
+#include "compositingprefs.h"
+#include "main.h"
 #include "placement.h"
 #include "kwinadaptor.h"
+#include "scene.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
 #ifdef KWIN_BUILD_ACTIVITIES
@@ -141,6 +146,87 @@ void DBusInterface::nextDesktop()
 void DBusInterface::previousDesktop()
 {
     VirtualDesktopManager::self()->moveTo<DesktopPrevious>();
+}
+
+
+CompositorDBusInterface::CompositorDBusInterface(Compositor *parent)
+    : QObject(parent)
+    , m_compositor(parent)
+{
+    connect(m_compositor, &Compositor::compositingToggled, this, &CompositorDBusInterface::compositingToggled);
+    new CompositingAdaptor(this);
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject(QStringLiteral("/Compositor"), this);
+    dbus.connect(QString(), QStringLiteral("/Compositor"), QStringLiteral("org.kde.kwin.Compositing"),
+                 QStringLiteral("reinit"), m_compositor, SLOT(slotReinitialize()));
+}
+
+QString CompositorDBusInterface::compositingNotPossibleReason() const
+{
+    return CompositingPrefs::compositingNotPossibleReason();
+}
+
+QString CompositorDBusInterface::compositingType() const
+{
+    if (!m_compositor->hasScene()) {
+        return QStringLiteral("none");
+    }
+    switch (m_compositor->scene()->compositingType()) {
+    case XRenderCompositing:
+        return QStringLiteral("xrender");
+    case OpenGL2Compositing:
+#ifdef KWIN_HAVE_OPENGLES
+        return QStringLiteral("gles");
+#else
+        return QStringLiteral("gl2");
+#endif
+    case QPainterCompositing:
+        return "qpainter";
+    case NoCompositing:
+    default:
+        return QStringLiteral("none");
+    }
+}
+
+bool CompositorDBusInterface::isActive() const
+{
+    return m_compositor->isActive();
+}
+
+bool CompositorDBusInterface::isCompositingPossible() const
+{
+    return CompositingPrefs::compositingPossible();
+}
+
+bool CompositorDBusInterface::isOpenGLBroken() const
+{
+    return CompositingPrefs::openGlIsBroken();
+}
+
+void CompositorDBusInterface::resume()
+{
+    m_compositor->resume(Compositor::ScriptSuspend);
+}
+
+void CompositorDBusInterface::suspend()
+{
+    m_compositor->suspend(Compositor::ScriptSuspend);
+}
+
+QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
+{
+    QStringList interfaces;
+    bool supportsGlx = (kwinApp()->operationMode() == Application::OperationModeX11);
+#ifdef KWIN_HAVE_OPENGLES
+    supportsGlx = false;
+#endif
+    if (supportsGlx) {
+        interfaces << QStringLiteral("glx");
+    }
+#ifdef KWIN_HAVE_EGL
+    interfaces << QStringLiteral("egl");
+#endif
+    return interfaces;
 }
 
 } // namespace

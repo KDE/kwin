@@ -10,14 +10,9 @@
     <signal name="compositingToggled">
       <arg name="active" type="b" direction="out"/>
     </signal>
-    <method name="toggleCompositing">
-    </method>
     <method name="suspend">
     </method>
     <method name="resume">
-    </method>
-    <method name="setCompositing">
-      <arg name="active" type="b" direction="in"/>
     </method>
   </interface>
 </node>
