@@ -111,7 +111,6 @@ private:
 class TabBox : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin")
 public:
     ~TabBox();
 
@@ -185,33 +184,8 @@ public:
 
 public Q_SLOTS:
     void show();
-    /**
-     * Only for DBus Interface to start primary KDE Walk through windows.
-     * @param modal Whether the TabBox should grab keyboard and mouse, that is go into modal
-     * mode or whether the TabBox is controlled externally (e.g. through an effect).
-     * @param layout The name of the layout to use, if null string (default) the configured layout is used
-     **/
-    Q_SCRIPTABLE void open(bool modal = true, const QString &layout = QString());
-    /**
-     * Opens the TabBox view embedded on a different window. This implies non-modal mode.
-     * The geometry of the TabBox is determined by offset, size and the alignment flags.
-     * If the alignment flags are set to center the view scales with the container. That is if
-     * the window where the TabBox is embedded onto resizes, the TabBox resizes, too.
-     * The alignment in combination with the offset determines to what border the TabBox is snapped.
-     * E.g. if horizontal alignment is right the offset is interpreted as the offset between right
-     * corner of TabBox view and the container view. When the container changes its geometry this
-     * offset is kept. So the offset on the left side would increase.
-     * @param wid The window Id the TabBox should be embedded onto
-     * @param offset The offset to one of the size borders
-     * @param size The size of the TabBox. To use the same size as the container, set alignment to center
-     * @param horizontalAlignment Either Qt::AlignLeft, Qt::AlignHCenter or Qt::AlignRight
-     * @param verticalAlignment Either Qt::AlignTop, Qt::AlignVCenter or Qt::AlignBottom
-     * @param layout The name of the layout to use, if null string (default) the configured layout is used
-     **/
-    Q_SCRIPTABLE void openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment, const QString &layout = QString());
-    Q_SCRIPTABLE void close(bool abort = false);
-    Q_SCRIPTABLE void accept();
-    Q_SCRIPTABLE void reject();
+    void close(bool abort = false);
+    void accept();
     void slotWalkThroughDesktops();
     void slotWalkBackThroughDesktops();
     void slotWalkThroughDesktopList();
@@ -231,8 +205,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void tabBoxAdded(int);
-    Q_SCRIPTABLE void tabBoxClosed();
-    Q_SCRIPTABLE void itemSelected();
+    void tabBoxClosed();
     void tabBoxUpdated();
     void tabBoxKeyEvent(QKeyEvent*);
 

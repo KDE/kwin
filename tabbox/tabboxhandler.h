@@ -325,23 +325,12 @@ public:
     */
     QModelIndex first() const;
 
-    void setEmbedded(WId wid);
-    WId embedded() const;
-    void setEmbeddedOffset(const QPoint &offset);
-    const QPoint &embeddedOffset() const;
-    void setEmbeddedSize(const QSize &size);
-    const QSize &embeddedSize() const;
-    void setEmbeddedAlignment(Qt::Alignment alignment);
-    Qt::Alignment embeddedAlignment() const;
-    void resetEmbedded();
-
 Q_SIGNALS:
     /**
     * This signal is fired when the TabBoxConfig changes
     * @see setConfig
     */
     void configChanged();
-    void embeddedChanged(bool enabled);
     void selectedIndexChanged();
 
 private Q_SLOTS:

@@ -94,10 +94,6 @@ public:
     */
     bool isShown;
     TabBoxClient *lastRaisedClient, *lastRaisedClientSucc;
-    WId m_embedded;
-    QPoint m_embeddedOffset;
-    QSize m_embeddedSize;
-    Qt::Alignment m_embeddedAlignment;
     Xcb::Atom m_highlightWindowsAtom;
 
 private:
@@ -108,9 +104,6 @@ TabBoxHandlerPrivate::TabBoxHandlerPrivate(TabBoxHandler *q)
     : m_qmlContext()
     , m_qmlComponent()
     , m_mainItem(nullptr)
-    , m_embedded(0)
-    , m_embeddedOffset(QPoint(0, 0))
-    , m_embeddedSize(QSize(0, 0))
     , m_highlightWindowsAtom(QByteArrayLiteral("_KDE_WINDOW_HIGHLIGHT"))
 {
     this->q = q;
@@ -582,58 +575,6 @@ QModelIndex TabBoxHandler::first() const
         return QModelIndex();
     }
     return model->index(0, 0);
-}
-
-WId TabBoxHandler::embedded() const
-{
-    return d->m_embedded;
-}
-
-void TabBoxHandler::setEmbedded(WId wid)
-{
-    d->m_embedded = wid;
-    emit embeddedChanged(wid != 0);
-}
-
-void TabBoxHandler::setEmbeddedOffset(const QPoint &offset)
-{
-    d->m_embeddedOffset = offset;
-}
-
-void TabBoxHandler::setEmbeddedSize(const QSize &size)
-{
-    d->m_embeddedSize = size;
-}
-
-const QPoint &TabBoxHandler::embeddedOffset() const
-{
-    return d->m_embeddedOffset;
-}
-
-const QSize &TabBoxHandler::embeddedSize() const
-{
-    return d->m_embeddedSize;
-}
-
-Qt::Alignment TabBoxHandler::embeddedAlignment() const
-{
-    return d->m_embeddedAlignment;
-}
-
-void TabBoxHandler::setEmbeddedAlignment(Qt::Alignment alignment)
-{
-    d->m_embeddedAlignment = alignment;
-}
-
-void TabBoxHandler::resetEmbedded()
-{
-    if (d->m_embedded == 0) {
-        return;
-    }
-    d->m_embedded = 0;
-    d->m_embeddedOffset = QPoint(0, 0);
-    d->m_embeddedSize = QSize(0, 0);
-    emit embeddedChanged(false);
 }
 
 TabBoxHandler* tabBox = nullptr;

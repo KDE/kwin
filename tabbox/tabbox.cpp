@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QAction>
 #include <QDebug>
-#include <QtDBus/QDBusConnection>
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -464,19 +463,16 @@ TabBox::TabBox(QObject *parent)
     m_desktopListConfig.setDesktopSwitchingMode(TabBoxConfig::StaticDesktopSwitching);
     m_tabBox = new TabBoxHandlerImpl(this);
     QTimer::singleShot(0, this, SLOT(handlerReady()));
-    connect(m_tabBox, SIGNAL(selectedIndexChanged()), SIGNAL(itemSelected()));
 
     m_tabBoxMode = TabBoxDesktopMode; // init variables
     connect(&m_delayedShowTimer, SIGNAL(timeout()), this, SLOT(show()));
     connect(Workspace::self(), SIGNAL(configChanged()), this, SLOT(reconfigure()));
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/TabBox"), this, QDBusConnection::ExportScriptableContents);
 
     connect(input(), &InputRedirection::keyboardModifiersChanged, this, &TabBox::modifiersChanged);
 }
 
 TabBox::~TabBox()
 {
-    QDBusConnection::sessionBus().unregisterObject(QStringLiteral("/TabBox"));
     s_self = nullptr;
 }
 
@@ -1111,61 +1107,12 @@ bool TabBox::toggle(ElectricBorder eb)
     return true;
 }
 
-void TabBox::open(bool modal, const QString &layout)
-{
-    if (isDisplayed()) {
-        return;
-    }
-    if (modal) {
-        if (!establishTabBoxGrab()) {
-            return;
-        }
-        m_tabGrab = true;
-    } else {
-        m_tabGrab = false;
-    }
-    m_noModifierGrab = !modal;
-    setMode(TabBoxWindowsMode);
-    if (!layout.isNull()) {
-        TabBoxConfig tempConfig;
-        tempConfig = tabBox->config();
-        tempConfig.setLayoutName(layout);
-        tempConfig.setShowTabBox(true);
-        tabBox->setConfig(tempConfig);
-    }
-    reset();
-    show();
-}
-
-void TabBox::openEmbedded(qulonglong wid, QPoint offset, QSize size, int horizontalAlignment, int verticalAlignment, const QString &layout)
-{
-    if (isDisplayed()) {
-        return;
-    }
-    m_tabGrab = false;
-    m_noModifierGrab = true;
-    tabBox->setEmbedded(static_cast<WId>(wid));
-    tabBox->setEmbeddedOffset(offset);
-    tabBox->setEmbeddedSize(size);
-    tabBox->setEmbeddedAlignment(static_cast<Qt::AlignmentFlag>(horizontalAlignment) | static_cast<Qt::AlignmentFlag>(verticalAlignment));
-    setMode(TabBoxWindowsMode);
-    if (!layout.isNull()) {
-        TabBoxConfig tempConfig;
-        tempConfig = tabBox->config();
-        tempConfig.setLayoutName(layout);
-        tabBox->setConfig(tempConfig);
-    }
-    reset();
-    show();
-}
-
 bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
 {
     if (!establishTabBoxGrab())
         return false;
     m_tabGrab = true;
     m_noModifierGrab = false;
-    tabBox->resetEmbedded();
     setMode(mode);
     reset();
     return true;
@@ -1464,11 +1411,6 @@ void TabBox::accept()
         if (c->isDesktop())
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
     }
-}
-
-void TabBox::reject()
-{
-    close(true);
 }
 
 /*!
