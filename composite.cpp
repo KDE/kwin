@@ -213,14 +213,15 @@ void Compositor::slotCompositingOptionsInitialized()
 #endif
 
             m_scene = SceneOpenGL::createScene();
-            connect(m_scene, SIGNAL(resetCompositing()), SLOT(restart()));
 
             // TODO: Add 30 second delay to protect against screen freezes as well
             unsafeConfig.writeEntry(openGLIsUnsafe, false);
             unsafeConfig.sync();
 
-            if (m_scene && !m_scene->initFailed())
+            if (m_scene && !m_scene->initFailed()) {
+                connect(static_cast<SceneOpenGL*>(m_scene), &SceneOpenGL::resetCompositing, this, &Compositor::restart);
                 break; // -->
+            }
             delete m_scene;
             m_scene = NULL;
         }
