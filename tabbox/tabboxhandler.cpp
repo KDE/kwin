@@ -489,10 +489,16 @@ const QModelIndex& TabBoxHandler::currentIndex() const
 
 void TabBoxHandler::grabbedKeyEvent(QKeyEvent* event) const
 {
-    if (!d->m_mainItem) {
+    if (!d->m_mainItem || !d->window()) {
         return;
     }
-    QApplication::sendEvent(d->window(), event);
+    const QList<QQuickItem*> items = d->window()->contentItem()->findChildren<QQuickItem*>(QString(), Qt::FindDirectChildrenOnly);
+    for (QQuickItem *item : items) {
+        d->window()->sendEvent(item, event);
+        if (event->isAccepted()) {
+            break;
+        }
+    }
 }
 
 bool TabBoxHandler::containsPos(const QPoint& pos) const
