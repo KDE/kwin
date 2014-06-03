@@ -50,6 +50,7 @@ public:
 
     Q_INVOKABLE bool OpenGLIsUnsafe() const;
     Q_INVOKABLE bool OpenGLIsBroken();
+    Q_INVOKABLE void reenableOpenGLDetection();
     int animationSpeed() const;
     int windowThumbnail() const;
     int glScaleFilter() const;

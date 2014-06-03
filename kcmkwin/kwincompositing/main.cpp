@@ -78,6 +78,16 @@ KWinCompositingSettings::KWinCompositingSettings(QWidget *parent, const QVariant
     , m_compositing(new KWin::Compositing::Compositing(this))
 {
     m_form.setupUi(this);
+    m_form.glCrashedWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
+    QAction *reenableGLAction = new QAction(i18n("Re-enable OpenGL detection"), this);
+    connect(reenableGLAction, &QAction::triggered, m_compositing, &KWin::Compositing::Compositing::reenableOpenGLDetection);
+    connect(reenableGLAction, &QAction::triggered, m_form.glCrashedWarning, &KMessageWidget::animatedHide);
+    m_form.glCrashedWarning->addAction(reenableGLAction);
+    m_form.interfaceWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
+    m_form.scaleWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
+    m_form.tearingWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
+    m_form.windowThumbnailWarning->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
+    m_form.unredirectInformation->setIcon(QIcon::fromTheme(QStringLiteral("dialog-information")));
 
     init();
 }
@@ -103,6 +113,15 @@ void KWinCompositingSettings::init()
     m_form.glScaleFilter->setCurrentIndex(m_compositing->glScaleFilter());
     connect(m_compositing, &Compositing::glScaleFilterChanged, m_form.glScaleFilter, &QComboBox::setCurrentIndex);
     connect(m_form.glScaleFilter, currentIndexChangedSignal, m_compositing, &Compositing::setGlScaleFilter);
+    connect(m_form.glScaleFilter, currentIndexChangedSignal,
+        [this](int index) {
+            if (index == 2) {
+                m_form.scaleWarning->animatedShow();
+            } else {
+                m_form.scaleWarning->animatedHide();
+            }
+        }
+    );
 
     // xrender scale filter
     m_form.xrScaleFilter->setCurrentIndex(m_compositing->xrScaleFilter());
@@ -113,22 +132,69 @@ void KWinCompositingSettings::init()
     m_form.tearingPrevention->setCurrentIndex(m_compositing->glSwapStrategy());
     connect(m_compositing, &Compositing::glSwapStrategyChanged, m_form.tearingPrevention, &QComboBox::setCurrentIndex);
     connect(m_form.tearingPrevention, currentIndexChangedSignal, m_compositing, &Compositing::setGlSwapStrategy);
+    connect(m_form.tearingPrevention, currentIndexChangedSignal,
+        [this](int index) {
+            if (index == 2) {
+                // only when cheap - tearing
+                m_form.tearingWarning->setText(i18n("\"Only when cheap\" only prevents tearing for full screen changes like a video."));
+                m_form.tearingWarning->animatedShow();
+            } else if (index == 3) {
+                // full screen repaints
+                m_form.tearingWarning->setText(i18n("\"Full screen repaints\" can cause performance problems."));
+                m_form.tearingWarning->animatedShow();
+            } else if (index == 4) {
+                // re-use screen content
+                m_form.tearingWarning->setText(i18n("\"Re-use screen content\" causes performance severe problems on MESA drivers."));
+                m_form.tearingWarning->animatedShow();
+            } else {
+                m_form.tearingWarning->animatedHide();
+            }
+        }
+    );
 
     // windowThumbnail
     m_form.windowThumbnail->setCurrentIndex(m_compositing->windowThumbnail());
     connect(m_compositing, &Compositing::windowThumbnailChanged, m_form.windowThumbnail, &QComboBox::setCurrentIndex);
     connect(m_form.windowThumbnail, currentIndexChangedSignal, m_compositing, &Compositing::setWindowThumbnail);
+    connect(m_form.windowThumbnail, currentIndexChangedSignal,
+        [this](int index) {
+            if (index == 0) {
+                m_form.windowThumbnailWarning->animatedShow();
+            } else {
+                m_form.windowThumbnailWarning->animatedHide();
+            }
+        }
+    );
 
     // openglPlatformInterface
     m_form.openGLPlatformInterface->setModel(m_compositing->openGLPlatformInterfaceModel());
     m_form.openGLPlatformInterface->setCurrentIndex(m_compositing->openGLPlatformInterface());
     connect(m_compositing, &Compositing::openGLPlatformInterfaceChanged, m_form.openGLPlatformInterface, &QComboBox::setCurrentIndex);
     connect(m_form.openGLPlatformInterface, currentIndexChangedSignal, m_compositing, &Compositing::setOpenGLPlatformInterface);
+    connect(m_form.openGLPlatformInterface, currentIndexChangedSignal,
+        [this]() {
+            if (m_form.openGLPlatformInterface->count() > 1 // only if egl and glx are supported
+                    && m_form.openGLPlatformInterface->currentData().toString() == QStringLiteral("egl")) {
+                m_form.interfaceWarning->animatedShow();
+            } else {
+                m_form.interfaceWarning->animatedHide();
+            }
+        }
+    );
 
     // unredirect fullscreen
     m_form.unredirectFullscreen->setChecked(m_compositing->unredirectFullscreen());
     connect(m_compositing, &Compositing::unredirectFullscreenChanged, m_form.unredirectFullscreen, &QCheckBox::setChecked);
     connect(m_form.unredirectFullscreen, &QCheckBox::toggled, m_compositing, &Compositing::setUnredirectFullscreen);
+    connect(m_form.unredirectFullscreen, &QCheckBox::toggled,
+        [this](bool enabled) {
+            if (enabled) {
+                m_form.unredirectInformation->animatedShow();
+            } else {
+                m_form.unredirectInformation->animatedHide();
+            }
+        }
+    );
 
     // color correction
     m_form.colorCorrection->setChecked(m_compositing->glColorCorrection());
@@ -164,6 +230,10 @@ void KWinCompositingSettings::init()
             showHideBasedOnType();
         }
     );
+
+    if (m_compositing->OpenGLIsUnsafe()) {
+        m_form.glCrashedWarning->animatedShow();
+    }
 }
 
 void KWinCompositingSettings::load()

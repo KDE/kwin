@@ -161,6 +161,13 @@ bool Compositing::OpenGLIsBroken()
     return false;
 }
 
+void Compositing::reenableOpenGLDetection()
+{
+    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Compositing");
+    kwinConfig.writeEntry("OpenGLIsUnsafe", false);
+    kwinConfig.sync();
+}
+
 int Compositing::animationSpeed() const
 {
     return m_animationSpeed;
