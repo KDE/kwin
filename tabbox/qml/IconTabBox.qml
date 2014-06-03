@@ -23,6 +23,12 @@ import org.kde.kquickcontrolsaddons 2.0
 
 Item {
     id: iconsTabBox
+    function decrementCurrentIndex() {
+        iconsListView.decrementCurrentIndex();
+    }
+    function incrementCurrentIndex() {
+        iconsListView.incrementCurrentIndex();
+    }
     property int iconSize
     property alias count: iconsListView.count
     property alias margins: hoverItem.margins
@@ -91,17 +97,5 @@ Item {
         }
         highlightMoveDuration: 250
         boundsBehavior: Flickable.StopAtBounds
-    }
-    /*
-     * Key navigation on outer item for two reasons:
-     * @li we have to emit the change signal
-     * @li on multiple invocation it does not work on the list view. Focus seems to be lost.
-     **/
-    Keys.onPressed: {
-        if (event.key == Qt.Key_Left) {
-            iconsListView.decrementCurrentIndex();
-        } else if (event.key == Qt.Key_Right) {
-            iconsListView.incrementCurrentIndex();
-        }
     }
 }
