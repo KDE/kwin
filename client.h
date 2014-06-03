@@ -496,7 +496,7 @@ public:
 
     QString caption(bool full = true, bool stripped = false) const;
 
-    void keyPressEvent(uint key_code, xcb_timestamp_t time);   // FRAME ??
+    void keyPressEvent(uint key_code, xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);   // FRAME ??
     void updateMouseGrab();
     xcb_window_t moveResizeGrabWindow() const;
 
