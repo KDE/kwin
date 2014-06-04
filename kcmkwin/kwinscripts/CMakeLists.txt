@@ -9,7 +9,7 @@ set(kcm_SRCS
     module.cpp
 )
 
-qt5_wrap_ui(kcm_SRCS module.ui)
+ki18n_wrap_ui(kcm_SRCS module.ui)
 
 add_library(kcm_kwin_scripts MODULE ${kcm_SRCS})
 
