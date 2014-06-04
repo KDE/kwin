@@ -488,6 +488,11 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     KWin::Application a(argc, argv);
 
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    a.installTranslator(&qtTranslator);
+
     KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
                          i18n("KWin"),                       // A displayable program name string
                          QStringLiteral(KWIN_VERSION_STRING), // The program version string
