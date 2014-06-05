@@ -527,7 +527,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             demandAttention();
         if (info->state() & NET::Modal)
             setModal(true);
-        if (fullscreen_mode != FullScreenHack && isFullScreenable())
+        if (fullscreen_mode != FullScreenHack)
             setFullScreen(rules()->checkFullScreen(info->state() & NET::FullScreen, !isMapped), false);
     }
 
