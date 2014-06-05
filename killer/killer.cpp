@@ -94,11 +94,11 @@ int main(int argc, char* argv[])
 
     QString question = i18nc("@info", "<b>Application \"%1\" is not responding</b>", appname);
     question += isLocal
-        ? i18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
+        ? xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3) but the application is not responding.</para>",
             caption, appname, pidString)
-        : i18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
+        : xi18nc("@info", "<para>You tried to close window \"%1\" from application \"%2\" (Process ID: %3), running on host \"%4\", but the application is not responding.</para>",
             caption, appname, pidString, hostname);
-    question += i18nc("@info",
+    question += xi18nc("@info",
         "<para>Do you want to terminate this application?</para>"
         "<para><warning>Terminating the application will close all of its child windows. Any unsaved data will be lost.</warning></para>"
         );
