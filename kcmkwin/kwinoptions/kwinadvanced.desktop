@@ -99,6 +99,14 @@ Name[zh_CN]=高级
 Name[zh_TW]=進階
 
 Comment=Advanced Window Management Features
+Comment[nl]=Geavanceerde vensterbeheermogelijkheden
+Comment[pl]=Możliwości zaawansowanego zarządzania oknami
+Comment[pt]=Funcionalidades de Gestão de Janelas Avançadas
+Comment[pt_BR]=Recursos avançados de gerenciamento de janelas
+Comment[sk]=Pokročilé možnosti správy okien
+Comment[sv]=Avancerade fönsterhanteringsfunktioner
+Comment[uk]=Додаткові можливості з керування вікнами
+Comment[x-test]=xxAdvanced Window Management Featuresxx
 
 X-KDE-Keywords=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
 X-KDE-Keywords[bs]=sjenčanje, granične, lebdjenje, aktivne granice, popločavanje, Kartice, tabovanje, prozorno tabovanje, grupiranje prozora, pločica, prozorna pločica,  plasman przora, plasman prozorâ, napredo ponašanje prozora

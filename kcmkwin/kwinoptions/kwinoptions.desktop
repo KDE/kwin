@@ -102,8 +102,24 @@ Name[zh_CN]=窗口行为
 Name[zh_TW]=視窗行為
 
 Comment=Window Actions and Behavior
+Comment[nl]=Vensteracties en gedrag
+Comment[pl]=Działania i zachowania okien
+Comment[pt]=Acções e Comportamento das Janelas
+Comment[pt_BR]=Ações e comportamento das janelas
+Comment[sk]=Akcie a správanie okien
+Comment[sv]=Fönsteråtgärder och beteende
+Comment[uk]=Реакція і поведінка вікон
+Comment[x-test]=xxWindow Actions and Behaviorxx
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
+X-KDE-Keywords[nl]=focus,plaatsing,venstegedrag,vensteracties,animatie,omhoog,automatisch omhoog,vensters,frame,titelbalk,dubbelklik
+X-KDE-Keywords[pl]=uaktywnienie,umieszczenie,zachowanie okna,działania okien,animacja,wzniesienie,auto-wzniesienie, okna,ramka,pasek tytułu,podwójne kliknięcie
+X-KDE-Keywords[pt]=foco,colocação,comportamento da janela,acções das janelas,animação,elevar,elevar automaticamente,janelas,contorno,barra de título,duplo-click
+X-KDE-Keywords[pt_BR]=foco,colocação,comportamento da janela,ações da janela,animação,elevar,elevar automaticamente,janelas,contorno,barra de título,clique duplo
+X-KDE-Keywords[sk]=zameranie,umiestnenie,správanie okien,animácia,zdvihnúť,automaticky zdvihnúť,okná,rám,titulkový pruh,dvojklik
+X-KDE-Keywords[sv]=fokus,placering,fönsterbeteende,animering,höj,höj automatiskt,fönster,ram,namnlist,dubbelklick
+X-KDE-Keywords[uk]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне
+X-KDE-Keywords[x-test]=xxfocus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 

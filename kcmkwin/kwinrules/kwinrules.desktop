@@ -52,7 +52,7 @@ Name[nds]=Finsterbedregen
 Name[nl]=Vensterregels
 Name[nn]=Vindaugsreglar
 Name[pa]=ਵਿੰਡੋ ਨਿਯਮ
-Name[pl]=Reguły okien
+Name[pl]=Zasady okien
 Name[pt]=Regras das Janelas
 Name[pt_BR]=Regras das janelas
 Name[ro]=Reguli fereastră
@@ -75,6 +75,14 @@ Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
+Comment[nl]=Individueel venstergedrag
+Comment[pl]=Osobne zachowania okien
+Comment[pt]=Comportamento das Janelas Individuais
+Comment[pt_BR]=Comportamento das janelas individuais
+Comment[sk]=Individuálne správanie okien
+Comment[sv]=Individuellt fönsterbeteende
+Comment[uk]=Поведінка окремих вікон
+Comment[x-test]=xxIndividual Window Behaviorxx
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
 X-KDE-Keywords[bs]=veličina,pozicija,grad,reagiranje prozora,prozori,specifičan,workarounds,sjećati se,pravila

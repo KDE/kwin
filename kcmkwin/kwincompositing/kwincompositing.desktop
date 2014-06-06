@@ -42,6 +42,14 @@ Name[uk]=Засіб композиції
 Name[x-test]=xxCompositorxx
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
+Comment[nl]=Instellingen van compositor configureren voor bureaubladeffecten
+Comment[pl]=Ustawienia kompozytora dla efektów pulpitu
+Comment[pt]=Configuração do Compositor para os Efeitos do Ecrã
+Comment[pt_BR]=Definições do Compositor para os efeitos da área de trabalho
+Comment[sk]=Nastavenia kompozítora pre efekty plochy
+Comment[sv]=Sammansättningsinställningar för skrivbordseffekter
+Comment[uk]=Параметри засобу композиції для ефектів стільниці
+Comment[x-test]=xxCompositor Settings for Desktop Effectsxx
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
 X-KDE-Keywords[ca]=kwin,finestra,gestor,composició,efecte,efectes 3D,efectes 2D,OpenGL,XRender,arranjament de vídeo,efectes gràfics,efectes d'escriptori
