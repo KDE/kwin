@@ -514,6 +514,7 @@ void EffectView::init(ViewType type)
 {
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
+    kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
     kdeclarative.setupBindings();
     QString path;
     switch (type) {
