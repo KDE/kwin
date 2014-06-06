@@ -20,11 +20,13 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
+#include "uitranslator.h"
 #include <kwineffects_interface.h>
 #include <KAboutData>
 #define TRANSLATION_DOMAIN "kwin_scripting"
 #include <KLocalizedString>
 #include <kconfigloader.h>
+#include <KDesktopFile>
 
 #include <QFile>
 #include <QLabel>
@@ -48,7 +50,9 @@ QObject *GenericScriptedConfigFactory::create(const char *iface, QWidget *parent
 GenericScriptedConfig::GenericScriptedConfig(const QString &componentName, const QString &keyword, QWidget *parent, const QVariantList &args)
     : KCModule(KAboutData::pluginData(componentName), parent, args)
     , m_packageName(keyword)
+    , m_translator(new KLocalizedTranslator(this))
 {
+    QCoreApplication::instance()->installTranslator(m_translator);
 }
 
 GenericScriptedConfig::~GenericScriptedConfig()
@@ -82,10 +86,25 @@ void GenericScriptedConfig::createUi()
     KConfigLoader *configLoader = new KConfigLoader(cg, &xmlFile, this);
     // load the ui file
     QUiLoader *loader = new QUiLoader(this);
+    loader->setLanguageChangeEnabled(true);
     QFile uiFile(uiPath);
+    // try getting a translation domain
+    const QString metaDataPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                        QStringLiteral(KWIN_NAME"/%1/%2/metadata.desktop").arg(typeName()).arg(m_packageName));
+    if (!metaDataPath.isNull()) {
+        KDesktopFile metaData(metaDataPath);
+        m_translator->setTranslationDomain(metaData.desktopGroup().readEntry("X-KWin-Config-TranslationDomain", QString()));
+    }
+
     uiFile.open(QFile::ReadOnly);
     QWidget *customConfigForm = loader->load(&uiFile, this);
+    m_translator->addContextToMonitor(customConfigForm->objectName());
     uiFile.close();
+
+    // send a custom event to the translator to retranslate using our translator
+    QEvent le(QEvent::LanguageChange);
+    QCoreApplication::sendEvent(customConfigForm, &le);
+
     layout->addWidget(customConfigForm);
     addConfig(configLoader, customConfigForm);
 }

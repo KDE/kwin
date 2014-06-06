@@ -168,3 +168,4 @@ X-Plasma-MainScript=code/main.js
 X-KDE-PluginKeyword=kwin4_effect_login
 X-KDE-Library=kcm_kwin4_genericscripted
 X-KDE-ParentComponents=kwin4_effect_login
+X-KWin-Config-TranslationDomain=kwin_effects

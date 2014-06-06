@@ -1,4 +1,5 @@
-set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp)
+include_directories(${KWIN_SOURCE_DIR}/kcmkwin/utils/)
+set(kcm_kwin4_genericscripted_SRCS genericscriptedconfig.cpp ${KWIN_SOURCE_DIR}/kcmkwin/utils/uitranslator.cpp)
 qt5_add_dbus_interface(kcm_kwin4_genericscripted_SRCS ${kwin_effects_dbus_xml} kwineffects_interface)
 add_library(kcm_kwin4_genericscripted MODULE ${kcm_kwin4_genericscripted_SRCS})
 target_link_libraries( kcm_kwin4_genericscripted

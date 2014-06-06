@@ -28,6 +28,8 @@
 namespace KWin
 {
 
+class KLocalizedTranslator;
+
 class GenericScriptedConfigFactory : public KPluginFactory
 {
     Q_OBJECT
@@ -58,6 +60,7 @@ protected:
 
 private:
     QString m_packageName;
+    KLocalizedTranslator *m_translator;
 };
 
 class ScriptedEffectConfig : public GenericScriptedConfig
