@@ -34,6 +34,7 @@
 #include "decorationmodel.h"
 #include "auroraetheme.h"
 #include "preview.h"
+#include "uitranslator.h"
 // Qt
 #include <QtDBus/QtDBus>
 #include <QSortFilterProxyModel>
@@ -79,6 +80,7 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
     , m_configLoaded(false)
     , m_decorationButtons(new DecorationButtons(this))
     , m_listView(new QQuickView())
+    , m_translator(new KLocalizedTranslator(this))
 {
     qmlRegisterType<Aurorae::AuroraeTheme>("org.kde.kwin.aurorae", 0, 1, "AuroraeTheme");
     qmlRegisterType<PreviewItem>("org.kde.kwin.kcmdecoration", 0, 1, "PreviewItem");
@@ -99,6 +101,8 @@ KWinDecorationModule::KWinDecorationModule(QWidget* parent, const QVariantList &
                        i18n("(c) 2001 Karol Szwed"));
     about->addAuthor(i18n("Karol Szwed"), QString(), "gallium@kde.org");
     setAboutData(about);
+
+    QCoreApplication::instance()->installTranslator(m_translator);
 }
 
 
@@ -403,15 +407,22 @@ void KWinDecorationModule::slotConfigureDecoration()
                 KConfigGroup configGroup = auroraeConfig->group(packageName);
                 KConfigLoader *skeleton = new KConfigLoader(configGroup, &configFile, dlg);
                 // load the ui file
+                m_translator->setTranslationDomain(index.data(DecorationModel::ConfigTranslationDomain).toString());
                 QUiLoader *loader = new QUiLoader(dlg);
+                loader->setLanguageChangeEnabled(true);
                 QFile uiFile(uiPath);
                 uiFile.open(QFile::ReadOnly);
                 QWidget *customConfigForm = loader->load(&uiFile, form);
+                m_translator->addContextToMonitor(customConfigForm->objectName());
                 uiFile.close();
                 form->layout()->addWidget(customConfigForm);
                 // connect the ui file with the skeleton
                 configManager = new KConfigDialogManager(customConfigForm, skeleton);
                 configManager->updateWidgets();
+
+                // send a custom event to the translator to retranslate using our translator
+                QEvent le(QEvent::LanguageChange);
+                QCoreApplication::sendEvent(customConfigForm, &le);
             }
         }
         if (dlg->exec() == QDialog::Accepted) {

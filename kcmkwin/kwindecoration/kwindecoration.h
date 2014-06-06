@@ -44,6 +44,7 @@ namespace KWin
 {
 
 class DecorationModel;
+class KLocalizedTranslator;
 
 class KWinDecorationForm : public QWidget, public Ui::KWinDecorationForm
 {
@@ -133,6 +134,8 @@ private:
     DecorationButtons *m_decorationButtons;
 
     QScopedPointer<QQuickView> m_listView;
+
+    KLocalizedTranslator *m_translator;
 };
 
 } //namespace

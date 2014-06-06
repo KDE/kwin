@@ -56,6 +56,7 @@ public:
     QString license;
     QString auroraeName;
     QString qmlPath;
+    QString configTranslationDomain;
     KDecorationDefines::BorderSize borderSize;
     KDecorationDefines::BorderSize buttonSize;
     /**
@@ -88,7 +89,8 @@ public:
         BorderSizesRole = Qt::UserRole + 12,
         ButtonSizeRole = Qt::UserRole + 13,
         QmlMainScriptRole = Qt::UserRole + 14,
-        CloseOnDblClickRole = Qt::UserRole + 15
+        CloseOnDblClickRole = Qt::UserRole + 15,
+        ConfigTranslationDomain = Qt::UserRole + 16
     };
     explicit DecorationModel(KSharedConfigPtr config, QObject* parent = nullptr);
     ~DecorationModel();

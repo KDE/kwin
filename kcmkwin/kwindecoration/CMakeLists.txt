@@ -4,6 +4,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcmkwindecoration\")
 # need a header file from Aurorae sources
 include_directories(
     ${KWIN_SOURCE_DIR}/clients/aurorae/src/lib
+    ../utils/
 )
 
 set(AURORAE_SOURCE_DIR ${KWIN_SOURCE_DIR}/clients/aurorae/src/lib/)
@@ -15,6 +16,7 @@ set(kcm_kwindecoration_PART_SRCS
     configdialog.cpp
     preview.cpp
     decorationmodel.cpp
+    ../utils/uitranslator.cpp
     ${AURORAE_SOURCE_DIR}/auroraetheme.cpp
     ${AURORAE_SOURCE_DIR}/themeconfig.cpp
 )

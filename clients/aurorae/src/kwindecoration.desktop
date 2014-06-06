@@ -51,3 +51,6 @@ Comment[zh_TW]=KWin 視窗裝飾
 
 [PropertyDef::X-Plasma-MainScript]
 Type=QString
+
+[PropertyDef::X-KWin-Config-TranslationDomain]
+Type=QString

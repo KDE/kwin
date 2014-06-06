@@ -119,6 +119,7 @@ void DecorationModel::findDecorations()
         data.type = DecorationModelData::QmlDecoration;
         data.auroraeName = service->property("X-KDE-PluginInfo-Name").toString();
         QString scriptName = service->property("X-Plasma-MainScript").toString();
+        data.configTranslationDomain = service->property(QStringLiteral("X-KWin-Config-TranslationDomain")).toString();
         data.qmlPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, "kwin/decorations/" + data.auroraeName + "/contents/" + scriptName);
         if (data.qmlPath.isEmpty()) {
             // not a valid QML theme
@@ -251,6 +252,8 @@ QVariant DecorationModel::data(const QModelIndex& index, int role) const
         return m_decorations[ index.row()].qmlPath;
     case CloseOnDblClickRole:
         return m_decorations[index.row()].closeDblClick;
+    case ConfigTranslationDomain:
+        return m_decorations[index.row()].configTranslationDomain;
     default:
         return QVariant();
     }
