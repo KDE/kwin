@@ -75,6 +75,7 @@ Name[zh_CN]=窗口规则
 Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
+Comment[ca]=Comportament individual de les finestres
 Comment[nl]=Individueel venstergedrag
 Comment[pl]=Osobne zachowania okien
 Comment[pt]=Comportamento das Janelas Individuais
