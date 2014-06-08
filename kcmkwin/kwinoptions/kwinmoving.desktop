@@ -99,11 +99,16 @@ Name[zh_TW]=移動
 
 Comment=Window Moving
 Comment[ca]=Moviment de les finestres
+Comment[fi]=Ikkunoiden siirtäminen
 Comment[nl]=Verplaatsen van vensters
 Comment[pl]=Przesuwanie okien
 Comment[pt]=Movimentação das Janelas
 Comment[pt_BR]=Movimentação da janela
 Comment[sk]=Presuny okien
+Comment[sr]=Померање прозора
+Comment[sr@ijekavian]=Померање прозора
+Comment[sr@ijekavianlatin]=Pomeranje prozora
+Comment[sr@latin]=Pomeranje prozora
 Comment[sv]=Fönsterförflyttning
 Comment[uk]=Пересування вікон
 Comment[x-test]=xxWindow Movingxx

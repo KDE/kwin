@@ -101,11 +101,16 @@ Name[zh_TW]=動作
 
 Comment=Mouse Actions on Windows
 Comment[ca]=Accions del ratolí en les finestres
+Comment[fi]=Ikkunoiden hiiritoiminnot
 Comment[nl]=Muisacties op vensters
 Comment[pl]=Działania myszy na oknach
 Comment[pt]=Acções do Rato nas Janelas
 Comment[pt_BR]=Ações do mouse nas janelas
 Comment[sk]=Akcie myši na oknách
+Comment[sr]=Радње мишем над прозорима
+Comment[sr@ijekavian]=Радње мишем над прозорима
+Comment[sr@ijekavianlatin]=Radnje mišem nad prozorima
+Comment[sr@latin]=Radnje mišem nad prozorima
 Comment[sv]=Musåtgärder för fönster
 Comment[uk]=Дії над вікнами за допомогою миші
 Comment[x-test]=xxMouse Actions on Windowsxx

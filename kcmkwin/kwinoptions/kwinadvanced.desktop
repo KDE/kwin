@@ -100,11 +100,16 @@ Name[zh_TW]=進階
 
 Comment=Advanced Window Management Features
 Comment[ca]=Característiques avançades de la gestió de finestres
+Comment[fi]=Ikkunoinnin lisäominaisuudet
 Comment[nl]=Geavanceerde vensterbeheermogelijkheden
 Comment[pl]=Możliwości zaawansowanego zarządzania oknami
 Comment[pt]=Funcionalidades de Gestão de Janelas Avançadas
 Comment[pt_BR]=Recursos avançados de gerenciamento de janelas
 Comment[sk]=Pokročilé možnosti správy okien
+Comment[sr]=Напредне могућности управљања прозорима
+Comment[sr@ijekavian]=Напредне могућности управљања прозорима
+Comment[sr@ijekavianlatin]=Napredne mogućnosti upravljanja prozorima
+Comment[sr@latin]=Napredne mogućnosti upravljanja prozorima
 Comment[sv]=Avancerade fönsterhanteringsfunktioner
 Comment[uk]=Додаткові можливості з керування вікнами
 Comment[x-test]=xxAdvanced Window Management Featuresxx

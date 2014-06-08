@@ -76,11 +76,16 @@ Name[zh_TW]=視窗規則
 
 Comment=Individual Window Behavior
 Comment[ca]=Comportament individual de les finestres
+Comment[fi]=Yksittäisten ikkunoiden toiminta
 Comment[nl]=Individueel venstergedrag
 Comment[pl]=Osobne zachowania okien
 Comment[pt]=Comportamento das Janelas Individuais
 Comment[pt_BR]=Comportamento das janelas individuais
 Comment[sk]=Individuálne správanie okien
+Comment[sr]=Понашање појединачних прозора
+Comment[sr@ijekavian]=Понашање појединачних прозора
+Comment[sr@ijekavianlatin]=Ponašanje pojedinačnih prozora
+Comment[sr@latin]=Ponašanje pojedinačnih prozora
 Comment[sv]=Individuellt fönsterbeteende
 Comment[uk]=Поведінка окремих вікон
 Comment[x-test]=xxIndividual Window Behaviorxx

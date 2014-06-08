@@ -99,11 +99,16 @@ Name[zh_TW]=焦點
 
 Comment=Active Window Policy
 Comment[ca]=Política de finestra activa
+Comment[fi]=Aktiivisen ikkunan valintatapa
 Comment[nl]=Beleid voor actief venster
 Comment[pl]=Zasady aktywowania okna
 Comment[pt]=Política da Janela Activa
 Comment[pt_BR]=Política da janela ativa
 Comment[sk]=Politika aktívneho okna
+Comment[sr]=Смерница активирања прозора
+Comment[sr@ijekavian]=Смерница активирања прозора
+Comment[sr@ijekavianlatin]=Smernica aktiviranja prozora
+Comment[sr@latin]=Smernica aktiviranja prozora
 Comment[sv]=Aktiv fönsterprincip
 Comment[uk]=Правила для задіяння вікон
 Comment[x-test]=xxActive Window Policyxx

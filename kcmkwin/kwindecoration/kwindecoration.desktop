@@ -75,11 +75,16 @@ Name[zh_TW]=視窗裝飾
 
 Comment=Look and Feel of Window Titles
 Comment[ca]=Aspecte i comportament dels títols de les finestres
+Comment[fi]=Ikkunoiden kehysten ulkoasu
 Comment[nl]=Uiterlijk en gedrag van venstertitels
 Comment[pl]=Wygląd i odczucia tytułów okien
 Comment[pt]=Aparência e Comportamento dos Títulos das Janelas
 Comment[pt_BR]=Aparência dos títulos das janelas
 Comment[sk]=Nastavenie vzhľadu titulkov okien
+Comment[sr]=Изглед и осећај за наслове прозора
+Comment[sr@ijekavian]=Изглед и осјећај за наслове прозора
+Comment[sr@ijekavianlatin]=Izgled i osjećaj za naslove prozora
+Comment[sr@latin]=Izgled i osećaj za naslove prozora
 Comment[sv]=Namnlisternas utseende och känsla
 Comment[uk]=Вигляд і поведінка смужок заголовків вікон
 Comment[x-test]=xxLook and Feel of Window Titlesxx
