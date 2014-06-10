@@ -102,8 +102,6 @@ public:
     void setTextureMatrix(const QMatrix4x4 &matrix);
     void setModelViewProjectionMatrix(const QMatrix4x4 &matrix);
 
-    static bool supported();
-
 protected:
     void init();
     void reset();

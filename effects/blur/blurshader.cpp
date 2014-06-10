@@ -43,10 +43,7 @@ BlurShader::~BlurShader()
 
 BlurShader *BlurShader::create()
 {
-    if (GLSLBlurShader::supported())
-        return new GLSLBlurShader();
-
-    return nullptr;
+    return new GLSLBlurShader();
 }
 
 void BlurShader::setRadius(int radius)
@@ -129,19 +126,6 @@ void GLSLBlurShader::reset()
     shader = NULL;
 
     setIsValid(false);
-}
-
-bool GLSLBlurShader::supported()
-{
-    if (!GLPlatform::instance()->supports(GLSL))
-        return false;
-
-    (void) glGetError(); // Clear the error state
-
-    if (glGetError() != GL_NO_ERROR)
-        return false;
-
-    return true;
 }
 
 void GLSLBlurShader::setPixelDistance(float val)

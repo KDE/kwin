@@ -50,8 +50,6 @@ public:
     void bind();
     void unbind();
 
-    static bool supported();
-
     void setOpacity(float opacity);
     float opacity() const;
 

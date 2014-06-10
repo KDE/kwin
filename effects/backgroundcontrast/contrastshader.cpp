@@ -45,11 +45,7 @@ ContrastShader::~ContrastShader()
 
 ContrastShader *ContrastShader::create()
 {
-    if (ContrastShader::supported()) {
-        return new ContrastShader();
-    }
-
-    return NULL;
+    return new ContrastShader();
 }
 
 void ContrastShader::reset()
@@ -58,19 +54,6 @@ void ContrastShader::reset()
     shader = NULL;
 
     setIsValid(false);
-}
-
-bool ContrastShader::supported()
-{
-    if (!GLPlatform::instance()->supports(GLSL))
-        return false;
-
-    (void) glGetError(); // Clear the error state
-
-    if (glGetError() != GL_NO_ERROR)
-        return false;
-
-    return true;
 }
 
 void ContrastShader::setOpacity(float opacity)
