@@ -186,6 +186,8 @@ endif()
 
 # Binary name of KWin
 set(KWIN_NAME "kwin")
+set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
+set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
 set(KWIN_VERSION_MAJOR 4)
 set(KWIN_VERSION_MINOR 97)
 set(KWIN_VERSION_PATCH 0)
@@ -515,7 +517,7 @@ endif()
 kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
 
 target_link_libraries(kdeinit_kwin ${kwinLibs})
-set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_NAME})
+set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_INTERNAL_NAME_X11})
 generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)

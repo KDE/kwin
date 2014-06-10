@@ -153,7 +153,7 @@ public:
         addWM(QStringLiteral("metacity"));
         addWM(QStringLiteral("openbox"));
         addWM(QStringLiteral("fvwm2"));
-        addWM(QStringLiteral(KWIN_NAME));
+        addWM(QStringLiteral(KWIN_INTERNAL_NAME_X11));
 
         QVBoxLayout *mainLayout = new QVBoxLayout(this);
         mainLayout->addWidget(mainWidget);
@@ -303,7 +303,7 @@ void Application::crashChecking()
     if (crashes >= 4) {
         // Something has gone seriously wrong
         AlternativeWMDialog dialog;
-        QString cmd = QStringLiteral(KWIN_NAME);
+        QString cmd = QStringLiteral(KWIN_INTERNAL_NAME_X11);
         if (dialog.exec() == QDialog::Accepted)
             cmd = dialog.selectedWM();
         else
