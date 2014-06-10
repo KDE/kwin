@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_MOCK_TABBOX_CLIENT_H
 
 #include "../tabboxhandler.h"
+
+#include <QIcon>
+
 namespace KWin
 {
 class MockTabBoxClient : public TabBox::TabBoxClient
@@ -57,6 +60,9 @@ public:
     }
     virtual int y() const {
         return 0;
+    }
+    virtual QIcon icon() const {
+        return QIcon();
     }
 
 private:

@@ -27,7 +27,7 @@ class MockTabBoxHandler : public TabBox::TabBoxHandler
 {
     Q_OBJECT
 public:
-    MockTabBoxHandler();
+    MockTabBoxHandler(QObject *parent = nullptr);
     virtual ~MockTabBoxHandler();
     virtual void activateAndClose() {
     }
