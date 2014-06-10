@@ -43,10 +43,11 @@ EffectConfig::EffectConfig(QObject *parent)
 {
 }
 
-void EffectConfig::openConfig(const QString &serviceName, bool scripted)
+void EffectConfig::openConfig(const QString &serviceName, bool scripted, const QString &title)
 {
     //setup the UI
     QDialog dialog;
+    dialog.setWindowTitle(title);
 
     // create the KCModule through the plugintrader
     KCModule *kcm = nullptr;
