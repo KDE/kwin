@@ -82,8 +82,6 @@ static QString translatedCategory(const QString &category)
 
 EffectModel::EffectModel(QObject *parent)
     : QAbstractItemModel(parent) {
-
-    loadEffects();
 }
 
 QHash< int, QByteArray > EffectModel::roleNames() const
