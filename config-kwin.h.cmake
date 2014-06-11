@@ -17,3 +17,10 @@
 
 /* Define to 1 if you have the <malloc.h> header file. */
 #cmakedefine HAVE_MALLOC_H 1
+
+#cmakedefine XCB_ICCCM_FOUND 1
+#ifndef XCB_ICCCM_FOUND
+#define XCB_ICCCM_WM_STATE_WITHDRAWN 0
+#define XCB_ICCCM_WM_STATE_NORMAL 1
+#define XCB_ICCCM_WM_STATE_ICONIC 3
+#endif

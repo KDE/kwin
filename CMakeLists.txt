@@ -138,24 +138,29 @@ set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                     )
 
 # All the required XCB components
-find_package(XCB REQUIRED COMPONENTS
-    XCB
-    XFIXES
-    DAMAGE
-    COMPOSITE
-    SHAPE
-    SYNC
-    RENDER
-    RANDR
-    KEYSYMS
-    IMAGE
-    SHM
-    XTEST
+find_package(XCB
+    REQUIRED COMPONENTS
+        XCB
+        XFIXES
+        DAMAGE
+        COMPOSITE
+        SHAPE
+        SYNC
+        RENDER
+        RANDR
+        KEYSYMS
+        IMAGE
+        SHM
+        XTEST
+    OPTIONAL_COMPONENTS
+        ICCCM
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 
 # and the optional XCB dependencies
-find_package(XCB COMPONENTS ICCCM)
+if (XCB_ICCCM_VERSION VERSION_LESS "0.4")
+    set(XCB_ICCCM_FOUND FALSE)
+endif()
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

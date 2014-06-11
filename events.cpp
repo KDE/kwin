@@ -54,7 +54,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 
 #include <xcb/sync.h>
+#ifdef XCB_ICCCM_FOUND
 #include <xcb/xcb_icccm.h>
+#endif
 
 #include "composite.h"
 #include "killwindow.h"
