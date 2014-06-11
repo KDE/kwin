@@ -203,11 +203,6 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
         }
 
         return true;
-    } else if (role == EffectModel::WindowManagementRole) {
-        bool enabled = value.toBool();
-        handleWindowManagement(index.row(), enabled);
-        emit dataChanged(index, index);
-        return true;
     }
 
     return QAbstractItemModel::setData(index, value, role);
@@ -331,13 +326,6 @@ void EffectModel::loadEffects()
 
     m_effectsChanged = m_effectsList;
     endResetModel();
-}
-
-void EffectModel::handleWindowManagement(int row, bool enabled)
-{
-    //Make sure that our row is valid
-    if (m_effectsList.size() > 0 && row <= m_effectsList.size())
-        m_effectsList[row].effectStatus = enabled;
 }
 
 int EffectModel::findRowByServiceName(const QString &serviceName)

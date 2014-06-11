@@ -69,7 +69,6 @@ public:
         CategoryRole,
         ServiceNameRole,
         EffectStatusRole,
-        WindowManagementRole,
         VideoRole,
         SupportedRole,
         ExclusiveRole,
@@ -97,7 +96,6 @@ public:
     void defaults();
 
 private:
-    void handleWindowManagement(int row, bool enabled);
     int findRowByServiceName(const QString &serviceName);
     QList<EffectData> m_effectsList;
     QList<EffectData> m_effectsChanged;
