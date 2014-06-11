@@ -51,6 +51,7 @@ struct EffectData {
     bool internal;
     bool configurable;
     bool scripted;
+    bool changed = false;
 };
 
 class EffectModel : public QAbstractItemModel

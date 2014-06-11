@@ -184,8 +184,12 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
         return QAbstractItemModel::setData(index, value, role);
 
     if (role == EffectModel::EffectStatusRole) {
+        // note: whenever the StatusRole is modified (even to the same value) the entry
+        // gets marked as changed and will get saved to the config file. This means the
+        // config file could get polluted
         EffectData &data = m_effectsList[index.row()];
         data.effectStatus = value.toBool();
+        data.changed = true;
         emit dataChanged(index, index);
 
         if (data.effectStatus && !data.exclusiveGroup.isEmpty()) {
@@ -197,6 +201,7 @@ bool EffectModel::setData(const QModelIndex& index, const QVariant& value, int r
                 EffectData &otherData = m_effectsList[i];
                 if (otherData.exclusiveGroup == data.exclusiveGroup) {
                     otherData.effectStatus = false;
+                    otherData.changed = true;
                     emit dataChanged(this->index(i, 0), this->index(i, 0));
                 }
             }
@@ -367,6 +372,10 @@ void EffectModel::syncConfig()
 
     for (auto it = m_effectsList.constBegin(); it != m_effectsList.constEnd(); it++) {
         const EffectData &effect = *(it);
+        if (!effect.changed) {
+            continue;
+        }
+        effect.changed = false;
 
         const QString key = effect.serviceName + QStringLiteral("Enabled");
 
