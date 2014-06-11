@@ -34,6 +34,12 @@
 namespace KWin {
 namespace Compositing {
 
+enum class EffectStatus {
+    Disabled = Qt::Unchecked,
+    EnabledUndeterminded = Qt::PartiallyChecked,
+    Enabled = Qt::Checked
+};
+
 struct EffectData {
     QString name;
     QString description;
@@ -43,8 +49,9 @@ struct EffectData {
     QString version;
     QString category;
     QString serviceName;
-    bool effectStatus;
+    EffectStatus effectStatus;
     bool enabledByDefault;
+    bool enabledByDefaultFunction;
     QUrl video;
     bool supported;
     QString exclusiveGroup;
@@ -90,7 +97,7 @@ public:
 
     virtual QHash< int, QByteArray > roleNames() const override;
 
-    void updateEffectStatus(const QModelIndex &rowIndex, bool effectState);
+    void updateEffectStatus(const QModelIndex &rowIndex, EffectStatus effectState);
     void syncEffectsToKWin();
     void syncConfig();
     void loadEffects();
@@ -153,7 +160,7 @@ public:
     EffectFilterModel(QObject *parent = 0);
     const QString &filter() const;
 
-    Q_INVOKABLE void updateEffectStatus(int rowIndex, bool effectState);
+    Q_INVOKABLE void updateEffectStatus(int rowIndex, int effectState);
     Q_INVOKABLE void syncConfig();
     Q_INVOKABLE void load();
 

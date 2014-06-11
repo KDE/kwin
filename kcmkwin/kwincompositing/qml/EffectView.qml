@@ -111,11 +111,6 @@ Item {
             id: searchModel
             objectName: "filterModel"
             filter: searchField.text
-            signal effectState(int rowIndex, bool enabled)
-
-            onEffectState: {
-                searchModel.updateEffectStatus(rowIndex, enabled);
-            }
         }
 
         ScrollView {
@@ -157,7 +152,9 @@ Item {
                     Connections {
                         id: effectStateConnection
                         target: null
-                        onChanged: searchModel.effectState(index, checked)
+                        onChanged: {
+                            searchModel.updateEffectStatus(index, checkedState);
+                        }
                     }
                     Component.onCompleted: {
                         effectStateConnection.target = effectDelegate
@@ -174,6 +171,6 @@ Item {
     }//End ColumnLayout
     Connections {
         target: searchModel
-        onEffectState: changed()
+        onDataChanged: changed()
     }
 }//End item

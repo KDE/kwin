@@ -30,7 +30,7 @@ Rectangle {
     height: rowEffect.implicitHeight
     color: item.ListView.isCurrentItem ? effectView.backgroundActiveColor : index % 2 ? effectView.backgroundNormalColor : effectView.backgroundAlternateColor
     signal changed()
-    property bool checked: model.EffectStatusRole
+    property int checkedState: model.EffectStatusRole
 
     MouseArea {
         anchors.fill: parent
@@ -61,7 +61,7 @@ Rectangle {
                         return;
                     }
                     actuallyChanged = true;
-                    item.checked = exclusiveGroupButton.checked
+                    item.checkedState = exclusiveGroupButton.checked ? Qt.Checked : Qt.UnChecked
                     item.changed();
                 }
                 onClicked: {
@@ -78,20 +78,20 @@ Rectangle {
 
             CheckBox {
                 id: effectStatusCheckBox
-                checked: model.EffectStatusRole
+                checkedState: model.EffectStatusRole
                 visible: model.ExclusiveRole == ""
 
-                onCheckedChanged: {
+                onCheckedStateChanged: {
                     if (!visible) {
                         return;
                     }
-                    item.checked = effectStatusCheckBox.checked;
+                    item.checkedState = effectStatusCheckBox.checkedState;
                     item.changed();
                 }
                 Connections {
                     target: searchModel
                     onDataChanged: {
-                        effectStatusCheckBox.checked = model.EffectStatusRole;
+                        effectStatusCheckBox.checkedState = model.EffectStatusRole;
                     }
                 }
             }
@@ -140,7 +140,7 @@ Rectangle {
         Button {
             id: configureButton
             visible: ConfigurableRole
-            enabled: effectStatusCheckBox.checked
+            enabled: item.checkedState != Qt.UnChecked
             iconName: "configure"
             onClicked: {
                 effectConfig.openConfig(model.ServiceNameRole, model.ScriptedRole, model.NameRole);
