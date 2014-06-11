@@ -689,7 +689,8 @@ public:
      * or @p type mismatch the @p defaultValue is returned. Also if the value length
      * is @c 0 the @p defaultValue is returned. The optional argument @p ok is set
      * to @c false in case of error and to @c true in case of successful reading of
-     * the property.
+     * the property. Ok will always be true if the property exists and has been
+     * successfully read, even in the case the property is empty and its length is 0
      *
      * @param format The expected format of the property value, e.g. 32 for XCB_ATOM_CARDINAL
      * @param type The expected type of the property value, e.g. XCB_ATOM_CARDINAL
@@ -712,12 +713,14 @@ public:
         if (reply->format != format) {
             return defaultValue;
         }
-        if (xcb_get_property_value_length(reply) == 0) {
-            return defaultValue;
-        }
+
         if (ok) {
             *ok = true;
         }
+        if (xcb_get_property_value_length(reply) == 0) {
+            return defaultValue;
+        }
+
         return reinterpret_cast<T>(xcb_get_property_value(reply));
     }
     /**
@@ -726,9 +729,16 @@ public:
      * In case of error this method returns a null QByteArray.
      **/
     inline QByteArray toByteArray(uint8_t format = 8, xcb_atom_t type = XCB_ATOM_STRING, bool *ok = nullptr) {
-        const char *reply = value<const char*>(format, type, nullptr, ok);
-        if (!reply) {
-            return QByteArray();
+        bool valueOk = false;
+        const char *reply = value<const char*>(format, type, nullptr, &valueOk);
+        if (ok) {
+            *ok = valueOk;
+        }
+
+        if (valueOk && !reply) {
+            return QByteArray("", 0); // valid, not null, but empty data
+        } else if (!valueOk) {
+            return QByteArray(); // Property not found, data empty and null
         }
         return QByteArray(reply, xcb_get_property_value_length(data()));
     }

@@ -342,7 +342,26 @@ void TestXcbWrapper::testPropertyByteArray()
     prop = Property(false, testWindow, XCB_ATOM_WM_NAME, XCB_ATOM_STRING, 0, 100000);
     QCOMPARE(prop.toByteArray(), QByteArray());
     QCOMPARE(prop.toByteArray(&ok), QByteArray());
+    //valid bytearray
+    QVERIFY(ok);
+    //The bytearray should be empty
+    QVERIFY(prop.toByteArray().isEmpty());
+    //The bytearray should be not null
+    QVERIFY(!prop.toByteArray().isNull());
+    QVERIFY(!prop.value<const char*>());
+    QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
+
+    // verify non existing property
+    Xcb::Atom invalid(QByteArrayLiteral("INVALID_ATOM"));
+    prop = Property(false, testWindow, invalid, XCB_ATOM_STRING, 0, 100000);
+    QCOMPARE(prop.toByteArray(), QByteArray());
+    QCOMPARE(prop.toByteArray(&ok), QByteArray());
+    //invalid bytearray
     QVERIFY(!ok);
+    //The bytearray should be empty
+    QVERIFY(prop.toByteArray().isEmpty());
+    //The bytearray should be not null
+    QVERIFY(prop.toByteArray().isNull());
     QVERIFY(!prop.value<const char*>());
     QCOMPARE(QByteArray(StringProperty(testWindow, XCB_ATOM_WM_NAME)), QByteArray());
 }
