@@ -44,6 +44,7 @@ Name[x-test]=xxCompositorxx
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
 Comment[ca]=Arranjament del compositor pels efectes d'escriptori
+Comment[es]=Configurar las preferencias del compositor para los efectos del escritorio
 Comment[fi]=Koostimen asetukset työpöytätehosteita varten
 Comment[id]=Pengaturan Kompositor untuk Efek Jendela
 Comment[nds]=Tosamensettoptschonen för de Schriefdischeffekten instellen
