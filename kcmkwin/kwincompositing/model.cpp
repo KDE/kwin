@@ -370,8 +370,8 @@ void EffectModel::syncConfig()
 {
     KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), "Plugins");
 
-    for (auto it = m_effectsList.constBegin(); it != m_effectsList.constEnd(); it++) {
-        const EffectData &effect = *(it);
+    for (auto it = m_effectsList.begin(); it != m_effectsList.end(); it++) {
+        EffectData &effect = *(it);
         if (!effect.changed) {
             continue;
         }
