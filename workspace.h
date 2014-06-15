@@ -451,6 +451,7 @@ private:
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
+    void selectWmInputEventMask();
     void setupWindowShortcut(Client* c);
     enum Direction {
         DirectionNorth,

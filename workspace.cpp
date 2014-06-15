@@ -187,15 +187,7 @@ Workspace::Workspace(bool restore)
         KStartupInfo::DisableKWinModule | KStartupInfo::AnnounceSilenceChanges, this);
 
     // Select windowmanager privileges
-    Xcb::selectInput(rootWindow(),
-                     XCB_EVENT_MASK_KEY_PRESS |
-                     XCB_EVENT_MASK_PROPERTY_CHANGE |
-                     XCB_EVENT_MASK_COLOR_MAP_CHANGE |
-                     XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
-                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
-                     XCB_EVENT_MASK_FOCUS_CHANGE | // For NotifyDetailNone
-                     XCB_EVENT_MASK_EXPOSURE
-    );
+    selectWmInputEventMask();
 
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::create(this);
@@ -1113,6 +1105,27 @@ void Workspace::resetClientAreas(uint desktopCount)
     screenarea.clear();
 
     updateClientArea(true);
+}
+
+void Workspace::selectWmInputEventMask()
+{
+    uint32_t presentMask = 0;
+    Xcb::WindowAttributes attr(rootWindow());
+    Xcb::WindowGeometry geo(rootWindow());
+    if (!attr.isNull()) {
+        presentMask = attr->your_event_mask;
+    }
+
+    Xcb::selectInput(rootWindow(),
+                     presentMask |
+                     XCB_EVENT_MASK_KEY_PRESS |
+                     XCB_EVENT_MASK_PROPERTY_CHANGE |
+                     XCB_EVENT_MASK_COLOR_MAP_CHANGE |
+                     XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT |
+                     XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY |
+                     XCB_EVENT_MASK_FOCUS_CHANGE | // For NotifyDetailNone
+                     XCB_EVENT_MASK_EXPOSURE
+    );
 }
 
 /**
