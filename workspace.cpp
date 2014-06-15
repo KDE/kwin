@@ -189,6 +189,12 @@ Workspace::Workspace(bool restore)
     // Select windowmanager privileges
     selectWmInputEventMask();
 
+#if QT_VERSION < 0x050302
+    // WORKAROUND: QXcbScreen before 5.3.2 overrides them, see bug #335926, QTBUG-39648
+    // TODO once we depend on Qt 5.4 remove it
+    connect(qApp, SIGNAL(screenAdded(QScreen*)), this, SLOT(selectWmInputEventMask()));
+#endif
+
 #ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::create(this);
 #endif
@@ -1111,7 +1117,6 @@ void Workspace::selectWmInputEventMask()
 {
     uint32_t presentMask = 0;
     Xcb::WindowAttributes attr(rootWindow());
-    Xcb::WindowGeometry geo(rootWindow());
     if (!attr.isNull()) {
         presentMask = attr->your_event_mask;
     }

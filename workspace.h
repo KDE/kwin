@@ -409,6 +409,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void desktopResized();
+    void selectWmInputEventMask();
     void slotUpdateToolWindows();
     void delayFocus();
     void slotReloadConfig();
@@ -451,7 +452,6 @@ private:
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
-    void selectWmInputEventMask();
     void setupWindowShortcut(Client* c);
     enum Direction {
         DirectionNorth,
