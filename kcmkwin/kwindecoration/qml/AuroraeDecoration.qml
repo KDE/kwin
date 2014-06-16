@@ -54,6 +54,9 @@ Item {
                 return decorationBaseModel.readConfig(auroraeThemeName, key, defaultValue);
             }
         }
+        // just to not cause warnings
+        signal buttonsChanged()
+        signal fontChanged()
     }
     Loader {
         id: auroraeLoader
