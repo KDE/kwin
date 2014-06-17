@@ -486,7 +486,7 @@ void AuroraeClient::titlePressed(int button, int buttons)
 void AuroraeClient::titlePressed(Qt::MouseButton button, Qt::MouseButtons buttons)
 {
     const QPoint cursor = QCursor::pos();
-    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, m_view->mapFromGlobal(cursor),
+    QMouseEvent *event = new QMouseEvent(QEvent::MouseButtonPress, cursor - geometry().topLeft() + (m_padding ? QPoint(m_padding->left(), m_padding->top()) : QPoint(0, 0)),
                                          cursor, button, buttons, Qt::NoModifier);
     processMousePressEvent(event);
     delete event;
