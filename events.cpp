@@ -313,9 +313,21 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     }
     if (movingClient) {
         if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
+            Client *c = movingClient;
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && movingClient->windowEvent(e)) {
                 // we need to pass the button release event to the decoration, otherwise Qt still thinks the button is pressed.
-                return eventType == XCB_BUTTON_PRESS;
+                if (eventType == XCB_BUTTON_RELEASE && c->decorationId() != XCB_WINDOW_NONE) {
+                    // the event is for the moveResizeGrabWindow and Qt doesn't forward that to the decoration
+                    // so we need to send the event to the decoration ourselves
+                    // TODO check whether m_moveResizeWindow can be offscreen and XAllowEvents be sufficient here
+                    xcb_button_release_event_t event = *(reinterpret_cast<xcb_button_release_event_t*>(e));
+                    event.event = c->decorationId();
+                    event.child = XCB_WINDOW_NONE;
+                    event.event_x = event.root_x - c->x() + c->paddingLeft();
+                    event.event_y = event.root_y - c->y() + c->paddingTop();
+                    xcb_send_event(connection(), false, c->decorationId(), XCB_EVENT_MASK_BUTTON_RELEASE, reinterpret_cast<const char*>(&event));
+                }
+                return true;
             }
         } else if (eventType == XCB_MOTION_NOTIFY) {
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_motion_notify_event_t*>(e)->event && movingClient->windowEvent(e)) {
