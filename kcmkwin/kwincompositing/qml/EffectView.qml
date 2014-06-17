@@ -23,10 +23,11 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
-Item {
+Rectangle {
     signal changed
     implicitWidth: col.implicitWidth
     implicitHeight: col.implicitHeight
+    color: engine.backgroundViewColor()
 
     Component {
         id: sectionHeading

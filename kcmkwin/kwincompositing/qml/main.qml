@@ -23,41 +23,9 @@ import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
 import org.kde.kwin.kwincompositing 1.0
 
-
-Rectangle {
-    id: window
-    implicitWidth: openGLBrokeState ? glError.implicitWidth : view.implicitWidth
-    implicitHeight: openGLBrokeState ? glError.implicitHeight : view.implicitHeight
-    color: engine.backgroundViewColor()
-    property bool openGLBrokeState: true
-    signal changed
-
-    OpenGLErrorView {
-        id: glError
-        visible: window.openGLBrokeState
-        anchors.fill: parent
-        onActivated: window.openGLBrokeState = compositing.OpenGLIsBroken();
-    }
-
-    EffectView{
-        id: view
-        anchors.fill: parent
-        visible: !window.openGLBrokeState
-        onChanged: {
-            window.changed()
-        }
-    }
-
-    Compositing {
-        id: compositing
-    }
-    Connections {
-        target: compositing
-        onChanged: window.changed()
-    }
-
-    Component.onCompleted: {
-        openGLBrokeState = compositing.OpenGLIsUnsafe()
-        compositing.reset();
+EffectView{
+    id: view
+    onChanged: {
+        window.changed()
     }
 }
