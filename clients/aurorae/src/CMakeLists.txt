@@ -7,6 +7,7 @@ include_directories(
 
 set(kwin3_aurorae_PART_SRCS
     aurorae.cpp
+    decorationoptions.cpp
     lib/auroraetheme.cpp
     lib/themeconfig.cpp
 )

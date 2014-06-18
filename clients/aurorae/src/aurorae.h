@@ -32,6 +32,11 @@ class QQuickWindow;
 class KConfig;
 class KConfigGroup;
 
+namespace KWin
+{
+class Borders;
+}
+
 namespace Aurorae
 {
 class AuroraeTheme;
@@ -162,11 +167,16 @@ private Q_SLOTS:
     void slotAlphaChanged();
 
 private:
-    void sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const;
+    void sizesFromBorders(const KWin::Borders *borders, int &left, int &right, int &top, int &bottom) const;
+    void setupBorders();
     QQuickWindow *m_view;
     QQuickItem *m_item;
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
+    KWin::Borders *m_borders;
+    KWin::Borders *m_maximizedBorders;
+    KWin::Borders *m_extendedBorders;
+    KWin::Borders *m_padding;
 };
 
 }

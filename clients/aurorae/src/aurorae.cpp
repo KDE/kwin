@@ -18,9 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "aurorae.h"
 #include "auroraetheme.h"
 #include "config-kwin.h"
+// qml imports
+#include "decorationoptions.h"
 
 #include <QApplication>
 #include <QDebug>
+#include <QDirIterator>
+#include <QFileInfo>
 #include <QMutex>
 #include <QOpenGLFramebufferObject>
 #include <QPainter>
@@ -63,6 +67,33 @@ AuroraeFactory::AuroraeFactory(QObject *parent)
 void AuroraeFactory::init()
 {
     qRegisterMetaType<uint>("Qt::MouseButtons");
+
+    // we need to first load our decoration plugin
+    // once it's loaded we can provide the Borders and access them from C++ side
+    // so let's try to locate our plugin:
+    QString pluginPath;
+    for (const QString &path : m_engine->importPathList()) {
+        QDirIterator it(path, QDirIterator::Subdirectories);
+        while (it.hasNext()) {
+            it.next();
+            QFileInfo fileInfo = it.fileInfo();
+            if (!fileInfo.isFile()) {
+                continue;
+            }
+            if (!fileInfo.path().endsWith(QLatin1String("/org/kde/kwin/decoration"))) {
+                continue;
+            }
+            if (fileInfo.fileName() == QLatin1String("libdecorationplugin.so")) {
+                pluginPath = fileInfo.absoluteFilePath();
+                break;
+            }
+        }
+        if (!pluginPath.isEmpty()) {
+            break;
+        }
+    }
+    m_engine->importPlugin(pluginPath, "org.kde.kwin.decoration", nullptr);
+    qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
     KConfig conf(QStringLiteral("auroraerc"));
     KConfigGroup group(&conf, "Engine");
@@ -250,6 +281,10 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
     : KDecoration(bridge, factory)
     , m_view(nullptr)
     , m_item(AuroraeFactory::instance()->createQmlDecoration(this))
+    , m_borders(nullptr)
+    , m_maximizedBorders(nullptr)
+    , m_extendedBorders(nullptr)
+    , m_padding(nullptr)
 {
     connect(AuroraeFactory::instance(), SIGNAL(buttonsChanged()), SIGNAL(buttonsChanged()));
     connect(AuroraeFactory::instance(), SIGNAL(configChanged()), SIGNAL(configChanged()));
@@ -295,6 +330,7 @@ void AuroraeClient::init()
     if (m_item) {
         m_item->setParentItem(m_view->contentItem());
         m_item->setParent(m_view);
+        setupBorders();
     }
     slotAlphaChanged();
 
@@ -333,18 +369,18 @@ void AuroraeClient::borders(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    QObject *borders = nullptr;
+    KWin::Borders *borders = nullptr;
     if (maximizeMode() == MaximizeFull) {
-        borders = m_item->findChild<QObject*>(QStringLiteral("maximizedBorders"));
+        borders = m_maximizedBorders;
     } else {
-        borders = m_item->findChild<QObject*>(QStringLiteral("borders"));
+        borders = m_borders;
     }
     sizesFromBorders(borders, left, right, top, bottom);
 }
 
 void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
 {
-    if (!m_item) {
+    if (!m_padding) {
         left = right = top = bottom = 0;
         return;
     }
@@ -352,18 +388,19 @@ void AuroraeClient::padding(int &left, int &right, int &top, int &bottom) const
         left = right = top = bottom = 0;
         return;
     }
-    sizesFromBorders(m_item->findChild<QObject*>(QStringLiteral("padding")), left, right, top, bottom);
+    sizesFromBorders(m_padding, left, right, top, bottom);
 }
 
-void AuroraeClient::sizesFromBorders(const QObject *borders, int &left, int &right, int &top, int &bottom) const
+void AuroraeClient::sizesFromBorders(const KWin::Borders *borders, int &left, int &right, int &top, int &bottom) const
 {
     if (!borders) {
+        left = right = top = bottom = 0;
         return;
     }
-    left = borders->property("left").toInt();
-    right = borders->property("right").toInt();
-    top = borders->property("top").toInt();
-    bottom = borders->property("bottom").toInt();
+    left   = borders->left();
+    right  = borders->right();
+    top    = borders->top();
+    bottom = borders->bottom();
 }
 
 QSize AuroraeClient::minimumSize() const
@@ -461,11 +498,16 @@ void AuroraeClient::themeChanged()
     m_item->deleteLater();
     m_item = AuroraeFactory::instance()->createQmlDecoration(this);
     if (!m_item) {
+        m_borders = nullptr;
+        m_extendedBorders = nullptr;
+        m_maximizedBorders = nullptr;
+        m_padding = nullptr;
         return;
     }
 
     m_item->setParentItem(m_view->contentItem());
     m_item->setParent(m_view);
+    setupBorders();
     connect(m_item, SIGNAL(alphaChanged()), SLOT(slotAlphaChanged()));
     slotAlphaChanged();
 }
@@ -548,7 +590,7 @@ QRegion AuroraeClient::region(KDecorationDefines::Region r)
     }
     int left, right, top, bottom;
     left = right = top = bottom = 0;
-    sizesFromBorders(m_item->findChild<QObject*>(QStringLiteral("extendedBorders")), left, right, top, bottom);
+    sizesFromBorders(m_extendedBorders, left, right, top, bottom);
     if (top == 0 && right == 0 && bottom == 0 && left == 0) {
         // no extended borders
         return QRegion();
@@ -574,6 +616,17 @@ void AuroraeClient::render(QPaintDevice *device, const QRegion &sourceRegion)
     QPainter painter(device);
     painter.setClipRegion(sourceRegion);
     painter.drawImage(QPoint(0, 0), m_buffer);
+}
+
+void AuroraeClient::setupBorders()
+{
+    if (!m_item) {
+        return;
+    }
+    m_borders          = m_item->findChild<KWin::Borders*>(QStringLiteral("borders"));
+    m_maximizedBorders = m_item->findChild<KWin::Borders*>(QStringLiteral("maximizedBorders"));
+    m_extendedBorders  = m_item->findChild<KWin::Borders*>(QStringLiteral("extendedBorders"));
+    m_padding          = m_item->findChild<KWin::Borders*>(QStringLiteral("padding"));
 }
 
 } // namespace Aurorae
