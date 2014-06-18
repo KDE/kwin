@@ -25,10 +25,10 @@
 #include <KPluginFactory>
 #include <KConfigGroup>
 
+class KLocalizedTranslator;
+
 namespace KWin
 {
-
-class KLocalizedTranslator;
 
 class GenericScriptedConfigFactory : public KPluginFactory
 {

@@ -34,7 +34,6 @@
 #include "decorationmodel.h"
 #include "auroraetheme.h"
 #include "preview.h"
-#include "uitranslator.h"
 // Qt
 #include <QtDBus/QtDBus>
 #include <QSortFilterProxyModel>
@@ -48,6 +47,7 @@
 #include <KAboutData>
 #include <kconfigloader.h>
 #include <KLocalizedString>
+#include <KLocalizedTranslator>
 #include <KMessageBox>
 #include <KNewStuff3/KNS3/DownloadDialog>
 #include <KConfigDialogManager>

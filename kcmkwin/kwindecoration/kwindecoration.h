@@ -40,11 +40,11 @@
 
 class QQuickView;
 class QSortFilterProxyModel;
+class KLocalizedTranslator;
 namespace KWin
 {
 
 class DecorationModel;
-class KLocalizedTranslator;
 
 class KWinDecorationForm : public QWidget, public Ui::KWinDecorationForm
 {

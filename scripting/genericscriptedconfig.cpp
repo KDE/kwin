@@ -20,11 +20,11 @@
 
 #include "genericscriptedconfig.h"
 #include "config-kwin.h"
-#include "uitranslator.h"
 #include <kwineffects_interface.h>
 #include <KAboutData>
 #define TRANSLATION_DOMAIN "kwin_scripting"
 #include <KLocalizedString>
+#include <KLocalizedTranslator>
 #include <kconfigloader.h>
 #include <KDesktopFile>
 

@@ -16,7 +16,6 @@ set(kcm_kwindecoration_PART_SRCS
     configdialog.cpp
     preview.cpp
     decorationmodel.cpp
-    ../utils/uitranslator.cpp
     ${AURORAE_SOURCE_DIR}/auroraetheme.cpp
     ${AURORAE_SOURCE_DIR}/themeconfig.cpp
 )
