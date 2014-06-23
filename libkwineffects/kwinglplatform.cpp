@@ -811,7 +811,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_supportsGLSL = false;
 
         m_limitedGLSL = m_supportsGLSL && m_chipClass < I965;
-        m_looseBinding = true;
+        // see https://bugs.freedesktop.org/show_bug.cgi?id=80349#c1
+        m_looseBinding = false;
 
         if (m_chipClass < I915) {
             m_recommendedCompositor = XRenderCompositing;
