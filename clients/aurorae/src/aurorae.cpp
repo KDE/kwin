@@ -185,6 +185,9 @@ void AuroraeFactory::updateConfiguration()
     if (m_engineType == AuroraeEngine) {
         m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
         m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+    } else {
+        // we don't know how the settings change -> recreate
+        emit recreateDecorations();
     }
     emit configChanged();
 }
