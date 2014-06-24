@@ -47,7 +47,7 @@ MouseClickEffect::MouseClickEffect()
 
     QAction* a = new QAction(this);
     a->setObjectName(QStringLiteral("ToggleMouseClick"));
-    a->setText(i18n("Toggle Effect"));
+    a->setText(i18n("Toggle Mouse Click Effect"));
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     effects->registerGlobalShortcut(Qt::META + Qt::Key_Asterisk, a);

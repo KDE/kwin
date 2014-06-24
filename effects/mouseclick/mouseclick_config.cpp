@@ -59,7 +59,7 @@ MouseClickEffectConfig::MouseClickEffectConfig(QWidget* parent, const QVariantLi
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
     QAction* a = m_actionCollection->addAction(QStringLiteral("ToggleMouseClick"));
-    a->setText(i18n("Toggle Effect"));
+    a->setText(i18n("Toggle Mouse Click Effect"));
     a->setProperty("isConfigurationAction", true);
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << Qt::META + Qt::Key_Asterisk);
