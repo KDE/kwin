@@ -61,7 +61,7 @@ Rectangle {
                         return;
                     }
                     actuallyChanged = true;
-                    item.checkedState = exclusiveGroupButton.checked ? Qt.Checked : Qt.UnChecked
+                    item.checkedState = exclusiveGroupButton.checked ? Qt.Checked : Qt.Unchecked
                     item.changed();
                 }
                 onClicked: {
@@ -140,7 +140,7 @@ Rectangle {
         Button {
             id: configureButton
             visible: ConfigurableRole
-            enabled: item.checkedState != Qt.UnChecked
+            enabled: item.checkedState != Qt.Unchecked
             iconName: "configure"
             onClicked: {
                 effectConfig.openConfig(model.ServiceNameRole, model.ScriptedRole, model.NameRole);
