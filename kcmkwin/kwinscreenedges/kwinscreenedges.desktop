@@ -8,8 +8,8 @@ X-DocPath=kcontrol/kwinscreenedges/index.html
 X-KDE-Library=kcm_kwinscreenedges
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=workspace-behavior
-X-KDE-Weight=65
+X-KDE-System-Settings-Parent-Category=desktopbehavior
+X-KDE-Weight=50
 
 Name=Screen Edges
 Name[ar]=حواف الشاشة

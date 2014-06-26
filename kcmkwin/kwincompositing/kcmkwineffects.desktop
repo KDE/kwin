@@ -9,7 +9,7 @@ X-KDE-Library=kwincompositing
 X-KDE-PluginKeyword=effects
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=workspace-appearance-and-behavior
+X-KDE-System-Settings-Parent-Category=windowbehavior
 X-KDE-Weight=50
 
 Name=Desktop Effects

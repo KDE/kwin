@@ -7,7 +7,7 @@ X-DocPath=kcontrol/kwintabbox/index.html
 X-KDE-Library=kcm_kwintabbox
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=window-behaviour
+X-KDE-System-Settings-Parent-Category=windowbehavior
 X-KDE-Weight=60
 
 Name=Task Switcher

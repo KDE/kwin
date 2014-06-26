@@ -9,8 +9,8 @@ X-KDE-Library=kwincompositing
 X-KDE-PluginKeyword=compositing
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=hardware
-X-KDE-Weight=50
+X-KDE-System-Settings-Parent-Category=display
+X-KDE-Weight=60
 
 Name=Compositor
 Name[ca]=Compositor
