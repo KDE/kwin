@@ -561,7 +561,7 @@ ecm_install_icons(
     DESTINATION
         ${ICON_INSTALL_DIR}
     THEME
-        oxygen
+        hicolor
 )
 
 add_subdirectory(qml)
