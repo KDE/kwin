@@ -99,6 +99,8 @@ Name[zh_TW]=移動
 
 Comment=Window Moving
 Comment[ca]=Moviment de les finestres
+Comment[de]=Fensterbewegung
+Comment[en_GB]=Window Moving
 Comment[es]=Movimiento de ventanas
 Comment[fi]=Ikkunoiden siirtäminen
 Comment[fr]=Déplacement des fenêtres
@@ -125,6 +127,7 @@ X-KDE-Keywords[ca@valencia]=moviment,intel·ligent,cascada,maximització,zona d'
 X-KDE-Keywords[da]=flytning,smart,kaskade,maksimer,hægtzone,hægt,kant
 X-KDE-Keywords[de]=Verschieben,Gestaffelt,Maximieren,Minimieren,Einrastzone,Ränder
 X-KDE-Keywords[el]=κίνηση,έξυπνη,διαδοχική,μεγιστοποίηση,ελαχιστοποίηση,snap zone,snap,περίγραμμα
+X-KDE-Keywords[en_GB]=moving,smart,cascade,maximize,maximise,snap zone,snap,border
 X-KDE-Keywords[es]=movimiento,inteligente,cascada,maximizar,maximizar,zona de instantánea,instantánea,borde
 X-KDE-Keywords[et]=liigutamine,nutikas,kaskaad,maksimeerimine,haardetsoon,haaramine,piire
 X-KDE-Keywords[eu]=lekuz aldatzea,adimendun,kaskada,maximizatu,atxikitze-eremu,atxikitu,ertz

@@ -100,6 +100,8 @@ Name[zh_TW]=進階
 
 Comment=Advanced Window Management Features
 Comment[ca]=Característiques avançades de la gestió de finestres
+Comment[de]=Erweiterte Fensterverwaltung
+Comment[en_GB]=Advanced Window Management Features
 Comment[es]=Funciones avanzadas del gestor de ventanas
 Comment[fi]=Ikkunoinnin lisäominaisuudet
 Comment[fr]=Fonctionnalités de gestion avancée des fenêtres
@@ -126,6 +128,7 @@ X-KDE-Keywords[ca@valencia]=ombra,vora,passar per sobre,vores actives,mosaic,pes
 X-KDE-Keywords[da]=kant,hover,aktive kanter,tiling,faneblade,vinduesfaneblade,gruppering af vinduer,vinduesplacering,placering af vinduer,avanceret vinduesopførsel
 X-KDE-Keywords[de]=Fensterheber,Rand,Überfahren,Aktive Ränder,Kacheln,Unterfenster,Fenstergruppierung,Fensterkachelung,Fensteranordnung,Erweitertes Fensterverhalten
 X-KDE-Keywords[el]=σκίαση,περίγραμμα,αιώρηση,ενεργά περιγράμματα,παράθεση,στηλοθέτες,στηλοθέτηση,στηλοθέτηση παραθύρων,ομαδοποίηση παραθύρων,παράθεση παραθύρων,τοποθέτηση παραθύρων,τοποθέτηση παραθύρων,προχωρημένη συμπεριφορά παραθύρων
+X-KDE-Keywords[en_GB]=shading,border,hover,active borders,tiling,tabs,tabbing,window tabbing,window grouping,window tiling,window placement,placement of windows,window advanced behavior
 X-KDE-Keywords[es]=sombra,borde,pasada,bordes activos,mosaico,pestañas,páginas en pestañas,pestañas de páginas,agrupación de ventanas,ventanas en mosaico,posicionamiento de ventanas,comportamiento avanzado de las ventanas
 X-KDE-Keywords[et]=varjamine,piire,kohalviibimine,aktiivsed piirded,paanimine,kaardid,aknad kaartidena,akende rühmitamine,akende paanimine,akende paigutus, akende täpne käitumine
 X-KDE-Keywords[eu]=biltzea,ertza,gainetik pasatzea,ertz aktiboak,lauza, fitxak, leihoen fitxak,leihoak lauza moduan,leihoen kokalekua,leihoen portaera aurreratua

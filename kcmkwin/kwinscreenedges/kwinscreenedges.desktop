@@ -83,6 +83,8 @@ Name[zh_TW]=螢幕邊緣
 
 Comment=Active Screen Corners and Edges
 Comment[ca]=Cantonades i vores de la pantalla activa
+Comment[de]=Aktive Bildschirmränder
+Comment[en_GB]=Active Screen Corners and Edges
 Comment[es]=Esquinas y bordes de la pantalla activa
 Comment[fi]=Näytön kulmien ja reunojen toiminnot
 Comment[fr]=Bords et coins actifs de l'écran
@@ -104,6 +106,8 @@ Comment[x-test]=xxActive Screen Corners and Edgesxx
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,cantonada,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla
+X-KDE-Keywords[de]=KWin,Fenster,Verwaltung,Effekt,Kante,Rand,Aktion,Wechseln,Desktop,Arbeitsfläche,KWin Bildschirmkanten,Desktopkanten,Bildschirmkanten,Fenster maximieren,Fenster kacheln,Bildschirmseite,Bildschirmverhalten,Desktop wechseln,Arbeitsfläche wechseln,Virtueller Desktop,Virtuelle Arbeitsfläche,Bildschirmecken
+X-KDE-Keywords[en_GB]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximise windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[es]=kwin,ventana,gestor,efecto,esquina,borde,acción,cambiar,escritorio,bordes de pantalla de kwin,bordes del escritorio,bordes de la pantalla,maximizar ventanas,ventanas en mosaico,lado de la pantalla,comportamiento de la pantalla,cambiar escritorio,escritorio virtual,esquinas de la pantalla
 X-KDE-Keywords[fi]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,ikkunamanageri,ikkunointiohjelma,tehoste,kulma,reuna,vaihda,vaihto,työpöytä,näytön reunat,työpöydän reunat,suurenna ikkuna,kasaa ikkunat,näytön toiminta,vaihda työpöytää,virtuaalityöpöytä,näytön reunat
 X-KDE-Keywords[fr]=kwin, fenêtre, gestionnaire, effet, bord, coin, bordure, action, bascule, bureau, bords de l'écran kwin, bords du bureau, bords de l'écran, maximisation des fenêtres, mosaïque de fenêtres, cotés de l'écran, comportement de l'écran, changement de bureau, bureaux virtuels, coins de l'écran

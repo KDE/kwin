@@ -101,6 +101,8 @@ Name[zh_TW]=動作
 
 Comment=Mouse Actions on Windows
 Comment[ca]=Accions del ratolí en les finestres
+Comment[de]=Maus-Aktionen für Fenster
+Comment[en_GB]=Mouse Actions on Windows
 Comment[es]=Acciones del ratón sobre las ventanas
 Comment[fi]=Ikkunoiden hiiritoiminnot
 Comment[fr]=Actions de souris sur les fenêtres
@@ -127,6 +129,7 @@ X-KDE-Keywords[ca@valencia]=ombra,maximitza,maximitza,minimitza,minimitza,abaixa
 X-KDE-Keywords[da]=skyg,maksimer,minimer,nedre,operationsmenu,titellinje,ændr størrelse
 X-KDE-Keywords[de]=Fenstermenü,Fensterheber,Maximieren,Minimieren,Nach oben/unten,Titelleiste,Größe ändern
 X-KDE-Keywords[el]=σκιά,μεγιστοποίηση,μεγιστοποίηση,ελαχιστοποίηση,ελαχιστοποίηση, χαμηλότερα,μενού λειτουργιών,γραμμή τίτλου,αλλαγή μεγέθους
+X-KDE-Keywords[en_GB]=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
 X-KDE-Keywords[es]=sombra,maximizar,maximizar,minimizar,minimizar,inferior,menú de operaciones,barra de título,cambio de tamaño
 X-KDE-Keywords[et]=varjamine,peitmine,maksimeerimine,minimeerimine,allakerimine,üleskerimine,menüü,tiitliriba,suuruse muutmine
 X-KDE-Keywords[eu]=bildu,maximizatu,ikonotu,jaitsi,eragiketa-menua,titulu-barra,tamainaz aldatu

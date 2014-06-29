@@ -75,6 +75,8 @@ Name[zh_TW]=視窗裝飾
 
 Comment=Look and Feel of Window Titles
 Comment[ca]=Aspecte i comportament dels títols de les finestres
+Comment[de]=Erscheinungsbild von Fenstertiteln
+Comment[en_GB]=Look and Feel of Window Titles
 Comment[es]=Aspecto visual de los títulos de las ventanas
 Comment[fi]=Ikkunoiden kehysten ulkoasu
 Comment[fr]=Apparence des titres de fenêtre
@@ -101,6 +103,7 @@ X-KDE-Keywords[ca@valencia]=kwin,finestra,gestor,vora,estil,tema,aspecte,aparen�
 X-KDE-Keywords[da]=kwin,vindueshåndtering,window,manager,kant,stil,tema,udseende,layout,knap,håndtag,kant,kwm,dekoration
 X-KDE-Keywords[de]=KWin,Kwm,Fenster,Manager,Rahmen,Design,Stile,Themes,Optik,Erscheinungsbild,Layout,Knöpfe,Ränder,Dekorationen
 X-KDE-Keywords[el]=kwin,παράθυρο,διαχειριστής,περίγραμμα,στιλ,θέμα,εμφάνιση,αίσθηση,διάταξη,κουμπί,χειρισμός,άκρη,kwm,διακόσμηση
+X-KDE-Keywords[en_GB]=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[es]=kwin,ventana,gestor,borde,estilo,tema,aspecto,sensación,disposición,botón,asa,borde,kwm,decoración
 X-KDE-Keywords[et]=kwin,aken,haldur,piire,stiil,teema,välimus,paigutus,nupp,pide,serv,kwm,dekoratsioon
 X-KDE-Keywords[eu]=kwin,leiho,kudeatzaile,ertz,estilo,gai, itxura,izaera,diseinu,botoi,helduleku,kwm,dekorazio,apaindura,apainketa

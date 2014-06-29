@@ -77,6 +77,7 @@ Name[zh_TW]=虛擬桌面
 
 Comment=Navigation, Number and Layout of Virtual Desktops
 Comment[ca]=Navegació, nombre i disposició dels escriptoris virtuals
+Comment[en_GB]=Navigation, Number and Layout of Virtual Desktops
 Comment[es]=Navegación, número y disposición de los escritorios virtuales
 Comment[fi]=Virtuaalityöpöytien vaihtaminen, määrä ja asettelu
 Comment[fr]=Navigation, nombre et disposition des bureaux virtuels
@@ -102,6 +103,7 @@ X-KDE-Keywords[ca@valencia]=escriptori,escriptoris,nombre,escriptori virtual,esc
 X-KDE-Keywords[da]=skrivebord,skriveborde,desktop,desktops,virtuelt skrivebord,flere skriveborde,spaces,pager,skrivebordsvælger,pager widget,pager applet
 X-KDE-Keywords[de]=Arbeitsfläche,Arbeitsflächen,Desktop,Anzahl,Virtuelle Arbeitsfläche,Mehrere Arbeitsflächen,Arbeitsflächenumschalter,Arbeitsflächenumschalter-Bedienelement,Arbeitsflächenumschalter-Miniprogramm,Arbeitsflächenumschalter-Einstellungen
 X-KDE-Keywords[el]=επιφάνεια εργασίας,επιφάνειες εργασίας,αριθμός,εικονική επιφάνεια εργασίας,πολλαπλές επιφάνειες εργασίας,χαρτί,γραφικό συστατικό χαρτιού,μικροεφαρμογή χαρτιού,ρυθμίσεις χαρτιού
+X-KDE-Keywords[en_GB]=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
 X-KDE-Keywords[es]=escritorio,escritorios,número,escritorio virtual,múltiples escritorios,paginador,control de paginación,miniaplicación del paginador,preferencias del paginador
 X-KDE-Keywords[et]=töölaud,töölauad,arv,virtuaalne töölaud,mitu töölauda,töölauavahetaja,töölaudade vahetaja,töölauavahetaja aplett,töölauavahetaja vidin,töölauavahetaja seadistused
 X-KDE-Keywords[eu]=mahaigain,mahaigainak,kopuru,mahaigain birtuala,alegiazko mahaigaina,hainbat mahaigain,bilagailu,bilagailuaren trepeta,bilagailuaren miniaplikazioa,bilagailuaren ezarpenak
