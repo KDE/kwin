@@ -289,6 +289,7 @@ Decoration {
                     style: root.titleShadow ? Text.Raised : Text.Normal
                     styleColor: colorHelper.shade(color, ColorHelper.ShadowShade)
                     elide: Text.ElideMiddle
+                    renderType: Text.NativeRendering
                 }
                 ButtonGroup {
                     id: rightButtonGroup

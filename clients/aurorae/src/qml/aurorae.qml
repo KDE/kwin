@@ -153,6 +153,7 @@ Decoration {
         height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
         color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
         font: options.titleFont
+        renderType: Text.NativeRendering
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left
