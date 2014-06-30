@@ -413,11 +413,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     mallopt(M_TRIM_THRESHOLD, 5*pagesize);
 #endif // M_TRIM_THRESHOLD
 
-    const QByteArray loopName = qgetenv("QSG_RENDER_LOOP");
-    if (loopName.isEmpty()) {
-        setenv("QSG_RENDER_LOOP", "basic", 1);
-    }
-
     KLocalizedString::setApplicationDomain("kwin");
     QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true\n") +
                                      QStringLiteral("kwineffects.debug = true"));
