@@ -116,11 +116,24 @@ void KWinDesktopConfig::init()
         n = info.numberOfDesktops();
     }
 
-    for (int i = 1; i <= n; ++i) {
+    auto addSwitchTo = [this](int i, const QKeySequence &sequence) {
         QAction* a = m_actionCollection->addAction(QString("Switch to Desktop %1").arg(i));
         a->setProperty("isConfigurationAction", true);
         a->setText(i18n("Switch to Desktop %1", i));
-        KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
+        KGlobalAccel::setGlobalShortcut(a, sequence);
+    };
+    if (n >= 2) {
+        addSwitchTo(1, Qt::CTRL + Qt::Key_F1);
+        addSwitchTo(2, Qt::CTRL + Qt::Key_F2);
+    }
+    if (n >= 3) {
+        addSwitchTo(3, Qt::CTRL + Qt::Key_F3);
+    }
+    if (n >= 4) {
+        addSwitchTo(4, Qt::CTRL + Qt::Key_F4);
+    }
+    for (int i = 5; i <= n; ++i) {
+        addSwitchTo(i, QKeySequence());
     }
 
     // This should be after the "Switch to Desktop %1" loop. It HAS to be
@@ -201,7 +214,7 @@ void KWinDesktopConfig::addAction(const QString &name, const QString &label)
     QAction* a = m_switchDesktopCollection->addAction(name);
     a->setProperty("isConfigurationAction", true);
     a->setText(label);
-    KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>());
+    KGlobalAccel::setGlobalShortcut(a, QKeySequence());
 }
 
 void KWinDesktopConfig::defaults()
