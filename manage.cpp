@@ -120,6 +120,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable())
         xcb_shape_select_input(connection(), window(), true);
     detectShape(window());
+    detectGtkFrameExtents();
     detectNoBorder();
     fetchIconicName();
     getWMHints(); // Needs to be done before readTransient() because of reading the group

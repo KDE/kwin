@@ -232,6 +232,7 @@ Client::Client()
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
     , m_palette(QApplication::palette())
+    , m_clientSideDecorated(false)
 {
     // TODO: Do all as initialization
     syncRequest.counter = syncRequest.alarm = XCB_NONE;
@@ -737,6 +738,13 @@ void Client::updateFrameExtents()
     strut.top = border_top;
     strut.bottom = border_bottom;
     info->setFrameExtents(strut);
+}
+
+void Client::detectGtkFrameExtents()
+{
+    Xcb::Property prop(false, m_client, atoms->gtk_frame_extents, XCB_ATOM_CARDINAL, 0, 4);
+    m_clientSideDecorated = !prop.isNull() && prop->type != 0;
+    emit clientSideDecoratedChanged();
 }
 
 /**

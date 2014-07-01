@@ -278,6 +278,11 @@ class Client
      * Whether the decoration is currently using an alpha channel.
      **/
     Q_PROPERTY(bool decorationHasAlpha READ decorationHasAlpha)
+    /**
+     * Whether the Client uses client side window decorations.
+     * Only GTK+ are detected.
+     **/
+    Q_PROPERTY(bool clientSideDecorated READ isClientSideDecorated NOTIFY clientSideDecoratedChanged)
 public:
     explicit Client();
     xcb_window_t wrapperId() const;
@@ -608,6 +613,7 @@ public:
     QRegion decorationPendingRegion() const;
 
     bool decorationHasAlpha() const;
+    bool isClientSideDecorated() const;
 
     Position titlebarPosition() const;
 
@@ -780,6 +786,7 @@ Q_SIGNALS:
      * Emitted whenever the Client's block compositing state changes.
      **/
     void blockingCompositingChanged(KWin::Client *client);
+    void clientSideDecoratedChanged();
 
 private:
     void exportMappingState(int s);   // ICCCM 4.1.3.1, 4.1.4, NETWM 2.5.1
@@ -827,6 +834,7 @@ private:
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
+    void detectGtkFrameExtents();
     void destroyDecoration();
     void updateFrameExtents();
 
@@ -1016,6 +1024,7 @@ private:
 
     QPalette m_palette;
     QList<QMetaObject::Connection> m_connections;
+    bool m_clientSideDecorated;
 };
 
 /**
@@ -1047,6 +1056,11 @@ inline xcb_window_t Client::decorationId() const
         return decoration->window()->winId();
     }
     return XCB_WINDOW_NONE;
+}
+
+inline bool Client::isClientSideDecorated() const
+{
+    return m_clientSideDecorated;
 }
 
 inline const Client* Client::transientFor() const
