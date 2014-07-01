@@ -8,7 +8,7 @@ X-DocPath=kcontrol/kwindecoration/index.html
 X-KDE-Library=kcm_kwindecoration
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=style
+X-KDE-System-Settings-Parent-Category=applicationstyle
 X-KDE-Weight=40
 
 Name=Window Decorations
