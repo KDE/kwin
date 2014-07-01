@@ -8,7 +8,7 @@ X-DocPath=kcontrol/windowspecific/index.html
 X-KDE-Library=kcm_kwinrules
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=windowbehavior
+X-KDE-System-Settings-Parent-Category=windowmanagement
 X-KDE-Weight=120
 
 Name=Window Rules

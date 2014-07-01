@@ -9,7 +9,7 @@ X-KDE-Library=kcm_kwinoptions
 X-KDE-PluginKeyword=kwinoptions
 X-KDE-ParentApp=kcontrol
 
-X-KDE-System-Settings-Parent-Category=windowbehavior
+X-KDE-System-Settings-Parent-Category=windowmanagement
 X-KDE-Weight=40
 
 Name=Window Behavior
