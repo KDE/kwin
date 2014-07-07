@@ -296,6 +296,7 @@ AuroraeClient::AuroraeClient(KDecorationBridge *bridge, KDecorationFactory *fact
 
 AuroraeClient::~AuroraeClient()
 {
+    QMutexLocker locker(AuroraeFactory::instance()->mutex());
 }
 
 void AuroraeClient::init()
