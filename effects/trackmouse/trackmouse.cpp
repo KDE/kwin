@@ -134,10 +134,12 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         QMatrix4x4 matrix(modelview);
         const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width()/2.0, m_lastRect[0].height()/2.0);
+        const float x = p.x()*data.xScale() + data.xTranslation();
+        const float y = p.y()*data.yScale() + data.yTranslation();
         for (int i = 0; i < 2; ++i) {
-            matrix.translate(p.x(), p.y(), 0.0);
+            matrix.translate(x, y, 0.0);
             matrix.rotate(i ? -2*m_angle : m_angle, 0, 0, 1.0);
-            matrix.translate(-p.x(), -p.y(), 0.0);
+            matrix.translate(-x, -y, 0.0);
             shader->setUniform(GLShader::ModelViewMatrix, matrix);
             shader->setUniform(GLShader::Saturation, 1.0);
             shader->setUniform(GLShader::ModulationConstant, QVector4D(1.0, 1.0, 1.0, 1.0));
@@ -169,7 +171,9 @@ void TrackMouseEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             const QRect &rect = m_lastRect[i];
             xcb_render_composite(xcbConnection(), XCB_RENDER_PICT_OP_OVER, picture, XCB_RENDER_PICTURE_NONE,
                                  effects->xrenderBufferPicture(), 0, 0, 0, 0,
-                                 rect.x(), rect.y(), rect.width(), rect.height());
+                                 qRound((rect.x()+rect.width()/2.0)*data.xScale() - rect.width()/2.0 + data.xTranslation()),
+                                 qRound((rect.y()+rect.height()/2.0)*data.yScale() - rect.height()/2.0 + data.yTranslation()),
+                                 rect.width(), rect.height());
         }
     }
 #endif
