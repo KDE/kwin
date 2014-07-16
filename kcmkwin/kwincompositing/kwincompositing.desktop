@@ -46,6 +46,7 @@ Name[x-test]=xxCompositorxx
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
 Comment[ca]=Arranjament del compositor pels efectes d'escriptori
+Comment[cs]=Nastavení kompozitoru pro efekty pracovní plochy
 Comment[de]=Compositor-Einstellungen für Arbeitsflächen-Effekte
 Comment[en_GB]=Compositor Settings for Desktop Effects
 Comment[es]=Configurar las preferencias del compositor para los efectos del escritorio
