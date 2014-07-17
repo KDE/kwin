@@ -1040,26 +1040,7 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
 
 void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data)
 {
-    WindowQuadList quads;
-
-    foreach (const WindowQuad &quad, data.quads) {
-        switch (quad.type()) {
-        case WindowQuadShadowTopLeft:
-        case WindowQuadShadowTop:
-        case WindowQuadShadowTopRight:
-        case WindowQuadShadowLeft:
-        case WindowQuadShadowRight:
-        case WindowQuadShadowBottomLeft:
-        case WindowQuadShadowBottom:
-        case WindowQuadShadowBottomRight:
-             quads.append(quad);
-             break;
-
-        default:
-             break;
-        }
-    }
-
+    WindowQuadList quads = data.quads.select(WindowQuadShadow);
     if (quads.isEmpty())
         return;
 
@@ -1227,14 +1208,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
             quads[ContentLeaf].append(quad);
             continue;
 
-        case WindowQuadShadowTopLeft:
-        case WindowQuadShadowTop:
-        case WindowQuadShadowTopRight:
-        case WindowQuadShadowLeft:
-        case WindowQuadShadowRight:
-        case WindowQuadShadowBottomLeft:
-        case WindowQuadShadowBottom:
-        case WindowQuadShadowBottomRight:
+        case WindowQuadShadow:
             quads[ShadowLeaf].append(quad);
             continue;
 
@@ -1893,7 +1867,7 @@ void SceneOpenGLShadow::buildQuads()
 
     tx2 = topLeft.width()/width;
     ty2 = topLeft.height()/height;
-    WindowQuad topLeftQuad(WindowQuadShadowTopLeft);
+    WindowQuad topLeftQuad(WindowQuadShadow);
     topLeftQuad[ 0 ] = WindowVertex(outerRect.x(),                      outerRect.y(), tx1, ty1);
     topLeftQuad[ 1 ] = WindowVertex(outerRect.x() + topLeft.width(),    outerRect.y(), tx2, ty1);
     topLeftQuad[ 2 ] = WindowVertex(outerRect.x() + topLeft.width(),    outerRect.y() + topLeft.height(), tx2, ty2);
@@ -1903,7 +1877,7 @@ void SceneOpenGLShadow::buildQuads()
     tx1 = tx2;
     tx2 = (topLeft.width() + top.width())/width;
     ty2 = top.height()/height;
-    WindowQuad topQuad(WindowQuadShadowTop);
+    WindowQuad topQuad(WindowQuadShadow);
     topQuad[ 0 ] = WindowVertex(outerRect.x() + topLeft.width(),        outerRect.y(), tx1, ty1);
     topQuad[ 1 ] = WindowVertex(outerRect.right() - topRight.width(),   outerRect.y(), tx2, ty1);
     topQuad[ 2 ] = WindowVertex(outerRect.right() - topRight.width(),   outerRect.y() + top.height(),tx2, ty2);
@@ -1913,7 +1887,7 @@ void SceneOpenGLShadow::buildQuads()
     tx1 = tx2;
     tx2 = 1.0;
     ty2 = topRight.height()/height;
-    WindowQuad topRightQuad(WindowQuadShadowTopRight);
+    WindowQuad topRightQuad(WindowQuadShadow);
     topRightQuad[ 0 ] = WindowVertex(outerRect.right() - topRight.width(),  outerRect.y(), tx1, ty1);
     topRightQuad[ 1 ] = WindowVertex(outerRect.right(),                     outerRect.y(), tx2, ty1);
     topRightQuad[ 2 ] = WindowVertex(outerRect.right(),                     outerRect.y() + topRight.height(), tx2, ty2);
@@ -1923,7 +1897,7 @@ void SceneOpenGLShadow::buildQuads()
     tx1 = (width - right.width())/width;
     ty1 = topRight.height()/height;
     ty2 = (topRight.height() + right.height())/height;
-    WindowQuad rightQuad(WindowQuadShadowRight);
+    WindowQuad rightQuad(WindowQuadShadow);
     rightQuad[ 0 ] = WindowVertex(outerRect.right() - right.width(),    outerRect.y() + topRight.height(), tx1, ty1);
     rightQuad[ 1 ] = WindowVertex(outerRect.right(),                    outerRect.y() + topRight.height(), tx2, ty1);
     rightQuad[ 2 ] = WindowVertex(outerRect.right(),                    outerRect.bottom() - bottomRight.height(), tx2, ty2);
@@ -1933,7 +1907,7 @@ void SceneOpenGLShadow::buildQuads()
     tx1 = (width - bottomRight.width())/width;
     ty1 = ty2;
     ty2 = 1.0;
-    WindowQuad bottomRightQuad(WindowQuadShadowBottomRight);
+    WindowQuad bottomRightQuad(WindowQuadShadow);
     bottomRightQuad[ 0 ] = WindowVertex(outerRect.right() - bottomRight.width(),    outerRect.bottom() - bottomRight.height(), tx1, ty1);
     bottomRightQuad[ 1 ] = WindowVertex(outerRect.right(),                          outerRect.bottom() - bottomRight.height(), tx2, ty1);
     bottomRightQuad[ 2 ] = WindowVertex(outerRect.right(),                          outerRect.bottom(), tx2, ty2);
@@ -1943,7 +1917,7 @@ void SceneOpenGLShadow::buildQuads()
     tx2 = tx1;
     tx1 = bottomLeft.width()/width;
     ty1 = (height - bottom.height())/height;
-    WindowQuad bottomQuad(WindowQuadShadowBottom);
+    WindowQuad bottomQuad(WindowQuadShadow);
     bottomQuad[ 0 ] = WindowVertex(outerRect.x() + bottomLeft.width(),      outerRect.bottom() - bottom.height(), tx1, ty1);
     bottomQuad[ 1 ] = WindowVertex(outerRect.right() - bottomRight.width(), outerRect.bottom() - bottom.height(), tx2, ty1);
     bottomQuad[ 2 ] = WindowVertex(outerRect.right() - bottomRight.width(), outerRect.bottom(), tx2, ty2);
@@ -1953,7 +1927,7 @@ void SceneOpenGLShadow::buildQuads()
     tx1 = 0.0;
     tx2 = bottomLeft.width()/width;
     ty1 = (height - bottomLeft.height())/height;
-    WindowQuad bottomLeftQuad(WindowQuadShadowBottomLeft);
+    WindowQuad bottomLeftQuad(WindowQuadShadow);
     bottomLeftQuad[ 0 ] = WindowVertex(outerRect.x(),                       outerRect.bottom() - bottomLeft.height(), tx1, ty1);
     bottomLeftQuad[ 1 ] = WindowVertex(outerRect.x() + bottomLeft.width(),  outerRect.bottom() - bottomLeft.height(), tx2, ty1);
     bottomLeftQuad[ 2 ] = WindowVertex(outerRect.x() + bottomLeft.width(),  outerRect.bottom(), tx2, ty2);
@@ -1963,7 +1937,7 @@ void SceneOpenGLShadow::buildQuads()
     tx2 = left.width()/width;
     ty2 = ty1;
     ty1 = topLeft.height()/height;
-    WindowQuad leftQuad(WindowQuadShadowLeft);
+    WindowQuad leftQuad(WindowQuadShadow);
     leftQuad[ 0 ] = WindowVertex(outerRect.x(),                 outerRect.y() + topLeft.height(), tx1, ty1);
     leftQuad[ 1 ] = WindowVertex(outerRect.x() + left.width(),  outerRect.y() + topLeft.height(), tx2, ty1);
     leftQuad[ 2 ] = WindowVertex(outerRect.x() + left.width(),  outerRect.bottom() - bottomLeft.height(), tx2, ty2);
