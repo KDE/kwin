@@ -233,14 +233,6 @@ protected:
      **/
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
 
-    /**
-     * @brief Returns the texture for the given @p type.
-     *
-     * @param type The Texture Type for which the texture should be retrieved
-     * @return :GLTexture* the texture
-     **/
-    GLTexture *textureForType(TextureType type);
-
     void paintDecorations(const WindowPaintData &data, const QRegion &region);
 
 protected:

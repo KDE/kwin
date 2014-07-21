@@ -1116,36 +1116,6 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     vbo->render(region, primitiveType, m_hardwareClipping);
 }
 
-GLTexture *SceneOpenGL::Window::textureForType(SceneOpenGL::Window::TextureType type)
-{
-    GLTexture *tex = NULL;
-    OpenGLPaintRedirector *redirector = NULL;
-
-    if (type != Content && type != Shadow) {
-        if (toplevel->isClient()) {
-            Client *client = static_cast<Client*>(toplevel);
-            redirector = static_cast<OpenGLPaintRedirector*>(client->decorationPaintRedirector());
-        } else if (toplevel->isDeleted()) {
-            Deleted *deleted = static_cast<Deleted*>(toplevel);
-            redirector = static_cast<OpenGLPaintRedirector*>(deleted->decorationPaintRedirector());
-        }
-    }
-
-    switch(type) {
-    case Content:
-        tex = s_frameTexture;
-        break;
-
-    case Decoration:
-        tex = redirector ? redirector->decorationTexture() : 0;
-        break;
-
-    case Shadow:
-        tex = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
-    }
-    return tex;
-}
-
 WindowPixmap* SceneOpenGL::Window::createWindowPixmap()
 {
     return new OpenGLWindowPixmap(this, m_scene);
