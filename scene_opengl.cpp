@@ -1080,7 +1080,7 @@ void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQu
     int primcount;
 
     if (GLVertexBuffer::supportsIndexedQuads()) {
-        primitiveType = GL_QUADS_KWIN;
+        primitiveType = GL_QUADS;
         primcount = quads.count() * 4;
     } else {
         primitiveType = GL_TRIANGLES;
@@ -1242,7 +1242,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     }
 
     const bool indexedQuads = GLVertexBuffer::supportsIndexedQuads();
-    const GLenum primitiveType = indexedQuads ? GL_QUADS_KWIN : GL_TRIANGLES;
+    const GLenum primitiveType = indexedQuads ? GL_QUADS : GL_TRIANGLES;
     const int verticesPerQuad = indexedQuads ? 4 : 6;
 
     const size_t size = verticesPerQuad *

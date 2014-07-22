@@ -37,8 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <epoxy/gl.h>
 
-#define GL_QUADS_KWIN 0x0007
-
 namespace KWin
 {
 
