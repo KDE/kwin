@@ -63,12 +63,12 @@ DecorationBridge *DecorationBridge::self()
 
 void DecorationBridge::init()
 {
+    KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName);
     KDecoration2::DecorationSettings::self(this);
 
-    // TODO: configurable plugin
     const auto offers = KPluginTrader::self()->query(s_pluginName,
                                                      s_pluginName,
-                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("org.kde.breeze")));
+                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.readEntry("library", "org.kde.breeze")));
     if (offers.isEmpty()) {
         qWarning() << "Could not locate decoration plugin";
         return;

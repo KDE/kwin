@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+class KConfigGroup;
+
 namespace KWin
 {
 namespace Decoration
@@ -37,8 +39,20 @@ public:
     virtual ~SettingsImpl();
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
-    QList< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override;
-    QList< KDecoration2::DecorationButtonType > decorationButtonsRight() const override;
+    QList< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override {
+        return m_leftButtons;
+    }
+    QList< KDecoration2::DecorationButtonType > decorationButtonsRight() const override {
+        return m_rightButtons;
+    }
+
+private:
+    void readSettings();
+    QList< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfigGroup &config,
+                                                                      const char *key,
+                                                                      const QList< KDecoration2::DecorationButtonType > &defaultValue) const;
+    QList< KDecoration2::DecorationButtonType > m_leftButtons;
+    QList< KDecoration2::DecorationButtonType > m_rightButtons;
 };
 } // Decoration
 } // KWin
