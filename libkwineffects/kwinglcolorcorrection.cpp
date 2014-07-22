@@ -290,7 +290,7 @@ bool ColorCorrection::setEnabled(bool enabled)
 
 #ifdef KWIN_HAVE_OPENGLES
     const GLPlatform *gl = GLPlatform::instance();
-    if (enabled && gl->isGLES() && !m_haveTexture3D) {
+    if (enabled && gl->isGLES() && !d->m_haveTexture3D) {
         qCritical() << "color correction is not supported on OpenGL ES without OES_texture_3D";
         d->m_hasError = true;
         return false;
