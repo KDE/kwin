@@ -62,6 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include "decorations/decorationbridge.h"
+#include <KDecoration2/DecorationSettings>
 
 // dbus generated
 #include "screenlocker_interface.h"
@@ -1442,7 +1443,8 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 {
     switch (kwopt) {
     case CloseButtonCorner:
-        return Qt::TopRightCorner;
+        // TODO: this could become per window and be derived from the actual position in the deco
+        return KDecoration2::DecorationSettings::self()->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
 #ifdef KWIN_BUILD_SCREENEDGES
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();
