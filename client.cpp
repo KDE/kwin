@@ -2406,18 +2406,10 @@ NET::WindowType Client::windowType(bool direct, int supportedTypes) const
 
 bool Client::decorationHasAlpha() const
 {
-#if 0
-    if (!decoration || !decorationPlugin()->hasAlpha()) {
+    if (!m_decoration || m_decoration->isOpaque()) {
         // either no decoration or decoration has alpha disabled
         return false;
     }
-    if (decorationPlugin()->supportsAnnounceAlpha()) {
-        return decoration->isAlphaEnabled();
-    } else {
-        // decoration has alpha enabled and does not support alpha announcement
-        return true;
-    }
-#endif
     return true;
 }
 
