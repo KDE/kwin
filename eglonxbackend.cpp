@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+extern int screen_number; // main.cpp
+
 EglOnXBackend::EglOnXBackend()
     : OpenGLBackend()
     , m_overlayWindow(new OverlayWindow())
@@ -158,7 +160,34 @@ void EglOnXBackend::init()
 
 bool EglOnXBackend::initRenderingContext()
 {
-    dpy = eglGetDisplay(display());
+    // Get the list of client extensions
+    const QByteArray clientExtensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    if (clientExtensionString.isEmpty()) {
+        // If eglQueryString() returned NULL, the implementation doesn't support
+        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
+        (void) eglGetError();
+    }
+
+    const QList<QByteArray> clientExtensions = clientExtensionString.split(' ');
+
+    // Use eglGetPlatformDisplayEXT() to get the display pointer
+    // if the implementation supports it.
+    const bool havePlatformBase = clientExtensions.contains("EGL_EXT_platform_base");
+    if (havePlatformBase) {
+        // Make sure that the X11 platform is supported
+        if (!clientExtensions.contains("EGL_EXT_platform_x11"))
+            return false;
+
+        const int attribs[] = {
+            EGL_PLATFORM_X11_SCREEN_EXT, screen_number,
+            EGL_NONE
+        };
+
+        dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, display(), attribs);
+    } else {
+        dpy = eglGetDisplay(display());
+    }
+
     if (dpy == EGL_NO_DISPLAY)
         return false;
 
@@ -184,7 +213,16 @@ bool EglOnXBackend::initRenderingContext()
         overlayWindow()->setup(None);
     }
 
-    surface = eglCreateWindowSurface(dpy, config, overlayWindow()->window(), 0);
+    if (havePlatformBase) {
+        // Note: Window is 64 bits on a 64-bit architecture whereas xcb_window_t is
+        //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
+        //       native_window parameter to be pointer to a Window, so this variable
+        //       cannot be an xcb_window_t.
+        const Window window = overlayWindow()->window();
+        surface = eglCreatePlatformWindowSurfaceEXT(dpy, config, (void *) &window, nullptr);
+    } else {
+        surface = eglCreateWindowSurface(dpy, config, overlayWindow()->window(), nullptr);
+    }
 
 #ifdef KWIN_HAVE_OPENGLES
     const EGLint context_attribs[] = {
