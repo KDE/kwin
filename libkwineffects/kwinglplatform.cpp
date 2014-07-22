@@ -840,10 +840,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     if (isVirtualBox()) {
         m_virtualMachine = true;
+        m_recommendedCompositor = OpenGL2Compositing;
     }
 
     if (isVMware()) {
         m_virtualMachine = true;
+        m_recommendedCompositor = OpenGL2Compositing;
     }
 }
 
