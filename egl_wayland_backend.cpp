@@ -79,7 +79,29 @@ EglWaylandBackend::~EglWaylandBackend()
 
 bool EglWaylandBackend::initializeEgl()
 {
-    m_display = eglGetDisplay(m_wayland->display());
+    // Get the list of client extensions
+    const QByteArray clientExtensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    if (clientExtensionString.isEmpty()) {
+        // If eglQueryString() returned NULL, the implementation doesn't support
+        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
+        (void) eglGetError();
+    }
+
+    const QList<QByteArray> clientExtensions = clientExtensionString.split(' ');
+
+    // Use eglGetPlatformDisplayEXT() to get the display pointer
+    // if the implementation supports it.
+    m_havePlatformBase = clientExtensions.contains("EGL_EXT_platform_base");
+    if (m_havePlatformBase) {
+        // Make sure that the wayland platform is supported
+        if (!clientExtensions.contains("EGL_EXT_platform_wayland"))
+            return false;
+
+        m_display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
+    } else {
+        m_display = eglGetDisplay(m_wayland->display());
+    }
+
     if (m_display == EGL_NO_DISPLAY)
         return false;
 
@@ -180,7 +202,11 @@ bool EglWaylandBackend::initRenderingContext()
         return false;
     }
 
-    m_surface = eglCreateWindowSurface(m_display, m_config, m_overlay, NULL);
+    if (m_havePlatformBase)
+        m_surface = eglCreatePlatformWindowSurfaceEXT(m_display, m_config, (void *) m_overlay, nullptr);
+    else
+        m_surface = eglCreateWindowSurface(m_display, m_config, m_overlay, nullptr);
+
     if (m_surface == EGL_NO_SURFACE) {
         qCritical() << "Create Window Surface failed";
         return false;

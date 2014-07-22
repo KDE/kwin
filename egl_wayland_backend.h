@@ -92,6 +92,7 @@ private:
     wl_egl_window *m_overlay;
     QScopedPointer<Xcb::Shm> m_shm;
     bool m_lastFrameRendered;
+    bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };
 
