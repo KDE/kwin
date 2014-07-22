@@ -50,6 +50,7 @@ DecorationBridge::DecorationBridge(QObject *parent)
     : QObject(parent)
     , KDecoration2::DecorationBridge()
     , m_factory(nullptr)
+    , m_blur(false)
 {
 }
 
@@ -79,6 +80,25 @@ void DecorationBridge::init()
         qWarning() << "Error loading plugin:" << loader.errorString();
     } else {
         m_factory = factory;
+        loadMetaData(loader.metaData().value(QStringLiteral("MetaData")).toObject());
+    }
+}
+
+void DecorationBridge::loadMetaData(const QJsonObject &object)
+{
+    // reset all settings
+    m_blur = false;
+
+    // load the settings
+    const QJsonValue decoSettings = object.value(s_pluginName);
+    if (decoSettings.isUndefined()) {
+        // no settings
+        return;
+    }
+    const QVariantMap decoSettingsMap = decoSettings.toObject().toVariantMap();
+    auto blurIt = decoSettingsMap.find(QStringLiteral("blur"));
+    if (blurIt != decoSettingsMap.end()) {
+        m_blur = blurIt.value().toBool();
     }
 }
 

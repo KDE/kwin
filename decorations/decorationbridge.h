@@ -48,9 +48,15 @@ public:
     KDecoration2::DecorationSettingsPrivate *settings(KDecoration2::DecorationSettings *parent) override;
     void update(KDecoration2::Decoration *decoration, const QRect &geometry) override;
 
+    bool needsBlur() const {
+        return m_blur;
+    }
+
     static DecorationBridge *self();
 private:
+    void loadMetaData(const QJsonObject &object);
     KPluginFactory *m_factory;
+    bool m_blur;
 };
 } // Decoration
 } // KWin

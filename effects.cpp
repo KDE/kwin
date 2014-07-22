@@ -61,6 +61,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 #endif
 
+#include "decorations/decorationbridge.h"
+
 // dbus generated
 #include "screenlocker_interface.h"
 
@@ -501,7 +503,7 @@ bool EffectsHandlerImpl::decorationsHaveAlpha() const
 
 bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 {
-    return true;
+    return Decoration::DecorationBridge::self()->needsBlur();
 }
 
 // start another painting pass
