@@ -1106,10 +1106,6 @@ bool Client::setupCompositing()
         return false;
     }
     updateVisibility(); // for internalKeep()
-    if (isManaged()) {
-        // only create the decoration when a client is managed
-        updateDecoration(true, true);
-    }
     return true;
 }
 
@@ -1118,8 +1114,7 @@ void Client::finishCompositing(ReleaseReason releaseReason)
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
     if (!deleting) {
-        // only recreate the decoration if we are not shutting down completely
-        updateDecoration(true, true);
+        triggerDecorationRepaint();
     }
     // for safety in case KWin is just resizing the window
     s_haveResizeEffect = false;

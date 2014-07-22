@@ -28,12 +28,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglutils.h"
 #include "kwingltexture_p.h"
 
+#include "decorations/decorationrenderer.h"
+
 namespace KWin
 {
 class ColorCorrection;
 class LanczosFilter;
 class OpenGLBackend;
-class OpenGLPaintRedirector;
 
 class SceneOpenGL
     : public Scene
@@ -58,6 +59,7 @@ public:
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
     virtual bool isLastFrameRendered() const override;
+    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
 
     void idle();
 
@@ -238,9 +240,6 @@ protected:
 protected:
     SceneOpenGL *m_scene;
     bool m_hardwareClipping;
-
-private:
-    OpenGLPaintRedirector *paintRedirector() const;
 };
 
 class SceneOpenGL2Window : public SceneOpenGL::Window
@@ -615,6 +614,31 @@ private:
      * @brief Timer to measure how long a frame renders.
      **/
     QElapsedTimer m_renderTimer;
+};
+
+class SceneOpenGLDecorationRenderer : public Decoration::Renderer
+{
+    Q_OBJECT
+public:
+    enum class DecorationPart : int {
+        Left,
+        Top,
+        Right,
+        Bottom,
+        Count
+    };
+    explicit SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client);
+    virtual ~SceneOpenGLDecorationRenderer();
+
+    void render() override;
+
+    GLTexture *texture() {
+        return m_texture.data();
+    }
+
+private:
+    void resizeTexture();
+    QScopedPointer<GLTexture> m_texture;
 };
 
 inline bool SceneOpenGL::hasPendingFlush() const

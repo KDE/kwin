@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kdecorationfactory.h>
 // kwin
 #include "client.h"
-#include "decorations.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 // Qt
@@ -120,10 +119,6 @@ RootInfo *RootInfo::create()
         NET::ActionFullScreen |
         NET::ActionChangeDesktop |
         NET::ActionClose;
-
-    DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->isDisabled() && deco->factory()->supports(KDecorationDefines::AbilityExtendIntoClientArea))
-        properties2 |= NET::WM2FrameOverlap;
 
     s_self = new RootInfo(supportWindow, "KWin", properties, types, states, properties2, actions, screen_number);
     return s_self;

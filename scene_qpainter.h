@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "shadow.h"
 
+#include "decorations/decorationrenderer.h"
+
 namespace KWin {
 
 namespace Xcb {
@@ -143,6 +145,7 @@ public:
     virtual bool initFailed() const override;
     virtual EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     virtual Shadow *createShadow(Toplevel *toplevel) override;
+    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
 
     QPainter *painter();
 
@@ -225,6 +228,29 @@ public:
     using Shadow::bottomOffset;
 protected:
     virtual bool prepareBackend() override;
+};
+
+class SceneQPainterDecorationRenderer : public Decoration::Renderer
+{
+    Q_OBJECT
+public:
+    enum class DecorationPart : int {
+        Left,
+        Top,
+        Right,
+        Bottom,
+        Count
+    };
+    explicit SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client);
+    virtual ~SceneQPainterDecorationRenderer();
+
+    void render() override;
+
+    QImage image(DecorationPart part) const;
+
+private:
+    void resizeImages();
+    QImage m_images[int(DecorationPart::Count)];
 };
 
 inline

@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "client.h"
 #include "netinfo.h"
-#include "paintredirector.h"
 #include "shadow.h"
 
 #include <QDebug>
@@ -43,7 +42,6 @@ Deleted::Deleted()
     , m_layer(UnknownLayer)
     , m_minimized(false)
     , m_modal(false)
-    , m_paintRedirector(NULL)
     , m_wasClient(false)
 {
 }
@@ -88,21 +86,18 @@ void Deleted::copyToDeleted(Toplevel* c)
     if (client) {
         m_wasClient = true;
         no_border = client->noBorder();
+#if 0
         padding_left = client->paddingLeft();
         padding_right = client->paddingRight();
         padding_bottom = client->paddingBottom();
         padding_top = client->paddingTop();
+#endif
         if (!no_border) {
             client->layoutDecorationRects(decoration_left,
                                           decoration_top,
                                           decoration_right,
                                           decoration_bottom,
                                           Client::WindowRelative);
-            if (PaintRedirector *redirector = client->decorationPaintRedirector()) {
-                redirector->ensurePixmapsPainted();
-                redirector->reparent(this);
-                m_paintRedirector = redirector;
-            }
         }
         m_minimized = client->isMinimized();
         m_modal = client->isModal();

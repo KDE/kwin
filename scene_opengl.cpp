@@ -44,9 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "lanczosfilter.h"
 #include "main.h"
 #include "overlaywindow.h"
-#include "paintredirector.h"
 #include "screens.h"
 #include "workspace.h"
+#include "decorations/decoratedclient.h"
 
 #include <cmath>
 #include <unistd.h>
@@ -569,6 +569,11 @@ Shadow *SceneOpenGL::createShadow(Toplevel *toplevel)
     return new SceneOpenGLShadow(toplevel);
 }
 
+Decoration::Renderer *SceneOpenGL::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+{
+    return new SceneOpenGLDecorationRenderer(impl);
+}
+
 //****************************************
 // SceneOpenGL2
 //****************************************
@@ -963,39 +968,23 @@ void SceneOpenGL::Window::endRenderWindow()
     }
 }
 
-
-OpenGLPaintRedirector *SceneOpenGL::Window::paintRedirector() const
-{
-    if (toplevel->isClient()) {
-        Client *client = static_cast<Client *>(toplevel);
-        if (client->noBorder())
-            return 0;
-
-        return static_cast<OpenGLPaintRedirector *>(client->decorationPaintRedirector());
-    }
-
-    if (toplevel->isDeleted()) {
-        Deleted *deleted = static_cast<Deleted *>(toplevel);
-        if (deleted->noBorder())
-            return 0;
-
-        return static_cast<OpenGLPaintRedirector *>(deleted->decorationPaintRedirector());
-    }
-
-    return 0;
-}
-
 GLTexture *SceneOpenGL::Window::getDecorationTexture() const
 {
-    OpenGLPaintRedirector *redirector = paintRedirector();
-    if (!redirector)
-        return 0;
+    // TODO: deleted
+    if (toplevel->isClient()) {
+        Client *client = static_cast<Client *>(toplevel);
+        if (client->noBorder()) {
+            return nullptr;
+        }
 
-    redirector->ensurePixmapsPainted();
-    GLTexture *texture = redirector->decorationTexture();
-    redirector->markAsRepainted();
-
-    return texture;
+        if (Decoration::DecoratedClientImpl *impl = client->decoratedClient()) {
+            if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(impl->renderer())) {
+                renderer->render();
+                return renderer->texture();
+            }
+        }
+    }
+    return nullptr;
 }
 
 void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
@@ -2007,6 +1996,106 @@ char SwapProfiler::end()
         return blocks ? 'd' : 't';
     }
     return 0;
+}
+
+SceneOpenGLDecorationRenderer::SceneOpenGLDecorationRenderer(Decoration::DecoratedClientImpl *client)
+    : Renderer(client)
+    , m_texture()
+{
+    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (Client::*)(const QRect&)>(&Client::addRepaint));
+}
+
+SceneOpenGLDecorationRenderer::~SceneOpenGLDecorationRenderer() = default;
+
+// Rotates the given source rect 90° counter-clockwise,
+// and flips it vertically
+static QImage rotate(const QImage &srcImage, const QRect &srcRect)
+{
+    QImage image(srcRect.height(), srcRect.width(), srcImage.format());
+
+    const uint32_t *src = reinterpret_cast<const uint32_t *>(srcImage.bits());
+    uint32_t *dst = reinterpret_cast<uint32_t *>(image.bits());
+
+    for (int x = 0; x < image.width(); x++) {
+        const uint32_t *s = src + (srcRect.y() + x) * srcImage.width() + srcRect.x();
+        uint32_t *d = dst + x;
+
+        for (int y = 0; y < image.height(); y++) {
+            *d = s[y];
+            d += image.width();
+        }
+    }
+
+    return image;
+}
+
+void SceneOpenGLDecorationRenderer::render()
+{
+    const QRegion scheduled = getScheduled();
+    if (scheduled.isEmpty()) {
+        return;
+    }
+    if (areImageSizesDirty()) {
+        resizeTexture();
+        resetImageSizesDirty();
+    }
+
+    QRect left, top, right, bottom;
+    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+
+    const QRect geometry = scheduled.boundingRect();
+
+    auto renderPart = [this](const QRect &geo, const QRect &partRect, const QPoint &offset, bool rotated = false) {
+        if (geo.isNull()) {
+            return;
+        }
+        QImage image = renderToImage(geo);
+        if (rotated) {
+            // TODO: get this done directly when rendering to the image
+            image = rotate(image, QRect(geo.topLeft() - partRect.topLeft(), geo.size()));
+        }
+        m_texture->update(image, geo.topLeft() - partRect.topLeft() + offset);
+    };
+    renderPart(left.intersected(geometry), left, QPoint(0, top.height() + bottom.height() + 2), true);
+    renderPart(top.intersected(geometry), top, QPoint(0, 0));
+    renderPart(right.intersected(geometry), right, QPoint(0, top.height() + bottom.height() + left.width() + 3), true);
+    renderPart(bottom.intersected(geometry), bottom, QPoint(0, top.height() + 1));
+}
+
+static int align(int value, int align)
+{
+    return (value + align - 1) & ~(align - 1);
+}
+
+void SceneOpenGLDecorationRenderer::resizeTexture()
+{
+    QRect left, top, right, bottom;
+    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    QSize size;
+
+    size.rwidth() = qMax(qMax(top.width(), bottom.width()),
+                         qMax(left.height(), right.height()));
+    size.rheight() = top.height() + bottom.height() +
+                     left.width() + right.width() + 3;
+
+    size.rwidth() = align(size.width(), 128);
+
+    if (!GLTexture::NPOTTextureSupported()) {
+        size.rwidth()  = nearestPowerOfTwo(size.width());
+        size.rheight() = nearestPowerOfTwo(size.height());
+    }
+
+    if (m_texture && m_texture->size() == size)
+        return;
+
+    if (!size.isEmpty()) {
+        m_texture.reset(new GLTexture(size.width(), size.height()));
+        m_texture->setYInverted(true);
+        m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_texture->clear();
+    } else {
+        m_texture.reset();
+    }
 }
 
 } // namespace

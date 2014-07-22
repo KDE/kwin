@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "scene.h"
 #include "shadow.h"
+#include "decorations/decorationrenderer.h"
 
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
@@ -196,6 +197,7 @@ public:
     virtual bool isLastFrameRendered() const {
         return m_backend->isLastFrameRendered();
     }
+    Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 
     static SceneXrender *createScene();
 protected:
@@ -335,6 +337,32 @@ protected:
     virtual bool prepareBackend();
 private:
     XRenderPicture* m_pictures[ShadowElementsCount];
+};
+
+class SceneXRenderDecorationRenderer : public Decoration::Renderer
+{
+    Q_OBJECT
+public:
+    enum class DecorationPart : int {
+        Left,
+        Top,
+        Right,
+        Bottom,
+        Count
+    };
+    explicit SceneXRenderDecorationRenderer(Decoration::DecoratedClientImpl *client);
+    virtual ~SceneXRenderDecorationRenderer();
+
+    void render() override;
+
+    xcb_render_picture_t picture(DecorationPart part) const;
+
+private:
+    void resizePixmaps();
+    QSize m_sizes[int(DecorationPart::Count)];
+    xcb_pixmap_t m_pixmaps[int(DecorationPart::Count)];
+    xcb_gcontext_t m_gc;
+    XRenderPicture* m_pictures[int(DecorationPart::Count)];
 };
 
 } // namespace

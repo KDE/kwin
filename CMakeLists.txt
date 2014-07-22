@@ -97,6 +97,8 @@ set_package_properties(KF5DocTools PROPERTIES
          )
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
+find_package(KDecoration2 CONFIG REQUIRED)
+
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     find_package(OpenGL)
     set_package_properties(OpenGL PROPERTIES DESCRIPTION "The OpenGL libraries"
@@ -313,7 +315,6 @@ set(kwin_KDEINIT_SRCS
    main.cpp 
    options.cpp 
    outline.cpp
-   decorations.cpp
    events.cpp 
    killwindow.cpp 
    geometrytip.cpp 
@@ -321,7 +322,6 @@ set(kwin_KDEINIT_SRCS
    shadow.cpp
    sm.cpp 
    group.cpp 
-   bridge.cpp 
    manage.cpp 
    overlaywindow.cpp
    activation.cpp 
@@ -342,7 +342,6 @@ set(kwin_KDEINIT_SRCS
    effects.cpp
    effectloader.cpp
    compositingprefs.cpp
-   paintredirector.cpp
    virtualdesktops.cpp
    xcbutils.cpp
     scripting/scripting.cpp
@@ -354,6 +353,10 @@ set(kwin_KDEINIT_SRCS
     scripting/scripting_model.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
+    decorations/decoratedclient.cpp
+    decorations/decorationbridge.cpp
+    decorations/settings.cpp
+    decorations/decorationrenderer.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
@@ -445,6 +448,8 @@ set(kwin_KDE_LIBS
     KF5::Service
     KF5::Plasma
     KF5::WindowSystem
+    KDecoration2::KDecoration
+    KDecoration2::KDecoration2Private
 )
 
 set(kwin_XLIB_LIBS

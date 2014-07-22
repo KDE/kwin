@@ -36,7 +36,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "dbusinterface.h"
-#include "decorations.h"
 #include "deleted.h"
 #include "effects.h"
 #include "focuschain.h"
@@ -63,6 +62,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "xcbutils.h"
 #include "main.h"
+#include "decorations/decorationbridge.h"
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -171,7 +171,6 @@ Workspace::Workspace(bool restore)
 
     options->loadConfig();
     options->loadCompositingConfig(false);
-    DecorationPlugin::create(this);
     ColorMapper *colormaps = new ColorMapper(this);
     connect(this, SIGNAL(clientActivated(KWin::Client*)), colormaps, SLOT(update()));
 
@@ -213,7 +212,9 @@ Workspace::Workspace(bool restore)
     XRenderUtils::init(connection(), rootWindow());
     m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
-    connect(m_compositor, &Compositor::compositingToggled, decorationPlugin(), &DecorationPlugin::compositingToggled);
+
+    new Decoration::DecorationBridge(this);
+    Decoration::DecorationBridge::self()->init();
 
     new DBusInterface(this);
 
@@ -784,18 +785,6 @@ void Workspace::slotReconfigure()
     m_userActionsMenu->discard();
     updateToolWindows(true);
 
-    DecorationPlugin *deco = DecorationPlugin::self();
-    if (!deco->isDisabled() && deco->reset()) {
-        deco->recreateDecorations();
-        deco->destroyPreviousPlugin();
-        connect(deco->factory(), &KDecorationFactory::recreateDecorations, deco, &DecorationPlugin::recreateDecorations);
-    } else {
-        foreach (Client * c, clients) {
-            c->checkBorderSizes(true);
-            c->triggerDecorationRepaint();
-        }
-    }
-
     RuleBook::self()->load();
     for (ClientList::Iterator it = clients.begin();
             it != clients.end();
@@ -815,12 +804,6 @@ void Workspace::slotReconfigure()
             if ((*it)->maximizeMode() == MaximizeFull)
                 (*it)->checkNoBorder();
         }
-    }
-
-    if (!deco->isDisabled()) {
-        rootInfo()->setSupported(NET::WM2FrameOverlap, deco->factory()->supports(AbilityExtendIntoClientArea));
-    } else {
-        rootInfo()->setSupported(NET::WM2FrameOverlap, false);
     }
 }
 
@@ -1412,9 +1395,6 @@ QString Workspace::supportInformation() const
                               .arg(geo.width())
                               .arg(geo.height()));
     }
-    support.append(QStringLiteral("\nDecoration\n"));
-    support.append(QStringLiteral(  "==========\n"));
-    support.append(decorationPlugin()->supportInformation());
     support.append(QStringLiteral("\nCompositing\n"));
     support.append(QStringLiteral(  "===========\n"));
     if (effects) {
