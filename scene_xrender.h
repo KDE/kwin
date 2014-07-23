@@ -354,6 +354,7 @@ public:
     virtual ~SceneXRenderDecorationRenderer();
 
     void render() override;
+    void reparent(Deleted *deleted) override;
 
     xcb_render_picture_t picture(DecorationPart part) const;
 

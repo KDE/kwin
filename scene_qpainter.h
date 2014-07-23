@@ -245,6 +245,7 @@ public:
     virtual ~SceneQPainterDecorationRenderer();
 
     void render() override;
+    void reparent(Deleted *deleted) override;
 
     QImage image(DecorationPart part) const;
 

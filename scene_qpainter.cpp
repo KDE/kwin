@@ -443,11 +443,12 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
     }
 
     bool noBorder = true;
-    SceneQPainterDecorationRenderer *renderer = nullptr;
+    const SceneQPainterDecorationRenderer *renderer = nullptr;
     QRect dtr, dlr, drr, dbr;
     if (client && !client->noBorder()) {
         if (Decoration::DecoratedClientImpl *impl = client->decoratedClient()) {
             if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(impl->renderer())) {
+                r->render();
                 renderer = r;
             }
         }
@@ -455,14 +456,12 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
         noBorder = false;
     } else if (deleted && !deleted->noBorder()) {
         noBorder = false;
-        // TODO: renderer
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
+        renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
     }
     if (noBorder || !renderer) {
         return;
     }
-
-    renderer->render();
 
     painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
     painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
@@ -690,6 +689,12 @@ void SceneQPainterDecorationRenderer::resizeImages()
     checkAndCreate(int(DecorationPart::Right), right.size());
     checkAndCreate(int(DecorationPart::Top), top.size());
     checkAndCreate(int(DecorationPart::Bottom), bottom.size());
+}
+
+void SceneQPainterDecorationRenderer::reparent(Deleted *deleted)
+{
+    render();
+    Renderer::reparent(deleted);
 }
 
 } // KWin

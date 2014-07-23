@@ -30,6 +30,8 @@ class QTimer;
 namespace KWin
 {
 
+class Deleted;
+
 namespace Decoration
 {
 
@@ -42,6 +44,13 @@ public:
     virtual ~Renderer();
 
     void schedule(const QRect &rect);
+
+    /**
+     * Reparents this Renderer to the @p deleted.
+     * After this call the Renderer is no longer able to render
+     * anything, client() returns a nullptr.
+     **/
+    virtual void reparent(Deleted *deleted);
 
 Q_SIGNALS:
     void renderScheduled(const QRect &geo);

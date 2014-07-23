@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "netinfo.h"
 #include "shadow.h"
+#include "decorations/decoratedclient.h"
+#include "decorations/decorationrenderer.h"
 
 #include <QDebug>
 
@@ -35,14 +37,11 @@ Deleted::Deleted()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , no_border(true)
-    , padding_left(0)
-    , padding_top(0)
-    , padding_right(0)
-    , padding_bottom(0)
     , m_layer(UnknownLayer)
     , m_minimized(false)
     , m_modal(false)
     , m_wasClient(false)
+    , m_decorationRenderer(nullptr)
 {
 }
 
@@ -86,18 +85,18 @@ void Deleted::copyToDeleted(Toplevel* c)
     if (client) {
         m_wasClient = true;
         no_border = client->noBorder();
-#if 0
-        padding_left = client->paddingLeft();
-        padding_right = client->paddingRight();
-        padding_bottom = client->paddingBottom();
-        padding_top = client->paddingTop();
-#endif
         if (!no_border) {
             client->layoutDecorationRects(decoration_left,
                                           decoration_top,
                                           decoration_right,
                                           decoration_bottom,
                                           Client::WindowRelative);
+            if (Decoration::DecoratedClientImpl *decoClient = client->decoratedClient()) {
+                if (Decoration::Renderer *renderer = decoClient->renderer()) {
+                    m_decorationRenderer = renderer;
+                    m_decorationRenderer->reparent(this);
+                }
+            }
         }
         m_minimized = client->isMinimized();
         m_modal = client->isModal();
@@ -154,7 +153,7 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
 
 QRect Deleted::decorationRect() const
 {
-    return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
+    return rect();
 }
 
 QRect Deleted::transparentRect() const

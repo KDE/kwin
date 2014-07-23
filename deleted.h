@@ -26,6 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+namespace Decoration
+{
+class Renderer;
+}
+
 class Deleted
     : public Toplevel
 {
@@ -66,6 +71,10 @@ public:
     bool wasClient() const {
         return m_wasClient;
     }
+
+    const Decoration::Renderer *decorationRenderer() const {
+        return m_decorationRenderer;
+    }
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
@@ -88,12 +97,12 @@ private:
     QRect decoration_right;
     QRect decoration_top;
     QRect decoration_bottom;
-    int padding_left, padding_top, padding_right, padding_bottom;
     Layer m_layer;
     bool m_minimized;
     bool m_modal;
     ClientList m_mainClients;
     bool m_wasClient;
+    Decoration::Renderer *m_decorationRenderer;
 };
 
 inline void Deleted::refWindow()

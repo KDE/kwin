@@ -631,8 +631,12 @@ public:
     virtual ~SceneOpenGLDecorationRenderer();
 
     void render() override;
+    void reparent(Deleted *deleted) override;
 
     GLTexture *texture() {
+        return m_texture.data();
+    }
+    GLTexture *texture() const {
         return m_texture.data();
     }
 

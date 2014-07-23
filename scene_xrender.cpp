@@ -722,19 +722,26 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
     xcb_render_picture_t right  = XCB_RENDER_PICTURE_NONE;
     xcb_render_picture_t bottom = XCB_RENDER_PICTURE_NONE;
     QRect dtr, dlr, drr, dbr;
-    SceneXRenderDecorationRenderer *renderer = nullptr;
-    // TODO: deleted
+    const SceneXRenderDecorationRenderer *renderer = nullptr;
     if (client) {
         if (client && !client->noBorder()) {
             if (Decoration::DecoratedClientImpl *impl = client->decoratedClient()) {
-                renderer = static_cast<SceneXRenderDecorationRenderer*>(impl->renderer());
+                SceneXRenderDecorationRenderer *r = static_cast<SceneXRenderDecorationRenderer*>(impl->renderer());
+                if (r) {
+                    r->render();
+                    renderer = r;
+                }
             }
             noBorder = client->noBorder();
             client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
         }
     }
+    if (deleted && !deleted->noBorder()) {
+        renderer = static_cast<const SceneXRenderDecorationRenderer*>(deleted->decorationRenderer());
+        noBorder = deleted->noBorder();
+        deleted->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
+    }
     if (renderer) {
-        renderer->render();
         left   = renderer->picture(SceneXRenderDecorationRenderer::DecorationPart::Left);
         top    = renderer->picture(SceneXRenderDecorationRenderer::DecorationPart::Top);
         right  = renderer->picture(SceneXRenderDecorationRenderer::DecorationPart::Right);
@@ -1413,6 +1420,12 @@ xcb_render_picture_t SceneXRenderDecorationRenderer::picture(SceneXRenderDecorat
         return XCB_RENDER_PICTURE_NONE;
     }
     return *picture;
+}
+
+void SceneXRenderDecorationRenderer::reparent(Deleted *deleted)
+{
+    render();
+    Renderer::reparent(deleted);
 }
 
 #undef DOUBLE_TO_FIXED

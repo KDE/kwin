@@ -970,7 +970,6 @@ void SceneOpenGL::Window::endRenderWindow()
 
 GLTexture *SceneOpenGL::Window::getDecorationTexture() const
 {
-    // TODO: deleted
     if (toplevel->isClient()) {
         Client *client = static_cast<Client *>(toplevel);
         if (client->noBorder()) {
@@ -982,6 +981,14 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
                 renderer->render();
                 return renderer->texture();
             }
+        }
+    } else if (toplevel->isDeleted()) {
+        Deleted *deleted = static_cast<Deleted *>(toplevel);
+        if (!deleted->wasClient() || deleted->noBorder()) {
+            return nullptr;
+        }
+        if (const SceneOpenGLDecorationRenderer *renderer = static_cast<const SceneOpenGLDecorationRenderer*>(deleted->decorationRenderer())) {
+            return renderer->texture();
         }
     }
     return nullptr;
@@ -2096,6 +2103,12 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     } else {
         m_texture.reset();
     }
+}
+
+void SceneOpenGLDecorationRenderer::reparent(Deleted *deleted)
+{
+    render();
+    Renderer::reparent(deleted);
 }
 
 } // namespace

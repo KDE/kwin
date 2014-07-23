@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationrenderer.h"
 #include "decoratedclient.h"
 #include "client.h"
+#include "deleted.h"
 
 #include <kwinglobals.h>
 
@@ -63,6 +64,7 @@ QRegion Renderer::getScheduled()
 
 QImage Renderer::renderToImage(const QRect &geo)
 {
+    Q_ASSERT(m_client);
     QImage image(geo.width(), geo.height(), QImage::Format_ARGB32_Premultiplied);
     image.fill(Qt::transparent);
     QPainter p(&image);
@@ -71,6 +73,12 @@ QImage Renderer::renderToImage(const QRect &geo)
     p.setClipRect(geo);
     client()->decoration()->paint(&p);
     return image;
+}
+
+void Renderer::reparent(Deleted *deleted)
+{
+    setParent(deleted);
+    m_client = nullptr;
 }
 
 X11Renderer::X11Renderer(DecoratedClientImpl *client)
