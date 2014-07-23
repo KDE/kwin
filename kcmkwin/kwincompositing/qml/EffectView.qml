@@ -79,7 +79,7 @@ Rectangle {
 
             Button {
                 iconName: "configure"
-                tooltip: "Configure filter"
+                tooltip: i18n("Configure filter")
                 menu: Menu {
                     MenuItem {
                         text: i18n("Exclude Desktop Effects not supported by the Compositor")
