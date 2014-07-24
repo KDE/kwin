@@ -826,7 +826,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         }
 
     }
-    if (m_shadow) {
+    if (m_shadow && toplevel->wantsShadowToBeRendered()) {
         ret << m_shadow->shadowQuads();
     }
     effects->buildQuads(toplevel->effectWindow(), ret);

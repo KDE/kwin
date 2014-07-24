@@ -736,6 +736,11 @@ void Client::checkNoBorder()
     setNoBorder(app_noborder);
 }
 
+bool Client::wantsShadowToBeRendered() const
+{
+    return !isFullScreen() && maximizeMode() != KDecorationDefines::MaximizeFull;
+}
+
 void Client::updateShape()
 {
     if (shape()) {

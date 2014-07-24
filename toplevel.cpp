@@ -347,6 +347,11 @@ const Shadow *Toplevel::shadow() const
     }
 }
 
+bool Toplevel::wantsShadowToBeRendered() const
+{
+    return true;
+}
+
 void Toplevel::getWmOpaqueRegion()
 {
     const int length=32768;

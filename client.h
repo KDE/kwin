@@ -605,6 +605,7 @@ public:
 
     bool decorationHasAlpha() const;
     bool isClientSideDecorated() const;
+    bool wantsShadowToBeRendered() const override;
 
     Position titlebarPosition() const;
 

@@ -301,6 +301,11 @@ public:
      * Call this method when the Property changes or Compositing is started.
      **/
     void getShadow();
+    /**
+     * Whether the Toplevel currently wants the shadow to be rendered. Default
+     * implementation always returns @c true.
+     **/
+    virtual bool wantsShadowToBeRendered() const;
 
     /**
      * This method returns the area that the Toplevel window reports to be opaque.
