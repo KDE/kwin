@@ -35,6 +35,7 @@ namespace Decoration
 SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
     : QObject()
     , DecorationSettingsPrivate(parent)
+    , m_borderSize(KDecoration2::BorderSize::Normal)
 {
     readSettings();
 

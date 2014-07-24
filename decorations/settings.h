@@ -39,6 +39,9 @@ public:
     virtual ~SettingsImpl();
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
+    KDecoration2::BorderSize borderSize() const override {
+        return m_borderSize;
+    }
     QList< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override {
         return m_leftButtons;
     }
@@ -53,6 +56,7 @@ private:
                                                                       const QList< KDecoration2::DecorationButtonType > &defaultValue) const;
     QList< KDecoration2::DecorationButtonType > m_leftButtons;
     QList< KDecoration2::DecorationButtonType > m_rightButtons;
+    KDecoration2::BorderSize m_borderSize;
 };
 } // Decoration
 } // KWin
