@@ -1296,6 +1296,10 @@ void SceneXRenderShadow::buildQuads()
 
 bool SceneXRenderShadow::prepareBackend()
 {
+    if (hasDecorationShadow()) {
+        // TODO: implement for XRender
+        return false;
+    }
     const uint32_t values[] = {XCB_RENDER_REPEAT_NORMAL};
     for (int i=0; i<ShadowElementsCount; ++i) {
         delete m_pictures[i];

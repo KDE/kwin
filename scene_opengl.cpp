@@ -1836,14 +1836,14 @@ void SceneOpenGLShadow::buildQuads()
 {
     // prepare window quads
     m_shadowQuads.clear();
-    const QSizeF top(shadowPixmap(ShadowElementTop).size());
-    const QSizeF topRight(shadowPixmap(ShadowElementTopRight).size());
-    const QSizeF right(shadowPixmap(ShadowElementRight).size());
-    const QSizeF bottomRight(shadowPixmap(ShadowElementBottomRight).size());
-    const QSizeF bottom(shadowPixmap(ShadowElementBottom).size());
-    const QSizeF bottomLeft(shadowPixmap(ShadowElementBottomLeft).size());
-    const QSizeF left(shadowPixmap(ShadowElementLeft).size());
-    const QSizeF topLeft(shadowPixmap(ShadowElementTopLeft).size());
+    const QSizeF top(elementSize(ShadowElementTop));
+    const QSizeF topRight(elementSize(ShadowElementTopRight));
+    const QSizeF right(elementSize(ShadowElementRight));
+    const QSizeF bottomRight(elementSize(ShadowElementBottomRight));
+    const QSizeF bottom(elementSize(ShadowElementBottom));
+    const QSizeF bottomLeft(elementSize(ShadowElementBottomLeft));
+    const QSizeF left(elementSize(ShadowElementLeft));
+    const QSizeF topLeft(elementSize(ShadowElementTopLeft));
     if ((left.width() - leftOffset() > topLevel()->width()) ||
         (right.width() - rightOffset() > topLevel()->width()) ||
         (top.height() - topOffset() > topLevel()->height()) ||
@@ -1943,6 +1943,14 @@ void SceneOpenGLShadow::buildQuads()
 
 bool SceneOpenGLShadow::prepareBackend()
 {
+    if (hasDecorationShadow()) {
+        // simplifies a lot by going directly to
+        effects->makeOpenGLContextCurrent();
+        delete m_texture;
+        m_texture = new GLTexture(decorationShadowImage());
+
+        return true;
+    }
     const QSize top(shadowPixmap(ShadowElementTop).size());
     const QSize topRight(shadowPixmap(ShadowElementTopRight).size());
     const QSize right(shadowPixmap(ShadowElementRight).size());

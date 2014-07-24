@@ -503,6 +503,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         createDecoration(oldgeom);
     } else
         destroyDecoration();
+    getShadow();
     if (check_workspace_pos)
         checkWorkspacePosition(oldgeom);
     updateInputWindow();
@@ -515,6 +516,7 @@ void Client::createDecoration(const QRect& oldgeom)
     m_decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (m_decoration) {
         m_decoration->update();
+        connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
     }
 
     move(calculateGravitation(false));

@@ -615,6 +615,10 @@ SceneQPainterShadow::~SceneQPainterShadow()
 
 bool SceneQPainterShadow::prepareBackend()
 {
+    if (hasDecorationShadow()) {
+        // TODO: implement for QPainter
+        return false;
+    }
     return true;
 }
 
