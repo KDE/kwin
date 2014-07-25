@@ -691,11 +691,10 @@ void Client::detectGtkFrameExtents()
  * the decoration may alter some borders, but the actual size
  * of the decoration stays the same).
  */
-void Client::resizeDecoration(const QSize& s)
+void Client::resizeDecoration()
 {
     if (m_decoration) {
         m_decoration->update();
-        updateInputWindow();
     }
     updateInputWindow();
 }

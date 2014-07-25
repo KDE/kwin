@@ -811,7 +811,7 @@ private:
     void positionGeometryTip();
     void grabButton(int mod);
     void ungrabButton(int mod);
-    void resizeDecoration(const QSize& s);
+    void resizeDecoration();
     void createDecoration(const QRect &oldgeom);
 
     void pingWindow();

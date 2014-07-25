@@ -1923,7 +1923,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     }
     bool resized = (geom_before_block.size() != geom.size() || pending_geometry_update == PendingGeometryForced);
     if (resized) {
-        resizeDecoration(QSize(w, h));
+        resizeDecoration();
         m_frame.setGeometry(x, y, w, h);
         if (!isShade()) {
             QSize cs = clientSize();
@@ -2011,7 +2011,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
             pending_geometry_update = PendingGeometryNormal;
         return;
     }
-    resizeDecoration(s);
+    resizeDecoration();
     m_frame.resize(w, h);
 //     resizeDecoration( s );
     if (!isShade()) {
