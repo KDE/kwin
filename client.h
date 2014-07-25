@@ -774,6 +774,7 @@ Q_SIGNALS:
      **/
     void blockingCompositingChanged(KWin::Client *client);
     void clientSideDecoratedChanged();
+    void quickTileModeChanged();
 
 private:
     int borderLeft() const;

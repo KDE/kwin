@@ -1627,6 +1627,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
         quick_tile_mode = QuickTileNone;
         max_mode = MaximizeRestore;
+        emit quickTileModeChanged();
     } else if (!app_noborder && quick_tile_mode == QuickTileNone &&
         (maximizeMode() == MaximizeVertical || maximizeMode() == MaximizeHorizontal)) {
         // ignoring can be, because either we do, or the user does explicitly not want it.
@@ -2372,6 +2373,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert|Rules::MaximizeHoriz|Rules::Position|Rules::Size);
+    emit quickTileModeChanged();
 }
 
 bool Client::isFullScreenable(bool fullscreen_hack) const
@@ -2605,6 +2607,7 @@ bool Client::startMoveResize()
     if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
         // Exit quick tile mode when the user attempts to resize a tiled window
         quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
+        emit quickTileModeChanged();
     }
 
     s_haveResizeEffect = effects && static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::Resize);
@@ -3151,6 +3154,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
             }
             quick_tile_mode = QuickTileMaximize;
         }
+        emit quickTileModeChanged();
         return;
     }
 
@@ -3178,6 +3182,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
         // Store the mode change
         quick_tile_mode = mode;
+        emit quickTileModeChanged();
 
         return;
     }
@@ -3258,6 +3263,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         setGeometry(geom_restore, geom_mode);
         checkWorkspacePosition(); // Just in case it's a different screen
     }
+    emit quickTileModeChanged();
 }
 
 void Client::sendToScreen(int newScreen)
