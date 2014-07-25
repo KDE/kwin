@@ -444,7 +444,6 @@ public:
     void demandAttention(bool set = true);
 
     void updateDecoration(bool check_workspace_pos, bool force = false);
-    bool checkBorderSizes(bool also_resize);
     void triggerDecorationRepaint();
 
     void updateShape();

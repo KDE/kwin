@@ -536,6 +536,17 @@ void Client::createDecoration(const QRect& oldgeom)
             }
         );
         connect(m_decoration, &KDecoration2::Decoration::extendedBordersChanged, this, &Client::updateInputWindow);
+        connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
+            [this]() {
+                GeometryUpdatesBlocker blocker(this);
+                move(calculateGravitation(true));
+                move(calculateGravitation(false));
+                QRect oldgeom = geometry();
+                plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
+                checkWorkspacePosition(oldgeom);
+                emit geometryShapeChanged(this, oldgeom);
+            }
+        );
     }
 
     move(calculateGravitation(false));
@@ -562,45 +573,6 @@ void Client::destroyDecoration()
         }
     }
     m_decoInputExtent.reset();
-}
-
-bool Client::checkBorderSizes(bool also_resize)
-{
-#if 0
-    if (decoration == NULL)
-        return false;
-
-    int new_left = 0, new_right = 0, new_top = 0, new_bottom = 0;
-    decoration->padding(new_left, new_right, new_top, new_bottom);
-    if (padding_left != new_left || padding_top != new_top)
-        Xcb::moveWindow(decoration->window()->winId(), -new_left, -new_top);
-    padding_left = new_left;
-    padding_right = new_right;
-    padding_top = new_top;
-    padding_bottom = new_bottom;
-    decoration->borders(new_left, new_right, new_top, new_bottom);
-    if (new_left == border_left && new_right == border_right &&
-            new_top == border_top && new_bottom == border_bottom)
-        return false;
-    if (!also_resize) {
-        border_left = new_left;
-        border_right = new_right;
-        border_top = new_top;
-        border_bottom = new_bottom;
-        return true;
-    }
-    GeometryUpdatesBlocker blocker(this);
-    move(calculateGravitation(true));
-    border_left = new_left;
-    border_right = new_right;
-    border_top = new_top;
-    border_bottom = new_bottom;
-    move(calculateGravitation(false));
-    QRect oldgeom = geometry();
-    plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
-    checkWorkspacePosition(oldgeom);
-#endif
-    return true;
 }
 
 void Client::triggerDecorationRepaint()
