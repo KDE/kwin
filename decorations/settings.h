@@ -39,6 +39,7 @@ public:
     virtual ~SettingsImpl();
     bool isAlphaChannelSupported() const override;
     bool isOnAllDesktopsAvailable() const override;
+    bool isCloseOnDoubleClickOnMenu() const override;
     KDecoration2::BorderSize borderSize() const override {
         return m_borderSize;
     }

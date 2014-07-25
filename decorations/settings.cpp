@@ -63,6 +63,11 @@ bool SettingsImpl::isOnAllDesktopsAvailable() const
     return VirtualDesktopManager::self()->count() > 1;
 }
 
+bool SettingsImpl::isCloseOnDoubleClickOnMenu() const
+{
+    return false;
+}
+
 static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
 static void initButtons()
 {
