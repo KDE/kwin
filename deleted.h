@@ -53,7 +53,7 @@ public:
     bool noBorder() const {
         return no_border;
     }
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, int unused = 0) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     QRect decorationRect() const;
     virtual Layer layer() const {
         return m_layer;

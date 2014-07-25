@@ -452,7 +452,7 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
                 renderer = r;
             }
         }
-        client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
+        client->layoutDecorationRects(dlr, dtr, drr, dbr);
         noBorder = false;
     } else if (deleted && !deleted->noBorder()) {
         noBorder = false;
@@ -681,7 +681,7 @@ void SceneQPainterDecorationRenderer::render()
 void SceneQPainterDecorationRenderer::resizeImages()
 {
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     auto checkAndCreate = [this](int index, const QSize &size) {
         if (m_images[index].size() != size) {

@@ -113,7 +113,7 @@ void X11Renderer::render()
     }
 
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     const QRect geometry = scheduled.boundingRect();
     left   = left.intersected(geometry);

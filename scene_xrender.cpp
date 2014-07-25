@@ -733,13 +733,13 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
                 }
             }
             noBorder = client->noBorder();
-            client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
+            client->layoutDecorationRects(dlr, dtr, drr, dbr);
         }
     }
     if (deleted && !deleted->noBorder()) {
         renderer = static_cast<const SceneXRenderDecorationRenderer*>(deleted->decorationRenderer());
         noBorder = deleted->noBorder();
-        deleted->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
+        deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
     }
     if (renderer) {
         left   = renderer->picture(SceneXRenderDecorationRenderer::DecorationPart::Left);
@@ -1382,7 +1382,7 @@ void SceneXRenderDecorationRenderer::render()
 void SceneXRenderDecorationRenderer::resizePixmaps()
 {
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     xcb_connection_t *c = connection();
     auto checkAndCreate = [this, c](int border, const QRect &rect) {

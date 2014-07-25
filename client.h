@@ -608,11 +608,7 @@ public:
 
     Position titlebarPosition() const;
 
-    enum CoordinateMode {
-        DecorationRelative, // Relative to the top left corner of the decoration
-        WindowRelative      // Relative to the top left corner of the window
-    };
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, CoordinateMode mode) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
     QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
         return m_tabBoxClient.toWeakRef();

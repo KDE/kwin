@@ -89,8 +89,7 @@ void Deleted::copyToDeleted(Toplevel* c)
             client->layoutDecorationRects(decoration_left,
                                           decoration_top,
                                           decoration_right,
-                                          decoration_bottom,
-                                          Client::WindowRelative);
+                                          decoration_bottom);
             if (Decoration::DecoratedClientImpl *decoClient = client->decoratedClient()) {
                 if (Decoration::Renderer *renderer = decoClient->renderer()) {
                     m_decorationRenderer = renderer;
@@ -143,7 +142,7 @@ void Deleted::debug(QDebug& stream) const
     stream << "\'ID:" << window() << "\' (deleted)";
 }
 
-void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom, int) const
+void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
 {
     left = decoration_left;
     top = decoration_top;

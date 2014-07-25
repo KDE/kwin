@@ -814,7 +814,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         bool isShadedClient = false;
 
         if (client) {
-            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3], Client::WindowRelative);
+            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
             isShadedClient = client->isShade() || center.isEmpty();
         }
 

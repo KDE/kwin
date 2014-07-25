@@ -582,7 +582,7 @@ void Client::triggerDecorationRepaint()
     }
 }
 
-void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, Client::CoordinateMode mode) const
+void Client::layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const
 {
     if (!m_decoration) {
         return;

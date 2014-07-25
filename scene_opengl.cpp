@@ -2056,7 +2056,7 @@ void SceneOpenGLDecorationRenderer::render()
     }
 
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
 
     const QRect geometry = scheduled.boundingRect();
 
@@ -2085,7 +2085,7 @@ static int align(int value, int align)
 void SceneOpenGLDecorationRenderer::resizeTexture()
 {
     QRect left, top, right, bottom;
-    client()->client()->layoutDecorationRects(left, top, right, bottom, Client::DecorationRelative);
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 
     size.rwidth() = qMax(qMax(top.width(), bottom.width()),
