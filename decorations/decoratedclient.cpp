@@ -86,6 +86,11 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
             decoration->update();
         }
     );
+    connect(client, &Client::quickTileModeChanged, decoratedClient,
+        [this, decoratedClient]() {
+            emit decoratedClient->borderingScreenEdgesChanged(borderingScreenEdges());
+        }
+    );
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;
@@ -186,6 +191,33 @@ bool DecoratedClientImpl::isMaximized() const
 bool DecoratedClientImpl::isMaximizedHorizontally() const
 {
     return m_client->maximizeMode() & KDecorationDefines::MaximizeHorizontal;
+}
+
+Qt::Edges DecoratedClientImpl::borderingScreenEdges() const
+{
+    Qt::Edges edges;
+    const KDecorationDefines::QuickTileMode mode = m_client->quickTileMode();
+    if (mode.testFlag(KDecorationDefines::QuickTileLeft)) {
+        edges |= Qt::LeftEdge;
+        if (!mode.testFlag(KDecorationDefines::QuickTileTop) && !mode.testFlag(KDecorationDefines::QuickTileBottom)) {
+            // using complete side
+            edges |= Qt::TopEdge | Qt::BottomEdge;
+        }
+    }
+    if (mode.testFlag(KDecorationDefines::QuickTileTop)) {
+        edges |= Qt::TopEdge;
+    }
+    if (mode.testFlag(KDecorationDefines::QuickTileRight)) {
+        edges |= Qt::RightEdge;
+        if (!mode.testFlag(KDecorationDefines::QuickTileTop) && !mode.testFlag(KDecorationDefines::QuickTileBottom)) {
+            // using complete side
+            edges |= Qt::TopEdge | Qt::BottomEdge;
+        }
+    }
+    if (mode.testFlag(KDecorationDefines::QuickTileBottom)) {
+        edges |= Qt::BottomEdge;
+    }
+    return edges;
 }
 
 void DecoratedClientImpl::createRenderer()
