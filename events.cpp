@@ -1128,13 +1128,31 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
     }
     if (w == frameId() && m_decoration) {
-        qDebug() << "Button press on frame";
-        QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
-                          x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
-        event.setAccepted(false);
-        QCoreApplication::sendEvent(m_decoration, &event);
-        if (!event.isAccepted()) {
-            processDecorationButtonPress(button, state, x, y, x_root, y_root);
+        if (button >= 4 && button <= 7) {
+            const Qt::KeyboardModifiers modifiers = x11ToQtKeyboardModifiers(state);
+            // Logic borrowed from qapplication_x11.cpp
+            const int delta = 120 * ((button == 4 || button == 6) ? 1 : -1);
+            const bool hor = (((button == 4 || button == 5) && (modifiers & Qt::AltModifier))
+                             || (button == 6 || button == 7));
+
+            const QPoint angle = hor ? QPoint(delta, 0) : QPoint(0, delta);
+            QWheelEvent event(QPointF(x, y),
+                              QPointF(x_root, y_root),
+                              QPoint(),
+                              angle,
+                              delta,
+                              hor ? Qt::Horizontal : Qt::Vertical,
+                              x11ToQtMouseButtons(state),
+                              modifiers);
+            QCoreApplication::sendEvent(m_decoration, &event);
+        } else {
+            QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
+                            x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
+            event.setAccepted(false);
+            QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted()) {
+                processDecorationButtonPress(button, state, x, y, x_root, y_root);
+            }
         }
         return true;
     }
@@ -1189,9 +1207,16 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
 bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
     if (w == frameId() && m_decoration) {
-        qDebug() << "Button release on frame";
-        QMouseEvent event(QEvent::MouseButtonRelease, QPointF(x, y), QPointF(x_root, y_root), x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
-        QCoreApplication::sendEvent(m_decoration, &event);
+        // wheel handled on buttonPress
+        if (button < 4 || button > 7) {
+            QMouseEvent event(QEvent::MouseButtonRelease,
+                              QPointF(x, y),
+                              QPointF(x_root, y_root),
+                              x11ToQtMouseButton(button),
+                              x11ToQtMouseButtons(state),
+                              x11ToQtKeyboardModifiers(state));
+            QCoreApplication::sendEvent(m_decoration, &event);
+        }
     }
     if (w == wrapperId()) {
         xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
