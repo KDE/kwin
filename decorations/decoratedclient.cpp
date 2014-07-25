@@ -77,7 +77,6 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
     );
     connect(client, &Client::keepAboveChanged, decoratedClient, &KDecoration2::DecoratedClient::keepAboveChanged);
     connect(client, &Client::keepBelowChanged, decoratedClient, &KDecoration2::DecoratedClient::keepBelowChanged);
-    // closeable, etc.
     connect(Compositor::self(), &Compositor::compositingToggled, this,
         [this, decoration]() {
             delete m_renderer;
@@ -91,6 +90,10 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
             emit decoratedClient->borderingScreenEdgesChanged(borderingScreenEdges());
         }
     );
+    connect(client, &Client::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
+    connect(client, &Client::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
+    connect(client, &Client::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizableChanged);
+    connect(client, &Client::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizableChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;

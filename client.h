@@ -772,6 +772,11 @@ Q_SIGNALS:
     void clientSideDecoratedChanged();
     void quickTileModeChanged();
 
+    void closeableChanged(bool);
+    void minimizeableChanged(bool);
+    void shadeableChanged(bool);
+    void maximizeableChanged(bool);
+
 private:
     int borderLeft() const;
     int borderRight() const;

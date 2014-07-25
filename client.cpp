@@ -1963,10 +1963,9 @@ void Client::getMotifHints()
     motif_may_close = mclose; // Motif apps like to crash when they set this hint and WM closes them anyway
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
-#if 0
-    if (decoration && closabilityChanged)
-        emit decoration->decorationButtonsChanged();
-#endif
+    if (closabilityChanged) {
+        emit closeableChanged(isCloseable());
+    }
 }
 
 void Client::getIcons()
@@ -2251,10 +2250,17 @@ void Client::updateAllowedActions(bool force)
 
     // ONLY if relevant features have changed (and the window didn't just get/loose moveresize for maximization state changes)
     const NET::Actions relevant = ~(NET::ActionMove|NET::ActionResize);
-#if 0
-    if (decoration && (allowed_actions & relevant) != (old_allowed_actions & relevant))
-        emit decoration->decorationButtonsChanged();
-#endif
+    if ((allowed_actions & relevant) != (old_allowed_actions & relevant)) {
+        if ((allowed_actions & NET::ActionMinimize) != (old_allowed_actions & NET::ActionMinimize)) {
+            emit minimizeableChanged(allowed_actions & NET::ActionMinimize);
+        }
+        if ((allowed_actions & NET::ActionShade) != (old_allowed_actions & NET::ActionShade)) {
+            emit shadeableChanged(allowed_actions & NET::ActionShade);
+        }
+        if ((allowed_actions & NET::ActionMax) != (old_allowed_actions & NET::ActionMax)) {
+            emit maximizeableChanged(allowed_actions & NET::ActionMax);
+        }
+    }
 }
 
 void Client::autoRaise()
