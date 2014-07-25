@@ -445,15 +445,19 @@ void Client::updateInputWindow()
 
     QRegion region;
 
-#if 0
-    if (!noBorder()) {
-        // This function is implemented as a slot to avoid breaking binary
-        // compatibility
-        QMetaObject::invokeMethod(decoration, "region", Qt::DirectConnection,
-                Q_RETURN_ARG(QRegion, region),
-                Q_ARG(KDecorationDefines::Region, KDecorationDefines::ExtendedBorderRegion));
+    if (!noBorder() && m_decoration) {
+        const int left   = m_decoration->extendedBorderLeft();
+        const int top    = m_decoration->extendedBorderTop();
+        const int right  = m_decoration->extendedBorderRight();
+        const int bottom = m_decoration->extendedBorderBottom();
+        if (left != 0 || top != 0 || right != 0 || bottom != 0) {
+            region = QRegion(-left,
+                             -top,
+                             m_decoration->size().width() + left + right,
+                             m_decoration->size().height() + top + bottom);
+            region = region.subtracted(m_decoration->rect());
+        }
     }
-#endif
 
     if (region.isEmpty()) {
         m_decoInputExtent.reset();
@@ -531,6 +535,7 @@ void Client::createDecoration(const QRect& oldgeom)
                 performMouseCommand(options->operationTitlebarMouseWheel(angleDelta.y()), Cursor::pos());
             }
         );
+        connect(m_decoration, &KDecoration2::Decoration::extendedBordersChanged, this, &Client::updateInputWindow);
     }
 
     move(calculateGravitation(false));
