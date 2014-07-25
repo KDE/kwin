@@ -81,6 +81,7 @@ public:
     Renderer *renderer() {
         return m_renderer;
     }
+    void destroyRenderer();
     KDecoration2::DecoratedClient *decoratedClient() {
         return KDecoration2::DecoratedClientPrivate::client();
     }

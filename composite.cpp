@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
+#include "decorations/decoratedclient.h"
 
 #include <stdio.h>
 
@@ -1105,6 +1106,9 @@ bool Client::setupCompositing()
     if (!Toplevel::setupCompositing()){
         return false;
     }
+    if (decoratedClient()) {
+        decoratedClient()->destroyRenderer();
+    }
     updateVisibility(); // for internalKeep()
     return true;
 }
@@ -1114,7 +1118,9 @@ void Client::finishCompositing(ReleaseReason releaseReason)
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
     if (!deleting) {
-        triggerDecorationRepaint();
+        if (decoratedClient()) {
+            decoratedClient()->destroyRenderer();
+        }
     }
     // for safety in case KWin is just resizing the window
     s_haveResizeEffect = false;

@@ -197,5 +197,11 @@ void DecoratedClientImpl::createRenderer()
     }
 }
 
+void DecoratedClientImpl::destroyRenderer()
+{
+    delete m_renderer;
+    m_renderer = nullptr;
+}
+
 }
 }
