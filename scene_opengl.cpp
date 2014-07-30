@@ -1038,35 +1038,6 @@ void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
 #endif
 }
 
-void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data)
-{
-    WindowQuadList quads = data.quads.select(WindowQuadShadow);
-    if (quads.isEmpty())
-        return;
-
-    GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
-    if (!texture) {
-        return;
-    }
-    if (filter == ImageFilterGood)
-        texture->setFilter(GL_LINEAR);
-    else
-        texture->setFilter(GL_NEAREST);
-    texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    texture->bind();
-    prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, true);
-    restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation());
-    texture->unbind();
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug()) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(0, region, quads, texture, true);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-#endif
-}
-
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
                                       GLTexture *tex, bool normalized)
 {

@@ -210,7 +210,6 @@ protected:
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
     void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
-    void paintShadow(const QRegion &region, const WindowPaintData &data);
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
     /**
      * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
