@@ -998,36 +998,6 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
     return texture;
 }
 
-void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
-                                      GLTexture *tex, bool normalized)
-{
-    if (quads.isEmpty())
-        return;
-
-    const QMatrix4x4 matrix = tex->matrix(normalized ? NormalizedCoordinates : UnnormalizedCoordinates);
-
-    // Render geometry
-    GLenum primitiveType;
-    int primcount;
-
-    if (GLVertexBuffer::supportsIndexedQuads()) {
-        primitiveType = GL_QUADS;
-        primcount = quads.count() * 4;
-    } else {
-        primitiveType = GL_TRIANGLES;
-        primcount = quads.count() * 6;
-    }
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setVertexCount(primcount);
-
-    GLVertex2D *map = (GLVertex2D *) vbo->map(primcount * sizeof(GLVertex2D));
-    quads.makeInterleavedArrays(primitiveType, map, matrix);
-    vbo->unmap();
-
-    vbo->render(region, primitiveType, m_hardwareClipping);
-}
-
 WindowPixmap* SceneOpenGL::Window::createWindowPixmap()
 {
     return new OpenGLWindowPixmap(this, m_scene);

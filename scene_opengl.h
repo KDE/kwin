@@ -209,16 +209,6 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
-    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
-    /**
-     * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
-     *
-     * @param type The type of the Texture which will be rendered
-     * @param opacity The opacity value to use for this rendering
-     * @param brightness The brightness value to use for this rendering
-     * @param saturation The saturation value to use for this rendering
-     * @param screen The index of the screen to use for this rendering
-     **/
     virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen) = 0;
     /**
      * @brief Restores the OpenGL rendering state after the texture with @p type has been rendered.
