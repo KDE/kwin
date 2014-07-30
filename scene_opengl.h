@@ -209,17 +209,6 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
-    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen) = 0;
-    /**
-     * @brief Restores the OpenGL rendering state after the texture with @p type has been rendered.
-     *
-     * @param type The type of the Texture which has been rendered
-     * @param opacity The opacity value used for the rendering
-     * @param brightness The brightness value used for this rendering
-     * @param saturation The saturation value used for this rendering
-     * @param screen The index of the screen to use for this rendering
-     **/
-    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
 
 protected:
     SceneOpenGL *m_scene;
@@ -262,8 +251,6 @@ protected:
     void setBlendEnabled(bool enabled);
     void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
-    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
-    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 
 private:
     /**

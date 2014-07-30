@@ -1205,60 +1205,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     endRenderWindow();
 }
 
-void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)
-{
-    // setup blending of transparent windows
-    bool opaque = isOpaque() && opacity == 1.0;
-    bool alpha = toplevel->hasAlpha() || type != Content;
-    if (type != Content) {
-        if (type == Shadow) {
-            opaque = false;
-        } else {
-            if (opacity == 1.0 && toplevel->isClient()) {
-                opaque = !(static_cast<Client*>(toplevel)->decorationHasAlpha());
-            } else {
-                // TODO: add support in Deleted
-                opaque = false;
-            }
-        }
-    }
-    if (!opaque) {
-        glEnable(GL_BLEND);
-        if (alpha) {
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        } else {
-            glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
-        }
-    }
-    m_blendingEnabled = !opaque;
-
-    const qreal rgb = brightness * opacity;
-    const qreal a = opacity;
-
-    GLShader *shader = ShaderManager::instance()->getBoundShader();
-    shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-    shader->setUniform(GLShader::Saturation,         saturation);
-
-    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
-        cc->setupForOutput(screen);
-    }
-}
-
-void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation)
-{
-    Q_UNUSED(type);
-    Q_UNUSED(opacity);
-    Q_UNUSED(brightness);
-    Q_UNUSED(saturation);
-    if (m_blendingEnabled) {
-        glDisable(GL_BLEND);
-    }
-
-    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
-        cc->setupForOutput(-1);
-    }
-}
 
 //****************************************
 // OpenGLWindowPixmap
