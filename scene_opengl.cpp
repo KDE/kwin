@@ -998,46 +998,6 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
     return texture;
 }
 
-void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
-{
-    GLTexture *texture = getDecorationTexture();
-    if (!texture)
-        return;
-
-    const WindowQuadList quads = data.quads.select(WindowQuadDecoration);
-    paintDecoration(texture, Decoration, region, data, quads);
-}
-
-void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
-                                          const QRegion &region, const WindowPaintData &data,
-                                          const WindowQuadList &quads)
-{
-    if (!texture || quads.isEmpty())
-        return;
-
-    if (filter == ImageFilterGood)
-        texture->setFilter(GL_LINEAR);
-    else
-        texture->setFilter(GL_NEAREST);
-
-    texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    texture->bind();
-
-    prepareStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, false);
-    restoreStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
-
-    texture->unbind();
-
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug()) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, m_hardwareClipping);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-#endif
-}
-
 void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
                                       GLTexture *tex, bool normalized)
 {

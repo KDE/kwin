@@ -209,7 +209,6 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
-    void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
     void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
     /**
      * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
@@ -231,8 +230,6 @@ protected:
      * @param screen The index of the screen to use for this rendering
      **/
     virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
-
-    void paintDecorations(const WindowPaintData &data, const QRegion &region);
 
 protected:
     SceneOpenGL *m_scene;
