@@ -847,7 +847,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
 
         if (client || deleted) {
             if (!noBorder) {
-                xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity() * data.decorationOpacity());
+                xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity());
                 auto renderDeco = [decorationAlpha, renderTarget](xcb_render_picture_t deco, const QRect &rect) {
                     if (deco == XCB_RENDER_PICTURE_NONE) {
                         return;

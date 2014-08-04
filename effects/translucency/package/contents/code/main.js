@@ -21,7 +21,6 @@ var translucencyEffect = {
     activeWindow: effects.activeWindow,
     settings: {
         duration: animationTime(250),
-        decoration: 100,
         moveresize: 100,
         dialogs: 100,
         inactive: 100,
@@ -35,7 +34,6 @@ var translucencyEffect = {
         "use strict";
         var i, individualMenu, windows;
         // TODO: add animation duration
-        translucencyEffect.settings.decoration     = effect.readConfig("Decoration", 100);
         translucencyEffect.settings.moveresize     = effect.readConfig("MoveResize", 80);
         translucencyEffect.settings.dialogs        = effect.readConfig("Dialogs", 100);
         translucencyEffect.settings.inactive       = effect.readConfig("Inactive", 100);
@@ -97,24 +95,6 @@ var translucencyEffect = {
         } else if (window.menu === true) {
             checkWindow(window, translucencyEffect.settings.tornoffmenus);
         }
-        translucencyEffect.startDecorationAnimation(window);
-    },
-    startDecorationAnimation: function (window) {
-        "use strict";
-        var ids;
-        if (translucencyEffect.settings.decoration === 100 || window.hasDecoration === false) {
-            return;
-        }
-        ids = set({
-            window: window,
-            duration: 1,
-            animations: [{
-                type: Effect.DecorationOpacity,
-                from: translucencyEffect.settings.decoration / 100.0,
-                to: translucencyEffect.settings.decoration / 100.0
-            }]
-        });
-        window.decorationOpacityAnimation = ids;
     },
     /**
      * @brief Cancels all animations for window type and inactive window
@@ -129,10 +109,6 @@ var translucencyEffect = {
         if (window.translucencyInactiveAnimation !== undefined) {
             cancel(window.translucencyInactiveAnimation);
             window.translucencyInactiveAnimation = undefined;
-        }
-        if (window.decorationOpacityAnimation !== undefined) {
-            cancel(window.decorationOpacityAnimation);
-            window.decorationOpacityAnimation = undefined;
         }
     },
     moveResize: {

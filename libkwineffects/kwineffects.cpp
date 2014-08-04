@@ -226,7 +226,6 @@ void PaintData::setRotationOrigin(const QVector3D &origin)
 class WindowPaintDataPrivate {
 public:
     qreal opacity;
-    qreal decorationOpacity;
     qreal saturation;
     qreal brightness;
     int screen;
@@ -240,7 +239,6 @@ WindowPaintData::WindowPaintData(EffectWindow* w)
 {
     quads = w->buildQuads();
     setOpacity(w->opacity());
-    setDecorationOpacity(1.0);
     setSaturation(1.0);
     setBrightness(1.0);
     setScreen(0);
@@ -261,7 +259,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setRotationAxis(other.rotationAxis());
     setRotationAngle(other.rotationAngle());
     setOpacity(other.opacity());
-    setDecorationOpacity(other.decorationOpacity());
     setSaturation(other.saturation());
     setBrightness(other.brightness());
     setScreen(other.screen());
@@ -271,11 +268,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
 WindowPaintData::~WindowPaintData()
 {
     delete d;
-}
-
-qreal WindowPaintData::decorationOpacity() const
-{
-    return d->decorationOpacity;
 }
 
 qreal WindowPaintData::opacity() const
@@ -296,11 +288,6 @@ qreal WindowPaintData::brightness() const
 int WindowPaintData::screen() const
 {
     return d->screen;
-}
-
-void WindowPaintData::setDecorationOpacity(qreal opacity)
-{
-    d->decorationOpacity = opacity;
 }
 
 void WindowPaintData::setOpacity(qreal opacity)
@@ -331,12 +318,6 @@ qreal WindowPaintData::crossFadeProgress() const
 void WindowPaintData::setCrossFadeProgress(qreal factor)
 {
     d->crossFadeProgress = qBound(qreal(0.0), factor, qreal(1.0));
-}
-
-qreal WindowPaintData::multiplyDecorationOpacity(qreal factor)
-{
-    d->decorationOpacity *= factor;
-    return d->decorationOpacity;
 }
 
 qreal WindowPaintData::multiplyOpacity(qreal factor)
