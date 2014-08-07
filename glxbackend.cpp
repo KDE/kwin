@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "utils.h"
 #include "overlaywindow.h"
+#include "composite.h"
+#include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
 #include <kwinxrenderutils.h>
@@ -38,11 +40,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QOpenGLContext>
 // system
 #include <unistd.h>
+#include <xcb/glx.h>
 
 #include <tuple>
 
+#if __cplusplus <= 201103L
+namespace std {
+    // C++-14
+    template<class T, class... Args>
+    unique_ptr<T> make_unique(Args&&... args) {
+        return unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+}
+#endif
+
+
 namespace KWin
 {
+
+SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable)
+    : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE),
+      m_drawable(drawable)
+{
+}
+
+bool SwapEventFilter::event(xcb_generic_event_t *event)
+{
+    xcb_glx_buffer_swap_complete_event_t *ev =
+            reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
+
+    if (ev->drawable == m_drawable) {
+        Compositor::self()->bufferSwapComplete();
+        return true;
+    }
+
+    return false;
+}
+
+
+// -----------------------------------------------------------------------
+
+
+
 GlxBackend::GlxBackend()
     : OpenGLBackend()
     , m_overlayWindow(new OverlayWindow())
@@ -116,6 +155,21 @@ void GlxBackend::init()
     m_haveMESASwapControl   = hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasGLExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasGLExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
+    m_haveINTELSwapEvent    = hasGLExtension(QByteArrayLiteral("GLX_INTEL_swap_event"));
+
+    if (m_haveINTELSwapEvent) {
+        const QList<QByteArray> tokens = QByteArray(qVersion()).split('.');
+        uint32_t version = tokens[0].toInt() << 16 | tokens[1].toInt() << 8 | tokens[2].toInt();
+
+        // Qt 5.3 doesn't forward swap events to the native event filter
+        if (version < 0x00050400)
+            m_haveINTELSwapEvent = false;
+    }
+
+    if (m_haveINTELSwapEvent) {
+        m_swapEventFilter = std::make_unique<SwapEventFilter>(window);
+        glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
+    }
 
     haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -473,6 +527,9 @@ void GlxBackend::present()
     const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint) {
+        if (m_haveINTELSwapEvent)
+            Compositor::self()->aboutToSwapBuffers();
+
         if (haveSwapInterval) {
             if (gs_tripleBufferNeedsDetection) {
                 glXWaitGL();
