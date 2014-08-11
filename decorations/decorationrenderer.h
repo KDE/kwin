@@ -89,6 +89,8 @@ public:
     explicit X11Renderer(DecoratedClientImpl *client);
     virtual ~X11Renderer();
 
+    void reparent(Deleted *deleted) override;
+
 protected:
     void render() override;
 
