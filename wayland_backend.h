@@ -201,8 +201,8 @@ private:
 /**
 * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
 *
-* It creates the connection to the Wayland Compositor, set's up the registry and creates
-* the Wayland surface and it's shell mapping.
+* It creates the connection to the Wayland Compositor, sets up the registry and creates
+* the Wayland surface and its shell mapping.
 */
 class WaylandBackend : public QObject
 {
