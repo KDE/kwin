@@ -1091,11 +1091,10 @@ bool TabBox::toggle(ElectricBorder eb)
     if (!options->focusPolicyIsReasonable())
         return false; // not supported.
     if (isDisplayed()) {
-        ungrabXKeyboard();
         accept();
         return true;
     }
-    if (!grabXKeyboard())
+    if (!establishTabBoxGrab())
         return false;
     m_noModifierGrab = m_tabGrab = true;
     if (m_borderAlternativeActivate.contains(eb))
