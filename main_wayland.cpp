@@ -34,6 +34,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #endif // HAVE_UNISTD_H
 
+#include <iostream>
+
 namespace KWin
 {
 
@@ -95,11 +97,102 @@ void ApplicationWayland::performStartup()
     notifyKSplash();
 }
 
+/**
+ * Starts the X-Server with binary name @p process on @p display.
+ * The new process is started by forking into it.
+ **/
+static void startXServer(const QByteArray &process, const QByteArray &display)
+{
+    int pipeFds[2];
+    if (pipe(pipeFds) != 0) {
+        std::cerr << "FATAL ERROR failed to create pipe to start X Server "
+                  << process.constData()
+                  << " with arguments "
+                  << display.constData()
+                  << std::endl;
+        exit(1);
+    }
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        // child process - should be turned into X-Server
+        // writes to pipe, closes read side
+        close(pipeFds[0]);
+        char fdbuf[16];
+        sprintf(fdbuf, "%d", pipeFds[1]);
+        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, display.constData(), (char *)0);
+        close(pipeFds[1]);
+        exit(20);
+    }
+    // parent process - this is KWin
+    // reads from pipe, closes write side
+    close(pipeFds[1]);
+
+    QFile readPipe;
+    if (!readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
+        std::cerr << "FATAL ERROR failed to open pipe to start X Server "
+                  << process.constData()
+                  << " with arguments "
+                  << display.constData()
+                  << std::endl;
+        exit(1);
+    }
+    QByteArray displayNumber = readPipe.readLine();
+
+    displayNumber.prepend(QByteArray(":"));
+    displayNumber.remove(displayNumber.size() -1, 1);
+    std::cout << "X-Server started on display " << displayNumber.constData();
+
+    setenv("DISPLAY", displayNumber.constData(), true);
+
+    // close our pipe
+    close(pipeFds[0]);
+}
+
 } // namespace
 
 extern "C"
 KWIN_EXPORT int kdemain(int argc, char * argv[])
 {
+    // process command line arguments to figure out whether we have to start an X-Server
+    bool startXephyr = false;
+    bool startXvfb = false;
+    bool startXwayland = false;
+    QByteArray xDisplay;
+    QByteArray xServer;
+    for (int i = 1; i < argc; ++i) {
+        QByteArray arg = argv[i];
+        if (arg == "-x" || arg == "--start-X-Server") {
+            if (++i < argc) {
+                xServer = argv[i];
+            }
+            startXephyr = (xServer == QStringLiteral("xephyr"));
+            startXvfb = (xServer == QStringLiteral("xvfb"));
+            startXwayland = (xServer == QStringLiteral("xwayland"));
+            if (!startXephyr && !startXvfb && !startXwayland) {
+                fprintf(stderr, "%s: FATAL ERROR unknown X-Server %s specified to start\n",
+                        argv[0], qPrintable(xServer));
+                exit(1);
+            }
+            continue;
+        }
+        if (arg == "--display") {
+            if (++i < argc) {
+                xDisplay = argv[i];
+            }
+        }
+    }
+
+    if (startXephyr) {
+        KWin::startXServer(QByteArrayLiteral("Xephyr"), xDisplay);
+    }
+    if (startXvfb) {
+        KWin::startXServer(QByteArrayLiteral("Xvfb"), xDisplay);
+    }
+    if (startXwayland) {
+        KWin::startXServer(QByteArrayLiteral("Xwayland"), xDisplay);
+    }
+
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
     KWin::Application::setupLoggingCategoryFilters();
@@ -119,8 +212,17 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     KWin::Application::createAboutData();
 
+    QCommandLineOption startXServerOption(QStringList({QStringLiteral("x"), QStringLiteral("x-server")}),
+                                          i18n("Start a nested X Server."),
+                                          QStringLiteral("xephyr|xvfb|xwayland"));
+    QCommandLineOption x11DisplayOption(QStringLiteral("display"),
+                                        i18n("The X11 Display to connect to, required if option x-server is used."),
+                                        QStringLiteral("display"));
+
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
+    parser.addOption(startXServerOption);
+    parser.addOption(x11DisplayOption);
 
     parser.process(a);
     a.processCommandLine(&parser);
