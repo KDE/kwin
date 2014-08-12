@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 // KWin
 #include "cursor.h"
-#include "main.h"
 #include "input.h"
 // Qt
 #include <QDebug>
@@ -751,7 +750,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     }
 
     initConnection();
-    kwinApp()->setOperationMode(Application::OperationModeWaylandAndX11);
 }
 
 WaylandBackend::~WaylandBackend()

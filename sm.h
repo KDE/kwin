@@ -82,7 +82,7 @@ enum SMSavePhase {
     SMSavePhase2Full  // complete saving in phase2, there was no phase 0
 };
 
-class SessionSaveDoneHelper
+class KWIN_EXPORT SessionSaveDoneHelper
     : public QObject
 {
     Q_OBJECT

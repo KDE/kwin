@@ -506,26 +506,42 @@ if(Wayland_Client_FOUND AND XKB_FOUND)
     endif()
 endif()
 
-kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
+add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
 
-target_link_libraries(kdeinit_kwin ${kwinLibs})
-set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_INTERNAL_NAME_X11})
-generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
+set_target_properties(kwin PROPERTIES
+   VERSION GENERIC_LIB_VERSION
+   SOVERSION GENERIC_LIB_SOVERSION
+   )
+
+target_link_libraries(kwin ${kwinLibs})
+generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
-  target_link_libraries(kdeinit_kwin kwinglutils ${epoxy_LIBRARY})
+  target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
-    target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
+    target_link_libraries(kwin ${DL_LIBRARY})
   endif()
 elseif(KWIN_BUILD_OPENGLES)
-  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
-  set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
+  target_link_libraries(kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
+  set_target_properties(kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
 endif()
 
-install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
+target_link_libraries(kdeinit_kwin_x11 kwin)
+
+install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+if(Wayland_Client_FOUND AND XKB_FOUND)
+    kf5_add_kdeinit_executable(kwin_wayland main_wayland.cpp)
+    target_link_libraries(kdeinit_kwin_wayland kwin)
+
+    install(TARGETS kdeinit_kwin_wayland ${INSTALL_TARGETS_DEFAULT_ARGS} )
+    install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+endif()
 
 ########### install files ###############
 

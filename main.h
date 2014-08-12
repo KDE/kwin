@@ -22,11 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MAIN_H
 #define MAIN_H
 
+#include <kwinglobals.h>
+
 #include <KSelectionWatcher>
 #include <KSelectionOwner>
 // Qt
 #include <QApplication>
 #include <QAbstractNativeEventFilter>
+
+class QCommandLineParser;
 
 namespace KWin
 {
@@ -37,22 +41,7 @@ public:
     virtual bool nativeEventFilter(const QByteArray &eventType, void *message, long int *result) override;
 };
 
-class KWinSelectionOwner
-    : public KSelectionOwner
-{
-    Q_OBJECT
-public:
-    explicit KWinSelectionOwner(int screen);
-protected:
-    virtual bool genericReply(xcb_atom_t target, xcb_atom_t property, xcb_window_t requestor);
-    virtual void replyTargets(xcb_atom_t property, xcb_window_t requestor);
-    virtual void getAtoms();
-private:
-    xcb_atom_t make_selection_atom(int screen);
-    static xcb_atom_t xa_version;
-};
-
-class Application : public  QApplication
+class KWIN_EXPORT Application : public  QApplication
 {
     Q_OBJECT
 public:
@@ -73,10 +62,8 @@ public:
         */
         OperationModeWaylandAndX11
     };
-    Application(int &argc, char **argv);
-    ~Application();
+    virtual ~Application();
 
-    void setReplace(bool replace);
     void setConfigLock(bool lock);
 
     void start();
@@ -90,22 +77,62 @@ public:
     bool shouldUseWaylandForCompositing() const;
     bool requiresCompositing() const;
 
+    void setupTranslator();
+    void setupCommandLine(QCommandLineParser *parser);
+    void processCommandLine(QCommandLineParser *parser);
+
+    void registerDBusService();
+
     static void setCrashCount(int count);
     static bool wasCrash();
 
+    /**
+     * Creates the KAboutData object for the KWin instance and registers it as
+     * KAboutData::setApplicationData.
+     **/
+    static void createAboutData();
+
+    /**
+     * @returns the X11 Screen number. If not applicable it's set to @c -1.
+     **/
+    static int x11ScreenNumber();
+    /**
+     * Sets the X11 screen number of this KWin instance to @p screenNumber.
+     **/
+    static void setX11ScreenNumber(int screenNumber);
+    /**
+     * @returns whether this is a multi head setup on X11.
+     **/
+    static bool isX11MultiHead();
+    /**
+     * Sets whether this is a multi head setup on X11.
+     */
+    static void setX11MultiHead(bool multiHead);
+
+    static void setupMalloc();
+    static void setupLocalizedString();
+    static void setupLoggingCategoryFilters();
+
 protected:
+    Application(OperationMode mode, int &argc, char **argv);
+    virtual void performStartup() = 0;
+
+    void notifyKSplash();
+    void createWorkspace();
+    void createAtoms();
+    void createOptions();
+    void setupEventFilters();
+    void destroyWorkspace();
+
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
 
 private Q_SLOTS:
-    void lostSelection();
     void resetCrashesCount();
 
 private:
     void crashChecking();
-    QScopedPointer<KWinSelectionOwner> owner;
     QScopedPointer<XcbEventFilter> m_eventFilter;
-    bool m_replace;
     bool m_configLock;
     OperationMode m_operationMode;
     static int crashes;
