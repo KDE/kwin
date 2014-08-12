@@ -726,6 +726,11 @@ WaylandBackend *WaylandBackend::create(QObject *parent)
         return NULL;
     }
     s_self = new WaylandBackend(parent);
+    // check whether it has a display
+    if (!s_self->display()) {
+        delete s_self;
+        s_self = nullptr;
+    }
     return s_self;
 }
 
