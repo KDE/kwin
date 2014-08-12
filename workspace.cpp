@@ -149,7 +149,6 @@ Workspace::Workspace(bool restore)
 
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
 #if HAVE_WAYLAND
-    Wayland::WaylandBackend::create(this);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
     }

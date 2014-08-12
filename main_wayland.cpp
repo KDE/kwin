@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main_wayland.h"
 #include <config-kwin.h>
 // kwin
+#include "wayland_backend.h"
 #include "xcbutils.h"
 
 // KDE
@@ -48,6 +49,7 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
 ApplicationWayland::~ApplicationWayland()
 {
     destroyWorkspace();
+    delete Wayland::WaylandBackend::self();
     // TODO: only if we support X11
     Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
 }
@@ -75,7 +77,14 @@ void ApplicationWayland::performStartup()
                                                                                                                 XCB_CW_EVENT_MASK,
                                                                                                                 maskValues)));
     if (!redirectCheck.isNull()) {
-        fputs(i18n("kwin: an X11 window manager is running on the X11 Display.\n").toLocal8Bit().constData(), stderr);
+        fputs(i18n("kwin_wayland: an X11 window manager is running on the X11 Display.\n").toLocal8Bit().constData(), stderr);
+        ::exit(1);
+    }
+
+    // try creating the Wayland Backend
+    Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
+    if (!backend) {
+        fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     }
 

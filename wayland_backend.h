@@ -204,7 +204,7 @@ private:
 * It creates the connection to the Wayland Compositor, sets up the registry and creates
 * the Wayland surface and its shell mapping.
 */
-class WaylandBackend : public QObject
+class KWIN_EXPORT WaylandBackend : public QObject
 {
     Q_OBJECT
 public:
