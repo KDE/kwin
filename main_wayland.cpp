@@ -39,6 +39,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+static void sighandler(int)
+{
+    QApplication::exit();
+}
+
 //************************************
 // ApplicationWayland
 //************************************
@@ -206,6 +211,13 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     // enforce xcb plugin, unfortunately command line switch has precedence
     // TODO: ensure it's not xcb once we support the Wayland QPA
     setenv("QT_QPA_PLATFORM", "xcb", true);
+
+    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
+        signal(SIGTERM, SIG_IGN);
+    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
+        signal(SIGINT, SIG_IGN);
+    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
+        signal(SIGHUP, SIG_IGN);
 
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
