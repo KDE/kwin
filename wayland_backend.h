@@ -33,10 +33,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QTemporaryFile;
 class QImage;
-class QFileSystemWatcher;
 struct wl_cursor_theme;
 struct wl_buffer;
 struct wl_shm;
+struct wl_event_queue;
 
 namespace KWin
 {
@@ -46,6 +46,7 @@ namespace Wayland
 class ShmPool;
 class WaylandBackend;
 class WaylandSeat;
+class ConnectionThread;
 
 class CursorData
 {
@@ -233,15 +234,13 @@ Q_SIGNALS:
     void systemCompositorDied();
     void backendReady();
     void outputsChanged();
-private Q_SLOTS:
-    void readEvents();
-    void socketFileChanged(const QString &socket);
-    void socketDirectoryChanged();
+    void connectionFailed();
 private:
     void initConnection();
     void createSurface();
     void destroyOutputs();
     wl_display *m_display;
+    wl_event_queue *m_eventQueue;
     wl_registry *m_registry;
     wl_compositor *m_compositor;
     wl_shell *m_shell;
@@ -250,11 +249,9 @@ private:
     QSize m_shellSurfaceSize;
     QScopedPointer<WaylandSeat> m_seat;
     QScopedPointer<ShmPool> m_shm;
-    bool m_systemCompositorDied;
-    QString m_socketName;
-    QDir m_runtimeDir;
-    QFileSystemWatcher *m_socketWatcher;
     QList<Output*> m_outputs;
+    ConnectionThread *m_connectionThreadObject;
+    QThread *m_connectionThread;
 
     KWIN_SINGLETON(WaylandBackend)
 };

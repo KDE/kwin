@@ -397,7 +397,10 @@ if(KWIN_HAVE_EGL)
 endif()
 
 if(Wayland_Client_FOUND AND XKB_FOUND)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} wayland_backend.cpp)
+    set(kwin_KDEINIT_SRCS
+            ${kwin_KDEINIT_SRCS}
+            wayland_backend.cpp
+            wayland_client/connection_thread.cpp)
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
     endif()

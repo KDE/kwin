@@ -22,12 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "cursor.h"
 #include "input.h"
+#include "wayland_client/connection_thread.h"
 // Qt
 #include <QDebug>
 #include <QImage>
-#include <QFileSystemWatcher>
-#include <QSocketNotifier>
 #include <QTemporaryFile>
+#include <QThread>
 // xcb
 #include <xcb/xtest.h>
 #include <xcb/xfixes.h>
@@ -726,17 +726,13 @@ WaylandBackend *WaylandBackend::create(QObject *parent)
         return NULL;
     }
     s_self = new WaylandBackend(parent);
-    // check whether it has a display
-    if (!s_self->display()) {
-        delete s_self;
-        s_self = nullptr;
-    }
     return s_self;
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
+    , m_eventQueue(nullptr)
     , m_registry(nullptr)
     , m_compositor(NULL)
     , m_shell(NULL)
@@ -745,15 +741,9 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shellSurfaceSize(displayWidth(), displayHeight())
     , m_seat()
     , m_shm()
-    , m_systemCompositorDied(false)
-    , m_runtimeDir(qgetenv("XDG_RUNTIME_DIR"))
-    , m_socketWatcher(nullptr)
+    , m_connectionThreadObject(nullptr)
+    , m_connectionThread(nullptr)
 {
-    m_socketName = qgetenv("WAYLAND_DISPLAY");
-    if (m_socketName.isEmpty()) {
-        m_socketName = QStringLiteral("wayland-0");
-    }
-
     initConnection();
 }
 
@@ -775,10 +765,13 @@ WaylandBackend::~WaylandBackend()
     if (m_registry) {
         wl_registry_destroy(m_registry);
     }
-    if (m_display) {
-        wl_display_flush(m_display);
-        wl_display_disconnect(m_display);
-    }
+    m_seat.reset();
+    m_shm.reset();
+
+    m_connectionThreadObject->deleteLater();
+    m_connectionThread->quit();
+    m_connectionThread->wait();
+
     qDebug() << "Destroyed Wayland display";
     s_self = NULL;
 }
@@ -791,91 +784,67 @@ void WaylandBackend::destroyOutputs()
 
 void WaylandBackend::initConnection()
 {
-    m_display = wl_display_connect(nullptr);
-    if (!m_display) {
-        // TODO: maybe we should now really tear down
-        qWarning() << "Failed connecting to Wayland display";
-        return;
-    }
-    m_registry = wl_display_get_registry(m_display);
-    // setup the registry
-    wl_registry_add_listener(m_registry, &s_registryListener, this);
-    wl_display_dispatch(m_display);
-    int fd = wl_display_get_fd(m_display);
-    QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(notifier, &QSocketNotifier::activated, this, &WaylandBackend::readEvents);
+    m_connectionThreadObject = new ConnectionThread(nullptr);
+    connect(m_connectionThreadObject, &ConnectionThread::connected, this,
+        [this]() {
+            // create the event queue for the main gui thread
+            m_display = m_connectionThreadObject->display();
+            m_eventQueue = wl_display_create_queue(m_display);
+            // setup registry
+            m_registry = wl_display_get_registry(m_display);
+            wl_proxy_set_queue((wl_proxy*)m_registry, m_eventQueue);
+            // setup the registry
+            wl_registry_add_listener(m_registry, &s_registryListener, this);
+            wl_display_flush(m_display);
+        },
+        Qt::QueuedConnection);
+    connect(m_connectionThreadObject, &ConnectionThread::eventsRead, this,
+        [this]() {
+            if (!m_eventQueue) {
+                return;
+            }
+            wl_display_dispatch_queue_pending(m_display, m_eventQueue);
+            wl_display_flush(m_display);
+        },
+        Qt::QueuedConnection);
+    connect(m_connectionThreadObject, &ConnectionThread::connectionDied, this,
+        [this]() {
+            emit systemCompositorDied();
+            m_seat.reset();
+            m_shm.reset();
+            destroyOutputs();
+            if (m_shellSurface) {
+                free(m_shellSurface);
+                m_shellSurface = nullptr;
+            }
+            if (m_surface) {
+                free(m_surface);
+                m_surface = nullptr;
+            }
+            if (m_shell) {
+                free(m_shell);
+                m_shell = nullptr;
+            }
+            if (m_compositor) {
+                free(m_compositor);
+                m_compositor = nullptr;
+            }
+            if (m_registry) {
+                free(m_registry);
+                m_registry = nullptr;
+            }
+            if (m_display) {
+                m_display = nullptr;
+            }
+        },
+        Qt::QueuedConnection);
+    connect(m_connectionThreadObject, &ConnectionThread::failed, this, &WaylandBackend::connectionFailed, Qt::QueuedConnection);
 
-    if (m_runtimeDir.exists()) {
-        m_socketWatcher = new QFileSystemWatcher(this);
-        m_socketWatcher->addPath(m_runtimeDir.absoluteFilePath(m_socketName));
-        connect(m_socketWatcher, &QFileSystemWatcher::fileChanged, this, &WaylandBackend::socketFileChanged);
-    }
-    qDebug() << "Created Wayland display";
-}
+    m_connectionThread = new QThread(this);
+    m_connectionThreadObject->moveToThread(m_connectionThread);
+    m_connectionThread->start();
 
-void WaylandBackend::readEvents()
-{
-    // TODO: this still seems to block
-    if (m_systemCompositorDied) {
-        return;
-    }
-    wl_display_flush(m_display);
-    wl_display_dispatch(m_display);
-}
-
-void WaylandBackend::socketFileChanged(const QString &socket)
-{
-    if (!QFile::exists(socket) && !m_systemCompositorDied) {
-        qDebug() << "We lost the system compositor at:" << socket;
-        m_systemCompositorDied = true;
-        emit systemCompositorDied();
-        m_seat.reset();
-        m_shm.reset();
-        destroyOutputs();
-        if (m_shellSurface) {
-            free(m_shellSurface);
-            m_shellSurface = nullptr;
-        }
-        if (m_surface) {
-            free(m_surface);
-            m_surface = nullptr;
-        }
-        if (m_shell) {
-            free(m_shell);
-            m_shell = nullptr;
-        }
-        if (m_compositor) {
-            free(m_compositor);
-            m_compositor = nullptr;
-        }
-        if (m_registry) {
-            free(m_registry);
-            m_registry = nullptr;
-        }
-        if (m_display) {
-            free(m_display);
-            m_display = nullptr;
-        }
-        // need a new filesystem watcher
-        delete m_socketWatcher;
-        m_socketWatcher = new QFileSystemWatcher(this);
-        m_socketWatcher->addPath(m_runtimeDir.absolutePath());
-        connect(m_socketWatcher, &QFileSystemWatcher::directoryChanged, this, &WaylandBackend::socketDirectoryChanged);
-    }
-}
-
-void WaylandBackend::socketDirectoryChanged()
-{
-    if (!m_systemCompositorDied) {
-        return;
-    }
-    if (m_runtimeDir.exists(m_socketName)) {
-        qDebug() << "Socket reappeared";
-        delete m_socketWatcher;
-        m_socketWatcher = nullptr;
-        initConnection();
-        m_systemCompositorDied = false;
-    }
+    m_connectionThreadObject->initConnection();
 }
 
 void WaylandBackend::createSeat(uint32_t name)
@@ -946,7 +915,7 @@ void WaylandBackend::addOutput(wl_output *o)
 
 void WaylandBackend::dispatchEvents()
 {
-    wl_display_dispatch_pending(m_display);
+    // TODO: integrate into event loop to flush before going to block
     wl_display_flush(m_display);
 }
 

@@ -90,10 +90,12 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
-    if (!backend) {
-        fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
-        ::exit(1);
-    }
+    connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
+        [] () {
+            fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
+            ::exit(1);
+        }
+    );
 
     createWorkspace();
 

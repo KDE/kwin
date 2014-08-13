@@ -113,14 +113,16 @@ Compositor::Compositor(QObject* workspace)
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::systemCompositorDied, this, &Compositor::finish);
         connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::backendReady, this, &Compositor::setup);
-    }
+    } else
 #endif
 
+    {
     // delay the call to setup by one event cycle
     // The ctor of this class is invoked from the Workspace ctor, that means before
     // Workspace is completely constructed, so calling Workspace::self() would result
     // in undefined behavior. This is fixed by using a delayed invocation.
     QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
+    }
 
     // register DBus
     new CompositorDBusInterface(this);
