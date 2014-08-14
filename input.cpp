@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "unmanaged.h"
 #include "workspace.h"
+#if HAVE_INPUT
+#include "libinput/connection.h"
+#endif
 // KDE
 #include <kkeyserver.h>
 // TODO: remove xtest
@@ -166,6 +169,16 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_pointerWindow()
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
+#if HAVE_INPUT
+    LibInput::Connection *conn = LibInput::Connection::create(this);
+    if (conn) {
+        // TODO: connect the motion notifiers
+        conn->setup();
+        connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
+        connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
+        connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
+    }
+#endif
 }
 
 InputRedirection::~InputRedirection()

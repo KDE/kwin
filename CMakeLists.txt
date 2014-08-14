@@ -147,6 +147,20 @@ set_package_properties(XKB PROPERTIES
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 
+find_package(Libinput 0.5)
+set_package_properties(Libinput PROPERTIES TYPE OPTIONAL PURPOSE "Required for input handling on Wayland.")
+
+find_package(UDev)
+set_package_properties(UDev PROPERTIES  URL "http://www.freedesktop.org/software/systemd/libudev/"
+                                        DESCRIPTION "Linux device library."
+                                        TYPE OPTIONAL
+                                        PURPOSE "Required for input handling on Wayland."
+                        )
+set(HAVE_INPUT FALSE)
+if (Libinput_FOUND AND UDEV_FOUND)
+    set(HAVE_INPUT TRUE)
+endif()
+
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         URL "http://www.x.org"
@@ -410,6 +424,15 @@ if(HAVE_WAYLAND)
     endif()
 endif()
 
+if(HAVE_INPUT)
+    set(kwin_KDEINIT_SRCS
+        ${kwin_KDEINIT_SRCS}
+        libinput/context.cpp
+        libinput/connection.cpp
+        libinput/events.cpp
+    )
+endif()
+
 kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
 
 qt5_add_dbus_adaptor( kwin_KDEINIT_SRCS org.kde.KWin.xml dbusinterface.h KWin::DBusInterface )
@@ -513,6 +536,10 @@ if(HAVE_WAYLAND)
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
     endif()
+endif()
+
+if(HAVE_INPUT)
+    set(kwinLibs ${kwinLibs} Libinput::Libinput ${UDEV_LIBS})
 endif()
 
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
