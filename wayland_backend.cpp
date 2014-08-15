@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "cursor.h"
 #include "input.h"
+#include "main.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -470,6 +471,9 @@ WaylandBackend::WaylandBackend(QObject *parent)
     );
     connect(m_registry, &Registry::seatAnnounced, this,
         [this](quint32 name) {
+            if (Application::usesLibinput()) {
+                return;
+            }
             m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 2), this));
         }
     );
