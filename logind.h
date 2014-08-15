@@ -42,6 +42,9 @@ public:
     bool hasSessionControl() const {
         return m_sessionControl;
     }
+    bool isActiveSession() const {
+        return m_sessionActive;
+    }
 
     void takeControl();
     void releaseControl();
@@ -52,6 +55,10 @@ public:
 Q_SIGNALS:
     void connectedChanged();
     void hasSessionControlChanged(bool);
+    void sessionActiveChanged(bool);
+
+private Q_SLOTS:
+    void getSessionActive();
 
 private:
     friend class LogindTest;
@@ -63,11 +70,13 @@ private:
      **/
     explicit LogindIntegration(const QDBusConnection &connection, QObject *parent = nullptr);
     void logindServiceRegistered();
+    void connectSessionPropertiesChanged();
     QDBusConnection m_bus;
     QDBusServiceWatcher *m_logindServiceWatcher;
     bool m_connected;
     QString m_sessionPath;
     bool m_sessionControl;
+    bool m_sessionActive;
     KWIN_SINGLETON(LogindIntegration)
 };
 

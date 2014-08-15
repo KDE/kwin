@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "connection.h"
 #include "context.h"
 #include "events.h"
+#include "../logind.h"
 
 #include <QDebug>
 #include <QSocketNotifier>
@@ -85,6 +86,13 @@ void Connection::setup()
     Q_ASSERT(!m_notifier);
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
+
+    LogindIntegration *logind = LogindIntegration::self();
+    connect(logind, &LogindIntegration::sessionActiveChanged, this,
+        [this](bool active) {
+            active ? m_input->resume() : m_input->suspend();
+        }
+    );
 }
 
 void Connection::handleEvent()

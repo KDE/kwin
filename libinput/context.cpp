@@ -45,6 +45,7 @@ Udev::~Udev()
 
 Context::Context(const Udev &udev)
     : m_libinput(libinput_udev_create_context(&Context::s_interface, this, udev))
+    , m_suspended(false)
 {
     libinput_log_set_priority(m_libinput, LIBINPUT_LOG_PRIORITY_DEBUG);
 }
@@ -148,6 +149,24 @@ void Context::closeRestricted(int fd)
 Event *Context::event()
 {
     return Event::create(libinput_get_event(m_libinput));
+}
+
+void Context::suspend()
+{
+    if (m_suspended) {
+        return;
+    }
+    libinput_suspend(m_libinput);
+    m_suspended = true;
+}
+
+void Context::resume()
+{
+    if (!m_suspended) {
+        return;
+    }
+    libinput_resume(m_libinput);
+    m_suspended = false;
 }
 
 }

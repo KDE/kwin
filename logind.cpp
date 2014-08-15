@@ -37,6 +37,7 @@ const static QString s_login1Service = QStringLiteral("org.freedesktop.login1");
 const static QString s_login1Path = QStringLiteral("/org/freedesktop/login1");
 const static QString s_login1ManagerInterface = QStringLiteral("org.freedesktop.login1.Manager");
 const static QString s_login1SessionInterface = QStringLiteral("org.freedesktop.login1.Session");
+const static QString s_dbusPropertiesInterface = QStringLiteral("org.freedesktop.DBus.Properties");
 
 LogindIntegration *LogindIntegration::s_self = nullptr;
 
@@ -56,6 +57,7 @@ LogindIntegration::LogindIntegration(const QDBusConnection &connection, QObject 
                                                      this))
     , m_connected(false)
     , m_sessionControl(false)
+    , m_sessionActive(false)
 {
     connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceRegistered, this, &LogindIntegration::logindServiceRegistered);
     connect(m_logindServiceWatcher, &QDBusServiceWatcher::serviceUnregistered, this,
@@ -120,7 +122,49 @@ void LogindIntegration::logindServiceRegistered()
             m_sessionPath = reply.value().path();
             qDebug() << "Session path:" << m_sessionPath;
             m_connected = true;
+            connectSessionPropertiesChanged();
+            getSessionActive();
+
             emit connectedChanged();
+        }
+    );
+}
+
+void LogindIntegration::connectSessionPropertiesChanged()
+{
+    m_bus.connect(s_login1Service,
+                  m_sessionPath,
+                  s_dbusPropertiesInterface,
+                  QStringLiteral("PropertiesChanged"),
+                  this,
+                  SLOT(getSessionActive()));
+}
+
+void LogindIntegration::getSessionActive()
+{
+    if (!m_connected || m_sessionPath.isEmpty()) {
+        return;
+    }
+    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+                                                          m_sessionPath,
+                                                          s_dbusPropertiesInterface,
+                                                          QStringLiteral("Get"));
+    message.setArguments(QVariantList({s_login1SessionInterface, QStringLiteral("Active")}));
+    QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
+        [this](QDBusPendingCallWatcher *self) {
+            QDBusPendingReply<QVariant> reply = *self;
+            self->deleteLater();
+            if (!reply.isValid()) {
+                qDebug() << "Failed to get Active Property of logind session:" << reply.error().message();
+                return;
+            }
+            const bool active = reply.value().toBool();
+            if (m_sessionActive != active) {
+                m_sessionActive = active;
+                emit sessionActiveChanged(m_sessionActive);
+            }
         }
     );
 }

@@ -62,6 +62,8 @@ public:
 
     int fileDescriptor();
     void dispatch();
+    void suspend();
+    void resume();
 
     operator libinput*() {
         return m_libinput;
@@ -84,6 +86,7 @@ private:
     int openRestricted(const char *path, int flags);
     void closeRestricted(int fd);
     struct libinput *m_libinput;
+    bool m_suspended;
 };
 
 }
