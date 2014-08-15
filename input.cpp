@@ -172,7 +172,7 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
 #if HAVE_INPUT
-    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+    if (Application::usesLibinput()) {
         LogindIntegration *logind = LogindIntegration::self();
         auto takeControl = [logind, this]() {
             if (logind->hasSessionControl()) {
@@ -199,6 +199,9 @@ InputRedirection::~InputRedirection()
 void InputRedirection::setupLibInput()
 {
 #if HAVE_INPUT
+    if (!Application::usesLibinput()) {
+        return;
+    }
     LibInput::Connection *conn = LibInput::Connection::create(this);
     if (conn) {
         // TODO: connect the motion notifiers

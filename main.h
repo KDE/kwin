@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MAIN_H
 
 #include <kwinglobals.h>
+#include <config-kwin.h>
 
 #include <KSelectionWatcher>
 #include <KSelectionOwner>
@@ -112,6 +113,9 @@ public:
     static void setupMalloc();
     static void setupLocalizedString();
     static void setupLoggingCategoryFilters();
+
+    static bool usesLibinput();
+    static void setUseLibinput(bool use);
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);

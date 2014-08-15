@@ -406,6 +406,18 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
     return Workspace::self()->workspaceEvent(static_cast<xcb_generic_event_t *>(message));
 }
 
+static bool s_useLibinput = false;
+
+void Application::setUseLibinput(bool use)
+{
+    s_useLibinput = use;
+}
+
+bool Application::usesLibinput()
+{
+    return s_useLibinput;
+}
+
 } // namespace
 
 #include "main.moc"

@@ -238,9 +238,18 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     a.setupCommandLine(&parser);
     parser.addOption(startXServerOption);
     parser.addOption(x11DisplayOption);
+#if HAVE_INPUT
+    QCommandLineOption libinputOption(QStringLiteral("libinput"),
+                                      i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
+    parser.addOption(libinputOption);
+#endif
 
     parser.process(a);
     a.processCommandLine(&parser);
+
+#if HAVE_INPUT
+    KWin::Application::setUseLibinput(parser.isSet(libinputOption));
+#endif
 
     // perform sanity checks
     // TODO: remove those two
