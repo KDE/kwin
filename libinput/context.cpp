@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "context.h"
 #include "events.h"
+#include "../logind.h"
 
 #include <libudev.h>
 #include <fcntl.h>
@@ -93,13 +94,55 @@ void Context::closeRestrictedCallBack(int fd, void *user_data)
 
 int Context::openRestricted(const char *path, int flags)
 {
-    int fd = open(path, flags);
-    return fd < 0 ? -errno : fd;
+    LogindIntegration *logind = LogindIntegration::self();
+    Q_ASSERT(logind);
+    int fd = logind->takeDevice(path);
+    if (fd < 0) {
+        // failed
+        return fd;
+    }
+    // adjust flags - based on Weston (logind-util.c)
+    int fl = fcntl(fd, F_GETFL);
+    auto errorHandling = [fd, this]() {
+        close(fd);
+        closeRestricted(fd);
+    };
+    if (fl < 0) {
+        errorHandling();
+        return -1;
+    }
+
+    if (flags & O_NONBLOCK) {
+            fl |= O_NONBLOCK;
+    }
+
+    if (fcntl(fd, F_SETFL, fl) < 0) {
+        errorHandling();
+        return -1;
+    }
+
+    fl = fcntl(fd, F_GETFD);
+    if (fl < 0) {
+        errorHandling();
+        return -1;
+    }
+
+    if (!(flags & O_CLOEXEC)) {
+            fl &= ~FD_CLOEXEC;
+    }
+
+    if (fcntl(fd, F_SETFD, fl) < 0) {
+        errorHandling();
+        return -1;
+    }
+    return fd;
 }
 
 void Context::closeRestricted(int fd)
 {
-    close(fd);
+    LogindIntegration *logind = LogindIntegration::self();
+    Q_ASSERT(logind);
+    logind->releaseDevice(fd);
 }
 
 Event *Context::event()

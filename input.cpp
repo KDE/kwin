@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "globalshortcuts.h"
+#include "logind.h"
+#include "main.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
@@ -170,6 +172,33 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
 #if HAVE_INPUT
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        LogindIntegration *logind = LogindIntegration::self();
+        auto takeControl = [logind, this]() {
+            if (logind->hasSessionControl()) {
+                setupLibInput();
+            } else {
+                logind->takeControl();
+                connect(logind, &LogindIntegration::hasSessionControlChanged, this, &InputRedirection::setupLibInput);
+            }
+        };
+        if (logind->isConnected()) {
+            takeControl();
+        } else {
+            connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
+        }
+    }
+#endif
+}
+
+InputRedirection::~InputRedirection()
+{
+    s_self = NULL;
+}
+
+void InputRedirection::setupLibInput()
+{
+#if HAVE_INPUT
     LibInput::Connection *conn = LibInput::Connection::create(this);
     if (conn) {
         // TODO: connect the motion notifiers
@@ -179,11 +208,6 @@ InputRedirection::InputRedirection(QObject *parent)
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
     }
 #endif
-}
-
-InputRedirection::~InputRedirection()
-{
-    s_self = NULL;
 }
 
 void InputRedirection::updatePointerWindow()

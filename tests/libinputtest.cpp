@@ -19,6 +19,7 @@
 */
 #include "../input.h"
 #include "../libinput/connection.h"
+#include "../logind.h"
 
 #include <QCoreApplication>
 
@@ -31,37 +32,55 @@ int main(int argc, char **argv)
     using namespace KWin::LibInput;
 
     QCoreApplication app(argc, argv);
-    Connection *conn = Connection::create(&app);
-    if (!conn) {
-        std::cerr << "Failed to create LibInput integration" << std::endl;
-        return 1;
-    }
-    conn->setScreenSize(QSize(100, 100));
-    conn->setup();
-    QObject::connect(conn, &Connection::keyChanged,
-        [](uint32_t key, KWin::InputRedirection::KeyboardKeyState state) {
-            std::cout << "Got key event" << std::endl;;
-            if (key == KEY_Q && state == KWin::InputRedirection::KeyboardKeyReleased) {
-                QCoreApplication::instance()->quit();
+
+    KWin::LogindIntegration *logind = KWin::LogindIntegration::create(&app);
+    QObject::connect(logind, &KWin::LogindIntegration::connectedChanged,
+        [logind]() {
+            if (logind->isConnected()) {
+                logind->takeControl();
             }
         }
     );
-    QObject::connect(conn, &Connection::pointerButtonChanged,
-        [](uint32_t button, KWin::InputRedirection::PointerButtonState state) {
-            std::cout << "Got pointer button event" << std::endl;
-            if (button == BTN_MIDDLE && state == KWin::InputRedirection::PointerButtonReleased) {
-                QCoreApplication::instance()->quit();
+    QObject::connect(logind, &KWin::LogindIntegration::hasSessionControlChanged,
+        [&app](bool valid) {
+            if (!valid) {
+                return;
             }
-        }
-    );
-    QObject::connect(conn, &Connection::pointerMotion,
-        [](QPointF delta) {
-            std::cout << "Got pointer motion: " << delta.x() << "/" << delta.y() << std::endl;
-        }
-    );
-    QObject::connect(conn, &Connection::pointerAxisChanged,
-        [](KWin::InputRedirection::PointerAxis axis, qreal delta) {
-            std::cout << "Axis: " << axis << " with delta" << delta << std::endl;
+            Connection *conn = Connection::create(&app);
+            if (!conn) {
+                std::cerr << "Failed to create LibInput integration" << std::endl;
+                ::exit(1);
+            }
+            conn->setScreenSize(QSize(100, 100));
+            conn->setup();
+
+            QObject::connect(conn, &Connection::keyChanged,
+                [](uint32_t key, KWin::InputRedirection::KeyboardKeyState state) {
+                    std::cout << "Got key event" << std::endl;;
+                    if (key == KEY_Q && state == KWin::InputRedirection::KeyboardKeyReleased) {
+                        QCoreApplication::instance()->quit();
+                    }
+                }
+            );
+            QObject::connect(conn, &Connection::pointerButtonChanged,
+                [](uint32_t button, KWin::InputRedirection::PointerButtonState state) {
+                    std::cout << "Got pointer button event" << std::endl;
+                    if (button == BTN_MIDDLE && state == KWin::InputRedirection::PointerButtonReleased) {
+                        QCoreApplication::instance()->quit();
+                    }
+                }
+            );
+            QObject::connect(conn, &Connection::pointerMotion,
+                [](QPointF delta) {
+                    std::cout << "Got pointer motion: " << delta.x() << "/" << delta.y() << std::endl;
+                }
+            );
+            QObject::connect(conn, &Connection::pointerAxisChanged,
+                [](KWin::InputRedirection::PointerAxis axis, qreal delta) {
+                    std::cout << "Axis: " << axis << " with delta" << delta << std::endl;
+                }
+            );
+            QObject::connect(&app, &QCoreApplication::aboutToQuit, [conn] { delete conn; });
         }
     );
 

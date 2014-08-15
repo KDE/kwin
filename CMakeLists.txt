@@ -362,6 +362,7 @@ set(kwin_KDEINIT_SRCS
    virtualdesktops.cpp
    xcbutils.cpp
    x11eventfilter.cpp
+   logind.cpp
     scripting/scripting.cpp
     scripting/workspace_wrapper.cpp
     scripting/meta.cpp

@@ -155,6 +155,7 @@ private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
     Toplevel *findToplevel(const QPoint &pos);
+    void setupLibInput();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB
