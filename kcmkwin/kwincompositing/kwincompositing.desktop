@@ -42,6 +42,7 @@ Name[sr@latin]=Slagač
 Name[sv]=Sammansättning
 Name[tr]=Birleştirici
 Name[uk]=Засіб композиції
+Name[vi]=Compositor
 Name[x-test]=xxCompositorxx
 Name[zh_TW]=組合器
 Comment=Compositor Settings for Desktop Effects
@@ -68,6 +69,7 @@ Comment[sr@ijekavianlatin]=Postavke slagača za efekte površi
 Comment[sr@latin]=Postavke slagača za efekte površi
 Comment[sv]=Sammansättningsinställningar för skrivbordseffekter
 Comment[uk]=Параметри засобу композиції для ефектів стільниці
+Comment[vi]=Thiết lập Compositor cho hiệu ứng màn hình
 Comment[x-test]=xxCompositor Settings for Desktop Effectsxx
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
