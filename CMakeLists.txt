@@ -512,8 +512,8 @@ endif()
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
 
 set_target_properties(kwin PROPERTIES
-   VERSION GENERIC_LIB_VERSION
-   SOVERSION GENERIC_LIB_SOVERSION
+   VERSION ${GENERIC_LIB_VERSION}
+   SOVERSION ${GENERIC_LIB_SOVERSION}
    )
 
 target_link_libraries(kwin ${kwinLibs})
