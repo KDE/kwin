@@ -152,6 +152,9 @@ void WaylandQPainterBackend::lastFrameRendered()
 void WaylandQPainterBackend::screenGeometryChanged(const QSize &size)
 {
     Q_UNUSED(size)
+    if (!m_buffer) {
+        return;
+    }
     m_buffer->setUsed(false);
     m_buffer = NULL;
 }
