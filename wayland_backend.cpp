@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "wayland_client/connection_thread.h"
+#include "wayland_client/registry.h"
 // Qt
 #include <QDebug>
 #include <QImage>
@@ -42,40 +43,6 @@ namespace KWin
 {
 namespace Wayland
 {
-
-/**
- * Callback for announcing global objects in the registry
- **/
-static void registryHandleGlobal(void *data, struct wl_registry *registry,
-                                 uint32_t name, const char *interface, uint32_t version)
-{
-    Q_UNUSED(version)
-    WaylandBackend *d = reinterpret_cast<WaylandBackend*>(data);
-
-    if (strcmp(interface, "wl_compositor") == 0) {
-        d->setCompositor(reinterpret_cast<wl_compositor*>(wl_registry_bind(registry, name, &wl_compositor_interface, 1)));
-    } else if (strcmp(interface, "wl_shell") == 0) {
-        d->setShell(reinterpret_cast<wl_shell *>(wl_registry_bind(registry, name, &wl_shell_interface, 1)));
-    } else if (strcmp(interface, "wl_seat") == 0) {
-        d->createSeat(name);
-    } else if (strcmp(interface, "wl_shm") == 0) {
-        d->createShm(name);
-    } else if (strcmp(interface, "wl_output") == 0) {
-        d->addOutput(reinterpret_cast<wl_output *>(wl_registry_bind(registry, name, &wl_output_interface, 1)));
-    }
-    qDebug() << "Wayland Interface: " << interface;
-}
-
-/**
- * Callback for removal of global objects in the registry
- **/
-static void registryHandleGlobalRemove(void *data, struct wl_registry *registry, uint32_t name)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(registry)
-    Q_UNUSED(name)
-    // TODO: implement me
-}
 
 /**
  * Call back for ping from Wayland Shell.
@@ -259,11 +226,6 @@ static void outputHandleScale(void *data, wl_output *output, int32_t scale)
 }
 
 // handlers
-static const struct wl_registry_listener s_registryListener = {
-    registryHandleGlobal,
-    registryHandleGlobalRemove
-};
-
 static const struct wl_shell_surface_listener s_shellSurfaceListener = {
     handlePing,
     handleConfigure,
@@ -733,7 +695,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
     , m_eventQueue(nullptr)
-    , m_registry(nullptr)
+    , m_registry(new Registry(this))
     , m_compositor(NULL)
     , m_shell(NULL)
     , m_surface(NULL)
@@ -744,6 +706,23 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThreadObject(nullptr)
     , m_connectionThread(nullptr)
 {
+    connect(m_registry, &Registry::compositorAnnounced, this,
+        [this](quint32 name) {
+            setCompositor(m_registry->bindCompositor(name, 1));
+        }
+    );
+    connect(m_registry, &Registry::shellAnnounced, this,
+        [this](quint32 name) {
+            setShell(m_registry->bindShell(name, 1));
+        }
+    );
+    connect(m_registry, &Registry::outputAnnounced, this,
+        [this](quint32 name) {
+            addOutput(m_registry->bindOutput(name, 1));
+        }
+    );
+    connect(m_registry, &Registry::seatAnnounced, this, &WaylandBackend::createSeat);
+    connect(m_registry, &Registry::shmAnnounced, this, &WaylandBackend::createShm);
     initConnection();
 }
 
@@ -762,9 +741,7 @@ WaylandBackend::~WaylandBackend()
     if (m_compositor) {
         wl_compositor_destroy(m_compositor);
     }
-    if (m_registry) {
-        wl_registry_destroy(m_registry);
-    }
+    m_registry->release();
     m_seat.reset();
     m_shm.reset();
 
@@ -791,10 +768,9 @@ void WaylandBackend::initConnection()
             m_display = m_connectionThreadObject->display();
             m_eventQueue = wl_display_create_queue(m_display);
             // setup registry
-            m_registry = wl_display_get_registry(m_display);
-            wl_proxy_set_queue((wl_proxy*)m_registry, m_eventQueue);
-            // setup the registry
-            wl_registry_add_listener(m_registry, &s_registryListener, this);
+            m_registry->create(m_display);
+            wl_proxy_set_queue((wl_proxy*)m_registry->registry(), m_eventQueue);
+            m_registry->setup();
             wl_display_flush(m_display);
         },
         Qt::QueuedConnection);
@@ -829,10 +805,7 @@ void WaylandBackend::initConnection()
                 free(m_compositor);
                 m_compositor = nullptr;
             }
-            if (m_registry) {
-                free(m_registry);
-                m_registry = nullptr;
-            }
+            m_registry->destroy();
             if (m_display) {
                 m_display = nullptr;
             }
@@ -849,8 +822,7 @@ void WaylandBackend::initConnection()
 
 void WaylandBackend::createSeat(uint32_t name)
 {
-    wl_seat *seat = reinterpret_cast<wl_seat*>(wl_registry_bind(m_registry, name, &wl_seat_interface, 1));
-    m_seat.reset(new WaylandSeat(seat, this));
+    m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 1), this));
 }
 
 void WaylandBackend::installCursorImage(Qt::CursorShape shape)
@@ -877,7 +849,7 @@ void WaylandBackend::createSurface()
 
 void WaylandBackend::createShm(uint32_t name)
 {
-    m_shm.reset(new ShmPool(reinterpret_cast<wl_shm *>(wl_registry_bind(m_registry, name, &wl_shm_interface, 1))));
+    m_shm.reset(new ShmPool(m_registry->bindShm(name, 1)));
     if (!m_shm->isValid()) {
         m_shm.reset();
     }
@@ -917,6 +889,11 @@ void WaylandBackend::dispatchEvents()
 {
     // TODO: integrate into event loop to flush before going to block
     wl_display_flush(m_display);
+}
+
+wl_registry *WaylandBackend::registry()
+{
+    return m_registry->registry();
 }
 
 }

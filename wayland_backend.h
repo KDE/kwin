@@ -47,6 +47,7 @@ class ShmPool;
 class WaylandBackend;
 class WaylandSeat;
 class ConnectionThread;
+class Registry;
 
 class CursorData
 {
@@ -241,7 +242,7 @@ private:
     void destroyOutputs();
     wl_display *m_display;
     wl_event_queue *m_eventQueue;
-    wl_registry *m_registry;
+    Registry *m_registry;
     wl_compositor *m_compositor;
     wl_shell *m_shell;
     wl_surface *m_surface;
@@ -350,12 +351,6 @@ inline
 wl_display *WaylandBackend::display()
 {
     return m_display;
-}
-
-inline
-wl_registry *WaylandBackend::registry()
-{
-    return m_registry;
 }
 
 inline
