@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "wayland_client/output.h"
 #include <xcb/randr.h>
 #endif
 

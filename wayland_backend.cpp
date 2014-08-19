@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "wayland_client/connection_thread.h"
 #include "wayland_client/fullscreen_shell.h"
+#include "wayland_client/output.h"
 #include "wayland_client/registry.h"
 // Qt
 #include <QDebug>
@@ -184,48 +185,6 @@ static void bufferRelease(void *data, wl_buffer *wl_buffer)
     buffer->setReleased(true);
 }
 
-static void outputHandleGeometry(void *data, wl_output *output, int32_t x, int32_t y,
-                                 int32_t physicalWidth, int32_t physicalHeight, int32_t subPixel,
-                                 const char *make, const char *model, int32_t transform)
-{
-    Q_UNUSED(subPixel)
-    Q_UNUSED(transform)
-    Output *o = reinterpret_cast<Output*>(data);
-    if (o->output() != output) {
-        return;
-    }
-    o->setGlobalPosition(QPoint(x, y));
-    o->setManufacturer(make);
-    o->setModel(model);
-    o->setPhysicalSize(QSize(physicalWidth, physicalHeight));
-    o->emitChanged();
-}
-
-static void outputHandleMode(void *data, wl_output *output, uint32_t flags, int32_t width, int32_t height, int32_t refresh)
-{
-    Q_UNUSED(flags)
-    Output *o = reinterpret_cast<Output*>(data);
-    if (o->output() != output) {
-        return;
-    }
-    o->setPixelSize(QSize(width, height));
-    o->setRefreshRate(refresh);
-    o->emitChanged();
-}
-
-static void outputHandleDone(void *data, wl_output *output)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(output)
-}
-
-static void outputHandleScale(void *data, wl_output *output, int32_t scale)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(output)
-    Q_UNUSED(scale)
-}
-
 // handlers
 static const struct wl_shell_surface_listener s_shellSurfaceListener = {
     handlePing,
@@ -255,13 +214,6 @@ static const struct wl_seat_listener s_seatListener = {
 
 static const struct wl_buffer_listener s_bufferListener = {
     bufferRelease
-};
-
-static const struct wl_output_listener s_outputListener = {
-    outputHandleGeometry,
-    outputHandleMode,
-    outputHandleDone,
-    outputHandleScale
 };
 
 CursorData::CursorData()
@@ -627,59 +579,6 @@ void WaylandSeat::destroyTheme()
     }
 }
 
-Output::Output(wl_output *output, QObject *parent)
-    : QObject(parent)
-    , m_output(output)
-    , m_physicalSize()
-    , m_globalPosition()
-    , m_manufacturer()
-    , m_model()
-    , m_pixelSize()
-    , m_refreshRate(0)
-{
-    wl_output_add_listener(m_output, &s_outputListener, this);
-}
-
-Output::~Output()
-{
-    wl_output_destroy(m_output);
-}
-
-void Output::setGlobalPosition(const QPoint &pos)
-{
-    m_globalPosition = pos;
-}
-
-void Output::setManufacturer(const QString &manufacturer)
-{
-    m_manufacturer = manufacturer;
-}
-
-void Output::setModel(const QString &model)
-{
-    m_model = model;
-}
-
-void Output::setPhysicalSize(const QSize &size)
-{
-    m_physicalSize = size;
-}
-
-void Output::setPixelSize(const QSize& size)
-{
-    m_pixelSize = size;
-}
-
-void Output::setRefreshRate(int refreshRate)
-{
-    m_refreshRate = refreshRate;
-}
-
-void Output::emitChanged()
-{
-    emit changed();
-}
-
 WaylandBackend *WaylandBackend::s_self = 0;
 WaylandBackend *WaylandBackend::create(QObject *parent)
 {
@@ -720,7 +619,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     );
     connect(m_registry, &Registry::outputAnnounced, this,
         [this](quint32 name) {
-            addOutput(m_registry->bindOutput(name, 1));
+            addOutput(m_registry->bindOutput(name, 2));
         }
     );
     connect(m_registry, &Registry::seatAnnounced, this, &WaylandBackend::createSeat);
@@ -905,7 +804,8 @@ void WaylandBackend::setShellSurfaceSize(const QSize &size)
 
 void WaylandBackend::addOutput(wl_output *o)
 {
-    Output *output = new Output(o, this);
+    Output *output = new Output(this);
+    output->setup(o);
     m_outputs.append(output);
     connect(output, &Output::changed, this, &WaylandBackend::outputsChanged);
 }
