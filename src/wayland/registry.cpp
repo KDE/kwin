@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "registry.h"
+#include <wayland-client-fullscreen-shell.h>
 
 #include <QDebug>
 
@@ -97,6 +98,8 @@ static Registry::Interface nameToInterface(const char *interface)
         return Registry::Interface::Shm;
     } else if (strcmp(interface, "wl_output") == 0) {
         return Registry::Interface::Output;
+    } else if (strcmp(interface, "_wl_fullscreen_shell") == 0) {
+        return Registry::Interface::FullscreenShell;
     }
     return Registry::Interface::Unknown;
 }
@@ -125,6 +128,9 @@ void Registry::handleAnnounce(uint32_t name, const char *interface, uint32_t ver
         break;
     case Interface::Shm:
         emit shmAnnounced(name, version);
+        break;
+    case Interface::FullscreenShell:
+        emit fullscreenShellAnnounced(name, version);
         break;
     case Interface::Unknown:
     default:
@@ -158,6 +164,9 @@ void Registry::handleRemove(uint32_t name)
             break;
         case Interface::Shm:
             emit shmRemoved(data.name);
+            break;
+        case Interface::FullscreenShell:
+            emit fullscreenShellRemoved(data.name);
             break;
         case Interface::Unknown:
         default:
@@ -202,6 +211,11 @@ wl_shm *Registry::bindShm(uint32_t name, uint32_t version) const
     return reinterpret_cast<wl_shm*>(bind(Interface::Shm, name, version));
 }
 
+_wl_fullscreen_shell *Registry::bindFullscreenShell(uint32_t name, uint32_t version) const
+{
+    return reinterpret_cast<_wl_fullscreen_shell*>(bind(Interface::FullscreenShell, name, version));
+}
+
 static const wl_interface *wlInterface(Registry::Interface interface)
 {
     switch (interface) {
@@ -215,6 +229,8 @@ static const wl_interface *wlInterface(Registry::Interface interface)
         return &wl_shell_interface;
     case Registry::Interface::Shm:
         return &wl_shm_interface;
+    case Registry::Interface::FullscreenShell:
+        return &_wl_fullscreen_shell_interface;
     case Registry::Interface::Unknown:
     default:
         return nullptr;

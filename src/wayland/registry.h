@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-client-protocol.h>
 
+struct _wl_fullscreen_shell;
+
 namespace KWin
 {
 namespace Wayland
@@ -40,6 +42,7 @@ public:
         Seat,       // wl_seat
         Shm,        // wl_shm
         Output,     // wl_output
+        FullscreenShell, // _wl_fullscreen_shell
         Unknown
     };
     explicit Registry(QObject *parent = nullptr);
@@ -60,6 +63,7 @@ public:
     wl_seat *bindSeat(uint32_t name, uint32_t version) const;
     wl_shm *bindShm(uint32_t name, uint32_t version) const;
     wl_output *bindOutput(uint32_t name, uint32_t version) const;
+    _wl_fullscreen_shell *bindFullscreenShell(uint32_t name, uint32_t version) const;
 
     operator wl_registry*() {
         return m_registry;
@@ -80,11 +84,13 @@ Q_SIGNALS:
     void seatAnnounced(quint32 name, quint32 version);
     void shmAnnounced(quint32 name, quint32 version);
     void outputAnnounced(quint32 name, quint32 version);
+    void fullscreenShellAnnounced(quint32 name, quint32 version);
     void compositorRemoved(quint32 name);
     void shellRemoved(quint32 name);
     void seatRemoved(quint32 name);
     void shmRemoved(quint32 name);
     void outputRemoved(quint32 name);
+    void fullscreenShellRemoved(quint32 name);
 
 private:
     static const struct wl_registry_listener s_registryListener;
