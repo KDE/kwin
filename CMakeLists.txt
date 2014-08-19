@@ -50,6 +50,8 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
         message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
     endif()
+    # adjusting CMAKE_C_FLAGS to get wayland protocols to compile
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 endif()
 
 find_package(Qt5Multimedia QUIET)
@@ -133,6 +135,36 @@ set_package_properties(Wayland PROPERTIES
                       )
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
+
+find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
+add_feature_info("wayland-scanner" WAYLAND_SCANNER_EXECUTABLE "Required for generating Wayland protocols")
+
+if(WAYLAND_SCANNER_EXECUTABLE)
+    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/wayland_protocols/)
+    add_custom_command(
+        OUTPUT
+            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
+        COMMAND
+            ${WAYLAND_SCANNER_EXECUTABLE} client-header <${KWIN_SOURCE_DIR}/wayland_client/protocols/fullscreen-shell.xml >${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/wayland_protocols/
+        WORKING_DIRECTORY
+            ${CMAKE_BINARY_DIR}/wayland_protocols
+    )
+    add_custom_command(
+        OUTPUT
+            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        COMMAND
+            ${WAYLAND_SCANNER_EXECUTABLE} code <${KWIN_SOURCE_DIR}/wayland_client/protocols/fullscreen-shell.xml >${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        DEPENDS ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
+        WORKING_DIRECTORY
+            ${CMAKE_BINARY_DIR}/wayland_protocols
+    )
+    add_custom_target(wayland-client-fullscreen-shell DEPENDS ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c)
+    include_directories(${CMAKE_BINARY_DIR}/wayland_protocols/)
+    set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c GENERATED)
+else()
+    set(Wayland_Client_FOUND FALSE)
+endif()
 
 find_package(XKB 0.4.1)
 set_package_properties(XKB PROPERTIES
@@ -396,6 +428,8 @@ if(Wayland_Client_FOUND AND XKB_FOUND)
             wayland_backend.cpp
             wayland_client/connection_thread.cpp
             wayland_client/registry.cpp
+            wayland_client/fullscreen_shell.cpp
+            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)

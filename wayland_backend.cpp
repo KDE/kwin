@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "wayland_client/connection_thread.h"
+#include "wayland_client/fullscreen_shell.h"
 #include "wayland_client/registry.h"
 // Qt
 #include <QDebug>
@@ -705,6 +706,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shm()
     , m_connectionThreadObject(nullptr)
     , m_connectionThread(nullptr)
+    , m_fullscreenShell(new FullscreenShell(this))
 {
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {
@@ -723,6 +725,12 @@ WaylandBackend::WaylandBackend(QObject *parent)
     );
     connect(m_registry, &Registry::seatAnnounced, this, &WaylandBackend::createSeat);
     connect(m_registry, &Registry::shmAnnounced, this, &WaylandBackend::createShm);
+    connect(m_registry, &Registry::fullscreenShellAnnounced, this,
+        [this](quint32 name, quint32 version) {
+            m_fullscreenShell->setup(m_registry->bindFullscreenShell(name, version));
+            createSurface();
+        }
+    );
     initConnection();
 }
 
@@ -732,6 +740,7 @@ WaylandBackend::~WaylandBackend()
     if (m_shellSurface) {
         wl_shell_surface_destroy(m_shellSurface);
     }
+    m_fullscreenShell->release();
     if (m_surface) {
         wl_surface_destroy(m_surface);
     }
@@ -793,6 +802,7 @@ void WaylandBackend::initConnection()
                 free(m_shellSurface);
                 m_shellSurface = nullptr;
             }
+            m_fullscreenShell->destroy();
             if (m_surface) {
                 free(m_surface);
                 m_surface = nullptr;
@@ -840,10 +850,25 @@ void WaylandBackend::createSurface()
         qCritical() << "Creating Wayland Surface failed";
         return;
     }
-    // map the surface as fullscreen
-    m_shellSurface = wl_shell_get_shell_surface(m_shell, m_surface);
-    wl_shell_surface_add_listener(m_shellSurface, &s_shellSurfaceListener, this);
-    wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
+    if (m_fullscreenShell->isValid()) {
+        Output *o = m_outputs.first();
+        if (o->pixelSize().isValid()) {
+            setShellSurfaceSize(o->pixelSize());
+        }
+        connect(o, &Output::changed, this,
+            [this, o]() {
+                if (o->pixelSize().isValid()) {
+                    setShellSurfaceSize(o->pixelSize());
+                }
+            }
+        );
+        m_fullscreenShell->present(m_surface, o->output());
+    } else {
+        // map the surface as fullscreen
+        m_shellSurface = wl_shell_get_shell_surface(m_shell, m_surface);
+        wl_shell_surface_add_listener(m_shellSurface, &s_shellSurfaceListener, this);
+        wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
+    }
     emit backendReady();
 }
 

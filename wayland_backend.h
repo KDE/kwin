@@ -47,6 +47,7 @@ class ShmPool;
 class WaylandBackend;
 class WaylandSeat;
 class ConnectionThread;
+class FullscreenShell;
 class Registry;
 
 class CursorData
@@ -253,6 +254,7 @@ private:
     QList<Output*> m_outputs;
     ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
+    FullscreenShell *m_fullscreenShell;
 
     KWIN_SINGLETON(WaylandBackend)
 };
