@@ -250,9 +250,6 @@ bool EglWaylandBackend::initBufferConfigs()
 
 void EglWaylandBackend::present()
 {
-    // need to dispatch pending events as eglSwapBuffers can block
-    m_wayland->dispatchEvents();
-
     m_lastFrameRendered = false;
     wl_callback *callback = wl_surface_frame(m_wayland->surface());
     wl_callback_add_listener(callback, &s_surfaceFrameListener, this);

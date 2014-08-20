@@ -190,8 +190,6 @@ public:
     wl_surface *surface() const;
     QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
-
-    void dispatchEvents();
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();

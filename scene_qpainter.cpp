@@ -140,7 +140,6 @@ void WaylandQPainterBackend::present(int mask, const QRegion &damage)
         wl_surface_damage(surface, rect.x(), rect.y(), rect.width(), rect.height());
     }
     wl_surface_commit(surface);
-    wl->dispatchEvents();
 }
 
 void WaylandQPainterBackend::lastFrameRendered()

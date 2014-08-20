@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_client/registry.h"
 #include "wayland_client/shell.h"
 // Qt
+#include <QAbstractEventDispatcher>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QImage>
 #include <QTemporaryFile>
@@ -571,6 +573,15 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
 {
+    QAbstractEventDispatcher *dispatcher = QCoreApplication::instance()->eventDispatcher();
+    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this,
+        [this]() {
+            if (!m_display) {
+                return;
+            }
+            wl_display_flush(m_display);
+        }
+    );
     connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {
@@ -643,7 +654,6 @@ void WaylandBackend::initConnection()
             m_registry->create(m_display);
             wl_proxy_set_queue((wl_proxy*)m_registry->registry(), m_eventQueue);
             m_registry->setup();
-            wl_display_flush(m_display);
         },
         Qt::QueuedConnection);
     connect(m_connectionThreadObject, &ConnectionThread::eventsRead, this,
@@ -755,12 +765,6 @@ void WaylandBackend::addOutput(wl_output *o)
     output->setup(o);
     m_outputs.append(output);
     connect(output, &Output::changed, this, &WaylandBackend::outputsChanged);
-}
-
-void WaylandBackend::dispatchEvents()
-{
-    // TODO: integrate into event loop to flush before going to block
-    wl_display_flush(m_display);
 }
 
 wl_registry *WaylandBackend::registry()
