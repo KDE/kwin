@@ -35,7 +35,6 @@ class QTemporaryFile;
 class QImage;
 struct wl_cursor_theme;
 struct wl_buffer;
-struct wl_shm;
 struct wl_event_queue;
 
 namespace KWin
@@ -85,57 +84,6 @@ private:
     WaylandBackend *m_backend;
     uint32_t m_installedCursor;
     uint32_t m_lastX11Cursor;
-};
-
-class Buffer
-{
-public:
-    Buffer(wl_buffer *buffer, const QSize &size, int32_t stride, size_t offset);
-    ~Buffer();
-    void copy(const void *src);
-    void setReleased(bool released);
-    void setUsed(bool used);
-
-    wl_buffer *buffer() const;
-    const QSize &size() const;
-    int32_t stride() const;
-    bool isReleased() const;
-    bool isUsed() const;
-    uchar *address();
-private:
-    wl_buffer *m_nativeBuffer;
-    bool m_released;
-    QSize m_size;
-    int32_t m_stride;
-    size_t m_offset;
-    bool m_used;
-};
-
-class ShmPool : public QObject
-{
-    Q_OBJECT
-public:
-    ShmPool(wl_shm *shm);
-    ~ShmPool();
-    bool isValid() const;
-    wl_buffer *createBuffer(const QImage &image);
-    wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
-    void *poolAddress() const;
-    Buffer *getBuffer(const QSize &size, int32_t stride);
-    wl_shm *shm();
-Q_SIGNALS:
-    void poolResized();
-private:
-    bool createPool();
-    bool resizePool(int32_t newSize);
-    wl_shm *m_shm;
-    wl_shm_pool *m_pool;
-    void *m_poolData;
-    int32_t m_size;
-    QScopedPointer<QTemporaryFile> m_tmpFile;
-    bool m_valid;
-    int m_offset;
-    QList<Buffer*> m_buffers;
 };
 
 class WaylandSeat : public QObject
@@ -244,24 +192,6 @@ wl_seat *WaylandSeat::seat()
 }
 
 inline
-bool ShmPool::isValid() const
-{
-    return m_valid;
-}
-
-inline
-void* ShmPool::poolAddress() const
-{
-    return m_poolData;
-}
-
-inline
-wl_shm *ShmPool::shm()
-{
-    return m_shm;
-}
-
-inline
 wl_display *WaylandBackend::display()
 {
     return m_display;
@@ -295,48 +225,6 @@ inline
 const QList< Output* >& WaylandBackend::outputs() const
 {
     return m_outputs;
-}
-
-inline
-wl_buffer* Buffer::buffer() const
-{
-    return m_nativeBuffer;
-}
-
-inline
-const QSize& Buffer::size() const
-{
-    return m_size;
-}
-
-inline
-int32_t Buffer::stride() const
-{
-    return m_stride;
-}
-
-inline
-bool Buffer::isReleased() const
-{
-    return m_released;
-}
-
-inline
-void Buffer::setReleased(bool released)
-{
-    m_released = released;
-}
-
-inline
-bool Buffer::isUsed() const
-{
-    return m_used;
-}
-
-inline
-void Buffer::setUsed(bool used)
-{
-    m_used = used;
 }
 
 } // namespace Wayland

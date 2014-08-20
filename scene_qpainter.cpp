@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "wayland_client/buffer.h"
+#include "wayland_client/shm_pool.h"
 #include "wayland_client/surface.h"
 #endif
 #include "workspace.h"
