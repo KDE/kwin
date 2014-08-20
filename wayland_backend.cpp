@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_client/fullscreen_shell.h"
 #include "wayland_client/output.h"
 #include "wayland_client/registry.h"
+#include "wayland_client/shell.h"
 // Qt
 #include <QDebug>
 #include <QImage>
@@ -45,36 +46,6 @@ namespace KWin
 {
 namespace Wayland
 {
-
-/**
- * Call back for ping from Wayland Shell.
- **/
-static void handlePing(void *data, struct wl_shell_surface *shellSurface, uint32_t serial)
-{
-    Q_UNUSED(shellSurface);
-    reinterpret_cast<WaylandBackend*>(data)->ping(serial);
-}
-
-/**
- * Callback for a configure request for a shell surface
- **/
-static void handleConfigure(void *data, struct wl_shell_surface *shellSurface, uint32_t edges, int32_t width, int32_t height)
-{
-    Q_UNUSED(shellSurface)
-    Q_UNUSED(edges)
-    WaylandBackend *display = reinterpret_cast<WaylandBackend*>(data);
-    display->setShellSurfaceSize(QSize(width, height));
-    // TODO: this information should probably go into Screens
-}
-
-/**
- * Callback for popups - not needed, we don't have popups
- **/
-static void handlePopupDone(void *data, struct wl_shell_surface *shellSurface)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(shellSurface)
-}
 
 static void seatHandleCapabilities(void *data, wl_seat *seat, uint32_t capabilities)
 {
@@ -186,12 +157,6 @@ static void bufferRelease(void *data, wl_buffer *wl_buffer)
 }
 
 // handlers
-static const struct wl_shell_surface_listener s_shellSurfaceListener = {
-    handlePing,
-    handleConfigure,
-    handlePopupDone
-};
-
 static const struct wl_pointer_listener s_pointerListener = {
     pointerHandleEnter,
     pointerHandleLeave,
@@ -597,16 +562,16 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_eventQueue(nullptr)
     , m_registry(new Registry(this))
     , m_compositor(NULL)
-    , m_shell(NULL)
+    , m_shell(new Shell(this))
     , m_surface(NULL)
     , m_shellSurface(NULL)
-    , m_shellSurfaceSize(displayWidth(), displayHeight())
     , m_seat()
     , m_shm()
     , m_connectionThreadObject(nullptr)
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
 {
+    connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {
             setCompositor(m_registry->bindCompositor(name, 1));
@@ -614,7 +579,8 @@ WaylandBackend::WaylandBackend(QObject *parent)
     );
     connect(m_registry, &Registry::shellAnnounced, this,
         [this](quint32 name) {
-            setShell(m_registry->bindShell(name, 1));
+            m_shell->setup(m_registry->bindShell(name, 1));
+            createSurface();
         }
     );
     connect(m_registry, &Registry::outputAnnounced, this,
@@ -637,15 +603,13 @@ WaylandBackend::~WaylandBackend()
 {
     destroyOutputs();
     if (m_shellSurface) {
-        wl_shell_surface_destroy(m_shellSurface);
+        m_shellSurface->release();
     }
     m_fullscreenShell->release();
     if (m_surface) {
         wl_surface_destroy(m_surface);
     }
-    if (m_shell) {
-        wl_shell_destroy(m_shell);
-    }
+    m_shell->release();
     if (m_compositor) {
         wl_compositor_destroy(m_compositor);
     }
@@ -698,7 +662,8 @@ void WaylandBackend::initConnection()
             m_shm.reset();
             destroyOutputs();
             if (m_shellSurface) {
-                free(m_shellSurface);
+                m_shellSurface->destroy();
+                delete m_shellSurface;
                 m_shellSurface = nullptr;
             }
             m_fullscreenShell->destroy();
@@ -707,8 +672,7 @@ void WaylandBackend::initConnection()
                 m_surface = nullptr;
             }
             if (m_shell) {
-                free(m_shell);
-                m_shell = nullptr;
+                m_shell->destroy();
             }
             if (m_compositor) {
                 free(m_compositor);
@@ -751,24 +715,30 @@ void WaylandBackend::createSurface()
     }
     if (m_fullscreenShell->isValid()) {
         Output *o = m_outputs.first();
+        m_fullscreenShell->present(m_surface, o->output());
         if (o->pixelSize().isValid()) {
-            setShellSurfaceSize(o->pixelSize());
+            emit shellSurfaceSizeChanged(o->pixelSize());
         }
         connect(o, &Output::changed, this,
             [this, o]() {
                 if (o->pixelSize().isValid()) {
-                    setShellSurfaceSize(o->pixelSize());
+                    emit shellSurfaceSizeChanged(o->pixelSize());
                 }
             }
         );
-        m_fullscreenShell->present(m_surface, o->output());
-    } else {
+    } else if (m_shell->isValid()) {
         // map the surface as fullscreen
-        m_shellSurface = wl_shell_get_shell_surface(m_shell, m_surface);
-        wl_shell_surface_add_listener(m_shellSurface, &s_shellSurfaceListener, this);
-        wl_shell_surface_set_fullscreen(m_shellSurface, WL_SHELL_SURFACE_FULLSCREEN_METHOD_DEFAULT, 0, NULL);
+        m_shellSurface = m_shell->createSurface(m_surface, this);
+        m_shellSurface->setFullscreen();
+        connect(m_shellSurface, &ShellSurface::pinged, this,
+            [this]() {
+                if (!m_seat.isNull()) {
+                    m_seat->resetCursor();
+                }
+            }
+        );
+        connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
     }
-    emit backendReady();
 }
 
 void WaylandBackend::createShm(uint32_t name)
@@ -777,29 +747,6 @@ void WaylandBackend::createShm(uint32_t name)
     if (!m_shm->isValid()) {
         m_shm.reset();
     }
-}
-
-void WaylandBackend::ping(uint32_t serial)
-{
-    wl_shell_surface_pong(m_shellSurface, serial);
-    if (!m_seat.isNull()) {
-        m_seat->resetCursor();
-    }
-}
-
-void WaylandBackend::setShell(wl_shell *s)
-{
-    m_shell = s;
-    createSurface();
-}
-
-void WaylandBackend::setShellSurfaceSize(const QSize &size)
-{
-    if (m_shellSurfaceSize == size) {
-        return;
-    }
-    m_shellSurfaceSize = size;
-    emit shellSurfaceSizeChanged(m_shellSurfaceSize);
 }
 
 void WaylandBackend::addOutput(wl_output *o)
@@ -819,6 +766,26 @@ void WaylandBackend::dispatchEvents()
 wl_registry *WaylandBackend::registry()
 {
     return m_registry->registry();
+}
+
+QSize WaylandBackend::shellSurfaceSize() const
+{
+    if (m_shellSurface) {
+        return m_shellSurface->size();
+    }
+    if (m_fullscreenShell->isValid()) {
+        return m_outputs.first()->pixelSize();
+    }
+    return QSize();
+}
+
+void WaylandBackend::checkBackendReady()
+{
+    if (!shellSurfaceSize().isValid()) {
+        return;
+    }
+    disconnect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
+    emit backendReady();
 }
 
 }

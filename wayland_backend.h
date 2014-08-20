@@ -50,6 +50,8 @@ class ConnectionThread;
 class FullscreenShell;
 class Output;
 class Registry;
+class Shell;
+class ShellSurface;
 
 class CursorData
 {
@@ -179,18 +181,14 @@ public:
     wl_registry *registry();
     void setCompositor(wl_compositor *c);
     wl_compositor *compositor();
-    void setShell(wl_shell *s);
-    wl_shell *shell();
     void addOutput(wl_output *o);
     const QList<Output*> &outputs() const;
     ShmPool *shmPool();
     void createSeat(uint32_t name);
     void createShm(uint32_t name);
-    void ping(uint32_t serial);
 
     wl_surface *surface() const;
-    const QSize &shellSurfaceSize() const;
-    void setShellSurfaceSize(const QSize &size);
+    QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
 
     void dispatchEvents();
@@ -204,14 +202,14 @@ private:
     void initConnection();
     void createSurface();
     void destroyOutputs();
+    void checkBackendReady();
     wl_display *m_display;
     wl_event_queue *m_eventQueue;
     Registry *m_registry;
     wl_compositor *m_compositor;
-    wl_shell *m_shell;
+    Shell *m_shell;
     wl_surface *m_surface;
-    wl_shell_surface *m_shellSurface;
-    QSize m_shellSurfaceSize;
+    ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
     QScopedPointer<ShmPool> m_shm;
     QList<Output*> m_outputs;
@@ -283,12 +281,6 @@ wl_compositor *WaylandBackend::compositor()
 }
 
 inline
-wl_shell *WaylandBackend::shell()
-{
-    return m_shell;
-}
-
-inline
 ShmPool* WaylandBackend::shmPool()
 {
     return m_shm.data();
@@ -298,12 +290,6 @@ inline
 wl_surface *WaylandBackend::surface() const
 {
     return m_surface;
-}
-
-inline
-const QSize &WaylandBackend::shellSurfaceSize() const
-{
-    return m_shellSurfaceSize;
 }
 
 inline
