@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../wayland_client/connection_thread.h"
 #include "../../wayland_client/shell.h"
+#include "../../wayland_client/surface.h"
 #include "../../wayland_client/registry.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -151,7 +152,9 @@ void TestWaylandShell::testShell()
     KWin::Wayland::Shell shell;
     shell.setup(registry.bindShell(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(connection.display());
-    KWin::Wayland::ShellSurface *surface = shell.createSurface(wl_compositor_create_surface(compositor), &shell);
+    KWin::Wayland::Surface s;
+    s.setup(wl_compositor_create_surface(compositor));
+    KWin::Wayland::ShellSurface *surface = shell.createSurface(&s, &shell);
     QSignalSpy sizeSpy(surface, SIGNAL(sizeChanged(QSize)));
     QVERIFY(sizeSpy.isValid());
     QCOMPARE(surface->size(), QSize());
@@ -167,6 +170,7 @@ void TestWaylandShell::testShell()
     shell.release();
     QVERIFY(!surface->isValid());
 
+    s.release();
     wl_compositor_destroy(compositor);
 }
 

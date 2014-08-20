@@ -66,10 +66,11 @@ set( testWaylandShell_SRCS
         ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/shell.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
     )
 add_executable(testWaylandShell ${testWaylandShell_SRCS})
 add_dependencies(testWaylandShell wayland-client-fullscreen-shell)
-target_link_libraries( testWaylandShell Qt5::Test Wayland::Client)
+target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui Wayland::Client)
 add_test(kwin-testWaylandShell testWaylandShell)
 ecm_mark_as_test(testWaylandShell)

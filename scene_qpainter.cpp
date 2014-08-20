@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "wayland_client/surface.h"
 #endif
 #include "workspace.h"
 #include "xcbutils.h"
@@ -79,20 +80,6 @@ void QPainterBackend::setFailed(const QString &reason)
 //****************************************
 // WaylandQPainterBackend
 //****************************************
-static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(time)
-    reinterpret_cast<WaylandQPainterBackend*>(data)->lastFrameRendered();
-
-    if (callback) {
-            wl_callback_destroy(callback);
-    }
-}
-
-static const struct wl_callback_listener s_surfaceFrameListener = {
-        handleFrameCallback
-};
 
 WaylandQPainterBackend::WaylandQPainterBackend()
     : QPainterBackend()
@@ -104,6 +91,8 @@ WaylandQPainterBackend::WaylandQPainterBackend()
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandQPainterBackend::screenGeometryChanged);
+    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::frameRendered,
+            this, &WaylandQPainterBackend::lastFrameRendered);
 }
 
 WaylandQPainterBackend::~WaylandQPainterBackend()
@@ -126,20 +115,15 @@ bool WaylandQPainterBackend::usesOverlayWindow() const
 void WaylandQPainterBackend::present(int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
-    Wayland::WaylandBackend *wl = Wayland::WaylandBackend::self();
     if (m_backBuffer.isNull()) {
         return;
     }
     m_lastFrameRendered = false;
     m_needsFullRepaint = false;
-    wl_surface *surface = wl->surface();
-    wl_callback *callback = wl_surface_frame(surface);
-    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
-    wl_surface_attach(surface, m_buffer->buffer(), 0, 0);
-    Q_FOREACH (const QRect &rect, damage.rects()) {
-        wl_surface_damage(surface, rect.x(), rect.y(), rect.width(), rect.height());
-    }
-    wl_surface_commit(surface);
+    Wayland::Surface *s = Wayland::WaylandBackend::self()->surface();
+    s->attachBuffer(m_buffer->buffer());
+    s->damage(damage);
+    s->commit();
 }
 
 void WaylandQPainterBackend::lastFrameRendered()

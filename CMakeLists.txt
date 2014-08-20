@@ -431,6 +431,7 @@ if(Wayland_Client_FOUND AND XKB_FOUND)
             wayland_client/fullscreen_shell.cpp
             wayland_client/output.cpp
             wayland_client/shell.cpp
+            wayland_client/surface.cpp
             ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)

@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "options.h"
 #include "wayland_backend.h"
+#include "wayland_client/surface.h"
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
@@ -32,21 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-
-static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(time)
-    reinterpret_cast<EglWaylandBackend*>(data)->lastFrameRendered();
-
-    if (callback) {
-            wl_callback_destroy(callback);
-    }
-}
-
-static const struct wl_callback_listener s_surfaceFrameListener = {
-        handleFrameCallback
-};
 
 EglWaylandBackend::EglWaylandBackend()
     : QObject(NULL)
@@ -186,7 +172,9 @@ bool EglWaylandBackend::initRenderingContext()
     }
 
     const QSize &size = m_wayland->shellSurfaceSize();
-    m_overlay = wl_egl_window_create(m_wayland->surface(), size.width(), size.height());
+    Wayland::Surface *s = m_wayland->surface();
+    connect(s, &Wayland::Surface::frameRendered, this, &EglWaylandBackend::lastFrameRendered);
+    m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
         qCritical() << "Creating Wayland Egl window failed";
         return false;
@@ -251,8 +239,7 @@ bool EglWaylandBackend::initBufferConfigs()
 void EglWaylandBackend::present()
 {
     m_lastFrameRendered = false;
-    wl_callback *callback = wl_surface_frame(m_wayland->surface());
-    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
+    m_wayland->surface()->setupFrameCallback();
     if (supportsBufferAge()) {
         eglSwapBuffers(m_display, m_surface);
         eglQuerySurface(m_display, m_surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);

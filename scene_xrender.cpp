@@ -37,6 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "wayland_client/surface.h"
 #endif
 
 #include <xcb/xfixes.h>
@@ -257,20 +258,6 @@ bool X11XRenderBackend::usesOverlayWindow() const
 // WaylandXRenderBackend
 //****************************************
 #if HAVE_WAYLAND
-static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(time)
-    reinterpret_cast<WaylandXRenderBackend*>(data)->lastFrameRendered();
-
-    if (callback) {
-            wl_callback_destroy(callback);
-    }
-}
-
-static const struct wl_callback_listener s_surfaceFrameListener = {
-        handleFrameCallback
-};
 
 WaylandXRenderBackend::WaylandXRenderBackend()
     : m_shm(new Xcb::Shm)
@@ -286,6 +273,8 @@ WaylandXRenderBackend::WaylandXRenderBackend()
     init();
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandXRenderBackend::createBuffer);
+    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::frameRendered,
+            this, &WaylandXRenderBackend::lastFrameRendered);
 }
 
 WaylandXRenderBackend::~WaylandXRenderBackend()
@@ -341,14 +330,10 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
         return;
     }
     m_lastFrameRendered = false;
-    wl_surface *surface = wl->surface();
-    wl_callback *callback = wl_surface_frame(surface);
-    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
-    wl_surface_attach(surface, buffer, 0, 0);
-    Q_FOREACH (const QRect &rect, damage.rects()) {
-        wl_surface_damage(surface, rect.x(), rect.y(), rect.width(), rect.height());
-    }
-    wl_surface_commit(surface);
+    Wayland::Surface *s = wl->surface();
+    s->attachBuffer(buffer);
+    s->damage(damage);
+    s->commit();
 }
 
 bool WaylandXRenderBackend::isLastFrameRendered() const

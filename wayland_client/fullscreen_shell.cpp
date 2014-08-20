@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "fullscreen_shell.h"
+#include "surface.h"
+#include "output.h"
 
 #include <QDebug>
 
@@ -90,6 +92,13 @@ void FullscreenShell::present(wl_surface *surface, wl_output *output)
 {
     Q_ASSERT(m_shell);
     _wl_fullscreen_shell_present_surface(m_shell, surface, _WL_FULLSCREEN_SHELL_PRESENT_METHOD_DEFAULT, output);
+}
+
+void FullscreenShell::present(Surface *surface, Output *output)
+{
+    Q_ASSERT(surface);
+    Q_ASSERT(output);
+    present(*surface, *output);
 }
 
 }

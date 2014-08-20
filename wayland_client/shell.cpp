@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell.h"
 #include "output.h"
+#include "surface.h"
 
 namespace KWin
 {
@@ -71,6 +72,12 @@ ShellSurface *Shell::createSurface(wl_surface *surface, QObject *parent)
     connect(this, &Shell::interfaceAboutToBeDestroyed, s, &ShellSurface::destroy);
     s->setup(wl_shell_get_shell_surface(m_shell, surface));
     return s;
+}
+
+ShellSurface *Shell::createSurface(Surface *surface, QObject *parent)
+{
+    Q_ASSERT(surface);
+    return createSurface(*surface, parent);
 }
 
 ShellSurface::ShellSurface(QObject *parent)

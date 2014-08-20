@@ -52,6 +52,7 @@ class Output;
 class Registry;
 class Shell;
 class ShellSurface;
+class Surface;
 
 class CursorData
 {
@@ -187,7 +188,7 @@ public:
     void createSeat(uint32_t name);
     void createShm(uint32_t name);
 
-    wl_surface *surface() const;
+    Surface *surface() const;
     QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
 Q_SIGNALS:
@@ -206,7 +207,7 @@ private:
     Registry *m_registry;
     wl_compositor *m_compositor;
     Shell *m_shell;
-    wl_surface *m_surface;
+    Surface *m_surface;
     ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
     QScopedPointer<ShmPool> m_shm;
@@ -285,7 +286,7 @@ ShmPool* WaylandBackend::shmPool()
 }
 
 inline
-wl_surface *WaylandBackend::surface() const
+Surface *WaylandBackend::surface() const
 {
     return m_surface;
 }

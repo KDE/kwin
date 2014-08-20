@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_client/output.h"
 #include "wayland_client/registry.h"
 #include "wayland_client/shell.h"
+#include "wayland_client/surface.h"
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -565,7 +566,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_registry(new Registry(this))
     , m_compositor(NULL)
     , m_shell(new Shell(this))
-    , m_surface(NULL)
+    , m_surface(new Surface(this))
     , m_shellSurface(NULL)
     , m_seat()
     , m_shm()
@@ -617,9 +618,7 @@ WaylandBackend::~WaylandBackend()
         m_shellSurface->release();
     }
     m_fullscreenShell->release();
-    if (m_surface) {
-        wl_surface_destroy(m_surface);
-    }
+    m_surface->release();
     m_shell->release();
     if (m_compositor) {
         wl_compositor_destroy(m_compositor);
@@ -677,10 +676,7 @@ void WaylandBackend::initConnection()
                 m_shellSurface = nullptr;
             }
             m_fullscreenShell->destroy();
-            if (m_surface) {
-                free(m_surface);
-                m_surface = nullptr;
-            }
+            m_surface->destroy();
             if (m_shell) {
                 m_shell->destroy();
             }
@@ -718,14 +714,14 @@ void WaylandBackend::installCursorImage(Qt::CursorShape shape)
 
 void WaylandBackend::createSurface()
 {
-    m_surface = wl_compositor_create_surface(m_compositor);
-    if (!m_surface) {
+    m_surface->setup(wl_compositor_create_surface(m_compositor));
+    if (!m_surface->isValid()) {
         qCritical() << "Creating Wayland Surface failed";
         return;
     }
     if (m_fullscreenShell->isValid()) {
         Output *o = m_outputs.first();
-        m_fullscreenShell->present(m_surface, o->output());
+        m_fullscreenShell->present(m_surface, o);
         if (o->pixelSize().isValid()) {
             emit shellSurfaceSizeChanged(o->pixelSize());
         }
