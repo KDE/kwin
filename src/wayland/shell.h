@@ -31,6 +31,7 @@ namespace Wayland
 {
 class ShellSurface;
 class Output;
+class Surface;
 
 class Shell : public QObject
 {
@@ -47,6 +48,7 @@ public:
     void setup(wl_shell *shell);
 
     ShellSurface *createSurface(wl_surface *surface, QObject *parent = nullptr);
+    ShellSurface *createSurface(Surface *surface, QObject *parent = nullptr);
 
     operator wl_shell*() {
         return m_shell;

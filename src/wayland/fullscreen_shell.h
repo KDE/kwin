@@ -30,6 +30,9 @@ namespace KWin
 namespace Wayland
 {
 
+class Surface;
+class Output;
+
 class FullscreenShell : public QObject
 {
     Q_OBJECT
@@ -52,6 +55,7 @@ public:
     }
     void setup(_wl_fullscreen_shell *shell);
     void present(wl_surface *surface, wl_output *output);
+    void present(Surface *surface, Output *output);
 
     static void capabilitiesAnnounce(void *data, struct _wl_fullscreen_shell *shell, uint32_t capability);
 
