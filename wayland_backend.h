@@ -48,8 +48,11 @@ class WaylandSeat;
 class Compositor;
 class ConnectionThread;
 class FullscreenShell;
+class Keyboard;
 class Output;
+class Pointer;
 class Registry;
+class Seat;
 class Shell;
 class ShellSurface;
 class Surface;
@@ -94,9 +97,6 @@ public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
 
-    void changed(uint32_t capabilities);
-    wl_seat *seat();
-    void pointerEntered(uint32_t serial);
     void resetCursor();
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
     void installCursorImage(Qt::CursorShape shape);
@@ -106,9 +106,9 @@ private:
     void destroyPointer();
     void destroyKeyboard();
     void destroyTheme();
-    wl_seat *m_seat;
-    wl_pointer *m_pointer;
-    wl_keyboard *m_keyboard;
+    Seat *m_seat;
+    Pointer *m_pointer;
+    Keyboard *m_keyboard;
     Surface *m_cursor;
     wl_cursor_theme *m_theme;
     uint32_t m_enteredSerial;
@@ -182,12 +182,6 @@ inline
 const QImage &CursorData::cursor() const
 {
     return m_cursor;
-}
-
-inline
-wl_seat *WaylandSeat::seat()
-{
-    return m_seat;
 }
 
 inline

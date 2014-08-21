@@ -26,8 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_client/compositor.h"
 #include "wayland_client/connection_thread.h"
 #include "wayland_client/fullscreen_shell.h"
+#include "wayland_client/keyboard.h"
 #include "wayland_client/output.h"
+#include "wayland_client/pointer.h"
 #include "wayland_client/registry.h"
+#include "wayland_client/seat.h"
 #include "wayland_client/shell.h"
 #include "wayland_client/shm_pool.h"
 #include "wayland_client/surface.h"
@@ -48,127 +51,6 @@ namespace KWin
 {
 namespace Wayland
 {
-
-static void seatHandleCapabilities(void *data, wl_seat *seat, uint32_t capabilities)
-{
-    WaylandSeat *s = reinterpret_cast<WaylandSeat*>(data);
-    if (seat != s->seat()) {
-        return;
-    }
-    s->changed(capabilities);
-}
-
-static void pointerHandleEnter(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface,
-                               wl_fixed_t sx, wl_fixed_t sy)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(pointer)
-    Q_UNUSED(surface)
-    Q_UNUSED(sx)
-    Q_UNUSED(sy)
-    WaylandSeat *seat = reinterpret_cast<WaylandSeat*>(data);
-    seat->pointerEntered(serial);
-}
-
-static void pointerHandleLeave(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(pointer)
-    Q_UNUSED(serial)
-    Q_UNUSED(surface)
-}
-
-static void pointerHandleMotion(void *data, wl_pointer *pointer, uint32_t time, wl_fixed_t sx, wl_fixed_t sy)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(pointer)
-    input()->processPointerMotion(QPoint(wl_fixed_to_double(sx), wl_fixed_to_double(sy)), time);
-}
-
-static void pointerHandleButton(void *data, wl_pointer *pointer, uint32_t serial, uint32_t time,
-                                uint32_t button, uint32_t state)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(pointer)
-    Q_UNUSED(serial)
-    input()->processPointerButton(button, static_cast<InputRedirection::PointerButtonState>(state), time);
-}
-
-static void pointerHandleAxis(void *data, wl_pointer *pointer, uint32_t time, uint32_t axis, wl_fixed_t value)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(pointer)
-    input()->processPointerAxis(static_cast<InputRedirection::PointerAxis>(axis), wl_fixed_to_double(value), time);
-}
-
-static void keyboardHandleKeymap(void *data, wl_keyboard *keyboard,
-                       uint32_t format, int fd, uint32_t size)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(keyboard)
-    if (format != WL_KEYBOARD_KEYMAP_FORMAT_XKB_V1) {
-        return;
-    }
-    input()->processKeymapChange(fd, size);
-}
-
-static void keyboardHandleEnter(void *data, wl_keyboard *keyboard,
-                      uint32_t serial, wl_surface *surface,
-                      wl_array *keys)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(keyboard)
-    Q_UNUSED(serial)
-    Q_UNUSED(surface)
-    Q_UNUSED(keys)
-}
-
-static void keyboardHandleLeave(void *data, wl_keyboard *keyboard, uint32_t serial, wl_surface *surface)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(keyboard)
-    Q_UNUSED(serial)
-    Q_UNUSED(surface)
-}
-
-static void keyboardHandleKey(void *data, wl_keyboard *keyboard, uint32_t serial, uint32_t time,
-                              uint32_t key, uint32_t state)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(keyboard)
-    Q_UNUSED(serial)
-    input()->processKeyboardKey(key, static_cast<InputRedirection::KeyboardKeyState>(state), time);
-}
-
-static void keyboardHandleModifiers(void *data, wl_keyboard *keyboard, uint32_t serial, uint32_t modsDepressed,
-                                    uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(keyboard)
-    Q_UNUSED(serial)
-    input()->processKeyboardModifiers(modsDepressed, modsLatched, modsLocked, group);
-}
-
-// handlers
-static const struct wl_pointer_listener s_pointerListener = {
-    pointerHandleEnter,
-    pointerHandleLeave,
-    pointerHandleMotion,
-    pointerHandleButton,
-    pointerHandleAxis
-};
-
-static const struct wl_keyboard_listener s_keyboardListener = {
-    keyboardHandleKeymap,
-    keyboardHandleEnter,
-    keyboardHandleLeave,
-    keyboardHandleKey,
-    keyboardHandleModifiers,
-};
-
-static const struct wl_seat_listener s_seatListener = {
-    seatHandleCapabilities
-};
 
 CursorData::CursorData()
     : m_valid(init())
@@ -264,7 +146,7 @@ void X11CursorTracker::resetCursor()
 
 WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     : QObject(NULL)
-    , m_seat(seat)
+    , m_seat(new Seat(this))
     , m_pointer(NULL)
     , m_keyboard(NULL)
     , m_cursor(NULL)
@@ -273,58 +155,109 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_cursorTracker()
     , m_backend(backend)
 {
-    if (m_seat) {
-        wl_seat_add_listener(m_seat, &s_seatListener, this);
-    }
+    m_seat->setup(seat);
+    connect(m_seat, &Seat::hasKeyboardChanged, this,
+        [this](bool hasKeyboard) {
+            if (hasKeyboard) {
+                m_keyboard = m_seat->createKeyboard(this);
+                connect(m_keyboard, &Keyboard::keyChanged, this,
+                    [this](quint32 key, Keyboard::KeyState state, quint32 time) {
+                        auto toState = [state] {
+                            switch (state) {
+                            case Keyboard::KeyState::Pressed:
+                                return InputRedirection::KeyboardKeyPressed;
+                            case Keyboard::KeyState::Released:
+                                return InputRedirection::KeyboardKeyReleased;
+                            }
+                            abort();
+                        };
+                        input()->processKeyboardKey(key, toState(), time);
+                    }
+                );
+                connect(m_keyboard, &Keyboard::modifiersChanged, this,
+                    [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
+                        input()->processKeyboardModifiers(depressed, latched, locked, group);
+                    }
+                );
+                connect(m_keyboard, &Keyboard::keymapChanged, this,
+                    [this](int fd, quint32 size) {
+                        input()->processKeymapChange(fd, size);
+                    }
+                );
+            } else {
+                destroyKeyboard();
+            }
+        }
+    );
+    connect(m_seat, &Seat::hasPointerChanged, this,
+        [this](bool hasPointer) {
+            if (hasPointer && !m_pointer) {
+                m_pointer = m_seat->createPointer(this);
+                connect(m_pointer, &Pointer::entered, this,
+                    [this](quint32 serial) {
+                        m_enteredSerial = serial;
+                    }
+                );
+                connect(m_pointer, &Pointer::motion, this,
+                    [this](const QPointF &relativeToSurface, quint32 time) {
+                        input()->processPointerMotion(relativeToSurface.toPoint(), time);
+                    }
+                );
+                connect(m_pointer, &Pointer::buttonStateChanged, this,
+                    [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
+                        Q_UNUSED(serial)
+                        auto toState = [state] {
+                            switch (state) {
+                            case Pointer::ButtonState::Pressed:
+                                return InputRedirection::PointerButtonPressed;
+                            case Pointer::ButtonState::Released:
+                                return InputRedirection::PointerButtonReleased;
+                            }
+                            abort();
+                        };
+                        input()->processPointerButton(button, toState(), time);
+                    }
+                );
+                connect(m_pointer, &Pointer::axisChanged, this,
+                    [this](quint32 time, Pointer::Axis axis, qreal delta) {
+                        auto toAxis = [axis] {
+                            switch (axis) {
+                            case Pointer::Axis::Horizontal:
+                                return InputRedirection::PointerAxisHorizontal;
+                            case Pointer::Axis::Vertical:
+                                return InputRedirection::PointerAxisVertical;
+                            }
+                            abort();
+                        };
+                        input()->processPointerAxis(toAxis(), delta, time);
+                    }
+                );
+                m_cursorTracker.reset(new X11CursorTracker(this, m_backend));
+            } else {
+                destroyPointer();
+            }
+        }
+    );
 }
 
 WaylandSeat::~WaylandSeat()
 {
     destroyPointer();
     destroyKeyboard();
-    if (m_seat) {
-        wl_seat_destroy(m_seat);
-    }
     destroyTheme();
 }
 
 void WaylandSeat::destroyPointer()
 {
-    if (m_pointer) {
-        wl_pointer_destroy(m_pointer);
-        m_pointer = NULL;
-        m_cursorTracker.reset();
-    }
+    delete m_pointer;
+    m_pointer = nullptr;
+    m_cursorTracker.reset();
 }
 
 void WaylandSeat::destroyKeyboard()
 {
-    if (m_keyboard) {
-        wl_keyboard_destroy(m_keyboard);
-        m_keyboard = NULL;
-    }
-}
-
-void WaylandSeat::changed(uint32_t capabilities)
-{
-    if ((capabilities & WL_SEAT_CAPABILITY_POINTER) && !m_pointer) {
-        m_pointer = wl_seat_get_pointer(m_seat);
-        wl_pointer_add_listener(m_pointer, &s_pointerListener, this);
-        m_cursorTracker.reset(new X11CursorTracker(this, m_backend));
-    } else if (!(capabilities & WL_SEAT_CAPABILITY_POINTER)) {
-        destroyPointer();
-    }
-    if ((capabilities & WL_SEAT_CAPABILITY_KEYBOARD)) {
-        m_keyboard = wl_seat_get_keyboard(m_seat);
-        wl_keyboard_add_listener(m_keyboard, &s_keyboardListener, this);
-    } else if (!(capabilities & WL_SEAT_CAPABILITY_KEYBOARD)) {
-        destroyKeyboard();
-    }
-}
-
-void WaylandSeat::pointerEntered(uint32_t serial)
-{
-    m_enteredSerial = serial;
+    delete m_keyboard;
+    m_keyboard = nullptr;
 }
 
 void WaylandSeat::resetCursor()
@@ -336,7 +269,7 @@ void WaylandSeat::resetCursor()
 
 void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotSpot)
 {
-    if (!m_pointer) {
+    if (!m_pointer || !m_pointer->isValid()) {
         return;
     }
     if (!m_cursor) {
@@ -345,7 +278,7 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
     if (!m_cursor || !m_cursor->isValid()) {
         return;
     }
-    wl_pointer_set_cursor(m_pointer, m_enteredSerial, *m_cursor, hotSpot.x(), hotSpot.y());
+    wl_pointer_set_cursor(*m_pointer, m_enteredSerial, *m_cursor, hotSpot.x(), hotSpot.y());
     m_cursor->attachBuffer(image);
     m_cursor->damage(QRect(QPoint(0,0), size));
     m_cursor->commit(Surface::CommitFlag::None);
@@ -546,7 +479,7 @@ void WaylandBackend::initConnection()
 
 void WaylandBackend::createSeat(uint32_t name)
 {
-    m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 1), this));
+    m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 2), this));
 }
 
 void WaylandBackend::installCursorImage(Qt::CursorShape shape)

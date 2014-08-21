@@ -431,7 +431,10 @@ if(Wayland_Client_FOUND AND XKB_FOUND)
             wayland_client/connection_thread.cpp
             wayland_client/registry.cpp
             wayland_client/fullscreen_shell.cpp
+            wayland_client/keyboard.cpp
             wayland_client/output.cpp
+            wayland_client/pointer.cpp
+            wayland_client/seat.cpp
             wayland_client/shell.cpp
             wayland_client/shm_pool.cpp
             wayland_client/surface.cpp
