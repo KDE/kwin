@@ -32,30 +32,71 @@ namespace KWin
 namespace Wayland
 {
 
-ShmPool::ShmPool(wl_shm *shm)
-    : m_shm(shm)
+ShmPool::ShmPool(QObject *parent)
+    : QObject(parent)
+    , m_shm(nullptr)
     , m_pool(nullptr)
     , m_poolData(nullptr)
     , m_size(1024)
     , m_tmpFile(new QTemporaryFile())
-    , m_valid(createPool())
+    , m_valid(false)
     , m_offset(0)
 {
 }
 
 ShmPool::~ShmPool()
 {
+    release();
+}
+
+void ShmPool::release()
+{
     qDeleteAll(m_buffers);
+    m_buffers.clear();
     if (m_poolData) {
         munmap(m_poolData, m_size);
+        m_poolData = nullptr;
     }
     if (m_pool) {
         wl_shm_pool_destroy(m_pool);
+        m_pool = nullptr;
     }
     if (m_shm) {
         wl_shm_destroy(m_shm);
+        m_shm = nullptr;
     }
     m_tmpFile->close();
+    m_valid = false;
+    m_offset = 0;
+}
+
+void ShmPool::destroy()
+{
+    qDeleteAll(m_buffers);
+    m_buffers.clear();
+    if (m_poolData) {
+        munmap(m_poolData, m_size);
+        m_poolData = nullptr;
+    }
+    if (m_pool) {
+        free(m_pool);
+        m_pool = nullptr;
+    }
+    if (m_shm) {
+        free(m_shm);
+        m_shm = nullptr;
+    }
+    m_tmpFile->close();
+    m_valid = false;
+    m_offset = 0;
+}
+
+void ShmPool::setup(wl_shm *shm)
+{
+    Q_ASSERT(shm);
+    Q_ASSERT(!m_shm);
+    m_shm = shm;
+    m_valid = createPool();
 }
 
 bool ShmPool::createPool()
