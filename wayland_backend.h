@@ -45,6 +45,7 @@ namespace Wayland
 class ShmPool;
 class WaylandBackend;
 class WaylandSeat;
+class Compositor;
 class ConnectionThread;
 class FullscreenShell;
 class Output;
@@ -108,7 +109,7 @@ private:
     wl_seat *m_seat;
     wl_pointer *m_pointer;
     wl_keyboard *m_keyboard;
-    wl_surface *m_cursor;
+    Surface *m_cursor;
     wl_cursor_theme *m_theme;
     uint32_t m_enteredSerial;
     QScopedPointer<X11CursorTracker> m_cursorTracker;
@@ -128,8 +129,7 @@ public:
     virtual ~WaylandBackend();
     wl_display *display();
     wl_registry *registry();
-    void setCompositor(wl_compositor *c);
-    wl_compositor *compositor();
+    Compositor *compositor();
     void addOutput(wl_output *o);
     const QList<Output*> &outputs() const;
     ShmPool *shmPool();
@@ -152,7 +152,7 @@ private:
     wl_display *m_display;
     wl_event_queue *m_eventQueue;
     Registry *m_registry;
-    wl_compositor *m_compositor;
+    Compositor *m_compositor;
     Shell *m_shell;
     Surface *m_surface;
     ShellSurface *m_shellSurface;
@@ -197,13 +197,7 @@ wl_display *WaylandBackend::display()
 }
 
 inline
-void WaylandBackend::setCompositor(wl_compositor *c)
-{
-    m_compositor = c;
-}
-
-inline
-wl_compositor *WaylandBackend::compositor()
+Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
 }

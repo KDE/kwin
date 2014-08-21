@@ -62,6 +62,7 @@ ecm_mark_as_test(testWaylandOutput)
 ########################################################
 set( testWaylandShell_SRCS
         test_wayland_shell.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp

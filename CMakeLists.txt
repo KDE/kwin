@@ -427,6 +427,7 @@ if(Wayland_Client_FOUND AND XKB_FOUND)
             ${kwin_KDEINIT_SRCS}
             wayland_backend.cpp
             wayland_client/buffer.cpp
+            wayland_client/compositor.cpp
             wayland_client/connection_thread.cpp
             wayland_client/registry.cpp
             wayland_client/fullscreen_shell.cpp

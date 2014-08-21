@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 // KWin
+#include "../../wayland_client/compositor.h"
 #include "../../wayland_client/connection_thread.h"
 #include "../../wayland_client/shell.h"
 #include "../../wayland_client/surface.h"
@@ -147,14 +148,16 @@ void TestWaylandShell::testShell()
     if (compositorSpy.isEmpty()) {
         QVERIFY(compositorSpy.wait());
     }
-    wl_compositor *compositor = registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>());
+    KWin::Wayland::Compositor compositor;
+    compositor.setup(registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
 
     KWin::Wayland::Shell shell;
     shell.setup(registry.bindShell(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(connection.display());
-    KWin::Wayland::Surface s;
-    s.setup(wl_compositor_create_surface(compositor));
-    KWin::Wayland::ShellSurface *surface = shell.createSurface(&s, &shell);
+    QScopedPointer<KWin::Wayland::Surface> s(compositor.createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    KWin::Wayland::ShellSurface *surface = shell.createSurface(s.data(), &shell);
     QSignalSpy sizeSpy(surface, SIGNAL(sizeChanged(QSize)));
     QVERIFY(sizeSpy.isValid());
     QCOMPARE(surface->size(), QSize());
@@ -170,8 +173,7 @@ void TestWaylandShell::testShell()
     shell.release();
     QVERIFY(!surface->isValid());
 
-    s.release();
-    wl_compositor_destroy(compositor);
+    compositor.release();
 }
 
 QTEST_MAIN(TestWaylandShell)

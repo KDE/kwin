@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "wayland_client/buffer.h"
+#include "wayland_client/compositor.h"
 #include "wayland_client/connection_thread.h"
 #include "wayland_client/fullscreen_shell.h"
 #include "wayland_client/output.h"
@@ -284,9 +285,6 @@ WaylandSeat::~WaylandSeat()
     if (m_seat) {
         wl_seat_destroy(m_seat);
     }
-    if (m_cursor) {
-        wl_surface_destroy(m_cursor);
-    }
     destroyTheme();
 }
 
@@ -342,12 +340,15 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
         return;
     }
     if (!m_cursor) {
-        m_cursor = wl_compositor_create_surface(m_backend->compositor());
+        m_cursor = m_backend->compositor()->createSurface(this);
     }
-    wl_pointer_set_cursor(m_pointer, m_enteredSerial, m_cursor, hotSpot.x(), hotSpot.y());
-    wl_surface_attach(m_cursor, image, 0, 0);
-    wl_surface_damage(m_cursor, 0, 0, size.width(), size.height());
-    wl_surface_commit(m_cursor);
+    if (!m_cursor || !m_cursor->isValid()) {
+        return;
+    }
+    wl_pointer_set_cursor(m_pointer, m_enteredSerial, *m_cursor, hotSpot.x(), hotSpot.y());
+    m_cursor->attachBuffer(image);
+    m_cursor->damage(QRect(QPoint(0,0), size));
+    m_cursor->commit(Surface::CommitFlag::None);
 }
 
 void WaylandSeat::installCursorImage(Qt::CursorShape shape)
@@ -403,9 +404,9 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_display(nullptr)
     , m_eventQueue(nullptr)
     , m_registry(new Registry(this))
-    , m_compositor(NULL)
+    , m_compositor(new Compositor(this))
     , m_shell(new Shell(this))
-    , m_surface(new Surface(this))
+    , m_surface(nullptr)
     , m_shellSurface(NULL)
     , m_seat()
     , m_shm(new ShmPool(this))
@@ -425,7 +426,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {
-            setCompositor(m_registry->bindCompositor(name, 1));
+            m_compositor->setup(m_registry->bindCompositor(name, 1));
         }
     );
     connect(m_registry, &Registry::shellAnnounced, this,
@@ -461,11 +462,11 @@ WaylandBackend::~WaylandBackend()
         m_shellSurface->release();
     }
     m_fullscreenShell->release();
-    m_surface->release();
-    m_shell->release();
-    if (m_compositor) {
-        wl_compositor_destroy(m_compositor);
+    if (m_surface) {
+        m_surface->release();
     }
+    m_shell->release();
+    m_compositor->release();
     m_registry->release();
     m_seat.reset();
     m_shm->release();
@@ -519,14 +520,15 @@ void WaylandBackend::initConnection()
                 m_shellSurface = nullptr;
             }
             m_fullscreenShell->destroy();
-            m_surface->destroy();
+            if (m_surface) {
+                m_surface->destroy();
+                delete m_surface;
+                m_surface = nullptr;
+            }
             if (m_shell) {
                 m_shell->destroy();
             }
-            if (m_compositor) {
-                free(m_compositor);
-                m_compositor = nullptr;
-            }
+            m_compositor->destroy();
             m_registry->destroy();
             if (m_display) {
                 m_display = nullptr;
@@ -557,8 +559,8 @@ void WaylandBackend::installCursorImage(Qt::CursorShape shape)
 
 void WaylandBackend::createSurface()
 {
-    m_surface->setup(wl_compositor_create_surface(m_compositor));
-    if (!m_surface->isValid()) {
+    m_surface = m_compositor->createSurface(this);
+    if (!m_surface || !m_surface->isValid()) {
         qCritical() << "Creating Wayland Surface failed";
         return;
     }
