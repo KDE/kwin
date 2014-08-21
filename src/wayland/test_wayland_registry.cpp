@@ -62,7 +62,7 @@ void TestWaylandRegistry::init()
     m_westonProcess = new QProcess(this);
     m_westonProcess->setProgram(QStringLiteral("weston"));
 
-    m_westonProcess->setArguments(QStringList({QStringLiteral("--socket=%1").arg(s_socketName), QStringLiteral("--no-config")}));
+    m_westonProcess->setArguments(QStringList({QStringLiteral("--socket=%1").arg(s_socketName), QStringLiteral("--use-pixman")}));
     m_westonProcess->start();
     QVERIFY(m_westonProcess->waitForStarted());
 
