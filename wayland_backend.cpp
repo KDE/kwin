@@ -38,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 #include <QDebug>
-#include <QImage>
 #include <QThread>
 // xcb
 #include <xcb/xtest.h>
@@ -370,10 +369,17 @@ WaylandBackend::WaylandBackend(QObject *parent)
     );
     connect(m_registry, &Registry::outputAnnounced, this,
         [this](quint32 name) {
-            addOutput(m_registry->bindOutput(name, 2));
+            Output *output = new Output(this);
+            output->setup(m_registry->bindOutput(name, 2));
+            m_outputs.append(output);
+            connect(output, &Output::changed, this, &WaylandBackend::outputsChanged);
         }
     );
-    connect(m_registry, &Registry::seatAnnounced, this, &WaylandBackend::createSeat);
+    connect(m_registry, &Registry::seatAnnounced, this,
+        [this](quint32 name) {
+            m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 2), this));
+        }
+    );
     connect(m_registry, &Registry::shmAnnounced, this,
         [this](quint32 name) {
             m_shm->setup(m_registry->bindShm(name, 1));
@@ -477,11 +483,6 @@ void WaylandBackend::initConnection()
     m_connectionThreadObject->initConnection();
 }
 
-void WaylandBackend::createSeat(uint32_t name)
-{
-    m_seat.reset(new WaylandSeat(m_registry->bindSeat(name, 2), this));
-}
-
 void WaylandBackend::installCursorImage(Qt::CursorShape shape)
 {
     if (m_seat.isNull()) {
@@ -523,19 +524,6 @@ void WaylandBackend::createSurface()
         );
         connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
     }
-}
-
-void WaylandBackend::addOutput(wl_output *o)
-{
-    Output *output = new Output(this);
-    output->setup(o);
-    m_outputs.append(output);
-    connect(output, &Output::changed, this, &WaylandBackend::outputsChanged);
-}
-
-wl_registry *WaylandBackend::registry()
-{
-    return m_registry->registry();
 }
 
 QSize WaylandBackend::shellSurfaceSize() const

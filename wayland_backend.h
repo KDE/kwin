@@ -22,20 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglobals.h>
 // Qt
-#include <QDir>
 #include <QHash>
 #include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
-// wayland
-#include <wayland-client.h>
 
 class QTemporaryFile;
-class QImage;
 struct wl_cursor_theme;
 struct wl_buffer;
+struct wl_display;
 struct wl_event_queue;
+struct wl_seat;
 
 namespace KWin
 {
@@ -128,12 +126,9 @@ class KWIN_EXPORT WaylandBackend : public QObject
 public:
     virtual ~WaylandBackend();
     wl_display *display();
-    wl_registry *registry();
     Compositor *compositor();
-    void addOutput(wl_output *o);
     const QList<Output*> &outputs() const;
     ShmPool *shmPool();
-    void createSeat(uint32_t name);
 
     Surface *surface() const;
     QSize shellSurfaceSize() const;
