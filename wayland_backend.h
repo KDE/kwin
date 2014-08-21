@@ -134,7 +134,6 @@ public:
     const QList<Output*> &outputs() const;
     ShmPool *shmPool();
     void createSeat(uint32_t name);
-    void createShm(uint32_t name);
 
     Surface *surface() const;
     QSize shellSurfaceSize() const;
@@ -158,7 +157,7 @@ private:
     Surface *m_surface;
     ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
-    QScopedPointer<ShmPool> m_shm;
+    ShmPool *m_shm;
     QList<Output*> m_outputs;
     ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
@@ -212,7 +211,7 @@ wl_compositor *WaylandBackend::compositor()
 inline
 ShmPool* WaylandBackend::shmPool()
 {
-    return m_shm.data();
+    return m_shm;
 }
 
 inline

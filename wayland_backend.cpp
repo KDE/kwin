@@ -232,7 +232,7 @@ void X11CursorTracker::cursorChanged(uint32_t serial)
         return;
     }
     ShmPool *pool = m_backend->shmPool();
-    if (!pool) {
+    if (!pool->isValid()) {
         return;
     }
     CursorData cursor;
@@ -408,7 +408,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_surface(new Surface(this))
     , m_shellSurface(NULL)
     , m_seat()
-    , m_shm()
+    , m_shm(new ShmPool(this))
     , m_connectionThreadObject(nullptr)
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
@@ -440,7 +440,11 @@ WaylandBackend::WaylandBackend(QObject *parent)
         }
     );
     connect(m_registry, &Registry::seatAnnounced, this, &WaylandBackend::createSeat);
-    connect(m_registry, &Registry::shmAnnounced, this, &WaylandBackend::createShm);
+    connect(m_registry, &Registry::shmAnnounced, this,
+        [this](quint32 name) {
+            m_shm->setup(m_registry->bindShm(name, 1));
+        }
+    );
     connect(m_registry, &Registry::fullscreenShellAnnounced, this,
         [this](quint32 name, quint32 version) {
             m_fullscreenShell->setup(m_registry->bindFullscreenShell(name, version));
@@ -464,7 +468,7 @@ WaylandBackend::~WaylandBackend()
     }
     m_registry->release();
     m_seat.reset();
-    m_shm.reset();
+    m_shm->release();
 
     m_connectionThreadObject->deleteLater();
     m_connectionThread->quit();
@@ -507,7 +511,7 @@ void WaylandBackend::initConnection()
         [this]() {
             emit systemCompositorDied();
             m_seat.reset();
-            m_shm.reset();
+            m_shm->destroy();
             destroyOutputs();
             if (m_shellSurface) {
                 m_shellSurface->destroy();
@@ -583,14 +587,6 @@ void WaylandBackend::createSurface()
             }
         );
         connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
-    }
-}
-
-void WaylandBackend::createShm(uint32_t name)
-{
-    m_shm.reset(new ShmPool(m_registry->bindShm(name, 1)));
-    if (!m_shm->isValid()) {
-        m_shm.reset();
     }
 }
 

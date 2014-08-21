@@ -40,9 +40,13 @@ class ShmPool : public QObject
 {
     Q_OBJECT
 public:
-    ShmPool(wl_shm *shm);
-    ~ShmPool();
+    explicit ShmPool(QObject *parent = nullptr);
+    virtual ~ShmPool();
     bool isValid() const;
+    void setup(wl_shm *shm);
+    void release();
+    void destroy();
+
     wl_buffer *createBuffer(const QImage &image);
     wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
     void *poolAddress() const;
