@@ -77,3 +77,21 @@ add_dependencies(testWaylandShell wayland-client-fullscreen-shell)
 target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui Wayland::Client)
 add_test(kwin-testWaylandShell testWaylandShell)
 ecm_mark_as_test(testWaylandShell)
+
+########################################################
+# Test WaylandSurface
+########################################################
+set( testWaylandSurface_SRCS
+        test_wayland_surface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
+        ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+    )
+add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
+add_dependencies(testWaylandSurface wayland-client-fullscreen-shell)
+target_link_libraries( testWaylandSurface Qt5::Test Qt5::Gui Wayland::Client)
+add_test(kwin-testWaylandSurface testWaylandSurface)
+ecm_mark_as_test(testWaylandSurface)

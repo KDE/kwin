@@ -27,15 +27,19 @@ namespace KWin
 namespace Wayland
 {
 
+QList<Surface*> Surface::s_surfaces = QList<Surface*>();
+
 Surface::Surface(QObject *parent)
     : QObject(parent)
     , m_surface(nullptr)
     , m_frameCallbackInstalled(false)
 {
+    s_surfaces << this;
 }
 
 Surface::~Surface()
 {
+    s_surfaces.removeAll(this);
     release();
 }
 
@@ -119,6 +123,24 @@ void Surface::attachBuffer(wl_buffer *buffer, const QPoint &offset)
 {
     Q_ASSERT(isValid());
     wl_surface_attach(m_surface, buffer, offset.x(), offset.y());
+}
+
+Surface *Surface::get(wl_surface *native)
+{
+    auto it = std::find_if(s_surfaces.constBegin(), s_surfaces.constEnd(),
+        [native](Surface *s) {
+            return s->m_surface == native;
+        }
+    );
+    if (it != s_surfaces.constEnd()) {
+        return *(it);
+    }
+    return nullptr;
+}
+
+const QList< Surface* > &Surface::all()
+{
+    return s_surfaces;
 }
 
 }

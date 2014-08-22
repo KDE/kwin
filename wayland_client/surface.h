@@ -62,12 +62,16 @@ public:
 
     static void frameCallback(void *data, wl_callback *callback, uint32_t time);
 
+    static const QList<Surface*> &all();
+    static Surface *get(wl_surface *native);
+
 Q_SIGNALS:
     void frameRendered();
 
 private:
     void handleFrameCallback();
     static const wl_callback_listener s_listener;
+    static QList<Surface*> s_surfaces;
     wl_surface *m_surface;
     bool m_frameCallbackInstalled;
 };
