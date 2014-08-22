@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QPoint>
+#include <QSize>
 
 #include <wayland-client-protocol.h>
 
@@ -52,6 +53,10 @@ public:
     void damage(const QRect &rect);
     void damage(const QRegion &region);
     void attachBuffer(wl_buffer *buffer, const QPoint &offset = QPoint());
+    void setSize(const QSize &size);
+    const QSize &size() const {
+        return m_size;
+    }
 
     operator wl_surface*() {
         return m_surface;
@@ -67,6 +72,7 @@ public:
 
 Q_SIGNALS:
     void frameRendered();
+    void sizeChanged(const QSize&);
 
 private:
     void handleFrameCallback();
@@ -74,6 +80,7 @@ private:
     static QList<Surface*> s_surfaces;
     wl_surface *m_surface;
     bool m_frameCallbackInstalled;
+    QSize m_size;
 };
 
 }
