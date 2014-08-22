@@ -28,6 +28,8 @@ namespace KWin
 namespace Wayland
 {
 
+class Surface;
+
 class Pointer : public QObject
 {
     Q_OBJECT
@@ -48,6 +50,13 @@ public:
     }
     void setup(wl_pointer *pointer);
     void release();
+
+    Surface *enteredSurface() const {
+        return m_enteredSurface;
+    }
+    Surface *enteredSurface(){
+        return m_enteredSurface;
+    }
 
     operator wl_pointer*() {
         return m_pointer;
@@ -72,7 +81,10 @@ Q_SIGNALS:
     void axisChanged(quint32 time, Axis axis, qreal delta);
 
 private:
+    void enter(uint32_t serial, wl_surface *surface, const QPointF &relativeToSurface);
+    void leave(uint32_t serial);
     wl_pointer *m_pointer;
+    Surface *m_enteredSurface;
     static const wl_pointer_listener s_listener;
 };
 

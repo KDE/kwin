@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "pointer.h"
+#include "surface.h"
 
 #include <QPointF>
 
@@ -37,6 +38,7 @@ const wl_pointer_listener Pointer::s_listener = {
 Pointer::Pointer(QObject *parent)
     : QObject(parent)
     , m_pointer(nullptr)
+    , m_enteredSurface(nullptr)
 {
 }
 
@@ -65,18 +67,29 @@ void Pointer::setup(wl_pointer *pointer)
 void Pointer::enterCallback(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface,
                             wl_fixed_t sx, wl_fixed_t sy)
 {
-    Q_UNUSED(surface)
     Pointer *p = reinterpret_cast<Pointer*>(data);
     Q_ASSERT(p->m_pointer == pointer);
-    emit p->entered(serial, QPointF(wl_fixed_to_double(sx), wl_fixed_to_double(sy)));
+    p->enter(serial, surface, QPointF(wl_fixed_to_double(sx), wl_fixed_to_double(sy)));
+}
+
+void Pointer::enter(uint32_t serial, wl_surface *surface, const QPointF &relativeToSurface)
+{
+    m_enteredSurface = Surface::get(surface);
+    emit entered(serial, relativeToSurface);
 }
 
 void Pointer::leaveCallback(void *data, wl_pointer *pointer, uint32_t serial, wl_surface *surface)
 {
-    Q_UNUSED(surface)
     Pointer *p = reinterpret_cast<Pointer*>(data);
     Q_ASSERT(p->m_pointer == pointer);
-    emit p->left(serial);
+    Q_ASSERT(*(p->m_enteredSurface) == surface);
+    p->leave(serial);
+}
+
+void Pointer::leave(uint32_t serial)
+{
+    m_enteredSurface = nullptr;
+    emit left(serial);
 }
 
 void Pointer::motionCallback(void *data, wl_pointer *pointer, uint32_t time, wl_fixed_t sx, wl_fixed_t sy)
