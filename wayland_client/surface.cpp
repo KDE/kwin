@@ -125,6 +125,15 @@ void Surface::attachBuffer(wl_buffer *buffer, const QPoint &offset)
     wl_surface_attach(m_surface, buffer, offset.x(), offset.y());
 }
 
+void Surface::setSize(const QSize &size)
+{
+    if (m_size == size) {
+        return;
+    }
+    m_size = size;
+    emit sizeChanged(m_size);
+}
+
 Surface *Surface::get(wl_surface *native)
 {
     auto it = std::find_if(s_surfaces.constBegin(), s_surfaces.constEnd(),

@@ -118,6 +118,15 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWin::Wayland::Surface::all().first(), s1);
     QCOMPARE(KWin::Wayland::Surface::get(*s1), s1);
 
+    QVERIFY(!s1->size().isValid());
+    QSignalSpy sizeChangedSpy(s1, SIGNAL(sizeChanged(QSize)));
+    QVERIFY(sizeChangedSpy.isValid());
+    const QSize testSize(200, 300);
+    s1->setSize(testSize);
+    QCOMPARE(s1->size(), testSize);
+    QCOMPARE(sizeChangedSpy.count(), 1);
+    QCOMPARE(sizeChangedSpy.first().first().toSize(), testSize);
+
     // add another surface
     KWin::Wayland::Surface *s2 = compositor.createSurface();
     QCOMPARE(KWin::Wayland::Surface::all().count(), 2);
