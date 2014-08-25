@@ -596,7 +596,7 @@ void WaylandSeat::installCursorImage(Qt::CursorShape shape)
         loadTheme();
     }
     wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, Cursor::self()->cursorName(shape).constData());
-    if (c->image_count <= 0) {
+    if (!c || c->image_count <= 0) {
         return;
     }
     wl_cursor_image *image = c->images[0];
