@@ -530,7 +530,7 @@ endif()
 kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
 target_link_libraries(kdeinit_kwin_x11 kwin)
 
-install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP )
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
