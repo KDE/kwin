@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // KWin
 #include "../../wayland_client/connection_thread.h"
+#include "../../wayland_server/display.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -39,60 +40,36 @@ private Q_SLOTS:
     void testConnectionThread();
 
 private:
-    QProcess *m_westonProcess;
+    KWin::WaylandServer::Display *m_display;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-connection-0");
 
 TestWaylandConnectionThread::TestWaylandConnectionThread(QObject *parent)
     : QObject(parent)
-    , m_westonProcess(nullptr)
+    , m_display(nullptr)
 {
 }
 
 void TestWaylandConnectionThread::init()
 {
-    QVERIFY(!m_westonProcess);
-    // starts weston
-    m_westonProcess = new QProcess(this);
-    m_westonProcess->setProgram(QStringLiteral("weston"));
-
-    m_westonProcess->setArguments(QStringList({QStringLiteral("--socket=%1").arg(s_socketName), QStringLiteral("--use-pixman")}));
-    m_westonProcess->start();
-    QVERIFY(m_westonProcess->waitForStarted());
-
-    // wait for the socket to appear
-    QDir runtimeDir(qgetenv("XDG_RUNTIME_DIR"));
-    if (runtimeDir.exists(s_socketName)) {
-        return;
-    }
-    QFileSystemWatcher *socketWatcher = new QFileSystemWatcher(QStringList({runtimeDir.absolutePath()}), this);
-    QSignalSpy socketSpy(socketWatcher, SIGNAL(directoryChanged(QString)));
-
-    // limit to maximum of 10 waits
-    for (int i = 0; i < 10; ++i) {
-        QVERIFY(socketSpy.wait());
-        if (runtimeDir.exists(s_socketName)) {
-            delete socketWatcher;
-            return;
-        }
-    }
+    using namespace KWin::WaylandServer;
+    delete m_display;
+    m_display = new Display(this);
+    QSignalSpy displayRunning(m_display, SIGNAL(runningChanged(bool)));
+    m_display->setSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 }
 
 void TestWaylandConnectionThread::cleanup()
 {
-    // terminates weston
-    m_westonProcess->terminate();
-    QVERIFY(m_westonProcess->waitForFinished());
-    delete m_westonProcess;
-    m_westonProcess = nullptr;
+    delete m_display;
+    m_display = nullptr;
 }
 
 void TestWaylandConnectionThread::testInitConnectionNoThread()
 {
-    if (m_westonProcess->state() != QProcess::Running) {
-        QSKIP("This test requires a running wayland server");
-    }
     QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
     QCOMPARE(connection->socketName(), QStringLiteral("wayland-0"));
     connection->setSocketName(s_socketName);
@@ -109,9 +86,6 @@ void TestWaylandConnectionThread::testInitConnectionNoThread()
 
 void TestWaylandConnectionThread::testConnectionFailure()
 {
-    if (m_westonProcess->state() != QProcess::Running) {
-        QSKIP("This test requires a running wayland server");
-    }
     QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
     connection->setSocketName(QStringLiteral("kwin-test-socket-does-not-exist"));
 
@@ -148,9 +122,6 @@ static const struct wl_registry_listener s_registryListener = {
 
 void TestWaylandConnectionThread::testConnectionThread()
 {
-    if (m_westonProcess->state() != QProcess::Running) {
-        QSKIP("This test requires a running wayland server");
-    }
     QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
     connection->setSocketName(s_socketName);
 
@@ -177,7 +148,10 @@ void TestWaylandConnectionThread::testConnectionThread()
     wl_registry_add_listener(registry, &s_registryListener, this);
     wl_display_flush(display);
 
-    QVERIFY(eventsSpy.wait());
+    if (eventsSpy.isEmpty()) {
+        QVERIFY(eventsSpy.wait());
+    }
+    QVERIFY(!eventsSpy.isEmpty());
 
     wl_registry_destroy(registry);
     wl_event_queue_destroy(queue);
@@ -189,9 +163,6 @@ void TestWaylandConnectionThread::testConnectionThread()
 
 void TestWaylandConnectionThread::testConnectionDieing()
 {
-    if (m_westonProcess->state() != QProcess::Running) {
-        QSKIP("This test requires a running wayland server");
-    }
     QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
     QSignalSpy connectedSpy(connection.data(), SIGNAL(connected()));
     connection->setSocketName(s_socketName);
@@ -200,8 +171,8 @@ void TestWaylandConnectionThread::testConnectionDieing()
     QVERIFY(connection->display());
 
     QSignalSpy diedSpy(connection.data(), SIGNAL(connectionDied()));
-    m_westonProcess->terminate();
-    QVERIFY(m_westonProcess->waitForFinished());
+    m_display->terminate();
+    QVERIFY(!m_display->isRunning());
     QVERIFY(diedSpy.wait());
     QCOMPARE(diedSpy.count(), 1);
     QVERIFY(!connection->display());
@@ -209,9 +180,8 @@ void TestWaylandConnectionThread::testConnectionDieing()
     connectedSpy.clear();
     QVERIFY(connectedSpy.isEmpty());
     // restarts the server
-    delete m_westonProcess;
-    m_westonProcess = nullptr;
-    init();
+    m_display->start();
+    QVERIFY(m_display->isRunning());
     if (connectedSpy.count() == 0) {
         QVERIFY(connectedSpy.wait());
     }

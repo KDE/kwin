@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../wayland_client/connection_thread.h"
 #include "../../wayland_client/output.h"
 #include "../../wayland_client/registry.h"
+#include "../../wayland_server/display.h"
+#include "../../wayland_server/output_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 
@@ -36,79 +38,91 @@ private Q_SLOTS:
     void cleanup();
 
     void testRegistry();
+    void testModeChanges();
+    void testScaleChange();
 
-    // TODO: add tests for removal - requires more control over the compositor
+    void testSubPixel_data();
+    void testSubPixel();
+
+    void testTransform_data();
+    void testTransform();
 
 private:
-    QProcess *m_westonProcess;
+    KWin::WaylandServer::Display *m_display;
+    KWin::WaylandServer::OutputInterface *m_serverOutput;
+    KWin::Wayland::ConnectionThread *m_connection;
+    QThread *m_thread;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-output-0");
 
 TestWaylandOutput::TestWaylandOutput(QObject *parent)
     : QObject(parent)
-    , m_westonProcess(nullptr)
+    , m_display(nullptr)
+    , m_serverOutput(nullptr)
+    , m_connection(nullptr)
+    , m_thread(nullptr)
 {
 }
 
 void TestWaylandOutput::init()
 {
-    QVERIFY(!m_westonProcess);
-    // starts weston
-    m_westonProcess = new QProcess(this);
-    m_westonProcess->setProgram(QStringLiteral("weston"));
+    using namespace KWin::WaylandServer;
+    delete m_display;
+    m_display = new Display(this);
+    m_display->setSocketName(s_socketName);
+    m_display->start();
+    QVERIFY(m_display->isRunning());
 
-    m_westonProcess->setArguments(QStringList({QStringLiteral("--socket=%1").arg(s_socketName),
-                                               QStringLiteral("--use-pixman"),
-                                               QStringLiteral("--width=1024"),
-                                               QStringLiteral("--height=768")}));
-    m_westonProcess->start();
-    QVERIFY(m_westonProcess->waitForStarted());
+    m_serverOutput = m_display->createOutput(this);
+    m_serverOutput->addMode(QSize(800, 600));
+    m_serverOutput->addMode(QSize(1024, 768));
+    m_serverOutput->addMode(QSize(1280, 1024));
+    m_serverOutput->setCurrentMode(QSize(1024, 768));
+    m_serverOutput->create();
 
-    // wait for the socket to appear
-    QDir runtimeDir(qgetenv("XDG_RUNTIME_DIR"));
-    if (runtimeDir.exists(s_socketName)) {
-        return;
-    }
-    QFileSystemWatcher *socketWatcher = new QFileSystemWatcher(QStringList({runtimeDir.absolutePath()}), this);
-    QSignalSpy socketSpy(socketWatcher, SIGNAL(directoryChanged(QString)));
+    // setup connection
+    m_connection = new KWin::Wayland::ConnectionThread;
+    QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
+    m_connection->setSocketName(s_socketName);
 
-    // limit to maximum of 10 waits
-    for (int i = 0; i < 10; ++i) {
-        QVERIFY(socketSpy.wait());
-        if (runtimeDir.exists(s_socketName)) {
-            delete socketWatcher;
-            return;
-        }
-    }
+    m_thread = new QThread(this);
+    m_connection->moveToThread(m_thread);
+    m_thread->start();
+
+    m_connection->initConnection();
+    QVERIFY(connectedSpy.wait());
 }
 
 void TestWaylandOutput::cleanup()
 {
-    // terminates weston
-    m_westonProcess->terminate();
-    QVERIFY(m_westonProcess->waitForFinished());
-    delete m_westonProcess;
-    m_westonProcess = nullptr;
+    if (m_thread) {
+        m_thread->quit();
+        m_thread->wait();
+        delete m_thread;
+        m_thread = nullptr;
+    }
+    delete m_connection;
+    m_connection = nullptr;
+
+    delete m_serverOutput;
+    m_serverOutput = nullptr;
+
+    delete m_display;
+    m_display = nullptr;
 }
 
 void TestWaylandOutput::testRegistry()
 {
-    if (m_westonProcess->state() != QProcess::Running) {
-        QSKIP("This test requires a running wayland server");
-    }
-    KWin::Wayland::ConnectionThread connection;
-    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
-    connection.setSocketName(s_socketName);
-    connection.initConnection();
-    QVERIFY(connectedSpy.wait());
+    m_serverOutput->setGlobalPosition(QPoint(100, 50));
+    m_serverOutput->setPhysicalSize(QSize(200, 100));
 
     KWin::Wayland::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
-    registry.create(connection.display());
+    registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
-    wl_display_flush(connection.display());
+    wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
     KWin::Wayland::Output output;
@@ -128,14 +142,14 @@ void TestWaylandOutput::testRegistry()
     QVERIFY(outputChanged.isValid());
 
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
-    wl_display_flush(connection.display());
+    wl_display_flush(m_connection->display());
     QVERIFY(outputChanged.wait());
 
-    QCOMPARE(output.geometry(), QRect(0, 0, 1024, 768));
-    QCOMPARE(output.globalPosition(), QPoint(0, 0));
-    QCOMPARE(output.manufacturer(), QStringLiteral("xwayland"));
+    QCOMPARE(output.geometry(), QRect(100, 50, 1024, 768));
+    QCOMPARE(output.globalPosition(), QPoint(100, 50));
+    QCOMPARE(output.manufacturer(), QStringLiteral("org.kde.kwin"));
     QCOMPARE(output.model(), QStringLiteral("none"));
-    // TODO: add test for physicalSize
+    QCOMPARE(output.physicalSize(), QSize(200, 100));
     QCOMPARE(output.pixelSize(), QSize(1024, 768));
     QCOMPARE(output.refreshRate(), 60000);
     QCOMPARE(output.scale(), 1);
@@ -143,6 +157,169 @@ void TestWaylandOutput::testRegistry()
     QCOMPARE(output.subPixel(), KWin::Wayland::Output::SubPixel::Unknown);
     // for xwayland transform is normal
     QCOMPARE(output.transform(), KWin::Wayland::Output::Transform::Normal);
+}
+
+void TestWaylandOutput::testModeChanges()
+{
+    KWin::Wayland::Registry registry;
+    QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(announced.wait());
+
+    KWin::Wayland::Output output;
+    QSignalSpy outputChanged(&output, SIGNAL(changed()));
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    QVERIFY(outputChanged.wait());
+
+    QCOMPARE(output.pixelSize(), QSize(1024, 768));
+
+    // change the current mode
+    outputChanged.clear();
+    m_serverOutput->setCurrentMode(QSize(800, 600));
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.pixelSize(), QSize(800, 600));
+
+    // change once more
+    outputChanged.clear();
+    m_serverOutput->setCurrentMode(QSize(1280, 1024));
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.pixelSize(), QSize(1280, 1024));
+}
+
+void TestWaylandOutput::testScaleChange()
+{
+    KWin::Wayland::Registry registry;
+    QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(announced.wait());
+
+    KWin::Wayland::Output output;
+    QSignalSpy outputChanged(&output, SIGNAL(changed()));
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scale(), 1);
+
+    // change the scale
+    outputChanged.clear();
+    m_serverOutput->setScale(2);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scale(), 2);
+
+    // change once more
+    outputChanged.clear();
+    m_serverOutput->setScale(4);
+    QVERIFY(outputChanged.wait());
+    QCOMPARE(output.scale(), 4);
+}
+
+void TestWaylandOutput::testSubPixel_data()
+{
+    using namespace KWin::Wayland;
+    using namespace KWin::WaylandServer;
+    QTest::addColumn<KWin::Wayland::Output::SubPixel>("expected");
+    QTest::addColumn<KWin::WaylandServer::OutputInterface::SubPixel>("actual");
+
+    QTest::newRow("none") << Output::SubPixel::None << OutputInterface::SubPixel::None;
+    QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << OutputInterface::SubPixel::HorizontalRGB;
+    QTest::newRow("horizontal/bgr") << Output::SubPixel::HorizontalBGR << OutputInterface::SubPixel::HorizontalBGR;
+    QTest::newRow("vertical/rgb") << Output::SubPixel::VerticalRGB << OutputInterface::SubPixel::VerticalRGB;
+    QTest::newRow("vertical/bgr") << Output::SubPixel::VerticalBGR << OutputInterface::SubPixel::VerticalBGR;
+}
+
+void TestWaylandOutput::testSubPixel()
+{
+    using namespace KWin::Wayland;
+    using namespace KWin::WaylandServer;
+    QFETCH(OutputInterface::SubPixel, actual);
+    m_serverOutput->setSubPixel(actual);
+
+    KWin::Wayland::Registry registry;
+    QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(announced.wait());
+
+    KWin::Wayland::Output output;
+    QSignalSpy outputChanged(&output, SIGNAL(changed()));
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    if (outputChanged.isEmpty()) {
+        QVERIFY(outputChanged.wait());
+    }
+
+    QTEST(output.subPixel(), "expected");
+
+    // change back to unknown
+    outputChanged.clear();
+    m_serverOutput->setSubPixel(OutputInterface::SubPixel::Unknown);
+    if (outputChanged.isEmpty()) {
+        QVERIFY(outputChanged.wait());
+    }
+    QCOMPARE(output.subPixel(), Output::SubPixel::Unknown);
+}
+
+void TestWaylandOutput::testTransform_data()
+{
+    using namespace KWin::Wayland;
+    using namespace KWin::WaylandServer;
+    QTest::addColumn<KWin::Wayland::Output::Transform>("expected");
+    QTest::addColumn<KWin::WaylandServer::OutputInterface::Transform>("actual");
+
+    QTest::newRow("90")          << Output::Transform::Rotated90  << OutputInterface::Transform::Rotated90;
+    QTest::newRow("180")         << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
+    QTest::newRow("270")         << Output::Transform::Rotated270 << OutputInterface::Transform::Rotated270;
+    QTest::newRow("Flipped")     << Output::Transform::Flipped    << OutputInterface::Transform::Flipped;
+    QTest::newRow("Flipped 90")  << Output::Transform::Flipped90  << OutputInterface::Transform::Flipped90;
+    QTest::newRow("Flipped 180") << Output::Transform::Flipped180 << OutputInterface::Transform::Flipped180;
+    QTest::newRow("Flipped 280") << Output::Transform::Flipped270 << OutputInterface::Transform::Flipped270;
+}
+
+void TestWaylandOutput::testTransform()
+{
+    using namespace KWin::Wayland;
+    using namespace KWin::WaylandServer;
+    QFETCH(OutputInterface::Transform, actual);
+    m_serverOutput->setTransform(actual);
+
+    KWin::Wayland::Registry registry;
+    QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(m_connection->display());
+    QVERIFY(announced.wait());
+
+    KWin::Wayland::Output output;
+    QSignalSpy outputChanged(&output, SIGNAL(changed()));
+    QVERIFY(outputChanged.isValid());
+    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
+    wl_display_flush(m_connection->display());
+    if (outputChanged.isEmpty()) {
+        QVERIFY(outputChanged.wait());
+    }
+
+    QTEST(output.transform(), "expected");
+
+    // change back to normal
+    outputChanged.clear();
+    m_serverOutput->setTransform(OutputInterface::Transform::Normal);
+    if (outputChanged.isEmpty()) {
+        QVERIFY(outputChanged.wait());
+    }
+    QCOMPARE(output.transform(), Output::Transform::Normal);
 }
 
 QTEST_MAIN(TestWaylandOutput)
