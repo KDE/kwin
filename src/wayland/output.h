@@ -179,4 +179,7 @@ Output::Transform Output::transform() const
 }
 }
 
+Q_DECLARE_METATYPE(KWin::Wayland::Output::SubPixel)
+Q_DECLARE_METATYPE(KWin::Wayland::Output::Transform)
+
 #endif
