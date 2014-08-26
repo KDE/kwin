@@ -3,9 +3,14 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client
 ########################################################
 # Test WaylandConnectionThread
 ########################################################
-set( testWaylandConnectionThread_SRCS test_wayland_connection_thread.cpp ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp )
+set( testWaylandConnectionThread_SRCS
+        test_wayland_connection_thread.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+    )
 add_executable(testWaylandConnectionThread ${testWaylandConnectionThread_SRCS})
-target_link_libraries( testWaylandConnectionThread Qt5::Test Wayland::Client)
+target_link_libraries( testWaylandConnectionThread Qt5::Test Wayland::Client Wayland::Server)
 add_test(kwin-testWaylandConnectionThread testWaylandConnectionThread)
 ecm_mark_as_test(testWaylandConnectionThread)
 
@@ -52,10 +57,12 @@ set( testWaylandOutput_SRCS
         ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/output.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
 add_dependencies(testWaylandOutput wayland-client-fullscreen-shell)
-target_link_libraries( testWaylandOutput Qt5::Test Wayland::Client)
+target_link_libraries( testWaylandOutput Qt5::Test Wayland::Client Wayland::Server)
 add_test(kwin-testWaylandOutput testWaylandOutput)
 ecm_mark_as_test(testWaylandOutput)
 

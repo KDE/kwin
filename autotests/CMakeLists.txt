@@ -1,7 +1,8 @@
 add_definitions(-DKWIN_UNIT_TEST)
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(Wayland_Client_FOUND AND XKB_FOUND AND Wayland_Server_FOUND)
     add_subdirectory(wayland_client)
+    add_subdirectory(wayland_server)
 endif()
 
 ########################################################

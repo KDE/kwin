@@ -128,13 +128,14 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
-find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
+find_package(Wayland 1.2 COMPONENTS Client Egl Cursor Server)
 set_package_properties(Wayland PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
+add_feature_info("Wayland-Server" Wayland_Server_FOUND "Required for building Wayland server backend in KWin")
 
 find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
 add_feature_info("wayland-scanner" WAYLAND_SCANNER_EXECUTABLE "Required for generating Wayland protocols")
