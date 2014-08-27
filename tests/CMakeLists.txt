@@ -11,6 +11,8 @@ target_link_libraries(screenedgeshowtest Qt5::Widgets Qt5::X11Extras KF5::Window
 
 if (Wayland_Client_FOUND AND XKB_FOUND)
     add_definitions(-DSOURCE_DIR="${KWIN_SOURCE_DIR}")
+    include_directories(${CMAKE_BINARY_DIR}/wayland_protocols/)
+    set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c GENERATED)
     set(waylandclienttest_SRCS
             waylandclienttest.cpp
             ../wayland_client/buffer.cpp
