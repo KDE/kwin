@@ -343,11 +343,6 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
     return region;
 }
 
-bool OpenGLBackend::isLastFrameRendered() const
-{
-    return true;
-}
-
 OverlayWindow* OpenGLBackend::overlayWindow()
 {
     return NULL;

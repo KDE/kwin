@@ -108,10 +108,6 @@ void XRenderBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-bool XRenderBackend::isLastFrameRendered() const
-{
-    return true;
-}
 
 //****************************************
 // X11XRenderBackend
@@ -226,7 +222,6 @@ bool X11XRenderBackend::usesOverlayWindow() const
 
 WaylandXRenderBackend::WaylandXRenderBackend()
     : m_shm(new Xcb::Shm)
-    , m_lastFrameRendered(true)
     , m_format(0)
 {
     if (!m_shm->isValid()) {
@@ -238,8 +233,8 @@ WaylandXRenderBackend::WaylandXRenderBackend()
     init();
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandXRenderBackend::createBuffer);
-    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::frameRendered,
-            this, &WaylandXRenderBackend::lastFrameRendered);
+    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::framePresented,
+            Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
 WaylandXRenderBackend::~WaylandXRenderBackend()
@@ -294,22 +289,13 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
         qDebug() << "Did not get a buffer";
         return;
     }
-    m_lastFrameRendered = false;
+
+    Compositor::self()->aboutToSwapBuffers();
+
     Wayland::Surface *s = wl->surface();
     s->attachBuffer(buffer);
     s->damage(damage);
     s->commit();
-}
-
-bool WaylandXRenderBackend::isLastFrameRendered() const
-{
-    return m_lastFrameRendered;
-}
-
-void WaylandXRenderBackend::lastFrameRendered()
-{
-    m_lastFrameRendered = true;
-    Compositor::self()->lastFrameRendered();
 }
 
 bool WaylandXRenderBackend::usesOverlayWindow() const

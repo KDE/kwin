@@ -59,7 +59,6 @@ public:
     virtual bool syncsToVBlank() const;
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
-    virtual bool isLastFrameRendered() const override;
     virtual void triggerFence() override;
 
     void insertWait();
@@ -397,13 +396,6 @@ public:
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) = 0;
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    /**
-     * @brief Backend specific code to determine whether the last frame got rendered.
-     *
-     * Default implementation always returns @c true. That is it's always assumed that the last
-     * frame got rendered. If a backend needs more control it needs to implement this method.
-     */
-    virtual bool isLastFrameRendered() const;
     virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
@@ -592,11 +584,6 @@ private:
 inline bool SceneOpenGL::hasPendingFlush() const
 {
     return m_backend->hasPendingFlush();
-}
-
-inline bool SceneOpenGL::isLastFrameRendered() const
-{
-    return m_backend->isLastFrameRendered();
 }
 
 inline bool SceneOpenGL::usesOverlayWindow() const

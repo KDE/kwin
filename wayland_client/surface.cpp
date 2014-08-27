@@ -81,7 +81,7 @@ void Surface::frameCallback(void *data, wl_callback *callback, uint32_t time)
 void Surface::handleFrameCallback()
 {
     m_frameCallbackInstalled = false;
-    frameRendered();
+    emit framePresented();
 }
 
 const struct wl_callback_listener Surface::s_listener = {

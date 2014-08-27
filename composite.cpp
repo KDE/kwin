@@ -88,7 +88,8 @@ Compositor::Compositor(QObject* workspace)
     , m_finishing(false)
     , m_timeSinceLastVBlank(0)
     , m_scene(NULL)
-    , m_waitingForFrameRendered(false)
+    , m_bufferSwapPending(false)
+    , m_composeAtSwapCompletion(false)
 {
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
@@ -559,22 +560,35 @@ void Compositor::timerEvent(QTimerEvent *te)
         QObject::timerEvent(te);
 }
 
-void Compositor::lastFrameRendered()
+void Compositor::aboutToSwapBuffers()
 {
-    if (!m_waitingForFrameRendered) {
-        return;
+    assert(!m_bufferSwapPending);
+
+    m_bufferSwapPending = true;
+}
+
+void Compositor::bufferSwapComplete()
+{
+    assert(m_bufferSwapPending);
+    m_bufferSwapPending = false;
+
+    if (m_composeAtSwapCompletion) {
+        m_composeAtSwapCompletion = false;
+        performCompositing();
     }
-    m_waitingForFrameRendered = false;
-    performCompositing();
 }
 
 void Compositor::performCompositing()
 {
     if (m_scene->usesOverlayWindow() && !isOverlayWindowVisible())
         return; // nothing is visible anyway
-    if (!m_scene->isLastFrameRendered()) {
-        m_waitingForFrameRendered = true;
-        return; // frame wouldn't make it on the screen
+
+    // If a buffer swap is still pending, we return to the event loop and
+    // continue processing events until the swap has completed.
+    if (m_bufferSwapPending) {
+        m_composeAtSwapCompletion = true;
+        compositeTimer.stop();
+        return;
     }
 
     // Create a list of all windows in the stacking order
@@ -673,6 +687,10 @@ void Compositor::setCompositeResetTimer(int msecs)
 void Compositor::setCompositeTimer()
 {
     if (!hasScene())  // should not really happen, but there may be e.g. some damage events still pending
+        return;
+
+    // Don't start the timer if we're waiting for a swap event
+    if (m_bufferSwapPending && m_composeAtSwapCompletion)
         return;
 
     uint waitTime = 1;

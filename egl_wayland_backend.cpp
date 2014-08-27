@@ -41,7 +41,6 @@ EglWaylandBackend::EglWaylandBackend()
     , m_bufferAge(0)
     , m_wayland(Wayland::WaylandBackend::self())
     , m_overlay(NULL)
-    , m_lastFrameRendered(true)
 {
     if (!m_wayland) {
         setFailed("Wayland Backend has not been created");
@@ -195,7 +194,7 @@ bool EglWaylandBackend::initRenderingContext()
 
     const QSize &size = m_wayland->shellSurfaceSize();
     Wayland::Surface *s = m_wayland->surface();
-    connect(s, &Wayland::Surface::frameRendered, this, &EglWaylandBackend::lastFrameRendered);
+    connect(s, &Wayland::Surface::framePresented, Compositor::self(), &Compositor::bufferSwapComplete);
     m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
         qCritical() << "Creating Wayland Egl window failed";
@@ -264,8 +263,9 @@ bool EglWaylandBackend::initBufferConfigs()
 
 void EglWaylandBackend::present()
 {
-    m_lastFrameRendered = false;
     m_wayland->surface()->setupFrameCallback();
+    Compositor::self()->aboutToSwapBuffers();
+
     if (supportsBufferAge()) {
         eglSwapBuffers(m_display, m_surface);
         eglQuerySurface(m_display, m_surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
@@ -366,17 +366,6 @@ Xcb::Shm *EglWaylandBackend::shm()
 void EglWaylandBackend::overlaySizeChanged(const QSize &size)
 {
     wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
-}
-
-bool EglWaylandBackend::isLastFrameRendered() const
-{
-    return m_lastFrameRendered;
-}
-
-void EglWaylandBackend::lastFrameRendered()
-{
-    m_lastFrameRendered = true;
-    Compositor::self()->lastFrameRendered();
 }
 
 bool EglWaylandBackend::usesOverlayWindow() const

@@ -90,13 +90,6 @@ public:
      * Set's the Scene's Overlay X Window visibility to @p visible.
      **/
     void setOverlayWindowVisibility(bool visible);
-    /**
-     * @brief Hook for the Scene to notify about a that the last frame got rendered.
-     *
-     * In case the Compositor was waiting for the frame being rendered, the next rendering process
-     * is triggered.
-     */
-    void lastFrameRendered();
 
     Scene *scene() {
         return m_scene;
@@ -178,6 +171,18 @@ public Q_SLOTS:
     void updateCompositeBlocking();
     void updateCompositeBlocking(KWin::Client* c);
 
+    /**
+     * Notifies the compositor that SwapBuffers() is about to be called.
+     * Rendering of the next frame will be deferred until bufferSwapComplete()
+     * is called.
+     */
+    void aboutToSwapBuffers();
+
+    /**
+     * Notifies the compositor that a pending buffer swap has completed.
+     */
+    void bufferSwapComplete();
+
 Q_SIGNALS:
     void compositingToggled(bool active);
 
@@ -229,7 +234,8 @@ private:
     bool m_starting; // start() sets this variable while starting
     qint64 m_timeSinceLastVBlank;
     Scene *m_scene;
-    bool m_waitingForFrameRendered;
+    bool m_bufferSwapPending;
+    bool m_composeAtSwapCompletion;
 
     KWIN_SINGLETON_VARIABLE(Compositor, s_compositor)
 };

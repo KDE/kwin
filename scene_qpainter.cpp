@@ -53,11 +53,6 @@ QPainterBackend::~QPainterBackend()
 {
 }
 
-bool QPainterBackend::isLastFrameRendered() const
-{
-    return true;
-}
-
 OverlayWindow* QPainterBackend::overlayWindow()
 {
     return NULL;
@@ -85,7 +80,6 @@ void QPainterBackend::setFailed(const QString &reason)
 
 WaylandQPainterBackend::WaylandQPainterBackend()
     : QPainterBackend()
-    , m_lastFrameRendered(true)
     , m_needsFullRepaint(true)
     , m_backBuffer(QImage(QSize(), QImage::Format_ARGB32_Premultiplied))
     , m_buffer(NULL)
@@ -93,8 +87,8 @@ WaylandQPainterBackend::WaylandQPainterBackend()
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandQPainterBackend::screenGeometryChanged);
-    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::frameRendered,
-            this, &WaylandQPainterBackend::lastFrameRendered);
+    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::framePresented,
+            Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
 WaylandQPainterBackend::~WaylandQPainterBackend()
@@ -102,11 +96,6 @@ WaylandQPainterBackend::~WaylandQPainterBackend()
     if (m_buffer) {
         m_buffer->setUsed(false);
     }
-}
-
-bool WaylandQPainterBackend::isLastFrameRendered() const
-{
-    return m_lastFrameRendered;
 }
 
 bool WaylandQPainterBackend::usesOverlayWindow() const
@@ -120,18 +109,12 @@ void WaylandQPainterBackend::present(int mask, const QRegion &damage)
     if (m_backBuffer.isNull()) {
         return;
     }
-    m_lastFrameRendered = false;
+    Compositor::self()->aboutToSwapBuffers();
     m_needsFullRepaint = false;
     Wayland::Surface *s = Wayland::WaylandBackend::self()->surface();
     s->attachBuffer(m_buffer->buffer());
     s->damage(damage);
     s->commit();
-}
-
-void WaylandQPainterBackend::lastFrameRendered()
-{
-    m_lastFrameRendered = true;
-    Compositor::self()->lastFrameRendered();
 }
 
 void WaylandQPainterBackend::screenGeometryChanged(const QSize &size)

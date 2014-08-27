@@ -71,7 +71,7 @@ public:
     static Surface *get(wl_surface *native);
 
 Q_SIGNALS:
-    void frameRendered();
+    void framePresented();
     void sizeChanged(const QSize&);
 
 private:

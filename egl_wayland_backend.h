@@ -66,9 +66,7 @@ public:
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     virtual bool makeCurrent() override;
     virtual void doneCurrent() override;
-    virtual bool isLastFrameRendered() const override;
     Xcb::Shm *shm();
-    void lastFrameRendered();
     virtual bool usesOverlayWindow() const override;
 
 protected:
@@ -91,7 +89,6 @@ private:
     Wayland::WaylandBackend *m_wayland;
     wl_egl_window *m_overlay;
     QScopedPointer<Xcb::Shm> m_shm;
-    bool m_lastFrameRendered;
     bool m_havePlatformBase;
     friend class EglWaylandTexture;
 };
