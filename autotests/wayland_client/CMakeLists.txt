@@ -27,18 +27,20 @@ ecm_mark_as_test(testWaylandRegistry)
 ########################################################
 # Test WaylandFullscreenShell
 ########################################################
-set( testWaylandFullscreenShell_SRCS
-        test_wayland_fullscreen_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
-        ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-    )
-add_executable(testWaylandFullscreenShell ${testWaylandFullscreenShell_SRCS})
-add_dependencies(testWaylandFullscreenShell wayland-client-fullscreen-shell)
-target_link_libraries( testWaylandFullscreenShell Qt5::Test Wayland::Client)
-add_test(kwin-testWaylandFullscreenShell testWaylandFullscreenShell)
-ecm_mark_as_test(testWaylandFullscreenShell)
+if(Wayland_VERSION VERSION_GREATER "1.4.0")
+    set( testWaylandFullscreenShell_SRCS
+            test_wayland_fullscreen_shell.cpp
+            ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
+            ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
+            ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
+            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        )
+    add_executable(testWaylandFullscreenShell ${testWaylandFullscreenShell_SRCS})
+    add_dependencies(testWaylandFullscreenShell wayland-client-fullscreen-shell)
+    target_link_libraries( testWaylandFullscreenShell Qt5::Test Wayland::Client)
+    add_test(kwin-testWaylandFullscreenShell testWaylandFullscreenShell)
+    ecm_mark_as_test(testWaylandFullscreenShell)
+endif()
 
 ########################################################
 # Test WaylandOutput
