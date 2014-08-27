@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // DBus generated
 #include "screenlocker_interface.h"
 // Qt
+#include <QSharedPointer>
 #include <QTimer>
 #include <QVector>
 #include <QTextStream>
@@ -63,6 +64,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_approaching(false)
     , m_lastApproachingFactor(0)
     , m_blocked(false)
+    , m_pushBackBlocked(false)
     , m_client(nullptr)
 {
 }
@@ -288,12 +290,24 @@ void Edge::switchDesktop(const QPoint &cursorPos)
     }
     vds->setCurrent(desktop);
     if (vds->current() != oldDesktop) {
+        m_pushBackBlocked = true;
         Cursor::setPos(pos);
+        QSharedPointer<QMetaObject::Connection> me(new QMetaObject::Connection);
+        *me = QObject::connect(QCoreApplication::eventDispatcher(),
+                               &QAbstractEventDispatcher::aboutToBlock, this,
+                               [this, me](){
+            QObject::disconnect(*me);
+            const_cast<QSharedPointer<QMetaObject::Connection>*>(&me)->reset(nullptr);
+            m_pushBackBlocked = false;
+        }
+        );
     }
 }
 
 void Edge::pushCursorBack(const QPoint &cursorPos)
 {
+    if (m_pushBackBlocked)
+        return;
     int x = cursorPos.x();
     int y = cursorPos.y();
     const QSize &distance = edges()->cursorPushBackDistance();

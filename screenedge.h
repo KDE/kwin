@@ -112,6 +112,7 @@ private:
     bool m_approaching;
     int m_lastApproachingFactor;
     bool m_blocked;
+    bool m_pushBackBlocked;
     Client *m_client;
 };
 
