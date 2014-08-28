@@ -19,11 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // Qt
 #include <QtTest/QtTest>
+#include <QImage>
 // KWin
 #include "../../wayland_client/compositor.h"
 #include "../../wayland_client/connection_thread.h"
 #include "../../wayland_client/surface.h"
 #include "../../wayland_client/registry.h"
+#include "../../wayland_client/shm_pool.h"
+#include "../../wayland_server/buffer_interface.h"
 #include "../../wayland_server/compositor_interface.h"
 #include "../../wayland_server/display.h"
 #include "../../wayland_server/surface_interface.h"
@@ -42,6 +45,7 @@ private Q_SLOTS:
     void testStaticAccessor();
     void testDamage();
     void testFrameCallback();
+    void testAttachBuffer();
 
 private:
     KWin::WaylandServer::Display *m_display;
@@ -228,6 +232,70 @@ void TestWaylandSurface::testFrameCallback()
     QVERIFY(frameRenderedSpy.isEmpty());
     QVERIFY(frameRenderedSpy.wait());
     QVERIFY(!frameRenderedSpy.isEmpty());
+}
+
+void TestWaylandSurface::testAttachBuffer()
+{
+    // here we need a shm pool
+    m_display->createShm();
+
+    KWin::Wayland::Registry registry;
+    QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    QVERIFY(shmSpy.wait());
+
+    KWin::Wayland::ShmPool pool;
+    pool.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
+    QVERIFY(pool.isValid());
+
+    // create the surface
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWin::WaylandServer::SurfaceInterface*)));
+    QVERIFY(serverSurfaceCreated.isValid());
+    KWin::Wayland::Surface *s = m_compositor->createSurface();
+    QVERIFY(serverSurfaceCreated.wait());
+    KWin::WaylandServer::SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWin::WaylandServer::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    // create two images
+    // TODO: test RGB32
+    QImage black(24, 24, QImage::Format_ARGB32);
+    black.fill(Qt::black);
+    QImage red(24, 24, QImage::Format_ARGB32);
+    red.fill(QColor(255, 0, 0, 128));
+
+    wl_buffer *blackBuffer = pool.createBuffer(black);
+    wl_buffer *redBuffer = pool.createBuffer(red);
+
+    s->attachBuffer(redBuffer);
+    s->attachBuffer(blackBuffer);
+    s->damage(QRect(0, 0, 24, 24));
+    s->commit(KWin::Wayland::Surface::CommitFlag::None);
+    QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
+    QVERIFY(damageSpy.isValid());
+    QVERIFY(damageSpy.wait());
+
+    // now the ServerSurface should have the black image attached as a buffer
+    KWin::WaylandServer::BufferInterface *buffer = serverSurface->buffer();
+    buffer->ref();
+    QVERIFY(buffer->shmBuffer());
+    QCOMPARE(buffer->data(), black);
+
+    // render another frame
+    s->attachBuffer(redBuffer);
+    s->damage(QRect(0, 0, 24, 24));
+    s->commit(KWin::Wayland::Surface::CommitFlag::None);
+    damageSpy.clear();
+    QVERIFY(damageSpy.wait());
+    KWin::WaylandServer::BufferInterface *buffer2 = serverSurface->buffer();
+    buffer2->ref();
+    QVERIFY(buffer2->shmBuffer());
+    QCOMPARE(buffer2->data(), red);
+    buffer2->unref();
+
+    // TODO: add signal test on release
+    buffer->unref();
 }
 
 QTEST_MAIN(TestWaylandSurface)
