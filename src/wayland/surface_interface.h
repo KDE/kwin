@@ -31,6 +31,7 @@ namespace KWin
 {
 namespace WaylandServer
 {
+class BufferInterface;
 class CompositorInterface;
 
 class SurfaceInterface : public QObject
@@ -70,6 +71,12 @@ public:
     OutputInterface::Transform transform() const {
         return m_current.transform;
     }
+    BufferInterface *buffer() {
+        return m_current.buffer;
+    }
+    QPoint offset() const {
+        return m_current.offset;
+    }
 
 Q_SIGNALS:
     void damaged(const QRegion&);
@@ -86,6 +93,8 @@ private:
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
         QList<wl_resource*> callbacks = QList<wl_resource*>();
+        QPoint offset = QPoint();
+        BufferInterface *buffer = nullptr;
     };
     friend class CompositorInterface;
     explicit SurfaceInterface(CompositorInterface *parent);
@@ -114,6 +123,7 @@ private:
     void setScale(qint32 scale);
     void setTransform(OutputInterface::Transform transform);
     void addFrameCallback(uint32_t callback);
+    void attachBuffer(wl_resource *buffer, const QPoint &offset);
     CompositorInterface *m_compositor;
     wl_resource *m_surface;
     wl_client *m_client;

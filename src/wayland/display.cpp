@@ -131,6 +131,12 @@ CompositorInterface *Display::createCompositor(QObject *parent)
     return compositor;
 }
 
+void Display::createShm()
+{
+    Q_ASSERT(m_running);
+    wl_display_init_shm(m_display);
+}
+
 void Display::removeOutput(OutputInterface *output)
 {
     m_outputs.removeAll(output);

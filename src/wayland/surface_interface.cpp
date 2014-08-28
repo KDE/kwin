@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "surface_interface.h"
+#include "buffer_interface.h"
 #include "compositor_interface.h"
 
 namespace KWin
@@ -87,6 +88,9 @@ void SurfaceInterface::destroy()
     for (wl_resource *c : m_pending.callbacks) {
         wl_resource_destroy(c);
     }
+    if (m_current.buffer) {
+        m_current.buffer->unref();
+    }
     if (m_surface) {
         wl_resource_destroy(m_surface);
         m_surface = nullptr;
@@ -102,6 +106,12 @@ void SurfaceInterface::commit()
     const bool inputRegionChanged = m_current.input != m_pending.input;
     const bool scaleFactorChanged = m_current.scale != m_pending.scale;
     const bool transformFactorChanged = m_current.transform != m_pending.transform;
+    if (m_current.buffer) {
+        m_current.buffer->unref();
+    }
+    if (m_pending.buffer) {
+        m_pending.buffer->ref();
+    }
     // copy values
     m_current = m_pending;
     m_pending = State{};
@@ -149,6 +159,15 @@ void SurfaceInterface::addFrameCallback(uint32_t callback)
     m_pending.callbacks << r;
 }
 
+void SurfaceInterface::attachBuffer(wl_resource *buffer, const QPoint &offset)
+{
+    m_pending.offset = offset;
+    if (m_pending.buffer) {
+        delete m_pending.buffer;
+    }
+    m_pending.buffer = new BufferInterface(buffer, this);
+}
+
 void SurfaceInterface::destroyFrameCallback(wl_resource *r)
 {
     SurfaceInterface *s = SurfaceInterface::cast(r);
@@ -165,11 +184,7 @@ void SurfaceInterface::destroyCallback(wl_client *client, wl_resource *resource)
 void SurfaceInterface::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(buffer)
-    Q_UNUSED(sx)
-    Q_UNUSED(sy)
-    // TODO: implement me
+    SurfaceInterface::cast(resource)->attachBuffer(buffer, QPoint(sx, sy));
 }
 
 void SurfaceInterface::damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
