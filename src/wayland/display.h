@@ -31,6 +31,7 @@ namespace KWin
 namespace WaylandServer
 {
 
+class CompositorInterface;
 class OutputInterface;
 
 class Display : public QObject
@@ -63,6 +64,8 @@ public:
     const QList<OutputInterface*> outputs() const {
         return m_outputs;
     }
+
+    CompositorInterface *createCompositor(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);
