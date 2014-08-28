@@ -66,6 +66,7 @@ public:
     }
 
     CompositorInterface *createCompositor(QObject *parent = nullptr);
+    void createShm();
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);

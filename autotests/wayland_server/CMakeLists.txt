@@ -3,6 +3,7 @@
 ########################################################
 set( testWaylandServerDisplay_SRCS
         test_display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp

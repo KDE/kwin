@@ -5,6 +5,7 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client
 ########################################################
 set( testWaylandConnectionThread_SRCS
         test_wayland_connection_thread.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
@@ -59,6 +60,7 @@ set( testWaylandOutput_SRCS
         ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/output.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
@@ -94,12 +96,15 @@ ecm_mark_as_test(testWaylandShell)
 ########################################################
 set( testWaylandSurface_SRCS
         test_wayland_surface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/buffer.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/shm_pool.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
