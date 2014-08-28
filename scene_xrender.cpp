@@ -56,42 +56,6 @@ ScreenPaintData SceneXrender::screen_paint;
 #define FIXED_TO_DOUBLE(f) ((double) ((f) / 65536.0))
 
 
-static xcb_render_pictformat_t findFormatForVisual(xcb_visualid_t visual)
-{
-    static QHash<xcb_visualid_t, xcb_render_pictformat_t> s_cache;
-
-    if (xcb_render_pictformat_t format = s_cache.value(visual, 0)) {
-        return format;
-    }
-    if (!s_cache.isEmpty()) {
-        return 0;
-    }
-
-    ScopedCPointer<xcb_render_query_pict_formats_reply_t> formats(xcb_render_query_pict_formats_reply(
-        connection(), xcb_render_query_pict_formats_unchecked(connection()), NULL));
-    if (!formats) {
-        return 0;
-    }
-    int screen = QX11Info::appScreen();
-    for (xcb_render_pictscreen_iterator_t sit = xcb_render_query_pict_formats_screens_iterator(formats.data());
-            sit.rem;
-            --screen, xcb_render_pictscreen_next(&sit)) {
-        if (screen != 0) {
-            continue;
-        }
-        for (xcb_render_pictdepth_iterator_t dit = xcb_render_pictscreen_depths_iterator(sit.data);
-                dit.rem;
-                xcb_render_pictdepth_next(&dit)) {
-            for (xcb_render_pictvisual_iterator_t vit = xcb_render_pictdepth_visuals_iterator(dit.data);
-                    vit.rem;
-                    xcb_render_pictvisual_next(&vit)) {
-                s_cache.insert(vit.data->visual, vit.data->format);
-            }
-        }
-    }
-    return s_cache.value(visual, 0);
-}
-
 //****************************************
 // XRenderBackend
 //****************************************
@@ -193,7 +157,7 @@ void X11XRenderBackend::init(bool createOverlay)
             setFailed("Failed getting window attributes for overlay window");
             return;
         }
-        m_format = findFormatForVisual(attribs->visual);
+        m_format = XRenderUtils::findPictFormat(attribs->visual);
         if (m_format == 0) {
             setFailed("Failed to find XRender format for overlay window");
             return;
@@ -202,7 +166,7 @@ void X11XRenderBackend::init(bool createOverlay)
         xcb_render_create_picture(connection(), m_front, m_overlayWindow->window(), m_format, 0, NULL);
     } else {
         // create XRender picture for the root window
-        m_format = findFormatForVisual(defaultScreen()->root_visual);
+        m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
         if (m_format == 0) {
             setFailed("Failed to find XRender format for root window");
             return; // error
@@ -284,7 +248,7 @@ WaylandXRenderBackend::~WaylandXRenderBackend()
 
 void WaylandXRenderBackend::init()
 {
-    m_format = findFormatForVisual(defaultScreen()->root_visual);
+    m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
     if (m_format == 0) {
         setFailed("Failed to find XRender format for root window");
         return; // error
@@ -461,7 +425,7 @@ QRect SceneXrender::Window::temp_visibleRect;
 SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
     , m_scene(scene)
-    , format(findFormatForVisual(c->visual()))
+    , format(XRenderUtils::findPictFormat(c->visual()))
     , alpha_cached_opacity(0.0)
 {
 }
