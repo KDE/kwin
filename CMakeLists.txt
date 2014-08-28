@@ -580,6 +580,7 @@ install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 if(Wayland_Client_FOUND AND XKB_FOUND)
     kf5_add_kdeinit_executable(kwin_wayland main_wayland.cpp)
     target_link_libraries(kdeinit_kwin_wayland kwin)
+    add_dependencies(kdeinit_kwin_wayland wayland-client-fullscreen-shell)
 
     install(TARGETS kdeinit_kwin_wayland ${INSTALL_TARGETS_DEFAULT_ARGS} )
     install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
