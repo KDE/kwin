@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "display.h"
+#include "compositor_interface.h"
 #include "output_interface.h"
 
 #include <QCoreApplication>
@@ -121,6 +122,13 @@ OutputInterface *Display::createOutput(QObject *parent)
     connect(this, &Display::aboutToTerminate, output, [this,output] { removeOutput(output); });
     m_outputs << output;
     return output;
+}
+
+CompositorInterface *Display::createCompositor(QObject *parent)
+{
+    CompositorInterface *compositor = new CompositorInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, compositor, [this,compositor] { delete compositor; });
+    return compositor;
 }
 
 void Display::removeOutput(OutputInterface *output)
