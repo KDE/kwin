@@ -7,6 +7,7 @@ set( testWaylandServerDisplay_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandServerDisplay ${testWaylandServerDisplay_SRCS})

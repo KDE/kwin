@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "compositor_interface.h"
 #include "output_interface.h"
+#include "shell_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -131,6 +132,13 @@ CompositorInterface *Display::createCompositor(QObject *parent)
     return compositor;
 }
 
+ShellInterface *Display::createShell(QObject *parent)
+{
+    ShellInterface *shell = new ShellInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, shell, [this,shell] { delete shell; });
+    return shell;
+}
+
 void Display::createShm()
 {
     Q_ASSERT(m_running);
@@ -141,6 +149,16 @@ void Display::removeOutput(OutputInterface *output)
 {
     m_outputs.removeAll(output);
     delete output;
+}
+
+quint32 Display::nextSerial()
+{
+    return wl_display_next_serial(m_display);
+}
+
+quint32 Display::serial()
+{
+    return wl_display_get_serial(m_display);
 }
 
 }

@@ -10,6 +10,7 @@ set( testWaylandConnectionThread_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandConnectionThread ${testWaylandConnectionThread_SRCS})
@@ -64,6 +65,7 @@ set( testWaylandOutput_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
@@ -84,10 +86,16 @@ set( testWaylandShell_SRCS
         ${KWIN_SOURCE_DIR}/wayland_client/shell.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandShell ${testWaylandShell_SRCS})
 add_dependencies(testWaylandShell wayland-client-fullscreen-shell)
-target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui Wayland::Client)
+target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui Wayland::Client Wayland::Server)
 add_test(kwin-testWaylandShell testWaylandShell)
 ecm_mark_as_test(testWaylandShell)
 
@@ -108,6 +116,7 @@ set( testWaylandSurface_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
