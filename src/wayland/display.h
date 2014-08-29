@@ -33,6 +33,7 @@ namespace WaylandServer
 
 class CompositorInterface;
 class OutputInterface;
+class ShellInterface;
 
 class Display : public QObject
 {
@@ -45,6 +46,9 @@ public:
 
     void setSocketName(const QString &name);
     QString socketName() const;
+
+    quint32 serial();
+    quint32 nextSerial();
 
     void start();
     void terminate();
@@ -67,6 +71,7 @@ public:
 
     CompositorInterface *createCompositor(QObject *parent = nullptr);
     void createShm();
+    ShellInterface *createShell(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);
