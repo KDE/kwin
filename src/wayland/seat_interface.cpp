@@ -24,6 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fcntl.h>
 #include <unistd.h>
 
+#ifndef WL_SEAT_NAME_SINCE_VERSION
+#define WL_SEAT_NAME_SINCE_VERSION 2
+#endif
+
 namespace KWin
 {
 
