@@ -61,7 +61,7 @@ public:
 
 Q_SIGNALS:
     void keymapChanged(int fd, quint32 size);
-    void keyChanged(quint32 key, KeyState state, quint32 time);
+    void keyChanged(quint32 key, KWin::Wayland::Keyboard::KeyState state, quint32 time);
     void modifiersChanged(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
 private:
