@@ -77,8 +77,8 @@ Q_SIGNALS:
     void entered(quint32 serial, const QPointF &relativeToSurface);
     void left(quint32 serial);
     void motion(const QPointF &relativeToSurface, quint32 time);
-    void buttonStateChanged(quint32 serial, quint32 time, quint32 button, ButtonState state);
-    void axisChanged(quint32 time, Axis axis, qreal delta);
+    void buttonStateChanged(quint32 serial, quint32 time, quint32 button, KWin::Wayland::Pointer::ButtonState state);
+    void axisChanged(quint32 time, KWin::Wayland::Pointer::Axis axis, qreal delta);
 
 private:
     void enter(uint32_t serial, wl_surface *surface, const QPointF &relativeToSurface);
@@ -92,5 +92,6 @@ private:
 }
 
 Q_DECLARE_METATYPE(KWin::Wayland::Pointer::ButtonState)
+Q_DECLARE_METATYPE(KWin::Wayland::Pointer::Axis)
 
 #endif
