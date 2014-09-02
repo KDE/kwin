@@ -10,6 +10,7 @@ set( testWaylandConnectionThread_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
@@ -65,6 +66,7 @@ set( testWaylandOutput_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
@@ -90,6 +92,7 @@ set( testWaylandShell_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
@@ -116,6 +119,7 @@ set( testWaylandSurface_SRCS
         ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
         ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
@@ -124,3 +128,33 @@ add_dependencies(testWaylandSurface wayland-client-fullscreen-shell)
 target_link_libraries( testWaylandSurface Qt5::Test Qt5::Gui Wayland::Client Wayland::Server)
 add_test(kwin-testWaylandSurface testWaylandSurface)
 ecm_mark_as_test(testWaylandSurface)
+
+########################################################
+# Test WaylandSeat
+########################################################
+set( testWaylandSeat_SRCS
+        test_wayland_seat.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/buffer.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/keyboard.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/pointer.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/seat.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/shm_pool.cpp
+        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
+        ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+    )
+add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
+add_dependencies(testWaylandSeat wayland-client-fullscreen-shell)
+target_link_libraries( testWaylandSeat Qt5::Test Qt5::Gui Wayland::Client Wayland::Server)
+add_test(kwin-testWaylandSeat testWaylandSeat)
+ecm_mark_as_test(testWaylandSeat)

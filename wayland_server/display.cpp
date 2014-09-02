@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "compositor_interface.h"
 #include "output_interface.h"
+#include "seat_interface.h"
 #include "shell_interface.h"
 
 #include <QCoreApplication>
@@ -137,6 +138,13 @@ ShellInterface *Display::createShell(QObject *parent)
     ShellInterface *shell = new ShellInterface(this, parent);
     connect(this, &Display::aboutToTerminate, shell, [this,shell] { delete shell; });
     return shell;
+}
+
+SeatInterface *Display::createSeat(QObject *parent)
+{
+    SeatInterface *seat = new SeatInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, seat, [this,seat] { delete seat; });
+    return seat;
 }
 
 void Display::createShm()
