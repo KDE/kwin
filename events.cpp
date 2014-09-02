@@ -60,6 +60,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "composite.h"
 #include "killwindow.h"
+#include "x11eventfilter.h"
 
 namespace KWin
 {
@@ -157,6 +158,25 @@ QVector<QByteArray> s_xcbEerrors({
     QByteArrayLiteral("BadLength"),
     QByteArrayLiteral("BadImplementation"),
     QByteArrayLiteral("Unknown")});
+
+
+void Workspace::registerEventFilter(X11EventFilter *filter)
+{
+    if (filter->eventType() == XCB_GE_GENERIC)
+        m_genericEventFilters.append(filter);
+    else
+        m_eventFilters.append(filter);
+}
+
+void Workspace::unregisterEventFilter(X11EventFilter *filter)
+{
+    if (filter->eventType() == XCB_GE_GENERIC)
+        m_genericEventFilters.removeOne(filter);
+    else
+        m_eventFilters.removeOne(filter);
+}
+
+
 /*!
   Handles workspace specific XCB event
  */
@@ -192,6 +212,23 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
         return false;
     }
+
+    if (eventType == XCB_GE_GENERIC) {
+        xcb_ge_generic_event_t *ge = reinterpret_cast<xcb_ge_generic_event_t *>(e);
+
+        foreach (X11EventFilter *filter, m_genericEventFilters) {
+            if (filter->extension() == ge->extension && filter->genericEventType() == ge->event_type && filter->event(e)) {
+                return true;
+            }
+        }
+    } else {
+        foreach (X11EventFilter *filter, m_eventFilters) {
+            if (filter->eventType() == eventType && filter->event(e)) {
+                return true;
+            }
+        }
+    }
+
     if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()
             && (eventType == XCB_KEY_PRESS || eventType == XCB_KEY_RELEASE))
         return false; // let Qt process it, it'll be intercepted again in eventFilter()

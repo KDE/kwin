@@ -373,6 +373,7 @@ set(kwin_KDEINIT_SRCS
    paintredirector.cpp
    virtualdesktops.cpp
    xcbutils.cpp
+   x11eventfilter.cpp
     scripting/scripting.cpp
     scripting/workspace_wrapper.cpp
     scripting/meta.cpp
