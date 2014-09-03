@@ -27,10 +27,17 @@ set( testWaylandRegistry_SRCS
         ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
         ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
+        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
+        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
     )
 add_executable(testWaylandRegistry ${testWaylandRegistry_SRCS})
 add_dependencies(testWaylandRegistry wayland-client-fullscreen-shell)
-target_link_libraries( testWaylandRegistry Qt5::Test Wayland::Client)
+target_link_libraries( testWaylandRegistry Qt5::Test Qt5::Gui Wayland::Client Wayland::Server)
 add_test(kwin-testWaylandRegistry testWaylandRegistry)
 ecm_mark_as_test(testWaylandRegistry)
 
