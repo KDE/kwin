@@ -109,6 +109,14 @@ void TestWaylandShell::init()
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
+    // TODO: we should destroy the queue
+    wl_event_queue *queue = wl_display_create_queue(m_connection->display());
+    connect(m_connection, &KWin::Wayland::ConnectionThread::eventsRead, this,
+        [this, queue]() {
+            wl_display_dispatch_queue_pending(m_connection->display(), queue);
+            wl_display_flush(m_connection->display());
+        },
+        Qt::QueuedConnection);
 
     KWin::Wayland::Registry registry;
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
@@ -116,6 +124,7 @@ void TestWaylandShell::init()
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
+    wl_proxy_set_queue((wl_proxy*)registry.registry(), queue);
     QVERIFY(compositorSpy.wait());
 
     m_compositor = new KWin::Wayland::Compositor(this);
@@ -233,6 +242,7 @@ void TestWaylandShell::testPing()
     pongSpy.clear();
     pingTimeoutSpy.clear();
     serverSurface->ping();
+    QTest::qWait(100);
     if (pingTimeoutSpy.isEmpty()) {
         QVERIFY(pingTimeoutSpy.wait());
     }
