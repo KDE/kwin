@@ -588,8 +588,10 @@ void Compositor::performCompositing()
             damaged << win;
     }
 
-    if (damaged.count() > 0)
+    if (damaged.count() > 0) {
+        m_scene->triggerFence();
         xcb_flush(connection());
+    }
 
     // Move elevated windows to the top of the stacking order
     foreach (EffectWindow *c, static_cast<EffectsHandlerImpl *>(effects)->elevatedWindows()) {

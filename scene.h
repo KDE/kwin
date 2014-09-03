@@ -134,6 +134,8 @@ public:
      */
     virtual bool isLastFrameRendered() const = 0;
 
+    virtual void triggerFence();
+
 public Q_SLOTS:
     // a window has been destroyed
     void windowDeleted(KWin::Deleted*);

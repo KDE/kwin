@@ -8,6 +8,11 @@ Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 Based on glcompmgr code by Felix Bellaby.
 Using code from Compiz and Beryl.
 
+Explicit command stream synchronization based on the sample
+implementation by James Jones <jajones@nvidia.com>,
+
+Copyright © 2011 NVIDIA Corporation
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -74,6 +79,216 @@ namespace KWin
 {
 
 extern int currentRefreshRate();
+
+
+/**
+ * SyncObject represents a fence used to synchronize operations in
+ * the kwin command stream with operations in the X command stream.
+ */
+class SyncObject
+{
+public:
+    enum State { Ready, TriggerSent, Waiting, Done, Resetting };
+
+    SyncObject();
+    ~SyncObject();
+
+    State state() const { return m_state; }
+
+    void trigger();
+    void wait();
+    bool finish();
+    void reset();
+    void finishResetting();
+
+private:
+    State m_state;
+    GLsync m_sync;
+    xcb_sync_fence_t m_fence;
+    xcb_get_input_focus_cookie_t m_reset_cookie;
+};
+
+SyncObject::SyncObject()
+{
+    m_state = Ready;
+
+    xcb_connection_t * const c = connection();
+
+    m_fence = xcb_generate_id(c);
+    xcb_sync_create_fence(c, rootWindow(), m_fence, false);
+    xcb_flush(c);
+
+    m_sync = glImportSyncEXT(GL_SYNC_X11_FENCE_EXT, m_fence, 0);
+}
+
+SyncObject::~SyncObject()
+{
+    xcb_sync_destroy_fence(connection(), m_fence);
+    glDeleteSync(m_sync);
+
+    if (m_state == Resetting)
+        xcb_discard_reply(connection(), m_reset_cookie.sequence);
+}
+
+void SyncObject::trigger()
+{
+    assert(m_state == Ready || m_state == Resetting);
+
+    // Finish resetting the fence if necessary
+    if (m_state == Resetting)
+        finishResetting();
+
+    xcb_sync_trigger_fence(connection(), m_fence);
+    m_state = TriggerSent;
+}
+
+void SyncObject::wait()
+{
+    if (m_state != TriggerSent)
+        return;
+
+    glWaitSync(m_sync, 0, GL_TIMEOUT_IGNORED);
+    m_state = Waiting;
+}
+
+bool SyncObject::finish()
+{
+    if (m_state == Done)
+        return true;
+
+    // Note: It is possible that we never inserted a wait for the fence.
+    //       This can happen if we ended up not rendering the damaged
+    //       window because it is fully occluded.
+    assert(m_state == TriggerSent || m_state == Waiting);
+
+    // Check if the fence is signaled
+    GLint value;
+    glGetSynciv(m_sync, GL_SYNC_STATUS, 1, nullptr, &value);
+
+    if (value != GL_SIGNALED) {
+        qDebug() << "Waiting for X fence to finish";
+
+        // Wait for the fence to become signaled with a one second timeout
+        const GLenum result = glClientWaitSync(m_sync, 0, 1000000000);
+
+        switch (result) {
+        case GL_TIMEOUT_EXPIRED:
+            qWarning() << "Timeout while waiting for X fence";
+            return false;
+
+        case GL_WAIT_FAILED:
+            qWarning() << "glClientWaitSync() failed";
+            return false;
+        }
+    }
+
+    m_state = Done;
+    return true;
+}
+
+void SyncObject::reset()
+{
+    assert(m_state == Done);
+
+    xcb_connection_t * const c = connection();
+
+    // Send the reset request along with a sync request.
+    // We use the cookie to ensure that the server has processed the reset
+    // request before we trigger the fence and call glWaitSync().
+    // Otherwise there is a race condition between the reset finishing and
+    // the glWaitSync() call.
+    xcb_sync_reset_fence(c, m_fence);
+    m_reset_cookie = xcb_get_input_focus(c);
+    xcb_flush(c);
+
+    m_state = Resetting;
+}
+
+void SyncObject::finishResetting()
+{
+    assert(m_state == Resetting);
+    free(xcb_get_input_focus_reply(connection(), m_reset_cookie, nullptr));
+    m_state = Ready;
+}
+
+
+
+// -----------------------------------------------------------------------
+
+
+
+/**
+ * SyncManager manages a set of fences used for explicit synchronization
+ * with the X command stream.
+ */
+class SyncManager
+{
+public:
+    enum { MaxFences = 4 };
+
+    SyncManager();
+    ~SyncManager();
+
+    SyncObject *nextFence();
+    bool updateFences();
+
+private:
+    std::array<SyncObject, MaxFences> m_fences;
+    int m_next;
+};
+
+SyncManager::SyncManager()
+    : m_next(0)
+{
+}
+
+SyncManager::~SyncManager()
+{
+}
+
+SyncObject *SyncManager::nextFence()
+{
+    SyncObject *fence = &m_fences[m_next];
+    m_next = (m_next + 1) % MaxFences;
+    return fence;
+}
+
+bool SyncManager::updateFences()
+{
+    for (int i = 0; i < qMin(2, MaxFences - 1); i++) {
+        const int index = (m_next + i) % MaxFences;
+        SyncObject &fence = m_fences[index];
+
+        switch (fence.state()) {
+        case SyncObject::Ready:
+            break;
+
+        case SyncObject::TriggerSent:
+        case SyncObject::Waiting:
+            if (!fence.finish())
+                return false;
+            fence.reset();
+            break;
+
+        // Should not happen in practice since we always reset the fence
+        // after finishing it
+        case SyncObject::Done:
+            fence.reset();
+            break;
+
+        case SyncObject::Resetting:
+            fence.finishResetting();
+            break;
+        }
+    }
+
+    return true;
+}
+
+
+// -----------------------------------------------------------------------
+
+
 
 //****************************************
 // SceneOpenGL
@@ -146,6 +361,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     : Scene(ws)
     , init_ok(true)
     , m_backend(backend)
+    , m_syncManager(nullptr)
+    , m_currentFence(nullptr)
 {
     if (m_backend->isFailed()) {
         init_ok = false;
@@ -179,6 +396,21 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     if (options->isGlStrictBindingFollowsDriver()) {
         options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
     }
+
+    bool haveSyncObjects = glPlatform->isGLES()
+        ? hasGLVersion(3, 0)
+        : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
+
+    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
+        const QByteArray useExplicitSync = qgetenv("KWIN_EXPLICIT_SYNC");
+
+        if (useExplicitSync != "0") {
+            qDebug() << "Initializing fences for synchronization with the X command stream";
+            m_syncManager = new SyncManager;
+        } else {
+            qDebug() << "Explicit synchronization with the X command stream disabled by environment variable";
+        }
+    }
 }
 
 SceneOpenGL::~SceneOpenGL()
@@ -186,6 +418,8 @@ SceneOpenGL::~SceneOpenGL()
     // do cleanup after initBuffer()
     SceneOpenGL::EffectFrame::cleanup();
     if (init_ok) {
+        delete m_syncManager;
+
         // backend might be still needed for a different scene
         delete m_backend;
     }
@@ -329,6 +563,22 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
 }
 
+
+void SceneOpenGL::triggerFence()
+{
+    if (m_syncManager) {
+        m_currentFence = m_syncManager->nextFence();
+        m_currentFence->trigger();
+    }
+}
+
+void SceneOpenGL::insertWait()
+{
+    if (m_currentFence && m_currentFence->state() != SyncObject::Waiting) {
+        m_currentFence->wait();
+    }
+}
+
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -375,6 +625,16 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 #endif
 
     m_backend->endRenderingFrame(validRegion, updateRegion);
+
+    if (m_currentFence) {
+        if (!m_syncManager->updateFences()) {
+            qDebug() << "Aborting explicit synchronization with the X command stream.";
+            qDebug() << "Future frames will be rendered unsynchronized.";
+            delete m_syncManager;
+            m_syncManager = nullptr;
+        }
+        m_currentFence = nullptr;
+    }
 
     // do cleanup
     clearStackingOrder();
@@ -826,6 +1086,10 @@ bool SceneOpenGL::Window::bindTexture()
     if (pixmap->isDiscarded()) {
         return !pixmap->texture()->isNull();
     }
+
+    if (!window()->damage().isEmpty())
+        m_scene->insertWait();
+
     return pixmap->bind();
 }
 

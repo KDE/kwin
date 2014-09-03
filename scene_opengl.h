@@ -34,6 +34,8 @@ class ColorCorrection;
 class LanczosFilter;
 class OpenGLBackend;
 class OpenGLPaintRedirector;
+class SyncManager;
+class SyncObject;
 
 class SceneOpenGL
     : public Scene
@@ -58,6 +60,9 @@ public:
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
     virtual bool isLastFrameRendered() const override;
+    virtual void triggerFence() override;
+
+    void insertWait();
 
     void idle();
 
@@ -101,6 +106,8 @@ private:
 private:
     bool m_debug;
     OpenGLBackend *m_backend;
+    SyncManager *m_syncManager;
+    SyncObject *m_currentFence;
 };
 
 class SceneOpenGL2 : public SceneOpenGL
