@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // WaylandServer
 #include "../../wayland_server/display.h"
+#include "../../wayland_server/output_interface.h"
 
 using namespace KWin::WaylandServer;
 
@@ -30,6 +31,7 @@ class TestWaylandServerDisplay : public QObject
 private Q_SLOTS:
     void testSocketName();
     void testStartStop();
+    void testAddRemoveOutput();
 };
 
 void TestWaylandServerDisplay::testSocketName()
@@ -74,6 +76,29 @@ void TestWaylandServerDisplay::testStartStop()
     QVERIFY(runningSpy.first().first().toBool());
     QVERIFY(!runningSpy.last().first().toBool());
     QVERIFY(!runtimeDir.exists(testSocketName));
+}
+
+void TestWaylandServerDisplay::testAddRemoveOutput()
+{
+    Display display;
+    display.setSocketName(QStringLiteral("kwin-wayland-server-display-test-output-0"));
+    display.start();
+
+    OutputInterface *output = display.createOutput();
+    QCOMPARE(display.outputs().size(), 1);
+    QCOMPARE(display.outputs().first(), output);
+    // create a second output
+    OutputInterface *output2 = display.createOutput();
+    QCOMPARE(display.outputs().size(), 2);
+    QCOMPARE(display.outputs().first(), output);
+    QCOMPARE(display.outputs().last(), output2);
+    // remove the first output
+    display.removeOutput(output);
+    QCOMPARE(display.outputs().size(), 1);
+    QCOMPARE(display.outputs().first(), output2);
+    // and delete the second
+    delete output2;
+    QVERIFY(display.outputs().isEmpty());
 }
 
 QTEST_MAIN(TestWaylandServerDisplay)
