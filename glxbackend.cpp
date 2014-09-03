@@ -168,6 +168,8 @@ void GlxBackend::init()
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
     qDebug() << "Direct rendering:" << isDirectRendering() << endl;
+
+    initVisualDepthHashTable();
 }
 
 bool GlxBackend::initRenderingContext()
@@ -304,6 +306,26 @@ bool GlxBackend::initFbConfig()
     return true;
 }
 
+void GlxBackend::initVisualDepthHashTable()
+{
+    const xcb_setup_t *setup = xcb_get_setup(connection());
+
+    for (auto screen = xcb_setup_roots_iterator(setup); screen.rem; xcb_screen_next(&screen)) {
+        for (auto depth = xcb_screen_allowed_depths_iterator(screen.data); depth.rem; xcb_depth_next(&depth)) {
+            const int len = xcb_depth_visuals_length(depth.data);
+            const xcb_visualtype_t *visuals = xcb_depth_visuals(depth.data);
+
+            for (int i = 0; i < len; i++)
+                m_visualDepthHash.insert(visuals[i].visual_id, depth.data->depth);
+        }
+    }
+}
+
+int GlxBackend::visualDepth(xcb_visualid_t visual) const
+{
+    return m_visualDepthHash.value(visual);
+}
+
 FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
 {
     FBConfigInfo *&info = m_fbconfigHash[visual];
@@ -330,6 +352,8 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const int green_bits = bitCount(direct->green_mask);
     const int blue_bits  = bitCount(direct->blue_mask);
     const int alpha_bits = bitCount(direct->alpha_mask);
+
+    const int depth = visualDepth(visual);
 
     const auto rgb_sizes = std::tie(red_bits, green_bits, blue_bits);
 
@@ -364,6 +388,12 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE,  &blue);
 
         if (std::tie(red, green, blue) != rgb_sizes)
+            continue;
+
+        xcb_visualid_t visual;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_VISUAL_ID, (int *) &visual);
+
+        if (visualDepth(visual) != depth)
             continue;
 
         int bind_rgb, bind_rgba;

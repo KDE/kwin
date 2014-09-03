@@ -60,8 +60,10 @@ private:
     void waitSync();
     bool initRenderingContext();
     bool initFbConfig();
+    void initVisualDepthHashTable();
     void setSwapInterval(int interval);
 
+    int visualDepth(xcb_visualid_t visual) const;
     FBConfigInfo *infoForVisual(xcb_visualid_t visual);
 
     /**
@@ -73,6 +75,7 @@ private:
     GLXWindow glxWindow;
     GLXContext ctx;
     QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
+    QHash<xcb_visualid_t, int> m_visualDepthHash;
     int m_bufferAge;
     bool m_haveMESACopySubBuffer;
     bool m_haveMESASwapControl;
