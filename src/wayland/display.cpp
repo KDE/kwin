@@ -110,9 +110,7 @@ void Display::terminate()
 
 void Display::setRunning(bool running)
 {
-    if (m_running == running) {
-        return;
-    }
+    Q_ASSERT(m_running != running);
     m_running = running;
     emit runningChanged(m_running);
 }
