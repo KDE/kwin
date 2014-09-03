@@ -34,6 +34,7 @@ private Q_SLOTS:
     void testName();
     void testPointerButton();
     void testPointerPos();
+    void testDestroyThroughTerminate();
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-test-0");
@@ -155,6 +156,18 @@ void TestWaylandServerSeat::testPointerPos()
 
     pointer->setGlobalPos(QPoint(10, 15));
     QCOMPARE(posSpy.count(), 1);
+}
+
+void TestWaylandServerSeat::testDestroyThroughTerminate()
+{
+    Display display;
+    display.setSocketName(s_socketName);
+    display.start();
+    SeatInterface *seat = display.createSeat();
+    QSignalSpy destroyedSpy(seat, SIGNAL(destroyed(QObject*)));
+    QVERIFY(destroyedSpy.isValid());
+    display.terminate();
+    QVERIFY(!destroyedSpy.isEmpty());
 }
 
 QTEST_MAIN(TestWaylandServerSeat)
