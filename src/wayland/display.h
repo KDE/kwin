@@ -66,7 +66,7 @@ public:
 
     OutputInterface *createOutput(QObject *parent = nullptr);
     void removeOutput(OutputInterface *output);
-    const QList<OutputInterface*> outputs() const {
+    const QList<OutputInterface*> &outputs() const {
         return m_outputs;
     }
 
