@@ -872,23 +872,27 @@ void ScreenEdges::recreateEdges()
     QList<Edge*> oldEdges(m_edges);
     m_edges.clear();
     const QRect fullArea(0, 0, displayWidth(), displayHeight());
+    QRegion processedRegion;
     for (int i=0; i<screens()->count(); ++i) {
-        const QRect screen = screens()->geometry(i);
-        if (isLeftScreen(screen, fullArea)) {
-            // left most screen
-            createVerticalEdge(ElectricLeft, screen, fullArea);
-        }
-        if (isRightScreen(screen, fullArea)) {
-            // right most screen
-            createVerticalEdge(ElectricRight, screen, fullArea);
-        }
-        if (isTopScreen(screen, fullArea)) {
-            // top most screen
-            createHorizontalEdge(ElectricTop, screen, fullArea);
-        }
-        if (isBottomScreen(screen, fullArea)) {
-            // bottom most screen
-            createHorizontalEdge(ElectricBottom, screen, fullArea);
+        const QRegion screen = QRegion(screens()->geometry(i)).subtracted(processedRegion);
+        processedRegion += screen;
+        Q_FOREACH (const QRect &screenPart, screen.rects()) {
+            if (isLeftScreen(screenPart, fullArea)) {
+                // left most screen
+                createVerticalEdge(ElectricLeft, screenPart, fullArea);
+            }
+            if (isRightScreen(screenPart, fullArea)) {
+                // right most screen
+                createVerticalEdge(ElectricRight, screenPart, fullArea);
+            }
+            if (isTopScreen(screenPart, fullArea)) {
+                // top most screen
+                createHorizontalEdge(ElectricTop, screenPart, fullArea);
+            }
+            if (isBottomScreen(screenPart, fullArea)) {
+                // bottom most screen
+                createHorizontalEdge(ElectricBottom, screenPart, fullArea);
+            }
         }
     }
     // copy over the effect/script reservations from the old edges
