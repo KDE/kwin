@@ -26,6 +26,7 @@ Name[sr@latin]=Nametanje dekoracija prozora na GTK+ prozor
 Name[sv]=Tvingar fönsterdekorationer på GTK+ fönster
 Name[uk]=Примусове декорування вікон для програм на основі GTK+
 Name[x-test]=xxEnforces Window Decorations on GTK+ windowxx
+Name[zh_TW]=強制 GTK+ 視窗的視窗裝飾
 Comment=Fixes functional deficits for client side decorated windows.
 Comment[ca]=Corregeix els dèficits funcionals amb les finestres decorades a la banda del client.
 Comment[en_GB]=Fixes functional deficits for client side decorated windows.
@@ -51,6 +52,7 @@ Comment[sr@latin]=Ispravlja funkcionalne nedostatke prozora dekorisanih pri klij
 Comment[sv]=Fixar funktionella svagheter för fönster dekorerade på klientsidan
 Comment[uk]=Виправляє недостатність функціональних можливостей для декорованих вікон на боці клієнта.
 Comment[x-test]=xxFixes functional deficits for client side decorated windows.xx
+Comment[zh_TW]=修正客戶端裝飾視窗功能不足的問題。
 Icon=preferences-system-windows-script-enforcedeco
 
 X-Plasma-API=javascript

@@ -129,6 +129,7 @@ Comment[sr@latin]=Ponašanje prozora i radnje nad njima
 Comment[sv]=Fönsteråtgärder och beteende
 Comment[uk]=Реакція і поведінка вікон
 Comment[x-test]=xxWindow Actions and Behaviorxx
+Comment[zh_TW]=視窗動作與行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,clic doble
@@ -157,6 +158,7 @@ X-KDE-Keywords[sr@latin]=focus,placement,window behavior,window actions,animatio
 X-KDE-Keywords[sv]=fokus,placering,fönsterbeteende,animering,höj,höj automatiskt,fönster,ram,namnlist,dubbelklick
 X-KDE-Keywords[uk]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне
 X-KDE-Keywords[x-test]=xxfocus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
+X-KDE-Keywords[zh_TW]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 
