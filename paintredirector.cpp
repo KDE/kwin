@@ -411,7 +411,7 @@ void OpenGLPaintRedirector::updatePixmaps(const QRect *rects, const QRegion &reg
 
     const int topHeight    = rects[TopPixmap].height();
     const int bottomHeight = rects[BottomPixmap].height();
-    const int leftWidth    = rects[RightPixmap].width();
+    const int leftWidth    = rects[LeftPixmap].width();
 
     const QPoint offsets[4] = {
         QPoint(0, 0),                                         // Top
