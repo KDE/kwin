@@ -104,7 +104,7 @@ void ThemeConfig::load(const KConfig &conf)
         m_alignment = Qt::AlignLeft;
     }
     else if (alignment == QStringLiteral("center")) {
-        m_alignment = Qt::AlignCenter;
+        m_alignment = Qt::AlignHCenter;
     }
     else {
         m_alignment = Qt::AlignRight;
