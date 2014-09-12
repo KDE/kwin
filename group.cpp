@@ -920,15 +920,15 @@ void Client::checkGroup(Group* set_group, bool force)
             in_group = set_group;
             in_group->addMember(this);
         }
-    } else if (m_windowGroup != XCB_WINDOW_NONE) {
-        Group* new_group = workspace()->findGroup(m_windowGroup);
+    } else if (info->groupLeader() != XCB_WINDOW_NONE) {
+        Group* new_group = workspace()->findGroup(info->groupLeader());
         if (transientFor() != NULL && transientFor()->group() != new_group) {
             // move the window to the right group (e.g. a dialog provided
             // by different app, but transient for this one, so make it part of that group)
             new_group = transientFor()->group();
         }
         if (new_group == NULL)   // doesn't exist yet
-            new_group = new Group(m_windowGroup);
+            new_group = new Group(info->groupLeader());
         if (new_group != in_group) {
             if (in_group != NULL)
                 in_group->removeMember(this);
@@ -1030,7 +1030,7 @@ void Client::changeClientLeaderGroup(Group* gr)
     if (transientFor() != NULL)
         return;
     // also don't change the group for window which have group set
-    if (m_windowGroup)
+    if (info->groupLeader())
         return;
     checkGroup(gr);   // change group
 }

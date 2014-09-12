@@ -601,6 +601,13 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2.testFlag(NET::WM2BlockCompositing)) {
             setBlockingCompositing(info->isBlockingCompositing());
         }
+        if (dirtyProperties2.testFlag(NET::WM2GroupLeader)) {
+            checkGroup();
+            updateAllowedActions(); // Group affects isMinimizable()
+        }
+        if (dirtyProperties2.testFlag(NET::WM2Urgency)) {
+            updateUrgency();
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -851,7 +858,6 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
         readTransient();
         break;
     case XCB_ATOM_WM_HINTS:
-        getWMHints();
         getIcons(); // because KWin::icon() uses WMHints as fallback
         break;
     default:

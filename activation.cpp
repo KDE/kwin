@@ -846,7 +846,7 @@ void Client::startupIdChanged()
 
 void Client::updateUrgency()
 {
-    if (urgency)
+    if (info->urgency())
         demandAttention();
 }
 
