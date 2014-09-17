@@ -50,9 +50,10 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     if ("${CMAKE_CXX_COMPILER_VERSION}" VERSION_LESS "4.8")
         message(SEND_ERROR "Version ${CMAKE_CXX_COMPILER_VERSION} of the ${CMAKE_CXX_COMPILER_ID} C++ compiler is not supported. Please use version 4.8 or later.")
     endif()
-    # adjusting CMAKE_C_FLAGS to get wayland protocols to compile
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 endif()
+
+# adjusting CMAKE_C_FLAGS to get wayland protocols to compile
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
 
 find_package(Qt5Multimedia QUIET)
 set_package_properties(Qt5Multimedia PROPERTIES
