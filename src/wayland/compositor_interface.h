@@ -17,8 +17,8 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef KWIN_WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
-#define KWIN_WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
+#ifndef WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
+#define WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
 
 #include "surface_interface.h"
 
