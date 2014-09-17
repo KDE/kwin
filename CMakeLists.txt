@@ -426,6 +426,7 @@ endif()
 if(Wayland_Client_FOUND AND XKB_FOUND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
+            screens_wayland.cpp
             wayland_backend.cpp
             wayland_client/buffer.cpp
             wayland_client/compositor.cpp
