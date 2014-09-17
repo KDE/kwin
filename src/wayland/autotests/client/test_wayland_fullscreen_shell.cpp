@@ -96,13 +96,13 @@ void TestWaylandFullscreenShell::testRegistry()
     if (m_westonProcess->state() != QProcess::Running) {
         QSKIP("This test requires a running wayland server");
     }
-    KWin::Wayland::ConnectionThread connection;
+    KWayland::Client::ConnectionThread connection;
     QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
     connection.setSocketName(s_socketName);
     connection.initConnection();
     QVERIFY(connectedSpy.wait());
 
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(fullscreenShellAnnounced(quint32,quint32)));
     registry.create(connection.display());
     QVERIFY(registry.isValid());
@@ -110,7 +110,7 @@ void TestWaylandFullscreenShell::testRegistry()
     wl_display_flush(connection.display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::FullscreenShell fullscreenShell;
+    KWayland::Client::FullscreenShell fullscreenShell;
     QVERIFY(!fullscreenShell.isValid());
     QVERIFY(!fullscreenShell.hasCapabilityArbitraryModes());
     QVERIFY(!fullscreenShell.hasCapabilityCursorPlane());

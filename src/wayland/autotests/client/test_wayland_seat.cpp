@@ -58,9 +58,9 @@ private:
     KWayland::Server::Display *m_display;
     KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Server::SeatInterface *m_seatInterface;
-    KWin::Wayland::ConnectionThread *m_connection;
-    KWin::Wayland::Compositor *m_compositor;
-    KWin::Wayland::Seat *m_seat;
+    KWayland::Client::ConnectionThread *m_connection;
+    KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::Seat *m_seat;
     QThread *m_thread;
 };
 
@@ -93,7 +93,7 @@ void TestWaylandSeat::init()
     QVERIFY(m_compositorInterface->isValid());
 
     // setup connection
-    m_connection = new KWin::Wayland::ConnectionThread;
+    m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
     m_connection->setSocketName(s_socketName);
 
@@ -113,14 +113,14 @@ void TestWaylandSeat::init()
     QVERIFY(connectedSpy.wait());
     // TODO: we should destroy the queue
     wl_event_queue *queue = wl_display_create_queue(m_connection->display());
-    connect(m_connection, &KWin::Wayland::ConnectionThread::eventsRead, this,
+    connect(m_connection, &KWayland::Client::ConnectionThread::eventsRead, this,
         [this, queue]() {
             wl_display_dispatch_queue_pending(m_connection->display(), queue);
             wl_display_flush(m_connection->display());
         },
         Qt::QueuedConnection);
 
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
     QSignalSpy seatSpy(&registry, SIGNAL(seatAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
@@ -136,11 +136,11 @@ void TestWaylandSeat::init()
     QVERIFY(m_seatInterface->isValid());
     QVERIFY(seatSpy.wait());
 
-    m_compositor = new KWin::Wayland::Compositor(this);
+    m_compositor = new KWayland::Client::Compositor(this);
     m_compositor->setup(registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_compositor->isValid());
 
-    m_seat = new KWin::Wayland::Seat(this);
+    m_seat = new KWayland::Client::Seat(this);
     QSignalSpy nameSpy(m_seat, SIGNAL(nameChanged(QString)));
     m_seat->setup(registry.bindSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>()));
     QVERIFY(nameSpy.wait());
@@ -258,7 +258,7 @@ void TestWaylandSeat::testCapabilities()
 
 void TestWaylandSeat::testPointer()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
 
     QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
@@ -292,10 +292,10 @@ void TestWaylandSeat::testPointer()
     QSignalSpy motionSpy(p, SIGNAL(motion(QPointF,quint32)));
     QVERIFY(motionSpy.isValid());
 
-    QSignalSpy axisSpy(p, SIGNAL(axisChanged(quint32,KWin::Wayland::Pointer::Axis,qreal)));
+    QSignalSpy axisSpy(p, SIGNAL(axisChanged(quint32,KWayland::Client::Pointer::Axis,qreal)));
     QVERIFY(axisSpy.isValid());
 
-    QSignalSpy buttonSpy(p, SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWin::Wayland::Pointer::ButtonState)));
+    QSignalSpy buttonSpy(p, SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWayland::Client::Pointer::ButtonState)));
     QVERIFY(buttonSpy.isValid());
 
     serverPointer->setFocusedSurface(serverSurface, QPoint(10, 15));
@@ -348,27 +348,27 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(buttonSpy.at(0).at(1).value<quint32>(), quint32(4));
     // button
     QCOMPARE(buttonSpy.at(0).at(2).value<quint32>(), quint32(1));
-    QCOMPARE(buttonSpy.at(0).at(3).value<KWin::Wayland::Pointer::ButtonState>(), KWin::Wayland::Pointer::ButtonState::Pressed);
+    QCOMPARE(buttonSpy.at(0).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Pressed);
 
     // timestamp
     QCOMPARE(buttonSpy.at(1).at(1).value<quint32>(), quint32(5));
     // button
     QCOMPARE(buttonSpy.at(1).at(2).value<quint32>(), quint32(2));
-    QCOMPARE(buttonSpy.at(1).at(3).value<KWin::Wayland::Pointer::ButtonState>(), KWin::Wayland::Pointer::ButtonState::Pressed);
+    QCOMPARE(buttonSpy.at(1).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Pressed);
 
     QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), serverPointer->buttonSerial(2));
     // timestamp
     QCOMPARE(buttonSpy.at(2).at(1).value<quint32>(), quint32(6));
     // button
     QCOMPARE(buttonSpy.at(2).at(2).value<quint32>(), quint32(2));
-    QCOMPARE(buttonSpy.at(2).at(3).value<KWin::Wayland::Pointer::ButtonState>(), KWin::Wayland::Pointer::ButtonState::Released);
+    QCOMPARE(buttonSpy.at(2).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Released);
 
     QCOMPARE(buttonSpy.at(3).at(0).value<quint32>(), serverPointer->buttonSerial(1));
     // timestamp
     QCOMPARE(buttonSpy.at(3).at(1).value<quint32>(), quint32(7));
     // button
     QCOMPARE(buttonSpy.at(3).at(2).value<quint32>(), quint32(1));
-    QCOMPARE(buttonSpy.at(3).at(3).value<KWin::Wayland::Pointer::ButtonState>(), KWin::Wayland::Pointer::ButtonState::Released);
+    QCOMPARE(buttonSpy.at(3).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Released);
 
     // leave the surface
     serverPointer->setFocusedSurface(nullptr);
@@ -387,7 +387,7 @@ void TestWaylandSeat::testPointer()
 
 void TestWaylandSeat::testKeyboard()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
 
     QSignalSpy keyboardSpy(m_seat, SIGNAL(hasKeyboardChanged(bool)));
@@ -436,7 +436,7 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.first().at(2).value<quint32>(), quint32(0));
     QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(0));
 
-    QSignalSpy keyChangedSpy(keyboard, SIGNAL(keyChanged(quint32,KWin::Wayland::Keyboard::KeyState,quint32)));
+    QSignalSpy keyChangedSpy(keyboard, SIGNAL(keyChanged(quint32,KWayland::Client::Keyboard::KeyState,quint32)));
     QVERIFY(keyChangedSpy.isValid());
 
     serverKeyboard->updateTimestamp(4);

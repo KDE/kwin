@@ -50,7 +50,7 @@ private Q_SLOTS:
 private:
     KWayland::Server::Display *m_display;
     KWayland::Server::OutputInterface *m_serverOutput;
-    KWin::Wayland::ConnectionThread *m_connection;
+    KWayland::Client::ConnectionThread *m_connection;
     QThread *m_thread;
 };
 
@@ -82,7 +82,7 @@ void TestWaylandOutput::init()
     m_serverOutput->create();
 
     // setup connection
-    m_connection = new KWin::Wayland::ConnectionThread;
+    m_connection = new KWayland::Client::ConnectionThread;
     QSignalSpy connectedSpy(m_connection, SIGNAL(connected()));
     m_connection->setSocketName(s_socketName);
 
@@ -117,7 +117,7 @@ void TestWaylandOutput::testRegistry()
     m_serverOutput->setGlobalPosition(QPoint(100, 50));
     m_serverOutput->setPhysicalSize(QSize(200, 100));
 
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -125,7 +125,7 @@ void TestWaylandOutput::testRegistry()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::Output output;
+    KWayland::Client::Output output;
     QVERIFY(!output.isValid());
     QCOMPARE(output.geometry(), QRect());
     QCOMPARE(output.globalPosition(), QPoint());
@@ -135,8 +135,8 @@ void TestWaylandOutput::testRegistry()
     QCOMPARE(output.pixelSize(), QSize());
     QCOMPARE(output.refreshRate(), 0);
     QCOMPARE(output.scale(), 1);
-    QCOMPARE(output.subPixel(), KWin::Wayland::Output::SubPixel::Unknown);
-    QCOMPARE(output.transform(), KWin::Wayland::Output::Transform::Normal);
+    QCOMPARE(output.subPixel(), KWayland::Client::Output::SubPixel::Unknown);
+    QCOMPARE(output.transform(), KWayland::Client::Output::Transform::Normal);
 
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
@@ -154,14 +154,14 @@ void TestWaylandOutput::testRegistry()
     QCOMPARE(output.refreshRate(), 60000);
     QCOMPARE(output.scale(), 1);
     // for xwayland output it's unknown
-    QCOMPARE(output.subPixel(), KWin::Wayland::Output::SubPixel::Unknown);
+    QCOMPARE(output.subPixel(), KWayland::Client::Output::SubPixel::Unknown);
     // for xwayland transform is normal
-    QCOMPARE(output.transform(), KWin::Wayland::Output::Transform::Normal);
+    QCOMPARE(output.transform(), KWayland::Client::Output::Transform::Normal);
 }
 
 void TestWaylandOutput::testModeChanges()
 {
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -169,7 +169,7 @@ void TestWaylandOutput::testModeChanges()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::Output output;
+    KWayland::Client::Output output;
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
@@ -193,7 +193,7 @@ void TestWaylandOutput::testModeChanges()
 
 void TestWaylandOutput::testScaleChange()
 {
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -201,7 +201,7 @@ void TestWaylandOutput::testScaleChange()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::Output output;
+    KWayland::Client::Output output;
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
@@ -224,9 +224,9 @@ void TestWaylandOutput::testScaleChange()
 
 void TestWaylandOutput::testSubPixel_data()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
-    QTest::addColumn<KWin::Wayland::Output::SubPixel>("expected");
+    QTest::addColumn<KWayland::Client::Output::SubPixel>("expected");
     QTest::addColumn<KWayland::Server::OutputInterface::SubPixel>("actual");
 
     QTest::newRow("none") << Output::SubPixel::None << OutputInterface::SubPixel::None;
@@ -238,12 +238,12 @@ void TestWaylandOutput::testSubPixel_data()
 
 void TestWaylandOutput::testSubPixel()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
     QFETCH(OutputInterface::SubPixel, actual);
     m_serverOutput->setSubPixel(actual);
 
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -251,7 +251,7 @@ void TestWaylandOutput::testSubPixel()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::Output output;
+    KWayland::Client::Output output;
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
@@ -273,9 +273,9 @@ void TestWaylandOutput::testSubPixel()
 
 void TestWaylandOutput::testTransform_data()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
-    QTest::addColumn<KWin::Wayland::Output::Transform>("expected");
+    QTest::addColumn<KWayland::Client::Output::Transform>("expected");
     QTest::addColumn<KWayland::Server::OutputInterface::Transform>("actual");
 
     QTest::newRow("90")          << Output::Transform::Rotated90  << OutputInterface::Transform::Rotated90;
@@ -289,12 +289,12 @@ void TestWaylandOutput::testTransform_data()
 
 void TestWaylandOutput::testTransform()
 {
-    using namespace KWin::Wayland;
+    using namespace KWayland::Client;
     using namespace KWayland::Server;
     QFETCH(OutputInterface::Transform, actual);
     m_serverOutput->setTransform(actual);
 
-    KWin::Wayland::Registry registry;
+    KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
@@ -302,7 +302,7 @@ void TestWaylandOutput::testTransform()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWin::Wayland::Output output;
+    KWayland::Client::Output output;
     QSignalSpy outputChanged(&output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
     output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));

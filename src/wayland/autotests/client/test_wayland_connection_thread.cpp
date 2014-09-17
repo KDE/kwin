@@ -70,7 +70,7 @@ void TestWaylandConnectionThread::cleanup()
 
 void TestWaylandConnectionThread::testInitConnectionNoThread()
 {
-    QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
+    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
     QCOMPARE(connection->socketName(), QStringLiteral("wayland-0"));
     connection->setSocketName(s_socketName);
     QCOMPARE(connection->socketName(), s_socketName);
@@ -86,7 +86,7 @@ void TestWaylandConnectionThread::testInitConnectionNoThread()
 
 void TestWaylandConnectionThread::testConnectionFailure()
 {
-    QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
+    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
     connection->setSocketName(QStringLiteral("kwin-test-socket-does-not-exist"));
 
     QSignalSpy connectedSpy(connection.data(), SIGNAL(connected()));
@@ -122,7 +122,7 @@ static const struct wl_registry_listener s_registryListener = {
 
 void TestWaylandConnectionThread::testConnectionThread()
 {
-    QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
+    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
     connection->setSocketName(s_socketName);
 
     QThread *connectionThread = new QThread(this);
@@ -163,7 +163,7 @@ void TestWaylandConnectionThread::testConnectionThread()
 
 void TestWaylandConnectionThread::testConnectionDieing()
 {
-    QScopedPointer<KWin::Wayland::ConnectionThread> connection(new KWin::Wayland::ConnectionThread);
+    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
     QSignalSpy connectedSpy(connection.data(), SIGNAL(connected()));
     connection->setSocketName(s_socketName);
     connection->initConnection();
