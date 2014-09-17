@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
+#include <kwaylandserver_export.h>
+
 namespace KWin
 {
 namespace WaylandServer
@@ -36,7 +38,7 @@ class KeyboardInterface;
 class PointerInterface;
 class SurfaceInterface;
 
-class SeatInterface : public QObject
+class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -111,7 +113,7 @@ private:
     static const struct wl_seat_interface s_interface;
 };
 
-class PointerInterface : public QObject
+class KWAYLANDSERVER_EXPORT PointerInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QPoint globalPos READ globalPos WRITE setGlobalPos NOTIFY globalPosChanged)
@@ -188,7 +190,7 @@ private:
     static const struct wl_pointer_interface s_interface;
 };
 
-class KeyboardInterface : public QObject
+class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
 {
     Q_OBJECT
 public:

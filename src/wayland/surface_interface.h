@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
+#include <kwaylandserver_export.h>
+
 namespace KWin
 {
 namespace WaylandServer
@@ -34,7 +36,7 @@ namespace WaylandServer
 class BufferInterface;
 class CompositorInterface;
 
-class SurfaceInterface : public QObject
+class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QRegion damage READ damage NOTIFY damaged)

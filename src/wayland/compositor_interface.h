@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
+#include <kwaylandserver_export.h>
+
 namespace KWin
 {
 namespace WaylandServer
@@ -34,7 +36,7 @@ namespace WaylandServer
 class Display;
 class SurfaceInterface;
 
-class CompositorInterface : public QObject
+class KWAYLANDSERVER_EXPORT CompositorInterface : public QObject
 {
     Q_OBJECT
 public:

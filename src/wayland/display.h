@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 #include <QObject>
 
+#include <kwaylandserver_export.h>
+
 struct wl_display;
 struct wl_event_loop;
 
@@ -36,7 +38,7 @@ class OutputInterface;
 class SeatInterface;
 class ShellInterface;
 
-class Display : public QObject
+class KWAYLANDSERVER_EXPORT Display : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString socketName READ socketName WRITE setSocketName NOTIFY socketNameChanged)

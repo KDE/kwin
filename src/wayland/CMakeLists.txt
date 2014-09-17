@@ -9,6 +9,7 @@ set(SERVER_LIB_SRCS
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
+generate_export_header(KF5WaylandServer BASE_NAME KWaylandServer)
 add_library(KF5::WaylandServer ALIAS KF5WaylandServer)
 
 target_link_libraries(KF5WaylandServer

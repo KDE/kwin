@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QObject>
 
+#include <kwaylandserver_export.h>
+
 struct wl_resource;
 struct wl_shm_buffer;
 
@@ -33,7 +35,7 @@ namespace WaylandServer
 class SurfaceInterface;
 
 
-class BufferInterface : public QObject
+class KWAYLANDSERVER_EXPORT BufferInterface : public QObject
 {
     Q_OBJECT
 public:

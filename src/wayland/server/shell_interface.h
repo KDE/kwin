@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
+#include <kwaylandserver_export.h>
+
 class QSize;
 class QTimer;
 struct wl_global;
@@ -37,7 +39,7 @@ class Display;
 class SurfaceInterface;
 class ShellSurfaceInterface;
 
-class ShellInterface : public QObject
+class KWAYLANDSERVER_EXPORT ShellInterface : public QObject
 {
     Q_OBJECT
 public:
@@ -70,7 +72,7 @@ private:
     QList<ShellSurfaceInterface*> m_surfaces;
 };
 
-class ShellSurfaceInterface : public QObject
+class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)

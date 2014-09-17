@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 #include <QSize>
 
+#include <kwaylandserver_export.h>
+
 struct wl_global;
 struct wl_client;
 struct wl_resource;
@@ -35,7 +37,7 @@ namespace WaylandServer
 
 class Display;
 
-class OutputInterface : public QObject
+class KWAYLANDSERVER_EXPORT OutputInterface : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
