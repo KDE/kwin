@@ -8,7 +8,7 @@ set( testWaylandConnectionThread_SRCS
     )
 add_executable(testWaylandConnectionThread ${testWaylandConnectionThread_SRCS})
 target_link_libraries( testWaylandConnectionThread Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandConnectionThread testWaylandConnectionThread)
+add_test(kwayland-testWaylandConnectionThread testWaylandConnectionThread)
 ecm_mark_as_test(testWaylandConnectionThread)
 
 ########################################################
@@ -19,7 +19,7 @@ set( testWaylandRegistry_SRCS
     )
 add_executable(testWaylandRegistry ${testWaylandRegistry_SRCS})
 target_link_libraries( testWaylandRegistry Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandRegistry testWaylandRegistry)
+add_test(kwayland-testWaylandRegistry testWaylandRegistry)
 ecm_mark_as_test(testWaylandRegistry)
 
 ########################################################
@@ -31,7 +31,7 @@ if(Wayland_VERSION VERSION_GREATER "1.4.0")
         )
     add_executable(testWaylandFullscreenShell ${testWaylandFullscreenShell_SRCS})
     target_link_libraries( testWaylandFullscreenShell Qt5::Test KF5::WaylandClient Wayland::Client)
-    add_test(kwin-testWaylandFullscreenShell testWaylandFullscreenShell)
+    add_test(kwayland-testWaylandFullscreenShell testWaylandFullscreenShell)
     ecm_mark_as_test(testWaylandFullscreenShell)
 endif()
 
@@ -43,7 +43,7 @@ set( testWaylandOutput_SRCS
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
 target_link_libraries( testWaylandOutput Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandOutput testWaylandOutput)
+add_test(kwayland-testWaylandOutput testWaylandOutput)
 ecm_mark_as_test(testWaylandOutput)
 
 ########################################################
@@ -54,7 +54,7 @@ set( testWaylandShell_SRCS
     )
 add_executable(testWaylandShell ${testWaylandShell_SRCS})
 target_link_libraries( testWaylandShell Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandShell testWaylandShell)
+add_test(kwayland-testWaylandShell testWaylandShell)
 ecm_mark_as_test(testWaylandShell)
 
 ########################################################
@@ -65,7 +65,7 @@ set( testWaylandSurface_SRCS
     )
 add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
 target_link_libraries( testWaylandSurface Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandSurface testWaylandSurface)
+add_test(kwayland-testWaylandSurface testWaylandSurface)
 ecm_mark_as_test(testWaylandSurface)
 
 ########################################################
@@ -76,5 +76,5 @@ set( testWaylandSeat_SRCS
     )
 add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
 target_link_libraries( testWaylandSeat Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
-add_test(kwin-testWaylandSeat testWaylandSeat)
+add_test(kwayland-testWaylandSeat testWaylandSeat)
 ecm_mark_as_test(testWaylandSeat)
