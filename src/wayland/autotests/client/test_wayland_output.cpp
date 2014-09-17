@@ -48,8 +48,8 @@ private Q_SLOTS:
     void testTransform();
 
 private:
-    KWin::WaylandServer::Display *m_display;
-    KWin::WaylandServer::OutputInterface *m_serverOutput;
+    KWayland::Server::Display *m_display;
+    KWayland::Server::OutputInterface *m_serverOutput;
     KWin::Wayland::ConnectionThread *m_connection;
     QThread *m_thread;
 };
@@ -67,7 +67,7 @@ TestWaylandOutput::TestWaylandOutput(QObject *parent)
 
 void TestWaylandOutput::init()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -225,9 +225,9 @@ void TestWaylandOutput::testScaleChange()
 void TestWaylandOutput::testSubPixel_data()
 {
     using namespace KWin::Wayland;
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QTest::addColumn<KWin::Wayland::Output::SubPixel>("expected");
-    QTest::addColumn<KWin::WaylandServer::OutputInterface::SubPixel>("actual");
+    QTest::addColumn<KWayland::Server::OutputInterface::SubPixel>("actual");
 
     QTest::newRow("none") << Output::SubPixel::None << OutputInterface::SubPixel::None;
     QTest::newRow("horizontal/rgb") << Output::SubPixel::HorizontalRGB << OutputInterface::SubPixel::HorizontalRGB;
@@ -239,7 +239,7 @@ void TestWaylandOutput::testSubPixel_data()
 void TestWaylandOutput::testSubPixel()
 {
     using namespace KWin::Wayland;
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QFETCH(OutputInterface::SubPixel, actual);
     m_serverOutput->setSubPixel(actual);
 
@@ -274,9 +274,9 @@ void TestWaylandOutput::testSubPixel()
 void TestWaylandOutput::testTransform_data()
 {
     using namespace KWin::Wayland;
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QTest::addColumn<KWin::Wayland::Output::Transform>("expected");
-    QTest::addColumn<KWin::WaylandServer::OutputInterface::Transform>("actual");
+    QTest::addColumn<KWayland::Server::OutputInterface::Transform>("actual");
 
     QTest::newRow("90")          << Output::Transform::Rotated90  << OutputInterface::Transform::Rotated90;
     QTest::newRow("180")         << Output::Transform::Rotated180 << OutputInterface::Transform::Rotated180;
@@ -290,7 +290,7 @@ void TestWaylandOutput::testTransform_data()
 void TestWaylandOutput::testTransform()
 {
     using namespace KWin::Wayland;
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QFETCH(OutputInterface::Transform, actual);
     m_serverOutput->setTransform(actual);
 

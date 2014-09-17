@@ -28,9 +28,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwaylandserver_export.h>
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 class Display;

@@ -22,9 +22,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 static const quint32 s_version = 2;

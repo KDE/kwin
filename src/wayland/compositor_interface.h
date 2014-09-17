@@ -28,9 +28,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwaylandserver_export.h>
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 class Display;
@@ -49,7 +49,7 @@ public:
     }
 
 Q_SIGNALS:
-    void surfaceCreated(KWin::WaylandServer::SurfaceInterface*);
+    void surfaceCreated(KWayland::Server::SurfaceInterface*);
 
 private:
     explicit CompositorInterface(Display *display, QObject *parent = nullptr);

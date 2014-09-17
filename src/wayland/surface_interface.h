@@ -29,9 +29,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kwaylandserver_export.h>
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 class BufferInterface;
 class CompositorInterface;
@@ -43,7 +43,7 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
     Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 scale READ scale NOTIFY scaleChanged)
-    Q_PROPERTY(KWin::WaylandServer::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
+    Q_PROPERTY(KWayland::Server::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
 public:
     virtual ~SurfaceInterface();
 
@@ -85,7 +85,7 @@ Q_SIGNALS:
     void opaqueChanged(const QRegion&);
     void inputChanged(const QRegion&);
     void scaleChanged(qint32);
-    void transformChanged(KWin::WaylandServer::OutputInterface::Transform);
+    void transformChanged(KWayland::Server::OutputInterface::Transform);
 
 private:
     struct State {

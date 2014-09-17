@@ -48,9 +48,9 @@ private Q_SLOTS:
     void testWindowClass();
 
 private:
-    KWin::WaylandServer::Display *m_display;
-    KWin::WaylandServer::CompositorInterface *m_compositorInterface;
-    KWin::WaylandServer::ShellInterface *m_shellInterface;
+    KWayland::Server::Display *m_display;
+    KWayland::Server::CompositorInterface *m_compositorInterface;
+    KWayland::Server::ShellInterface *m_shellInterface;
     KWin::Wayland::ConnectionThread *m_connection;
     KWin::Wayland::Compositor *m_compositor;
     KWin::Wayland::Shell *m_shell;
@@ -73,7 +73,7 @@ TestWaylandShell::TestWaylandShell(QObject *parent)
 
 void TestWaylandShell::init()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     delete m_display;
     m_display = new Display(this);
     m_display->setSocketName(s_socketName);
@@ -170,7 +170,7 @@ void TestWaylandShell::cleanup()
 
 void TestWaylandShell::testFullscreen()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QScopedPointer<KWin::Wayland::Surface> s(m_compositor->createSurface());
     QVERIFY(!s.isNull());
     QVERIFY(s->isValid());
@@ -179,7 +179,7 @@ void TestWaylandShell::testFullscreen()
     QVERIFY(sizeSpy.isValid());
     QCOMPARE(surface->size(), QSize());
 
-    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWin::WaylandServer::ShellSurfaceInterface*)));
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
     QVERIFY(serverSurfaceSpy.isValid());
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
@@ -209,14 +209,14 @@ void TestWaylandShell::testFullscreen()
 
 void TestWaylandShell::testPing()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QScopedPointer<KWin::Wayland::Surface> s(m_compositor->createSurface());
     QVERIFY(!s.isNull());
     QVERIFY(s->isValid());
     KWin::Wayland::ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
     QSignalSpy pingSpy(surface, SIGNAL(pinged()));
 
-    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWin::WaylandServer::ShellSurfaceInterface*)));
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
     QVERIFY(serverSurfaceSpy.isValid());
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
@@ -252,13 +252,13 @@ void TestWaylandShell::testPing()
 
 void TestWaylandShell::testTitle()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QScopedPointer<KWin::Wayland::Surface> s(m_compositor->createSurface());
     QVERIFY(!s.isNull());
     QVERIFY(s->isValid());
     KWin::Wayland::ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
 
-    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWin::WaylandServer::ShellSurfaceInterface*)));
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
     QVERIFY(serverSurfaceSpy.isValid());
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
@@ -277,13 +277,13 @@ void TestWaylandShell::testTitle()
 
 void TestWaylandShell::testWindowClass()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     QScopedPointer<KWin::Wayland::Surface> s(m_compositor->createSurface());
     QVERIFY(!s.isNull());
     QVERIFY(s->isValid());
     KWin::Wayland::ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
 
-    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWin::WaylandServer::ShellSurfaceInterface*)));
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
     QVERIFY(serverSurfaceSpy.isValid());
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();

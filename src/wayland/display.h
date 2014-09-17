@@ -28,9 +28,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 struct wl_display;
 struct wl_event_loop;
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 class CompositorInterface;

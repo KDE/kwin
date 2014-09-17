@@ -28,10 +28,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
 
-namespace KWin
+namespace KWayland
 {
 
-namespace WaylandServer
+namespace Server
 {
 
 static const quint32 s_version = 3;

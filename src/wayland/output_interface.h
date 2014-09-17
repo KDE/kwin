@@ -30,9 +30,9 @@ struct wl_global;
 struct wl_client;
 struct wl_resource;
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 class Display;
@@ -174,8 +174,8 @@ private:
 }
 }
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::WaylandServer::OutputInterface::ModeFlags)
-Q_DECLARE_METATYPE(KWin::WaylandServer::OutputInterface::SubPixel)
-Q_DECLARE_METATYPE(KWin::WaylandServer::OutputInterface::Transform)
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::OutputInterface::ModeFlags)
+Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::SubPixel)
+Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::Transform)
 
 #endif

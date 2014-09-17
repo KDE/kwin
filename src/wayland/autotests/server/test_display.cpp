@@ -23,7 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"
 
-using namespace KWin::WaylandServer;
+using namespace KWayland::Server;
 
 class TestWaylandServerDisplay : public QObject
 {

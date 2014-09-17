@@ -30,9 +30,9 @@ class QSize;
 class QTimer;
 struct wl_global;
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 class Display;
@@ -57,7 +57,7 @@ public:
     }
 
 Q_SIGNALS:
-    void surfaceCreated(KWin::WaylandServer::ShellSurfaceInterface*);
+    void surfaceCreated(KWayland::Server::ShellSurfaceInterface*);
 
 private:
     friend class Display;

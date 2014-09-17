@@ -20,9 +20,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "buffer_interface.h"
 #include "surface_interface.h"
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent)

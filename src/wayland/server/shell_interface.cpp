@@ -23,9 +23,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 static const quint32 s_version = 1;

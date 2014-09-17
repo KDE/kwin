@@ -40,7 +40,7 @@ private Q_SLOTS:
     void testConnectionThread();
 
 private:
-    KWin::WaylandServer::Display *m_display;
+    KWayland::Server::Display *m_display;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-connection-0");
@@ -53,7 +53,7 @@ TestWaylandConnectionThread::TestWaylandConnectionThread(QObject *parent)
 
 void TestWaylandConnectionThread::init()
 {
-    using namespace KWin::WaylandServer;
+    using namespace KWayland::Server;
     delete m_display;
     m_display = new Display(this);
     QSignalSpy displayRunning(m_display, SIGNAL(runningChanged(bool)));

@@ -21,9 +21,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "surface_interface.h"
 
-namespace KWin
+namespace KWayland
 {
-namespace WaylandServer
+namespace Server
 {
 
 static const quint32 s_version = 3;

@@ -48,11 +48,11 @@ private Q_SLOTS:
     void testRemoval();
 
 private:
-    KWin::WaylandServer::Display *m_display;
-    KWin::WaylandServer::CompositorInterface *m_compositor;
-    KWin::WaylandServer::OutputInterface *m_output;
-    KWin::WaylandServer::SeatInterface *m_seat;
-    KWin::WaylandServer::ShellInterface *m_shell;
+    KWayland::Server::Display *m_display;
+    KWayland::Server::CompositorInterface *m_compositor;
+    KWayland::Server::OutputInterface *m_output;
+    KWayland::Server::SeatInterface *m_seat;
+    KWayland::Server::ShellInterface *m_shell;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -69,7 +69,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
 
 void TestWaylandRegistry::init()
 {
-    m_display = new KWin::WaylandServer::Display();
+    m_display = new KWayland::Server::Display();
     m_display->setSocketName(s_socketName);
     m_display->start();
     m_display->createShm();
