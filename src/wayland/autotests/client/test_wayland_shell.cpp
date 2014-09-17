@@ -20,16 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 // KWin
-#include "../../wayland_client/compositor.h"
-#include "../../wayland_client/connection_thread.h"
-#include "../../wayland_client/shell.h"
-#include "../../wayland_client/surface.h"
-#include "../../wayland_client/registry.h"
-#include "../../wayland_server/buffer_interface.h"
-#include "../../wayland_server/compositor_interface.h"
-#include "../../wayland_server/display.h"
-#include "../../wayland_server/shell_interface.h"
-#include "../../wayland_server/surface_interface.h"
+#include "../../src/client/compositor.h"
+#include "../../src/client/connection_thread.h"
+#include "../../src/client/shell.h"
+#include "../../src/client/surface.h"
+#include "../../src/client/registry.h"
+#include "../../src/server/buffer_interface.h"
+#include "../../src/server/compositor_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/shell_interface.h"
+#include "../../src/server/surface_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
 

@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 // WaylandServer
-#include "../../wayland_server/display.h"
-#include "../../wayland_server/seat_interface.h"
+#include "../../src/server/display.h"
+#include "../../src/server/seat_interface.h"
 
 using namespace KWin::WaylandServer;
 

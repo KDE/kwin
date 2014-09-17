@@ -20,9 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 // KWin
-#include "../../wayland_client/connection_thread.h"
-#include "../../wayland_client/registry.h"
-#include "../../wayland_client/fullscreen_shell.h"
+#include "../../src/client/connection_thread.h"
+#include "../../src/client/registry.h"
+#include "../../src/client/fullscreen_shell.h"
 // Wayland
 #include <wayland-client-protocol.h>
 

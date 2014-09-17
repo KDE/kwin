@@ -5,14 +5,14 @@ set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client
 ########################################################
 set( testWaylandConnectionThread_SRCS
         test_wayland_connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandConnectionThread ${testWaylandConnectionThread_SRCS})
 target_link_libraries( testWaylandConnectionThread Qt5::Test Qt5::Gui Wayland::Client Wayland::Server)
@@ -24,16 +24,16 @@ ecm_mark_as_test(testWaylandConnectionThread)
 ########################################################
 set( testWaylandRegistry_SRCS
         test_wayland_registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandRegistry ${testWaylandRegistry_SRCS})
 add_dependencies(testWaylandRegistry wayland-client-fullscreen-shell)
@@ -47,9 +47,9 @@ ecm_mark_as_test(testWaylandRegistry)
 if(Wayland_VERSION VERSION_GREATER "1.4.0")
     set( testWaylandFullscreenShell_SRCS
             test_wayland_fullscreen_shell.cpp
-            ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-            ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-            ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
+            ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+            ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
+            ${KWAYLAND_SOURCE_DIR}/src/client/fullscreen_shell.cpp
             ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
         )
     add_executable(testWaylandFullscreenShell ${testWaylandFullscreenShell_SRCS})
@@ -64,18 +64,18 @@ endif()
 ########################################################
 set( testWaylandOutput_SRCS
         test_wayland_output.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/output.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/fullscreen_shell.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/output.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandOutput ${testWaylandOutput_SRCS})
 add_dependencies(testWaylandOutput wayland-client-fullscreen-shell)
@@ -88,20 +88,20 @@ ecm_mark_as_test(testWaylandOutput)
 ########################################################
 set( testWaylandShell_SRCS
         test_wayland_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/compositor.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/fullscreen_shell.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/shell.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandShell ${testWaylandShell_SRCS})
 add_dependencies(testWaylandShell wayland-client-fullscreen-shell)
@@ -114,21 +114,21 @@ ecm_mark_as_test(testWaylandShell)
 ########################################################
 set( testWaylandSurface_SRCS
         test_wayland_surface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/buffer.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/shm_pool.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/buffer.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/compositor.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/fullscreen_shell.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/shm_pool.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandSurface ${testWaylandSurface_SRCS})
 add_dependencies(testWaylandSurface wayland-client-fullscreen-shell)
@@ -141,24 +141,24 @@ ecm_mark_as_test(testWaylandSurface)
 ########################################################
 set( testWaylandSeat_SRCS
         test_wayland_seat.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/buffer.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/compositor.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/connection_thread.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/registry.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/fullscreen_shell.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/keyboard.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/pointer.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/seat.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/shm_pool.cpp
-        ${KWIN_SOURCE_DIR}/wayland_client/surface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/buffer.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/compositor.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/connection_thread.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/registry.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/fullscreen_shell.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/keyboard.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/pointer.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/seat.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/shm_pool.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/client/surface.cpp
         ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        ${KWIN_SOURCE_DIR}/wayland_server/buffer_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/compositor_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/display.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/output_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/seat_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/shell_interface.cpp
-        ${KWIN_SOURCE_DIR}/wayland_server/surface_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/buffer_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/compositor_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/display.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/output_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/seat_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/shell_interface.cpp
+        ${KWAYLAND_SOURCE_DIR}/src/server/surface_interface.cpp
     )
 add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
 add_dependencies(testWaylandSeat wayland-client-fullscreen-shell)
