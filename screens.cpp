@@ -18,13 +18,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens.h"
-#include "client.h"
+#include <client.h>
 #include "cursor.h"
 #include "settings.h"
-#include "workspace.h"
+#include <workspace.h>
 #include <config-kwin.h>
 #if HAVE_WAYLAND
 #include "screens_wayland.h"
+#endif
+#ifdef KWIN_UNIT_TEST
+#include <mock_screens.h>
 #endif
 
 #include <QApplication>
@@ -38,6 +41,9 @@ Screens *Screens::s_self = nullptr;
 Screens *Screens::create(QObject *parent)
 {
     Q_ASSERT(!s_self);
+#ifdef KWIN_UNIT_TEST
+    s_self = new MockScreens(parent);
+#else
 #if HAVE_WAYLAND
     if (kwinApp()->operationMode() == Application::OperationModeWaylandAndX11) {
         s_self = new WaylandScreens(parent);
@@ -46,6 +52,7 @@ Screens *Screens::create(QObject *parent)
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         s_self = new DesktopWidgetScreens(parent);
     }
+#endif
     s_self->init();
     return s_self;
 }

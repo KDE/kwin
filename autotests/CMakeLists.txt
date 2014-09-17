@@ -184,3 +184,29 @@ target_link_libraries(fakeeffectplugin kwineffects)
 add_library(effectversionplugin MODULE fakeeffectplugin_version.cpp)
 set_target_properties(effectversionplugin PROPERTIES PREFIX "")
 target_link_libraries(effectversionplugin kwineffects)
+
+########################################################
+# Test Screens
+########################################################
+set( testScreens_SRCS
+    test_screens.cpp
+    mock_client.cpp
+    mock_screens.cpp
+    mock_workspace.cpp
+    ../screens.cpp
+)
+kconfig_add_kcfg_files(testScreens_SRCS ../settings.kcfgc)
+
+add_executable( testScreens ${testScreens_SRCS})
+target_include_directories(testScreens BEFORE PRIVATE ./)
+target_link_libraries(testScreens
+    Qt5::Test
+    Qt5::X11Extras
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::WindowSystem
+    KF5::Service
+)
+
+add_test(kwin_testScreens testScreens)
+ecm_mark_as_test(testScreens)
