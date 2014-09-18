@@ -272,28 +272,87 @@ KeyboardInterface *SeatInterface::keyboard()
  * PointerInterface
  ***************************************/
 
-const struct wl_pointer_interface PointerInterface::s_interface = {
-    PointerInterface::setCursorCallback,
-    PointerInterface::releaseCallback
+class PointerInterface::Private
+{
+public:
+    Private(Display *display, SeatInterface *parent);
+    void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
+    wl_resource *pointerForSurface(SurfaceInterface *surface) const;
+    void surfaceDeleted();
+    void updateButtonSerial(quint32 button, quint32 serial);
+    enum class ButtonState {
+        Released,
+        Pressed
+    };
+    void updateButtonState(quint32 button, ButtonState state);
+
+    Display *display;
+    SeatInterface *seat;
+    struct ResourceData {
+        wl_client *client = nullptr;
+        wl_resource *pointer = nullptr;
+    };
+    QList<ResourceData> resources;
+    quint32 eventTime = 0;
+    QPoint globalPos;
+    struct FocusedSurface {
+        SurfaceInterface *surface = nullptr;
+        QPoint offset = QPoint();
+        wl_resource *pointer = nullptr;
+        quint32 serial = 0;
+    };
+    FocusedSurface focusedSurface;
+    QHash<quint32, quint32> buttonSerials;
+    QHash<quint32, ButtonState> buttonStates;
+    QMetaObject::Connection destroyConnection;
+
+private:
+    static PointerInterface::Private *cast(wl_resource *resource) {
+        return reinterpret_cast<PointerInterface::Private*>(wl_resource_get_user_data(resource));
+    }
+
+    static void unbind(wl_resource *resource);
+    // interface
+    static void setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
+                                  wl_resource *surface, int32_t hotspot_x, int32_t hotspot_y);
+    // since version 3
+    static void releaseCallback(wl_client *client, wl_resource *resource);
+
+    static const struct wl_pointer_interface s_interface;
+};
+
+PointerInterface::Private::Private(Display *display, SeatInterface *parent)
+    : display(display)
+    , seat(parent)
+{
+}
+
+
+const struct wl_pointer_interface PointerInterface::Private::s_interface = {
+    setCursorCallback,
+    releaseCallback
 };
 
 PointerInterface::PointerInterface(Display *display, SeatInterface *parent)
     : QObject(parent)
-    , m_display(display)
-    , m_seat(parent)
-    , m_eventTime(0)
+    , d(new Private(display, parent))
 {
 }
 
 PointerInterface::~PointerInterface()
 {
-    while (!m_resources.isEmpty()) {
-        ResourceData data = m_resources.takeLast();
+    while (!d->resources.isEmpty()) {
+        auto data = d->resources.takeLast();
         wl_resource_destroy(data.pointer);
     }
 }
 
 void PointerInterface::createInterface(wl_client *client, wl_resource *parentResource, uint32_t id)
+{
+    d->createInterface(client, parentResource, id);
+}
+
+void PointerInterface::Private::createInterface(wl_client* client, wl_resource* parentResource, uint32_t id)
 {
     wl_resource *p = wl_resource_create(client, &wl_pointer_interface, wl_resource_get_version(parentResource), id);
     if (!p) {
@@ -303,17 +362,17 @@ void PointerInterface::createInterface(wl_client *client, wl_resource *parentRes
     ResourceData data;
     data.client = client;
     data.pointer = p;
-    m_resources << data;
+    resources << data;
 
-    wl_resource_set_implementation(p, &PointerInterface::s_interface, this, PointerInterface::unbind);
+    wl_resource_set_implementation(p, &s_interface, this, unbind);
 }
 
-wl_resource *PointerInterface::pointerForSurface(SurfaceInterface *surface) const
+wl_resource *PointerInterface::Private::pointerForSurface(SurfaceInterface *surface) const
 {
     if (!surface) {
         return nullptr;
     }
-    for (auto it = m_resources.constBegin(); it != m_resources.constEnd(); ++it) {
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         if ((*it).client == surface->client()) {
             return (*it).pointer;
         }
@@ -323,86 +382,86 @@ wl_resource *PointerInterface::pointerForSurface(SurfaceInterface *surface) cons
 
 void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition)
 {
-    const quint32 serial = m_display->nextSerial();
-    if (m_focusedSurface.surface && m_focusedSurface.pointer) {
-        wl_pointer_send_leave(m_focusedSurface.pointer, serial, m_focusedSurface.surface->surface());
-        disconnect(m_focusedSurface.surface, &QObject::destroyed, this, &PointerInterface::surfaceDeleted);
+    const quint32 serial = d->display->nextSerial();
+    if (d->focusedSurface.surface && d->focusedSurface.pointer) {
+        wl_pointer_send_leave(d->focusedSurface.pointer, serial, d->focusedSurface.surface->surface());
+        disconnect(d->destroyConnection);
     }
-    m_focusedSurface.pointer = pointerForSurface(surface);
-    if (!m_focusedSurface.pointer) {
-        m_focusedSurface = FocusedSurface();
+    d->focusedSurface.pointer = d->pointerForSurface(surface);
+    if (!d->focusedSurface.pointer) {
+        d->focusedSurface = Private::FocusedSurface();
         return;
     }
-    m_focusedSurface.surface = surface;
-    m_focusedSurface.offset = surfacePosition;
-    m_focusedSurface.serial = serial;
-    connect(m_focusedSurface.surface, &QObject::destroyed, this, &PointerInterface::surfaceDeleted);
+    d->focusedSurface.surface = surface;
+    d->focusedSurface.offset = surfacePosition;
+    d->focusedSurface.serial = serial;
+    d->destroyConnection = connect(d->focusedSurface.surface, &QObject::destroyed, this, [this] { d->surfaceDeleted(); });
 
-    const QPoint pos = m_globalPos - surfacePosition;
-    wl_pointer_send_enter(m_focusedSurface.pointer, m_focusedSurface.serial,
-                          m_focusedSurface.surface->surface(),
+    const QPoint pos = d->globalPos - surfacePosition;
+    wl_pointer_send_enter(d->focusedSurface.pointer, d->focusedSurface.serial,
+                          d->focusedSurface.surface->surface(),
                           wl_fixed_from_int(pos.x()), wl_fixed_from_int(pos.y()));
 }
 
-void PointerInterface::surfaceDeleted()
+void PointerInterface::Private::surfaceDeleted()
 {
-    m_focusedSurface = FocusedSurface();
+    focusedSurface = FocusedSurface();
 }
 
 void PointerInterface::setFocusedSurfacePosition(const QPoint &surfacePosition)
 {
-    if (!m_focusedSurface.surface) {
+    if (!d->focusedSurface.surface) {
         return;
     }
-    m_focusedSurface.offset = surfacePosition;
+    d->focusedSurface.offset = surfacePosition;
 }
 
 void PointerInterface::setGlobalPos(const QPoint &pos)
 {
-    if (m_globalPos == pos) {
+    if (d->globalPos == pos) {
         return;
     }
-    m_globalPos = pos;
-    if (m_focusedSurface.surface && m_focusedSurface.pointer) {
-        const QPoint pos = m_globalPos - m_focusedSurface.offset;
-        wl_pointer_send_motion(m_focusedSurface.pointer, m_eventTime,
+    d->globalPos = pos;
+    if (d->focusedSurface.surface && d->focusedSurface.pointer) {
+        const QPoint pos = d->globalPos - d->focusedSurface.offset;
+        wl_pointer_send_motion(d->focusedSurface.pointer, d->eventTime,
                                wl_fixed_from_int(pos.x()), wl_fixed_from_int(pos.y()));
     }
-    emit globalPosChanged(m_globalPos);
+    emit globalPosChanged(d->globalPos);
 }
 
 void PointerInterface::updateTimestamp(quint32 time)
 {
-    m_eventTime = time;
+    d->eventTime = time;
 }
 
 void PointerInterface::buttonPressed(quint32 button)
 {
-    const quint32 serial = m_display->nextSerial();
-    updateButtonSerial(button, serial);
-    updateButtonState(button, ButtonState::Pressed);
-    if (!m_focusedSurface.surface || !m_focusedSurface.pointer) {
+    const quint32 serial = d->display->nextSerial();
+    d->updateButtonSerial(button, serial);
+    d->updateButtonState(button, Private::ButtonState::Pressed);
+    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_button(m_focusedSurface.pointer, serial, m_eventTime, button, WL_POINTER_BUTTON_STATE_PRESSED);
+    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_PRESSED);
 }
 
 void PointerInterface::buttonReleased(quint32 button)
 {
-    const quint32 serial = m_display->nextSerial();
-    updateButtonSerial(button, serial);
-    updateButtonState(button, ButtonState::Released);
-    if (!m_focusedSurface.surface || !m_focusedSurface.pointer) {
+    const quint32 serial = d->display->nextSerial();
+    d->updateButtonSerial(button, serial);
+    d->updateButtonState(button, Private::ButtonState::Released);
+    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_button(m_focusedSurface.pointer, serial, m_eventTime, button, WL_POINTER_BUTTON_STATE_RELEASED);
+    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_RELEASED);
 }
 
-void PointerInterface::updateButtonSerial(quint32 button, quint32 serial)
+void PointerInterface::Private::updateButtonSerial(quint32 button, quint32 serial)
 {
-    auto it = m_buttonSerials.find(button);
-    if (it == m_buttonSerials.end()) {
-        m_buttonSerials.insert(button, serial);
+    auto it = buttonSerials.find(button);
+    if (it == buttonSerials.end()) {
+        buttonSerials.insert(button, serial);
         return;
     }
     it.value() = serial;
@@ -410,18 +469,18 @@ void PointerInterface::updateButtonSerial(quint32 button, quint32 serial)
 
 quint32 PointerInterface::buttonSerial(quint32 button) const
 {
-    auto it = m_buttonSerials.constFind(button);
-    if (it == m_buttonSerials.constEnd()) {
+    auto it = d->buttonSerials.constFind(button);
+    if (it == d->buttonSerials.constEnd()) {
         return 0;
     }
     return it.value();
 }
 
-void PointerInterface::updateButtonState(quint32 button, PointerInterface::ButtonState state)
+void PointerInterface::Private::updateButtonState(quint32 button, ButtonState state)
 {
-    auto it = m_buttonStates.find(button);
-    if (it == m_buttonStates.end()) {
-        m_buttonStates.insert(button, state);
+    auto it = buttonStates.find(button);
+    if (it == buttonStates.end()) {
+        buttonStates.insert(button, state);
         return;
     }
     it.value() = state;
@@ -429,42 +488,42 @@ void PointerInterface::updateButtonState(quint32 button, PointerInterface::Butto
 
 bool PointerInterface::isButtonPressed(quint32 button) const
 {
-    auto it = m_buttonStates.constFind(button);
-    if (it == m_buttonStates.constEnd()) {
+    auto it = d->buttonStates.constFind(button);
+    if (it == d->buttonStates.constEnd()) {
         return false;
     }
-    return it.value() == ButtonState::Pressed ? true : false;
+    return it.value() == Private::ButtonState::Pressed ? true : false;
 }
 
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 {
-    if (!m_focusedSurface.surface || !m_focusedSurface.pointer) {
+    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_axis(m_focusedSurface.pointer, m_eventTime,
+    wl_pointer_send_axis(d->focusedSurface.pointer, d->eventTime,
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
 }
 
-void PointerInterface::unbind(wl_resource *resource)
+void PointerInterface::Private::unbind(wl_resource *resource)
 {
-    PointerInterface *p = PointerInterface::cast(resource);
-    auto it = std::find_if(p->m_resources.begin(), p->m_resources.end(),
+    auto p = cast(resource);
+    auto it = std::find_if(p->resources.begin(), p->resources.end(),
         [resource](const ResourceData &data) {
             return data.pointer == resource;
         }
     );
-    if (it == p->m_resources.end()) {
+    if (it == p->resources.end()) {
         return;
     }
-    if ((*it).pointer == p->m_focusedSurface.pointer) {
-        disconnect(p->m_focusedSurface.surface, &QObject::destroyed, p, &PointerInterface::surfaceDeleted);
-        p->m_focusedSurface = FocusedSurface();
+    if ((*it).pointer == p->focusedSurface.pointer) {
+        QObject::disconnect(p->destroyConnection);
+        p->focusedSurface = FocusedSurface();
     }
-    p->m_resources.erase(it);
+    p->resources.erase(it);
 }
 
-void PointerInterface::setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
+void PointerInterface::Private::setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
                                          wl_resource *surface, int32_t hotspot_x, int32_t hotspot_y)
 {
     Q_UNUSED(client)
@@ -476,10 +535,25 @@ void PointerInterface::setCursorCallback(wl_client *client, wl_resource *resourc
     // TODO: implement
 }
 
-void PointerInterface::releaseCallback(wl_client *client, wl_resource *resource)
+void PointerInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
     unbind(resource);
+}
+
+QPoint PointerInterface::globalPos() const
+{
+    return d->globalPos;
+}
+
+SurfaceInterface *PointerInterface::focusedSurface() const
+{
+    return d->focusedSurface.surface;
+}
+
+QPoint PointerInterface::focusedSurfacePosition() const
+{
+    return d->focusedSurface.offset;
 }
 
 /****************************************

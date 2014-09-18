@@ -89,9 +89,7 @@ public:
 
     void updateTimestamp(quint32 time);
     void setGlobalPos(const QPoint &pos);
-    const QPoint &globalPos() const {
-        return m_globalPos;
-    }
+    QPoint globalPos() const;
     void buttonPressed(quint32 button);
     void buttonReleased(quint32 button);
     bool isButtonPressed(quint32 button) const;
@@ -100,12 +98,8 @@ public:
 
     void setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
     void setFocusedSurfacePosition(const QPoint &surfacePosition);
-    SurfaceInterface *focusedSurface() const {
-        return m_focusedSurface.surface;
-    }
-    const QPoint &focusedSurfacePosition() const {
-        return m_focusedSurface.offset;
-    }
+    SurfaceInterface *focusedSurface() const;
+    QPoint focusedSurfacePosition() const;
 
 Q_SIGNALS:
     void globalPosChanged(const QPoint &pos);
@@ -113,46 +107,8 @@ Q_SIGNALS:
 private:
     friend class SeatInterface;
     explicit PointerInterface(Display *display, SeatInterface *parent);
-    wl_resource *pointerForSurface(SurfaceInterface *surface) const;
-    void surfaceDeleted();
-    void updateButtonSerial(quint32 button, quint32 serial);
-    enum class ButtonState {
-        Released,
-        Pressed
-    };
-    void updateButtonState(quint32 button, ButtonState state);
-
-    static PointerInterface *cast(wl_resource *resource) {
-        return reinterpret_cast<PointerInterface*>(wl_resource_get_user_data(resource));
-    }
-
-    static void unbind(wl_resource *resource);
-    // interface
-    static void setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
-                                  wl_resource *surface, int32_t hotspot_x, int32_t hotspot_y);
-    // since version 3
-    static void releaseCallback(wl_client *client, wl_resource *resource);
-
-    Display *m_display;
-    SeatInterface *m_seat;
-    struct ResourceData {
-        wl_client *client = nullptr;
-        wl_resource *pointer = nullptr;
-    };
-    QList<ResourceData> m_resources;
-    quint32 m_eventTime;
-    QPoint m_globalPos;
-    struct FocusedSurface {
-        SurfaceInterface *surface = nullptr;
-        QPoint offset = QPoint();
-        wl_resource *pointer = nullptr;
-        quint32 serial = 0;
-    };
-    FocusedSurface m_focusedSurface;
-    QHash<quint32, quint32> m_buttonSerials;
-    QHash<quint32, ButtonState> m_buttonStates;
-
-    static const struct wl_pointer_interface s_interface;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
