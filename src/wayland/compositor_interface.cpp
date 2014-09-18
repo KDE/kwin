@@ -20,6 +20,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositor_interface.h"
 #include "display.h"
 #include "surface_interface.h"
+// Wayland
+#include <wayland-server.h>
 
 namespace KWayland
 {
@@ -28,15 +30,53 @@ namespace Server
 
 static const quint32 s_version = 3;
 
-const struct wl_compositor_interface CompositorInterface::s_interface = {
-    CompositorInterface::createSurfaceCallback,
-    CompositorInterface::createRegionCallback
+class CompositorInterface::Private
+{
+public:
+    Private(CompositorInterface *q, Display *d);
+    void create();
+
+    Display *display;
+    wl_global *compositor;
+
+private:
+    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void createSurface(wl_client *client, wl_resource *resource, uint32_t id);
+    void createRegion(wl_client *client, wl_resource *resource, uint32_t id);
+
+    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
+    static void unbind(wl_resource *resource);
+    static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static void createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static Private *cast(wl_resource *r) {
+        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+    }
+
+    CompositorInterface *q;
+    static const struct wl_compositor_interface s_interface;
+};
+
+CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
+    : display(d)
+    , compositor(nullptr)
+    , q(q)
+{
+}
+
+void CompositorInterface::Private::create()
+{
+    Q_ASSERT(!compositor);
+    compositor = wl_global_create(*display, &wl_compositor_interface, s_version, this, bind);
+}
+
+const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
+    createSurfaceCallback,
+    createRegionCallback
 };
 
 CompositorInterface::CompositorInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , m_display(display)
-    , m_compositor(nullptr)
+    , d(new Private(this, display))
 {
 }
 
@@ -47,70 +87,74 @@ CompositorInterface::~CompositorInterface()
 
 void CompositorInterface::create()
 {
-    Q_ASSERT(!m_compositor);
-    m_compositor = wl_global_create(*m_display, &wl_compositor_interface, s_version, this, CompositorInterface::bind);
+    d->create();
 }
 
 void CompositorInterface::destroy()
 {
-    if (!m_compositor) {
+    if (!d->compositor) {
         return;
     }
-    wl_global_destroy(m_compositor);
-    m_compositor = nullptr;
+    wl_global_destroy(d->compositor);
+    d->compositor = nullptr;
 }
 
-void CompositorInterface::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
+void CompositorInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
-    CompositorInterface *compositor = reinterpret_cast<CompositorInterface*>(data);
+    auto compositor = reinterpret_cast<CompositorInterface::Private*>(data);
     compositor->bind(client, version, id);
 }
 
-void CompositorInterface::bind(wl_client *client, uint32_t version, uint32_t id)
+void CompositorInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     wl_resource *resource = wl_resource_create(client, &wl_compositor_interface, qMin(version, s_version), id);
     if (!resource) {
         wl_client_post_no_memory(client);
         return;
     }
-    wl_resource_set_implementation(resource, &CompositorInterface::s_interface, this, CompositorInterface::unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
     // TODO: should we track?
 }
 
-void CompositorInterface::unbind(wl_resource *resource)
+void CompositorInterface::Private::unbind(wl_resource *resource)
 {
     Q_UNUSED(resource)
     // TODO: implement?
 }
 
-void CompositorInterface::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void CompositorInterface::Private::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    CompositorInterface::cast(resource)->createSurface(client, resource, id);
+    cast(resource)->createSurface(client, resource, id);
 }
 
-void CompositorInterface::createSurface(wl_client *client, wl_resource *resource, uint32_t id)
+void CompositorInterface::Private::createSurface(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    SurfaceInterface *surface = new SurfaceInterface(this);
+    SurfaceInterface *surface = new SurfaceInterface(q);
     surface->create(client, wl_resource_get_version(resource), id);
     if (!surface->surface()) {
         wl_resource_post_no_memory(resource);
         delete surface;
         return;
     }
-    emit surfaceCreated(surface);
+    emit q->surfaceCreated(surface);
 }
 
-void CompositorInterface::createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void CompositorInterface::Private::createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    CompositorInterface::cast(resource)->createRegion(client, resource, id);
+    cast(resource)->createRegion(client, resource, id);
 }
 
-void CompositorInterface::createRegion(wl_client *client, wl_resource *resource, uint32_t id)
+void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *resource, uint32_t id)
 {
     Q_UNUSED(client)
     Q_UNUSED(resource)
     Q_UNUSED(id)
     // TODO: implement
+}
+
+bool CompositorInterface::isValid() const
+{
+    return d->compositor != nullptr;
 }
 
 }

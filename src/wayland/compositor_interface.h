@@ -24,8 +24,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
-#include <wayland-server.h>
-
 #include <kwaylandserver_export.h>
 
 namespace KWayland
@@ -44,9 +42,7 @@ public:
 
     void create();
     void destroy();
-    bool isValid() const {
-        return m_compositor != nullptr;
-    }
+    bool isValid() const;
 
 Q_SIGNALS:
     void surfaceCreated(KWayland::Server::SurfaceInterface*);
@@ -54,19 +50,8 @@ Q_SIGNALS:
 private:
     explicit CompositorInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
-    static void unbind(wl_resource *resource);
-    static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
-    void createSurface(wl_client *client, wl_resource *resource, uint32_t id);
-    void createRegion(wl_client *client, wl_resource *resource, uint32_t id);
-    static CompositorInterface *cast(wl_resource *r) {
-        return reinterpret_cast<CompositorInterface*>(wl_resource_get_user_data(r));
-    }
-    static const struct wl_compositor_interface s_interface;
-    Display *m_display;
-    wl_global *m_compositor;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }
