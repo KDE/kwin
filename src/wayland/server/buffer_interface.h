@@ -42,30 +42,18 @@ public:
     virtual ~BufferInterface();
     void ref();
     void unref();
-    bool isReferenced() const {
-        return m_refCount > 0;
-    }
+    bool isReferenced() const;
 
-    SurfaceInterface *surface() const {
-        return m_surface;
-    }
-    wl_shm_buffer *shmBuffer() {
-        return m_shmBuffer;
-    }
+    SurfaceInterface *surface() const;
+    wl_shm_buffer *shmBuffer();
 
     QImage data();
 
 private:
     friend class SurfaceInterface;
     explicit BufferInterface(wl_resource *resource, SurfaceInterface *parent);
-    QImage::Format format() const;
-    void createImage();
-    void releaseImage();
-    wl_resource *m_buffer;
-    wl_shm_buffer *m_shmBuffer;
-    SurfaceInterface *m_surface;
-    int m_refCount;
-    QImage m_image;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }
