@@ -20,13 +20,13 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_SEAT_INTERFACE_H
 #define WAYLAND_SERVER_SEAT_INTERFACE_H
 
-#include <QHash>
 #include <QObject>
 #include <QPoint>
 
-#include <wayland-server.h>
-
 #include <kwaylandserver_export.h>
+
+struct wl_client;
+struct wl_resource;
 
 namespace KWayland
 {
@@ -126,61 +126,14 @@ public:
     void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
 
     void setFocusedSurface(SurfaceInterface *surface);
-    SurfaceInterface *focusedSurface() const {
-        return m_focusedSurface.surface;
-    }
+    SurfaceInterface *focusedSurface() const;
 
 private:
     friend class SeatInterface;
     explicit KeyboardInterface(Display *display, SeatInterface *parent);
-    void surfaceDeleted();
-    wl_resource *keyboardForSurface(SurfaceInterface *surface) const;
-    void sendKeymap(wl_resource *r);
-    void sendKeymapToAll();
-    void sendModifiers(wl_resource *r);
-    enum class KeyState {
-        Released,
-        Pressed
-    };
-    void updateKey(quint32 key, KeyState state);
 
-    static KeyboardInterface *cast(wl_resource *resource) {
-        return reinterpret_cast<KeyboardInterface*>(wl_resource_get_user_data(resource));
-    }
-
-    static void unbind(wl_resource *resource);
-    // since version 3
-    static void releaseCallback(wl_client *client, wl_resource *resource);
-
-    Display *m_display;
-    SeatInterface *m_seat;
-    struct ResourceData {
-        wl_client *client = nullptr;
-        wl_resource *keyboard = nullptr;
-    };
-    QList<ResourceData> m_resources;
-    struct Keymap {
-        int fd = -1;
-        quint32 size = 0;
-        bool xkbcommonCompatible = false;
-    };
-    Keymap m_keymap;
-    struct Modifiers {
-        quint32 depressed = 0;
-        quint32 latched = 0;
-        quint32 locked = 0;
-        quint32 group = 0;
-    };
-    Modifiers m_modifiers;
-    struct FocusedSurface {
-        SurfaceInterface *surface = nullptr;
-        wl_resource *keyboard = nullptr;
-    };
-    FocusedSurface m_focusedSurface;
-    QHash<quint32, KeyState> m_keyStates;
-    quint32 m_eventTime;
-
-    static const struct wl_keyboard_interface s_interface;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }
