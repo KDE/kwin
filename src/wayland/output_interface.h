@@ -79,36 +79,18 @@ public:
     virtual ~OutputInterface();
     void create();
     void destroy();
-    bool isValid() const {
-        return m_output != nullptr;
-    }
+    bool isValid() const;
 
-    const QSize &physicalSize() const {
-        return m_physicalSize;
-    }
-    const QPoint &globalPosition() const {
-        return m_globalPosition;
-    }
-    const QString &manufacturer() const {
-        return m_manufacturer;
-    }
-    const QString &model() const {
-        return m_model;
-    }
+    QSize physicalSize() const;
+    QPoint globalPosition() const;
+    QString manufacturer() const;
+    QString model() const;
     QSize pixelSize() const;
     int refreshRate() const;
-    int scale() const {
-        return m_scale;
-    }
-    SubPixel subPixel() const {
-        return m_subPixel;
-    }
-    Transform transform() const {
-        return m_transform;
-    }
-    QList<Mode> modes() const {
-        return m_modes;
-    }
+    int scale() const;
+    SubPixel subPixel() const;
+    Transform transform() const;
+    QList<Mode> modes() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -120,12 +102,8 @@ public:
     void addMode(const QSize &size, ModeFlags flags = ModeFlags(), int refreshRate = 60000);
     void setCurrentMode(const QSize &size, int refreshRate = 60000);
 
-    operator wl_global*() {
-        return m_output;
-    }
-    operator wl_global*() const {
-        return m_output;
-    }
+    operator wl_global*();
+    operator wl_global*() const;
 
 Q_SIGNALS:
     void physicalSizeChanged(const QSize&);
@@ -141,34 +119,10 @@ Q_SIGNALS:
     void currentModeChanged();
 
 private:
-    struct ResourceData {
-        wl_resource *resource;
-        uint32_t version;
-    };
     friend class Display;
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
-    static void unbind(wl_resource *resource);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
-    int32_t toTransform() const;
-    int32_t toSubPixel() const;
-    void sendMode(wl_resource *resource, const Mode &mode);
-    void sendDone(const ResourceData &data);
-    void updateGeometry();
-    void sendGeometry(wl_resource *resource);
-    void sendScale(const ResourceData &data);
-    void updateScale();
-    Display *m_display;
-    wl_global *m_output;
-    QSize m_physicalSize;
-    QPoint m_globalPosition;
-    QString m_manufacturer;
-    QString m_model;
-    int m_scale;
-    SubPixel m_subPixel;
-    Transform m_transform;
-    QList<Mode> m_modes;
-    QList<ResourceData> m_resources;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }
