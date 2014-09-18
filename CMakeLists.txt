@@ -195,6 +195,7 @@ find_package(XCB
         IMAGE
         SHM
         XTEST
+        GLX
     OPTIONAL_COMPONENTS
         ICCCM
 )
@@ -513,6 +514,7 @@ set(kwin_XCB_LIBS
     XCB::KEYSYMS
     XCB::SHM
     XCB::XTEST
+    XCB::GLX
 )
 
 set(kwin_WAYLAND_LIBS
