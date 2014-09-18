@@ -56,21 +56,13 @@ public:
     void start();
     void terminate();
 
-    operator wl_display*() {
-        return m_display;
-    }
-    operator wl_display*() const {
-        return m_display;
-    }
-    bool isRunning() const {
-        return m_running;
-    }
+    operator wl_display*();
+    operator wl_display*() const;
+    bool isRunning() const;
 
     OutputInterface *createOutput(QObject *parent = nullptr);
     void removeOutput(OutputInterface *output);
-    const QList<OutputInterface*> &outputs() const {
-        return m_outputs;
-    }
+    QList<OutputInterface*> outputs() const;
 
     CompositorInterface *createCompositor(QObject *parent = nullptr);
     void createShm();
@@ -83,13 +75,8 @@ Q_SIGNALS:
     void aboutToTerminate();
 
 private:
-    void flush();
-    void setRunning(bool running);
-    wl_display *m_display;
-    wl_event_loop *m_loop;
-    QString m_socketName;
-    bool m_running;
-    QList<OutputInterface*> m_outputs;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }

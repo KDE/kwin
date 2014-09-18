@@ -35,14 +35,33 @@ namespace KWayland
 namespace Server
 {
 
+class Display::Private
+{
+public:
+    Private(Display *q);
+    void flush();
+    void setRunning(bool running);
+
+    wl_display *display = nullptr;
+    wl_event_loop *loop = nullptr;
+    QString socketName = QStringLiteral("wayland-0");
+    bool running = false;
+    QList<OutputInterface*> outputs;
+
+private:
+    Display *q;
+};
+
+Display::Private::Private(Display *q)
+    : q(q)
+{
+}
+
 Display::Display(QObject *parent)
     : QObject(parent)
-    , m_display(nullptr)
-    , m_loop(nullptr)
-    , m_socketName(QStringLiteral("wayland-0"))
-    , m_running(false)
+    , d(new Private(this))
 {
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &Display::flush);
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, [this] { d->flush(); });
 }
 
 Display::~Display()
@@ -50,77 +69,77 @@ Display::~Display()
     terminate();
 }
 
-void Display::flush()
+void Display::Private::flush()
 {
-    if (!m_display || !m_loop) {
+    if (!display || !loop) {
         return;
     }
-    if (wl_event_loop_dispatch(m_loop, 0) != 0) {
+    if (wl_event_loop_dispatch(loop, 0) != 0) {
         qWarning() << "Error on dispatching Wayland event loop";
     }
-    wl_display_flush_clients(m_display);
+    wl_display_flush_clients(display);
 }
 
 void Display::setSocketName(const QString &name)
 {
-    if (m_socketName == name) {
+    if (d->socketName == name) {
         return;
     }
-    m_socketName = name;
-    emit socketNameChanged(m_socketName);
+    d->socketName = name;
+    emit socketNameChanged(d->socketName);
 }
 
 QString Display::socketName() const
 {
-    return m_socketName;
+    return d->socketName;
 }
 
 void Display::start()
 {
-    Q_ASSERT(!m_running);
-    Q_ASSERT(!m_display);
-    m_display = wl_display_create();
-    if (wl_display_add_socket(m_display, qPrintable(m_socketName)) != 0) {
+    Q_ASSERT(!d->running);
+    Q_ASSERT(!d->display);
+    d->display = wl_display_create();
+    if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
         return;
     }
 
-    m_loop = wl_display_get_event_loop(m_display);
-    int fd = wl_event_loop_get_fd(m_loop);
+    d->loop = wl_display_get_event_loop(d->display);
+    int fd = wl_event_loop_get_fd(d->loop);
     if (fd == -1) {
         qWarning() << "Did not get the file descriptor for the event loop";
         return;
     }
     QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(m_notifier, &QSocketNotifier::activated, this, &Display::flush);
-    setRunning(true);
+    connect(m_notifier, &QSocketNotifier::activated, this, [this] { d->flush(); } );
+    d->setRunning(true);
 }
 
 void Display::terminate()
 {
-    if (!m_running) {
+    if (!d->running) {
         return;
     }
     emit aboutToTerminate();
-    wl_display_terminate(m_display);
-    wl_display_destroy(m_display);
-    m_display = nullptr;
-    m_loop = nullptr;
-    setRunning(false);
+    wl_display_terminate(d->display);
+    wl_display_destroy(d->display);
+    d->display = nullptr;
+    d->loop = nullptr;
+    d->setRunning(false);
 }
 
-void Display::setRunning(bool running)
+void Display::Private::setRunning(bool r)
 {
-    Q_ASSERT(m_running != running);
-    m_running = running;
-    emit runningChanged(m_running);
+    Q_ASSERT(running != r);
+    running = r;
+    emit q->runningChanged(running);
 }
 
 OutputInterface *Display::createOutput(QObject *parent)
 {
     OutputInterface *output = new OutputInterface(this, parent);
-    connect(output, &QObject::destroyed, this, [this,output] { m_outputs.removeAll(output); });
+    connect(output, &QObject::destroyed, this, [this,output] { d->outputs.removeAll(output); });
     connect(this, &Display::aboutToTerminate, output, [this,output] { removeOutput(output); });
-    m_outputs << output;
+    d->outputs << output;
     return output;
 }
 
@@ -147,25 +166,46 @@ SeatInterface *Display::createSeat(QObject *parent)
 
 void Display::createShm()
 {
-    Q_ASSERT(m_running);
-    wl_display_init_shm(m_display);
+    Q_ASSERT(d->running);
+    wl_display_init_shm(d->display);
 }
 
 void Display::removeOutput(OutputInterface *output)
 {
-    m_outputs.removeAll(output);
+    d->outputs.removeAll(output);
     delete output;
 }
 
 quint32 Display::nextSerial()
 {
-    return wl_display_next_serial(m_display);
+    return wl_display_next_serial(d->display);
 }
 
 quint32 Display::serial()
 {
-    return wl_display_get_serial(m_display);
+    return wl_display_get_serial(d->display);
 }
+
+bool Display::isRunning() const
+{
+    return d->running;
+}
+
+Display::operator wl_display*()
+{
+    return d->display;
+}
+
+Display::operator wl_display*() const
+{
+    return d->display;
+}
+
+QList< OutputInterface* > Display::outputs() const
+{
+    return d->outputs;
+}
+
 
 }
 }
