@@ -50,28 +50,14 @@ public:
 
     void create();
     void destroy();
-    bool isValid() const {
-        return m_seat != nullptr;
-    }
+    bool isValid() const;
 
-    const QString &name() const {
-        return m_name;
-    }
-    bool hasPointer() const {
-        return m_pointer;
-    }
-    bool hasKeyboard() const {
-        return m_keyboard;
-    }
-    bool hasTouch() const {
-        return m_touch;
-    }
-    PointerInterface *pointer() {
-        return m_pointerInterface;
-    }
-    KeyboardInterface *keyboard() {
-        return m_keyboardInterface;
-    }
+    QString name() const;
+    bool hasPointer() const;
+    bool hasKeyboard() const;
+    bool hasTouch() const;
+    PointerInterface *pointer();
+    KeyboardInterface *keyboard();
 
     void setName(const QString &name);
     void setHasPointer(bool has);
@@ -88,29 +74,8 @@ private:
     friend class Display;
     explicit SeatInterface(Display *display, QObject *parent);
 
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
-    static void unbind(wl_resource *r);
-
-    // interface
-    static void getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
-
-    static SeatInterface *cast(wl_resource *r);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
-    void sendCapabilities(wl_resource *r);
-    void sendName(wl_resource *r);
-
-    Display *m_display;
-    wl_global *m_seat;
-    QString m_name;
-    bool m_pointer;
-    bool m_keyboard;
-    bool m_touch;
-    QList<wl_resource*> m_resources;
-    PointerInterface *m_pointerInterface;
-    KeyboardInterface *m_keyboardInterface;
-    static const struct wl_seat_interface s_interface;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 class KWAYLANDSERVER_EXPORT PointerInterface : public QObject

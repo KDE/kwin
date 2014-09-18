@@ -36,33 +36,70 @@ namespace Server
 
 static const quint32 s_version = 3;
 
-const struct wl_seat_interface SeatInterface::s_interface = {
-    SeatInterface::getPointerCallback,
-    SeatInterface::getKeyboardCallback,
-    SeatInterface::getTouchCallback
+class SeatInterface::Private
+{
+public:
+    Private(SeatInterface *q, Display *d);
+    void create();
+    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void sendCapabilities(wl_resource *r);
+    void sendName(wl_resource *r);
+
+    Display *display;
+    wl_global *seat = nullptr;
+    QString name;
+    bool pointer = false;
+    bool keyboard = false;
+    bool touch = false;
+    QList<wl_resource*> resources;
+    PointerInterface *pointerInterface;
+    KeyboardInterface *keyboardInterface;
+
+private:
+    static Private *cast(wl_resource *r);
+    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
+    static void unbind(wl_resource *r);
+
+    // interface
+    static void getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
+    static const struct wl_seat_interface s_interface;
+};
+
+SeatInterface::Private::Private(SeatInterface *q, Display *d)
+    : display(d)
+    , pointerInterface(new PointerInterface(d, q))
+    , keyboardInterface(new KeyboardInterface(d, q))
+{
+}
+
+void SeatInterface::Private::create()
+{
+    Q_ASSERT(!seat);
+    seat = wl_global_create(*display, &wl_seat_interface, s_version, this, &bind);
+}
+
+const struct wl_seat_interface SeatInterface::Private::s_interface = {
+    getPointerCallback,
+    getKeyboardCallback,
+    getTouchCallback
 };
 
 SeatInterface::SeatInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , m_display(display)
-    , m_seat(nullptr)
-    , m_name()
-    , m_pointer(false)
-    , m_keyboard(false)
-    , m_touch(false)
-    , m_pointerInterface(new PointerInterface(display, this))
-    , m_keyboardInterface(new KeyboardInterface(display, this))
+    , d(new Private(this, display))
 {
     connect(this, &SeatInterface::nameChanged, this,
         [this] {
-            for (auto it = m_resources.constBegin(); it != m_resources.constEnd(); ++it) {
-                sendName(*it);
+            for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+                d->sendName(*it);
             }
         }
     );
     auto sendCapabilitiesAll = [this] {
-        for (auto it = m_resources.constBegin(); it != m_resources.constEnd(); ++it) {
-            sendCapabilities(*it);
+        for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
+            d->sendCapabilities(*it);
         }
     };
     connect(this, &SeatInterface::hasPointerChanged,  this, sendCapabilitiesAll);
@@ -77,125 +114,158 @@ SeatInterface::~SeatInterface()
 
 void SeatInterface::create()
 {
-    Q_ASSERT(!m_seat);
-    m_seat = wl_global_create(*m_display, &wl_seat_interface, s_version, this, &SeatInterface::bind);
+    d->create();
 }
 
 void SeatInterface::destroy()
 {
-    while (!m_resources.isEmpty()) {
-        wl_resource_destroy(m_resources.takeLast());
+    while (!d->resources.isEmpty()) {
+        wl_resource_destroy(d->resources.takeLast());
     }
-    if (m_seat) {
-        wl_global_destroy(m_seat);
-        m_seat = nullptr;
+    if (d->seat) {
+        wl_global_destroy(d->seat);
+        d->seat = nullptr;
     }
 }
 
-void SeatInterface::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
+void SeatInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
-    reinterpret_cast<SeatInterface*>(data)->bind(client, version, id);
+    reinterpret_cast<SeatInterface::Private*>(data)->bind(client, version, id);
 }
 
-void SeatInterface::bind(wl_client *client, uint32_t version, uint32_t id)
+void SeatInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     wl_resource *r = wl_resource_create(client, &wl_seat_interface, qMin(s_version, version), id);
     if (!r) {
         wl_client_post_no_memory(client);
         return;
     }
-    m_resources << r;
+    resources << r;
 
-    wl_resource_set_implementation(r, &SeatInterface::s_interface, this, SeatInterface::unbind);
+    wl_resource_set_implementation(r, &s_interface, this, unbind);
 
     sendCapabilities(r);
     sendName(r);
 }
 
-void SeatInterface::unbind(wl_resource *r)
+void SeatInterface::Private::unbind(wl_resource *r)
 {
-    SeatInterface::cast(r)->m_resources.removeAll(r);
+    cast(r)->resources.removeAll(r);
 }
 
-void SeatInterface::sendName(wl_resource *r)
+void SeatInterface::Private::sendName(wl_resource *r)
 {
     if (wl_resource_get_version(r) < WL_SEAT_NAME_SINCE_VERSION) {
         return;
     }
-    wl_seat_send_name(r, m_name.toUtf8().constData());
+    wl_seat_send_name(r, name.toUtf8().constData());
 }
 
-void SeatInterface::sendCapabilities(wl_resource *r)
+void SeatInterface::Private::sendCapabilities(wl_resource *r)
 {
     uint32_t capabilities = 0;
-    if (m_pointer) {
+    if (pointer) {
         capabilities |= WL_SEAT_CAPABILITY_POINTER;
     }
-    if (m_keyboard) {
+    if (keyboard) {
         capabilities |= WL_SEAT_CAPABILITY_KEYBOARD;
     }
-    if (m_touch) {
+    if (touch) {
         capabilities |= WL_SEAT_CAPABILITY_TOUCH;
     }
     wl_seat_send_capabilities(r, capabilities);
 }
 
-SeatInterface *SeatInterface::cast(wl_resource *r)
+SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
 {
-    return reinterpret_cast<SeatInterface*>(wl_resource_get_user_data(r));
+    return reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r));
 }
 
 void SeatInterface::setHasKeyboard(bool has)
 {
-    if (m_keyboard == has) {
+    if (d->keyboard == has) {
         return;
     }
-    m_keyboard = has;
-    emit hasKeyboardChanged(m_keyboard);
+    d->keyboard = has;
+    emit hasKeyboardChanged(d->keyboard);
 }
 
 void SeatInterface::setHasPointer(bool has)
 {
-    if (m_pointer == has) {
+    if (d->pointer == has) {
         return;
     }
-    m_pointer = has;
-    emit hasPointerChanged(m_pointer);
+    d->pointer = has;
+    emit hasPointerChanged(d->pointer);
 }
 
 void SeatInterface::setHasTouch(bool has)
 {
-    if (m_touch == has) {
+    if (d->touch == has) {
         return;
     }
-    m_touch = has;
-    emit hasTouchChanged(m_touch);
+    d->touch = has;
+    emit hasTouchChanged(d->touch);
 }
 
 void SeatInterface::setName(const QString &name)
 {
-    if (m_name == name) {
+    if (d->name == name) {
         return;
     }
-    m_name = name;
-    emit nameChanged(m_name);
+    d->name = name;
+    emit nameChanged(d->name);
 }
 
-void SeatInterface::getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void SeatInterface::Private::getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    SeatInterface::cast(resource)->m_pointerInterface->createInterface(client, resource, id);
+    cast(resource)->pointerInterface->createInterface(client, resource, id);
 }
 
-void SeatInterface::getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void SeatInterface::Private::getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    SeatInterface::cast(resource)->m_keyboardInterface->createInterfae(client, resource, id);
+    cast(resource)->keyboardInterface->createInterfae(client, resource, id);
 }
 
-void SeatInterface::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
+void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
     Q_UNUSED(client)
     Q_UNUSED(resource)
     Q_UNUSED(id)
+}
+
+bool SeatInterface::isValid() const {
+    return d->seat != nullptr;
+}
+
+QString SeatInterface::name() const
+{
+    return d->name;
+}
+
+bool SeatInterface::hasPointer() const
+{
+    return d->pointer;
+}
+
+bool SeatInterface::hasKeyboard() const
+{
+    return d->keyboard;
+}
+
+bool SeatInterface::hasTouch() const
+{
+    return d->touch;
+}
+
+PointerInterface *SeatInterface::pointer()
+{
+    return d->pointerInterface;
+}
+
+KeyboardInterface *SeatInterface::keyboard()
+{
+    return d->keyboardInterface;
 }
 
 /****************************************
