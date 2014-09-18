@@ -48,13 +48,9 @@ public:
     void create();
     void destroy();
 
-    bool isValid() const {
-        return m_shell != nullptr;
-    }
+    bool isValid() const;
 
-    Display *display() const {
-        return m_display;
-    }
+    Display *display() const;
 
 Q_SIGNALS:
     void surfaceCreated(KWayland::Server::ShellSurfaceInterface*);
@@ -62,14 +58,8 @@ Q_SIGNALS:
 private:
     friend class Display;
     explicit ShellInterface(Display *display, QObject *parent);
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
-    static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
-    void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface);
-    Display *m_display;
-    wl_global *m_shell;
-    static const struct wl_shell_interface s_interface;
-    QList<ShellSurfaceInterface*> m_surfaces;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public QObject

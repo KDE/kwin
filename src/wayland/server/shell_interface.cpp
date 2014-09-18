@@ -30,14 +30,45 @@ namespace Server
 
 static const quint32 s_version = 1;
 
-const struct wl_shell_interface ShellInterface::s_interface = {
-    ShellInterface::createSurfaceCallback
+class ShellInterface::Private
+{
+public:
+    Private(ShellInterface *q, Display *d);
+    void create();
+
+    Display *display;
+    wl_global *shell = nullptr;
+    QList<ShellSurfaceInterface*> surfaces;
+
+private:
+    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
+    static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
+    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface);
+
+    ShellInterface *q;
+    static const struct wl_shell_interface s_interface;
+};
+
+ShellInterface::Private::Private(ShellInterface *q, Display *d)
+    : display(d)
+    , q(q)
+{
+}
+
+void ShellInterface::Private::create()
+{
+    Q_ASSERT(!shell);
+    shell = wl_global_create(*display, &wl_shell_interface, s_version, this, &bind);
+}
+
+const struct wl_shell_interface ShellInterface::Private::s_interface = {
+    createSurfaceCallback
 };
 
 ShellInterface::ShellInterface(Display *display, QObject *parent)
     : QObject(parent)
-    , m_display(display)
-    , m_shell(nullptr)
+    , d(new Private(this, display))
 {
 }
 
@@ -48,61 +79,70 @@ ShellInterface::~ShellInterface()
 
 void ShellInterface::create()
 {
-    Q_ASSERT(!m_shell);
-    m_shell = wl_global_create(*m_display, &wl_shell_interface, s_version, this, &ShellInterface::bind);
+    d->create();
 }
 
 void ShellInterface::destroy()
 {
-    if (!m_shell) {
+    if (!d->shell) {
         return;
     }
-    wl_global_destroy(m_shell);
-    m_shell = nullptr;
+    wl_global_destroy(d->shell);
+    d->shell = nullptr;
 }
 
-void ShellInterface::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
+void ShellInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
-    reinterpret_cast<ShellInterface*>(data)->bind(client, version, id);
+    reinterpret_cast<ShellInterface::Private*>(data)->bind(client, version, id);
 }
 
-void ShellInterface::bind(wl_client *client, uint32_t version, uint32_t id)
+void ShellInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
     wl_resource *shell = wl_resource_create(client, &wl_shell_interface, qMin(version, s_version), id);
     if (!shell) {
         wl_client_post_no_memory(client);
         return;
     }
-    wl_resource_set_implementation(shell, &ShellInterface::s_interface, this, nullptr);
+    wl_resource_set_implementation(shell, &s_interface, this, nullptr);
 }
 
-void ShellInterface::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
+void ShellInterface::Private::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
 {
-    ShellInterface *s = reinterpret_cast<ShellInterface*>(wl_resource_get_user_data(resource));
+    auto s = reinterpret_cast<ShellInterface::Private*>(wl_resource_get_user_data(resource));
     s->createSurface(client, wl_resource_get_version(resource), id,
                      reinterpret_cast<SurfaceInterface*>(wl_resource_get_user_data(surface)));
 }
 
-void ShellInterface::createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface)
+void ShellInterface::Private::createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface)
 {
-    auto it = std::find_if(m_surfaces.constBegin(), m_surfaces.constEnd(),
+    auto it = std::find_if(surfaces.constBegin(), surfaces.constEnd(),
         [surface](ShellSurfaceInterface *s) {
             return surface == s->surface();
         }
     );
-    if (it != m_surfaces.constBegin()) {
+    if (it != surfaces.constBegin()) {
         wl_resource_post_error(surface->surface(), WL_DISPLAY_ERROR_INVALID_OBJECT, "ShellSurface already created");
         return;
     }
-    ShellSurfaceInterface *shellSurface = new ShellSurfaceInterface(this, surface);
-    m_surfaces << shellSurface;
-    connect(shellSurface, &ShellSurfaceInterface::destroyed, this,
+    ShellSurfaceInterface *shellSurface = new ShellSurfaceInterface(q, surface);
+    surfaces << shellSurface;
+    QObject::connect(shellSurface, &ShellSurfaceInterface::destroyed, q,
         [this, shellSurface] {
-            m_surfaces.removeAll(shellSurface);
+            surfaces.removeAll(shellSurface);
         }
     );
     shellSurface->create(client, version, id);
-    emit surfaceCreated(shellSurface);
+    emit q->surfaceCreated(shellSurface);
+}
+
+bool ShellInterface::isValid() const
+{
+    return d->shell != nullptr;
+}
+
+Display *ShellInterface::display() const
+{
+    return d->display;
 }
 
 /*********************************
