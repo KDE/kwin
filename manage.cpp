@@ -103,7 +103,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2FrameOverlap |
         NET::WM2GroupLeader |
         NET::WM2Urgency |
-        NET::WM2Input;
+        NET::WM2Input |
+        NET::WM2Protocols;
 
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
@@ -135,7 +136,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     modal = (info->state() & NET::Modal) != 0;   // Needs to be valid before handling groups
     readTransient();
     getIcons();
-    getWindowProtocols();
     getWmNormalHints(); // Get xSizeHint
     getMotifHints();
     getWmOpaqueRegion();

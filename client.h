@@ -922,10 +922,6 @@ private:
     uint keep_above : 1; ///< NET::KeepAbove (was stays_on_top)
     uint skip_taskbar : 1;
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
-    uint Pdeletewindow : 1; ///< Does the window understand the DeleteWindow protocol?
-    uint Ptakefocus : 1;///< Does the window understand the TakeFocus protocol?
-    uint Pcontexthelp : 1; ///< Does the window understand the ContextHelp protocol?
-    uint Pping : 1; ///< Does it support _NET_WM_PING?
     uint skip_pager : 1;
     uint skip_switcher : 1;
     uint motif_may_resize : 1;
@@ -942,7 +938,6 @@ private:
     uint demands_attention : 1;
     bool blocks_compositing;
     WindowRules client_rules;
-    void getWindowProtocols();
     QIcon m_icon;
     Qt::CursorShape m_cursor;
     // DON'T reorder - Saved to config files !!!

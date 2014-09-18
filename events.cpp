@@ -911,9 +911,7 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
         getIcons(); // because KWin::icon() uses WMHints as fallback
         break;
     default:
-        if (e->atom == atoms->wm_protocols)
-            getWindowProtocols();
-        else if (e->atom == atoms->motif_wm_hints)
+        if (e->atom == atoms->motif_wm_hints)
             getMotifHints();
         else if (e->atom == atoms->net_wm_sync_request_counter)
             getSyncCounter();

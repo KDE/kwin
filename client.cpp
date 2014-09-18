@@ -271,10 +271,6 @@ Client::Client()
     demands_attention = false;
     check_active_modal = false;
 
-    Pdeletewindow = 0;
-    Ptakefocus = 0;
-    Pcontexthelp = 0;
-    Pping = 0;
     skip_pager = false;
 
     max_mode = MaximizeRestore;
@@ -1410,7 +1406,7 @@ void Client::closeWindow()
     // Update user time, because the window may create a confirming dialog.
     updateUserTime();
 
-    if (Pdeletewindow) {
+    if (info->supportsProtocol(NET::DeleteWindowProtocol)) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_delete_window);
         pingWindow();
     } else // Client will not react on wm_delete_window. We have not choice
@@ -1436,7 +1432,7 @@ void Client::killWindow()
  */
 void Client::pingWindow()
 {
-    if (!Pping)
+    if (!info->supportsProtocol(NET::PingProtocol))
         return; // Can't ping :(
     if (options->killPingTimeout() == 0)
         return; // Turned off
@@ -1763,7 +1759,7 @@ void Client::takeFocus()
         m_client.focus();
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
-    if (Ptakefocus)
+    if (info->supportsProtocol(NET::TakeFocusProtocol))
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     workspace()->setShouldGetFocus(this);
 }
@@ -1777,7 +1773,7 @@ void Client::takeFocus()
  */
 bool Client::providesContextHelp() const
 {
-    return Pcontexthelp;
+    return info->supportsProtocol(NET::ContextHelpProtocol);
 }
 
 /**
@@ -1788,7 +1784,7 @@ bool Client::providesContextHelp() const
  */
 void Client::showContextHelp()
 {
-    if (Pcontexthelp) {
+    if (info->supportsProtocol(NET::ContextHelpProtocol)) {
         sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_context_help);
         QWhatsThis::enterWhatsThisMode(); // SELI TODO: ?
     }
@@ -2116,32 +2112,6 @@ void Client::getIcons()
     emit iconChanged();
 }
 
-void Client::getWindowProtocols()
-{
-    Atom* p;
-    int i, n;
-
-    Pdeletewindow = 0;
-    Ptakefocus = 0;
-    Pcontexthelp = 0;
-    Pping = 0;
-
-    if (XGetWMProtocols(display(), window(), &p, &n)) {
-        for (i = 0; i < n; ++i) {
-            if (p[i] == atoms->wm_delete_window)
-                Pdeletewindow = 1;
-            else if (p[i] == atoms->wm_take_focus)
-                Ptakefocus = 1;
-            else if (p[i] == atoms->net_wm_context_help)
-                Pcontexthelp = 1;
-            else if (p[i] == atoms->net_wm_ping)
-                Pping = 1;
-        }
-        if (n > 0)
-            XFree(p);
-    }
-}
-
 void Client::getSyncCounter()
 {
     if (!Xcb::Extensions::self()->isSyncAvailable())
@@ -2235,7 +2205,7 @@ bool Client::wantsTabFocus() const
 
 bool Client::wantsInput() const
 {
-    return rules()->checkAcceptFocus(info->input() || Ptakefocus);
+    return rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
 }
 
 bool Client::isSpecialWindow() const
