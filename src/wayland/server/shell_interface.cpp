@@ -23,6 +23,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QTimer>
 
+#include <wayland-server.h>
+
 namespace KWayland
 {
 namespace Server
@@ -64,6 +66,61 @@ void ShellInterface::Private::create()
 
 const struct wl_shell_interface ShellInterface::Private::s_interface = {
     createSurfaceCallback
+};
+
+
+
+class ShellSurfaceInterface::Private
+{
+public:
+    Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface);
+    void create(wl_client *client, quint32 version, quint32 id);
+    void setFullscreen(bool fullscreen);
+    void setToplevel(bool toplevel);
+    void ping();
+
+    SurfaceInterface *surface;
+    ShellInterface *shell;
+    wl_resource *shellSurface = nullptr;
+    wl_client *client = nullptr;
+    pid_t clientPid = 0;
+    uid_t clientUser = 0;
+    gid_t clientGroup = 0;
+    QString title;
+    QByteArray windowClass;
+    QScopedPointer<QTimer> pingTimer;
+    quint32 pingSerial = 0;
+    bool fullscreen = false;
+    bool toplevel = false;
+
+private:
+    static Private *cast(wl_resource *r) {
+        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+    }
+
+    static void unbind(wl_resource *r);
+    // interface callbacks
+    static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
+    static void moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial);
+    static void resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat,
+                               uint32_t serial, uint32_t edges);
+    static void setToplevelCallback(wl_client *client, wl_resource *resource);
+    static void setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
+                                     int32_t x, int32_t y, uint32_t flags);
+    static void setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
+                                      uint32_t framerate, wl_resource *output);
+    static void setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
+                                wl_resource *parent, int32_t x, int32_t y, uint32_t flags);
+    static void setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output);
+    static void setTitleCallback(wl_client *client, wl_resource *resource, const char *title);
+    static void setClassCallback(wl_client *client, wl_resource *resource, const char *class_);
+
+    void setTitle(const QString &title);
+    void setWindowClass(const QByteArray &windowClass);
+    void pong(quint32 serial);
+
+    ShellSurfaceInterface *q;
+    static const struct wl_shell_surface_interface s_interface;
 };
 
 ShellInterface::ShellInterface(Display *display, QObject *parent)
@@ -131,7 +188,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
             surfaces.removeAll(shellSurface);
         }
     );
-    shellSurface->create(client, version, id);
+    shellSurface->d->create(client, version, id);
     emit q->surfaceCreated(shellSurface);
 }
 
@@ -148,44 +205,40 @@ Display *ShellInterface::display() const
 /*********************************
  * ShellSurfaceInterface
  *********************************/
+ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface)
+    : surface(surface)
+    , shell(shell)
+    , pingTimer(new QTimer)
+    , q(q)
+{
+    pingTimer->setSingleShot(true);
+    pingTimer->setInterval(1000);
+}
 
-const struct wl_shell_surface_interface ShellSurfaceInterface::s_interface = {
-    ShellSurfaceInterface::pongCallback,
-    ShellSurfaceInterface::moveCallback,
-    ShellSurfaceInterface::resizeCallback,
-    ShellSurfaceInterface::setToplevelCallback,
-    ShellSurfaceInterface::setTransientCallback,
-    ShellSurfaceInterface::setFullscreenCallback,
-    ShellSurfaceInterface::setPopupCalback,
-    ShellSurfaceInterface::setMaximizedCallback,
-    ShellSurfaceInterface::setTitleCallback,
-    ShellSurfaceInterface::setClassCallback
+const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interface = {
+    pongCallback,
+    moveCallback,
+    resizeCallback,
+    setToplevelCallback,
+    setTransientCallback,
+    setFullscreenCallback,
+    setPopupCalback,
+    setMaximizedCallback,
+    setTitleCallback,
+    setClassCallback
 };
 
 ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent)
     : QObject(parent)
-    , m_surface(parent)
-    , m_shell(shell)
-    , m_shellSurface(nullptr)
-    , m_client(nullptr)
-    , m_clientPid(0)
-    , m_clientUser(0)
-    , m_clientGroup(0)
-    , m_title()
-    , m_windowClass(QByteArray())
-    , m_pingTimer(new QTimer(this))
-    , m_fullscreen(false)
-    , m_toplevel(false)
+    , d(new Private(this, shell, parent))
 {
-    m_pingTimer->setSingleShot(true);
-    m_pingTimer->setInterval(1000);
-    connect(m_pingTimer, &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);
+    connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);
     connect(this, &ShellSurfaceInterface::fullscreenChanged, this,
         [this] (bool fullscreen) {
             if (!fullscreen) {
                 return;
             }
-            setToplevel(false);
+            d->setToplevel(false);
         }
     );
     connect(this, &ShellSurfaceInterface::toplevelChanged, this,
@@ -193,152 +246,157 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
             if (!toplevel) {
                 return;
             }
-            setFullscreen(false);
+            d->setFullscreen(false);
         }
     );
 }
 
 ShellSurfaceInterface::~ShellSurfaceInterface()
 {
-    if (m_shellSurface) {
-        wl_resource_destroy(m_shellSurface);
+    if (d->shellSurface) {
+        wl_resource_destroy(d->shellSurface);
     }
 }
 
-void ShellSurfaceInterface::create(wl_client *client, quint32 version, quint32 id)
+void ShellSurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
 {
-    Q_ASSERT(!m_client);
-    Q_ASSERT(!m_shellSurface);
-    m_shellSurface = wl_resource_create(client, &wl_shell_surface_interface, version, id);
-    if (!m_shellSurface) {
-        wl_client_post_no_memory(client);
+    Q_ASSERT(!client);
+    Q_ASSERT(!shellSurface);
+    shellSurface = wl_resource_create(c, &wl_shell_surface_interface, version, id);
+    if (!shellSurface) {
+        wl_client_post_no_memory(c);
         return;
     }
-    m_client = client;
-    wl_client_get_credentials(m_client, &m_clientPid, &m_clientUser, &m_clientGroup);
+    client = c;
+    wl_client_get_credentials(client, &clientPid, &clientUser, &clientGroup);
 
-    wl_resource_set_implementation(m_shellSurface, &ShellSurfaceInterface::s_interface, this, ShellSurfaceInterface::unbind);
+    wl_resource_set_implementation(shellSurface, &s_interface, this, unbind);
 }
 
-void ShellSurfaceInterface::unbind(wl_resource *r)
+void ShellSurfaceInterface::Private::unbind(wl_resource *r)
 {
-    ShellSurfaceInterface *s = cast(r);
-    s->m_shellSurface = nullptr;
-    s->deleteLater();
+    auto s = cast(r);
+    s->shellSurface = nullptr;
+    s->q->deleteLater();
 }
 
-void ShellSurfaceInterface::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
+void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
 {
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     s->pong(serial);
 }
 
-void ShellSurfaceInterface::pong(quint32 serial)
+void ShellSurfaceInterface::Private::pong(quint32 serial)
 {
-    if (m_pingTimer->isActive() && serial == m_pingSerial) {
-        m_pingTimer->stop();
-        emit pongReceived();
+    if (pingTimer->isActive() && serial == pingSerial) {
+        pingTimer->stop();
+        emit q->pongReceived();
     }
 }
 
 void ShellSurfaceInterface::ping()
 {
-    if (m_pingTimer->isActive()) {
+    d->ping();
+}
+
+void ShellSurfaceInterface::Private::ping()
+{
+    if (pingTimer->isActive()) {
         return;
     }
-    m_pingSerial = m_shell->display()->nextSerial();
-    wl_shell_surface_send_ping(m_shellSurface, m_pingSerial);
-    wl_client_flush(m_client);
-    m_pingTimer->start();
+    pingSerial = shell->display()->nextSerial();
+    wl_shell_surface_send_ping(shellSurface, pingSerial);
+    wl_client_flush(client);
+    pingTimer->start();
 }
 
 void ShellSurfaceInterface::setPingTimeout(uint msec)
 {
-    m_pingTimer->setInterval(msec);
+    d->pingTimer->setInterval(msec);
 }
 
 bool ShellSurfaceInterface::isPinged() const
 {
-    return m_pingTimer->isActive();
+    return d->pingTimer->isActive();
 }
 
 void ShellSurfaceInterface::requestSize(const QSize &size)
 {
     // TODO: what about the edges?
-    wl_shell_surface_send_configure(m_shellSurface, 0, size.width(), size.height());
-    wl_client_flush(m_client);
+    wl_shell_surface_send_configure(d->shellSurface, 0, size.width(), size.height());
+    wl_client_flush(d->client);
 }
 
-void ShellSurfaceInterface::moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)
+void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)
 {
     Q_UNUSED(seat)
     Q_UNUSED(serial)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
-void ShellSurfaceInterface::resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, uint32_t edges)
+void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial, uint32_t edges)
 {
     Q_UNUSED(seat)
     Q_UNUSED(serial)
     Q_UNUSED(edges)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
-void ShellSurfaceInterface::setToplevelCallback(wl_client *client, wl_resource *resource)
+void ShellSurfaceInterface::Private::setToplevelCallback(wl_client *client, wl_resource *resource)
 {
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     s->setToplevel(true);
 }
 
-void ShellSurfaceInterface::setToplevel(bool toplevel)
+void ShellSurfaceInterface::Private::setToplevel(bool t)
 {
-    if (m_toplevel == toplevel) {
+    if (toplevel == t) {
         return;
     }
-    m_toplevel = toplevel;
-    emit toplevelChanged(m_toplevel);
+    toplevel = t;
+    emit q->toplevelChanged(toplevel);
 }
 
-void ShellSurfaceInterface::setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
+void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
                                                  int32_t x, int32_t y, uint32_t flags)
 {
     Q_UNUSED(parent)
     Q_UNUSED(x)
     Q_UNUSED(y)
     Q_UNUSED(flags)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
-void ShellSurfaceInterface::setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
+void ShellSurfaceInterface::Private::setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
                                                   uint32_t framerate, wl_resource *output)
 {
     Q_UNUSED(method)
     Q_UNUSED(framerate)
     Q_UNUSED(output)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: add method, framerate and output
     s->setFullscreen(true);
 }
 
-void ShellSurfaceInterface::setFullscreen(bool fullscreen)
+void ShellSurfaceInterface::Private::setFullscreen(bool f)
 {
-    if (m_fullscreen == fullscreen) {
+    if (fullscreen == f) {
         return;
     }
-    m_fullscreen = fullscreen;
-    emit fullscreenChanged(m_fullscreen);
+    fullscreen = f;
+    emit q->fullscreenChanged(fullscreen);
 }
 
-void ShellSurfaceInterface::setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
+void ShellSurfaceInterface::Private::setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
                                             wl_resource *parent, int32_t x, int32_t y, uint32_t flags)
 {
     Q_UNUSED(seat)
@@ -347,49 +405,89 @@ void ShellSurfaceInterface::setPopupCalback(wl_client *client, wl_resource *reso
     Q_UNUSED(x)
     Q_UNUSED(y)
     Q_UNUSED(flags)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
-void ShellSurfaceInterface::setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output)
+void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output)
 {
     Q_UNUSED(output)
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
-void ShellSurfaceInterface::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
+void ShellSurfaceInterface::Private::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
 {
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     s->setTitle(QString::fromUtf8(title));
 }
 
-void ShellSurfaceInterface::setTitle(const QString &title)
+void ShellSurfaceInterface::Private::setTitle(const QString &t)
 {
-    if (m_title == title) {
+    if (title == t) {
         return;
     }
-    m_title = title;
-    emit titleChanged(m_title);
+    title = t;
+    emit q->titleChanged(title);
 }
 
-void ShellSurfaceInterface::setClassCallback(wl_client *client, wl_resource *resource, const char *class_)
+void ShellSurfaceInterface::Private::setClassCallback(wl_client *client, wl_resource *resource, const char *class_)
 {
-    ShellSurfaceInterface *s = cast(resource);
-    Q_ASSERT(client == s->m_client);
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     s->setWindowClass(QByteArray(class_));
 }
 
-void ShellSurfaceInterface::setWindowClass(const QByteArray &windowClass)
+void ShellSurfaceInterface::Private::setWindowClass(const QByteArray &wc)
 {
-    if (m_windowClass == windowClass) {
+    if (windowClass == wc) {
         return;
     }
-    m_windowClass = windowClass;
-    emit windowClassChanged(m_windowClass);
+    windowClass = wc;
+    emit q->windowClassChanged(windowClass);
+}
+
+SurfaceInterface *ShellSurfaceInterface::surface() const {
+    return d->surface;
+}
+
+ShellInterface *ShellSurfaceInterface::shell() const {
+    return d->shell;
+}
+
+wl_resource *ShellSurfaceInterface::shellSurface() const {
+    return d->shellSurface;
+}
+
+QString ShellSurfaceInterface::title() const {
+    return d->title;
+}
+
+QByteArray ShellSurfaceInterface::windowClass() const {
+    return d->windowClass;
+}
+
+bool ShellSurfaceInterface::isFullscreen() const {
+    return d->fullscreen;
+}
+
+bool ShellSurfaceInterface::isToplevel() const {
+    return d->toplevel;
+}
+
+pid_t ShellSurfaceInterface::clientPid() const {
+    return d->clientPid;
+}
+
+uid_t ShellSurfaceInterface::clientUser() const {
+    return d->clientUser;
+}
+
+gid_t ShellSurfaceInterface::clientGroup() const {
+    return d->clientGroup;
 }
 
 }

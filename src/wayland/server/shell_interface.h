@@ -22,13 +22,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
-#include <wayland-server.h>
-
 #include <kwaylandserver_export.h>
 
 class QSize;
-class QTimer;
-struct wl_global;
+struct wl_resource;
 
 namespace KWayland
 {
@@ -77,39 +74,19 @@ public:
     bool isPinged() const;
     void requestSize(const QSize &size);
 
-    SurfaceInterface *surface() const {
-        return m_surface;
-    }
-    ShellInterface *shell() const {
-        return m_shell;
-    }
-    wl_resource *shellSurface() const {
-        return m_shellSurface;
-    }
+    SurfaceInterface *surface() const;
+    ShellInterface *shell() const;
+    wl_resource *shellSurface() const;
 
-    const QString &title() const {
-        return m_title;
-    }
-    const QByteArray &windowClass() const {
-        return m_windowClass;
-    }
-    bool isFullscreen() const {
-        return m_fullscreen;
-    }
-    bool isToplevel() const {
-        return m_toplevel;
-    }
+    QString title() const;
+    QByteArray windowClass() const;
+    bool isFullscreen() const;
+    bool isToplevel() const;
 
     // TODO: keep them here or add a better encapsulation?
-    pid_t clientPid() const {
-        return m_clientPid;
-    }
-    uid_t clientUser() const {
-        return m_clientUser;
-    }
-    gid_t clientGroup() const {
-        return m_clientGroup;
-    }
+    pid_t clientPid() const;
+    uid_t clientUser() const;
+    gid_t clientGroup() const;
 
 Q_SIGNALS:
     void titleChanged(const QString&);
@@ -122,49 +99,8 @@ Q_SIGNALS:
 private:
     friend class ShellInterface;
     explicit ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent);
-    void create(wl_client *client, quint32 version, quint32 id);
-    void setTitle(const QString &title);
-    void setWindowClass(const QByteArray &windowClass);
-    void pong(quint32 serial);
-    void setFullscreen(bool fullscreen);
-    void setToplevel(bool toplevel);
-
-    static ShellSurfaceInterface *cast(wl_resource *r) {
-        return reinterpret_cast<ShellSurfaceInterface*>(wl_resource_get_user_data(r));
-    }
-
-    static void unbind(wl_resource *r);
-    // interface callbacks
-    static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
-    static void moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial);
-    static void resizeCallback(wl_client *client, wl_resource *resource, wl_resource *seat,
-                               uint32_t serial, uint32_t edges);
-    static void setToplevelCallback(wl_client *client, wl_resource *resource);
-    static void setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
-                                     int32_t x, int32_t y, uint32_t flags);
-    static void setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
-                                      uint32_t framerate, wl_resource *output);
-    static void setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
-                                wl_resource *parent, int32_t x, int32_t y, uint32_t flags);
-    static void setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output);
-    static void setTitleCallback(wl_client *client, wl_resource *resource, const char *title);
-    static void setClassCallback(wl_client *client, wl_resource *resource, const char *class_);
-
-    SurfaceInterface *m_surface;
-    ShellInterface *m_shell;
-    wl_resource *m_shellSurface;
-    wl_client *m_client;
-    pid_t m_clientPid;
-    uid_t m_clientUser;
-    gid_t m_clientGroup;
-    QString m_title;
-    QByteArray m_windowClass;
-    QTimer *m_pingTimer;
-    quint32 m_pingSerial;
-    bool m_fullscreen;
-    bool m_toplevel;
-
-    static const struct wl_shell_surface_interface s_interface;
+    class Private;
+    QScopedPointer<Private> d;
 };
 
 }
