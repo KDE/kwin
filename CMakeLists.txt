@@ -4,6 +4,7 @@ set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.0")
+set(KF5_MIN_VERSION "5.3.0")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH} )
 
@@ -63,7 +64,7 @@ set_package_properties(Qt5Multimedia PROPERTIES
 
 
 # required frameworks by Core
-find_package(KF5 REQUIRED COMPONENTS
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Config
     ConfigWidgets
     CoreAddons
@@ -78,7 +79,7 @@ find_package(KF5 REQUIRED COMPONENTS
     WindowSystem
 )
 # required frameworks by config modules
-find_package(KF5 REQUIRED COMPONENTS
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Completion
     Declarative
     KCMUtils
@@ -88,14 +89,14 @@ find_package(KF5 REQUIRED COMPONENTS
 )
 
 # optional frameworks
-find_package(KF5Activities CONFIG)
+find_package(KF5Activities ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Activities PROPERTIES
          PURPOSE "Enable building of KWin with kactivities support"
          TYPE OPTIONAL
          )
 add_feature_info("KF5Activities" KF5Activities_FOUND "Enable building of KWin with kactivities support")
 
-find_package(KF5DocTools CONFIG)
+find_package(KF5DocTools ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5DocTools PROPERTIES
          PURPOSE "Enable building documentation"
          TYPE OPTIONAL
