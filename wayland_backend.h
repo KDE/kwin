@@ -35,14 +35,11 @@ struct wl_display;
 struct wl_event_queue;
 struct wl_seat;
 
-namespace KWin
+namespace KWayland
 {
-
-namespace Wayland
+namespace Client
 {
 class ShmPool;
-class WaylandBackend;
-class WaylandSeat;
 class Compositor;
 class ConnectionThread;
 class FullscreenShell;
@@ -54,6 +51,17 @@ class Seat;
 class Shell;
 class ShellSurface;
 class Surface;
+}
+}
+
+namespace KWin
+{
+
+namespace Wayland
+{
+
+class WaylandBackend;
+class WaylandSeat;
 
 class CursorData
 {
@@ -104,10 +112,10 @@ private:
     void destroyPointer();
     void destroyKeyboard();
     void destroyTheme();
-    Seat *m_seat;
-    Pointer *m_pointer;
-    Keyboard *m_keyboard;
-    Surface *m_cursor;
+    KWayland::Client::Seat *m_seat;
+    KWayland::Client::Pointer *m_pointer;
+    KWayland::Client::Keyboard *m_keyboard;
+    KWayland::Client::Surface *m_cursor;
     wl_cursor_theme *m_theme;
     uint32_t m_enteredSerial;
     QScopedPointer<X11CursorTracker> m_cursorTracker;
@@ -126,11 +134,11 @@ class KWIN_EXPORT WaylandBackend : public QObject
 public:
     virtual ~WaylandBackend();
     wl_display *display();
-    Compositor *compositor();
-    const QList<Output*> &outputs() const;
-    ShmPool *shmPool();
+    KWayland::Client::Compositor *compositor();
+    const QList<KWayland::Client::Output*> &outputs() const;
+    KWayland::Client::ShmPool *shmPool();
 
-    Surface *surface() const;
+    KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
 Q_SIGNALS:
@@ -146,17 +154,17 @@ private:
     void checkBackendReady();
     wl_display *m_display;
     wl_event_queue *m_eventQueue;
-    Registry *m_registry;
-    Compositor *m_compositor;
-    Shell *m_shell;
-    Surface *m_surface;
-    ShellSurface *m_shellSurface;
+    KWayland::Client::Registry *m_registry;
+    KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::Shell *m_shell;
+    KWayland::Client::Surface *m_surface;
+    KWayland::Client::ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
-    ShmPool *m_shm;
-    QList<Output*> m_outputs;
-    ConnectionThread *m_connectionThreadObject;
+    KWayland::Client::ShmPool *m_shm;
+    QList<KWayland::Client::Output*> m_outputs;
+    KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
-    FullscreenShell *m_fullscreenShell;
+    KWayland::Client::FullscreenShell *m_fullscreenShell;
 
     KWIN_SINGLETON(WaylandBackend)
 };
@@ -186,25 +194,25 @@ wl_display *WaylandBackend::display()
 }
 
 inline
-Compositor *WaylandBackend::compositor()
+KWayland::Client::Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
 }
 
 inline
-ShmPool* WaylandBackend::shmPool()
+KWayland::Client::ShmPool* WaylandBackend::shmPool()
 {
     return m_shm;
 }
 
 inline
-Surface *WaylandBackend::surface() const
+KWayland::Client::Surface *WaylandBackend::surface() const
 {
     return m_surface;
 }
 
 inline
-const QList< Output* >& WaylandBackend::outputs() const
+const QList< KWayland::Client::Output* >& WaylandBackend::outputs() const
 {
     return m_outputs;
 }

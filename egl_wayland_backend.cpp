@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "options.h"
 #include "wayland_backend.h"
-#include "wayland_client/surface.h"
+#include <KWayland/Client/surface.h>
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
@@ -193,8 +193,8 @@ bool EglWaylandBackend::initRenderingContext()
     }
 
     const QSize &size = m_wayland->shellSurfaceSize();
-    Wayland::Surface *s = m_wayland->surface();
-    connect(s, &Wayland::Surface::framePresented, Compositor::self(), &Compositor::bufferSwapComplete);
+    auto s = m_wayland->surface();
+    connect(s, &KWayland::Client::Surface::frameRendered, Compositor::self(), &Compositor::bufferSwapComplete);
     m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
         qCritical() << "Creating Wayland Egl window failed";

@@ -28,9 +28,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
-#include "wayland_client/buffer.h"
-#include "wayland_client/shm_pool.h"
-#include "wayland_client/surface.h"
+#include <KWayland/Client/buffer.h>
+#include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/surface.h>
 #endif
 #include "workspace.h"
 #include "xcbutils.h"
@@ -87,7 +87,7 @@ WaylandQPainterBackend::WaylandQPainterBackend()
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandQPainterBackend::screenGeometryChanged);
-    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::framePresented,
+    connect(Wayland::WaylandBackend::self()->surface(), &KWayland::Client::Surface::frameRendered,
             Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
@@ -111,7 +111,7 @@ void WaylandQPainterBackend::present(int mask, const QRegion &damage)
     }
     Compositor::self()->aboutToSwapBuffers();
     m_needsFullRepaint = false;
-    Wayland::Surface *s = Wayland::WaylandBackend::self()->surface();
+    auto s = Wayland::WaylandBackend::self()->surface();
     s->attachBuffer(m_buffer->buffer());
     s->damage(damage);
     s->commit();

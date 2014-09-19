@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
-#include "wayland_client/shm_pool.h"
-#include "wayland_client/surface.h"
+#include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/surface.h>
 #endif
 
 #include <xcb/xfixes.h>
@@ -233,7 +233,7 @@ WaylandXRenderBackend::WaylandXRenderBackend()
     init();
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandXRenderBackend::createBuffer);
-    connect(Wayland::WaylandBackend::self()->surface(), &Wayland::Surface::framePresented,
+    connect(Wayland::WaylandBackend::self()->surface(), &KWayland::Client::Surface::frameRendered,
             Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
@@ -292,7 +292,7 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
 
     Compositor::self()->aboutToSwapBuffers();
 
-    Wayland::Surface *s = wl->surface();
+    auto s = wl->surface();
     s->attachBuffer(buffer);
     s->damage(damage);
     s->commit();

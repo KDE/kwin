@@ -22,18 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "cursor.h"
 #include "input.h"
-#include "wayland_client/buffer.h"
-#include "wayland_client/compositor.h"
-#include "wayland_client/connection_thread.h"
-#include "wayland_client/fullscreen_shell.h"
-#include "wayland_client/keyboard.h"
-#include "wayland_client/output.h"
-#include "wayland_client/pointer.h"
-#include "wayland_client/registry.h"
-#include "wayland_client/seat.h"
-#include "wayland_client/shell.h"
-#include "wayland_client/shm_pool.h"
-#include "wayland_client/surface.h"
+#include <KWayland/Client/buffer.h>
+#include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/fullscreen_shell.h>
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/output.h>
+#include <KWayland/Client/pointer.h>
+#include <KWayland/Client/registry.h>
+#include <KWayland/Client/seat.h>
+#include <KWayland/Client/shell.h>
+#include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/surface.h>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -50,6 +50,8 @@ namespace KWin
 {
 namespace Wayland
 {
+
+using namespace KWayland::Client;
 
 CursorData::CursorData()
     : m_valid(init())
@@ -346,15 +348,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
 {
-    QAbstractEventDispatcher *dispatcher = QCoreApplication::instance()->eventDispatcher();
-    connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this,
-        [this]() {
-            if (!m_display) {
-                return;
-            }
-            wl_display_flush(m_display);
-        }
-    );
     connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
         [this](quint32 name) {

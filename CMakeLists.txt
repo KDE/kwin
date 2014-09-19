@@ -53,9 +53,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     endif()
 endif()
 
-# adjusting CMAKE_C_FLAGS to get wayland protocols to compile
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu90")
-
 find_package(Qt5Multimedia QUIET)
 set_package_properties(Qt5Multimedia PROPERTIES
          PURPOSE "Runtime-only dependency for effect video playback"
@@ -103,6 +100,12 @@ set_package_properties(KF5DocTools PROPERTIES
          )
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
+find_package(KF5Wayland CONFIG)
+set_package_properties(KF5Wayland PROPERTIES
+                       TYPE OPTIONAL
+                      )
+add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for Wayland Compositor Information Module")
+
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     find_package(OpenGL)
     set_package_properties(OpenGL PROPERTIES DESCRIPTION "The OpenGL libraries"
@@ -137,37 +140,6 @@ set_package_properties(Wayland PROPERTIES
                       )
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
-add_feature_info("Wayland-Server" Wayland_Server_FOUND "Required for building Wayland server backend in KWin")
-
-find_program(WAYLAND_SCANNER_EXECUTABLE NAMES wayland-scanner)
-add_feature_info("wayland-scanner" WAYLAND_SCANNER_EXECUTABLE "Required for generating Wayland protocols")
-
-if(WAYLAND_SCANNER_EXECUTABLE)
-    file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/wayland_protocols/)
-    add_custom_command(
-        OUTPUT
-            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
-        COMMAND
-            ${WAYLAND_SCANNER_EXECUTABLE} client-header <${KWIN_SOURCE_DIR}/wayland_client/protocols/fullscreen-shell.xml >${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/wayland_protocols/
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}/wayland_protocols
-    )
-    add_custom_command(
-        OUTPUT
-            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        COMMAND
-            ${WAYLAND_SCANNER_EXECUTABLE} code <${KWIN_SOURCE_DIR}/wayland_client/protocols/fullscreen-shell.xml >${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
-        DEPENDS ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.h
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}/wayland_protocols
-    )
-    add_custom_target(wayland-client-fullscreen-shell DEPENDS ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c)
-    include_directories(${CMAKE_BINARY_DIR}/wayland_protocols/)
-    set_source_files_properties(${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c GENERATED)
-else()
-    set(Wayland_Client_FOUND FALSE)
-endif()
 
 find_package(XKB 0.4.1)
 set_package_properties(XKB PROPERTIES
@@ -275,7 +247,7 @@ endif()
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(Wayland_Client_FOUND AND XKB_FOUND AND KF5Wayland_FOUND)
     set(HAVE_WAYLAND ${Wayland_Client_FOUND})
     set(HAVE_XKB ${XKB_FOUND})
     set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
@@ -427,24 +399,11 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
             screens_wayland.cpp
             wayland_backend.cpp
-            wayland_client/buffer.cpp
-            wayland_client/compositor.cpp
-            wayland_client/connection_thread.cpp
-            wayland_client/registry.cpp
-            wayland_client/fullscreen_shell.cpp
-            wayland_client/keyboard.cpp
-            wayland_client/output.cpp
-            wayland_client/pointer.cpp
-            wayland_client/seat.cpp
-            wayland_client/shell.cpp
-            wayland_client/shm_pool.cpp
-            wayland_client/surface.cpp
-            ${CMAKE_BINARY_DIR}/wayland_protocols/wayland-client-fullscreen-shell.c
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
@@ -523,6 +482,7 @@ set(kwin_WAYLAND_LIBS
     Wayland::Cursor
     XCB::XTEST
     XKB::XKB
+    KF5::WaylandClient
 )
 
 set(kwin_WAYLAND_EGL_LIBS
@@ -548,7 +508,7 @@ set(kwinLibs
     ${kwin_XCB_LIBS}
 )
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(HAVE_WAYLAND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
@@ -584,10 +544,9 @@ install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELIN
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(HAVE_WAYLAND)
     kf5_add_kdeinit_executable(kwin_wayland main_wayland.cpp)
     target_link_libraries(kdeinit_kwin_wayland kwin)
-    add_dependencies(kdeinit_kwin_wayland wayland-client-fullscreen-shell)
 
     install(TARGETS kdeinit_kwin_wayland ${INSTALL_TARGETS_DEFAULT_ARGS} )
     install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )

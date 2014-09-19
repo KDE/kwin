@@ -23,6 +23,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene.h"
 #include "shadow.h"
 
+#if HAVE_WAYLAND
+namespace KWayland
+{
+namespace Client
+{
+class Buffer;
+}
+}
+#endif
+
 namespace KWin {
 
 namespace Xcb {
@@ -93,9 +103,6 @@ private:
 };
 
 #if HAVE_WAYLAND
-namespace Wayland {
-class Buffer;
-}
 class WaylandQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT
@@ -114,7 +121,7 @@ private Q_SLOTS:
 private:
     bool m_needsFullRepaint;
     QImage m_backBuffer;
-    Wayland::Buffer *m_buffer;
+    KWayland::Client::Buffer *m_buffer;
 };
 #endif
 

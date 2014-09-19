@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_wayland.h"
 
 #include "wayland_backend.h"
-#include "wayland_client/output.h"
+#include <KWayland/Client/output.h>
 #include "xcbutils.h"
 
 #include <QDebug>
@@ -85,7 +85,7 @@ void WaylandScreens::updateCount()
 {
     m_geometries.clear();
     int count = 0;
-    const QList<Wayland::Output*> &outputs = Wayland::WaylandBackend::self()->outputs();
+    const QList<KWayland::Client::Output*> &outputs = Wayland::WaylandBackend::self()->outputs();
     for (auto it = outputs.begin(); it != outputs.end(); ++it) {
         if ((*it)->pixelSize().isEmpty()) {
             continue;

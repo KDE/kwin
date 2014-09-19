@@ -19,17 +19,17 @@
 */
 #include "waylandclienttest.h"
 // KWin::Wayland
-#include "../wayland_client/buffer.h"
-#include "../wayland_client/compositor.h"
-#include "../wayland_client/connection_thread.h"
-#include "../wayland_client/keyboard.h"
-#include "../wayland_client/output.h"
-#include "../wayland_client/pointer.h"
-#include "../wayland_client/registry.h"
-#include "../wayland_client/seat.h"
-#include "../wayland_client/shell.h"
-#include "../wayland_client/shm_pool.h"
-#include "../wayland_client/surface.h"
+#include <KWayland/Client/buffer.h>
+#include <KWayland/Client/compositor.h>
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/output.h>
+#include <KWayland/Client/pointer.h>
+#include <KWayland/Client/registry.h>
+#include <KWayland/Client/seat.h>
+#include <KWayland/Client/shell.h>
+#include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/surface.h>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -42,7 +42,7 @@
 
 #include <linux/input.h>
 
-using namespace KWin::Wayland;
+using namespace KWayland::Client;
 
 static Qt::GlobalColor s_colors[] = {
     Qt::white,
