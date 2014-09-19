@@ -81,7 +81,7 @@ void QPainterBackend::setFailed(const QString &reason)
 WaylandQPainterBackend::WaylandQPainterBackend()
     : QPainterBackend()
     , m_needsFullRepaint(true)
-    , m_backBuffer(QImage(QSize(), QImage::Format_ARGB32_Premultiplied))
+    , m_backBuffer(QImage(QSize(), QImage::Format_RGB32))
     , m_buffer(NULL)
 {
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
@@ -153,7 +153,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
         return;
     }
     m_buffer->setUsed(true);
-    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
     m_needsFullRepaint = true;
     qDebug() << "Created a new back buffer";
@@ -165,7 +165,7 @@ void WaylandQPainterBackend::remapBuffer()
         return;
     }
     const QSize size = m_backBuffer.size();
-    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_ARGB32_Premultiplied);
+    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_RGB32);
     qDebug() << "Remapped our back buffer";
 }
 
