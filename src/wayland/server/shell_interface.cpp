@@ -166,8 +166,7 @@ void ShellInterface::Private::bind(wl_client *client, uint32_t version, uint32_t
 void ShellInterface::Private::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
 {
     auto s = reinterpret_cast<ShellInterface::Private*>(wl_resource_get_user_data(resource));
-    s->createSurface(client, wl_resource_get_version(resource), id,
-                     reinterpret_cast<SurfaceInterface*>(wl_resource_get_user_data(surface)));
+    s->createSurface(client, wl_resource_get_version(resource), id, SurfaceInterface::get(surface));
 }
 
 void ShellInterface::Private::createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface)

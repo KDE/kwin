@@ -20,187 +20,274 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 #include "buffer_interface.h"
 #include "compositor_interface.h"
+// Wayland
+#include <wayland-server.h>
 
 namespace KWayland
 {
 namespace Server
 {
 
-const struct wl_surface_interface SurfaceInterface::s_interface = {
-    SurfaceInterface::destroyCallback,
-    SurfaceInterface::attachCallback,
-    SurfaceInterface::damageCallback,
-    SurfaceInterface::frameCallaback,
-    SurfaceInterface::opaqueRegionCallback,
-    SurfaceInterface::inputRegionCallback,
-    SurfaceInterface::commitCallback,
-    SurfaceInterface::bufferTransformCallback,
-    SurfaceInterface::bufferScaleCallback
+class SurfaceInterface::Private
+{
+public:
+    struct State {
+        QRegion damage = QRegion();
+        QRegion opaque = QRegion();
+        QRegion input = QRegion();
+        qint32 scale = 1;
+        OutputInterface::Transform transform = OutputInterface::Transform::Normal;
+        QList<wl_resource*> callbacks = QList<wl_resource*>();
+        QPoint offset = QPoint();
+        BufferInterface *buffer = nullptr;
+    };
+    Private(SurfaceInterface *q, CompositorInterface *c);
+    ~Private();
+
+    void create(wl_client *client, quint32 version, quint32 id);
+    void destroy();
+
+    static SurfaceInterface *get(wl_resource *native);
+
+    CompositorInterface *compositor;
+    wl_resource *surface = nullptr;
+    wl_client *client = nullptr;
+    State current;
+    State pending;
+
+private:
+    void commit();
+    void damage(const QRect &rect);
+    void setScale(qint32 scale);
+    void setTransform(OutputInterface::Transform transform);
+    void addFrameCallback(uint32_t callback);
+    void attachBuffer(wl_resource *buffer, const QPoint &offset);
+
+    static Private *cast(wl_resource *r) {
+        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+    }
+
+    static void unbind(wl_resource *r);
+    static void destroyFrameCallback(wl_resource *r);
+
+    static void destroyCallback(wl_client *client, wl_resource *resource);
+    static void attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy);
+    static void damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
+    static void frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback);
+    static void opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
+    static void inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
+    static void commitCallback(wl_client *client, wl_resource *resource);
+    // since version 2
+    static void bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform);
+    // since version 3
+    static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
+
+    SurfaceInterface *q;
+    static const struct wl_surface_interface s_interface;
+    static QList<SurfaceInterface::Private*> s_allSurfaces;
+};
+
+QList<SurfaceInterface::Private*> SurfaceInterface::Private::s_allSurfaces;
+
+SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
+    : compositor(c)
+    , q(q)
+{
+    s_allSurfaces << this;
+}
+
+SurfaceInterface::Private::~Private()
+{
+    destroy();
+    s_allSurfaces.removeAll(this);
+}
+
+SurfaceInterface *SurfaceInterface::Private::get(wl_resource *native)
+{
+    auto it = std::find_if(s_allSurfaces.constBegin(), s_allSurfaces.constEnd(), [native](Private *s) {
+        return s->surface == native;
+    });
+    if (it == s_allSurfaces.constEnd()) {
+        return nullptr;
+    }
+    return (*it)->q;
+}
+
+const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
+    destroyCallback,
+    attachCallback,
+    damageCallback,
+    frameCallaback,
+    opaqueRegionCallback,
+    inputRegionCallback,
+    commitCallback,
+    bufferTransformCallback,
+    bufferScaleCallback
 };
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *parent)
-    : QObject(parent)
-    , m_compositor(parent)
-    , m_surface(nullptr)
-    , m_client(nullptr)
+    : QObject(/*parent*/)
+    , d(new Private(this, parent))
 {
 }
 
-SurfaceInterface::~SurfaceInterface()
-{
-    destroy();
-}
+SurfaceInterface::~SurfaceInterface() = default;
 
 void SurfaceInterface::create(wl_client *client, quint32 version, quint32 id)
 {
-    Q_ASSERT(!m_surface);
-    Q_ASSERT(!m_client);
-    m_client = client;
-    m_surface = wl_resource_create(client, &wl_surface_interface, version, id);
-    if (!m_surface) {
+    d->create(client, version, id);
+}
+
+void SurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
+{
+    Q_ASSERT(!surface);
+    Q_ASSERT(!client);
+    client = c;
+    surface = wl_resource_create(client, &wl_surface_interface, version, id);
+    if (!surface) {
         return;
     }
-    wl_resource_set_implementation(m_surface, &SurfaceInterface::s_interface, this, SurfaceInterface::unbind);
+    wl_resource_set_implementation(surface, &s_interface, this, unbind);
 }
 
 void SurfaceInterface::frameRendered(quint32 msec)
 {
     // notify all callbacks
-    while (!m_current.callbacks.isEmpty()) {
-        wl_resource *r = m_current.callbacks.takeFirst();
+    while (!d->current.callbacks.isEmpty()) {
+        wl_resource *r = d->current.callbacks.takeFirst();
         wl_callback_send_done(r, msec);
         wl_resource_destroy(r);
     }
 }
 
-void SurfaceInterface::unbind(wl_resource *r)
+void SurfaceInterface::Private::unbind(wl_resource *r)
 {
-    SurfaceInterface *s = SurfaceInterface::cast(r);
-    s->m_surface = nullptr;
-    s->deleteLater();
+    auto s = cast(r);
+    s->surface = nullptr;
+    s->q->deleteLater();
 }
 
-void SurfaceInterface::destroy()
+void SurfaceInterface::Private::destroy()
 {
-    for (wl_resource *c : m_current.callbacks) {
+    for (wl_resource *c : current.callbacks) {
         wl_resource_destroy(c);
     }
-    for (wl_resource *c : m_pending.callbacks) {
+    for (wl_resource *c : pending.callbacks) {
         wl_resource_destroy(c);
     }
-    if (m_current.buffer) {
-        m_current.buffer->unref();
+    if (current.buffer) {
+        current.buffer->unref();
     }
-    if (m_surface) {
-        wl_resource_destroy(m_surface);
-        m_surface = nullptr;
+    if (surface) {
+        wl_resource_destroy(surface);
+        surface = nullptr;
     }
 }
 
-void SurfaceInterface::commit()
+void SurfaceInterface::Private::commit()
 {
-    for (wl_resource *c : m_current.callbacks) {
+    for (wl_resource *c : current.callbacks) {
         wl_resource_destroy(c);
     }
-    const bool opaqueRegionChanged = m_current.opaque != m_pending.opaque;
-    const bool inputRegionChanged = m_current.input != m_pending.input;
-    const bool scaleFactorChanged = m_current.scale != m_pending.scale;
-    const bool transformFactorChanged = m_current.transform != m_pending.transform;
-    if (m_current.buffer) {
-        m_current.buffer->unref();
+    const bool opaqueRegionChanged = current.opaque != pending.opaque;
+    const bool inputRegionChanged = current.input != pending.input;
+    const bool scaleFactorChanged = current.scale != pending.scale;
+    const bool transformFactorChanged = current.transform != pending.transform;
+    if (current.buffer) {
+        current.buffer->unref();
     }
-    if (m_pending.buffer) {
-        m_pending.buffer->ref();
+    if (pending.buffer) {
+        pending.buffer->ref();
     }
     // copy values
-    m_current = m_pending;
-    m_pending = State{};
+    current = pending;
+    pending = State{};
     if (opaqueRegionChanged) {
-        emit opaqueChanged(m_current.opaque);
+        emit q->opaqueChanged(current.opaque);
     }
     if (inputRegionChanged) {
-        emit inputChanged(m_current.input);
+        emit q->inputChanged(current.input);
     }
     if (scaleFactorChanged) {
-        emit scaleChanged(m_current.scale);
+        emit q->scaleChanged(current.scale);
     }
     if (transformFactorChanged) {
-        emit transformChanged(m_current.transform);
+        emit q->transformChanged(current.transform);
     }
-    if (!m_current.damage.isEmpty()) {
-        emit damaged(m_current.damage);
+    if (!current.damage.isEmpty()) {
+        emit q->damaged(current.damage);
     }
 }
 
-void SurfaceInterface::damage(const QRect &rect)
+void SurfaceInterface::Private::damage(const QRect &rect)
 {
     // TODO: documentation says we need to remove the parts outside of the surface
-    m_pending.damage = m_pending.damage.united(rect);
+    pending.damage = pending.damage.united(rect);
 }
 
-void SurfaceInterface::setScale(qint32 scale)
+void SurfaceInterface::Private::setScale(qint32 scale)
 {
-    m_pending.scale = scale;
+    pending.scale = scale;
 }
 
-void SurfaceInterface::setTransform(OutputInterface::Transform transform)
+void SurfaceInterface::Private::setTransform(OutputInterface::Transform transform)
 {
-    m_pending.transform = transform;
+    pending.transform = transform;
 }
 
-void SurfaceInterface::addFrameCallback(uint32_t callback)
+void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
 {
-    wl_resource *r = wl_resource_create(m_client, &wl_callback_interface, 1, callback);
+    wl_resource *r = wl_resource_create(client, &wl_callback_interface, 1, callback);
     if (!r) {
-        wl_resource_post_no_memory(m_surface);
+        wl_resource_post_no_memory(surface);
         return;
     }
     wl_resource_set_implementation(r, nullptr, this, destroyFrameCallback);
-    m_pending.callbacks << r;
+    pending.callbacks << r;
 }
 
-void SurfaceInterface::attachBuffer(wl_resource *buffer, const QPoint &offset)
+void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &offset)
 {
-    m_pending.offset = offset;
-    if (m_pending.buffer) {
-        delete m_pending.buffer;
+    pending.offset = offset;
+    if (pending.buffer) {
+        delete pending.buffer;
     }
-    m_pending.buffer = new BufferInterface(buffer, this);
+    pending.buffer = new BufferInterface(buffer, q);
 }
 
-void SurfaceInterface::destroyFrameCallback(wl_resource *r)
+void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)
 {
-    SurfaceInterface *s = SurfaceInterface::cast(r);
-    s->m_current.callbacks.removeAll(r);
-    s->m_pending.callbacks.removeAll(r);
+    auto s = cast(r);
+    s->current.callbacks.removeAll(r);
+    s->pending.callbacks.removeAll(r);
 }
 
-void SurfaceInterface::destroyCallback(wl_client *client, wl_resource *resource)
-{
-    Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->deleteLater();
-}
-
-void SurfaceInterface::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)
+void SurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->attachBuffer(buffer, QPoint(sx, sy));
+    cast(resource)->q->deleteLater();
 }
 
-void SurfaceInterface::damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
+void SurfaceInterface::Private::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)
 {
     Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->damage(QRect(x, y, width, height));
+    cast(resource)->attachBuffer(buffer, QPoint(sx, sy));
 }
 
-void SurfaceInterface::frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback)
+void SurfaceInterface::Private::damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    SurfaceInterface *s = SurfaceInterface::cast(resource);
-    Q_ASSERT(client == s->m_client);
+    Q_UNUSED(client)
+    cast(resource)->damage(QRect(x, y, width, height));
+}
+
+void SurfaceInterface::Private::frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback)
+{
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
     s->addFrameCallback(callback);
 }
 
-void SurfaceInterface::opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
+void SurfaceInterface::Private::opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
     Q_UNUSED(client)
     Q_UNUSED(resource)
@@ -208,7 +295,7 @@ void SurfaceInterface::opaqueRegionCallback(wl_client *client, wl_resource *reso
     // TODO: implement me
 }
 
-void SurfaceInterface::inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
+void SurfaceInterface::Private::inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
     Q_UNUSED(client)
     Q_UNUSED(resource)
@@ -216,22 +303,72 @@ void SurfaceInterface::inputRegionCallback(wl_client *client, wl_resource *resou
     // TODO: implement me
 }
 
-void SurfaceInterface::commitCallback(wl_client *client, wl_resource *resource)
+void SurfaceInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->commit();
+    cast(resource)->commit();
 }
 
-void SurfaceInterface::bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform)
+void SurfaceInterface::Private::bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform)
 {
     Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->setTransform(OutputInterface::Transform(transform));
+    cast(resource)->setTransform(OutputInterface::Transform(transform));
 }
 
-void SurfaceInterface::bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale)
+void SurfaceInterface::Private::bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale)
 {
     Q_UNUSED(client)
-    SurfaceInterface::cast(resource)->setScale(scale);
+    cast(resource)->setScale(scale);
+}
+
+wl_resource *SurfaceInterface::surface() const
+{
+    return d->surface;
+}
+
+wl_client *SurfaceInterface::client() const
+{
+    return d->client;
+}
+
+QRegion SurfaceInterface::damage() const
+{
+    return d->current.damage;
+}
+
+QRegion SurfaceInterface::opaque() const
+{
+    return d->current.opaque;
+}
+
+QRegion SurfaceInterface::input() const
+{
+    return d->current.input;
+}
+
+qint32 SurfaceInterface::scale() const
+{
+    return d->current.scale;
+}
+
+OutputInterface::Transform SurfaceInterface::transform() const
+{
+    return d->current.transform;
+}
+
+BufferInterface *SurfaceInterface::buffer()
+{
+    return d->current.buffer;
+}
+
+QPoint SurfaceInterface::offset() const
+{
+    return d->current.offset;
+}
+
+SurfaceInterface *SurfaceInterface::get(wl_resource *native)
+{
+    return Private::get(native);
 }
 
 }
