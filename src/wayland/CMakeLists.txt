@@ -30,16 +30,16 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
                                                  EXPORT_NAME WaylandServer
 )
 
-install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/kwaylandserver_export.h
-  buffer_interface.h
-  compositor_interface.h
-  display.h
-  output_interface.h
-  seat_interface.h
-  shell_interface.h
-  surface_interface.h
-  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
-)
+# install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+#
+# install(FILES
+#   ${CMAKE_CURRENT_BINARY_DIR}/kwaylandserver_export.h
+#   buffer_interface.h
+#   compositor_interface.h
+#   display.h
+#   output_interface.h
+#   seat_interface.h
+#   shell_interface.h
+#   surface_interface.h
+#   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
+# )
