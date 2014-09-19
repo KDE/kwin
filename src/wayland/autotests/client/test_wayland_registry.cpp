@@ -134,7 +134,7 @@ void TestWaylandRegistry::testCreate()
     /* registry should now about the interface now */ \
     QVERIFY(registry.hasInterface(interface)); \
     QVERIFY(!registry.bindMethod(name+1, version)); \
-    QVERIFY(!registry.bindMethod(name, version+1)); \
+    QVERIFY(registry.bindMethod(name, version+1)); \
     auto *c = registry.bindMethod(name, version); \
     QVERIFY(c); \
     destroyFunction(c); \
