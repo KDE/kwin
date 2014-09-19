@@ -140,9 +140,8 @@ void TestWaylandSeat::init()
     m_compositor->setup(registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
     QVERIFY(m_compositor->isValid());
 
-    m_seat = new KWayland::Client::Seat(this);
+    m_seat = registry.createSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>(), this);
     QSignalSpy nameSpy(m_seat, SIGNAL(nameChanged(QString)));
-    m_seat->setup(registry.bindSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>()));
     QVERIFY(nameSpy.wait());
 }
 

@@ -134,8 +134,7 @@ void TestWaylandShell::init()
     if (shellSpy.isEmpty()) {
         QVERIFY(shellSpy.wait());
     }
-    m_shell = new KWayland::Client::Shell(this);
-    m_shell->setup(registry.bindShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>()));
+    m_shell = registry.createShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>(), this);
     QVERIFY(m_shell->isValid());
 }
 

@@ -36,6 +36,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testRegistry();
+    void testRegistryCreate();
 
     // TODO: add tests for removal - requires more control over the compositor
 
@@ -117,6 +118,28 @@ void TestWaylandFullscreenShell::testRegistry()
 
     fullscreenShell.setup(registry.bindFullscreenShell(announced.first().first().value<quint32>(), 1));
     QVERIFY(fullscreenShell.isValid());
+}
+
+void TestWaylandFullscreenShell::testRegistryCreate()
+{    if (m_westonProcess->state() != QProcess::Running) {
+        QSKIP("This test requires a running wayland server");
+    }
+    KWayland::Client::ConnectionThread connection;
+    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
+    connection.setSocketName(s_socketName);
+    connection.initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    KWayland::Client::Registry registry;
+    QSignalSpy announced(&registry, SIGNAL(fullscreenShellAnnounced(quint32,quint32)));
+    registry.create(connection.display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    wl_display_flush(connection.display());
+    QVERIFY(announced.wait());
+
+    KWayland::Client::FullscreenShell *fullscreenShell = registry.createFullscreenShell(announced.first().first().value<quint32>(), 1, &registry);
+    QVERIFY(fullscreenShell->isValid());
 }
 
 QTEST_MAIN(TestWaylandFullscreenShell)

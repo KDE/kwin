@@ -108,8 +108,7 @@ void TestWaylandSurface::init()
     registry.setup();
     QVERIFY(compositorSpy.wait());
 
-    m_compositor = new KWayland::Client::Compositor(this);
-    m_compositor->setup(registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>()));
+    m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_compositor->isValid());
 }
 

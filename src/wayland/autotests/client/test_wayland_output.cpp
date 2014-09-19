@@ -302,16 +302,15 @@ void TestWaylandOutput::testTransform()
     wl_display_flush(m_connection->display());
     QVERIFY(announced.wait());
 
-    KWayland::Client::Output output;
-    QSignalSpy outputChanged(&output, SIGNAL(changed()));
+    KWayland::Client::Output *output = registry.createOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>(), &registry);
+    QSignalSpy outputChanged(output, SIGNAL(changed()));
     QVERIFY(outputChanged.isValid());
-    output.setup(registry.bindOutput(announced.first().first().value<quint32>(), announced.first().last().value<quint32>()));
     wl_display_flush(m_connection->display());
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
 
-    QTEST(output.transform(), "expected");
+    QTEST(output->transform(), "expected");
 
     // change back to normal
     outputChanged.clear();
@@ -319,7 +318,7 @@ void TestWaylandOutput::testTransform()
     if (outputChanged.isEmpty()) {
         QVERIFY(outputChanged.wait());
     }
-    QCOMPARE(output.transform(), Output::Transform::Normal);
+    QCOMPARE(output->transform(), Output::Transform::Normal);
 }
 
 QTEST_MAIN(TestWaylandOutput)
