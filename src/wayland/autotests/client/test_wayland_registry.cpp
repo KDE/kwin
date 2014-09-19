@@ -117,7 +117,7 @@ void TestWaylandRegistry::testCreate()
     QVERIFY(!registry.bindMethod(0, 0)); \
     \
     QVERIFY(!registry.isValid()); \
-    registry.create(connection.display()); \
+    registry.create(&connection); \
     QVERIFY(registry.isValid()); \
     /* created but not yet connected still results in no bind */ \
     QVERIFY(!registry.bindMethod(0, 0)); \
