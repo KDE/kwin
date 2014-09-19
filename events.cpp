@@ -62,6 +62,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "killwindow.h"
 #include "x11eventfilter.h"
 
+#ifndef XCB_GE_GENERIC
+#define XCB_GE_GENERIC 35
+typedef struct xcb_ge_generic_event_t {
+    uint8_t  response_type; /**<  */
+    uint8_t  extension; /**<  */
+    uint16_t sequence; /**<  */
+    uint32_t length; /**<  */
+    uint16_t event_type; /**<  */
+    uint8_t  pad0[22]; /**<  */
+    uint32_t full_sequence; /**<  */
+} xcb_ge_generic_event_t;
+#endif
+
 namespace KWin
 {
 

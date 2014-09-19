@@ -42,6 +42,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <xcb/glx.h>
 
+#ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
+#define XCB_GLX_BUFFER_SWAP_COMPLETE 1
+typedef struct xcb_glx_buffer_swap_complete_event_t {
+    uint8_t            response_type; /**<  */
+    uint8_t            pad0; /**<  */
+    uint16_t           sequence; /**<  */
+    uint16_t           event_type; /**<  */
+    uint8_t            pad1[2]; /**<  */
+    xcb_glx_drawable_t drawable; /**<  */
+    uint32_t           ust_hi; /**<  */
+    uint32_t           ust_lo; /**<  */
+    uint32_t           msc_hi; /**<  */
+    uint32_t           msc_lo; /**<  */
+    uint32_t           sbc; /**<  */
+} xcb_glx_buffer_swap_complete_event_t;
+#endif
+
 #include <tuple>
 
 #if __cplusplus <= 201103L
