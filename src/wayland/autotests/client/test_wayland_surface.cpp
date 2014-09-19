@@ -258,14 +258,16 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(serverSurface);
 
     // create two images
-    // TODO: test RGB32
-    QImage black(24, 24, QImage::Format_ARGB32);
+    QImage black(24, 24, QImage::Format_RGB32);
     black.fill(Qt::black);
     QImage red(24, 24, QImage::Format_ARGB32);
     red.fill(QColor(255, 0, 0, 128));
+    QImage blue(24, 24, QImage::Format_ARGB32_Premultiplied);
+    blue.fill(QColor(0, 0, 255, 128));
 
     wl_buffer *blackBuffer = pool.createBuffer(black);
     wl_buffer *redBuffer = pool.createBuffer(red);
+    wl_buffer *blueBuffer = pool.createBuffer(blue);
 
     s->attachBuffer(redBuffer);
     s->attachBuffer(blackBuffer);
@@ -280,6 +282,7 @@ void TestWaylandSurface::testAttachBuffer()
     buffer->ref();
     QVERIFY(buffer->shmBuffer());
     QCOMPARE(buffer->data(), black);
+    QCOMPARE(buffer->data().format(), QImage::Format_RGB32);
 
     // render another frame
     s->attachBuffer(redBuffer);
@@ -291,7 +294,28 @@ void TestWaylandSurface::testAttachBuffer()
     buffer2->ref();
     QVERIFY(buffer2->shmBuffer());
     QCOMPARE(buffer2->data(), red);
+    QCOMPARE(buffer2->data().format(), QImage::Format_ARGB32);
     buffer2->unref();
+
+    // render another frame
+    s->attachBuffer(blueBuffer);
+    s->damage(QRect(0, 0, 24, 24));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    damageSpy.clear();
+    QVERIFY(damageSpy.wait());
+    KWayland::Server::BufferInterface *buffer3 = serverSurface->buffer();
+    buffer3->ref();
+    QVERIFY(buffer3->shmBuffer());
+    QCOMPARE(buffer3->data().format(), QImage::Format_ARGB32);
+    QCOMPARE(buffer3->data().width(), 24);
+    QCOMPARE(buffer3->data().height(), 24);
+    for (int i = 0; i < 24; ++i) {
+        for (int j = 0; j < 24; ++j) {
+            // it's premultiplied in the format
+            QCOMPARE(buffer3->data().pixel(i, j), qRgba(0, 0, 128, 128));
+        }
+    }
+    buffer3->unref();
 
     // TODO: add signal test on release
     buffer->unref();
