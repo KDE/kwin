@@ -310,7 +310,9 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(blueBuffer->isUsed());
     s->attachBuffer(blueBuffer);
     s->damage(QRect(0, 0, 24, 24));
-    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy frameRenderedSpy(s, SIGNAL(frameRendered()));
+    QVERIFY(frameRenderedSpy.isValid());
+    s->commit();
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
     QVERIFY(!buffer2->isReferenced());
@@ -333,6 +335,9 @@ void TestWaylandSurface::testAttachBuffer()
     }
     buffer3->unref();
     QVERIFY(buffer3->isReferenced());
+
+    serverSurface->frameRendered(1);
+    QVERIFY(frameRenderedSpy.wait());
 
     // TODO: add signal test on release
     buffer->unref();
