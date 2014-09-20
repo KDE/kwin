@@ -265,9 +265,15 @@ void TestWaylandSurface::testAttachBuffer()
     QImage blue(24, 24, QImage::Format_ARGB32_Premultiplied);
     blue.fill(QColor(0, 0, 255, 128));
 
-    wl_buffer *blackBuffer = pool.createBuffer(black);
-    wl_buffer *redBuffer = pool.createBuffer(red);
-    wl_buffer *blueBuffer = pool.createBuffer(blue);
+    wl_buffer *blackBuffer = *(pool.createBuffer(black));
+    KWayland::Client::Buffer *redBuffer = pool.createBuffer(red);
+    KWayland::Client::Buffer *blueBuffer = pool.createBuffer(blue);
+
+    QCOMPARE(blueBuffer->format(), KWayland::Client::Buffer::Format::ARGB32);
+    QCOMPARE(blueBuffer->size(), blue.size());
+    QVERIFY(!blueBuffer->isReleased());
+    QVERIFY(!blueBuffer->isUsed());
+    QCOMPARE(blueBuffer->stride(), blue.bytesPerLine());
 
     s->attachBuffer(redBuffer);
     s->attachBuffer(blackBuffer);
@@ -296,13 +302,23 @@ void TestWaylandSurface::testAttachBuffer()
     QCOMPARE(buffer2->data(), red);
     QCOMPARE(buffer2->data().format(), QImage::Format_ARGB32);
     buffer2->unref();
+    QVERIFY(buffer2->isReferenced());
+    QVERIFY(!redBuffer->isReleased());
 
     // render another frame
+    blueBuffer->setUsed(true);
+    QVERIFY(blueBuffer->isUsed());
     s->attachBuffer(blueBuffer);
     s->damage(QRect(0, 0, 24, 24));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
+    QVERIFY(!buffer2->isReferenced());
+    delete buffer2;
+    // TODO: we should have a signal on when the Buffer gets released
+    QTest::qWait(100);
+    QVERIFY(redBuffer->isReleased());
+
     KWayland::Server::BufferInterface *buffer3 = serverSurface->buffer();
     buffer3->ref();
     QVERIFY(buffer3->shmBuffer());
@@ -316,6 +332,7 @@ void TestWaylandSurface::testAttachBuffer()
         }
     }
     buffer3->unref();
+    QVERIFY(buffer3->isReferenced());
 
     // TODO: add signal test on release
     buffer->unref();
