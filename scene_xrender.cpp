@@ -284,7 +284,7 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
 
     Wayland::WaylandBackend *wl = Wayland::WaylandBackend::self();
     const QSize &size = wl->shellSurfaceSize();
-    wl_buffer *buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
+    auto buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
     if (!buffer) {
         qDebug() << "Did not get a buffer";
         return;

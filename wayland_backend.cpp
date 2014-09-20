@@ -130,11 +130,11 @@ void X11CursorTracker::cursorChanged(uint32_t serial)
 void X11CursorTracker::installCursor(const CursorData& cursor)
 {
     const QImage &cursorImage = cursor.cursor();
-    wl_buffer *buffer = m_backend->shmPool()->createBuffer(cursorImage);
+    auto buffer = m_backend->shmPool()->createBuffer(cursorImage);
     if (!buffer) {
         return;
     }
-    m_seat->installCursorImage(buffer, cursorImage.size(), cursor.hotSpot());
+    m_seat->installCursorImage(buffer->buffer(), cursorImage.size(), cursor.hotSpot());
 }
 
 void X11CursorTracker::resetCursor()
