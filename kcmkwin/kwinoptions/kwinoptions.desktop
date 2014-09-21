@@ -104,6 +104,7 @@ Name[zh_TW]=視窗行為
 Comment=Window Actions and Behavior
 Comment[ca]=Accions i comportament de les finestres
 Comment[cs]=Činnosti a chování oken
+Comment[da]=Vindueshandlinger og -opførsel
 Comment[de]=Fenster-Aktionen und -verhalten
 Comment[en_GB]=Window Actions and Behavior
 Comment[es]=Acciones y comportamiento de las ventanas
@@ -133,6 +134,7 @@ Comment[zh_TW]=視窗動作與行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,clic doble
+X-KDE-Keywords[da]=fokus,placering,vinduesopførsel,vindueshandlinger,animation,hæv,autohæv,vinduesramme,titelbjælke,dobbeltklik
 X-KDE-Keywords[de]=Aktivierung,Platzierung,Fensterverhalten,Fensteraktionen,Animation,Nach vorn/hinten, Fenster,Rahmen,Umrandung,Titelleiste,Doppelklick
 X-KDE-Keywords[en_GB]=focus,placement,window behaviour,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[es]=foco,posicionamiento,comportamiento de las ventanas,acciones de las ventanas,animación,elevación,autoelevación,ventanas,marco,barra de título,doble clic

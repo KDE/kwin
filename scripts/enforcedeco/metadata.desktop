@@ -2,6 +2,7 @@
 Name=Enforces Window Decorations on GTK+ window
 Name[ca]=Força la decoració de les finestres a les finestres GTK+
 Name[cs]=Vynutí dekoraci oken na okně GTK+
+Name[da]=Gennemtvinger vinduesdekorationer på GTK+-vinduer
 Name[de]=Erzwingt Fensterdekorationen für „GTK+“-Fenster
 Name[en_GB]=Enforces Window Decorations on GTK+ window
 Name[es]=Fuerza decoraciones en las ventanas de GTK+
@@ -30,6 +31,7 @@ Name[x-test]=xxEnforces Window Decorations on GTK+ windowxx
 Name[zh_TW]=強制 GTK+ 視窗的視窗裝飾
 Comment=Fixes functional deficits for client side decorated windows.
 Comment[ca]=Corregeix els dèficits funcionals amb les finestres decorades a la banda del client.
+Comment[da]=Løser funktionelle mangler ved vinduer med dekorationer på klientsiden.
 Comment[en_GB]=Fixes functional deficits for client side decorated windows.
 Comment[es]=Fija deficiencias funcionales en ventanas decoradas en el lado cliente.
 Comment[fi]=Korjaa asiakkaan kehystämien ikkunoiden toiminnallisia puutteita.
