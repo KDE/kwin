@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testBindShm();
     void testBindSeat();
     void testRemoval();
+    void testDestroy();
 
 private:
     KWayland::Server::Display *m_display;
@@ -241,6 +242,36 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Compositor));
 
     // cannot test shmRemoved as there is no functionality for it
+}
+
+void TestWaylandRegistry::testDestroy()
+{
+    using namespace KWayland::Client;
+    KWayland::Client::ConnectionThread connection;
+    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
+    connection.setSocketName(s_socketName);
+    connection.initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    Registry registry;
+    QVERIFY(!registry.isValid());
+    registry.create(connection.display());
+    registry.setup();
+    QVERIFY(registry.isValid());
+
+    connect(&connection, &ConnectionThread::connectionDied, &registry, &Registry::destroy);
+
+    QSignalSpy connectionDiedSpy(&connection, SIGNAL(connectionDied()));
+    QVERIFY(connectionDiedSpy.isValid());
+    delete m_display;
+    m_display = nullptr;
+    QVERIFY(connectionDiedSpy.wait());
+
+    // now the registry should be destroyed;
+    QVERIFY(!registry.isValid());
+
+    // calling destroy again should not fail
+    registry.destroy();
 }
 
 QTEST_MAIN(TestWaylandRegistry)
