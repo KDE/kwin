@@ -40,6 +40,7 @@ private Q_SLOTS:
     void cleanup();
 
     void testDestroy();
+    void testCast();
 
 private:
     KWayland::Server::Display *m_display;
@@ -134,6 +135,26 @@ void TestCompositor::testDestroy()
 
     // calling destroy again should not fail
     m_compositor->destroy();
+}
+
+void TestCompositor::testCast()
+{
+    using namespace KWayland::Client;
+    Registry registry;
+    QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+
+    QVERIFY(compositorSpy.wait());
+
+    Compositor c;
+    auto wlComp = registry.bindCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>());
+    c.setup(wlComp);
+    QCOMPARE((wl_compositor*)c, wlComp);
+
+    const Compositor &c2(c);
+    QCOMPARE((wl_compositor*)c2, wlComp);
 }
 
 QTEST_MAIN(TestCompositor)
