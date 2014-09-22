@@ -53,6 +53,7 @@ private Q_SLOTS:
     void testPointer();
     void testKeyboard();
     void testCast();
+    void testDestroy();
     // TODO: add test for keymap
 
 private:
@@ -516,6 +517,29 @@ void TestWaylandSeat::testCast()
     QCOMPARE((wl_seat*)s, wlSeat);
     const Seat &s2(s);
     QCOMPARE((wl_seat*)s2, wlSeat);
+}
+
+void TestWaylandSeat::testDestroy()
+{
+    using namespace KWayland::Client;
+    delete m_compositor;
+    m_compositor = nullptr;
+    connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
+    QVERIFY(m_seat->isValid());
+
+    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QVERIFY(connectionDiedSpy.isValid());
+    delete m_display;
+    m_display = nullptr;
+    m_compositorInterface = nullptr;
+    m_seatInterface = nullptr;
+    QVERIFY(connectionDiedSpy.wait());
+
+    // now the seat should be destroyed;
+    QVERIFY(!m_seat->isValid());
+
+    // calling destroy again should not fail
+    m_seat->destroy();
 }
 
 QTEST_MAIN(TestWaylandSeat)
