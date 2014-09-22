@@ -30,8 +30,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/surface_interface.h"
-// Wayland
-#include <wayland-client-protocol.h>
 
 class TestShmPool : public QObject
 {
