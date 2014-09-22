@@ -89,3 +89,14 @@ add_executable(testShmPool ${testShmPool_SRCS})
 target_link_libraries( testShmPool Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testShmPool testShmPool)
 ecm_mark_as_test(testShmPool)
+
+########################################################
+# Test Compositor
+########################################################
+set( testCompositor_SRCS
+        test_compositor.cpp
+    )
+add_executable(testCompositor ${testCompositor_SRCS})
+target_link_libraries( testCompositor Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testCompositor testCompositor)
+ecm_mark_as_test(testCompositor)
