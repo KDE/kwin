@@ -408,7 +408,7 @@ void TestWaylandSeat::testKeyboard()
     // no pointer yet - won't be set
     QVERIFY(!serverKeyboard->focusedSurface());
 
-    Keyboard *keyboard = m_seat->createKeyboard();
+    Keyboard *keyboard = m_seat->createKeyboard(m_seat);
     QVERIFY(keyboard->isValid());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
