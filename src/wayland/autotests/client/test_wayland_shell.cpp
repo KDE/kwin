@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testPing();
     void testTitle();
     void testWindowClass();
+    void testDestroy();
 
 private:
     KWayland::Server::Display *m_display;
@@ -297,6 +298,34 @@ void TestWaylandShell::testWindowClass()
     QVERIFY(windowClassSpy.wait());
     QCOMPARE(serverSurface->windowClass(), testClass);
     QCOMPARE(windowClassSpy.first().first().toByteArray(), testClass);
+}
+
+void TestWaylandShell::testDestroy()
+{
+    using namespace KWayland::Client;
+    QScopedPointer<Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
+    QVERIFY(surface->isValid());
+
+    connect(m_connection, &ConnectionThread::connectionDied, m_shell, &Shell::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, s.data(), &Surface::destroy);
+
+    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QVERIFY(connectionDiedSpy.isValid());
+    delete m_display;
+    m_display = nullptr;
+    m_compositorInterface = nullptr;
+    m_shellInterface = nullptr;
+    QVERIFY(connectionDiedSpy.wait());
+
+    QVERIFY(!m_shell->isValid());
+    QVERIFY(!surface->isValid());
+
+    m_shell->destroy();
+    surface->destroy();
 }
 
 QTEST_MAIN(TestWaylandShell)
