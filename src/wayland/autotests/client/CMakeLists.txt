@@ -78,3 +78,14 @@ add_executable(testWaylandSeat ${testWaylandSeat_SRCS})
 target_link_libraries( testWaylandSeat Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client Wayland::Server)
 add_test(kwayland-testWaylandSeat testWaylandSeat)
 ecm_mark_as_test(testWaylandSeat)
+
+########################################################
+# Test ShmPool
+########################################################
+set( testShmPool_SRCS
+        test_shm_pool.cpp
+    )
+add_executable(testShmPool ${testShmPool_SRCS})
+target_link_libraries( testShmPool Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testShmPool testShmPool)
+ecm_mark_as_test(testShmPool)
