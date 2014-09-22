@@ -522,6 +522,20 @@ void TestWaylandSeat::testCast()
 void TestWaylandSeat::testDestroy()
 {
     using namespace KWayland::Client;
+    QSignalSpy keyboardSpy(m_seat, SIGNAL(hasKeyboardChanged(bool)));
+    QVERIFY(keyboardSpy.isValid());
+    m_seatInterface->setHasKeyboard(true);
+    QVERIFY(keyboardSpy.wait());
+    Keyboard *k = m_seat->createKeyboard(m_seat);
+    QVERIFY(k->isValid());
+
+    QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
+    QVERIFY(pointerSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(pointerSpy.wait());
+    Pointer *p = m_seat->createPointer(m_seat);
+    QVERIFY(p->isValid());
+
     delete m_compositor;
     m_compositor = nullptr;
     connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
@@ -537,9 +551,13 @@ void TestWaylandSeat::testDestroy()
 
     // now the seat should be destroyed;
     QVERIFY(!m_seat->isValid());
+    QVERIFY(!k->isValid());
+    QVERIFY(!p->isValid());
 
     // calling destroy again should not fail
     m_seat->destroy();
+    k->destroy();
+    p->destroy();
 }
 
 QTEST_MAIN(TestWaylandSeat)
