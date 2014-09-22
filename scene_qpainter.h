@@ -121,7 +121,7 @@ private Q_SLOTS:
 private:
     bool m_needsFullRepaint;
     QImage m_backBuffer;
-    KWayland::Client::Buffer *m_buffer;
+    QWeakPointer<KWayland::Client::Buffer> m_buffer;
 };
 #endif
 

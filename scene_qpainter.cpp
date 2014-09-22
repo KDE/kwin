@@ -82,7 +82,7 @@ WaylandQPainterBackend::WaylandQPainterBackend()
     : QPainterBackend()
     , m_needsFullRepaint(true)
     , m_backBuffer(QImage(QSize(), QImage::Format_RGB32))
-    , m_buffer(NULL)
+    , m_buffer()
 {
     connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
@@ -94,7 +94,7 @@ WaylandQPainterBackend::WaylandQPainterBackend()
 WaylandQPainterBackend::~WaylandQPainterBackend()
 {
     if (m_buffer) {
-        m_buffer->setUsed(false);
+        m_buffer.toStrongRef()->setUsed(false);
     }
 }
 
@@ -112,7 +112,7 @@ void WaylandQPainterBackend::present(int mask, const QRegion &damage)
     Compositor::self()->aboutToSwapBuffers();
     m_needsFullRepaint = false;
     auto s = Wayland::WaylandBackend::self()->surface();
-    s->attachBuffer(m_buffer->buffer());
+    s->attachBuffer(m_buffer);
     s->damage(damage);
     s->commit();
 }
@@ -123,8 +123,8 @@ void WaylandQPainterBackend::screenGeometryChanged(const QSize &size)
     if (!m_buffer) {
         return;
     }
-    m_buffer->setUsed(false);
-    m_buffer = NULL;
+    m_buffer.toStrongRef()->setUsed(false);
+    m_buffer.clear();
 }
 
 QImage *WaylandQPainterBackend::buffer()
@@ -135,16 +135,17 @@ QImage *WaylandQPainterBackend::buffer()
 void WaylandQPainterBackend::prepareRenderingFrame()
 {
     if (m_buffer) {
-        if (m_buffer->isReleased()) {
+        auto b = m_buffer.toStrongRef();
+        if (b->isReleased()) {
             // we can re-use this buffer
-            m_buffer->setReleased(false);
+            b->setReleased(false);
             return;
         } else {
             // buffer is still in use, get a new one
-            m_buffer->setUsed(false);
+            b->setUsed(false);
         }
     }
-    m_buffer = NULL;
+    m_buffer.clear();
     const QSize size(Wayland::WaylandBackend::self()->shellSurfaceSize());
     m_buffer = Wayland::WaylandBackend::self()->shmPool()->getBuffer(size, size.width() * 4);
     if (!m_buffer) {
@@ -152,8 +153,9 @@ void WaylandQPainterBackend::prepareRenderingFrame()
         m_backBuffer = QImage();
         return;
     }
-    m_buffer->setUsed(true);
-    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_RGB32);
+    auto b = m_buffer.toStrongRef();
+    b->setUsed(true);
+    m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
     m_needsFullRepaint = true;
     qDebug() << "Created a new back buffer";
@@ -161,11 +163,15 @@ void WaylandQPainterBackend::prepareRenderingFrame()
 
 void WaylandQPainterBackend::remapBuffer()
 {
-    if (!m_buffer || !m_buffer->isUsed()) {
+    if (!m_buffer) {
+        return;
+    }
+    auto b = m_buffer.toStrongRef();
+    if (!b->isUsed()){
         return;
     }
     const QSize size = m_backBuffer.size();
-    m_backBuffer = QImage(m_buffer->address(), size.width(), size.height(), QImage::Format_RGB32);
+    m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
     qDebug() << "Remapped our back buffer";
 }
 

@@ -211,7 +211,7 @@ void WaylandClientTest::render()
     if (!m_shm || !m_surface || !m_surface->isValid() || !m_currentSize.isValid()) {
         return;
     }
-    Buffer *buffer = m_shm->getBuffer(m_currentSize, m_currentSize.width() * 4);
+    auto buffer = m_shm->getBuffer(m_currentSize, m_currentSize.width() * 4).toStrongRef();
     buffer->setUsed(true);
     QImage image(buffer->address(), m_currentSize.width(), m_currentSize.height(), QImage::Format_ARGB32_Premultiplied);
     image.fill(s_colors[s_colorIndex]);
