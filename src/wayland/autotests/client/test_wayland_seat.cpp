@@ -279,6 +279,7 @@ void TestWaylandSeat::testPointer()
     QVERIFY(!serverPointer->focusedSurface());
 
     Pointer *p = m_seat->createPointer(m_seat);
+    QVERIFY(p->isValid());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
 
