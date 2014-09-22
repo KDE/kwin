@@ -157,7 +157,7 @@ void TestShmPool::testCreateBufferFromImage()
     QImage img(24, 24, QImage::Format_ARGB32);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
-    auto buffer = m_shmPool->createBuffer(img);
+    auto buffer = m_shmPool->createBuffer(img).toStrongRef();
     QVERIFY(buffer);
     QCOMPARE(buffer->size(), img.size());
     QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32);
@@ -170,7 +170,7 @@ void TestShmPool::testCreateBufferFromData()
     QImage img(24, 24, QImage::Format_ARGB32);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
-    auto buffer = m_shmPool->createBuffer(img.size(), img.bytesPerLine(), img.constBits());
+    auto buffer = m_shmPool->createBuffer(img.size(), img.bytesPerLine(), img.constBits()).toStrongRef();
     QVERIFY(buffer);
     QCOMPARE(buffer->size(), img.size());
     QImage img2(buffer->address(), img.width(), img.height(), QImage::Format_ARGB32);
@@ -183,13 +183,13 @@ void TestShmPool::testReuseBuffer()
     QImage img(24, 24, QImage::Format_ARGB32);
     img.fill(Qt::black);
     QVERIFY(!img.isNull());
-    auto buffer = m_shmPool->createBuffer(img);
+    auto buffer = m_shmPool->createBuffer(img).toStrongRef();
     QVERIFY(buffer);
     buffer->setReleased(true);
     buffer->setUsed(false);
 
     // same image should get the same buffer
-    auto buffer2 = m_shmPool->createBuffer(img);
+    auto buffer2 = m_shmPool->createBuffer(img).toStrongRef();
     QCOMPARE(buffer, buffer2);
     buffer2->setReleased(true);
     buffer2->setUsed(false);
@@ -202,7 +202,7 @@ void TestShmPool::testReuseBuffer()
     QImage img2(24, 24, QImage::Format_RGB32);
     img2.fill(Qt::black);
     QVERIFY(!img2.isNull());
-    auto buffer4 = m_shmPool->createBuffer(img2);
+    auto buffer4 = m_shmPool->createBuffer(img2).toStrongRef();
     QVERIFY(buffer4);
     QVERIFY(buffer4 != buffer2);
     QVERIFY(buffer4 != buffer3);
