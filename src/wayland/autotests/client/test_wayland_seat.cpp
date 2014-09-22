@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testCapabilities();
     void testPointer();
     void testKeyboard();
+    void testCast();
     // TODO: add test for keymap
 
 private:
@@ -493,6 +494,28 @@ void TestWaylandSeat::testKeyboard()
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
     QVERIFY(!serverKeyboard->focusedSurface());
+}
+
+void TestWaylandSeat::testCast()
+{
+    using namespace KWayland::Client;
+    Registry registry;
+    QSignalSpy seatSpy(&registry, SIGNAL(seatAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+
+    QVERIFY(seatSpy.wait());
+    Seat s;
+    QVERIFY(!s.isValid());
+    auto wlSeat = registry.bindSeat(seatSpy.first().first().value<quint32>(), seatSpy.first().last().value<quint32>());
+    QVERIFY(wlSeat);
+    s.setup(wlSeat);
+    QVERIFY(s.isValid());
+
+    QCOMPARE((wl_seat*)s, wlSeat);
+    const Seat &s2(s);
+    QCOMPARE((wl_seat*)s2, wlSeat);
 }
 
 QTEST_MAIN(TestWaylandSeat)
