@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testDamage();
     void testFrameCallback();
     void testAttachBuffer();
+    void testDestroy();
 
 private:
     KWayland::Server::Display *m_display;
@@ -341,6 +342,29 @@ void TestWaylandSurface::testAttachBuffer()
 
     // TODO: add signal test on release
     buffer->unref();
+}
+
+void TestWaylandSurface::testDestroy()
+{
+    using namespace KWayland::Client;
+    Surface *s = m_compositor->createSurface();
+
+    connect(m_connection, &ConnectionThread::connectionDied, s, &Surface::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
+    QVERIFY(s->isValid());
+
+    QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
+    QVERIFY(connectionDiedSpy.isValid());
+    delete m_display;
+    m_display = nullptr;
+    m_compositorInterface = nullptr;
+    QVERIFY(connectionDiedSpy.wait());
+
+    // now the Surface should be destroyed;
+    QVERIFY(!s->isValid());
+
+    // calling destroy again should not fail
+    s->destroy();
 }
 
 QTEST_MAIN(TestWaylandSurface)
