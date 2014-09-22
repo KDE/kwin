@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testTitle();
     void testWindowClass();
     void testDestroy();
+    void testCast();
 
 private:
     KWayland::Server::Display *m_display;
@@ -269,7 +270,7 @@ void TestWaylandShell::testTitle()
     QString testTitle = QStringLiteral("fooBar");
     QVERIFY(serverSurface->title().isNull());
 
-    wl_shell_surface_set_title(*surface, testTitle.toUtf8().constData());
+    wl_shell_surface_set_title(*(const KWayland::Client::ShellSurface *)surface, testTitle.toUtf8().constData());
     QVERIFY(titleSpy.wait());
     QCOMPARE(serverSurface->title(), testTitle);
     QCOMPARE(titleSpy.first().first().toString(), testTitle);
@@ -326,6 +327,28 @@ void TestWaylandShell::testDestroy()
 
     m_shell->destroy();
     surface->destroy();
+}
+
+void TestWaylandShell::testCast()
+{
+    using namespace KWayland::Client;
+    Registry registry;
+    QSignalSpy shellSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    QVERIFY(shellSpy.wait());
+
+    Shell s;
+    auto wlShell = registry.bindShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>());
+    QVERIFY(wlShell);
+    QVERIFY(!s.isValid());
+    s.setup(wlShell);
+    QVERIFY(s.isValid());
+    QCOMPARE((wl_shell*)s, wlShell);
+
+    const Shell &s2(s);
+    QCOMPARE((wl_shell*)s2, wlShell);
 }
 
 QTEST_MAIN(TestWaylandShell)
