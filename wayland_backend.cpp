@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/fullscreen_shell.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
@@ -336,7 +337,7 @@ WaylandBackend *WaylandBackend::create(QObject *parent)
 WaylandBackend::WaylandBackend(QObject *parent)
     : QObject(parent)
     , m_display(nullptr)
-    , m_eventQueue(nullptr)
+    , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))
     , m_compositor(new Compositor(this))
     , m_shell(new Shell(this))
@@ -402,6 +403,7 @@ WaylandBackend::~WaylandBackend()
     m_registry->release();
     m_seat.reset();
     m_shm->release();
+    m_eventQueue->release();
 
     m_connectionThreadObject->deleteLater();
     m_connectionThread->quit();
@@ -424,20 +426,11 @@ void WaylandBackend::initConnection()
         [this]() {
             // create the event queue for the main gui thread
             m_display = m_connectionThreadObject->display();
-            m_eventQueue = wl_display_create_queue(m_display);
+            m_eventQueue->setup(m_connectionThreadObject);
+            m_registry->setEventQueue(m_eventQueue);
             // setup registry
             m_registry->create(m_display);
-            wl_proxy_set_queue((wl_proxy*)m_registry->registry(), m_eventQueue);
             m_registry->setup();
-        },
-        Qt::QueuedConnection);
-    connect(m_connectionThreadObject, &ConnectionThread::eventsRead, this,
-        [this]() {
-            if (!m_eventQueue) {
-                return;
-            }
-            wl_display_dispatch_queue_pending(m_display, m_eventQueue);
-            wl_display_flush(m_display);
         },
         Qt::QueuedConnection);
     connect(m_connectionThreadObject, &ConnectionThread::connectionDied, this,
@@ -462,6 +455,7 @@ void WaylandBackend::initConnection()
             }
             m_compositor->destroy();
             m_registry->destroy();
+            m_eventQueue->destroy();
             if (m_display) {
                 m_display = nullptr;
             }

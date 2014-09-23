@@ -42,6 +42,7 @@ namespace Client
 class ShmPool;
 class Compositor;
 class ConnectionThread;
+class EventQueue;
 class FullscreenShell;
 class Keyboard;
 class Output;
@@ -153,7 +154,7 @@ private:
     void destroyOutputs();
     void checkBackendReady();
     wl_display *m_display;
-    wl_event_queue *m_eventQueue;
+    KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Registry *m_registry;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Shell *m_shell;
