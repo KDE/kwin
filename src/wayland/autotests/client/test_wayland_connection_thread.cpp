@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // KWin
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/server/display.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -140,10 +141,11 @@ void TestWaylandConnectionThread::testConnectionThread()
     // now we have the connection ready, let's get some events
     QSignalSpy eventsSpy(connection.data(), SIGNAL(eventsRead()));
     wl_display *display = connection->display();
-    wl_event_queue *queue = wl_display_create_queue(display);
+    QScopedPointer<KWayland::Client::EventQueue> queue(new KWayland::Client::EventQueue);
+    queue->setup(display);
 
     wl_registry *registry = wl_display_get_registry(display);
-    wl_proxy_set_queue((wl_proxy*)registry, queue);
+    wl_proxy_set_queue((wl_proxy*)registry, *(queue.data()));
 
     wl_registry_add_listener(registry, &s_registryListener, this);
     wl_display_flush(display);
@@ -154,7 +156,7 @@ void TestWaylandConnectionThread::testConnectionThread()
     QVERIFY(!eventsSpy.isEmpty());
 
     wl_registry_destroy(registry);
-    wl_event_queue_destroy(queue);
+    queue.reset();
 
     connectionThread->quit();
     connectionThread->wait();

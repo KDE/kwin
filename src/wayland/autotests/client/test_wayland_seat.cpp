@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/client/keyboard.h"
 #include "../../src/client/pointer.h"
 #include "../../src/client/surface.h"
@@ -63,6 +64,7 @@ private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Seat *m_seat;
+    KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
 
@@ -76,6 +78,7 @@ TestWaylandSeat::TestWaylandSeat(QObject *parent)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_seat(nullptr)
+    , m_queue(nullptr)
     , m_thread(nullptr)
 {
 }
@@ -113,22 +116,17 @@ void TestWaylandSeat::init()
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
-    // TODO: we should destroy the queue
-    wl_event_queue *queue = wl_display_create_queue(m_connection->display());
-    connect(m_connection, &KWayland::Client::ConnectionThread::eventsRead, this,
-        [this, queue]() {
-            wl_display_dispatch_queue_pending(m_connection->display(), queue);
-            wl_display_flush(m_connection->display());
-        },
-        Qt::QueuedConnection);
+
+    m_queue = new KWayland::Client::EventQueue(this);
+    m_queue->setup(m_connection);
 
     KWayland::Client::Registry registry;
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
     QSignalSpy seatSpy(&registry, SIGNAL(seatAnnounced(quint32,quint32)));
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
-    wl_proxy_set_queue((wl_proxy*)registry.registry(), queue);
     QVERIFY(compositorSpy.wait());
 
     m_seatInterface = m_display->createSeat();
@@ -157,14 +155,20 @@ void TestWaylandSeat::cleanup()
         delete m_compositor;
         m_compositor = nullptr;
     }
+    if (m_queue) {
+        delete m_queue;
+        m_queue = nullptr;
+    }
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
         delete m_thread;
         m_thread = nullptr;
     }
-    delete m_connection;
-    m_connection = nullptr;
 
     delete m_compositorInterface;
     m_compositorInterface = nullptr;
@@ -539,6 +543,7 @@ void TestWaylandSeat::testDestroy()
     delete m_compositor;
     m_compositor = nullptr;
     connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(m_seat->isValid());
 
     QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));

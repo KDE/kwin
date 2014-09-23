@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/client/shell.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/registry.h"
@@ -56,6 +57,7 @@ private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Shell *m_shell;
+    KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
 
@@ -69,6 +71,7 @@ TestWaylandShell::TestWaylandShell(QObject *parent)
     , m_connection(nullptr)
     , m_compositor(nullptr)
     , m_shell(nullptr)
+    , m_queue(nullptr)
     , m_thread(nullptr)
 {
 }
@@ -101,32 +104,23 @@ void TestWaylandShell::init()
     m_connection->moveToThread(m_thread);
     m_thread->start();
 
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, m_connection,
-        [this]() {
-            if (m_connection->display()) {
-                wl_display_flush(m_connection->display());
-            }
-        }
-    );
-
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
-    // TODO: we should destroy the queue
-    wl_event_queue *queue = wl_display_create_queue(m_connection->display());
-    connect(m_connection, &KWayland::Client::ConnectionThread::eventsRead, this,
-        [this, queue]() {
-            wl_display_dispatch_queue_pending(m_connection->display(), queue);
-            wl_display_flush(m_connection->display());
-        },
-        Qt::QueuedConnection);
+
+    m_queue = new KWayland::Client::EventQueue(this);
+    QVERIFY(!m_queue->isValid());
+    m_queue->setup(m_connection);
+    QVERIFY(m_queue->isValid());
 
     KWayland::Client::Registry registry;
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
     QSignalSpy shellSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+    QVERIFY(!registry.eventQueue());
+    registry.setEventQueue(m_queue);
+    QCOMPARE(registry.eventQueue(), m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
-    wl_proxy_set_queue((wl_proxy*)registry.registry(), queue);
     QVERIFY(compositorSpy.wait());
 
     m_compositor = new KWayland::Client::Compositor(this);
@@ -150,14 +144,20 @@ void TestWaylandShell::cleanup()
         delete m_compositor;
         m_compositor = nullptr;
     }
+    if (m_queue) {
+        delete m_queue;
+        m_queue = nullptr;
+    }
+    if (m_connection) {
+        m_connection->deleteLater();
+        m_connection = nullptr;
+    }
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
         delete m_thread;
         m_thread = nullptr;
     }
-    delete m_connection;
-    m_connection = nullptr;
 
     delete m_shellInterface;
     m_shellInterface = nullptr;
@@ -313,6 +313,7 @@ void TestWaylandShell::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, m_shell, &Shell::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, s.data(), &Surface::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
 
     QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
     QVERIFY(connectionDiedSpy.isValid());
@@ -334,6 +335,7 @@ void TestWaylandShell::testCast()
     using namespace KWayland::Client;
     Registry registry;
     QSignalSpy shellSpy(&registry, SIGNAL(shellAnnounced(quint32,quint32)));
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -341,6 +343,7 @@ void TestWaylandShell::testCast()
 
     Shell s;
     auto wlShell = registry.bindShell(shellSpy.first().first().value<quint32>(), shellSpy.first().last().value<quint32>());
+    m_queue->addProxy(wlShell);
     QVERIFY(wlShell);
     QVERIFY(!s.isValid());
     s.setup(wlShell);
