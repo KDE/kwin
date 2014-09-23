@@ -565,5 +565,5 @@ void TestWaylandSeat::testDestroy()
     p->destroy();
 }
 
-QTEST_MAIN(TestWaylandSeat)
+QTEST_GUILESS_MAIN(TestWaylandSeat)
 #include "test_wayland_seat.moc"

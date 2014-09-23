@@ -354,5 +354,5 @@ void TestWaylandShell::testCast()
     QCOMPARE((wl_shell*)s2, wlShell);
 }
 
-QTEST_MAIN(TestWaylandShell)
+QTEST_GUILESS_MAIN(TestWaylandShell)
 #include "test_wayland_shell.moc"

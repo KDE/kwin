@@ -170,5 +170,5 @@ void TestWaylandServerSeat::testDestroyThroughTerminate()
     QVERIFY(!destroyedSpy.isEmpty());
 }
 
-QTEST_MAIN(TestWaylandServerSeat)
+QTEST_GUILESS_MAIN(TestWaylandServerSeat)
 #include "test_seat.moc"

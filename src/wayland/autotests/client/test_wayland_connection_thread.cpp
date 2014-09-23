@@ -190,5 +190,5 @@ void TestWaylandConnectionThread::testConnectionDieing()
     QCOMPARE(connectedSpy.count(), 1);
 }
 
-QTEST_MAIN(TestWaylandConnectionThread)
+QTEST_GUILESS_MAIN(TestWaylandConnectionThread)
 #include "test_wayland_connection_thread.moc"

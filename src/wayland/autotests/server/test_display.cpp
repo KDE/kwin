@@ -101,5 +101,5 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
     QVERIFY(display.outputs().isEmpty());
 }
 
-QTEST_MAIN(TestWaylandServerDisplay)
+QTEST_GUILESS_MAIN(TestWaylandServerDisplay)
 #include "test_display.moc"

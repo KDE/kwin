@@ -274,5 +274,5 @@ void TestWaylandRegistry::testDestroy()
     registry.destroy();
 }
 
-QTEST_MAIN(TestWaylandRegistry)
+QTEST_GUILESS_MAIN(TestWaylandRegistry)
 #include "test_wayland_registry.moc"

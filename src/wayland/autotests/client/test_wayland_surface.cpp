@@ -367,5 +367,5 @@ void TestWaylandSurface::testDestroy()
     s->destroy();
 }
 
-QTEST_MAIN(TestWaylandSurface)
+QTEST_GUILESS_MAIN(TestWaylandSurface)
 #include "test_wayland_surface.moc"

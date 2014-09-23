@@ -142,5 +142,5 @@ void TestWaylandFullscreenShell::testRegistryCreate()
     QVERIFY(fullscreenShell->isValid());
 }
 
-QTEST_MAIN(TestWaylandFullscreenShell)
+QTEST_GUILESS_MAIN(TestWaylandFullscreenShell)
 #include "test_wayland_fullscreen_shell.moc"

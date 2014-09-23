@@ -321,5 +321,5 @@ void TestWaylandOutput::testTransform()
     QCOMPARE(output->transform(), Output::Transform::Normal);
 }
 
-QTEST_MAIN(TestWaylandOutput)
+QTEST_GUILESS_MAIN(TestWaylandOutput)
 #include "test_wayland_output.moc"
