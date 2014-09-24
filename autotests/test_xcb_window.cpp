@@ -39,6 +39,7 @@ private Q_SLOTS:
     void mapUnmap();
     void geometry();
     void destroy();
+    void destroyNotManaged();
 };
 
 void TestXcbWindow::defaultCtor()
@@ -95,6 +96,10 @@ void TestXcbWindow::create()
     window.create(geometry, XCB_CW_OVERRIDE_REDIRECT, values);
     QCOMPARE(window.isValid(), true);
     QVERIFY(window != XCB_WINDOW_NONE);
+    // and reset again
+    window.reset();
+    QCOMPARE(window.isValid(), false);
+    QVERIFY(window == XCB_WINDOW_NONE);
 }
 
 void TestXcbWindow::mapUnmap()
@@ -115,6 +120,11 @@ void TestXcbWindow::mapUnmap()
     Xcb::WindowAttributes attribs3(window);
     QCOMPARE(attribs3.isNull(), false);
     QVERIFY(attribs3->map_state == XCB_MAP_STATE_UNMAPPED);
+
+    // map, unmap shouldn't fail for an invalid window, it's just ignored
+    window.reset();
+    window.map();
+    window.unmap();
 }
 
 void TestXcbWindow::geometry()
@@ -131,6 +141,12 @@ void TestXcbWindow::geometry()
     Xcb::WindowGeometry windowGeometry2(window);
     QCOMPARE(windowGeometry2.isNull(), false);
     QCOMPARE(windowGeometry2.rect(), geometry2);
+
+    // setting a geometry on an invalid window should be ignored
+    window.reset();
+    window.setGeometry(geometry2);
+    Xcb::WindowGeometry windowGeometry3(window);
+    QCOMPARE(windowGeometry3.isNull(), true);
 }
 
 void TestXcbWindow::destroy()
@@ -168,6 +184,20 @@ void TestXcbWindow::destroy()
     QCOMPARE(error->error_code, uint8_t(3));
     QCOMPARE(error->resource_id, wId);
     free(error);
+}
+
+void TestXcbWindow::destroyNotManaged()
+{
+    Xcb::Window window;
+    // just destroy the non-existing window
+    window.reset();
+
+    // now let's add a window
+    window.reset(createWindow(), false);
+    xcb_window_t w = window;
+    window.reset();
+    Xcb::WindowAttributes attribs(w);
+    QVERIFY(attribs);
 }
 
 KWIN_TEST_MAIN(TestXcbWindow)
