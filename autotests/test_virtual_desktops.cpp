@@ -496,7 +496,7 @@ void TestVirtualDesktops::updateLayout_data()
     QTest::addColumn<uint>("desktop");
     QTest::addColumn<QSize>("result");
 
-    QTest::newRow("01") << (uint)1  << QSize(1, 2);
+    QTest::newRow("01") << (uint)1  << QSize(1, 1);
     QTest::newRow("02") << (uint)2  << QSize(1, 2);
     QTest::newRow("03") << (uint)3  << QSize(2, 2);
     QTest::newRow("04") << (uint)4  << QSize(2, 2);

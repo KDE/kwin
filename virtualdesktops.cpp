@@ -305,7 +305,7 @@ void VirtualDesktopManager::updateLayout()
     }
     if (width == 0 && height == 0) {
         // Not given, set default layout
-        height = 2;
+        height = count() == 1u ? 1 : 2;
     }
     setNETDesktopLayout(orientation,
         width, height, 0 //rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
