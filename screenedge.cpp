@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "atoms.h"
 #include "client.h"
 #include "cursor.h"
-#include "effects.h"
 #include "input.h"
 #include "main.h"
 #include "screens.h"
