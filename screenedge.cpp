@@ -31,16 +31,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin
 #include "atoms.h"
-#include "client.h"
+#include <client.h>
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
 #include "screens.h"
 #include "utils.h"
-#include "workspace.h"
+#include <workspace.h>
 #include "virtualdesktops.h"
 // DBus generated
 #include "screenlocker_interface.h"
+// frameworks
+#include <KConfigGroup>
 // Qt
 #include <QSharedPointer>
 #include <QTimer>
@@ -48,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
+#include <QWidget>
 
 namespace KWin {
 
@@ -281,12 +284,14 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         if (desktop != interimDesktop)
             pos.setY(OFFSET);
     }
+#ifndef KWIN_UNIT_TEST
     if (Client *c = Workspace::self()->getMovingClient()) {
         if (c->rules()->checkDesktop(desktop) != int(desktop)) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;
         }
     }
+#endif
     vds->setCurrent(desktop);
     if (vds->current() != oldDesktop) {
         m_pushBackBlocked = true;

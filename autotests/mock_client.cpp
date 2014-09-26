@@ -26,6 +26,9 @@ Client::Client(QObject *parent)
     : QObject(parent)
     , m_active(false)
     , m_screen(0)
+    , m_fullscreen(false)
+    , m_hiddenInternal(false)
+    , m_geometry()
 {
 }
 
@@ -55,6 +58,41 @@ bool Client::isOnScreen(int screen) const
 int Client::screen() const
 {
     return m_screen;
+}
+
+void Client::showOnScreenEdge()
+{
+}
+
+void Client::setFullScreen(bool set)
+{
+    m_fullscreen = set;
+}
+
+bool Client::isFullScreen() const
+{
+    return m_fullscreen;
+}
+
+bool Client::isHiddenInternal() const
+{
+    return m_hiddenInternal;
+}
+
+void Client::setHiddenInternal(bool set)
+{
+    m_hiddenInternal = set;
+}
+
+void Client::setGeometry(const QRect &rect)
+{
+    m_geometry = rect;
+    emit geometryChanged();
+}
+
+QRect Client::geometry() const
+{
+    return m_geometry;
 }
 
 }

@@ -28,6 +28,8 @@ Workspace *MockWorkspace::s_self = nullptr;
 MockWorkspace::MockWorkspace(QObject *parent)
     : QObject(parent)
     , m_activeClient(nullptr)
+    , m_movingClient(nullptr)
+    , m_showingDesktop(false)
 {
     s_self = this;
 }
@@ -45,6 +47,33 @@ Client *MockWorkspace::activeClient() const
 void MockWorkspace::setActiveClient(Client *c)
 {
     m_activeClient = c;
+}
+
+Client *MockWorkspace::getMovingClient() const
+{
+    return m_movingClient;
+}
+
+void MockWorkspace::setMovingClient(Client *c)
+{
+    m_movingClient = c;
+}
+
+void MockWorkspace::setShowingDesktop(bool showing)
+{
+    m_showingDesktop = showing;
+}
+
+bool MockWorkspace::showingDesktop() const
+{
+    return m_showingDesktop;
+}
+
+QRect MockWorkspace::clientArea(clientAreaOption, int screen, int desktop) const
+{
+    Q_UNUSED(screen)
+    Q_UNUSED(desktop)
+    return QRect();
 }
 
 }

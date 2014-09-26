@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_MOCK_CLIENT_H
 
 #include <QObject>
+#include <QRect>
 
 namespace KWin
 {
@@ -35,13 +36,27 @@ public:
     int screen() const;
     bool isOnScreen(int screen) const;
     bool isActive() const;
+    bool isFullScreen() const;
+    bool isHiddenInternal() const;
+    QRect geometry() const;
 
     void setActive(bool active);
     void setScreen(int screen);
+    void setFullScreen(bool set);
+    void setHiddenInternal(bool set);
+    void setGeometry(const QRect &rect);
+
+    void showOnScreenEdge();
+
+Q_SIGNALS:
+    void geometryChanged();
 
 private:
     bool m_active;
     int m_screen;
+    bool m_fullscreen;
+    bool m_hiddenInternal;
+    QRect m_geometry;
 };
 
 }
