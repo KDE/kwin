@@ -123,6 +123,7 @@ private Q_SLOTS:
     void testPushBack_data();
     void testPushBack();
     void testFullScreenBlocking();
+    void testClientEdge();
 };
 
 void TestScreenEdges::initTestCase()
@@ -139,6 +140,7 @@ void TestScreenEdges::cleanupTestCase()
 void TestScreenEdges::init()
 {
     using namespace KWin;
+    new MockWorkspace;
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     Screens::create();
 
@@ -155,6 +157,7 @@ void TestScreenEdges::cleanup()
     delete ScreenEdges::self();
     delete VirtualDesktopManager::self();
     delete Screens::self();
+    delete workspace();
 }
 
 void TestScreenEdges::testInit()
@@ -670,6 +673,107 @@ void TestScreenEdges::testFullScreenBlocking()
     Cursor::setPos(99, 99);
     QVERIFY(s->isEntered(&event));
     QVERIFY(!spy.isEmpty());
+}
+
+void TestScreenEdges::testClientEdge()
+{
+    using namespace KWin;
+    Client client(workspace());
+    client.setGeometry(QRect(10, 50, 10, 50));
+    auto s = ScreenEdges::self();
+    s->init();
+
+    s->reserve(&client, KWin::ElectricBottom);
+    QPointer<Edge> edge = s->findChildren<Edge*>().last();
+    QCOMPARE(&client, edge->client());
+    QCOMPARE(edge->isScreenEdge(), true);
+    QCOMPARE(edge->isCorner(), false);
+    QCOMPARE(edge->isBottom(), true);
+    QCOMPARE(edge->isReserved(), false);
+    // reserve again shouldn't change anything
+    s->reserve(&client, KWin::ElectricBottom);
+    QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
+    QCOMPARE(&client, edge->client());
+    QCOMPARE(edge->isReserved(), false);
+
+    // let's set the client to be hidden
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricBottom);
+    QCOMPARE(edge.data(), s->findChildren<Edge*>().last());
+    QCOMPARE(edge->isReserved(), true);
+
+    // let's change the geometry, which should destroy the edge
+    QCOMPARE(client.isHiddenInternal(), true);
+    QCOMPARE(edge.isNull(), false);
+    client.setGeometry(QRect(2, 2, 20, 20));
+    QCOMPARE(client.isHiddenInternal(), false);
+    QCOMPARE(edge.isNull(), true);
+
+    // for none of the edges it should be able to be set
+    for (int i = 0; i < ELECTRIC_COUNT; ++i) {
+        client.setHiddenInternal(true);
+        s->reserve(&client, static_cast<ElectricBorder>(i));
+        QCOMPARE(client.isHiddenInternal(), false);
+    }
+
+    // now let's try to set it and activate it
+    client.setGeometry(screens()->geometry());
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricLeft);
+    QCOMPARE(client.isHiddenInternal(), true);
+
+    xcb_enter_notify_event_t event;
+    Cursor::setPos(0, 50);
+    event.root_x = 0;
+    event.root_y = 50;
+    event.event_x = 0;
+    event.event_y = 50;
+    event.root = XCB_WINDOW_NONE;
+    event.child = XCB_WINDOW_NONE;
+    event.event = s->windows().first();
+    event.same_screen_focus = 1;
+    event.time = QDateTime::currentMSecsSinceEpoch();
+    QVERIFY(s->isEntered(&event));
+    // first attempt should be pushed back and not activated
+    QCOMPARE(client.isHiddenInternal(), true);
+    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+
+    // but if we wait a little bit it should trigger
+    QTest::qWait(160);
+    Cursor::setPos(0, 50);
+    event.time = QDateTime::currentMSecsSinceEpoch();
+    QVERIFY(s->isEntered(&event));
+    QCOMPARE(client.isHiddenInternal(), false);
+    QCOMPARE(Cursor::pos(), QPoint(1, 50));
+
+    // now let's reserve the client for each of the edges, in the end for the right one
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricTop);
+    s->reserve(&client, KWin::ElectricBottom);
+    QCOMPARE(client.isHiddenInternal(), true);
+    // corners shouldn't get reserved
+    s->reserve(&client, KWin::ElectricTopLeft);
+    QCOMPARE(client.isHiddenInternal(), false);
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricTopRight);
+    QCOMPARE(client.isHiddenInternal(), false);
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricBottomRight);
+    QCOMPARE(client.isHiddenInternal(), false);
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricBottomLeft);
+    QCOMPARE(client.isHiddenInternal(), false);
+    // now finally reserve on right one
+    client.setHiddenInternal(true);
+    s->reserve(&client, KWin::ElectricRight);
+    QCOMPARE(client.isHiddenInternal(), true);
+
+    // now let's emulate the removal of a Client through Workspace
+    emit workspace()->clientRemoved(&client);
+    for (auto e : s->findChildren<Edge*>()) {
+        QVERIFY(!e->client());
+    }
+    QCOMPARE(client.isHiddenInternal(), true);
 }
 
 QTEST_MAIN(TestScreenEdges)

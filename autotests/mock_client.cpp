@@ -62,6 +62,7 @@ int Client::screen() const
 
 void Client::showOnScreenEdge()
 {
+    setHiddenInternal(false);
 }
 
 void Client::setFullScreen(bool set)
