@@ -45,31 +45,31 @@ struct ParameterSet {
     int move_factor;
 };
 
-ParameterSet set_0 = {
+static const ParameterSet set_0 = {
     15,
     80,
     10
 };
 
-ParameterSet set_1 = {
+static const ParameterSet set_1 = {
     10,
     85,
     10
 };
 
-ParameterSet set_2 = {
+static const ParameterSet set_2 = {
     6,
     90,
     10
 };
 
-ParameterSet set_3 = {
+static const ParameterSet set_3 = {
     3,
     92,
     20
 };
 
-ParameterSet set_4 = {
+static const ParameterSet set_4 = {
     1,
     97,
     25

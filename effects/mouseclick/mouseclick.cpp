@@ -276,10 +276,10 @@ void MouseClickEffect::paintScreenFinish(int mask, QRegion region, ScreenPaintDa
 
 void MouseClickEffect::drawCircleGl(const QColor& color, float cx, float cy, float r)
 {
-    static int num_segments = 80;
-    static float theta = 2 * 3.1415926 / float(num_segments);
-    static float c = cosf(theta); //precalculate the sine and cosine
-    static float s = sinf(theta);
+    static const int num_segments = 80;
+    static const float theta = 2 * 3.1415926 / float(num_segments);
+    static const float c = cosf(theta); //precalculate the sine and cosine
+    static const float s = sinf(theta);
     float t;
 
     float x = r;//we start at angle = 0

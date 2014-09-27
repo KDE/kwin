@@ -496,18 +496,18 @@ void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }
 
-static const char *s_windows        = I18N_NOOP("Walk Through Windows");
-static const char *s_windowsRev     = I18N_NOOP("Walk Through Windows (Reverse)");
-static const char *s_windowsAlt     = I18N_NOOP("Walk Through Windows Alternative");
-static const char *s_windowsAltRev  = I18N_NOOP("Walk Through Windows Alternative (Reverse)");
-static const char *s_app            = I18N_NOOP("Walk Through Windows of Current Application");
-static const char *s_appRev         = I18N_NOOP("Walk Through Windows of Current Application (Reverse)");
-static const char *s_appAlt         = I18N_NOOP("Walk Through Windows of Current Application Alternative");
-static const char *s_appAltRev      = I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)");
-static const char *s_desktops       = I18N_NOOP("Walk Through Desktops");
-static const char *s_desktopsRev    = I18N_NOOP("Walk Through Desktops (Reverse)");
-static const char *s_desktopList    = I18N_NOOP("Walk Through Desktop List");
-static const char *s_desktopListRev = I18N_NOOP("Walk Through Desktop List (Reverse)");
+static const char s_windows[]        = I18N_NOOP("Walk Through Windows");
+static const char s_windowsRev[]     = I18N_NOOP("Walk Through Windows (Reverse)");
+static const char s_windowsAlt[]     = I18N_NOOP("Walk Through Windows Alternative");
+static const char s_windowsAltRev[]  = I18N_NOOP("Walk Through Windows Alternative (Reverse)");
+static const char s_app[]            = I18N_NOOP("Walk Through Windows of Current Application");
+static const char s_appRev[]         = I18N_NOOP("Walk Through Windows of Current Application (Reverse)");
+static const char s_appAlt[]         = I18N_NOOP("Walk Through Windows of Current Application Alternative");
+static const char s_appAltRev[]      = I18N_NOOP("Walk Through Windows of Current Application Alternative (Reverse)");
+static const char s_desktops[]       = I18N_NOOP("Walk Through Desktops");
+static const char s_desktopsRev[]    = I18N_NOOP("Walk Through Desktops (Reverse)");
+static const char s_desktopList[]    = I18N_NOOP("Walk Through Desktop List");
+static const char s_desktopListRev[] = I18N_NOOP("Walk Through Desktop List (Reverse)");
 
 void TabBox::initShortcuts()
 {

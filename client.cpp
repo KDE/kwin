@@ -1812,13 +1812,13 @@ QString Client::readName() const
 }
 
 // The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
-QChar LRM(0x200E);
-QChar RLM(0x200F);
-QChar LRE(0x202A);
-QChar RLE(0x202B);
-QChar LRO(0x202D);
-QChar RLO(0x202E);
-QChar PDF(0x202C);
+static const QChar LRM(0x200E);
+static const QChar RLM(0x200F);
+static const QChar LRE(0x202A);
+static const QChar RLE(0x202B);
+static const QChar LRO(0x202D);
+static const QChar RLO(0x202E);
+static const QChar PDF(0x202C);
 
 void Client::setCaption(const QString& _s, bool force)
 {

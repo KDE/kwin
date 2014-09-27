@@ -277,7 +277,7 @@ const char* const tbl_All[] = {
     ""
 };
 
-const char* tbl_TiWAc[] = {
+const char* const tbl_TiWAc[] = {
     "Raise/Lower",
     "Shade/Unshade",
     "Maximize/Restore",
@@ -289,7 +289,7 @@ const char* tbl_TiWAc[] = {
     ""
 };
 
-const char* tbl_AllW[] = {
+const char* const tbl_AllW[] = {
     "Raise/Lower",
     "Shade/Unshade",
     "Maximize/Restore",

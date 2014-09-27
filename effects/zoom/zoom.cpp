@@ -380,7 +380,7 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (xrenderPicture) {
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-            static xcb_render_transform_t xrenderIdentity = {
+            static const xcb_render_transform_t xrenderIdentity = {
                 DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)

@@ -202,7 +202,7 @@ void MagnifierEffect::paintScreen(int mask, QRegion region, ScreenPaintData& dat
                 m_picture.reset(new XRenderPicture(m_pixmap, 32));
             }
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
-            static xcb_render_transform_t identity = {
+            static const xcb_render_transform_t identity = {
                 DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
                 DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)

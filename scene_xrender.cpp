@@ -565,7 +565,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
     };
-    static xcb_render_transform_t identity = {
+    static const xcb_render_transform_t identity = {
         DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
@@ -1065,10 +1065,10 @@ void SceneXrender::EffectFrame::renderUnstyled(xcb_render_picture_t pict, const 
         xcb_render_color_t tranparent = {0, 0, 0, 0};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_effectFrameCircle, tranparent, 1, &xrect);
 
-        static int num_segments = 80;
-        static qreal theta = 2 * M_PI / qreal(num_segments);
-        static qreal c = qCos(theta); //precalculate the sine and cosine
-        static qreal s = qSin(theta);
+        static const int num_segments = 80;
+        static const qreal theta = 2 * M_PI / qreal(num_segments);
+        static const qreal c = qCos(theta); //precalculate the sine and cosine
+        static const qreal s = qSin(theta);
         qreal t;
 
         qreal x = roundness;//we start at angle = 0
