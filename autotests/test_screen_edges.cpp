@@ -120,6 +120,7 @@ private Q_SLOTS:
     void testInit();
     void testCreatingInitialEdges();
     void testCallback();
+    void testCallbackWithCheck();
     void testPushBack_data();
     void testPushBack();
     void testFullScreenBlocking();
@@ -519,6 +520,43 @@ void TestScreenEdges::testCallback()
     }
 }
 
+void TestScreenEdges::testCallbackWithCheck()
+{
+    using namespace KWin;
+    auto s = ScreenEdges::self();
+    s->init();
+    TestObject callback;
+    QSignalSpy spy(&callback, SIGNAL(gotCallback(KWin::ElectricBorder)));
+    QVERIFY(spy.isValid());
+    s->reserve(ElectricLeft, &callback, "callback");
+
+    // check activating a different edge doesn't do anything
+    s->check(QPoint(50, 0), QDateTime::currentDateTime(), true);
+    QVERIFY(spy.isEmpty());
+
+    // try a direct activate without pushback
+    Cursor::setPos(0, 50);
+    s->check(QPoint(0, 50), QDateTime::currentDateTime(), true);
+    QCOMPARE(spy.count(), 1);
+    QEXPECT_FAIL("", "Argument says force no pushback, but it gets pushed back. Needs investigation", Continue);
+    QCOMPARE(Cursor::pos(), QPoint(0, 50));
+
+    // use a different edge, this time with pushback
+    s->reserve(KWin::ElectricRight, &callback, "callback");
+    Cursor::setPos(99, 50);
+    s->check(QPoint(99, 50), QDateTime::currentDateTime());
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricLeft);
+    QCOMPARE(Cursor::pos(), QPoint(98, 50));
+    // and trigger it again
+    QTest::qWait(160);
+    Cursor::setPos(99, 50);
+    s->check(QPoint(99, 50), QDateTime::currentDateTime());
+    QCOMPARE(spy.count(), 2);
+    QCOMPARE(spy.last().first().value<ElectricBorder>(), ElectricRight);
+    QCOMPARE(Cursor::pos(), QPoint(98, 50));
+}
+
 void TestScreenEdges::testPushBack_data()
 {
     QTest::addColumn<KWin::ElectricBorder>("border");
@@ -569,6 +607,12 @@ void TestScreenEdges::testPushBack()
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(s->isEntered(&event));
+    QVERIFY(spy.isEmpty());
+    QTEST(Cursor::pos(), "expected");
+
+    // do the same without the event, but the check method
+    Cursor::setPos(trigger);
+    s->check(trigger, QDateTime::currentDateTime());
     QVERIFY(spy.isEmpty());
     QTEST(Cursor::pos(), "expected");
 }
@@ -774,6 +818,29 @@ void TestScreenEdges::testClientEdge()
         QVERIFY(!e->client());
     }
     QCOMPARE(client.isHiddenInternal(), true);
+
+    // now let's try to trigger the client showing with the check method instead of enter notify
+    s->reserve(&client, KWin::ElectricTop);
+    QCOMPARE(client.isHiddenInternal(), true);
+    Cursor::setPos(50, 0);
+    s->check(QPoint(50, 0), QDateTime::currentDateTime());
+    QCOMPARE(client.isHiddenInternal(), true);
+    QCOMPARE(Cursor::pos(), QPoint(50, 1));
+    // and trigger
+    QTest::qWait(160);
+    Cursor::setPos(50, 0);
+    s->check(QPoint(50, 0), QDateTime::currentDateTime());
+    QCOMPARE(client.isHiddenInternal(), false);
+    QCOMPARE(Cursor::pos(), QPoint(50, 1));
+
+    // unreserve by setting to none edge
+    s->reserve(&client, KWin::ElectricNone);
+    // check on previous edge again, should fail
+    client.setHiddenInternal(true);
+    Cursor::setPos(50, 0);
+    s->check(QPoint(50, 0), QDateTime::currentDateTime());
+    QCOMPARE(client.isHiddenInternal(), true);
+    QCOMPARE(Cursor::pos(), QPoint(50, 0));
 }
 
 QTEST_MAIN(TestScreenEdges)
