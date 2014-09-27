@@ -77,7 +77,6 @@ Name[zh_TW]=虛擬桌面
 
 Comment=Navigation, Number and Layout of Virtual Desktops
 Comment[ca]=Navegació, nombre i disposició dels escriptoris virtuals
-Comment[cs]=Navigace, počet a rozvržení virtuálních ploch
 Comment[da]=Navigation, antal og layout af virtuelle skriveborde
 Comment[de]=Navigation, Anzahl und Layout virtueller Arbeitsflächen
 Comment[en_GB]=Navigation, Number and Layout of Virtual Desktops
@@ -102,9 +101,7 @@ Comment[sr@ijekavianlatin]=Kretanje, broj i raspored virtuelnih površi
 Comment[sr@latin]=Kretanje, broj i raspored virtuelnih površi
 Comment[sv]=Navigering, antal och layout av virtuella skrivbord
 Comment[uk]=Навігація, кількість та компонування віртуальних стільниць
-Comment[vi]=Số lượng, bố trí và điều hướng của màn hình ảo
 Comment[x-test]=xxNavigation, Number and Layout of Virtual Desktopsxx
-Comment[zh_TW]=虛擬桌面的導覽、數字與佈局
 X-KDE-Keywords=desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings
 X-KDE-Keywords[bs]=pozadina,pozadine,broj,virtuelna pozadina,višestruka pozadina,pejdžer,dodatak pejdžeru,aplet pejdžer,pejdžer postavke
 X-KDE-Keywords[ca]=escriptori,escriptoris,nombre,escriptori virtual,escriptoris múltiples,paginador,estri paginador,miniaplicació de paginació,arranjament de paginador

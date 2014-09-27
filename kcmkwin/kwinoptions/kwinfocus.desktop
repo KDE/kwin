@@ -99,7 +99,6 @@ Name[zh_TW]=焦點
 
 Comment=Active Window Policy
 Comment[ca]=Política de finestra activa
-Comment[cs]=Chování aktivního okna
 Comment[da]=Politik for aktivt vindue
 Comment[de]=Richtlinie für aktives Fenster
 Comment[en_GB]=Active Window Policy
@@ -125,7 +124,6 @@ Comment[sr@latin]=Smernica aktiviranja prozora
 Comment[sv]=Aktiv fönsterprincip
 Comment[uk]=Правила для задіяння вікон
 Comment[x-test]=xxActive Window Policyxx
-Comment[zh_TW]=作用中視窗政策
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
 X-KDE-Keywords[bs]=fokus, smještaj, automatski rast, rast, kliknite na rast, tastatura, CDE, Alt-Tab, cijeli desktop, fokus slijedi miša, fokus prevenciju, usredotoči krade, fokus politike, fokus prozora ponašanje, prozor zaslon ponašanje

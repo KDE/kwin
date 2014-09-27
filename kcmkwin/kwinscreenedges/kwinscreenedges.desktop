@@ -83,7 +83,6 @@ Name[zh_TW]=螢幕邊緣
 
 Comment=Active Screen Corners and Edges
 Comment[ca]=Cantonades i vores de la pantalla activa
-Comment[cs]=Aktivní rohy a hrany obrazovky
 Comment[da]=Aktive skærmhjørner og -kanter
 Comment[de]=Aktive Bildschirmränder
 Comment[en_GB]=Active Screen Corners and Edges
@@ -109,7 +108,6 @@ Comment[sr@latin]=Aktivni uglovi i ivice ekrana
 Comment[sv]=Aktiva skärmhörn och kanter
 Comment[uk]=Активні кути та краї екрана
 Comment[x-test]=xxActive Screen Corners and Edgesxx
-Comment[zh_TW]=作用中螢幕角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,cantonada,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla
@@ -139,4 +137,3 @@ X-KDE-Keywords[sr@latin]=kwin,window,manager,effect,corner,edge,border,action,sw
 X-KDE-Keywords[sv]=kwin,fönster,hanterare,effekt,kant,gräns,åtgärd,byta,skrivbord,kwin skärmkanter,skrivbordskanter,maximera fönster,lägg fönster sida vid sida,skärmsidan, skärmbeteende,skrivbordsbyte,virtuellt skrivbord,skärmhörn
 X-KDE-Keywords[uk]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,вікно,керування,край,кут,межа,сторона,бік,дія,перемикання,стільниця,краї екрана,максимізація,мозаїка,плитка,край екрана,поведінка екрана,перемикання стільниць,віртуальна стільниця
 X-KDE-Keywords[x-test]=xxkwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen cornersxx
-X-KDE-Keywords[zh_TW]= kwin,window,manager,effect,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
