@@ -28,6 +28,7 @@ Name[sr@latin]=Nametanje dekoracija prozora na GTK+ prozor
 Name[sv]=Tvingar fönsterdekorationer på GTK+ fönster
 Name[uk]=Примусове декорування вікон для програм на основі GTK+
 Name[x-test]=xxEnforces Window Decorations on GTK+ windowxx
+Name[zh_CN]=强制对 GTK+ 窗口使用窗口装饰
 Name[zh_TW]=強制 GTK+ 視窗的視窗裝飾
 Comment=Fixes functional deficits for client side decorated windows.
 Comment[ca]=Corregeix els dèficits funcionals amb les finestres decorades a la banda del client.

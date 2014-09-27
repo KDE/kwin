@@ -130,6 +130,7 @@ Comment[sr@latin]=Ponašanje prozora i radnje nad njima
 Comment[sv]=Fönsteråtgärder och beteende
 Comment[uk]=Реакція і поведінка вікон
 Comment[x-test]=xxWindow Actions and Behaviorxx
+Comment[zh_CN]=窗口行为
 Comment[zh_TW]=視窗動作與行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
