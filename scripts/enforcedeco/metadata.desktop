@@ -31,6 +31,7 @@ Name[x-test]=xxEnforces Window Decorations on GTK+ windowxx
 Comment=Fixes functional deficits for client side decorated windows.
 Comment[ca]=Corregeix els dèficits funcionals amb les finestres decorades a la banda del client.
 Comment[da]=Løser funktionelle mangler ved vinduer med dekorationer på klientsiden.
+Comment[de]=Behebt funktionale Defizite von Fenstern, die durch Klient-Programme dekoriert werden.
 Comment[en_GB]=Fixes functional deficits for client side decorated windows.
 Comment[es]=Fija deficiencias funcionales en ventanas decoradas en el lado cliente.
 Comment[fi]=Korjaa asiakkaan kehystämien ikkunoiden toiminnallisia puutteita.
