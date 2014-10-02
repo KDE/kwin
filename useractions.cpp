@@ -266,6 +266,7 @@ void UserActionsMenu::init()
     m_resizeOperation->setData(Options::ResizeOp);
 
     m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
+    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
     m_keepAboveOperation->setCheckable(true);
     m_keepAboveOperation->setData(Options::KeepAboveOp);
