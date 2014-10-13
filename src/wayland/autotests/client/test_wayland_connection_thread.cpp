@@ -57,10 +57,10 @@ void TestWaylandConnectionThread::init()
     using namespace KWayland::Server;
     delete m_display;
     m_display = new Display(this);
-    QSignalSpy displayRunning(m_display, SIGNAL(runningChanged(bool)));
     m_display->setSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
+    m_display->createShm();
 }
 
 void TestWaylandConnectionThread::cleanup()
@@ -123,15 +123,17 @@ static const struct wl_registry_listener s_registryListener = {
 
 void TestWaylandConnectionThread::testConnectionThread()
 {
-    QScopedPointer<KWayland::Client::ConnectionThread> connection(new KWayland::Client::ConnectionThread);
+    KWayland::Client::ConnectionThread *connection = new KWayland::Client::ConnectionThread;
     connection->setSocketName(s_socketName);
 
     QThread *connectionThread = new QThread(this);
     connection->moveToThread(connectionThread);
     connectionThread->start();
 
-    QSignalSpy connectedSpy(connection.data(), SIGNAL(connected()));
-    QSignalSpy failedSpy(connection.data(), SIGNAL(failed()));
+    QSignalSpy connectedSpy(connection, SIGNAL(connected()));
+    QVERIFY(connectedSpy.isValid());
+    QSignalSpy failedSpy(connection, SIGNAL(failed()));
+    QVERIFY(failedSpy.isValid());
     connection->initConnection();
     QVERIFY(connectedSpy.wait());
     QCOMPARE(connectedSpy.count(), 1);
@@ -139,10 +141,13 @@ void TestWaylandConnectionThread::testConnectionThread()
     QVERIFY(connection->display());
 
     // now we have the connection ready, let's get some events
-    QSignalSpy eventsSpy(connection.data(), SIGNAL(eventsRead()));
+    QSignalSpy eventsSpy(connection, SIGNAL(eventsRead()));
+    QVERIFY(eventsSpy.isValid());
     wl_display *display = connection->display();
     QScopedPointer<KWayland::Client::EventQueue> queue(new KWayland::Client::EventQueue);
     queue->setup(display);
+    QVERIFY(queue->isValid());
+    connect(connection, &KWayland::Client::ConnectionThread::eventsRead, queue.data(), &KWayland::Client::EventQueue::dispatch, Qt::QueuedConnection);
 
     wl_registry *registry = wl_display_get_registry(display);
     wl_proxy_set_queue((wl_proxy*)registry, *(queue.data()));
@@ -158,6 +163,7 @@ void TestWaylandConnectionThread::testConnectionThread()
     wl_registry_destroy(registry);
     queue.reset();
 
+    connection->deleteLater();
     connectionThread->quit();
     connectionThread->wait();
     delete connectionThread;
