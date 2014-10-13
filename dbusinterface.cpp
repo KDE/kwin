@@ -43,13 +43,18 @@ namespace KWin
 
 DBusInterface::DBusInterface(QObject *parent)
     : QObject(parent)
+    , m_serviceName(QStringLiteral("org.kde.KWin"))
 {
     (void) new KWinAdaptor(this);
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/KWin"), this);
-    if (!dbus.registerService(QStringLiteral("org.kde.KWin"))) {
-        QDBusServiceWatcher *dog = new QDBusServiceWatcher(QStringLiteral("org.kde.KWin"), dbus, QDBusServiceWatcher::WatchForUnregistration, this);
+    const QByteArray dBusSuffix = qgetenv("KWIN_DBUS_SERVICE_SUFFIX");
+    if (!dBusSuffix.isNull()) {
+        m_serviceName = m_serviceName + QStringLiteral(".") + dBusSuffix;
+    }
+    if (!dbus.registerService(m_serviceName)) {
+        QDBusServiceWatcher *dog = new QDBusServiceWatcher(m_serviceName, dbus, QDBusServiceWatcher::WatchForUnregistration, this);
         connect (dog, SIGNAL(serviceUnregistered(QString)), SLOT(becomeKWinService(QString)));
     }
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
@@ -60,14 +65,14 @@ void DBusInterface::becomeKWinService(const QString &service)
 {
     // TODO: this watchdog exists to make really safe that we at some point get the service
     // but it's probably no longer needed since we explicitly unregister the service with the deconstructor
-    if (service == QStringLiteral("org.kde.KWin") && QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin")) && sender()) {
+    if (service == m_serviceName && QDBusConnection::sessionBus().registerService(m_serviceName) && sender()) {
         sender()->deleteLater(); // bye doggy :'(
     }
 }
 
 DBusInterface::~DBusInterface()
 {
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.KWin")); // this is the long standing legal service
+    QDBusConnection::sessionBus().unregisterService(m_serviceName);
     // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
     QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin"));
 }
