@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // KWin
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/client/registry.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
@@ -45,6 +46,8 @@ private Q_SLOTS:
     void testBindOutput();
     void testBindShm();
     void testBindSeat();
+    void testGlobalSync();
+    void testGlobalSyncThreaded();
     void testRemoval();
     void testDestroy();
 
@@ -272,6 +275,58 @@ void TestWaylandRegistry::testDestroy()
 
     // calling destroy again should not fail
     registry.destroy();
+}
+
+void TestWaylandRegistry::testGlobalSync()
+{
+    using namespace KWayland::Client;
+    ConnectionThread connection;
+    connection.setSocketName(s_socketName);
+    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
+    connection.initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    Registry registry;
+    QSignalSpy syncSpy(&registry, SIGNAL(interfacesAnnounced()));
+    // Most simple case: don't even use the ConnectionThread,
+    // just its display.
+    registry.create(connection.display());
+    registry.setup();
+    QVERIFY(syncSpy.wait());
+    QCOMPARE(syncSpy.count(), 1);
+    registry.destroy();
+}
+
+void TestWaylandRegistry::testGlobalSyncThreaded()
+{
+    // More complex case, use a ConnectionThread, in a different Thread,
+    // and our own EventQueue
+    using namespace KWayland::Client;
+    ConnectionThread connection;
+    connection.setSocketName(s_socketName);
+    QThread thread;
+    connection.moveToThread(&thread);
+    thread.start();
+
+    QSignalSpy connectedSpy(&connection, SIGNAL(connected()));
+    connection.initConnection();
+
+    QVERIFY(connectedSpy.wait());
+    EventQueue queue;
+    queue.setup(&connection);
+
+    Registry registry;
+    QSignalSpy syncSpy(&registry, SIGNAL(interfacesAnnounced()));
+    registry.setEventQueue(&queue);
+    registry.create(&connection);
+    registry.setup();
+
+    QVERIFY(syncSpy.wait());
+    QCOMPARE(syncSpy.count(), 1);
+    registry.destroy();
+
+    thread.quit();
+    thread.wait();
 }
 
 QTEST_GUILESS_MAIN(TestWaylandRegistry)
