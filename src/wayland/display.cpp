@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "output_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
+#include "subcompositor_interface.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -162,6 +163,13 @@ SeatInterface *Display::createSeat(QObject *parent)
     SeatInterface *seat = new SeatInterface(this, parent);
     connect(this, &Display::aboutToTerminate, seat, [this,seat] { delete seat; });
     return seat;
+}
+
+SubCompositorInterface *Display::createSubCompositor(QObject *parent)
+{
+    auto c = new SubCompositorInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, c, [this,c] { delete c; });
+    return c;
 }
 
 void Display::createShm()

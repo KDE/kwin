@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "output_interface.h"
 
 #include <QObject>
+#include <QPointer>
 #include <QRegion>
 
 #include <KWayland/Server/kwaylandserver_export.h>
@@ -33,6 +34,7 @@ namespace Server
 {
 class BufferInterface;
 class CompositorInterface;
+class SubSurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 {
@@ -60,6 +62,15 @@ public:
     BufferInterface *buffer();
     QPoint offset() const;
 
+    /**
+     * @returns The SubSurface for this Surface in case there is one.
+     **/
+    QPointer<SubSurfaceInterface> subSurface() const;
+    /**
+     * @returns Children in stacking order from bottom (first) to top (last).
+     **/
+    QList<QPointer<SubSurfaceInterface>> childSubSurfaces() const;
+
     static SurfaceInterface *get(wl_resource *native);
 
 Q_SIGNALS:
@@ -71,6 +82,7 @@ Q_SIGNALS:
 
 private:
     friend class CompositorInterface;
+    friend class SubSurfaceInterface;
     explicit SurfaceInterface(CompositorInterface *parent);
 
     class Private;

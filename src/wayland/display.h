@@ -37,6 +37,7 @@ class CompositorInterface;
 class OutputInterface;
 class SeatInterface;
 class ShellInterface;
+class SubCompositorInterface;
 
 class KWAYLANDSERVER_EXPORT Display : public QObject
 {
@@ -68,6 +69,7 @@ public:
     void createShm();
     ShellInterface *createShell(QObject *parent = nullptr);
     SeatInterface *createSeat(QObject *parent = nullptr);
+    SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);

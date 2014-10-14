@@ -100,3 +100,26 @@ add_executable(testCompositor ${testCompositor_SRCS})
 target_link_libraries( testCompositor Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testCompositor testCompositor)
 ecm_mark_as_test(testCompositor)
+
+########################################################
+# Test SubCompositor
+########################################################
+set( testSubCompositor_SRCS
+        test_wayland_subcompositor.cpp
+    )
+add_executable(testSubCompositor ${testSubCompositor_SRCS})
+target_link_libraries( testSubCompositor Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testSubCompositor testSubCompositor)
+ecm_mark_as_test(testSubCompositor)
+
+
+########################################################
+# Test SubSurface
+########################################################
+set( testSubSurface_SRCS
+        test_wayland_subsurface.cpp
+    )
+add_executable(testSubSurface ${testSubSurface_SRCS})
+target_link_libraries( testSubSurface Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testSubSurface testSubSurface)
+ecm_mark_as_test(testSubSurface)

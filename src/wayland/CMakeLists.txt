@@ -6,6 +6,7 @@ set(SERVER_LIB_SRCS
     seat_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
+    subcompositor_interface.cpp
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})

@@ -18,74 +18,20 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "surface_interface.h"
+#include "surface_interface_p.h"
 #include "buffer_interface.h"
 #include "compositor_interface.h"
+#include "subcompositor_interface.h"
+#include "subsurface_interface_p.h"
 // Wayland
 #include <wayland-server.h>
+// std
+#include <algorithm>
 
 namespace KWayland
 {
 namespace Server
 {
-
-class SurfaceInterface::Private
-{
-public:
-    struct State {
-        QRegion damage = QRegion();
-        QRegion opaque = QRegion();
-        QRegion input = QRegion();
-        qint32 scale = 1;
-        OutputInterface::Transform transform = OutputInterface::Transform::Normal;
-        QList<wl_resource*> callbacks = QList<wl_resource*>();
-        QPoint offset = QPoint();
-        BufferInterface *buffer = nullptr;
-    };
-    Private(SurfaceInterface *q, CompositorInterface *c);
-    ~Private();
-
-    void create(wl_client *client, quint32 version, quint32 id);
-    void destroy();
-
-    static SurfaceInterface *get(wl_resource *native);
-
-    CompositorInterface *compositor;
-    wl_resource *surface = nullptr;
-    wl_client *client = nullptr;
-    State current;
-    State pending;
-
-private:
-    void commit();
-    void damage(const QRect &rect);
-    void setScale(qint32 scale);
-    void setTransform(OutputInterface::Transform transform);
-    void addFrameCallback(uint32_t callback);
-    void attachBuffer(wl_resource *buffer, const QPoint &offset);
-
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
-
-    static void unbind(wl_resource *r);
-    static void destroyFrameCallback(wl_resource *r);
-
-    static void destroyCallback(wl_client *client, wl_resource *resource);
-    static void attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy);
-    static void damageCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y, int32_t width, int32_t height);
-    static void frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback);
-    static void opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-    static void inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region);
-    static void commitCallback(wl_client *client, wl_resource *resource);
-    // since version 2
-    static void bufferTransformCallback(wl_client *client, wl_resource *resource, int32_t transform);
-    // since version 3
-    static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
-
-    SurfaceInterface *q;
-    static const struct wl_surface_interface s_interface;
-    static QList<SurfaceInterface::Private*> s_allSurfaces;
-};
 
 QList<SurfaceInterface::Private*> SurfaceInterface::Private::s_allSurfaces;
 
@@ -100,6 +46,88 @@ SurfaceInterface::Private::~Private()
 {
     destroy();
     s_allSurfaces.removeAll(this);
+}
+
+SurfaceInterface::Private *SurfaceInterface::Private::cast(wl_resource *r)
+{
+    return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+}
+
+void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > subSurface)
+{
+    pending.children.append(subSurface);
+}
+
+void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > subSurface)
+{
+    pending.children.removeAll(subSurface);
+}
+
+bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+{
+    auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
+    if (it == pending.children.end()) {
+        return false;
+    }
+    if (pending.children.count() == 1) {
+        // nothing to do
+        return true;
+    }
+    if (sibling == q) {
+        // it's to the parent, so needs to become last item
+        pending.children.append(*it);
+        pending.children.erase(it);
+        return true;
+    }
+    if (!sibling->subSurface()) {
+        // not a sub surface
+        return false;
+    }
+    auto siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
+    if (siblingIt == pending.children.end() || siblingIt == it) {
+        // not a sibling
+        return false;
+    }
+    auto value = (*it);
+    pending.children.erase(it);
+    // find the iterator again
+    siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
+    pending.children.insert(++siblingIt, value);
+    return true;
+}
+
+bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
+{
+    auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
+    if (it == pending.children.end()) {
+        return false;
+    }
+    if (pending.children.count() == 1) {
+        // nothing to do
+        return true;
+    }
+    if (sibling == q) {
+        // it's to the parent, so needs to become first item
+        auto value = *it;
+        pending.children.erase(it);
+        pending.children.prepend(value);
+        return true;
+    }
+    if (!sibling->subSurface()) {
+        // not a sub surface
+        return false;
+    }
+    auto siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
+    if (siblingIt == pending.children.end() || siblingIt == it) {
+        // not a sibling
+        return false;
+    }
+    auto value = (*it);
+    pending.children.erase(it);
+    // find the iterator again
+    siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
+    pending.children.insert(siblingIt, value);
+    return true;
 }
 
 SurfaceInterface *SurfaceInterface::Private::get(wl_resource *native)
@@ -202,6 +230,14 @@ void SurfaceInterface::Private::commit()
     // copy values
     current = pending;
     pending = State{};
+    pending.children = current.children;
+    // commit all subSurfaces to apply position changes
+    for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
+        if (!(*it)) {
+            continue;
+        }
+        (*it)->d->commit();
+    }
     if (opaqueRegionChanged) {
         emit q->opaqueChanged(current.opaque);
     }
@@ -369,6 +405,16 @@ QPoint SurfaceInterface::offset() const
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 {
     return Private::get(native);
+}
+
+QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const
+{
+    return d->current.children;
+}
+
+QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
+{
+    return d->subSurface;
 }
 
 }
