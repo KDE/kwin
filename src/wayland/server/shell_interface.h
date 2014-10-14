@@ -22,7 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
-#include <kwaylandserver_export.h>
+#include <KWayland/Server/kwaylandserver_export.h>
 
 class QSize;
 struct wl_resource;

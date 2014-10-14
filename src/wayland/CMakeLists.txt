@@ -9,7 +9,14 @@ set(SERVER_LIB_SRCS
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
-generate_export_header(KF5WaylandServer BASE_NAME KWaylandServer)
+generate_export_header(KF5WaylandServer
+    BASE_NAME
+        KWaylandServer
+    EXPORT_FILE_NAME
+        KWayland/Server/kwaylandserver_export.h
+)
+
+
 add_library(KF5::WaylandServer ALIAS KF5WaylandServer)
 
 target_include_directories(KF5WaylandServer INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server>")
@@ -33,7 +40,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 # install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
 #
 # install(FILES
-#   ${CMAKE_CURRENT_BINARY_DIR}/kwaylandserver_export.h
+#   ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
 #   buffer_interface.h
 #   compositor_interface.h
 #   display.h

@@ -23,7 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QObject>
 
-#include <kwaylandserver_export.h>
+#include <KWayland/Server/kwaylandserver_export.h>
 
 struct wl_resource;
 struct wl_shm_buffer;

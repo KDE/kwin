@@ -23,7 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 #include <QObject>
 
-#include <kwaylandserver_export.h>
+#include <KWayland/Server/kwaylandserver_export.h>
 
 struct wl_display;
 struct wl_event_loop;
