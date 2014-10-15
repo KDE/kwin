@@ -358,7 +358,6 @@ WaylandBackend::WaylandBackend(QObject *parent)
     connect(m_registry, &Registry::shellAnnounced, this,
         [this](quint32 name) {
             m_shell->setup(m_registry->bindShell(name, 1));
-            createSurface();
         }
     );
     connect(m_registry, &Registry::outputAnnounced, this,
@@ -382,9 +381,9 @@ WaylandBackend::WaylandBackend(QObject *parent)
     connect(m_registry, &Registry::fullscreenShellAnnounced, this,
         [this](quint32 name, quint32 version) {
             m_fullscreenShell->setup(m_registry->bindFullscreenShell(name, version));
-            createSurface();
         }
     );
+    connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
     initConnection();
 }
 
