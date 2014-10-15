@@ -108,7 +108,6 @@ public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
 
-    void resetCursor();
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
     void installCursorImage(Qt::CursorShape shape);
 private Q_SLOTS:
@@ -123,7 +122,6 @@ private:
     KWayland::Client::Surface *m_cursor;
     wl_cursor_theme *m_theme;
     uint32_t m_enteredSerial;
-    QScopedPointer<X11CursorTracker> m_cursorTracker;
     WaylandBackend *m_backend;
 };
 
@@ -142,6 +140,7 @@ public:
     KWayland::Client::Compositor *compositor();
     const QList<KWayland::Client::Output*> &outputs() const;
     KWayland::Client::ShmPool *shmPool();
+    X11CursorTracker *cursorTracker();
 
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
@@ -166,6 +165,7 @@ private:
     KWayland::Client::ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
+    QScopedPointer<X11CursorTracker> m_cursorTracker;
     QList<KWayland::Client::Output*> m_outputs;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
@@ -208,6 +208,12 @@ inline
 KWayland::Client::ShmPool* WaylandBackend::shmPool()
 {
     return m_shm;
+}
+
+inline
+X11CursorTracker *WaylandBackend::cursorTracker()
+{
+    return m_cursorTracker.data();
 }
 
 inline

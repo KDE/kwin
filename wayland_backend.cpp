@@ -153,7 +153,6 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_cursor(NULL)
     , m_theme(NULL)
     , m_enteredSerial(0)
-    , m_cursorTracker()
     , m_backend(backend)
 {
     m_seat->setup(seat);
@@ -233,8 +232,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                         input()->processPointerAxis(toAxis(), delta, time);
                     }
                 );
-                m_cursorTracker.reset(new X11CursorTracker(m_backend));
-                connect(m_cursorTracker.data(), &X11CursorTracker::cursorImageChanged, this,
+                connect(m_backend->cursorTracker(), &X11CursorTracker::cursorImageChanged, this,
                     [this](Buffer::Ptr image, const QSize &size, const QPoint &hotspot) {
                         if (image.isNull()) {
                             return;
@@ -260,20 +258,12 @@ void WaylandSeat::destroyPointer()
 {
     delete m_pointer;
     m_pointer = nullptr;
-    m_cursorTracker.reset();
 }
 
 void WaylandSeat::destroyKeyboard()
 {
     delete m_keyboard;
     m_keyboard = nullptr;
-}
-
-void WaylandSeat::resetCursor()
-{
-    if (!m_cursorTracker.isNull()) {
-        m_cursorTracker->resetCursor();
-    }
 }
 
 void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotSpot)
@@ -352,6 +342,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shellSurface(NULL)
     , m_seat()
     , m_shm(new ShmPool(this))
+    , m_cursorTracker()
     , m_connectionThreadObject(nullptr)
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
@@ -437,11 +428,13 @@ void WaylandBackend::initConnection()
             // setup registry
             m_registry->create(m_display);
             m_registry->setup();
+            m_cursorTracker.reset(new X11CursorTracker(this, this));
         },
         Qt::QueuedConnection);
     connect(m_connectionThreadObject, &ConnectionThread::connectionDied, this,
         [this]() {
             emit systemCompositorDied();
+            m_cursorTracker.reset();
             m_seat.reset();
             m_shm->destroy();
             destroyOutputs();
@@ -508,13 +501,7 @@ void WaylandBackend::createSurface()
         // map the surface as fullscreen
         m_shellSurface = m_shell->createSurface(m_surface, this);
         m_shellSurface->setFullscreen();
-        connect(m_shellSurface, &ShellSurface::pinged, this,
-            [this]() {
-                if (!m_seat.isNull()) {
-                    m_seat->resetCursor();
-                }
-            }
-        );
+        connect(m_shellSurface, &ShellSurface::pinged, m_cursorTracker.data(), &X11CursorTracker::resetCursor);
         connect(m_shellSurface, &ShellSurface::sizeChanged, this, &WaylandBackend::shellSurfaceSizeChanged);
     }
 }
