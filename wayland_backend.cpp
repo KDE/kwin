@@ -86,9 +86,8 @@ bool CursorData::init()
     return true;
 }
 
-X11CursorTracker::X11CursorTracker(WaylandSeat *seat, WaylandBackend *backend, QObject* parent)
+X11CursorTracker::X11CursorTracker(WaylandBackend *backend, QObject* parent)
     : QObject(parent)
-    , m_seat(seat)
     , m_backend(backend)
     , m_lastX11Cursor(0)
 {
@@ -131,11 +130,11 @@ void X11CursorTracker::cursorChanged(uint32_t serial)
 void X11CursorTracker::installCursor(const CursorData& cursor)
 {
     const QImage &cursorImage = cursor.cursor();
-    auto buffer = m_backend->shmPool()->createBuffer(cursorImage).toStrongRef();
+    auto buffer = m_backend->shmPool()->createBuffer(cursorImage);
     if (!buffer) {
         return;
     }
-    m_seat->installCursorImage(buffer->buffer(), cursorImage.size(), cursor.hotSpot());
+    emit cursorImageChanged(buffer, cursorImage.size(), cursor.hotSpot());
 }
 
 void X11CursorTracker::resetCursor()
@@ -234,7 +233,15 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                         input()->processPointerAxis(toAxis(), delta, time);
                     }
                 );
-                m_cursorTracker.reset(new X11CursorTracker(this, m_backend));
+                m_cursorTracker.reset(new X11CursorTracker(m_backend));
+                connect(m_cursorTracker.data(), &X11CursorTracker::cursorImageChanged, this,
+                    [this](Buffer::Ptr image, const QSize &size, const QPoint &hotspot) {
+                        if (image.isNull()) {
+                            return;
+                        }
+                        installCursorImage(image.toStrongRef()->buffer(), size, hotspot);
+                    }
+                );
             } else {
                 destroyPointer();
             }

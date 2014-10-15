@@ -39,6 +39,7 @@ namespace KWayland
 {
 namespace Client
 {
+class Buffer;
 class ShmPool;
 class Compositor;
 class ConnectionThread;
@@ -83,14 +84,17 @@ class X11CursorTracker : public QObject
 {
     Q_OBJECT
 public:
-    explicit X11CursorTracker(WaylandSeat *seat, WaylandBackend *backend, QObject* parent = 0);
+    explicit X11CursorTracker(WaylandBackend *backend, QObject* parent = 0);
     virtual ~X11CursorTracker();
     void resetCursor();
+
+Q_SIGNALS:
+    void cursorImageChanged(QWeakPointer<KWayland::Client::Buffer> image, const QSize &size, const QPoint &hotSpot);
+
 private Q_SLOTS:
     void cursorChanged(uint32_t serial);
 private:
     void installCursor(const CursorData &cursor);
-    WaylandSeat *m_seat;
     QHash<uint32_t, CursorData> m_cursors;
     WaylandBackend *m_backend;
     uint32_t m_installedCursor;
