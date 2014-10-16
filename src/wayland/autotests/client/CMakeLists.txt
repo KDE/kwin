@@ -123,3 +123,14 @@ add_executable(testSubSurface ${testSubSurface_SRCS})
 target_link_libraries( testSubSurface Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testSubSurface testSubSurface)
 ecm_mark_as_test(testSubSurface)
+
+########################################################
+# Test Region
+########################################################
+set( testRegion_SRCS
+        test_wayland_region.cpp
+    )
+add_executable(testRegion ${testRegion_SRCS})
+target_link_libraries( testRegion Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testRegion testRegion)
+ecm_mark_as_test(testRegion)

@@ -3,6 +3,7 @@ set(SERVER_LIB_SRCS
     compositor_interface.cpp
     display.cpp
     output_interface.cpp
+    region_interface.cpp
     seat_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
@@ -46,6 +47,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   compositor_interface.h
 #   display.h
 #   output_interface.h
+#   region_interface.h
 #   seat_interface.h
 #   shell_interface.h
 #   surface_interface.h

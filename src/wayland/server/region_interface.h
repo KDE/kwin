@@ -17,41 +17,44 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
-#define WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
-
-#include "region_interface.h"
-#include "surface_interface.h"
+#ifndef WAYLAND_SERVER_REGION_INTERFACE_H
+#define WAYLAND_SERVER_REGION_INTERFACE_H
 
 #include <QObject>
+#include <QRegion>
 
 #include <KWayland/Server/kwaylandserver_export.h>
+
+struct wl_client;
+struct wl_resource;
 
 namespace KWayland
 {
 namespace Server
 {
+class CompositorInterface;
 
-class Display;
-class SurfaceInterface;
-
-class KWAYLANDSERVER_EXPORT CompositorInterface : public QObject
+class KWAYLANDSERVER_EXPORT RegionInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~CompositorInterface();
+    virtual ~RegionInterface();
 
-    void create();
-    void destroy();
-    bool isValid() const;
+    void create(wl_client *client, quint32 version, quint32 id);
+
+    wl_resource *resource() const;
+
+    QRegion region() const;
+
+    static RegionInterface *get(wl_resource *native);
 
 Q_SIGNALS:
-    void surfaceCreated(KWayland::Server::SurfaceInterface*);
-    void regionCreated(KWayland::Server::RegionInterface*);
+    void regionChanged(const QRegion&);
 
 private:
-    explicit CompositorInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
+    friend class CompositorInterface;
+    explicit RegionInterface(CompositorInterface *parent);
+
     class Private;
     QScopedPointer<Private> d;
 };
