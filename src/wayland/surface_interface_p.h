@@ -36,6 +36,9 @@ public:
         QRegion damage = QRegion();
         QRegion opaque = QRegion();
         QRegion input = QRegion();
+        bool inputIsSet = false;
+        bool opaqueIsSet = false;
+        bool inputIsInfinite = true;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
         QList<wl_resource*> callbacks = QList<wl_resource*>();
@@ -71,6 +74,8 @@ private:
     void setTransform(OutputInterface::Transform transform);
     void addFrameCallback(uint32_t callback);
     void attachBuffer(wl_resource *buffer, const QPoint &offset);
+    void setOpaque(const QRegion &region);
+    void setInput(const QRegion &region, bool isInfinite);
 
     static Private *cast(wl_resource *r);
 

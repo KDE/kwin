@@ -57,6 +57,7 @@ public:
     QRegion damage() const;
     QRegion opaque() const;
     QRegion input() const;
+    bool inputIsInfitine() const;
     qint32 scale() const;
     OutputInterface::Transform transform() const;
     BufferInterface *buffer();

@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/surface.h"
+#include "../../src/client/region.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/shm_pool.h"
 #include "../../src/server/buffer_interface.h"
@@ -46,6 +47,8 @@ private Q_SLOTS:
     void testDamage();
     void testFrameCallback();
     void testAttachBuffer();
+    void testOpaque();
+    void testInput();
     void testDestroy();
 
 private:
@@ -342,6 +345,122 @@ void TestWaylandSurface::testAttachBuffer()
 
     // TODO: add signal test on release
     buffer->unref();
+}
+
+void TestWaylandSurface::testOpaque()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(serverSurfaceCreated.isValid());
+    Surface *s = m_compositor->createSurface();
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QSignalSpy opaqueRegionChangedSpy(serverSurface, SIGNAL(opaqueChanged(QRegion)));
+    QVERIFY(opaqueRegionChangedSpy.isValid());
+
+    // by default there should be an empty opaque region
+    QCOMPARE(serverSurface->opaque(), QRegion());
+
+    // let's install an opaque region
+    s->setOpaqueRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
+    // the region should only be applied after the surface got commited
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCOMPARE(serverSurface->opaque(), QRegion());
+    QCOMPARE(opaqueRegionChangedSpy.count(), 0);
+
+    // so let's commit to get the new region
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(opaqueRegionChangedSpy.wait());
+    QCOMPARE(opaqueRegionChangedSpy.count(), 1);
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(0, 10, 20, 30));
+    QCOMPARE(serverSurface->opaque(), QRegion(0, 10, 20, 30));
+
+    // committing without setting a new region shouldn't change
+    s->commit(Surface::CommitFlag::None);
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCOMPARE(opaqueRegionChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->opaque(), QRegion(0, 10, 20, 30));
+
+    // let's change the opaque region
+    s->setOpaqueRegion(m_compositor->createRegion(QRegion(10, 20, 30, 40)).get());
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(opaqueRegionChangedSpy.wait());
+    QCOMPARE(opaqueRegionChangedSpy.count(), 2);
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 30, 40));
+    QCOMPARE(serverSurface->opaque(), QRegion(10, 20, 30, 40));
+
+    // and let's go back to an empty region
+    s->setOpaqueRegion();
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(opaqueRegionChangedSpy.wait());
+    QCOMPARE(opaqueRegionChangedSpy.count(), 3);
+    QCOMPARE(opaqueRegionChangedSpy.last().first().value<QRegion>(), QRegion());
+    QCOMPARE(serverSurface->opaque(), QRegion());
+}
+
+void TestWaylandSurface::testInput()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(serverSurfaceCreated.isValid());
+    Surface *s = m_compositor->createSurface();
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QSignalSpy inputRegionChangedSpy(serverSurface, SIGNAL(inputChanged(QRegion)));
+    QVERIFY(inputRegionChangedSpy.isValid());
+
+    // by default there should be an empty == infinite input region
+    QCOMPARE(serverSurface->input(), QRegion());
+    QCOMPARE(serverSurface->inputIsInfitine(), true);
+
+    // let's install an input region
+    s->setInputRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
+    // the region should only be applied after the surface got commited
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCOMPARE(serverSurface->input(), QRegion());
+    QCOMPARE(serverSurface->inputIsInfitine(), true);
+    QCOMPARE(inputRegionChangedSpy.count(), 0);
+
+    // so let's commit to get the new region
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(inputRegionChangedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 1);
+    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(0, 10, 20, 30));
+    QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
+    QCOMPARE(serverSurface->inputIsInfitine(), false);
+
+    // committing without setting a new region shouldn't change
+    s->commit(Surface::CommitFlag::None);
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCOMPARE(inputRegionChangedSpy.count(), 1);
+    QCOMPARE(serverSurface->input(), QRegion(0, 10, 20, 30));
+    QCOMPARE(serverSurface->inputIsInfitine(), false);
+
+    // let's change the input region
+    s->setInputRegion(m_compositor->createRegion(QRegion(10, 20, 30, 40)).get());
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(inputRegionChangedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 2);
+    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion(10, 20, 30, 40));
+    QCOMPARE(serverSurface->input(), QRegion(10, 20, 30, 40));
+    QCOMPARE(serverSurface->inputIsInfitine(), false);
+
+    // and let's go back to an empty region
+    s->setInputRegion();
+    s->commit(Surface::CommitFlag::None);
+    QVERIFY(inputRegionChangedSpy.wait());
+    QCOMPARE(inputRegionChangedSpy.count(), 3);
+    QCOMPARE(inputRegionChangedSpy.last().first().value<QRegion>(), QRegion());
+    QCOMPARE(serverSurface->input(), QRegion());
+    QCOMPARE(serverSurface->inputIsInfitine(), true);
 }
 
 void TestWaylandSurface::testDestroy()

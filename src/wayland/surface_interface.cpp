@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface_p.h"
 #include "buffer_interface.h"
 #include "compositor_interface.h"
+#include "region_interface.h"
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
 // Wayland
@@ -217,8 +218,8 @@ void SurfaceInterface::Private::commit()
     for (wl_resource *c : current.callbacks) {
         wl_resource_destroy(c);
     }
-    const bool opaqueRegionChanged = current.opaque != pending.opaque;
-    const bool inputRegionChanged = current.input != pending.input;
+    const bool opaqueRegionChanged = pending.opaqueIsSet;
+    const bool inputRegionChanged = pending.inputIsSet;
     const bool scaleFactorChanged = current.scale != pending.scale;
     const bool transformFactorChanged = current.transform != pending.transform;
     if (current.buffer) {
@@ -231,6 +232,9 @@ void SurfaceInterface::Private::commit()
     current = pending;
     pending = State{};
     pending.children = current.children;
+    pending.input = current.input;
+    pending.inputIsInfinite = current.inputIsInfinite;
+    pending.opaque = current.opaque;
     // commit all subSurfaces to apply position changes
     for (auto it = current.children.constBegin(); it != current.children.constEnd(); ++it) {
         if (!(*it)) {
@@ -325,18 +329,31 @@ void SurfaceInterface::Private::frameCallaback(wl_client *client, wl_resource *r
 
 void SurfaceInterface::Private::opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(region)
-    // TODO: implement me
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
+    auto r = RegionInterface::get(region);
+    s->setOpaque(r ? r->region() : QRegion());
+}
+
+void SurfaceInterface::Private::setOpaque(const QRegion &region)
+{
+    pending.opaqueIsSet = true;
+    pending.opaque = region;
 }
 
 void SurfaceInterface::Private::inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(region)
-    // TODO: implement me
+    auto s = cast(resource);
+    Q_ASSERT(client == s->client);
+    auto r = RegionInterface::get(region);
+    s->setInput(r ? r->region() : QRegion(), !r);
+}
+
+void SurfaceInterface::Private::setInput(const QRegion &region, bool isInfinite)
+{
+    pending.inputIsSet = true;
+    pending.inputIsInfinite = isInfinite;
+    pending.input = region;
 }
 
 void SurfaceInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
@@ -380,6 +397,11 @@ QRegion SurfaceInterface::opaque() const
 QRegion SurfaceInterface::input() const
 {
     return d->current.input;
+}
+
+bool SurfaceInterface::inputIsInfitine() const
+{
+    return d->current.inputIsInfinite;
 }
 
 qint32 SurfaceInterface::scale() const
