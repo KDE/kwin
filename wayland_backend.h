@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 
 class QTemporaryFile;
+struct wl_cursor_image;
 struct wl_cursor_theme;
 struct wl_buffer;
 struct wl_display;
@@ -52,6 +53,8 @@ class Registry;
 class Seat;
 class Shell;
 class ShellSurface;
+class SubCompositor;
+class SubSurface;
 class Surface;
 }
 }
@@ -101,6 +104,22 @@ private:
     uint32_t m_lastX11Cursor;
 };
 
+class WaylandCursorTheme : public QObject
+{
+    Q_OBJECT
+public:
+    explicit WaylandCursorTheme(WaylandBackend *backend, QObject *parent = nullptr);
+    virtual ~WaylandCursorTheme();
+
+    wl_cursor_image *get(Qt::CursorShape shape);
+
+private:
+    void loadTheme();
+    void destroyTheme();
+    wl_cursor_theme *m_theme;
+    WaylandBackend *m_backend;
+};
+
 class WaylandSeat : public QObject
 {
     Q_OBJECT
@@ -110,19 +129,44 @@ public:
 
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
     void installCursorImage(Qt::CursorShape shape);
-private Q_SLOTS:
-    void loadTheme();
+    void setInstallCursor(bool install);
+    bool isInstallCursor() const {
+        return m_installCursor;
+    }
 private:
     void destroyPointer();
     void destroyKeyboard();
-    void destroyTheme();
     KWayland::Client::Seat *m_seat;
     KWayland::Client::Pointer *m_pointer;
     KWayland::Client::Keyboard *m_keyboard;
     KWayland::Client::Surface *m_cursor;
-    wl_cursor_theme *m_theme;
+    WaylandCursorTheme *m_theme;
     uint32_t m_enteredSerial;
     WaylandBackend *m_backend;
+    bool m_installCursor;
+};
+
+class WaylandCursor : public QObject
+{
+    Q_OBJECT
+public:
+    explicit WaylandCursor(KWayland::Client::Surface *parentSurface, WaylandBackend *backend);
+
+    void setHotSpot(const QPoint &pos);
+    const QPoint &hotSpot() const {
+        return m_hotSpot;
+    }
+    void setCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
+    void setCursorImage(Qt::CursorShape shape);
+
+Q_SIGNALS:
+    void hotSpotChanged(const QPoint &);
+
+private:
+    WaylandBackend *m_backend;
+    QPoint m_hotSpot;
+    KWayland::Client::SubSurface *m_subSurface;
+    WaylandCursorTheme *m_theme;
 };
 
 /**
@@ -140,6 +184,7 @@ public:
     KWayland::Client::Compositor *compositor();
     const QList<KWayland::Client::Output*> &outputs() const;
     KWayland::Client::ShmPool *shmPool();
+    KWayland::Client::SubCompositor *subCompositor();
     X11CursorTracker *cursorTracker();
 
     KWayland::Client::Surface *surface() const;
@@ -170,6 +215,8 @@ private:
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
     KWayland::Client::FullscreenShell *m_fullscreenShell;
+    KWayland::Client::SubCompositor *m_subCompositor;
+    WaylandCursor *m_cursor;
 
     KWIN_SINGLETON(WaylandBackend)
 };
@@ -202,6 +249,12 @@ inline
 KWayland::Client::Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
+}
+
+inline
+KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
+{
+    return m_subCompositor;
 }
 
 inline
