@@ -427,10 +427,6 @@ WaylandBackend *WaylandBackend::s_self = 0;
 WaylandBackend *WaylandBackend::create(QObject *parent)
 {
     Q_ASSERT(!s_self);
-    const QByteArray display = qgetenv("WAYLAND_DISPLAY");
-    if (display.isEmpty()) {
-        return NULL;
-    }
     s_self = new WaylandBackend(parent);
     return s_self;
 }
