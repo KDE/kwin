@@ -226,6 +226,11 @@ void InputRedirection::setupLibInput()
                 processPointerMotion(screen, time);
             }
         );
+        // set pos to center of all screens
+        if (screens()) {
+            m_globalPointer = screens()->geometry().center();
+            emit globalPointerChanged(m_globalPointer);
+        }
     }
 #endif
 }
