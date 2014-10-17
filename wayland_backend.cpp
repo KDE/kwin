@@ -383,6 +383,9 @@ WaylandCursor::WaylandCursor(Surface *parentSurface, WaylandBackend *backend)
             parent->commit(Surface::CommitFlag::None);
         }
     );
+
+    // install a default cursor image:
+    setCursorImage(Qt::ArrowCursor);
 }
 
 void WaylandCursor::setHotSpot(const QPoint &pos)
