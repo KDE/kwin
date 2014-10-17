@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "workspace.h"
 #if HAVE_INPUT
+#include "screens.h"
 #include "libinput/connection.h"
 #endif
 // KDE
@@ -204,11 +205,27 @@ void InputRedirection::setupLibInput()
     }
     LibInput::Connection *conn = LibInput::Connection::create(this);
     if (conn) {
-        // TODO: connect the motion notifiers
         conn->setup();
+        conn->setScreenSize(screens()->size());
+        connect(screens(), &Screens::sizeChanged, this,
+            [this, conn] {
+                conn->setScreenSize(screens()->size());
+            }
+        );
         connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
+        connect(conn, &LibInput::Connection::pointerMotion, this,
+            [this] (QPointF delta, uint32_t time) {
+                processPointerMotion(m_globalPointer + delta, time);
+            }
+        );
+        connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
+            [this] (QPointF orig, QPointF screen, uint32_t time) {
+                Q_UNUSED(orig)
+                processPointerMotion(screen, time);
+            }
+        );
     }
 #endif
 }
