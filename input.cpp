@@ -226,10 +226,13 @@ void InputRedirection::setupLibInput()
                 processPointerMotion(screen, time);
             }
         );
+        connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
         // set pos to center of all screens
         if (screens()) {
             m_globalPointer = screens()->geometry().center();
             emit globalPointerChanged(m_globalPointer);
+            // sanitize
+            updatePointerAfterScreenChange();
         }
     }
 #endif
@@ -259,8 +262,7 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     Q_UNUSED(time)
     // first update to new mouse position
 //     const QPointF oldPos = m_globalPointer;
-    m_globalPointer = pos;
-    emit globalPointerChanged(m_globalPointer);
+    updatePointerPosition(pos);
 
     // TODO: check which part of KWin would like to intercept the event
     QMouseEvent event(QEvent::MouseMove, m_globalPointer.toPoint(), m_globalPointer.toPoint(),
@@ -556,6 +558,37 @@ void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+}
+
+static bool screenContainsPos(const QPointF &pos)
+{
+    for (int i = 0; i < screens()->count(); ++i) {
+        if (screens()->geometry(i).contains(pos.toPoint())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void InputRedirection::updatePointerPosition(const QPointF &pos)
+{
+    // verify that at least one screen contains the pointer position
+    if (!screenContainsPos(pos)) {
+        return;
+    }
+    m_globalPointer = pos;
+    emit globalPointerChanged(m_globalPointer);
+}
+
+void InputRedirection::updatePointerAfterScreenChange()
+{
+    if (screenContainsPos(m_globalPointer)) {
+        // pointer still on a screen
+        return;
+    }
+    // pointer no longer on a screen, reposition to closes screen
+    m_globalPointer = screens()->geometry(screens()->number(m_globalPointer.toPoint())).center();
+    emit globalPointerChanged(m_globalPointer);
 }
 
 } // namespace

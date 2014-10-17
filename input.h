@@ -156,6 +156,8 @@ private:
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
     Toplevel *findToplevel(const QPoint &pos);
     void setupLibInput();
+    void updatePointerPosition(const QPointF &pos);
+    void updatePointerAfterScreenChange();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB
