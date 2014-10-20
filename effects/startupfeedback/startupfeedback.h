@@ -33,6 +33,7 @@ class StartupFeedbackEffect
     : public Effect
 {
     Q_OBJECT
+    Q_PROPERTY(int type READ type)
 public:
     StartupFeedbackEffect();
     virtual ~StartupFeedbackEffect();
@@ -45,6 +46,10 @@ public:
 
     int requestedEffectChainPosition() const override {
         return 90;
+    }
+
+    int type() const {
+        return int(m_type);
     }
 
     static bool supported();
