@@ -102,14 +102,14 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
     }
 }
 
-KDecoration2::DecoratedClientPrivate *DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
+std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
 {
-    return new DecoratedClientImpl(static_cast<Client*>(decoration->parent()), client, decoration);
+    return std::unique_ptr<DecoratedClientImpl>(new DecoratedClientImpl(static_cast<Client*>(decoration->parent()), client, decoration));
 }
 
-KDecoration2::DecorationSettingsPrivate *DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
+std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::settings(KDecoration2::DecorationSettings *parent)
 {
-    return new SettingsImpl(parent);
+    return std::unique_ptr<SettingsImpl>(new SettingsImpl(parent));
 }
 
 void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
