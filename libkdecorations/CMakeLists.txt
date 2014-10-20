@@ -27,11 +27,11 @@ target_link_libraries(kdecorations
 include(ECMPackageConfigHelpers)
 include(ECMSetupVersion)
 
-ecm_setup_version(${KWIN_VERSION}
+ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KDECORATIONS
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kdecorations_version.h"
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KDecorationsConfigVersion.cmake"
-                  SOVERSION 5
+                  SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 set_target_properties(kdecorations PROPERTIES

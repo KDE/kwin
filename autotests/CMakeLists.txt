@@ -1,4 +1,5 @@
 add_definitions(-DKWIN_UNIT_TEST)
+
 ########################################################
 # Test ScreenPaintData
 ########################################################
@@ -178,3 +179,63 @@ target_link_libraries(fakeeffectplugin kwineffects)
 add_library(effectversionplugin MODULE fakeeffectplugin_version.cpp)
 set_target_properties(effectversionplugin PROPERTIES PREFIX "")
 target_link_libraries(effectversionplugin kwineffects)
+
+########################################################
+# Test Screens
+########################################################
+set( testScreens_SRCS
+    test_screens.cpp
+    mock_client.cpp
+    mock_screens.cpp
+    mock_workspace.cpp
+    ../screens.cpp
+)
+kconfig_add_kcfg_files(testScreens_SRCS ../settings.kcfgc)
+
+add_executable( testScreens ${testScreens_SRCS})
+target_include_directories(testScreens BEFORE PRIVATE ./)
+target_link_libraries(testScreens
+    Qt5::Test
+    Qt5::X11Extras
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::WindowSystem
+    KF5::Service
+)
+
+add_test(kwin_testScreens testScreens)
+ecm_mark_as_test(testScreens)
+
+########################################################
+# Test ScreenEdges
+########################################################
+set( testScreenEdges_SRCS
+    test_screen_edges.cpp
+    mock_client.cpp
+    mock_screens.cpp
+    mock_workspace.cpp
+    ../atoms.cpp
+    ../screens.cpp
+    ../screenedge.cpp
+    ../virtualdesktops.cpp
+)
+kconfig_add_kcfg_files(testScreenEdges_SRCS ../settings.kcfgc)
+qt5_add_dbus_interface( testScreenEdges_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../org.freedesktop.ScreenSaver.xml screenlocker_interface)
+
+add_executable( testScreenEdges ${testScreenEdges_SRCS})
+target_include_directories(testScreenEdges BEFORE PRIVATE ./)
+target_link_libraries(testScreenEdges
+    Qt5::DBus
+    Qt5::Test
+    Qt5::X11Extras
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::I18n
+    KF5::GlobalAccel
+    KF5::WindowSystem
+    KF5::Service
+    XCB::XCB
+)
+
+add_test(kwin_testScreenEdges testScreenEdges)
+ecm_mark_as_test(testScreenEdges)

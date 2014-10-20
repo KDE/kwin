@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/shape.h>
 #include <xcb/sync.h>
 #include <xcb/xfixes.h>
+#include <xcb/glx.h>
 // system
 #include <sys/shm.h>
 #include <sys/types.h>
@@ -266,6 +267,70 @@ QVector<QByteArray> syncOpCodes()
                                 QByteArrayLiteral("AwaitFence")});
 }
 
+static QVector<QByteArray> glxOpCodes()
+{
+    return QVector<QByteArray>{
+        QByteArrayLiteral(""),
+        QByteArrayLiteral("Render"),
+        QByteArrayLiteral("RenderLarge"),
+        QByteArrayLiteral("CreateContext"),
+        QByteArrayLiteral("DestroyContext"),
+        QByteArrayLiteral("MakeCurrent"),
+        QByteArrayLiteral("IsDirect"),
+        QByteArrayLiteral("QueryVersion"),
+        QByteArrayLiteral("WaitGL"),
+        QByteArrayLiteral("WaitX"),
+        QByteArrayLiteral("CopyContext"),
+        QByteArrayLiteral("SwapBuffers"),
+        QByteArrayLiteral("UseXFont"),
+        QByteArrayLiteral("CreateGLXPixmap"),
+        QByteArrayLiteral("GetVisualConfigs"),
+        QByteArrayLiteral("DestroyGLXPixmap"),
+        QByteArrayLiteral("VendorPrivate"),
+        QByteArrayLiteral("VendorPrivateWithReply"),
+        QByteArrayLiteral("QueryExtensionsString"),
+        QByteArrayLiteral("QueryServerString"),
+        QByteArrayLiteral("ClientInfo"),
+        QByteArrayLiteral("GetFBConfigs"),
+        QByteArrayLiteral("CreatePixmap"),
+        QByteArrayLiteral("DestroyPixmap"),
+        QByteArrayLiteral("CreateNewContext"),
+        QByteArrayLiteral("QueryContext"),
+        QByteArrayLiteral("MakeContextCurrent"),
+        QByteArrayLiteral("CreatePbuffer"),
+        QByteArrayLiteral("DestroyPbuffer"),
+        QByteArrayLiteral("GetDrawableAttributes"),
+        QByteArrayLiteral("ChangeDrawableAttributes"),
+        QByteArrayLiteral("CreateWindow"),
+        QByteArrayLiteral("DeleteWindow"),
+        QByteArrayLiteral("SetClientInfoARB"),
+        QByteArrayLiteral("CreateContextAttribsARB"),
+        QByteArrayLiteral("SetClientInfo2ARB")
+        // Opcodes 36-100 are unused
+        // The GL single commands begin at opcode 101
+    };
+}
+
+static QVector<QByteArray> glxErrorCodes()
+{
+    return QVector<QByteArray>{
+        QByteArrayLiteral("BadContext"),
+        QByteArrayLiteral("BadContextState"),
+        QByteArrayLiteral("BadDrawable"),
+        QByteArrayLiteral("BadPixmap"),
+        QByteArrayLiteral("BadContextTag"),
+        QByteArrayLiteral("BadCurrentWindow"),
+        QByteArrayLiteral("BadRenderRequest"),
+        QByteArrayLiteral("BadLargeRequest"),
+        QByteArrayLiteral("UnsupportedPrivateRequest"),
+        QByteArrayLiteral("BadFBConfig"),
+        QByteArrayLiteral("BadPbuffer"),
+        QByteArrayLiteral("BadCurrentDrawable"),
+        QByteArrayLiteral("BadWindow"),
+        QByteArrayLiteral("GLXBadProfileARB")
+    };
+}
+
 ExtensionData::ExtensionData()
     : version(0)
     , eventBase(0)
@@ -317,6 +382,7 @@ void Extensions::init()
     xcb_prefetch_extension_data(c, &xcb_xfixes_id);
     xcb_prefetch_extension_data(c, &xcb_render_id);
     xcb_prefetch_extension_data(c, &xcb_sync_id);
+    xcb_prefetch_extension_data(c, &xcb_glx_id);
 
     m_shape.name     = QByteArray("SHAPE");
     m_randr.name     = QByteArray("RANDR");
@@ -325,6 +391,7 @@ void Extensions::init()
     m_fixes.name     = QByteArray("XFIXES");
     m_render.name    = QByteArray("RENDER");
     m_sync.name      = QByteArray("SYNC");
+    m_glx.name       = QByteArray("GLX");
 
     m_shape.opCodes     = shapeOpCodes();
     m_randr.opCodes     = randrOpCodes();
@@ -333,10 +400,12 @@ void Extensions::init()
     m_fixes.opCodes     = fixesOpCodes();
     m_render.opCodes    = renderOpCodes();
     m_sync.opCodes      = syncOpCodes();
+    m_glx.opCodes       = glxOpCodes();
 
     m_randr.errorCodes  = randrErrorCodes();
     m_damage.errorCodes = damageErrorCodes();
     m_fixes.errorCodes  = fixesErrorCodes();
+    m_glx.errorCodes    = glxErrorCodes();
 
     extensionQueryReply(xcb_get_extension_data(c, &xcb_shape_id), &m_shape);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_randr_id), &m_randr);
@@ -345,6 +414,7 @@ void Extensions::init()
     extensionQueryReply(xcb_get_extension_data(c, &xcb_xfixes_id), &m_fixes);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_render_id), &m_render);
     extensionQueryReply(xcb_get_extension_data(c, &xcb_sync_id), &m_sync);
+    extensionQueryReply(xcb_get_extension_data(c, &xcb_glx_id), &m_glx);
 
     // extension specific queries
     xcb_shape_query_version_cookie_t shapeVersion;
@@ -480,7 +550,8 @@ QVector<ExtensionData> Extensions::extensions() const
                << m_composite
                << m_render
                << m_fixes
-               << m_sync;
+               << m_sync
+               << m_glx;
     return extensions;
 }
 

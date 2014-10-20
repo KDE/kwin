@@ -35,6 +35,8 @@ namespace KWin
 class ColorCorrection;
 class LanczosFilter;
 class OpenGLBackend;
+class SyncManager;
+class SyncObject;
 
 class SceneOpenGL
     : public Scene
@@ -58,8 +60,10 @@ public:
     virtual bool syncsToVBlank() const;
     virtual bool makeOpenGLContextCurrent() override;
     virtual void doneOpenGLContextCurrent() override;
-    virtual bool isLastFrameRendered() const override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    virtual void triggerFence() override;
+
+    void insertWait();
 
     void idle();
 
@@ -103,6 +107,8 @@ private:
 private:
     bool m_debug;
     OpenGLBackend *m_backend;
+    SyncManager *m_syncManager;
+    SyncObject *m_currentFence;
 };
 
 class SceneOpenGL2 : public SceneOpenGL
@@ -145,10 +151,8 @@ class SceneOpenGL::TexturePrivate
 public:
     virtual ~TexturePrivate();
 
-    virtual void findTarget() = 0;
-    virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth) = 0;
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) = 0;
     virtual OpenGLBackend *backend() = 0;
-    virtual bool update(const QRegion &damage);
 
 protected:
     TexturePrivate();
@@ -168,16 +172,10 @@ public:
     Texture & operator = (const Texture& tex);
 
     using GLTexture::load;
-    virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
-    virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     virtual void discard();
-    bool update(const QRegion &damage);
 
 protected:
-    void findTarget();
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth,
-                      QRegion region);
-    virtual bool load(const Pixmap& pix, const QSize& size, int depth);
+    virtual bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
 
     Texture(TexturePrivate& dd);
 
@@ -211,31 +209,6 @@ protected:
 
     QMatrix4x4 transformation(int mask, const WindowPaintData &data) const;
     GLTexture *getDecorationTexture() const;
-    void paintDecoration(GLTexture *texture, TextureType type, const QRegion &region, const WindowPaintData &data, const WindowQuadList &quads);
-    void paintShadow(const QRegion &region, const WindowPaintData &data);
-    void renderQuads(int, const QRegion& region, const WindowQuadList& quads, GLTexture* tex, bool normalized);
-    /**
-     * @brief Prepare the OpenGL rendering state before the texture with @p type will be rendered.
-     *
-     * @param type The type of the Texture which will be rendered
-     * @param opacity The opacity value to use for this rendering
-     * @param brightness The brightness value to use for this rendering
-     * @param saturation The saturation value to use for this rendering
-     * @param screen The index of the screen to use for this rendering
-     **/
-    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen) = 0;
-    /**
-     * @brief Restores the OpenGL rendering state after the texture with @p type has been rendered.
-     *
-     * @param type The type of the Texture which has been rendered
-     * @param opacity The opacity value used for the rendering
-     * @param brightness The brightness value used for this rendering
-     * @param saturation The saturation value used for this rendering
-     * @param screen The index of the screen to use for this rendering
-     **/
-    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation) = 0;
-
-    void paintDecorations(const WindowPaintData &data, const QRegion &region);
 
 protected:
     SceneOpenGL *m_scene;
@@ -275,8 +248,6 @@ protected:
     void setBlendEnabled(bool enabled);
     void setupLeafNodes(LeafNode *nodes, const WindowQuadList *quads, const WindowPaintData &data);
     virtual void performPaint(int mask, QRegion region, WindowPaintData data);
-    virtual void prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen);
-    virtual void restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation);
 
 private:
     /**
@@ -424,13 +395,6 @@ public:
     virtual void endRenderingFrame(const QRegion &damage, const QRegion &damagedRegion) = 0;
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
-    /**
-     * @brief Backend specific code to determine whether the last frame got rendered.
-     *
-     * Default implementation always returns @c true. That is it's always assumed that the last
-     * frame got rendered. If a backend needs more control it needs to implement this method.
-     */
-    virtual bool isLastFrameRendered() const;
     virtual bool usesOverlayWindow() const = 0;
     /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
@@ -648,11 +612,6 @@ private:
 inline bool SceneOpenGL::hasPendingFlush() const
 {
     return m_backend->hasPendingFlush();
-}
-
-inline bool SceneOpenGL::isLastFrameRendered() const
-{
-    return m_backend->isLastFrameRendered();
 }
 
 inline bool SceneOpenGL::usesOverlayWindow() const

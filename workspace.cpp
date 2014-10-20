@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "group.h"
 #include "input.h"
+#include "logind.h"
 #include "killwindow.h"
 #include "netinfo.h"
 #include "outline.h"
@@ -145,11 +146,11 @@ Workspace::Workspace(bool restore)
     // first initialize the extensions
     Xcb::Extensions::self();
 
+    LogindIntegration::create(this);
     InputRedirection::create(this);
 
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
 #if HAVE_WAYLAND
-    Wayland::WaylandBackend::create(this);
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
     }

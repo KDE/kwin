@@ -5,9 +5,6 @@
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name=""/>
     <group name="">
-        <entry name="Decoration" type="Int">
-            <default>100</default>
-        </entry>
         <entry name="MoveResize" type="Int">
             <default>80</default>
         </entry>

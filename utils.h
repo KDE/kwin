@@ -163,6 +163,22 @@ Qt::KeyboardModifiers x11ToQtKeyboardModifiers(int state);
 
 void checkNonExistentClients();
 
+static inline int bitCount(uint32_t mask)
+{
+#if defined(__GNUC__)
+    return __builtin_popcount(mask);
+#else
+    int count = 0;
+
+    while (mask) {
+        count += (mask & 1);
+        mask >>= 1;
+    }
+
+    return count;
+#endif
+}
+
 } // namespace
 
 // Must be outside namespace

@@ -67,6 +67,9 @@ public Q_SLOTS: // METHODS
 
 private Q_SLOTS:
     void becomeKWinService(const QString &service);
+
+private:
+    QString m_serviceName;
 };
 
 class CompositorDBusInterface : public QObject

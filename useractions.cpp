@@ -265,6 +265,7 @@ void UserActionsMenu::init()
     m_resizeOperation->setData(Options::ResizeOp);
 
     m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
+    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("go-up")));
     setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
     m_keepAboveOperation->setCheckable(true);
     m_keepAboveOperation->setData(Options::KeepAboveOp);
@@ -1196,7 +1197,7 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         break;
     case Options::MouseActivateAndRaise: {
         replay = isActive(); // for clickraise mode
-        bool mustReplay = !rules()->checkAcceptFocus(input);
+        bool mustReplay = !rules()->checkAcceptFocus(info->input());
         if (mustReplay) {
             ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
                                      begin = workspace()->stackingOrder().constBegin();
@@ -1216,13 +1217,13 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         workspace()->requestFocus(this);
         workspace()->lowerClient(this);
         screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(input);
+        replay = replay || !rules()->checkAcceptFocus(info->input());
         break;
     case Options::MouseActivate:
         replay = isActive(); // for clickraise mode
         workspace()->takeActivity(this, Workspace::ActivityFocus);
         screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(input);
+        replay = replay || !rules()->checkAcceptFocus(info->input());
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);

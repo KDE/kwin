@@ -55,6 +55,7 @@ class KillWindow;
 class ShortcutDialog;
 class UserActionsMenu;
 class Compositor;
+class X11EventFilter;
 enum class Predicate;
 
 class Workspace : public QObject, public KDecorationDefines
@@ -327,6 +328,9 @@ public:
      **/
     bool compositing() const;
 
+    void registerEventFilter(X11EventFilter *filter);
+    void unregisterEventFilter(X11EventFilter *filter);
+
 public Q_SLOTS:
     void performWindowOperation(KWin::Client* c, KDecorationDefines::WindowOperation op);
     // Keybindings
@@ -573,6 +577,9 @@ private:
     friend class StackingUpdatesBlocker;
 
     QScopedPointer<KillWindow> m_windowKiller;
+
+    QList<X11EventFilter *> m_eventFilters;
+    QList<X11EventFilter *> m_genericEventFilters;
 
 private:
     friend bool performTransiencyCheck();

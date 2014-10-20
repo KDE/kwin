@@ -75,13 +75,6 @@ public:
      */
     virtual void screenGeometryChanged(const QSize &size);
     /**
-     * @brief Backend specific code to determine whether the last frame got rendered.
-     *
-     * Default implementation always returns @c true. That is it's always assumed that the last
-     * frame got rendered. If a backend needs more control it needs to implement this method.
-     */
-    virtual bool isLastFrameRendered() const;
-    /**
      * @brief The compositing buffer hold by this backend.
      *
      * The Scene composites the new frame into this buffer.
@@ -160,14 +153,12 @@ public:
     WaylandXRenderBackend();
     virtual ~WaylandXRenderBackend();
     virtual void present(int mask, const QRegion &damage);
-    virtual bool isLastFrameRendered() const;
     virtual bool usesOverlayWindow() const;
-    void lastFrameRendered();
+
 private:
     void createBuffer();
     void init();
     QScopedPointer<Xcb::Shm> m_shm;
-    bool m_lastFrameRendered;
     xcb_render_pictformat_t m_format;
 };
 #endif
@@ -193,9 +184,6 @@ public:
     }
     virtual bool usesOverlayWindow() const {
         return m_backend->usesOverlayWindow();
-    }
-    virtual bool isLastFrameRendered() const {
-        return m_backend->isLastFrameRendered();
     }
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *client);
 

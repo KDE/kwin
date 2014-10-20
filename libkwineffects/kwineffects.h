@@ -2224,14 +2224,10 @@ public:
     WindowPaintData& operator+=(const QVector3D &translation);
     /**
      * Window opacity, in range 0 = transparent to 1 = fully opaque
-     * Opacity for decoration is opacity*decorationOpacity
-     * @see decorationOpacity
      * @see setOpacity
-     * @see setDecorationOpacity
      * @since 4.10
      */
     qreal opacity() const;
-    qreal decorationOpacity() const;
     /**
      * Sets the window opacity to the new @p opacity.
      * If you want to modify the existing opacity level consider using multiplyOpacity.
@@ -2239,7 +2235,6 @@ public:
      * @since 4.10
      **/
     void setOpacity(qreal opacity);
-    void setDecorationOpacity(qreal opacity);
     /**
      * Multiplies the current opacity with the @p factor.
      * @param factor Factor with which the opacity should be multiplied
@@ -2247,13 +2242,6 @@ public:
      * @since 4.10
      **/
     qreal multiplyOpacity(qreal factor);
-    /**
-     * Multiplies the current decoration opacity with the @p factor.
-     * @param factor Factor with which the opacity should be multiplied
-     * @return New decoration opacity level
-     * @since 4.10
-     **/
-    qreal multiplyDecorationOpacity(qreal factor);
     /**
      * Saturation of the window, in range [0; 1]
      * 1 means that the window is unchanged, 0 means that it's completely

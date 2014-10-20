@@ -1,7 +1,10 @@
 project(KWIN)
+set(PROJECT_VERSION "5.1.90")
+set(PROJECT_VERSION_MAJOR 5)
 
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set(QT_MIN_VERSION "5.3.0")
+set(KF5_MIN_VERSION "5.3.0")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH} )
 
@@ -58,7 +61,7 @@ set_package_properties(Qt5Multimedia PROPERTIES
 
 
 # required frameworks by Core
-find_package(KF5 REQUIRED COMPONENTS
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Config
     ConfigWidgets
     CoreAddons
@@ -73,7 +76,7 @@ find_package(KF5 REQUIRED COMPONENTS
     WindowSystem
 )
 # required frameworks by config modules
-find_package(KF5 REQUIRED COMPONENTS
+find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Completion
     Declarative
     KCMUtils
@@ -83,14 +86,14 @@ find_package(KF5 REQUIRED COMPONENTS
 )
 
 # optional frameworks
-find_package(KF5Activities CONFIG)
+find_package(KF5Activities ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Activities PROPERTIES
          PURPOSE "Enable building of KWin with kactivities support"
          TYPE OPTIONAL
          )
 add_feature_info("KF5Activities" KF5Activities_FOUND "Enable building of KWin with kactivities support")
 
-find_package(KF5DocTools CONFIG)
+find_package(KF5DocTools ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5DocTools PROPERTIES
          PURPOSE "Enable building documentation"
          TYPE OPTIONAL
@@ -98,6 +101,11 @@ set_package_properties(KF5DocTools PROPERTIES
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
 find_package(KDecoration2 CONFIG REQUIRED)
+find_package(KF5Wayland CONFIG)
+set_package_properties(KF5Wayland PROPERTIES
+                       TYPE OPTIONAL
+                      )
+add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for Wayland Compositor Information Module")
 
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     find_package(OpenGL)
@@ -126,7 +134,7 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
-find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
+find_package(Wayland 1.2 COMPONENTS Client Egl Cursor Server)
 set_package_properties(Wayland PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
@@ -139,6 +147,20 @@ set_package_properties(XKB PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
                       )
+
+find_package(Libinput 0.5)
+set_package_properties(Libinput PROPERTIES TYPE OPTIONAL PURPOSE "Required for input handling on Wayland.")
+
+find_package(UDev)
+set_package_properties(UDev PROPERTIES  URL "http://www.freedesktop.org/software/systemd/libudev/"
+                                        DESCRIPTION "Linux device library."
+                                        TYPE OPTIONAL
+                                        PURPOSE "Required for input handling on Wayland."
+                        )
+set(HAVE_INPUT FALSE)
+if (Libinput_FOUND AND UDEV_FOUND)
+    set(HAVE_INPUT TRUE)
+endif()
 
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
@@ -161,6 +183,7 @@ find_package(XCB
         IMAGE
         SHM
         XTEST
+        GLX
     OPTIONAL_COMPONENTS
         ICCCM
 )
@@ -197,15 +220,7 @@ endif()
 set(KWIN_NAME "kwin")
 set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
 set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
-set(KWIN_VERSION_MAJOR 5)
-set(KWIN_VERSION_MINOR 0)
-set(KWIN_VERSION_PATCH 0)
-set(KWIN_VERSION ${KWIN_VERSION_MAJOR}.${KWIN_VERSION_MINOR}.${KWIN_VERSION_PATCH} )
 set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
-set(GENERIC_LIB_SOVERSION ${KWIN_VERSION_MAJOR})
-
-set(GENERIC_LIB_VERSION "${KWIN_VERSION_MAJOR}.${KWIN_VERSION_MINOR}.${KWIN_VERSION_PATCH}")
 
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
@@ -247,7 +262,7 @@ endif()
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(Wayland_Client_FOUND AND XKB_FOUND AND KF5Wayland_FOUND)
     set(HAVE_WAYLAND ${Wayland_Client_FOUND})
     set(HAVE_XKB ${XKB_FOUND})
     set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
@@ -344,6 +359,8 @@ set(kwin_KDEINIT_SRCS
    compositingprefs.cpp
    virtualdesktops.cpp
    xcbutils.cpp
+   x11eventfilter.cpp
+   logind.cpp
     scripting/scripting.cpp
     scripting/workspace_wrapper.cpp
     scripting/meta.cpp
@@ -399,11 +416,24 @@ if(KWIN_HAVE_EGL)
     set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
 endif()
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} wayland_backend.cpp)
+if(HAVE_WAYLAND)
+    set(kwin_KDEINIT_SRCS
+            ${kwin_KDEINIT_SRCS}
+            screens_wayland.cpp
+            wayland_backend.cpp
+       )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
     endif()
+endif()
+
+if(HAVE_INPUT)
+    set(kwin_KDEINIT_SRCS
+        ${kwin_KDEINIT_SRCS}
+        libinput/context.cpp
+        libinput/connection.cpp
+        libinput/events.cpp
+    )
 endif()
 
 kconfig_add_kcfg_files(kwin_KDEINIT_SRCS settings.kcfgc)
@@ -472,6 +502,7 @@ set(kwin_XCB_LIBS
     XCB::KEYSYMS
     XCB::SHM
     XCB::XTEST
+    XCB::GLX
 )
 
 set(kwin_WAYLAND_LIBS
@@ -479,6 +510,7 @@ set(kwin_WAYLAND_LIBS
     Wayland::Cursor
     XCB::XTEST
     XKB::XKB
+    KF5::WaylandClient
 )
 
 set(kwin_WAYLAND_EGL_LIBS
@@ -504,33 +536,53 @@ set(kwinLibs
     ${kwin_XCB_LIBS}
 )
 
-if(Wayland_Client_FOUND AND XKB_FOUND)
+if(HAVE_WAYLAND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
     endif()
 endif()
 
-kf5_add_kdeinit_executable( kwin ${kwin_KDEINIT_SRCS})
+if(HAVE_INPUT)
+    set(kwinLibs ${kwinLibs} Libinput::Libinput ${UDEV_LIBS})
+endif()
 
-target_link_libraries(kdeinit_kwin ${kwinLibs})
-set_target_properties(kwin PROPERTIES OUTPUT_NAME ${KWIN_INTERNAL_NAME_X11})
-generate_export_header(kdeinit_kwin EXPORT_FILE_NAME kwin_export.h)
+add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
+
+set_target_properties(kwin PROPERTIES
+   VERSION ${PROJECT_VERSION}
+   SOVERSION ${PROJECT_VERSION_MAJOR}
+   )
+
+target_link_libraries(kwin ${kwinLibs})
+generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
 if(KWIN_BUILD_OPENGL)
-  target_link_libraries(kdeinit_kwin kwinglutils ${epoxy_LIBRARY})
+  target_link_libraries(kwin kwinglutils ${epoxy_LIBRARY})
   # -ldl used by OpenGL code
   find_library(DL_LIBRARY dl)
   if (DL_LIBRARY)
-    target_link_libraries(kdeinit_kwin ${DL_LIBRARY})
+    target_link_libraries(kwin ${DL_LIBRARY})
   endif()
 elseif(KWIN_BUILD_OPENGLES)
-  target_link_libraries(kdeinit_kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
-  set_target_properties(kdeinit_kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
+  target_link_libraries(kwin ${kwinLibs} kwinglesutils ${epoxy_LIBRARY})
+  set_target_properties(kwin PROPERTIES COMPILE_FLAGS "-DKWIN_HAVE_OPENGLES")
 endif()
 
-install(TARGETS kdeinit_kwin ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install(TARGETS kwin         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+kf5_add_kdeinit_executable(kwin_x11 main_x11.cpp)
+target_link_libraries(kdeinit_kwin_x11 kwin)
+
+install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP )
+install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+if(HAVE_WAYLAND)
+    kf5_add_kdeinit_executable(kwin_wayland main_wayland.cpp)
+    target_link_libraries(kdeinit_kwin_wayland kwin)
+
+    install(TARGETS kdeinit_kwin_wayland ${INSTALL_TARGETS_DEFAULT_ARGS} )
+    install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+endif()
 
 ########### install files ###############
 

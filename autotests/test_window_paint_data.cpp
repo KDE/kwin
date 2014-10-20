@@ -167,7 +167,6 @@ private Q_SLOTS:
     void testOperatorMultiplyAssign();
     void testOperatorPlus();
     void testMultiplyOpacity();
-    void testMultiplyDecorationOpacity();
     void testMultiplySaturation();
     void testMultiplyBrightness();
 };
@@ -189,7 +188,6 @@ void TestWindowPaintData::testCtor()
     QCOMPARE(data.rotationOrigin(), QVector3D());
     QCOMPARE(data.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
     QCOMPARE(data.opacity(), 0.5);
-    QCOMPARE(data.decorationOpacity(), 1.0);
     QCOMPARE(data.brightness(), 1.0);
     QCOMPARE(data.saturation(), 1.0);
 }
@@ -212,7 +210,6 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data2.rotationOrigin(), QVector3D());
     QCOMPARE(data2.rotationAxis(), QVector3D(0.0, 0.0, 1.0));
     QCOMPARE(data2.opacity(), 1.0);
-    QCOMPARE(data2.decorationOpacity(), 1.0);
     QCOMPARE(data2.brightness(), 1.0);
     QCOMPARE(data2.saturation(), 1.0);
 
@@ -222,7 +219,6 @@ void TestWindowPaintData::testCopyCtor()
     data2.setRotationOrigin(QVector3D(1.0, 2.0, 3.0));
     data2.setRotationAxis(QVector3D(1.0, 1.0, 0.0));
     data2.setOpacity(0.1);
-    data2.setDecorationOpacity(0.2);
     data2.setBrightness(0.3);
     data2.setSaturation(0.4);
 
@@ -238,7 +234,6 @@ void TestWindowPaintData::testCopyCtor()
     QCOMPARE(data3.rotationOrigin(), QVector3D(1.0, 2.0, 3.0));
     QCOMPARE(data3.rotationAxis(), QVector3D(1.0, 1.0, 0.0));
     QCOMPARE(data3.opacity(), 0.1);
-    QCOMPARE(data3.decorationOpacity(), 0.2);
     QCOMPARE(data3.brightness(), 0.3);
     QCOMPARE(data3.saturation(), 0.4);
 }
@@ -303,22 +298,6 @@ void TestWindowPaintData::testMultiplyBrightness()
     QCOMPARE(0.6, data.brightness());
     // just for safety
     QCOMPARE(1.0, data.opacity());
-    QCOMPARE(1.0, data.decorationOpacity());
-    QCOMPARE(1.0, data.saturation());
-}
-
-void TestWindowPaintData::testMultiplyDecorationOpacity()
-{
-    MockEffectWindowHelper helper;
-    MockEffectWindow w(&helper);
-    WindowPaintData data(&w);
-    QCOMPARE(0.2, data.multiplyDecorationOpacity(0.2));
-    QCOMPARE(0.2, data.decorationOpacity());
-    QCOMPARE(0.6, data.multiplyDecorationOpacity(3.0));
-    QCOMPARE(0.6, data.decorationOpacity());
-    // just for safety
-    QCOMPARE(1.0, data.brightness());
-    QCOMPARE(1.0, data.opacity());
     QCOMPARE(1.0, data.saturation());
 }
 
@@ -333,7 +312,6 @@ void TestWindowPaintData::testMultiplyOpacity()
     QCOMPARE(0.6, data.opacity());
     // just for safety
     QCOMPARE(1.0, data.brightness());
-    QCOMPARE(1.0, data.decorationOpacity());
     QCOMPARE(1.0, data.saturation());
 }
 
@@ -349,7 +327,6 @@ void TestWindowPaintData::testMultiplySaturation()
     // just for safety
     QCOMPARE(1.0, data.brightness());
     QCOMPARE(1.0, data.opacity());
-    QCOMPARE(1.0, data.decorationOpacity());
 }
 
 QTEST_MAIN(TestWindowPaintData)

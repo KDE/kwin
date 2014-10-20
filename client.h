@@ -918,7 +918,6 @@ private:
     uint Ptakefocus : 1;///< Does the window understand the TakeFocus protocol?
     uint Pcontexthelp : 1; ///< Does the window understand the ContextHelp protocol?
     uint Pping : 1; ///< Does it support _NET_WM_PING?
-    uint input : 1; ///< Does the window want input in its wm_hints
     uint skip_pager : 1;
     uint skip_switcher : 1;
     uint motif_may_resize : 1;
@@ -931,12 +930,10 @@ private:
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint motif_noborder : 1; ///< App requested no border via Motif WM hints
-    uint urgency : 1; ///< XWMHints, UrgencyHint
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
     bool blocks_compositing;
     WindowRules client_rules;
-    void getWMHints();
     void getWindowProtocols();
     QIcon m_icon;
     Qt::CursorShape m_cursor;
@@ -956,7 +953,6 @@ private:
     xcb_colormap_t m_colormap;
     QString cap_normal, cap_iconic, cap_suffix, cap_deco;
     Group* in_group;
-    xcb_window_t m_windowGroup;
     TabGroup* tab_group;
     Layer in_layer;
     QTimer* ping_timer;

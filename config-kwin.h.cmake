@@ -7,11 +7,12 @@
 #define KWIN_NAME "${KWIN_NAME}"
 #define KWIN_INTERNAL_NAME_X11 "${KWIN_INTERNAL_NAME_X11}"
 #define KWIN_CONFIG "${KWIN_NAME}rc"
-#define KWIN_VERSION_STRING "${KWIN_VERSION}"
+#define KWIN_VERSION_STRING "${PROJECT_VERSION}"
 #define KWIN_KILLER_BIN "${CMAKE_INSTALL_PREFIX}/${LIBEXEC_INSTALL_DIR}/kwin_killer_helper"
 #cmakedefine01 HAVE_WAYLAND
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_XKB
+#cmakedefine01 HAVE_INPUT
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1

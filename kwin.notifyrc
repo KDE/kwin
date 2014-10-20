@@ -242,6 +242,7 @@ Comment=A graphics reset event occurred
 Comment[bs]=Grafički reset događaj se desio
 Comment[ca]=Ha ocorregut un esdeveniment de reinici dels gràfics
 Comment[ca@valencia]=Ha ocorregut un esdeveniment de reinici dels gràfics
+Comment[cs]=Nastala událost resetování grafiky
 Comment[da]=En grafiknulstillingshændelse fandt sted
 Comment[de]=Ein Zurücksetzen der Grafik ist aufgetreten
 Comment[el]=Συνέβη μια επαναφορά των γραφικών

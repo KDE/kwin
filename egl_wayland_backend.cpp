@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "options.h"
 #include "wayland_backend.h"
+#include <KWayland/Client/surface.h>
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
@@ -33,21 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(time)
-    reinterpret_cast<EglWaylandBackend*>(data)->lastFrameRendered();
-
-    if (callback) {
-            wl_callback_destroy(callback);
-    }
-}
-
-static const struct wl_callback_listener s_surfaceFrameListener = {
-        handleFrameCallback
-};
-
 EglWaylandBackend::EglWaylandBackend()
     : QObject(NULL)
     , OpenGLBackend()
@@ -55,7 +41,6 @@ EglWaylandBackend::EglWaylandBackend()
     , m_bufferAge(0)
     , m_wayland(Wayland::WaylandBackend::self())
     , m_overlay(NULL)
-    , m_lastFrameRendered(true)
 {
     if (!m_wayland) {
         setFailed("Wayland Backend has not been created");
@@ -93,7 +78,29 @@ EglWaylandBackend::~EglWaylandBackend()
 
 bool EglWaylandBackend::initializeEgl()
 {
-    m_display = eglGetDisplay(m_wayland->display());
+    // Get the list of client extensions
+    const QByteArray clientExtensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    if (clientExtensionString.isEmpty()) {
+        // If eglQueryString() returned NULL, the implementation doesn't support
+        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
+        (void) eglGetError();
+    }
+
+    const QList<QByteArray> clientExtensions = clientExtensionString.split(' ');
+
+    // Use eglGetPlatformDisplayEXT() to get the display pointer
+    // if the implementation supports it.
+    m_havePlatformBase = clientExtensions.contains("EGL_EXT_platform_base");
+    if (m_havePlatformBase) {
+        // Make sure that the wayland platform is supported
+        if (!clientExtensions.contains("EGL_EXT_platform_wayland"))
+            return false;
+
+        m_display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
+    } else {
+        m_display = eglGetDisplay(m_wayland->display());
+    }
+
     if (m_display == EGL_NO_DISPLAY)
         return false;
 
@@ -186,13 +193,19 @@ bool EglWaylandBackend::initRenderingContext()
     }
 
     const QSize &size = m_wayland->shellSurfaceSize();
-    m_overlay = wl_egl_window_create(m_wayland->surface(), size.width(), size.height());
+    auto s = m_wayland->surface();
+    connect(s, &KWayland::Client::Surface::frameRendered, Compositor::self(), &Compositor::bufferSwapComplete);
+    m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
         qCritical() << "Creating Wayland Egl window failed";
         return false;
     }
 
-    m_surface = eglCreateWindowSurface(m_display, m_config, m_overlay, NULL);
+    if (m_havePlatformBase)
+        m_surface = eglCreatePlatformWindowSurfaceEXT(m_display, m_config, (void *) m_overlay, nullptr);
+    else
+        m_surface = eglCreateWindowSurface(m_display, m_config, m_overlay, nullptr);
+
     if (m_surface == EGL_NO_SURFACE) {
         qCritical() << "Create Window Surface failed";
         return false;
@@ -250,12 +263,9 @@ bool EglWaylandBackend::initBufferConfigs()
 
 void EglWaylandBackend::present()
 {
-    // need to dispatch pending events as eglSwapBuffers can block
-    m_wayland->dispatchEvents();
+    m_wayland->surface()->setupFrameCallback();
+    Compositor::self()->aboutToSwapBuffers();
 
-    m_lastFrameRendered = false;
-    wl_callback *callback = wl_surface_frame(m_wayland->surface());
-    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
     if (supportsBufferAge()) {
         eglSwapBuffers(m_display, m_surface);
         eglQuerySurface(m_display, m_surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
@@ -358,17 +368,6 @@ void EglWaylandBackend::overlaySizeChanged(const QSize &size)
     wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
 }
 
-bool EglWaylandBackend::isLastFrameRendered() const
-{
-    return m_lastFrameRendered;
-}
-
-void EglWaylandBackend::lastFrameRendered()
-{
-    m_lastFrameRendered = true;
-    Compositor::self()->lastFrameRendered();
-}
-
 bool EglWaylandBackend::usesOverlayWindow() const
 {
     return false;
@@ -396,22 +395,17 @@ OpenGLBackend *EglWaylandTexture::backend()
     return m_backend;
 }
 
-void EglWaylandTexture::findTarget()
+bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
 {
-    if (m_target != GL_TEXTURE_2D) {
-        m_target = GL_TEXTURE_2D;
-    }
-}
+    Q_UNUSED(visual)
 
-bool EglWaylandTexture::loadTexture(const Pixmap &pix, const QSize &size, int depth)
-{
     // HACK: egl wayland platform doesn't support texture from X11 pixmap through the KHR_image_pixmap
     // extension. To circumvent this problem we copy the pixmap content into a SHM image and from there
     // to the OpenGL texture. This is a temporary solution. In future we won't need to get the content
     // from X11 pixmaps. That's what we have XWayland for to get the content into a nice Wayland buffer.
-    Q_UNUSED(depth)
     if (pix == XCB_PIXMAP_NONE)
         return false;
+
     m_referencedPixmap = pix;
 
     Xcb::Shm *shm = m_backend->shm();

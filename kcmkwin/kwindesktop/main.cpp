@@ -431,7 +431,7 @@ QString KWinDesktopConfig::extrapolatedShortcut(int desktop) const
     }
     QString before;
     if (!shortcuts.isEmpty()) {
-        before = shortcuts.first().toString(QKeySequence::NativeText);
+        before = shortcuts.first().toString(QKeySequence::PortableText);
     }
 
     QString seq;
@@ -494,8 +494,8 @@ void KWinDesktopConfig::slotChangeShortcuts(int number)
                 m_ui->messageLabel->show();
             } else {
                 QKeySequence shortcut(shortcutString);
-                if (!shortcut.isEmpty() || KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut)) {
-                    KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>(), KGlobalAccel::NoAutoloading);
+                if (!shortcut.isEmpty() && KGlobalAccel::self()->isGlobalShortcutAvailable(shortcut)) {
+                    KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>() << shortcut, KGlobalAccel::NoAutoloading);
                     m_ui->messageLabel->setText(i18n("Assigned global Shortcut \"%1\" to Desktop %2", shortcutString, desktop));
                     m_ui->messageLabel->show();
                 } else {

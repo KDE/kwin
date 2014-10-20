@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_GLX_BACKEND_H
 #define KWIN_GLX_BACKEND_H
 #include "scene_opengl.h"
+#include "x11eventfilter.h"
+
+#include <memory>
 
 namespace KWin
 {
@@ -33,6 +36,21 @@ public:
     int y_inverted;
     int mipmap;
 };
+
+
+// ------------------------------------------------------------------
+
+
+class SwapEventFilter : public X11EventFilter
+{
+public:
+    SwapEventFilter(xcb_drawable_t drawable);
+    bool event(xcb_generic_event_t *event) override;
+
+private:
+    xcb_drawable_t m_drawable;
+};
+
 
 /**
  * @brief OpenGL Backend using GLX over an X overlay window.
@@ -57,26 +75,32 @@ protected:
 private:
     void init();
     bool initBuffer();
-    bool initDrawableConfigs();
     void waitSync();
     bool initRenderingContext();
     bool initFbConfig();
+    void initVisualDepthHashTable();
     void setSwapInterval(int interval);
+
+    int visualDepth(xcb_visualid_t visual) const;
+    FBConfigInfo *infoForVisual(xcb_visualid_t visual);
 
     /**
      * @brief The OverlayWindow used by this Backend.
      **/
     OverlayWindow *m_overlayWindow;
     Window window;
-    FBConfigInfo fbcdrawableinfo[ 32 + 1 ];
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
     GLXContext ctx;
+    QHash<xcb_visualid_t, FBConfigInfo *> m_fbconfigHash;
+    QHash<xcb_visualid_t, int> m_visualDepthHash;
+    std::unique_ptr<SwapEventFilter> m_swapEventFilter;
     int m_bufferAge;
     bool m_haveMESACopySubBuffer;
     bool m_haveMESASwapControl;
     bool m_haveEXTSwapControl;
     bool m_haveSGISwapControl;
+    bool m_haveINTELSwapEvent;
     bool haveSwapInterval, haveWaitSync;
     friend class GlxTexture;
 };
@@ -89,8 +113,7 @@ class GlxTexture : public SceneOpenGL::TexturePrivate
 public:
     virtual ~GlxTexture();
     virtual void onDamage();
-    virtual void findTarget();
-    virtual bool loadTexture(const Pixmap& pix, const QSize& size, int depth);
+    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
     virtual OpenGLBackend *backend();
 
 private:

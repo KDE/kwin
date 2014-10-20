@@ -99,7 +99,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2ExtendedStrut |
         NET::WM2Opacity |
         NET::WM2FullscreenMonitors |
-        NET::WM2FrameOverlap;
+        NET::WM2FrameOverlap |
+        NET::WM2GroupLeader |
+        NET::WM2Urgency |
+        NET::WM2Input;
 
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
@@ -122,7 +125,12 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     detectGtkFrameExtents();
     detectNoBorder();
     fetchIconicName();
-    getWMHints(); // Needs to be done before readTransient() because of reading the group
+
+    // Needs to be done before readTransient() because of reading the group
+    checkGroup();
+    updateUrgency();
+    updateAllowedActions(); // Group affects isMinimizable()
+
     modal = (info->state() & NET::Modal) != 0;   // Needs to be valid before handling groups
     readTransient();
     getIcons();

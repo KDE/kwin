@@ -638,6 +638,10 @@ void Scene::doneOpenGLContextCurrent()
 {
 }
 
+void Scene::triggerFence()
+{
+}
+
 //****************************************
 // Scene::Window
 //****************************************

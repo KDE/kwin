@@ -116,20 +116,9 @@ QString CompositingPrefs::compositingNotPossibleReason()
     return QString();
 }
 
-static bool s_glxDetected = false;
-static bool s_hasGlx = false;
-
 bool CompositingPrefs::hasGlx()
 {
-    if (s_glxDetected) {
-        return s_hasGlx;
-    }
-#ifndef KWIN_HAVE_OPENGLES
-    int event_base, error_base;
-    s_hasGlx = glXQueryExtension(display(), &event_base, &error_base);
-#endif
-    s_glxDetected = true;
-    return s_hasGlx;
+    return Xcb::Extensions::self()->hasGlx();
 }
 
 } // namespace

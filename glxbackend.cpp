@@ -30,16 +30,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "utils.h"
 #include "overlaywindow.h"
+#include "composite.h"
+#include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
+#include <kwinxrenderutils.h>
 // Qt
 #include <QDebug>
 #include <QOpenGLContext>
 // system
 #include <unistd.h>
+#include <xcb/glx.h>
+
+#ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
+#define XCB_GLX_BUFFER_SWAP_COMPLETE 1
+typedef struct xcb_glx_buffer_swap_complete_event_t {
+    uint8_t            response_type; /**<  */
+    uint8_t            pad0; /**<  */
+    uint16_t           sequence; /**<  */
+    uint16_t           event_type; /**<  */
+    uint8_t            pad1[2]; /**<  */
+    xcb_glx_drawable_t drawable; /**<  */
+    uint32_t           ust_hi; /**<  */
+    uint32_t           ust_lo; /**<  */
+    uint32_t           msc_hi; /**<  */
+    uint32_t           msc_lo; /**<  */
+    uint32_t           sbc; /**<  */
+} xcb_glx_buffer_swap_complete_event_t;
+#endif
+
+#include <tuple>
+
+#if __cplusplus <= 201103L
+namespace std {
+    // C++-14
+    template<class T, class... Args>
+    unique_ptr<T> make_unique(Args&&... args) {
+        return unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+}
+#endif
+
 
 namespace KWin
 {
+
+SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable)
+    : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE),
+      m_drawable(drawable)
+{
+}
+
+bool SwapEventFilter::event(xcb_generic_event_t *event)
+{
+    xcb_glx_buffer_swap_complete_event_t *ev =
+            reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
+
+    if (ev->drawable == m_drawable) {
+        Compositor::self()->bufferSwapComplete();
+        return true;
+    }
+
+    return false;
+}
+
+
+// -----------------------------------------------------------------------
+
+
+
 GlxBackend::GlxBackend()
     : OpenGLBackend()
     , m_overlayWindow(new OverlayWindow())
@@ -88,10 +147,6 @@ void GlxBackend::init()
         setFailed(QStringLiteral("Requires at least GLX 1.3"));
         return;
     }
-    if (!initDrawableConfigs()) {
-        setFailed(QStringLiteral("Could not initialize the drawable configs"));
-        return;
-    }
     if (!initBuffer()) {
         setFailed(QStringLiteral("Could not initialize the buffer"));
         return;
@@ -100,6 +155,7 @@ void GlxBackend::init()
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
+
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
     glPlatform->detect(GlxPlatformInterface);
@@ -116,6 +172,21 @@ void GlxBackend::init()
     m_haveMESASwapControl   = hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasGLExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasGLExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
+    m_haveINTELSwapEvent    = hasGLExtension(QByteArrayLiteral("GLX_INTEL_swap_event"));
+
+    if (m_haveINTELSwapEvent) {
+        const QList<QByteArray> tokens = QByteArray(qVersion()).split('.');
+        uint32_t version = tokens[0].toInt() << 16 | tokens[1].toInt() << 8 | tokens[2].toInt();
+
+        // Qt 5.3 doesn't forward swap events to the native event filter
+        if (version < 0x00050400)
+            m_haveINTELSwapEvent = false;
+    }
+
+    if (m_haveINTELSwapEvent) {
+        m_swapEventFilter = std::make_unique<SwapEventFilter>(window);
+        glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
+    }
 
     haveSwapInterval = m_haveMESASwapControl || m_haveEXTSwapControl || m_haveSGISwapControl;
 
@@ -168,6 +239,8 @@ void GlxBackend::init()
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
     qDebug() << "Direct rendering:" << isDirectRendering() << endl;
+
+    initVisualDepthHashTable();
 }
 
 bool GlxBackend::initRenderingContext()
@@ -304,18 +377,68 @@ bool GlxBackend::initFbConfig()
     return true;
 }
 
-bool GlxBackend::initDrawableConfigs()
+void GlxBackend::initVisualDepthHashTable()
 {
+    const xcb_setup_t *setup = xcb_get_setup(connection());
+
+    for (auto screen = xcb_setup_roots_iterator(setup); screen.rem; xcb_screen_next(&screen)) {
+        for (auto depth = xcb_screen_allowed_depths_iterator(screen.data); depth.rem; xcb_depth_next(&depth)) {
+            const int len = xcb_depth_visuals_length(depth.data);
+            const xcb_visualtype_t *visuals = xcb_depth_visuals(depth.data);
+
+            for (int i = 0; i < len; i++)
+                m_visualDepthHash.insert(visuals[i].visual_id, depth.data->depth);
+        }
+    }
+}
+
+int GlxBackend::visualDepth(xcb_visualid_t visual) const
+{
+    return m_visualDepthHash.value(visual);
+}
+
+FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
+{
+    FBConfigInfo *&info = m_fbconfigHash[visual];
+
+    if (info)
+        return info;
+
+    info = new FBConfigInfo;
+    info->fbconfig            = nullptr;
+    info->bind_texture_format = 0;
+    info->texture_targets     = 0;
+    info->y_inverted          = 0;
+    info->mipmap              = 0;
+
+    const xcb_render_pictformat_t format = XRenderUtils::findPictFormat(visual);
+    const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
+
+    if (!direct) {
+        qCritical().nospace() << "Could not find a picture format for visual 0x" << hex << visual;
+        return info;
+    }
+
+    const int red_bits   = bitCount(direct->red_mask);
+    const int green_bits = bitCount(direct->green_mask);
+    const int blue_bits  = bitCount(direct->blue_mask);
+    const int alpha_bits = bitCount(direct->alpha_mask);
+
+    const int depth = visualDepth(visual);
+
+    const auto rgb_sizes = std::tie(red_bits, green_bits, blue_bits);
+
     const int attribs[] = {
         GLX_RENDER_TYPE,    GLX_RGBA_BIT,
         GLX_DRAWABLE_TYPE,  GLX_WINDOW_BIT | GLX_PIXMAP_BIT,
         GLX_X_VISUAL_TYPE,  GLX_TRUE_COLOR,
         GLX_X_RENDERABLE,   True,
         GLX_CONFIG_CAVEAT,  int(GLX_DONT_CARE), // The ARGB32 visual is marked non-conformant in Catalyst
-        GLX_RED_SIZE,       5,
-        GLX_GREEN_SIZE,     5,
-        GLX_BLUE_SIZE,      5,
-        GLX_ALPHA_SIZE,     0,
+        GLX_BUFFER_SIZE,    red_bits + green_bits + blue_bits + alpha_bits,
+        GLX_RED_SIZE,       red_bits,
+        GLX_GREEN_SIZE,     green_bits,
+        GLX_BLUE_SIZE,      blue_bits,
+        GLX_ALPHA_SIZE,     alpha_bits,
         GLX_STENCIL_SIZE,   0,
         GLX_DEPTH_SIZE,     0,
         0
@@ -325,96 +448,64 @@ bool GlxBackend::initDrawableConfigs()
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count < 1) {
-        qCritical() << "Could not find any usable framebuffer configurations.";
-        return false;
+        qCritical().nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
+        return info;
     }
 
-    for (int i = 0; i <= 32; i++) {
-        fbcdrawableinfo[i].fbconfig            = NULL;
-        fbcdrawableinfo[i].bind_texture_format = 0;
-        fbcdrawableinfo[i].texture_targets     = 0;
-        fbcdrawableinfo[i].y_inverted          = 0;
-        fbcdrawableinfo[i].mipmap              = 0;
-    }
+    for (int i = 0; i < count; i++) {
+        int red, green, blue;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_RED_SIZE,   &red);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_GREEN_SIZE, &green);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BLUE_SIZE,  &blue);
 
-    // Find the first usable framebuffer configuration for each depth.
-    // Single-buffered ones will appear first in the list.
-    const int depths[] = { 15, 16, 24, 30, 32 };
-    for (unsigned int i = 0; i < sizeof(depths) / sizeof(depths[0]); i++) {
-        const int depth = depths[i];
-
-        for (int j = 0; j < count; j++) {
-            int alpha_size, buffer_size;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_ALPHA_SIZE,  &alpha_size);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BUFFER_SIZE, &buffer_size);
-
-            if (buffer_size != depth && (buffer_size - alpha_size) != depth)
-                continue;
-
-            if (depth == 32 && alpha_size != 8)
-                continue;
-
-            XVisualInfo *vi = glXGetVisualFromFBConfig(display(), configs[j]);
-            if (vi == NULL)
-                continue;
-
-            int visual_depth = vi->depth;
-            XFree(vi);
-
-            if (visual_depth != depth)
-                continue;
-
-            int bind_rgb, bind_rgba;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_RGB_EXT,  &bind_rgb);
-
-            // Skip this config if it cannot be bound to a texture
-            if (!bind_rgb && !bind_rgba)
-                continue;
-
-            int texture_format;
-            if (depth == 32)
-                texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
-            else
-                texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
-
-            int y_inverted, texture_targets;
-            glXGetFBConfigAttrib(display(), configs[j], GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
-            glXGetFBConfigAttrib(display(), configs[j], GLX_Y_INVERTED_EXT, &y_inverted);
-
-            fbcdrawableinfo[depth].fbconfig            = configs[j];
-            fbcdrawableinfo[depth].bind_texture_format = texture_format;
-            fbcdrawableinfo[depth].texture_targets     = texture_targets;
-            fbcdrawableinfo[depth].y_inverted          = y_inverted;
-            fbcdrawableinfo[depth].mipmap              = 0;
-            break;
-        }
-    }
-
-    if (count)
-        XFree(configs);
-
-    if (fbcdrawableinfo[DefaultDepth(display(), DefaultScreen(display()))].fbconfig == NULL) {
-        qCritical() << "Could not find a framebuffer configuration for the default depth.";
-        return false;
-    }
-
-    if (fbcdrawableinfo[32].fbconfig == NULL) {
-        qCritical() << "Could not find a framebuffer configuration for depth 32.";
-        return false;
-    }
-
-    for (int i = 0; i <= 32; i++) {
-        if (fbcdrawableinfo[i].fbconfig == NULL)
+        if (std::tie(red, green, blue) != rgb_sizes)
             continue;
 
-        int vis_drawable = 0;
-        glXGetFBConfigAttrib(display(), fbcdrawableinfo[i].fbconfig, GLX_VISUAL_ID, &vis_drawable);
+        xcb_visualid_t visual;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_VISUAL_ID, (int *) &visual);
 
-        qDebug() << "Drawable visual (depth " << i << "): 0x" << QString::number(vis_drawable, 16);
+        if (visualDepth(visual) != depth)
+            continue;
+
+        int bind_rgb, bind_rgba;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGBA_EXT, &bind_rgba);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_RGB_EXT,  &bind_rgb);
+
+        if (!bind_rgb && !bind_rgba)
+            continue;
+
+        int texture_format;
+        if (alpha_bits)
+            texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
+        else
+            texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
+
+        int y_inverted, texture_targets;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_Y_INVERTED_EXT, &y_inverted);
+
+        info->fbconfig            = configs[i];
+        info->bind_texture_format = texture_format;
+        info->texture_targets     = texture_targets;
+        info->y_inverted          = y_inverted;
+        info->mipmap              = 0;
+        break;
     }
 
-    return true;
+    if (count > 0)
+        XFree(configs);
+
+    if (info->fbconfig) {
+        int fbc_id = 0;
+        int visual_id = 0;
+
+        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
+        glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
+
+        qDebug().nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
+    }
+
+    return info;
 }
 
 void GlxBackend::setSwapInterval(int interval)
@@ -453,6 +544,9 @@ void GlxBackend::present()
     const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint) {
+        if (m_haveINTELSwapEvent)
+            Compositor::self()->aboutToSwapBuffers();
+
         if (haveSwapInterval) {
             if (gs_tripleBufferNeedsDetection) {
                 glXWaitGL();
@@ -643,100 +737,50 @@ void GlxTexture::onDamage()
     GLTexturePrivate::onDamage();
 }
 
-void GlxTexture::findTarget()
+bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visualid_t visual)
 {
-    unsigned int new_target = 0;
-    if (glXQueryDrawable && m_glxpixmap != None)
-        glXQueryDrawable(display(), m_glxpixmap, GLX_TEXTURE_TARGET_EXT, &new_target);
-    // HACK: this used to be a hack for Xgl.
-    // without this hack the NVIDIA blob aborts when trying to bind a texture from
-    // a pixmap icon
-    if (new_target == 0) {
-        if (GLTexture::NPOTTextureSupported() ||
-            (isPowerOfTwo(m_size.width()) && isPowerOfTwo(m_size.height()))) {
-            new_target = GLX_TEXTURE_2D_EXT;
-        } else {
-            new_target = GLX_TEXTURE_RECTANGLE_EXT;
-        }
-    }
-    switch(new_target) {
-    case GLX_TEXTURE_2D_EXT:
+    if (pixmap == XCB_NONE || size.isEmpty() || visual == XCB_NONE)
+        return false;
+
+    const FBConfigInfo *info = m_backend->infoForVisual(visual);
+    if (!info || info->fbconfig == nullptr)
+        return false;
+
+    if ((info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
+            (GLTexture::NPOTTextureSupported() ||
+              (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
         m_target = GL_TEXTURE_2D;
         m_scale.setWidth(1.0f / m_size.width());
         m_scale.setHeight(1.0f / m_size.height());
-        break;
-    case GLX_TEXTURE_RECTANGLE_EXT:
-        m_target = GL_TEXTURE_RECTANGLE_ARB;
+    } else {
+        assert(info->texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT);
+
+        m_target = GL_TEXTURE_RECTANGLE;
         m_scale.setWidth(1.0f);
         m_scale.setHeight(1.0f);
-        break;
-    default:
-        abort();
-    }
-}
-
-bool GlxTexture::loadTexture(const Pixmap& pix, const QSize& size, int depth)
-{
-#ifdef CHECK_GL_ERROR
-    checkGLError("TextureLoad1");
-#endif
-    if (pix == None || size.isEmpty() || depth < 1)
-        return false;
-    if (m_backend->fbcdrawableinfo[ depth ].fbconfig == NULL) {
-        qDebug() << "No framebuffer configuration for depth " << depth
-                     << "; not binding pixmap" << endl;
-        return false;
     }
 
-    m_size = size;
-    // new texture, or texture contents changed; mipmaps now invalid
-    q->setDirty();
-
-#ifdef CHECK_GL_ERROR
-    checkGLError("TextureLoad2");
-#endif
-    // tfp mode, simply bind the pixmap to texture
-    glGenTextures(1, &m_texture);
-    // The GLX pixmap references the contents of the original pixmap, so it doesn't
-    // need to be recreated when the contents change.
-    // The texture may or may not use the same storage depending on the EXT_tfp
-    // implementation. When options->glStrictBinding is true, the texture uses
-    // a different storage and needs to be updated with a call to
-    // glXBindTexImageEXT() when the contents of the pixmap has changed.
-    int attrs[] = {
-        GLX_TEXTURE_FORMAT_EXT, m_backend->fbcdrawableinfo[ depth ].bind_texture_format,
-        GLX_MIPMAP_TEXTURE_EXT, m_backend->fbcdrawableinfo[ depth ].mipmap > 0,
-        None, None, None
+    const int attrs[] = {
+        GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
+        GLX_MIPMAP_TEXTURE_EXT, info->mipmap,
+        GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
+        0
     };
-    if ((m_backend->fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
-            (GLTexture::NPOTTextureSupported() ||
-                (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
-        attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-        attrs[ 5 ] = GLX_TEXTURE_2D_EXT;
-    } else if (m_backend->fbcdrawableinfo[ depth ].texture_targets & GLX_TEXTURE_RECTANGLE_BIT_EXT) {
-        attrs[ 4 ] = GLX_TEXTURE_TARGET_EXT;
-        attrs[ 5 ] = GLX_TEXTURE_RECTANGLE_EXT;
-    }
-    m_glxpixmap = glXCreatePixmap(display(), m_backend->fbcdrawableinfo[ depth ].fbconfig, pix, attrs);
-#ifdef CHECK_GL_ERROR
-    checkGLError("TextureLoadTFP1");
-#endif
-    findTarget();
-    m_yInverted = m_backend->fbcdrawableinfo[ depth ].y_inverted ? true : false;
-    m_canUseMipmaps = m_backend->fbcdrawableinfo[ depth ].mipmap > 0;
-    q->setFilter(m_backend->fbcdrawableinfo[ depth ].mipmap > 0 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
+
+    m_glxpixmap     = glXCreatePixmap(display(), info->fbconfig, pixmap, attrs);
+    m_size          = size;
+    m_yInverted     = info->y_inverted ? true : false;
+    m_canUseMipmaps = info->mipmap;
+
+    glGenTextures(1, &m_texture);
+
+    q->setDirty();
+    q->setFilter(info->mipmap > 0 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
+
     glBindTexture(m_target, m_texture);
-#ifdef CHECK_GL_ERROR
-    checkGLError("TextureLoadTFP2");
-#endif
-    glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, NULL);
-#ifdef CHECK_GL_ERROR
-    checkGLError("TextureLoad0");
-#endif
+    glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, nullptr);
 
     updateMatrix();
-
-    unbind();
     return true;
 }
 

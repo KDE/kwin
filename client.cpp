@@ -200,7 +200,6 @@ Client::Client()
     , delayedMoveResizeTimer(NULL)
     , m_colormap(XCB_COLORMAP_NONE)
     , in_group(NULL)
-    , m_windowGroup(XCB_WINDOW_NONE)
     , tab_group(NULL)
     , in_layer(UnknownLayer)
     , ping_timer(NULL)
@@ -259,7 +258,6 @@ Client::Client()
     noborder = false;
     app_noborder = false;
     motif_noborder = false;
-    urgency = false;
     ignore_focus_stealing = false;
     demands_attention = false;
     check_active_modal = false;
@@ -268,7 +266,6 @@ Client::Client()
     Ptakefocus = 0;
     Pcontexthelp = 0;
     Pping = 0;
-    input = false;
     skip_pager = false;
 
     max_mode = MaximizeRestore;
@@ -984,7 +981,7 @@ void Client::setShade(ShadeMode mode)
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);
-        if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(input))
+        if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shade_mode == ShadeHover) {
             ToplevelList order = workspace()->stackingOrder();
@@ -1632,7 +1629,7 @@ void Client::takeFocus()
     previous_focus_timestamp = xTime();
     previous_client = this;
 #endif
-    if (rules()->checkAcceptFocus(input))
+    if (rules()->checkAcceptFocus(info->input()))
         m_client.focus();
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
@@ -1685,13 +1682,13 @@ QString Client::readName() const
 }
 
 // The list is taken from http://www.unicode.org/reports/tr9/ (#154840)
-QChar LRM(0x200E);
-QChar RLM(0x200F);
-QChar LRE(0x202A);
-QChar RLE(0x202B);
-QChar LRO(0x202D);
-QChar RLO(0x202E);
-QChar PDF(0x202C);
+static const QChar LRM(0x200E);
+static const QChar RLM(0x200F);
+static const QChar LRE(0x202A);
+static const QChar RLE(0x202B);
+static const QChar LRO(0x202D);
+static const QChar RLO(0x202E);
+static const QChar PDF(0x202C);
 
 void Client::setCaption(const QString& _s, bool force)
 {
@@ -1917,25 +1914,6 @@ void Client::setClientShown(bool shown)
     }
 }
 
-void Client::getWMHints()
-{
-    XWMHints* hints = XGetWMHints(display(), window());
-    input = true;
-    m_windowGroup = XCB_WINDOW_NONE;
-    urgency = false;
-    if (hints) {
-        if (hints->flags & InputHint)
-            input = hints->input;
-        if (hints->flags & WindowGroupHint)
-            m_windowGroup = hints->window_group;
-        urgency = !!(hints->flags & UrgencyHint);   // Need boolean, it's a uint bitfield
-        XFree((char*)hints);
-    }
-    checkGroup();
-    updateUrgency();
-    updateAllowedActions(); // Group affects isMinimizable()
-}
-
 void Client::getMotifHints()
 {
     bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
@@ -2128,7 +2106,7 @@ bool Client::wantsTabFocus() const
 
 bool Client::wantsInput() const
 {
-    return rules()->checkAcceptFocus(input || Ptakefocus);
+    return rules()->checkAcceptFocus(info->input() || Ptakefocus);
 }
 
 bool Client::isSpecialWindow() const

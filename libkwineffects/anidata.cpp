@@ -29,7 +29,7 @@ QDebug operator<<(QDebug dbg, const KWin::AniData &a)
 }
 
 using namespace KWin;
-static int Gaussian = 46;
+static const int Gaussian = 46;
 
 AniData::AniData()
 {

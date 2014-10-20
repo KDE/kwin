@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "sm.h"
 #include "workspace.h"
-#include "xcbutils.h"
 
 // KDE
 #include <KAboutData>
@@ -48,9 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStandardPaths>
 #include <QVBoxLayout>
 #include <QtDBus/QtDBus>
-#include <QX11Info>
-// TODO: remove once QX11Info provides the X screen
-#include <X11/Xlib.h>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -70,68 +66,6 @@ Atoms* atoms;
 
 int screen_number = -1;
 bool is_multihead = false;
-
-//************************************
-// KWinSelectionOwner
-//************************************
-
-KWinSelectionOwner::KWinSelectionOwner(int screen_P)
-    : KSelectionOwner(make_selection_atom(screen_P), screen_P)
-{
-}
-
-xcb_atom_t KWinSelectionOwner::make_selection_atom(int screen_P)
-{
-    if (screen_P < 0)
-        screen_P = QX11Info::appScreen();
-    QByteArray screen(QByteArrayLiteral("WM_S"));
-    screen.append(QByteArray::number(screen_P));
-    ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
-        connection(),
-        xcb_intern_atom_unchecked(connection(), false, screen.length(), screen.constData()),
-        nullptr));
-    if (atom.isNull()) {
-        return XCB_ATOM_NONE;
-    }
-    return atom->atom;
-}
-
-void KWinSelectionOwner::getAtoms()
-{
-    KSelectionOwner::getAtoms();
-    if (xa_version == XCB_ATOM_NONE) {
-        const QByteArray name(QByteArrayLiteral("VERSION"));
-        ScopedCPointer<xcb_intern_atom_reply_t> atom(xcb_intern_atom_reply(
-            connection(),
-            xcb_intern_atom_unchecked(connection(), false, name.length(), name.constData()),
-            nullptr));
-        if (!atom.isNull()) {
-            xa_version = atom->atom;
-        }
-    }
-}
-
-void KWinSelectionOwner::replyTargets(xcb_atom_t property_P, xcb_window_t requestor_P)
-{
-    KSelectionOwner::replyTargets(property_P, requestor_P);
-    xcb_atom_t atoms[ 1 ] = { xa_version };
-    // PropModeAppend !
-    xcb_change_property(connection(), XCB_PROP_MODE_APPEND, requestor_P,
-                        property_P, XCB_ATOM_ATOM, 32, 1, atoms);
-}
-
-bool KWinSelectionOwner::genericReply(xcb_atom_t target_P, xcb_atom_t property_P, xcb_window_t requestor_P)
-{
-    if (target_P == xa_version) {
-        int32_t version[] = { 2, 0 };
-        xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, requestor_P,
-                            property_P, XCB_ATOM_INTEGER, 32, 2, version);
-    } else
-        return KSelectionOwner::genericReply(target_P, property_P, requestor_P);
-    return true;
-}
-
-xcb_atom_t KWinSelectionOwner::xa_version = XCB_ATOM_NONE;
 
 class AlternativeWMDialog : public QDialog
 {
@@ -181,24 +115,37 @@ private:
 
 int Application::crashes = 0;
 
-Application::Application(int &argc, char **argv)
+bool Application::isX11MultiHead()
+{
+    return is_multihead;
+}
+
+void Application::setX11MultiHead(bool multiHead)
+{
+    is_multihead = multiHead;
+}
+
+void Application::setX11ScreenNumber(int screenNumber)
+{
+    screen_number = screenNumber;
+}
+
+int Application::x11ScreenNumber()
+{
+    return screen_number;
+}
+
+Application::Application(Application::OperationMode mode, int &argc, char **argv)
     : QApplication(argc, argv)
-    , owner()
     , m_eventFilter(new XcbEventFilter())
-    , m_replace(false)
     , m_configLock(false)
-    , m_operationMode(OperationModeX11)
+    , m_operationMode(mode)
 {
 }
 
 void Application::setConfigLock(bool lock)
 {
     m_configLock = lock;
-}
-
-void Application::setReplace(bool replace)
-{
-    m_replace = replace;
 }
 
 Application::OperationMode Application::operationMode() const
@@ -232,67 +179,13 @@ void Application::start()
         config->reparseConfiguration();
     }
 
-    if (screen_number == -1)
-        screen_number = QX11Info::appScreen();
-
-    owner.reset(new KWinSelectionOwner(screen_number));
-    connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, []{
-        fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
-        ::exit(1);
-    });
-    connect(owner.data(), SIGNAL(lostOwnership()), SLOT(lostSelection()));
-    connect(owner.data(), &KSelectionOwner::claimedOwnership, [this]{
-        // we want all QQuickWindows with an alpha buffer
-        QQuickWindow::setDefaultAlphaBuffer(true);
-
-        installNativeEventFilter(m_eventFilter.data());
-        // first load options - done internally by a different thread
-        options = new Options;
-
-        // Check  whether another windowmanager is running
-        const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
-        ScopedCPointer<xcb_generic_error_t> redirectCheck(xcb_request_check(connection(),
-                                                                            xcb_change_window_attributes_checked(connection(),
-                                                                                                                 rootWindow(),
-                                                                                                                 XCB_CW_EVENT_MASK,
-                                                                                                                 maskValues)));
-        if (!redirectCheck.isNull()) {
-            fputs(i18n("kwin: another window manager is running (try using --replace)\n").toLocal8Bit().constData(), stderr);
-            ::exit(1);
-        }
-
-        atoms->retrieveHelpers();
-
-        // This tries to detect compositing options and can use GLX. GLX problems
-        // (X errors) shouldn't cause kwin to abort, so this is out of the
-        // critical startup section where x errors cause kwin to abort.
-
-        // create workspace.
-        (void) new Workspace(isSessionRestored());
-
-        Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-        // Tell KSplash that KWin has started
-        QDBusMessage ksplashProgressMessage = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KSplash"),
-                                                                             QStringLiteral("/KSplash"),
-                                                                             QStringLiteral("org.kde.KSplash"),
-                                                                             QStringLiteral("setStage"));
-        ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
-        QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
-    });
     crashChecking();
-    // we need to do an XSync here, otherwise the QPA might crash us later on
-    Xcb::sync();
-    owner->claim(m_replace, true);
 
-    atoms = new Atoms;
+    performStartup();
 }
 
 Application::~Application()
 {
-    delete Workspace::self();
-    if (!owner.isNull() && owner->ownerWindow() != XCB_WINDOW_NONE)   // If there was no --replace (no new WM)
-        Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
     delete options;
     delete atoms;
 }
@@ -328,25 +221,11 @@ void Application::crashChecking()
     QTimer::singleShot(15 * 1000, this, SLOT(resetCrashesCount()));
 }
 
-void Application::lostSelection()
-{
-    sendPostedEvents();
-    delete Workspace::self();
-    // Remove windowmanager privileges
-    Xcb::selectInput(rootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
-    quit();
-}
-
 bool Application::notify(QObject* o, QEvent* e)
 {
     if (Workspace::self()->workspaceEvent(e))
         return true;
     return QApplication::notify(o, e);
-}
-
-static void sighandler(int)
-{
-    QApplication::exit();
 }
 
 void Application::crashHandler(int signal)
@@ -377,26 +256,68 @@ bool Application::wasCrash()
     return crashes > 0;
 }
 
-bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
-{
-    Q_UNUSED(result)
-    if (!Workspace::self()) {
-        // Workspace not yet created
-        return false;
-    }
-    if (eventType != "xcb_generic_event_t") {
-        return false;
-    }
-    return Workspace::self()->workspaceEvent(static_cast<xcb_generic_event_t *>(message));
-}
-
-} // namespace
-
-static const char version[] = KWIN_VERSION_STRING;
 static const char description[] = I18N_NOOP("KDE window manager");
 
-extern "C"
-KWIN_EXPORT int kdemain(int argc, char * argv[])
+void Application::createAboutData()
+{
+    KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
+                         i18n("KWin"),                       // A displayable program name string
+                         QStringLiteral(KWIN_VERSION_STRING), // The program version string
+                         i18n(description),                  // Short description of what the app does
+                         KAboutLicense::GPL,            // The license this code is released under
+                         i18n("(c) 1999-2013, The KDE Developers"));   // Copyright Statement
+
+    aboutData.addAuthor(i18n("Matthias Ettrich"), QString(), QStringLiteral("ettrich@kde.org"));
+    aboutData.addAuthor(i18n("Cristian Tibirna"), QString(), QStringLiteral("tibirna@kde.org"));
+    aboutData.addAuthor(i18n("Daniel M. Duley"),  QString(), QStringLiteral("mosfet@kde.org"));
+    aboutData.addAuthor(i18n("Luboš Luňák"),      QString(), QStringLiteral("l.lunak@kde.org"));
+    aboutData.addAuthor(i18n("Martin Gräßlin"),   i18n("Maintainer"), QStringLiteral("mgraesslin@kde.org"));
+    KAboutData::setApplicationData(aboutData);
+}
+
+static const QString s_lockOption = QStringLiteral("lock");
+static const QString s_crashesOption = QStringLiteral("crashes");
+
+void Application::setupCommandLine(QCommandLineParser *parser)
+{
+    QCommandLineOption lockOption(s_lockOption, i18n("Disable configuration options"));
+    QCommandLineOption crashesOption(s_crashesOption, i18n("Indicate that KWin has recently crashed n times"), QStringLiteral("n"));
+
+    parser->setApplicationDescription(i18n("KDE window manager"));
+    parser->addVersionOption();
+    parser->addHelpOption();
+    parser->addOption(lockOption);
+    parser->addOption(crashesOption);
+    KAboutData::applicationData().setupCommandLine(parser);
+}
+
+void Application::processCommandLine(QCommandLineParser *parser)
+{
+    setConfigLock(parser->isSet(s_lockOption));
+    Application::setCrashCount(parser->value(s_crashesOption).toInt());
+}
+
+void Application::registerDBusService()
+{
+    QString appname;
+    if (x11ScreenNumber() == 0)
+        appname = QStringLiteral("org.kde.kwin");
+    else
+        appname.sprintf("org.kde.kwin-screen-%d", KWin::Application::x11ScreenNumber());
+
+    QDBusConnection::sessionBus().interface()->registerService(
+        appname, QDBusConnectionInterface::DontQueueService);
+}
+
+void Application::setupTranslator()
+{
+    QTranslator qtTranslator;
+    qtTranslator.load("qt_" + QLocale::system().name(),
+                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    installTranslator(&qtTranslator);
+}
+
+void Application::setupMalloc()
 {
 #ifdef M_TRIM_THRESHOLD
     // Prevent fragmentation of the heap by malloc (glibc).
@@ -412,146 +333,91 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 #endif // HAVE_UNISTD_H
     mallopt(M_TRIM_THRESHOLD, 5*pagesize);
 #endif // M_TRIM_THRESHOLD
+}
 
+void Application::setupLocalizedString()
+{
     KLocalizedString::setApplicationDomain("kwin");
+}
+
+void Application::setupLoggingCategoryFilters()
+{
     QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true\n") +
                                      QStringLiteral("kwineffects.debug = true"));
-
-    int primaryScreen = 0;
-    xcb_connection_t *c = xcb_connect(nullptr, &primaryScreen);
-    if (!c || xcb_connection_has_error(c)) {
-        fprintf(stderr, "%s: FATAL ERROR while trying to open display %s\n",
-                argv[0], qgetenv("DISPLAY").constData());
-        exit(1);
-    }
-
-    const int number_of_screens = xcb_setup_roots_length(xcb_get_setup(c));
-
-    // multi head
-    auto isMultiHead = []() -> bool {
-        QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
-        if (!multiHead.isEmpty()) {
-            return (multiHead.toLower() == "true");
-        }
-        return true;
-    };
-    if (number_of_screens != 1 && isMultiHead()) {
-        KWin::is_multihead = true;
-        KWin::screen_number = primaryScreen;
-        int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
-        QByteArray display_name = qgetenv("DISPLAY");
-        xcb_disconnect(c);
-        c = nullptr;
-
-        if ((pos = display_name.lastIndexOf('.')) != -1)
-            display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
-
-        QString envir;
-        for (int i = 0; i < number_of_screens; i++) {
-            // If execution doesn't pass by here, then kwin
-            // acts exactly as previously
-            if (i != KWin::screen_number && fork() == 0) {
-                KWin::screen_number = i;
-                // Break here because we are the child process, we don't
-                // want to fork() anymore
-                break;
-            }
-        }
-        // In the next statement, display_name shouldn't contain a screen
-        // number. If it had it, it was removed at the "pos" check
-        envir.sprintf("DISPLAY=%s.%d", display_name.data(), KWin::screen_number);
-
-        if (putenv(strdup(envir.toAscii().constData()))) {
-            fprintf(stderr, "%s: WARNING: unable to set DISPLAY environment variable\n", argv[0]);
-            perror("putenv()");
-        }
-    }
-
-    if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
-        signal(SIGTERM, SIG_IGN);
-    if (signal(SIGINT, KWin::sighandler) == SIG_IGN)
-        signal(SIGINT, SIG_IGN);
-    if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
-        signal(SIGHUP, SIG_IGN);
-
-    // Disable the glib event loop integration, since it seems to be responsible
-    // for several bug reports about high CPU usage (bug #239963)
-    setenv("QT_NO_GLIB", "1", true);
-
-    // enforce xcb plugin, unfortunately command line switch has precedence
-    setenv("QT_QPA_PLATFORM", "xcb", true);
-
-    KWin::Application a(argc, argv);
-
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    a.installTranslator(&qtTranslator);
-
-    KAboutData aboutData(QStringLiteral(KWIN_NAME),          // The program name used internally
-                         i18n("KWin"),                       // A displayable program name string
-                         QStringLiteral(KWIN_VERSION_STRING), // The program version string
-                         i18n(description),                  // Short description of what the app does
-                         KAboutLicense::GPL,            // The license this code is released under
-                         i18n("(c) 1999-2013, The KDE Developers"));   // Copyright Statement
-
-    aboutData.addAuthor(i18n("Matthias Ettrich"), QString(), QStringLiteral("ettrich@kde.org"));
-    aboutData.addAuthor(i18n("Cristian Tibirna"), QString(), QStringLiteral("tibirna@kde.org"));
-    aboutData.addAuthor(i18n("Daniel M. Duley"),  QString(), QStringLiteral("mosfet@kde.org"));
-    aboutData.addAuthor(i18n("Luboš Luňák"),      QString(), QStringLiteral("l.lunak@kde.org"));
-    aboutData.addAuthor(i18n("Martin Gräßlin"),   i18n("Maintainer"), QStringLiteral("mgraesslin@kde.org"));
-    KAboutData::setApplicationData(aboutData);
-
-    QCommandLineOption lockOption(QStringLiteral("lock"), i18n("Disable configuration options"));
-    QCommandLineOption replaceOption(QStringLiteral("replace"), i18n("Replace already-running ICCCM2.0-compliant window manager"));
-    QCommandLineOption crashesOption(QStringLiteral("crashes"), i18n("Indicate that KWin has recently crashed n times"), QStringLiteral("n"));
-
-    QCommandLineParser parser;
-    parser.setApplicationDescription(i18n("KDE window manager"));
-    parser.addVersionOption();
-    parser.addHelpOption();
-    parser.addOption(lockOption);
-    parser.addOption(replaceOption);
-    parser.addOption(crashesOption);
-    aboutData.setupCommandLine(&parser);
-
-    parser.process(a);
-    aboutData.processCommandLine(&parser);
-
-    KWin::Application::setCrashCount(parser.value(crashesOption).toInt());
-    a.setConfigLock(parser.isSet(lockOption));
-    a.setReplace(parser.isSet(replaceOption));
-
-    // perform sanity checks
-    if (a.platformName().toLower() != QStringLiteral("xcb")) {
-        fprintf(stderr, "%s: FATAL ERROR expecting platform xcb but got platform %s\n",
-                argv[0], qPrintable(a.platformName()));
-        exit(1);
-    }
-    if (!KWin::display()) {
-        fprintf(stderr, "%s: FATAL ERROR KWin requires Xlib support in the xcb plugin. Do not configure Qt with -no-xcb-xlib\n",
-                argv[0]);
-        exit(1);
-    }
-
-    a.start();
-
-#warning SessionManager needs porting
-#if KWIN_QT5_PORTING
-    KWin::SessionManager weAreIndeed;
-#endif
-    KWin::SessionSaveDoneHelper helper;
-
-    QString appname;
-    if (KWin::screen_number == 0)
-        appname = QStringLiteral("org.kde.kwin");
-    else
-        appname.sprintf("org.kde.kwin-screen-%d", KWin::screen_number);
-
-    QDBusConnection::sessionBus().interface()->registerService(
-        appname, QDBusConnectionInterface::DontQueueService);
-
-    return a.exec();
 }
+
+void Application::notifyKSplash()
+{
+    // Tell KSplash that KWin has started
+    QDBusMessage ksplashProgressMessage = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KSplash"),
+                                                                            QStringLiteral("/KSplash"),
+                                                                            QStringLiteral("org.kde.KSplash"),
+                                                                            QStringLiteral("setStage"));
+    ksplashProgressMessage.setArguments(QList<QVariant>() << QStringLiteral("wm"));
+    QDBusConnection::sessionBus().asyncCall(ksplashProgressMessage);
+}
+
+void Application::createWorkspace()
+{
+    // ensure the helper atoms are retrieved before we create the Workspace
+    atoms->retrieveHelpers();
+
+    // we want all QQuickWindows with an alpha buffer, do here as Workspace might create QQuickWindows
+    QQuickWindow::setDefaultAlphaBuffer(true);
+
+    // This tries to detect compositing options and can use GLX. GLX problems
+    // (X errors) shouldn't cause kwin to abort, so this is out of the
+    // critical startup section where x errors cause kwin to abort.
+
+    // create workspace.
+    (void) new Workspace(isSessionRestored());
+}
+
+void Application::createAtoms()
+{
+    atoms = new Atoms;
+}
+
+void Application::createOptions()
+{
+    options = new Options;
+}
+
+void Application::setupEventFilters()
+{
+    installNativeEventFilter(m_eventFilter.data());
+}
+
+void Application::destroyWorkspace()
+{
+    delete Workspace::self();
+}
+
+bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *message, long int *result)
+{
+    Q_UNUSED(result)
+    if (!Workspace::self()) {
+        // Workspace not yet created
+        return false;
+    }
+    if (eventType != "xcb_generic_event_t") {
+        return false;
+    }
+    return Workspace::self()->workspaceEvent(static_cast<xcb_generic_event_t *>(message));
+}
+
+static bool s_useLibinput = false;
+
+void Application::setUseLibinput(bool use)
+{
+    s_useLibinput = use;
+}
+
+bool Application::usesLibinput()
+{
+    return s_useLibinput;
+}
+
+} // namespace
 
 #include "main.moc"

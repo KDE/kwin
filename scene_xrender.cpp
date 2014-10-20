@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinxrenderutils.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include <KWayland/Client/shm_pool.h>
+#include <KWayland/Client/surface.h>
 #endif
 #include "decorations/decoratedclient.h"
 
@@ -52,42 +54,6 @@ ScreenPaintData SceneXrender::screen_paint;
 #define DOUBLE_TO_FIXED(d) ((xcb_render_fixed_t) ((d) * 65536))
 #define FIXED_TO_DOUBLE(f) ((double) ((f) / 65536.0))
 
-
-static xcb_render_pictformat_t findFormatForVisual(xcb_visualid_t visual)
-{
-    static QHash<xcb_visualid_t, xcb_render_pictformat_t> s_cache;
-
-    if (xcb_render_pictformat_t format = s_cache.value(visual, 0)) {
-        return format;
-    }
-    if (!s_cache.isEmpty()) {
-        return 0;
-    }
-
-    ScopedCPointer<xcb_render_query_pict_formats_reply_t> formats(xcb_render_query_pict_formats_reply(
-        connection(), xcb_render_query_pict_formats_unchecked(connection()), NULL));
-    if (!formats) {
-        return 0;
-    }
-    int screen = QX11Info::appScreen();
-    for (xcb_render_pictscreen_iterator_t sit = xcb_render_query_pict_formats_screens_iterator(formats.data());
-            sit.rem;
-            --screen, xcb_render_pictscreen_next(&sit)) {
-        if (screen != 0) {
-            continue;
-        }
-        for (xcb_render_pictdepth_iterator_t dit = xcb_render_pictscreen_depths_iterator(sit.data);
-                dit.rem;
-                xcb_render_pictdepth_next(&dit)) {
-            for (xcb_render_pictvisual_iterator_t vit = xcb_render_pictdepth_visuals_iterator(dit.data);
-                    vit.rem;
-                    xcb_render_pictvisual_next(&vit)) {
-                s_cache.insert(vit.data->visual, vit.data->format);
-            }
-        }
-    }
-    return s_cache.value(visual, 0);
-}
 
 //****************************************
 // XRenderBackend
@@ -141,10 +107,6 @@ void XRenderBackend::screenGeometryChanged(const QSize &size)
     Q_UNUSED(size)
 }
 
-bool XRenderBackend::isLastFrameRendered() const
-{
-    return true;
-}
 
 //****************************************
 // X11XRenderBackend
@@ -190,7 +152,7 @@ void X11XRenderBackend::init(bool createOverlay)
             setFailed("Failed getting window attributes for overlay window");
             return;
         }
-        m_format = findFormatForVisual(attribs->visual);
+        m_format = XRenderUtils::findPictFormat(attribs->visual);
         if (m_format == 0) {
             setFailed("Failed to find XRender format for overlay window");
             return;
@@ -199,7 +161,7 @@ void X11XRenderBackend::init(bool createOverlay)
         xcb_render_create_picture(connection(), m_front, m_overlayWindow->window(), m_format, 0, NULL);
     } else {
         // create XRender picture for the root window
-        m_format = findFormatForVisual(defaultScreen()->root_visual);
+        m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
         if (m_format == 0) {
             setFailed("Failed to find XRender format for root window");
             return; // error
@@ -256,24 +218,9 @@ bool X11XRenderBackend::usesOverlayWindow() const
 // WaylandXRenderBackend
 //****************************************
 #if HAVE_WAYLAND
-static void handleFrameCallback(void *data, wl_callback *callback, uint32_t time)
-{
-    Q_UNUSED(data)
-    Q_UNUSED(time)
-    reinterpret_cast<WaylandXRenderBackend*>(data)->lastFrameRendered();
-
-    if (callback) {
-            wl_callback_destroy(callback);
-    }
-}
-
-static const struct wl_callback_listener s_surfaceFrameListener = {
-        handleFrameCallback
-};
 
 WaylandXRenderBackend::WaylandXRenderBackend()
     : m_shm(new Xcb::Shm)
-    , m_lastFrameRendered(true)
     , m_format(0)
 {
     if (!m_shm->isValid()) {
@@ -285,6 +232,8 @@ WaylandXRenderBackend::WaylandXRenderBackend()
     init();
     connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandXRenderBackend::createBuffer);
+    connect(Wayland::WaylandBackend::self()->surface(), &KWayland::Client::Surface::frameRendered,
+            Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
 WaylandXRenderBackend::~WaylandXRenderBackend()
@@ -293,7 +242,7 @@ WaylandXRenderBackend::~WaylandXRenderBackend()
 
 void WaylandXRenderBackend::init()
 {
-    m_format = findFormatForVisual(defaultScreen()->root_visual);
+    m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
     if (m_format == 0) {
         setFailed("Failed to find XRender format for root window");
         return; // error
@@ -334,32 +283,18 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
 
     Wayland::WaylandBackend *wl = Wayland::WaylandBackend::self();
     const QSize &size = wl->shellSurfaceSize();
-    wl_buffer *buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
+    auto buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
     if (!buffer) {
         qDebug() << "Did not get a buffer";
         return;
     }
-    m_lastFrameRendered = false;
-    wl_surface *surface = wl->surface();
-    wl_callback *callback = wl_surface_frame(surface);
-    wl_callback_add_listener(callback, &s_surfaceFrameListener, this);
-    wl_surface_attach(surface, buffer, 0, 0);
-    Q_FOREACH (const QRect &rect, damage.rects()) {
-        wl_surface_damage(surface, rect.x(), rect.y(), rect.width(), rect.height());
-    }
-    wl_surface_commit(surface);
-    wl->dispatchEvents();
-}
 
-bool WaylandXRenderBackend::isLastFrameRendered() const
-{
-    return m_lastFrameRendered;
-}
+    Compositor::self()->aboutToSwapBuffers();
 
-void WaylandXRenderBackend::lastFrameRendered()
-{
-    m_lastFrameRendered = true;
-    Compositor::self()->lastFrameRendered();
+    auto s = wl->surface();
+    s->attachBuffer(buffer);
+    s->damage(damage);
+    s->commit();
 }
 
 bool WaylandXRenderBackend::usesOverlayWindow() const
@@ -480,7 +415,7 @@ QRect SceneXrender::Window::temp_visibleRect;
 SceneXrender::Window::Window(Toplevel* c, SceneXrender *scene)
     : Scene::Window(c)
     , m_scene(scene)
-    , format(findFormatForVisual(c->visual()))
+    , format(XRenderUtils::findPictFormat(c->visual()))
     , alpha_cached_opacity(0.0)
 {
 }
@@ -634,7 +569,7 @@ void SceneXrender::Window::performPaint(int mask, QRegion region, WindowPaintDat
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
     };
-    static xcb_render_transform_t identity = {
+    static const xcb_render_transform_t identity = {
         DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1), DOUBLE_TO_FIXED(0),
         DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(0), DOUBLE_TO_FIXED(1)
@@ -856,7 +791,7 @@ xcb_render_composite(connection(), XCB_RENDER_PICT_OP_OVER, m_xrenderShadow->pic
 
         if (client || deleted) {
             if (!noBorder) {
-                xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity() * data.decorationOpacity());
+                xcb_render_picture_t decorationAlpha = xRenderBlendPicture(data.opacity());
                 auto renderDeco = [decorationAlpha, renderTarget](xcb_render_picture_t deco, const QRect &rect) {
                     if (deco == XCB_RENDER_PICTURE_NONE) {
                         return;
@@ -1136,10 +1071,10 @@ void SceneXrender::EffectFrame::renderUnstyled(xcb_render_picture_t pict, const 
         xcb_render_color_t tranparent = {0, 0, 0, 0};
         xcb_render_fill_rectangles(connection(), XCB_RENDER_PICT_OP_SRC, *s_effectFrameCircle, tranparent, 1, &xrect);
 
-        static int num_segments = 80;
-        static qreal theta = 2 * M_PI / qreal(num_segments);
-        static qreal c = qCos(theta); //precalculate the sine and cosine
-        static qreal s = qSin(theta);
+        static const int num_segments = 80;
+        static const qreal theta = 2 * M_PI / qreal(num_segments);
+        static const qreal c = qCos(theta); //precalculate the sine and cosine
+        static const qreal s = qSin(theta);
         qreal t;
 
         qreal x = roundness;//we start at angle = 0

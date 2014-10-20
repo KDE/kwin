@@ -8,6 +8,11 @@ Copyright (C) 2009, 2010, 2011 Martin Gräßlin <mgraesslin@kde.org>
 Based on glcompmgr code by Felix Bellaby.
 Using code from Compiz and Beryl.
 
+Explicit command stream synchronization based on the sample
+implementation by James Jones <jajones@nvidia.com>,
+
+Copyright © 2011 NVIDIA Corporation
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -75,6 +80,216 @@ namespace KWin
 
 extern int currentRefreshRate();
 
+
+/**
+ * SyncObject represents a fence used to synchronize operations in
+ * the kwin command stream with operations in the X command stream.
+ */
+class SyncObject
+{
+public:
+    enum State { Ready, TriggerSent, Waiting, Done, Resetting };
+
+    SyncObject();
+    ~SyncObject();
+
+    State state() const { return m_state; }
+
+    void trigger();
+    void wait();
+    bool finish();
+    void reset();
+    void finishResetting();
+
+private:
+    State m_state;
+    GLsync m_sync;
+    xcb_sync_fence_t m_fence;
+    xcb_get_input_focus_cookie_t m_reset_cookie;
+};
+
+SyncObject::SyncObject()
+{
+    m_state = Ready;
+
+    xcb_connection_t * const c = connection();
+
+    m_fence = xcb_generate_id(c);
+    xcb_sync_create_fence(c, rootWindow(), m_fence, false);
+    xcb_flush(c);
+
+    m_sync = glImportSyncEXT(GL_SYNC_X11_FENCE_EXT, m_fence, 0);
+}
+
+SyncObject::~SyncObject()
+{
+    xcb_sync_destroy_fence(connection(), m_fence);
+    glDeleteSync(m_sync);
+
+    if (m_state == Resetting)
+        xcb_discard_reply(connection(), m_reset_cookie.sequence);
+}
+
+void SyncObject::trigger()
+{
+    assert(m_state == Ready || m_state == Resetting);
+
+    // Finish resetting the fence if necessary
+    if (m_state == Resetting)
+        finishResetting();
+
+    xcb_sync_trigger_fence(connection(), m_fence);
+    m_state = TriggerSent;
+}
+
+void SyncObject::wait()
+{
+    if (m_state != TriggerSent)
+        return;
+
+    glWaitSync(m_sync, 0, GL_TIMEOUT_IGNORED);
+    m_state = Waiting;
+}
+
+bool SyncObject::finish()
+{
+    if (m_state == Done)
+        return true;
+
+    // Note: It is possible that we never inserted a wait for the fence.
+    //       This can happen if we ended up not rendering the damaged
+    //       window because it is fully occluded.
+    assert(m_state == TriggerSent || m_state == Waiting);
+
+    // Check if the fence is signaled
+    GLint value;
+    glGetSynciv(m_sync, GL_SYNC_STATUS, 1, nullptr, &value);
+
+    if (value != GL_SIGNALED) {
+        qDebug() << "Waiting for X fence to finish";
+
+        // Wait for the fence to become signaled with a one second timeout
+        const GLenum result = glClientWaitSync(m_sync, 0, 1000000000);
+
+        switch (result) {
+        case GL_TIMEOUT_EXPIRED:
+            qWarning() << "Timeout while waiting for X fence";
+            return false;
+
+        case GL_WAIT_FAILED:
+            qWarning() << "glClientWaitSync() failed";
+            return false;
+        }
+    }
+
+    m_state = Done;
+    return true;
+}
+
+void SyncObject::reset()
+{
+    assert(m_state == Done);
+
+    xcb_connection_t * const c = connection();
+
+    // Send the reset request along with a sync request.
+    // We use the cookie to ensure that the server has processed the reset
+    // request before we trigger the fence and call glWaitSync().
+    // Otherwise there is a race condition between the reset finishing and
+    // the glWaitSync() call.
+    xcb_sync_reset_fence(c, m_fence);
+    m_reset_cookie = xcb_get_input_focus(c);
+    xcb_flush(c);
+
+    m_state = Resetting;
+}
+
+void SyncObject::finishResetting()
+{
+    assert(m_state == Resetting);
+    free(xcb_get_input_focus_reply(connection(), m_reset_cookie, nullptr));
+    m_state = Ready;
+}
+
+
+
+// -----------------------------------------------------------------------
+
+
+
+/**
+ * SyncManager manages a set of fences used for explicit synchronization
+ * with the X command stream.
+ */
+class SyncManager
+{
+public:
+    enum { MaxFences = 4 };
+
+    SyncManager();
+    ~SyncManager();
+
+    SyncObject *nextFence();
+    bool updateFences();
+
+private:
+    std::array<SyncObject, MaxFences> m_fences;
+    int m_next;
+};
+
+SyncManager::SyncManager()
+    : m_next(0)
+{
+}
+
+SyncManager::~SyncManager()
+{
+}
+
+SyncObject *SyncManager::nextFence()
+{
+    SyncObject *fence = &m_fences[m_next];
+    m_next = (m_next + 1) % MaxFences;
+    return fence;
+}
+
+bool SyncManager::updateFences()
+{
+    for (int i = 0; i < qMin(2, MaxFences - 1); i++) {
+        const int index = (m_next + i) % MaxFences;
+        SyncObject &fence = m_fences[index];
+
+        switch (fence.state()) {
+        case SyncObject::Ready:
+            break;
+
+        case SyncObject::TriggerSent:
+        case SyncObject::Waiting:
+            if (!fence.finish())
+                return false;
+            fence.reset();
+            break;
+
+        // Should not happen in practice since we always reset the fence
+        // after finishing it
+        case SyncObject::Done:
+            fence.reset();
+            break;
+
+        case SyncObject::Resetting:
+            fence.finishResetting();
+            break;
+        }
+    }
+
+    return true;
+}
+
+
+// -----------------------------------------------------------------------
+
+
+
 //****************************************
 // SceneOpenGL
 //****************************************
@@ -128,11 +343,6 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
     return region;
 }
 
-bool OpenGLBackend::isLastFrameRendered() const
-{
-    return true;
-}
-
 OverlayWindow* OpenGLBackend::overlayWindow()
 {
     return NULL;
@@ -146,6 +356,8 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     : Scene(ws)
     , init_ok(true)
     , m_backend(backend)
+    , m_syncManager(nullptr)
+    , m_currentFence(nullptr)
 {
     if (m_backend->isFailed()) {
         init_ok = false;
@@ -179,6 +391,21 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
     if (options->isGlStrictBindingFollowsDriver()) {
         options->setGlStrictBinding(!glPlatform->supports(LooseBinding));
     }
+
+    bool haveSyncObjects = glPlatform->isGLES()
+        ? hasGLVersion(3, 0)
+        : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
+
+    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
+        const QByteArray useExplicitSync = qgetenv("KWIN_EXPLICIT_SYNC");
+
+        if (useExplicitSync != "0") {
+            qDebug() << "Initializing fences for synchronization with the X command stream";
+            m_syncManager = new SyncManager;
+        } else {
+            qDebug() << "Explicit synchronization with the X command stream disabled by environment variable";
+        }
+    }
 }
 
 SceneOpenGL::~SceneOpenGL()
@@ -186,6 +413,8 @@ SceneOpenGL::~SceneOpenGL()
     // do cleanup after initBuffer()
     SceneOpenGL::EffectFrame::cleanup();
     if (init_ok) {
+        delete m_syncManager;
+
         // backend might be still needed for a different scene
         delete m_backend;
     }
@@ -329,6 +558,22 @@ void SceneOpenGL::handleGraphicsReset(GLenum status)
     KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
 }
 
+
+void SceneOpenGL::triggerFence()
+{
+    if (m_syncManager) {
+        m_currentFence = m_syncManager->nextFence();
+        m_currentFence->trigger();
+    }
+}
+
+void SceneOpenGL::insertWait()
+{
+    if (m_currentFence && m_currentFence->state() != SyncObject::Waiting) {
+        m_currentFence->wait();
+    }
+}
+
 qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 {
     // actually paint the frame, flushed with the NEXT frame
@@ -375,6 +620,16 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 #endif
 
     m_backend->endRenderingFrame(validRegion, updateRegion);
+
+    if (m_currentFence) {
+        if (!m_syncManager->updateFences()) {
+            qDebug() << "Aborting explicit synchronization with the X command stream.";
+            qDebug() << "Future frames will be rendered unsynchronized.";
+            delete m_syncManager;
+            m_syncManager = nullptr;
+        }
+        m_currentFence = nullptr;
+    }
 
     // do cleanup
     clearStackingOrder();
@@ -762,7 +1017,7 @@ SceneOpenGL::Texture::Texture(OpenGLBackend *backend)
 SceneOpenGL::Texture::Texture(OpenGLBackend *backend, const QPixmap &pix, GLenum target)
     : GLTexture(*backend->createBackendTexture(this))
 {
-    load(pix, target);
+    GLTexture::load(pix.toImage(), target);
 }
 
 SceneOpenGL::Texture::~Texture()
@@ -780,51 +1035,17 @@ void SceneOpenGL::Texture::discard()
     d_ptr = d_func()->backend()->createBackendTexture(this);
 }
 
-bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
-                                int depth)
+bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
+                                xcb_visualid_t visual)
 {
-    if (pix == None)
-        return false;
-    return load(pix, size, depth,
-                QRegion(0, 0, size.width(), size.height()));
-}
-
-bool SceneOpenGL::Texture::load(const QImage& image, GLenum target)
-{
-    if (image.isNull())
-        return false;
-    return load(QPixmap::fromImage(image), target);
-}
-
-bool SceneOpenGL::Texture::load(const QPixmap& pixmap, GLenum target)
-{
-    if (pixmap.isNull())
+    if (pix == XCB_NONE)
         return false;
 
-    return GLTexture::load(pixmap.toImage(), target);
-}
-
-void SceneOpenGL::Texture::findTarget()
-{
-    Q_D(Texture);
-    d->findTarget();
-}
-
-bool SceneOpenGL::Texture::load(const Pixmap& pix, const QSize& size,
-                                int depth, QRegion region)
-{
-    Q_UNUSED(region)
     // decrease the reference counter for the old texture
     d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
 
     Q_D(Texture);
-    return d->loadTexture(pix, size, depth);
-}
-
-bool SceneOpenGL::Texture::update(const QRegion &damage)
-{
-    Q_D(Texture);
-    return d->update(damage);
+    return d->loadTexture(pix, size, visual);
 }
 
 //****************************************
@@ -836,12 +1057,6 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
-}
-
-bool SceneOpenGL::TexturePrivate::update(const QRegion &damage)
-{
-    Q_UNUSED(damage)
-    return true;
 }
 
 //****************************************
@@ -871,6 +1086,10 @@ bool SceneOpenGL::Window::bindTexture()
     if (pixmap->isDiscarded()) {
         return !pixmap->texture()->isNull();
     }
+
+    if (!window()->damage().isEmpty())
+        m_scene->insertWait();
+
     return pixmap->bind();
 }
 
@@ -992,105 +1211,6 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
         }
     }
     return nullptr;
-}
-
-void SceneOpenGL::Window::paintDecorations(const WindowPaintData &data, const QRegion &region)
-{
-    GLTexture *texture = getDecorationTexture();
-    if (!texture)
-        return;
-
-    const WindowQuadList quads = data.quads.select(WindowQuadDecoration);
-    paintDecoration(texture, Decoration, region, data, quads);
-}
-
-void SceneOpenGL::Window::paintDecoration(GLTexture *texture, TextureType type,
-                                          const QRegion &region, const WindowPaintData &data,
-                                          const WindowQuadList &quads)
-{
-    if (!texture || quads.isEmpty())
-        return;
-
-    if (filter == ImageFilterGood)
-        texture->setFilter(GL_LINEAR);
-    else
-        texture->setFilter(GL_NEAREST);
-
-    texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    texture->bind();
-
-    prepareStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, false);
-    restoreStates(type, data.opacity() * data.decorationOpacity(), data.brightness(), data.saturation());
-
-    texture->unbind();
-
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug()) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        GLVertexBuffer::streamingBuffer()->render(region, GL_TRIANGLES, m_hardwareClipping);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-#endif
-}
-
-void SceneOpenGL::Window::paintShadow(const QRegion &region, const WindowPaintData &data)
-{
-    WindowQuadList quads = data.quads.select(WindowQuadShadow);
-    if (quads.isEmpty())
-        return;
-
-    GLTexture *texture = static_cast<SceneOpenGLShadow*>(m_shadow)->shadowTexture();
-    if (!texture) {
-        return;
-    }
-    if (filter == ImageFilterGood)
-        texture->setFilter(GL_LINEAR);
-    else
-        texture->setFilter(GL_NEAREST);
-    texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    texture->bind();
-    prepareStates(Shadow, data.opacity(), data.brightness(), data.saturation(), data.screen());
-    renderQuads(0, region, quads, texture, true);
-    restoreStates(Shadow, data.opacity(), data.brightness(), data.saturation());
-    texture->unbind();
-#ifndef KWIN_HAVE_OPENGLES
-    if (m_scene && m_scene->debug()) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        renderQuads(0, region, quads, texture, true);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-#endif
-}
-
-void SceneOpenGL::Window::renderQuads(int, const QRegion& region, const WindowQuadList& quads,
-                                      GLTexture *tex, bool normalized)
-{
-    if (quads.isEmpty())
-        return;
-
-    const QMatrix4x4 matrix = tex->matrix(normalized ? NormalizedCoordinates : UnnormalizedCoordinates);
-
-    // Render geometry
-    GLenum primitiveType;
-    int primcount;
-
-    if (GLVertexBuffer::supportsIndexedQuads()) {
-        primitiveType = GL_QUADS;
-        primcount = quads.count() * 4;
-    } else {
-        primitiveType = GL_TRIANGLES;
-        primcount = quads.count() * 6;
-    }
-
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->setVertexCount(primcount);
-
-    GLVertex2D *map = (GLVertex2D *) vbo->map(primcount * sizeof(GLVertex2D));
-    quads.makeInterleavedArrays(primitiveType, map, matrix);
-    vbo->unmap();
-
-    vbo->render(region, primitiveType, m_hardwareClipping);
 }
 
 WindowPixmap* SceneOpenGL::Window::createWindowPixmap()
@@ -1300,60 +1420,6 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     endRenderWindow();
 }
 
-void SceneOpenGL2Window::prepareStates(TextureType type, qreal opacity, qreal brightness, qreal saturation, int screen)
-{
-    // setup blending of transparent windows
-    bool opaque = isOpaque() && opacity == 1.0;
-    bool alpha = toplevel->hasAlpha() || type != Content;
-    if (type != Content) {
-        if (type == Shadow) {
-            opaque = false;
-        } else {
-            if (opacity == 1.0 && toplevel->isClient()) {
-                opaque = !(static_cast<Client*>(toplevel)->decorationHasAlpha());
-            } else {
-                // TODO: add support in Deleted
-                opaque = false;
-            }
-        }
-    }
-    if (!opaque) {
-        glEnable(GL_BLEND);
-        if (alpha) {
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        } else {
-            glBlendColor((float)opacity, (float)opacity, (float)opacity, (float)opacity);
-            glBlendFunc(GL_ONE, GL_ONE_MINUS_CONSTANT_ALPHA);
-        }
-    }
-    m_blendingEnabled = !opaque;
-
-    const qreal rgb = brightness * opacity;
-    const qreal a = opacity;
-
-    GLShader *shader = ShaderManager::instance()->getBoundShader();
-    shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-    shader->setUniform(GLShader::Saturation,         saturation);
-
-    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
-        cc->setupForOutput(screen);
-    }
-}
-
-void SceneOpenGL2Window::restoreStates(TextureType type, qreal opacity, qreal brightness, qreal saturation)
-{
-    Q_UNUSED(type);
-    Q_UNUSED(opacity);
-    Q_UNUSED(brightness);
-    Q_UNUSED(saturation);
-    if (m_blendingEnabled) {
-        glDisable(GL_BLEND);
-    }
-
-    if (ColorCorrection *cc = static_cast<SceneOpenGL2*>(m_scene)->colorCorrection()) {
-        cc->setupForOutput(-1);
-    }
-}
 
 //****************************************
 // OpenGLWindowPixmap
@@ -1373,11 +1439,9 @@ bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
         if (!toplevel()->damage().isEmpty()) {
-            const bool success = m_texture->update(toplevel()->damage());
             // mipmaps need to be updated
             m_texture->setDirty();
             toplevel()->resetDamage();
-            return success;
         }
         return true;
     }
@@ -1385,7 +1449,7 @@ bool OpenGLWindowPixmap::bind()
         return false;
     }
 
-    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->depth(), toplevel()->damage());
+    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->visual());
 
     if (success)
         toplevel()->resetDamage();

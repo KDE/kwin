@@ -254,9 +254,9 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     Q_D(GLTexture);
 #ifdef KWIN_HAVE_OPENGLES
-    static bool s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
+    static const bool s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
 #else
-    static bool s_supportsUnpack = true;
+    static const bool s_supportsUnpack = true;
 #endif
 
     int width = image.width();

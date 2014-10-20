@@ -169,9 +169,20 @@ namespace XRenderUtils
  * @internal
  **/
 KWINXRENDERUTILS_EXPORT void init(xcb_connection_t *connection, xcb_window_t rootWindow);
-}
 
-} // namespace
+/**
+ * Returns the Xrender format that corresponds to the given visual ID.
+ */
+KWINXRENDERUTILS_EXPORT xcb_render_pictformat_t findPictFormat(xcb_visualid_t visual);
+
+/**
+ * Returns the xcb_render_directformat_t for the given Xrender format.
+ */
+KWINXRENDERUTILS_EXPORT const xcb_render_directformat_t *findPictFormatInfo(xcb_render_pictformat_t format);
+
+} // namespace XRenderUtils
+
+} // namespace KWin
 
 /** @} */
 

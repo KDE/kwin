@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QStack>
 #include <QPixmap>
+#include <QGlobalStatic>
 
 namespace KWin
 {
@@ -226,4 +227,60 @@ xcb_render_picture_t xRenderOffscreenTarget()
     return s_offscreenTarget;
 }
 
-} // namespace
+namespace XRenderUtils
+{
+
+struct PictFormatData
+{
+    PictFormatData() {
+        // Fetch the render pict formats
+        reply = xcb_render_query_pict_formats_reply(s_connection,
+                        xcb_render_query_pict_formats_unchecked(s_connection), nullptr);
+
+        // Init the visual ID -> format ID hash table
+        for (auto screens = xcb_render_query_pict_formats_screens_iterator(reply); screens.rem; xcb_render_pictscreen_next(&screens)) {
+            for (auto depths = xcb_render_pictscreen_depths_iterator(screens.data); depths.rem; xcb_render_pictdepth_next(&depths)) {
+                const xcb_render_pictvisual_t *visuals = xcb_render_pictdepth_visuals(depths.data);
+                const int len = xcb_render_pictdepth_visuals_length(depths.data);
+
+                for (int i = 0; i < len; i++)
+                    visualHash.insert(visuals[i].visual, visuals[i].format);
+            }
+        }
+
+        // Init the format ID -> xcb_render_directformat_t* hash table
+        const xcb_render_pictforminfo_t *formats = xcb_render_query_pict_formats_formats(reply);
+        const int len = xcb_render_query_pict_formats_formats_length(reply);
+
+        for (int i = 0; i < len; i++) {
+            if (formats[i].type == XCB_RENDER_PICT_TYPE_DIRECT)
+                formatInfoHash.insert(formats[i].id, &formats[i].direct);
+        }
+    }
+
+    ~PictFormatData() {
+        free(reply);
+    }
+
+    xcb_render_query_pict_formats_reply_t *reply;
+    QHash<xcb_visualid_t, xcb_render_pictformat_t> visualHash;
+    QHash<xcb_render_pictformat_t, const xcb_render_directformat_t *> formatInfoHash;
+};
+
+Q_GLOBAL_STATIC(PictFormatData, g_pictFormatData)
+
+xcb_render_pictformat_t findPictFormat(xcb_visualid_t visual)
+{
+    PictFormatData *d = g_pictFormatData;
+    return d->visualHash.value(visual);
+}
+
+const xcb_render_directformat_t *findPictFormatInfo(xcb_render_pictformat_t format)
+{
+    PictFormatData *d = g_pictFormatData;
+    return d->formatInfoHash.value(format);
+}
+
+} // namespace XRenderUtils
+
+} // namespace KWin

@@ -22,28 +22,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include <kwinglobals.h>
 // Qt
-#include <QDir>
 #include <QHash>
 #include <QImage>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
-// wayland
-#include <wayland-client.h>
 
 class QTemporaryFile;
-class QImage;
-class QFileSystemWatcher;
+struct wl_cursor_image;
 struct wl_cursor_theme;
 struct wl_buffer;
-struct wl_shm;
+struct wl_display;
+struct wl_event_queue;
+struct wl_seat;
+
+namespace KWayland
+{
+namespace Client
+{
+class Buffer;
+class ShmPool;
+class Compositor;
+class ConnectionThread;
+class EventQueue;
+class FullscreenShell;
+class Keyboard;
+class Output;
+class Pointer;
+class Registry;
+class Seat;
+class Shell;
+class ShellSurface;
+class SubCompositor;
+class SubSurface;
+class Surface;
+}
+}
 
 namespace KWin
 {
 
 namespace Wayland
 {
-class ShmPool;
+
 class WaylandBackend;
 class WaylandSeat;
 
@@ -66,69 +87,37 @@ class X11CursorTracker : public QObject
 {
     Q_OBJECT
 public:
-    explicit X11CursorTracker(WaylandSeat *seat, WaylandBackend *backend, QObject* parent = 0);
+    explicit X11CursorTracker(WaylandBackend *backend, QObject* parent = 0);
     virtual ~X11CursorTracker();
     void resetCursor();
+
+Q_SIGNALS:
+    void cursorImageChanged(QWeakPointer<KWayland::Client::Buffer> image, const QSize &size, const QPoint &hotSpot);
+
 private Q_SLOTS:
     void cursorChanged(uint32_t serial);
 private:
     void installCursor(const CursorData &cursor);
-    WaylandSeat *m_seat;
     QHash<uint32_t, CursorData> m_cursors;
     WaylandBackend *m_backend;
     uint32_t m_installedCursor;
     uint32_t m_lastX11Cursor;
 };
 
-class Buffer
-{
-public:
-    Buffer(wl_buffer *buffer, const QSize &size, int32_t stride, size_t offset);
-    ~Buffer();
-    void copy(const void *src);
-    void setReleased(bool released);
-    void setUsed(bool used);
-
-    wl_buffer *buffer() const;
-    const QSize &size() const;
-    int32_t stride() const;
-    bool isReleased() const;
-    bool isUsed() const;
-    uchar *address();
-private:
-    wl_buffer *m_nativeBuffer;
-    bool m_released;
-    QSize m_size;
-    int32_t m_stride;
-    size_t m_offset;
-    bool m_used;
-};
-
-class ShmPool : public QObject
+class WaylandCursorTheme : public QObject
 {
     Q_OBJECT
 public:
-    ShmPool(wl_shm *shm);
-    ~ShmPool();
-    bool isValid() const;
-    wl_buffer *createBuffer(const QImage &image);
-    wl_buffer *createBuffer(const QSize &size, int32_t stride, const void *src);
-    void *poolAddress() const;
-    Buffer *getBuffer(const QSize &size, int32_t stride);
-    wl_shm *shm();
-Q_SIGNALS:
-    void poolResized();
+    explicit WaylandCursorTheme(WaylandBackend *backend, QObject *parent = nullptr);
+    virtual ~WaylandCursorTheme();
+
+    wl_cursor_image *get(Qt::CursorShape shape);
+
 private:
-    bool createPool();
-    bool resizePool(int32_t newSize);
-    wl_shm *m_shm;
-    wl_shm_pool *m_pool;
-    void *m_poolData;
-    int32_t m_size;
-    QScopedPointer<QTemporaryFile> m_tmpFile;
-    bool m_valid;
-    int m_offset;
-    QList<Buffer*> m_buffers;
+    void loadTheme();
+    void destroyTheme();
+    wl_cursor_theme *m_theme;
+    WaylandBackend *m_backend;
 };
 
 class WaylandSeat : public QObject
@@ -138,123 +127,96 @@ public:
     WaylandSeat(wl_seat *seat, WaylandBackend *backend);
     virtual ~WaylandSeat();
 
-    void changed(uint32_t capabilities);
-    wl_seat *seat();
-    void pointerEntered(uint32_t serial);
-    void resetCursor();
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
     void installCursorImage(Qt::CursorShape shape);
-private Q_SLOTS:
-    void loadTheme();
+    void setInstallCursor(bool install);
+    bool isInstallCursor() const {
+        return m_installCursor;
+    }
 private:
     void destroyPointer();
     void destroyKeyboard();
-    void destroyTheme();
-    wl_seat *m_seat;
-    wl_pointer *m_pointer;
-    wl_keyboard *m_keyboard;
-    wl_surface *m_cursor;
-    wl_cursor_theme *m_theme;
+    KWayland::Client::Seat *m_seat;
+    KWayland::Client::Pointer *m_pointer;
+    KWayland::Client::Keyboard *m_keyboard;
+    KWayland::Client::Surface *m_cursor;
+    WaylandCursorTheme *m_theme;
     uint32_t m_enteredSerial;
-    QScopedPointer<X11CursorTracker> m_cursorTracker;
     WaylandBackend *m_backend;
+    bool m_installCursor;
 };
 
-class Output : public QObject
+class WaylandCursor : public QObject
 {
     Q_OBJECT
 public:
-    Output(wl_output *output, QObject *parent);
-    virtual ~Output();
+    explicit WaylandCursor(KWayland::Client::Surface *parentSurface, WaylandBackend *backend);
 
-    wl_output *output();
-    const QSize &physicalSize() const;
-    const QPoint &globalPosition() const;
-    const QString &manufacturer() const;
-    const QString &model() const;
-    const QSize &pixelSize() const;
-    QRect geometry() const;
-    int refreshRate() const;
-
-    void setPhysicalSize(const QSize &size);
-    void setGlobalPosition(const QPoint &pos);
-    void setManufacturer(const QString &manufacturer);
-    void setModel(const QString &model);
-    void setPixelSize(const QSize &size);
-    void setRefreshRate(int refreshRate);
-
-    void emitChanged();
+    void setHotSpot(const QPoint &pos);
+    const QPoint &hotSpot() const {
+        return m_hotSpot;
+    }
+    void setCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
+    void setCursorImage(Qt::CursorShape shape);
 
 Q_SIGNALS:
-    void changed();
+    void hotSpotChanged(const QPoint &);
 
 private:
-    wl_output *m_output;
-    QSize m_physicalSize;
-    QPoint m_globalPosition;
-    QString m_manufacturer;
-    QString m_model;
-    QSize m_pixelSize;
-    int m_refreshRate;
+    WaylandBackend *m_backend;
+    QPoint m_hotSpot;
+    KWayland::Client::SubSurface *m_subSurface;
+    WaylandCursorTheme *m_theme;
 };
 
 /**
 * @brief Class encapsulating all Wayland data structures needed by the Egl backend.
 *
-* It creates the connection to the Wayland Compositor, set's up the registry and creates
-* the Wayland surface and it's shell mapping.
+* It creates the connection to the Wayland Compositor, sets up the registry and creates
+* the Wayland surface and its shell mapping.
 */
-class WaylandBackend : public QObject
+class KWIN_EXPORT WaylandBackend : public QObject
 {
     Q_OBJECT
 public:
     virtual ~WaylandBackend();
     wl_display *display();
-    wl_registry *registry();
-    void setCompositor(wl_compositor *c);
-    wl_compositor *compositor();
-    void setShell(wl_shell *s);
-    wl_shell *shell();
-    void addOutput(wl_output *o);
-    const QList<Output*> &outputs() const;
-    ShmPool *shmPool();
-    void createSeat(uint32_t name);
-    void createShm(uint32_t name);
-    void ping(uint32_t serial);
+    KWayland::Client::Compositor *compositor();
+    const QList<KWayland::Client::Output*> &outputs() const;
+    KWayland::Client::ShmPool *shmPool();
+    KWayland::Client::SubCompositor *subCompositor();
+    X11CursorTracker *cursorTracker();
 
-    wl_surface *surface() const;
-    const QSize &shellSurfaceSize() const;
-    void setShellSurfaceSize(const QSize &size);
+    KWayland::Client::Surface *surface() const;
+    QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
-
-    void dispatchEvents();
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
     void backendReady();
     void outputsChanged();
-private Q_SLOTS:
-    void readEvents();
-    void socketFileChanged(const QString &socket);
-    void socketDirectoryChanged();
+    void connectionFailed();
 private:
     void initConnection();
     void createSurface();
     void destroyOutputs();
+    void checkBackendReady();
     wl_display *m_display;
-    wl_registry *m_registry;
-    wl_compositor *m_compositor;
-    wl_shell *m_shell;
-    wl_surface *m_surface;
-    wl_shell_surface *m_shellSurface;
-    QSize m_shellSurfaceSize;
+    KWayland::Client::EventQueue *m_eventQueue;
+    KWayland::Client::Registry *m_registry;
+    KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::Shell *m_shell;
+    KWayland::Client::Surface *m_surface;
+    KWayland::Client::ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
-    QScopedPointer<ShmPool> m_shm;
-    bool m_systemCompositorDied;
-    QString m_socketName;
-    QDir m_runtimeDir;
-    QFileSystemWatcher *m_socketWatcher;
-    QList<Output*> m_outputs;
+    KWayland::Client::ShmPool *m_shm;
+    QScopedPointer<X11CursorTracker> m_cursorTracker;
+    QList<KWayland::Client::Output*> m_outputs;
+    KWayland::Client::ConnectionThread *m_connectionThreadObject;
+    QThread *m_connectionThread;
+    KWayland::Client::FullscreenShell *m_fullscreenShell;
+    KWayland::Client::SubCompositor *m_subCompositor;
+    WaylandCursor *m_cursor;
 
     KWIN_SINGLETON(WaylandBackend)
 };
@@ -278,171 +240,45 @@ const QImage &CursorData::cursor() const
 }
 
 inline
-wl_seat *WaylandSeat::seat()
-{
-    return m_seat;
-}
-
-inline
-bool ShmPool::isValid() const
-{
-    return m_valid;
-}
-
-inline
-void* ShmPool::poolAddress() const
-{
-    return m_poolData;
-}
-
-inline
-wl_shm *ShmPool::shm()
-{
-    return m_shm;
-}
-
-inline
-QRect Output::geometry() const
-{
-    return QRect(m_globalPosition, m_pixelSize);
-}
-
-inline
-const QPoint &Output::globalPosition() const
-{
-    return m_globalPosition;
-}
-
-inline
-const QString &Output::manufacturer() const
-{
-    return m_manufacturer;
-}
-
-inline
-const QString &Output::model() const
-{
-    return m_model;
-}
-
-inline
-wl_output *Output::output()
-{
-    return m_output;
-}
-
-inline
-const QSize &Output::physicalSize() const
-{
-    return m_physicalSize;
-}
-
-inline
-const QSize &Output::pixelSize() const
-{
-    return m_pixelSize;
-}
-
-inline
-int Output::refreshRate() const
-{
-    return m_refreshRate;
-}
-
-inline
 wl_display *WaylandBackend::display()
 {
     return m_display;
 }
 
 inline
-wl_registry *WaylandBackend::registry()
-{
-    return m_registry;
-}
-
-inline
-void WaylandBackend::setCompositor(wl_compositor *c)
-{
-    m_compositor = c;
-}
-
-inline
-wl_compositor *WaylandBackend::compositor()
+KWayland::Client::Compositor *WaylandBackend::compositor()
 {
     return m_compositor;
 }
 
 inline
-wl_shell *WaylandBackend::shell()
+KWayland::Client::SubCompositor *WaylandBackend::subCompositor()
 {
-    return m_shell;
+    return m_subCompositor;
 }
 
 inline
-ShmPool* WaylandBackend::shmPool()
+KWayland::Client::ShmPool* WaylandBackend::shmPool()
 {
-    return m_shm.data();
+    return m_shm;
 }
 
 inline
-wl_surface *WaylandBackend::surface() const
+X11CursorTracker *WaylandBackend::cursorTracker()
+{
+    return m_cursorTracker.data();
+}
+
+inline
+KWayland::Client::Surface *WaylandBackend::surface() const
 {
     return m_surface;
 }
 
 inline
-const QSize &WaylandBackend::shellSurfaceSize() const
-{
-    return m_shellSurfaceSize;
-}
-
-inline
-const QList< Output* >& WaylandBackend::outputs() const
+const QList< KWayland::Client::Output* >& WaylandBackend::outputs() const
 {
     return m_outputs;
-}
-
-inline
-wl_buffer* Buffer::buffer() const
-{
-    return m_nativeBuffer;
-}
-
-inline
-const QSize& Buffer::size() const
-{
-    return m_size;
-}
-
-inline
-int32_t Buffer::stride() const
-{
-    return m_stride;
-}
-
-inline
-bool Buffer::isReleased() const
-{
-    return m_released;
-}
-
-inline
-void Buffer::setReleased(bool released)
-{
-    m_released = released;
-}
-
-inline
-bool Buffer::isUsed() const
-{
-    return m_used;
-}
-
-inline
-void Buffer::setUsed(bool used)
-{
-    m_used = used;
 }
 
 } // namespace Wayland

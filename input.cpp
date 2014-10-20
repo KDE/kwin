@@ -21,11 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "effects.h"
 #include "globalshortcuts.h"
+#include "logind.h"
+#include "main.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
 #include "unmanaged.h"
+#include "screens.h"
 #include "workspace.h"
+#if HAVE_INPUT
+#include "libinput/connection.h"
+#endif
 // KDE
 #include <kkeyserver.h>
 // TODO: remove xtest
@@ -166,11 +172,70 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_pointerWindow()
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
+#if HAVE_INPUT
+    if (Application::usesLibinput()) {
+        LogindIntegration *logind = LogindIntegration::self();
+        auto takeControl = [logind, this]() {
+            if (logind->hasSessionControl()) {
+                setupLibInput();
+            } else {
+                logind->takeControl();
+                connect(logind, &LogindIntegration::hasSessionControlChanged, this, &InputRedirection::setupLibInput);
+            }
+        };
+        if (logind->isConnected()) {
+            takeControl();
+        } else {
+            connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
+        }
+    }
+#endif
 }
 
 InputRedirection::~InputRedirection()
 {
     s_self = NULL;
+}
+
+void InputRedirection::setupLibInput()
+{
+#if HAVE_INPUT
+    if (!Application::usesLibinput()) {
+        return;
+    }
+    LibInput::Connection *conn = LibInput::Connection::create(this);
+    if (conn) {
+        conn->setup();
+        conn->setScreenSize(screens()->size());
+        connect(screens(), &Screens::sizeChanged, this,
+            [this, conn] {
+                conn->setScreenSize(screens()->size());
+            }
+        );
+        connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
+        connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
+        connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
+        connect(conn, &LibInput::Connection::pointerMotion, this,
+            [this] (QPointF delta, uint32_t time) {
+                processPointerMotion(m_globalPointer + delta, time);
+            }
+        );
+        connect(conn, &LibInput::Connection::pointerMotionAbsolute, this,
+            [this] (QPointF orig, QPointF screen, uint32_t time) {
+                Q_UNUSED(orig)
+                processPointerMotion(screen, time);
+            }
+        );
+        connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
+        // set pos to center of all screens
+        if (screens()) {
+            m_globalPointer = screens()->geometry().center();
+            emit globalPointerChanged(m_globalPointer);
+            // sanitize
+            updatePointerAfterScreenChange();
+        }
+    }
+#endif
 }
 
 void InputRedirection::updatePointerWindow()
@@ -197,8 +262,7 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     Q_UNUSED(time)
     // first update to new mouse position
 //     const QPointF oldPos = m_globalPointer;
-    m_globalPointer = pos;
-    emit globalPointerChanged(m_globalPointer);
+    updatePointerPosition(pos);
 
     // TODO: check which part of KWin would like to intercept the event
     QMouseEvent event(QEvent::MouseMove, m_globalPointer.toPoint(), m_globalPointer.toPoint(),
@@ -494,6 +558,37 @@ void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+}
+
+static bool screenContainsPos(const QPointF &pos)
+{
+    for (int i = 0; i < screens()->count(); ++i) {
+        if (screens()->geometry(i).contains(pos.toPoint())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void InputRedirection::updatePointerPosition(const QPointF &pos)
+{
+    // verify that at least one screen contains the pointer position
+    if (!screenContainsPos(pos)) {
+        return;
+    }
+    m_globalPointer = pos;
+    emit globalPointerChanged(m_globalPointer);
+}
+
+void InputRedirection::updatePointerAfterScreenChange()
+{
+    if (screenContainsPos(m_globalPointer)) {
+        // pointer still on a screen
+        return;
+    }
+    // pointer no longer on a screen, reposition to closes screen
+    m_globalPointer = screens()->geometry(screens()->number(m_globalPointer.toPoint())).center();
+    emit globalPointerChanged(m_globalPointer);
 }
 
 } // namespace

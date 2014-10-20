@@ -24,6 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include "decorations/decorationrenderer.h"
+#if HAVE_WAYLAND
+namespace KWayland
+{
+namespace Client
+{
+class Buffer;
+}
+}
+#endif
 
 namespace KWin {
 
@@ -64,13 +73,6 @@ public:
      */
     virtual void screenGeometryChanged(const QSize &size);
     /**
-     * @brief Backend specific code to determine whether the last frame got rendered.
-     *
-     * Default implementation always returns @c true. That is it's always assumed that the last
-     * frame got rendered. If a backend needs more control it needs to implement this method.
-     */
-    virtual bool isLastFrameRendered() const;
-    /**
      * @brief Whether the creation of the Backend failed.
      *
      * The SceneQPainter should test whether the Backend got constructed correctly. If this method
@@ -102,9 +104,6 @@ private:
 };
 
 #if HAVE_WAYLAND
-namespace Wayland {
-class Buffer;
-}
 class WaylandQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT
@@ -114,19 +113,16 @@ public:
 
     virtual void present(int mask, const QRegion& damage) override;
     virtual bool usesOverlayWindow() const override;
-    virtual bool isLastFrameRendered() const override;
     virtual void screenGeometryChanged(const QSize &size) override;
     virtual QImage *buffer() override;
     virtual void prepareRenderingFrame() override;
     virtual bool needsFullRepaint() const override;
-    void lastFrameRendered();
 private Q_SLOTS:
     void remapBuffer();
 private:
-    bool m_lastFrameRendered;
     bool m_needsFullRepaint;
     QImage m_backBuffer;
-    Wayland::Buffer *m_buffer;
+    QWeakPointer<KWayland::Client::Buffer> m_buffer;
 };
 #endif
 
@@ -136,7 +132,6 @@ class SceneQPainter : public Scene
 
 public:
     virtual ~SceneQPainter();
-    virtual bool isLastFrameRendered() const override;
     virtual bool usesOverlayWindow() const override;
     virtual OverlayWindow* overlayWindow() override;
     virtual qint64 paint(QRegion damage, ToplevelList windows) override;
@@ -264,12 +259,6 @@ inline
 OverlayWindow* SceneQPainter::overlayWindow()
 {
     return m_backend->overlayWindow();
-}
-
-inline
-bool SceneQPainter::isLastFrameRendered() const
-{
-    return m_backend->isLastFrameRendered();
 }
 
 inline

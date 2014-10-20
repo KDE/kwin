@@ -31,23 +31,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // KWin
 #include "atoms.h"
-#include "client.h"
+#include <client.h>
 #include "cursor.h"
-#include "effects.h"
 #include "input.h"
 #include "main.h"
 #include "screens.h"
 #include "utils.h"
-#include "workspace.h"
+#include <workspace.h>
 #include "virtualdesktops.h"
 // DBus generated
 #include "screenlocker_interface.h"
+// frameworks
+#include <KConfigGroup>
 // Qt
+#include <QSharedPointer>
 #include <QTimer>
 #include <QVector>
 #include <QTextStream>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusPendingCall>
+#include <QWidget>
 
 namespace KWin {
 
@@ -63,6 +66,7 @@ Edge::Edge(ScreenEdges *parent)
     , m_approaching(false)
     , m_lastApproachingFactor(0)
     , m_blocked(false)
+    , m_pushBackBlocked(false)
     , m_client(nullptr)
 {
 }
@@ -280,20 +284,34 @@ void Edge::switchDesktop(const QPoint &cursorPos)
         if (desktop != interimDesktop)
             pos.setY(OFFSET);
     }
+#ifndef KWIN_UNIT_TEST
     if (Client *c = Workspace::self()->getMovingClient()) {
         if (c->rules()->checkDesktop(desktop) != int(desktop)) {
             // user attempts to move a client to another desktop where it is ruleforced to not be
             return;
         }
     }
+#endif
     vds->setCurrent(desktop);
     if (vds->current() != oldDesktop) {
+        m_pushBackBlocked = true;
         Cursor::setPos(pos);
+        QSharedPointer<QMetaObject::Connection> me(new QMetaObject::Connection);
+        *me = QObject::connect(QCoreApplication::eventDispatcher(),
+                               &QAbstractEventDispatcher::aboutToBlock, this,
+                               [this, me](){
+            QObject::disconnect(*me);
+            const_cast<QSharedPointer<QMetaObject::Connection>*>(&me)->reset(nullptr);
+            m_pushBackBlocked = false;
+        }
+        );
     }
 }
 
 void Edge::pushCursorBack(const QPoint &cursorPos)
 {
+    if (m_pushBackBlocked)
+        return;
     int x = cursorPos.x();
     int y = cursorPos.y();
     const QSize &distance = edges()->cursorPushBackDistance();

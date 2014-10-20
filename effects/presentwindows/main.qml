@@ -21,8 +21,9 @@ import QtQuick 2.0
 import org.kde.plasma.components 2.0 as Plasma
 
 Item {
-    width: 32
-    height: 32
+    width: units.iconSizes.medium
+    height: width
+
     Plasma.Button {
         id: closeButton
         objectName: "closeButton"
