@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/tabbox.h"
 #endif
 #include "unmanaged.h"
+#include "screens.h"
 #include "workspace.h"
 #if HAVE_INPUT
-#include "screens.h"
 #include "libinput/connection.h"
 #endif
 // KDE
