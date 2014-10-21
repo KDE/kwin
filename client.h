@@ -596,7 +596,11 @@ public:
     const KDecoration2::Decoration *decoration() const {
         return m_decoration;
     }
-    Decoration::DecoratedClientImpl *decoratedClient();
+    QPointer<Decoration::DecoratedClientImpl> decoratedClient() const;
+    bool isDecorated() const {
+        return m_decoration != nullptr;
+    }
+    void setDecoratedClient(QPointer<Decoration::DecoratedClientImpl> client);
 
     QRect decorationRect() const;
 
@@ -863,6 +867,7 @@ private:
     // wrapper around m_frame to use as a parent for the decoration
     QScopedPointer<QWindow> m_frameWrapper;
     KDecoration2::Decoration *m_decoration;
+    QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
     int desk;
     QStringList activityList;
     int m_activityUpdatesBlocked;

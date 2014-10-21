@@ -2492,12 +2492,14 @@ BORDER(Right)
 BORDER(Top)
 #undef BORDER
 
-Decoration::DecoratedClientImpl *Client::decoratedClient()
+QPointer<Decoration::DecoratedClientImpl> Client::decoratedClient() const
 {
-    if (!m_decoration) {
-        return nullptr;
-    }
-    return static_cast<Decoration::DecoratedClientImpl*>(m_decoration->client()->handle());
+    return m_decoratedClient;
+}
+
+void Client::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > client)
+{
+    m_decoratedClient = client;
 }
 
 } // namespace

@@ -1195,11 +1195,12 @@ GLTexture *SceneOpenGL::Window::getDecorationTexture() const
             return nullptr;
         }
 
-        if (Decoration::DecoratedClientImpl *impl = client->decoratedClient()) {
-            if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(impl->renderer())) {
-                renderer->render();
-                return renderer->texture();
-            }
+        if (!client->isDecorated()) {
+            return nullptr;
+        }
+        if (SceneOpenGLDecorationRenderer *renderer = static_cast<SceneOpenGLDecorationRenderer*>(client->decoratedClient()->renderer())) {
+            renderer->render();
+            return renderer->texture();
         }
     } else if (toplevel->isDeleted()) {
         Deleted *deleted = static_cast<Deleted *>(toplevel);

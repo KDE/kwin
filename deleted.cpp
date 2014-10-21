@@ -90,8 +90,8 @@ void Deleted::copyToDeleted(Toplevel* c)
                                           decoration_top,
                                           decoration_right,
                                           decoration_bottom);
-            if (Decoration::DecoratedClientImpl *decoClient = client->decoratedClient()) {
-                if (Decoration::Renderer *renderer = decoClient->renderer()) {
+            if (client->isDecorated()) {
+                if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
                     m_decorationRenderer = renderer;
                     m_decorationRenderer->reparent(this);
                 }

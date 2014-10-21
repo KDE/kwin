@@ -1128,7 +1128,7 @@ bool Client::setupCompositing()
     if (!Toplevel::setupCompositing()){
         return false;
     }
-    if (decoratedClient()) {
+    if (isDecorated()) {
         decoratedClient()->destroyRenderer();
     }
     updateVisibility(); // for internalKeep()
@@ -1140,7 +1140,7 @@ void Client::finishCompositing(ReleaseReason releaseReason)
     Toplevel::finishCompositing(releaseReason);
     updateVisibility();
     if (!deleting) {
-        if (decoratedClient()) {
+        if (isDecorated()) {
             decoratedClient()->destroyRenderer();
         }
     }

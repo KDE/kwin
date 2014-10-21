@@ -43,6 +43,7 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
     , m_renderer(nullptr)
 {
     createRenderer();
+    client->setDecoratedClient(QPointer<DecoratedClientImpl>(this));
     connect(client, &Client::activeChanged, this,
         [decoratedClient, client]() {
             emit decoratedClient->activeChanged(client->isActive());
