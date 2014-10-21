@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "composite.h"
 #include "scene.h"
+#include "workspace.h"
 
 // KDecoration
 #include <KDecoration2/Decoration>
@@ -115,8 +116,10 @@ std::unique_ptr<KDecoration2::DecorationSettingsPrivate> DecorationBridge::setti
 void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect &geometry)
 {
     // TODO: remove check once all compositors implement it
-    if (Renderer *renderer = static_cast<DecoratedClientImpl*>(decoration->client()->handle())->renderer()) {
-        renderer->schedule(geometry);
+    if (Client *c = Workspace::self()->findClient([decoration] (const Client *client) { return client->decoration() == decoration; })) {
+        if (Renderer *renderer = c->decoratedClient()->renderer()) {
+            renderer->schedule(geometry);
+        }
     }
 }
 
