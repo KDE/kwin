@@ -193,6 +193,7 @@ option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu suppor
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
+option(KWIN_BUILD_EGL "Enables building the EGL backend in KWin" ON)
 
 option(KWIN_BUILD_COVERAGE "Build KWin with gcov support" OFF)
 
@@ -238,7 +239,7 @@ if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif()
 
-set(KWIN_HAVE_EGL ${EGL_FOUND})
+set(KWIN_HAVE_EGL ${KWIN_BUILD_EGL})
 
 if (XKB_FOUND)
   include_directories(${XKB_INCLUDE_DIR})
