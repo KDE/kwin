@@ -106,20 +106,6 @@ set_package_properties(KF5Wayland PROPERTIES
                       )
 add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for Wayland Compositor Information Module")
 
-if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
-    find_package(OpenGL)
-    set_package_properties(OpenGL PROPERTIES DESCRIPTION "The OpenGL libraries"
-                        URL "http://www.opengl.org"
-                        TYPE REQUIRED
-                        )
-else()
-    find_package(OpenGLES)
-    set_package_properties(OpenGLES PROPERTIES DESCRIPTION "The OpenGLES libraries"
-                        URL "http://www.khronos.org/opengles"
-                        TYPE REQUIRED
-                        )
-endif()
-
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
                        TYPE RUNTIME
@@ -234,11 +220,11 @@ cmake_dependent_option(KWIN_BUILD_KAPPMENU "Build without appmenu support" ON "K
 
 set(KWIN_BUILD_OPENGL FALSE)
 set(KWIN_BUILD_OPENGLES FALSE)
-if(OPENGL_FOUND AND (${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL"))
+if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GL")
     set(KWIN_BUILD_OPENGL TRUE)
     message("Building KWin with OpenGL support")
 endif()
-if(OPENGLES_FOUND AND (${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GLESv2"))
+if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GLESv2")
     set(KWIN_BUILD_OPENGLES TRUE)
     message("Building KWin with OpenGL ES 2 support")
 endif()
