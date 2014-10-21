@@ -57,6 +57,7 @@ Comment[sr@latin]=Ispravlja funkcionalne nedostatke prozora dekorisanih pri klij
 Comment[sv]=Fixar funktionella svagheter för fönster dekorerade på klientsidan
 Comment[uk]=Виправляє недостатність функціональних можливостей для декорованих вікон на боці клієнта.
 Comment[x-test]=xxFixes functional deficits for client side decorated windows.xx
+Comment[zh_CN]=修复客户端窗口装饰的功能缺失。
 Comment[zh_TW]=修正客戶端裝飾視窗功能不足的問題。
 Icon=preferences-system-windows-script-enforcedeco
 
