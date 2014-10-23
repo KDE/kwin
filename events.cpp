@@ -1269,7 +1269,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
                               QPointF(x, y),
                               QPointF(x_root, y_root),
                               x11ToQtMouseButton(button),
-                              x11ToQtMouseButtons(state),
+                              x11ToQtMouseButtons(state) & ~x11ToQtMouseButton(button),
                               x11ToQtKeyboardModifiers(state));
             QCoreApplication::sendEvent(m_decoration, &event);
         }
