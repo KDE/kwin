@@ -93,33 +93,36 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
     );
     connect(client, &Client::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
     connect(client, &Client::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
-    connect(client, &Client::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizableChanged);
-    connect(client, &Client::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizableChanged);
+    connect(client, &Client::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
+    connect(client, &Client::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;
 
-#define DELEGATE(type, name) \
+#define DELEGATE(type, name, clientName) \
     type DecoratedClientImpl::name() const \
     { \
-        return m_client->name(); \
+        return m_client->clientName(); \
     }
 
-DELEGATE(QString, caption)
-DELEGATE(bool, isActive)
-DELEGATE(bool, isCloseable)
-DELEGATE(bool, isMaximizable)
-DELEGATE(bool, isMinimizable)
-DELEGATE(bool, isModal)
-DELEGATE(bool, isMovable)
-DELEGATE(bool, isResizable)
-DELEGATE(bool, isShadeable)
-DELEGATE(bool, providesContextHelp)
-DELEGATE(int, desktop)
-DELEGATE(bool, isOnAllDesktops)
-DELEGATE(QPalette, palette)
-DELEGATE(QIcon, icon)
+#define DELEGATE2(type, name) DELEGATE(type, name, name)
 
+DELEGATE2(QString, caption)
+DELEGATE2(bool, isActive)
+DELEGATE2(bool, isCloseable)
+DELEGATE(bool, isMaximizeable, isMaximizable)
+DELEGATE(bool, isMinimizeable, isMinimizable)
+DELEGATE2(bool, isModal)
+DELEGATE(bool, isMoveable, isMovable)
+DELEGATE(bool, isResizeable, isResizable)
+DELEGATE2(bool, isShadeable)
+DELEGATE2(bool, providesContextHelp)
+DELEGATE2(int, desktop)
+DELEGATE2(bool, isOnAllDesktops)
+DELEGATE2(QPalette, palette)
+DELEGATE2(QIcon, icon)
+
+#undef DELEGATE2
 #undef DELEGATE
 
 #define DELEGATE(type, name, clientName) \
