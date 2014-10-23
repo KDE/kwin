@@ -128,7 +128,9 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
     if (!m_factory) {
         return nullptr;
     }
-    return m_factory->create<KDecoration2::Decoration>(client);
+    auto deco = m_factory->create<KDecoration2::Decoration>(client);
+    deco->init();
+    return deco;
 }
 
 
