@@ -89,6 +89,7 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
 {
     // reset all settings
     m_blur = false;
+    m_theme = QString();
 
     // load the settings
     const QJsonValue decoSettings = object.value(s_pluginName);
@@ -101,6 +102,21 @@ void DecorationBridge::loadMetaData(const QJsonObject &object)
     if (blurIt != decoSettingsMap.end()) {
         m_blur = blurIt.value().toBool();
     }
+    findTheme(decoSettingsMap);
+}
+
+void DecorationBridge::findTheme(const QVariantMap &map)
+{
+    auto it = map.find(QStringLiteral("themes"));
+    if (it == map.end()) {
+        return;
+    }
+    if (!it.value().toBool()) {
+        return;
+    }
+    it = map.find(QStringLiteral("defaultTheme"));
+    const KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName);
+    m_theme = config.readEntry("theme", it != map.end() ? it.value().toString() : QString());
 }
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)
@@ -128,7 +144,11 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
     if (!m_factory) {
         return nullptr;
     }
-    auto deco = m_factory->create<KDecoration2::Decoration>(client);
+    QVariantList args;
+    if (!m_theme.isEmpty()) {
+        args << QVariantMap({ {QStringLiteral("theme"), m_theme} });
+    }
+    auto deco = m_factory->create<KDecoration2::Decoration>(client, args);
     deco->init();
     return deco;
 }

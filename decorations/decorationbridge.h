@@ -55,8 +55,10 @@ public:
     static DecorationBridge *self();
 private:
     void loadMetaData(const QJsonObject &object);
+    void findTheme(const QVariantMap &map);
     KPluginFactory *m_factory;
     bool m_blur;
+    QString m_theme;
 };
 } // Decoration
 } // KWin
