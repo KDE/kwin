@@ -245,6 +245,8 @@ if (XKB_FOUND)
   include_directories(${XKB_INCLUDE_DIR})
 endif()
 
+include_directories(${epoxy_INCLUDE_DIR})
+
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
