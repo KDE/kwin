@@ -103,7 +103,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActive
-        property bool shown: (decoration.active || !buttonSvg.supportsInactive) && ((!pressed && !toggled) || !buttonSvg.supportsPressed) && (!hovered || !buttonSvg.supportsHover) && (enabled || !buttonSvg.supportsDeactivated)
+        property bool shown: (decoration.client.active || !buttonSvg.supportsInactive) && ((!pressed && !toggled) || !buttonSvg.supportsPressed) && (!hovered || !buttonSvg.supportsHover) && (enabled || !buttonSvg.supportsDeactivated)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "active"
@@ -116,7 +116,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActiveHover
-        property bool shown: hovered && !pressed && !toggled && buttonSvg.supportsHover && (decoration.active || !buttonSvg.supportsInactiveHover)
+        property bool shown: hovered && !pressed && !toggled && buttonSvg.supportsHover && (decoration.client.active || !buttonSvg.supportsInactiveHover)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "hover"
@@ -129,7 +129,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActivePressed
-        property bool shown: (toggled || pressed) && buttonSvg.supportsPressed && (decoration.active || !buttonSvg.supportsInactivePressed)
+        property bool shown: (toggled || pressed) && buttonSvg.supportsPressed && (decoration.client.active || !buttonSvg.supportsInactivePressed)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "pressed"
@@ -142,7 +142,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonActiveDeactivated
-        property bool shown: !enabled && buttonSvg.supportsDeactivated && (decoration.active || !buttonSvg.supportsInactiveDeactivated)
+        property bool shown: !enabled && buttonSvg.supportsDeactivated && (decoration.client.active || !buttonSvg.supportsInactiveDeactivated)
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "deactivated"
@@ -155,7 +155,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactive
-        property bool shown: !decoration.active && buttonSvg.supportsInactive && !hovered && !pressed && !toggled && enabled
+        property bool shown: !decoration.client.active && buttonSvg.supportsInactive && !hovered && !pressed && !toggled && enabled
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "inactive"
@@ -168,7 +168,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactiveHover
-        property bool shown: !decoration.active && hovered && !pressed && !toggled && buttonSvg.supportsInactiveHover
+        property bool shown: !decoration.client.active && hovered && !pressed && !toggled && buttonSvg.supportsInactiveHover
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "hover-inactive"
@@ -181,7 +181,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactivePressed
-        property bool shown: !decoration.active && (toggled || pressed) && buttonSvg.supportsInactivePressed
+        property bool shown: !decoration.client.active && (toggled || pressed) && buttonSvg.supportsInactivePressed
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "pressed-inactive"
@@ -194,7 +194,7 @@ DecorationButton {
     }
     PlasmaCore.FrameSvgItem {
         id: buttonInactiveDeactivated
-        property bool shown: !decoration.active && !enabled && buttonSvg.supportsInactiveDeactivated
+        property bool shown: !decoration.client.active && !enabled && buttonSvg.supportsInactiveDeactivated
         anchors.fill: parent
         imagePath: buttonSvg.imagePath
         prefix: "deactivated-inactive"

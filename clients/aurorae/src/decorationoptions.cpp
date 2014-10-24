@@ -15,19 +15,55 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "decorationoptions.h"
-#include <kdecoration.h>
+#include <KDecoration2/DecoratedClient>
+#include <KDecoration2/DecorationSettings>
+#include <KConfigGroup>
+#include <KSharedConfig>
 
 namespace KWin
 {
+
+ColorSettings::ColorSettings(const QPalette &pal)
+{
+    init(pal);
+}
+
+void ColorSettings::update(const QPalette &pal)
+{
+    init(pal);
+}
+
+void ColorSettings::init(const QPalette &pal)
+{
+    m_palette = pal;
+    KConfigGroup wmConfig(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), QStringLiteral("WM"));
+    m_activeFrameColor      = wmConfig.readEntry("frame", pal.color(QPalette::Active, QPalette::Background));
+    m_inactiveFrameColor    = wmConfig.readEntry("inactiveFrame", m_activeFrameColor);
+    m_activeTitleBarColor   = wmConfig.readEntry("activeBackground", pal.color(QPalette::Active, QPalette::Highlight));
+    m_inactiveTitleBarColor = wmConfig.readEntry("inactiveBackground", m_inactiveFrameColor);
+    m_activeTitleBarBlendColor = wmConfig.readEntry("activeBlend", m_activeTitleBarColor.dark(110));
+    m_inactiveTitleBarBlendColor = wmConfig.readEntry("inactiveBlend", m_inactiveTitleBarColor.dark(110));
+    m_activeFontColor       = wmConfig.readEntry("activeForeground", pal.color(QPalette::Active, QPalette::HighlightedText));
+    m_inactiveFontColor     = wmConfig.readEntry("inactiveForeground", m_activeFontColor.dark());
+    m_activeButtonColor = wmConfig.readEntry("activeTitleBtnBg", m_activeFrameColor.light(130));
+    m_inactiveButtonColor = wmConfig.readEntry("inactiveTitleBtnBg", m_inactiveFrameColor.light(130));
+    m_activeHandle = wmConfig.readEntry("handle", m_activeFrameColor);
+    m_inactiveHandle = wmConfig.readEntry("inactiveHandle", m_activeHandle);
+}
+
 
 DecorationOptions::DecorationOptions(QObject *parent)
     : QObject(parent)
     , m_active(true)
     , m_decoration(nullptr)
+    , m_colors(ColorSettings(QPalette()))
 {
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::slotActiveChanged);
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::colorsChanged);
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::fontChanged);
+    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
 }
 
 DecorationOptions::~DecorationOptions()
@@ -36,89 +72,101 @@ DecorationOptions::~DecorationOptions()
 
 QColor DecorationOptions::borderColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorFrame, m_active);
+    return m_active ? m_colors.activeFrame() : m_colors.inactiveFrame();
 }
 
 QColor DecorationOptions::buttonColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorButtonBg, m_active);
+    return m_active ? m_colors.activeButtonColor() : m_colors.inactiveButtonColor();
 }
 
 QColor DecorationOptions::fontColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorFont, m_active);
+    return m_active ? m_colors.activeFont() : m_colors.inactiveFont();
 }
 
 QColor DecorationOptions::resizeHandleColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorHandle, m_active);
+    return m_active ? m_colors.activeHandle() : m_colors.inactiveHandle();
 }
 
 QColor DecorationOptions::titleBarBlendColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorTitleBlend, m_active);
+    return m_active ? m_colors.activeTitleBarBlendColor() : m_colors.inactiveTitleBarBlendColor();
 }
 
 QColor DecorationOptions::titleBarColor() const
 {
-    return KDecoration::options()->color(KDecorationDefines::ColorTitleBar, m_active);
+    return m_active ? m_colors.activeTitleBarColor() : m_colors.inactiveTitleBarColor();
 }
 
 QFont DecorationOptions::titleFont() const
 {
-    return KDecoration::options()->font(m_active);
+    return KDecoration2::DecorationSettings::self()->font();
+}
+
+static int decorationButton(KDecoration2::DecorationButtonType type)
+{
+    switch (type) {
+    case KDecoration2::DecorationButtonType::Menu:
+        return DecorationOptions::DecorationButtonMenu;
+    case KDecoration2::DecorationButtonType::ApplicationMenu:
+        return DecorationOptions::DecorationButtonApplicationMenu;
+    case KDecoration2::DecorationButtonType::OnAllDesktops:
+        return DecorationOptions::DecorationButtonOnAllDesktops;
+    case KDecoration2::DecorationButtonType::Minimize:
+        return DecorationOptions::DecorationButtonMinimize;
+    case KDecoration2::DecorationButtonType::Maximize:
+        return DecorationOptions::DecorationButtonMaximizeRestore;
+    case KDecoration2::DecorationButtonType::Close:
+        return DecorationOptions::DecorationButtonClose;
+    case KDecoration2::DecorationButtonType::QuickHelp:
+        return DecorationOptions::DecorationButtonQuickHelp;
+    case KDecoration2::DecorationButtonType::Shade:
+        return DecorationOptions::DecorationButtonShade;
+    case KDecoration2::DecorationButtonType::KeepBelow:
+        return DecorationOptions::DecorationButtonKeepBelow;
+    case KDecoration2::DecorationButtonType::KeepAbove:
+        return DecorationOptions::DecorationButtonKeepAbove;
+    default:
+        return DecorationOptions::DecorationButtonNone;
+    }
 }
 
 QList<int> DecorationOptions::titleButtonsLeft() const
 {
-    QList<KDecorationDefines::DecorationButton> buttons;
-    if (KDecoration::options()->customButtonPositions()) {
-        buttons = KDecoration::options()->titleButtonsLeft();
-    } else {
-        buttons = KDecorationOptions::defaultTitleButtonsLeft();
-    }
     QList<int> ret;
-    for (auto it : buttons) {
-        ret << static_cast<int>(it);
+    for (auto it : KDecoration2::DecorationSettings::self()->decorationButtonsLeft()) {
+        ret << decorationButton(it);
     }
     return ret;
 }
 
 QList<int> DecorationOptions::titleButtonsRight() const
 {
-    QList<KDecorationDefines::DecorationButton> buttons;
-    if (KDecoration::options()->customButtonPositions()) {
-        buttons = KDecoration::options()->titleButtonsRight();
-    } else {
-        buttons = KDecorationOptions::defaultTitleButtonsRight();
-    }
     QList<int> ret;
-    for (auto it : buttons) {
-        ret << static_cast<int>(it);
+    for (auto it : KDecoration2::DecorationSettings::self()->decorationButtonsRight()) {
+        ret << decorationButton(it);
     }
     return ret;
 }
 
-QObject *DecorationOptions::decoration() const
+KDecoration2::Decoration *DecorationOptions::decoration() const
 {
     return m_decoration;
 }
 
-void DecorationOptions::setDecoration(QObject *decoration)
+void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
 {
     if (m_decoration == decoration) {
         return;
     }
     if (m_decoration) {
         // disconnect from existing decoration
-        disconnect(m_decoration, SIGNAL(activeChanged()), this, SLOT(slotActiveChanged()));
-        disconnect(m_decoration, SIGNAL(buttonsChanged()), this, SIGNAL(titleButtonsChanged()));
-        disconnect(m_decoration, SIGNAL(fontChanged()), this, SIGNAL(fontChanged()));
+        disconnect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
     }
     m_decoration = decoration;
-    connect(m_decoration, SIGNAL(activeChanged()), SLOT(slotActiveChanged()));
-    connect(m_decoration, SIGNAL(buttonsChanged()), SIGNAL(titleButtonsChanged()));
-    connect(m_decoration, SIGNAL(fontChanged()), SIGNAL(fontChanged()));
+    connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
     emit decorationChanged();
 }
 
@@ -127,10 +175,10 @@ void DecorationOptions::slotActiveChanged()
     if (!m_decoration) {
         return;
     }
-    if (m_active == m_decoration->property("active").toBool()) {
+    if (m_active == m_decoration->client()->isActive()) {
         return;
     }
-    m_active = m_decoration->property("active").toBool();
+    m_active = m_decoration->client()->isActive();
     emit colorsChanged();
     emit fontChanged();
 }

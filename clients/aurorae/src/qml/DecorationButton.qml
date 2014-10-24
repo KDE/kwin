@@ -26,11 +26,11 @@ Item {
     enabled: {
         switch (button.buttonType) {
         case DecorationOptions.DecorationButtonClose:
-            return decoration.closeable;
+            return decoration.client.closeable;
         case DecorationOptions.DecorationButtonMaximizeRestore:
-            return decoration.maximizeable;
+            return decoration.client.maximizeable;
         case DecorationOptions.DecorationButtonMinimize:
-            return decoration.minimizeable;
+            return decoration.client.minimizeable;
         case DecorationOptions.DecorationButtonExplicitSpacer:
             return false;
         default:
@@ -58,93 +58,93 @@ Item {
             switch (button.buttonType) {
             case DecorationOptions.DecorationButtonMenu:
                 // menu
-                decoration.menuClicked();
+                decoration.requestShowWindowMenu();
                 break;
             case DecorationOptions.DecorationButtonApplicationMenu:
                 // app menu
-                decoration.appMenuClicked();
+//                 decoration.appMenuClicked();
                 break;
             case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
-                decoration.toggleOnAllDesktops();
+                decoration.requestToggleOnAllDesktops();
                 break;
             case DecorationOptions.DecorationButtonQuickHelp:
                 // help
-                decoration.showContextHelp();
+                decoration.requestContextHelp();
                 break;
             case DecorationOptions.DecorationButtonMinimize:
                 // minimize
-                decoration.minimize();
+                decoration.requestMinimize();
                 break;
             case DecorationOptions.DecorationButtonMaximizeRestore:
                 // maximize
-                decoration.maximize(mouse.button);
+                decoration.requestMaximize(mouse.button);
                 break;
             case DecorationOptions.DecorationButtonClose:
                 // close
-                decoration.closeWindow();
+                decoration.requestClose();
                 break;
             case DecorationOptions.DecorationButtonKeepAbove:
                 // keep above
-                decoration.toggleKeepAbove();
+                decoration.requestToggleKeepAbove();
                 break;
             case DecorationOptions.DecorationButtonKeepBelow:
                 // keep below
-                decoration.toggleKeepBelow();
+                decoration.requestToggleKeepBelow();
                 break;
             case DecorationOptions.DecorationButtonShade:
                 // shade
-                decoration.toggleShade();
+                decoration.requestToggleShade();
                 break;
             }
         }
         onDoubleClicked: {
             if (button.buttonType == DecorationOptions.DecorationButtonMenu) {
-                decoration.closeWindow();
+                decoration.requestClose();
             }
         }
         Component.onCompleted: {
             switch (button.buttonType) {
             case DecorationOptions.DecorationButtonOnAllDesktops:
                 // all desktops
-                button.toggled = decoration.onAllDesktops;
+                button.toggled = decoration.client.onAllDesktops;
                 break;
             case DecorationOptions.DecorationButtonKeepAbove:
-                button.toggled = decoration.keepAbove;
+                button.toggled = decoration.client.keepAbove;
                 break;
             case DecorationOptions.DecorationButtonKeepBelow:
-                button.toggled = decoration.keepBelow;
+                button.toggled = decoration.client.keepBelow;
                 break;
             case DecorationOptions.DecorationButtonShade:
-                button.toggled = decoration.shade;
+                button.toggled = decoration.client.shaded;
                 break;
             }
         }
         Connections {
-            target: decoration
-            onShadeChanged: {
+            target: decoration.client
+            onShadedChanged: {
                 if (button.buttonType != DecorationOptions.DecorationButtonShade) {
                     return;
                 }
-                button.toggled = decoration.shade;
+                button.toggled = decoration.client.shaded;
             }
             onKeepBelowChanged: {
                 if (button.buttonType != DecorationOptions.DecorationButtonKeepBelow) {
                     return;
                 }
-                button.toggled = decoration.keepBelow;
+                button.toggled = decoration.client.keepBelow;
             }
             onKeepAboveChanged: {
                 if (button.buttonType != DecorationOptions.DecorationButtonKeepAbove) {
                     return;
                 }
-                button.toggled = decoration.keepAbove;
+                button.toggled = decoration.client.keepAbove;
             }
             onDesktopChanged: {
                 if (button.buttonType != DecorationOptions.DecorationButtonOnAllDesktops) {
                     return;
                 }
-                button.toggled = decoration.onAllDesktops;
+                button.toggled = decoration.client.onAllDesktops;
             }
         }
     }

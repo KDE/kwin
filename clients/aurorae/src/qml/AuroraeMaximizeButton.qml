@@ -28,7 +28,7 @@ Item {
         id: maximizeButton
         anchors.fill: parent
         buttonType: DecorationOptions.DecorationButtonMaximizeRestore
-        opacity: (!decoration.maximized || auroraeTheme.restoreButtonPath == "") ? 1 : 0
+        opacity: (!decoration.client.maximized || auroraeTheme.restoreButtonPath == "") ? 1 : 0
         hovered: button.hovered
         pressed: button.pressed
         toggled: button.toggled
@@ -42,7 +42,7 @@ Item {
         id: restoreButton
         anchors.fill: parent
         buttonType: DecorationOptions.DecorationButtonMaximizeRestore + 100
-        opacity: (decoration.maximized && auroraeTheme.restoreButtonPath != "") ? 1 : 0
+        opacity: (decoration.client.maximized && auroraeTheme.restoreButtonPath != "") ? 1 : 0
         hovered: button.hovered
         pressed: button.pressed
         toggled: button.toggled
@@ -63,7 +63,7 @@ Item {
         onPressed: button.pressed = true
         onReleased: button.pressed = false
         onClicked: {
-            decoration.maximize(mouse.button);
+            decoration.requestMaximize(mouse.button);
         }
     }
 }

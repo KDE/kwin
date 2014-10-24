@@ -40,6 +40,16 @@ Decoration {
         id: options
         deco: decoration
     }
+    Item {
+        id: titleRect
+        x: decoration.client.maximized ? maximizedBorders.left : borders.left
+        y: 0
+        width: decoration.client.width//parent.width - x - (decoration.client.maximized ? maximizedBorders.right : borders.right)
+        height: decoration.client.maximized ? maximizedBorders.top : borders.top
+        Component.onCompleted: {
+            decoration.installTitleItem(titleRect);
+        }
+    }
     PlasmaCore.FrameSvg {
         property bool supportsInactive: hasElementPrefix("decoration-inactive")
         property bool supportsMaximized: hasElementPrefix("decoration-maximized")
@@ -51,12 +61,12 @@ Decoration {
     }
     PlasmaCore.FrameSvgItem {
         id: decorationActive
-        property bool shown: (!decoration.maxized || !backgroundSvg.supportsMaximized) && (decoration.active || !backgroundSvg.supportsInactive)
+        property bool shown: (!decoration.client.maxized || !backgroundSvg.supportsMaximized) && (decoration.client.active || !backgroundSvg.supportsInactive)
         anchors.fill: parent
         imagePath: backgroundSvg.imagePath
         prefix: "decoration"
         opacity: shown ? 1 : 0
-        enabledBorders: decoration.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
+        enabledBorders: decoration.client.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
         Behavior on opacity {
             enabled: root.animate
             NumberAnimation {
@@ -69,8 +79,8 @@ Decoration {
         anchors.fill: parent
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-inactive"
-        opacity: (!decoration.active && backgroundSvg.supportsInactive) ? 1 : 0
-        enabledBorders: decoration.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
+        opacity: (!decoration.client.active && backgroundSvg.supportsInactive) ? 1 : 0
+        enabledBorders: decoration.client.maximized ? PlasmaCore.FrameSvg.NoBorder : PlasmaCore.FrameSvg.TopBorder | PlasmaCore.FrameSvg.BottomBorder | PlasmaCore.FrameSvg.LeftBorder | PlasmaCore.FrameSvg.RightBorder
         Behavior on opacity {
             enabled: root.animate
             NumberAnimation {
@@ -80,7 +90,7 @@ Decoration {
     }
     PlasmaCore.FrameSvgItem {
         id: decorationMaximized
-        property bool shown: decoration.maximized && backgroundSvg.supportsMaximized && (decoration.active || !backgroundSvg.supportsMaximizedInactive)
+        property bool shown: decoration.client.maximized && backgroundSvg.supportsMaximized && (decoration.client.active || !backgroundSvg.supportsMaximizedInactive)
         anchors {
             left: parent.left
             right: parent.right
@@ -114,7 +124,7 @@ Decoration {
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized-inactive"
         height: parent.maximizedBorders.top
-        opacity: (!decoration.active && decoration.maximized && backgroundSvg.supportsMaximizedInactive) ? 1 : 0
+        opacity: (!decoration.client.active && decoration.client.maximized && backgroundSvg.supportsMaximizedInactive) ? 1 : 0
         enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
             enabled: root.animate
@@ -130,7 +140,7 @@ Decoration {
         animate: root.animate
         anchors {
             left: root.left
-            leftMargin: decoration.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.padding.left)
+            leftMargin: decoration.client.maximized ? auroraeTheme.titleEdgeLeftMaximized : (auroraeTheme.titleEdgeLeft + root.padding.left)
         }
     }
     AuroraeButtonGroup {
@@ -140,39 +150,27 @@ Decoration {
         animate: root.animate
         anchors {
             right: root.right
-            rightMargin: decoration.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.padding.right)
+            rightMargin: decoration.client.maximized ? auroraeTheme.titleEdgeRightMaximized : (auroraeTheme.titleEdgeRight + root.padding.right)
         }
     }
     Text {
         id: caption
-        text: decoration.caption
+        text: decoration.client.caption
         textFormat: Text.PlainText
         horizontalAlignment: auroraeTheme.horizontalAlignment
         verticalAlignment: auroraeTheme.verticalAlignment
         elide: Text.ElideRight
         height: Math.max(auroraeTheme.titleHeight, auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor)
-        color: decoration.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
+        color: decoration.client.active ? auroraeTheme.activeTextColor : auroraeTheme.inactiveTextColor
         font: options.titleFont
         renderType: Text.NativeRendering
         anchors {
             left: leftButtonGroup.right
             right: rightButtonGroup.left
             top: root.top
-            topMargin: decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
+            topMargin: decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : (auroraeTheme.titleEdgeTop + root.padding.top)
             leftMargin: auroraeTheme.titleBorderLeft
             rightMargin: auroraeTheme.titleBorderRight
-        }
-        MouseArea {
-            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-            anchors.fill: parent
-            onDoubleClicked: decoration.titlebarDblClickOperation()
-            onPressed: {
-                if (mouse.button == Qt.LeftButton) {
-                    mouse.accepted = false;
-                } else {
-                    decoration.titlePressed(mouse.button, mouse.buttons);
-                }
-            }
         }
         Behavior on color {
             enabled: root.animate
@@ -192,7 +190,7 @@ Decoration {
         }
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder"
-        opacity: (decoration.active && !decoration.maximized && backgroundSvg.supportsInnerBorder) ? 1 : 0
+        opacity: (decoration.client.active && !decoration.client.maximized && backgroundSvg.supportsInnerBorder) ? 1 : 0
         Behavior on opacity {
             enabled: root.animate
             NumberAnimation {
@@ -211,7 +209,7 @@ Decoration {
         }
         imagePath: backgroundSvg.imagePath
         prefix: "innerborder-inactive"
-        opacity: (!decoration.active && !decoration.maximized && backgroundSvg.supportsInnerBorderInactive) ? 1 : 0
+        opacity: (!decoration.client.active && !decoration.client.maximized && backgroundSvg.supportsInnerBorderInactive) ? 1 : 0
         Behavior on opacity {
             enabled: root.animate
             NumberAnimation {
