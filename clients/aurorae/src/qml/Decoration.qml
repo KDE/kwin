@@ -31,6 +31,6 @@ Item {
         objectName: "padding"
     }
     property bool alpha: true
-    width: decoration.client.width + decoration.borderLeft + decoration.borderRight
-    height: decoration.client.height + decoration.borderTop + decoration.borderBottom
+    width: decoration.client.width + decoration.borderLeft + decoration.borderRight + (decoration.client.maximized ? 0 : (padding.left + padding.right))
+    height: decoration.client.height + decoration.borderTop + decoration.borderBottom + (decoration.client.maximized ? 0 : (padding.top + padding.bottom))
 }

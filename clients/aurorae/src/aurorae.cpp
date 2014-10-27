@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDecoration2
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/DecorationSettings>
+#include <KDecoration2/DecorationShadow>
 // KDE
 #include <KConfigGroup>
 #include <KPluginFactory>
@@ -225,6 +226,15 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
         }
     }
     Helper::instance().ref();
+    // recreate scene when compositing gets disabled, TODO: remove with rendercontrol
+    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
+            this, [this](bool alpha) {
+                if (!alpha && m_item) {
+                    m_item->deleteLater();
+                    m_decorationWindow.reset();
+                    init();
+                }
+            });
 }
 
 Decoration::~Decoration()
@@ -272,10 +282,11 @@ void Decoration::init()
         connect(m_view.data(), &QQuickWindow::beforeRendering, [this]() {
             if (!KDecoration2::DecorationSettings::self()->isAlphaChannelSupported()) {
                 // directly render to QQuickWindow
+                m_fbo.reset();
                 return;
             }
-            if (m_fbo.isNull() || m_fbo->size() != size()) {
-                m_fbo.reset(new QOpenGLFramebufferObject(size(), QOpenGLFramebufferObject::CombinedDepthStencil));
+            if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
+                m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
                 if (!m_fbo->isValid()) {
                     qCWarning(AURORAE) << "Creating FBO as render target failed";
                     m_fbo.reset();
@@ -311,15 +322,19 @@ void Decoration::init()
     updateBorders();
     if (!m_view.isNull()) {
         m_view->setVisible(true);
-        m_view->lower();
-        m_view->resize(m_item->width(), m_item->height());
         auto resizeWindow = [this] {
-            m_view->resize(m_item->width(), m_item->height());
+            QRect rect(QPoint(0, 0), size());
+            if (m_padding && !client()->isMaximized()) {
+                rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
+            }
+            m_view->setGeometry(rect);
             m_view->lower();
             m_view->update();
         };
+        connect(this, &Decoration::bordersChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::heightChanged, this, resizeWindow);
+        connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, resizeWindow);
         resizeWindow();
     }
 }
@@ -352,10 +367,50 @@ void Decoration::updateBorders()
 
 void Decoration::paint(QPainter *painter)
 {
+    if (!KDecoration2::DecorationSettings::self()->isAlphaChannelSupported()) {
+        return;
+    }
     QMutexLocker locker(&m_mutex);
     painter->fillRect(rect(), Qt::transparent);
-    // TODO: remove Shadow
-    painter->drawImage(rect(), m_buffer);
+    QRectF r(QPointF(0, 0), m_buffer.size());
+    if (m_padding &&
+            (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
+            !client()->isMaximized()) {
+        r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
+        KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
+        s->setShadow(m_buffer);
+        s->setPaddingLeft(m_padding->left());
+        s->setPaddingTop(m_padding->top());
+        s->setPaddingRight(m_padding->right());
+        s->setPaddingBottom(m_padding->bottom());
+        s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
+        s->setTopRight(QSize(m_padding->right(), m_padding->top()));
+        s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
+        s->setBottomRight(QSize(m_padding->right(), m_padding->bottom()));
+        s->setLeft(QSize(m_padding->left(), m_buffer.height() - m_padding->top() - m_padding->bottom()));
+        s->setRight(QSize(m_padding->right(), m_buffer.height() - m_padding->top() - m_padding->bottom()));
+        s->setTop(QSize(m_buffer.width() - m_padding->left() - m_padding->right(), m_padding->top()));
+        s->setBottom(QSize(m_buffer.width() - m_padding->left() - m_padding->right(), m_padding->bottom()));
+        auto oldShadow = shadow();
+        setShadow(s);
+        if (oldShadow) {
+            delete oldShadow.data();
+        }
+    } else {
+        setShadow(QPointer<KDecoration2::DecorationShadow>());
+    }
+    painter->drawImage(rect(), m_buffer, r);
+}
+
+QMouseEvent Decoration::translatedMouseEvent(QMouseEvent *orig)
+{
+    if (!m_padding || client()->isMaximized()) {
+        orig->setAccepted(false);
+        return *orig;
+    }
+    QMouseEvent event(orig->type(), orig->localPos() + QPointF(m_padding->left(), m_padding->top()), orig->button(), orig->buttons(), orig->modifiers());
+    event.setAccepted(false);
+    return event;
 }
 
 void Decoration::hoverEnterEvent(QHoverEvent *event)
@@ -379,8 +434,10 @@ void Decoration::hoverLeaveEvent(QHoverEvent *event)
 void Decoration::hoverMoveEvent(QHoverEvent *event)
 {
     if (m_view) {
-        QMouseEvent ev(QEvent::MouseMove, event->posF(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+        QMouseEvent mouseEvent(QEvent::MouseMove, event->posF(), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
+        QMouseEvent ev = translatedMouseEvent(&mouseEvent);
         QCoreApplication::sendEvent(m_view.data(), &ev);
+        event->setAccepted(ev.isAccepted());
     }
     KDecoration2::Decoration::hoverMoveEvent(event);
 }
@@ -388,8 +445,9 @@ void Decoration::hoverMoveEvent(QHoverEvent *event)
 void Decoration::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_view) {
-        event->setAccepted(false);
-        QCoreApplication::sendEvent(m_view.data(), event);
+        QMouseEvent ev = translatedMouseEvent(event);
+        QCoreApplication::sendEvent(m_view.data(), &ev);
+        event->setAccepted(ev.isAccepted());
     }
     KDecoration2::Decoration::mouseMoveEvent(event);
 }
@@ -397,8 +455,9 @@ void Decoration::mouseMoveEvent(QMouseEvent *event)
 void Decoration::mousePressEvent(QMouseEvent *event)
 {
     if (m_view) {
-        event->setAccepted(false);
-        QCoreApplication::sendEvent(m_view.data(), event);
+        QMouseEvent ev = translatedMouseEvent(event);
+        QCoreApplication::sendEvent(m_view.data(), &ev);
+        event->setAccepted(ev.isAccepted());
     }
     KDecoration2::Decoration::mousePressEvent(event);
 }
@@ -406,8 +465,9 @@ void Decoration::mousePressEvent(QMouseEvent *event)
 void Decoration::mouseReleaseEvent(QMouseEvent *event)
 {
     if (m_view) {
-        event->setAccepted(false);
-        QCoreApplication::sendEvent(m_view.data(), event);
+        QMouseEvent ev = translatedMouseEvent(event);
+        QCoreApplication::sendEvent(m_view.data(), &ev);
+        event->setAccepted(ev.isAccepted());
     }
     KDecoration2::Decoration::mouseReleaseEvent(event);
 }
