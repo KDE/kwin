@@ -66,7 +66,7 @@ private:
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
     QScopedPointer<QWindow> m_decorationWindow;
-    QScopedPointer<QQuickWindow> m_view;
+    QPointer<QQuickWindow> m_view;
     QQuickItem *m_item;
     KWin::Borders *m_borders;
     KWin::Borders *m_maximizedBorders;

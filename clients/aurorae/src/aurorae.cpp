@@ -266,7 +266,7 @@ void Decoration::init()
     } else {
         // we need a QQuickWindow till we depend on Qt 5.4
         m_decorationWindow.reset(QWindow::fromWinId(client()->decorationId()));
-        m_view.reset(new QQuickWindow(m_decorationWindow.data()));
+        m_view = new QQuickWindow(m_decorationWindow.data());
         m_view->setFlags(Qt::WindowDoesNotAcceptFocus | Qt::WindowTransparentForInput);
         m_view->setColor(Qt::transparent);
         connect(m_view.data(), &QQuickWindow::beforeRendering, [this]() {
@@ -318,8 +318,8 @@ void Decoration::init()
             m_view->lower();
             m_view->update();
         };
-        connect(m_item, &QQuickItem::widthChanged, this, resizeWindow);
-        connect(m_item, &QQuickItem::heightChanged, this, resizeWindow);
+        connect(client().data(), &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
+        connect(client().data(), &KDecoration2::DecoratedClient::heightChanged, this, resizeWindow);
         resizeWindow();
     }
 }
