@@ -9,6 +9,7 @@
     "org.kde.kdecoration2": {
         "blur": true,
         "themes": true,
-        "defaultTheme": "kwin4_decoration_qml_plastik"
+        "defaultTheme": "kwin4_decoration_qml_plastik",
+        "themeListKeyword": "themes"
     }
 }

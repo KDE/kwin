@@ -77,6 +77,24 @@ private:
     QMutex m_mutex;
 };
 
+class ThemeFinder : public QObject
+{
+    Q_OBJECT
+    Q_PROPERTY(QVariantMap themes READ themes)
+public:
+    explicit ThemeFinder(QObject *parent = nullptr, const QVariantList &args = QVariantList());
+
+    QVariantMap themes() const {
+        return m_themes;
+    }
+
+private:
+    void init();
+    void findAllQmlThemes();
+    void findAllSvgThemes();
+    QVariantMap m_themes;
+};
+
 }
 
 #endif

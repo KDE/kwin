@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationShadow>
 // KDE
 #include <KConfigGroup>
+#include <KDesktopFile>
 #include <KPluginFactory>
 #include <KSharedConfig>
 #include <KService>
@@ -44,7 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 K_PLUGIN_FACTORY_WITH_JSON(AuroraeDecoFactory,
                            "aurorae.json",
-                           registerPlugin<Aurorae::Decoration>();)
+                           registerPlugin<Aurorae::Decoration>();
+                           registerPlugin<Aurorae::ThemeFinder>(QStringLiteral("themes"));
+                          )
 
 namespace Aurorae
 {
@@ -505,6 +508,59 @@ void Decoration::installTitleItem(QQuickItem *item)
     connect(item, &QQuickItem::heightChanged, this, update);
     connect(item, &QQuickItem::xChanged, this, update);
     connect(item, &QQuickItem::yChanged, this, update);
+}
+
+ThemeFinder::ThemeFinder(QObject *parent, const QVariantList &args)
+    : QObject(parent)
+{
+    Q_UNUSED(args)
+    init();
+}
+
+void ThemeFinder::init()
+{
+    findAllQmlThemes();
+    findAllSvgThemes();
+}
+
+void ThemeFinder::findAllQmlThemes()
+{
+    const KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"));
+    for (const auto &offer : offers) {
+        m_themes.insert(offer->name(), offer->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString());
+    }
+}
+
+void ThemeFinder::findAllSvgThemes()
+{
+    QStringList themes;
+    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("aurorae/themes/"), QStandardPaths::LocateDirectory);
+    QStringList themeDirectories;
+    for (const QString &dir : dirs) {
+        QDir directory = QDir(dir);
+        for (const QString &themeDir : directory.entryList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
+            themeDirectories << dir + themeDir;
+        }
+    }
+    for (const QString &dir : themeDirectories) {
+        for (const QString & file : QDir(dir).entryList(QStringList() << QStringLiteral("metadata.desktop"))) {
+            themes.append(dir + '/' + file);
+        }
+    }
+    for (const QString & theme : themes) {
+        int themeSepIndex = theme.lastIndexOf('/', -1);
+        QString themeRoot = theme.left(themeSepIndex);
+        int themeNameSepIndex = themeRoot.lastIndexOf('/', -1);
+        QString packageName = themeRoot.right(themeRoot.length() - themeNameSepIndex - 1);
+
+        KDesktopFile df(theme);
+        QString name = df.readName();
+        if (name.isEmpty()) {
+            name = packageName;
+        }
+
+        m_themes.insert(name, QStringLiteral("__aurorae__svg__") + packageName);
+    }
 }
 
 }
