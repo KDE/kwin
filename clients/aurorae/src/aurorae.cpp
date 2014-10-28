@@ -273,6 +273,7 @@ void Decoration::init()
     QVariant visualParent = property("visualParent");
     if (visualParent.isValid()) {
         m_item->setParentItem(visualParent.value<QQuickItem*>());
+        visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
         // we need a QQuickWindow till we depend on Qt 5.4
         m_decorationWindow.reset(QWindow::fromWinId(client()->decorationId()));
