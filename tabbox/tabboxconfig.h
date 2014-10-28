@@ -314,7 +314,7 @@ public:
         return true;
     }
     static QString defaultLayoutName() {
-        return QStringLiteral("sidebar");
+        return QStringLiteral("org.kde.breeze.desktop");
     }
 private:
     TabBoxConfigPrivate* d;

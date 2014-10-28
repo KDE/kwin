@@ -231,36 +231,44 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 #ifndef KWIN_UNIT_TEST
 QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
 {
-    auto findSwitcher = [this, desktopMode] {
-        QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.layoutName());
-        const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
-        KService::List offers = KServiceTypeTrader::self()->query(type, constraint);
-        if (offers.isEmpty()) {
-            // load default
-            constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
-            offers = KServiceTypeTrader::self()->query(type, constraint);
+    QString file;
+    if (!desktopMode) {
+        // first try look'n'feel package
+        file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                        QStringLiteral("plasma/look-and-feel/%1/contents/windowswitcher/WindowSwitcher.qml").arg(config.layoutName()));
+    }
+    if (file.isNull()) {
+        auto findSwitcher = [this, desktopMode] {
+            QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.layoutName());
+            const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
+            KService::List offers = KServiceTypeTrader::self()->query(type, constraint);
             if (offers.isEmpty()) {
-                qDebug() << "could not find default window switcher layout";
-                return KService::Ptr();
+                // load default
+                constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
+                offers = KServiceTypeTrader::self()->query(type, constraint);
+                if (offers.isEmpty()) {
+                    qDebug() << "could not find default window switcher layout";
+                    return KService::Ptr();
+                }
             }
+            return offers.first();
+        };
+        KService::Ptr service = findSwitcher();
+        if (!service) {
+            return nullptr;
         }
-        return offers.first();
-    };
-    KService::Ptr service = findSwitcher();
-    if (!service) {
-        return nullptr;
+        if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
+            qDebug() << "Window Switcher Layout is no declarativeappletscript";
+            return nullptr;
+        }
+        auto findScriptFile = [desktopMode, service] {
+            const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
+            const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
+            const QString type = desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/");
+            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + type + pluginName + QStringLiteral("/contents/") + scriptName);
+        };
+        file = findScriptFile();
     }
-    if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
-        qDebug() << "Window Switcher Layout is no declarativeappletscript";
-        return nullptr;
-    }
-    auto findScriptFile = [desktopMode, service] {
-        const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
-        const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-        const QString type = desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/");
-        return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + type + pluginName + QStringLiteral("/contents/") + scriptName);
-    };
-    const QString file = findScriptFile();
     if (file.isNull()) {
         qDebug() << "Could not find QML file for window switcher";
         return nullptr;
