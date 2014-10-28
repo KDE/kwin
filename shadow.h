@@ -103,7 +103,7 @@ public:
     void setToplevel(Toplevel *toplevel);
 
     bool hasDecorationShadow() const {
-        return m_decorationShadow;
+        return !m_decorationShadow.isNull();
     }
     QImage decorationShadowImage() const;
 
@@ -170,7 +170,7 @@ private:
     QRegion m_shadowRegion;
     QSize m_cachedSize;
     // Decoration based shadows
-    KDecoration2::DecorationShadow *m_decorationShadow;
+    QPointer<KDecoration2::DecorationShadow> m_decorationShadow;
 };
 
 }

@@ -170,7 +170,7 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
         disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingRightChanged,  m_topLevel, &Toplevel::getShadow);
         disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingBottomChanged, m_topLevel, &Toplevel::getShadow);
     }
-    m_decorationShadow = static_cast<const KDecoration2::Decoration*>(decoration)->shadow();
+    m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
         return false;
     }
