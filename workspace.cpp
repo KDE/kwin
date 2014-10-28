@@ -216,6 +216,7 @@ Workspace::Workspace(bool restore)
 
     new Decoration::DecorationBridge(this);
     Decoration::DecorationBridge::self()->init();
+    connect(this, &Workspace::configChanged, Decoration::DecorationBridge::self(), &Decoration::DecorationBridge::reconfigure);
 
     new DBusInterface(this);
 

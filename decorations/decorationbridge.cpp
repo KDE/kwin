@@ -62,14 +62,28 @@ DecorationBridge *DecorationBridge::self()
     return static_cast<KWin::Decoration::DecorationBridge*>(KDecoration2::DecorationBridge::self());
 }
 
+static QString readPlugin()
+{
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("library", QStringLiteral("org.kde.breeze"));
+}
+
+QString DecorationBridge::readTheme() const
+{
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("theme", m_defaultTheme);
+}
+
 void DecorationBridge::init()
 {
-    KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName);
+    m_plugin = readPlugin();
     KDecoration2::DecorationSettings::self(this);
+    initPlugin();
+}
 
+void DecorationBridge::initPlugin()
+{
     const auto offers = KPluginTrader::self()->query(s_pluginName,
                                                      s_pluginName,
-                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.readEntry("library", "org.kde.breeze")));
+                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(m_plugin));
     if (offers.isEmpty()) {
         qWarning() << "Could not locate decoration plugin";
         return;
@@ -85,11 +99,44 @@ void DecorationBridge::init()
     }
 }
 
+static void recreateDecorations()
+{
+    Workspace::self()->forEachClient([](Client *c) { c->updateDecoration(true, true); });
+}
+
+void DecorationBridge::reconfigure()
+{
+    const QString newPlugin = readPlugin();
+    if (newPlugin != m_plugin) {
+        // plugin changed, recreate everything
+        auto oldFactory = m_factory;
+        const auto oldPluginName = m_plugin;
+        m_plugin = newPlugin;
+        initPlugin();
+        if (m_factory == oldFactory) {
+            // loading new plugin failed
+            m_factory = oldFactory;
+            m_plugin = oldPluginName;
+        } else {
+            recreateDecorations();
+            // TODO: unload and destroy old plugin
+        }
+    } else {
+        // same plugin, but theme might have changed
+        const QString oldTheme = m_theme;
+        m_theme = readTheme();
+        if (m_theme != oldTheme) {
+            recreateDecorations();
+        }
+    }
+}
+
 void DecorationBridge::loadMetaData(const QJsonObject &object)
 {
     // reset all settings
     m_blur = false;
     m_theme = QString();
+    m_defaultTheme = QString();
 
     // load the settings
     const QJsonValue decoSettings = object.value(s_pluginName);
@@ -115,8 +162,8 @@ void DecorationBridge::findTheme(const QVariantMap &map)
         return;
     }
     it = map.find(QStringLiteral("defaultTheme"));
-    const KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName);
-    m_theme = config.readEntry("theme", it != map.end() ? it.value().toString() : QString());
+    m_defaultTheme = it != map.end() ? it.value().toString() : QString();
+    m_theme = readTheme();
 }
 
 std::unique_ptr<KDecoration2::DecoratedClientPrivate> DecorationBridge::createClient(KDecoration2::DecoratedClient *client, KDecoration2::Decoration *decoration)

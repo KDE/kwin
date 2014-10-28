@@ -52,12 +52,18 @@ public:
         return m_blur;
     }
 
+    void reconfigure();
+
     static DecorationBridge *self();
 private:
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
+    void initPlugin();
+    QString readTheme() const;
     KPluginFactory *m_factory;
     bool m_blur;
+    QString m_plugin;
+    QString m_defaultTheme;
     QString m_theme;
 };
 } // Decoration
