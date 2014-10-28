@@ -336,6 +336,24 @@ void Decoration::init()
         connect(client().data(), &KDecoration2::DecoratedClient::heightChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, resizeWindow);
         resizeWindow();
+    } else {
+        // create a dummy shadow for the configuration interface
+        if (m_padding) {
+            KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
+            s->setPaddingLeft(m_padding->left());
+            s->setPaddingTop(m_padding->top());
+            s->setPaddingRight(m_padding->right());
+            s->setPaddingBottom(m_padding->bottom());
+            s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
+            s->setTopRight(QSize(m_padding->right(), m_padding->top()));
+            s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
+            s->setBottomRight(QSize(m_padding->right(), m_padding->bottom()));
+            s->setLeft(QSize(m_padding->left(), 1));
+            s->setRight(QSize(m_padding->right(), 1));
+            s->setTop(QSize(1, m_padding->top()));
+            s->setBottom(QSize(1, m_padding->bottom()));
+            setShadow(s);
+        }
     }
 }
 
