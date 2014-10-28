@@ -37,6 +37,7 @@ Multimedia.Video {
         }
     }
     autoLoad: false
+    visible: false
     source: model.VideoRole
     width: 400
     height: 400
