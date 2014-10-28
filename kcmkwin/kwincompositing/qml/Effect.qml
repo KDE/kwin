@@ -121,9 +121,20 @@ Rectangle {
                 wrapMode: Text.Wrap
                 Layout.maximumWidth: parent.maximumWidth
             }
-            Video {
+            Loader {
                 id: videoItem
-                visible: false
+                active: false
+                source: "Video.qml"
+                function showHide() {
+                    if (!videoItem.active) {
+                        videoItem.active = true;
+                    } else {
+                        videoItem.item.showHide();
+                    }
+                }
+                onLoaded: {
+                    videoItem.item.showHide();
+                }
             }
         }
         Item {
