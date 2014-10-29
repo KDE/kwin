@@ -75,6 +75,7 @@ private:
     KWin::Borders *m_padding;
     QString m_themeName;
     QMutex m_mutex;
+    QMetaObject::Connection m_recreateNonCompositedConnection;
 };
 
 class ThemeFinder : public QObject

@@ -1444,7 +1444,7 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
     switch (kwopt) {
     case CloseButtonCorner:
         // TODO: this could become per window and be derived from the actual position in the deco
-        return KDecoration2::DecorationSettings::self()->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
+        return Decoration::DecorationBridge::self()->settings()->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
 #ifdef KWIN_BUILD_SCREENEDGES
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();

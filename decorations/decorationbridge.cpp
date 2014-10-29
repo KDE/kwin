@@ -52,6 +52,7 @@ DecorationBridge::DecorationBridge(QObject *parent)
     , KDecoration2::DecorationBridge()
     , m_factory(nullptr)
     , m_blur(false)
+    , m_settings()
 {
 }
 
@@ -75,7 +76,7 @@ QString DecorationBridge::readTheme() const
 void DecorationBridge::init()
 {
     m_plugin = readPlugin();
-    KDecoration2::DecorationSettings::self(this);
+    m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create();
     initPlugin();
 }
 
@@ -196,6 +197,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
         args << QVariantMap({ {QStringLiteral("theme"), m_theme} });
     }
     auto deco = m_factory->create<KDecoration2::Decoration>(client, args);
+    deco->setSettings(m_settings);
     deco->init();
     return deco;
 }

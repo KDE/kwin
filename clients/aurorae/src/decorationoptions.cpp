@@ -61,9 +61,7 @@ DecorationOptions::DecorationOptions(QObject *parent)
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::slotActiveChanged);
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::colorsChanged);
     connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::fontChanged);
-    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
-    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
-    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(this, &DecorationOptions::decorationChanged, this, &DecorationOptions::titleButtonsChanged);
 }
 
 DecorationOptions::~DecorationOptions()
@@ -102,7 +100,7 @@ QColor DecorationOptions::titleBarColor() const
 
 QFont DecorationOptions::titleFont() const
 {
-    return KDecoration2::DecorationSettings::self()->font();
+    return m_decoration ? m_decoration->settings()->font() : QFont();
 }
 
 static int decorationButton(KDecoration2::DecorationButtonType type)
@@ -136,8 +134,10 @@ static int decorationButton(KDecoration2::DecorationButtonType type)
 QList<int> DecorationOptions::titleButtonsLeft() const
 {
     QList<int> ret;
-    for (auto it : KDecoration2::DecorationSettings::self()->decorationButtonsLeft()) {
-        ret << decorationButton(it);
+    if (m_decoration) {
+        for (auto it : m_decoration->settings()->decorationButtonsLeft()) {
+            ret << decorationButton(it);
+        }
     }
     return ret;
 }
@@ -145,8 +145,10 @@ QList<int> DecorationOptions::titleButtonsLeft() const
 QList<int> DecorationOptions::titleButtonsRight() const
 {
     QList<int> ret;
-    for (auto it : KDecoration2::DecorationSettings::self()->decorationButtonsRight()) {
-        ret << decorationButton(it);
+    if (m_decoration) {
+        for (auto it : m_decoration->settings()->decorationButtonsRight()) {
+            ret << decorationButton(it);
+        }
     }
     return ret;
 }
@@ -164,9 +166,17 @@ void DecorationOptions::setDecoration(KDecoration2::Decoration *decoration)
     if (m_decoration) {
         // disconnect from existing decoration
         disconnect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+        auto s = m_decoration->settings();
+        disconnect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+        disconnect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
     }
     m_decoration = decoration;
     connect(m_decoration->client().data(), &KDecoration2::DecoratedClient::activeChanged, this, &DecorationOptions::slotActiveChanged);
+    auto s = m_decoration->settings();
+    connect(s.data(), &KDecoration2::DecorationSettings::fontChanged, this, &DecorationOptions::fontChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsLeftChanged, this, &DecorationOptions::titleButtonsChanged);
+    connect(s.data(), &KDecoration2::DecorationSettings::decorationButtonsRightChanged, this, &DecorationOptions::titleButtonsChanged);
     emit decorationChanged();
 }
 

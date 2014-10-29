@@ -229,15 +229,6 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
         }
     }
     Helper::instance().ref();
-    // recreate scene when compositing gets disabled, TODO: remove with rendercontrol
-    connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
-            this, [this](bool alpha) {
-                if (!alpha && m_item) {
-                    m_item->deleteLater();
-                    m_decorationWindow.reset();
-                    init();
-                }
-            });
 }
 
 Decoration::~Decoration()
@@ -248,6 +239,19 @@ Decoration::~Decoration()
 void Decoration::init()
 {
     KDecoration2::Decoration::init();
+    auto s = settings();
+    // recreate scene when compositing gets disabled, TODO: remove with rendercontrol
+    if (!m_recreateNonCompositedConnection) {
+        m_recreateNonCompositedConnection = connect(s.data(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
+                this, [this](bool alpha) {
+                    if (!alpha && m_item) {
+                        m_item->deleteLater();
+                        m_decorationWindow.reset();
+                        init();
+                    }
+                });
+    }
+
     QQmlContext *context = new QQmlContext(Helper::instance().rootContext(), this);
     context->setContextProperty(QStringLiteral("decoration"), this);
     auto component = Helper::instance().component(m_themeName);
@@ -284,7 +288,7 @@ void Decoration::init()
         m_view->setFlags(Qt::WindowDoesNotAcceptFocus | Qt::WindowTransparentForInput);
         m_view->setColor(Qt::transparent);
         connect(m_view.data(), &QQuickWindow::beforeRendering, [this]() {
-            if (!KDecoration2::DecorationSettings::self()->isAlphaChannelSupported()) {
+            if (!settings()->isAlphaChannelSupported()) {
                 // directly render to QQuickWindow
                 m_fbo.reset();
                 return;
@@ -306,7 +310,7 @@ void Decoration::init()
             QMutexLocker locker(&m_mutex);
             m_buffer = m_fbo->toImage();
         });
-        connect(KDecoration2::DecorationSettings::self(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
+        connect(s.data(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
                 m_view.data(), &QQuickWindow::update);
         connect(m_view.data(), &QQuickWindow::afterRendering, this, [this] { update(); }, Qt::QueuedConnection);
         m_item->setParentItem(m_view->contentItem());
@@ -389,7 +393,7 @@ void Decoration::updateBorders()
 
 void Decoration::paint(QPainter *painter)
 {
-    if (!KDecoration2::DecorationSettings::self()->isAlphaChannelSupported()) {
+    if (!settings()->isAlphaChannelSupported()) {
         return;
     }
     QMutexLocker locker(&m_mutex);

@@ -23,8 +23,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Private/DecorationBridge>
 
 #include <QObject>
+#include <QSharedPointer>
 
 class KPluginFactory;
+
+namespace KDecoration2
+{
+class DecorationSettings;
+}
 
 namespace KWin
 {
@@ -54,6 +60,10 @@ public:
 
     void reconfigure();
 
+    const QSharedPointer<KDecoration2::DecorationSettings> &settings() const {
+        return m_settings;
+    }
+
     static DecorationBridge *self();
 private:
     void loadMetaData(const QJsonObject &object);
@@ -65,6 +75,7 @@ private:
     QString m_plugin;
     QString m_defaultTheme;
     QString m_theme;
+    QSharedPointer<KDecoration2::DecorationSettings> m_settings;
 };
 } // Decoration
 } // KWin
