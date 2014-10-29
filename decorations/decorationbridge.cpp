@@ -76,7 +76,7 @@ QString DecorationBridge::readTheme() const
 void DecorationBridge::init()
 {
     m_plugin = readPlugin();
-    m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create();
+    m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(this);
     initPlugin();
 }
 
