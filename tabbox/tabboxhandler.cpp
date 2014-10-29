@@ -231,15 +231,11 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 #ifndef KWIN_UNIT_TEST
 QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
 {
-    QString file;
     // first try look'n'feel package
-    if (desktopMode) {
-        file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                      QStringLiteral("plasma/look-and-feel/%1/contents/desktopswitcher/DesktopSwitcher.qml").arg(config.layoutName()));
-    } else {
-        file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                      QStringLiteral("plasma/look-and-feel/%1/contents/windowswitcher/WindowSwitcher.qml").arg(config.layoutName()));
-    }
+    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                          QStringLiteral("plasma/look-and-feel/%1/contents/%2")
+                                              .arg(config.layoutName())
+                                              .arg(desktopMode ? QStringLiteral("desktopswitcher/DesktopSwitcher.qml") : QStringLiteral("windowswitcher/WindowSwitcher.qml")));
     if (file.isNull()) {
         auto findSwitcher = [this, desktopMode] {
             QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.layoutName());
