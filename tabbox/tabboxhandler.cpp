@@ -232,10 +232,13 @@ void TabBoxHandlerPrivate::endHighlightWindows(bool abort)
 QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
 {
     QString file;
-    if (!desktopMode) {
-        // first try look'n'feel package
+    // first try look'n'feel package
+    if (desktopMode) {
         file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
-                                        QStringLiteral("plasma/look-and-feel/%1/contents/windowswitcher/WindowSwitcher.qml").arg(config.layoutName()));
+                                      QStringLiteral("plasma/look-and-feel/%1/contents/desktopswitcher/DesktopSwitcher.qml").arg(config.layoutName()));
+    } else {
+        file = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                      QStringLiteral("plasma/look-and-feel/%1/contents/windowswitcher/WindowSwitcher.qml").arg(config.layoutName()));
     }
     if (file.isNull()) {
         auto findSwitcher = [this, desktopMode] {

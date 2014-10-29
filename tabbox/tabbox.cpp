@@ -761,8 +761,9 @@ void TabBox::reconfigure()
     m_delayShow = config.readEntry<bool>("ShowDelay", true);
     m_delayShowTime = config.readEntry<int>("DelayTime", 90);
 
-    m_desktopConfig.setLayoutName(config.readEntry("DesktopLayout", "informative"));
-    m_desktopListConfig.setLayoutName(config.readEntry("DesktopListLayout", "informative"));
+    const QString defaultDesktopLayout = QStringLiteral("org.kde.breeze.desktop");
+    m_desktopConfig.setLayoutName(config.readEntry("DesktopLayout", defaultDesktopLayout));
+    m_desktopListConfig.setLayoutName(config.readEntry("DesktopListLayout", defaultDesktopLayout));
 
 #ifdef KWIN_BUILD_SCREENEDGES
     QList<ElectricBorder> *borders = &m_borderActivate;
