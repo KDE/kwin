@@ -47,20 +47,19 @@ namespace Decoration
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 
+KWIN_SINGLETON_FACTORY(DecorationBridge)
+
 DecorationBridge::DecorationBridge(QObject *parent)
-    : QObject(parent)
-    , KDecoration2::DecorationBridge()
+    : KDecoration2::DecorationBridge(parent)
     , m_factory(nullptr)
     , m_blur(false)
     , m_settings()
 {
 }
 
-DecorationBridge::~DecorationBridge() = default;
-
-DecorationBridge *DecorationBridge::self()
+DecorationBridge::~DecorationBridge()
 {
-    return static_cast<KWin::Decoration::DecorationBridge*>(KDecoration2::DecorationBridge::self());
+    s_self = nullptr;
 }
 
 static QString readPlugin()
@@ -192,11 +191,12 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
     if (!m_factory) {
         return nullptr;
     }
-    QVariantList args;
+    QVariantMap args({ {QStringLiteral("bridge"), QVariant::fromValue(this)} });
+
     if (!m_theme.isEmpty()) {
-        args << QVariantMap({ {QStringLiteral("theme"), m_theme} });
+        args.insert(QStringLiteral("theme"), m_theme);
     }
-    auto deco = m_factory->create<KDecoration2::Decoration>(client, args);
+    auto deco = m_factory->create<KDecoration2::Decoration>(client, QVariantList({args}));
     deco->setSettings(m_settings);
     deco->init();
     return deco;

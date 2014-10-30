@@ -214,9 +214,9 @@ Workspace::Workspace(bool restore)
     m_compositor = Compositor::create(this);
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
 
-    new Decoration::DecorationBridge(this);
-    Decoration::DecorationBridge::self()->init();
-    connect(this, &Workspace::configChanged, Decoration::DecorationBridge::self(), &Decoration::DecorationBridge::reconfigure);
+    auto decorationBridge = Decoration::DecorationBridge::create(this);
+    decorationBridge->init();
+    connect(this, &Workspace::configChanged, decorationBridge, &Decoration::DecorationBridge::reconfigure);
 
     new DBusInterface(this);
 

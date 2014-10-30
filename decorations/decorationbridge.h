@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DECORATION_BRIDGE_H
 #define KWIN_DECORATION_BRIDGE_H
 
+#include <kwinglobals.h>
+
 #include <KDecoration2/Private/DecorationBridge>
 
 #include <QObject>
@@ -40,11 +42,10 @@ class Client;
 namespace Decoration
 {
 
-class DecorationBridge : public QObject, public KDecoration2::DecorationBridge
+class DecorationBridge : public KDecoration2::DecorationBridge
 {
     Q_OBJECT
 public:
-    explicit DecorationBridge(QObject *parent);
     virtual ~DecorationBridge();
 
     void init();
@@ -64,7 +65,6 @@ public:
         return m_settings;
     }
 
-    static DecorationBridge *self();
 private:
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
@@ -76,6 +76,7 @@ private:
     QString m_defaultTheme;
     QString m_theme;
     QSharedPointer<KDecoration2::DecorationSettings> m_settings;
+    KWIN_SINGLETON(DecorationBridge)
 };
 } // Decoration
 } // KWin

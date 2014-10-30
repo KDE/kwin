@@ -212,7 +212,7 @@ void Helper::init()
 
 
 Decoration::Decoration(QObject *parent, const QVariantList &args)
-    : KDecoration2::Decoration(parent)
+    : KDecoration2::Decoration(parent, args)
     , m_item(nullptr)
     , m_borders(nullptr)
     , m_maximizedBorders(nullptr)
