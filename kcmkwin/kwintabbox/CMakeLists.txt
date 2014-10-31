@@ -26,6 +26,7 @@ target_link_libraries(kcm_kwintabbox
     KF5::I18n
     KF5::Service
     KF5::NewStuff
+    KF5::Plasma
     XCB::XCB
     kwin4_effect_builtins
 )

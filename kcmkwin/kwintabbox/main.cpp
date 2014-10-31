@@ -42,6 +42,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KServiceTypeTrader>
 #include <KShortcutsEditor>
 #include <KNewStuff3/KNS3/DownloadDialog>
+// Plasma
+#include <Plasma/Package>
+#include <Plasma/PluginLoader>
 
 // own
 #include "tabboxconfig.h"
@@ -158,6 +161,36 @@ KWinTabBoxConfig::~KWinTabBoxConfig()
 {
 }
 
+
+static QList<Plasma::Package> availableLnFPackages()
+{
+    QList<Plasma::Package> packages;
+    QStringList paths;
+    const QStringList dataPaths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+
+    for (const QString &path : dataPaths) {
+        QDir dir(path + QStringLiteral("/plasma/look-and-feel"));
+        paths << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
+    }
+
+    const auto &p = paths;
+    for (const QString &path : p) {
+        Plasma::Package pkg = Plasma::PluginLoader::self()->loadPackage(QStringLiteral("Plasma/LookAndFeel"));
+        pkg.setPath(path);
+        pkg.setFallbackPackage(Plasma::Package());
+        if (!pkg.filePath("defaults").isEmpty()) {
+            KSharedConfigPtr conf = KSharedConfig::openConfig(pkg.filePath("defaults"));
+            KConfigGroup cg = KConfigGroup(conf, "kwinrc");
+            cg = KConfigGroup(&cg, "WindowSwitcher");
+            if (!cg.readEntry("LayoutName", QString()).isEmpty()) {
+                packages << pkg;
+            }
+        }
+    }
+
+    return packages;
+}
+
 void KWinTabBoxConfig::initLayoutLists()
 {
     // search the effect names
@@ -167,6 +200,15 @@ void KWinTabBoxConfig::initLayoutLists()
     KServiceTypeTrader* trader = KServiceTypeTrader::self();
     KService::List offers = trader->query("KWin/WindowSwitcher");
     QStringList layoutNames, layoutPlugins, layoutPaths;
+
+    const auto lnfPackages = availableLnFPackages();
+    for (const auto &package : lnfPackages) {
+        const auto &metaData = package.metadata();
+        layoutNames << metaData.name();
+        layoutPlugins << metaData.pluginName();
+        layoutPaths << package.filePath("windowswitcher", QStringLiteral("WindowSwitcher.qml"));
+    }
+
     foreach (KService::Ptr service, offers) {
         const QString pluginName = service->property("X-KDE-PluginInfo-Name").toString();
         if (service->property("X-Plasma-API").toString() != "declarativeappletscript") {
