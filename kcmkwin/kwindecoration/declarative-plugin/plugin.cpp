@@ -17,43 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KDECORATION_DECORATIONS_MODEL_H
-#define KDECORATION_DECORATIONS_MODEL_H
+#include "plugin.h"
+#include "previewbridge.h"
+#include "previewclient.h"
+#include "previewitem.h"
+#include "previewsettings.h"
 
-#include <QAbstractListModel>
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationShadow>
+
+#include <qqml.h>
 
 namespace KDecoration2
 {
-
-namespace Configuration
+namespace Preview
 {
 
-class DecorationsModel : public QAbstractListModel
+void Plugin::registerTypes(const char *uri)
 {
-    Q_OBJECT
-public:
-    explicit DecorationsModel(QObject *parent = nullptr);
-    virtual ~DecorationsModel();
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
-
-    QModelIndex findDecoration(const QString &pluginName, const QString &themeName = QString()) const;
-
-public Q_SLOTS:
-    void init();
-
-private:
-    struct Data {
-        QString pluginName;
-        QString themeName;
-        QString visibleName;
-    };
-    std::vector<Data> m_plugins;
-};
+    Q_ASSERT(QLatin1String(uri) == QLatin1String("org.kde.kwin.private.kdecoration"));
+    qmlRegisterType<KDecoration2::Preview::PreviewBridge>(uri, 1, 0, "Bridge");
+    qmlRegisterType<KDecoration2::Preview::Settings>(uri, 1, 0, "Settings");
+    qmlRegisterType<KDecoration2::Preview::PreviewItem>(uri, 1, 0, "Decoration");
+    qmlRegisterType<KDecoration2::Preview::PreviewClient>();
+    qmlRegisterType<KDecoration2::Decoration>();
+    qmlRegisterType<KDecoration2::DecorationShadow>();
+}
 
 }
 }
 
-#endif
+#include "plugin.moc"
+

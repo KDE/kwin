@@ -1,0 +1,20 @@
+set(plugin_SRCS
+    previewbridge.cpp
+    previewclient.cpp
+    previewitem.cpp
+    previewsettings.cpp
+    plugin.cpp
+)
+
+add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})
+target_link_libraries(kdecorationprivatedeclarative
+    KDecoration2::KDecoration
+    KDecoration2::KDecoration2Private
+    Qt5::Quick
+    KF5::CoreAddons
+    KF5::ConfigWidgets
+    KF5::Service
+)
+
+install(TARGETS kdecorationprivatedeclarative DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/private/kdecoration )
+install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/private/kdecoration )

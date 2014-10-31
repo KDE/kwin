@@ -17,43 +17,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KDECORATION_DECORATIONS_MODEL_H
-#define KDECORATION_DECORATIONS_MODEL_H
+#ifndef KDECORATIONS_KCM_H
+#define KDECORATIONS_KCM_H
 
-#include <QAbstractListModel>
+#include <kcmodule.h>
+
+class QQuickWidget;
 
 namespace KDecoration2
 {
-
+namespace Preview
+{
+class PreviewBridge;
+}
 namespace Configuration
 {
+class DecorationsModel;
 
-class DecorationsModel : public QAbstractListModel
+class ConfigurationModule : public KCModule
 {
     Q_OBJECT
 public:
-    explicit DecorationsModel(QObject *parent = nullptr);
-    virtual ~DecorationsModel();
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
-
-    QModelIndex findDecoration(const QString &pluginName, const QString &themeName = QString()) const;
+    explicit ConfigurationModule(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
+    virtual ~ConfigurationModule();
 
 public Q_SLOTS:
-    void init();
+    void defaults() override;
+    void load() override;
+    void save() override;
+
+protected:
+    void showEvent(QShowEvent *ev) override;
 
 private:
-    struct Data {
-        QString pluginName;
-        QString themeName;
-        QString visibleName;
-    };
-    std::vector<Data> m_plugins;
+    QQuickWidget *m_view;
+    DecorationsModel *m_model;
 };
 
 }
+
 }
 
 #endif

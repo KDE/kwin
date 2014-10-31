@@ -17,40 +17,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef KDECORATION_DECORATIONS_MODEL_H
-#define KDECORATION_DECORATIONS_MODEL_H
+#ifndef KDECOARTIONS_PREVIEW_PLUGIN_H
+#define KDECOARTIONS_PREVIEW_PLUGIN_H
 
-#include <QAbstractListModel>
+#include <QQmlExtensionPlugin>
 
 namespace KDecoration2
 {
-
-namespace Configuration
+namespace Preview
 {
 
-class DecorationsModel : public QAbstractListModel
+class Plugin : public QQmlExtensionPlugin
 {
+    Q_PLUGIN_METADATA(IID "org.kde.kdecoration2")
     Q_OBJECT
 public:
-    explicit DecorationsModel(QObject *parent = nullptr);
-    virtual ~DecorationsModel();
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
-
-    QModelIndex findDecoration(const QString &pluginName, const QString &themeName = QString()) const;
-
-public Q_SLOTS:
-    void init();
-
-private:
-    struct Data {
-        QString pluginName;
-        QString themeName;
-        QString visibleName;
-    };
-    std::vector<Data> m_plugins;
+    void registerTypes(const char *uri) override;
 };
 
 }
