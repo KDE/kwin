@@ -1,4 +1,3 @@
-add_subdirectory( qml )
 add_subdirectory( autotests )
 
 # Install the KWin/WindowSwitcher service type
