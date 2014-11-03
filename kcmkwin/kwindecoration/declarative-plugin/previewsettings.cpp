@@ -20,6 +20,8 @@
 #include "previewsettings.h"
 #include "previewbridge.h"
 
+#include <KLocalizedString>
+
 #include <QFontDatabase>
 
 namespace KDecoration2
@@ -34,6 +36,22 @@ ButtonsModel::ButtonsModel(const QList< DecorationButtonType > &buttons, QObject
 {
 }
 
+ButtonsModel::ButtonsModel(QObject* parent)
+    : ButtonsModel(QList<DecorationButtonType>({
+        DecorationButtonType::Menu,
+        DecorationButtonType::ApplicationMenu,
+        DecorationButtonType::OnAllDesktops,
+        DecorationButtonType::Minimize,
+        DecorationButtonType::Maximize,
+        DecorationButtonType::Close,
+        DecorationButtonType::QuickHelp,
+        DecorationButtonType::Shade,
+        DecorationButtonType::KeepBelow,
+        DecorationButtonType::KeepAbove
+    }), parent)
+{
+}
+
 ButtonsModel::~ButtonsModel() = default;
 
 int ButtonsModel::rowCount(const QModelIndex &parent) const
@@ -42,6 +60,34 @@ int ButtonsModel::rowCount(const QModelIndex &parent) const
         return 0;
     }
     return m_buttons.count();
+}
+
+static QString buttonToName(DecorationButtonType type)
+{
+    switch (type) {
+        case DecorationButtonType::Menu:
+            return i18n("Menu");
+        case DecorationButtonType::ApplicationMenu:
+            return i18n("Application menu");
+        case DecorationButtonType::OnAllDesktops:
+            return i18n("On all desktops");
+        case DecorationButtonType::Minimize:
+            return i18n("Minimize");
+        case DecorationButtonType::Maximize:
+            return i18n("Maximize");
+        case DecorationButtonType::Close:
+            return i18n("Close");
+        case DecorationButtonType::QuickHelp:
+            return i18n("Quick help");
+        case DecorationButtonType::Shade:
+            return i18n("Shade");
+        case DecorationButtonType::KeepBelow:
+            return i18n("Keep below");
+        case DecorationButtonType::KeepAbove:
+            return i18n("Keep above");
+        default:
+            return QString();
+    }
 }
 
 QVariant ButtonsModel::data(const QModelIndex &index, int role) const
@@ -54,9 +100,9 @@ QVariant ButtonsModel::data(const QModelIndex &index, int role) const
     }
     switch (role) {
     case Qt::DisplayRole:
-        return QVariant::fromValue(m_buttons.at(index.row()));
+        return buttonToName(m_buttons.at(index.row()));
     case Qt::UserRole:
-        return QVariant::fromValue(m_buttons.at(index.row()));
+        return QVariant::fromValue(int(m_buttons.at(index.row())));
     }
     return QVariant();
 }
@@ -65,6 +111,7 @@ QHash< int, QByteArray > ButtonsModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles.insert(Qt::DisplayRole, QByteArrayLiteral("display"));
+    roles.insert(Qt::UserRole, QByteArrayLiteral("button"));
     return roles;
 }
 

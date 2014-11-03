@@ -18,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "plugin.h"
+#include "previewbutton.h"
 #include "previewbridge.h"
 #include "previewclient.h"
 #include "previewitem.h"
@@ -39,6 +40,8 @@ void Plugin::registerTypes(const char *uri)
     qmlRegisterType<KDecoration2::Preview::PreviewBridge>(uri, 1, 0, "Bridge");
     qmlRegisterType<KDecoration2::Preview::Settings>(uri, 1, 0, "Settings");
     qmlRegisterType<KDecoration2::Preview::PreviewItem>(uri, 1, 0, "Decoration");
+    qmlRegisterType<KDecoration2::Preview::PreviewButtonItem>(uri, 1, 0, "Button");
+    qmlRegisterType<KDecoration2::Preview::ButtonsModel>(uri, 1, 0, "ButtonsModel");
     qmlRegisterType<KDecoration2::Preview::PreviewClient>();
     qmlRegisterType<KDecoration2::Decoration>();
     qmlRegisterType<KDecoration2::DecorationShadow>();

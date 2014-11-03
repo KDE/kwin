@@ -1,4 +1,5 @@
 set(plugin_SRCS
+    previewbutton.cpp
     previewbridge.cpp
     previewclient.cpp
     previewitem.cpp
@@ -13,6 +14,7 @@ target_link_libraries(kdecorationprivatedeclarative
     Qt5::Quick
     KF5::CoreAddons
     KF5::ConfigWidgets
+    KF5::I18n
     KF5::Service
 )
 

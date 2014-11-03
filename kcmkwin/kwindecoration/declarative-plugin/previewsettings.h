@@ -37,6 +37,7 @@ class ButtonsModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ButtonsModel(const QList< DecorationButtonType > &buttons, QObject *parent = 0);
+    explicit ButtonsModel(QObject *parent = nullptr);
     virtual ~ButtonsModel();
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;

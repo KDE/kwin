@@ -161,5 +161,13 @@ Decoration *PreviewBridge::createDecoration(QObject *parent)
     return m_factory->create<KDecoration2::Decoration>(parent, QVariantList({args}));
 }
 
+DecorationButton *PreviewBridge::createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent)
+{
+    if (!m_valid) {
+        return nullptr;
+    }
+    return m_factory->create<KDecoration2::DecorationButton>(QStringLiteral("button"), parent, QVariantList({QVariant::fromValue(type), QVariant::fromValue(decoration)}));
+}
+
 }
 }

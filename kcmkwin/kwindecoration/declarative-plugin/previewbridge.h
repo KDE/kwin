@@ -21,6 +21,7 @@
 #define KDECOARTIONS_PREVIEW_BRIDGE_H
 
 #include <KDecoration2/Private/DecorationBridge>
+#include <KDecoration2/DecorationButton>
 
 #include <QList>
 #include <QPointer>
@@ -66,6 +67,7 @@ public:
     bool isValid() const;
 
     KDecoration2::Decoration *createDecoration(QObject *parent = nullptr);
+    KDecoration2::DecorationButton *createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent = nullptr);
 
 Q_SIGNALS:
     void pluginChanged();
