@@ -156,38 +156,38 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 {
     if (m_decorationShadow) {
         // disconnect previous connections
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::topLeftChanged,       m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::topChanged,           m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::topRightChanged,      m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::rightChanged,         m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomRightChanged,   m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomChanged,        m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomLeftChanged,    m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::leftChanged,          m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingLeftChanged,   m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingTopChanged,    m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingRightChanged,  m_topLevel, &Toplevel::getShadow);
-        disconnect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingBottomChanged, m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topLeftChanged,       m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topChanged,           m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topRightChanged,      m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::rightChanged,         m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomRightChanged,   m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomChanged,        m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomLeftChanged,    m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::leftChanged,          m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingLeftChanged,   m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingTopChanged,    m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingRightChanged,  m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingBottomChanged, m_topLevel, &Toplevel::getShadow);
     }
     m_decorationShadow = decoration->shadow();
     if (!m_decorationShadow) {
         return false;
     }
     // setup connections - all just mapped to recreate
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::topLeftChanged,       m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::topChanged,           m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::topRightChanged,      m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::rightChanged,         m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomRightChanged,   m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomChanged,        m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::bottomLeftChanged,    m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::leftChanged,          m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingLeftChanged,   m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingTopChanged,    m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingRightChanged,  m_topLevel, &Toplevel::getShadow);
-    connect(m_decorationShadow, &KDecoration2::DecorationShadow::paddingBottomChanged, m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topLeftChanged,       m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topChanged,           m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::topRightChanged,      m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::rightChanged,         m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomRightChanged,   m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomChanged,        m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::bottomLeftChanged,    m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::leftChanged,          m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingLeftChanged,   m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingTopChanged,    m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingRightChanged,  m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingBottomChanged, m_topLevel, &Toplevel::getShadow);
 
     m_topOffset    = m_decorationShadow->paddingTop();
     m_rightOffset  = m_decorationShadow->paddingRight();
