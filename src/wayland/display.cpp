@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "display.h"
 #include "compositor_interface.h"
+#include "datadevicemanager_interface.h"
 #include "output_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
@@ -170,6 +171,13 @@ SubCompositorInterface *Display::createSubCompositor(QObject *parent)
     auto c = new SubCompositorInterface(this, parent);
     connect(this, &Display::aboutToTerminate, c, [this,c] { delete c; });
     return c;
+}
+
+DataDeviceManagerInterface *Display::createDataDeviceManager(QObject *parent)
+{
+    auto m = new DataDeviceManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, m, [this,m] { delete m; });
+    return m;
 }
 
 void Display::createShm()

@@ -34,6 +34,7 @@ namespace Server
 {
 
 class CompositorInterface;
+class DataDeviceManagerInterface;
 class OutputInterface;
 class SeatInterface;
 class ShellInterface;
@@ -70,6 +71,7 @@ public:
     ShellInterface *createShell(QObject *parent = nullptr);
     SeatInterface *createSeat(QObject *parent = nullptr);
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
+    DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);

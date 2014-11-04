@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/event_queue.h"
 #include "../../src/client/registry.h"
 #include "../../src/server/compositor_interface.h"
+#include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/seat_interface.h"
@@ -48,6 +49,7 @@ private Q_SLOTS:
     void testBindShm();
     void testBindSeat();
     void testBindSubCompositor();
+    void testBindDataDeviceManager();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -60,6 +62,7 @@ private:
     KWayland::Server::SeatInterface *m_seat;
     KWayland::Server::ShellInterface *m_shell;
     KWayland::Server::SubCompositorInterface *m_subcompositor;
+    KWayland::Server::DataDeviceManagerInterface *m_dataDeviceManager;
 };
 
 static const QString s_socketName = QStringLiteral("kwin-test-wayland-registry-0");
@@ -72,6 +75,7 @@ TestWaylandRegistry::TestWaylandRegistry(QObject *parent)
     , m_seat(nullptr)
     , m_shell(nullptr)
     , m_subcompositor(nullptr)
+    , m_dataDeviceManager(nullptr)
 {
 }
 
@@ -91,6 +95,8 @@ void TestWaylandRegistry::init()
     m_shell->create();
     m_subcompositor = m_display->createSubCompositor();
     m_subcompositor->create();
+    m_dataDeviceManager = m_display->createDataDeviceManager();
+    m_dataDeviceManager->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -177,6 +183,11 @@ void TestWaylandRegistry::testBindShm()
 void TestWaylandRegistry::testBindSubCompositor()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::SubCompositor, SIGNAL(subCompositorAnnounced(quint32,quint32)), bindSubCompositor, wl_subcompositor_destroy)
+}
+
+void TestWaylandRegistry::testBindDataDeviceManager()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::DataDeviceManager, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)), bindDataDeviceManager, wl_data_device_manager_destroy)
 }
 
 #undef TEST_BIND

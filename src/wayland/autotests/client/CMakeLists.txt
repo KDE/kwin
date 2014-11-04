@@ -134,3 +134,14 @@ add_executable(testRegion ${testRegion_SRCS})
 target_link_libraries( testRegion Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
 add_test(kwayland-testRegion testRegion)
 ecm_mark_as_test(testRegion)
+
+########################################################
+# Test DataSource
+########################################################
+set( testDataSource_SRCS
+        test_datasource.cpp
+    )
+add_executable(testDataSource ${testDataSource_SRCS})
+target_link_libraries( testDataSource Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testDataSource testDataSource)
+ecm_mark_as_test(testDataSource)
