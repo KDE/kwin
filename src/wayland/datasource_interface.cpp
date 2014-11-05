@@ -35,6 +35,11 @@ public:
     ~Private();
     void create(wl_client *client, quint32 version, quint32 id);
 
+    static DataSourceInterface *get(wl_resource *r) {
+        auto s = cast(r);
+        return s ? s->q : nullptr;
+    }
+
     wl_resource *dataSource = nullptr;
     QStringList mimeTypes;
 
@@ -45,7 +50,7 @@ private:
     static void destroyCallack(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
     static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
+        return r ? reinterpret_cast<Private*>(wl_resource_get_user_data(r)) : nullptr;
     }
 
     const static struct wl_data_source_interface s_interface;
@@ -144,6 +149,11 @@ wl_resource *DataSourceInterface::resource() const
 QStringList DataSourceInterface::mimeTypes() const
 {
     return d->mimeTypes;
+}
+
+DataSourceInterface *DataSourceInterface::get(wl_resource *native)
+{
+    return Private::get(native);
 }
 
 }

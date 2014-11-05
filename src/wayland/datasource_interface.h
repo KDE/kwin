@@ -49,6 +49,8 @@ public:
 
     wl_resource *resource() const;
 
+    static DataSourceInterface *get(wl_resource *native);
+
 Q_SIGNALS:
     void mimeTypeOffered(const QString&);
 

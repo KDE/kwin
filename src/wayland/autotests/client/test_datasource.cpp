@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testTargetAccepts();
     void testRequestSend();
     void testCancel();
+    void testServerGet();
     void testDestroy();
 
 private:
@@ -264,6 +265,25 @@ void TestDataSource::testCancel()
 
     QVERIFY(cancelledSpy.wait());
     QCOMPARE(cancelledSpy.count(), 1);
+}
+
+void TestDataSource::testServerGet()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy dataSourceCreatedSpy(m_dataDeviceManagerInterface, SIGNAL(dataSourceCreated(DataSourceInterface*)));
+    QVERIFY(dataSourceCreatedSpy.isValid());
+
+    QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
+    QVERIFY(dataSource->isValid());
+
+    QVERIFY(!DataSourceInterface::get(nullptr));
+    QVERIFY(dataSourceCreatedSpy.wait());
+    auto d = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
+
+    QCOMPARE(DataSourceInterface::get(d->resource()), d);
+    QVERIFY(!DataSourceInterface::get(nullptr));
 }
 
 void TestDataSource::testDestroy()
