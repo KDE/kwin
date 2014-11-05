@@ -170,7 +170,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QByteArray xServer;
     for (int i = 1; i < argc; ++i) {
         QByteArray arg = argv[i];
-        if (arg == "-x" || arg == "--start-X-Server") {
+        if (arg == "-x" || arg == "--x-server") {
             if (++i < argc) {
                 xServer = argv[i];
             }
