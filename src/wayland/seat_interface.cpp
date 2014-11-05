@@ -58,6 +58,11 @@ public:
     PointerInterface *pointerInterface;
     KeyboardInterface *keyboardInterface;
 
+    static SeatInterface *get(wl_resource *native) {
+        auto s = cast(native);
+        return s ? s->q : nullptr;
+    }
+
 private:
     static Private *cast(wl_resource *r);
     static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
@@ -68,12 +73,15 @@ private:
     static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static const struct wl_seat_interface s_interface;
+
+    SeatInterface *q;
 };
 
 SeatInterface::Private::Private(SeatInterface *q, Display *d)
     : display(d)
     , pointerInterface(new PointerInterface(d, q))
     , keyboardInterface(new KeyboardInterface(d, q))
+    , q(q)
 {
 }
 
@@ -181,7 +189,7 @@ void SeatInterface::Private::sendCapabilities(wl_resource *r)
 
 SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
 {
-    return reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r));
+    return r ? reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r)) : nullptr;
 }
 
 void SeatInterface::setHasKeyboard(bool has)
@@ -269,6 +277,11 @@ PointerInterface *SeatInterface::pointer()
 KeyboardInterface *SeatInterface::keyboard()
 {
     return d->keyboardInterface;
+}
+
+SeatInterface *SeatInterface::get(wl_resource *native)
+{
+    return Private::get(native);
 }
 
 /****************************************

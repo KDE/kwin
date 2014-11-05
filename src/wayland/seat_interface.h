@@ -64,6 +64,8 @@ public:
     void setHasKeyboard(bool has);
     void setHasTouch(bool has);
 
+    static SeatInterface *get(wl_resource *native);
+
 Q_SIGNALS:
     void nameChanged(const QString&);
     void hasPointerChanged(bool);
