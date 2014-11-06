@@ -44,7 +44,7 @@ public:
     bool isValid() const;
 
 Q_SIGNALS:
-    void dataSourceCreated(DataSourceInterface*);
+    void dataSourceCreated(KWayland::Server::DataSourceInterface*);
     void dataDeviceCreated(KWayland::Server::DataDeviceInterface*);
 
 private:
