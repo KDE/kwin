@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevice_interface.h"
+#include "dataoffer_interface.h"
 #include "datasource_interface.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
@@ -36,6 +37,8 @@ public:
     ~Private();
 
     void create(wl_client *client, quint32 version, quint32 id);
+
+    DataOfferInterface *createDataOffer(DataSourceInterface *source);
 
     SeatInterface *seat;
     wl_resource *device = nullptr;
@@ -133,6 +136,19 @@ void DataDeviceInterface::Private::create(wl_client *client, quint32 version, qu
     wl_resource_set_implementation(device, &s_interface, this, unbind);
 }
 
+DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
+{
+    DataOfferInterface *offer = new DataOfferInterface(source, q);
+    offer->create(wl_resource_get_client(device), wl_resource_get_version(device), 0);
+    if (!offer->resource()) {
+        // TODO: send error?
+        delete offer;
+        return nullptr;
+    }
+    wl_data_device_send_data_offer(device, offer->resource());
+    offer->sendAllOffers();
+    return offer;
+}
 
 DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent)
     : QObject(/*parent*/)
@@ -175,6 +191,15 @@ SurfaceInterface *DataDeviceInterface::origin() const
 DataSourceInterface *DataDeviceInterface::selection() const
 {
     return d->selection;
+}
+
+void DataDeviceInterface::sendSelection(DataDeviceInterface *other)
+{
+    auto r = d->createDataOffer(other->selection());
+    if (!r) {
+        return;
+    }
+    wl_data_device_send_selection(d->device, r->resource());
 }
 
 }

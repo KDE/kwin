@@ -321,6 +321,7 @@ void TestDataDevice::testSetSelection()
 
     QScopedPointer<DataSource> dataSource(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource->isValid());
+    dataSource->offer(QStringLiteral("text/plain"));
 
     QVERIFY(dataSourceCreatedSpy.wait());
     QCOMPARE(dataSourceCreatedSpy.count(), 1);
@@ -340,6 +341,28 @@ void TestDataDevice::testSetSelection()
     QCOMPARE(selectionClearedSpy.count(), 0);
     QCOMPARE(selectionChangedSpy.first().first().value<DataSourceInterface*>(), sourceInterface);
     QCOMPARE(deviceInterface->selection(), sourceInterface);
+
+    // send selection to datadevice
+    QSignalSpy selectionOfferedSpy(dataDevice.data(), SIGNAL(selectionOffered(KWayland::Client::DataOffer*)));
+    QVERIFY(selectionOfferedSpy.isValid());
+    deviceInterface->sendSelection(deviceInterface);
+    QVERIFY(selectionOfferedSpy.wait());
+    QCOMPARE(selectionOfferedSpy.count(), 1);
+    auto dataOffer = selectionOfferedSpy.first().first().value<DataOffer*>();
+    QVERIFY(dataOffer);
+    QCOMPARE(dataOffer->offeredMimeTypes().count(), 1);
+    QCOMPARE(dataOffer->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
+
+    // sending a new mimetype to the selection, should be announced in the offer
+    QSignalSpy mimeTypeAddedSpy(dataOffer, SIGNAL(mimeTypeOffered(QString)));
+    QVERIFY(mimeTypeAddedSpy.isValid());
+    dataSource->offer(QStringLiteral("text/html"));
+    QVERIFY(mimeTypeAddedSpy.wait());
+    QCOMPARE(mimeTypeAddedSpy.count(), 1);
+    QCOMPARE(mimeTypeAddedSpy.first().first().toString(), QStringLiteral("text/html"));
+    QCOMPARE(dataOffer->offeredMimeTypes().count(), 2);
+    QCOMPARE(dataOffer->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
+    QCOMPARE(dataOffer->offeredMimeTypes().last().name(), QStringLiteral("text/html"));
 
     // now clear the selection
     dataDevice->clearSelection(1);

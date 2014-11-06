@@ -17,8 +17,8 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_DATA_DEVICE_INTERFACE_H
-#define WAYLAND_SERVER_DATA_DEVICE_INTERFACE_H
+#ifndef WAYLAND_SERVER_DATA_OFFER_INTERFACE_H
+#define WAYLAND_SERVER_DATA_OFFER_INTERFACE_H
 
 #include <QObject>
 
@@ -32,38 +32,24 @@ namespace KWayland
 namespace Server
 {
 
-class DataDeviceManagerInterface;
+class DataDeviceInterface;
 class DataSourceInterface;
-class SeatInterface;
-class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataOfferInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~DataDeviceInterface();
+    virtual ~DataOfferInterface();
 
     void create(wl_client *client, quint32 version, quint32 id);
 
-    SeatInterface *seat() const;
-    DataSourceInterface *dragSource() const;
-    SurfaceInterface *origin() const;
-    SurfaceInterface *icon() const;
-
-    DataSourceInterface *selection() const;
-
-    void sendSelection(DataDeviceInterface *other);
+    void sendAllOffers();
 
     wl_resource *resource() const;
 
-Q_SIGNALS:
-    void dragStarted();
-    void selectionChanged(KWayland::Server::DataSourceInterface*);
-    void selectionCleared();
-
 private:
-    friend class DataDeviceManagerInterface;
-    explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent);
+    friend class DataDeviceInterface;
+    explicit DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface);
 
     class Private;
     QScopedPointer<Private> d;
@@ -72,6 +58,6 @@ private:
 }
 }
 
-Q_DECLARE_METATYPE(KWayland::Server::DataDeviceInterface*)
+Q_DECLARE_METATYPE(KWayland::Server::DataOfferInterface*)
 
 #endif

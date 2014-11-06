@@ -3,6 +3,7 @@ set(SERVER_LIB_SRCS
     compositor_interface.cpp
     datadevice_interface.cpp
     datadevicemanager_interface.cpp
+    dataoffer_interface.cpp
     datasource_interface.cpp
     display.cpp
     output_interface.cpp
@@ -50,6 +51,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   compositor_interface.h
 #   datadevice_interface.h
 #   datadevicemanager_interface.h
+#   dataoffer_interface.h
 #   datasource_interface.h
 #   display.h
 #   output_interface.h
