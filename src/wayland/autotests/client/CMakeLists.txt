@@ -145,3 +145,14 @@ add_executable(testDataSource ${testDataSource_SRCS})
 target_link_libraries( testDataSource Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testDataSource testDataSource)
 ecm_mark_as_test(testDataSource)
+
+########################################################
+# Test DataDevice
+########################################################
+set( testDataDevice_SRCS
+        test_datadevice.cpp
+    )
+add_executable(testDataDevice ${testDataDevice_SRCS})
+target_link_libraries( testDataDevice Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testDataDevice testDataDevice)
+ecm_mark_as_test(testDataDevice)

@@ -17,44 +17,59 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
-#define WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
+#ifndef WAYLAND_SERVER_DATA_DEVICE_INTERFACE_H
+#define WAYLAND_SERVER_DATA_DEVICE_INTERFACE_H
 
 #include <QObject>
 
 #include <KWayland/Server/kwaylandserver_export.h>
-#include "datadevice_interface.h"
-#include "datasource_interface.h"
+
+struct wl_client;
+struct wl_resource;
 
 namespace KWayland
 {
 namespace Server
 {
 
-class Display;
+class DataDeviceManagerInterface;
+class DataSourceInterface;
+class SeatInterface;
+class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~DataDeviceManagerInterface();
+    virtual ~DataDeviceInterface();
 
-    void create();
-    void destroy();
-    bool isValid() const;
+    void create(wl_client *client, quint32 version, quint32 id);
+
+    SeatInterface *seat() const;
+    DataSourceInterface *dragSource() const;
+    SurfaceInterface *origin() const;
+    SurfaceInterface *icon() const;
+
+    DataSourceInterface *selection() const;
+
+    wl_resource *resource() const;
 
 Q_SIGNALS:
-    void dataSourceCreated(DataSourceInterface*);
-    void dataDeviceCreated(KWayland::Server::DataDeviceInterface*);
+    void dragStarted();
+    void selectionChanged(KWayland::Server::DataSourceInterface*);
+    void selectionCleared();
 
 private:
-    explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
+    friend class DataDeviceManagerInterface;
+    explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent);
+
     class Private;
     QScopedPointer<Private> d;
 };
 
 }
 }
+
+Q_DECLARE_METATYPE(KWayland::Server::DataDeviceInterface*)
 
 #endif

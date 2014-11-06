@@ -1,6 +1,7 @@
 set(SERVER_LIB_SRCS
     buffer_interface.cpp
     compositor_interface.cpp
+    datadevice_interface.cpp
     datadevicemanager_interface.cpp
     datasource_interface.cpp
     display.cpp
@@ -47,6 +48,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
 #   buffer_interface.h
 #   compositor_interface.h
+#   datadevice_interface.h
 #   datadevicemanager_interface.h
 #   datasource_interface.h
 #   display.h

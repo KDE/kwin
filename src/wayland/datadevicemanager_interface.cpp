@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevicemanager_interface.h"
 #include "display.h"
+#include "seat_interface.h"
 // Wayland
 #include <wayland-server.h>
 
@@ -41,6 +42,7 @@ public:
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id);
     void createDataSource(wl_client *client, wl_resource *resource, uint32_t id);
+    void getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat);
 
     static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *resource);
@@ -109,10 +111,18 @@ void DataDeviceManagerInterface::Private::createDataSource(wl_client *client, wl
 
 void DataDeviceManagerInterface::Private::getDataDeviceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(id)
-    Q_UNUSED(seat)
+    cast(resource)->getDataDevice(client, resource, id, seat);
+}
+
+void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat)
+{
+    DataDeviceInterface *dataDevice = new DataDeviceInterface(SeatInterface::get(seat), q);
+    dataDevice->create(client, wl_resource_get_version(resource), id);
+    if (!dataDevice->resource()) {
+        wl_resource_post_no_memory(resource);
+        return;
+    }
+    emit q->dataDeviceCreated(dataDevice);
 }
 
 void DataDeviceManagerInterface::Private::create()
