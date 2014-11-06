@@ -202,7 +202,10 @@ Client *FocusChain::nextMostRecentlyUsed(Client *reference) const
         return NULL;
     }
     const int index = m_mostRecentlyUsed.indexOf(reference);
-    if (index == -1 || index == 0) {
+    if (index == -1) {
+        return m_mostRecentlyUsed.first();
+    }
+    if (index == 0) {
         return m_mostRecentlyUsed.last();
     }
     return m_mostRecentlyUsed.at(index - 1);
