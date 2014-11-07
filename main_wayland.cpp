@@ -153,7 +153,7 @@ static void startXServer(const QByteArray &process, const QByteArray &display)
 
     displayNumber.prepend(QByteArray(":"));
     displayNumber.remove(displayNumber.size() -1, 1);
-    std::cout << "X-Server started on display " << displayNumber.constData();
+    std::cout << "X-Server started on display " << displayNumber.constData() << std::endl;
 
     setenv("DISPLAY", displayNumber.constData(), true);
 
