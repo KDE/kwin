@@ -43,6 +43,7 @@ public:
     Private(Display *q);
     void flush();
     void setRunning(bool running);
+    void installSocketNotifier();
 
     wl_display *display = nullptr;
     wl_event_loop *loop = nullptr;
@@ -59,11 +60,26 @@ Display::Private::Private(Display *q)
 {
 }
 
+void Display::Private::installSocketNotifier()
+{
+    if (!QCoreApplication::instance()) {
+        return;
+    }
+    int fd = wl_event_loop_get_fd(loop);
+    if (fd == -1) {
+        qWarning() << "Did not get the file descriptor for the event loop";
+        return;
+    }
+    QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, q);
+    QObject::connect(m_notifier, &QSocketNotifier::activated, q, [this] { flush(); } );
+    QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, q, [this] { flush(); });
+    setRunning(true);
+}
+
 Display::Display(QObject *parent)
     : QObject(parent)
     , d(new Private(this))
 {
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, [this] { d->flush(); });
 }
 
 Display::~Display()
@@ -106,14 +122,22 @@ void Display::start()
     }
 
     d->loop = wl_display_get_event_loop(d->display);
-    int fd = wl_event_loop_get_fd(d->loop);
-    if (fd == -1) {
-        qWarning() << "Did not get the file descriptor for the event loop";
-        return;
-    }
-    QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
-    connect(m_notifier, &QSocketNotifier::activated, this, [this] { d->flush(); } );
-    d->setRunning(true);
+    d->installSocketNotifier();
+}
+
+void Display::startLoop()
+{
+    Q_ASSERT(!d->running);
+    Q_ASSERT(d->display);
+    d->installSocketNotifier();
+}
+
+void Display::dispatchEvents(int msecTimeout)
+{
+    Q_ASSERT(!d->running);
+    Q_ASSERT(d->display);
+    wl_event_loop_dispatch(d->loop, msecTimeout);
+    wl_display_flush_clients(d->display);
 }
 
 void Display::terminate()
