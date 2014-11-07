@@ -75,6 +75,7 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
 
 BufferInterface::Private::~Private()
 {
+    wl_list_remove(&listener.link);
     s_buffers.removeAll(this);
 }
 
