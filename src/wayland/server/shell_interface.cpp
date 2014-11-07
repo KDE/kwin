@@ -176,7 +176,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
             return surface == s->surface();
         }
     );
-    if (it != surfaces.constBegin()) {
+    if (it != surfaces.constEnd()) {
         wl_resource_post_error(surface->surface(), WL_DISPLAY_ERROR_INVALID_OBJECT, "ShellSurface already created");
         return;
     }

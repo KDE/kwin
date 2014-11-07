@@ -43,6 +43,7 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testCreateMultiple();
     void testFullscreen();
     void testPing();
     void testTitle();
@@ -167,6 +168,43 @@ void TestWaylandShell::cleanup()
 
     delete m_display;
     m_display = nullptr;
+}
+
+void TestWaylandShell::testCreateMultiple()
+{
+    using namespace KWayland::Server;
+    using namespace KWayland::Client;
+
+    QScopedPointer<Surface> s1(m_compositor->createSurface());
+    QScopedPointer<Surface> s2(m_compositor->createSurface());
+    QVERIFY(!s1.isNull());
+    QVERIFY(s1->isValid());
+    QVERIFY(!s2.isNull());
+    QVERIFY(s2->isValid());
+
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
+    QVERIFY(serverSurfaceSpy.isValid());
+    QScopedPointer<ShellSurface> surface1(m_shell->createSurface(s1.data()));
+    QVERIFY(!surface1.isNull());
+    QVERIFY(surface1->isValid());
+
+    QVERIFY(serverSurfaceSpy.wait());
+    QCOMPARE(serverSurfaceSpy.count(), 1);
+
+    QScopedPointer<ShellSurface> surface2(m_shell->createSurface(s2.data()));
+    QVERIFY(!surface2.isNull());
+    QVERIFY(surface2->isValid());
+
+    QVERIFY(serverSurfaceSpy.wait());
+    QCOMPARE(serverSurfaceSpy.count(), 2);
+
+    // try creating for one which already exist should not be possible
+    QScopedPointer<ShellSurface> surface3(m_shell->createSurface(s2.data()));
+    QVERIFY(!surface3.isNull());
+    QVERIFY(surface3->isValid());
+
+    QVERIFY(!serverSurfaceSpy.wait(100));
+    QCOMPARE(serverSurfaceSpy.count(), 2);
 }
 
 void TestWaylandShell::testFullscreen()
