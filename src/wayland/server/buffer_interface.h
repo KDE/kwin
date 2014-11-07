@@ -49,6 +49,9 @@ public:
 
     QImage data();
 
+Q_SIGNALS:
+    void aboutToBeDestroyed(KWayland::Server::BufferInterface*);
+
 private:
     friend class SurfaceInterface;
     explicit BufferInterface(wl_resource *resource, SurfaceInterface *parent);
@@ -58,5 +61,7 @@ private:
 
 }
 }
+
+Q_DECLARE_METATYPE(KWayland::Server::BufferInterface*)
 
 #endif

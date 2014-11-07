@@ -293,6 +293,17 @@ void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &
         delete pending.buffer;
     }
     pending.buffer = new BufferInterface(buffer, q);
+    QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
+        [this](BufferInterface *buffer) {
+            if (pending.buffer == buffer) {
+                pending.buffer = nullptr;
+            }
+            if (current.buffer == buffer) {
+                current.buffer->unref();
+                current.buffer = nullptr;
+            }
+        }
+    );
 }
 
 void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)

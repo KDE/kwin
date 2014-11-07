@@ -30,7 +30,8 @@ namespace Server
 class BufferInterface::Private
 {
 public:
-    Private(wl_resource *resource, SurfaceInterface *parent);
+    Private(BufferInterface *q, wl_resource *resource, SurfaceInterface *parent);
+    ~Private();
     QImage::Format format() const;
     void createImage();
     void releaseImage();
@@ -39,20 +40,47 @@ public:
     SurfaceInterface *surface;
     int refCount;
     QImage image;
+
+private:
+    static void destroyListenerCallback(wl_listener *listener, void *data);
+    static Private *cast(wl_resource *r);
+    static QList<Private*> s_buffers;
+
+    BufferInterface *q;
+    wl_listener listener;
 };
 
-BufferInterface::Private::Private(wl_resource *resource, SurfaceInterface *parent)
+QList<BufferInterface::Private*> BufferInterface::Private::s_buffers;
+
+BufferInterface::Private *BufferInterface::Private::cast(wl_resource *r)
+{
+    auto it = std::find_if(s_buffers.constBegin(), s_buffers.constEnd(), [r](Private *d) { return d->buffer == r; });
+    if (it == s_buffers.constEnd()) {
+        return nullptr;
+    }
+    return *it;
+}
+
+BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, SurfaceInterface *parent)
     : buffer(resource)
     , shmBuffer(wl_shm_buffer_get(resource))
     , surface(parent)
     , refCount(0)
+    , q(q)
 {
+    s_buffers << this;
+    listener.notify = destroyListenerCallback;
+    wl_resource_add_destroy_listener(resource, &listener);
 }
 
+BufferInterface::Private::~Private()
+{
+    s_buffers.removeAll(this);
+}
 
 BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent)
     : QObject(parent)
-    , d(new Private(resource, parent))
+    , d(new Private(this, resource, parent))
 {
 }
 
@@ -72,6 +100,15 @@ void BufferInterface::Private::releaseImage()
     wl_shm_buffer_end_access(shmBuffer);
 }
 
+void BufferInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
+{
+    Q_UNUSED(listener);
+    auto b = cast(reinterpret_cast<wl_resource*>(data));
+    b->buffer = nullptr;
+    emit b->q->aboutToBeDestroyed(b->q);
+    b->q->deleteLater();
+}
+
 void BufferInterface::ref()
 {
     d->refCount++;
@@ -83,7 +120,9 @@ void BufferInterface::unref()
     d->refCount--;
     if (d->refCount == 0) {
         d->releaseImage();
-        wl_buffer_send_release(d->buffer);
+        if (d->buffer) {
+            wl_buffer_send_release(d->buffer);
+        }
         deleteLater();
     }
 }
