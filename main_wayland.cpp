@@ -128,7 +128,11 @@ static void startXServer(const QByteArray &process, const QByteArray &display)
         close(pipeFds[0]);
         char fdbuf[16];
         sprintf(fdbuf, "%d", pipeFds[1]);
-        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, display.constData(), (char *)0);
+        if (display.isEmpty()) {
+            execlp(process.constData(), process.constData(), "-displayfd", fdbuf, (char *)0);
+        } else {
+            execlp(process.constData(), process.constData(), "-displayfd", fdbuf, display.constData(), (char *)0);
+        }
         close(pipeFds[1]);
         exit(20);
     }
@@ -231,7 +235,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                                           i18n("Start a nested X Server."),
                                           QStringLiteral("xephyr|xvfb|xwayland"));
     QCommandLineOption x11DisplayOption(QStringLiteral("display"),
-                                        i18n("The X11 Display to connect to, required if option x-server is used."),
+                                        i18n("The X11 Display to connect to. If not set next free number will be picked."),
                                         QStringLiteral("display"));
 
     QCommandLineParser parser;
