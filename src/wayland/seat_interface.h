@@ -93,9 +93,13 @@ public:
     void setGlobalPos(const QPoint &pos);
     QPoint globalPos() const;
     void buttonPressed(quint32 button);
+    void buttonPressed(Qt::MouseButton button);
     void buttonReleased(quint32 button);
+    void buttonReleased(Qt::MouseButton button);
     bool isButtonPressed(quint32 button) const;
+    bool isButtonPressed(Qt::MouseButton button) const;
     quint32 buttonSerial(quint32 button) const;
+    quint32 buttonSerial(Qt::MouseButton button) const;
     void axis(Qt::Orientation orientation, quint32 delta);
 
     void setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());

@@ -52,6 +52,8 @@ private Q_SLOTS:
     void testCapabilities_data();
     void testCapabilities();
     void testPointer();
+    void testPointerButton_data();
+    void testPointerButton();
     void testKeyboard();
     void testCast();
     void testDestroy();
@@ -389,6 +391,97 @@ void TestWaylandSeat::testPointer()
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
     QVERIFY(!serverPointer->focusedSurface());
+}
+
+Q_DECLARE_METATYPE(Qt::MouseButton)
+
+void TestWaylandSeat::testPointerButton_data()
+{
+    QTest::addColumn<Qt::MouseButton>("qtButton");
+    QTest::addColumn<quint32>("waylandButton");
+
+    QTest::newRow("left")    << Qt::LeftButton    << quint32(BTN_LEFT);
+    QTest::newRow("right")   << Qt::RightButton   << quint32(BTN_RIGHT);
+    QTest::newRow("mid")     << Qt::MidButton     << quint32(BTN_MIDDLE);
+    QTest::newRow("middle")  << Qt::MiddleButton  << quint32(BTN_MIDDLE);
+    QTest::newRow("back")    << Qt::BackButton    << quint32(BTN_BACK);
+    QTest::newRow("x1")      << Qt::XButton1      << quint32(BTN_BACK);
+    QTest::newRow("extra1")  << Qt::ExtraButton1  << quint32(BTN_BACK);
+    QTest::newRow("forward") << Qt::ForwardButton << quint32(BTN_FORWARD);
+    QTest::newRow("x2")      << Qt::XButton2      << quint32(BTN_FORWARD);
+    QTest::newRow("extra2")  << Qt::ExtraButton2  << quint32(BTN_FORWARD);
+    QTest::newRow("task")    << Qt::TaskButton    << quint32(BTN_TASK);
+    QTest::newRow("extra3")  << Qt::ExtraButton3  << quint32(BTN_TASK);
+    QTest::newRow("extra4")  << Qt::ExtraButton4  << quint32(BTN_EXTRA);
+    QTest::newRow("extra5")  << Qt::ExtraButton5  << quint32(BTN_SIDE);
+    QTest::newRow("extra6")  << Qt::ExtraButton6  << quint32(0x118);
+    QTest::newRow("extra7")  << Qt::ExtraButton7  << quint32(0x119);
+    QTest::newRow("extra8")  << Qt::ExtraButton8  << quint32(0x11a);
+    QTest::newRow("extra9")  << Qt::ExtraButton9  << quint32(0x11b);
+    QTest::newRow("extra10") << Qt::ExtraButton10 << quint32(0x11c);
+    QTest::newRow("extra11") << Qt::ExtraButton11 << quint32(0x11d);
+    QTest::newRow("extra12") << Qt::ExtraButton12 << quint32(0x11e);
+    QTest::newRow("extra13") << Qt::ExtraButton13 << quint32(0x11f);
+}
+
+void TestWaylandSeat::testPointerButton()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy pointerSpy(m_seat, SIGNAL(hasPointerChanged(bool)));
+    QVERIFY(pointerSpy.isValid());
+    m_seatInterface->setHasPointer(true);
+    QVERIFY(pointerSpy.wait());
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(surfaceCreatedSpy.isValid());
+    m_compositor->createSurface(m_compositor);
+    QVERIFY(surfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    QScopedPointer<Pointer> p(m_seat->createPointer());
+    QVERIFY(p->isValid());
+    QSignalSpy buttonChangedSpy(p.data(), SIGNAL(buttonStateChanged(quint32, quint32, quint32, KWayland::Client::Pointer::ButtonState)));
+    QVERIFY(buttonChangedSpy.isValid());
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+
+    PointerInterface *serverPointer = m_seatInterface->pointer();
+    serverPointer->setGlobalPos(QPoint(20, 18));
+    serverPointer->setFocusedSurface(serverSurface, QPoint(10, 15));
+    // no pointer yet - won't be set
+    QVERIFY(serverPointer->focusedSurface());
+
+    QFETCH(Qt::MouseButton, qtButton);
+    QFETCH(quint32, waylandButton);
+    quint32 msec = QDateTime::currentMSecsSinceEpoch();
+    QCOMPARE(serverPointer->isButtonPressed(waylandButton), false);
+    QCOMPARE(serverPointer->isButtonPressed(qtButton), false);
+    serverPointer->updateTimestamp(msec);
+    serverPointer->buttonPressed(qtButton);
+    QCOMPARE(serverPointer->isButtonPressed(waylandButton), true);
+    QCOMPARE(serverPointer->isButtonPressed(qtButton), true);
+    QVERIFY(buttonChangedSpy.wait());
+    QCOMPARE(buttonChangedSpy.count(), 1);
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(waylandButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(qtButton));
+    QCOMPARE(buttonChangedSpy.last().at(1).value<quint32>(), msec);
+    QCOMPARE(buttonChangedSpy.last().at(2).value<quint32>(), waylandButton);
+    QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Pressed);
+    msec = QDateTime::currentMSecsSinceEpoch();
+    serverPointer->updateTimestamp(QDateTime::currentMSecsSinceEpoch());
+    serverPointer->buttonReleased(qtButton);
+    QCOMPARE(serverPointer->isButtonPressed(waylandButton), false);
+    QCOMPARE(serverPointer->isButtonPressed(qtButton), false);
+    QVERIFY(buttonChangedSpy.wait());
+    QCOMPARE(buttonChangedSpy.count(), 2);
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(waylandButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(qtButton));
+    QCOMPARE(buttonChangedSpy.last().at(1).value<quint32>(), msec);
+    QCOMPARE(buttonChangedSpy.last().at(2).value<quint32>(), waylandButton);
+    QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Released);
 }
 
 void TestWaylandSeat::testKeyboard()

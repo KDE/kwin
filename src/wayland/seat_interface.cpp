@@ -30,6 +30,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WL_SEAT_NAME_SINCE_VERSION
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
+// linux
+#include <linux/input.h>
 
 namespace KWayland
 {
@@ -451,6 +453,30 @@ void PointerInterface::updateTimestamp(quint32 time)
     d->eventTime = time;
 }
 
+static quint32 qtToWaylandButton(Qt::MouseButton button)
+{
+    static const QHash<Qt::MouseButton, quint32> s_buttons({
+        {Qt::LeftButton, BTN_LEFT},
+        {Qt::RightButton, BTN_RIGHT},
+        {Qt::MiddleButton, BTN_MIDDLE},
+        {Qt::ExtraButton1, BTN_BACK},    // note: QtWayland maps BTN_SIDE
+        {Qt::ExtraButton2, BTN_FORWARD}, // note: QtWayland maps BTN_EXTRA
+        {Qt::ExtraButton3, BTN_TASK},    // note: QtWayland maps BTN_FORWARD
+        {Qt::ExtraButton4, BTN_EXTRA},   // note: QtWayland maps BTN_BACK
+        {Qt::ExtraButton5, BTN_SIDE},    // note: QtWayland maps BTN_TASK
+        {Qt::ExtraButton6, BTN_TASK + 1},
+        {Qt::ExtraButton7, BTN_TASK + 2},
+        {Qt::ExtraButton8, BTN_TASK + 3},
+        {Qt::ExtraButton9, BTN_TASK + 4},
+        {Qt::ExtraButton10, BTN_TASK + 5},
+        {Qt::ExtraButton11, BTN_TASK + 6},
+        {Qt::ExtraButton12, BTN_TASK + 7},
+        {Qt::ExtraButton13, BTN_TASK + 8}
+        // further mapping not possible, 0x120 is BTN_JOYSTICK
+    });
+    return s_buttons.value(button, 0);
+};
+
 void PointerInterface::buttonPressed(quint32 button)
 {
     const quint32 serial = d->display->nextSerial();
@@ -462,6 +488,15 @@ void PointerInterface::buttonPressed(quint32 button)
     wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_PRESSED);
 }
 
+void PointerInterface::buttonPressed(Qt::MouseButton button)
+{
+    const quint32 nativeButton = qtToWaylandButton(button);
+    if (nativeButton == 0) {
+        return;
+    }
+    buttonPressed(nativeButton);
+}
+
 void PointerInterface::buttonReleased(quint32 button)
 {
     const quint32 serial = d->display->nextSerial();
@@ -471,6 +506,15 @@ void PointerInterface::buttonReleased(quint32 button)
         return;
     }
     wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_RELEASED);
+}
+
+void PointerInterface::buttonReleased(Qt::MouseButton button)
+{
+    const quint32 nativeButton = qtToWaylandButton(button);
+    if (nativeButton == 0) {
+        return;
+    }
+    buttonReleased(nativeButton);
 }
 
 void PointerInterface::Private::updateButtonSerial(quint32 button, quint32 serial)
@@ -492,6 +536,11 @@ quint32 PointerInterface::buttonSerial(quint32 button) const
     return it.value();
 }
 
+quint32 PointerInterface::buttonSerial(Qt::MouseButton button) const
+{
+    return buttonSerial(qtToWaylandButton(button));
+}
+
 void PointerInterface::Private::updateButtonState(quint32 button, ButtonState state)
 {
     auto it = buttonStates.find(button);
@@ -509,6 +558,15 @@ bool PointerInterface::isButtonPressed(quint32 button) const
         return false;
     }
     return it.value() == Private::ButtonState::Pressed ? true : false;
+}
+
+bool PointerInterface::isButtonPressed(Qt::MouseButton button) const
+{
+    const quint32 nativeButton = qtToWaylandButton(button);
+    if (nativeButton == 0) {
+        return false;
+    }
+    return isButtonPressed(nativeButton);
 }
 
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
