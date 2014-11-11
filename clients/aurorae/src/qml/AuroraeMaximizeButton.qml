@@ -63,7 +63,7 @@ Item {
         onPressed: button.pressed = true
         onReleased: button.pressed = false
         onClicked: {
-            decoration.requestMaximize(mouse.button);
+            decoration.requestToggleMaximization(mouse.button);
         }
     }
 }

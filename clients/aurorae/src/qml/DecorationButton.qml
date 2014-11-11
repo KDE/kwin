@@ -78,7 +78,7 @@ Item {
                 break;
             case DecorationOptions.DecorationButtonMaximizeRestore:
                 // maximize
-                decoration.requestMaximize(mouse.button);
+                decoration.requestToggleMaximization(mouse.button);
                 break;
             case DecorationOptions.DecorationButtonClose:
                 // close
