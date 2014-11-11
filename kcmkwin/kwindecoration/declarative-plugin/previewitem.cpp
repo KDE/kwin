@@ -102,7 +102,7 @@ void PreviewItem::setDecoration(Decoration *deco)
     m_decoration = deco;
     m_decoration->setProperty("visualParent", QVariant::fromValue(this));
     connect(m_decoration, &Decoration::bordersChanged, this, updateSlot);
-    connect(m_decoration, &Decoration::windowFrameSectionChanged, this,
+    connect(m_decoration, &Decoration::sectionUnderMouseChanged, this,
         [this](Qt::WindowFrameSection section) {
             switch (section) {
                 case Qt::TopRightSection:

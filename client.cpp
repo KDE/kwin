@@ -2176,7 +2176,7 @@ Client::Position Client::mousePosition(const QPoint& p) const
 {
     Q_UNUSED(p)
     if (m_decoration) {
-        switch (m_decoration->windowFrameSection()) {
+        switch (m_decoration->sectionUnderMouse()) {
             case Qt::BottomLeftSection:
                 return KDecorationDefines::PositionBottomLeft;
             case Qt::BottomRightSection:
