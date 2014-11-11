@@ -65,7 +65,7 @@ public:
     int width() const override;
     WId windowId() const override;
 
-    Qt::Edges borderingScreenEdges() const override;
+    Qt::Edges adjacentScreenEdges() const override;
 
     void requestClose() override;
     void requestContextHelp() override;

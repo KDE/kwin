@@ -124,7 +124,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
         }
     );
     auto emitEdgesChanged = [this, c]() {
-        c->borderingScreenEdgesChanged(borderingScreenEdges());
+        c->adjacentScreenEdgesChanged(adjacentScreenEdges());
     };
     connect(this, &PreviewClient::bordersTopEdgeChanged,    this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
@@ -296,7 +296,7 @@ void PreviewClient::setColorSchemeIndex(int index)
     emit colorSchemeIndexChanged(m_colorSchemeIndex);
 }
 
-Qt::Edges PreviewClient::borderingScreenEdges() const
+Qt::Edges PreviewClient::adjacentScreenEdges() const
 {
     Qt::Edges edges;
     if (m_bordersBottomEdge) {

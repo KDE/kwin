@@ -88,7 +88,7 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
     );
     connect(client, &Client::quickTileModeChanged, decoratedClient,
         [this, decoratedClient]() {
-            emit decoratedClient->borderingScreenEdgesChanged(borderingScreenEdges());
+            emit decoratedClient->adjacentScreenEdgesChanged(adjacentScreenEdges());
         }
     );
     connect(client, &Client::closeableChanged, decoratedClient, &KDecoration2::DecoratedClient::closeableChanged);
@@ -200,7 +200,7 @@ bool DecoratedClientImpl::isMaximizedHorizontally() const
     return m_client->maximizeMode() & KDecorationDefines::MaximizeHorizontal;
 }
 
-Qt::Edges DecoratedClientImpl::borderingScreenEdges() const
+Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const
 {
     Qt::Edges edges;
     const KDecorationDefines::QuickTileMode mode = m_client->quickTileMode();
