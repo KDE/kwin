@@ -506,7 +506,7 @@ void Decoration::installTitleItem(QQuickItem *item)
         if (rect.isNull()) {
             rect = item->parentItem()->mapRectToScene(QRectF(item->x(), item->y(), item->width(), item->height())).toRect();
         }
-        setTitleRect(rect);
+        setTitleBar(rect);
     };
     update();
     connect(item, &QQuickItem::widthChanged, this, update);
