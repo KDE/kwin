@@ -96,7 +96,7 @@ public:
 
     void requestClose() override;
     void requestContextHelp() override;
-    void requestMaximize(Qt::MouseButtons buttons) override;
+    void requestToggleMaximization(Qt::MouseButtons buttons) override;
     void requestMinimize() override;
     void requestToggleKeepAbove() override;
     void requestToggleKeepBelow() override;

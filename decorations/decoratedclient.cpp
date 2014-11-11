@@ -170,7 +170,7 @@ void DecoratedClientImpl::requestShowWindowMenu()
     Workspace::self()->showWindowMenu(QRect(Cursor::pos(), Cursor::pos()), m_client);
 }
 
-void DecoratedClientImpl::requestMaximize(Qt::MouseButtons buttons)
+void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
 {
     Workspace::self()->performWindowOperation(m_client, options->operationMaxButtonClick(buttons));
 }

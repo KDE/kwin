@@ -380,7 +380,7 @@ void PreviewClient::requestContextHelp()
     qDebug() << "context help requested";
 }
 
-void PreviewClient::requestMaximize(Qt::MouseButtons buttons)
+void PreviewClient::requestToggleMaximization(Qt::MouseButtons buttons)
 {
     if (buttons.testFlag(Qt::LeftButton)) {
         const bool set = !isMaximized();
