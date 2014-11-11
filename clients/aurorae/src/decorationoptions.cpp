@@ -246,6 +246,11 @@ void Borders::setTitle(int value)
     setTop(value);
 }
 
+Borders::operator QMargins() const
+{
+    return QMargins(m_left, m_top, m_right, m_bottom);
+}
+
 } // namespace
 
 #include "decorationoptions.moc"

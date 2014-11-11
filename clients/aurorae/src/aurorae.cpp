@@ -388,7 +388,7 @@ void Decoration::updateBorders()
     if (!b) {
         return;
     }
-    setBorders(b->left(), b->right(), b->top(), b->bottom());
+    setBorders(*b);
 }
 
 void Decoration::paint(QPainter *painter, const QRegion &repaintRegion)

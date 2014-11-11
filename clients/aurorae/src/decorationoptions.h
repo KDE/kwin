@@ -263,6 +263,8 @@ public:
     void setTop(int top);
     void setBottom(int bottom);
 
+    operator QMargins() const;
+
 public Q_SLOTS:
     /**
      * Sets all four borders to @p value.
