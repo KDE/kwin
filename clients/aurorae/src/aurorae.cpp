@@ -349,14 +349,7 @@ void Decoration::init()
         if (m_padding) {
             KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
             s->setPadding(*m_padding);
-            s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
-            s->setTopRight(QSize(m_padding->right(), m_padding->top()));
-            s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
-            s->setBottomRight(QSize(m_padding->right(), m_padding->bottom()));
-            s->setLeft(QSize(m_padding->left(), 1));
-            s->setRight(QSize(m_padding->right(), 1));
-            s->setTop(QSize(1, m_padding->top()));
-            s->setBottom(QSize(1, m_padding->bottom()));
+            s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
         }
     }
@@ -404,14 +397,10 @@ void Decoration::paint(QPainter *painter, const QRegion &repaintRegion)
         KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
         s->setShadow(m_buffer);
         s->setPadding(*m_padding);
-        s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
-        s->setTopRight(QSize(m_padding->right(), m_padding->top()));
-        s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
-        s->setBottomRight(QSize(m_padding->right(), m_padding->bottom()));
-        s->setLeft(QSize(m_padding->left(), m_buffer.height() - m_padding->top() - m_padding->bottom()));
-        s->setRight(QSize(m_padding->right(), m_buffer.height() - m_padding->top() - m_padding->bottom()));
-        s->setTop(QSize(m_buffer.width() - m_padding->left() - m_padding->right(), m_padding->top()));
-        s->setBottom(QSize(m_buffer.width() - m_padding->left() - m_padding->right(), m_padding->bottom()));
+        s->setInnerShadowRect(QRect(m_padding->left(),
+                                    m_padding->top(),
+                                    m_buffer.width() - m_padding->left() - m_padding->right(),
+                                    m_buffer.height() - m_padding->top() - m_padding->bottom()));
         auto oldShadow = shadow();
         setShadow(s);
         if (oldShadow) {
