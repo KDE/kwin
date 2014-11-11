@@ -443,10 +443,11 @@ void Client::updateInputWindow()
     QRegion region;
 
     if (!noBorder() && m_decoration) {
-        const int left   = m_decoration->extendedBorderLeft();
-        const int top    = m_decoration->extendedBorderTop();
-        const int right  = m_decoration->extendedBorderRight();
-        const int bottom = m_decoration->extendedBorderBottom();
+        const QMargins &r = m_decoration->resizeOnlyBorders();
+        const int left   = r.left();
+        const int top    = r.top();
+        const int right  = r.right();
+        const int bottom = r.bottom();
         if (left != 0 || top != 0 || right != 0 || bottom != 0) {
             region = QRegion(-left,
                              -top,
@@ -532,7 +533,7 @@ void Client::createDecoration(const QRect& oldgeom)
                 performMouseCommand(options->operationTitlebarMouseWheel(angleDelta.y()), Cursor::pos());
             }
         );
-        connect(m_decoration, &KDecoration2::Decoration::extendedBordersChanged, this, &Client::updateInputWindow);
+        connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 GeometryUpdatesBlocker blocker(this);

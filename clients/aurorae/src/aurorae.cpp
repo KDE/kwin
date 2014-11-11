@@ -318,7 +318,7 @@ void Decoration::init()
     setupBorders(m_item);
     if (m_extendedBorders) {
         auto updateExtendedBorders = [this] {
-            setExtendedBorders(m_extendedBorders->left(), m_extendedBorders->right(), m_extendedBorders->top(), m_extendedBorders->bottom());
+            setResizeOnlyBorders(*m_extendedBorders);
         };
         updateExtendedBorders();
         connect(m_extendedBorders, &KWin::Borders::leftChanged, this, updateExtendedBorders);
