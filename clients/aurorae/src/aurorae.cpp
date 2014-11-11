@@ -348,10 +348,7 @@ void Decoration::init()
         // create a dummy shadow for the configuration interface
         if (m_padding) {
             KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
-            s->setPaddingLeft(m_padding->left());
-            s->setPaddingTop(m_padding->top());
-            s->setPaddingRight(m_padding->right());
-            s->setPaddingBottom(m_padding->bottom());
+            s->setPadding(*m_padding);
             s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
             s->setTopRight(QSize(m_padding->right(), m_padding->top()));
             s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
@@ -406,10 +403,7 @@ void Decoration::paint(QPainter *painter, const QRegion &repaintRegion)
         r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
         KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
         s->setShadow(m_buffer);
-        s->setPaddingLeft(m_padding->left());
-        s->setPaddingTop(m_padding->top());
-        s->setPaddingRight(m_padding->right());
-        s->setPaddingBottom(m_padding->bottom());
+        s->setPadding(*m_padding);
         s->setTopLeft(QSize(m_padding->left(), m_padding->top()));
         s->setTopRight(QSize(m_padding->right(), m_padding->top()));
         s->setBottomLeft(QSize(m_padding->left(), m_padding->bottom()));
