@@ -646,7 +646,7 @@ void SceneQPainterDecorationRenderer::render()
         painter.setCompositionMode(QPainter::CompositionMode_Source);
         painter.fillRect(rect, Qt::red);
         painter.restore();
-        client()->decoration()->paint(&painter);
+        client()->decoration()->paint(&painter, rect);
     };
 
     renderPart(left.intersected(geometry), left, int(DecorationPart::Left));

@@ -128,11 +128,10 @@ void PreviewButtonItem::syncGeometry()
 
 void PreviewButtonItem::paint(QPainter *painter)
 {
-    Q_UNUSED(painter)
     if (!m_button) {
         return;
     }
-    m_button->paint(painter);
+    m_button->paint(painter, QRegion(0, 0, width(), height()));
 }
 
 }

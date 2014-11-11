@@ -391,8 +391,9 @@ void Decoration::updateBorders()
     setBorders(b->left(), b->right(), b->top(), b->bottom());
 }
 
-void Decoration::paint(QPainter *painter)
+void Decoration::paint(QPainter *painter, const QRegion &repaintRegion)
 {
+    Q_UNUSED(repaintRegion)
     if (!settings()->isAlphaChannelSupported()) {
         return;
     }

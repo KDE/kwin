@@ -154,7 +154,7 @@ void PreviewItem::paint(QPainter *painter)
     int paddingRight  = 0;
     int paddingBottom = 0;
     paintShadow(painter, paddingLeft, paddingRight, paddingTop, paddingBottom);
-    m_decoration->paint(painter);
+    m_decoration->paint(painter, QRegion(0, 0, width(), height()));
     if (m_drawBackground) {
         painter->fillRect(m_decoration->borderLeft(), m_decoration->borderTop(),
                         width() - m_decoration->borderLeft() - m_decoration->borderRight() - paddingLeft - paddingRight,
