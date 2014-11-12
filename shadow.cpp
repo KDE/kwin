@@ -333,21 +333,21 @@ QSize Shadow::elementSize(Shadow::ShadowElements element) const
     if (m_decorationShadow) {
         switch (element) {
         case ShadowElementTop:
-            return m_decorationShadow->top();
+            return m_decorationShadow->topGeometry().size();
         case ShadowElementTopRight:
-            return m_decorationShadow->topRight();
+            return m_decorationShadow->topRightGeometry().size();
         case ShadowElementRight:
-            return m_decorationShadow->right();
+            return m_decorationShadow->rightGeometry().size();
         case ShadowElementBottomRight:
-            return m_decorationShadow->bottomRight();
+            return m_decorationShadow->bottomRightGeometry().size();
         case ShadowElementBottom:
-            return m_decorationShadow->bottom();
+            return m_decorationShadow->bottomGeometry().size();
         case ShadowElementBottomLeft:
-            return m_decorationShadow->bottomLeft();
+            return m_decorationShadow->bottomLeftGeometry().size();
         case ShadowElementLeft:
-            return m_decorationShadow->left();
+            return m_decorationShadow->leftGeometry().size();
         case ShadowElementTopLeft:
-            return m_decorationShadow->topLeft();
+            return m_decorationShadow->topLeftGeometry().size();
         default:
             return QSize();
         }

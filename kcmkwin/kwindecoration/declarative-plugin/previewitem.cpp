@@ -177,14 +177,14 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     if (img.isNull()) {
         return;
     }
-    const QRect topLeft     = QRect(QPoint(0, 0), shadow->topLeft());
-    const QRect top         = QRect(QPoint(topLeft.width(), 0), shadow->top());
-    const QRect topRight    = QRect(QPoint(topLeft.width() + top.width(), 0), shadow->topRight());
-    const QRect right       = QRect(QPoint(topLeft.width() + top.width(), topRight.height()), shadow->right());
-    const QRect left        = QRect(QPoint(0, topLeft.height()), shadow->left());
-    const QRect bottomLeft  = QRect(QPoint(0, topLeft.height() + left.height()), shadow->bottomLeft());
-    const QRect bottom      = QRect(QPoint(bottomLeft.width(), img.height() - shadow->bottom().height()), shadow->bottom());
-    const QRect bottomRight = QRect(QPoint(bottomLeft.width() + bottom.width(), topRight.height() + right.height()), shadow->bottomRight());
+    const QRect &topLeft     = shadow->topLeftGeometry();
+    const QRect &top         = shadow->topGeometry();
+    const QRect &topRight    = shadow->topRightGeometry();
+    const QRect &right       = shadow->rightGeometry();
+    const QRect &left        = shadow->leftGeometry();
+    const QRect &bottomLeft  = shadow->bottomLeftGeometry();
+    const QRect &bottom      = shadow->bottomGeometry();
+    const QRect &bottomRight = shadow->bottomRightGeometry();
 
     painter->translate(paddingLeft, paddingTop);
 
