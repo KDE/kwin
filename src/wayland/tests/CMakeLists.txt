@@ -18,3 +18,7 @@ endif()
 add_executable(copyClient copyclient.cpp)
 target_link_libraries(copyClient KF5::WaylandClient)
 ecm_mark_as_test(copyClient)
+
+add_executable(pasteClient pasteclient.cpp)
+target_link_libraries(pasteClient KF5::WaylandClient)
+ecm_mark_as_test(pasteClient)
