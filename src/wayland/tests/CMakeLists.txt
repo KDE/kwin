@@ -14,3 +14,7 @@ if (Qt5Widgets_FOUND)
     target_link_libraries(testRenderingServer KF5::WaylandServer Qt5::Widgets)
     ecm_mark_as_test(testRenderingServer)
 endif()
+
+add_executable(copyClient copyclient.cpp)
+target_link_libraries(copyClient KF5::WaylandClient)
+ecm_mark_as_test(copyClient)
