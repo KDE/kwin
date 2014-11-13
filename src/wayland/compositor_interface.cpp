@@ -131,7 +131,7 @@ void CompositorInterface::Private::createSurface(wl_client *client, wl_resource 
 {
     SurfaceInterface *surface = new SurfaceInterface(q);
     surface->create(client, wl_resource_get_version(resource), id);
-    if (!surface->surface()) {
+    if (!surface->resource()) {
         wl_resource_post_no_memory(resource);
         delete surface;
         return;

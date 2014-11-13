@@ -51,7 +51,7 @@ public:
 
     void frameRendered(quint32 msec);
 
-    wl_resource *surface() const;
+    wl_resource *resource() const;
     wl_client *client() const;
 
     QRegion damage() const;

@@ -76,7 +76,7 @@ public:
 
     SurfaceInterface *surface() const;
     ShellInterface *shell() const;
-    wl_resource *shellSurface() const;
+    wl_resource *resource() const;
 
     QString title() const;
     QByteArray windowClass() const;

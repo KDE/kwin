@@ -123,7 +123,7 @@ void SubCompositorInterface::Private::subsurface(wl_client *client, wl_resource 
     // TODO: add check that parentSurface is not a child of surface
     SubSurfaceInterface *s = new SubSurfaceInterface(q);
     s->d->create(client, wl_resource_get_version(resource), id, surface, parentSurface);
-    if (!s->subSurface()) {
+    if (!s->resource()) {
         wl_resource_post_no_memory(resource);
         delete s;
         return;
@@ -313,7 +313,7 @@ QPoint SubSurfaceInterface::position() const
     return d->pos;
 }
 
-wl_resource *SubSurfaceInterface::subSurface()
+wl_resource *SubSurfaceInterface::resource()
 {
     return d->subSurface;
 }

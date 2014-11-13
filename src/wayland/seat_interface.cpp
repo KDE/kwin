@@ -402,7 +402,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
 {
     const quint32 serial = d->display->nextSerial();
     if (d->focusedSurface.surface && d->focusedSurface.pointer) {
-        wl_pointer_send_leave(d->focusedSurface.pointer, serial, d->focusedSurface.surface->surface());
+        wl_pointer_send_leave(d->focusedSurface.pointer, serial, d->focusedSurface.surface->resource());
         disconnect(d->destroyConnection);
     }
     d->focusedSurface.pointer = d->pointerForSurface(surface);
@@ -417,7 +417,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
 
     const QPoint pos = d->globalPos - surfacePosition;
     wl_pointer_send_enter(d->focusedSurface.pointer, d->focusedSurface.serial,
-                          d->focusedSurface.surface->surface(),
+                          d->focusedSurface.surface->resource(),
                           wl_fixed_from_int(pos.x()), wl_fixed_from_int(pos.y()));
 }
 
@@ -804,7 +804,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface)
 {
     const quint32 serial = d->display->nextSerial();
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
-        wl_keyboard_send_leave(d->focusedSurface.keyboard, serial, d->focusedSurface.surface->surface());
+        wl_keyboard_send_leave(d->focusedSurface.keyboard, serial, d->focusedSurface.surface->resource());
         disconnect(d->destroyConnection);
     }
     d->focusedSurface.keyboard = d->keyboardForSurface(surface);
@@ -824,7 +824,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface)
         uint32_t *k = reinterpret_cast<uint32_t*>(wl_array_add(&keys, sizeof(uint32_t)));
         *k = it.key();
     }
-    wl_keyboard_send_enter(d->focusedSurface.keyboard, serial, d->focusedSurface.surface->surface(), &keys);
+    wl_keyboard_send_enter(d->focusedSurface.keyboard, serial, d->focusedSurface.surface->resource(), &keys);
     wl_array_release(&keys);
 
     d->sendModifiers(d->focusedSurface.keyboard);

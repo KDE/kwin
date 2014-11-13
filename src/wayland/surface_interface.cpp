@@ -385,7 +385,7 @@ void SurfaceInterface::Private::bufferScaleCallback(wl_client *client, wl_resour
     cast(resource)->setScale(scale);
 }
 
-wl_resource *SurfaceInterface::surface() const
+wl_resource *SurfaceInterface::resource() const
 {
     return d->surface;
 }

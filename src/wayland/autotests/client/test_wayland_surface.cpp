@@ -381,7 +381,7 @@ void TestWaylandSurface::testMultipleSurfaces()
     QVERIFY(serverSurfaceCreated.wait());
     SurfaceInterface *serverSurface2 = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(serverSurface2);
-    QVERIFY(serverSurface1->surface() != serverSurface2->surface());
+    QVERIFY(serverSurface1->resource() != serverSurface2->resource());
 
     // create two images
     QImage black(24, 24, QImage::Format_RGB32);

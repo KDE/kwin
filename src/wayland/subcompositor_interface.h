@@ -72,7 +72,7 @@ public:
     };
     Mode mode() const;
 
-    wl_resource *subSurface();
+    wl_resource *resource();
     QPointer<SurfaceInterface> surface();
     QPointer<SurfaceInterface> parentSurface();
 
