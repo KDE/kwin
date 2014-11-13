@@ -47,6 +47,26 @@ public:
     SurfaceInterface *surface() const;
     wl_shm_buffer *shmBuffer();
 
+    /**
+     * Creates a QImage for the shared memory buffer.
+     *
+     * If the BufferInterface does not reference a shared memory buffer a null QImage is returned.
+     *
+     * The QImage shares the memory with the buffer and this constraints how the returned
+     * QImage can be used and when this method can be invoked.
+     *
+     * It is not safe to have two shared memory QImages for different BufferInterfaces at
+     * the same time. This method ensures that this does not happen and returns a null
+     * QImage if a different BufferInterface's data is still mapped to a QImage. Please note
+     * that this also applies to all implicitly data shared copies.
+     *
+     * In case it is needed to keep a copy, a deep copy has to be performed by using QImage::copy.
+     *
+     * As the underlying shared memory buffer is owned by a different client it is not safe to
+     * write to the returned QImage. The image is a read-only buffer. If there is need to modify
+     * the image, perform a deep copy.
+     *
+     **/
     QImage data();
 
 Q_SIGNALS:

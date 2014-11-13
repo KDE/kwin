@@ -33,24 +33,27 @@ public:
     Private(BufferInterface *q, wl_resource *resource, SurfaceInterface *parent);
     ~Private();
     QImage::Format format() const;
-    void createImage();
-    void releaseImage();
+    QImage createImage();
     wl_resource *buffer;
     wl_shm_buffer *shmBuffer;
     SurfaceInterface *surface;
     int refCount;
-    QImage image;
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
     static Private *cast(wl_resource *r);
+    static void imageBufferCleanupHandler(void *info);
     static QList<Private*> s_buffers;
+    static Private *s_accessedBuffer;
+    static int s_accessCounter;
 
     BufferInterface *q;
     wl_listener listener;
 };
 
 QList<BufferInterface::Private*> BufferInterface::Private::s_buffers;
+BufferInterface::Private *BufferInterface::Private::s_accessedBuffer = nullptr;
+int BufferInterface::Private::s_accessCounter = 0;
 
 BufferInterface::Private *BufferInterface::Private::cast(wl_resource *r)
 {
@@ -59,6 +62,18 @@ BufferInterface::Private *BufferInterface::Private::cast(wl_resource *r)
         return nullptr;
     }
     return *it;
+}
+
+void BufferInterface::Private::imageBufferCleanupHandler(void *info)
+{
+    Private *p = reinterpret_cast<Private*>(info);
+    Q_ASSERT(p == s_accessedBuffer);
+    Q_ASSERT(s_accessCounter > 0);
+    s_accessCounter--;
+    if (s_accessCounter == 0) {
+        s_accessedBuffer = nullptr;
+    }
+    wl_shm_buffer_end_access(p->shmBuffer);
 }
 
 BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, SurfaceInterface *parent)
@@ -88,17 +103,6 @@ BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent
 BufferInterface::~BufferInterface()
 {
     Q_ASSERT(d->refCount == 0);
-    d->releaseImage();
-}
-
-void BufferInterface::Private::releaseImage()
-{
-    if (image.isNull()) {
-        return;
-    }
-    // first destroy it
-    image = QImage();
-    wl_shm_buffer_end_access(shmBuffer);
 }
 
 void BufferInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
@@ -120,7 +124,6 @@ void BufferInterface::unref()
     Q_ASSERT(d->refCount > 0);
     d->refCount--;
     if (d->refCount == 0) {
-        d->releaseImage();
         if (d->buffer) {
             wl_buffer_send_release(d->buffer);
         }
@@ -142,27 +145,30 @@ QImage::Format BufferInterface::Private::format() const
 
 QImage BufferInterface::data()
 {
-    if (d->image.isNull()) {
-        d->createImage();
-    }
-    return d->image;
+    return std::move(d->createImage());
 }
 
-void BufferInterface::Private::createImage()
+QImage BufferInterface::Private::createImage()
 {
     if (!shmBuffer) {
-        return;
+        return QImage();
+    }
+    if (s_accessedBuffer != nullptr && s_accessedBuffer != this) {
+        return QImage();
     }
     const QImage::Format imageFormat = format();
     if (imageFormat == QImage::Format_Invalid) {
-        return;
+        return QImage();
     }
+    s_accessedBuffer = this;
+    s_accessCounter++;
     wl_shm_buffer_begin_access(shmBuffer);
-    image = QImage((const uchar*)wl_shm_buffer_get_data(shmBuffer),
-                   wl_shm_buffer_get_width(shmBuffer),
-                   wl_shm_buffer_get_height(shmBuffer),
-                   wl_shm_buffer_get_stride(shmBuffer),
-                   imageFormat);
+    return std::move(QImage((const uchar*)wl_shm_buffer_get_data(shmBuffer),
+                            wl_shm_buffer_get_width(shmBuffer),
+                            wl_shm_buffer_get_height(shmBuffer),
+                            wl_shm_buffer_get_stride(shmBuffer),
+                            imageFormat,
+                            &imageBufferCleanupHandler, this));
 }
 
 bool BufferInterface::isReferenced() const

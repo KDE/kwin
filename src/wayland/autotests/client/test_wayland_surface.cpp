@@ -47,6 +47,7 @@ private Q_SLOTS:
     void testDamage();
     void testFrameCallback();
     void testAttachBuffer();
+    void testMultipleSurfaces();
     void testOpaque();
     void testInput();
     void testDestroy();
@@ -345,6 +346,100 @@ void TestWaylandSurface::testAttachBuffer()
 
     // TODO: add signal test on release
     buffer->unref();
+}
+
+void TestWaylandSurface::testMultipleSurfaces()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    // here we need a shm pool
+    m_display->createShm();
+
+    Registry registry;
+    QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    QVERIFY(shmSpy.wait());
+
+    ShmPool pool1;
+    ShmPool pool2;
+    pool1.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
+    pool2.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
+    QVERIFY(pool1.isValid());
+    QVERIFY(pool2.isValid());
+
+    // create the surfaces
+    QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(serverSurfaceCreated.isValid());
+    QScopedPointer<Surface> s1(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface1 = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface1);
+    //second surface
+    QScopedPointer<Surface> s2(m_compositor->createSurface());
+    QVERIFY(serverSurfaceCreated.wait());
+    SurfaceInterface *serverSurface2 = serverSurfaceCreated.last().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface2);
+    QVERIFY(serverSurface1->surface() != serverSurface2->surface());
+
+    // create two images
+    QImage black(24, 24, QImage::Format_RGB32);
+    black.fill(Qt::black);
+    QImage red(24, 24, QImage::Format_ARGB32);
+    red.fill(QColor(255, 0, 0, 128));
+
+    auto blackBuffer = pool1.createBuffer(black);
+    auto redBuffer = pool2.createBuffer(red);
+
+    s1->attachBuffer(blackBuffer);
+    s1->damage(QRect(0, 0, 24, 24));
+    s1->commit(Surface::CommitFlag::None);
+    QSignalSpy damageSpy1(serverSurface1, SIGNAL(damaged(QRegion)));
+    QVERIFY(damageSpy1.isValid());
+    QVERIFY(damageSpy1.wait());
+
+    // now the ServerSurface should have the black image attached as a buffer
+    BufferInterface *buffer1 = serverSurface1->buffer();
+    QVERIFY(buffer1);
+    QImage buffer1Data = buffer1->data();
+    QCOMPARE(buffer1Data, black);
+    // accessing the same buffer is OK
+    QImage buffer1Data2 = buffer1->data();
+    QCOMPARE(buffer1Data2, buffer1Data);
+    buffer1Data = QImage();
+    QVERIFY(buffer1Data.isNull());
+    buffer1Data2 = QImage();
+    QVERIFY(buffer1Data2.isNull());
+
+    // attach a buffer for the other surface
+    s2->attachBuffer(redBuffer);
+    s2->damage(QRect(0, 0, 24, 24));
+    s2->commit(Surface::CommitFlag::None);
+    QSignalSpy damageSpy2(serverSurface2, SIGNAL(damaged(QRegion)));
+    QVERIFY(damageSpy2.isValid());
+    QVERIFY(damageSpy2.wait());
+
+    BufferInterface *buffer2 = serverSurface2->buffer();
+    QVERIFY(buffer2);
+    QImage buffer2Data = buffer2->data();
+    QCOMPARE(buffer2Data, red);
+
+    // while buffer2 is accessed we cannot access buffer1
+    buffer1Data = buffer1->data();
+    QVERIFY(buffer1Data.isNull());
+
+    // a deep copy can be kept around
+    QImage deepCopy = buffer2Data.copy();
+    QCOMPARE(deepCopy, red);
+    buffer2Data = QImage();
+    QVERIFY(buffer2Data.isNull());
+    QCOMPARE(deepCopy, red);
+
+    // now that buffer2Data is destroyed we can access buffer1 again
+    buffer1Data = buffer1->data();
+    QVERIFY(!buffer1Data.isNull());
+    QCOMPARE(buffer1Data, black);
 }
 
 void TestWaylandSurface::testOpaque()
