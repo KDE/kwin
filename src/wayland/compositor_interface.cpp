@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "compositor_interface.h"
 #include "display.h"
+#include "global_p.h"
 #include "surface_interface.h"
 // Wayland
 #include <wayland-server.h>
@@ -30,14 +31,11 @@ namespace Server
 
 static const quint32 s_version = 3;
 
-class CompositorInterface::Private
+class CompositorInterface::Private : public Global::Private
 {
 public:
     Private(CompositorInterface *q, Display *d);
-    void create();
-
-    Display *display;
-    wl_global *compositor;
+    void create() override;
 
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id);
@@ -57,16 +55,15 @@ private:
 };
 
 CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
-    : display(d)
-    , compositor(nullptr)
+    : Global::Private(d)
     , q(q)
 {
 }
 
 void CompositorInterface::Private::create()
 {
-    Q_ASSERT(!compositor);
-    compositor = wl_global_create(*display, &wl_compositor_interface, s_version, this, bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_compositor_interface, s_version, this, bind);
 }
 
 const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
@@ -75,29 +72,11 @@ const struct wl_compositor_interface CompositorInterface::Private::s_interface =
 };
 
 CompositorInterface::CompositorInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
 }
 
-CompositorInterface::~CompositorInterface()
-{
-    destroy();
-}
-
-void CompositorInterface::create()
-{
-    d->create();
-}
-
-void CompositorInterface::destroy()
-{
-    if (!d->compositor) {
-        return;
-    }
-    wl_global_destroy(d->compositor);
-    d->compositor = nullptr;
-}
+CompositorInterface::~CompositorInterface() = default;
 
 void CompositorInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
@@ -154,11 +133,6 @@ void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *
         return;
     }
     emit q->regionCreated(region);
-}
-
-bool CompositorInterface::isValid() const
-{
-    return d->compositor != nullptr;
 }
 
 }

@@ -24,6 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPoint>
 
 #include <KWayland/Server/kwaylandserver_export.h>
+#include "global.h"
 
 struct wl_client;
 struct wl_resource;
@@ -38,7 +39,7 @@ class KeyboardInterface;
 class PointerInterface;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
+class KWAYLANDSERVER_EXPORT SeatInterface : public Global
 {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -47,10 +48,6 @@ class KWAYLANDSERVER_EXPORT SeatInterface : public QObject
     Q_PROPERTY(bool tourch READ hasTouch WRITE setHasTouch NOTIFY hasTouchChanged)
 public:
     virtual ~SeatInterface();
-
-    void create();
-    void destroy();
-    bool isValid() const;
 
     QString name() const;
     bool hasPointer() const;
@@ -77,7 +74,7 @@ private:
     explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 class KWAYLANDSERVER_EXPORT PointerInterface : public QObject

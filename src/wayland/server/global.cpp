@@ -17,40 +17,67 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
-#define WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
-
-#include <QObject>
-
-#include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
-#include "datadevice_interface.h"
-#include "datasource_interface.h"
+#include "global_p.h"
+// wayland
+#include <wayland-server.h>
 
 namespace KWayland
 {
 namespace Server
 {
 
-class Display;
-
-class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public Global
+Global::Private::Private(Display *d)
+    : display(d)
 {
-    Q_OBJECT
-public:
-    virtual ~DataDeviceManagerInterface();
+}
 
-Q_SIGNALS:
-    void dataSourceCreated(KWayland::Server::DataSourceInterface*);
-    void dataDeviceCreated(KWayland::Server::DataDeviceInterface*);
+Global::Private::~Private() = default;
 
-private:
-    explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
-    class Private;
-};
+Global::Global(Global::Private *d, QObject *parent)
+    : QObject(parent)
+    , d(d)
+{
+}
+
+Global::~Global()
+{
+    destroy();
+}
+
+void Global::create()
+{
+    d->create();
+}
+
+void Global::destroy()
+{
+    if (!d->global) {
+        return;
+    }
+    wl_global_destroy(d->global);
+    d->global = nullptr;
+}
+
+bool Global::isValid() const
+{
+    return d->global != nullptr;
+}
+
+Global::operator wl_global*() const
+{
+    return d->global;
+}
+
+Global::operator wl_global*()
+{
+    return d->global;
+}
+
+Display *Global::display()
+{
+    return d->display;
+}
 
 }
 }
-
-#endif

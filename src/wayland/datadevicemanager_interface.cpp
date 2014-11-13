@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevicemanager_interface.h"
+#include "global_p.h"
 #include "display.h"
 #include "seat_interface.h"
 // Wayland
@@ -30,14 +31,11 @@ namespace Server
 
 static const quint32 s_version = 1;
 
-class DataDeviceManagerInterface::Private
+class DataDeviceManagerInterface::Private : public Global::Private
 {
 public:
     Private(DataDeviceManagerInterface *q, Display *d);
-    void create();
-
-    Display *display;
-    wl_global *manager = nullptr;
+    void create() override;
 
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id);
@@ -62,7 +60,7 @@ const struct wl_data_device_manager_interface DataDeviceManagerInterface::Privat
 };
 
 DataDeviceManagerInterface::Private::Private(DataDeviceManagerInterface *q, Display *d)
-    : display(d)
+    : Global::Private(d)
     , q(q)
 {
 }
@@ -127,39 +125,16 @@ void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_re
 
 void DataDeviceManagerInterface::Private::create()
 {
-    Q_ASSERT(!manager);
-    manager = wl_global_create(*display, &wl_data_device_manager_interface, s_version, this, bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_data_device_manager_interface, s_version, this, bind);
 }
 
 DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
 }
 
-DataDeviceManagerInterface::~DataDeviceManagerInterface()
-{
-    destroy();
-}
-
-void DataDeviceManagerInterface::create()
-{
-    d->create();
-}
-
-void DataDeviceManagerInterface::destroy()
-{
-    if (!d->manager) {
-        return;
-    }
-    wl_global_destroy(d->manager);
-    d->manager = nullptr;
-}
-
-bool DataDeviceManagerInterface::isValid() const
-{
-    return d->manager != nullptr;
-}
+DataDeviceManagerInterface::~DataDeviceManagerInterface() = default;
 
 }
 }

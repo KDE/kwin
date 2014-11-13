@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell_interface.h"
+#include "global_p.h"
 #include "display.h"
 #include "surface_interface.h"
 
@@ -32,14 +33,12 @@ namespace Server
 
 static const quint32 s_version = 1;
 
-class ShellInterface::Private
+class ShellInterface::Private : public Global::Private
 {
 public:
     Private(ShellInterface *q, Display *d);
-    void create();
+    void create() override;
 
-    Display *display;
-    wl_global *shell = nullptr;
     QList<ShellSurfaceInterface*> surfaces;
 
 private:
@@ -53,15 +52,15 @@ private:
 };
 
 ShellInterface::Private::Private(ShellInterface *q, Display *d)
-    : display(d)
+    : Global::Private(d)
     , q(q)
 {
 }
 
 void ShellInterface::Private::create()
 {
-    Q_ASSERT(!shell);
-    shell = wl_global_create(*display, &wl_shell_interface, s_version, this, &bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_shell_interface, s_version, this, &bind);
 }
 
 const struct wl_shell_interface ShellInterface::Private::s_interface = {
@@ -124,29 +123,11 @@ private:
 };
 
 ShellInterface::ShellInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
 }
 
-ShellInterface::~ShellInterface()
-{
-    destroy();
-}
-
-void ShellInterface::create()
-{
-    d->create();
-}
-
-void ShellInterface::destroy()
-{
-    if (!d->shell) {
-        return;
-    }
-    wl_global_destroy(d->shell);
-    d->shell = nullptr;
-}
+ShellInterface::~ShellInterface() = default;
 
 void ShellInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
 {
@@ -189,16 +170,6 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
     );
     shellSurface->d->create(client, version, id);
     emit q->surfaceCreated(shellSurface);
-}
-
-bool ShellInterface::isValid() const
-{
-    return d->shell != nullptr;
-}
-
-Display *ShellInterface::display() const
-{
-    return d->display;
 }
 
 /*********************************

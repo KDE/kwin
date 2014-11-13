@@ -6,6 +6,7 @@ set(SERVER_LIB_SRCS
     dataoffer_interface.cpp
     datasource_interface.cpp
     display.cpp
+    global.cpp
     output_interface.cpp
     region_interface.cpp
     seat_interface.cpp
@@ -54,6 +55,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   dataoffer_interface.h
 #   datasource_interface.h
 #   display.h
+#   global.h
 #   output_interface.h
 #   region_interface.h
 #   seat_interface.h

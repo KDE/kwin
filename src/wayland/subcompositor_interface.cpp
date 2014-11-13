@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "subcompositor_interface.h"
 #include "subsurface_interface_p.h"
+#include "global_p.h"
 #include "display.h"
 #include "surface_interface_p.h"
 // Wayland
@@ -31,14 +32,11 @@ namespace Server
 
 static const quint32 s_version = 1;
 
-class SubCompositorInterface::Private
+class SubCompositorInterface::Private : public Global::Private
 {
 public:
     Private(SubCompositorInterface *q, Display *d);
-    void create();
-
-    Display *display;
-    wl_global *compositor;
+    void create() override;
 
 private:
     void bind(wl_client *client, uint32_t version, uint32_t id);
@@ -63,16 +61,15 @@ const struct wl_subcompositor_interface SubCompositorInterface::Private::s_inter
 };
 
 SubCompositorInterface::Private::Private(SubCompositorInterface *q, Display *d)
-    : display(d)
-    , compositor(nullptr)
+    : Global::Private(d)
     , q(q)
 {
 }
 
 void SubCompositorInterface::Private::create()
 {
-    Q_ASSERT(!compositor);
-    compositor = wl_global_create(*display, &wl_subcompositor_interface, s_version, this, bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_subcompositor_interface, s_version, this, bind);
 }
 
 void SubCompositorInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
@@ -132,34 +129,11 @@ void SubCompositorInterface::Private::subsurface(wl_client *client, wl_resource 
 }
 
 SubCompositorInterface::SubCompositorInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
 }
 
-SubCompositorInterface::~SubCompositorInterface()
-{
-    destroy();
-}
-
-void SubCompositorInterface::destroy()
-{
-    if (!d->compositor) {
-        return;
-    }
-    wl_global_destroy(d->compositor);
-    d->compositor = nullptr;
-}
-
-void SubCompositorInterface::create()
-{
-    d->create();
-}
-
-bool SubCompositorInterface::isValid() const
-{
-    return d->compositor != nullptr;
-}
+SubCompositorInterface::~SubCompositorInterface() = default;
 
 const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface = {
     destroyCallback,

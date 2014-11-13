@@ -24,6 +24,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
+#include "global.h"
+
 class QSize;
 struct wl_resource;
 
@@ -36,18 +38,11 @@ class Display;
 class SurfaceInterface;
 class ShellSurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT ShellInterface : public QObject
+class KWAYLANDSERVER_EXPORT ShellInterface : public Global
 {
     Q_OBJECT
 public:
     virtual ~ShellInterface();
-
-    void create();
-    void destroy();
-
-    bool isValid() const;
-
-    Display *display() const;
 
 Q_SIGNALS:
     void surfaceCreated(KWayland::Server::ShellSurfaceInterface*);
@@ -56,7 +51,6 @@ private:
     friend class Display;
     explicit ShellInterface(Display *display, QObject *parent);
     class Private;
-    QScopedPointer<Private> d;
 };
 
 class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public QObject

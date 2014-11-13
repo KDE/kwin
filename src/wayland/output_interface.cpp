@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "output_interface.h"
+#include "global_p.h"
 #include "display.h"
 
 #include <wayland-server.h>
@@ -29,7 +30,7 @@ namespace Server
 
 static const quint32 s_version = 2;
 
-class OutputInterface::Private
+class OutputInterface::Private : public Global::Private
 {
 public:
     struct ResourceData {
@@ -37,14 +38,12 @@ public:
         uint32_t version;
     };
     Private(OutputInterface *q, Display *d);
-    void create();
+    void create() override;
     void sendMode(wl_resource *resource, const Mode &mode);
     void sendDone(const ResourceData &data);
     void updateGeometry();
     void updateScale();
 
-    Display *display;
-    wl_global *output = nullptr;
     QSize physicalSize;
     QPoint globalPosition;
     QString manufacturer = QStringLiteral("org.kde.kwin");
@@ -68,23 +67,23 @@ private:
 };
 
 OutputInterface::Private::Private(OutputInterface *q, Display *d)
-    : display(d)
+    : Global::Private(d)
     , q(q)
 {
 }
 
 void OutputInterface::Private::create()
 {
-    Q_ASSERT(!output);
-    output = wl_global_create(*display, &wl_output_interface, s_version, this, bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_output_interface, s_version, this, bind);
 }
 
 OutputInterface::OutputInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
+    Q_D();
     connect(this, &OutputInterface::currentModeChanged, this,
-        [this] {
+        [this, d] {
             auto currentModeIt = std::find_if(d->modes.constBegin(), d->modes.constEnd(), [](const Mode &mode) { return mode.flags.testFlag(ModeFlag::Current); });
             if (currentModeIt == d->modes.constEnd()) {
                 return;
@@ -95,35 +94,19 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
             }
         }
     );
-    connect(this, &OutputInterface::subPixelChanged,       this, [this] { d->updateGeometry(); });
-    connect(this, &OutputInterface::transformChanged,      this, [this] { d->updateGeometry(); });
-    connect(this, &OutputInterface::globalPositionChanged, this, [this] { d->updateGeometry(); });
-    connect(this, &OutputInterface::modelChanged,          this, [this] { d->updateGeometry(); });
-    connect(this, &OutputInterface::manufacturerChanged,   this, [this] { d->updateGeometry(); });
-    connect(this, &OutputInterface::scaleChanged,          this, [this] { d->updateScale(); });
+    connect(this, &OutputInterface::subPixelChanged,       this, [this, d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::transformChanged,      this, [this, d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::globalPositionChanged, this, [this, d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::modelChanged,          this, [this, d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::manufacturerChanged,   this, [this, d] { d->updateGeometry(); });
+    connect(this, &OutputInterface::scaleChanged,          this, [this, d] { d->updateScale(); });
 }
 
-OutputInterface::~OutputInterface()
-{
-    destroy();
-}
-
-void OutputInterface::create()
-{
-    d->create();
-}
-
-void OutputInterface::destroy()
-{
-    if (!d->output) {
-        return;
-    }
-    wl_global_destroy(d->output);
-    d->output = nullptr;
-}
+OutputInterface::~OutputInterface() = default;
 
 QSize OutputInterface::pixelSize() const
 {
+    Q_D();
     auto it = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
@@ -137,6 +120,7 @@ QSize OutputInterface::pixelSize() const
 
 int OutputInterface::refreshRate() const
 {
+    Q_D();
     auto it = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
@@ -151,6 +135,7 @@ int OutputInterface::refreshRate() const
 void OutputInterface::addMode(const QSize &size, OutputInterface::ModeFlags flags, int refreshRate)
 {
     Q_ASSERT(!isValid());
+    Q_D();
 
     auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
@@ -210,6 +195,7 @@ void OutputInterface::addMode(const QSize &size, OutputInterface::ModeFlags flag
 
 void OutputInterface::setCurrentMode(const QSize &size, int refreshRate)
 {
+    Q_D();
     auto currentModeIt = std::find_if(d->modes.begin(), d->modes.end(),
         [](const Mode &mode) {
             return mode.flags.testFlag(ModeFlag::Current);
@@ -391,6 +377,7 @@ void OutputInterface::Private::updateScale()
 #define SETTER(setterName, type, argumentName) \
     void OutputInterface::setterName(type arg) \
     { \
+        Q_D(); \
         if (d->argumentName == arg) { \
             return; \
         } \
@@ -408,59 +395,57 @@ SETTER(setTransform, Transform, transform)
 
 #undef SETTER
 
-bool OutputInterface::isValid() const
-{
-    return d->output != nullptr;
-}
-
 QSize OutputInterface::physicalSize() const
 {
+    Q_D();
     return d->physicalSize;
 }
 
 QPoint OutputInterface::globalPosition() const
 {
+    Q_D();
     return d->globalPosition;
 }
 
 QString OutputInterface::manufacturer() const
 {
+    Q_D();
     return d->manufacturer;
 }
 
 QString OutputInterface::model() const
 {
+    Q_D();
     return d->model;
 }
 
 int OutputInterface::scale() const
 {
+    Q_D();
     return d->scale;
 }
 
 OutputInterface::SubPixel OutputInterface::subPixel() const
 {
+    Q_D();
     return d->subPixel;
 }
 
 OutputInterface::Transform OutputInterface::transform() const
 {
+    Q_D();
     return d->transform;
 }
 
 QList< OutputInterface::Mode > OutputInterface::modes() const
 {
+    Q_D();
     return d->modes;
 }
 
-OutputInterface::operator wl_global*()
+OutputInterface::Private *OutputInterface::d_func() const
 {
-    return d->output;
-}
-
-OutputInterface::operator wl_global*() const
-{
-    return d->output;
+    return reinterpret_cast<Private*>(d.data());
 }
 
 }

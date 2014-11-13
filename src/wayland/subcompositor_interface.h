@@ -25,6 +25,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
+#include "global.h"
+
 struct wl_resource;
 
 namespace KWayland
@@ -36,15 +38,11 @@ class Display;
 class SurfaceInterface;
 class SubSurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT SubCompositorInterface : public QObject
+class KWAYLANDSERVER_EXPORT SubCompositorInterface : public Global
 {
     Q_OBJECT
 public:
     virtual ~SubCompositorInterface();
-
-    void create();
-    void destroy();
-    bool isValid() const;
 
 Q_SIGNALS:
     void subSurfaceCreated(KWayland::Server::SubSurfaceInterface*);
@@ -53,7 +51,6 @@ private:
     explicit SubCompositorInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
     class Private;
-    QScopedPointer<Private> d;
 };
 
 class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public QObject

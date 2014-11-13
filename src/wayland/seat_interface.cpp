@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "seat_interface.h"
+#include "global_p.h"
 #include "display.h"
 #include "surface_interface.h"
 // Qt
@@ -41,24 +42,22 @@ namespace Server
 
 static const quint32 s_version = 3;
 
-class SeatInterface::Private
+class SeatInterface::Private : public Global::Private
 {
 public:
     Private(SeatInterface *q, Display *d);
-    void create();
+    void create() override;
     void bind(wl_client *client, uint32_t version, uint32_t id);
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
 
-    Display *display;
-    wl_global *seat = nullptr;
     QString name;
     bool pointer = false;
     bool keyboard = false;
     bool touch = false;
     QList<wl_resource*> resources;
-    PointerInterface *pointerInterface;
-    KeyboardInterface *keyboardInterface;
+    PointerInterface *pointerInterface = nullptr;
+    KeyboardInterface *keyboardInterface = nullptr;
 
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
@@ -79,18 +78,16 @@ private:
     SeatInterface *q;
 };
 
-SeatInterface::Private::Private(SeatInterface *q, Display *d)
-    : display(d)
-    , pointerInterface(new PointerInterface(d, q))
-    , keyboardInterface(new KeyboardInterface(d, q))
+SeatInterface::Private::Private(SeatInterface *q, Display *display)
+    : Global::Private(display)
     , q(q)
 {
 }
 
 void SeatInterface::Private::create()
 {
-    Q_ASSERT(!seat);
-    seat = wl_global_create(*display, &wl_seat_interface, s_version, this, &bind);
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, &wl_seat_interface, s_version, this, &bind);
 }
 
 const struct wl_seat_interface SeatInterface::Private::s_interface = {
@@ -100,17 +97,19 @@ const struct wl_seat_interface SeatInterface::Private::s_interface = {
 };
 
 SeatInterface::SeatInterface(Display *display, QObject *parent)
-    : QObject(parent)
-    , d(new Private(this, display))
+    : Global(new Private(this, display), parent)
 {
+    Q_D();
+    d->pointerInterface = new PointerInterface(display, this);
+    d->keyboardInterface = new KeyboardInterface(display, this);
     connect(this, &SeatInterface::nameChanged, this,
-        [this] {
+        [this, d] {
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
                 d->sendName(*it);
             }
         }
     );
-    auto sendCapabilitiesAll = [this] {
+    auto sendCapabilitiesAll = [this, d] {
         for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
             d->sendCapabilities(*it);
         }
@@ -122,22 +121,9 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
 
 SeatInterface::~SeatInterface()
 {
-    destroy();
-}
-
-void SeatInterface::create()
-{
-    d->create();
-}
-
-void SeatInterface::destroy()
-{
+    Q_D();
     while (!d->resources.isEmpty()) {
         wl_resource_destroy(d->resources.takeLast());
-    }
-    if (d->seat) {
-        wl_global_destroy(d->seat);
-        d->seat = nullptr;
     }
 }
 
@@ -196,6 +182,7 @@ SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
 
 void SeatInterface::setHasKeyboard(bool has)
 {
+    Q_D();
     if (d->keyboard == has) {
         return;
     }
@@ -205,6 +192,7 @@ void SeatInterface::setHasKeyboard(bool has)
 
 void SeatInterface::setHasPointer(bool has)
 {
+    Q_D();
     if (d->pointer == has) {
         return;
     }
@@ -214,6 +202,7 @@ void SeatInterface::setHasPointer(bool has)
 
 void SeatInterface::setHasTouch(bool has)
 {
+    Q_D();
     if (d->touch == has) {
         return;
     }
@@ -223,6 +212,7 @@ void SeatInterface::setHasTouch(bool has)
 
 void SeatInterface::setName(const QString &name)
 {
+    Q_D();
     if (d->name == name) {
         return;
     }
@@ -247,43 +237,50 @@ void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *re
     Q_UNUSED(id)
 }
 
-bool SeatInterface::isValid() const {
-    return d->seat != nullptr;
-}
-
 QString SeatInterface::name() const
 {
+    Q_D();
     return d->name;
 }
 
 bool SeatInterface::hasPointer() const
 {
+    Q_D();
     return d->pointer;
 }
 
 bool SeatInterface::hasKeyboard() const
 {
+    Q_D();
     return d->keyboard;
 }
 
 bool SeatInterface::hasTouch() const
 {
+    Q_D();
     return d->touch;
 }
 
 PointerInterface *SeatInterface::pointer()
 {
+    Q_D();
     return d->pointerInterface;
 }
 
 KeyboardInterface *SeatInterface::keyboard()
 {
+    Q_D();
     return d->keyboardInterface;
 }
 
 SeatInterface *SeatInterface::get(wl_resource *native)
 {
     return Private::get(native);
+}
+
+SeatInterface::Private *SeatInterface::d_func() const
+{
+    return reinterpret_cast<Private*>(d.data());
 }
 
 /****************************************

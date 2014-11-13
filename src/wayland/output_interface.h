@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 
 #include <KWayland/Server/kwaylandserver_export.h>
+#include "global.h"
 
 struct wl_global;
 struct wl_client;
@@ -37,7 +38,7 @@ namespace Server
 
 class Display;
 
-class KWAYLANDSERVER_EXPORT OutputInterface : public QObject
+class KWAYLANDSERVER_EXPORT OutputInterface : public Global
 {
     Q_OBJECT
     Q_PROPERTY(QSize physicalSize READ physicalSize WRITE setPhysicalSize NOTIFY physicalSizeChanged)
@@ -77,9 +78,6 @@ public:
         ModeFlags flags;
     };
     virtual ~OutputInterface();
-    void create();
-    void destroy();
-    bool isValid() const;
 
     QSize physicalSize() const;
     QPoint globalPosition() const;
@@ -102,9 +100,6 @@ public:
     void addMode(const QSize &size, ModeFlags flags = ModeFlags(), int refreshRate = 60000);
     void setCurrentMode(const QSize &size, int refreshRate = 60000);
 
-    operator wl_global*();
-    operator wl_global*() const;
-
 Q_SIGNALS:
     void physicalSizeChanged(const QSize&);
     void globalPositionChanged(const QPoint&);
@@ -122,7 +117,7 @@ private:
     friend class Display;
     explicit OutputInterface(Display *display, QObject *parent = nullptr);
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

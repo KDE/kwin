@@ -17,37 +17,27 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
-#define WAYLAND_SERVER_DATA_DEVICE_MANAGER_INTERFACE_H
+#ifndef WAYLAND_SERVER_GLOBAL_P_H
+#define WAYLAND_SERVER_GLOBAL_P_H
 
-#include <QObject>
-
-#include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
-#include "datadevice_interface.h"
-#include "datasource_interface.h"
 
 namespace KWayland
 {
 namespace Server
 {
 
-class Display;
-
-class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public Global
+class Global::Private
 {
-    Q_OBJECT
 public:
-    virtual ~DataDeviceManagerInterface();
+    virtual ~Private();
+    virtual void create() = 0;
 
-Q_SIGNALS:
-    void dataSourceCreated(KWayland::Server::DataSourceInterface*);
-    void dataDeviceCreated(KWayland::Server::DataDeviceInterface*);
+    Display *display = nullptr;
+    wl_global *global = nullptr;
 
-private:
-    explicit DataDeviceManagerInterface(Display *display, QObject *parent = nullptr);
-    friend class Display;
-    class Private;
+protected:
+    Private(Display *d);
 };
 
 }

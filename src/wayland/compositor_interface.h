@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
 #define WAYLAND_SERVER_COMPOSITOR_INTERFACE_H
 
+#include "global.h"
 #include "region_interface.h"
 #include "surface_interface.h"
 
@@ -35,15 +36,11 @@ namespace Server
 class Display;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT CompositorInterface : public QObject
+class KWAYLANDSERVER_EXPORT CompositorInterface : public Global
 {
     Q_OBJECT
 public:
     virtual ~CompositorInterface();
-
-    void create();
-    void destroy();
-    bool isValid() const;
 
 Q_SIGNALS:
     void surfaceCreated(KWayland::Server::SurfaceInterface*);
@@ -53,7 +50,6 @@ private:
     explicit CompositorInterface(Display *display, QObject *parent = nullptr);
     friend class Display;
     class Private;
-    QScopedPointer<Private> d;
 };
 
 }
