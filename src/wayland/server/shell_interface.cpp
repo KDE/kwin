@@ -37,14 +37,12 @@ class ShellInterface::Private : public Global::Private
 {
 public:
     Private(ShellInterface *q, Display *d);
-    void create() override;
 
     QList<ShellSurfaceInterface*> surfaces;
 
 private:
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface);
 
     ShellInterface *q;
@@ -52,15 +50,9 @@ private:
 };
 
 ShellInterface::Private::Private(ShellInterface *q, Display *d)
-    : Global::Private(d)
+    : Global::Private(d, &wl_shell_interface, s_version)
     , q(q)
 {
-}
-
-void ShellInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_shell_interface, s_version, this, &bind);
 }
 
 const struct wl_shell_interface ShellInterface::Private::s_interface = {
@@ -128,11 +120,6 @@ ShellInterface::ShellInterface(Display *display, QObject *parent)
 }
 
 ShellInterface::~ShellInterface() = default;
-
-void ShellInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    reinterpret_cast<ShellInterface::Private*>(data)->bind(client, version, id);
-}
 
 void ShellInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {

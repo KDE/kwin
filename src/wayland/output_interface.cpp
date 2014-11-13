@@ -38,7 +38,6 @@ public:
         uint32_t version;
     };
     Private(OutputInterface *q, Display *d);
-    void create() override;
     void sendMode(wl_resource *resource, const Mode &mode);
     void sendDone(const ResourceData &data);
     void updateGeometry();
@@ -55,9 +54,8 @@ public:
     QList<ResourceData> resources;
 
 private:
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *resource);
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     int32_t toTransform() const;
     int32_t toSubPixel() const;
     void sendGeometry(wl_resource *resource);
@@ -67,15 +65,9 @@ private:
 };
 
 OutputInterface::Private::Private(OutputInterface *q, Display *d)
-    : Global::Private(d)
+    : Global::Private(d, &wl_output_interface, s_version)
     , q(q)
 {
-}
-
-void OutputInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_output_interface, s_version, this, bind);
 }
 
 OutputInterface::OutputInterface(Display *display, QObject *parent)
@@ -218,12 +210,6 @@ void OutputInterface::setCurrentMode(const QSize &size, int refreshRate)
     emit refreshRateChanged((*existingModeIt).refreshRate);
     emit pixelSizeChanged((*existingModeIt).size);
     emit currentModeChanged();
-}
-
-void OutputInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    auto output = reinterpret_cast<OutputInterface::Private*>(data);
-    output->bind(client, version, id);
 }
 
 int32_t OutputInterface::Private::toTransform() const

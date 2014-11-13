@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "global.h"
 #include "global_p.h"
+#include "display.h"
 // wayland
 #include <wayland-server.h>
 
@@ -27,12 +28,26 @@ namespace KWayland
 namespace Server
 {
 
-Global::Private::Private(Display *d)
+Global::Private::Private(Display *d, const wl_interface *interface, quint32 version)
     : display(d)
+    , m_interface(interface)
+    , m_version(version)
 {
 }
 
 Global::Private::~Private() = default;
+
+void Global::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
+{
+    auto d = reinterpret_cast<Private*>(data);
+    d->bind(client, version, id);
+}
+
+void Global::Private::create()
+{
+    Q_ASSERT(!global);
+    global = wl_global_create(*display, m_interface, m_version, this, bind);
+}
 
 Global::Global(Global::Private *d, QObject *parent)
     : QObject(parent)

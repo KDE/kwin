@@ -35,14 +35,12 @@ class CompositorInterface::Private : public Global::Private
 {
 public:
     Private(CompositorInterface *q, Display *d);
-    void create() override;
 
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void createSurface(wl_client *client, wl_resource *resource, uint32_t id);
     void createRegion(wl_client *client, wl_resource *resource, uint32_t id);
 
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *resource);
     static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static void createRegionCallback(wl_client *client, wl_resource *resource, uint32_t id);
@@ -55,15 +53,9 @@ private:
 };
 
 CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
-    : Global::Private(d)
+    : Global::Private(d, &wl_compositor_interface, s_version)
     , q(q)
 {
-}
-
-void CompositorInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_compositor_interface, s_version, this, bind);
 }
 
 const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
@@ -77,12 +69,6 @@ CompositorInterface::CompositorInterface(Display *display, QObject *parent)
 }
 
 CompositorInterface::~CompositorInterface() = default;
-
-void CompositorInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    auto compositor = reinterpret_cast<CompositorInterface::Private*>(data);
-    compositor->bind(client, version, id);
-}
 
 void CompositorInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {

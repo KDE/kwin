@@ -46,8 +46,7 @@ class SeatInterface::Private : public Global::Private
 {
 public:
     Private(SeatInterface *q, Display *d);
-    void create() override;
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
 
@@ -66,7 +65,6 @@ public:
 
 private:
     static Private *cast(wl_resource *r);
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *r);
 
     // interface
@@ -79,15 +77,9 @@ private:
 };
 
 SeatInterface::Private::Private(SeatInterface *q, Display *display)
-    : Global::Private(display)
+    : Global::Private(display, &wl_seat_interface, s_version)
     , q(q)
 {
-}
-
-void SeatInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_seat_interface, s_version, this, &bind);
 }
 
 const struct wl_seat_interface SeatInterface::Private::s_interface = {
@@ -125,11 +117,6 @@ SeatInterface::~SeatInterface()
     while (!d->resources.isEmpty()) {
         wl_resource_destroy(d->resources.takeLast());
     }
-}
-
-void SeatInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    reinterpret_cast<SeatInterface::Private*>(data)->bind(client, version, id);
 }
 
 void SeatInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)

@@ -35,14 +35,12 @@ class DataDeviceManagerInterface::Private : public Global::Private
 {
 public:
     Private(DataDeviceManagerInterface *q, Display *d);
-    void create() override;
 
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void createDataSource(wl_client *client, wl_resource *resource, uint32_t id);
     void getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat);
 
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *resource);
     static void createDataSourceCallback(wl_client *client, wl_resource *resource, uint32_t id);
     static void getDataDeviceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat);
@@ -60,15 +58,9 @@ const struct wl_data_device_manager_interface DataDeviceManagerInterface::Privat
 };
 
 DataDeviceManagerInterface::Private::Private(DataDeviceManagerInterface *q, Display *d)
-    : Global::Private(d)
+    : Global::Private(d, &wl_data_device_manager_interface, s_version)
     , q(q)
 {
-}
-
-void DataDeviceManagerInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    auto m = reinterpret_cast<DataDeviceManagerInterface::Private*>(data);
-    m->bind(client, version, id);
 }
 
 void DataDeviceManagerInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
@@ -121,12 +113,6 @@ void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_re
         return;
     }
     emit q->dataDeviceCreated(dataDevice);
-}
-
-void DataDeviceManagerInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_data_device_manager_interface, s_version, this, bind);
 }
 
 DataDeviceManagerInterface::DataDeviceManagerInterface(Display *display, QObject *parent)

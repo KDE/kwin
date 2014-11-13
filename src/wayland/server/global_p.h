@@ -22,6 +22,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 
+struct wl_client;
+struct wl_interface;
+
 namespace KWayland
 {
 namespace Server
@@ -30,14 +33,21 @@ namespace Server
 class Global::Private
 {
 public:
+    static constexpr quint32 version = 0;
     virtual ~Private();
-    virtual void create() = 0;
+    void create();
 
     Display *display = nullptr;
     wl_global *global = nullptr;
 
 protected:
-    Private(Display *d);
+    Private(Display *d, const wl_interface *interface, quint32 version);
+    virtual void bind(wl_client *client, uint32_t version, uint32_t id) = 0;
+
+    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
+
+    const wl_interface *const m_interface;
+    const quint32 m_version;
 };
 
 }

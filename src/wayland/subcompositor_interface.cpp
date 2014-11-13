@@ -36,13 +36,11 @@ class SubCompositorInterface::Private : public Global::Private
 {
 public:
     Private(SubCompositorInterface *q, Display *d);
-    void create() override;
 
 private:
-    void bind(wl_client *client, uint32_t version, uint32_t id);
+    void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void subsurface(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface, wl_resource *parent);
 
-    static void bind(wl_client *client, void *data, uint32_t version, uint32_t id);
     static void unbind(wl_resource *resource);
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void subsurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface, wl_resource *parent);
@@ -61,20 +59,9 @@ const struct wl_subcompositor_interface SubCompositorInterface::Private::s_inter
 };
 
 SubCompositorInterface::Private::Private(SubCompositorInterface *q, Display *d)
-    : Global::Private(d)
+    : Global::Private(d, &wl_subcompositor_interface, s_version)
     , q(q)
 {
-}
-
-void SubCompositorInterface::Private::create()
-{
-    Q_ASSERT(!global);
-    global = wl_global_create(*display, &wl_subcompositor_interface, s_version, this, bind);
-}
-
-void SubCompositorInterface::Private::bind(wl_client *client, void *data, uint32_t version, uint32_t id)
-{
-    reinterpret_cast<SubCompositorInterface::Private*>(data)->bind(client, version, id);
 }
 
 void SubCompositorInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
