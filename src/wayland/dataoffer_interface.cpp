@@ -36,7 +36,6 @@ class DataOfferInterface::Private : public Resource::Private
 public:
     Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id) override;
     DataSourceInterface *source;
     DataDeviceInterface *dataDevice;
 
@@ -59,7 +58,7 @@ const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = 
 };
 
 DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q)
-    : Resource::Private(q, nullptr)
+    : Resource::Private(q, nullptr, &wl_data_offer_interface, &s_interface)
     , source(source)
     , dataDevice(parentInterface)
 {
@@ -67,16 +66,6 @@ DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInte
 }
 
 DataOfferInterface::Private::~Private() = default;
-
-void DataOfferInterface::Private::create(wl_client *client, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(client, &wl_data_offer_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
-}
 
 void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType)
 {

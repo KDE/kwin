@@ -132,7 +132,7 @@ const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface =
 };
 
 SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor)
-    : Resource::Private(q, compositor)
+    : Resource::Private(q, compositor, &wl_subsurface_interface, &s_interface)
 {
 }
 
@@ -143,16 +143,6 @@ SubSurfaceInterface::Private::~Private()
         Q_Q(SubSurfaceInterface);
         reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
     }
-}
-
-void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(client, &wl_subsurface_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *s, SurfaceInterface *p)

@@ -38,8 +38,6 @@ public:
     Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager);
     ~Private();
 
-    void create(wl_client *client, quint32 version, quint32 id) override;
-
     DataOfferInterface *createDataOffer(DataSourceInterface *source);
 
     SeatInterface *seat;
@@ -67,7 +65,7 @@ const struct wl_data_device_interface DataDeviceInterface::Private::s_interface 
 };
 
 DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager)
-    : Resource::Private(q, manager)
+    : Resource::Private(q, manager, &wl_data_device_interface, &s_interface)
     , seat(seat)
 {
 }
@@ -112,16 +110,6 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
     } else {
         emit q->selectionCleared();
     }
-}
-
-void DataDeviceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(client, &wl_data_device_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)

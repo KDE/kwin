@@ -35,7 +35,6 @@ class DataSourceInterface::Private : public Resource::Private
 public:
     Private(DataSourceInterface *q, DataDeviceManagerInterface *parent);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id) override;
 
     QStringList mimeTypes;
 
@@ -57,7 +56,7 @@ const struct wl_data_source_interface DataSourceInterface::Private::s_interface 
 };
 
 DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent)
-    : Resource::Private(q, parent)
+    : Resource::Private(q, parent, &wl_data_source_interface, &s_interface)
 {
 }
 
@@ -80,16 +79,6 @@ void DataSourceInterface::Private::offer(const QString &mimeType)
     mimeTypes << mimeType;
     Q_Q(DataSourceInterface);
     emit q->mimeTypeOffered(mimeType);
-}
-
-void DataSourceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(client, &wl_data_source_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent)

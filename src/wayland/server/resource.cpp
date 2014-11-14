@@ -29,9 +29,11 @@ namespace Server
 
 QList<Resource::Private*> Resource::Private::s_allResources;
 
-Resource::Private::Private(Resource *q, Global *g)
+Resource::Private::Private(Resource *q, Global *g, const wl_interface *interface, const void *implementation)
     : global(g)
     , q(q)
+    , m_interface(interface)
+    , m_interfaceImplementation(implementation)
 {
     s_allResources << this;
 }
@@ -42,6 +44,18 @@ Resource::Private::~Private()
     if (resource) {
         wl_resource_destroy(resource);
     }
+}
+
+void Resource::Private::create(wl_client *c, quint32 version, quint32 id)
+{
+    Q_ASSERT(!resource);
+    Q_ASSERT(!client);
+    client = c;
+    resource = wl_resource_create(client, m_interface, version, id);
+    if (!resource) {
+        return;
+    }
+    wl_resource_set_implementation(resource, m_interfaceImplementation, this, unbind);
 }
 
 void Resource::Private::unbind(wl_resource *r)

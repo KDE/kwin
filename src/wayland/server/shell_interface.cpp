@@ -158,7 +158,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
  * ShellSurfaceInterface
  *********************************/
 ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface)
-    : Resource::Private(q, shell)
+    : Resource::Private(q, shell, &wl_shell_surface_interface, &s_interface)
     , surface(surface)
     , pingTimer(new QTimer)
 {
@@ -208,17 +208,8 @@ ShellSurfaceInterface::~ShellSurfaceInterface() = default;
 
 void ShellSurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
 {
-    Q_ASSERT(!client);
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(c, &wl_shell_surface_interface, version, id);
-    if (!resource) {
-        wl_client_post_no_memory(c);
-        return;
-    }
-    client = c;
+    Resource::Private::create(c, version, id);
     wl_client_get_credentials(client, &clientPid, &clientUser, &clientGroup);
-
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)

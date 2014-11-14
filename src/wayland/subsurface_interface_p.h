@@ -38,7 +38,7 @@ public:
     Private(SubSurfaceInterface *q, SubCompositorInterface *compositor);
     ~Private();
 
-    void create(wl_client *client, quint32 version, quint32 id) override;
+    using Resource::Private::create;
     void create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *surface, SurfaceInterface *parent);
     void commit();
 

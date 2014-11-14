@@ -33,7 +33,6 @@ class RegionInterface::Private : public Resource::Private
 public:
     Private(CompositorInterface *compositor, RegionInterface *q);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id) override;
     QRegion qtRegion;
 
 private:
@@ -57,7 +56,7 @@ const struct wl_region_interface RegionInterface::Private::s_interface = {
 };
 
 RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q)
-    : Resource::Private(q, compositor)
+    : Resource::Private(q, compositor, &wl_region_interface, &s_interface)
 {
 }
 
@@ -96,16 +95,6 @@ void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r
 {
     Q_UNUSED(client)
     cast<Private>(r)->q_func()->deleteLater();
-}
-
-void RegionInterface::Private::create(wl_client *client, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    resource = wl_resource_create(client, &wl_region_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent)

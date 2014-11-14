@@ -35,7 +35,7 @@ namespace Server
 {
 
 SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
-    : Resource::Private(q, c)
+    : Resource::Private(q, c, &wl_surface_interface, &s_interface)
 {
 }
 
@@ -141,18 +141,6 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *parent)
 }
 
 SurfaceInterface::~SurfaceInterface() = default;
-
-void SurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
-{
-    Q_ASSERT(!resource);
-    Q_ASSERT(!client);
-    client = c;
-    resource = wl_resource_create(client, &wl_surface_interface, version, id);
-    if (!resource) {
-        return;
-    }
-    wl_resource_set_implementation(resource, &s_interface, this, unbind);
-}
 
 void SurfaceInterface::frameRendered(quint32 msec)
 {

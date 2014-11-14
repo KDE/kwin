@@ -33,7 +33,7 @@ class Resource::Private
 {
 public:
     virtual ~Private();
-    virtual void create(wl_client *client, quint32 version, quint32 id) = 0;
+    virtual void create(wl_client *client, quint32 version, quint32 id);
 
     wl_resource *resource = nullptr;
     wl_client *client = nullptr;
@@ -55,7 +55,7 @@ public:
     }
 
 protected:
-    explicit Private(Resource *q, Global *g);
+    explicit Private(Resource *q, Global *g, const wl_interface *interface, const void *implementation);
 
     template <typename Derived>
     static Derived *cast(wl_resource *r) {
@@ -67,6 +67,10 @@ protected:
 
     Resource *q;
     static QList<Private*> s_allResources;
+
+private:
+    const wl_interface *const m_interface;
+    const void *const m_interfaceImplementation;
 };
 
 }

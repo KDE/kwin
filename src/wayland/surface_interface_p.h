@@ -51,7 +51,6 @@ public:
     Private(SurfaceInterface *q, CompositorInterface *c);
     ~Private();
 
-    void create(wl_client *client, quint32 version, quint32 id);
     void destroy();
 
     void addChild(QPointer<SubSurfaceInterface> subsurface);
