@@ -179,13 +179,6 @@ void SubSurfaceInterface::Private::commit()
     }
 }
 
-void SubSurfaceInterface::Private::unbind(wl_resource *r)
-{
-    auto s = cast<Private>(r);
-    s->resource = nullptr;
-    s->q_func()->deleteLater();
-}
-
 void SubSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)

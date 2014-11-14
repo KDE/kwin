@@ -83,7 +83,6 @@ public:
     bool toplevel = false;
 
 private:
-    static void unbind(wl_resource *r);
     // interface callbacks
     static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
     static void moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial);
@@ -220,13 +219,6 @@ void ShellSurfaceInterface::Private::create(wl_client *c, quint32 version, quint
     wl_client_get_credentials(client, &clientPid, &clientUser, &clientGroup);
 
     wl_resource_set_implementation(resource, &s_interface, this, unbind);
-}
-
-void ShellSurfaceInterface::Private::unbind(wl_resource *r)
-{
-    auto s = cast<Private>(r);
-    s->resource = nullptr;
-    s->q_func()->deleteLater();
 }
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)

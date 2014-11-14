@@ -57,7 +57,6 @@ private:
     void setSelection(DataSourceInterface *dataSource);
     static void startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial);
     static void setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial);
-    static void unbind(wl_resource *resource);
 
     static const struct wl_data_device_interface s_interface;
 };
@@ -113,13 +112,6 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
     } else {
         emit q->selectionCleared();
     }
-}
-
-void DataDeviceInterface::Private::unbind(wl_resource *resource)
-{
-    auto s = cast<Private>(resource);
-    s->resource = nullptr;
-    s->q_func()->deleteLater();
 }
 
 void DataDeviceInterface::Private::create(wl_client *client, quint32 version, quint32 id)

@@ -40,6 +40,13 @@ Resource::Private::~Private()
     }
 }
 
+void Resource::Private::unbind(wl_resource *r)
+{
+    Private *p = cast<Private>(r);
+    p->resource = nullptr;
+    p->q->deleteLater();
+}
+
 Resource::Resource(Resource::Private *d, QObject *parent)
     : QObject(parent)
     , d(d)

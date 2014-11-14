@@ -180,13 +180,6 @@ void SurfaceInterface::frameRendered(quint32 msec)
     }
 }
 
-void SurfaceInterface::Private::unbind(wl_resource *r)
-{
-    auto s = cast<Private>(r);
-    s->resource = nullptr;
-    s->q_func()->deleteLater();
-}
-
 void SurfaceInterface::Private::destroy()
 {
     for (wl_resource *c : current.callbacks) {

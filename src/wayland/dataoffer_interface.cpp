@@ -48,7 +48,6 @@ private:
     static void acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType);
     static void receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd);
     static void destroyCallback(wl_client *client, wl_resource *resource);
-    static void unbind(wl_resource *resource);
 
     static const struct wl_data_offer_interface s_interface;
 };
@@ -102,13 +101,6 @@ void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource
 void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
 {
     source->requestData(mimeType, fd);
-}
-
-void DataOfferInterface::Private::unbind(wl_resource *resource)
-{
-    auto o = cast<Private>(resource);
-    o->resource = nullptr;
-    o->q_func()->deleteLater();
 }
 
 DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface)

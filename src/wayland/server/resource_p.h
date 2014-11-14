@@ -48,6 +48,7 @@ protected:
                       "Derived must be derived from Resource::Private");
         return r ? reinterpret_cast<Derived*>(wl_resource_get_user_data(r)) : nullptr;
     }
+    static void unbind(wl_resource *resource);
 
     Resource *q;
 };

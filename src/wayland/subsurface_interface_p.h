@@ -58,7 +58,6 @@ private:
     void placeAbove(SurfaceInterface *sibling);
     void placeBelow(SurfaceInterface *sibling);
 
-    static void unbind(wl_resource *r);
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y);
     static void placeAboveCallback(wl_client *client, wl_resource *resource, wl_resource *sibling);

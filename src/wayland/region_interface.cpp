@@ -45,7 +45,6 @@ private:
     void add(const QRect &rect);
     void subtract(const QRect &rect);
 
-    static void unbind(wl_resource *r);
     static void destroyCallback(wl_client *client, wl_resource *r);
     static void addCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
     static void subtractCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
@@ -99,13 +98,6 @@ void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r
 {
     Q_UNUSED(client)
     cast<Private>(r)->q_func()->deleteLater();
-}
-
-void RegionInterface::Private::unbind(wl_resource *r)
-{
-    auto region = cast<Private>(r);
-    region->resource = nullptr;
-    region->q_func()->deleteLater();
 }
 
 void RegionInterface::Private::create(wl_client *client, quint32 version, quint32 id)

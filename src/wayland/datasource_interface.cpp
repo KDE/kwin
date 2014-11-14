@@ -52,7 +52,6 @@ private:
 
     static void offerCallback(wl_client *client, wl_resource *resource, const char *mimeType);
     static void destroyCallack(wl_client *client, wl_resource *resource);
-    static void unbind(wl_resource *resource);
 
     const static struct wl_data_source_interface s_interface;
 };
@@ -68,13 +67,6 @@ DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerI
 }
 
 DataSourceInterface::Private::~Private() = default;
-
-void DataSourceInterface::Private::unbind(wl_resource *resource)
-{
-    auto s = cast<Private>(resource);
-    s->resource = nullptr;
-    s->q_func()->deleteLater();
-}
 
 void DataSourceInterface::Private::destroyCallack(wl_client *client, wl_resource *resource)
 {
