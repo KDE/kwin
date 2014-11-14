@@ -27,14 +27,18 @@ namespace KWayland
 namespace Server
 {
 
+QList<Resource::Private*> Resource::Private::s_allResources;
+
 Resource::Private::Private(Resource *q, Global *g)
     : global(g)
     , q(q)
 {
+    s_allResources << this;
 }
 
 Resource::Private::~Private()
 {
+    s_allResources.removeAll(this);
     if (resource) {
         wl_resource_destroy(resource);
     }

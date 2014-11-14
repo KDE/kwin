@@ -34,18 +34,14 @@ namespace KWayland
 namespace Server
 {
 
-QList<SurfaceInterface::Private*> SurfaceInterface::Private::s_allSurfaces;
-
 SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
     : Resource::Private(q, c)
 {
-    s_allSurfaces << this;
 }
 
 SurfaceInterface::Private::~Private()
 {
     destroy();
-    s_allSurfaces.removeAll(this);
 }
 
 void SurfaceInterface::Private::addChild(QPointer< SubSurfaceInterface > subSurface)
@@ -125,17 +121,6 @@ bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurf
     siblingIt = std::find(pending.children.begin(), pending.children.end(), sibling->subSurface());
     pending.children.insert(siblingIt, value);
     return true;
-}
-
-SurfaceInterface *SurfaceInterface::Private::get(wl_resource *native)
-{
-    auto it = std::find_if(s_allSurfaces.constBegin(), s_allSurfaces.constEnd(), [native](Private *s) {
-        return s->resource == native;
-    });
-    if (it == s_allSurfaces.constEnd()) {
-        return nullptr;
-    }
-    return (*it)->q_func();
 }
 
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
@@ -421,7 +406,7 @@ QPoint SurfaceInterface::offset() const
 
 SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 {
-    return Private::get(native);
+    return Private::get<SurfaceInterface>(native);
 }
 
 QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const

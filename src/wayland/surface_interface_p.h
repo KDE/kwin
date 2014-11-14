@@ -59,8 +59,6 @@ public:
     bool raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
     bool lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
 
-    static SurfaceInterface *get(wl_resource *native);
-
     State current;
     State pending;
     QPointer<SubSurfaceInterface> subSurface;
@@ -93,7 +91,6 @@ private:
     static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
 
     static const struct wl_surface_interface s_interface;
-    static QList<SurfaceInterface::Private*> s_allSurfaces;
 };
 
 }

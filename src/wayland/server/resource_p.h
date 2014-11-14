@@ -39,6 +39,21 @@ public:
     wl_client *client = nullptr;
     Global *global;
 
+    template <typename ResourceDerived>
+    static ResourceDerived *get(wl_resource *native) {
+        static_assert(std::is_base_of<Resource, ResourceDerived>::value,
+                      "ResourceDerived must be derived from Resource");
+        auto it = std::find_if(s_allResources.constBegin(), s_allResources.constEnd(),
+            [native](Private *p) {
+                return p->resource == native;
+            }
+        );
+        if (it == s_allResources.constEnd()) {
+            return nullptr;
+        }
+        return reinterpret_cast<ResourceDerived*>((*it)->q);
+    }
+
 protected:
     explicit Private(Resource *q, Global *g);
 
@@ -51,6 +66,7 @@ protected:
     static void unbind(wl_resource *resource);
 
     Resource *q;
+    static QList<Private*> s_allResources;
 };
 
 }

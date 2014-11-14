@@ -36,8 +36,6 @@ public:
     void create(wl_client *client, quint32 version, quint32 id) override;
     QRegion qtRegion;
 
-    static RegionInterface *get(wl_resource *native);
-
 private:
     RegionInterface *q_func() {
         return reinterpret_cast<RegionInterface*>(q);
@@ -110,14 +108,6 @@ void RegionInterface::Private::create(wl_client *client, quint32 version, quint3
     wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
-RegionInterface *RegionInterface::Private::get(wl_resource *native)
-{
-    if (!native) {
-        return nullptr;
-    }
-    return cast<Private>(native)->q_func();
-}
-
 RegionInterface::RegionInterface(CompositorInterface *parent)
     : Resource(new Private(parent, this), parent)
 {
@@ -133,7 +123,7 @@ QRegion RegionInterface::region() const
 
 RegionInterface *RegionInterface::get(wl_resource *native)
 {
-    return Private::get(native);
+    return Private::get<RegionInterface>(native);
 }
 
 RegionInterface::Private *RegionInterface::d_func() const

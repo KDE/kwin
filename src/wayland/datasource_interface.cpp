@@ -37,11 +37,6 @@ public:
     ~Private();
     void create(wl_client *client, quint32 version, quint32 id) override;
 
-    static DataSourceInterface *get(wl_resource *r) {
-        auto s = cast<Private>(r);
-        return s ? s->q_func() : nullptr;
-    }
-
     QStringList mimeTypes;
 
 private:
@@ -132,7 +127,7 @@ QStringList DataSourceInterface::mimeTypes() const
 
 DataSourceInterface *DataSourceInterface::get(wl_resource *native)
 {
-    return Private::get(native);
+    return Private::get<DataSourceInterface>(native);
 }
 
 DataSourceInterface::Private *DataSourceInterface::d_func() const
