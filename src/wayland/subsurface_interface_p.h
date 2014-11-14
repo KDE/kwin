@@ -63,8 +63,6 @@ private:
     static void setSyncCallback(wl_client *client, wl_resource *resource);
     static void setDeSyncCallback(wl_client *client, wl_resource *resource);
 
-    static Private *cast(wl_resource *r);
-
     SubSurfaceInterface *q;
 
     static const struct wl_subsurface_interface s_interface;

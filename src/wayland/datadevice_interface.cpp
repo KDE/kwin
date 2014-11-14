@@ -55,9 +55,6 @@ private:
     static void startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial);
     static void setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial);
     static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
 
     DataDeviceInterface *q;
 
@@ -83,7 +80,7 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
     Q_UNUSED(client)
     Q_UNUSED(serial)
     // TODO: verify serial
-    cast(resource)->startDrag(DataSourceInterface::get(source), SurfaceInterface::get(origin), SurfaceInterface::get(icon));
+    cast<Private>(resource)->startDrag(DataSourceInterface::get(source), SurfaceInterface::get(origin), SurfaceInterface::get(icon));
 }
 
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i)
@@ -103,7 +100,7 @@ void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_re
     Q_UNUSED(client)
     Q_UNUSED(serial)
     // TODO: verify serial
-    cast(resource)->setSelection(DataSourceInterface::get(source));
+    cast<Private>(resource)->setSelection(DataSourceInterface::get(source));
 }
 
 void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
@@ -118,7 +115,7 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 
 void DataDeviceInterface::Private::unbind(wl_resource *resource)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     s->resource = nullptr;
     s->q->deleteLater();
 }

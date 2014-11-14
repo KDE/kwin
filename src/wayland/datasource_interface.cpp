@@ -38,7 +38,7 @@ public:
     void create(wl_client *client, quint32 version, quint32 id) override;
 
     static DataSourceInterface *get(wl_resource *r) {
-        auto s = cast(r);
+        auto s = cast<Private>(r);
         return s ? s->q : nullptr;
     }
 
@@ -50,9 +50,6 @@ private:
     static void offerCallback(wl_client *client, wl_resource *resource, const char *mimeType);
     static void destroyCallack(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        return r ? reinterpret_cast<Private*>(wl_resource_get_user_data(r)) : nullptr;
-    }
 
     const static struct wl_data_source_interface s_interface;
     DataSourceInterface *q;
@@ -73,7 +70,7 @@ DataSourceInterface::Private::~Private() = default;
 
 void DataSourceInterface::Private::unbind(wl_resource *resource)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     s->resource = nullptr;
     s->q->deleteLater();
 }
@@ -81,13 +78,13 @@ void DataSourceInterface::Private::unbind(wl_resource *resource)
 void DataSourceInterface::Private::destroyCallack(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast(resource)->q->deleteLater();
+    cast<Private>(resource)->q->deleteLater();
 }
 
 void DataSourceInterface::Private::offerCallback(wl_client *client, wl_resource *resource, const char *mimeType)
 {
     Q_UNUSED(client)
-    cast(resource)->offer(QString::fromUtf8(mimeType));
+    cast<Private>(resource)->offer(QString::fromUtf8(mimeType));
 }
 
 void DataSourceInterface::Private::offer(const QString &mimeType)

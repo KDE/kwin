@@ -75,8 +75,6 @@ private:
     void setOpaque(const QRegion &region);
     void setInput(const QRegion &region, bool isInfinite);
 
-    static Private *cast(wl_resource *r);
-
     static void unbind(wl_resource *r);
     static void destroyFrameCallback(wl_resource *r);
 

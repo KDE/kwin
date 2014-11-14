@@ -46,9 +46,6 @@ private:
     static void receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd);
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
 
     DataOfferInterface *q;
 
@@ -93,13 +90,13 @@ void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource 
 void DataOfferInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast(resource)->q->deleteLater();
+    cast<Private>(resource)->q->deleteLater();
 }
 
 void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd)
 {
     Q_UNUSED(client)
-    cast(resource)->receive(QString::fromUtf8(mimeType), fd);
+    cast<Private>(resource)->receive(QString::fromUtf8(mimeType), fd);
 }
 
 void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
@@ -109,7 +106,7 @@ void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
 
 void DataOfferInterface::Private::unbind(wl_resource *resource)
 {
-    auto o = cast(resource);
+    auto o = cast<Private>(resource);
     o->resource = nullptr;
     o->q->deleteLater();
 }

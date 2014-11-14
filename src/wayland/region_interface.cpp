@@ -47,10 +47,6 @@ private:
     static void addCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
     static void subtractCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
 
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
-
     static const struct wl_region_interface s_interface;
     RegionInterface *q;
 };
@@ -87,24 +83,24 @@ void RegionInterface::Private::subtract(const QRect &rect)
 void RegionInterface::Private::addCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     Q_UNUSED(client)
-    cast(r)->add(QRect(x, y, width, height));
+    cast<Private>(r)->add(QRect(x, y, width, height));
 }
 
 void RegionInterface::Private::subtractCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height)
 {
     Q_UNUSED(client)
-    cast(r)->subtract(QRect(x, y, width, height));
+    cast<Private>(r)->subtract(QRect(x, y, width, height));
 }
 
 void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r)
 {
     Q_UNUSED(client)
-    cast(r)->q->deleteLater();
+    cast<Private>(r)->q->deleteLater();
 }
 
 void RegionInterface::Private::unbind(wl_resource *r)
 {
-    auto region = cast(r);
+    auto region = cast<Private>(r);
     region->resource = nullptr;
     region->q->deleteLater();
 }
@@ -124,7 +120,7 @@ RegionInterface *RegionInterface::Private::get(wl_resource *native)
     if (!native) {
         return nullptr;
     }
-    return cast(native)->q;
+    return cast<Private>(native)->q;
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent)

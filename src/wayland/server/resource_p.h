@@ -21,6 +21,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WAYLAND_SERVER_RESOURCE_P_H
 
 #include "resource.h"
+#include <wayland-server.h>
+#include <type_traits>
 
 namespace KWayland
 {
@@ -39,6 +41,13 @@ public:
 
 protected:
     explicit Private(Global *g);
+
+    template <typename Derived>
+    static Derived *cast(wl_resource *r) {
+        static_assert(std::is_base_of<Private, Derived>::value,
+                      "Derived must be derived from Resource::Private");
+        return r ? reinterpret_cast<Derived*>(wl_resource_get_user_data(r)) : nullptr;
+    }
 
 };
 

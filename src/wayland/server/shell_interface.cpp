@@ -83,10 +83,6 @@ public:
     bool toplevel = false;
 
 private:
-    static Private *cast(wl_resource *r) {
-        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-    }
-
     static void unbind(wl_resource *r);
     // interface callbacks
     static void pongCallback(wl_client *client, wl_resource *resource, uint32_t serial);
@@ -227,14 +223,14 @@ void ShellSurfaceInterface::Private::create(wl_client *c, quint32 version, quint
 
 void ShellSurfaceInterface::Private::unbind(wl_resource *r)
 {
-    auto s = cast(r);
+    auto s = cast<Private>(r);
     s->resource = nullptr;
     s->q->deleteLater();
 }
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     s->pong(serial);
 }
@@ -288,7 +284,7 @@ void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource
 {
     Q_UNUSED(seat)
     Q_UNUSED(serial)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: implement
 }
@@ -298,14 +294,14 @@ void ShellSurfaceInterface::Private::resizeCallback(wl_client *client, wl_resour
     Q_UNUSED(seat)
     Q_UNUSED(serial)
     Q_UNUSED(edges)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
 void ShellSurfaceInterface::Private::setToplevelCallback(wl_client *client, wl_resource *resource)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     s->setToplevel(true);
 }
@@ -326,7 +322,7 @@ void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_
     Q_UNUSED(x)
     Q_UNUSED(y)
     Q_UNUSED(flags)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: implement
 }
@@ -337,7 +333,7 @@ void ShellSurfaceInterface::Private::setFullscreenCallback(wl_client *client, wl
     Q_UNUSED(method)
     Q_UNUSED(framerate)
     Q_UNUSED(output)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: add method, framerate and output
     s->setFullscreen(true);
@@ -361,7 +357,7 @@ void ShellSurfaceInterface::Private::setPopupCalback(wl_client *client, wl_resou
     Q_UNUSED(x)
     Q_UNUSED(y)
     Q_UNUSED(flags)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: implement
 }
@@ -369,14 +365,14 @@ void ShellSurfaceInterface::Private::setPopupCalback(wl_client *client, wl_resou
 void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output)
 {
     Q_UNUSED(output)
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     // TODO: implement
 }
 
 void ShellSurfaceInterface::Private::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     s->setTitle(QString::fromUtf8(title));
 }
@@ -392,7 +388,7 @@ void ShellSurfaceInterface::Private::setTitle(const QString &t)
 
 void ShellSurfaceInterface::Private::setClassCallback(wl_client *client, wl_resource *resource, const char *class_)
 {
-    auto s = cast(resource);
+    auto s = cast<Private>(resource);
     Q_ASSERT(client == s->client);
     s->setWindowClass(QByteArray(class_));
 }

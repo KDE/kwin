@@ -131,11 +131,6 @@ const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface =
     setDeSyncCallback
 };
 
-SubSurfaceInterface::Private *SubSurfaceInterface::Private::cast(wl_resource *r)
-{
-    return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
-}
-
 SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor)
     : Resource::Private(compositor)
     , q(q)
@@ -184,7 +179,7 @@ void SubSurfaceInterface::Private::commit()
 
 void SubSurfaceInterface::Private::unbind(wl_resource *r)
 {
-    auto s = cast(r);
+    auto s = cast<Private>(r);
     s->resource = nullptr;
     s->q->deleteLater();
 }
@@ -192,14 +187,14 @@ void SubSurfaceInterface::Private::unbind(wl_resource *r)
 void SubSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast(resource)->q->deleteLater();
+    cast<Private>(resource)->q->deleteLater();
 }
 
 void SubSurfaceInterface::Private::setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y)
 {
     Q_UNUSED(client)
     // TODO: is this a fixed position?
-    cast(resource)->setPosition(QPoint(x, y));
+    cast<Private>(resource)->setPosition(QPoint(x, y));
 }
 
 void SubSurfaceInterface::Private::setPosition(const QPoint &p)
@@ -214,7 +209,7 @@ void SubSurfaceInterface::Private::setPosition(const QPoint &p)
 void SubSurfaceInterface::Private::placeAboveCallback(wl_client *client, wl_resource *resource, wl_resource *sibling)
 {
     Q_UNUSED(client)
-    cast(resource)->placeAbove(SurfaceInterface::get(sibling));
+    cast<Private>(resource)->placeAbove(SurfaceInterface::get(sibling));
 }
 
 void SubSurfaceInterface::Private::placeAbove(SurfaceInterface *sibling)
@@ -231,7 +226,7 @@ void SubSurfaceInterface::Private::placeAbove(SurfaceInterface *sibling)
 void SubSurfaceInterface::Private::placeBelowCallback(wl_client *client, wl_resource *resource, wl_resource *sibling)
 {
     Q_UNUSED(client)
-    cast(resource)->placeBelow(SurfaceInterface::get(sibling));
+    cast<Private>(resource)->placeBelow(SurfaceInterface::get(sibling));
 }
 
 void SubSurfaceInterface::Private::placeBelow(SurfaceInterface *sibling)
@@ -248,13 +243,13 @@ void SubSurfaceInterface::Private::placeBelow(SurfaceInterface *sibling)
 void SubSurfaceInterface::Private::setSyncCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast(resource)->setMode(Mode::Synchronized);
+    cast<Private>(resource)->setMode(Mode::Synchronized);
 }
 
 void SubSurfaceInterface::Private::setDeSyncCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast(resource)->setMode(Mode::Desynchronized);
+    cast<Private>(resource)->setMode(Mode::Desynchronized);
 }
 
 void SubSurfaceInterface::Private::setMode(Mode m)
