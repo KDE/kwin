@@ -41,13 +41,14 @@ public:
     DataDeviceInterface *dataDevice;
 
 private:
+    DataOfferInterface *q_func() {
+        return reinterpret_cast<DataOfferInterface *>(q);
+    }
     void receive(const QString &mimeType, qint32 fd);
     static void acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType);
     static void receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd);
     static void destroyCallback(wl_client *client, wl_resource *resource);
     static void unbind(wl_resource *resource);
-
-    DataOfferInterface *q;
 
     static const struct wl_data_offer_interface s_interface;
 };
@@ -59,10 +60,9 @@ const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = 
 };
 
 DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q)
-    : Resource::Private(nullptr)
+    : Resource::Private(q, nullptr)
     , source(source)
     , dataDevice(parentInterface)
-    , q(q)
 {
     // TODO: connect to new selections
 }
@@ -90,7 +90,7 @@ void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource 
 void DataOfferInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q->deleteLater();
+    cast<Private>(resource)->q_func()->deleteLater();
 }
 
 void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd)
@@ -108,7 +108,7 @@ void DataOfferInterface::Private::unbind(wl_resource *resource)
 {
     auto o = cast<Private>(resource);
     o->resource = nullptr;
-    o->q->deleteLater();
+    o->q_func()->deleteLater();
 }
 
 DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface)

@@ -103,8 +103,10 @@ private:
     void setTitle(const QString &title);
     void setWindowClass(const QByteArray &windowClass);
     void pong(quint32 serial);
+    ShellSurfaceInterface *q_func() {
+        return reinterpret_cast<ShellSurfaceInterface *>(q);
+    }
 
-    ShellSurfaceInterface *q;
     static const struct wl_shell_surface_interface s_interface;
 };
 
@@ -157,10 +159,9 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
  * ShellSurfaceInterface
  *********************************/
 ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface)
-    : Resource::Private(shell)
+    : Resource::Private(q, shell)
     , surface(surface)
     , pingTimer(new QTimer)
-    , q(q)
 {
     pingTimer->setSingleShot(true);
     pingTimer->setInterval(1000);
@@ -225,7 +226,7 @@ void ShellSurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast<Private>(r);
     s->resource = nullptr;
-    s->q->deleteLater();
+    s->q_func()->deleteLater();
 }
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
@@ -239,6 +240,7 @@ void ShellSurfaceInterface::Private::pong(quint32 serial)
 {
     if (pingTimer->isActive() && serial == pingSerial) {
         pingTimer->stop();
+        Q_Q(ShellSurfaceInterface);
         emit q->pongReceived();
     }
 }
@@ -312,6 +314,7 @@ void ShellSurfaceInterface::Private::setToplevel(bool t)
         return;
     }
     toplevel = t;
+    Q_Q(ShellSurfaceInterface);
     emit q->toplevelChanged(toplevel);
 }
 
@@ -345,6 +348,7 @@ void ShellSurfaceInterface::Private::setFullscreen(bool f)
         return;
     }
     fullscreen = f;
+    Q_Q(ShellSurfaceInterface);
     emit q->fullscreenChanged(fullscreen);
 }
 
@@ -383,6 +387,7 @@ void ShellSurfaceInterface::Private::setTitle(const QString &t)
         return;
     }
     title = t;
+    Q_Q(ShellSurfaceInterface);
     emit q->titleChanged(title);
 }
 
@@ -399,6 +404,7 @@ void ShellSurfaceInterface::Private::setWindowClass(const QByteArray &wc)
         return;
     }
     windowClass = wc;
+    Q_Q(ShellSurfaceInterface);
     emit q->windowClassChanged(windowClass);
 }
 

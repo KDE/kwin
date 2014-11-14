@@ -66,6 +66,9 @@ public:
     QPointer<SubSurfaceInterface> subSurface;
 
 private:
+    SurfaceInterface *q_func() {
+        return reinterpret_cast<SurfaceInterface *>(q);
+    }
     void commit();
     void damage(const QRect &rect);
     void setScale(qint32 scale);
@@ -90,7 +93,6 @@ private:
     // since version 3
     static void bufferScaleCallback(wl_client *client, wl_resource *resource, int32_t scale);
 
-    SurfaceInterface *q;
     static const struct wl_surface_interface s_interface;
     static QList<SurfaceInterface::Private*> s_allSurfaces;
 };

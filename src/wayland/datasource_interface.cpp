@@ -39,12 +39,15 @@ public:
 
     static DataSourceInterface *get(wl_resource *r) {
         auto s = cast<Private>(r);
-        return s ? s->q : nullptr;
+        return s ? s->q_func() : nullptr;
     }
 
     QStringList mimeTypes;
 
 private:
+    DataSourceInterface *q_func() {
+        return reinterpret_cast<DataSourceInterface *>(q);
+    }
     void offer(const QString &mimeType);
 
     static void offerCallback(wl_client *client, wl_resource *resource, const char *mimeType);
@@ -52,7 +55,6 @@ private:
     static void unbind(wl_resource *resource);
 
     const static struct wl_data_source_interface s_interface;
-    DataSourceInterface *q;
 };
 
 const struct wl_data_source_interface DataSourceInterface::Private::s_interface = {
@@ -61,8 +63,7 @@ const struct wl_data_source_interface DataSourceInterface::Private::s_interface 
 };
 
 DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent)
-    : Resource::Private(parent)
-    , q(q)
+    : Resource::Private(q, parent)
 {
 }
 
@@ -72,13 +73,13 @@ void DataSourceInterface::Private::unbind(wl_resource *resource)
 {
     auto s = cast<Private>(resource);
     s->resource = nullptr;
-    s->q->deleteLater();
+    s->q_func()->deleteLater();
 }
 
 void DataSourceInterface::Private::destroyCallack(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q->deleteLater();
+    cast<Private>(resource)->q_func()->deleteLater();
 }
 
 void DataSourceInterface::Private::offerCallback(wl_client *client, wl_resource *resource, const char *mimeType)
@@ -90,6 +91,7 @@ void DataSourceInterface::Private::offerCallback(wl_client *client, wl_resource 
 void DataSourceInterface::Private::offer(const QString &mimeType)
 {
     mimeTypes << mimeType;
+    Q_Q(DataSourceInterface);
     emit q->mimeTypeOffered(mimeType);
 }
 

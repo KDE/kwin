@@ -40,7 +40,7 @@ public:
     Global *global;
 
 protected:
-    explicit Private(Global *g);
+    explicit Private(Resource *q, Global *g);
 
     template <typename Derived>
     static Derived *cast(wl_resource *r) {
@@ -49,6 +49,7 @@ protected:
         return r ? reinterpret_cast<Derived*>(wl_resource_get_user_data(r)) : nullptr;
     }
 
+    Resource *q;
 };
 
 }

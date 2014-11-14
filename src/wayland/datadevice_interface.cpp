@@ -50,13 +50,14 @@ public:
     DataSourceInterface *selection = nullptr;
 
 private:
+    DataDeviceInterface *q_func() {
+        return reinterpret_cast<DataDeviceInterface*>(q);
+    }
     void startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *icon);
     void setSelection(DataSourceInterface *dataSource);
     static void startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial);
     static void setSelectionCallback(wl_client *client, wl_resource *resource, wl_resource *source, uint32_t serial);
     static void unbind(wl_resource *resource);
-
-    DataDeviceInterface *q;
 
     static const struct wl_data_device_interface s_interface;
 };
@@ -67,9 +68,8 @@ const struct wl_data_device_interface DataDeviceInterface::Private::s_interface 
 };
 
 DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager)
-    : Resource::Private(manager)
+    : Resource::Private(q, manager)
     , seat(seat)
-    , q(q)
 {
 }
 
@@ -92,6 +92,7 @@ void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, Su
     source = dataSource;
     surface = origin;
     icon = i;
+    Q_Q(DataDeviceInterface);
     emit q->dragStarted();
 }
 
@@ -105,6 +106,7 @@ void DataDeviceInterface::Private::setSelectionCallback(wl_client *client, wl_re
 
 void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 {
+    Q_Q(DataDeviceInterface);
     selection = dataSource;
     if (selection) {
         emit q->selectionChanged(selection);
@@ -117,7 +119,7 @@ void DataDeviceInterface::Private::unbind(wl_resource *resource)
 {
     auto s = cast<Private>(resource);
     s->resource = nullptr;
-    s->q->deleteLater();
+    s->q_func()->deleteLater();
 }
 
 void DataDeviceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
@@ -132,6 +134,7 @@ void DataDeviceInterface::Private::create(wl_client *client, quint32 version, qu
 
 DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
 {
+    Q_Q(DataDeviceInterface);
     DataOfferInterface *offer = new DataOfferInterface(source, q);
     offer->create(wl_resource_get_client(resource), wl_resource_get_version(resource), 0);
     if (!offer->resource()) {

@@ -37,8 +37,7 @@ namespace Server
 QList<SurfaceInterface::Private*> SurfaceInterface::Private::s_allSurfaces;
 
 SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
-    : Resource::Private(c)
-    , q(q)
+    : Resource::Private(q, c)
 {
     s_allSurfaces << this;
 }
@@ -61,6 +60,7 @@ void SurfaceInterface::Private::removeChild(QPointer< SubSurfaceInterface > subS
 
 bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
 {
+    Q_Q(SurfaceInterface);
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
         return false;
@@ -94,6 +94,7 @@ bool SurfaceInterface::Private::raiseChild(QPointer<SubSurfaceInterface> subsurf
 
 bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling)
 {
+    Q_Q(SurfaceInterface);
     auto it = std::find(pending.children.begin(), pending.children.end(), subsurface);
     if (it == pending.children.end()) {
         return false;
@@ -134,7 +135,7 @@ SurfaceInterface *SurfaceInterface::Private::get(wl_resource *native)
     if (it == s_allSurfaces.constEnd()) {
         return nullptr;
     }
-    return (*it)->q;
+    return (*it)->q_func();
 }
 
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
@@ -183,7 +184,7 @@ void SurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast<Private>(r);
     s->resource = nullptr;
-    s->q->deleteLater();
+    s->q_func()->deleteLater();
 }
 
 void SurfaceInterface::Private::destroy()
@@ -205,6 +206,7 @@ void SurfaceInterface::Private::destroy()
 
 void SurfaceInterface::Private::commit()
 {
+    Q_Q(SurfaceInterface);
     for (wl_resource *c : current.callbacks) {
         wl_resource_destroy(c);
     }
@@ -282,6 +284,7 @@ void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &
     if (pending.buffer) {
         delete pending.buffer;
     }
+    Q_Q(SurfaceInterface);
     pending.buffer = new BufferInterface(buffer, q);
     QObject::connect(pending.buffer, &BufferInterface::aboutToBeDestroyed, q,
         [this](BufferInterface *buffer) {

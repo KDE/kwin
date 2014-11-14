@@ -27,8 +27,9 @@ namespace KWayland
 namespace Server
 {
 
-Resource::Private::Private(Global *g)
+Resource::Private::Private(Resource *q, Global *g)
     : global(g)
+    , q(q)
 {
 }
 

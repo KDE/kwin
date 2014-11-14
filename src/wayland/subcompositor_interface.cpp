@@ -132,8 +132,7 @@ const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface =
 };
 
 SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor)
-    : Resource::Private(compositor)
-    , q(q)
+    : Resource::Private(q, compositor)
 {
 }
 
@@ -141,6 +140,7 @@ SubSurfaceInterface::Private::~Private()
 {
     // no need to notify the surface as it's tracking a QPointer which will be reset automatically
     if (parent) {
+        Q_Q(SubSurfaceInterface);
         reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
     }
 }
@@ -163,6 +163,7 @@ void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, qu
     }
     surface = s;
     parent = p;
+    Q_Q(SubSurfaceInterface);
     surface->d_func()->subSurface = QPointer<SubSurfaceInterface>(q);
     parent->d_func()->addChild(QPointer<SubSurfaceInterface>(q));
 }
@@ -173,6 +174,7 @@ void SubSurfaceInterface::Private::commit()
         scheduledPosChange = false;
         pos = scheduledPos;
         scheduledPos = QPoint();
+        Q_Q(SubSurfaceInterface);
         emit q->positionChanged(pos);
     }
 }
@@ -181,13 +183,13 @@ void SubSurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast<Private>(r);
     s->resource = nullptr;
-    s->q->deleteLater();
+    s->q_func()->deleteLater();
 }
 
 void SubSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q->deleteLater();
+    cast<Private>(resource)->q_func()->deleteLater();
 }
 
 void SubSurfaceInterface::Private::setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y)
@@ -218,6 +220,7 @@ void SubSurfaceInterface::Private::placeAbove(SurfaceInterface *sibling)
         // TODO: raise error
         return;
     }
+    Q_Q(SubSurfaceInterface);
     if (!parent->d_func()->raiseChild(QPointer<SubSurfaceInterface>(q), sibling)) {
         wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
@@ -235,6 +238,7 @@ void SubSurfaceInterface::Private::placeBelow(SurfaceInterface *sibling)
         // TODO: raise error
         return;
     }
+    Q_Q(SubSurfaceInterface);
     if (!parent->d_func()->lowerChild(QPointer<SubSurfaceInterface>(q), sibling)) {
         wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
@@ -258,6 +262,7 @@ void SubSurfaceInterface::Private::setMode(Mode m)
         return;
     }
     mode = m;
+    Q_Q(SubSurfaceInterface);
     emit q->modeChanged(m);
 }
 

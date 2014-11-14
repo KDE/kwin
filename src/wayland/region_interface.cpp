@@ -39,6 +39,9 @@ public:
     static RegionInterface *get(wl_resource *native);
 
 private:
+    RegionInterface *q_func() {
+        return reinterpret_cast<RegionInterface*>(q);
+    }
     void add(const QRect &rect);
     void subtract(const QRect &rect);
 
@@ -48,7 +51,6 @@ private:
     static void subtractCallback(wl_client *client, wl_resource *r, int32_t x, int32_t y, int32_t width, int32_t height);
 
     static const struct wl_region_interface s_interface;
-    RegionInterface *q;
 };
 
 const struct wl_region_interface RegionInterface::Private::s_interface = {
@@ -58,8 +60,7 @@ const struct wl_region_interface RegionInterface::Private::s_interface = {
 };
 
 RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q)
-    : Resource::Private(compositor)
-    , q(q)
+    : Resource::Private(q, compositor)
 {
 }
 
@@ -68,6 +69,7 @@ RegionInterface::Private::~Private() = default;
 void RegionInterface::Private::add(const QRect &rect)
 {
     qtRegion = qtRegion.united(rect);
+    Q_Q(RegionInterface);
     emit q->regionChanged(qtRegion);
 }
 
@@ -77,6 +79,7 @@ void RegionInterface::Private::subtract(const QRect &rect)
         return;
     }
     qtRegion = qtRegion.subtracted(rect);
+    Q_Q(RegionInterface);
     emit q->regionChanged(qtRegion);
 }
 
@@ -95,14 +98,14 @@ void RegionInterface::Private::subtractCallback(wl_client *client, wl_resource *
 void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r)
 {
     Q_UNUSED(client)
-    cast<Private>(r)->q->deleteLater();
+    cast<Private>(r)->q_func()->deleteLater();
 }
 
 void RegionInterface::Private::unbind(wl_resource *r)
 {
     auto region = cast<Private>(r);
     region->resource = nullptr;
-    region->q->deleteLater();
+    region->q_func()->deleteLater();
 }
 
 void RegionInterface::Private::create(wl_client *client, quint32 version, quint32 id)
@@ -120,7 +123,7 @@ RegionInterface *RegionInterface::Private::get(wl_resource *native)
     if (!native) {
         return nullptr;
     }
-    return cast<Private>(native)->q;
+    return cast<Private>(native)->q_func();
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent)

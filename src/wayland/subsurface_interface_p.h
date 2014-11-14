@@ -50,6 +50,9 @@ public:
     QPointer<SurfaceInterface> parent;
 
 private:
+    SubSurfaceInterface *q_func() {
+        return reinterpret_cast<SubSurfaceInterface *>(q);
+    }
     void setMode(Mode mode);
     void setPosition(const QPoint &pos);
     void placeAbove(SurfaceInterface *sibling);
@@ -62,8 +65,6 @@ private:
     static void placeBelowCallback(wl_client *client, wl_resource *resource, wl_resource *sibling);
     static void setSyncCallback(wl_client *client, wl_resource *resource);
     static void setDeSyncCallback(wl_client *client, wl_resource *resource);
-
-    SubSurfaceInterface *q;
 
     static const struct wl_subsurface_interface s_interface;
 };
