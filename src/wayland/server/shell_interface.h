@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/kwaylandserver_export.h>
 
 #include "global.h"
+#include "resource.h"
 
 class QSize;
 struct wl_resource;
@@ -53,7 +54,7 @@ private:
     class Private;
 };
 
-class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public QObject
+class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public Resource
 {
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
@@ -70,7 +71,6 @@ public:
 
     SurfaceInterface *surface() const;
     ShellInterface *shell() const;
-    wl_resource *resource() const;
 
     QString title() const;
     QByteArray windowClass() const;
@@ -94,7 +94,7 @@ private:
     friend class ShellInterface;
     explicit ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent);
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

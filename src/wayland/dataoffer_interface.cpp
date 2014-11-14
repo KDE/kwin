@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "dataoffer_interface.h"
 #include "datadevice_interface.h"
 #include "datasource_interface.h"
+#include "resource_p.h"
 // Qt
 #include <QStringList>
 // Wayland
@@ -30,13 +31,12 @@ namespace KWayland
 namespace Server
 {
 
-class DataOfferInterface::Private
+class DataOfferInterface::Private : public Resource::Private
 {
 public:
     Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id);
-    wl_resource *offer = nullptr;
+    void create(wl_client *client, quint32 version, quint32 id) override;
     DataSourceInterface *source;
     DataDeviceInterface *dataDevice;
 
@@ -62,28 +62,24 @@ const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = 
 };
 
 DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q)
-    : source(source)
+    : Resource::Private(nullptr)
+    , source(source)
     , dataDevice(parentInterface)
     , q(q)
 {
     // TODO: connect to new selections
 }
 
-DataOfferInterface::Private::~Private()
-{
-    if (offer) {
-        wl_resource_destroy(offer);
-    }
-}
+DataOfferInterface::Private::~Private() = default;
 
 void DataOfferInterface::Private::create(wl_client *client, quint32 version, quint32 id)
 {
-    Q_ASSERT(!offer);
-    offer = wl_resource_create(client, &wl_data_offer_interface, version, id);
-    if (!offer) {
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(client, &wl_data_offer_interface, version, id);
+    if (!resource) {
         return;
     }
-    wl_resource_set_implementation(offer, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource *resource, uint32_t serial, const char *mimeType)
@@ -114,41 +110,37 @@ void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
 void DataOfferInterface::Private::unbind(wl_resource *resource)
 {
     auto o = cast(resource);
-    o->offer = nullptr;
+    o->resource = nullptr;
     o->q->deleteLater();
 }
 
 DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface)
-    : QObject(parentInterface)
-    , d(new Private(source, parentInterface, this))
+    : Resource(new Private(source, parentInterface, this), parentInterface)
 {
     connect(source, &DataSourceInterface::mimeTypeOffered, this,
         [this](const QString &mimeType) {
-            if (!d->offer) {
+            Q_D();
+            if (!d->resource) {
                 return;
             }
-            wl_data_offer_send_offer(d->offer, mimeType.toUtf8().constData());
+            wl_data_offer_send_offer(d->resource, mimeType.toUtf8().constData());
         }
     );
 }
 
 DataOfferInterface::~DataOfferInterface() = default;
 
-void DataOfferInterface::create(wl_client *client, quint32 version, quint32 id)
-{
-    d->create(client, version, id);
-}
-
 void DataOfferInterface::sendAllOffers()
 {
+    Q_D();
     for (const QString &mimeType : d->source->mimeTypes()) {
-        wl_data_offer_send_offer(d->offer, mimeType.toUtf8().constData());
+        wl_data_offer_send_offer(d->resource, mimeType.toUtf8().constData());
     }
 }
 
-wl_resource *DataOfferInterface::resource() const
+DataOfferInterface::Private *DataOfferInterface::d_func() const
 {
-    return d->offer;
+    return reinterpret_cast<DataOfferInterface::Private*>(d.data());
 }
 
 }

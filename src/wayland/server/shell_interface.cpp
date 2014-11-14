@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell_interface.h"
 #include "global_p.h"
+#include "resource_p.h"
 #include "display.h"
 #include "surface_interface.h"
 
@@ -61,19 +62,16 @@ const struct wl_shell_interface ShellInterface::Private::s_interface = {
 
 
 
-class ShellSurfaceInterface::Private
+class ShellSurfaceInterface::Private : public Resource::Private
 {
 public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface);
-    void create(wl_client *client, quint32 version, quint32 id);
+    void create(wl_client *client, quint32 version, quint32 id) override;
     void setFullscreen(bool fullscreen);
     void setToplevel(bool toplevel);
     void ping();
 
     SurfaceInterface *surface;
-    ShellInterface *shell;
-    wl_resource *shellSurface = nullptr;
-    wl_client *client = nullptr;
     pid_t clientPid = 0;
     uid_t clientUser = 0;
     gid_t clientGroup = 0;
@@ -163,8 +161,8 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
  * ShellSurfaceInterface
  *********************************/
 ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface)
-    : surface(surface)
-    , shell(shell)
+    : Resource::Private(shell)
+    , surface(surface)
     , pingTimer(new QTimer)
     , q(q)
 {
@@ -186,15 +184,16 @@ const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interf
 };
 
 ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent)
-    : QObject(parent)
-    , d(new Private(this, shell, parent))
+    : Resource(new Private(this, shell, parent), parent)
 {
+    Q_D();
     connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);
     connect(this, &ShellSurfaceInterface::fullscreenChanged, this,
         [this] (bool fullscreen) {
             if (!fullscreen) {
                 return;
             }
+            Q_D();
             d->setToplevel(false);
         }
     );
@@ -203,37 +202,33 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
             if (!toplevel) {
                 return;
             }
+            Q_D();
             d->setFullscreen(false);
         }
     );
 }
 
-ShellSurfaceInterface::~ShellSurfaceInterface()
-{
-    if (d->shellSurface) {
-        wl_resource_destroy(d->shellSurface);
-    }
-}
+ShellSurfaceInterface::~ShellSurfaceInterface() = default;
 
 void ShellSurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
 {
     Q_ASSERT(!client);
-    Q_ASSERT(!shellSurface);
-    shellSurface = wl_resource_create(c, &wl_shell_surface_interface, version, id);
-    if (!shellSurface) {
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(c, &wl_shell_surface_interface, version, id);
+    if (!resource) {
         wl_client_post_no_memory(c);
         return;
     }
     client = c;
     wl_client_get_credentials(client, &clientPid, &clientUser, &clientGroup);
 
-    wl_resource_set_implementation(shellSurface, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void ShellSurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast(r);
-    s->shellSurface = nullptr;
+    s->resource = nullptr;
     s->q->deleteLater();
 }
 
@@ -254,6 +249,7 @@ void ShellSurfaceInterface::Private::pong(quint32 serial)
 
 void ShellSurfaceInterface::ping()
 {
+    Q_D();
     d->ping();
 }
 
@@ -262,26 +258,29 @@ void ShellSurfaceInterface::Private::ping()
     if (pingTimer->isActive()) {
         return;
     }
-    pingSerial = shell->display()->nextSerial();
-    wl_shell_surface_send_ping(shellSurface, pingSerial);
+    pingSerial = global->display()->nextSerial();
+    wl_shell_surface_send_ping(resource, pingSerial);
     wl_client_flush(client);
     pingTimer->start();
 }
 
 void ShellSurfaceInterface::setPingTimeout(uint msec)
 {
+    Q_D();
     d->pingTimer->setInterval(msec);
 }
 
 bool ShellSurfaceInterface::isPinged() const
 {
+    Q_D();
     return d->pingTimer->isActive();
 }
 
 void ShellSurfaceInterface::requestSize(const QSize &size)
 {
+    Q_D();
     // TODO: what about the edges?
-    wl_shell_surface_send_configure(d->shellSurface, 0, size.width(), size.height());
+    wl_shell_surface_send_configure(d->resource, 0, size.width(), size.height());
     wl_client_flush(d->client);
 }
 
@@ -408,43 +407,53 @@ void ShellSurfaceInterface::Private::setWindowClass(const QByteArray &wc)
 }
 
 SurfaceInterface *ShellSurfaceInterface::surface() const {
+    Q_D();
     return d->surface;
 }
 
 ShellInterface *ShellSurfaceInterface::shell() const {
-    return d->shell;
-}
-
-wl_resource *ShellSurfaceInterface::resource() const {
-    return d->shellSurface;
+    Q_D();
+    return reinterpret_cast<ShellInterface*>(d->global);
 }
 
 QString ShellSurfaceInterface::title() const {
+    Q_D();
     return d->title;
 }
 
 QByteArray ShellSurfaceInterface::windowClass() const {
+    Q_D();
     return d->windowClass;
 }
 
 bool ShellSurfaceInterface::isFullscreen() const {
+    Q_D();
     return d->fullscreen;
 }
 
 bool ShellSurfaceInterface::isToplevel() const {
+    Q_D();
     return d->toplevel;
 }
 
 pid_t ShellSurfaceInterface::clientPid() const {
+    Q_D();
     return d->clientPid;
 }
 
 uid_t ShellSurfaceInterface::clientUser() const {
+    Q_D();
     return d->clientUser;
 }
 
 gid_t ShellSurfaceInterface::clientGroup() const {
+    Q_D();
     return d->clientGroup;
+}
+
+ShellSurfaceInterface::Private *ShellSurfaceInterface::d_func() const
+{
+    return reinterpret_cast<ShellSurfaceInterface::Private*>(d.data());
 }
 
 }

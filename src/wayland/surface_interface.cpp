@@ -37,7 +37,7 @@ namespace Server
 QList<SurfaceInterface::Private*> SurfaceInterface::Private::s_allSurfaces;
 
 SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
-    : compositor(c)
+    : Resource::Private(c)
     , q(q)
 {
     s_allSurfaces << this;
@@ -134,7 +134,7 @@ bool SurfaceInterface::Private::lowerChild(QPointer<SubSurfaceInterface> subsurf
 SurfaceInterface *SurfaceInterface::Private::get(wl_resource *native)
 {
     auto it = std::find_if(s_allSurfaces.constBegin(), s_allSurfaces.constEnd(), [native](Private *s) {
-        return s->surface == native;
+        return s->resource == native;
     });
     if (it == s_allSurfaces.constEnd()) {
         return nullptr;
@@ -155,32 +155,27 @@ const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
 };
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *parent)
-    : QObject(/*parent*/)
-    , d(new Private(this, parent))
+    : Resource(new Private(this, parent))
 {
 }
 
 SurfaceInterface::~SurfaceInterface() = default;
 
-void SurfaceInterface::create(wl_client *client, quint32 version, quint32 id)
-{
-    d->create(client, version, id);
-}
-
 void SurfaceInterface::Private::create(wl_client *c, quint32 version, quint32 id)
 {
-    Q_ASSERT(!surface);
+    Q_ASSERT(!resource);
     Q_ASSERT(!client);
     client = c;
-    surface = wl_resource_create(client, &wl_surface_interface, version, id);
-    if (!surface) {
+    resource = wl_resource_create(client, &wl_surface_interface, version, id);
+    if (!resource) {
         return;
     }
-    wl_resource_set_implementation(surface, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void SurfaceInterface::frameRendered(quint32 msec)
 {
+    Q_D();
     // notify all callbacks
     while (!d->current.callbacks.isEmpty()) {
         wl_resource *r = d->current.callbacks.takeFirst();
@@ -192,7 +187,7 @@ void SurfaceInterface::frameRendered(quint32 msec)
 void SurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast(r);
-    s->surface = nullptr;
+    s->resource = nullptr;
     s->q->deleteLater();
 }
 
@@ -207,9 +202,9 @@ void SurfaceInterface::Private::destroy()
     if (current.buffer) {
         current.buffer->unref();
     }
-    if (surface) {
-        wl_resource_destroy(surface);
-        surface = nullptr;
+    if (resource) {
+        wl_resource_destroy(resource);
+        resource = nullptr;
     }
 }
 
@@ -240,7 +235,7 @@ void SurfaceInterface::Private::commit()
         if (!(*it)) {
             continue;
         }
-        (*it)->d->commit();
+        (*it)->d_func()->commit();
     }
     if (opaqueRegionChanged) {
         emit q->opaqueChanged(current.opaque);
@@ -279,7 +274,7 @@ void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
 {
     wl_resource *r = wl_resource_create(client, &wl_callback_interface, 1, callback);
     if (!r) {
-        wl_resource_post_no_memory(surface);
+        wl_resource_post_no_memory(resource);
         return;
     }
     wl_resource_set_implementation(r, nullptr, this, destroyFrameCallback);
@@ -385,53 +380,51 @@ void SurfaceInterface::Private::bufferScaleCallback(wl_client *client, wl_resour
     cast(resource)->setScale(scale);
 }
 
-wl_resource *SurfaceInterface::resource() const
-{
-    return d->surface;
-}
-
-wl_client *SurfaceInterface::client() const
-{
-    return d->client;
-}
-
 QRegion SurfaceInterface::damage() const
 {
+    Q_D();
     return d->current.damage;
 }
 
 QRegion SurfaceInterface::opaque() const
 {
+    Q_D();
     return d->current.opaque;
 }
 
 QRegion SurfaceInterface::input() const
 {
+    Q_D();
     return d->current.input;
 }
 
 bool SurfaceInterface::inputIsInfitine() const
 {
+    Q_D();
     return d->current.inputIsInfinite;
 }
 
 qint32 SurfaceInterface::scale() const
 {
+    Q_D();
     return d->current.scale;
 }
 
 OutputInterface::Transform SurfaceInterface::transform() const
 {
+    Q_D();
     return d->current.transform;
 }
 
 BufferInterface *SurfaceInterface::buffer()
 {
+    Q_D();
     return d->current.buffer;
 }
 
 QPoint SurfaceInterface::offset() const
 {
+    Q_D();
     return d->current.offset;
 }
 
@@ -442,12 +435,19 @@ SurfaceInterface *SurfaceInterface::get(wl_resource *native)
 
 QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const
 {
+    Q_D();
     return d->current.children;
 }
 
 QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
 {
+    Q_D();
     return d->subSurface;
+}
+
+SurfaceInterface::Private *SurfaceInterface::d_func() const
+{
+    return reinterpret_cast<Private*>(d.data());
 }
 
 }

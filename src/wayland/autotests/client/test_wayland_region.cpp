@@ -149,6 +149,7 @@ void TestRegion::testCreate()
     auto serverRegion = regionCreatedSpy.first().first().value<KWayland::Server::RegionInterface*>();
     QVERIFY(serverRegion);
     QCOMPARE(serverRegion->region(), QRegion());
+    QCOMPARE(serverRegion->global(), m_compositorInterface);
 }
 
 void TestRegion::testCreateWithRegion()

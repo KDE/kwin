@@ -18,8 +18,10 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datadevice_interface.h"
+#include "datadevicemanager_interface.h"
 #include "dataoffer_interface.h"
 #include "datasource_interface.h"
+#include "resource_p.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
 // Wayland
@@ -30,18 +32,17 @@ namespace KWayland
 namespace Server
 {
 
-class DataDeviceInterface::Private
+class DataDeviceInterface::Private : public Resource::Private
 {
 public:
-    Private(SeatInterface *seat, DataDeviceInterface *q);
+    Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager);
     ~Private();
 
-    void create(wl_client *client, quint32 version, quint32 id);
+    void create(wl_client *client, quint32 version, quint32 id) override;
 
     DataOfferInterface *createDataOffer(DataSourceInterface *source);
 
     SeatInterface *seat;
-    wl_resource *device = nullptr;
     DataSourceInterface *source = nullptr;
     SurfaceInterface *surface = nullptr;
     SurfaceInterface *icon = nullptr;
@@ -68,18 +69,14 @@ const struct wl_data_device_interface DataDeviceInterface::Private::s_interface 
     setSelectionCallback
 };
 
-DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q)
-    : seat(seat)
+DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager)
+    : Resource::Private(manager)
+    , seat(seat)
     , q(q)
 {
 }
 
-DataDeviceInterface::Private::~Private()
-{
-    if (device) {
-        wl_resource_destroy(device);
-    }
-}
+DataDeviceInterface::Private::~Private() = default;
 
 void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resource *resource, wl_resource *source, wl_resource *origin, wl_resource *icon, uint32_t serial)
 {
@@ -92,7 +89,7 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i)
 {
     if (seat->pointer()->focusedSurface() != origin) {
-        wl_resource_post_error(device, 0, "Surface doesn't have pointer grab");
+        wl_resource_post_error(resource, 0, "Surface doesn't have pointer grab");
         return;
     }
     source = dataSource;
@@ -122,84 +119,84 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 void DataDeviceInterface::Private::unbind(wl_resource *resource)
 {
     auto s = cast(resource);
-    s->device = nullptr;
+    s->resource = nullptr;
     s->q->deleteLater();
 }
 
 void DataDeviceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
 {
-    Q_ASSERT(!device);
-    device = wl_resource_create(client, &wl_data_device_interface, version, id);
-    if (!device) {
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(client, &wl_data_device_interface, version, id);
+    if (!resource) {
         return;
     }
-    wl_resource_set_implementation(device, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
 {
     DataOfferInterface *offer = new DataOfferInterface(source, q);
-    offer->create(wl_resource_get_client(device), wl_resource_get_version(device), 0);
+    offer->create(wl_resource_get_client(resource), wl_resource_get_version(resource), 0);
     if (!offer->resource()) {
         // TODO: send error?
         delete offer;
         return nullptr;
     }
-    wl_data_device_send_data_offer(device, offer->resource());
+    wl_data_device_send_data_offer(resource, offer->resource());
     offer->sendAllOffers();
     return offer;
 }
 
 DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent)
-    : QObject(/*parent*/)
-    , d(new Private(seat, this))
+    : Resource(new Private(seat, this, parent))
 {
 }
 
 DataDeviceInterface::~DataDeviceInterface() = default;
 
-void DataDeviceInterface::create(wl_client *client, quint32 version, quint32 id)
-{
-    d->create(client, version, id);
-}
-
 SeatInterface *DataDeviceInterface::seat() const
 {
+    Q_D();
     return d->seat;
-}
-
-wl_resource *DataDeviceInterface::resource() const
-{
-    return d->device;
 }
 
 DataSourceInterface *DataDeviceInterface::dragSource() const
 {
+    Q_D();
     return d->source;
 }
 
 SurfaceInterface *DataDeviceInterface::icon() const
 {
+    Q_D();
     return d->icon;
 }
 
 SurfaceInterface *DataDeviceInterface::origin() const
 {
+    Q_D();
     return d->surface;
 }
 
 DataSourceInterface *DataDeviceInterface::selection() const
 {
+    Q_D();
     return d->selection;
 }
 
 void DataDeviceInterface::sendSelection(DataDeviceInterface *other)
 {
+    Q_D();
     auto r = d->createDataOffer(other->selection());
     if (!r) {
         return;
     }
-    wl_data_device_send_selection(d->device, r->resource());
+    wl_data_device_send_selection(d->resource, r->resource());
+}
+
+DataDeviceInterface::Private *DataDeviceInterface::d_func() const
+{
+    return reinterpret_cast<DataDeviceInterface::Private*>(d.data());
 }
 
 }

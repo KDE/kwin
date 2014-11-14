@@ -106,7 +106,7 @@ void SubCompositorInterface::Private::subsurface(wl_client *client, wl_resource 
     // TODO: add check that surface is not already used in an interface (e.g. Shell)
     // TODO: add check that parentSurface is not a child of surface
     SubSurfaceInterface *s = new SubSurfaceInterface(q);
-    s->d->create(client, wl_resource_get_version(resource), id, surface, parentSurface);
+    s->d_func()->create(client, wl_resource_get_version(resource), id, surface, parentSurface);
     if (!s->resource()) {
         wl_resource_post_no_memory(resource);
         delete s;
@@ -136,8 +136,9 @@ SubSurfaceInterface::Private *SubSurfaceInterface::Private::cast(wl_resource *r)
     return reinterpret_cast<Private*>(wl_resource_get_user_data(r));
 }
 
-SubSurfaceInterface::Private::Private(SubSurfaceInterface *q)
-    : q(q)
+SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor)
+    : Resource::Private(compositor)
+    , q(q)
 {
 }
 
@@ -145,25 +146,30 @@ SubSurfaceInterface::Private::~Private()
 {
     // no need to notify the surface as it's tracking a QPointer which will be reset automatically
     if (parent) {
-        parent->d->removeChild(QPointer<SubSurfaceInterface>(q));
+        reinterpret_cast<SurfaceInterface::Private*>(parent->d.data())->removeChild(QPointer<SubSurfaceInterface>(q));
     }
-    if (subSurface) {
-        wl_resource_destroy(subSurface);
+}
+
+void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
+{
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(client, &wl_subsurface_interface, version, id);
+    if (!resource) {
+        return;
     }
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *s, SurfaceInterface *p)
 {
-    Q_ASSERT(!subSurface);
-    subSurface = wl_resource_create(client, &wl_subsurface_interface, version, id);
-    if (!subSurface) {
+    create(client, version, id);
+    if (!resource) {
         return;
     }
     surface = s;
     parent = p;
-    surface->d->subSurface = QPointer<SubSurfaceInterface>(q);
-    parent->d->addChild(QPointer<SubSurfaceInterface>(q));
-    wl_resource_set_implementation(subSurface, &s_interface, this, unbind);
+    surface->d_func()->subSurface = QPointer<SubSurfaceInterface>(q);
+    parent->d_func()->addChild(QPointer<SubSurfaceInterface>(q));
 }
 
 void SubSurfaceInterface::Private::commit()
@@ -179,7 +185,7 @@ void SubSurfaceInterface::Private::commit()
 void SubSurfaceInterface::Private::unbind(wl_resource *r)
 {
     auto s = cast(r);
-    s->subSurface = nullptr;
+    s->resource = nullptr;
     s->q->deleteLater();
 }
 
@@ -217,8 +223,8 @@ void SubSurfaceInterface::Private::placeAbove(SurfaceInterface *sibling)
         // TODO: raise error
         return;
     }
-    if (!parent->d->raiseChild(QPointer<SubSurfaceInterface>(q), sibling)) {
-        wl_resource_post_error(subSurface, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
+    if (!parent->d_func()->raiseChild(QPointer<SubSurfaceInterface>(q), sibling)) {
+        wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
 }
 
@@ -234,8 +240,8 @@ void SubSurfaceInterface::Private::placeBelow(SurfaceInterface *sibling)
         // TODO: raise error
         return;
     }
-    if (!parent->d->lowerChild(QPointer<SubSurfaceInterface>(q), sibling)) {
-        wl_resource_post_error(subSurface, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
+    if (!parent->d_func()->lowerChild(QPointer<SubSurfaceInterface>(q), sibling)) {
+        wl_resource_post_error(resource, WL_SUBCOMPOSITOR_ERROR_BAD_SURFACE, "Incorrect sibling");
     }
 }
 
@@ -261,8 +267,7 @@ void SubSurfaceInterface::Private::setMode(Mode m)
 }
 
 SubSurfaceInterface::SubSurfaceInterface(SubCompositorInterface *parent)
-    : QObject(/*parent*/)
-    , d(new Private(this))
+    : Resource(new Private(this, parent))
 {
     Q_UNUSED(parent)
 }
@@ -271,27 +276,31 @@ SubSurfaceInterface::~SubSurfaceInterface() = default;
 
 QPoint SubSurfaceInterface::position() const
 {
+    Q_D();
     return d->pos;
-}
-
-wl_resource *SubSurfaceInterface::resource()
-{
-    return d->subSurface;
 }
 
 QPointer<SurfaceInterface> SubSurfaceInterface::surface()
 {
+    Q_D();
     return d->surface;
 }
 
 QPointer<SurfaceInterface> SubSurfaceInterface::parentSurface()
 {
+    Q_D();
     return d->parent;
 }
 
 SubSurfaceInterface::Mode SubSurfaceInterface::mode() const
 {
+    Q_D();
     return d->mode;
+}
+
+SubSurfaceInterface::Private *SubSurfaceInterface::d_func() const
+{
+    return reinterpret_cast<SubSurfaceInterface::Private*>(d.data());
 }
 
 }

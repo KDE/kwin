@@ -26,6 +26,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/kwaylandserver_export.h>
 
 #include "global.h"
+#include "resource.h"
 
 struct wl_resource;
 
@@ -53,7 +54,7 @@ private:
     class Private;
 };
 
-class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public QObject
+class KWAYLANDSERVER_EXPORT SubSurfaceInterface : public Resource
 {
     Q_OBJECT
     Q_PROPERTY(QPoint position READ position NOTIFY positionChanged)
@@ -69,7 +70,6 @@ public:
     };
     Mode mode() const;
 
-    wl_resource *resource();
     QPointer<SurfaceInterface> surface();
     QPointer<SurfaceInterface> parentSurface();
 
@@ -83,7 +83,7 @@ private:
     explicit SubSurfaceInterface(SubCompositorInterface *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

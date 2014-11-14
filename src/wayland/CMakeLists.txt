@@ -9,6 +9,7 @@ set(SERVER_LIB_SRCS
     global.cpp
     output_interface.cpp
     region_interface.cpp
+    resource.cpp
     seat_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
@@ -58,6 +59,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   global.h
 #   output_interface.h
 #   region_interface.h
+#   resource.h
 #   seat_interface.h
 #   shell_interface.h
 #   surface_interface.h

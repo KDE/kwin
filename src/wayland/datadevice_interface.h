@@ -24,8 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
-struct wl_client;
-struct wl_resource;
+#include "resource.h"
 
 namespace KWayland
 {
@@ -37,13 +36,11 @@ class DataSourceInterface;
 class SeatInterface;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT DataDeviceInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataDeviceInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~DataDeviceInterface();
-
-    void create(wl_client *client, quint32 version, quint32 id);
 
     SeatInterface *seat() const;
     DataSourceInterface *dragSource() const;
@@ -53,8 +50,6 @@ public:
     DataSourceInterface *selection() const;
 
     void sendSelection(DataDeviceInterface *other);
-
-    wl_resource *resource() const;
 
 Q_SIGNALS:
     void dragStarted();
@@ -66,7 +61,7 @@ private:
     explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

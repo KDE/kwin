@@ -18,6 +18,8 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "datasource_interface.h"
+#include "datadevicemanager_interface.h"
+#include "resource_p.h"
 // Qt
 #include <QStringList>
 // Wayland
@@ -28,19 +30,18 @@ namespace KWayland
 namespace Server
 {
 
-class DataSourceInterface::Private
+class DataSourceInterface::Private : public Resource::Private
 {
 public:
-    Private(DataSourceInterface *q);
+    Private(DataSourceInterface *q, DataDeviceManagerInterface *parent);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id);
+    void create(wl_client *client, quint32 version, quint32 id) override;
 
     static DataSourceInterface *get(wl_resource *r) {
         auto s = cast(r);
         return s ? s->q : nullptr;
     }
 
-    wl_resource *dataSource = nullptr;
     QStringList mimeTypes;
 
 private:
@@ -62,23 +63,18 @@ const struct wl_data_source_interface DataSourceInterface::Private::s_interface 
     destroyCallack
 };
 
-DataSourceInterface::Private::Private(DataSourceInterface *q)
-    : q(q)
+DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent)
+    : Resource::Private(parent)
+    , q(q)
 {
 }
 
-DataSourceInterface::Private::~Private()
-{
-    if (dataSource) {
-        wl_resource_destroy(dataSource);
-    }
-}
+DataSourceInterface::Private::~Private() = default;
 
 void DataSourceInterface::Private::unbind(wl_resource *resource)
 {
-    Q_UNUSED(resource)
     auto s = cast(resource);
-    s->dataSource = nullptr;
+    s->resource = nullptr;
     s->q->deleteLater();
 }
 
@@ -102,58 +98,55 @@ void DataSourceInterface::Private::offer(const QString &mimeType)
 
 void DataSourceInterface::Private::create(wl_client *client, quint32 version, quint32 id)
 {
-    Q_ASSERT(!dataSource);
-    dataSource = wl_resource_create(client, &wl_data_source_interface, version, id);
-    if (!dataSource) {
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(client, &wl_data_source_interface, version, id);
+    if (!resource) {
         return;
     }
-    wl_resource_set_implementation(dataSource, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent)
-    : QObject(/*parent*/)
-    , d(new Private(this))
+    : Resource(new Private(this, parent))
 {
-    Q_UNUSED(parent)
 }
 
 DataSourceInterface::~DataSourceInterface() = default;
 
-void DataSourceInterface::create(wl_client *client, quint32 version, quint32 id)
-{
-    d->create(client, version, id);
-}
-
 void DataSourceInterface::accept(const QString &mimeType)
 {
+    Q_D();
     // TODO: does this require a sanity check on the possible mimeType?
-    wl_data_source_send_target(d->dataSource, mimeType.isEmpty() ? nullptr : mimeType.toUtf8().constData());
+    wl_data_source_send_target(d->resource, mimeType.isEmpty() ? nullptr : mimeType.toUtf8().constData());
 }
 
 void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
 {
+    Q_D();
     // TODO: does this require a sanity check on the possible mimeType?
-    wl_data_source_send_send(d->dataSource, mimeType.toUtf8().constData(), int32_t(fd));
+    wl_data_source_send_send(d->resource, mimeType.toUtf8().constData(), int32_t(fd));
 }
 
 void DataSourceInterface::cancel()
 {
-    wl_data_source_send_cancelled(d->dataSource);
-}
-
-wl_resource *DataSourceInterface::resource() const
-{
-    return d->dataSource;
+    Q_D();
+    wl_data_source_send_cancelled(d->resource);
 }
 
 QStringList DataSourceInterface::mimeTypes() const
 {
+    Q_D();
     return d->mimeTypes;
 }
 
 DataSourceInterface *DataSourceInterface::get(wl_resource *native)
 {
     return Private::get(native);
+}
+
+DataSourceInterface::Private *DataSourceInterface::d_func() const
+{
+    return reinterpret_cast<DataSourceInterface::Private*>(d.data());
 }
 
 }

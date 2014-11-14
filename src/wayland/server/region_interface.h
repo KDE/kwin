@@ -25,8 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
-struct wl_client;
-struct wl_resource;
+#include "resource.h"
 
 namespace KWayland
 {
@@ -34,15 +33,11 @@ namespace Server
 {
 class CompositorInterface;
 
-class KWAYLANDSERVER_EXPORT RegionInterface : public QObject
+class KWAYLANDSERVER_EXPORT RegionInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~RegionInterface();
-
-    void create(wl_client *client, quint32 version, quint32 id);
-
-    wl_resource *resource() const;
 
     QRegion region() const;
 
@@ -56,7 +51,7 @@ private:
     explicit RegionInterface(CompositorInterface *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

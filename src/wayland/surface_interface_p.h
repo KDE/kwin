@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WAYLAND_SERVER_SURFACE_INTERFACE_P_H
 
 #include "surface_interface.h"
+#include "resource_p.h"
 // Wayland
 #include <wayland-server.h>
 
@@ -29,7 +30,7 @@ namespace KWayland
 namespace Server
 {
 
-class SurfaceInterface::Private
+class SurfaceInterface::Private : public Resource::Private
 {
 public:
     struct State {
@@ -60,9 +61,6 @@ public:
 
     static SurfaceInterface *get(wl_resource *native);
 
-    CompositorInterface *compositor;
-    wl_resource *surface = nullptr;
-    wl_client *client = nullptr;
     State current;
     State pending;
     QPointer<SubSurfaceInterface> subSurface;

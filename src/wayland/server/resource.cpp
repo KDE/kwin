@@ -17,42 +17,55 @@ Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
-#ifndef WAYLAND_SERVER_DATA_OFFER_INTERFACE_H
-#define WAYLAND_SERVER_DATA_OFFER_INTERFACE_H
-
-#include <QObject>
-
-#include <KWayland/Server/kwaylandserver_export.h>
-
 #include "resource.h"
+#include "resource_p.h"
+
+#include <wayland-server.h>
 
 namespace KWayland
 {
 namespace Server
 {
 
-class DataDeviceInterface;
-class DataSourceInterface;
-
-class KWAYLANDSERVER_EXPORT DataOfferInterface : public Resource
+Resource::Private::Private(Global *g)
+    : global(g)
 {
-    Q_OBJECT
-public:
-    virtual ~DataOfferInterface();
+}
 
-    void sendAllOffers();
+Resource::Private::~Private()
+{
+    if (resource) {
+        wl_resource_destroy(resource);
+    }
+}
 
-private:
-    friend class DataDeviceInterface;
-    explicit DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface);
+Resource::Resource(Resource::Private *d, QObject *parent)
+    : QObject(parent)
+    , d(d)
+{
+}
 
-    class Private;
-    Private *d_func() const;
-};
+Resource::~Resource() = default;
+
+void Resource::create(wl_client *client, quint32 version, quint32 id)
+{
+    d->create(client, version, id);
+}
+
+wl_client *Resource::client()
+{
+    return d->client;
+}
+
+Global *Resource::global()
+{
+    return d->global;
+}
+
+wl_resource *Resource::resource()
+{
+    return d->resource;
+}
 
 }
 }
-
-Q_DECLARE_METATYPE(KWayland::Server::DataOfferInterface*)
-
-#endif

@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "region_interface.h"
+#include "resource_p.h"
 #include "compositor_interface.h"
 // Wayland
 #include <wayland-server.h>
@@ -27,14 +28,12 @@ namespace KWayland
 namespace Server
 {
 
-class RegionInterface::Private
+class RegionInterface::Private : public Resource::Private
 {
 public:
     Private(CompositorInterface *compositor, RegionInterface *q);
     ~Private();
-    void create(wl_client *client, quint32 version, quint32 id);
-    CompositorInterface *compositor;
-    wl_resource *region = nullptr;
+    void create(wl_client *client, quint32 version, quint32 id) override;
     QRegion qtRegion;
 
     static RegionInterface *get(wl_resource *native);
@@ -63,17 +62,12 @@ const struct wl_region_interface RegionInterface::Private::s_interface = {
 };
 
 RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q)
-    : compositor(compositor)
+    : Resource::Private(compositor)
     , q(q)
 {
 }
 
-RegionInterface::Private::~Private()
-{
-    if (region) {
-        wl_resource_destroy(region);
-    }
-}
+RegionInterface::Private::~Private() = default;
 
 void RegionInterface::Private::add(const QRect &rect)
 {
@@ -111,18 +105,18 @@ void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r
 void RegionInterface::Private::unbind(wl_resource *r)
 {
     auto region = cast(r);
-    region->region = nullptr;
+    region->resource = nullptr;
     region->q->deleteLater();
 }
 
 void RegionInterface::Private::create(wl_client *client, quint32 version, quint32 id)
 {
-    Q_ASSERT(!region);
-    region = wl_resource_create(client, &wl_region_interface, version, id);
-    if (!region) {
+    Q_ASSERT(!resource);
+    resource = wl_resource_create(client, &wl_region_interface, version, id);
+    if (!resource) {
         return;
     }
-    wl_resource_set_implementation(region, &s_interface, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
 }
 
 RegionInterface *RegionInterface::Private::get(wl_resource *native)
@@ -134,31 +128,26 @@ RegionInterface *RegionInterface::Private::get(wl_resource *native)
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent)
-    : QObject(/*parent*/)
-    , d(new Private(parent, this))
+    : Resource(new Private(parent, this), parent)
 {
 }
 
 RegionInterface::~RegionInterface() = default;
 
-void RegionInterface::create(wl_client *client, quint32 version, quint32 id)
-{
-    d->create(client, version, id);
-}
-
 QRegion RegionInterface::region() const
 {
+    Q_D();
     return d->qtRegion;
-}
-
-wl_resource *RegionInterface::resource() const
-{
-    return d->region;
 }
 
 RegionInterface *RegionInterface::get(wl_resource *native)
 {
     return Private::get(native);
+}
+
+RegionInterface::Private *RegionInterface::d_func() const
+{
+    return reinterpret_cast<Private*>(d.data());
 }
 
 }

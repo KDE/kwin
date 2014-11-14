@@ -24,8 +24,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
-struct wl_client;
-struct wl_resource;
+#include "resource.h"
 
 namespace KWayland
 {
@@ -33,21 +32,17 @@ namespace Server
 {
 class DataDeviceManagerInterface;
 
-class KWAYLANDSERVER_EXPORT DataSourceInterface : public QObject
+class KWAYLANDSERVER_EXPORT DataSourceInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~DataSourceInterface();
-
-    void create(wl_client *client, quint32 version, quint32 id);
 
     void accept(const QString &mimeType);
     void requestData(const QString &mimeType, qint32 fd);
     void cancel();
 
     QStringList mimeTypes() const;
-
-    wl_resource *resource() const;
 
     static DataSourceInterface *get(wl_resource *native);
 
@@ -59,7 +54,7 @@ private:
     explicit DataSourceInterface(DataDeviceManagerInterface *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

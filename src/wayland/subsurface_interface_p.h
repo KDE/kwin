@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #define WAYLAND_SERVER_SUBSURFACE_INTERFACE_P_H
 
 #include "subcompositor_interface.h"
+#include "resource_p.h"
 // Qt
 #include <QPoint>
 // Wayland
@@ -31,12 +32,13 @@ namespace KWayland
 namespace Server
 {
 
-class SubSurfaceInterface::Private
+class SubSurfaceInterface::Private : public Resource::Private
 {
 public:
-    Private(SubSurfaceInterface *q);
+    Private(SubSurfaceInterface *q, SubCompositorInterface *compositor);
     ~Private();
 
+    void create(wl_client *client, quint32 version, quint32 id) override;
     void create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *surface, SurfaceInterface *parent);
     void commit();
 
@@ -44,7 +46,6 @@ public:
     QPoint scheduledPos = QPoint();
     bool scheduledPosChange = false;
     Mode mode = Mode::Synchronized;
-    wl_resource *subSurface = nullptr;
     QPointer<SurfaceInterface> surface;
     QPointer<SurfaceInterface> parent;
 

@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_SURFACE_INTERFACE_H
 #define WAYLAND_SERVER_SURFACE_INTERFACE_H
 
+#include "resource.h"
 #include "output_interface.h"
 
 #include <QObject>
@@ -36,7 +37,7 @@ class BufferInterface;
 class CompositorInterface;
 class SubSurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
+class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
 {
     Q_OBJECT
     Q_PROPERTY(QRegion damage READ damage NOTIFY damaged)
@@ -47,12 +48,7 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public QObject
 public:
     virtual ~SurfaceInterface();
 
-    void create(wl_client *client, quint32 version, quint32 id);
-
     void frameRendered(quint32 msec);
-
-    wl_resource *resource() const;
-    wl_client *client() const;
 
     QRegion damage() const;
     QRegion opaque() const;
@@ -87,7 +83,7 @@ private:
     explicit SurfaceInterface(CompositorInterface *parent);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }
