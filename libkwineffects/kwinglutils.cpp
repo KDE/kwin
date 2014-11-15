@@ -667,6 +667,207 @@ ShaderManager::~ShaderManager()
     m_shaderHash.clear();
 }
 
+static bool fuzzyCompare(const QVector4D &lhs, const QVector4D &rhs)
+{
+    const float epsilon = 1.0f / 255.0f;
+
+    return lhs[0] >= rhs[0] - epsilon && lhs[0] <= rhs[0] + epsilon &&
+           lhs[1] >= rhs[1] - epsilon && lhs[1] <= rhs[1] + epsilon &&
+           lhs[2] >= rhs[2] - epsilon && lhs[2] <= rhs[2] + epsilon &&
+           lhs[3] >= rhs[3] - epsilon && lhs[3] <= rhs[3] + epsilon;
+}
+
+static bool checkPixel(int x, int y, const QVector4D &expected, const char *file, int line)
+{
+    uint8_t data[4];
+    glReadnPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 4, data);
+
+    const QVector4D pixel{data[0] / 255.f, data[1] / 255.f, data[2] / 255.f, data[3] / 255.f};
+
+    if (fuzzyCompare(pixel, expected))
+        return true;
+
+    QMessageLogger(file, line, nullptr).warning() << "Pixel was" << pixel << "expected" << expected;
+    return false;
+}
+
+#define CHECK_PIXEL(x, y, expected) \
+    checkPixel(x, y, expected, __FILE__, __LINE__)
+
+static QVector4D adjustSaturation(const QVector4D &color, float saturation)
+{
+    const float gray = QVector3D::dotProduct(color.toVector3D(), {0.2126, 0.7152, 0.0722});
+    return QVector4D{gray, gray, gray, color.w()} * (1.0f - saturation) + color * saturation;
+}
+
+bool ShaderManager::selfTest()
+{
+    bool pass = true;
+
+    if (!GLRenderTarget::supported()) {
+        qWarning() << "Framebuffer objects not supported - skipping shader tests";
+        return true;
+    }
+
+    // Create the source texture
+    QImage image(2, 2, QImage::Format_ARGB32_Premultiplied);
+    image.setPixel(0, 0, 0xffff0000); // Red
+    image.setPixel(1, 0, 0xff00ff00); // Green
+    image.setPixel(0, 1, 0xff0000ff); // Blue
+    image.setPixel(1, 1, 0xffffffff); // White
+
+    GLTexture src(image);
+    src.setFilter(GL_NEAREST);
+
+    // Create the render target
+    GLTexture dst(32, 32);
+
+    GLRenderTarget fbo(dst);
+    GLRenderTarget::pushRenderTarget(&fbo);
+
+    // Set up the vertex buffer
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+
+    const GLVertexAttrib attribs[] {
+        { VA_Position, 2, GL_FLOAT, offsetof(GLVertex2D, position) },
+        { VA_TexCoord, 2, GL_FLOAT, offsetof(GLVertex2D, texcoord) },
+    };
+
+    vbo->setAttribLayout(attribs, 2, sizeof(GLVertex2D));
+
+    GLVertex2D *verts = (GLVertex2D*) vbo->map(6 * sizeof(GLVertex2D));
+    verts[0] = GLVertex2D{{0,   0}, {0, 0}}; // Top left
+    verts[1] = GLVertex2D{{0,  32}, {0, 1}}; // Bottom left
+    verts[2] = GLVertex2D{{32,  0}, {1, 0}}; // Top right
+
+    verts[3] = GLVertex2D{{32,  0}, {1, 0}}; // Top right
+    verts[4] = GLVertex2D{{0,  32}, {0, 1}}; // Bottom left
+    verts[5] = GLVertex2D{{32, 32}, {1, 1}}; // Bottom right
+    vbo->unmap();
+
+    vbo->bindArrays();
+
+    glViewport(0, 0, 32, 32);
+    glClearColor(0, 0, 0, 0);
+
+    // Set up the projection matrix
+    QMatrix4x4 matrix;
+    matrix.ortho(QRect(0, 0, 32, 32));
+
+    // Bind the source texture
+    src.bind();
+
+    const QVector4D red   {1.0f, 0.0f, 0.0f, 1.0f};
+    const QVector4D green {0.0f, 1.0f, 0.0f, 1.0f};
+    const QVector4D blue  {0.0f, 0.0f, 1.0f, 1.0f};
+    const QVector4D white {1.0f, 1.0f, 1.0f, 1.0f};
+
+    // Note: To see the line number in error messages, set
+    //       QT_MESSAGE_PATTERN="%{message} (%{file}:%{line})"
+
+    // Test solid color
+    GLShader *shader = pushShader(ShaderTrait::UniformColor);
+    if (shader->isValid()) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+        shader->setUniform(GLShader::Color, green);
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        pass = CHECK_PIXEL(8,  24, green) && pass;
+        pass = CHECK_PIXEL(24, 24, green) && pass;
+        pass = CHECK_PIXEL(8,   8, green) && pass;
+        pass = CHECK_PIXEL(24,  8, green) && pass;
+    } else {
+        pass = false;
+    }
+    popShader();
+
+    // Test texture mapping
+    shader = pushShader(ShaderTrait::MapTexture);
+    if (shader->isValid()) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        pass = CHECK_PIXEL(8,  24, red)   && pass;
+        pass = CHECK_PIXEL(24, 24, green) && pass;
+        pass = CHECK_PIXEL(8,   8, blue)  && pass;
+        pass = CHECK_PIXEL(24,  8, white) && pass;
+    } else {
+        pass = false;
+    }
+    popShader();
+
+    // Test saturation filter
+    shader = pushShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation);
+    if (shader->isValid()) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        const float saturation = .3;
+
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+        shader->setUniform(GLShader::Saturation, saturation);
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        pass = CHECK_PIXEL(8,  24, adjustSaturation(red,   saturation)) && pass;
+        pass = CHECK_PIXEL(24, 24, adjustSaturation(green, saturation)) && pass;
+        pass = CHECK_PIXEL(8,  8,  adjustSaturation(blue,  saturation)) && pass;
+        pass = CHECK_PIXEL(24, 8,  adjustSaturation(white, saturation)) && pass;
+    } else {
+        pass = false;
+    }
+    popShader();
+
+    // Test modulation filter
+    shader = pushShader(ShaderTrait::MapTexture | ShaderTrait::Modulate);
+    if (shader->isValid()) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        const QVector4D modulation{.3f, .4f, .5f, .6f};
+
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+        shader->setUniform(GLShader::ModulationConstant, modulation);
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        pass = CHECK_PIXEL(8,  24, red   * modulation) && pass;
+        pass = CHECK_PIXEL(24, 24, green * modulation) && pass;
+        pass = CHECK_PIXEL(8,   8, blue  * modulation) && pass;
+        pass = CHECK_PIXEL(24,  8, white * modulation) && pass;
+    } else {
+        pass = false;
+    }
+    popShader();
+
+    // Test saturation + modulation
+    shader = pushShader(ShaderTrait::MapTexture | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate);
+    if (shader->isValid()) {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        const QVector4D modulation{.3f, .4f, .5f, .6f};
+        const float saturation = .3;
+
+        shader->setUniform(GLShader::ModelViewProjectionMatrix, matrix);
+        shader->setUniform(GLShader::ModulationConstant, modulation);
+        shader->setUniform(GLShader::Saturation, saturation);
+        vbo->draw(GL_TRIANGLES, 0, 6);
+
+        pass = CHECK_PIXEL(8,  24, adjustSaturation(red   * modulation, saturation)) && pass;
+        pass = CHECK_PIXEL(24, 24, adjustSaturation(green * modulation, saturation)) && pass;
+        pass = CHECK_PIXEL(8,  8,  adjustSaturation(blue  * modulation, saturation)) && pass;
+        pass = CHECK_PIXEL(24, 8,  adjustSaturation(white * modulation, saturation)) && pass;
+    } else {
+        pass = false;
+    }
+    popShader();
+
+    vbo->unbindArrays();
+    GLRenderTarget::popRenderTarget();
+
+    return pass;
+}
+
 QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
 {
     QByteArray source;

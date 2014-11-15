@@ -361,6 +361,12 @@ public:
     GLShader *loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource);
 
     /**
+     * Compiles and tests the dynamically generated shaders.
+     * Returns true if successful and false otherwise.
+     */
+    bool selfTest();
+
+    /**
      * Sets the virtual screen size to @p s.
      * @since 5.2
      **/

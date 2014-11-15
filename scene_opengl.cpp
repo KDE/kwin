@@ -934,8 +934,6 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
         return; // error
     }
 
-    qDebug() << "OpenGL 2 compositing successfully initialized";
-
 #ifndef KWIN_HAVE_OPENGLES
     // It is not legal to not have a vertex array object bound in a core context
     if (hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
@@ -944,6 +942,13 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     }
 #endif
 
+    if (!ShaderManager::instance()->selfTest()) {
+        qCritical() << "ShaderManager self test failed";
+        init_ok = false;
+        return;
+    }
+
+    qDebug() << "OpenGL 2 compositing successfully initialized";
     init_ok = true;
 }
 
