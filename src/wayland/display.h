@@ -99,6 +99,7 @@ public:
      * @return The ClientConnection for the given native client
      **/
     ClientConnection *getConnection(wl_client *client);
+    QVector<ClientConnection*> connections() const;
 
 Q_SIGNALS:
     void socketNameChanged(const QString&);

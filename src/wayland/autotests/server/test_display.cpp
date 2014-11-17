@@ -126,6 +126,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(client);
 
     QVERIFY(connectedSpy.isEmpty());
+    QVERIFY(display.connections().isEmpty());
     ClientConnection *connection = display.getConnection(client);
     QVERIFY(connection);
     QCOMPARE(connection->client(), client);
@@ -138,6 +139,8 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE((wl_client*)constRef, client);
     QCOMPARE(connectedSpy.count(), 1);
     QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
+    QCOMPARE(display.connections().count(), 1);
+    QCOMPARE(display.connections().first(), connection);
 
     QCOMPARE(connection, display.getConnection(client));
     QCOMPARE(connectedSpy.count(), 1);
@@ -153,6 +156,9 @@ void TestWaylandServerDisplay::testClientConnection()
     QCOMPARE(connectedSpy.count(), 2);
     QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
     QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), connection2);
+    QCOMPARE(display.connections().count(), 2);
+    QCOMPARE(display.connections().first(), connection);
+    QCOMPARE(display.connections().last(), connection2);
 
     // and destroy
     QVERIFY(disconnectedSpy.isEmpty());
@@ -164,6 +170,7 @@ void TestWaylandServerDisplay::testClientConnection()
     close(sv[1]);
     close(sv2[0]);
     close(sv2[1]);
+    QVERIFY(display.connections().isEmpty());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandServerDisplay)

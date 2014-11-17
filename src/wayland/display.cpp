@@ -274,5 +274,10 @@ ClientConnection *Display::getConnection(wl_client *client)
     return c;
 }
 
+QVector< ClientConnection* > Display::connections() const
+{
+    return d->clients;
+}
+
 }
 }
