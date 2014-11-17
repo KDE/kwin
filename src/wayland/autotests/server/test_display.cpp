@@ -132,6 +132,7 @@ void TestWaylandServerDisplay::testClientConnection()
     QVERIFY(connection->userId() != 0);
     QVERIFY(connection->groupId() != 0);
     QVERIFY(connection->processId() != 0);
+    QCOMPARE(connection->display(), &display);
     QCOMPARE((wl_client*)*connection, client);
     const ClientConnection &constRef = *connection;
     QCOMPARE((wl_client*)constRef, client);
