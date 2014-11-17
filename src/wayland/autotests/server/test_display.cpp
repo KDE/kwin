@@ -21,7 +21,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // WaylandServer
 #include "../../src/server/display.h"
+#include "../../src/server/clientconnection.h"
 #include "../../src/server/output_interface.h"
+// Wayland
+#include <wayland-server.h>
+// system
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 using namespace KWayland::Server;
 
@@ -32,6 +39,7 @@ private Q_SLOTS:
     void testSocketName();
     void testStartStop();
     void testAddRemoveOutput();
+    void testClientConnection();
 };
 
 void TestWaylandServerDisplay::testSocketName()
@@ -99,6 +107,62 @@ void TestWaylandServerDisplay::testAddRemoveOutput()
     // and delete the second
     delete output2;
     QVERIFY(display.outputs().isEmpty());
+}
+
+void TestWaylandServerDisplay::testClientConnection()
+{
+    Display display;
+    display.setSocketName(QStringLiteral("kwin-wayland-server-display-test-client-connection"));
+    display.start();
+    QSignalSpy connectedSpy(&display, SIGNAL(clientConnected(KWayland::Server::ClientConnection*)));
+    QVERIFY(connectedSpy.isValid());
+    QSignalSpy disconnectedSpy(&display, SIGNAL(clientDisconnected(KWayland::Server::ClientConnection*)));
+    QVERIFY(disconnectedSpy.isValid());
+
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
+
+    auto client = wl_client_create(display, sv[0]);
+    QVERIFY(client);
+
+    QVERIFY(connectedSpy.isEmpty());
+    ClientConnection *connection = display.getConnection(client);
+    QVERIFY(connection);
+    QCOMPARE(connection->client(), client);
+    QVERIFY(connection->userId() != 0);
+    QVERIFY(connection->groupId() != 0);
+    QVERIFY(connection->processId() != 0);
+    QCOMPARE((wl_client*)*connection, client);
+    const ClientConnection &constRef = *connection;
+    QCOMPARE((wl_client*)constRef, client);
+    QCOMPARE(connectedSpy.count(), 1);
+    QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
+
+    QCOMPARE(connection, display.getConnection(client));
+    QCOMPARE(connectedSpy.count(), 1);
+
+    // create a second client
+    int sv2[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv2) >= 0);
+    auto client2 = wl_client_create(display, sv2[0]);
+    QVERIFY(client2);
+    ClientConnection *connection2 = display.getConnection(client2);
+    QVERIFY(connection2);
+    QCOMPARE(connection2->client(), client2);
+    QCOMPARE(connectedSpy.count(), 2);
+    QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
+    QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), connection2);
+
+    // and destroy
+    QVERIFY(disconnectedSpy.isEmpty());
+    wl_client_destroy(client);
+    QCOMPARE(disconnectedSpy.count(), 1);
+    wl_client_destroy(client2);
+    QCOMPARE(disconnectedSpy.count(), 2);
+    close(sv[0]);
+    close(sv[1]);
+    close(sv2[0]);
+    close(sv2[1]);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandServerDisplay)

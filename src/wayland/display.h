@@ -25,6 +25,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 
+#include "clientconnection.h"
+
+struct wl_client;
 struct wl_display;
 struct wl_event_loop;
 
@@ -89,10 +92,20 @@ public:
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
 
+    /**
+     * Gets the ClientConnection for the given @p client.
+     * If there is no ClientConnection yet for the given @p client, it will be created.
+     * @param client The native client for which the ClientConnection is retrieved
+     * @return The ClientConnection for the given native client
+     **/
+    ClientConnection *getConnection(wl_client *client);
+
 Q_SIGNALS:
     void socketNameChanged(const QString&);
     void runningChanged(bool);
     void aboutToTerminate();
+    void clientConnected(KWayland::Server::ClientConnection*);
+    void clientDisconnected(KWayland::Server::ClientConnection*);
 
 private:
     class Private;

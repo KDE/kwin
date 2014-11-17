@@ -50,6 +50,7 @@ public:
     QString socketName = QStringLiteral("wayland-0");
     bool running = false;
     QList<OutputInterface*> outputs;
+    QVector<ClientConnection*> clients;
 
 private:
     Display *q;
@@ -246,6 +247,32 @@ QList< OutputInterface* > Display::outputs() const
     return d->outputs;
 }
 
+ClientConnection *Display::getConnection(wl_client *client)
+{
+    Q_ASSERT(client);
+    auto it = std::find_if(d->clients.constBegin(), d->clients.constEnd(),
+        [client](ClientConnection *c) {
+            return c->client() == client;
+        }
+    );
+    if (it != d->clients.constEnd()) {
+        return *it;
+    }
+    // no ConnectionData yet, create it
+    auto c = new ClientConnection(client, this);
+    d->clients << c;
+    connect(c, &ClientConnection::disconnected, this,
+        [this] (ClientConnection *c) {
+            const int index = d->clients.indexOf(c);
+            Q_ASSERT(index != -1);
+            d->clients.remove(index);
+            Q_ASSERT(d->clients.indexOf(c) == -1);
+            emit clientDisconnected(c);
+        }
+    );
+    emit clientConnected(c);
+    return c;
+}
 
 }
 }
