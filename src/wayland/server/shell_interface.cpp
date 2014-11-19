@@ -66,15 +66,11 @@ class ShellSurfaceInterface::Private : public Resource::Private
 {
 public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface);
-    void create(ClientConnection *client, quint32 version, quint32 id) override;
     void setFullscreen(bool fullscreen);
     void setToplevel(bool toplevel);
     void ping();
 
     SurfaceInterface *surface;
-    pid_t clientPid = 0;
-    uid_t clientUser = 0;
-    gid_t clientGroup = 0;
     QString title;
     QByteArray windowClass;
     QScopedPointer<QTimer> pingTimer;
@@ -205,12 +201,6 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
 }
 
 ShellSurfaceInterface::~ShellSurfaceInterface() = default;
-
-void ShellSurfaceInterface::Private::create(ClientConnection *c, quint32 version, quint32 id)
-{
-    Resource::Private::create(c, version, id);
-    wl_client_get_credentials(*client, &clientPid, &clientUser, &clientGroup);
-}
 
 void ShellSurfaceInterface::Private::pongCallback(wl_client *client, wl_resource *resource, uint32_t serial)
 {
@@ -419,21 +409,6 @@ bool ShellSurfaceInterface::isFullscreen() const {
 bool ShellSurfaceInterface::isToplevel() const {
     Q_D();
     return d->toplevel;
-}
-
-pid_t ShellSurfaceInterface::clientPid() const {
-    Q_D();
-    return d->clientPid;
-}
-
-uid_t ShellSurfaceInterface::clientUser() const {
-    Q_D();
-    return d->clientUser;
-}
-
-gid_t ShellSurfaceInterface::clientGroup() const {
-    Q_D();
-    return d->clientGroup;
 }
 
 ShellSurfaceInterface::Private *ShellSurfaceInterface::d_func() const

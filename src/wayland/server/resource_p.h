@@ -33,7 +33,7 @@ class Resource::Private
 {
 public:
     virtual ~Private();
-    virtual void create(ClientConnection *client, quint32 version, quint32 id);
+    void create(ClientConnection *client, quint32 version, quint32 id);
 
     wl_resource *resource = nullptr;
     ClientConnection *client = nullptr;

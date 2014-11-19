@@ -77,11 +77,6 @@ public:
     bool isFullscreen() const;
     bool isToplevel() const;
 
-    // TODO: keep them here or add a better encapsulation?
-    pid_t clientPid() const;
-    uid_t clientUser() const;
-    gid_t clientGroup() const;
-
 Q_SIGNALS:
     void titleChanged(const QString&);
     void windowClassChanged(const QByteArray&);
