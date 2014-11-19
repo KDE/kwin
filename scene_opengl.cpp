@@ -386,6 +386,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
 #endif
 
     m_debug = qstrcmp(qgetenv("KWIN_GL_DEBUG"), "1") == 0;
+    initDebugOutput();
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
@@ -418,6 +419,58 @@ SceneOpenGL::~SceneOpenGL()
         // backend might be still needed for a different scene
         delete m_backend;
     }
+}
+
+void SceneOpenGL::initDebugOutput()
+{
+    const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
+    if (!have_KHR_debug && !hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output")))
+        return;
+
+    // Set the callback function
+    auto callback = [](GLenum source, GLenum type, GLuint id,
+                       GLenum severity, GLsizei length,
+                       const GLchar *message,
+                       const GLvoid *userParam) {
+        Q_UNUSED(source)
+        Q_UNUSED(severity)
+        Q_UNUSED(userParam)
+
+        switch (type) {
+        case GL_DEBUG_TYPE_ERROR:
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            qWarning("%#x: %.*s", id, length, message);
+            break;
+
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        case GL_DEBUG_TYPE_PORTABILITY:
+        case GL_DEBUG_TYPE_PERFORMANCE:
+        case GL_DEBUG_TYPE_OTHER:
+        default:
+            qDebug("%#x: %.*s", id, length, message);
+            break;
+        }
+    };
+
+    glDebugMessageCallback(callback, nullptr);
+
+    // This state exists only in GL_KHR_debug
+    if (have_KHR_debug)
+        glEnable(GL_DEBUG_OUTPUT);
+
+#ifndef NDEBUG
+    // Enable all debug messages
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+#else
+    // Enable error messages
+    glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+#endif
+
+    // Insert a test message
+    const QByteArray message = QByteArrayLiteral("OpenGL debug output initialized");
+    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_OTHER, 0,
+                         GL_DEBUG_SEVERITY_LOW, message.length(), message.constData());
 }
 
 SceneOpenGL *SceneOpenGL::createScene()

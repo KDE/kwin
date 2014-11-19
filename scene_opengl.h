@@ -66,6 +66,7 @@ public:
     void idle();
 
     bool debug() const { return m_debug; }
+    void initDebugOutput();
 
     /**
      * @brief Factory method to create a backend specific texture.
