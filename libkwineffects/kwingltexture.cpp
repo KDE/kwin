@@ -263,7 +263,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     bind();
     glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
                     GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, img.bits());
-    checkGLError("update texture");
+
     unbind();
     setDirty();
     if (!src.isNull() && d->s_supportsUnpack) {

@@ -376,7 +376,6 @@ bool CubeEffect::loadShader()
         sphereShader->setUniform("width", (float)rect.width() * 0.5f);
         sphereShader->setUniform("height", (float)rect.height() * 0.5f);
         sphereShader->setUniform("u_offset", QVector2D(0, 0));
-        checkGLError("Loading Sphere Shader");
     }
     return true;
 }

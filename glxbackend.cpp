@@ -120,7 +120,6 @@ GlxBackend::~GlxBackend()
     // TODO: cleanup in error case
     // do cleanup after initBuffer()
     cleanupGL();
-    checkGLError("Cleanup");
     doneCurrent();
 
     if (ctx)

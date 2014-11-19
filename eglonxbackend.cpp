@@ -53,7 +53,6 @@ EglOnXBackend::~EglOnXBackend()
         m_overlayWindow->destroy();
     }
     cleanupGL();
-    checkGLError("Cleanup");
     doneCurrent();
     eglDestroyContext(dpy, ctx);
     eglDestroySurface(dpy, surface);
@@ -523,7 +522,6 @@ bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)m_image);
     q->unbind();
-    checkGLError("load texture");
     q->setYInverted(true);
     m_size = size;
     updateMatrix();

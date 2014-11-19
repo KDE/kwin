@@ -57,10 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <stddef.h>
 
-// turns on checks for opengl errors in various places (for easier finding of them)
-// normally only few of them are enabled
-//#define CHECK_GL_ERROR
-
 #include <qpainter.h>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -642,9 +638,6 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     }
 
     int mask = 0;
-#ifdef CHECK_GL_ERROR
-    checkGLError("Paint1");
-#endif
 
     // After this call, updateRegion will contain the damaged region in the
     // back buffer. This is the region that needs to be posted to repair
@@ -668,10 +661,6 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     }
 #endif
 
-#ifdef CHECK_GL_ERROR
-    checkGLError("Paint2");
-#endif
-
     m_backend->endRenderingFrame(validRegion, updateRegion);
 
     if (m_currentFence) {
@@ -686,7 +675,6 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
 
     // do cleanup
     clearStackingOrder();
-    checkGLError("PostPaint");
     return m_backend->renderTime();
 }
 

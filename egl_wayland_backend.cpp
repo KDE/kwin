@@ -65,7 +65,6 @@ EglWaylandBackend::EglWaylandBackend()
 EglWaylandBackend::~EglWaylandBackend()
 {
     cleanupGL();
-    checkGLError("Cleanup");
     doneCurrent();
     eglDestroyContext(m_display, m_context);
     eglDestroySurface(m_display, m_surface);
@@ -433,7 +432,6 @@ bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_vis
 #endif
 
     q->unbind();
-    checkGLError("load texture");
     q->setYInverted(true);
     m_size = size;
     updateMatrix();
@@ -470,7 +468,6 @@ bool EglWaylandTexture::update(const QRegion &damage)
 #endif
 
     q->unbind();
-    checkGLError("update texture");
     return true;
 }
 

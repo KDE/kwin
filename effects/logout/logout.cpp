@@ -360,7 +360,6 @@ void LogoutEffect::renderBlurTexture()
     blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
     blurTexture->unbind();
     glDisable(GL_BLEND);
-    checkGLError("Render blur texture");
 }
 
 void LogoutEffect::slotPropertyNotify(EffectWindow* w, long a)

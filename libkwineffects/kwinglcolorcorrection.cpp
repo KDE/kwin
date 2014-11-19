@@ -590,11 +590,8 @@ bool ColorCorrectionPrivate::setupCCTextures()
     return success;
 }
 
-bool ColorCorrectionPrivate::deleteCCTextures()
+void ColorCorrectionPrivate::deleteCCTextures()
 {
-    // Clear any previous GL errors
-    checkGLError("deleteCCTextures-clearErrors");
-
     // Delete dummy texture
     if (m_dummyCCTexture) {
         glDeleteTextures(1, &m_dummyCCTexture);
@@ -606,8 +603,6 @@ bool ColorCorrectionPrivate::deleteCCTextures()
         glDeleteTextures(m_outputCCTextures.size(), m_outputCCTextures.data());
         m_outputCCTextures.clear();
     }
-
-    return !checkGLError("deleteCCTextures");
 }
 
 bool ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)

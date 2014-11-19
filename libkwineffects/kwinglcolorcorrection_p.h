@@ -82,7 +82,7 @@ public:
     virtual ~ColorCorrectionPrivate();
 
     bool setupCCTextures();
-    bool deleteCCTextures();
+    void deleteCCTextures();
     static bool setupCCTexture(GLuint texture, const Clut &clut);
 
 public Q_SLOTS:
