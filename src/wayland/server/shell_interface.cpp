@@ -231,7 +231,7 @@ void ShellSurfaceInterface::Private::ping()
     }
     pingSerial = global->display()->nextSerial();
     wl_shell_surface_send_ping(resource, pingSerial);
-    wl_client_flush(*client);
+    client->flush();
     pingTimer->start();
 }
 
@@ -252,7 +252,7 @@ void ShellSurfaceInterface::requestSize(const QSize &size)
     Q_D();
     // TODO: what about the edges?
     wl_shell_surface_send_configure(d->resource, 0, size.width(), size.height());
-    wl_client_flush(*d->client);
+    d->client->flush();
 }
 
 void ShellSurfaceInterface::Private::moveCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial)

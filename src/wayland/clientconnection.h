@@ -39,6 +39,8 @@ class KWAYLANDSERVER_EXPORT ClientConnection : public QObject
 public:
     virtual ~ClientConnection();
 
+    void flush();
+
     wl_client *client();
     Display *display();
 

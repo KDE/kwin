@@ -90,6 +90,11 @@ ClientConnection::ClientConnection(wl_client *c, Display *parent)
 
 ClientConnection::~ClientConnection() = default;
 
+void ClientConnection::flush()
+{
+    wl_client_flush(d->client);
+}
+
 wl_client *ClientConnection::client()
 {
     return d->client;
