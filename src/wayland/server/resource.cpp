@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "resource.h"
 #include "resource_p.h"
+#include "clientconnection.h"
 
 #include <wayland-server.h>
 
@@ -46,12 +47,12 @@ Resource::Private::~Private()
     }
 }
 
-void Resource::Private::create(wl_client *c, quint32 version, quint32 id)
+void Resource::Private::create(ClientConnection *c, quint32 version, quint32 id)
 {
     Q_ASSERT(!resource);
     Q_ASSERT(!client);
     client = c;
-    resource = wl_resource_create(client, m_interface, version, id);
+    resource = wl_resource_create(*client, m_interface, version, id);
     if (!resource) {
         return;
     }
@@ -73,12 +74,12 @@ Resource::Resource(Resource::Private *d, QObject *parent)
 
 Resource::~Resource() = default;
 
-void Resource::create(wl_client *client, quint32 version, quint32 id)
+void Resource::create(ClientConnection *client, quint32 version, quint32 id)
 {
     d->create(client, version, id);
 }
 
-wl_client *Resource::client()
+ClientConnection *Resource::client()
 {
     return d->client;
 }

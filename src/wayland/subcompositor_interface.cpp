@@ -106,7 +106,7 @@ void SubCompositorInterface::Private::subsurface(wl_client *client, wl_resource 
     // TODO: add check that surface is not already used in an interface (e.g. Shell)
     // TODO: add check that parentSurface is not a child of surface
     SubSurfaceInterface *s = new SubSurfaceInterface(q);
-    s->d_func()->create(client, wl_resource_get_version(resource), id, surface, parentSurface);
+    s->d_func()->create(display->getConnection(client), wl_resource_get_version(resource), id, surface, parentSurface);
     if (!s->resource()) {
         wl_resource_post_no_memory(resource);
         delete s;
@@ -145,7 +145,7 @@ SubSurfaceInterface::Private::~Private()
     }
 }
 
-void SubSurfaceInterface::Private::create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *s, SurfaceInterface *p)
+void SubSurfaceInterface::Private::create(ClientConnection *client, quint32 version, quint32 id, SurfaceInterface *s, SurfaceInterface *p)
 {
     create(client, version, id);
     if (!resource) {

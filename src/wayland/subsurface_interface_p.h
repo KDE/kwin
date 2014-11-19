@@ -39,7 +39,7 @@ public:
     ~Private();
 
     using Resource::Private::create;
-    void create(wl_client *client, quint32 version, quint32 id, SurfaceInterface *surface, SurfaceInterface *parent);
+    void create(ClientConnection *client, quint32 version, quint32 id, SurfaceInterface *surface, SurfaceInterface *parent);
     void commit();
 
     QPoint pos = QPoint(0, 0);

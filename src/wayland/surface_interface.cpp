@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 #include "surface_interface_p.h"
 #include "buffer_interface.h"
+#include "clientconnection.h"
 #include "compositor_interface.h"
 #include "region_interface.h"
 #include "subcompositor_interface.h"
@@ -235,7 +236,7 @@ void SurfaceInterface::Private::setTransform(OutputInterface::Transform transfor
 
 void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
 {
-    wl_resource *r = wl_resource_create(client, &wl_callback_interface, 1, callback);
+    wl_resource *r = wl_resource_create(*client, &wl_callback_interface, 1, callback);
     if (!r) {
         wl_resource_post_no_memory(resource);
         return;
@@ -293,14 +294,14 @@ void SurfaceInterface::Private::damageCallback(wl_client *client, wl_resource *r
 void SurfaceInterface::Private::frameCallaback(wl_client *client, wl_resource *resource, uint32_t callback)
 {
     auto s = cast<Private>(resource);
-    Q_ASSERT(client == s->client);
+    Q_ASSERT(client == *s->client);
     s->addFrameCallback(callback);
 }
 
 void SurfaceInterface::Private::opaqueRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
     auto s = cast<Private>(resource);
-    Q_ASSERT(client == s->client);
+    Q_ASSERT(client == *s->client);
     auto r = RegionInterface::get(region);
     s->setOpaque(r ? r->region() : QRegion());
 }
@@ -314,7 +315,7 @@ void SurfaceInterface::Private::setOpaque(const QRegion &region)
 void SurfaceInterface::Private::inputRegionCallback(wl_client *client, wl_resource *resource, wl_resource *region)
 {
     auto s = cast<Private>(resource);
-    Q_ASSERT(client == s->client);
+    Q_ASSERT(client == *s->client);
     auto r = RegionInterface::get(region);
     s->setInput(r ? r->region() : QRegion(), !r);
 }

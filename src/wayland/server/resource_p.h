@@ -33,10 +33,10 @@ class Resource::Private
 {
 public:
     virtual ~Private();
-    virtual void create(wl_client *client, quint32 version, quint32 id);
+    virtual void create(ClientConnection *client, quint32 version, quint32 id);
 
     wl_resource *resource = nullptr;
-    wl_client *client = nullptr;
+    ClientConnection *client = nullptr;
     Global *global;
 
     template <typename ResourceDerived>

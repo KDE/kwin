@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "datadevicemanager_interface.h"
 #include "dataoffer_interface.h"
 #include "datasource_interface.h"
+#include "display.h"
 #include "resource_p.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
@@ -116,7 +117,8 @@ DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInte
 {
     Q_Q(DataDeviceInterface);
     DataOfferInterface *offer = new DataOfferInterface(source, q);
-    offer->create(wl_resource_get_client(resource), wl_resource_get_version(resource), 0);
+    auto c = q->global()->display()->getConnection(wl_resource_get_client(resource));
+    offer->create(c, wl_resource_get_version(resource), 0);
     if (!offer->resource()) {
         // TODO: send error?
         delete offer;

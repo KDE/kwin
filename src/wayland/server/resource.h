@@ -32,6 +32,7 @@ namespace KWayland
 namespace Server
 {
 
+class ClientConnection;
 class Global;
 
 class KWAYLANDSERVER_EXPORT Resource : public QObject
@@ -39,10 +40,10 @@ class KWAYLANDSERVER_EXPORT Resource : public QObject
     Q_OBJECT
 public:
     virtual ~Resource();
-    void create(wl_client *client, quint32 version, quint32 id);
+    void create(ClientConnection *client, quint32 version, quint32 id);
 
     wl_resource *resource();
-    wl_client *client();
+    ClientConnection *client();
     Global *global();
 
 protected:

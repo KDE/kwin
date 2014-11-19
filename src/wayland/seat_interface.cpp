@@ -375,7 +375,7 @@ wl_resource *PointerInterface::Private::pointerForSurface(SurfaceInterface *surf
         return nullptr;
     }
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        if ((*it).client == surface->client()) {
+        if ((*it).client == *surface->client()) {
             return (*it).pointer;
         }
     }
@@ -820,7 +820,7 @@ wl_resource *KeyboardInterface::Private::keyboardForSurface(SurfaceInterface *su
         return nullptr;
     }
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        if ((*it).client == surface->client()) {
+        if ((*it).client == *surface->client()) {
             return (*it).keyboard;
         }
     }

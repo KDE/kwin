@@ -90,7 +90,7 @@ void DataDeviceManagerInterface::Private::createDataSource(wl_client *client, wl
     Q_UNUSED(resource)
     Q_UNUSED(id)
     DataSourceInterface *dataSource = new DataSourceInterface(q);
-    dataSource->create(client, wl_resource_get_version(resource), id);
+    dataSource->create(display->getConnection(client), wl_resource_get_version(resource), id);
     if (!dataSource->resource()) {
         wl_resource_post_no_memory(resource);
         delete dataSource;
@@ -107,7 +107,7 @@ void DataDeviceManagerInterface::Private::getDataDeviceCallback(wl_client *clien
 void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat)
 {
     DataDeviceInterface *dataDevice = new DataDeviceInterface(SeatInterface::get(seat), q);
-    dataDevice->create(client, wl_resource_get_version(resource), id);
+    dataDevice->create(display->getConnection(client), wl_resource_get_version(resource), id);
     if (!dataDevice->resource()) {
         wl_resource_post_no_memory(resource);
         return;
