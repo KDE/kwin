@@ -66,7 +66,8 @@ SubCompositorInterface::Private::Private(SubCompositorInterface *q, Display *d)
 
 void SubCompositorInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
-    wl_resource *resource = wl_resource_create(client, &wl_subcompositor_interface, qMin(version, s_version), id);
+    auto c = display->getConnection(client);
+    wl_resource *resource = c->createResource(&wl_subcompositor_interface, qMin(version, s_version), id);
     if (!resource) {
         wl_client_post_no_memory(client);
         return;

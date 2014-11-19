@@ -114,7 +114,8 @@ ShellInterface::~ShellInterface() = default;
 
 void ShellInterface::Private::bind(wl_client *client, uint32_t version, uint32_t id)
 {
-    wl_resource *shell = wl_resource_create(client, &wl_shell_interface, qMin(version, s_version), id);
+    auto c = display->getConnection(client);
+    wl_resource *shell = c->createResource(&wl_shell_interface, qMin(version, s_version), id);
     if (!shell) {
         wl_client_post_no_memory(client);
         return;

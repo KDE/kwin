@@ -52,7 +52,7 @@ void Resource::Private::create(ClientConnection *c, quint32 version, quint32 id)
     Q_ASSERT(!resource);
     Q_ASSERT(!client);
     client = c;
-    resource = wl_resource_create(*client, m_interface, version, id);
+    resource = client->createResource(m_interface, version, id);
     if (!resource) {
         return;
     }

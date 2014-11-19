@@ -236,7 +236,7 @@ void SurfaceInterface::Private::setTransform(OutputInterface::Transform transfor
 
 void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
 {
-    wl_resource *r = wl_resource_create(*client, &wl_callback_interface, 1, callback);
+    wl_resource *r = client->createResource(&wl_callback_interface, 1, callback);
     if (!r) {
         wl_resource_post_no_memory(resource);
         return;
