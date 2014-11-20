@@ -189,7 +189,7 @@ int main(int argc, char **argv)
     shell->create();
     display.createShm();
     OutputInterface *output = display.createOutput(&display);
-    output->setPhysicalSize(QSize(10, 10));
+    output->setPhysicalSize(QSize(400, 300));
     const QSize windowSize(1024, 768);
     output->addMode(windowSize);
     output->create();
