@@ -80,7 +80,7 @@ Q_SIGNALS:
 private:
     friend class SubCompositorInterface;
     friend class SurfaceInterface;
-    explicit SubSurfaceInterface(SubCompositorInterface *parent);
+    explicit SubSurfaceInterface(SubCompositorInterface *parent, wl_resource *parentResource);
 
     class Private;
     Private *d_func() const;

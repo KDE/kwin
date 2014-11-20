@@ -143,6 +143,7 @@ void TestDataSource::testOffer()
     QPointer<DataSourceInterface> serverDataSource = dataSourceCreatedSpy.first().first().value<DataSourceInterface*>();
     QVERIFY(!serverDataSource.isNull());
     QCOMPARE(serverDataSource->mimeTypes().count(), 0);
+    QVERIFY(serverDataSource->parentResource());
 
     QSignalSpy offeredSpy(serverDataSource.data(), SIGNAL(mimeTypeOffered(const QString&)));
     QVERIFY(offeredSpy.isValid());

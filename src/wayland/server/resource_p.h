@@ -35,6 +35,7 @@ public:
     virtual ~Private();
     void create(ClientConnection *client, quint32 version, quint32 id);
 
+    wl_resource *parentResource = nullptr;
     wl_resource *resource = nullptr;
     ClientConnection *client = nullptr;
     Global *global;
@@ -55,7 +56,7 @@ public:
     }
 
 protected:
-    explicit Private(Resource *q, Global *g, const wl_interface *interface, const void *implementation);
+    explicit Private(Resource *q, Global *g, wl_resource *parentResource, const wl_interface *interface, const void *implementation);
 
     template <typename Derived>
     static Derived *cast(wl_resource *r) {

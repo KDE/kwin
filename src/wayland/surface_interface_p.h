@@ -48,7 +48,7 @@ public:
         // stacking order: bottom (first) -> top (last)
         QList<QPointer<SubSurfaceInterface>> children;
     };
-    Private(SurfaceInterface *q, CompositorInterface *c);
+    Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource);
     ~Private();
 
     void destroy();

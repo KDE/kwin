@@ -30,8 +30,9 @@ namespace Server
 
 QList<Resource::Private*> Resource::Private::s_allResources;
 
-Resource::Private::Private(Resource *q, Global *g, const wl_interface *interface, const void *implementation)
-    : global(g)
+Resource::Private::Private(Resource *q, Global *g, wl_resource *parentResource, const wl_interface *interface, const void *implementation)
+    : parentResource(parentResource)
+    , global(g)
     , q(q)
     , m_interface(interface)
     , m_interfaceImplementation(implementation)
@@ -92,6 +93,11 @@ Global *Resource::global()
 wl_resource *Resource::resource()
 {
     return d->resource;
+}
+
+wl_resource *Resource::parentResource() const
+{
+    return d->parentResource;
 }
 
 }

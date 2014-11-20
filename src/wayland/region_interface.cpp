@@ -31,7 +31,7 @@ namespace Server
 class RegionInterface::Private : public Resource::Private
 {
 public:
-    Private(CompositorInterface *compositor, RegionInterface *q);
+    Private(CompositorInterface *compositor, RegionInterface *q, wl_resource *parentResource);
     ~Private();
     QRegion qtRegion;
 
@@ -55,8 +55,8 @@ const struct wl_region_interface RegionInterface::Private::s_interface = {
     subtractCallback
 };
 
-RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q)
-    : Resource::Private(q, compositor, &wl_region_interface, &s_interface)
+RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q, wl_resource *parentResource)
+    : Resource::Private(q, compositor, parentResource, &wl_region_interface, &s_interface)
 {
 }
 
@@ -97,8 +97,8 @@ void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r
     cast<Private>(r)->q_func()->deleteLater();
 }
 
-RegionInterface::RegionInterface(CompositorInterface *parent)
-    : Resource(new Private(parent, this), parent)
+RegionInterface::RegionInterface(CompositorInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(parent, this, parentResource), parent)
 {
 }
 

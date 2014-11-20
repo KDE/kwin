@@ -35,8 +35,8 @@ namespace KWayland
 namespace Server
 {
 
-SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c)
-    : Resource::Private(q, c, &wl_surface_interface, &s_interface)
+SurfaceInterface::Private::Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource)
+    : Resource::Private(q, c, parentResource, &wl_surface_interface, &s_interface)
 {
 }
 
@@ -136,8 +136,8 @@ const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     bufferScaleCallback
 };
 
-SurfaceInterface::SurfaceInterface(CompositorInterface *parent)
-    : Resource(new Private(this, parent))
+SurfaceInterface::SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(this, parent, parentResource))
 {
 }
 

@@ -44,7 +44,7 @@ public:
 
 private:
     friend class DataDeviceInterface;
-    explicit DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface);
+    explicit DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface, wl_resource *parentResource);
 
     class Private;
     Private *d_func() const;

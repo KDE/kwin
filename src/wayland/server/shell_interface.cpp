@@ -44,7 +44,7 @@ public:
 private:
     static void createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface);
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
-    void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface);
+    void createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface, wl_resource *parentResource);
 
     ShellInterface *q;
     static const struct wl_shell_interface s_interface;
@@ -65,7 +65,7 @@ const struct wl_shell_interface ShellInterface::Private::s_interface = {
 class ShellSurfaceInterface::Private : public Resource::Private
 {
 public:
-    Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface);
+    Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
     void setFullscreen(bool fullscreen);
     void setToplevel(bool toplevel);
     void ping();
@@ -126,10 +126,10 @@ void ShellInterface::Private::bind(wl_client *client, uint32_t version, uint32_t
 void ShellInterface::Private::createSurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface)
 {
     auto s = reinterpret_cast<ShellInterface::Private*>(wl_resource_get_user_data(resource));
-    s->createSurface(client, wl_resource_get_version(resource), id, SurfaceInterface::get(surface));
+    s->createSurface(client, wl_resource_get_version(resource), id, SurfaceInterface::get(surface), resource);
 }
 
-void ShellInterface::Private::createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface)
+void ShellInterface::Private::createSurface(wl_client *client, uint32_t version, uint32_t id, SurfaceInterface *surface, wl_resource *parentResource)
 {
     auto it = std::find_if(surfaces.constBegin(), surfaces.constEnd(),
         [surface](ShellSurfaceInterface *s) {
@@ -140,7 +140,7 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
         wl_resource_post_error(surface->resource(), WL_DISPLAY_ERROR_INVALID_OBJECT, "ShellSurface already created");
         return;
     }
-    ShellSurfaceInterface *shellSurface = new ShellSurfaceInterface(q, surface);
+    ShellSurfaceInterface *shellSurface = new ShellSurfaceInterface(q, surface, parentResource);
     surfaces << shellSurface;
     QObject::connect(shellSurface, &ShellSurfaceInterface::destroyed, q,
         [this, shellSurface] {
@@ -154,8 +154,8 @@ void ShellInterface::Private::createSurface(wl_client *client, uint32_t version,
 /*********************************
  * ShellSurfaceInterface
  *********************************/
-ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface)
-    : Resource::Private(q, shell, &wl_shell_surface_interface, &s_interface)
+ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource)
+    : Resource::Private(q, shell, parentResource, &wl_shell_surface_interface, &s_interface)
     , surface(surface)
     , pingTimer(new QTimer)
 {
@@ -176,8 +176,8 @@ const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interf
     setClassCallback
 };
 
-ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent)
-    : Resource(new Private(this, shell, parent), parent)
+ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(this, shell, parent, parentResource), parent)
 {
     Q_D();
     connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);

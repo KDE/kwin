@@ -95,7 +95,7 @@ void CompositorInterface::Private::createSurfaceCallback(wl_client *client, wl_r
 
 void CompositorInterface::Private::createSurface(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    SurfaceInterface *surface = new SurfaceInterface(q);
+    SurfaceInterface *surface = new SurfaceInterface(q, resource);
     surface->create(display->getConnection(client), wl_resource_get_version(resource), id);
     if (!surface->resource()) {
         wl_resource_post_no_memory(resource);
@@ -112,7 +112,7 @@ void CompositorInterface::Private::createRegionCallback(wl_client *client, wl_re
 
 void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    RegionInterface *region = new RegionInterface(q);
+    RegionInterface *region = new RegionInterface(q, resource);
     region->create(display->getConnection(client), wl_resource_get_version(resource), id);
     if (!region->resource()) {
         wl_resource_post_no_memory(resource);

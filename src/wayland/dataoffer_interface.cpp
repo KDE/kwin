@@ -34,7 +34,7 @@ namespace Server
 class DataOfferInterface::Private : public Resource::Private
 {
 public:
-    Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q);
+    Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource);
     ~Private();
     DataSourceInterface *source;
     DataDeviceInterface *dataDevice;
@@ -57,8 +57,8 @@ const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = 
     destroyCallback
 };
 
-DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q)
-    : Resource::Private(q, nullptr, &wl_data_offer_interface, &s_interface)
+DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource)
+    : Resource::Private(q, nullptr, parentResource, &wl_data_offer_interface, &s_interface)
     , source(source)
     , dataDevice(parentInterface)
 {
@@ -92,8 +92,8 @@ void DataOfferInterface::Private::receive(const QString &mimeType, qint32 fd)
     source->requestData(mimeType, fd);
 }
 
-DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface)
-    : Resource(new Private(source, parentInterface, this), parentInterface)
+DataOfferInterface::DataOfferInterface(DataSourceInterface *source, DataDeviceInterface *parentInterface, wl_resource *parentResource)
+    : Resource(new Private(source, parentInterface, this, parentResource), parentInterface)
 {
     connect(source, &DataSourceInterface::mimeTypeOffered, this,
         [this](const QString &mimeType) {

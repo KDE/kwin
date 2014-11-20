@@ -223,6 +223,7 @@ void TestWaylandShell::testFullscreen()
     QVERIFY(serverSurfaceSpy.wait());
     ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
     QVERIFY(serverSurface);
+    QVERIFY(serverSurface->parentResource());
 
     QSignalSpy fullscreenSpy(serverSurface, SIGNAL(fullscreenChanged(bool)));
     QVERIFY(fullscreenSpy.isValid());

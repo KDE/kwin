@@ -189,6 +189,7 @@ void TestDataDevice::testCreate()
     QVERIFY(!deviceInterface->origin());
     QVERIFY(!deviceInterface->icon());
     QVERIFY(!deviceInterface->selection());
+    QVERIFY(deviceInterface->parentResource());
 }
 
 void TestDataDevice::testDrag()

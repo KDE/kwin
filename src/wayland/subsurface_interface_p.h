@@ -35,7 +35,7 @@ namespace Server
 class SubSurfaceInterface::Private : public Resource::Private
 {
 public:
-    Private(SubSurfaceInterface *q, SubCompositorInterface *compositor);
+    Private(SubSurfaceInterface *q, SubCompositorInterface *compositor, wl_resource *parentResource);
     ~Private();
 
     using Resource::Private::create;

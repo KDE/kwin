@@ -48,7 +48,7 @@ Q_SIGNALS:
 
 private:
     friend class CompositorInterface;
-    explicit RegionInterface(CompositorInterface *parent);
+    explicit RegionInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;
     Private *d_func() const;

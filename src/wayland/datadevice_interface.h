@@ -58,7 +58,7 @@ Q_SIGNALS:
 
 private:
     friend class DataDeviceManagerInterface;
-    explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent);
+    explicit DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent, wl_resource *parentResource);
 
     class Private;
     Private *d_func() const;

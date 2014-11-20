@@ -36,7 +36,7 @@ namespace Server
 class DataDeviceInterface::Private : public Resource::Private
 {
 public:
-    Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager);
+    Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource);
     ~Private();
 
     DataOfferInterface *createDataOffer(DataSourceInterface *source);
@@ -65,8 +65,8 @@ const struct wl_data_device_interface DataDeviceInterface::Private::s_interface 
     setSelectionCallback
 };
 
-DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager)
-    : Resource::Private(q, manager, &wl_data_device_interface, &s_interface)
+DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource)
+    : Resource::Private(q, manager, parentResource, &wl_data_device_interface, &s_interface)
     , seat(seat)
 {
 }
@@ -116,7 +116,7 @@ void DataDeviceInterface::Private::setSelection(DataSourceInterface *dataSource)
 DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInterface *source)
 {
     Q_Q(DataDeviceInterface);
-    DataOfferInterface *offer = new DataOfferInterface(source, q);
+    DataOfferInterface *offer = new DataOfferInterface(source, q, resource);
     auto c = q->global()->display()->getConnection(wl_resource_get_client(resource));
     offer->create(c, wl_resource_get_version(resource), 0);
     if (!offer->resource()) {
@@ -129,8 +129,8 @@ DataOfferInterface *DataDeviceInterface::Private::createDataOffer(DataSourceInte
     return offer;
 }
 
-DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent)
-    : Resource(new Private(seat, this, parent))
+DataDeviceInterface::DataDeviceInterface(SeatInterface *seat, DataDeviceManagerInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(seat, this, parent, parentResource))
 {
 }
 

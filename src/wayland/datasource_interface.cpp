@@ -33,7 +33,7 @@ namespace Server
 class DataSourceInterface::Private : public Resource::Private
 {
 public:
-    Private(DataSourceInterface *q, DataDeviceManagerInterface *parent);
+    Private(DataSourceInterface *q, DataDeviceManagerInterface *parent, wl_resource *parentResource);
     ~Private();
 
     QStringList mimeTypes;
@@ -55,8 +55,8 @@ const struct wl_data_source_interface DataSourceInterface::Private::s_interface 
     destroyCallack
 };
 
-DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent)
-    : Resource::Private(q, parent, &wl_data_source_interface, &s_interface)
+DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent, wl_resource *parentResource)
+    : Resource::Private(q, parent, parentResource, &wl_data_source_interface, &s_interface)
 {
 }
 
@@ -81,8 +81,8 @@ void DataSourceInterface::Private::offer(const QString &mimeType)
     emit q->mimeTypeOffered(mimeType);
 }
 
-DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent)
-    : Resource(new Private(this, parent))
+DataSourceInterface::DataSourceInterface(DataDeviceManagerInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(this, parent, parentResource))
 {
 }
 

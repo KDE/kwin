@@ -167,6 +167,7 @@ void TestRegion::testCreateWithRegion()
     auto serverRegion = regionCreatedSpy.first().first().value<KWayland::Server::RegionInterface*>();
     QVERIFY(serverRegion);
     QCOMPARE(serverRegion->region(), QRegion(0, 0, 10, 20));
+    QVERIFY(serverRegion->parentResource());
 }
 
 void TestRegion::testCreateUniquePtr()

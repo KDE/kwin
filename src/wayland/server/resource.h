@@ -45,6 +45,7 @@ public:
     wl_resource *resource();
     ClientConnection *client();
     Global *global();
+    wl_resource *parentResource() const;
 
 protected:
     class Private;

@@ -106,7 +106,7 @@ void SubCompositorInterface::Private::subsurface(wl_client *client, wl_resource 
     }
     // TODO: add check that surface is not already used in an interface (e.g. Shell)
     // TODO: add check that parentSurface is not a child of surface
-    SubSurfaceInterface *s = new SubSurfaceInterface(q);
+    SubSurfaceInterface *s = new SubSurfaceInterface(q, resource);
     s->d_func()->create(display->getConnection(client), wl_resource_get_version(resource), id, surface, parentSurface);
     if (!s->resource()) {
         wl_resource_post_no_memory(resource);
@@ -132,8 +132,8 @@ const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface =
     setDeSyncCallback
 };
 
-SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor)
-    : Resource::Private(q, compositor, &wl_subsurface_interface, &s_interface)
+SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor, wl_resource *parentResource)
+    : Resource::Private(q, compositor, parentResource, &wl_subsurface_interface, &s_interface)
 {
 }
 
@@ -250,8 +250,8 @@ void SubSurfaceInterface::Private::setMode(Mode m)
     emit q->modeChanged(m);
 }
 
-SubSurfaceInterface::SubSurfaceInterface(SubCompositorInterface *parent)
-    : Resource(new Private(this, parent))
+SubSurfaceInterface::SubSurfaceInterface(SubCompositorInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(this, parent, parentResource))
 {
     Q_UNUSED(parent)
 }

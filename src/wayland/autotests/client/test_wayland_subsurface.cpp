@@ -188,6 +188,7 @@ void TestSubSurface::testCreate()
     QVERIFY(subSurfaceCreatedSpy.wait());
     SubSurfaceInterface *serverSubSurface = subSurfaceCreatedSpy.first().first().value<KWayland::Server::SubSurfaceInterface*>();
     QVERIFY(serverSubSurface);
+    QVERIFY(serverSubSurface->parentSurface());
     QCOMPARE(serverSubSurface->parentSurface().data(), serverParentSurface);
     QCOMPARE(serverSubSurface->surface().data(), serverSurface);
     QCOMPARE(serverSurface->subSurface().data(), serverSubSurface);

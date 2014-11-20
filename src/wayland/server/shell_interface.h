@@ -87,7 +87,7 @@ Q_SIGNALS:
 
 private:
     friend class ShellInterface;
-    explicit ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent);
+    explicit ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource);
     class Private;
     Private *d_func() const;
 };
