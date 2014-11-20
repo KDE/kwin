@@ -1,3 +1,5 @@
+include(ECMMarkAsTest)
+
 set(testServer_SRCS
     waylandservertest.cpp
     )
