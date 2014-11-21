@@ -41,9 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "effects.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 #include "screens.h"
 #include "xcbutils.h"
 
@@ -283,22 +281,18 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         const QPoint rootPos(mouseEvent->root_x, mouseEvent->root_y);
 #ifdef KWIN_BUILD_TABBOX
         if (TabBox::TabBox::self()->isGrabbed()) {
-#ifdef KWIN_BUILD_SCREENEDGES
             ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
-#endif
             return TabBox::TabBox::self()->handleMouseEvent(mouseEvent);
         }
 #endif
         if (effects && static_cast<EffectsHandlerImpl*>(effects)->checkInputWindowEvent(mouseEvent)) {
             return true;
         }
-#ifdef KWIN_BUILD_SCREENEDGES
         if (QWidget::mouseGrabber()) {
             ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(xTime()), true);
         } else {
             ScreenEdges::self()->check(rootPos, QDateTime::fromMSecsSinceEpoch(mouseEvent->time));
         }
-#endif
         break;
     }
     case XCB_KEY_PRESS: {
@@ -453,10 +447,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             if (w)
                 QWhatsThis::leaveWhatsThisMode();
         }
-#ifdef KWIN_BUILD_SCREENEDGES
         if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_enter_notify_event_t*>(e)))
             return true;
-#endif
         break;
     }
     case XCB_LEAVE_NOTIFY: {
@@ -518,10 +510,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
     case XCB_FOCUS_OUT:
         return true; // always eat these, they would tell Qt that KWin is the active app
     case XCB_CLIENT_MESSAGE:
-#ifdef KWIN_BUILD_SCREENEDGES
         if (ScreenEdges::self()->isEntered(reinterpret_cast<xcb_client_message_event_t*>(e)))
             return true;
-#endif
         break;
     case XCB_EXPOSE: {
         const auto *event = reinterpret_cast<xcb_expose_event_t*>(e);

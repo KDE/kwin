@@ -48,9 +48,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "outline.h"
 #include "placement.h"
 #include "rules.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 #include "screens.h"
 #include "scripting/scripting.h"
 #ifdef KWIN_BUILD_TABBOX
@@ -196,9 +194,7 @@ Workspace::Workspace(bool restore)
     connect(qApp, SIGNAL(screenAdded(QScreen*)), this, SLOT(selectWmInputEventMask()));
 #endif
 
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::create(this);
-#endif
 
     // VirtualDesktopManager needs to be created prior to init shortcuts
     // and prior to TabBox, due to TabBox connecting to signals
@@ -239,14 +235,12 @@ void Workspace::init()
     screens->setConfig(config);
     screens->reconfigure();
     connect(options, SIGNAL(configChanged()), screens, SLOT(reconfigure()));
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges *screenEdges = ScreenEdges::self();
     screenEdges->setConfig(config);
     screenEdges->init();
     connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
     connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
     connect(this, SIGNAL(clientActivated(KWin::Client*)), screenEdges, SIGNAL(checkBlocking()));
-#endif
 
     FocusChain *focusChain = FocusChain::create(this);
     connect(this, SIGNAL(clientRemoved(KWin::Client*)), focusChain, SLOT(remove(KWin::Client*)));
@@ -462,9 +456,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
-#ifdef KWIN_BUILD_SCREENEDGES
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
-#endif
     connect(c, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)), Qt::QueuedConnection);
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
@@ -1377,7 +1369,6 @@ QString Workspace::supportInformation() const
         }
         support.append(QLatin1String(property.name()) + QStringLiteral(": ") + options->property(property.name()).toString() + QStringLiteral("\n"));
     }
-#ifdef KWIN_BUILD_SCREENEDGES
     support.append(QStringLiteral("\nScreen Edges\n"));
     support.append(QStringLiteral(  "============\n"));
     const QMetaObject *metaScreenEdges = ScreenEdges::self()->metaObject();
@@ -1388,7 +1379,6 @@ QString Workspace::supportInformation() const
         }
         support.append(QLatin1String(property.name()) + QStringLiteral(": ") + ScreenEdges::self()->property(property.name()).toString() + QStringLiteral("\n"));
     }
-#endif
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral(  "=======\n"));
     support.append(QStringLiteral("Multi-Head: "));

@@ -19,9 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screenedgeitem.h"
 #include <config-kwin.h>
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 
 namespace KWin
 {
@@ -64,9 +62,7 @@ void ScreenEdgeItem::enableEdge()
     if (!m_enabled || m_edge == NoEdge) {
         return;
     }
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->reserve(static_cast<ElectricBorder>(m_edge), this, "borderActivated");
-#endif
 }
 
 void ScreenEdgeItem::disableEdge()
@@ -74,9 +70,7 @@ void ScreenEdgeItem::disableEdge()
     if (!m_enabled || m_edge == NoEdge) {
         return;
     }
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->unreserve(static_cast<ElectricBorder>(m_edge), this);
-#endif
 }
 
 bool ScreenEdgeItem::borderActivated(ElectricBorder edge)

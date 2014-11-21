@@ -188,7 +188,6 @@ include(CMakeDependentOption)
 option(KWIN_BUILD_DECORATIONS "Enable building of KWin decorations." ON)
 option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
-option(KWIN_BUILD_SCREENEDGES "Enable building of KWin with screen edge support" ON)
 option(KWIN_BUILD_KAPPMENU "Enable building of KWin with application menu support" OFF)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
@@ -211,7 +210,6 @@ set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 if(KWIN_PLASMA_ACTIVE)
     set(KWIN_BUILD_DECORATIONS OFF)
     set(KWIN_BUILD_KCMS OFF)
-    set(KWIN_BUILD_SCREENEDGES OFF)
     set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
     set(KWIN_BUILD_WITH_OPENGLES ON)
     set(KWIN_NAME "kwinactive")
@@ -352,6 +350,7 @@ set(kwin_KDEINIT_SRCS
    xcbutils.cpp
    x11eventfilter.cpp
    logind.cpp
+    screenedge.cpp
     scripting/scripting.cpp
     scripting/workspace_wrapper.cpp
     scripting/meta.cpp
@@ -374,13 +373,6 @@ if(KWIN_BUILD_TABBOX)
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp
   )
-endif()
-
-if(KWIN_BUILD_SCREENEDGES)
-    set(
-        kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
-        screenedge.cpp
-    )
 endif()
 
 if(KWIN_BUILD_KAPPMENU)

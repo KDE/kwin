@@ -38,9 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rules.h"
 #include "screens.h"
 #include "effects.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 #include <QApplication>
 #include <QDebug>
 #include <QDesktopWidget>
@@ -82,9 +80,7 @@ void Workspace::desktopResized()
     saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->recreateEdges();
-#endif
 
     if (effects) {
         static_cast<EffectsHandlerImpl*>(effects)->desktopResized(geom.size());
@@ -2596,10 +2592,8 @@ bool Client::startMoveResize()
     initialMoveResizeGeom = moveResizeGeom = geometry();
     checkUnrestrictedMoveResize();
     emit clientStartUserMovedResized(this);
-#ifdef KWIN_BUILD_SCREENEDGES
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(true, Qt::Vertical|Qt::Horizontal);
-#endif
     return true;
 }
 
@@ -2674,10 +2668,8 @@ void Client::leaveMoveResize()
         syncRequest.isPending = false;
     delete syncRequest.timeout;
     syncRequest.timeout = NULL;
-#ifdef KWIN_BUILD_SCREENEDGES
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
-#endif
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
@@ -3037,11 +3029,9 @@ void Client::handleMoveResize(int x, int y, int x_root, int y_root)
     } else
         performMoveResize();
 
-#ifdef KWIN_BUILD_SCREENEDGES
     if (isMove()) {
         ScreenEdges::self()->check(globalPos, QDateTime::fromMSecsSinceEpoch(xTime()));
     }
-#endif
 }
 
 void Client::performMoveResize()

@@ -90,9 +90,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include <QX11Info>
 #include "composite.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 
 #include <QDebug>
 
@@ -141,7 +139,6 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     }
 }
 
-#ifdef KWIN_BUILD_SCREENEDGES
 /*!
  * Some fullscreen effects have to raise the screenedge on top of an input window, thus all windows
  * this function puts them back where they belong for regular use and is some cheap variant of
@@ -153,7 +150,6 @@ void Workspace::stackScreenEdgesUnderOverrideRedirect()
 {
     Xcb::restackWindows(QVector<xcb_window_t>() << rootInfo()->supportWindow() << ScreenEdges::self()->windows());
 }
-#endif
 
 /*!
   Propagates the managed clients to the world.
@@ -172,9 +168,7 @@ void Workspace::propagateClients(bool propagate_new_clients)
     // windows (e.g. popups).
     newWindowStack << rootInfo()->supportWindow();
 
-#ifdef KWIN_BUILD_SCREENEDGES
     newWindowStack << ScreenEdges::self()->windows();
-#endif
 
     newWindowStack.reserve(newWindowStack.size() + 2*stacking_order.size()); // *2 for inputWindow
 

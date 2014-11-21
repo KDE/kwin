@@ -212,9 +212,7 @@ public:
         return deleted;
     }
 
-#ifdef KWIN_BUILD_SCREENEDGES
     void stackScreenEdgesUnderOverrideRedirect();
-#endif
 
 public:
     QPoint cascadeOffset(const Client *c) const;

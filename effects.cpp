@@ -37,9 +37,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 #include "scripting/scriptedeffect.h"
 #include "screens.h"
 #include "thumbnailitem.h"
@@ -284,9 +282,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(tabBox, &TabBox::TabBox::tabBoxClosed,   this, &EffectsHandler::tabBoxClosed);
     connect(tabBox, &TabBox::TabBox::tabBoxKeyEvent, this, &EffectsHandler::tabBoxKeyEvent);
 #endif
-#ifdef KWIN_BUILD_SCREENEDGES
     connect(ScreenEdges::self(), &ScreenEdges::approaching, this, &EffectsHandler::screenEdgeApproaching);
-#endif
     connect(m_screenLockerWatcher, &ScreenLockerWatcher::locked, this, &EffectsHandler::screenLockingChanged);
     // connect all clients
     for (Client *c : ws->clientList()) {
@@ -696,9 +692,7 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
     m_mouseInterceptionWindow.raise();
     // Raise electric border windows above the input windows
     // so they can still be triggered.
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->ensureOnTop();
-#endif
 }
 
 void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
@@ -712,9 +706,7 @@ void EffectsHandlerImpl::stopMouseInterception(Effect *effect)
     }
     if (m_grabbedMouseEffects.isEmpty()) {
         m_mouseInterceptionWindow.unmap();
-#ifdef KWIN_BUILD_SCREENEDGES
         Workspace::self()->stackScreenEdgesUnderOverrideRedirect();
-#endif
     }
 }
 
@@ -1239,9 +1231,7 @@ void EffectsHandlerImpl::checkInputWindowStacking()
     m_mouseInterceptionWindow.raise();
     // Raise electric border windows above the input windows
     // so they can still be triggered. TODO: Do both at once.
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->ensureOnTop();
-#endif
 }
 
 QPoint EffectsHandlerImpl::cursorPos() const
@@ -1251,22 +1241,12 @@ QPoint EffectsHandlerImpl::cursorPos() const
 
 void EffectsHandlerImpl::reserveElectricBorder(ElectricBorder border, Effect *effect)
 {
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->reserve(border, effect, "borderActivated");
-#else
-    Q_UNUSED(border)
-    Q_UNUSED(effect)
-#endif
 }
 
 void EffectsHandlerImpl::unreserveElectricBorder(ElectricBorder border, Effect *effect)
 {
-#ifdef KWIN_BUILD_SCREENEDGES
     ScreenEdges::self()->unreserve(border, effect);
-#else
-    Q_UNUSED(border)
-    Q_UNUSED(effect)
-#endif
 }
 
 unsigned long EffectsHandlerImpl::xrenderBufferPicture()
@@ -1442,12 +1422,10 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
     switch (kwopt) {
     case CloseButtonCorner:
         return decorationPlugin()->closeButtonCorner();
-#ifdef KWIN_BUILD_SCREENEDGES
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();
     case SwitchDesktopOnScreenEdgeMovingWindows:
         return ScreenEdges::self()->isDesktopSwitchingMovingClients();
-#endif
     default:
         return QVariant(); // an invalid one
     }

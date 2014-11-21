@@ -227,9 +227,7 @@ QStringList configModules(bool controlCenter)
 #ifdef KWIN_BUILD_TABBOX
              << QStringLiteral("kwintabbox")
 #endif
-#ifdef KWIN_BUILD_SCREENEDGES
              << QStringLiteral("kwinscreenedges")
-#endif
              << QStringLiteral("kwinscripts")
              ;
     return args;

@@ -36,9 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "input.h"
 #include "focuschain.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 #include "screens.h"
 #include "unmanaged.h"
 #include "virtualdesktops.h"
@@ -765,7 +763,6 @@ void TabBox::reconfigure()
     m_desktopConfig.setLayoutName(config.readEntry("DesktopLayout", defaultDesktopLayout));
     m_desktopListConfig.setLayoutName(config.readEntry("DesktopListLayout", defaultDesktopLayout));
 
-#ifdef KWIN_BUILD_SCREENEDGES
     QList<ElectricBorder> *borders = &m_borderActivate;
     QString borderConfig = QStringLiteral("BorderActivate");
     for (int i = 0; i < 2; ++i) {
@@ -785,7 +782,6 @@ void TabBox::reconfigure()
         borders = &m_borderAlternativeActivate;
         borderConfig = QStringLiteral("BorderAlternativeActivate");
     }
-#endif
 }
 
 void TabBox::loadConfig(const KConfigGroup& config, TabBoxConfig& tabBoxConfig)

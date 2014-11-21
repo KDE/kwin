@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "input.h"
 #include "workspace.h"
-#ifdef KWIN_BUILD_SCREENEDGES
 #include "screenedge.h"
-#endif
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
@@ -164,9 +162,7 @@ QScriptValue registerScreenEdge(QScriptContext *context, QScriptEngine *engine)
     QHash<int, QList<QScriptValue> >::iterator it = script->screenEdgeCallbacks().find(edge);
     if (it == script->screenEdgeCallbacks().end()) {
         // not yet registered
-#ifdef KWIN_BUILD_SCREENEDGES
         ScreenEdges::self()->reserve(static_cast<KWin::ElectricBorder>(edge), script, "borderActivated");
-#endif
         script->screenEdgeCallbacks().insert(edge, QList<QScriptValue>() << context->argument(1));
     } else {
         it->append(context->argument(1));
