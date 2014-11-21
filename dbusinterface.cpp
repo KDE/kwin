@@ -120,6 +120,7 @@ bool DBusInterface::startActivity(const QString &in0)
 #ifdef KWIN_BUILD_ACTIVITIES
     return Activities::self()->start(in0);
 #else
+    Q_UNUSED(in0)
     return false;
 #endif
 }
@@ -129,6 +130,7 @@ bool DBusInterface::stopActivity(const QString &in0)
 #ifdef KWIN_BUILD_ACTIVITIES
     return Activities::self()->stop(in0);
 #else
+    Q_UNUSED(in0)
     return false;
 #endif
 }

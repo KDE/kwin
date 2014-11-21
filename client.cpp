@@ -1734,6 +1734,8 @@ void Client::setOnAllActivities(bool on)
     } else {
         setOnActivity(Activities::self()->current(), true);
     }
+#else
+    Q_UNUSED(on)
 #endif
 }
 

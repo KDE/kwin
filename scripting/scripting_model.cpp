@@ -18,7 +18,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scripting_model.h"
+#include <config-kwin.h>
+#ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
+#endif
 #include "client.h"
 #include "screens.h"
 #include "workspace.h"
@@ -496,6 +499,8 @@ void ForkLevel::activityAdded(const QString &activityId)
     childLevel->init();
     addChild(childLevel);
     emit endInsert();
+#else
+    Q_UNUSED(activityId)
 #endif
 }
 
@@ -513,6 +518,8 @@ void ForkLevel::activityRemoved(const QString &activityId)
             break;
         }
     }
+#else
+    Q_UNUSED(activityId)
 #endif
 }
 

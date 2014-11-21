@@ -810,6 +810,8 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
             }
         }
     }
+#else
+    Q_UNUSED(action)
 #endif
 }
 

@@ -110,7 +110,7 @@ RootInfo *RootInfo::create()
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
         NET::WM2KDEShadow;
-#if KWIN_BUILD_ACTIVITIES
+#ifdef KWIN_BUILD_ACTIVITIES
         properties2 |= NET::WM2Activities;
 #endif
     const NET::Actions actions = NET::ActionMove |
