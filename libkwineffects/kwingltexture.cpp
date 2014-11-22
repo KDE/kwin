@@ -98,12 +98,14 @@ GLTexture::GLTexture(int width, int height)
 
         glGenTextures(1, &d->m_texture);
         bind();
-#ifdef KWIN_HAVE_OPENGLES
-        glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, width, height,
-                     0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, 0);
-#else
-        glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-#endif
+
+        if (!GLPlatform::instance()->isGLES()) {
+            glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+        } else {
+            glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, width, height,
+                         0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, 0);
+        }
+
         unbind();
     }
 }
@@ -157,22 +159,22 @@ GLTexturePrivate::~GLTexturePrivate()
 
 void GLTexturePrivate::initStatic()
 {
-#ifdef KWIN_HAVE_OPENGLES
-    sNPOTTextureSupported = true;
-    sFramebufferObjectSupported = true;
-    sSaturationSupported = true;
-    if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
-        sTextureFormat = GL_BGRA_EXT;
-    else
-        sTextureFormat = GL_RGBA;
-#else
-    sNPOTTextureSupported = hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"));
-    sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-    sSaturationSupported = ((hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_crossbar"))
-                             && hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_dot3"))) || hasGLVersion(1, 4))
-                           && (glTextureUnitsCount >= 4) && glActiveTexture != nullptr;
-    sTextureFormat = GL_BGRA;
-#endif
+    if (!GLPlatform::instance()->isGLES()) {
+        sNPOTTextureSupported = hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"));
+        sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
+        sSaturationSupported = ((hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_crossbar"))
+                                 && hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_dot3"))) || hasGLVersion(1, 4))
+                                 && (glTextureUnitsCount >= 4) && glActiveTexture != nullptr;
+        sTextureFormat = GL_BGRA;
+    } else {
+        sNPOTTextureSupported = true;
+        sFramebufferObjectSupported = true;
+        sSaturationSupported = true;
+        if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
+            sTextureFormat = GL_BGRA_EXT;
+        else
+            sTextureFormat = GL_RGBA;
+    }
 }
 
 void GLTexturePrivate::cleanup()
@@ -205,9 +207,8 @@ bool GLTexture::load(const QImage& image, GLenum target)
         return false;
     QImage img = image;
     d->m_target = target;
-#ifndef KWIN_HAVE_OPENGLES
+
     if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
-#endif
         if (!NPOTTextureSupported()
                 && (!isPowerOfTwo(image.width()) || !isPowerOfTwo(image.height()))) {
             // non-rectangular target requires POT texture
@@ -217,13 +218,12 @@ bool GLTexture::load(const QImage& image, GLenum target)
         d->m_scale.setWidth(1.0 / img.width());
         d->m_scale.setHeight(1.0 / img.height());
         d->m_canUseMipmaps = true;
-#ifndef KWIN_HAVE_OPENGLES
     } else {
         d->m_scale.setWidth(1.0);
         d->m_scale.setHeight(1.0);
         d->m_canUseMipmaps = false;
     }
-#endif
+
     d->m_size = img.size();
     d->m_yInverted = true;
 
@@ -234,14 +234,17 @@ bool GLTexture::load(const QImage& image, GLenum target)
     if (isNull()) {
         glGenTextures(1, &d->m_texture);
     }
+
     bind();
-#ifdef KWIN_HAVE_OPENGLES
-    glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, img.width(), img.height(),
-                 0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, img.bits());
-#else
-    glTexImage2D(d->m_target, 0, GL_RGBA8, img.width(), img.height(), 0,
-                 GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
-#endif
+
+    if (!GLPlatform::instance()->isGLES()) {
+        glTexImage2D(d->m_target, 0, GL_RGBA8, img.width(), img.height(), 0,
+                     GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+    } else {
+        glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, img.width(), img.height(),
+                     0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, img.bits());
+    }
+
     unbind();
     setFilter(GL_LINEAR);
     return true;
@@ -253,11 +256,9 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         return;
 
     Q_D(GLTexture);
-#ifdef KWIN_HAVE_OPENGLES
-    static const bool s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
-#else
-    static const bool s_supportsUnpack = true;
-#endif
+
+    static const bool s_supportsUnpack = GLPlatform::instance()->isGLES() ?
+            hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage")) : true;
 
     int width = image.width();
     int height = image.height();
@@ -373,6 +374,7 @@ void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
         if (!d->m_vbo) {
             d->m_vbo = new GLVertexBuffer(KWin::GLVertexBuffer::Static);
         }
+
         const float verts[ 4 * 2 ] = {
             // NOTICE: r.x/y could be replaced by "0", but that would make it unreadable...
             static_cast<float>(r.x()), static_cast<float>(r.y()),
@@ -380,19 +382,17 @@ void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
             static_cast<float>(r.x() + rect.width()), static_cast<float>(r.y()),
             static_cast<float>(r.x() + rect.width()), static_cast<float>(r.y() + rect.height())
         };
-#ifdef KWIN_HAVE_OPENGLES
-        const float texWidth = 1.0f;
-        const float texHeight = 1.0f;
-#else
+
         const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
         const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;
-#endif
+
         const float texcoords[ 4 * 2 ] = {
             0.0f, d->m_yInverted ? 0.0f : texHeight, // y needs to be swapped (normalized coords)
             0.0f, d->m_yInverted ? texHeight : 0.0f,
             texWidth, d->m_yInverted ? 0.0f : texHeight,
             texWidth, d->m_yInverted ? texHeight : 0.0f
         };
+
         d->m_vbo->setData(4, 2, verts, texcoords);
     }
     QMatrix4x4 translation;
@@ -518,8 +518,7 @@ QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
         } else {
             return img;
         }
-    } else {
-#ifdef KWIN_HAVE_OPENGLES
+    } else if (GLPlatform::instance()->isGLES()) {
         res = QImage(img.size(), QImage::Format_ARGB32);
         QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
 
@@ -548,7 +547,6 @@ QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
                 }
             }
         }
-#endif
     }
     return res;
 }
@@ -558,11 +556,9 @@ void GLTexturePrivate::updateMatrix()
     m_matrix[NormalizedCoordinates].setToIdentity();
     m_matrix[UnnormalizedCoordinates].setToIdentity();
 
-#ifndef KWIN_HAVE_OPENGLES
     if (m_target == GL_TEXTURE_RECTANGLE_ARB)
         m_matrix[NormalizedCoordinates].scale(m_size.width(), m_size.height());
     else
-#endif
         m_matrix[UnnormalizedCoordinates].scale(1.0 / m_size.width(), 1.0 / m_size.height());
 
     if (!m_yInverted) {
