@@ -72,6 +72,7 @@ public:
 
     static bool sFramebufferObjectSupported;
     static GLenum sTextureFormat;
+    static bool s_supportsUnpack;
     static uint s_fbo;
     static uint s_textureObjectCounter;
 private:

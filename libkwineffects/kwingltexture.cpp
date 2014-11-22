@@ -44,6 +44,7 @@ namespace KWin
 
 bool GLTexturePrivate::sFramebufferObjectSupported = false;
 GLenum GLTexturePrivate::sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+bool GLTexturePrivate::s_supportsUnpack = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
@@ -159,12 +160,14 @@ void GLTexturePrivate::initStatic()
     if (!GLPlatform::instance()->isGLES()) {
         sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         sTextureFormat = GL_BGRA;
+        s_supportsUnpack = true;
     } else {
         sFramebufferObjectSupported = true;
         if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
             sTextureFormat = GL_BGRA_EXT;
         else
             sTextureFormat = GL_RGBA;
+        s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
     }
 }
 
@@ -240,14 +243,11 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     Q_D(GLTexture);
 
-    static const bool s_supportsUnpack = GLPlatform::instance()->isGLES() ?
-            hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage")) : true;
-
     int width = image.width();
     int height = image.height();
     QImage tmpImage;
     if (!src.isNull()) {
-        if (s_supportsUnpack) {
+        if (d->s_supportsUnpack) {
             glPixelStorei(GL_UNPACK_ROW_LENGTH, image.width());
             glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
             glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
@@ -265,7 +265,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     checkGLError("update texture");
     unbind();
     setDirty();
-    if (!src.isNull() && s_supportsUnpack) {
+    if (!src.isNull() && d->s_supportsUnpack) {
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
         glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
         glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
