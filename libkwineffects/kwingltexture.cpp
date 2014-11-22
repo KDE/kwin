@@ -42,7 +42,6 @@ namespace KWin
 // GLTexture
 //****************************************
 
-bool GLTexturePrivate::sNPOTTextureSupported = false;
 bool GLTexturePrivate::sFramebufferObjectSupported = false;
 GLenum GLTexturePrivate::sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 uint GLTexturePrivate::s_textureObjectCounter = 0;
@@ -86,27 +85,26 @@ GLTexture::GLTexture(int width, int height)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
-    if (NPOTTextureSupported() || (isPowerOfTwo(width) && isPowerOfTwo(height))) {
-        d->m_target = GL_TEXTURE_2D;
-        d->m_scale.setWidth(1.0 / width);
-        d->m_scale.setHeight(1.0 / height);
-        d->m_size = QSize(width, height);
-        d->m_canUseMipmaps = true;
 
-        d->updateMatrix();
+    d->m_target = GL_TEXTURE_2D;
+    d->m_scale.setWidth(1.0 / width);
+    d->m_scale.setHeight(1.0 / height);
+    d->m_size = QSize(width, height);
+    d->m_canUseMipmaps = true;
 
-        glGenTextures(1, &d->m_texture);
-        bind();
+    d->updateMatrix();
 
-        if (!GLPlatform::instance()->isGLES()) {
-            glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-        } else {
-            glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, width, height,
-                         0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, 0);
-        }
+    glGenTextures(1, &d->m_texture);
+    bind();
 
-        unbind();
+    if (!GLPlatform::instance()->isGLES()) {
+        glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+    } else {
+        glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, width, height,
+                     0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, 0);
     }
+
+    unbind();
 }
 
 GLTexture::GLTexture(const QSize &size)
@@ -159,11 +157,9 @@ GLTexturePrivate::~GLTexturePrivate()
 void GLTexturePrivate::initStatic()
 {
     if (!GLPlatform::instance()->isGLES()) {
-        sNPOTTextureSupported = hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"));
         sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         sTextureFormat = GL_BGRA;
     } else {
-        sNPOTTextureSupported = true;
         sFramebufferObjectSupported = true;
         if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
             sTextureFormat = GL_BGRA_EXT;
@@ -174,7 +170,6 @@ void GLTexturePrivate::initStatic()
 
 void GLTexturePrivate::cleanup()
 {
-    sNPOTTextureSupported = false;
     sFramebufferObjectSupported = false;
     sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 }
@@ -199,18 +194,12 @@ bool GLTexture::load(const QImage& image, GLenum target)
     Q_D(GLTexture);
     if (image.isNull())
         return false;
-    QImage img = image;
+
     d->m_target = target;
 
     if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
-        if (!NPOTTextureSupported()
-                && (!isPowerOfTwo(image.width()) || !isPowerOfTwo(image.height()))) {
-            // non-rectangular target requires POT texture
-            img = img.scaled(nearestPowerOfTwo(image.width()),
-                             nearestPowerOfTwo(image.height()));
-        }
-        d->m_scale.setWidth(1.0 / img.width());
-        d->m_scale.setHeight(1.0 / img.height());
+        d->m_scale.setWidth(1.0 / image.width());
+        d->m_scale.setHeight(1.0 / image.height());
         d->m_canUseMipmaps = true;
     } else {
         d->m_scale.setWidth(1.0);
@@ -218,12 +207,12 @@ bool GLTexture::load(const QImage& image, GLenum target)
         d->m_canUseMipmaps = false;
     }
 
-    d->m_size = img.size();
+    d->m_size = image.size();
     d->m_yInverted = true;
 
     d->updateMatrix();
 
-    img = d->convertToGLFormat(img);
+    const QImage img = d->convertToGLFormat(image);
 
     if (isNull()) {
         glGenTextures(1, &d->m_texture);
@@ -317,9 +306,7 @@ void GLTexture::bind()
     if (d->m_filterChanged) {
         if (d->m_filter == GL_LINEAR_MIPMAP_LINEAR) {
             // trilinear filtering requested, but is it possible?
-            if (d->sNPOTTextureSupported
-                    && d->sFramebufferObjectSupported
-                    && d->m_canUseMipmaps) {
+            if (d->sFramebufferObjectSupported && d->m_canUseMipmaps) {
                 glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glGenerateMipmap(d->m_target);
@@ -593,11 +580,6 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 {
     Q_D(const GLTexture);
     return d->m_matrix[type];
-}
-
-bool GLTexture::NPOTTextureSupported()
-{
-    return GLTexturePrivate::sNPOTTextureSupported;
 }
 
 bool GLTexture::framebufferObjectSupported()

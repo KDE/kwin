@@ -357,10 +357,6 @@ void OpenGLPaintRedirector::resizePixmaps(const QRect *rects)
     size.rwidth() = align(size.width(), 128);
 
     effects->makeOpenGLContextCurrent();
-    if (!GLTexture::NPOTTextureSupported()) {
-        size.rwidth()  = nearestPowerOfTwo(size.width());
-        size.rheight() = nearestPowerOfTwo(size.height());
-    }
 
     if (m_texture && m_texture->size() == size)
         return;

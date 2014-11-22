@@ -70,7 +70,6 @@ public:
 
     static void initStatic();
 
-    static bool sNPOTTextureSupported;
     static bool sFramebufferObjectSupported;
     static GLenum sTextureFormat;
     static uint s_fbo;

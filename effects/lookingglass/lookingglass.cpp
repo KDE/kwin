@@ -94,17 +94,10 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
 
 bool LookingGlassEffect::loadData()
 {
-    // If NPOT textures are not supported, use nearest power-of-two sized
-    //  texture. It wastes memory, but it's possible to support systems without
-    //  NPOT textures that way
     const QSize screenSize = effects->virtualScreenSize();
     int texw = screenSize.width();
     int texh = screenSize.height();
-    if (!GLTexture::NPOTTextureSupported()) {
-        qWarning() << "NPOT textures not supported, wasting some memory" ;
-        texw = nearestPowerOfTwo(texw);
-        texh = nearestPowerOfTwo(texh);
-    }
+
     // Create texture and render target
     m_texture = new GLTexture(texw, texh);
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);

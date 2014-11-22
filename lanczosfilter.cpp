@@ -103,10 +103,7 @@ void LanczosFilter::updateOffscreenSurfaces()
 {
     int w = displayWidth();
     int h = displayHeight();
-    if (!GLTexture::NPOTTextureSupported()) {
-        w = nearestPowerOfTwo(w);
-        h = nearestPowerOfTwo(h);
-    }
+
     if (!m_offscreenTex || m_offscreenTex->width() != w || m_offscreenTex->height() != h) {
         if (m_offscreenTex) {
             delete m_offscreenTex;

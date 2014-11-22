@@ -104,7 +104,6 @@ public:
     void setWrapMode(GLenum mode);
     void setDirty();
 
-    static bool NPOTTextureSupported();
     static bool framebufferObjectSupported();
 
 protected:

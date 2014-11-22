@@ -746,9 +746,7 @@ bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visuali
     if (!info || info->fbconfig == nullptr)
         return false;
 
-    if ((info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) &&
-            (GLTexture::NPOTTextureSupported() ||
-              (isPowerOfTwo(size.width()) && isPowerOfTwo(size.height())))) {
+    if (info->texture_targets & GLX_TEXTURE_2D_BIT_EXT) {
         m_target = GL_TEXTURE_2D;
         m_scale.setWidth(1.0f / m_size.width());
         m_scale.setHeight(1.0f / m_size.height());

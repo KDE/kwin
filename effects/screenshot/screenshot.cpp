@@ -110,13 +110,7 @@ void ScreenShotEffect::postPaintScreen()
         QScopedPointer<GLTexture> offscreenTexture;
         QScopedPointer<GLRenderTarget> target;
         if (effects->isOpenGLCompositing()) {
-            int w = width;
-            int h = height;
-            if (!GLTexture::NPOTTextureSupported()) {
-                w = nearestPowerOfTwo(w);
-                h = nearestPowerOfTwo(h);
-            }
-            offscreenTexture.reset(new GLTexture(w, h));
+            offscreenTexture.reset(new GLTexture(width, height));
             offscreenTexture->setFilter(GL_LINEAR);
             offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
             target.reset(new GLRenderTarget(*offscreenTexture));
