@@ -860,6 +860,14 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
         // base ctor already failed
         return;
     }
+
+    // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
+    if (!hasGLVersion(2, 0)) {
+        qDebug() << "OpenGL 2.0 is not supported";
+        init_ok = false;
+        return;
+    }
+
     // Initialize color correction before the shaders
     slotColorCorrectedChanged(false);
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
