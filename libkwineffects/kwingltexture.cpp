@@ -43,7 +43,7 @@ namespace KWin
 //****************************************
 
 bool GLTexturePrivate::s_supportsFramebufferObjects = false;
-GLenum GLTexturePrivate::s_textureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
@@ -99,10 +99,15 @@ GLTexture::GLTexture(int width, int height)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0,
+                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
     } else {
-        glTexImage2D(d->m_target, 0, GLTexturePrivate::s_textureFormat, width, height,
-                     0, GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, 0);
+        // The format parameter in glTexSubImage() must match the internal format
+        // of the texture, so it's important that we allocate the texture with
+        // the format that will be used in update() and clear().
+        const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
+        glTexImage2D(d->m_target, 0, format, width, height, 0,
+                     format, GL_UNSIGNED_BYTE, nullptr);
     }
 
     unbind();
@@ -160,14 +165,16 @@ void GLTexturePrivate::initStatic()
     if (!GLPlatform::instance()->isGLES()) {
         s_supportsFramebufferObjects = hasGLVersion(3, 0) ||
             hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-        s_textureFormat = GL_BGRA;
+        s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
         s_supportsFramebufferObjects = true;
-        if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
-            s_textureFormat = GL_BGRA_EXT;
-        else
-            s_textureFormat = GL_RGBA;
+
+        // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
+        // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
+        s_supportsARGB32 = QSysInfo::ByteOrder == QSysInfo::LittleEndian &&
+            hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888"));
+
         s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
     }
 }
@@ -175,7 +182,7 @@ void GLTexturePrivate::initStatic()
 void GLTexturePrivate::cleanup()
 {
     s_supportsFramebufferObjects = false;
-    s_textureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+    s_supportsARGB32 = false;
 }
 
 bool GLTexture::isNull() const
@@ -216,8 +223,6 @@ bool GLTexture::load(const QImage& image, GLenum target)
 
     d->updateMatrix();
 
-    const QImage img = d->convertToGLFormat(image);
-
     if (isNull()) {
         glGenTextures(1, &d->m_texture);
     }
@@ -225,11 +230,19 @@ bool GLTexture::load(const QImage& image, GLenum target)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        glTexImage2D(d->m_target, 0, GL_RGBA8, img.width(), img.height(), 0,
-                     GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
+        const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
+                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
     } else {
-        glTexImage2D(d->m_target, 0, GLTexturePrivate::s_textureFormat, img.width(), img.height(),
-                     0, GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, img.bits());
+        if (d->s_supportsARGB32) {
+            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            glTexImage2D(d->m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
+                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+        } else {
+            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            glTexImage2D(d->m_target, 0, GL_RGBA, im.width(), im.height(),
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+        }
     }
 
     unbind();
@@ -244,9 +257,12 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     Q_D(GLTexture);
 
+    bool useUnpack = !src.isNull() && d->s_supportsUnpack && d->s_supportsARGB32 && image.format() == QImage::Format_ARGB32_Premultiplied;
+
     int width = image.width();
     int height = image.height();
     QImage tmpImage;
+
     if (!src.isNull()) {
         if (d->s_supportsUnpack) {
             glPixelStorei(GL_UNPACK_ROW_LENGTH, image.width());
@@ -258,15 +274,31 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         width = src.width();
         height = src.height();
     }
-    const QImage &img = d->convertToGLFormat(tmpImage.isNull() ? image : tmpImage);
+
+    const QImage &img = tmpImage.isNull() ? image : tmpImage;
 
     bind();
-    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                    GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, img.bits());
+
+    if (!GLPlatform::instance()->isGLES()) {
+        const QImage im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
+                        GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+    } else {
+        if (d->s_supportsARGB32) {
+            const QImage im = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
+                            GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+        } else {
+            const QImage im = img.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
+                            GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+        }
+    }
 
     unbind();
     setDirty();
-    if (!src.isNull() && d->s_supportsUnpack) {
+
+    if (useUnpack) {
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
         glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
         glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
@@ -423,8 +455,14 @@ void GLTexture::clear()
             uint32_t *buffer = new uint32_t[size];
             memset(buffer, 0, size*sizeof(uint32_t));
             bind();
-            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                            GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, buffer);
+            if (!GLPlatform::instance()->isGLES()) {
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
+                                GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer);
+            } else {
+                const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
+                                format, GL_UNSIGNED_BYTE, buffer);
+            }
             unbind();
             delete[] buffer;
         }
@@ -466,71 +504,6 @@ void GLTexture::setDirty()
 {
     Q_D(GLTexture);
     d->m_markedDirty = true;
-}
-
-QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
-{
-    // Copied from Qt's QGLWidget::convertToGLFormat()
-    QImage res;
-
-    if (s_textureFormat != GL_RGBA) {
-        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-            res = QImage(img.size(), QImage::Format_ARGB32);
-            QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-
-            const int width = img.width();
-            const int height = img.height();
-            const uint32_t *p = (const uint32_t*) imgARGB32.scanLine(0);
-            uint32_t *q = (uint32_t*) res.scanLine(0);
-
-            // swizzle
-            for (int i = 0; i < height; ++i) {
-                const uint32_t *end = p + width;
-                while (p < end) {
-                    *q = ((*p << 24) & 0xff000000)
-                        | ((*p >> 24) & 0x000000ff)
-                        | ((*p << 8) & 0x00ff0000)
-                        | ((*p >> 8) & 0x0000ff00);
-                    p++;
-                    q++;
-                }
-            }
-        } else if (img.format() != QImage::Format_ARGB32_Premultiplied) {
-            res = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-        } else {
-            return img;
-        }
-    } else if (GLPlatform::instance()->isGLES()) {
-        res = QImage(img.size(), QImage::Format_ARGB32);
-        QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-
-        const int width = img.width();
-        const int height = img.height();
-        const uint32_t *p = (const uint32_t*) imgARGB32.scanLine(0);
-        uint32_t *q = (uint32_t*) res.scanLine(0);
-
-        if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
-            for (int i = 0; i < height; ++i) {
-                const uint32_t *end = p + width;
-                while (p < end) {
-                    *q = (*p << 8) | ((*p >> 24) & 0xFF);
-                    p++;
-                    q++;
-                }
-            }
-        } else {
-            // GL_BGRA -> GL_RGBA
-            for (int i = 0; i < height; ++i) {
-                const uint32_t *end = p + width;
-                while (p < end) {
-                    *q = ((*p << 16) & 0xff0000) | ((*p >> 16) & 0xff) | (*p & 0xff00ff00);
-                    p++;
-                    q++;
-                }
-            }
-        }
-    }
-    return res;
 }
 
 void GLTexturePrivate::updateMatrix()

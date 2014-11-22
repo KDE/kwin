@@ -46,8 +46,6 @@ public:
     virtual void unbind();
     virtual void onDamage();
 
-    QImage convertToGLFormat(const QImage& img) const;
-
     void updateMatrix();
 
     GLuint m_texture;
@@ -71,8 +69,8 @@ public:
     static void initStatic();
 
     static bool s_supportsFramebufferObjects;
+    static bool s_supportsARGB32;
     static bool s_supportsUnpack;
-    static GLenum s_textureFormat;
     static GLuint s_fbo;
     static uint s_textureObjectCounter;
 private:
