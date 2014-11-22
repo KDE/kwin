@@ -42,8 +42,8 @@ namespace KWin
 // GLTexture
 //****************************************
 
-bool GLTexturePrivate::sFramebufferObjectSupported = false;
-GLenum GLTexturePrivate::sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+bool GLTexturePrivate::s_supportsFramebufferObjects = false;
+GLenum GLTexturePrivate::s_textureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 bool GLTexturePrivate::s_supportsUnpack = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
@@ -101,8 +101,8 @@ GLTexture::GLTexture(int width, int height)
     if (!GLPlatform::instance()->isGLES()) {
         glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
     } else {
-        glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, width, height,
-                     0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(d->m_target, 0, GLTexturePrivate::s_textureFormat, width, height,
+                     0, GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, 0);
     }
 
     unbind();
@@ -158,23 +158,24 @@ GLTexturePrivate::~GLTexturePrivate()
 void GLTexturePrivate::initStatic()
 {
     if (!GLPlatform::instance()->isGLES()) {
-        sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-        sTextureFormat = GL_BGRA;
+        s_supportsFramebufferObjects = hasGLVersion(3, 0) ||
+            hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
+        s_textureFormat = GL_BGRA;
         s_supportsUnpack = true;
     } else {
-        sFramebufferObjectSupported = true;
+        s_supportsFramebufferObjects = true;
         if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
-            sTextureFormat = GL_BGRA_EXT;
+            s_textureFormat = GL_BGRA_EXT;
         else
-            sTextureFormat = GL_RGBA;
+            s_textureFormat = GL_RGBA;
         s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
     }
 }
 
 void GLTexturePrivate::cleanup()
 {
-    sFramebufferObjectSupported = false;
-    sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
+    s_supportsFramebufferObjects = false;
+    s_textureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 }
 
 bool GLTexture::isNull() const
@@ -227,8 +228,8 @@ bool GLTexture::load(const QImage& image, GLenum target)
         glTexImage2D(d->m_target, 0, GL_RGBA8, img.width(), img.height(), 0,
                      GL_BGRA, GL_UNSIGNED_BYTE, img.bits());
     } else {
-        glTexImage2D(d->m_target, 0, GLTexturePrivate::sTextureFormat, img.width(), img.height(),
-                     0, GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, img.bits());
+        glTexImage2D(d->m_target, 0, GLTexturePrivate::s_textureFormat, img.width(), img.height(),
+                     0, GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, img.bits());
     }
 
     unbind();
@@ -261,7 +262,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     bind();
     glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height,
-                    GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, img.bits());
+                    GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, img.bits());
     checkGLError("update texture");
     unbind();
     setDirty();
@@ -306,7 +307,7 @@ void GLTexture::bind()
     if (d->m_filterChanged) {
         if (d->m_filter == GL_LINEAR_MIPMAP_LINEAR) {
             // trilinear filtering requested, but is it possible?
-            if (d->sFramebufferObjectSupported && d->m_canUseMipmaps) {
+            if (d->s_supportsFramebufferObjects && d->m_canUseMipmaps) {
                 glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
                 glGenerateMipmap(d->m_target);
@@ -423,7 +424,7 @@ void GLTexture::clear()
             memset(buffer, 0, size*sizeof(uint32_t));
             bind();
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                            GLTexturePrivate::sTextureFormat, GL_UNSIGNED_BYTE, buffer);
+                            GLTexturePrivate::s_textureFormat, GL_UNSIGNED_BYTE, buffer);
             unbind();
             delete[] buffer;
         }
@@ -472,7 +473,7 @@ QImage GLTexturePrivate::convertToGLFormat(const QImage& img) const
     // Copied from Qt's QGLWidget::convertToGLFormat()
     QImage res;
 
-    if (sTextureFormat != GL_RGBA) {
+    if (s_textureFormat != GL_RGBA) {
         if (QSysInfo::ByteOrder == QSysInfo::BigEndian) {
             res = QImage(img.size(), QImage::Format_ARGB32);
             QImage imgARGB32 = img.convertToFormat(QImage::Format_ARGB32_Premultiplied);
@@ -584,7 +585,7 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 
 bool GLTexture::framebufferObjectSupported()
 {
-    return GLTexturePrivate::sFramebufferObjectSupported;
+    return GLTexturePrivate::s_supportsFramebufferObjects;
 }
 
 } // namespace KWin

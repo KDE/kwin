@@ -70,10 +70,10 @@ public:
 
     static void initStatic();
 
-    static bool sFramebufferObjectSupported;
-    static GLenum sTextureFormat;
+    static bool s_supportsFramebufferObjects;
     static bool s_supportsUnpack;
-    static uint s_fbo;
+    static GLenum s_textureFormat;
+    static GLuint s_fbo;
     static uint s_textureObjectCounter;
 private:
     friend void KWin::cleanupGL();
