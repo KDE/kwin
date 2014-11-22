@@ -106,7 +106,6 @@ public:
 
     static bool NPOTTextureSupported();
     static bool framebufferObjectSupported();
-    static bool saturationSupported();
 
 protected:
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;

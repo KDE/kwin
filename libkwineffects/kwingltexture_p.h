@@ -72,7 +72,6 @@ public:
 
     static bool sNPOTTextureSupported;
     static bool sFramebufferObjectSupported;
-    static bool sSaturationSupported;
     static GLenum sTextureFormat;
     static uint s_fbo;
     static uint s_textureObjectCounter;

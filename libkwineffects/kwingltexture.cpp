@@ -44,7 +44,6 @@ namespace KWin
 
 bool GLTexturePrivate::sNPOTTextureSupported = false;
 bool GLTexturePrivate::sFramebufferObjectSupported = false;
-bool GLTexturePrivate::sSaturationSupported = false;
 GLenum GLTexturePrivate::sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
@@ -162,14 +161,10 @@ void GLTexturePrivate::initStatic()
     if (!GLPlatform::instance()->isGLES()) {
         sNPOTTextureSupported = hasGLExtension(QByteArrayLiteral("GL_ARB_texture_non_power_of_two"));
         sFramebufferObjectSupported = hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-        sSaturationSupported = ((hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_crossbar"))
-                                 && hasGLExtension(QByteArrayLiteral("GL_ARB_texture_env_dot3"))) || hasGLVersion(1, 4))
-                                 && (glTextureUnitsCount >= 4) && glActiveTexture != nullptr;
         sTextureFormat = GL_BGRA;
     } else {
         sNPOTTextureSupported = true;
         sFramebufferObjectSupported = true;
-        sSaturationSupported = true;
         if (hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
             sTextureFormat = GL_BGRA_EXT;
         else
@@ -181,7 +176,6 @@ void GLTexturePrivate::cleanup()
 {
     sNPOTTextureSupported = false;
     sFramebufferObjectSupported = false;
-    sSaturationSupported = false;
     sTextureFormat = GL_RGBA; // custom dummy, GL_BGRA is not present on GLES
 }
 
@@ -609,11 +603,6 @@ bool GLTexture::NPOTTextureSupported()
 bool GLTexture::framebufferObjectSupported()
 {
     return GLTexturePrivate::sFramebufferObjectSupported;
-}
-
-bool GLTexture::saturationSupported()
-{
-    return GLTexturePrivate::sSaturationSupported;
 }
 
 } // namespace KWin
