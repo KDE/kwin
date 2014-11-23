@@ -292,14 +292,14 @@ private:
     void updateTexture();
     void updateTextTexture();
 
-    Texture* m_texture;
-    Texture* m_textTexture;
-    Texture* m_oldTextTexture;
-    QPixmap* m_textPixmap; // need to keep the pixmap around to workaround some driver problems
-    Texture* m_iconTexture;
-    Texture* m_oldIconTexture;
-    Texture* m_selectionTexture;
-    GLVertexBuffer* m_unstyledVBO;
+    GLTexture *m_texture;
+    GLTexture *m_textTexture;
+    GLTexture *m_oldTextTexture;
+    QPixmap *m_textPixmap; // need to keep the pixmap around to workaround some driver problems
+    GLTexture *m_iconTexture;
+    GLTexture *m_oldIconTexture;
+    GLTexture *m_selectionTexture;
+    GLVertexBuffer *m_unstyledVBO;
     SceneOpenGL *m_scene;
 
     static GLTexture* m_unstyledTexture;

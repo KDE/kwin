@@ -1771,7 +1771,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         if (!m_selectionTexture) { // Lazy creation
             QPixmap pixmap = m_effectFrame->selectionFrame().framePixmap();
             if (!pixmap.isNull())
-                m_selectionTexture = m_scene->createTexture(pixmap);
+                m_selectionTexture = new GLTexture(pixmap);
         }
         if (m_selectionTexture) {
             if (shader) {
@@ -1812,7 +1812,7 @@ void SceneOpenGL::EffectFrame::render(QRegion region, double opacity, double fra
         }
 
         if (!m_iconTexture) { // lazy creation
-            m_iconTexture = m_scene->createTexture(m_effectFrame->icon().pixmap(m_effectFrame->iconSize()));
+            m_iconTexture = new GLTexture(m_effectFrame->icon().pixmap(m_effectFrame->iconSize()));
         }
         m_iconTexture->bind();
         m_iconTexture->render(region, QRect(topLeft, m_effectFrame->iconSize()));
@@ -1859,7 +1859,7 @@ void SceneOpenGL::EffectFrame::updateTexture()
     m_texture = 0L;
     if (m_effectFrame->style() == EffectFrameStyled) {
         QPixmap pixmap = m_effectFrame->frame().framePixmap();
-        m_texture = m_scene->createTexture(pixmap);
+        m_texture = new GLTexture(pixmap);
     }
 }
 
@@ -1895,7 +1895,7 @@ void SceneOpenGL::EffectFrame::updateTextTexture()
         p.setPen(Qt::white);
     p.drawText(rect, m_effectFrame->alignment(), text);
     p.end();
-    m_textTexture = m_scene->createTexture(*m_textPixmap);
+    m_textTexture = new GLTexture(*m_textPixmap);
 }
 
 void SceneOpenGL::EffectFrame::updateUnstyledTexture()
