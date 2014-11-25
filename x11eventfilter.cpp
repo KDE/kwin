@@ -32,7 +32,9 @@ X11EventFilter::X11EventFilter(int eventType, int opcode, int genericEventType)
 
 X11EventFilter::~X11EventFilter()
 {
-    Workspace::self()->unregisterEventFilter(this);
+    if (auto w = Workspace::self()) {
+        w->unregisterEventFilter(this);
+    }
 }
 
 }
