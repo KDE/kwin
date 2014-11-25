@@ -65,9 +65,7 @@ public:
     quint32 buttonSerial(Qt::MouseButton button) const;
     void axis(Qt::Orientation orientation, quint32 delta);
 
-    void setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
     void setFocusedSurfacePosition(const QPoint &surfacePosition);
-    SurfaceInterface *focusedSurface() const;
     QPoint focusedSurfacePosition() const;
 
 Q_SIGNALS:
@@ -78,6 +76,8 @@ Q_SIGNALS:
     void globalPosChanged(const QPointF &pos);
 
 private:
+    void setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
+    SurfaceInterface *focusedSurface() const;
     friend class SeatInterface;
     explicit PointerInterface(SeatInterface *parent);
     class Private;

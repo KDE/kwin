@@ -303,5 +303,17 @@ void SeatInterface::setTimestamp(quint32 time)
     emit timestampChanged(time);
 }
 
+SurfaceInterface *SeatInterface::focusedPointerSurface() const
+{
+    Q_D();
+    return d->pointerInterface->focusedSurface();
+}
+
+void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPoint &surfacePosition)
+{
+    Q_D();
+    d->pointerInterface->setFocusedSurface(surface, surfacePosition);
+}
+
 }
 }

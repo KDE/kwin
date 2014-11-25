@@ -236,7 +236,7 @@ void TestDataDevice::testDrag()
     QVERIFY(dragStartedSpy.isValid());
 
     // first we need to fake the pointer enter
-    m_seatInterface->pointer()->setFocusedSurface(surfaceInterface);
+    m_seatInterface->setFocusedPointerSurface(surfaceInterface);
     m_seatInterface->pointer()->buttonPressed(1);
 
     QCoreApplication::processEvents();
@@ -288,7 +288,7 @@ void TestDataDevice::testDragInternally()
     QVERIFY(dragStartedSpy.isValid());
 
     // first we need to fake the pointer enter
-    m_seatInterface->pointer()->setFocusedSurface(surfaceInterface);
+    m_seatInterface->setFocusedPointerSurface(surfaceInterface);
     m_seatInterface->pointer()->buttonPressed(1);
 
     QCoreApplication::processEvents();

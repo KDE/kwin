@@ -134,9 +134,9 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
 {
     QWidget::mouseMoveEvent(event);
     const auto pointer = m_seat->pointer();
-    if (!pointer->focusedSurface()) {
+    if (!m_seat->focusedPointerSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            pointer->setFocusedSurface(m_stackingOrder.last()->surface());
+            m_seat->setFocusedPointerSurface(m_stackingOrder.last()->surface());
         }
     }
     m_seat->setTimestamp(event->timestamp());
@@ -147,9 +147,9 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
 {
     QWidget::mousePressEvent(event);
     const auto pointer = m_seat->pointer();
-    if (!pointer->focusedSurface()) {
+    if (!m_seat->focusedPointerSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            pointer->setFocusedSurface(m_stackingOrder.last()->surface());
+            m_seat->setFocusedPointerSurface(m_stackingOrder.last()->surface());
         }
     }
     m_seat->setTimestamp(event->timestamp());

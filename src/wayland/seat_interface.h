@@ -69,6 +69,8 @@ public:
     // pointer related methods
     void setPointerPos(const QPointF &pos);
     QPointF pointerPos() const;
+    void setFocusedPointerSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
+    SurfaceInterface *focusedPointerSurface() const;
 
     static SeatInterface *get(wl_resource *native);
 

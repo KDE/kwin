@@ -284,9 +284,9 @@ void TestWaylandSeat::testPointer()
 
     PointerInterface *serverPointer = m_seatInterface->pointer();
     serverPointer->setGlobalPos(QPoint(20, 18));
-    serverPointer->setFocusedSurface(serverSurface, QPoint(10, 15));
+    m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
     // no pointer yet - won't be set
-    QVERIFY(!serverPointer->focusedSurface());
+    QVERIFY(!m_seatInterface->focusedPointerSurface());
 
     Pointer *p = m_seat->createPointer(m_seat);
     QVERIFY(p->isValid());
@@ -308,8 +308,8 @@ void TestWaylandSeat::testPointer()
     QSignalSpy buttonSpy(p, SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWayland::Client::Pointer::ButtonState)));
     QVERIFY(buttonSpy.isValid());
 
-    serverPointer->setFocusedSurface(serverSurface, QPoint(10, 15));
-    QCOMPARE(serverPointer->focusedSurface(), serverSurface);
+    m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
+    QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial());
     QCOMPARE(enteredSpy.first().last().toPoint(), QPoint(10, 3));
@@ -381,18 +381,18 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(buttonSpy.at(3).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Released);
 
     // leave the surface
-    serverPointer->setFocusedSurface(nullptr);
+    m_seatInterface->setFocusedPointerSurface(nullptr);
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial());
 
     // enter it again
-    serverPointer->setFocusedSurface(serverSurface, QPoint(0, 0));
+    m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(0, 0));
     QVERIFY(enteredSpy.wait());
 
     delete s;
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
-    QVERIFY(!serverPointer->focusedSurface());
+    QVERIFY(!m_seatInterface->focusedPointerSurface());
 }
 
 Q_DECLARE_METATYPE(Qt::MouseButton)
@@ -452,9 +452,9 @@ void TestWaylandSeat::testPointerButton()
 
     PointerInterface *serverPointer = m_seatInterface->pointer();
     serverPointer->setGlobalPos(QPoint(20, 18));
-    serverPointer->setFocusedSurface(serverSurface, QPoint(10, 15));
+    m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
     // no pointer yet - won't be set
-    QVERIFY(serverPointer->focusedSurface());
+    QVERIFY(m_seatInterface->focusedPointerSurface());
 
     QFETCH(Qt::MouseButton, qtButton);
     QFETCH(quint32, waylandButton);

@@ -84,7 +84,7 @@ void DataDeviceInterface::Private::startDragCallback(wl_client *client, wl_resou
 
 void DataDeviceInterface::Private::startDrag(DataSourceInterface *dataSource, SurfaceInterface *origin, SurfaceInterface *i)
 {
-    if (seat->pointer()->focusedSurface() != origin) {
+    if (seat->focusedPointerSurface() != origin) {
         wl_resource_post_error(resource, 0, "Surface doesn't have pointer grab");
         return;
     }
