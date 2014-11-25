@@ -45,7 +45,6 @@ public:
 
     void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
 
-    void updateTimestamp(quint32 time);
     /**
      * Convenient method to set the pointer position of the SeatInterface.
      * @see SeatInterface::setPointerPos

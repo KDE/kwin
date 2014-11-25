@@ -54,7 +54,6 @@ public:
         wl_resource *pointer = nullptr;
     };
     QList<ResourceData> resources;
-    quint32 eventTime = 0;
     struct FocusedSurface {
         SurfaceInterface *surface = nullptr;
         QPoint offset = QPoint();
@@ -99,7 +98,7 @@ PointerInterface::PointerInterface(SeatInterface *parent)
     connect(parent, &SeatInterface::pointerPosChanged, [this](const QPointF &pos) {
         if (d->focusedSurface.surface && d->focusedSurface.pointer) {
             const QPointF pos = d->seat->pointerPos() - d->focusedSurface.offset;
-            wl_pointer_send_motion(d->focusedSurface.pointer, d->eventTime,
+            wl_pointer_send_motion(d->focusedSurface.pointer, d->seat->timestamp(),
                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         }
     });
@@ -188,11 +187,6 @@ void PointerInterface::setGlobalPos(const QPointF &pos)
     d->seat->setPointerPos(pos);
 }
 
-void PointerInterface::updateTimestamp(quint32 time)
-{
-    d->eventTime = time;
-}
-
 static quint32 qtToWaylandButton(Qt::MouseButton button)
 {
     static const QHash<Qt::MouseButton, quint32> s_buttons({
@@ -225,7 +219,7 @@ void PointerInterface::buttonPressed(quint32 button)
     if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_PRESSED);
+    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_PRESSED);
 }
 
 void PointerInterface::buttonPressed(Qt::MouseButton button)
@@ -245,7 +239,7 @@ void PointerInterface::buttonReleased(quint32 button)
     if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->eventTime, button, WL_POINTER_BUTTON_STATE_RELEASED);
+    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_RELEASED);
 }
 
 void PointerInterface::buttonReleased(Qt::MouseButton button)
@@ -314,7 +308,7 @@ void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
     if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
         return;
     }
-    wl_pointer_send_axis(d->focusedSurface.pointer, d->eventTime,
+    wl_pointer_send_axis(d->focusedSurface.pointer, d->seat->timestamp(),
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
 }

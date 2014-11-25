@@ -139,7 +139,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
             pointer->setFocusedSurface(m_stackingOrder.last()->surface());
         }
     }
-    pointer->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     pointer->setGlobalPos(event->localPos().toPoint());
 }
 
@@ -152,7 +152,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
             pointer->setFocusedSurface(m_stackingOrder.last()->surface());
         }
     }
-    pointer->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     pointer->buttonPressed(event->button());
 }
 
@@ -160,7 +160,7 @@ void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     const auto pointer = m_seat->pointer();
-    pointer->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     pointer->buttonReleased(event->button());
 }
 
@@ -168,7 +168,7 @@ void CompositorWindow::wheelEvent(QWheelEvent *event)
 {
     QWidget::wheelEvent(event);
     const auto pointer = m_seat->pointer();
-    pointer->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
         pointer->axis(Qt::Horizontal, angle.x());

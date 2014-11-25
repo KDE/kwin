@@ -47,6 +47,7 @@ class KWAYLANDSERVER_EXPORT SeatInterface : public Global
     Q_PROPERTY(bool keyboard READ hasKeyboard WRITE setHasKeyboard NOTIFY hasKeyboardChanged)
     Q_PROPERTY(bool tourch READ hasTouch WRITE setHasTouch NOTIFY hasTouchChanged)
     Q_PROPERTY(QPointF pointerPos READ pointerPos WRITE setPointerPos NOTIFY pointerPosChanged)
+    Q_PROPERTY(quint32 timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 public:
     virtual ~SeatInterface();
 
@@ -62,6 +63,9 @@ public:
     void setHasKeyboard(bool has);
     void setHasTouch(bool has);
 
+    void setTimestamp(quint32 time);
+    quint32 timestamp() const;
+
     // pointer related methods
     void setPointerPos(const QPointF &pos);
     QPointF pointerPos() const;
@@ -74,6 +78,7 @@ Q_SIGNALS:
     void hasKeyboardChanged(bool);
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
+    void timestampChanged(quint32);
 
 private:
     friend class Display;

@@ -54,6 +54,7 @@ public:
     QList<wl_resource*> resources;
     PointerInterface *pointerInterface = nullptr;
     KeyboardInterface *keyboardInterface = nullptr;
+    quint32 timestamp = 0;
 
     // Pointer related members
     QPointF pointerPos;
@@ -284,6 +285,22 @@ void SeatInterface::setPointerPos(const QPointF &pos)
     }
     d->pointerPos = pos;
     emit pointerPosChanged(pos);
+}
+
+quint32 SeatInterface::timestamp() const
+{
+    Q_D();
+    return d->timestamp;
+}
+
+void SeatInterface::setTimestamp(quint32 time)
+{
+    Q_D();
+    if (d->timestamp == time) {
+        return;
+    }
+    d->timestamp = time;
+    emit timestampChanged(time);
 }
 
 }
