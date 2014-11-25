@@ -89,8 +89,8 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
 {
     Q_D();
-    d->pointerInterface = new PointerInterface(display, this);
-    d->keyboardInterface = new KeyboardInterface(display, this);
+    d->pointerInterface = new PointerInterface(this);
+    d->keyboardInterface = new KeyboardInterface(this);
     connect(this, &SeatInterface::nameChanged, this,
         [this, d] {
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {

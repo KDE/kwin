@@ -37,7 +37,7 @@ namespace Server
 class PointerInterface::Private
 {
 public:
-    Private(Display *display, SeatInterface *parent);
+    Private(SeatInterface *parent);
     void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
     wl_resource *pointerForSurface(SurfaceInterface *surface) const;
     void surfaceDeleted();
@@ -48,7 +48,6 @@ public:
     };
     void updateButtonState(quint32 button, ButtonState state);
 
-    Display *display;
     SeatInterface *seat;
     struct ResourceData {
         wl_client *client = nullptr;
@@ -83,9 +82,8 @@ private:
     static const struct wl_pointer_interface s_interface;
 };
 
-PointerInterface::Private::Private(Display *display, SeatInterface *parent)
-    : display(display)
-    , seat(parent)
+PointerInterface::Private::Private(SeatInterface *parent)
+    : seat(parent)
 {
 }
 
@@ -95,9 +93,9 @@ const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     releaseCallback
 };
 
-PointerInterface::PointerInterface(Display *display, SeatInterface *parent)
+PointerInterface::PointerInterface(SeatInterface *parent)
     : QObject(parent)
-    , d(new Private(display, parent))
+    , d(new Private(parent))
 {
 }
 
@@ -144,7 +142,7 @@ wl_resource *PointerInterface::Private::pointerForSurface(SurfaceInterface *surf
 
 void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition)
 {
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = d->seat->display()->nextSerial();
     if (d->focusedSurface.surface && d->focusedSurface.pointer) {
         wl_pointer_send_leave(d->focusedSurface.pointer, serial, d->focusedSurface.surface->resource());
         disconnect(d->destroyConnection);
@@ -223,7 +221,7 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
 
 void PointerInterface::buttonPressed(quint32 button)
 {
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Pressed);
     if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
@@ -243,7 +241,7 @@ void PointerInterface::buttonPressed(Qt::MouseButton button)
 
 void PointerInterface::buttonReleased(quint32 button)
 {
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Released);
     if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {

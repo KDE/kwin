@@ -38,7 +38,7 @@ namespace Server
 class KeyboardInterface::Private
 {
 public:
-    Private(Display *d, SeatInterface *s);
+    Private(SeatInterface *s);
     void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
     void surfaceDeleted();
     wl_resource *keyboardForSurface(SurfaceInterface *surface) const;
@@ -51,7 +51,6 @@ public:
     };
     void updateKey(quint32 key, KeyState state);
 
-    Display *display;
     SeatInterface *seat;
     struct ResourceData {
         wl_client *client = nullptr;
@@ -92,9 +91,8 @@ private:
     static const struct wl_keyboard_interface s_interface;
 };
 
-KeyboardInterface::Private::Private(Display *d, SeatInterface *s)
-    : display(d)
-    , seat(s)
+KeyboardInterface::Private::Private(SeatInterface *s)
+    : seat(s)
 {
 }
 
@@ -102,9 +100,9 @@ const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
     releaseCallback
 };
 
-KeyboardInterface::KeyboardInterface(Display *display, SeatInterface *parent)
+KeyboardInterface::KeyboardInterface(SeatInterface *parent)
     : QObject(parent)
-    , d(new Private(display, parent))
+    , d(new Private(parent))
 {
 }
 
@@ -198,12 +196,12 @@ void KeyboardInterface::Private::sendKeymapToAll()
 
 void KeyboardInterface::Private::sendModifiers(wl_resource* r)
 {
-    wl_keyboard_send_modifiers(r, display->nextSerial(), modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group);
+    wl_keyboard_send_modifiers(r, seat->display()->nextSerial(), modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group);
 }
 
 void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface)
 {
-    const quint32 serial = d->display->nextSerial();
+    const quint32 serial = d->seat->display()->nextSerial();
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
         wl_keyboard_send_leave(d->focusedSurface.keyboard, serial, d->focusedSurface.surface->resource());
         disconnect(d->destroyConnection);
@@ -248,7 +246,7 @@ void KeyboardInterface::keyPressed(quint32 key)
 {
     d->updateKey(key, Private::KeyState::Pressed);
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
-        wl_keyboard_send_key(d->focusedSurface.keyboard, d->display->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_PRESSED);
+        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_PRESSED);
     }
 }
 
@@ -256,7 +254,7 @@ void KeyboardInterface::keyReleased(quint32 key)
 {
     d->updateKey(key, Private::KeyState::Released);
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
-        wl_keyboard_send_key(d->focusedSurface.keyboard, d->display->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_RELEASED);
+        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_RELEASED);
     }
 }
 

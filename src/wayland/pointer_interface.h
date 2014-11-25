@@ -33,7 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-class Display;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -69,7 +68,7 @@ Q_SIGNALS:
 
 private:
     friend class SeatInterface;
-    explicit PointerInterface(Display *display, SeatInterface *parent);
+    explicit PointerInterface(SeatInterface *parent);
     class Private;
     QScopedPointer<Private> d;
 };
