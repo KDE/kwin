@@ -115,7 +115,7 @@ void TestWaylandServerSeat::testPointerButton()
     display.setSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
-    PointerInterface *pointer = seat->pointer();
+    PointerInterface *pointer = seat->focusedPointer();
 
     // no button pressed yet, should be released and no serial
     QVERIFY(!pointer->isButtonPressed(0));
@@ -146,7 +146,7 @@ void TestWaylandServerSeat::testPointerPos()
     SeatInterface *seat = display.createSeat();
     QSignalSpy seatPosSpy(seat, SIGNAL(pointerPosChanged(QPointF)));
     QVERIFY(seatPosSpy.isValid());
-    PointerInterface *pointer = seat->pointer();
+    PointerInterface *pointer = seat->focusedPointer();
     QSignalSpy posSpy(pointer, SIGNAL(globalPosChanged(QPointF)));
     QVERIFY(posSpy.isValid());
 

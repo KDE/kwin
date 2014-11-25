@@ -282,7 +282,7 @@ void TestWaylandSeat::testPointer()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
-    PointerInterface *serverPointer = m_seatInterface->pointer();
+    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
     serverPointer->setGlobalPos(QPoint(20, 18));
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
     // no pointer yet - won't be set
@@ -450,7 +450,7 @@ void TestWaylandSeat::testPointerButton()
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
 
-    PointerInterface *serverPointer = m_seatInterface->pointer();
+    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
     serverPointer->setGlobalPos(QPoint(20, 18));
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
     // no pointer yet - won't be set

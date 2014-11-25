@@ -249,12 +249,6 @@ bool SeatInterface::hasTouch() const
     return d->touch;
 }
 
-PointerInterface *SeatInterface::pointer()
-{
-    Q_D();
-    return d->pointerInterface;
-}
-
 KeyboardInterface *SeatInterface::keyboard()
 {
     Q_D();
@@ -313,6 +307,12 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QP
 {
     Q_D();
     d->pointerInterface->setFocusedSurface(surface, surfacePosition);
+}
+
+PointerInterface *SeatInterface::focusedPointer() const
+{
+    Q_D();
+    return d->pointerInterface;
 }
 
 }

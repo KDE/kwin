@@ -55,7 +55,6 @@ public:
     bool hasPointer() const;
     bool hasKeyboard() const;
     bool hasTouch() const;
-    PointerInterface *pointer();
     KeyboardInterface *keyboard();
 
     void setName(const QString &name);
@@ -71,6 +70,7 @@ public:
     QPointF pointerPos() const;
     void setFocusedPointerSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
     SurfaceInterface *focusedPointerSurface() const;
+    PointerInterface *focusedPointer() const;
 
     static SeatInterface *get(wl_resource *native);
 
