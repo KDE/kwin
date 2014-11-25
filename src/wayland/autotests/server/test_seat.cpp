@@ -144,19 +144,36 @@ void TestWaylandServerSeat::testPointerPos()
     display.setSocketName(s_socketName);
     display.start();
     SeatInterface *seat = display.createSeat();
+    QSignalSpy seatPosSpy(seat, SIGNAL(pointerPosChanged(QPointF)));
+    QVERIFY(seatPosSpy.isValid());
     PointerInterface *pointer = seat->pointer();
-    QSignalSpy posSpy(pointer, SIGNAL(globalPosChanged(QPoint)));
+    QSignalSpy posSpy(pointer, SIGNAL(globalPosChanged(QPointF)));
     QVERIFY(posSpy.isValid());
 
-    QCOMPARE(pointer->globalPos(), QPoint());
+    QCOMPARE(pointer->globalPos(), QPointF());
+    QCOMPARE(seat->pointerPos(), QPointF());
 
-    pointer->setGlobalPos(QPoint(10, 15));
-    QCOMPARE(pointer->globalPos(), QPoint(10, 15));
+    pointer->setGlobalPos(QPointF(10, 15));
+    QCOMPARE(pointer->globalPos(), QPointF(10, 15));
+    QCOMPARE(seat->pointerPos(), QPointF(10, 15));
     QCOMPARE(posSpy.count(), 1);
-    QCOMPARE(posSpy.first().first().toPoint(), QPoint(10, 15));
+    QCOMPARE(posSpy.first().first().toPointF(), QPointF(10, 15));
+    QCOMPARE(seatPosSpy.count(), 1);
+    QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
 
-    pointer->setGlobalPos(QPoint(10, 15));
+    pointer->setGlobalPos(QPointF(10, 15));
     QCOMPARE(posSpy.count(), 1);
+    QCOMPARE(seatPosSpy.count(), 1);
+
+    seat->setPointerPos(QPointF(5, 7));
+    QCOMPARE(pointer->globalPos(), QPointF(5, 7));
+    QCOMPARE(seat->pointerPos(), QPointF(5, 7));
+    QCOMPARE(posSpy.count(), 2);
+    QCOMPARE(posSpy.first().first().toPointF(), QPointF(10, 15));
+    QCOMPARE(posSpy.last().first().toPointF(), QPointF(5, 7));
+    QCOMPARE(seatPosSpy.count(), 2);
+    QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
+    QCOMPARE(seatPosSpy.last().first().toPointF(), QPointF(5, 7));
 }
 
 void TestWaylandServerSeat::testDestroyThroughTerminate()

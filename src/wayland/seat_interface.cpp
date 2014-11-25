@@ -55,6 +55,9 @@ public:
     PointerInterface *pointerInterface = nullptr;
     KeyboardInterface *keyboardInterface = nullptr;
 
+    // Pointer related members
+    QPointF pointerPos;
+
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
         return s ? s->q : nullptr;
@@ -265,6 +268,22 @@ SeatInterface *SeatInterface::get(wl_resource *native)
 SeatInterface::Private *SeatInterface::d_func() const
 {
     return reinterpret_cast<Private*>(d.data());
+}
+
+QPointF SeatInterface::pointerPos() const
+{
+    Q_D();
+    return d->pointerPos;
+}
+
+void SeatInterface::setPointerPos(const QPointF &pos)
+{
+    Q_D();
+    if (d->pointerPos == pos) {
+        return;
+    }
+    d->pointerPos = pos;
+    emit pointerPosChanged(pos);
 }
 
 }

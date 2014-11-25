@@ -39,15 +39,23 @@ class SurfaceInterface;
 class KWAYLANDSERVER_EXPORT PointerInterface : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QPoint globalPos READ globalPos WRITE setGlobalPos NOTIFY globalPosChanged)
+    Q_PROPERTY(QPointF globalPos READ globalPos WRITE setGlobalPos NOTIFY globalPosChanged)
 public:
     virtual ~PointerInterface();
 
     void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
 
     void updateTimestamp(quint32 time);
-    void setGlobalPos(const QPoint &pos);
-    QPoint globalPos() const;
+    /**
+     * Convenient method to set the pointer position of the SeatInterface.
+     * @see SeatInterface::setPointerPos
+     **/
+    void setGlobalPos(const QPointF &pos);
+    /**
+     * Convenient method to get the pointer position of the SeatInterface.
+     * @see SeatInterface::pointerPos
+     **/
+    QPointF globalPos() const;
     void buttonPressed(quint32 button);
     void buttonPressed(Qt::MouseButton button);
     void buttonReleased(quint32 button);
@@ -64,7 +72,11 @@ public:
     QPoint focusedSurfacePosition() const;
 
 Q_SIGNALS:
-    void globalPosChanged(const QPoint &pos);
+    /**
+     * Convenient signal emitted when the SeatInterface's pointer position changes.
+     * @see SeatInterface::pointerPosChanged
+     **/
+    void globalPosChanged(const QPointF &pos);
 
 private:
     friend class SeatInterface;

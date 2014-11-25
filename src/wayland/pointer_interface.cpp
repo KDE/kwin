@@ -55,7 +55,6 @@ public:
     };
     QList<ResourceData> resources;
     quint32 eventTime = 0;
-    QPoint globalPos;
     struct FocusedSurface {
         SurfaceInterface *surface = nullptr;
         QPoint offset = QPoint();
@@ -97,6 +96,14 @@ PointerInterface::PointerInterface(SeatInterface *parent)
     : QObject(parent)
     , d(new Private(parent))
 {
+    connect(parent, &SeatInterface::pointerPosChanged, [this](const QPointF &pos) {
+        if (d->focusedSurface.surface && d->focusedSurface.pointer) {
+            const QPointF pos = d->seat->pointerPos() - d->focusedSurface.offset;
+            wl_pointer_send_motion(d->focusedSurface.pointer, d->eventTime,
+                                   wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        }
+    });
+    connect(parent, &SeatInterface::pointerPosChanged, this, &PointerInterface::globalPosChanged);
 }
 
 PointerInterface::~PointerInterface()
@@ -157,10 +164,10 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint
     d->focusedSurface.serial = serial;
     d->destroyConnection = connect(d->focusedSurface.surface, &QObject::destroyed, this, [this] { d->surfaceDeleted(); });
 
-    const QPoint pos = d->globalPos - surfacePosition;
+    const QPointF pos = d->seat->pointerPos() - surfacePosition;
     wl_pointer_send_enter(d->focusedSurface.pointer, d->focusedSurface.serial,
                           d->focusedSurface.surface->resource(),
-                          wl_fixed_from_int(pos.x()), wl_fixed_from_int(pos.y()));
+                          wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
 }
 
 void PointerInterface::Private::surfaceDeleted()
@@ -176,18 +183,9 @@ void PointerInterface::setFocusedSurfacePosition(const QPoint &surfacePosition)
     d->focusedSurface.offset = surfacePosition;
 }
 
-void PointerInterface::setGlobalPos(const QPoint &pos)
+void PointerInterface::setGlobalPos(const QPointF &pos)
 {
-    if (d->globalPos == pos) {
-        return;
-    }
-    d->globalPos = pos;
-    if (d->focusedSurface.surface && d->focusedSurface.pointer) {
-        const QPoint pos = d->globalPos - d->focusedSurface.offset;
-        wl_pointer_send_motion(d->focusedSurface.pointer, d->eventTime,
-                               wl_fixed_from_int(pos.x()), wl_fixed_from_int(pos.y()));
-    }
-    emit globalPosChanged(d->globalPos);
+    d->seat->setPointerPos(pos);
 }
 
 void PointerInterface::updateTimestamp(quint32 time)
@@ -357,9 +355,9 @@ void PointerInterface::Private::releaseCallback(wl_client *client, wl_resource *
     unbind(resource);
 }
 
-QPoint PointerInterface::globalPos() const
+QPointF PointerInterface::globalPos() const
 {
-    return d->globalPos;
+    return d->seat->pointerPos();
 }
 
 SurfaceInterface *PointerInterface::focusedSurface() const
