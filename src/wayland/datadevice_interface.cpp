@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "datasource_interface.h"
 #include "display.h"
 #include "resource_p.h"
+#include "pointer_interface.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
 // Wayland

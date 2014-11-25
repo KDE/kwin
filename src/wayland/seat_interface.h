@@ -77,43 +77,6 @@ private:
     Private *d_func() const;
 };
 
-class KWAYLANDSERVER_EXPORT PointerInterface : public QObject
-{
-    Q_OBJECT
-    Q_PROPERTY(QPoint globalPos READ globalPos WRITE setGlobalPos NOTIFY globalPosChanged)
-public:
-    virtual ~PointerInterface();
-
-    void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
-
-    void updateTimestamp(quint32 time);
-    void setGlobalPos(const QPoint &pos);
-    QPoint globalPos() const;
-    void buttonPressed(quint32 button);
-    void buttonPressed(Qt::MouseButton button);
-    void buttonReleased(quint32 button);
-    void buttonReleased(Qt::MouseButton button);
-    bool isButtonPressed(quint32 button) const;
-    bool isButtonPressed(Qt::MouseButton button) const;
-    quint32 buttonSerial(quint32 button) const;
-    quint32 buttonSerial(Qt::MouseButton button) const;
-    void axis(Qt::Orientation orientation, quint32 delta);
-
-    void setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
-    void setFocusedSurfacePosition(const QPoint &surfacePosition);
-    SurfaceInterface *focusedSurface() const;
-    QPoint focusedSurfacePosition() const;
-
-Q_SIGNALS:
-    void globalPosChanged(const QPoint &pos);
-
-private:
-    friend class SeatInterface;
-    explicit PointerInterface(Display *display, SeatInterface *parent);
-    class Private;
-    QScopedPointer<Private> d;
-};
-
 }
 }
 
