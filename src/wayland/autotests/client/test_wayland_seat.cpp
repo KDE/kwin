@@ -32,6 +32,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/display.h"
+#include "../../src/server/keyboard_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/surface_interface.h"
 // Wayland

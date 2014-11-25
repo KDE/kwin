@@ -8,6 +8,7 @@ set(SERVER_LIB_SRCS
     datasource_interface.cpp
     display.cpp
     global.cpp
+    keyboard_interface.cpp
     output_interface.cpp
     region_interface.cpp
     resource.cpp
@@ -59,6 +60,7 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
 #   datasource_interface.h
 #   display.h
 #   global.h
+#   keyboard_interface.h
 #   output_interface.h
 #   region_interface.h
 #   resource.h

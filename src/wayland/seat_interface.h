@@ -114,31 +114,6 @@ private:
     QScopedPointer<Private> d;
 };
 
-class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
-{
-    Q_OBJECT
-public:
-    virtual ~KeyboardInterface();
-
-    void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
-
-    void updateTimestamp(quint32 time);
-    void setKeymap(int fd, quint32 size);
-    void keyPressed(quint32 key);
-    void keyReleased(quint32 key);
-    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
-
-    void setFocusedSurface(SurfaceInterface *surface);
-    SurfaceInterface *focusedSurface() const;
-
-private:
-    friend class SeatInterface;
-    explicit KeyboardInterface(Display *display, SeatInterface *parent);
-
-    class Private;
-    QScopedPointer<Private> d;
-};
-
 }
 }
 
