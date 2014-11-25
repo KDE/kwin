@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screenedge.h"
 #include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QVarLengthArray>
 
 #include "outline.h"
@@ -65,12 +64,7 @@ extern bool is_multihead;
  */
 void Workspace::desktopResized()
 {
-    QRect geom;
-    for (int i = 0; i < screens()->count(); i++) {
-        //do NOT use - QApplication::desktop()->screenGeometry(i) there could be a virtual geometry
-        // see bug #302783
-        geom |= QApplication::desktop()->screen(i)->geometry();
-    }
+    QRect geom = screens()->geometry();
     NETSize desktop_geometry;
     desktop_geometry.width = geom.width();
     desktop_geometry.height = geom.height();
