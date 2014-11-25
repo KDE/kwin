@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "overlaywindow.h"
 #include "composite.h"
+#include "screens.h"
 #include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
@@ -324,7 +325,8 @@ bool GlxBackend::initBuffer()
         }
         XSetWindowAttributes attrs;
         attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
-        window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, displayWidth(), displayHeight(),
+        const QSize &screenSize = screens()->size();
+        window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, screenSize.width(), screenSize.height(),
                                0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
         glxWindow = glXCreateWindow(display(), fbconfig, window, NULL);
         overlayWindow()->setup(window);
@@ -539,7 +541,8 @@ void GlxBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const QSize &screenSize = screens()->size();
+    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint) {
@@ -581,7 +584,7 @@ void GlxBackend::present()
     } else if (m_haveMESACopySubBuffer) {
         foreach (const QRect & r, lastDamage().rects()) {
             // convert to OpenGL coordinates
-            int y = displayHeight() - r.y() - r.height();
+            int y = screenSize.height() - r.y() - r.height();
             glXCopySubBufferMESA(display(), glxWindow, r.x(), y, r.width(), r.height());
         }
     } else { // Copy Pixels (horribly slow on Mesa)

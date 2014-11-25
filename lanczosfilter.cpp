@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "deleted.h"
 #include "effects.h"
+#include "screens.h"
 #include "unmanaged.h"
 #include "options.h"
 #include "workspace.h"
@@ -101,8 +102,9 @@ void LanczosFilter::init()
 
 void LanczosFilter::updateOffscreenSurfaces()
 {
-    int w = displayWidth();
-    int h = displayHeight();
+    const QSize &s = screens()->size();
+    int w = s.width();
+    int h = s.height();
 
     if (!m_offscreenTex || m_offscreenTex->width() != w || m_offscreenTex->height() != h) {
         if (m_offscreenTex) {

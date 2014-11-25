@@ -337,6 +337,14 @@ public:
     GLShader *loadShaderFromCode(const QByteArray &vertexSource, const QByteArray &fragmentSource);
 
     /**
+     * Sets the virtual screen size to @p s.
+     * @since 5.2
+     **/
+    static void setVirtualScreenSize(const QSize &s) {
+        s_virtualScreenSize = s;
+    }
+
+    /**
      * @return a pointer to the ShaderManager instance
      **/
     static ShaderManager *instance();
@@ -362,6 +370,7 @@ private:
     bool m_debug;
     QByteArray m_shaderDir;
     static ShaderManager *s_shaderManager;
+    static QSize s_virtualScreenSize;
 };
 
 /**
@@ -505,6 +514,14 @@ public:
      **/
     void blitFromFramebuffer(const QRect &source = QRect(), const QRect &destination = QRect(), GLenum filter = GL_LINEAR);
 
+    /**
+     * Sets the virtual screen size to @p s.
+     * @since 5.2
+     **/
+    static void setVirtualScreenSize(const QSize &s) {
+        s_virtualScreenSize = s;
+    }
+
 
 protected:
     void initFBO();
@@ -516,6 +533,7 @@ private:
     static bool sSupported;
     static bool s_blitSupported;
     static QStack<GLRenderTarget*> s_renderTargets;
+    static QSize s_virtualScreenSize;
 
     GLTexture mTexture;
     bool mValid;
@@ -732,8 +750,17 @@ public:
      **/
     static GLVertexBuffer *streamingBuffer();
 
+    /**
+     * Sets the virtual screen size to @p s.
+     * @since 5.2
+     **/
+    static void setVirtualScreenSize(const QSize &s) {
+        s_virtualScreenSize = s;
+    }
+
 private:
     GLVertexBufferPrivate* const d;
+    static QSize s_virtualScreenSize;
 };
 
 } // namespace

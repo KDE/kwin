@@ -314,7 +314,7 @@ void LogoutEffect::renderVignetting()
     const QRect fullArea = effects->clientArea(FullArea, 0, 0);
     for (int screen = 0; screen < effects->numScreens(); screen++) {
         const QRect screenGeom = effects->clientArea(ScreenArea, screen, 0);
-        glScissor(screenGeom.x(), displayHeight() - screenGeom.y() - screenGeom.height(),
+        glScissor(screenGeom.x(), effects->virtualScreenSize().height() - screenGeom.y() - screenGeom.height(),
                   screenGeom.width(), screenGeom.height());  // GL coords are flipped
         const float cenX = screenGeom.x() + screenGeom.width() / 2;
         const float cenY = fullArea.height() - screenGeom.y() - screenGeom.height() / 2;

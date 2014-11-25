@@ -1370,7 +1370,8 @@ bool PaintClipper::clip()
 QRegion PaintClipper::paintArea()
 {
     assert(areas != nullptr);   // can be called only with clip() == true
-    QRegion ret = QRegion(0, 0, displayWidth(), displayHeight());
+    const QSize &s = effects->virtualScreenSize();
+    QRegion ret = QRegion(0, 0, s.width(), s.height());
     foreach (const QRegion & r, *areas)
     ret &= r;
     return ret;

@@ -615,6 +615,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char* name)
 // ShaderManager
 //****************************************
 ShaderManager *ShaderManager::s_shaderManager = nullptr;
+QSize ShaderManager::s_virtualScreenSize;
 
 ShaderManager *ShaderManager::instance()
 {
@@ -868,7 +869,7 @@ void ShaderManager::resetShader(ShaderType type)
 
     switch(type) {
     case SimpleShader:
-        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        projection.ortho(0, s_virtualScreenSize.width(), s_virtualScreenSize.height(), 0, 0, 65535);
         break;
 
     case GenericShader: {
@@ -886,12 +887,12 @@ void ShaderManager::resetShader(ShaderType type)
         // Set up the model-view matrix
         float scaleFactor = 1.1 * tan(fovy * M_PI / 360.0f) / ymax;
         modelView.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
-        modelView.scale((xmax - xmin)*scaleFactor / displayWidth(), -(ymax - ymin)*scaleFactor / displayHeight(), 0.001);
+        modelView.scale((xmax - xmin)*scaleFactor / s_virtualScreenSize.width(), -(ymax - ymin)*scaleFactor / s_virtualScreenSize.height(), 0.001);
         break;
     }
 
     case ColorShader:
-        projection.ortho(0, displayWidth(), displayHeight(), 0, 0, 65535);
+        projection.ortho(0, s_virtualScreenSize.width(), s_virtualScreenSize.height(), 0, 0, 65535);
         shader->setUniform("geometryColor", QVector4D(0, 0, 0, 1));
         break;
     }
@@ -913,6 +914,7 @@ void ShaderManager::resetShader(ShaderType type)
 bool GLRenderTarget::sSupported = false;
 bool GLRenderTarget::s_blitSupported = false;
 QStack<GLRenderTarget*> GLRenderTarget::s_renderTargets = QStack<GLRenderTarget*>();
+QSize GLRenderTarget::s_virtualScreenSize;
 
 void GLRenderTarget::initStatic()
 {
@@ -961,7 +963,7 @@ GLRenderTarget* GLRenderTarget::popRenderTarget()
     if (!s_renderTargets.isEmpty()) {
         s_renderTargets.top()->enable();
     } else {
-        glViewport (0, 0, displayWidth(), displayHeight());
+        glViewport (0, 0, s_virtualScreenSize.width(), s_virtualScreenSize.height());
     }
 
     return ret;
@@ -1118,10 +1120,10 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     GLRenderTarget::pushRenderTarget(this);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    const QRect s = source.isNull() ? QRect(0, 0, displayWidth(), displayHeight()) : source;
+    const QRect s = source.isNull() ? QRect(0, 0, s_virtualScreenSize.width(), s_virtualScreenSize.height()) : source;
     const QRect d = destination.isNull() ? QRect(0, 0, mTexture.width(), mTexture.height()) : destination;
 
-    glBlitFramebuffer(s.x(), displayHeight() - s.y() - s.height(), s.x() + s.width(), displayHeight() - s.y(),
+    glBlitFramebuffer(s.x(), s_virtualScreenSize.height() - s.y() - s.height(), s.x() + s.width(), s_virtualScreenSize.height() - s.y(),
                       d.x(), mTexture.height() - d.y() - d.height(), d.x() + d.width(), mTexture.height() - d.y(),
                       GL_COLOR_BUFFER_BIT, filter);
     GLRenderTarget::popRenderTarget();
@@ -1658,6 +1660,8 @@ GLvoid *GLVertexBufferPrivate::mapNextFreeRange(size_t size)
 //*********************************
 // GLVertexBuffer
 //*********************************
+QSize GLVertexBuffer::s_virtualScreenSize;
+
 GLVertexBuffer::GLVertexBuffer(UsageHint hint)
     : d(new GLVertexBufferPrivate(hint))
 {
@@ -1820,7 +1824,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
         } else {
             // Clip using scissoring
             foreach (const QRect &r, region.rects()) {
-                glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+                glScissor(r.x(), s_virtualScreenSize.height() - r.y() - r.height(), r.width(), r.height());
                 glDrawElementsBaseVertex(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, nullptr, first);
             }
         }
@@ -1833,7 +1837,7 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
     } else {
         // Clip using scissoring
         foreach (const QRect &r, region.rects()) {
-            glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+            glScissor(r.x(), s_virtualScreenSize.height() - r.y() - r.height(), r.width(), r.height());
             glDrawArrays(primitiveMode, first, count);
         }
     }

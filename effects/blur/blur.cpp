@@ -443,7 +443,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
 
-    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), displayHeight() - r.y() - r.height(),
+    glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, r.x(), effects->virtualScreenSize().height() - r.y() - r.height(),
                         r.width(), r.height());
 
     // Draw the texture on the offscreen framebuffer object, while blurring it horizontally
@@ -587,7 +587,7 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
         // into a scratch texture (in this case "tex").
         tex.bind();
 
-        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, updateRect.x(), displayHeight() - updateRect.y() - updateRect.height(),
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, updateRect.x(), effects->virtualScreenSize().height() - updateRect.y() - updateRect.height(),
                             updateRect.width(), updateRect.height());
 
         // Draw the texture on the offscreen framebuffer object, while blurring it horizontally

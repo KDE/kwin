@@ -213,8 +213,9 @@ quint64 AnimationEffect::p_animate( EffectWindow *w, Attribute a, uint meta, int
 
     if (delay > 0) {
         QTimer::singleShot(delay, this, SLOT(triggerRepaint()));
+        const QSize &s = effects->virtualScreenSize();
         if (waitAtSource)
-            w->addLayerRepaint(0, 0, displayWidth(), displayHeight());
+            w->addLayerRepaint(0, 0, s.width(), s.height());
     }
     else {
         triggerRepaint();
@@ -751,7 +752,7 @@ void AnimationEffect::updateLayerRepaints()
                     break;
                 case Rotation:
                     createRegion = false;
-                    *layerRect = QRect(0, 0, displayWidth(), displayHeight());
+                    *layerRect = QRect(QPoint(0, 0), effects->virtualScreenSize());
                     goto region_creation; // sic! no need to do anything else
                 case Generic:
                     d->m_needSceneRepaint = true; // we don't know whether this will change visual stacking order

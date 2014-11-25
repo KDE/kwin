@@ -333,7 +333,8 @@ QRegion OpenGLBackend::accumulatedDamageHistory(int bufferAge) const
         for (int i = 0; i < bufferAge - 1; i++)
             region |= m_damageHistory[i];
     } else {
-        region = QRegion(0, 0, displayWidth(), displayHeight());
+        const QSize &s = screens()->size();
+        region = QRegion(0, 0, s.width(), s.height());
     }
 
     return region;
@@ -359,7 +360,7 @@ SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
         init_ok = false;
         return;
     }
-    if (!viewportLimitsMatched(QSize(displayWidth(), displayHeight())))
+    if (!viewportLimitsMatched(screens()->size()))
         return;
 
     // perform Scene specific checks
@@ -554,11 +555,12 @@ bool SceneOpenGL::initFailed() const
 #ifndef KWIN_HAVE_OPENGLES
 void SceneOpenGL::copyPixels(const QRegion &region)
 {
+    const int height = screens()->size().height();
     foreach (const QRect &r, region.rects()) {
         const int x0 = r.x();
-        const int y0 = displayHeight() - r.y() - r.height();
+        const int y0 = height - r.y() - r.height();
         const int x1 = r.x() + r.width();
-        const int y1 = displayHeight() - r.y();
+        const int y1 = height - r.y();
 
         glBlitFramebuffer(x0, y0, x1, y1, x0, y0, x1, y1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
     }
@@ -648,7 +650,8 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
 
 #ifndef KWIN_HAVE_OPENGLES
-    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const QSize &screenSize = screens()->size();
+    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
     // copy dirty parts from front to backbuffer
     if (!m_backend->supportsBufferAge() &&
@@ -729,10 +732,11 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
     if (m_backend->supportsBufferAge())
         return;
 
+    const QSize &screenSize = screens()->size();
     if (options->glPreferBufferSwap() == Options::ExtendDamage) { // only Extend "large" repaints
-        const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+        const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
         uint damagedPixels = 0;
-        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*displayWidth()*displayHeight();
+        const uint fullRepaintLimit = (opaqueFullscreen?0.49f:0.748f)*screenSize.width()*screenSize.height();
         // 16:9 is 75% of 4:3 and 2.55:1 is 49.01% of 5:4
         // (5:4 is the most square format and 2.55:1 is Cinemascope55 - the widest ever shot
         // movie aspect - two times ;-) It's a Fox format, though, so maybe we want to restrict
@@ -747,7 +751,7 @@ void SceneOpenGL::extendPaintRegion(QRegion &region, bool opaqueFullscreen)
             }
         }
     } else if (options->glPreferBufferSwap() == Options::PaintFullScreen) { // forced full rePaint
-        region = QRegion(0, 0, displayWidth(), displayHeight());
+        region = QRegion(0, 0, screenSize.width(), screenSize.height());
     }
 }
 
@@ -828,6 +832,9 @@ void SceneOpenGL::screenGeometryChanged(const QSize &size)
     Scene::screenGeometryChanged(size);
     glViewport(0,0, size.width(), size.height());
     m_backend->screenGeometryChanged(size);
+    ShaderManager::setVirtualScreenSize(size);
+    GLRenderTarget::setVirtualScreenSize(size);
+    GLVertexBuffer::setVirtualScreenSize(size);
     ShaderManager::instance()->resetAllShaders();
 }
 
@@ -835,7 +842,7 @@ void SceneOpenGL::paintDesktop(int desktop, int mask, const QRegion &region, Scr
 {
     const QRect r = region.boundingRect();
     glEnable(GL_SCISSOR_TEST);
-    glScissor(r.x(), displayHeight() - r.y() - r.height(), r.width(), r.height());
+    glScissor(r.x(), screens()->size().height() - r.y() - r.height(), r.width(), r.height());
     KWin::Scene::paintDesktop(desktop, mask, region, data);
     glDisable(GL_SCISSOR_TEST);
 }
@@ -900,6 +907,10 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
     slotColorCorrectedChanged(false);
     connect(options, SIGNAL(colorCorrectedChanged()), this, SLOT(slotColorCorrectedChanged()), Qt::QueuedConnection);
 
+    const QSize &s = screens()->size();
+    ShaderManager::setVirtualScreenSize(s);
+    GLRenderTarget::setVirtualScreenSize(s);
+    GLVertexBuffer::setVirtualScreenSize(s);
     if (!ShaderManager::instance()->isValid()) {
         qDebug() << "No Scene Shaders available";
         init_ok = false;

@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_xrender.h"
 #include "scene_opengl.h"
 #include "scene_qpainter.h"
+#include "screens.h"
 #include "shadow.h"
 #include "useractions.h"
 #include "compositingprefs.h"
@@ -548,7 +549,8 @@ void Compositor::addRepaintFull()
 {
     if (!hasScene())
         return;
-    repaints_region = QRegion(0, 0, displayWidth(), displayHeight());
+    const QSize &s = screens()->size();
+    repaints_region = QRegion(0, 0, s.width(), s.height());
     scheduleRepaint();
 }
 
@@ -785,7 +787,8 @@ void Compositor::delayedCheckUnredirect()
     forceUnredirectCheck = false;
     // Cut out parts from the overlay window where unredirected windows are,
     // so that they are actually visible.
-    QRegion reg(0, 0, displayWidth(), displayHeight());
+    const QSize &s = screens()->size();
+    QRegion reg(0, 0, s.width(), s.height());
     foreach (Toplevel * c, list) {
         if (c->unredirected())
             reg -= c->geometry();
