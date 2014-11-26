@@ -518,30 +518,31 @@ void TestWaylandSeat::testKeyboard()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
-    KeyboardInterface *serverKeyboard = m_seatInterface->keyboard();
-
-    serverKeyboard->setFocusedSurface(serverSurface);
-    // no pointer yet - won't be set
-    QVERIFY(!serverKeyboard->focusedSurface());
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    // no keyboard yet
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedKeyboard());
 
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
     QVERIFY(keyboard->isValid());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
+    QVERIFY(m_seatInterface->focusedKeyboard());
 
     m_seatInterface->setTimestamp(1);
-    serverKeyboard->keyPressed(KEY_K);
+    m_seatInterface->keyPressed(KEY_K);
     m_seatInterface->setTimestamp(2);
-    serverKeyboard->keyPressed(KEY_D);
+    m_seatInterface->keyPressed(KEY_D);
     m_seatInterface->setTimestamp(3);
-    serverKeyboard->keyPressed(KEY_E);
+    m_seatInterface->keyPressed(KEY_E);
 
     QSignalSpy modifierSpy(keyboard, SIGNAL(modifiersChanged(quint32,quint32,quint32,quint32)));
     QVERIFY(modifierSpy.isValid());
 
     // TODO: add a signalspy for enter
-    serverKeyboard->setFocusedSurface(serverSurface);
-    QCOMPARE(serverKeyboard->focusedSurface(), serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
 
     // we get the modifiers sent after the enter
     QVERIFY(modifierSpy.wait());
@@ -555,19 +556,19 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(keyChangedSpy.isValid());
 
     m_seatInterface->setTimestamp(4);
-    serverKeyboard->keyReleased(KEY_E);
+    m_seatInterface->keyReleased(KEY_E);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(5);
-    serverKeyboard->keyReleased(KEY_D);
+    m_seatInterface->keyReleased(KEY_D);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(6);
-    serverKeyboard->keyReleased(KEY_K);
+    m_seatInterface->keyReleased(KEY_K);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(7);
-    serverKeyboard->keyPressed(KEY_F1);
+    m_seatInterface->keyPressed(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
     m_seatInterface->setTimestamp(8);
-    serverKeyboard->keyReleased(KEY_F1);
+    m_seatInterface->keyReleased(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
 
     QCOMPARE(keyChangedSpy.count(), 5);
@@ -587,7 +588,7 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(1).value<Keyboard::KeyState>(), Keyboard::KeyState::Released);
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(8));
 
-    serverKeyboard->updateModifiers(1, 2, 3, 4);
+    m_seatInterface->updateKeyboardModifiers(1, 2, 3, 4);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.count(), 2);
     QCOMPARE(modifierSpy.last().at(0).value<quint32>(), quint32(1));
@@ -596,18 +597,21 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.last().at(3).value<quint32>(), quint32(4));
 
     // TODO: add a test for leave signal
-    serverKeyboard->setFocusedSurface(nullptr);
-    QVERIFY(!serverKeyboard->focusedSurface());
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    QVERIFY(!m_seatInterface->focusedKeyboardSurface());
+    QVERIFY(!m_seatInterface->focusedKeyboard());
 
     // enter it again
-    serverKeyboard->setFocusedSurface(serverSurface);
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QVERIFY(modifierSpy.wait());
-    QCOMPARE(serverKeyboard->focusedSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
 
     delete s;
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
-    QVERIFY(!serverKeyboard->focusedSurface());
+    QVERIFY(!m_seatInterface->focusedKeyboardSurface());
+    QVERIFY(!m_seatInterface->focusedKeyboard());
 }
 
 void TestWaylandSeat::testCast()

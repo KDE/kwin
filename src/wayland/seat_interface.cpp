@@ -50,6 +50,7 @@ public:
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
     PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
+    KeyboardInterface *keyboardForSurface(SurfaceInterface *surface) const;
 
     QString name;
     bool pointer = false;
@@ -64,9 +65,9 @@ public:
         quint32 serial = 0;
     };
     FocusedPointer focusedPointer = FocusedPointer();
-    KeyboardInterface *keyboardInterface = nullptr;
     quint32 timestamp = 0;
     QVector<PointerInterface*> pointers;
+    QVector<KeyboardInterface*> keyboards;
 
     // Pointer related members
     struct Pointer {
@@ -82,6 +83,39 @@ public:
     void updatePointerButtonSerial(quint32 button, quint32 serial);
     void updatePointerButtonState(quint32 button, Pointer::ButtonState state);
 
+    // Keyboard related members
+    struct Keyboard {
+        enum class State {
+            Released,
+            Pressed
+        };
+        QHash<quint32, State> states;
+        struct Keymap {
+            int fd = -1;
+            quint32 size = 0;
+            bool xkbcommonCompatible = false;
+        };
+        Keymap keymap;
+        struct Modifiers {
+            quint32 depressed = 0;
+            quint32 latched = 0;
+            quint32 locked = 0;
+            quint32 group = 0;
+            quint32 serial = 0;
+        };
+        Modifiers modifiers;
+        struct Focus {
+            SurfaceInterface *surface = nullptr;
+            KeyboardInterface *keyboard = nullptr;
+            QMetaObject::Connection destroyConnection;
+            quint32 serial = 0;
+        };
+        Focus focus;
+        quint32 lastStateSerial = 0;
+    };
+    Keyboard keys;
+    void updateKey(quint32 key, Keyboard::State state);
+
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
         return s ? s->q : nullptr;
@@ -89,6 +123,7 @@ public:
 
 private:
     void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
+    void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);
 
@@ -117,7 +152,6 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
 {
     Q_D();
-    d->keyboardInterface = new KeyboardInterface(this);
     connect(this, &SeatInterface::nameChanged, this,
         [this, d] {
             for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
@@ -183,6 +217,16 @@ void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::B
     it.value() = state;
 }
 
+void SeatInterface::Private::updateKey(quint32 key, Keyboard::State state)
+{
+    auto it = keys.states.find(key);
+    if (it == keys.states.end()) {
+        keys.states.insert(key, state);
+        return;
+    }
+    it.value() = state;
+}
+
 void SeatInterface::Private::sendName(wl_resource *r)
 {
     if (wl_resource_get_version(r) < WL_SEAT_NAME_SINCE_VERSION) {
@@ -218,6 +262,20 @@ PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *su
     }
 
     for (auto it = pointers.begin(); it != pointers.end(); ++it) {
+        if (wl_resource_get_client((*it)->resource()) == *surface->client()) {
+            return (*it);
+        }
+    }
+    return nullptr;
+}
+
+KeyboardInterface *SeatInterface::Private::keyboardForSurface(SurfaceInterface *surface) const
+{
+    if (!surface) {
+        return nullptr;
+    }
+
+    for (auto it = keyboards.begin(); it != keyboards.end(); ++it) {
         if (wl_resource_get_client((*it)->resource()) == *surface->client()) {
             return (*it);
         }
@@ -301,7 +359,31 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
 
 void SeatInterface::Private::getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    cast(resource)->keyboardInterface->createInterfae(client, resource, id);
+    cast(resource)->getKeyboard(client, resource, id);
+}
+
+void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resource, uint32_t id)
+{
+    // TODO: only create if seat has keyboard?
+    KeyboardInterface *keyboard = new KeyboardInterface(q);
+    keyboard->createInterfae(client, resource, id);
+    keyboards << keyboard;
+    if (keys.focus.surface && keys.focus.surface->client()->client() == client) {
+        // this is a keyboard for the currently focused keyboard surface
+        if (!keys.focus.keyboard) {
+            keys.focus.keyboard = keyboard;
+            keyboard->setFocusedSurface(keys.focus.surface, keys.focus.serial);
+        }
+    }
+    QObject::connect(keyboard, &QObject::destroyed, q,
+        [keyboard,this] {
+            keyboards.removeAt(keyboards.indexOf(keyboard));
+            if (keys.focus.keyboard == keyboard) {
+                keys.focus.keyboard = nullptr;
+            }
+        }
+    );
+    emit q->keyboardCreated(keyboard);
 }
 
 void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
@@ -333,12 +415,6 @@ bool SeatInterface::hasTouch() const
 {
     Q_D();
     return d->touch;
-}
-
-KeyboardInterface *SeatInterface::keyboard()
-{
-    Q_D();
-    return d->keyboardInterface;
 }
 
 SeatInterface *SeatInterface::get(wl_resource *native)
@@ -539,6 +615,152 @@ quint32 SeatInterface::pointerButtonSerial(quint32 button) const
         return 0;
     }
     return it.value();
+}
+
+void SeatInterface::keyPressed(quint32 key)
+{
+    Q_D();
+    d->keys.lastStateSerial = d->display->nextSerial();
+    d->updateKey(key, Private::Keyboard::State::Pressed);
+    if (d->keys.focus.keyboard && d->keys.focus.surface) {
+        d->keys.focus.keyboard->keyPressed(key, d->keys.lastStateSerial);
+    }
+}
+
+void SeatInterface::keyReleased(quint32 key)
+{
+    Q_D();
+    d->keys.lastStateSerial = d->display->nextSerial();
+    d->updateKey(key, Private::Keyboard::State::Released);
+    if (d->keys.focus.keyboard && d->keys.focus.surface) {
+        d->keys.focus.keyboard->keyReleased(key, d->keys.lastStateSerial);
+    }
+}
+
+SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
+{
+    Q_D();
+    return d->keys.focus.surface;
+}
+
+void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
+{
+    Q_D();
+    const quint32 serial = d->display->nextSerial();
+    if (d->keys.focus.keyboard) {
+        d->keys.focus.keyboard->setFocusedSurface(nullptr, serial);
+    }
+    if (d->keys.focus.surface) {
+        disconnect(d->keys.focus.destroyConnection);
+    }
+    d->keys.focus = Private::Keyboard::Focus();
+    d->keys.focus.surface = surface;
+    KeyboardInterface *k = d->keyboardForSurface(surface);
+    d->keys.focus.keyboard = k;
+    if (d->keys.focus.surface) {
+        d->keys.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+            [this] {
+                Q_D();
+                d->keys.focus = Private::Keyboard::Focus();
+            }
+        );
+        d->keys.focus.serial = serial;
+    }
+    if (!k) {
+        return;
+    }
+    k->setFocusedSurface(surface, serial);
+}
+
+void SeatInterface::setKeymap(int fd, quint32 size)
+{
+    Q_D();
+    d->keys.keymap.xkbcommonCompatible = true;
+    d->keys.keymap.fd = fd;
+    d->keys.keymap.size = size;
+    for (auto it = d->keyboards.constBegin(); it != d->keyboards.constEnd(); ++it) {
+        (*it)->setKeymap(fd, size);
+    }
+}
+
+void SeatInterface::updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
+{
+    Q_D();
+    const quint32 serial = d->display->nextSerial();
+    d->keys.modifiers.serial = serial;
+    d->keys.modifiers.depressed = depressed;
+    d->keys.modifiers.latched = latched;
+    d->keys.modifiers.locked = locked;
+    d->keys.modifiers.group = group;
+    if (d->keys.focus.keyboard && d->keys.focus.surface) {
+        d->keys.focus.keyboard->updateModifiers(depressed, latched, locked, group, serial);
+    }
+}
+
+bool SeatInterface::isKeymapXkbCompatible() const
+{
+    Q_D();
+    return d->keys.keymap.xkbcommonCompatible;
+}
+
+int SeatInterface::keymapFileDescriptor() const
+{
+    Q_D();
+    return d->keys.keymap.fd;
+}
+
+quint32 SeatInterface::keymapSize() const
+{
+    Q_D();
+    return d->keys.keymap.size;
+}
+
+quint32 SeatInterface::depressedModifiers() const
+{
+    Q_D();
+    return d->keys.modifiers.depressed;
+}
+
+quint32 SeatInterface::groupModifiers() const
+{
+    Q_D();
+    return d->keys.modifiers.group;
+}
+
+quint32 SeatInterface::latchedModifiers() const
+{
+    Q_D();
+    return d->keys.modifiers.latched;
+}
+
+quint32 SeatInterface::lockedModifiers() const
+{
+    Q_D();
+    return d->keys.modifiers.locked;
+}
+
+quint32 SeatInterface::lastModifiersSerial() const
+{
+    Q_D();
+    return d->keys.modifiers.serial;
+}
+
+QVector< quint32 > SeatInterface::pressedKeys() const
+{
+    Q_D();
+    QVector<quint32> keys;
+    for (auto it = d->keys.states.begin(); it != d->keys.states.end(); ++it) {
+        if (it.value() == Private::Keyboard::State::Pressed) {
+            keys << it.key();
+        }
+    }
+    return keys;
+}
+
+KeyboardInterface *SeatInterface::focusedKeyboard() const
+{
+    Q_D();
+    return d->keys.focus.keyboard;
 }
 
 }

@@ -44,15 +44,16 @@ public:
 
     void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
 
-    void setKeymap(int fd, quint32 size);
-    void keyPressed(quint32 key);
-    void keyReleased(quint32 key);
-    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
-
-    void setFocusedSurface(SurfaceInterface *surface);
     SurfaceInterface *focusedSurface() const;
 
+    wl_resource *resource() const;
+
 private:
+    void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
+    void setKeymap(int fd, quint32 size);
+    void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
+    void keyPressed(quint32 key, quint32 serial);
+    void keyReleased(quint32 key, quint32 serial);
     friend class SeatInterface;
     explicit KeyboardInterface(SeatInterface *parent);
 
@@ -62,5 +63,7 @@ private:
 
 }
 }
+
+Q_DECLARE_METATYPE(KWayland::Server::KeyboardInterface*)
 
 #endif

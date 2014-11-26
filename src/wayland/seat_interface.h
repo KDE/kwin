@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
+#include "keyboard_interface.h"
 #include "pointer_interface.h"
 
 struct wl_client;
@@ -55,7 +56,6 @@ public:
     bool hasPointer() const;
     bool hasKeyboard() const;
     bool hasTouch() const;
-    KeyboardInterface *keyboard();
 
     void setName(const QString &name);
     void setHasPointer(bool has);
@@ -83,6 +83,25 @@ public:
     quint32 pointerButtonSerial(Qt::MouseButton button) const;
     void pointerAxis(Qt::Orientation orientation, quint32 delta);
 
+    // keyboard related methods
+    void setKeymap(int fd, quint32 size);
+    void keyPressed(quint32 key);
+    void keyReleased(quint32 key);
+    void updateKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    quint32 depressedModifiers() const;
+    quint32 latchedModifiers() const;
+    quint32 lockedModifiers() const;
+    quint32 groupModifiers() const;
+    quint32 lastModifiersSerial() const;
+    int keymapFileDescriptor() const;
+    quint32 keymapSize() const;
+    bool isKeymapXkbCompatible() const;
+    QVector<quint32> pressedKeys() const;
+
+    void setFocusedKeyboardSurface(SurfaceInterface *surface);
+    SurfaceInterface *focusedKeyboardSurface() const;
+    KeyboardInterface *focusedKeyboard() const;
+
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
@@ -94,6 +113,7 @@ Q_SIGNALS:
     void timestampChanged(quint32);
 
     void pointerCreated(KWayland::Server::PointerInterface*);
+    void keyboardCreated(KWayland::Server::KeyboardInterface*);
 
 private:
     friend class Display;

@@ -109,14 +109,13 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
     if (!m_seat) {
         return;
     }
-    const auto keyboard = m_seat->keyboard();
-    if (!keyboard->focusedSurface()) {
+    if (!m_seat->focusedKeyboardSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            keyboard->setFocusedSurface(m_stackingOrder.last()->surface());
+            m_seat->setFocusedKeyboardSurface(m_stackingOrder.last()->surface());
         }
     }
     m_seat->setTimestamp(event->timestamp());
-    keyboard->keyPressed(event->nativeScanCode() - 8);
+    m_seat->keyPressed(event->nativeScanCode() - 8);
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -125,9 +124,8 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
     if (!m_seat) {
         return;
     }
-    const auto keyboard = m_seat->keyboard();
     m_seat->setTimestamp(event->timestamp());
-    keyboard->keyReleased(event->nativeScanCode() - 8);
+    m_seat->keyReleased(event->nativeScanCode() - 8);
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
