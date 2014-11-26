@@ -67,19 +67,59 @@ GLTexture::GLTexture(const GLTexture& tex)
 GLTexture::GLTexture(const QImage& image, GLenum target)
     : d_ptr(new GLTexturePrivate())
 {
-    load(image, target);
+    Q_D(GLTexture);
+
+    if (image.isNull())
+        return;
+
+    d->m_target = target;
+
+    if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
+        d->m_scale.setWidth(1.0 / image.width());
+        d->m_scale.setHeight(1.0 / image.height());
+        d->m_canUseMipmaps = true;
+    } else {
+        d->m_scale.setWidth(1.0);
+        d->m_scale.setHeight(1.0);
+        d->m_canUseMipmaps = false;
+    }
+
+    d->m_size = image.size();
+    d->m_yInverted = true;
+
+    d->updateMatrix();
+
+    glGenTextures(1, &d->m_texture);
+    bind();
+
+    if (!GLPlatform::instance()->isGLES()) {
+        const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
+                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+    } else {
+        if (d->s_supportsARGB32) {
+            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            glTexImage2D(d->m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
+                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+        } else {
+            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            glTexImage2D(d->m_target, 0, GL_RGBA, im.width(), im.height(),
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+        }
+    }
+
+    unbind();
+    setFilter(GL_LINEAR);
 }
 
 GLTexture::GLTexture(const QPixmap& pixmap, GLenum target)
-    : d_ptr(new GLTexturePrivate())
+    : GLTexture(pixmap.toImage(), target)
 {
-    load(pixmap.toImage(), target);
 }
 
 GLTexture::GLTexture(const QString& fileName)
-     : d_ptr(new GLTexturePrivate())
+     : GLTexture(QImage(fileName))
 {
-    load(QImage(fileName));
 }
 
 GLTexture::GLTexture(int width, int height)
@@ -195,59 +235,6 @@ QSize GLTexture::size() const
 {
     Q_D(const GLTexture);
     return d->m_size;
-}
-
-bool GLTexture::load(const QImage& image, GLenum target)
-{
-    // decrease the reference counter for the old texture
-    d_ptr = new GLTexturePrivate();
-
-    Q_D(GLTexture);
-    if (image.isNull())
-        return false;
-
-    d->m_target = target;
-
-    if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
-        d->m_scale.setWidth(1.0 / image.width());
-        d->m_scale.setHeight(1.0 / image.height());
-        d->m_canUseMipmaps = true;
-    } else {
-        d->m_scale.setWidth(1.0);
-        d->m_scale.setHeight(1.0);
-        d->m_canUseMipmaps = false;
-    }
-
-    d->m_size = image.size();
-    d->m_yInverted = true;
-
-    d->updateMatrix();
-
-    if (isNull()) {
-        glGenTextures(1, &d->m_texture);
-    }
-
-    bind();
-
-    if (!GLPlatform::instance()->isGLES()) {
-        const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-        glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
-                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
-    } else {
-        if (d->s_supportsARGB32) {
-            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-            glTexImage2D(d->m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
-                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
-        } else {
-            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
-            glTexImage2D(d->m_target, 0, GL_RGBA, im.width(), im.height(),
-                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
-        }
-    }
-
-    unbind();
-    setFilter(GL_LINEAR);
-    return true;
 }
 
 void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
