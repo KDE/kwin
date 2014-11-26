@@ -237,7 +237,7 @@ void TestDataDevice::testDrag()
 
     // first we need to fake the pointer enter
     m_seatInterface->setFocusedPointerSurface(surfaceInterface);
-    m_seatInterface->focusedPointer()->buttonPressed(1);
+    m_seatInterface->pointerButtonPressed(1);
 
     QCoreApplication::processEvents();
 
@@ -289,7 +289,7 @@ void TestDataDevice::testDragInternally()
 
     // first we need to fake the pointer enter
     m_seatInterface->setFocusedPointerSurface(surfaceInterface);
-    m_seatInterface->focusedPointer()->buttonPressed(1);
+    m_seatInterface->pointerButtonPressed(1);
 
     QCoreApplication::processEvents();
 

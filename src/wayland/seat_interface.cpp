@@ -31,6 +31,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WL_SEAT_NAME_SINCE_VERSION
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
+// linux
+#include <linux/input.h>
 
 namespace KWayland
 {
@@ -68,6 +70,17 @@ public:
 
     // Pointer related members
     QPointF pointerPos;
+    struct Pointer {
+        enum class ButtonState {
+            Released,
+            Pressed
+        };
+        QHash<quint32, quint32> buttonSerials;
+        QHash<quint32, ButtonState> buttonStates;
+    };
+    Pointer globalPointer;
+    void updatePointerButtonSerial(quint32 button, quint32 serial);
+    void updatePointerButtonState(quint32 button, Pointer::ButtonState state);
 
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
@@ -148,6 +161,26 @@ void SeatInterface::Private::bind(wl_client *client, uint32_t version, uint32_t 
 void SeatInterface::Private::unbind(wl_resource *r)
 {
     cast(r)->resources.removeAll(r);
+}
+
+void SeatInterface::Private::updatePointerButtonSerial(quint32 button, quint32 serial)
+{
+    auto it = globalPointer.buttonSerials.find(button);
+    if (it == globalPointer.buttonSerials.end()) {
+        globalPointer.buttonSerials.insert(button, serial);
+        return;
+    }
+    it.value() = serial;
+}
+
+void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::ButtonState state)
+{
+    auto it = globalPointer.buttonStates.find(button);
+    if (it == globalPointer.buttonStates.end()) {
+        globalPointer.buttonStates.insert(button, state);
+        return;
+    }
+    it.value() = state;
 }
 
 void SeatInterface::Private::sendName(wl_resource *r)
@@ -404,6 +437,108 @@ QPointF SeatInterface::focusedPointerSurfacePosition() const
 {
     Q_D();
     return d->focusedPointer.offset;
+}
+
+static quint32 qtToWaylandButton(Qt::MouseButton button)
+{
+    static const QHash<Qt::MouseButton, quint32> s_buttons({
+        {Qt::LeftButton, BTN_LEFT},
+        {Qt::RightButton, BTN_RIGHT},
+        {Qt::MiddleButton, BTN_MIDDLE},
+        {Qt::ExtraButton1, BTN_BACK},    // note: QtWayland maps BTN_SIDE
+        {Qt::ExtraButton2, BTN_FORWARD}, // note: QtWayland maps BTN_EXTRA
+        {Qt::ExtraButton3, BTN_TASK},    // note: QtWayland maps BTN_FORWARD
+        {Qt::ExtraButton4, BTN_EXTRA},   // note: QtWayland maps BTN_BACK
+        {Qt::ExtraButton5, BTN_SIDE},    // note: QtWayland maps BTN_TASK
+        {Qt::ExtraButton6, BTN_TASK + 1},
+        {Qt::ExtraButton7, BTN_TASK + 2},
+        {Qt::ExtraButton8, BTN_TASK + 3},
+        {Qt::ExtraButton9, BTN_TASK + 4},
+        {Qt::ExtraButton10, BTN_TASK + 5},
+        {Qt::ExtraButton11, BTN_TASK + 6},
+        {Qt::ExtraButton12, BTN_TASK + 7},
+        {Qt::ExtraButton13, BTN_TASK + 8}
+        // further mapping not possible, 0x120 is BTN_JOYSTICK
+    });
+    return s_buttons.value(button, 0);
+};
+
+bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
+{
+    return isPointerButtonPressed(qtToWaylandButton(button));
+}
+
+bool SeatInterface::isPointerButtonPressed(quint32 button) const
+{
+    Q_D();
+    auto it = d->globalPointer.buttonStates.constFind(button);
+    if (it == d->globalPointer.buttonStates.constEnd()) {
+        return false;
+    }
+    return it.value() == Private::Pointer::ButtonState::Pressed ? true : false;
+}
+
+void SeatInterface::pointerAxis(Qt::Orientation orientation, quint32 delta)
+{
+    Q_D();
+    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
+        d->focusedPointer.pointer->axis(orientation, delta);
+    }
+}
+
+void SeatInterface::pointerButtonPressed(Qt::MouseButton button)
+{
+    const quint32 nativeButton = qtToWaylandButton(button);
+    if (nativeButton == 0) {
+        return;
+    }
+    pointerButtonPressed(nativeButton);
+}
+
+void SeatInterface::pointerButtonPressed(quint32 button)
+{
+    Q_D();
+    const quint32 serial = d->display->nextSerial();
+    d->updatePointerButtonSerial(button, serial);
+    d->updatePointerButtonState(button, Private::Pointer::ButtonState::Pressed);
+    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
+        d->focusedPointer.pointer->buttonPressed(button, serial);
+    }
+}
+
+void SeatInterface::pointerButtonReleased(Qt::MouseButton button)
+{
+    const quint32 nativeButton = qtToWaylandButton(button);
+    if (nativeButton == 0) {
+        return;
+    }
+    pointerButtonReleased(nativeButton);
+}
+
+void SeatInterface::pointerButtonReleased(quint32 button)
+{
+    Q_D();
+    const quint32 serial = d->display->nextSerial();
+    d->updatePointerButtonSerial(button, serial);
+    d->updatePointerButtonState(button, Private::Pointer::ButtonState::Released);
+    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
+        d->focusedPointer.pointer->buttonReleased(button, serial);
+    }
+}
+
+quint32 SeatInterface::pointerButtonSerial(Qt::MouseButton button) const
+{
+    return pointerButtonSerial(qtToWaylandButton(button));
+}
+
+quint32 SeatInterface::pointerButtonSerial(quint32 button) const
+{
+    Q_D();
+    auto it = d->globalPointer.buttonSerials.constFind(button);
+    if (it == d->globalPointer.buttonSerials.constEnd()) {
+        return 0;
+    }
+    return it.value();
 }
 
 }

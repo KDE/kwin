@@ -333,10 +333,10 @@ void TestWaylandSeat::testPointer()
 
     // test axis
     m_seatInterface->setTimestamp(2);
-    serverPointer->axis(Qt::Horizontal, 10);
+    m_seatInterface->pointerAxis(Qt::Horizontal, 10);
     QVERIFY(axisSpy.wait());
     m_seatInterface->setTimestamp(3);
-    serverPointer->axis(Qt::Vertical, 20);
+    m_seatInterface->pointerAxis(Qt::Vertical, 20);
     QVERIFY(axisSpy.wait());
     QCOMPARE(axisSpy.first().at(0).value<quint32>(), quint32(2));
     QCOMPARE(axisSpy.first().at(1).value<Pointer::Axis>(), Pointer::Axis::Horizontal);
@@ -348,19 +348,19 @@ void TestWaylandSeat::testPointer()
 
     // test button
     m_seatInterface->setTimestamp(4);
-    serverPointer->buttonPressed(1);
+    m_seatInterface->pointerButtonPressed(1);
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(5);
-    serverPointer->buttonPressed(2);
+    m_seatInterface->pointerButtonPressed(2);
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(6);
-    serverPointer->buttonReleased(2);
+    m_seatInterface->pointerButtonReleased(2);
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_display->serial());
     m_seatInterface->setTimestamp(7);
-    serverPointer->buttonReleased(1);
+    m_seatInterface->pointerButtonReleased(1);
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.count(), 4);
 
@@ -376,14 +376,14 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(buttonSpy.at(1).at(2).value<quint32>(), quint32(2));
     QCOMPARE(buttonSpy.at(1).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Pressed);
 
-    QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), serverPointer->buttonSerial(2));
+    QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(2));
     // timestamp
     QCOMPARE(buttonSpy.at(2).at(1).value<quint32>(), quint32(6));
     // button
     QCOMPARE(buttonSpy.at(2).at(2).value<quint32>(), quint32(2));
     QCOMPARE(buttonSpy.at(2).at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Released);
 
-    QCOMPARE(buttonSpy.at(3).at(0).value<quint32>(), serverPointer->buttonSerial(1));
+    QCOMPARE(buttonSpy.at(3).at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(1));
     // timestamp
     QCOMPARE(buttonSpy.at(3).at(1).value<quint32>(), quint32(7));
     // button
@@ -473,28 +473,28 @@ void TestWaylandSeat::testPointerButton()
     QFETCH(Qt::MouseButton, qtButton);
     QFETCH(quint32, waylandButton);
     quint32 msec = QDateTime::currentMSecsSinceEpoch();
-    QCOMPARE(serverPointer->isButtonPressed(waylandButton), false);
-    QCOMPARE(serverPointer->isButtonPressed(qtButton), false);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
     m_seatInterface->setTimestamp(msec);
-    serverPointer->buttonPressed(qtButton);
-    QCOMPARE(serverPointer->isButtonPressed(waylandButton), true);
-    QCOMPARE(serverPointer->isButtonPressed(qtButton), true);
+    m_seatInterface->pointerButtonPressed(qtButton);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), true);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), true);
     QVERIFY(buttonChangedSpy.wait());
     QCOMPARE(buttonChangedSpy.count(), 1);
-    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(waylandButton));
-    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(qtButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(waylandButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(qtButton));
     QCOMPARE(buttonChangedSpy.last().at(1).value<quint32>(), msec);
     QCOMPARE(buttonChangedSpy.last().at(2).value<quint32>(), waylandButton);
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Pressed);
     msec = QDateTime::currentMSecsSinceEpoch();
     m_seatInterface->setTimestamp(QDateTime::currentMSecsSinceEpoch());
-    serverPointer->buttonReleased(qtButton);
-    QCOMPARE(serverPointer->isButtonPressed(waylandButton), false);
-    QCOMPARE(serverPointer->isButtonPressed(qtButton), false);
+    m_seatInterface->pointerButtonReleased(qtButton);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
+    QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
     QVERIFY(buttonChangedSpy.wait());
     QCOMPARE(buttonChangedSpy.count(), 2);
-    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(waylandButton));
-    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), serverPointer->buttonSerial(qtButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(waylandButton));
+    QCOMPARE(buttonChangedSpy.last().at(0).value<quint32>(), m_seatInterface->pointerButtonSerial(qtButton));
     QCOMPARE(buttonChangedSpy.last().at(1).value<quint32>(), msec);
     QCOMPARE(buttonChangedSpy.last().at(2).value<quint32>(), waylandButton);
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), Pointer::ButtonState::Released);

@@ -151,34 +151,26 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
         }
     }
     m_seat->setTimestamp(event->timestamp());
-    if (auto pointer = m_seat->focusedPointer()) {
-        pointer->buttonPressed(event->button());
-    }
+    m_seat->pointerButtonPressed(event->button());
 }
 
 void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
     m_seat->setTimestamp(event->timestamp());
-    if (auto pointer = m_seat->focusedPointer()) {
-        pointer->buttonReleased(event->button());
-    }
+    m_seat->pointerButtonReleased(event->button());
 }
 
 void CompositorWindow::wheelEvent(QWheelEvent *event)
 {
     QWidget::wheelEvent(event);
     m_seat->setTimestamp(event->timestamp());
-    const auto pointer = m_seat->focusedPointer();
-    if (!pointer) {
-        return;
-    }
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
-        pointer->axis(Qt::Horizontal, angle.x());
+        m_seat->pointerAxis(Qt::Horizontal, angle.x());
     }
     if (angle.y() != 0) {
-        pointer->axis(Qt::Vertical, angle.y());
+        m_seat->pointerAxis(Qt::Vertical, angle.y());
     }
 }
 

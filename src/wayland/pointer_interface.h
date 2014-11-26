@@ -49,15 +49,6 @@ public:
      * @see SeatInterface::pointerPos
      **/
     QPointF globalPos() const;
-    void buttonPressed(quint32 button);
-    void buttonPressed(Qt::MouseButton button);
-    void buttonReleased(quint32 button);
-    void buttonReleased(Qt::MouseButton button);
-    bool isButtonPressed(quint32 button) const;
-    bool isButtonPressed(Qt::MouseButton button) const;
-    quint32 buttonSerial(quint32 button) const;
-    quint32 buttonSerial(Qt::MouseButton button) const;
-    void axis(Qt::Orientation orientation, quint32 delta);
 
 Q_SIGNALS:
     /**
@@ -69,6 +60,9 @@ Q_SIGNALS:
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
     SurfaceInterface *focusedSurface() const;
+    void buttonPressed(quint32 button, quint32 serial);
+    void buttonReleased(quint32 button, quint32 serial);
+    void axis(Qt::Orientation orientation, quint32 delta);
     friend class SeatInterface;
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;

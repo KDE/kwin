@@ -73,6 +73,15 @@ public:
     PointerInterface *focusedPointer() const;
     void setFocusedPointerSurfacePosition(const QPointF &surfacePosition);
     QPointF focusedPointerSurfacePosition() const;
+    void pointerButtonPressed(quint32 button);
+    void pointerButtonPressed(Qt::MouseButton button);
+    void pointerButtonReleased(quint32 button);
+    void pointerButtonReleased(Qt::MouseButton button);
+    bool isPointerButtonPressed(quint32 button) const;
+    bool isPointerButtonPressed(Qt::MouseButton button) const;
+    quint32 pointerButtonSerial(quint32 button) const;
+    quint32 pointerButtonSerial(Qt::MouseButton button) const;
+    void pointerAxis(Qt::Orientation orientation, quint32 delta);
 
     static SeatInterface *get(wl_resource *native);
 

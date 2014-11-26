@@ -118,27 +118,25 @@ void TestWaylandServerSeat::testPointerButton()
     PointerInterface *pointer = seat->focusedPointer();
     QVERIFY(!pointer);
 
-#if 0
     // no button pressed yet, should be released and no serial
-    QVERIFY(!pointer->isButtonPressed(0));
-    QVERIFY(!pointer->isButtonPressed(1));
-    QCOMPARE(pointer->buttonSerial(0), quint32(0));
-    QCOMPARE(pointer->buttonSerial(1), quint32(0));
+    QVERIFY(!seat->isPointerButtonPressed(0));
+    QVERIFY(!seat->isPointerButtonPressed(1));
+    QCOMPARE(seat->pointerButtonSerial(0), quint32(0));
+    QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // mark the button as pressed
-    pointer->buttonPressed(0);
-    QVERIFY(pointer->isButtonPressed(0));
-    QCOMPARE(pointer->buttonSerial(0), display.serial());
+    seat->pointerButtonPressed(0);
+    QVERIFY(seat->isPointerButtonPressed(0));
+    QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 
     // other button should still be unpressed
-    QVERIFY(!pointer->isButtonPressed(1));
-    QCOMPARE(pointer->buttonSerial(1), quint32(0));
+    QVERIFY(!seat->isPointerButtonPressed(1));
+    QCOMPARE(seat->pointerButtonSerial(1), quint32(0));
 
     // release it again
-    pointer->buttonReleased(0);
-    QVERIFY(!pointer->isButtonPressed(0));
-    QCOMPARE(pointer->buttonSerial(0), display.serial());
-#endif
+    seat->pointerButtonReleased(0);
+    QVERIFY(!seat->isPointerButtonPressed(0));
+    QCOMPARE(seat->pointerButtonSerial(0), display.serial());
 }
 
 void TestWaylandServerSeat::testPointerPos()
@@ -151,35 +149,22 @@ void TestWaylandServerSeat::testPointerPos()
     QVERIFY(seatPosSpy.isValid());
     PointerInterface *pointer = seat->focusedPointer();
     QVERIFY(!pointer);
-#if 0
-    QSignalSpy posSpy(pointer, SIGNAL(globalPosChanged(QPointF)));
-    QVERIFY(posSpy.isValid());
 
-    QCOMPARE(pointer->globalPos(), QPointF());
     QCOMPARE(seat->pointerPos(), QPointF());
 
-    pointer->setGlobalPos(QPointF(10, 15));
-    QCOMPARE(pointer->globalPos(), QPointF(10, 15));
+    seat->setPointerPos(QPointF(10, 15));
     QCOMPARE(seat->pointerPos(), QPointF(10, 15));
-    QCOMPARE(posSpy.count(), 1);
-    QCOMPARE(posSpy.first().first().toPointF(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.count(), 1);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
 
-    pointer->setGlobalPos(QPointF(10, 15));
-    QCOMPARE(posSpy.count(), 1);
+    seat->setPointerPos(QPointF(10, 15));
     QCOMPARE(seatPosSpy.count(), 1);
 
     seat->setPointerPos(QPointF(5, 7));
-    QCOMPARE(pointer->globalPos(), QPointF(5, 7));
     QCOMPARE(seat->pointerPos(), QPointF(5, 7));
-    QCOMPARE(posSpy.count(), 2);
-    QCOMPARE(posSpy.first().first().toPointF(), QPointF(10, 15));
-    QCOMPARE(posSpy.last().first().toPointF(), QPointF(5, 7));
     QCOMPARE(seatPosSpy.count(), 2);
     QCOMPARE(seatPosSpy.first().first().toPointF(), QPointF(10, 15));
     QCOMPARE(seatPosSpy.last().first().toPointF(), QPointF(5, 7));
-#endif
 }
 
 void TestWaylandServerSeat::testDestroyThroughTerminate()
