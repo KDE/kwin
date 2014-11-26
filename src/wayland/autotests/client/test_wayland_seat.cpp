@@ -326,7 +326,7 @@ void TestWaylandSeat::testPointer()
 
     // test motion
     m_seatInterface->setTimestamp(1);
-    serverPointer->setGlobalPos(QPoint(10, 16));
+    m_seatInterface->setPointerPos(QPoint(10, 16));
     QVERIFY(motionSpy.wait());
     QCOMPARE(motionSpy.first().first().toPoint(), QPoint(0, 1));
     QCOMPARE(motionSpy.first().last().value<quint32>(), quint32(1));

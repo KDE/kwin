@@ -73,7 +73,6 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         }
     });
-    connect(parent, &SeatInterface::pointerPosChanged, this, &PointerInterface::globalPosChanged);
 }
 
 PointerInterface::~PointerInterface() = default;
@@ -102,12 +101,6 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
     wl_pointer_send_enter(d->resource, serial,
                           d->focusedSurface->resource(),
                           wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-}
-
-void PointerInterface::setGlobalPos(const QPointF &pos)
-{
-    Q_D();
-    d->seat->setPointerPos(pos);
 }
 
 void PointerInterface::buttonPressed(quint32 button, quint32 serial)
@@ -149,12 +142,6 @@ void PointerInterface::Private::releaseCallback(wl_client *client, wl_resource *
 {
     Q_UNUSED(client)
     unbind(resource);
-}
-
-QPointF PointerInterface::globalPos() const
-{
-    Q_D();
-    return d->seat->pointerPos();
 }
 
 PointerInterface::Private *PointerInterface::d_func() const
