@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "keyboard_interface.h"
+#include "resource_p.h"
 #include "display.h"
 #include "seat_interface.h"
 #include "surface_interface.h"
@@ -35,11 +36,10 @@ namespace KWayland
 namespace Server
 {
 
-class KeyboardInterface::Private
+class KeyboardInterface::Private : public Resource::Private
 {
 public:
-    Private(SeatInterface *s);
-    void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
+    Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q);
     void sendKeymap();
     void sendKeymap(int fd, quint32 size);
     void sendModifiers();
@@ -48,22 +48,17 @@ public:
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
     QMetaObject::Connection destroyConnection;
-    wl_resource *resource = nullptr;
 
 private:
-    static Private *cast(wl_resource *resource) {
-        return reinterpret_cast<KeyboardInterface::Private*>(wl_resource_get_user_data(resource));
-    }
-
-    static void unbind(wl_resource *resource);
     // since version 3
     static void releaseCallback(wl_client *client, wl_resource *resource);
 
     static const struct wl_keyboard_interface s_interface;
 };
 
-KeyboardInterface::Private::Private(SeatInterface *s)
-    : seat(s)
+KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResource, KeyboardInterface *q)
+    : Resource::Private(q, s, parentResource, &wl_keyboard_interface, &s_interface)
+    , seat(s)
 {
 }
 
@@ -71,43 +66,12 @@ const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
     releaseCallback
 };
 
-KeyboardInterface::KeyboardInterface(SeatInterface *parent)
-    : QObject(parent)
-    , d(new Private(parent))
+KeyboardInterface::KeyboardInterface(SeatInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(parent, parentResource, this), parent)
 {
 }
 
-KeyboardInterface::~KeyboardInterface()
-{
-    if (d->resource) {
-        wl_resource_destroy(d->resource);
-    }
-}
-
-void KeyboardInterface::createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id)
-{
-    d->createInterfae(client, parentResource, id);
-}
-
-void KeyboardInterface::Private::createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id)
-{
-    wl_resource *k = wl_resource_create(client, &wl_keyboard_interface, wl_resource_get_version(parentResource), id);
-    if (!k) {
-        wl_resource_post_no_memory(parentResource);
-        return;
-    }
-    resource = k;
-
-    wl_resource_set_implementation(k, &s_interface, this, unbind);
-
-    sendKeymap();
-}
-
-void KeyboardInterface::Private::unbind(wl_resource *resource)
-{
-    auto k = cast(resource);
-    k->resource = nullptr;
-}
+KeyboardInterface::~KeyboardInterface() = default;
 
 void KeyboardInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
 {
@@ -117,6 +81,7 @@ void KeyboardInterface::Private::releaseCallback(wl_client *client, wl_resource 
 
 void KeyboardInterface::setKeymap(int fd, quint32 size)
 {
+    Q_D();
     d->sendKeymap(fd, size);
 }
 
@@ -151,6 +116,7 @@ void KeyboardInterface::Private::sendModifiers()
 
 void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
+    Q_D();
     if (d->focusedSurface) {
         wl_keyboard_send_leave(d->resource, serial, d->focusedSurface->resource());
         disconnect(d->destroyConnection);
@@ -161,6 +127,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     }
     d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this,
         [this] {
+            Q_D();
             d->focusedSurface = nullptr;
         }
     );
@@ -180,30 +147,34 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
 
 void KeyboardInterface::keyPressed(quint32 key, quint32 serial)
 {
+    Q_D();
     Q_ASSERT(d->focusedSurface);
     wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_PRESSED);
 }
 
 void KeyboardInterface::keyReleased(quint32 key, quint32 serial)
 {
+    Q_D();
     Q_ASSERT(d->focusedSurface);
     wl_keyboard_send_key(d->resource, serial, d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_RELEASED);
 }
 
 void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial)
 {
+    Q_D();
     Q_ASSERT(d->focusedSurface);
     d->sendModifiers(depressed, latched, locked, group, serial);
 }
 
 SurfaceInterface *KeyboardInterface::focusedSurface() const
 {
+    Q_D();
     return d->focusedSurface;
 }
 
-wl_resource *KeyboardInterface::resource() const
+KeyboardInterface::Private *KeyboardInterface::d_func() const
 {
-    return d->resource;
+    return reinterpret_cast<Private*>(d.data());
 }
 
 }

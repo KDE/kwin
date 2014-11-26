@@ -276,7 +276,7 @@ KeyboardInterface *SeatInterface::Private::keyboardForSurface(SurfaceInterface *
     }
 
     for (auto it = keyboards.begin(); it != keyboards.end(); ++it) {
-        if (wl_resource_get_client((*it)->resource()) == *surface->client()) {
+        if ((*it)->client() == surface->client()) {
             return (*it);
         }
     }
@@ -365,8 +365,13 @@ void SeatInterface::Private::getKeyboardCallback(wl_client *client, wl_resource 
 void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resource, uint32_t id)
 {
     // TODO: only create if seat has keyboard?
-    KeyboardInterface *keyboard = new KeyboardInterface(q);
-    keyboard->createInterfae(client, resource, id);
+    KeyboardInterface *keyboard = new KeyboardInterface(q, resource);
+    keyboard->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    if (!keyboard->resource()) {
+        wl_resource_post_no_memory(resource);
+        delete keyboard;
+        return;
+    }
     keyboards << keyboard;
     if (keys.focus.surface && keys.focus.surface->client()->client() == client) {
         // this is a keyboard for the currently focused keyboard surface

@@ -20,13 +20,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_KEYBOARD_INTERFACE_H
 #define WAYLAND_SERVER_KEYBOARD_INTERFACE_H
 
-#include <QObject>
-#include <QPoint>
-
 #include <KWayland/Server/kwaylandserver_export.h>
 
-struct wl_client;
-struct wl_resource;
+#include "resource.h"
 
 namespace KWayland
 {
@@ -36,17 +32,13 @@ namespace Server
 class SeatInterface;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT KeyboardInterface : public QObject
+class KWAYLANDSERVER_EXPORT KeyboardInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~KeyboardInterface();
 
-    void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
-
     SurfaceInterface *focusedSurface() const;
-
-    wl_resource *resource() const;
 
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
@@ -55,10 +47,10 @@ private:
     void keyPressed(quint32 key, quint32 serial);
     void keyReleased(quint32 key, quint32 serial);
     friend class SeatInterface;
-    explicit KeyboardInterface(SeatInterface *parent);
+    explicit KeyboardInterface(SeatInterface *parent, wl_resource *parentResource);
 
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }
