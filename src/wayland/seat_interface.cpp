@@ -255,32 +255,30 @@ SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
     return r ? reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r)) : nullptr;
 }
 
-PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *surface) const
+template <typename T>
+static
+T *interfaceForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
 {
     if (!surface) {
         return nullptr;
     }
 
-    for (auto it = pointers.begin(); it != pointers.end(); ++it) {
-        if (wl_resource_get_client((*it)->resource()) == *surface->client()) {
+    for (auto it = interfaces.begin(); it != interfaces.end(); ++it) {
+        if ((*it)->client() == surface->client()) {
             return (*it);
         }
     }
     return nullptr;
 }
 
+PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *surface) const
+{
+    return interfaceForSurface(surface, pointers);
+}
+
 KeyboardInterface *SeatInterface::Private::keyboardForSurface(SurfaceInterface *surface) const
 {
-    if (!surface) {
-        return nullptr;
-    }
-
-    for (auto it = keyboards.begin(); it != keyboards.end(); ++it) {
-        if ((*it)->client() == surface->client()) {
-            return (*it);
-        }
-    }
-    return nullptr;
+    return interfaceForSurface(surface, keyboards);
 }
 
 void SeatInterface::setHasKeyboard(bool has)
