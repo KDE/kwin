@@ -168,7 +168,7 @@ public:
 
     Texture & operator = (const Texture& tex);
 
-    virtual void discard();
+    void discard() override final;
 
 protected:
     bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
