@@ -297,15 +297,12 @@ void GLTexture::discard()
     d_ptr = new GLTexturePrivate();
 }
 
-void GLTexturePrivate::bind()
-{
-    glBindTexture(m_target, m_texture);
-}
-
 void GLTexture::bind()
 {
     Q_D(GLTexture);
-    d->bind();
+
+    glBindTexture(d->m_target, d->m_texture);
+
     if (d->m_markedDirty) {
         d->onDamage();
     }
@@ -340,15 +337,10 @@ void GLTexture::bind()
     }
 }
 
-void GLTexturePrivate::unbind()
-{
-    glBindTexture(m_target, 0);
-}
-
 void GLTexture::unbind()
 {
     Q_D(GLTexture);
-    d->unbind();
+    glBindTexture(d->m_target, 0);
 }
 
 void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)

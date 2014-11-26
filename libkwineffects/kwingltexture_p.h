@@ -42,8 +42,6 @@ public:
     GLTexturePrivate();
     virtual ~GLTexturePrivate();
 
-    virtual void bind();
-    virtual void unbind();
     virtual void onDamage();
 
     void updateMatrix();
