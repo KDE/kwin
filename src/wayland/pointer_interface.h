@@ -20,13 +20,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WAYLAND_SERVER_POINTER_INTERFACE_H
 #define WAYLAND_SERVER_POINTER_INTERFACE_H
 
-#include <QObject>
-#include <QPoint>
-
 #include <KWayland/Server/kwaylandserver_export.h>
 
-struct wl_client;
-struct wl_resource;
+#include "resource.h"
 
 namespace KWayland
 {
@@ -36,14 +32,12 @@ namespace Server
 class SeatInterface;
 class SurfaceInterface;
 
-class KWAYLANDSERVER_EXPORT PointerInterface : public QObject
+class KWAYLANDSERVER_EXPORT PointerInterface : public Resource
 {
     Q_OBJECT
     Q_PROPERTY(QPointF globalPos READ globalPos WRITE setGlobalPos NOTIFY globalPosChanged)
 public:
     virtual ~PointerInterface();
-
-    void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
 
     /**
      * Convenient method to set the pointer position of the SeatInterface.
@@ -65,8 +59,6 @@ public:
     quint32 buttonSerial(Qt::MouseButton button) const;
     void axis(Qt::Orientation orientation, quint32 delta);
 
-    wl_resource *resource() const;
-
 Q_SIGNALS:
     /**
      * Convenient signal emitted when the SeatInterface's pointer position changes.
@@ -78,9 +70,9 @@ private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
     SurfaceInterface *focusedSurface() const;
     friend class SeatInterface;
-    explicit PointerInterface(SeatInterface *parent);
+    explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;
-    QScopedPointer<Private> d;
+    Private *d_func() const;
 };
 
 }

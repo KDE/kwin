@@ -240,8 +240,13 @@ void SeatInterface::Private::getPointerCallback(wl_client *client, wl_resource *
 void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource, uint32_t id)
 {
     // TODO: only create if seat has pointer?
-    PointerInterface *pointer = new PointerInterface(q);
-    pointer->createInterface(client, resource, id);
+    PointerInterface *pointer = new PointerInterface(q, resource);
+    pointer->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    if (!pointer->resource()) {
+        wl_resource_post_no_memory(resource);
+        delete pointer;
+        return;
+    }
     pointers << pointer;
     if (focusedPointer.surface && focusedPointer.surface->client()->client() == client) {
         // this is a pointer for the currently focused pointer surface

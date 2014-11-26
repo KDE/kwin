@@ -18,6 +18,7 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "pointer_interface.h"
+#include "resource_p.h"
 #include "seat_interface.h"
 #include "display.h"
 #include "surface_interface.h"
@@ -34,11 +35,10 @@ namespace KWayland
 namespace Server
 {
 
-class PointerInterface::Private
+class PointerInterface::Private : public Resource::Private
 {
 public:
-    Private(SeatInterface *parent);
-    void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
+    Private(SeatInterface *parent, wl_resource *parentResource, PointerInterface *q);
     void updateButtonSerial(quint32 button, quint32 serial);
     enum class ButtonState {
         Released,
@@ -51,14 +51,8 @@ public:
     QHash<quint32, quint32> buttonSerials;
     QHash<quint32, ButtonState> buttonStates;
     QMetaObject::Connection destroyConnection;
-    wl_resource *resource = nullptr;
 
 private:
-    static PointerInterface::Private *cast(wl_resource *resource) {
-        return reinterpret_cast<PointerInterface::Private*>(wl_resource_get_user_data(resource));
-    }
-
-    static void unbind(wl_resource *resource);
     // interface
     static void setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
                                   wl_resource *surface, int32_t hotspot_x, int32_t hotspot_y);
@@ -68,8 +62,9 @@ private:
     static const struct wl_pointer_interface s_interface;
 };
 
-PointerInterface::Private::Private(SeatInterface *parent)
-    : seat(parent)
+PointerInterface::Private::Private(SeatInterface *parent, wl_resource *parentResource, PointerInterface *q)
+    : Resource::Private(q, parent, parentResource, &wl_pointer_interface, &s_interface)
+    , seat(parent)
 {
 }
 
@@ -79,11 +74,11 @@ const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     releaseCallback
 };
 
-PointerInterface::PointerInterface(SeatInterface *parent)
-    : QObject(parent)
-    , d(new Private(parent))
+PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentResource)
+    : Resource(new Private(parent, parentResource, this), parent)
 {
     connect(parent, &SeatInterface::pointerPosChanged, [this] {
+        Q_D();
         if (d->focusedSurface) {
             const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
             wl_pointer_send_motion(d->resource, d->seat->timestamp(),
@@ -93,32 +88,11 @@ PointerInterface::PointerInterface(SeatInterface *parent)
     connect(parent, &SeatInterface::pointerPosChanged, this, &PointerInterface::globalPosChanged);
 }
 
-PointerInterface::~PointerInterface()
-{
-    if (d->resource) {
-        wl_resource_destroy(d->resource);
-    }
-}
-
-void PointerInterface::createInterface(wl_client *client, wl_resource *parentResource, uint32_t id)
-{
-    d->createInterface(client, parentResource, id);
-}
-
-void PointerInterface::Private::createInterface(wl_client* client, wl_resource* parentResource, uint32_t id)
-{
-    wl_resource *p = wl_resource_create(client, &wl_pointer_interface, wl_resource_get_version(parentResource), id);
-    if (!p) {
-        wl_resource_post_no_memory(parentResource);
-        return;
-    }
-
-    wl_resource_set_implementation(p, &s_interface, this, unbind);
-    resource = p;
-}
+PointerInterface::~PointerInterface() = default;
 
 void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
+    Q_D();
     Q_ASSERT(d->resource);
     if (d->focusedSurface) {
         wl_pointer_send_leave(d->resource, serial, d->focusedSurface->resource());
@@ -129,7 +103,12 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
         return;
     }
     d->focusedSurface = surface;
-    d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this, [this] { d->focusedSurface = nullptr; });
+    d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this,
+        [this] {
+            Q_D();
+            d->focusedSurface = nullptr;
+        }
+    );
 
     const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
     wl_pointer_send_enter(d->resource, serial,
@@ -139,6 +118,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
 
 void PointerInterface::setGlobalPos(const QPointF &pos)
 {
+    Q_D();
     d->seat->setPointerPos(pos);
 }
 
@@ -168,6 +148,7 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
 
 void PointerInterface::buttonPressed(quint32 button)
 {
+    Q_D();
     const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Pressed);
@@ -188,6 +169,7 @@ void PointerInterface::buttonPressed(Qt::MouseButton button)
 
 void PointerInterface::buttonReleased(quint32 button)
 {
+    Q_D();
     const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Released);
@@ -218,6 +200,7 @@ void PointerInterface::Private::updateButtonSerial(quint32 button, quint32 seria
 
 quint32 PointerInterface::buttonSerial(quint32 button) const
 {
+    Q_D();
     auto it = d->buttonSerials.constFind(button);
     if (it == d->buttonSerials.constEnd()) {
         return 0;
@@ -242,6 +225,7 @@ void PointerInterface::Private::updateButtonState(quint32 button, ButtonState st
 
 bool PointerInterface::isButtonPressed(quint32 button) const
 {
+    Q_D();
     auto it = d->buttonStates.constFind(button);
     if (it == d->buttonStates.constEnd()) {
         return false;
@@ -260,18 +244,13 @@ bool PointerInterface::isButtonPressed(Qt::MouseButton button) const
 
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 {
+    Q_D();
     if (!d->focusedSurface) {
         return;
     }
     wl_pointer_send_axis(d->resource, d->seat->timestamp(),
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
-}
-
-void PointerInterface::Private::unbind(wl_resource *resource)
-{
-    auto p = cast(resource);
-    p->resource = nullptr;
 }
 
 void PointerInterface::Private::setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
@@ -294,12 +273,13 @@ void PointerInterface::Private::releaseCallback(wl_client *client, wl_resource *
 
 QPointF PointerInterface::globalPos() const
 {
+    Q_D();
     return d->seat->pointerPos();
 }
 
-wl_resource *PointerInterface::resource() const
+PointerInterface::Private *PointerInterface::d_func() const
 {
-    return d->resource;
+    return reinterpret_cast<Private*>(d.data());
 }
 
 }
