@@ -57,31 +57,31 @@ public:
     bool keyboard = false;
     bool touch = false;
     QList<wl_resource*> resources;
-    struct FocusedPointer {
-        SurfaceInterface *surface = nullptr;
-        PointerInterface *pointer = nullptr;
-        QMetaObject::Connection destroyConnection;
-        QPointF offset = QPointF();
-        quint32 serial = 0;
-    };
-    FocusedPointer focusedPointer = FocusedPointer();
     quint32 timestamp = 0;
     QVector<PointerInterface*> pointers;
     QVector<KeyboardInterface*> keyboards;
 
     // Pointer related members
     struct Pointer {
-        enum class ButtonState {
+        enum class State {
             Released,
             Pressed
         };
         QHash<quint32, quint32> buttonSerials;
-        QHash<quint32, ButtonState> buttonStates;
+        QHash<quint32, State> buttonStates;
         QPointF pos;
+        struct Focus {
+            SurfaceInterface *surface = nullptr;
+            PointerInterface *pointer = nullptr;
+            QMetaObject::Connection destroyConnection;
+            QPointF offset = QPointF();
+            quint32 serial = 0;
+        };
+        Focus focus;
     };
     Pointer globalPointer;
     void updatePointerButtonSerial(quint32 button, quint32 serial);
-    void updatePointerButtonState(quint32 button, Pointer::ButtonState state);
+    void updatePointerButtonState(quint32 button, Pointer::State state);
 
     // Keyboard related members
     struct Keyboard {
@@ -207,7 +207,7 @@ void SeatInterface::Private::updatePointerButtonSerial(quint32 button, quint32 s
     it.value() = serial;
 }
 
-void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::ButtonState state)
+void SeatInterface::Private::updatePointerButtonState(quint32 button, Pointer::State state)
 {
     auto it = globalPointer.buttonStates.find(button);
     if (it == globalPointer.buttonStates.end()) {
@@ -337,18 +337,18 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
         return;
     }
     pointers << pointer;
-    if (focusedPointer.surface && focusedPointer.surface->client()->client() == client) {
+    if (globalPointer.focus.surface && globalPointer.focus.surface->client()->client() == client) {
         // this is a pointer for the currently focused pointer surface
-        if (!focusedPointer.pointer) {
-            focusedPointer.pointer = pointer;
-            pointer->setFocusedSurface(focusedPointer.surface, focusedPointer.serial);
+        if (!globalPointer.focus.pointer) {
+            globalPointer.focus.pointer = pointer;
+            pointer->setFocusedSurface(globalPointer.focus.surface, globalPointer.focus.serial);
         }
     }
     QObject::connect(pointer, &QObject::destroyed, q,
         [pointer,this] {
             pointers.removeAt(pointers.indexOf(pointer));
-            if (focusedPointer.pointer == pointer) {
-                focusedPointer.pointer = nullptr;
+            if (globalPointer.focus.pointer == pointer) {
+                globalPointer.focus.pointer = nullptr;
             }
         }
     );
@@ -465,32 +465,32 @@ void SeatInterface::setTimestamp(quint32 time)
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
 {
     Q_D();
-    return d->focusedPointer.surface;
+    return d->globalPointer.focus.surface;
 }
 
 void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
 {
     Q_D();
     const quint32 serial = d->display->nextSerial();
-    if (d->focusedPointer.pointer) {
-        d->focusedPointer.pointer->setFocusedSurface(nullptr, serial);
+    if (d->globalPointer.focus.pointer) {
+        d->globalPointer.focus.pointer->setFocusedSurface(nullptr, serial);
     }
-    if (d->focusedPointer.surface) {
-        disconnect(d->focusedPointer.destroyConnection);
+    if (d->globalPointer.focus.surface) {
+        disconnect(d->globalPointer.focus.destroyConnection);
     }
-    d->focusedPointer = Private::FocusedPointer();
-    d->focusedPointer.surface = surface;
+    d->globalPointer.focus = Private::Pointer::Focus();
+    d->globalPointer.focus.surface = surface;
     PointerInterface *p = d->pointerForSurface(surface);
-    d->focusedPointer.pointer = p;
-    if (d->focusedPointer.surface) {
-        d->focusedPointer.destroyConnection = connect(surface, &QObject::destroyed, this,
+    d->globalPointer.focus.pointer = p;
+    if (d->globalPointer.focus.surface) {
+        d->globalPointer.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
             [this] {
                 Q_D();
-                d->focusedPointer = Private::FocusedPointer();
+                d->globalPointer.focus = Private::Pointer::Focus();
             }
         );
-        d->focusedPointer.offset = surfacePosition;
-        d->focusedPointer.serial = serial;
+        d->globalPointer.focus.offset = surfacePosition;
+        d->globalPointer.focus.serial = serial;
     }
     if (!p) {
         return;
@@ -501,21 +501,21 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QP
 PointerInterface *SeatInterface::focusedPointer() const
 {
     Q_D();
-    return d->focusedPointer.pointer;
+    return d->globalPointer.focus.pointer;
 }
 
 void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosition)
 {
     Q_D();
-    if (d->focusedPointer.surface) {
-        d->focusedPointer.offset = surfacePosition;
+    if (d->globalPointer.focus.surface) {
+        d->globalPointer.focus.offset = surfacePosition;
     }
 }
 
 QPointF SeatInterface::focusedPointerSurfacePosition() const
 {
     Q_D();
-    return d->focusedPointer.offset;
+    return d->globalPointer.focus.offset;
 }
 
 static quint32 qtToWaylandButton(Qt::MouseButton button)
@@ -554,14 +554,14 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     if (it == d->globalPointer.buttonStates.constEnd()) {
         return false;
     }
-    return it.value() == Private::Pointer::ButtonState::Pressed ? true : false;
+    return it.value() == Private::Pointer::State::Pressed ? true : false;
 }
 
 void SeatInterface::pointerAxis(Qt::Orientation orientation, quint32 delta)
 {
     Q_D();
-    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
-        d->focusedPointer.pointer->axis(orientation, delta);
+    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
+        d->globalPointer.focus.pointer->axis(orientation, delta);
     }
 }
 
@@ -579,9 +579,9 @@ void SeatInterface::pointerButtonPressed(quint32 button)
     Q_D();
     const quint32 serial = d->display->nextSerial();
     d->updatePointerButtonSerial(button, serial);
-    d->updatePointerButtonState(button, Private::Pointer::ButtonState::Pressed);
-    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
-        d->focusedPointer.pointer->buttonPressed(button, serial);
+    d->updatePointerButtonState(button, Private::Pointer::State::Pressed);
+    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
+        d->globalPointer.focus.pointer->buttonPressed(button, serial);
     }
 }
 
@@ -599,9 +599,9 @@ void SeatInterface::pointerButtonReleased(quint32 button)
     Q_D();
     const quint32 serial = d->display->nextSerial();
     d->updatePointerButtonSerial(button, serial);
-    d->updatePointerButtonState(button, Private::Pointer::ButtonState::Released);
-    if (d->focusedPointer.pointer && d->focusedPointer.surface) {
-        d->focusedPointer.pointer->buttonReleased(button, serial);
+    d->updatePointerButtonState(button, Private::Pointer::State::Released);
+    if (d->globalPointer.focus.pointer && d->globalPointer.focus.surface) {
+        d->globalPointer.focus.pointer->buttonReleased(button, serial);
     }
 }
 
