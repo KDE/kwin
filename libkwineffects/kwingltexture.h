@@ -83,8 +83,6 @@ public:
     QMatrix4x4 matrix(TextureCoordinateType type) const;
 
     virtual bool load(const QImage& image, GLenum target = GL_TEXTURE_2D);
-    virtual bool load(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
-    virtual bool load(const QString& fileName);
     void update(const QImage& image, const QPoint &offset = QPoint(0, 0), const QRect &src = QRect());
     virtual void discard();
     void bind();

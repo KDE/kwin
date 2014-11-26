@@ -73,13 +73,13 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 GLTexture::GLTexture(const QPixmap& pixmap, GLenum target)
     : d_ptr(new GLTexturePrivate())
 {
-    load(pixmap, target);
+    load(pixmap.toImage(), target);
 }
 
 GLTexture::GLTexture(const QString& fileName)
      : d_ptr(new GLTexturePrivate())
 {
-    load(fileName);
+    load(QImage(fileName));
 }
 
 GLTexture::GLTexture(int width, int height)
@@ -303,20 +303,6 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
         glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
     }
-}
-
-bool GLTexture::load(const QPixmap& pixmap, GLenum target)
-{
-    if (pixmap.isNull())
-        return false;
-    return load(pixmap.toImage(), target);
-}
-
-bool GLTexture::load(const QString& fileName)
-{
-    if (fileName.isEmpty())
-        return false;
-    return load(QImage(fileName));
 }
 
 void GLTexture::discard()
