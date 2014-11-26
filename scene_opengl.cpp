@@ -756,11 +756,6 @@ SceneOpenGL::Texture *SceneOpenGL::createTexture()
     return new Texture(m_backend);
 }
 
-SceneOpenGL::Texture *SceneOpenGL::createTexture(const QPixmap &pix, GLenum target)
-{
-    return new Texture(m_backend, pix, target);
-}
-
 bool SceneOpenGL::viewportLimitsMatched(const QSize &size) const {
     GLint limit[2];
     glGetIntegerv(GL_MAX_VIEWPORT_DIMS, limit);
@@ -1048,12 +1043,6 @@ void SceneOpenGL2::slotColorCorrectedChanged(bool recreateShaders)
 SceneOpenGL::Texture::Texture(OpenGLBackend *backend)
     : GLTexture(*backend->createBackendTexture(this))
 {
-}
-
-SceneOpenGL::Texture::Texture(OpenGLBackend *backend, const QPixmap &pix, GLenum target)
-    : GLTexture(*backend->createBackendTexture(this))
-{
-    GLTexture::load(pix.toImage(), target);
 }
 
 SceneOpenGL::Texture::~Texture()

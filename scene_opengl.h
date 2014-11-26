@@ -74,7 +74,6 @@ public:
      * @return :SceneOpenGL::Texture*
      **/
     Texture *createTexture();
-    Texture *createTexture(const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
 
 #ifndef KWIN_HAVE_OPENGLES
     /**
@@ -165,12 +164,10 @@ class SceneOpenGL::Texture
 {
 public:
     Texture(OpenGLBackend *backend);
-    Texture(OpenGLBackend *backend, const QPixmap& pix, GLenum target = GL_TEXTURE_2D);
     virtual ~Texture();
 
     Texture & operator = (const Texture& tex);
 
-    using GLTexture::load;
     virtual void discard();
 
 protected:
