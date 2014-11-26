@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KWayland/Server/kwaylandserver_export.h>
 #include "global.h"
+#include "pointer_interface.h"
 
 struct wl_client;
 struct wl_resource;
@@ -36,7 +37,6 @@ namespace Server
 
 class Display;
 class KeyboardInterface;
-class PointerInterface;
 class SurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT SeatInterface : public Global
@@ -68,9 +68,11 @@ public:
     // pointer related methods
     void setPointerPos(const QPointF &pos);
     QPointF pointerPos() const;
-    void setFocusedPointerSurface(SurfaceInterface *surface, const QPoint &surfacePosition = QPoint());
+    void setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPoint());
     SurfaceInterface *focusedPointerSurface() const;
     PointerInterface *focusedPointer() const;
+    void setFocusedPointerSurfacePosition(const QPointF &surfacePosition);
+    QPointF focusedPointerSurfacePosition() const;
 
     static SeatInterface *get(wl_resource *native);
 
@@ -81,6 +83,8 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
     void timestampChanged(quint32);
+
+    void pointerCreated(KWayland::Server::PointerInterface*);
 
 private:
     friend class Display;

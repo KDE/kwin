@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "surface_interface.h"
 // Qt
 #include <QHash>
+#include <QVector>
 // Wayland
 #include <wayland-server.h>
 #ifndef WL_SEAT_NAME_SINCE_VERSION
@@ -46,15 +47,24 @@ public:
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendCapabilities(wl_resource *r);
     void sendName(wl_resource *r);
+    PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
 
     QString name;
     bool pointer = false;
     bool keyboard = false;
     bool touch = false;
     QList<wl_resource*> resources;
-    PointerInterface *pointerInterface = nullptr;
+    struct FocusedPointer {
+        SurfaceInterface *surface = nullptr;
+        PointerInterface *pointer = nullptr;
+        QMetaObject::Connection destroyConnection;
+        QPointF offset = QPointF();
+        quint32 serial = 0;
+    };
+    FocusedPointer focusedPointer = FocusedPointer();
     KeyboardInterface *keyboardInterface = nullptr;
     quint32 timestamp = 0;
+    QVector<PointerInterface*> pointers;
 
     // Pointer related members
     QPointF pointerPos;
@@ -65,6 +75,7 @@ public:
     }
 
 private:
+    void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);
 
@@ -93,7 +104,6 @@ SeatInterface::SeatInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
 {
     Q_D();
-    d->pointerInterface = new PointerInterface(this);
     d->keyboardInterface = new KeyboardInterface(this);
     connect(this, &SeatInterface::nameChanged, this,
         [this, d] {
@@ -168,6 +178,20 @@ SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
     return r ? reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r)) : nullptr;
 }
 
+PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *surface) const
+{
+    if (!surface) {
+        return nullptr;
+    }
+
+    for (auto it = pointers.begin(); it != pointers.end(); ++it) {
+        if (wl_resource_get_client((*it)->resource()) == *surface->client()) {
+            return (*it);
+        }
+    }
+    return nullptr;
+}
+
 void SeatInterface::setHasKeyboard(bool has)
 {
     Q_D();
@@ -210,7 +234,31 @@ void SeatInterface::setName(const QString &name)
 
 void SeatInterface::Private::getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    cast(resource)->pointerInterface->createInterface(client, resource, id);
+    cast(resource)->getPointer(client, resource, id);
+}
+
+void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource, uint32_t id)
+{
+    // TODO: only create if seat has pointer?
+    PointerInterface *pointer = new PointerInterface(q);
+    pointer->createInterface(client, resource, id);
+    pointers << pointer;
+    if (focusedPointer.surface && focusedPointer.surface->client()->client() == client) {
+        // this is a pointer for the currently focused pointer surface
+        if (!focusedPointer.pointer) {
+            focusedPointer.pointer = pointer;
+            pointer->setFocusedSurface(focusedPointer.surface, focusedPointer.serial);
+        }
+    }
+    QObject::connect(pointer, &QObject::destroyed, q,
+        [pointer,this] {
+            pointers.removeAt(pointers.indexOf(pointer));
+            if (focusedPointer.pointer == pointer) {
+                focusedPointer.pointer = nullptr;
+            }
+        }
+    );
+    emit q->pointerCreated(pointer);
 }
 
 void SeatInterface::Private::getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id)
@@ -300,19 +348,57 @@ void SeatInterface::setTimestamp(quint32 time)
 SurfaceInterface *SeatInterface::focusedPointerSurface() const
 {
     Q_D();
-    return d->pointerInterface->focusedSurface();
+    return d->focusedPointer.surface;
 }
 
-void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPoint &surfacePosition)
+void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
 {
     Q_D();
-    d->pointerInterface->setFocusedSurface(surface, surfacePosition);
+    const quint32 serial = d->display->nextSerial();
+    if (d->focusedPointer.pointer) {
+        d->focusedPointer.pointer->setFocusedSurface(nullptr, serial);
+    }
+    if (d->focusedPointer.surface) {
+        disconnect(d->focusedPointer.destroyConnection);
+    }
+    d->focusedPointer = Private::FocusedPointer();
+    d->focusedPointer.surface = surface;
+    PointerInterface *p = d->pointerForSurface(surface);
+    d->focusedPointer.pointer = p;
+    if (d->focusedPointer.surface) {
+        d->focusedPointer.destroyConnection = connect(surface, &QObject::destroyed, this,
+            [this] {
+                Q_D();
+                d->focusedPointer = Private::FocusedPointer();
+            }
+        );
+        d->focusedPointer.offset = surfacePosition;
+        d->focusedPointer.serial = serial;
+    }
+    if (!p) {
+        return;
+    }
+    p->setFocusedSurface(surface, serial);
 }
 
 PointerInterface *SeatInterface::focusedPointer() const
 {
     Q_D();
-    return d->pointerInterface;
+    return d->focusedPointer.pointer;
+}
+
+void SeatInterface::setFocusedPointerSurfacePosition(const QPointF &surfacePosition)
+{
+    Q_D();
+    if (d->focusedPointer.surface) {
+        d->focusedPointer.offset = surfacePosition;
+    }
+}
+
+QPointF SeatInterface::focusedPointerSurfacePosition() const
+{
+    Q_D();
+    return d->focusedPointer.offset;
 }
 
 }

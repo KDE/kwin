@@ -39,8 +39,6 @@ class PointerInterface::Private
 public:
     Private(SeatInterface *parent);
     void createInterface(wl_client *client, wl_resource *parentResource, uint32_t id);
-    wl_resource *pointerForSurface(SurfaceInterface *surface) const;
-    void surfaceDeleted();
     void updateButtonSerial(quint32 button, quint32 serial);
     enum class ButtonState {
         Released,
@@ -49,21 +47,11 @@ public:
     void updateButtonState(quint32 button, ButtonState state);
 
     SeatInterface *seat;
-    struct ResourceData {
-        wl_client *client = nullptr;
-        wl_resource *pointer = nullptr;
-    };
-    QList<ResourceData> resources;
-    struct FocusedSurface {
-        SurfaceInterface *surface = nullptr;
-        QPoint offset = QPoint();
-        wl_resource *pointer = nullptr;
-        quint32 serial = 0;
-    };
-    FocusedSurface focusedSurface;
+    SurfaceInterface *focusedSurface = nullptr;
     QHash<quint32, quint32> buttonSerials;
     QHash<quint32, ButtonState> buttonStates;
     QMetaObject::Connection destroyConnection;
+    wl_resource *resource = nullptr;
 
 private:
     static PointerInterface::Private *cast(wl_resource *resource) {
@@ -95,10 +83,10 @@ PointerInterface::PointerInterface(SeatInterface *parent)
     : QObject(parent)
     , d(new Private(parent))
 {
-    connect(parent, &SeatInterface::pointerPosChanged, [this](const QPointF &pos) {
-        if (d->focusedSurface.surface && d->focusedSurface.pointer) {
-            const QPointF pos = d->seat->pointerPos() - d->focusedSurface.offset;
-            wl_pointer_send_motion(d->focusedSurface.pointer, d->seat->timestamp(),
+    connect(parent, &SeatInterface::pointerPosChanged, [this] {
+        if (d->focusedSurface) {
+            const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
+            wl_pointer_send_motion(d->resource, d->seat->timestamp(),
                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         }
     });
@@ -107,9 +95,8 @@ PointerInterface::PointerInterface(SeatInterface *parent)
 
 PointerInterface::~PointerInterface()
 {
-    while (!d->resources.isEmpty()) {
-        auto data = d->resources.takeLast();
-        wl_resource_destroy(data.pointer);
+    if (d->resource) {
+        wl_resource_destroy(d->resource);
     }
 }
 
@@ -125,61 +112,29 @@ void PointerInterface::Private::createInterface(wl_client* client, wl_resource* 
         wl_resource_post_no_memory(parentResource);
         return;
     }
-    ResourceData data;
-    data.client = client;
-    data.pointer = p;
-    resources << data;
 
     wl_resource_set_implementation(p, &s_interface, this, unbind);
+    resource = p;
 }
 
-wl_resource *PointerInterface::Private::pointerForSurface(SurfaceInterface *surface) const
+void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
 {
-    if (!surface) {
-        return nullptr;
-    }
-    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
-        if ((*it).client == *surface->client()) {
-            return (*it).pointer;
-        }
-    }
-    return nullptr;
-}
-
-void PointerInterface::setFocusedSurface(SurfaceInterface *surface, const QPoint &surfacePosition)
-{
-    const quint32 serial = d->seat->display()->nextSerial();
-    if (d->focusedSurface.surface && d->focusedSurface.pointer) {
-        wl_pointer_send_leave(d->focusedSurface.pointer, serial, d->focusedSurface.surface->resource());
+    Q_ASSERT(d->resource);
+    if (d->focusedSurface) {
+        wl_pointer_send_leave(d->resource, serial, d->focusedSurface->resource());
         disconnect(d->destroyConnection);
     }
-    d->focusedSurface.pointer = d->pointerForSurface(surface);
-    if (!d->focusedSurface.pointer) {
-        d->focusedSurface = Private::FocusedSurface();
+    if (!surface) {
+        d->focusedSurface = nullptr;
         return;
     }
-    d->focusedSurface.surface = surface;
-    d->focusedSurface.offset = surfacePosition;
-    d->focusedSurface.serial = serial;
-    d->destroyConnection = connect(d->focusedSurface.surface, &QObject::destroyed, this, [this] { d->surfaceDeleted(); });
+    d->focusedSurface = surface;
+    d->destroyConnection = connect(d->focusedSurface, &QObject::destroyed, this, [this] { d->focusedSurface = nullptr; });
 
-    const QPointF pos = d->seat->pointerPos() - surfacePosition;
-    wl_pointer_send_enter(d->focusedSurface.pointer, d->focusedSurface.serial,
-                          d->focusedSurface.surface->resource(),
+    const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
+    wl_pointer_send_enter(d->resource, serial,
+                          d->focusedSurface->resource(),
                           wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-}
-
-void PointerInterface::Private::surfaceDeleted()
-{
-    focusedSurface = FocusedSurface();
-}
-
-void PointerInterface::setFocusedSurfacePosition(const QPoint &surfacePosition)
-{
-    if (!d->focusedSurface.surface) {
-        return;
-    }
-    d->focusedSurface.offset = surfacePosition;
 }
 
 void PointerInterface::setGlobalPos(const QPointF &pos)
@@ -216,10 +171,10 @@ void PointerInterface::buttonPressed(quint32 button)
     const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Pressed);
-    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
+    if (!d->focusedSurface) {
         return;
     }
-    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_PRESSED);
+    wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_PRESSED);
 }
 
 void PointerInterface::buttonPressed(Qt::MouseButton button)
@@ -236,10 +191,10 @@ void PointerInterface::buttonReleased(quint32 button)
     const quint32 serial = d->seat->display()->nextSerial();
     d->updateButtonSerial(button, serial);
     d->updateButtonState(button, Private::ButtonState::Released);
-    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
+    if (!d->focusedSurface) {
         return;
     }
-    wl_pointer_send_button(d->focusedSurface.pointer, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_RELEASED);
+    wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_RELEASED);
 }
 
 void PointerInterface::buttonReleased(Qt::MouseButton button)
@@ -305,10 +260,10 @@ bool PointerInterface::isButtonPressed(Qt::MouseButton button) const
 
 void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 {
-    if (!d->focusedSurface.surface || !d->focusedSurface.pointer) {
+    if (!d->focusedSurface) {
         return;
     }
-    wl_pointer_send_axis(d->focusedSurface.pointer, d->seat->timestamp(),
+    wl_pointer_send_axis(d->resource, d->seat->timestamp(),
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
 }
@@ -316,19 +271,7 @@ void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 void PointerInterface::Private::unbind(wl_resource *resource)
 {
     auto p = cast(resource);
-    auto it = std::find_if(p->resources.begin(), p->resources.end(),
-        [resource](const ResourceData &data) {
-            return data.pointer == resource;
-        }
-    );
-    if (it == p->resources.end()) {
-        return;
-    }
-    if ((*it).pointer == p->focusedSurface.pointer) {
-        QObject::disconnect(p->destroyConnection);
-        p->focusedSurface = FocusedSurface();
-    }
-    p->resources.erase(it);
+    p->resource = nullptr;
 }
 
 void PointerInterface::Private::setCursorCallback(wl_client *client, wl_resource *resource, uint32_t serial,
@@ -354,14 +297,9 @@ QPointF PointerInterface::globalPos() const
     return d->seat->pointerPos();
 }
 
-SurfaceInterface *PointerInterface::focusedSurface() const
+wl_resource *PointerInterface::resource() const
 {
-    return d->focusedSurface.surface;
-}
-
-QPoint PointerInterface::focusedSurfacePosition() const
-{
-    return d->focusedSurface.offset;
+    return d->resource;
 }
 
 }

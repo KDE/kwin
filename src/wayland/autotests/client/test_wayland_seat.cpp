@@ -282,15 +282,23 @@ void TestWaylandSeat::testPointer()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
     QVERIFY(serverSurface);
 
-    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
-    serverPointer->setGlobalPos(QPoint(20, 18));
+    m_seatInterface->setPointerPos(QPoint(20, 18));
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
-    // no pointer yet - won't be set
-    QVERIFY(!m_seatInterface->focusedPointerSurface());
+    // no pointer yet
+    QVERIFY(m_seatInterface->focusedPointerSurface());
+    QVERIFY(!m_seatInterface->focusedPointer());
 
     Pointer *p = m_seat->createPointer(m_seat);
     QVERIFY(p->isValid());
-    wl_display_flush(m_connection->display());
+    QSignalSpy pointerCreatedSpy(m_seatInterface, SIGNAL(pointerCreated(KWayland::Server::PointerInterface*)));
+    QVERIFY(pointerCreatedSpy.isValid());
+    // once the pointer is created it should be set as the focused pointer
+    QVERIFY(pointerCreatedSpy.wait());
+    QVERIFY(m_seatInterface->focusedPointer());
+    QCOMPARE(pointerCreatedSpy.first().first().value<PointerInterface*>(), m_seatInterface->focusedPointer());
+
+    m_seatInterface->setFocusedPointerSurface(nullptr);
+    serverSurface->client()->flush();
     QTest::qWait(100);
 
     QSignalSpy enteredSpy(p, SIGNAL(entered(quint32,QPointF)));
@@ -313,6 +321,8 @@ void TestWaylandSeat::testPointer()
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial());
     QCOMPARE(enteredSpy.first().last().toPoint(), QPoint(10, 3));
+    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
+    QVERIFY(serverPointer);
 
     // test motion
     m_seatInterface->setTimestamp(1);
@@ -450,12 +460,16 @@ void TestWaylandSeat::testPointerButton()
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
 
-    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
-    serverPointer->setGlobalPos(QPoint(20, 18));
+    m_seatInterface->setPointerPos(QPoint(20, 18));
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
-    // no pointer yet - won't be set
     QVERIFY(m_seatInterface->focusedPointerSurface());
+    QVERIFY(m_seatInterface->focusedPointer());
 
+    QCoreApplication::processEvents();
+
+    m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
+    PointerInterface *serverPointer = m_seatInterface->focusedPointer();
+    QVERIFY(serverPointer);
     QFETCH(Qt::MouseButton, qtButton);
     QFETCH(quint32, waylandButton);
     quint32 msec = QDateTime::currentMSecsSinceEpoch();
