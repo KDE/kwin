@@ -37,10 +37,10 @@ class KWAYLANDSERVER_EXPORT PointerInterface : public Resource
     Q_OBJECT
 public:
     virtual ~PointerInterface();
+    SurfaceInterface *focusedSurface() const;
 
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
-    SurfaceInterface *focusedSurface() const;
     void buttonPressed(quint32 button, quint32 serial);
     void buttonReleased(quint32 button, quint32 serial);
     void axis(Qt::Orientation orientation, quint32 delta);
