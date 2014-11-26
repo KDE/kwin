@@ -76,7 +76,6 @@ public:
     };
     FocusedSurface focusedSurface;
     QHash<quint32, KeyState> keyStates;
-    quint32 eventTime = 0;
     QMetaObject::Connection destroyConnection;
 
 private:
@@ -246,7 +245,7 @@ void KeyboardInterface::keyPressed(quint32 key)
 {
     d->updateKey(key, Private::KeyState::Pressed);
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
-        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_PRESSED);
+        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_PRESSED);
     }
 }
 
@@ -254,7 +253,7 @@ void KeyboardInterface::keyReleased(quint32 key)
 {
     d->updateKey(key, Private::KeyState::Released);
     if (d->focusedSurface.surface && d->focusedSurface.keyboard) {
-        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->eventTime, key, WL_KEYBOARD_KEY_STATE_RELEASED);
+        wl_keyboard_send_key(d->focusedSurface.keyboard, d->seat->display()->nextSerial(), d->seat->timestamp(), key, WL_KEYBOARD_KEY_STATE_RELEASED);
     }
 }
 
@@ -266,11 +265,6 @@ void KeyboardInterface::Private::updateKey(quint32 key, KeyState state)
         return;
     }
     it.value() = state;
-}
-
-void KeyboardInterface::updateTimestamp(quint32 time)
-{
-    d->eventTime = time;
 }
 
 void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)

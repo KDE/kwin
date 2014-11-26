@@ -529,11 +529,11 @@ void TestWaylandSeat::testKeyboard()
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
 
-    serverKeyboard->updateTimestamp(1);
+    m_seatInterface->setTimestamp(1);
     serverKeyboard->keyPressed(KEY_K);
-    serverKeyboard->updateTimestamp(2);
+    m_seatInterface->setTimestamp(2);
     serverKeyboard->keyPressed(KEY_D);
-    serverKeyboard->updateTimestamp(3);
+    m_seatInterface->setTimestamp(3);
     serverKeyboard->keyPressed(KEY_E);
 
     QSignalSpy modifierSpy(keyboard, SIGNAL(modifiersChanged(quint32,quint32,quint32,quint32)));
@@ -554,19 +554,19 @@ void TestWaylandSeat::testKeyboard()
     QSignalSpy keyChangedSpy(keyboard, SIGNAL(keyChanged(quint32,KWayland::Client::Keyboard::KeyState,quint32)));
     QVERIFY(keyChangedSpy.isValid());
 
-    serverKeyboard->updateTimestamp(4);
+    m_seatInterface->setTimestamp(4);
     serverKeyboard->keyReleased(KEY_E);
     QVERIFY(keyChangedSpy.wait());
-    serverKeyboard->updateTimestamp(5);
+    m_seatInterface->setTimestamp(5);
     serverKeyboard->keyReleased(KEY_D);
     QVERIFY(keyChangedSpy.wait());
-    serverKeyboard->updateTimestamp(6);
+    m_seatInterface->setTimestamp(6);
     serverKeyboard->keyReleased(KEY_K);
     QVERIFY(keyChangedSpy.wait());
-    serverKeyboard->updateTimestamp(7);
+    m_seatInterface->setTimestamp(7);
     serverKeyboard->keyPressed(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
-    serverKeyboard->updateTimestamp(8);
+    m_seatInterface->setTimestamp(8);
     serverKeyboard->keyReleased(KEY_F1);
     QVERIFY(keyChangedSpy.wait());
 

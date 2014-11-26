@@ -44,7 +44,6 @@ public:
 
     void createInterfae(wl_client *client, wl_resource *parentResource, uint32_t id);
 
-    void updateTimestamp(quint32 time);
     void setKeymap(int fd, quint32 size);
     void keyPressed(quint32 key);
     void keyReleased(quint32 key);

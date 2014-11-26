@@ -115,7 +115,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
             keyboard->setFocusedSurface(m_stackingOrder.last()->surface());
         }
     }
-    keyboard->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     keyboard->keyPressed(event->nativeScanCode() - 8);
 }
 
@@ -126,7 +126,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
         return;
     }
     const auto keyboard = m_seat->keyboard();
-    keyboard->updateTimestamp(event->timestamp());
+    m_seat->setTimestamp(event->timestamp());
     keyboard->keyReleased(event->nativeScanCode() - 8);
 }
 
