@@ -69,7 +69,6 @@ public:
     QVector<PointerInterface*> pointers;
 
     // Pointer related members
-    QPointF pointerPos;
     struct Pointer {
         enum class ButtonState {
             Released,
@@ -77,6 +76,7 @@ public:
         };
         QHash<quint32, quint32> buttonSerials;
         QHash<quint32, ButtonState> buttonStates;
+        QPointF pos;
     };
     Pointer globalPointer;
     void updatePointerButtonSerial(quint32 button, quint32 serial);
@@ -354,16 +354,16 @@ SeatInterface::Private *SeatInterface::d_func() const
 QPointF SeatInterface::pointerPos() const
 {
     Q_D();
-    return d->pointerPos;
+    return d->globalPointer.pos;
 }
 
 void SeatInterface::setPointerPos(const QPointF &pos)
 {
     Q_D();
-    if (d->pointerPos == pos) {
+    if (d->globalPointer.pos == pos) {
         return;
     }
-    d->pointerPos = pos;
+    d->globalPointer.pos = pos;
     emit pointerPosChanged(pos);
 }
 
