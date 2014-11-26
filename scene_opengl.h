@@ -171,7 +171,7 @@ public:
     virtual void discard();
 
 protected:
-    virtual bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
+    bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
 
     Texture(TexturePrivate& dd);
 
