@@ -376,6 +376,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 !QWidget::find(event->window) &&
                 !event->override_redirect) {
             // see comments for allowClientActivation()
+            updateXTime();
             const xcb_timestamp_t t = xTime();
             xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, event->window, atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 32, 1, &t);
         }
