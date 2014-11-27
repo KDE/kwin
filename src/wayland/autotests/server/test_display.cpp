@@ -148,23 +148,25 @@ void TestWaylandServerDisplay::testClientConnection()
     // create a second client
     int sv2[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv2) >= 0);
-    auto client2 = wl_client_create(display, sv2[0]);
+    auto client2 = display.createClient(sv2[0]);
     QVERIFY(client2);
-    ClientConnection *connection2 = display.getConnection(client2);
+    ClientConnection *connection2 = display.getConnection(client2->client());
     QVERIFY(connection2);
-    QCOMPARE(connection2->client(), client2);
+    QCOMPARE(connection2, client2);
     QCOMPARE(connectedSpy.count(), 2);
     QCOMPARE(connectedSpy.first().first().value<ClientConnection*>(), connection);
     QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), connection2);
+    QCOMPARE(connectedSpy.last().first().value<ClientConnection*>(), client2);
     QCOMPARE(display.connections().count(), 2);
     QCOMPARE(display.connections().first(), connection);
     QCOMPARE(display.connections().last(), connection2);
+    QCOMPARE(display.connections().last(), client2);
 
     // and destroy
     QVERIFY(disconnectedSpy.isEmpty());
     wl_client_destroy(client);
     QCOMPARE(disconnectedSpy.count(), 1);
-    wl_client_destroy(client2);
+    wl_client_destroy(*client2);
     QCOMPARE(disconnectedSpy.count(), 2);
     close(sv[0]);
     close(sv[1]);

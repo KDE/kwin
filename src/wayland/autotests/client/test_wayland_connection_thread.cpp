@@ -22,9 +22,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/registry.h"
 #include "../../src/server/display.h"
 // Wayland
 #include <wayland-client-protocol.h>
+// system
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
 class TestWaylandConnectionThread : public QObject
 {
@@ -39,6 +44,7 @@ private Q_SLOTS:
     void testConnectionFailure();
     void testConnectionDieing();
     void testConnectionThread();
+    void testConnectFd();
 
 private:
     KWayland::Server::Display *m_display;
@@ -194,6 +200,42 @@ void TestWaylandConnectionThread::testConnectionDieing()
         QVERIFY(connectedSpy.wait());
     }
     QCOMPARE(connectedSpy.count(), 1);
+}
+
+void TestWaylandConnectionThread::testConnectFd()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
+    QVERIFY(m_display->createClient(sv[0]));
+
+    ConnectionThread *connection = new ConnectionThread;
+    QSignalSpy connectedSpy(connection, SIGNAL(connected()));
+    QVERIFY(connectedSpy.isValid());
+    connection->setSocketFd(sv[1]);
+
+    QThread *connectionThread = new QThread(this);
+    connection->moveToThread(connectionThread);
+    connectionThread->start();
+    connection->initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    // create the Registry
+    Registry registry;
+    QSignalSpy announcedSpy(&registry, SIGNAL(interfacesAnnounced()));
+    QVERIFY(announcedSpy.isValid());
+    registry.create(connection);
+    EventQueue queue;
+    queue.setup(connection);
+    registry.setEventQueue(&queue);
+    registry.setup();
+    QVERIFY(announcedSpy.wait());
+
+    connection->deleteLater();
+    connectionThread->quit();
+    connectionThread->wait();
+    delete connectionThread;
 }
 
 QTEST_GUILESS_MAIN(TestWaylandConnectionThread)

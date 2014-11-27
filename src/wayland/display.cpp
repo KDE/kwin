@@ -279,5 +279,16 @@ QVector< ClientConnection* > Display::connections() const
     return d->clients;
 }
 
+ClientConnection *Display::createClient(int fd)
+{
+    Q_ASSERT(fd != -1);
+    Q_ASSERT(d->display);
+    wl_client *c = wl_client_create(d->display, fd);
+    if (!c) {
+        return nullptr;
+    }
+    return getConnection(c);
+}
+
 }
 }

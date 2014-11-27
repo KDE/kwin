@@ -77,6 +77,19 @@ public:
      **/
     void dispatchEvents(int msecTimeout = -1);
 
+    /**
+     * Create a client for the given file descriptor.
+     *
+     * The client is created as if it connected through the normal server
+     * socket. This method can be used to create a connection bypassing the
+     * normal socket connection. It's recommended to use together with
+     * socketpair and pass the other side of the socket to the client.
+     *
+     * @param fd The file descriptor for the socket to the client
+     * @returns The new ClientConnection or @c null on failure.
+     **/
+    ClientConnection *createClient(int fd);
+
     operator wl_display*();
     operator wl_display*() const;
     bool isRunning() const;
