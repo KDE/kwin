@@ -20,7 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "datadevicemanager_interface.h"
 #include "global_p.h"
 #include "display.h"
-#include "seat_interface.h"
+#include "seat_interface_p.h"
 // Wayland
 #include <wayland-server.h>
 
@@ -104,12 +104,15 @@ void DataDeviceManagerInterface::Private::getDataDeviceCallback(wl_client *clien
 
 void DataDeviceManagerInterface::Private::getDataDevice(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *seat)
 {
-    DataDeviceInterface *dataDevice = new DataDeviceInterface(SeatInterface::get(seat), q, resource);
+    SeatInterface *s = SeatInterface::get(seat);
+    Q_ASSERT(s);
+    DataDeviceInterface *dataDevice = new DataDeviceInterface(s, q, resource);
     dataDevice->create(display->getConnection(client), wl_resource_get_version(resource), id);
     if (!dataDevice->resource()) {
         wl_resource_post_no_memory(resource);
         return;
     }
+    s->d_func()->registerDataDevice(dataDevice);
     emit q->dataDeviceCreated(dataDevice);
 }
 

@@ -33,6 +33,8 @@ namespace KWayland
 namespace Server
 {
 
+class DataDeviceInterface;
+
 class SeatInterface::Private : public Global::Private
 {
 public:
@@ -42,6 +44,8 @@ public:
     void sendName(wl_resource *r);
     PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
     KeyboardInterface *keyboardForSurface(SurfaceInterface *surface) const;
+    DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
+    void registerDataDevice(DataDeviceInterface *dataDevice);
 
     QString name;
     bool pointer = false;
@@ -51,6 +55,8 @@ public:
     quint32 timestamp = 0;
     QVector<PointerInterface*> pointers;
     QVector<KeyboardInterface*> keyboards;
+    QVector<DataDeviceInterface*> dataDevices;
+    DataDeviceInterface *currentSelection = nullptr;
 
     // Pointer related members
     struct Pointer {
@@ -100,6 +106,7 @@ public:
             KeyboardInterface *keyboard = nullptr;
             QMetaObject::Connection destroyConnection;
             quint32 serial = 0;
+            DataDeviceInterface *selection = nullptr;
         };
         Focus focus;
         quint32 lastStateSerial = 0;
@@ -115,6 +122,7 @@ public:
 private:
     void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
     void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
+    void updateSelection(DataDeviceInterface *dataDevice, bool set);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);
 

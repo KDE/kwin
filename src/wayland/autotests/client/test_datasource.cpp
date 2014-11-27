@@ -238,7 +238,7 @@ void TestDataSource::testRequestSend()
     QVERIFY(sendRequestedSpy.wait());
     QCOMPARE(sendRequestedSpy.count(), 1);
     QCOMPARE(sendRequestedSpy.first().first().toString(), plain);
-    QVERIFY(sendRequestedSpy.first().last().value<qint32>() != file.handle());
+    QCOMPARE(sendRequestedSpy.first().last().value<qint32>(), file.handle());
     QVERIFY(sendRequestedSpy.first().last().value<qint32>() != -1);
 
     QFile writeFile;

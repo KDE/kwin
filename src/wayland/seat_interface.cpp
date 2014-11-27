@@ -20,6 +20,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "seat_interface.h"
 #include "seat_interface_p.h"
 #include "display.h"
+#include "datadevice_interface.h"
+#include "datasource_interface.h"
 #include "keyboard_interface.h"
 #include "pointer_interface.h"
 #include "surface_interface.h"
@@ -181,6 +183,70 @@ PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *su
 KeyboardInterface *SeatInterface::Private::keyboardForSurface(SurfaceInterface *surface) const
 {
     return interfaceForSurface(surface, keyboards);
+}
+
+DataDeviceInterface *SeatInterface::Private::dataDeviceForSurface(SurfaceInterface *surface) const
+{
+    return interfaceForSurface(surface, dataDevices);
+}
+
+void SeatInterface::Private::registerDataDevice(DataDeviceInterface *dataDevice)
+{
+    Q_ASSERT(dataDevice->seat() == q);
+    dataDevices << dataDevice;
+    QObject::connect(dataDevice, &QObject::destroyed, q,
+        [this, dataDevice] {
+            dataDevices.removeAt(dataDevices.indexOf(dataDevice));
+            if (keys.focus.selection == dataDevice) {
+                keys.focus.selection = nullptr;
+            }
+            if (currentSelection == dataDevice) {
+                // current selection is cleared
+                currentSelection = nullptr;
+                if (keys.focus.selection) {
+                    keys.focus.selection->sendClearSelection();
+                }
+            }
+        }
+    );
+    QObject::connect(dataDevice, &DataDeviceInterface::selectionChanged, q,
+        [this, dataDevice] {
+            updateSelection(dataDevice, true);
+        }
+    );
+    QObject::connect(dataDevice, &DataDeviceInterface::selectionCleared, q,
+        [this, dataDevice] {
+            updateSelection(dataDevice, false);
+        }
+    );
+    // is the new DataDevice for the current keyoard focus?
+    if (keys.focus.surface && !keys.focus.selection) {
+        // same client?
+        if (keys.focus.surface->client() == dataDevice->client()) {
+            keys.focus.selection = dataDevice;
+            if (currentSelection) {
+                dataDevice->sendSelection(currentSelection);
+            }
+        }
+    }
+}
+
+void SeatInterface::Private::updateSelection(DataDeviceInterface *dataDevice, bool set)
+{
+    if (keys.focus.surface && (keys.focus.surface->client() == dataDevice->client())) {
+        // new selection on a data device belonging to current keyboard focus
+        currentSelection = dataDevice;
+    }
+    if (dataDevice == currentSelection) {
+        // need to send out the selection
+        if (keys.focus.selection) {
+            if (set) {
+                keys.focus.selection->sendSelection(dataDevice);
+            } else {
+                keys.focus.selection->sendClearSelection();
+            }
+        }
+    }
 }
 
 void SeatInterface::setHasKeyboard(bool has)
@@ -570,6 +636,13 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
             }
         );
         d->keys.focus.serial = serial;
+        // selection?
+        d->keys.focus.selection = d->dataDeviceForSurface(surface);
+        if (d->keys.focus.selection) {
+            if (d->currentSelection) {
+                d->keys.focus.selection->sendSelection(d->currentSelection);
+            }
+        }
     }
     if (!k) {
         return;

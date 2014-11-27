@@ -22,6 +22,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/datadevice.h"
+#include "../../src/client/datadevicemanager.h"
+#include "../../src/client/datasource.h"
 #include "../../src/client/event_queue.h"
 #include "../../src/client/keyboard.h"
 #include "../../src/client/pointer.h"
@@ -31,6 +34,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/shm_pool.h"
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
+#include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/display.h"
 #include "../../src/server/keyboard_interface.h"
 #include "../../src/server/pointer_interface.h"
@@ -59,6 +63,7 @@ private Q_SLOTS:
     void testKeyboard();
     void testCast();
     void testDestroy();
+    void testSelection();
     // TODO: add test for keymap
 
 private:
@@ -676,6 +681,81 @@ void TestWaylandSeat::testDestroy()
     m_seat->destroy();
     k->destroy();
     p->destroy();
+}
+
+void TestWaylandSeat::testSelection()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+    QScopedPointer<DataDeviceManagerInterface> ddmi(m_display->createDataDeviceManager());
+    ddmi->create();
+    Registry registry;
+    QSignalSpy dataDeviceManagerSpy(&registry, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)));
+    QVERIFY(dataDeviceManagerSpy.isValid());
+    registry.setEventQueue(m_queue);
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+
+    QVERIFY(dataDeviceManagerSpy.wait());
+    QScopedPointer<DataDeviceManager> ddm(registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(),
+                                                                           dataDeviceManagerSpy.first().last().value<quint32>()));
+    QVERIFY(ddm->isValid());
+
+    QScopedPointer<DataDevice> dd1(ddm->getDataDevice(m_seat));
+    QVERIFY(dd1->isValid());
+    QSignalSpy selectionSpy(dd1.data(), SIGNAL(selectionOffered(KWayland::Client::DataOffer*)));
+    QVERIFY(selectionSpy.isValid());
+    QSignalSpy selectionClearedSpy(dd1.data(), SIGNAL(selectionCleared()));
+    QVERIFY(selectionClearedSpy.isValid());
+
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(surfaceCreatedSpy.isValid());
+    QScopedPointer<Surface> surface(m_compositor->createSurface());
+    QVERIFY(surface->isValid());
+    QVERIFY(surfaceCreatedSpy.wait());
+    auto serverSurface = surfaceCreatedSpy.first().first().value<SurfaceInterface*>();
+    m_seatInterface->setFocusedKeyboardSurface(serverSurface);
+    QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedKeyboard());
+    serverSurface->client()->flush();
+    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
+    QVERIFY(selectionSpy.isEmpty());
+    QVERIFY(selectionClearedSpy.isEmpty());
+
+    // now let's try to set a selection - we have keyboard focus, so it should be sent to us
+    QScopedPointer<DataSource> ds(ddm->createDataSource());
+    QVERIFY(ds->isValid());
+    ds->offer(QStringLiteral("text/plain"));
+    dd1->setSelection(0, ds.data());
+    QVERIFY(selectionSpy.wait());
+    QCOMPARE(selectionSpy.count(), 1);
+    QVERIFY(selectionClearedSpy.isEmpty());
+    auto df = selectionSpy.first().first().value<DataOffer*>();
+    QCOMPARE(df->offeredMimeTypes().count(), 1);
+    QCOMPARE(df->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
+
+    // try to clear
+    dd1->setSelection(0);
+    QVERIFY(selectionClearedSpy.wait());
+    QCOMPARE(selectionClearedSpy.count(), 1);
+    QCOMPARE(selectionSpy.count(), 1);
+
+    // unset the keyboard focus
+    m_seatInterface->setFocusedKeyboardSurface(nullptr);
+    QVERIFY(!m_seatInterface->focusedKeyboardSurface());
+    QVERIFY(!m_seatInterface->focusedKeyboard());
+    serverSurface->client()->flush();
+    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
+
+    // try to set Selection
+    dd1->setSelection(0, ds.data());
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
+    QCOMPARE(selectionSpy.count(), 1);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)

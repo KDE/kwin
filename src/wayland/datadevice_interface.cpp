@@ -177,6 +177,12 @@ void DataDeviceInterface::sendSelection(DataDeviceInterface *other)
     wl_data_device_send_selection(d->resource, r->resource());
 }
 
+void DataDeviceInterface::sendClearSelection()
+{
+    Q_D();
+    wl_data_device_send_selection(d->resource, nullptr);
+}
+
 DataDeviceInterface::Private *DataDeviceInterface::d_func() const
 {
     return reinterpret_cast<DataDeviceInterface::Private*>(d.data());

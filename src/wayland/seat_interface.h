@@ -117,6 +117,7 @@ Q_SIGNALS:
 
 private:
     friend class Display;
+    friend class DataDeviceManagerInterface;
     explicit SeatInterface(Display *display, QObject *parent);
 
     class Private;

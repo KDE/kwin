@@ -50,6 +50,7 @@ public:
     DataSourceInterface *selection() const;
 
     void sendSelection(DataDeviceInterface *other);
+    void sendClearSelection();
 
 Q_SIGNALS:
     void dragStarted();
