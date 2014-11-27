@@ -174,12 +174,18 @@ void DataDeviceInterface::sendSelection(DataDeviceInterface *other)
     if (!r) {
         return;
     }
+    if (!d->resource) {
+        return;
+    }
     wl_data_device_send_selection(d->resource, r->resource());
 }
 
 void DataDeviceInterface::sendClearSelection()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_data_device_send_selection(d->resource, nullptr);
 }
 
