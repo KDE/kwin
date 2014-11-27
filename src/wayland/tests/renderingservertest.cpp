@@ -85,6 +85,10 @@ void CompositorWindow::surfaceCreated(KWayland::Server::ShellSurfaceInterface *s
             update();
         }
     );
+    if (m_seat) {
+        m_seat->setFocusedPointerSurface(surface->surface());
+        m_seat->setFocusedKeyboardSurface(surface->surface());
+    }
 }
 
 void CompositorWindow::setSeat(const QPointer< KWayland::Server::SeatInterface > &seat)
