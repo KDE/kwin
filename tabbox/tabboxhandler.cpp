@@ -31,9 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scripting/scripting.h"
 #include "switcheritem.h"
 // Qt
-#include <QApplication>
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QKeyEvent>
 #include <QModelIndex>
 #include <QStandardPaths>

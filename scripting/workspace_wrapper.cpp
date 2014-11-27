@@ -57,7 +57,12 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
 #endif
     connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
-    connect(QApplication::desktop(), SIGNAL(screenCountChanged(int)), SIGNAL(numberScreensChanged(int)));
+    connect(screens(), &Screens::countChanged, this,
+        [this] (int previousCount, int currentCount) {
+            Q_UNUSED(previousCount)
+            emit numberScreensChanged(currentCount);
+        }
+    );
     connect(QApplication::desktop(), SIGNAL(resized(int)), SIGNAL(screenResized(int)));
     foreach (KWin::Client *client, ws->clientList()) {
         setupClientConnections(client);
