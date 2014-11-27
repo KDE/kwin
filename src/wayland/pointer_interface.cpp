@@ -65,7 +65,7 @@ const struct wl_pointer_interface PointerInterface::Private::s_interface = {
 PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentResource)
     : Resource(new Private(parent, parentResource, this), parent)
 {
-    connect(parent, &SeatInterface::pointerPosChanged, [this] {
+    connect(parent, &SeatInterface::pointerPosChanged, this, [this] {
         Q_D();
         if (d->focusedSurface) {
             const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
