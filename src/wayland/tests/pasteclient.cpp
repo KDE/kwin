@@ -37,6 +37,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QMimeType>
 #include <QThread>
+#include <QtConcurrent>
 // system
 #include <unistd.h>
 
@@ -161,12 +162,16 @@ void PasteClient::setupRegistry(Registry *registry)
                     }
                     dataOffer->receive((*it).name(), pipeFds[1]);
                     close(pipeFds[1]);
-                    QFile readPipe;
-                    if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
-                        qDebug() << "Pasted: " << readPipe.readLine();
-                    }
-                    close(pipeFds[0]);
-                    QCoreApplication::quit();
+                    QtConcurrent::run(
+                        [pipeFds] {
+                            QFile readPipe;
+                            if (readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
+                                qDebug() << "Pasted: " << readPipe.readLine();
+                            }
+                            close(pipeFds[0]);
+                            QCoreApplication::quit();
+                        }
+                    );
                 }
             );
         }
