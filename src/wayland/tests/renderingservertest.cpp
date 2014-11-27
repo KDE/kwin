@@ -19,6 +19,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "../src/server/buffer_interface.h"
 #include "../src/server/compositor_interface.h"
+#include "../src/server/datadevicemanager_interface.h"
 #include "../src/server/display.h"
 #include "../src/server/keyboard_interface.h"
 #include "../src/server/output_interface.h"
@@ -179,6 +180,8 @@ int main(int argc, char **argv)
 
     Display display;
     display.start();
+    DataDeviceManagerInterface *ddm = display.createDataDeviceManager();
+    ddm->create();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
     ShellInterface *shell = display.createShell();
