@@ -18,16 +18,12 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "seat_interface.h"
-#include "global_p.h"
+#include "seat_interface_p.h"
 #include "display.h"
 #include "keyboard_interface.h"
 #include "pointer_interface.h"
 #include "surface_interface.h"
-// Qt
-#include <QHash>
-#include <QVector>
 // Wayland
-#include <wayland-server.h>
 #ifndef WL_SEAT_NAME_SINCE_VERSION
 #define WL_SEAT_NAME_SINCE_VERSION 2
 #endif
@@ -41,100 +37,6 @@ namespace Server
 {
 
 static const quint32 s_version = 3;
-
-class SeatInterface::Private : public Global::Private
-{
-public:
-    Private(SeatInterface *q, Display *d);
-    void bind(wl_client *client, uint32_t version, uint32_t id) override;
-    void sendCapabilities(wl_resource *r);
-    void sendName(wl_resource *r);
-    PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
-    KeyboardInterface *keyboardForSurface(SurfaceInterface *surface) const;
-
-    QString name;
-    bool pointer = false;
-    bool keyboard = false;
-    bool touch = false;
-    QList<wl_resource*> resources;
-    quint32 timestamp = 0;
-    QVector<PointerInterface*> pointers;
-    QVector<KeyboardInterface*> keyboards;
-
-    // Pointer related members
-    struct Pointer {
-        enum class State {
-            Released,
-            Pressed
-        };
-        QHash<quint32, quint32> buttonSerials;
-        QHash<quint32, State> buttonStates;
-        QPointF pos;
-        struct Focus {
-            SurfaceInterface *surface = nullptr;
-            PointerInterface *pointer = nullptr;
-            QMetaObject::Connection destroyConnection;
-            QPointF offset = QPointF();
-            quint32 serial = 0;
-        };
-        Focus focus;
-    };
-    Pointer globalPointer;
-    void updatePointerButtonSerial(quint32 button, quint32 serial);
-    void updatePointerButtonState(quint32 button, Pointer::State state);
-
-    // Keyboard related members
-    struct Keyboard {
-        enum class State {
-            Released,
-            Pressed
-        };
-        QHash<quint32, State> states;
-        struct Keymap {
-            int fd = -1;
-            quint32 size = 0;
-            bool xkbcommonCompatible = false;
-        };
-        Keymap keymap;
-        struct Modifiers {
-            quint32 depressed = 0;
-            quint32 latched = 0;
-            quint32 locked = 0;
-            quint32 group = 0;
-            quint32 serial = 0;
-        };
-        Modifiers modifiers;
-        struct Focus {
-            SurfaceInterface *surface = nullptr;
-            KeyboardInterface *keyboard = nullptr;
-            QMetaObject::Connection destroyConnection;
-            quint32 serial = 0;
-        };
-        Focus focus;
-        quint32 lastStateSerial = 0;
-    };
-    Keyboard keys;
-    void updateKey(quint32 key, Keyboard::State state);
-
-    static SeatInterface *get(wl_resource *native) {
-        auto s = cast(native);
-        return s ? s->q : nullptr;
-    }
-
-private:
-    void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
-    void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
-    static Private *cast(wl_resource *r);
-    static void unbind(wl_resource *r);
-
-    // interface
-    static void getPointerCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getKeyboardCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static void getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id);
-    static const struct wl_seat_interface s_interface;
-
-    SeatInterface *q;
-};
 
 SeatInterface::Private::Private(SeatInterface *q, Display *display)
     : Global::Private(display, &wl_seat_interface, s_version)
