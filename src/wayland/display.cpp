@@ -113,13 +113,15 @@ QString Display::socketName() const
     return d->socketName;
 }
 
-void Display::start()
+void Display::start(StartMode mode)
 {
     Q_ASSERT(!d->running);
     Q_ASSERT(!d->display);
     d->display = wl_display_create();
-    if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
-        return;
+    if (mode == StartMode::ConnectToSocket) {
+        if (wl_display_add_socket(d->display, qPrintable(d->socketName)) != 0) {
+            return;
+        }
     }
 
     d->loop = wl_display_get_event_loop(d->display);

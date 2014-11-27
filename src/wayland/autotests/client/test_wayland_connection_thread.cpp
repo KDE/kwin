@@ -45,6 +45,7 @@ private Q_SLOTS:
     void testConnectionDieing();
     void testConnectionThread();
     void testConnectFd();
+    void testConnectFdNoSocketName();
 
 private:
     KWayland::Server::Display *m_display;
@@ -209,6 +210,49 @@ void TestWaylandConnectionThread::testConnectFd()
     int sv[2];
     QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
     QVERIFY(m_display->createClient(sv[0]));
+
+    ConnectionThread *connection = new ConnectionThread;
+    QSignalSpy connectedSpy(connection, SIGNAL(connected()));
+    QVERIFY(connectedSpy.isValid());
+    connection->setSocketFd(sv[1]);
+
+    QThread *connectionThread = new QThread(this);
+    connection->moveToThread(connectionThread);
+    connectionThread->start();
+    connection->initConnection();
+    QVERIFY(connectedSpy.wait());
+
+    // create the Registry
+    Registry registry;
+    QSignalSpy announcedSpy(&registry, SIGNAL(interfacesAnnounced()));
+    QVERIFY(announcedSpy.isValid());
+    registry.create(connection);
+    EventQueue queue;
+    queue.setup(connection);
+    registry.setEventQueue(&queue);
+    registry.setup();
+    QVERIFY(announcedSpy.wait());
+
+    connection->deleteLater();
+    connectionThread->quit();
+    connectionThread->wait();
+    delete connectionThread;
+}
+
+void TestWaylandConnectionThread::testConnectFdNoSocketName()
+{
+    delete m_display;
+    m_display = nullptr;
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    Display display;
+    display.start(Display::StartMode::ConnectClientsOnly);
+    QVERIFY(display.isRunning());
+
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
+    QVERIFY(display.createClient(sv[0]));
 
     ConnectionThread *connection = new ConnectionThread;
     QSignalSpy connectedSpy(connection, SIGNAL(connected()));

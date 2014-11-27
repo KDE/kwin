@@ -40,6 +40,7 @@ private Q_SLOTS:
     void testStartStop();
     void testAddRemoveOutput();
     void testClientConnection();
+    void testConnectNoSocket();
 };
 
 void TestWaylandServerDisplay::testSocketName()
@@ -173,6 +174,23 @@ void TestWaylandServerDisplay::testClientConnection()
     close(sv2[0]);
     close(sv2[1]);
     QVERIFY(display.connections().isEmpty());
+}
+
+void TestWaylandServerDisplay::testConnectNoSocket()
+{
+    Display display;
+    display.start(Display::StartMode::ConnectClientsOnly);
+    QVERIFY(display.isRunning());
+
+    // let's try connecting a client
+    int sv[2];
+    QVERIFY(socketpair(AF_UNIX, SOCK_STREAM, 0, sv) >= 0);
+    auto client = display.createClient(sv[0]);
+    QVERIFY(client);
+
+    wl_client_destroy(client->client());
+    close(sv[0]);
+    close(sv[1]);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandServerDisplay)

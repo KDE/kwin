@@ -58,7 +58,16 @@ public:
     quint32 serial();
     quint32 nextSerial();
 
-    void start();
+    /**
+     * How to setup the server connection.
+     * @li ConnectToSocket: the server will open the socket identified by the socket name
+     * @li ConnectClientsOnly: only connections through createClient are possible
+     **/
+    enum class StartMode {
+        ConnectToSocket,
+        ConnectClientsOnly
+    };
+    void start(StartMode mode = StartMode::ConnectToSocket);
     void terminate();
     /**
      * Starts the event loop for the server socket.
