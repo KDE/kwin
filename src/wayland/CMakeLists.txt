@@ -48,26 +48,27 @@ set_target_properties(KF5WaylandServer PROPERTIES VERSION   ${KWAYLAND_VERSION_S
                                                  EXPORT_NAME WaylandServer
 )
 
-# install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
-#
-# install(FILES
-#   ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
-#   buffer_interface.h
-#   clientconnection.h
-#   compositor_interface.h
-#   datadevice_interface.h
-#   datadevicemanager_interface.h
-#   dataoffer_interface.h
-#   datasource_interface.h
-#   display.h
-#   global.h
-#   keyboard_interface.h
-#   output_interface.h
-#   pointer_interface.h
-#   region_interface.h
-#   resource.h
-#   seat_interface.h
-#   shell_interface.h
-#   surface_interface.h
-#   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
-# )
+install(TARGETS KF5WaylandServer EXPORT KF5WaylandTargets ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/KWayland/Server/kwaylandserver_export.h
+  buffer_interface.h
+  clientconnection.h
+  compositor_interface.h
+  datadevice_interface.h
+  datadevicemanager_interface.h
+  dataoffer_interface.h
+  datasource_interface.h
+  display.h
+  global.h
+  keyboard_interface.h
+  output_interface.h
+  pointer_interface.h
+  region_interface.h
+  resource.h
+  seat_interface.h
+  shell_interface.h
+  subcompositor_interface.h
+  surface_interface.h
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
+)
