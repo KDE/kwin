@@ -55,6 +55,7 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 private:
+    void updateFocus();
     QList<KWayland::Server::ShellSurfaceInterface*> m_stackingOrder;
     QPointer<KWayland::Server::SeatInterface> m_seat;
 };
@@ -82,13 +83,29 @@ void CompositorWindow::surfaceCreated(KWayland::Server::ShellSurfaceInterface *s
     connect(surface, &ShellSurfaceInterface::destroyed, this,
         [surface, this] {
             m_stackingOrder.removeAll(surface);
+            updateFocus();
             update();
         }
     );
-    if (m_seat) {
-        m_seat->setFocusedPointerSurface(surface->surface());
-        m_seat->setFocusedKeyboardSurface(surface->surface());
+    updateFocus();
+}
+
+void CompositorWindow::updateFocus()
+{
+    using namespace KWayland::Server;
+    if (!m_seat || m_stackingOrder.isEmpty()) {
+        return;
     }
+    auto it = std::find_if(m_stackingOrder.constBegin(), m_stackingOrder.constEnd(),
+        [](ShellSurfaceInterface *s) {
+            return s->surface()->buffer() != nullptr;
+        }
+    );
+    if (it == m_stackingOrder.constEnd()) {
+        return;
+    }
+    m_seat->setFocusedPointerSurface((*it)->surface());
+    m_seat->setFocusedKeyboardSurface((*it)->surface());
 }
 
 void CompositorWindow::setSeat(const QPointer< KWayland::Server::SeatInterface > &seat)
@@ -115,9 +132,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
         return;
     }
     if (!m_seat->focusedKeyboardSurface()) {
-        if (!m_stackingOrder.isEmpty()) {
-            m_seat->setFocusedKeyboardSurface(m_stackingOrder.last()->surface());
-        }
+        updateFocus();
     }
     m_seat->setTimestamp(event->timestamp());
     m_seat->keyPressed(event->nativeScanCode() - 8);
@@ -137,9 +152,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
 {
     QWidget::mouseMoveEvent(event);
     if (!m_seat->focusedPointerSurface()) {
-        if (!m_stackingOrder.isEmpty()) {
-            m_seat->setFocusedPointerSurface(m_stackingOrder.last()->surface());
-        }
+        updateFocus();
     }
     m_seat->setTimestamp(event->timestamp());
     m_seat->setPointerPos(event->localPos().toPoint());
