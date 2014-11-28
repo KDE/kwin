@@ -2213,15 +2213,16 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     }
 
     // call into decoration update borders
-    if (m_decoration) {
+    if (m_decoration && m_decoration->client()) {
+        const auto c = m_decoration->client().data();
         if ((max_mode & KDecorationDefines::MaximizeVertical) != (old_mode & KDecorationDefines::MaximizeVertical)) {
-            emit m_decoration->client()->maximizedVerticallyChanged(max_mode & KDecorationDefines::MaximizeVertical);
+            emit c->maximizedVerticallyChanged(max_mode & KDecorationDefines::MaximizeVertical);
         }
         if ((max_mode & KDecorationDefines::MaximizeHorizontal) != (old_mode & KDecorationDefines::MaximizeHorizontal)) {
-            emit m_decoration->client()->maximizedHorizontallyChanged(max_mode & KDecorationDefines::MaximizeHorizontal);
+            emit c->maximizedHorizontallyChanged(max_mode & KDecorationDefines::MaximizeHorizontal);
         }
         if ((max_mode == KDecorationDefines::MaximizeFull) != (old_mode == KDecorationDefines::MaximizeFull)) {
-            emit m_decoration->client()->maximizedChanged(max_mode & KDecorationDefines::MaximizeFull);
+            emit c->maximizedChanged(max_mode & KDecorationDefines::MaximizeFull);
         }
     }
 

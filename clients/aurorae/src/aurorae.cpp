@@ -283,7 +283,7 @@ void Decoration::init()
         visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
         // we need a QQuickWindow till we depend on Qt 5.4
-        m_decorationWindow.reset(QWindow::fromWinId(client()->decorationId()));
+        m_decorationWindow.reset(QWindow::fromWinId(client().data()->decorationId()));
         m_view = new QQuickWindow(m_decorationWindow.data());
         m_view->setFlags(Qt::WindowDoesNotAcceptFocus | Qt::WindowTransparentForInput);
         m_view->setColor(Qt::transparent);
@@ -332,7 +332,7 @@ void Decoration::init()
         m_view->setVisible(true);
         auto resizeWindow = [this] {
             QRect rect(QPoint(0, 0), size());
-            if (m_padding && !client()->isMaximized()) {
+            if (m_padding && !client().data()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
             m_view->setGeometry(rect);
@@ -372,7 +372,7 @@ void Decoration::setupBorders(QQuickItem *item)
 void Decoration::updateBorders()
 {
     KWin::Borders *b = m_borders;
-    if (client()->isMaximized() && m_maximizedBorders) {
+    if (client().data()->isMaximized() && m_maximizedBorders) {
         b = m_maximizedBorders;
     }
     if (!b) {
@@ -392,7 +392,7 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
     QRectF r(QPointF(0, 0), m_buffer.size());
     if (m_padding &&
             (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
-            !client()->isMaximized()) {
+            !client().data()->isMaximized()) {
         r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
         KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
         s->setShadow(m_buffer);
@@ -414,7 +414,7 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 
 QMouseEvent Decoration::translatedMouseEvent(QMouseEvent *orig)
 {
-    if (!m_padding || client()->isMaximized()) {
+    if (!m_padding || client().data()->isMaximized()) {
         orig->setAccepted(false);
         return *orig;
     }
@@ -496,6 +496,11 @@ void Decoration::installTitleItem(QQuickItem *item)
     connect(item, &QQuickItem::heightChanged, this, update);
     connect(item, &QQuickItem::xChanged, this, update);
     connect(item, &QQuickItem::yChanged, this, update);
+}
+
+KDecoration2::DecoratedClient *Decoration::clientPointer() const
+{
+    return client().data();
 }
 
 ThemeFinder::ThemeFinder(QObject *parent, const QVariantList &args)

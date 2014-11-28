@@ -185,10 +185,10 @@ void DecorationOptions::slotActiveChanged()
     if (!m_decoration) {
         return;
     }
-    if (m_active == m_decoration->client()->isActive()) {
+    if (m_active == m_decoration->client().data()->isActive()) {
         return;
     }
-    m_active = m_decoration->client()->isActive();
+    m_active = m_decoration->client().data()->isActive();
     emit colorsChanged();
     emit fontChanged();
 }

@@ -40,6 +40,7 @@ namespace Aurorae
 class Decoration : public KDecoration2::Decoration
 {
     Q_OBJECT
+    Q_PROPERTY(KDecoration2::DecoratedClient* client READ clientPointer CONSTANT)
 public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     virtual ~Decoration();
@@ -47,6 +48,8 @@ public:
     void paint(QPainter *painter, const QRect &repaintRegion) override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
+
+    KDecoration2::DecoratedClient *clientPointer() const;
 
 public Q_SLOTS:
     void init() override;
