@@ -118,7 +118,7 @@ static int decorationButton(KDecoration2::DecorationButtonType type)
         return DecorationOptions::DecorationButtonMaximizeRestore;
     case KDecoration2::DecorationButtonType::Close:
         return DecorationOptions::DecorationButtonClose;
-    case KDecoration2::DecorationButtonType::QuickHelp:
+    case KDecoration2::DecorationButtonType::ContextHelp:
         return DecorationOptions::DecorationButtonQuickHelp;
     case KDecoration2::DecorationButtonType::Shade:
         return DecorationOptions::DecorationButtonShade;

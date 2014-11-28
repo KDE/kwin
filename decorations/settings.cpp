@@ -77,7 +77,7 @@ static void initButtons()
     s_buttonNames[KDecoration2::DecorationButtonType::Menu]            = QChar('M');
     s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
     s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops]   = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::QuickHelp]       = QChar('H');
+    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp]     = QChar('H');
     s_buttonNames[KDecoration2::DecorationButtonType::Minimize]        = QChar('I');
     s_buttonNames[KDecoration2::DecorationButtonType::Maximize]        = QChar('A');
     s_buttonNames[KDecoration2::DecorationButtonType::Close]           = QChar('X');
