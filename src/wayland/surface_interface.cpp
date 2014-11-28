@@ -177,18 +177,24 @@ void SurfaceInterface::Private::commit()
     for (wl_resource *c : current.callbacks) {
         wl_resource_destroy(c);
     }
+    const bool bufferChanged = pending.bufferIsSet;
     const bool opaqueRegionChanged = pending.opaqueIsSet;
     const bool inputRegionChanged = pending.inputIsSet;
     const bool scaleFactorChanged = current.scale != pending.scale;
     const bool transformFactorChanged = current.transform != pending.transform;
-    if (current.buffer) {
-        current.buffer->unref();
-    }
-    if (pending.buffer) {
-        pending.buffer->ref();
+    auto buffer = current.buffer;
+    if (bufferChanged) {
+        if (current.buffer) {
+            current.buffer->unref();
+        }
+        if (pending.buffer) {
+            pending.buffer->ref();
+        }
+        buffer = pending.buffer;
     }
     // copy values
     current = pending;
+    current.buffer = buffer;
     pending = State{};
     pending.children = current.children;
     pending.input = current.input;
@@ -213,13 +219,21 @@ void SurfaceInterface::Private::commit()
     if (transformFactorChanged) {
         emit q->transformChanged(current.transform);
     }
-    if (!current.damage.isEmpty()) {
-        emit q->damaged(current.damage);
+    if (bufferChanged) {
+        if (!current.damage.isEmpty()) {
+            emit q->damaged(current.damage);
+        } else if (!current.buffer) {
+            emit q->unmapped();
+        }
     }
 }
 
 void SurfaceInterface::Private::damage(const QRect &rect)
 {
+    if (!pending.bufferIsSet || (pending.bufferIsSet && !pending.buffer)) {
+        // TODO: should we send an error?
+        return;
+    }
     // TODO: documentation says we need to remove the parts outside of the surface
     pending.damage = pending.damage.united(rect);
 }
@@ -247,9 +261,16 @@ void SurfaceInterface::Private::addFrameCallback(uint32_t callback)
 
 void SurfaceInterface::Private::attachBuffer(wl_resource *buffer, const QPoint &offset)
 {
+    pending.bufferIsSet = true;
     pending.offset = offset;
     if (pending.buffer) {
         delete pending.buffer;
+    }
+    if (!buffer) {
+        // got a null buffer, deletes content in next frame
+        pending.buffer = nullptr;
+        pending.damage = QRegion();
+        return;
     }
     Q_Q(SurfaceInterface);
     pending.buffer = new BufferInterface(buffer, q);

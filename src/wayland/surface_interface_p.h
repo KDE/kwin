@@ -39,6 +39,7 @@ public:
         QRegion input = QRegion();
         bool inputIsSet = false;
         bool opaqueIsSet = false;
+        bool bufferIsSet = false;
         bool inputIsInfinite = true;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;

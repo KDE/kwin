@@ -76,6 +76,10 @@ Q_SIGNALS:
     void inputChanged(const QRegion&);
     void scaleChanged(qint32);
     void transformChanged(KWayland::Server::OutputInterface::Transform);
+    /**
+     * Emitted when the Surface removes its content
+     **/
+    void unmapped();
 
 private:
     friend class CompositorInterface;

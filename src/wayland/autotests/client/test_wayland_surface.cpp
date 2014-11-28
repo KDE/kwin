@@ -57,6 +57,7 @@ private:
     KWayland::Server::CompositorInterface *m_compositorInterface;
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
+    KWayland::Client::ShmPool *m_shm;
     QThread *m_thread;
 };
 
@@ -80,6 +81,7 @@ void TestWaylandSurface::init()
     m_display->setSocketName(s_socketName);
     m_display->start();
     QVERIFY(m_display->isRunning());
+    m_display->createShm();
 
     m_compositorInterface = m_display->createCompositor(m_display);
     QVERIFY(m_compositorInterface);
@@ -108,13 +110,21 @@ void TestWaylandSurface::init()
 
     KWayland::Client::Registry registry;
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
+    QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
+    QSignalSpy allAnnounced(&registry, SIGNAL(interfacesAnnounced()));
+    QVERIFY(allAnnounced.isValid());
+    QVERIFY(shmSpy.isValid());
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
-    QVERIFY(compositorSpy.wait());
+    QVERIFY(allAnnounced.wait());
+    QVERIFY(!compositorSpy.isEmpty());
+    QVERIFY(!shmSpy.isEmpty());
 
     m_compositor = registry.createCompositor(compositorSpy.first().first().value<quint32>(), compositorSpy.first().last().value<quint32>(), this);
     QVERIFY(m_compositor->isValid());
+    m_shm = registry.createShmPool(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>(), this);
+    QVERIFY(m_shm->isValid());
 }
 
 void TestWaylandSurface::cleanup()
@@ -122,6 +132,10 @@ void TestWaylandSurface::cleanup()
     if (m_compositor) {
         delete m_compositor;
         m_compositor = nullptr;
+    }
+    if (m_shm) {
+        delete m_shm;
+        m_shm = nullptr;
     }
     if (m_thread) {
         m_thread->quit();
@@ -198,7 +212,18 @@ void TestWaylandSurface::testDamage()
     QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
     QVERIFY(damageSpy.isValid());
 
-    // TODO: actually we would need to attach a buffer first
+    // send damage without a buffer
+    s->damage(QRect(0, 0, 100, 100));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
+    QVERIFY(damageSpy.isEmpty());
+
+    QImage img(QSize(10, 10), QImage::Format_ARGB32);
+    img.fill(Qt::black);
+    auto b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
     s->damage(QRect(0, 0, 10, 10));
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QVERIFY(damageSpy.wait());
@@ -208,6 +233,10 @@ void TestWaylandSurface::testDamage()
     // damage multiple times
     QRegion testRegion(5, 8, 3, 6);
     testRegion = testRegion.united(QRect(10, 20, 30, 15));
+    img = QImage(QSize(40, 35), QImage::Format_ARGB32);
+    img.fill(Qt::black);
+    b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
     s->damage(testRegion);
     damageSpy.clear();
     s->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -230,6 +259,10 @@ void TestWaylandSurface::testFrameCallback()
 
     QSignalSpy frameRenderedSpy(s, SIGNAL(frameRendered()));
     QVERIFY(frameRenderedSpy.isValid());
+    QImage img(QSize(10, 10), QImage::Format_ARGB32);
+    img.fill(Qt::black);
+    auto b = m_shm->createBuffer(img);
+    s->attachBuffer(b);
     s->damage(QRect(0, 0, 10, 10));
     s->commit();
     QVERIFY(damageSpy.wait());
@@ -241,20 +274,6 @@ void TestWaylandSurface::testFrameCallback()
 
 void TestWaylandSurface::testAttachBuffer()
 {
-    // here we need a shm pool
-    m_display->createShm();
-
-    KWayland::Client::Registry registry;
-    QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
-    registry.create(m_connection->display());
-    QVERIFY(registry.isValid());
-    registry.setup();
-    QVERIFY(shmSpy.wait());
-
-    KWayland::Client::ShmPool pool;
-    pool.setup(registry.bindShm(shmSpy.first().first().value<quint32>(), shmSpy.first().last().value<quint32>()));
-    QVERIFY(pool.isValid());
-
     // create the surface
     QSignalSpy serverSurfaceCreated(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
     QVERIFY(serverSurfaceCreated.isValid());
@@ -271,9 +290,9 @@ void TestWaylandSurface::testAttachBuffer()
     QImage blue(24, 24, QImage::Format_ARGB32_Premultiplied);
     blue.fill(QColor(0, 0, 255, 128));
 
-    wl_buffer *blackBuffer = *(pool.createBuffer(black).data());
-    auto redBuffer = pool.createBuffer(red);
-    auto blueBuffer = pool.createBuffer(blue).toStrongRef();
+    wl_buffer *blackBuffer = *(m_shm->createBuffer(black).data());
+    auto redBuffer = m_shm->createBuffer(red);
+    auto blueBuffer = m_shm->createBuffer(blue).toStrongRef();
 
     QCOMPARE(blueBuffer->format(), KWayland::Client::Buffer::Format::ARGB32);
     QCOMPARE(blueBuffer->size(), blue.size());
@@ -287,7 +306,10 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy damageSpy(serverSurface, SIGNAL(damaged(QRegion)));
     QVERIFY(damageSpy.isValid());
+    QSignalSpy unmappedSpy(serverSurface, SIGNAL(unmapped()));
+    QVERIFY(unmappedSpy.isValid());
     QVERIFY(damageSpy.wait());
+    QVERIFY(unmappedSpy.isEmpty());
 
     // now the ServerSurface should have the black image attached as a buffer
     KWayland::Server::BufferInterface *buffer = serverSurface->buffer();
@@ -302,6 +324,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit(KWayland::Client::Surface::CommitFlag::None);
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
+    QVERIFY(unmappedSpy.isEmpty());
     KWayland::Server::BufferInterface *buffer2 = serverSurface->buffer();
     buffer2->ref();
     QVERIFY(buffer2->shmBuffer());
@@ -321,6 +344,7 @@ void TestWaylandSurface::testAttachBuffer()
     s->commit();
     damageSpy.clear();
     QVERIFY(damageSpy.wait());
+    QVERIFY(unmappedSpy.isEmpty());
     QVERIFY(!buffer2->isReferenced());
     delete buffer2;
     // TODO: we should have a signal on when the Buffer gets released
@@ -345,6 +369,32 @@ void TestWaylandSurface::testAttachBuffer()
     serverSurface->frameRendered(1);
     QVERIFY(frameRenderedSpy.wait());
 
+    // commit a different value shouldn't change our buffer
+    QCOMPARE(serverSurface->buffer(), buffer3);
+    QVERIFY(serverSurface->input().isNull());
+    damageSpy.clear();
+    s->setInputRegion(m_compositor->createRegion(QRegion(0, 0, 24, 24)).get());
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    wl_display_flush(m_connection->display());
+    QCoreApplication::processEvents();
+    QCoreApplication::processEvents();
+    QCOMPARE(serverSurface->input(), QRegion(0, 0, 24, 24));
+    QCOMPARE(serverSurface->buffer(), buffer3);
+    QVERIFY(damageSpy.isEmpty());
+    QVERIFY(unmappedSpy.isEmpty());
+
+    // clear the surface
+    s->attachBuffer(blackBuffer);
+    s->damage(QRect(0, 0, 1, 1));
+    // TODO: better method
+    s->attachBuffer((wl_buffer*)nullptr);
+    s->damage(QRect(0, 0, 10, 10));
+    s->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(unmappedSpy.wait());
+    QVERIFY(!unmappedSpy.isEmpty());
+    QCOMPARE(unmappedSpy.count(), 1);
+    QVERIFY(damageSpy.isEmpty());
+
     // TODO: add signal test on release
     buffer->unref();
 }
@@ -353,9 +403,6 @@ void TestWaylandSurface::testMultipleSurfaces()
 {
     using namespace KWayland::Client;
     using namespace KWayland::Server;
-    // here we need a shm pool
-    m_display->createShm();
-
     Registry registry;
     QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
     registry.create(m_connection->display());
@@ -566,6 +613,7 @@ void TestWaylandSurface::testDestroy()
 
     connect(m_connection, &ConnectionThread::connectionDied, s, &Surface::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
     QVERIFY(s->isValid());
 
     QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
