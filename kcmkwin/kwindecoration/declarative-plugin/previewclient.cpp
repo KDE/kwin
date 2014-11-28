@@ -113,16 +113,6 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
             emit paletteChanged(m_palette);
         }
     );
-    connect(decoration, &Decoration::titleBarDoubleClicked, this,
-        [this]() {
-            if (!isMaximizeable()) {
-                return;
-            }
-            const bool maximize = !isMaximized();
-            setMaximizedHorizontally(maximize);
-            setMaximizedVertically(maximize);
-        }
-    );
     auto emitEdgesChanged = [this, c]() {
         c->adjacentScreenEdgesChanged(adjacentScreenEdges());
     };

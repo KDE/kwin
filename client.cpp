@@ -519,12 +519,6 @@ void Client::createDecoration(const QRect& oldgeom)
     if (m_decoration) {
         m_decoration->update();
         connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
-        connect(m_decoration, &KDecoration2::Decoration::titleBarDoubleClicked, this,
-            [this]() {
-                Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
-                dontMoveResize();
-            }
-        );
         connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {

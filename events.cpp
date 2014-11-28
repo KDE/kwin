@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
+#include <QStyleHints>
 #include <QWhatsThis>
 
 #include <kkeyserver.h>
@@ -1232,6 +1233,19 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
     if (!wantsInput())    // we cannot be active, use it anyway
         active = true;
 
+    // check whether it is a double click
+    if (button == XCB_BUTTON_INDEX_1) {
+        if (m_decorationDoubleClickTimer.isValid() &&
+                m_decoration->titleBar().contains(x, y) &&
+                !m_decorationDoubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
+            Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
+            dontMoveResize();
+            m_decorationDoubleClickTimer.invalidate();
+            return false;
+        }
+        m_decorationDoubleClickTimer.invalidate();
+    }
+
     if (button == XCB_BUTTON_INDEX_1)
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
     else if (button == XCB_BUTTON_INDEX_2)
@@ -1277,7 +1291,11 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
                               x11ToQtMouseButton(button),
                               x11ToQtMouseButtons(state) & ~x11ToQtMouseButton(button),
                               x11ToQtKeyboardModifiers(state));
+            event.setAccepted(false);
             QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted() && m_decoration->titleBar().contains(x, y) && button == XCB_BUTTON_INDEX_1) {
+                m_decorationDoubleClickTimer.start();
+            }
         }
     }
     if (w == wrapperId()) {

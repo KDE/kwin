@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "xcbutils.h"
 // Qt
+#include <QElapsedTimer>
 #include <QPixmap>
 #include <QWindow>
 // X
@@ -868,6 +869,7 @@ private:
     QScopedPointer<QWindow> m_frameWrapper;
     KDecoration2::Decoration *m_decoration;
     QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
+    QElapsedTimer m_decorationDoubleClickTimer;
     int desk;
     QStringList activityList;
     int m_activityUpdatesBlocked;
