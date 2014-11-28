@@ -525,14 +525,6 @@ void Client::createDecoration(const QRect& oldgeom)
                 dontMoveResize();
             }
         );
-        connect(m_decoration, &KDecoration2::Decoration::titleBarWheelEvent, this,
-            [this](const QPoint &angleDelta) {
-                if (angleDelta.y() == 0) {
-                    return;
-                }
-                performMouseCommand(options->operationTitlebarMouseWheel(angleDelta.y()), Cursor::pos());
-            }
-        );
         connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {

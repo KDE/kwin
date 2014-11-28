@@ -1200,7 +1200,13 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
                               hor ? Qt::Horizontal : Qt::Vertical,
                               x11ToQtMouseButtons(state),
                               modifiers);
+            event.setAccepted(false);
             QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted() && !hor) {
+                if (m_decoration->titleBar().contains(x, y)) {
+                    performMouseCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
+                }
+            }
         } else {
             QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
                             x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
