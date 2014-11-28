@@ -44,7 +44,7 @@ public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     virtual ~Decoration();
 
-    void paint(QPainter *painter, const QRegion &repaintRegion) override;
+    void paint(QPainter *painter, const QRect &repaintRegion) override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 

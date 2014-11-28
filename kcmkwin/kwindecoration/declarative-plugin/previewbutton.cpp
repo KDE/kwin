@@ -131,7 +131,7 @@ void PreviewButtonItem::paint(QPainter *painter)
     if (!m_button) {
         return;
     }
-    m_button->paint(painter, QRegion(0, 0, width(), height()));
+    m_button->paint(painter, QRect(0, 0, width(), height()));
 }
 
 }
