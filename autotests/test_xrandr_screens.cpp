@@ -23,6 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_workspace.h"
 // Qt
 #include <QtTest/QtTest>
+// system
+#include <unistd.h>
 
 Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
@@ -66,19 +68,28 @@ void TestXRandRScreens::initTestCase()
     s_rootWindow = XCB_WINDOW_NONE;
     // start X Server
     m_xserver.reset(new QProcess);
-    // randomize the display id in [1, 98]
-    // 0 is not used because it conflicts with "normal" X server
-    // 99 is not used because it's used by KDE's CI infrastructure
-    const QString id = QStringLiteral(":") + QString::number((qrand() % 98) + 1);
+    // use pipe to pass fd to Xephyr to get back the display id
+    int pipeFds[2];
+    QVERIFY(pipe(pipeFds) == 0);
     // using Xephyr as Xvfb doesn't support render extension
-    m_xserver->start(QStringLiteral("Xephyr"), QStringList() << id);
+    m_xserver->start(QStringLiteral("Xephyr"), QStringList({ QStringLiteral("-displayfd"), QString::number(pipeFds[1]) }));
     QVERIFY(m_xserver->waitForStarted());
     QCOMPARE(m_xserver->state(), QProcess::Running);
-    // give it some time before we open the X Display
-    QTest::qWait(500);
+
+    // reads from pipe, closes write side
+    close(pipeFds[1]);
+
+    QFile readPipe;
+    QVERIFY(readPipe.open(pipeFds[0], QIODevice::ReadOnly, QFileDevice::AutoCloseHandle));
+    QByteArray displayNumber = readPipe.readLine();
+    readPipe.close();
+
+    displayNumber.prepend(QByteArray(":"));
+    displayNumber.remove(displayNumber.size() -1, 1);
+
     // create X connection
     int screen = 0;
-    s_connection = xcb_connect(qPrintable(id), &screen);
+    s_connection = xcb_connect(displayNumber.constData(), &screen);
     QVERIFY(s_connection);
 
     // set root window
