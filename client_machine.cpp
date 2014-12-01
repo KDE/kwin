@@ -71,9 +71,11 @@ GetAddrInfo::~GetAddrInfo()
 {
     if (m_watcher && m_watcher->isRunning()) {
         m_watcher->cancel();
+        m_watcher->waitForFinished();
     }
     if (m_ownAddressWatcher && m_ownAddressWatcher->isRunning()) {
         m_ownAddressWatcher->cancel();
+        m_ownAddressWatcher->waitForFinished();
     }
     if (m_address) {
         freeaddrinfo(m_address);
