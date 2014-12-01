@@ -392,33 +392,22 @@ void KWinScreenEdgesConfig::monitorDefaults()
 void KWinScreenEdgesConfig::monitorShowEvent()
 {
     // Check if they are enabled
-    KConfigGroup config(m_config, "Compositing");
-    if (config.readEntry("Enabled", true)) {
-        // Compositing enabled
-        config = KConfigGroup(m_config, "Plugins");
+    KConfigGroup config(m_config, "Plugins");
 
-        // Present Windows
-        bool enabled = effectEnabled(BuiltInEffect::PresentWindows, config);
-        monitorItemSetEnabled(int(PresentWindowsCurrent), enabled);
-        monitorItemSetEnabled(int(PresentWindowsAll), enabled);
+    // Present Windows
+    bool enabled = effectEnabled(BuiltInEffect::PresentWindows, config);
+    monitorItemSetEnabled(int(PresentWindowsCurrent), enabled);
+    monitorItemSetEnabled(int(PresentWindowsAll), enabled);
 
-        // Desktop Grid
-        enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
-        monitorItemSetEnabled(int(DesktopGrid), enabled);
+    // Desktop Grid
+    enabled = effectEnabled(BuiltInEffect::DesktopGrid, config);
+    monitorItemSetEnabled(int(DesktopGrid), enabled);
 
-        // Desktop Cube
-        enabled = effectEnabled(BuiltInEffect::Cube, config);
-        monitorItemSetEnabled(int(Cube), enabled);
-        monitorItemSetEnabled(int(Cylinder), enabled);
-        monitorItemSetEnabled(int(Sphere), enabled);
-    } else { // Compositing disabled
-        monitorItemSetEnabled(int(PresentWindowsCurrent), false);
-        monitorItemSetEnabled(int(PresentWindowsAll), false);
-        monitorItemSetEnabled(int(DesktopGrid), false);
-        monitorItemSetEnabled(int(Cube), false);
-        monitorItemSetEnabled(int(Cylinder), false);
-        monitorItemSetEnabled(int(Sphere), false);
-    }
+    // Desktop Cube
+    enabled = effectEnabled(BuiltInEffect::Cube, config);
+    monitorItemSetEnabled(int(Cube), enabled);
+    monitorItemSetEnabled(int(Cylinder), enabled);
+    monitorItemSetEnabled(int(Sphere), enabled);
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, "Windows");
     QString focusPolicy = config2.readEntry("FocusPolicy", QString());
