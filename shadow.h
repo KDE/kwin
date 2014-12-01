@@ -170,7 +170,7 @@ private:
     QRegion m_shadowRegion;
     QSize m_cachedSize;
     // Decoration based shadows
-    QPointer<KDecoration2::DecorationShadow> m_decorationShadow;
+    QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
 };
 
 }

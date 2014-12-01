@@ -126,6 +126,7 @@ void PreviewItem::setDecoration(Decoration *deco)
             }
         }
     );
+    connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &PreviewItem::shadowChanged);
     emit decorationChanged(m_decoration);
 }
 
@@ -165,7 +166,7 @@ void PreviewItem::paint(QPainter *painter)
 
 void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingRight, int &paddingTop, int &paddingBottom)
 {
-    const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow();
+    const auto &shadow = ((const Decoration*)(m_decoration))->shadow();
     if (!shadow) {
         return;
     }
@@ -208,7 +209,8 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
 void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QMouseEvent e(event->type(),
                       event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->button(),
@@ -222,7 +224,8 @@ void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
 
 void PreviewItem::mousePressEvent(QMouseEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QMouseEvent e(event->type(),
                       event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->button(),
@@ -236,7 +239,8 @@ void PreviewItem::mousePressEvent(QMouseEvent *event)
 
 void PreviewItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QMouseEvent e(event->type(),
                       event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->button(),
@@ -250,7 +254,8 @@ void PreviewItem::mouseReleaseEvent(QMouseEvent *event)
 
 void PreviewItem::mouseMoveEvent(QMouseEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QMouseEvent e(event->type(),
                       event->localPos() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->button(),
@@ -264,7 +269,8 @@ void PreviewItem::mouseMoveEvent(QMouseEvent *event)
 
 void PreviewItem::hoverEnterEvent(QHoverEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QHoverEvent e(event->type(),
                       event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
@@ -277,7 +283,8 @@ void PreviewItem::hoverEnterEvent(QHoverEvent *event)
 
 void PreviewItem::hoverLeaveEvent(QHoverEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QHoverEvent e(event->type(),
                       event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
@@ -290,7 +297,8 @@ void PreviewItem::hoverLeaveEvent(QHoverEvent *event)
 
 void PreviewItem::hoverMoveEvent(QHoverEvent *event)
 {
-    if (const DecorationShadow *shadow = ((const Decoration*)(m_decoration))->shadow()) {
+    const auto &shadow = m_decoration->shadow();
+    if (shadow) {
         QHoverEvent e(event->type(),
                       event->posF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
                       event->oldPosF() - QPointF(shadow->paddingLeft(), shadow->paddingTop()),
@@ -368,6 +376,18 @@ void PreviewItem::syncSize()
     }
     m_client->setWidth(width() - m_decoration->borderLeft() - m_decoration->borderRight() - widthOffset);
     m_client->setHeight(height() - m_decoration->borderTop() - m_decoration->borderBottom() - heightOffset);
+}
+
+DecorationShadow *PreviewItem::shadow() const
+{
+    if (!m_decoration) {
+        return nullptr;
+    }
+    const auto &s = m_decoration->shadow();
+    if (!s) {
+        return nullptr;
+    }
+    return s.data();
 }
 
 }

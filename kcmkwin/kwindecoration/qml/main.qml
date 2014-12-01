@@ -54,10 +54,10 @@ ScrollView {
                 Component.onCompleted: {
                     client.caption = Qt.binding(function() { return model["display"]; });
                     client.active = false;
-                    anchors.leftMargin = Qt.binding(function() { return 40 - (inactivePreview.decoration.shadow ? inactivePreview.decoration.shadow.paddingLeft : 0);});
-                    anchors.rightMargin = Qt.binding(function() { return 10 - (inactivePreview.decoration.shadow ? inactivePreview.decoration.shadow.paddingRight : 0);});
-                    anchors.topMargin = Qt.binding(function() { return 10 - (inactivePreview.decoration.shadow ? inactivePreview.decoration.shadow.paddingTop : 0);});
-                    anchors.bottomMargin = Qt.binding(function() { return 40 - (inactivePreview.decoration.shadow ? inactivePreview.decoration.shadow.paddingBottom : 0);});
+                    anchors.leftMargin = Qt.binding(function() { return 40 - (inactivePreview.shadow ? inactivePreview.shadow.paddingLeft : 0);});
+                    anchors.rightMargin = Qt.binding(function() { return 10 - (inactivePreview.shadow ? inactivePreview.shadow.paddingRight : 0);});
+                    anchors.topMargin = Qt.binding(function() { return 10 - (inactivePreview.shadow ? inactivePreview.shadow.paddingTop : 0);});
+                    anchors.bottomMargin = Qt.binding(function() { return 40 - (inactivePreview.shadow ? inactivePreview.shadow.paddingBottom : 0);});
                 }
             }
             KDecoration.Decoration {
@@ -68,10 +68,10 @@ ScrollView {
                 Component.onCompleted: {
                     client.caption = Qt.binding(function() { return model["display"]; });
                     client.active = true;
-                    anchors.leftMargin = Qt.binding(function() { return 10 - (activePreview.decoration.shadow ? activePreview.decoration.shadow.paddingLeft : 0);});
-                    anchors.rightMargin = Qt.binding(function() { return 40 - (activePreview.decoration.shadow ? activePreview.decoration.shadow.paddingRight : 0);});
-                    anchors.topMargin = Qt.binding(function() { return 40 - (activePreview.decoration.shadow ? activePreview.decoration.shadow.paddingTop : 0);});
-                    anchors.bottomMargin = Qt.binding(function() { return 10 - (activePreview.decoration.shadow ? activePreview.decoration.shadow.paddingBottom : 0);});
+                    anchors.leftMargin = Qt.binding(function() { return 10 - (activePreview.shadow ? activePreview.shadow.paddingLeft : 0);});
+                    anchors.rightMargin = Qt.binding(function() { return 40 - (activePreview.shadow ? activePreview.shadow.paddingRight : 0);});
+                    anchors.topMargin = Qt.binding(function() { return 40 - (activePreview.shadow ? activePreview.shadow.paddingTop : 0);});
+                    anchors.bottomMargin = Qt.binding(function() { return 10 - (activePreview.shadow ? activePreview.shadow.paddingBottom : 0);});
                 }
             }
             MouseArea {

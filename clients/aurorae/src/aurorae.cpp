@@ -347,7 +347,7 @@ void Decoration::init()
     } else {
         // create a dummy shadow for the configuration interface
         if (m_padding) {
-            KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
+            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
             s->setPadding(*m_padding);
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
@@ -394,20 +394,16 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
             (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
             !client().data()->isMaximized()) {
         r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
-        KDecoration2::DecorationShadow *s = new KDecoration2::DecorationShadow(this);
+        auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
         s->setShadow(m_buffer);
         s->setPadding(*m_padding);
         s->setInnerShadowRect(QRect(m_padding->left(),
                                     m_padding->top(),
                                     m_buffer.width() - m_padding->left() - m_padding->right(),
                                     m_buffer.height() - m_padding->top() - m_padding->bottom()));
-        auto oldShadow = shadow();
         setShadow(s);
-        if (oldShadow) {
-            delete oldShadow.data();
-        }
     } else {
-        setShadow(QPointer<KDecoration2::DecorationShadow>());
+        setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
     }
     painter->drawImage(rect(), m_buffer, r);
 }
