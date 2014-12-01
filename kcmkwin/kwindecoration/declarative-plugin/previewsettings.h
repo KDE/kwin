@@ -36,14 +36,14 @@ class ButtonsModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit ButtonsModel(const QList< DecorationButtonType > &buttons, QObject *parent = 0);
+    explicit ButtonsModel(const QVector< DecorationButtonType > &buttons, QObject *parent = 0);
     explicit ButtonsModel(QObject *parent = nullptr);
     virtual ~ButtonsModel();
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash< int, QByteArray > roleNames() const override;
 
-    QList< DecorationButtonType > buttons() const {
+    QVector< DecorationButtonType > buttons() const {
         return m_buttons;
     }
 
@@ -54,7 +54,7 @@ public:
     void add(DecorationButtonType type);
 
 private:
-    QList< DecorationButtonType > m_buttons;
+    QVector< DecorationButtonType > m_buttons;
 };
 
 class BorderSizesModel : public QAbstractListModel
@@ -119,8 +119,8 @@ public:
         return m_borderSizes;
     }
 
-    QList< DecorationButtonType > decorationButtonsLeft() const override;
-    QList< DecorationButtonType > decorationButtonsRight() const override;
+    QVector< DecorationButtonType > decorationButtonsLeft() const override;
+    QVector< DecorationButtonType > decorationButtonsRight() const override;
 
     Q_INVOKABLE void addButtonToLeft(int row);
     Q_INVOKABLE void addButtonToRight(int row);

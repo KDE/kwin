@@ -43,20 +43,20 @@ public:
     KDecoration2::BorderSize borderSize() const override {
         return m_borderSize;
     }
-    QList< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override {
+    QVector< KDecoration2::DecorationButtonType > decorationButtonsLeft() const override {
         return m_leftButtons;
     }
-    QList< KDecoration2::DecorationButtonType > decorationButtonsRight() const override {
+    QVector< KDecoration2::DecorationButtonType > decorationButtonsRight() const override {
         return m_rightButtons;
     }
 
 private:
     void readSettings();
-    QList< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfigGroup &config,
+    QVector< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfigGroup &config,
                                                                       const char *key,
-                                                                      const QList< KDecoration2::DecorationButtonType > &defaultValue) const;
-    QList< KDecoration2::DecorationButtonType > m_leftButtons;
-    QList< KDecoration2::DecorationButtonType > m_rightButtons;
+                                                                      const QVector< KDecoration2::DecorationButtonType > &defaultValue) const;
+    QVector< KDecoration2::DecorationButtonType > m_leftButtons;
+    QVector< KDecoration2::DecorationButtonType > m_rightButtons;
     KDecoration2::BorderSize m_borderSize;
 };
 } // Decoration
