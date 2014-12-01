@@ -82,7 +82,7 @@ void TestXRandRScreens::initTestCase()
     QVERIFY(m_xserver->waitForStarted());
     QCOMPARE(m_xserver->state(), QProcess::Running);
     // give it some time before we open the X Display
-    QTest::qWait(100);
+    QTest::qWait(500);
     // create X connection
     int screen = 0;
     s_connection = xcb_connect(qPrintable(id), &screen);
