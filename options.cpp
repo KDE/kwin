@@ -1155,7 +1155,7 @@ double Options::animationTimeFactor() const
     return factors[ animationSpeed ];
 }
 
-KDecorationDefines::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
+Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
 {
     return button == Qt::RightButton ? opMaxButtonRightClick :
            button == Qt::MidButton ?   opMaxButtonMiddleClick :

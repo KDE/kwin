@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include <kdecoration.h>
 #include "sm.h"
+#include "options.h"
 #include "utils.h"
 // Qt
 #include <QTimer>
@@ -330,7 +331,7 @@ public:
     void unregisterEventFilter(X11EventFilter *filter);
 
 public Q_SLOTS:
-    void performWindowOperation(KWin::Client* c, KDecorationDefines::WindowOperation op);
+    void performWindowOperation(KWin::Client* c, Options::WindowOperation op);
     // Keybindings
     //void slotSwitchToWindow( int );
     void slotWindowToDesktop();

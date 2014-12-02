@@ -740,7 +740,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     QMetaObject::invokeMethod(workspace(), "performWindowOperation",
                               Qt::QueuedConnection,
                               Q_ARG(KWin::Client*, c.data()),
-                              Q_ARG(KDecorationDefines::WindowOperation, op));
+                              Q_ARG(Options::WindowOperation, op));
 }
 
 void UserActionsMenu::slotSendToDesktop(QAction *action)

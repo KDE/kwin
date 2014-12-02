@@ -483,7 +483,7 @@ public:
     const QKeySequence &shortcut() const;
     void setShortcut(const QString& cut);
 
-    WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
+    Options::WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
     bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos);
 
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;

@@ -47,13 +47,14 @@ enum HiddenPreviews {
 
 class Settings;
 
-class Options : public QObject, public KDecorationDefines
+class Options : public QObject
 {
     Q_OBJECT
     Q_ENUMS(FocusPolicy)
     Q_ENUMS(GlSwapStrategy)
     Q_ENUMS(MouseCommand)
     Q_ENUMS(MouseWheelCommand)
+    Q_ENUMS(WindowOperation)
 
     Q_PROPERTY(FocusPolicy focusPolicy READ focusPolicy WRITE setFocusPolicy NOTIFY focusPolicyChanged)
     Q_PROPERTY(bool nextFocusPrefersMouse READ isNextFocusPrefersMouse WRITE setNextFocusPrefersMouse NOTIFY nextFocusPrefersMouseChanged)
@@ -346,6 +347,37 @@ public:
     bool isLegacyFullscreenSupport() const {
         return m_legacyFullscreenSupport;
     }
+
+    enum WindowOperation {
+        MaximizeOp = 5000,
+        RestoreOp,
+        MinimizeOp,
+        MoveOp,
+        UnrestrictedMoveOp,
+        ResizeOp,
+        UnrestrictedResizeOp,
+        CloseOp,
+        OnAllDesktopsOp,
+        ShadeOp,
+        KeepAboveOp,
+        KeepBelowOp,
+        OperationsOp,
+        WindowRulesOp,
+        ToggleStoreSettingsOp = WindowRulesOp, ///< @obsolete
+        HMaximizeOp,
+        VMaximizeOp,
+        LowerOp,
+        FullScreenOp,
+        NoBorderOp,
+        NoOp,
+        SetupWindowShortcutOp,
+        ApplicationRulesOp,
+        RemoveTabFromGroupOp, // Remove from group
+        CloseTabGroupOp, // Close the group
+        ActivateNextTabOp, // Move left in the group
+        ActivatePreviousTabOp, // Move right in the group
+        TabDragOp,
+    };
 
     WindowOperation operationTitlebarDblClick() const {
         return OpTitlebarDblClick;
@@ -913,5 +945,7 @@ private:
 extern Options* options;
 
 } // namespace
+
+Q_DECLARE_METATYPE(KWin::Options::WindowOperation)
 
 #endif

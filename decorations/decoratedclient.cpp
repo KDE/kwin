@@ -142,7 +142,7 @@ DELEGATE(WId, decorationId, frameId)
 #define DELEGATE(name, op) \
     void DecoratedClientImpl::name() \
     { \
-        Workspace::self()->performWindowOperation(m_client, KDecorationDefines::op); \
+        Workspace::self()->performWindowOperation(m_client, Options::op); \
     }
 
 DELEGATE(requestToggleShade, ShadeOp)
