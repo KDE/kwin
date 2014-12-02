@@ -104,14 +104,17 @@ void X11Renderer::reparent(Deleted *deleted)
 {
     if (m_scheduleTimer->isActive()) {
         m_scheduleTimer->stop();
-        disconnect(m_scheduleTimer, &QTimer::timeout, this, &X11Renderer::render);
-        disconnect(this, &Renderer::renderScheduled, m_scheduleTimer, static_cast<void (QTimer::*)()>(&QTimer::start));
     }
+    disconnect(m_scheduleTimer, &QTimer::timeout, this, &X11Renderer::render);
+    disconnect(this, &Renderer::renderScheduled, m_scheduleTimer, static_cast<void (QTimer::*)()>(&QTimer::start));
     Renderer::reparent(deleted);
 }
 
 void X11Renderer::render()
 {
+    if (!client()) {
+        return;
+    }
     const QRegion scheduled = getScheduled();
     if (scheduled.isEmpty()) {
         return;
