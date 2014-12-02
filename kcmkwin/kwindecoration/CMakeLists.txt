@@ -5,9 +5,9 @@ add_subdirectory(declarative-plugin)
 
 set(kcm_kwindecoration_PART_SRCS
     kcm.cpp
-    buttons.cpp
+#     buttons.cpp
 #     buttonsconfigdialog.cpp
-    configdialog.cpp
+#     configdialog.cpp
     decorationmodel.cpp
 )
 
