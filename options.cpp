@@ -377,6 +377,33 @@ void Options::setOperationTitlebarDblClick(WindowOperation operationTitlebarDblC
     emit operationTitlebarDblClickChanged();
 }
 
+void Options::setOperationMaxButtonLeftClick(WindowOperation op)
+{
+    if (opMaxButtonLeftClick == op) {
+        return;
+    }
+    opMaxButtonLeftClick = op;
+    emit operationMaxButtonLeftClickChanged();
+}
+
+void Options::setOperationMaxButtonRightClick(WindowOperation op)
+{
+    if (opMaxButtonRightClick == op) {
+        return;
+    }
+    opMaxButtonRightClick = op;
+    emit operationMaxButtonRightClickChanged();
+}
+
+void Options::setOperationMaxButtonMiddleClick(WindowOperation op)
+{
+    if (opMaxButtonMiddleClick == op) {
+        return;
+    }
+    opMaxButtonMiddleClick = op;
+    emit operationMaxButtonMiddleClickChanged();
+}
+
 void Options::setCommandActiveTitlebar1(MouseCommand commandActiveTitlebar1)
 {
     if (CmdActiveTitlebar1 == commandActiveTitlebar1) {
@@ -820,9 +847,9 @@ void Options::loadConfig()
     // Electric borders
     KConfigGroup config(m_settings->config(), "Windows");
     OpTitlebarDblClick = windowOperation(config.readEntry("TitlebarDoubleClickCommand", "Maximize"), true);
-    setOpMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
-    setOpMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
-    setOpMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
+    setOperationMaxButtonLeftClick(windowOperation(config.readEntry("MaximizeButtonLeftClickCommand", "Maximize"), true));
+    setOperationMaxButtonMiddleClick(windowOperation(config.readEntry("MaximizeButtonMiddleClickCommand", "Maximize (vertical only)"), true));
+    setOperationMaxButtonRightClick(windowOperation(config.readEntry("MaximizeButtonRightClickCommand", "Maximize (horizontal only)"), true));
 
     // Mouse bindings
     config = KConfigGroup(m_settings->config(), "MouseBindings");
@@ -1127,6 +1154,13 @@ double Options::animationTimeFactor() const
 {
     const double factors[] = { 0, 0.2, 0.5, 1, 2, 4, 20 };
     return factors[ animationSpeed ];
+}
+
+KDecorationDefines::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons button) const
+{
+    return button == Qt::RightButton ? opMaxButtonRightClick :
+           button == Qt::MidButton ?   opMaxButtonMiddleClick :
+           opMaxButtonLeftClick;
 }
 
 } // namespace

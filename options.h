@@ -118,6 +118,9 @@ class Options : public KDecorationOptions
     */
     Q_PROPERTY(bool legacyFullscreenSupport READ isLegacyFullscreenSupport WRITE setLegacyFullscreenSupport NOTIFY legacyFullscreenSupportChanged)
     Q_PROPERTY(WindowOperation operationTitlebarDblClick READ operationTitlebarDblClick WRITE setOperationTitlebarDblClick NOTIFY operationTitlebarDblClickChanged)
+    Q_PROPERTY(WindowOperation operationMaxButtonLeftClick READ operationMaxButtonLeftClick WRITE setOperationMaxButtonLeftClick NOTIFY operationMaxButtonLeftClickChanged)
+    Q_PROPERTY(WindowOperation operationMaxButtonMiddleClick READ operationMaxButtonMiddleClick WRITE setOperationMaxButtonMiddleClick NOTIFY operationMaxButtonMiddleClickChanged)
+    Q_PROPERTY(WindowOperation operationMaxButtonRightClick READ operationMaxButtonRightClick WRITE setOperationMaxButtonRightClick NOTIFY operationMaxButtonRightClickChanged)
     Q_PROPERTY(MouseCommand commandActiveTitlebar1 READ commandActiveTitlebar1 WRITE setCommandActiveTitlebar1 NOTIFY commandActiveTitlebar1Changed)
     Q_PROPERTY(MouseCommand commandActiveTitlebar2 READ commandActiveTitlebar2 WRITE setCommandActiveTitlebar2 NOTIFY commandActiveTitlebar2Changed)
     Q_PROPERTY(MouseCommand commandActiveTitlebar3 READ commandActiveTitlebar3 WRITE setCommandActiveTitlebar3 NOTIFY commandActiveTitlebar3Changed)
@@ -347,6 +350,17 @@ public:
     WindowOperation operationTitlebarDblClick() const {
         return OpTitlebarDblClick;
     }
+    WindowOperation operationMaxButtonLeftClick() const {
+        return opMaxButtonLeftClick;
+    }
+    WindowOperation operationMaxButtonRightClick() const {
+        return opMaxButtonRightClick;
+    }
+    WindowOperation operationMaxButtonMiddleClick() const {
+        return opMaxButtonMiddleClick;
+    }
+    WindowOperation operationMaxButtonClick(Qt::MouseButtons button) const;
+
 
     enum MouseCommand {
         MouseRaise, MouseLower, MouseOperationsMenu, MouseToggleRaiseAndLower,
@@ -570,6 +584,9 @@ public:
     void setFocusStealingPreventionLevel(int focusStealingPreventionLevel);
     void setLegacyFullscreenSupport(bool legacyFullscreenSupport);
     void setOperationTitlebarDblClick(WindowOperation operationTitlebarDblClick);
+    void setOperationMaxButtonLeftClick(WindowOperation op);
+    void setOperationMaxButtonRightClick(WindowOperation op);
+    void setOperationMaxButtonMiddleClick(WindowOperation op);
     void setCommandActiveTitlebar1(MouseCommand commandActiveTitlebar1);
     void setCommandActiveTitlebar2(MouseCommand commandActiveTitlebar2);
     void setCommandActiveTitlebar3(MouseCommand commandActiveTitlebar3);
@@ -614,6 +631,15 @@ public:
     // default values
     static WindowOperation defaultOperationTitlebarDblClick() {
         return MaximizeOp;
+    }
+    static WindowOperation defaultOperationMaxButtonLeftClick() {
+        return MaximizeOp;
+    }
+    static WindowOperation defaultOperationMaxButtonRightClick() {
+        return HMaximizeOp;
+    }
+    static WindowOperation defaultOperationMaxButtonMiddleClick() {
+        return VMaximizeOp;
     }
     static MouseCommand defaultCommandActiveTitlebar1() {
         return MouseRaise;
@@ -754,6 +780,9 @@ Q_SIGNALS:
     void focusStealingPreventionLevelChanged();
     void legacyFullscreenSupportChanged();
     void operationTitlebarDblClickChanged();
+    void operationMaxButtonLeftClickChanged();
+    void operationMaxButtonRightClickChanged();
+    void operationMaxButtonMiddleClickChanged();
     void commandActiveTitlebar1Changed();
     void commandActiveTitlebar2Changed();
     void commandActiveTitlebar3Changed();
@@ -846,6 +875,9 @@ private:
     OpenGLPlatformInterface m_glPlatformInterface;
 
     WindowOperation OpTitlebarDblClick;
+    WindowOperation opMaxButtonRightClick = defaultOperationMaxButtonRightClick();
+    WindowOperation opMaxButtonMiddleClick = defaultOperationMaxButtonMiddleClick();
+    WindowOperation opMaxButtonLeftClick = defaultOperationMaxButtonRightClick();
 
     // mouse bindings
     MouseCommand CmdActiveTitlebar1;
