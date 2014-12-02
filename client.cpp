@@ -50,6 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QApplication>
 #include <QDebug>
+#include <QFile>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QScriptEngine>

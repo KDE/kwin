@@ -32,6 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_INPUT
 #include "libinput/connection.h"
 #endif
+// Qt
+#include <QKeyEvent>
+#include <QMouseEvent>
 // KDE
 #include <kkeyserver.h>
 // TODO: remove xtest

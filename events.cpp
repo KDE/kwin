@@ -48,8 +48,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QApplication>
 #include <QDebug>
+#include <QHoverEvent>
+#include <QKeyEvent>
+#include <QMouseEvent>
 #include <QStyleHints>
 #include <QWhatsThis>
+#include <QWheelEvent>
 
 #include <kkeyserver.h>
 

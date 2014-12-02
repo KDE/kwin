@@ -23,7 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_CLIENT_H
 
 // kwin
-#include <kdecoration.h>
 #include "options.h"
 #include "rules.h"
 #include "tabgroup.h"
@@ -31,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // Qt
 #include <QElapsedTimer>
+#include <QFlags>
+#include <QPointer>
 #include <QPixmap>
 #include <QWindow>
 // X

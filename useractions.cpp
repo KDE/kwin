@@ -736,7 +736,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         helperDialog(type, c);
     // need to delay performing the window operation as we need to have the
     // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
-    qRegisterMetaType<KDecorationDefines::WindowOperation>();
+    qRegisterMetaType<Options::WindowOperation>();
     QMetaObject::invokeMethod(workspace(), "performWindowOperation",
                               Qt::QueuedConnection,
                               Q_ARG(KWin::Client*, c.data()),

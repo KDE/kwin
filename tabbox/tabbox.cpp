@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QAction>
 #include <QDebug>
+#include <QKeyEvent>
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
