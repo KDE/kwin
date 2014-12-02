@@ -395,7 +395,7 @@ void UserActionsMenu::menuAboutToShow()
     m_resizeOperation->setEnabled(m_client.data()->isResizable());
     m_moveOperation->setEnabled(m_client.data()->isMovableAcrossScreens());
     m_maximizeOperation->setEnabled(m_client.data()->isMaximizable());
-    m_maximizeOperation->setChecked(m_client.data()->maximizeMode() == Client::MaximizeFull);
+    m_maximizeOperation->setChecked(m_client.data()->maximizeMode() == MaximizeFull);
     m_shadeOperation->setEnabled(m_client.data()->isShadeable());
     m_shadeOperation->setChecked(m_client.data()->shadeMode() != ShadeNone);
     m_keepAboveOperation->setChecked(m_client.data()->keepAbove());
@@ -1049,17 +1049,17 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         QMetaObject::invokeMethod(c, "closeWindow", Qt::QueuedConnection);
         break;
     case Options::MaximizeOp:
-        c->maximize(c->maximizeMode() == Client::MaximizeFull
-                    ? Client::MaximizeRestore : Client::MaximizeFull);
+        c->maximize(c->maximizeMode() == MaximizeFull
+                    ? MaximizeRestore : MaximizeFull);
         break;
     case Options::HMaximizeOp:
-        c->maximize(c->maximizeMode() ^ Client::MaximizeHorizontal);
+        c->maximize(c->maximizeMode() ^ MaximizeHorizontal);
         break;
     case Options::VMaximizeOp:
-        c->maximize(c->maximizeMode() ^ Client::MaximizeVertical);
+        c->maximize(c->maximizeMode() ^ MaximizeVertical);
         break;
     case Options::RestoreOp:
-        c->maximize(Client::MaximizeRestore);
+        c->maximize(MaximizeRestore);
         break;
     case Options::MinimizeOp:
         c->minimize();
@@ -1285,10 +1285,10 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         break;
     }
     case Options::MouseMaximize:
-        maximize(Client::MaximizeFull);
+        maximize(MaximizeFull);
         break;
     case Options::MouseRestore:
-        maximize(Client::MaximizeRestore);
+        maximize(MaximizeRestore);
         break;
     case Options::MouseMinimize:
         minimize();

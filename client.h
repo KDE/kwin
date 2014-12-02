@@ -78,7 +78,7 @@ enum class Predicate {
 };
 
 class Client
-    : public Toplevel, public KDecorationDefines
+    : public Toplevel
 {
     Q_OBJECT
     /**
@@ -749,7 +749,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void clientManaging(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
-    void clientMaximizedStateChanged(KWin::Client*, Client::MaximizeMode);
+    void clientMaximizedStateChanged(KWin::Client*, MaximizeMode);
     void clientMaximizedStateChanged(KWin::Client* c, bool h, bool v);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);
@@ -1158,7 +1158,7 @@ inline QRect Client::geometryRestore() const
     return geom_restore;
 }
 
-inline Client::MaximizeMode Client::maximizeMode() const
+inline MaximizeMode Client::maximizeMode() const
 {
     return max_mode;
 }

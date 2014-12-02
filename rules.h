@@ -44,7 +44,6 @@ class Rules;
 #ifndef KCMRULES // only for kwin core
 
 class WindowRules
-    : public KDecorationDefines
 {
 public:
     explicit WindowRules(const QVector< Rules* >& rules);
@@ -97,7 +96,6 @@ private:
 #endif
 
 class Rules
-    : public KDecorationDefines
 {
 public:
     Rules();

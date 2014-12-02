@@ -371,16 +371,16 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
 {
     QSize borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
     QRect maxRect;
-    int guideMaximized = Client::MaximizeRestore;
-    if (c->maximizeMode() != Client::MaximizeRestore) {
+    int guideMaximized = MaximizeRestore;
+    if (c->maximizeMode() != MaximizeRestore) {
         maxRect = clientArea(MaximizeArea, pos + c->rect().center(), c->desktop());
         QRect geo = c->geometry();
-        if (c->maximizeMode() & Client::MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
-            guideMaximized |= Client::MaximizeHorizontal;
+        if (c->maximizeMode() & MaximizeHorizontal && (geo.x() == maxRect.left() || geo.right() == maxRect.right())) {
+            guideMaximized |= MaximizeHorizontal;
             borderSnapZone.setWidth(qMax(borderSnapZone.width() + 2, maxRect.width() / 16));
         }
-        if (c->maximizeMode() & Client::MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
-            guideMaximized |= Client::MaximizeVertical;
+        if (c->maximizeMode() & MaximizeVertical && (geo.y() == maxRect.top() || geo.bottom() == maxRect.bottom())) {
+            guideMaximized |= MaximizeVertical;
             borderSnapZone.setHeight(qMax(borderSnapZone.height() + 2, maxRect.height() / 16));
         }
     }
@@ -420,16 +420,16 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
 
             // snap to titlebar / snap to window borders on inner screen edges
             Client::Position titlePos = c->titlebarPosition();
-            if (padding[0] && (titlePos == Client::PositionLeft || (c->maximizeMode() & Client::MaximizeHorizontal) ||
+            if (padding[0] && (titlePos == Client::PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
                                screens()->intersecting(geo.translated(maxRect.x() - (padding[0] + geo.x()), 0)) > 1))
                 padding[0] = 0;
-            if (padding[1] && (titlePos == Client::PositionRight || (c->maximizeMode() & Client::MaximizeHorizontal) ||
+            if (padding[1] && (titlePos == Client::PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
                                screens()->intersecting(geo.translated(maxRect.right() + padding[1] - geo.right(), 0)) > 1))
                 padding[1] = 0;
-            if (padding[2] && (titlePos == Client::PositionTop || (c->maximizeMode() & Client::MaximizeVertical) ||
+            if (padding[2] && (titlePos == Client::PositionTop || (c->maximizeMode() & MaximizeVertical) ||
                                screens()->intersecting(geo.translated(0, maxRect.y() - (padding[2] + geo.y()))) > 1))
                 padding[2] = 0;
-            if (padding[3] && (titlePos == Client::PositionBottom || (c->maximizeMode() & Client::MaximizeVertical) ||
+            if (padding[3] && (titlePos == Client::PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
                                screens()->intersecting(geo.translated(0, maxRect.bottom() + padding[3] - geo.bottom())) > 1))
                 padding[3] = 0;
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
@@ -474,7 +474,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 lrx = lx + (*l)->width();
                 lry = ly + (*l)->height();
 
-                if (!(guideMaximized & Client::MaximizeHorizontal) &&
+                if (!(guideMaximized & MaximizeHorizontal) &&
                     (((cy <= lry) && (cy  >= ly)) || ((ry >= ly) && (ry  <= lry)) || ((cy <= ly) && (ry >= lry)))) {
                     if ((sOWO ? (cx < lrx) : true) && (qAbs(lrx - cx) < snap) && (qAbs(lrx - cx) < deltaX)) {
                         deltaX = qAbs(lrx - cx);
@@ -486,7 +486,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                     }
                 }
 
-                if (!(guideMaximized & Client::MaximizeVertical) &&
+                if (!(guideMaximized & MaximizeVertical) &&
                     (((cx <= lrx) && (cx  >= lx)) || ((rx >= lx) && (rx  <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
                     if ((sOWO ? (cy < lry) : true) && (qAbs(lry - cy) < snap) && (qAbs(lry - cy) < deltaY)) {
                         deltaY = qAbs(lry - cy);
@@ -500,7 +500,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                 }
 
                 // Corner snapping
-                if (!(guideMaximized & Client::MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
+                if (!(guideMaximized & MaximizeVertical) && (nx == lrx || nx + cw == lx)) {
                     if ((sOWO ? (ry > lry) : true) && (qAbs(lry - ry) < snap) && (qAbs(lry - ry) < deltaY)) {
                         deltaY = qAbs(lry - ry);
                         ny = lry - ch;
@@ -510,7 +510,7 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
                         ny = ly;
                     }
                 }
-                if (!(guideMaximized & Client::MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
+                if (!(guideMaximized & MaximizeHorizontal) && (ny == lry || ny + ch == ly)) {
                     if ((sOWO ? (rx > lrx) : true) && (qAbs(lrx - rx) < snap) && (qAbs(lrx - rx) < deltaX)) {
                         deltaX = qAbs(lrx - rx);
                         nx = lrx - cw;
@@ -2205,14 +2205,14 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     // call into decoration update borders
     if (m_decoration && m_decoration->client()) {
         const auto c = m_decoration->client().data();
-        if ((max_mode & KDecorationDefines::MaximizeVertical) != (old_mode & KDecorationDefines::MaximizeVertical)) {
-            emit c->maximizedVerticallyChanged(max_mode & KDecorationDefines::MaximizeVertical);
+        if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
+            emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
         }
-        if ((max_mode & KDecorationDefines::MaximizeHorizontal) != (old_mode & KDecorationDefines::MaximizeHorizontal)) {
-            emit c->maximizedHorizontallyChanged(max_mode & KDecorationDefines::MaximizeHorizontal);
+        if ((max_mode & MaximizeHorizontal) != (old_mode & MaximizeHorizontal)) {
+            emit c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
         }
-        if ((max_mode == KDecorationDefines::MaximizeFull) != (old_mode == KDecorationDefines::MaximizeFull)) {
-            emit c->maximizedChanged(max_mode & KDecorationDefines::MaximizeFull);
+        if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
+            emit c->maximizedChanged(max_mode & MaximizeFull);
         }
     }
 

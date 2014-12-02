@@ -110,13 +110,13 @@ void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacemen
         Client::Position titlePos = c->titlebarPosition();
 
         const QRect fullRect = workspace()->clientArea(FullArea, c);
-        if (!(c->maximizeMode() & KDecorationDefines::MaximizeHorizontal)) {
+        if (!(c->maximizeMode() & MaximizeHorizontal)) {
             if (titlePos != Client::PositionRight && geo.right() == fullRect.right())
                 corner.rx() += cs.width() - cp.x();
             if (titlePos != Client::PositionLeft && geo.x() == fullRect.x())
                 corner.rx() -= cp.x();
         }
-        if (!(c->maximizeMode() & KDecorationDefines::MaximizeVertical)) {
+        if (!(c->maximizeMode() & MaximizeVertical)) {
             if (titlePos != Client::PositionBottom && geo.bottom() == fullRect.bottom())
                 corner.ry() += cs.height() - cp.y();
             if (titlePos != Client::PositionTop && geo.y() == fullRect.y())
@@ -565,7 +565,7 @@ void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement)
         nextPlacement = Smart;
     if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
         if (workspace()->clientArea(MaximizeArea, c) == area)
-            c->maximize(Client::MaximizeFull);
+            c->maximize(MaximizeFull);
         else { // if the geometry doesn't match default maximize area (xinerama case?),
             // it's probably better to use the given area
             c->setGeometry(area);

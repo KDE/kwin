@@ -279,7 +279,7 @@ Client::Client()
     ready_for_painting = false; // wait for first damage or sync reply
 
     connect(this, &Client::geometryShapeChanged, this, &Client::geometryChanged);
-    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::Client*, Client::MaximizeMode)>(&Client::clientMaximizedStateChanged);
+    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::Client*, MaximizeMode)>(&Client::clientMaximizedStateChanged);
     connect(this, signalMaximizeChanged, this, &Client::geometryChanged);
     connect(this, &Client::clientStepUserMovedResized,   this, &Client::geometryChanged);
     connect(this, &Client::clientStartUserMovedResized,  this, &Client::moveResizedChanged);
@@ -708,7 +708,7 @@ void Client::checkNoBorder()
 
 bool Client::wantsShadowToBeRendered() const
 {
-    return !isFullScreen() && maximizeMode() != KDecorationDefines::MaximizeFull;
+    return !isFullScreen() && maximizeMode() != MaximizeFull;
 }
 
 void Client::updateShape()
@@ -1823,9 +1823,9 @@ bool Client::untab(const QRect &toGeometry, bool clientRemoved)
             setQuickTileMode(QuickTileNone); // if we leave a quicktiled group, assume that the user wants to untile
         }
         if (toGeometry.isValid()) {
-            if (maximizeMode() != Client::MaximizeRestore) {
+            if (maximizeMode() != MaximizeRestore) {
                 changedSize = true;
-                maximize(Client::MaximizeRestore); // explicitly calling for a geometry -> unmaximize
+                maximize(MaximizeRestore); // explicitly calling for a geometry -> unmaximize
             }
             if (keepSize && changedSize) {
                 geom_restore = geometry(); // checkWorkspacePosition() invokes it

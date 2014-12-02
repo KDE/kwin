@@ -120,6 +120,24 @@ enum ShadeMode {
     ShadeActivated // "shaded", but visible due to alt+tab to the window
 };
 
+/**
+ * Maximize mode. These values specify how a window is maximized.
+ */
+// these values are written to session files, don't change the order
+enum MaximizeMode {
+    MaximizeRestore    = 0, ///< The window is not maximized in any direction.
+    MaximizeVertical   = 1, ///< The window is maximized vertically.
+    MaximizeHorizontal = 2, ///< The window is maximized horizontally.
+    /// Equal to @p MaximizeVertical | @p MaximizeHorizontal
+    MaximizeFull = MaximizeVertical | MaximizeHorizontal
+};
+
+inline
+MaximizeMode operator^(MaximizeMode m1, MaximizeMode m2)
+{
+    return MaximizeMode(int(m1) ^ int(m2));
+}
+
 template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
 
 void updateXTime();

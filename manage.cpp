@@ -408,11 +408,11 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             const QSize ss = workspace()->clientArea(ScreenArea, area.center(), desktop()).size();
             const QRect fsa = workspace()->clientArea(FullArea, geom.center(), desktop());
             const QSize cs = clientSize();
-            int pseudo_max = Client::MaximizeRestore;
+            int pseudo_max = MaximizeRestore;
             if (width() >= area.width())
-                pseudo_max |=  Client::MaximizeHorizontal;
+                pseudo_max |=  MaximizeHorizontal;
             if (height() >= area.height())
-                pseudo_max |=  Client::MaximizeVertical;
+                pseudo_max |=  MaximizeVertical;
 
             // heuristics:
             // if decorated client is smaller than the entire screen, the user might want to move it around (multiscreen)
@@ -424,24 +424,24 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             // thus a former maximized window wil become non-maximized
             bool keepInFsArea = false;
             if (width() < fsa.width() && (cs.width() > ss.width()+1)) {
-                pseudo_max &= ~Client::MaximizeHorizontal;
+                pseudo_max &= ~MaximizeHorizontal;
                 keepInFsArea = true;
             }
             if (height() < fsa.height() && (cs.height() > ss.height()+1)) {
-                pseudo_max &= ~Client::MaximizeVertical;
+                pseudo_max &= ~MaximizeVertical;
                 keepInFsArea = true;
             }
 
-            if (pseudo_max != Client::MaximizeRestore) {
+            if (pseudo_max != MaximizeRestore) {
                 maximize((MaximizeMode)pseudo_max);
                 // from now on, care about maxmode, since the maximization call will override mode for fix aspects
-                dontKeepInArea |= (max_mode == Client::MaximizeFull);
+                dontKeepInArea |= (max_mode == MaximizeFull);
                 geom_restore = QRect(); // Use placement when unmaximizing ...
-                if (!(max_mode & Client::MaximizeVertical)) {
+                if (!(max_mode & MaximizeVertical)) {
                     geom_restore.setY(y());   // ...but only for horizontal direction
                     geom_restore.setHeight(height());
                 }
-                if (!(max_mode & Client::MaximizeHorizontal)) {
+                if (!(max_mode & MaximizeHorizontal)) {
                     geom_restore.setX(x());   // ...but only for vertical direction
                     geom_restore.setWidth(width());
                 }

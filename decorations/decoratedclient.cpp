@@ -187,7 +187,7 @@ int DecoratedClientImpl::height() const
 
 bool DecoratedClientImpl::isMaximizedVertically() const
 {
-    return m_client->maximizeMode() & KDecorationDefines::MaximizeVertical;
+    return m_client->maximizeMode() & MaximizeVertical;
 }
 
 bool DecoratedClientImpl::isMaximized() const
@@ -197,7 +197,7 @@ bool DecoratedClientImpl::isMaximized() const
 
 bool DecoratedClientImpl::isMaximizedHorizontally() const
 {
-    return m_client->maximizeMode() & KDecorationDefines::MaximizeHorizontal;
+    return m_client->maximizeMode() & MaximizeHorizontal;
 }
 
 Qt::Edges DecoratedClientImpl::adjacentScreenEdges() const

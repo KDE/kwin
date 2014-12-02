@@ -318,7 +318,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
     connect(c, &Client::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(c, static_cast<void (Client::*)(KWin::Client*, Client::MaximizeMode)>(&Client::clientMaximizedStateChanged),
+    connect(c, static_cast<void (Client::*)(KWin::Client*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
     connect(c, &Client::clientStartUserMovedResized, this,
         [this](Client *c) {
@@ -519,22 +519,22 @@ void EffectsHandlerImpl::startPaint()
     m_currentPaintEffectFrameIterator = m_activeEffects.constBegin();
 }
 
-void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, Client::MaximizeMode maxMode)
+void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, MaximizeMode maxMode)
 {
     bool horizontal = false;
     bool vertical = false;
     switch (maxMode) {
-    case KDecorationDefines::MaximizeHorizontal:
+    case MaximizeHorizontal:
         horizontal = true;
         break;
-    case KDecorationDefines::MaximizeVertical:
+    case MaximizeVertical:
         vertical = true;
         break;
-    case KDecorationDefines::MaximizeFull:
+    case MaximizeFull:
         horizontal = true;
         vertical = true;
         break;
-    case KDecorationDefines::MaximizeRestore: // fall through
+    case MaximizeRestore: // fall through
     default:
         // default - nothing to do
         break;
