@@ -279,7 +279,6 @@ include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/tabbox
     )
 
-add_subdirectory( libkdecorations )
 add_subdirectory( libkwineffects )
 add_subdirectory( killer )
 if(KWIN_BUILD_KCMS)
@@ -436,7 +435,6 @@ qt5_wrap_ui(kwin_KDEINIT_SRCS
 ########### target link libraries ###############
 
 set(kwin_OWN_LIBS
-    kdecorations
     kwineffects
     kwinxrenderutils
     kwin4_effect_builtins
@@ -604,6 +602,7 @@ if (KF5DocTools_FOUND)
     add_subdirectory(doc)
 endif()
 
+include(ECMPackageConfigHelpers)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
 ecm_configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake"
