@@ -795,7 +795,7 @@ void Workspace::slotReconfigure()
         for (ClientList::Iterator it = clients.begin();
                 it != clients.end();
                 ++it) {
-            if ((*it)->maximizeMode() == MaximizeFull)
+            if ((*it)->maximizeMode() == Client::MaximizeFull)
                 (*it)->checkNoBorder();
         }
     }

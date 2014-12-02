@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_WORKSPACE_H
 
 // kwin
-#include <kdecoration.h>
 #include "sm.h"
 #include "options.h"
 #include "utils.h"
@@ -59,7 +58,7 @@ class Compositor;
 class X11EventFilter;
 enum class Predicate;
 
-class Workspace : public QObject, public KDecorationDefines
+class Workspace : public QObject
 {
     Q_OBJECT
 public:
