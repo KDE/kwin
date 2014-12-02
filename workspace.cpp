@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // own
 #include "workspace.h"
 // kwin libs
-#include <kdecorationfactory.h>
 #include <kwinglplatform.h>
 #include <kwinxrenderutils.h>
 // kwin

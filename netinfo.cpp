@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "netinfo.h"
-// kwin libs
-#include <kdecorationfactory.h>
 // kwin
 #include "client.h"
 #include "virtualdesktops.h"
