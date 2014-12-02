@@ -17,12 +17,88 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_DECORATION_OPTIONS_H
 #define KWIN_DECORATION_OPTIONS_H
 
+#include <KDecoration2/Decoration>
+
 #include <QObject>
 #include <QColor>
 #include <QFont>
+#include <QPalette>
 
 namespace KWin
 {
+
+// TODO: move to deco API
+class ColorSettings
+{
+public:
+    ColorSettings(const QPalette &pal);
+
+    void update(const QPalette &pal);
+
+    const QColor &titleBarColor(bool active) const {
+        return active ? m_activeTitleBarColor : m_inactiveTitleBarColor;
+    }
+    const QColor &activeTitleBarColor() const {
+        return m_activeTitleBarColor;
+    }
+    const QColor &inactiveTitleBarColor() const {
+        return m_inactiveTitleBarColor;
+    }
+    const QColor &activeTitleBarBlendColor() const {
+        return m_activeTitleBarBlendColor;
+    }
+    const QColor &inactiveTitleBarBlendColor() const {
+        return m_inactiveTitleBarBlendColor;
+    }
+    const QColor &frame(bool active) const {
+        return active ? m_activeFrameColor : m_inactiveFrameColor;
+    }
+    const QColor &activeFrame() const {
+        return m_activeFrameColor;
+    }
+    const QColor &inactiveFrame() const {
+        return m_inactiveFrameColor;
+    }
+    const QColor &font(bool active) const {
+        return active ? m_activeFontColor : m_inactiveFontColor;
+    }
+    const QColor &activeFont() const {
+        return m_activeFontColor;
+    }
+    const QColor &inactiveFont() const {
+        return m_inactiveFontColor;
+    }
+    const QColor &activeButtonColor() const {
+        return m_activeButtonColor;
+    }
+    const QColor &inactiveButtonColor() const {
+        return m_inactiveButtonColor;
+    }
+    const QColor &activeHandle() const {
+        return m_activeHandle;
+    }
+    const QColor &inactiveHandle() const {
+        return m_inactiveHandle;
+    }
+    const QPalette &palette() const {
+        return m_palette;
+    }
+private:
+    void init(const QPalette &pal);
+    QColor m_activeTitleBarColor;
+    QColor m_inactiveTitleBarColor;
+    QColor m_activeTitleBarBlendColor;
+    QColor m_inactiveTitleBarBlendColor;
+    QColor m_activeFrameColor;
+    QColor m_inactiveFrameColor;
+    QColor m_activeFontColor;
+    QColor m_inactiveFontColor;
+    QColor m_activeButtonColor;
+    QColor m_inactiveButtonColor;
+    QColor m_activeHandle;
+    QColor m_inactiveHandle;
+    QPalette m_palette;
+};
 
 /**
  * @short Common Window Decoration Options.
@@ -60,7 +136,7 @@ class DecorationOptions : public QObject
      *
      * Best pass the decoration object available as a context property to this property.
      **/
-    Q_PROPERTY(QObject *deco READ decoration WRITE setDecoration NOTIFY decorationChanged)
+    Q_PROPERTY(KDecoration2::Decoration *deco READ decoration WRITE setDecoration NOTIFY decorationChanged)
     /**
      * The color for the titlebar depending on the decoration's active state.
      **/
@@ -149,8 +225,8 @@ public:
     QFont titleFont() const;
     QList<int> titleButtonsLeft() const;
     QList<int> titleButtonsRight() const;
-    QObject *decoration() const;
-    void setDecoration(QObject *decoration);
+    KDecoration2::Decoration *decoration() const;
+    void setDecoration(KDecoration2::Decoration *decoration);
 
 Q_SIGNALS:
     void colorsChanged();
@@ -163,7 +239,8 @@ private Q_SLOTS:
 
 private:
     bool m_active;
-    QObject *m_decoration;
+    KDecoration2::Decoration *m_decoration;
+    ColorSettings m_colors;
 };
 
 class Borders : public QObject
@@ -185,6 +262,8 @@ public:
     void setRight(int right);
     void setTop(int top);
     void setBottom(int bottom);
+
+    operator QMargins() const;
 
 public Q_SLOTS:
     /**

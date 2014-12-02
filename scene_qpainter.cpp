@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
-#include "paintredirector.h"
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
@@ -34,9 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "workspace.h"
 #include "xcbutils.h"
+#include "decorations/decoratedclient.h"
 // Qt
 #include <QDebug>
 #include <QPainter>
+#include <KDecoration2/Decoration>
 
 namespace KWin
 {
@@ -419,38 +420,40 @@ void SceneQPainter::Window::renderWindowDecorations(QPainter *painter)
     }
 
     bool noBorder = true;
-    PaintRedirector *redirector = NULL;
+    const SceneQPainterDecorationRenderer *renderer = nullptr;
     QRect dtr, dlr, drr, dbr;
     if (client && !client->noBorder()) {
-        redirector = client->decorationPaintRedirector();
-        client->layoutDecorationRects(dlr, dtr, drr, dbr, Client::WindowRelative);
+        if (client->isDecorated()) {
+            if (SceneQPainterDecorationRenderer *r = static_cast<SceneQPainterDecorationRenderer *>(client->decoratedClient()->renderer())) {
+                r->render();
+                renderer = r;
+            }
+        }
+        client->layoutDecorationRects(dlr, dtr, drr, dbr);
         noBorder = false;
     } else if (deleted && !deleted->noBorder()) {
         noBorder = false;
-        redirector = deleted->decorationPaintRedirector();
         deleted->layoutDecorationRects(dlr, dtr, drr, dbr);
+        renderer = static_cast<const SceneQPainterDecorationRenderer *>(deleted->decorationRenderer());
     }
-    if (noBorder || !redirector) {
+    if (noBorder || !renderer) {
         return;
     }
 
-    redirector->ensurePixmapsPainted();
-    const QImage *left   = redirector->leftDecoPixmap<const QImage *>();
-    const QImage *top    = redirector->topDecoPixmap<const QImage *>();
-    const QImage *right  = redirector->rightDecoPixmap<const QImage *>();
-    const QImage *bottom = redirector->bottomDecoPixmap<const QImage *>();
-
-    painter->drawImage(dtr, *top);
-    painter->drawImage(dlr, *left);
-    painter->drawImage(drr, *right);
-    painter->drawImage(dbr, *bottom);
-
-    redirector->markAsRepainted();
+    painter->drawImage(dtr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Top));
+    painter->drawImage(dlr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Left));
+    painter->drawImage(drr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Right));
+    painter->drawImage(dbr, renderer->image(SceneQPainterDecorationRenderer::DecorationPart::Bottom));
 }
 
 WindowPixmap *SceneQPainter::Window::createWindowPixmap()
 {
     return new QPainterWindowPixmap(this);
+}
+
+Decoration::Renderer *SceneQPainter::createDecorationRenderer(Decoration::DecoratedClientImpl *impl)
+{
+    return new SceneQPainterDecorationRenderer(impl);
 }
 
 //****************************************
@@ -589,7 +592,90 @@ SceneQPainterShadow::~SceneQPainterShadow()
 
 bool SceneQPainterShadow::prepareBackend()
 {
+    if (hasDecorationShadow()) {
+        // TODO: implement for QPainter
+        return false;
+    }
     return true;
+}
+
+//****************************************
+// QPainterDecorationRenderer
+//****************************************
+SceneQPainterDecorationRenderer::SceneQPainterDecorationRenderer(Decoration::DecoratedClientImpl *client)
+    : Renderer(client)
+{
+    connect(this, &Renderer::renderScheduled, client->client(), static_cast<void (Client::*)(const QRect&)>(&Client::addRepaint));
+}
+
+SceneQPainterDecorationRenderer::~SceneQPainterDecorationRenderer() = default;
+
+QImage SceneQPainterDecorationRenderer::image(SceneQPainterDecorationRenderer::DecorationPart part) const
+{
+    Q_ASSERT(part != DecorationPart::Count);
+    return m_images[int(part)];
+}
+
+void SceneQPainterDecorationRenderer::render()
+{
+    const QRegion scheduled = getScheduled();
+    if (scheduled.isEmpty()) {
+        return;
+    }
+    if (areImageSizesDirty()) {
+        resizeImages();
+        resetImageSizesDirty();
+    }
+
+    const QRect top(QPoint(0, 0), m_images[int(DecorationPart::Top)].size());
+    const QRect left(QPoint(0, top.height()), m_images[int(DecorationPart::Left)].size());
+    const QRect right(QPoint(top.width() - m_images[int(DecorationPart::Right)].size().width(), top.height()), m_images[int(DecorationPart::Right)].size());
+    const QRect bottom(QPoint(0, left.y() + left.height()), m_images[int(DecorationPart::Bottom)].size());
+
+    const QRect geometry = scheduled.boundingRect();
+    auto renderPart = [this](const QRect &rect, const QRect &partRect, int index) {
+        if (rect.isEmpty()) {
+            return;
+        }
+        QPainter painter(&m_images[index]);
+        painter.setRenderHint(QPainter::Antialiasing);
+        painter.setWindow(partRect);
+        painter.setClipRect(rect);
+        painter.save();
+        // clear existing part
+        painter.setCompositionMode(QPainter::CompositionMode_Source);
+        painter.fillRect(rect, Qt::red);
+        painter.restore();
+        client()->decoration()->paint(&painter, rect);
+    };
+
+    renderPart(left.intersected(geometry), left, int(DecorationPart::Left));
+    renderPart(top.intersected(geometry), top, int(DecorationPart::Top));
+    renderPart(right.intersected(geometry), right, int(DecorationPart::Right));
+    renderPart(bottom.intersected(geometry), bottom, int(DecorationPart::Bottom));
+}
+
+void SceneQPainterDecorationRenderer::resizeImages()
+{
+    QRect left, top, right, bottom;
+    client()->client()->layoutDecorationRects(left, top, right, bottom);
+
+    auto checkAndCreate = [this](int index, const QSize &size) {
+        if (m_images[index].size() != size) {
+            m_images[index] = QImage(size, QImage::Format_ARGB32_Premultiplied);
+            m_images[index].fill(Qt::transparent);
+        }
+    };
+    checkAndCreate(int(DecorationPart::Left), left.size());
+    checkAndCreate(int(DecorationPart::Right), right.size());
+    checkAndCreate(int(DecorationPart::Top), top.size());
+    checkAndCreate(int(DecorationPart::Bottom), bottom.size());
+}
+
+void SceneQPainterDecorationRenderer::reparent(Deleted *deleted)
+{
+    render();
+    Renderer::reparent(deleted);
 }
 
 } // KWin

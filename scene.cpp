@@ -72,7 +72,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVector2D>
 
 #include "client.h"
-#include "decorations.h"
 #include "deleted.h"
 #include "effects.h"
 #include "overlaywindow.h"
@@ -267,7 +266,6 @@ void Scene::paintSimpleScreen(int orig_mask, QRegion region)
         w->resetPaintingEnabled();
         data.paint = region;
         data.paint |= topw->repaints();
-        data.paint |= topw->decorationPendingRegion();
 
         // Reset the repaint_region.
         // This has to be done here because many effects schedule a repaint for
@@ -713,8 +711,7 @@ void Scene::Window::discardShape()
 const QRegion &Scene::Window::shape() const
 {
     if (!shape_valid) {
-        Client* c = dynamic_cast< Client* >(toplevel);
-        if (toplevel->shape() || (c != NULL && !c->mask().isEmpty())) {
+        if (toplevel->shape()) {
             auto cookie = xcb_shape_get_rectangles_unchecked(connection(), toplevel->frameId(), XCB_SHAPE_SK_BOUNDING);
             ScopedCPointer<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(connection(), cookie, nullptr));
             if (!reply.isNull()) {
@@ -819,7 +816,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         Client *client = dynamic_cast<Client*>(toplevel);
         QRegion contents = clientShape();
         QRegion center = toplevel->transparentRect();
-        QRegion decoration = (client && decorationPlugin()->hasAlpha() ?
+        QRegion decoration = (client && true ?
                               QRegion(client->decorationRect()) : shape()) - center;
         ret = makeQuads(WindowQuadContents, contents);
 
@@ -827,7 +824,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         bool isShadedClient = false;
 
         if (client) {
-            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3], Client::WindowRelative);
+            client->layoutDecorationRects(rects[0], rects[1], rects[2], rects[3]);
             isShadedClient = client->isShade() || center.isEmpty();
         }
 
@@ -839,7 +836,7 @@ WindowQuadList Scene::Window::buildQuads(bool force) const
         }
 
     }
-    if (m_shadow) {
+    if (m_shadow && toplevel->wantsShadowToBeRendered()) {
         ret << m_shadow->shadowQuads();
     }
     effects->buildQuads(toplevel->effectWindow(), ret);

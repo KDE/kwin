@@ -5,26 +5,23 @@ include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-set(kwin3_aurorae_PART_SRCS
+set(kwin5_aurorae_PART_SRCS
     aurorae.cpp
     decorationoptions.cpp
     lib/auroraetheme.cpp
     lib/themeconfig.cpp
 )
 
-add_library(kwin3_aurorae MODULE ${kwin3_aurorae_PART_SRCS})
+add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
 
-target_link_libraries(kwin3_aurorae
-    KF5::ConfigCore
+target_link_libraries(kwin5_aurorae
+    KDecoration2::KDecoration
     KF5::Service
+    KF5::WindowSystem
     Qt5::Quick
-    Qt5::Widgets
-    kdecorations
 )
 
-kservice_desktop_to_json(kwin3_aurorae aurorae.desktop)
-
-install(TARGETS kwin3_aurorae  DESTINATION ${PLUGIN_INSTALL_DIR}/kwin/kdecorations )
+install(TARGETS kwin5_aurorae DESTINATION ${PLUGIN_INSTALL_DIR}/org.kde.kdecoration2)
 
 set(decoration_plugin_SRCS
     decorationplugin.cpp
@@ -35,9 +32,8 @@ set(decoration_plugin_SRCS
 add_library(decorationplugin SHARED ${decoration_plugin_SRCS})
 target_link_libraries(decorationplugin
     Qt5::Quick
-    kdecorations
+    KDecoration2::KDecoration
     KF5::ConfigWidgets
-    KF5::Plasma
 )
 install(TARGETS decorationplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decoration)
 

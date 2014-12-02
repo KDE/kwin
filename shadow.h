@@ -25,6 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include <qvarlengtharray.h>
 
+namespace KDecoration2
+{
+class Decoration;
+class DecorationShadow;
+}
+
 namespace KWin {
 
 class Toplevel;
@@ -96,6 +102,11 @@ public:
      **/
     void setToplevel(Toplevel *toplevel);
 
+    bool hasDecorationShadow() const {
+        return !m_decorationShadow.isNull();
+    }
+    QImage decorationShadowImage() const;
+
 public Q_SLOTS:
     void geometryChanged();
 
@@ -116,6 +127,7 @@ protected:
     inline const QPixmap &shadowPixmap(ShadowElements element) const {
         return m_shadowElements[element];
     };
+    QSize elementSize(ShadowElements element) const;
 
     int topOffset() const {
         return m_topOffset;
@@ -141,8 +153,11 @@ protected:
     WindowQuadList m_shadowQuads;
 
 private:
+    static Shadow *createShadowFromX11(Toplevel *toplevel);
+    static Shadow *crateShadowFromDecoration(Toplevel *toplevel);
     static QVector<uint32_t> readX11ShadowProperty(xcb_window_t id);
     bool init(const QVector<uint32_t> &data);
+    bool init(KDecoration2::Decoration *decoration);
     Toplevel *m_topLevel;
     // shadow pixmaps
     QPixmap m_shadowElements[ShadowElementsCount];
@@ -154,6 +169,8 @@ private:
     // caches
     QRegion m_shadowRegion;
     QSize m_cachedSize;
+    // Decoration based shadows
+    QSharedPointer<KDecoration2::DecorationShadow> m_decorationShadow;
 };
 
 }

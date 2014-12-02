@@ -26,7 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#include "decorations.h"
 #include "deleted.h"
 #include "client.h"
 #include "cursor.h"
@@ -59,6 +58,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
 #endif
+
+#include "decorations/decorationbridge.h"
+#include <KDecoration2/DecorationSettings>
 
 // dbus generated
 #include "screenlocker_interface.h"
@@ -488,17 +490,17 @@ void EffectsHandlerImpl::buildQuads(EffectWindow* w, WindowQuadList& quadList)
 
 bool EffectsHandlerImpl::hasDecorationShadows() const
 {
-    return decorationPlugin()->hasShadows();
+    return false;
 }
 
 bool EffectsHandlerImpl::decorationsHaveAlpha() const
 {
-    return decorationPlugin()->hasAlpha();
+    return true;
 }
 
 bool EffectsHandlerImpl::decorationSupportsBlurBehind() const
 {
-    return decorationPlugin()->supportsBlurBehind();
+    return Decoration::DecorationBridge::self()->needsBlur();
 }
 
 // start another painting pass
@@ -1422,7 +1424,8 @@ QVariant EffectsHandlerImpl::kwinOption(KWinOption kwopt)
 {
     switch (kwopt) {
     case CloseButtonCorner:
-        return decorationPlugin()->closeButtonCorner();
+        // TODO: this could become per window and be derived from the actual position in the deco
+        return Decoration::DecorationBridge::self()->settings()->decorationButtonsLeft().contains(KDecoration2::DecorationButtonType::Close) ? Qt::TopLeftCorner : Qt::TopRightCorner;
     case SwitchDesktopOnScreenEdge:
         return ScreenEdges::self()->isDesktopSwitching();
     case SwitchDesktopOnScreenEdgeMovingWindows:

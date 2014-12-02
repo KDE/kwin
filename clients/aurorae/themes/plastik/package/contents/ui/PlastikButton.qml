@@ -24,7 +24,7 @@ DecorationButton {
         var highlightColor = null;
         if (button.pressed) {
             if (button.buttonType == DecorationOptions.DecorationButtonClose) {
-                highlightColor = colorHelper.foreground(decoration.active, ColorHelper.NegativeText);
+                highlightColor = colorHelper.foreground(decoration.client.active, ColorHelper.NegativeText);
             } else {
                 highlightColor = options.titleBarColor;
             }
@@ -32,7 +32,7 @@ DecorationButton {
             highlightColor = colorHelper.multiplyAlpha(highlightColor, 0.3);
         } else if (button.hovered) {
             if (button.buttonType == DecorationOptions.DecorationButtonClose) {
-                highlightColor = colorHelper.foreground(decoration.active, ColorHelper.NegativeText);
+                highlightColor = colorHelper.foreground(decoration.client.active, ColorHelper.NegativeText);
             } else {
                 highlightColor = options.titleBarColor;
             }
@@ -114,7 +114,7 @@ DecorationButton {
     Item {
         property int imageWidth: button.width > 14 ? button.width - 2 * Math.floor(button.width/3.5) : button.width - 6
         property int imageHeight: button.height > 14 ? button.height - 2 * Math.floor(button.height/3.5) : button.height - 6
-        property string source: "image://plastik/" + button.buttonType + "/" + decoration.active + "/" + ((buttonType == "A") ? decoration.maximized : button.toggled)
+        property string source: "image://plastik/" + button.buttonType + "/" + decoration.client.active + "/" + ((buttonType == "A") ? decoration.client.maximized : button.toggled)
         anchors.fill: parent
         Image {
             id: shadowImage
@@ -141,22 +141,18 @@ DecorationButton {
     Component.onCompleted: {
         colorize();
         if (buttonType == DecorationOptions.DecorationButtonQuickHelp) {
-            visible = decoration.providesContextHelp;
+            visible = Qt.binding(function() { return decoration.client.providesContextHelp});
         }
         if (buttonType == DecorationOptions.DecorationButtonApplicationMenu) {
-            visible = decoration.appMenu;
+//             visible = decoration.appMenu;
+            visible = false;
         }
     }
     onHoveredChanged: colorize()
     onPressedChanged: colorize()
     Connections {
-        target: decoration
+        target: decoration.client
         onActiveChanged: button.colorize()
-        onAppMenuChanged: {
-            if (buttonType == DecorationOptions.DecorationButtonApplicationMenu) {
-                visible = decoration.appMenu;
-            }
-        }
     }
     Connections {
         target: options

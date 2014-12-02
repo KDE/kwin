@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "client.h"
 #include "cursor.h"
-#include "decorations.h"
 #include "focuschain.h"
 #include "netinfo.h"
 #include "workspace.h"
@@ -45,8 +44,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "xcbutils.h"
 
+#include <KDecoration2/Decoration>
+
 #include <QApplication>
 #include <QDebug>
+#include <QStyleHints>
 #include <QWhatsThis>
 
 #include <kkeyserver.h>
@@ -356,25 +358,8 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
         }
     }
     if (movingClient) {
-        if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE) {
-            Client *c = movingClient;
+        if (eventType == XCB_BUTTON_PRESS || eventType == XCB_BUTTON_RELEASE || eventType == XCB_MOTION_NOTIFY) {
             if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_button_press_event_t*>(e)->event && movingClient->windowEvent(e)) {
-                // we need to pass the button release event to the decoration, otherwise Qt still thinks the button is pressed.
-                if (eventType == XCB_BUTTON_RELEASE && c->decorationId() != XCB_WINDOW_NONE) {
-                    // the event is for the moveResizeGrabWindow and Qt doesn't forward that to the decoration
-                    // so we need to send the event to the decoration ourselves
-                    // TODO check whether m_moveResizeWindow can be offscreen and XAllowEvents be sufficient here
-                    xcb_button_release_event_t event = *(reinterpret_cast<xcb_button_release_event_t*>(e));
-                    event.event = c->decorationId();
-                    event.child = XCB_WINDOW_NONE;
-                    event.event_x = event.root_x - c->x() + c->paddingLeft();
-                    event.event_y = event.root_y - c->y() + c->paddingTop();
-                    xcb_send_event(connection(), false, c->decorationId(), XCB_EVENT_MASK_BUTTON_RELEASE, reinterpret_cast<const char*>(&event));
-                }
-                return true;
-            }
-        } else if (eventType == XCB_MOTION_NOTIFY) {
-            if (movingClient->moveResizeGrabWindow() == reinterpret_cast<xcb_motion_notify_event_t*>(e)->event && movingClient->windowEvent(e)) {
                 return true;
             }
         }
@@ -733,6 +718,14 @@ bool Client::windowEvent(xcb_generic_event_t *e)
     case XCB_CLIENT_MESSAGE:
         clientMessageEvent(reinterpret_cast<xcb_client_message_event_t*>(e));
         break;
+    case XCB_EXPOSE: {
+        xcb_expose_event_t *event = reinterpret_cast<xcb_expose_event_t*>(e);
+        if (event->window == frameId() && !Compositor::self()->isActive()) {
+            // TODO: only repaint required areas
+            triggerDecorationRepaint();
+        }
+        break;
+    }
     default:
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent() && reinterpret_cast<xcb_shape_notify_event_t*>(e)->affected_window == window()) {
             detectShape(window());  // workaround for #19644
@@ -1080,65 +1073,6 @@ void Client::updateMouseGrab()
     }
 }
 
-// Qt propagates mouse events up the widget hierachy, which means events
-// for the decoration window cannot be (easily) intercepted as X11 events
-bool Client::eventFilter(QObject* o, QEvent* e)
-{
-    if (decoration == NULL
-            || (o != decoration->widget() && o != decoration->window()))
-        return false;
-    if (e->type() == QEvent::MouseButtonPress && decoration->widget()) {
-        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
-        return buttonPressEvent(decorationId(), qtToX11Button(ev->button()), qtToX11State(ev->buttons(), ev->modifiers()),
-                                ev->x(), ev->y(), ev->globalX(), ev->globalY());
-    }
-    if (e->type() == QEvent::MouseButtonRelease) {
-        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
-        return buttonReleaseEvent(decorationId(), qtToX11Button(ev->button()), qtToX11State(ev->buttons(), ev->modifiers()),
-                                  ev->x(), ev->y(), ev->globalX(), ev->globalY());
-    }
-    if (e->type() == QEvent::MouseMove) { // FRAME i fake z enter/leave?
-        QMouseEvent* ev = static_cast< QMouseEvent* >(e);
-        return motionNotifyEvent(decorationId(), qtToX11State(ev->buttons(), ev->modifiers()),
-                                 ev->x(), ev->y(), ev->globalX(), ev->globalY());
-    }
-    if (e->type() == QEvent::Wheel) {
-        QWheelEvent* ev = static_cast< QWheelEvent* >(e);
-        bool r = buttonPressEvent(decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State(ev->buttons(), ev->modifiers()),
-                                  ev->x(), ev->y(), ev->globalX(), ev->globalY());
-        r = r || buttonReleaseEvent(decorationId(), ev->delta() > 0 ? Button4 : Button5, qtToX11State(ev->buttons(), ev->modifiers()),
-                                    ev->x(), ev->y(), ev->globalX(), ev->globalY());
-        return r;
-    }
-    if (e->type() == QEvent::Resize && decoration->widget()) {
-        QResizeEvent* ev = static_cast< QResizeEvent* >(e);
-        // Filter out resize events that inform about size different than frame size.
-        // This will ensure that decoration->width() etc. and decoration->widget()->width() will be in sync.
-        // These events only seem to be delayed events from initial resizing before show() was called
-        // on the decoration widget.
-        if (ev->size() != (size() + QSize(padding_left + padding_right, padding_top + padding_bottom)))
-            return true;
-        // HACK: Avoid decoration redraw delays. On resize Qt sets WA_WStateConfigPending
-        // which delays all painting until a matching ConfigureNotify event comes.
-        // But this process itself is the window manager, so it's not needed
-        // to wait for that event, the geometry is known.
-        // Note that if Qt in the future changes how this flag is handled and what it
-        // triggers then this may potentionally break things. See mainly QETWidget::translateConfigEvent().
-        decoration->widget()->setAttribute(Qt::WA_WState_ConfigPending, false);
-        decoration->widget()->update();
-        return false;
-    }
-    if (e->type() == QEvent::ZOrderChange) {
-        // when the user actions menu is closed by clicking on the window decoration (which is not unlikely)
-        // Qt will raise the decoration window and thus the decoration window is above the actual Client
-        // see QWidgetWindow::handleMouseEvent (qtbase/src/widgets/kernel/qwidgetwindow.cpp)
-        // when this happens also a ZOrderChange event is sent, we intercept all of them and make sure that
-        // the window is lowest in stack again.
-        Xcb::lowerWindow(decorationId());
-    }
-    return false;
-}
-
 static bool modKeyDown(int state) {
     const uint keyModX = (options->keyCmdAllModKey() == Qt::Key_Meta) ?
                                                     KKeyServer::modXMeta() : KKeyServer::modXAlt();
@@ -1155,7 +1089,7 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         return true;
     }
 
-    if (w == wrapperId() || w == frameId() || w == decorationId() || w == inputId()) {
+    if (w == wrapperId() || w == frameId() || w == inputId()) {
         // FRAME neco s tohohle by se melo zpracovat, nez to dostane dekorace
         updateUserTime(time);
         workspace()->setWasUserInteraction();
@@ -1233,16 +1167,46 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
         return true;
     }
     if (w == inputId()) {
-        x = x_root - geometry().x() + padding_left;
-        y = y_root - geometry().y() + padding_top;
+        x = x_root - geometry().x();
+        y = y_root - geometry().y();
         // New API processes core events FIRST and only passes unused ones to the decoration
         return processDecorationButtonPress(button, state, x, y, x_root, y_root, true);
     }
-    if (w == decorationId()) {
-        return false;
+    if (w == frameId() && m_decoration) {
+        if (button >= 4 && button <= 7) {
+            const Qt::KeyboardModifiers modifiers = x11ToQtKeyboardModifiers(state);
+            // Logic borrowed from qapplication_x11.cpp
+            const int delta = 120 * ((button == 4 || button == 6) ? 1 : -1);
+            const bool hor = (((button == 4 || button == 5) && (modifiers & Qt::AltModifier))
+                             || (button == 6 || button == 7));
+
+            const QPoint angle = hor ? QPoint(delta, 0) : QPoint(0, delta);
+            QWheelEvent event(QPointF(x, y),
+                              QPointF(x_root, y_root),
+                              QPoint(),
+                              angle,
+                              delta,
+                              hor ? Qt::Horizontal : Qt::Vertical,
+                              x11ToQtMouseButtons(state),
+                              modifiers);
+            event.setAccepted(false);
+            QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted() && !hor) {
+                if (m_decoration->titleBar().contains(x, y)) {
+                    performMouseCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
+                }
+            }
+        } else {
+            QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
+                            x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
+            event.setAccepted(false);
+            QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted()) {
+                processDecorationButtonPress(button, state, x, y, x_root, y_root);
+            }
+        }
+        return true;
     }
-    if (w == frameId())
-        processDecorationButtonPress(button, state, x, y, x_root, y_root);
     return true;
 }
 
@@ -1257,6 +1221,19 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
     if (!wantsInput())    // we cannot be active, use it anyway
         active = true;
 
+    // check whether it is a double click
+    if (button == XCB_BUTTON_INDEX_1) {
+        if (m_decorationDoubleClickTimer.isValid() &&
+                m_decoration->titleBar().contains(x, y) &&
+                !m_decorationDoubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
+            Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
+            dontMoveResize();
+            m_decorationDoubleClickTimer.invalidate();
+            return false;
+        }
+        m_decorationDoubleClickTimer.invalidate();
+    }
+
     if (button == XCB_BUTTON_INDEX_1)
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
     else if (button == XCB_BUTTON_INDEX_2)
@@ -1269,7 +1246,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
             && com != Options::MouseDragTab) {
         mode = mousePosition(QPoint(x, y));
         buttonDown = true;
-        moveOffset = QPoint(x - padding_left, y - padding_top);
+        moveOffset = QPoint(x/* - padding_left*/, y/* - padding_top*/);
         invertedMoveOffset = rect().bottomRight() - moveOffset;
         unrestrictedMoveResize = false;
         startDelayedMoveResize();
@@ -1290,40 +1267,30 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
                com == Options::MouseNothing);
 }
 
-// called from decoration
-void Client::processMousePressEvent(QMouseEvent* e)
-{
-    if (e->type() != QEvent::MouseButtonPress) {
-        qWarning() << "processMousePressEvent()" ;
-        return;
-    }
-    int button;
-    switch(e->button()) {
-    case Qt::LeftButton:
-        button = XCB_BUTTON_INDEX_1;
-        break;
-    case Qt::MidButton:
-        button = XCB_BUTTON_INDEX_2;
-        break;
-    case Qt::RightButton:
-        button = XCB_BUTTON_INDEX_3;
-        break;
-    default:
-        return;
-    }
-    processDecorationButtonPress(button, e->buttons(), e->x(), e->y(), e->globalX(), e->globalY());
-}
-
 // return value matters only when filtering events before decoration gets them
 bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root)
 {
-    if (w == decorationId() && !buttonDown)
-        return false;
+    if (w == frameId() && m_decoration) {
+        // wheel handled on buttonPress
+        if (button < 4 || button > 7) {
+            QMouseEvent event(QEvent::MouseButtonRelease,
+                              QPointF(x, y),
+                              QPointF(x_root, y_root),
+                              x11ToQtMouseButton(button),
+                              x11ToQtMouseButtons(state) & ~x11ToQtMouseButton(button),
+                              x11ToQtKeyboardModifiers(state));
+            event.setAccepted(false);
+            QCoreApplication::sendEvent(m_decoration, &event);
+            if (!event.isAccepted() && m_decoration->titleBar().contains(x, y) && button == XCB_BUTTON_INDEX_1) {
+                m_decorationDoubleClickTimer.start();
+            }
+        }
+    }
     if (w == wrapperId()) {
         xcb_allow_events(connection(), XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME);  //xTime());
         return true;
     }
-    if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
+    if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())
         return true;
     x = this->x(); // translate from grab window to local coords
     y = this->y();
@@ -1343,10 +1310,9 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
         if (moveResizeMode) {
             finishMoveResize(false);
             // mouse position is still relative to old Client position, adjust it
-            QPoint mousepos(x_root - x + padding_left, y_root - y + padding_top);
+            QPoint mousepos(x_root - x, y_root - y);
             mode = mousePosition(mousepos);
-        } else if (decorationPlugin()->supportsTabbing())
-            return false;
+        }
         updateCursor();
     }
     return true;
@@ -1386,15 +1352,18 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
-    if (w != frameId() && w != decorationId() && w != inputId() && w != moveResizeGrabWindow())
+    if (w == frameId() && m_decoration) {
+        // TODO Mouse move event dependent on state
+        QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
+        QCoreApplication::instance()->sendEvent(m_decoration, &event);
+    }
+    if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
     if (!buttonDown) {
         QPoint mousePos(x, y);
-        if (w == frameId())
-            mousePos += QPoint(padding_left, padding_top);
         if (w == inputId()) {
-            int x = x_root - geometry().x() + padding_left;
-            int y = y_root - geometry().y() + padding_top;
+            int x = x_root - geometry().x();// + padding_left;
+            int y = y_root - geometry().y();// + padding_top;
             mousePos = QPoint(x, y);
         }
         Position newmode = modKeyDown(state) ? PositionCenter : mousePosition(mousePos);

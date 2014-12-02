@@ -23,8 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "client.h"
 #include "netinfo.h"
-#include "paintredirector.h"
 #include "shadow.h"
+#include "decorations/decoratedclient.h"
+#include "decorations/decorationrenderer.h"
 
 #include <QDebug>
 
@@ -36,15 +37,11 @@ Deleted::Deleted()
     , delete_refcount(1)
     , m_frame(XCB_WINDOW_NONE)
     , no_border(true)
-    , padding_left(0)
-    , padding_top(0)
-    , padding_right(0)
-    , padding_bottom(0)
     , m_layer(UnknownLayer)
     , m_minimized(false)
     , m_modal(false)
-    , m_paintRedirector(NULL)
     , m_wasClient(false)
+    , m_decorationRenderer(nullptr)
 {
 }
 
@@ -88,20 +85,16 @@ void Deleted::copyToDeleted(Toplevel* c)
     if (client) {
         m_wasClient = true;
         no_border = client->noBorder();
-        padding_left = client->paddingLeft();
-        padding_right = client->paddingRight();
-        padding_bottom = client->paddingBottom();
-        padding_top = client->paddingTop();
         if (!no_border) {
             client->layoutDecorationRects(decoration_left,
                                           decoration_top,
                                           decoration_right,
-                                          decoration_bottom,
-                                          Client::WindowRelative);
-            if (PaintRedirector *redirector = client->decorationPaintRedirector()) {
-                redirector->ensurePixmapsPainted();
-                redirector->reparent(this);
-                m_paintRedirector = redirector;
+                                          decoration_bottom);
+            if (client->isDecorated()) {
+                if (Decoration::Renderer *renderer = client->decoratedClient()->renderer()) {
+                    m_decorationRenderer = renderer;
+                    m_decorationRenderer->reparent(this);
+                }
             }
         }
         m_minimized = client->isMinimized();
@@ -149,7 +142,7 @@ void Deleted::debug(QDebug& stream) const
     stream << "\'ID:" << window() << "\' (deleted)";
 }
 
-void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom, int) const
+void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect& bottom) const
 {
     left = decoration_left;
     top = decoration_top;
@@ -159,7 +152,7 @@ void Deleted::layoutDecorationRects(QRect& left, QRect& top, QRect& right, QRect
 
 QRect Deleted::decorationRect() const
 {
-    return rect().adjusted(-padding_left, -padding_top, padding_top, padding_bottom);
+    return rect();
 }
 
 QRect Deleted::transparentRect() const

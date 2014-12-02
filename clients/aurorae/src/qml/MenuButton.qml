@@ -23,14 +23,14 @@ DecorationButton {
     id: menuButton
     buttonType: DecorationOptions.DecorationButtonMenu
     KQuickControlsAddons.QIconItem {
-        icon: decoration.icon
+        icon: decoration.client.icon
         anchors.fill: parent
     }
     Timer {
         id: timer
         interval: 150
         repeat: false
-        onTriggered: decoration.menuClicked()
+        onTriggered: decoration.requestShowWindowMenu()
     }
     MouseArea {
         anchors.fill: parent
@@ -64,13 +64,13 @@ DecorationButton {
             // for right clicks we show the menu instantly
             // and if the option is disabled we always show menu directly
             if (!menuButton.closeOnDoubleClick || mouse.button == Qt.RightButton) {
-                decoration.menuClicked();
+                decoration.requestShowWindowMenu();
                 timer.stop();
             }
         }
         onDoubleClicked: {
             if (menuButton.closeOnDoubleClick) {
-                decoration.closeWindow();
+                decoration.requestClose();
             }
         }
     }

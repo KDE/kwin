@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 
 #include "client.h"
-#include "decorations.h"
 #include "effects.h"
 #include "workspace.h"
 
@@ -63,7 +62,7 @@ bool TabGroup::add(Client* c, Client *other, bool after, bool becomeVisible)
 {
     Q_ASSERT(!c->tabGroup());
 
-    if (!decorationPlugin()->supportsTabbing() || contains(c) || !contains(other))
+    if (contains(c) || !contains(other))
         return false;
 
     // Tabbed windows MUST have a decoration

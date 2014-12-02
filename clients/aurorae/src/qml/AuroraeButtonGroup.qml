@@ -55,6 +55,6 @@ Item {
     }
     anchors {
         top: root.top
-        topMargin: (decoration.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop + root.padding.top) + auroraeTheme.buttonMarginTop
+        topMargin: (decoration.client.maximized ? auroraeTheme.titleEdgeTopMaximized : auroraeTheme.titleEdgeTop + root.padding.top) + auroraeTheme.buttonMarginTop
     }
 }

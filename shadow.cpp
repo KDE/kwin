@@ -20,9 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 // kwin
 #include "atoms.h"
+#include "client.h"
 #include "composite.h"
 #include "effects.h"
 #include "toplevel.h"
+
+#include <KDecoration2/Decoration>
+#include <KDecoration2/DecorationShadow>
 
 namespace KWin
 {
@@ -30,6 +34,7 @@ namespace KWin
 Shadow::Shadow(Toplevel *toplevel)
     : m_topLevel(toplevel)
     , m_cachedSize(toplevel->geometry().size())
+    , m_decorationShadow(nullptr)
 {
     connect(m_topLevel, SIGNAL(geometryChanged()), SLOT(geometryChanged()));
 }
@@ -43,6 +48,20 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
     if (!effects) {
         return NULL;
     }
+    Shadow *shadow = crateShadowFromDecoration(toplevel);
+    if (!shadow) {
+        shadow = createShadowFromX11(toplevel);
+    }
+    if (shadow) {
+        if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
+            toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
+        }
+    }
+    return shadow;
+}
+
+Shadow *Shadow::createShadowFromX11(Toplevel *toplevel)
+{
     auto data = Shadow::readX11ShadowProperty(toplevel->window());
     if (!data.isEmpty()) {
         Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
@@ -51,13 +70,27 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
             delete shadow;
             return NULL;
         }
-        if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
-            toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
-        }
         return shadow;
     } else {
         return NULL;
     }
+}
+
+Shadow *Shadow::crateShadowFromDecoration(Toplevel *toplevel)
+{
+    Client *c = qobject_cast<Client*>(toplevel);
+    if (!c) {
+        return nullptr;
+    }
+    if (!c->decoration()) {
+        return nullptr;
+    }
+    Shadow *shadow = Compositor::self()->scene()->createShadow(toplevel);
+    if (!shadow->init(c->decoration())) {
+        delete shadow;
+        return nullptr;
+    }
+    return shadow;
 }
 
 QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
@@ -111,6 +144,36 @@ bool Shadow::init(const QVector< uint32_t > &data)
     m_rightOffset = data[ShadowElementsCount+1];
     m_bottomOffset = data[ShadowElementsCount+2];
     m_leftOffset = data[ShadowElementsCount+3];
+    updateShadowRegion();
+    if (!prepareBackend()) {
+        return false;
+    }
+    buildQuads();
+    return true;
+}
+
+bool Shadow::init(KDecoration2::Decoration *decoration)
+{
+    if (m_decorationShadow) {
+        // disconnect previous connections
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
+        disconnect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::getShadow);
+    }
+    m_decorationShadow = decoration->shadow();
+    if (!m_decorationShadow) {
+        return false;
+    }
+    // setup connections - all just mapped to recreate
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::innerShadowRectChanged, m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::shadowChanged,        m_topLevel, &Toplevel::getShadow);
+    connect(m_decorationShadow.data(), &KDecoration2::DecorationShadow::paddingChanged,       m_topLevel, &Toplevel::getShadow);
+
+    const QMargins &p = m_decorationShadow->padding();
+    m_topOffset    = p.top();
+    m_rightOffset  = p.right();
+    m_bottomOffset = p.bottom();
+    m_leftOffset   = p.left();
     updateShadowRegion();
     if (!prepareBackend()) {
         return false;
@@ -210,14 +273,30 @@ void Shadow::buildQuads()
 
 bool Shadow::updateShadow()
 {
-    auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
-    if (data.isEmpty()) {
+    auto clear = [this]() {
         if (m_topLevel && m_topLevel->effectWindow() && m_topLevel->effectWindow()->sceneWindow() &&
                                             m_topLevel->effectWindow()->sceneWindow()->shadow()) {
             m_topLevel->effectWindow()->sceneWindow()->updateShadow(0);
             m_topLevel->effectWindow()->buildQuads(true);
         }
         deleteLater();
+    };
+    if (m_decorationShadow) {
+        if (Client *c = qobject_cast<Client*>(m_topLevel)) {
+            if (c->decoration()) {
+                if (init(c->decoration())) {
+                    if (m_topLevel && m_topLevel->effectWindow())
+                        m_topLevel->effectWindow()->buildQuads(true);
+                    return true;
+                }
+            }
+        }
+        clear();
+        return false;
+    }
+    auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
+    if (data.isEmpty()) {
+        clear();
         return false;
     }
     init(data);
@@ -239,6 +318,42 @@ void Shadow::geometryChanged()
     m_cachedSize = m_topLevel->geometry().size();
     updateShadowRegion();
     buildQuads();
+}
+
+QImage Shadow::decorationShadowImage() const
+{
+    if (!m_decorationShadow) {
+        return QImage();
+    }
+    return m_decorationShadow->shadow();
+}
+
+QSize Shadow::elementSize(Shadow::ShadowElements element) const
+{
+    if (m_decorationShadow) {
+        switch (element) {
+        case ShadowElementTop:
+            return m_decorationShadow->topGeometry().size();
+        case ShadowElementTopRight:
+            return m_decorationShadow->topRightGeometry().size();
+        case ShadowElementRight:
+            return m_decorationShadow->rightGeometry().size();
+        case ShadowElementBottomRight:
+            return m_decorationShadow->bottomRightGeometry().size();
+        case ShadowElementBottom:
+            return m_decorationShadow->bottomGeometry().size();
+        case ShadowElementBottomLeft:
+            return m_decorationShadow->bottomLeftGeometry().size();
+        case ShadowElementLeft:
+            return m_decorationShadow->leftGeometry().size();
+        case ShadowElementTopLeft:
+            return m_decorationShadow->topLeftGeometry().size();
+        default:
+            return QSize();
+        }
+    } else {
+        return m_shadowElements[element].size();
+    }
 }
 
 } // namespace

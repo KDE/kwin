@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "plastikbutton.h"
 #include <kdecoration.h>
 #include <KColorScheme>
+#include <KConfigGroup>
+#include <KSharedConfig>
 #include <QPainter>
 
 namespace KWin
@@ -118,7 +120,8 @@ QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool
     QPixmap image(size, size);
     image.fill(Qt::transparent);
     QPainter p(&image);
-    const QColor color = KDecoration::options()->color(KDecoration::ColorFont, active);
+    KConfigGroup wmConfig(KSharedConfig::openConfig(QStringLiteral("kdeglobals")), QStringLiteral("WM"));
+    const QColor color = wmConfig.readEntry("activeForeground", QPalette().color(QPalette::Active, QPalette::HighlightedText));
 
     if (shadow) {
         p.setPen(KColorScheme::shade(color, KColorScheme::ShadowShade));

@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "activities.h"
 #endif
 #include "cursor.h"
-#include "decorations.h"
 #include <QX11Info>
 #include "rules.h"
 #include "group.h"
@@ -329,7 +328,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     // Create client group if the window will have a decoration
     bool dontKeepInArea = false;
     setTabGroup(NULL);
-    if (!noBorder() && DecorationPlugin::self()->supportsTabbing()) {
+    if (!noBorder() && false) {
         const bool autogrouping = rules()->checkAutogrouping(options->isAutogroupSimilarWindows());
         const bool autogroupInFg = rules()->checkAutogroupInForeground(options->isAutogroupInForeground());
         // Automatically add to previous groups on session restore
@@ -686,7 +685,7 @@ void Client::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t
                                        XCB_EVENT_MASK_EXPOSURE |
                                        XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 
-    const uint32_t frame_event_mask   = common_event_mask | XCB_EVENT_MASK_PROPERTY_CHANGE;
+    const uint32_t frame_event_mask   = common_event_mask | XCB_EVENT_MASK_PROPERTY_CHANGE | XCB_EVENT_MASK_VISIBILITY_CHANGE;
     const uint32_t wrapper_event_mask = common_event_mask | XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY;
 
     const uint32_t client_event_mask = XCB_EVENT_MASK_FOCUS_CHANGE | XCB_EVENT_MASK_PROPERTY_CHANGE |

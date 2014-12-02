@@ -21,9 +21,9 @@ import org.kde.kwin.decoration 0.1
 DecorationButton {
     id: appMenuButton
     buttonType: DecorationOptions.DecorationButtonApplicationMenu
-    visible: decoration.appMenu
+    visible: false //decoration.appMenu
     KQuickControlsAddons.QIconItem {
-        icon: decoration.icon
+        icon: decoration.client.icon
         anchors.fill: parent
     }
 }

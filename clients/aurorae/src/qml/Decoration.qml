@@ -31,11 +31,6 @@ Item {
         objectName: "padding"
     }
     property bool alpha: true
-
-    MouseArea {
-        anchors.fill: parent
-        hoverEnabled: true
-        onPressed: decoration.titlePressed(mouse.button, mouse.buttons)
-        onDoubleClicked: decoration.titlebarDblClickOperation()
-    }
+    width: decoration.client.width + decoration.borderLeft + decoration.borderRight + (decoration.client.maximized ? 0 : (padding.left + padding.right))
+    height: decoration.client.height + decoration.borderTop + decoration.borderBottom + (decoration.client.maximized ? 0 : (padding.top + padding.bottom))
 }

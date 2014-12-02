@@ -25,7 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class PaintRedirector;
+
+namespace Decoration
+{
+class Renderer;
+}
 
 class Deleted
     : public Toplevel
@@ -49,7 +53,7 @@ public:
     bool noBorder() const {
         return no_border;
     }
-    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom, int unused = 0) const;
+    void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
     QRect decorationRect() const;
     virtual Layer layer() const {
         return m_layer;
@@ -64,11 +68,12 @@ public:
         return m_mainClients;
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
-    PaintRedirector *decorationPaintRedirector() {
-        return m_paintRedirector;
-    }
     bool wasClient() const {
         return m_wasClient;
+    }
+
+    const Decoration::Renderer *decorationRenderer() const {
+        return m_decorationRenderer;
     }
 protected:
     virtual void debug(QDebug& stream) const;
@@ -92,13 +97,12 @@ private:
     QRect decoration_right;
     QRect decoration_top;
     QRect decoration_bottom;
-    int padding_left, padding_top, padding_right, padding_bottom;
     Layer m_layer;
     bool m_minimized;
     bool m_modal;
     ClientList m_mainClients;
-    PaintRedirector *m_paintRedirector;
     bool m_wasClient;
+    Decoration::Renderer *m_decorationRenderer;
 };
 
 inline void Deleted::refWindow()

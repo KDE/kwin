@@ -30,6 +30,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+namespace Decoration
+{
+class DecoratedClientImpl;
+class Renderer;
+}
+
 class AbstractThumbnailItem;
 class Workspace;
 class Deleted;
@@ -127,6 +133,8 @@ public:
     virtual bool usesOverlayWindow() const = 0;
 
     virtual void triggerFence();
+
+    virtual Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *) = 0;
 
 public Q_SLOTS:
     // a window has been destroyed
