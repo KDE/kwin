@@ -107,7 +107,7 @@ int currentRefreshRate()
 }
 
 Options::Options(QObject *parent)
-    : KDecorationOptions(parent)
+    : QObject(parent)
     , m_settings(new Settings(KSharedConfig::openConfig()))
     , m_focusPolicy(ClickToFocus)
     , m_nextFocusPrefersMouse(false)
@@ -840,7 +840,6 @@ void Options::updateSettings()
 void Options::loadConfig()
 {
     m_settings->load();
-    KDecorationOptions::updateSettings(m_settings->config());   // read decoration settings
 
     syncFromKcfgc();
 

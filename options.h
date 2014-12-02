@@ -47,7 +47,7 @@ enum HiddenPreviews {
 
 class Settings;
 
-class Options : public KDecorationOptions
+class Options : public QObject, public KDecorationDefines
 {
     Q_OBJECT
     Q_ENUMS(FocusPolicy)
@@ -824,6 +824,8 @@ Q_SIGNALS:
     void glCoreProfileChanged();
     void glPreferBufferSwapChanged();
     void glPlatformInterfaceChanged();
+
+    void configChanged();
 
 public Q_SLOTS:
     void setColorCorrected(bool colorCorrected = false);
