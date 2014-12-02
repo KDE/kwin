@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_OPTIONS_H
 #define KWIN_OPTIONS_H
 
-#include <kdecoration.h>
-
 #include "main.h"
 #include "placement.h"
 
