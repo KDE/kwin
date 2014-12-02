@@ -108,19 +108,19 @@ void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacemen
         QPoint corner = geo.topLeft();
         const QPoint cp = c->clientPos();
         const QSize cs = geo.size() - c->clientSize();
-        KDecorationDefines::Position titlePos = c->titlebarPosition();
+        Client::Position titlePos = c->titlebarPosition();
 
         const QRect fullRect = workspace()->clientArea(FullArea, c);
         if (!(c->maximizeMode() & KDecorationDefines::MaximizeHorizontal)) {
-            if (titlePos != KDecorationDefines::PositionRight && geo.right() == fullRect.right())
+            if (titlePos != Client::PositionRight && geo.right() == fullRect.right())
                 corner.rx() += cs.width() - cp.x();
-            if (titlePos != KDecorationDefines::PositionLeft && geo.x() == fullRect.x())
+            if (titlePos != Client::PositionLeft && geo.x() == fullRect.x())
                 corner.rx() -= cp.x();
         }
         if (!(c->maximizeMode() & KDecorationDefines::MaximizeVertical)) {
-            if (titlePos != KDecorationDefines::PositionBottom && geo.bottom() == fullRect.bottom())
+            if (titlePos != Client::PositionBottom && geo.bottom() == fullRect.bottom())
                 corner.ry() += cs.height() - cp.y();
-            if (titlePos != KDecorationDefines::PositionTop && geo.y() == fullRect.y())
+            if (titlePos != Client::PositionTop && geo.y() == fullRect.y())
                 corner.ry() -= cp.y();
         }
         c->move(corner);
@@ -847,7 +847,7 @@ int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) cons
     if (oldx <= newx)   // try another Xinerama screen
         newx = clientArea(MaximizeArea,
                           QPoint(cl->geometry().left() - 1, cl->geometry().center().y()), cl->desktop()).left();
-    if (cl->titlebarPosition() != KDecorationDefines::PositionLeft) {
+    if (cl->titlebarPosition() != Client::PositionLeft) {
         QRect geo = cl->geometry();
         int rgt = newx - cl->clientPos().x();
         geo.moveRight(rgt);
@@ -874,7 +874,7 @@ int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) co
     if (oldx >= newx)   // try another Xinerama screen
         newx = clientArea(MaximizeArea,
                           QPoint(cl->geometry().right() + 1, cl->geometry().center().y()), cl->desktop()).right();
-    if (cl->titlebarPosition() != KDecorationDefines::PositionRight) {
+    if (cl->titlebarPosition() != Client::PositionRight) {
         QRect geo = cl->geometry();
         int rgt = newx + cl->width() - (cl->clientSize().width() + cl->clientPos().x());
         geo.moveRight(rgt);
@@ -901,7 +901,7 @@ int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
     if (oldy <= newy)   // try another Xinerama screen
         newy = clientArea(MaximizeArea,
                           QPoint(cl->geometry().center().x(), cl->geometry().top() - 1), cl->desktop()).top();
-    if (cl->titlebarPosition() != KDecorationDefines::PositionTop) {
+    if (cl->titlebarPosition() != Client::PositionTop) {
         QRect geo = cl->geometry();
         int top = newy - cl->clientPos().y();
         geo.moveTop(top);
@@ -928,7 +928,7 @@ int Workspace::packPositionDown(const Client* cl, int oldy, bool bottom_edge) co
     if (oldy >= newy)   // try another Xinerama screen
         newy = clientArea(MaximizeArea,
                           QPoint(cl->geometry().center().x(), cl->geometry().bottom() + 1), cl->desktop()).bottom();
-    if (cl->titlebarPosition() != KDecorationDefines::PositionBottom) {
+    if (cl->titlebarPosition() != Client::PositionBottom) {
         QRect geo = cl->geometry();
         int btm = newy + cl->height() - (cl->clientSize().height() + cl->clientPos().y());
         geo.moveBottom(btm);

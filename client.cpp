@@ -2136,23 +2136,23 @@ Client::Position Client::mousePosition(const QPoint& p) const
     if (m_decoration) {
         switch (m_decoration->sectionUnderMouse()) {
             case Qt::BottomLeftSection:
-                return KDecorationDefines::PositionBottomLeft;
+                return PositionBottomLeft;
             case Qt::BottomRightSection:
-                return KDecorationDefines::PositionBottomRight;
+                return PositionBottomRight;
             case Qt::BottomSection:
-                return KDecorationDefines::PositionBottom;
+                return PositionBottom;
             case Qt::LeftSection:
-                return KDecorationDefines::PositionLeft;
+                return PositionLeft;
             case Qt::RightSection:
-                return KDecorationDefines::PositionRight;
+                return PositionRight;
             case Qt::TopSection:
-                return KDecorationDefines::PositionTop;
+                return PositionTop;
             case Qt::TopLeftSection:
-                return KDecorationDefines::PositionTopLeft;
+                return PositionTopLeft;
             case Qt::TopRightSection:
-                return KDecorationDefines::PositionTopRight;
+                return PositionTopRight;
             default:
-                return KDecorationDefines::PositionCenter;
+                return PositionCenter;
         }
     }
     return PositionCenter;
@@ -2272,7 +2272,7 @@ QRect Client::decorationRect() const
     return QRect(0, 0, width(), height());
 }
 
-KDecorationDefines::Position Client::titlebarPosition() const
+Client::Position Client::titlebarPosition() const
 {
     // TODO: still needed, remove?
     return PositionTop;

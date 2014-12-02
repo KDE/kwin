@@ -419,17 +419,17 @@ QPoint Workspace::adjustClientPosition(Client* c, QPoint pos, bool unrestricted,
             int padding[4] = { cp.x(), cs.width() - cp.x(), cp.y(), cs.height() - cp.y() };
 
             // snap to titlebar / snap to window borders on inner screen edges
-            Position titlePos = c->titlebarPosition();
-            if (padding[0] && (titlePos == PositionLeft || (c->maximizeMode() & MaximizeHorizontal) ||
+            Client::Position titlePos = c->titlebarPosition();
+            if (padding[0] && (titlePos == Client::PositionLeft || (c->maximizeMode() & Client::MaximizeHorizontal) ||
                                screens()->intersecting(geo.translated(maxRect.x() - (padding[0] + geo.x()), 0)) > 1))
                 padding[0] = 0;
-            if (padding[1] && (titlePos == PositionRight || (c->maximizeMode() & MaximizeHorizontal) ||
+            if (padding[1] && (titlePos == Client::PositionRight || (c->maximizeMode() & Client::MaximizeHorizontal) ||
                                screens()->intersecting(geo.translated(maxRect.right() + padding[1] - geo.right(), 0)) > 1))
                 padding[1] = 0;
-            if (padding[2] && (titlePos == PositionTop || (c->maximizeMode() & MaximizeVertical) ||
+            if (padding[2] && (titlePos == Client::PositionTop || (c->maximizeMode() & Client::MaximizeVertical) ||
                                screens()->intersecting(geo.translated(0, maxRect.y() - (padding[2] + geo.y()))) > 1))
                 padding[2] = 0;
-            if (padding[3] && (titlePos == PositionBottom || (c->maximizeMode() & MaximizeVertical) ||
+            if (padding[3] && (titlePos == Client::PositionBottom || (c->maximizeMode() & Client::MaximizeVertical) ||
                                screens()->intersecting(geo.translated(0, maxRect.bottom() + padding[3] - geo.bottom())) > 1))
                 padding[3] = 0;
             if ((sOWO ? (cx < xmin) : true) && (qAbs(xmin - cx) < snapX)) {
@@ -610,31 +610,31 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
         newrx = xmax; \
     }
             switch(mode) {
-            case PositionBottomRight:
+            case Client::PositionBottomRight:
                 SNAP_BORDER_BOTTOM
                 SNAP_BORDER_RIGHT
                 break;
-            case PositionRight:
+            case Client::PositionRight:
                 SNAP_BORDER_RIGHT
                 break;
-            case PositionBottom:
+            case Client::PositionBottom:
                 SNAP_BORDER_BOTTOM
                 break;
-            case PositionTopLeft:
+            case Client::PositionTopLeft:
                 SNAP_BORDER_TOP
                 SNAP_BORDER_LEFT
                 break;
-            case PositionLeft:
+            case Client::PositionLeft:
                 SNAP_BORDER_LEFT
                 break;
-            case PositionTop:
+            case Client::PositionTop:
                 SNAP_BORDER_TOP
                 break;
-            case PositionTopRight:
+            case Client::PositionTopRight:
                 SNAP_BORDER_TOP
                 SNAP_BORDER_RIGHT
                 break;
-            case PositionBottomLeft:
+            case Client::PositionBottomLeft:
                 SNAP_BORDER_BOTTOM
                 SNAP_BORDER_LEFT
                 break;
@@ -727,41 +727,41 @@ QRect Workspace::adjustClientSize(Client* c, QRect moveResizeGeom, int mode)
 }
 
                     switch(mode) {
-                    case PositionBottomRight:
+                    case Client::PositionBottomRight:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_BOTTOM
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case PositionRight:
+                    case Client::PositionRight:
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case PositionBottom:
+                    case Client::PositionBottom:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_C_BOTTOM
                         break;
-                    case PositionTopLeft:
+                    case Client::PositionTopLeft:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_TOP
                         SNAP_WINDOW_C_LEFT
                         break;
-                    case PositionLeft:
+                    case Client::PositionLeft:
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_LEFT
                         break;
-                    case PositionTop:
+                    case Client::PositionTop:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_C_TOP
                         break;
-                    case PositionTopRight:
+                    case Client::PositionTopRight:
                         SNAP_WINDOW_TOP
                         SNAP_WINDOW_RIGHT
                         SNAP_WINDOW_C_TOP
                         SNAP_WINDOW_C_RIGHT
                         break;
-                    case PositionBottomLeft:
+                    case Client::PositionBottomLeft:
                         SNAP_WINDOW_BOTTOM
                         SNAP_WINDOW_LEFT
                         SNAP_WINDOW_C_BOTTOM

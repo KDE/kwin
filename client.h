@@ -624,6 +624,21 @@ public:
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
 
+    /**
+     * These values represent positions inside an area
+     */
+    enum Position {
+        // without prefix, they'd conflict with Qt::TopLeftCorner etc. :(
+        PositionCenter         = 0x00,
+        PositionLeft           = 0x01,
+        PositionRight          = 0x02,
+        PositionTop            = 0x04,
+        PositionBottom         = 0x08,
+        PositionTopLeft        = PositionLeft | PositionTop,
+        PositionTopRight       = PositionRight | PositionTop,
+        PositionBottomLeft     = PositionLeft | PositionBottom,
+        PositionBottomRight    = PositionRight | PositionBottom
+    };
     Position titlebarPosition() const;
 
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
