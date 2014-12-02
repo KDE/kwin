@@ -45,16 +45,16 @@ public:
     Aurorae::ThemeConfig themeConfig;
     QHash< AuroraeButtonType, QString > pathes;
     bool activeCompositing;
-    KDecorationDefines::BorderSize borderSize;
-    KDecorationDefines::BorderSize buttonSize;
+    AuroraeTheme::BorderSize borderSize;
+    AuroraeTheme::BorderSize buttonSize;
     QString dragMimeType;
     QString decorationPath;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
     :activeCompositing(true)
-    , borderSize(KDecoration::BorderNormal)
-    , buttonSize(KDecoration::BorderNormal)
+    , borderSize(AuroraeTheme::BorderNormal)
+    , buttonSize(AuroraeTheme::BorderNormal)
 {
 }
 
@@ -106,8 +106,8 @@ void AuroraeTheme::loadTheme(const QString &name)
                    KConfig::FullConfig, QStandardPaths::GenericDataLocation);
     KConfigGroup themeGroup(&conf, name);
     loadTheme(name, config);
-    setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
-    setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+    setBorderSize((BorderSize)themeGroup.readEntry<int>("BorderSize", BorderNormal));
+    setButtonSize((BorderSize)themeGroup.readEntry<int>("ButtonSize", BorderNormal));
 }
 
 void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
@@ -211,7 +211,7 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
         }
     } else {
         switch (d->borderSize) {
-        case KDecoration::BorderTiny:
+        case BorderTiny:
             // TODO: this looks wrong
             if (isCompositingActive()) {
                 left = qMin(0, (int)left - d->themeConfig.borderLeft() - d->themeConfig.paddingLeft());
@@ -223,22 +223,22 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
                 bottom = qMin(0, (int)bottom - d->themeConfig.borderBottom());
             }
             break;
-        case KDecoration::BorderLarge:
+        case BorderLarge:
             left = right = bottom = top = 4;
             break;
-        case KDecoration::BorderVeryLarge:
+        case BorderVeryLarge:
             left = right = bottom = top = 8;
             break;
-        case KDecoration::BorderHuge:
+        case BorderHuge:
             left = right = bottom = top = 12;
             break;
-        case KDecoration::BorderVeryHuge:
+        case BorderVeryHuge:
             left = right = bottom = top = 23;
             break;
-        case KDecoration::BorderOversized:
+        case BorderOversized:
             left = right = bottom = top = 36;
             break;
-        case KDecoration::BorderNormal:
+        case BorderNormal:
         default:
             left = right = bottom = top = 0;
         }
@@ -450,7 +450,7 @@ void AuroraeTheme::setCompositingActive(bool active)
     d->activeCompositing = active;
 }
 
-void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
+void AuroraeTheme::setBorderSize(BorderSize size)
 {
     if (d->borderSize == size) {
         return;
@@ -459,7 +459,7 @@ void AuroraeTheme::setBorderSize(KDecorationDefines::BorderSize size)
     emit borderSizesChanged();
 }
 
-void AuroraeTheme::setButtonSize(KDecorationDefines::BorderSize size)
+void AuroraeTheme::setButtonSize(BorderSize size)
 {
     if (d->buttonSize == size) {
         return;
@@ -481,19 +481,19 @@ const QString &AuroraeTheme::tabDragMimeType() const
 qreal AuroraeTheme::buttonSizeFactor() const
 {
     switch (d->buttonSize) {
-    case KDecorationDefines::BorderTiny:
+    case BorderTiny:
         return 0.8;
-    case KDecorationDefines::BorderLarge:
+    case BorderLarge:
         return 1.2;
-    case KDecorationDefines::BorderVeryLarge:
+    case BorderVeryLarge:
         return 1.4;
-    case KDecorationDefines::BorderHuge:
+    case BorderHuge:
         return 1.6;
-    case KDecorationDefines::BorderVeryHuge:
+    case BorderVeryHuge:
         return 1.8;
-    case KDecorationDefines::BorderOversized:
+    case BorderOversized:
         return 2.0;
-    case KDecorationDefines::BorderNormal: // fall through
+    case BorderNormal: // fall through
     default:
         return 1.0;
     }
