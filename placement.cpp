@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTextStream>
 
 #ifndef KCMRULES
-#include <kdecoration.h>
 #include "workspace.h"
 #include "client.h"
 #include "cursor.h"
