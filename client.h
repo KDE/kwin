@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_CLIENT_H
 
 // kwin
+#include <kdecoration.h>
 #include "options.h"
 #include "rules.h"
 #include "tabgroup.h"
@@ -77,7 +78,7 @@ enum class Predicate {
 };
 
 class Client
-    : public Toplevel
+    : public Toplevel, public KDecorationDefines
 {
     Q_OBJECT
     /**
@@ -748,7 +749,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void clientManaging(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
-    void clientMaximizedStateChanged(KWin::Client*, KDecorationDefines::MaximizeMode);
+    void clientMaximizedStateChanged(KWin::Client*, Client::MaximizeMode);
     void clientMaximizedStateChanged(KWin::Client* c, bool h, bool v);
     void clientMinimized(KWin::Client* client, bool animate);
     void clientUnminimized(KWin::Client* client, bool animate);

@@ -279,7 +279,7 @@ Client::Client()
     ready_for_painting = false; // wait for first damage or sync reply
 
     connect(this, &Client::geometryShapeChanged, this, &Client::geometryChanged);
-    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::Client*, KDecorationDefines::MaximizeMode)>(&Client::clientMaximizedStateChanged);
+    auto signalMaximizeChanged = static_cast<void (Client::*)(KWin::Client*, Client::MaximizeMode)>(&Client::clientMaximizedStateChanged);
     connect(this, signalMaximizeChanged, this, &Client::geometryChanged);
     connect(this, &Client::clientStepUserMovedResized,   this, &Client::geometryChanged);
     connect(this, &Client::clientStartUserMovedResized,  this, &Client::moveResizedChanged);

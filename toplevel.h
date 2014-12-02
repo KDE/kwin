@@ -21,8 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TOPLEVEL_H
 #define KWIN_TOPLEVEL_H
 
-// kwin libs
-#include <kdecoration.h>
 // kwin
 #include "input.h"
 #include "utils.h"
@@ -60,7 +58,7 @@ enum class ReleaseReason {
 };
 
 class Toplevel
-    : public QObject, public KDecorationDefines
+    : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
