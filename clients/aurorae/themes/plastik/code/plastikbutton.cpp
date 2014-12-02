@@ -19,7 +19,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "plastikbutton.h"
-#include <kdecoration.h>
 #include <KColorScheme>
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -57,52 +56,52 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
         shadow = true;
     }
     ButtonIcon button;
-    switch (static_cast<KDecorationDefines::DecorationButton>(idParts[0].toInt())) {
-    case KDecorationDefines::DecorationButtonClose:
+    switch (static_cast<DecorationButton>(idParts[0].toInt())) {
+    case DecorationButtonClose:
         button = CloseIcon;
         break;
-    case KDecorationDefines::DecorationButtonMaximizeRestore:
+    case DecorationButtonMaximizeRestore:
         if (toggled) {
             button = MaxRestoreIcon;
         } else {
             button = MaxIcon;
         }
         break;
-    case KDecorationDefines::DecorationButtonMinimize:
+    case DecorationButtonMinimize:
         button = MinIcon;
         break;
-    case KDecorationDefines::DecorationButtonQuickHelp:
+    case DecorationButtonQuickHelp:
         button = HelpIcon;
         break;
-    case KDecorationDefines::DecorationButtonOnAllDesktops:
+    case DecorationButtonOnAllDesktops:
         if (toggled) {
             button = NotOnAllDesktopsIcon;
         } else {
             button = OnAllDesktopsIcon;
         }
         break;
-    case KDecorationDefines::DecorationButtonKeepAbove:
+    case DecorationButtonKeepAbove:
         if (toggled) {
             button = NoKeepAboveIcon;
         } else {
             button = KeepAboveIcon;
         }
         break;
-    case KDecorationDefines::DecorationButtonKeepBelow:
+    case DecorationButtonKeepBelow:
         if (toggled) {
             button = NoKeepBelowIcon;
         } else {
             button = KeepBelowIcon;
         }
         break;
-    case KDecorationDefines::DecorationButtonShade:
+    case DecorationButtonShade:
         if (toggled) {
             button = UnShadeIcon;
         } else {
             button = ShadeIcon;
         }
         break;
-    case KDecorationDefines::DecorationButtonApplicationMenu:
+    case DecorationButtonApplicationMenu:
         button = AppMenuIcon;
         break;
     default:

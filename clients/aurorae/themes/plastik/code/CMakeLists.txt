@@ -4,6 +4,6 @@ set(plastik_plugin_SRCS
     )
 
 add_library(plastikplugin SHARED ${plastik_plugin_SRCS})
-target_link_libraries(plastikplugin Qt5::Core Qt5::Quick KF5::ConfigWidgets KF5::WindowSystem)
+target_link_libraries(plastikplugin Qt5::Core Qt5::Quick KF5::ConfigWidgets)
 install(TARGETS plastikplugin DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decorations/plastik)
 install(FILES qmldir DESTINATION ${QML_INSTALL_DIR}/org/kde/kwin/decorations/plastik)

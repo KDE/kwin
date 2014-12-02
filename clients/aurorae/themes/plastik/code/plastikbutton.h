@@ -52,6 +52,29 @@ private:
         DiagonalLine,
         CrossDiagonalLine
     };
+    enum DecorationButton {
+        /**
+         * Invalid button value. A decoration should not create a button for
+         * this type.
+         */
+        DecorationButtonNone,
+        DecorationButtonMenu,
+        DecorationButtonApplicationMenu,
+        DecorationButtonOnAllDesktops,
+        DecorationButtonQuickHelp,
+        DecorationButtonMinimize,
+        DecorationButtonMaximizeRestore,
+        DecorationButtonClose,
+        DecorationButtonKeepAbove,
+        DecorationButtonKeepBelow,
+        DecorationButtonShade,
+        DecorationButtonResize,
+        /**
+         * The decoration should create an empty spacer instead of a button for
+         * this type.
+         */
+        DecorationButtonExplicitSpacer
+    };
     QPixmap icon(ButtonIcon icon, int size, bool active, bool shadow);
     void drawObject(QPainter &p, Object object, int x, int y, int length, int lineWidth);
 };
