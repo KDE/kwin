@@ -1529,6 +1529,38 @@ static void deleteAll(std::deque<BufferFence> &fences)
 }
 
 
+
+// ------------------------------------------------------------------
+
+
+
+template <size_t Count>
+struct FrameSizesArray
+{
+public:
+    FrameSizesArray() {
+        m_array.fill(0);
+    }
+
+    void push(size_t size) {
+        m_array[m_index] = size;
+        m_index = (m_index + 1) % Count;
+    }
+
+    size_t average() const {
+        size_t sum = 0;
+        for (size_t size : m_array)
+            sum += size;
+        return sum / Count;
+    }
+
+private:
+    std::array<size_t, Count> m_array;
+    int m_index = 0;
+};
+
+
+
 //*********************************
 // GLVertexBufferPrivate
 //*********************************
@@ -1566,8 +1598,10 @@ public:
     ~GLVertexBufferPrivate() {
         deleteAll(fences);
 
-        glDeleteBuffers(1, &buffer);
-        map = nullptr;
+        if (buffer != 0) {
+            glDeleteBuffers(1, &buffer);
+            map = nullptr;
+        }
     }
 
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
@@ -1600,6 +1634,7 @@ public:
     intptr_t baseAddress;
     uint8_t *map;
     std::deque<BufferFence> fences;
+    FrameSizesArray<4> frameSizes;
     VertexAttrib attrib[VertexAttributeCount];
     Bitfield enabledArrays;
 #ifndef KWIN_HAVE_OPENGLES
@@ -1696,7 +1731,7 @@ void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
         glGenBuffers(1, &buffer);
 
     // Round the size up to 64 kb
-    size_t minSize = 128 * 1024;
+    size_t minSize = qMax<size_t>(frameSizes.average() * 3, 128 * 1024);
     bufferSize = align(qMax(size, minSize), 64 * 1024);
 
     const GLbitfield storage = GL_DYNAMIC_STORAGE_BIT;
@@ -2034,12 +2069,26 @@ void GLVertexBuffer::endOfFrame()
 
     // Emit a fence if we have uploaded data
     if (d->frameSize > 0) {
-        BufferFence fence;
-        fence.sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-        fence.nextEnd = d->nextOffset + d->bufferSize;
-
-        d->fences.emplace_back(fence);
+        d->frameSizes.push(d->frameSize);
         d->frameSize = 0;
+
+        // Force the buffer to be reallocated at the beginning of the next frame
+        // if the average frame size is greater than half the size of the buffer
+        if (unlikely(d->frameSizes.average() > d->bufferSize / 2)) {
+            deleteAll(d->fences);
+            glDeleteBuffers(1, &d->buffer);
+
+            d->buffer = 0;
+            d->bufferSize = 0;
+            d->nextOffset = 0;
+            d->map = nullptr;
+        } else {
+            BufferFence fence;
+            fence.sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+            fence.nextEnd = d->nextOffset + d->bufferSize;
+
+            d->fences.emplace_back(fence);
+        }
     }
 }
 
