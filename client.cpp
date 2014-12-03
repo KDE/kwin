@@ -514,7 +514,7 @@ void Client::createDecoration(const QRect& oldgeom)
 {
     m_decoration = Decoration::DecorationBridge::self()->createDecoration(this);
     if (m_decoration) {
-        m_decoration->update();
+        QMetaObject::invokeMethod(m_decoration, "update", Qt::QueuedConnection);
         connect(m_decoration, &KDecoration2::Decoration::shadowChanged, this, &Toplevel::getShadow);
         connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
