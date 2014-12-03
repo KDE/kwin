@@ -294,6 +294,7 @@ void TestWaylandSeat::testPointer()
     QVERIFY(!m_seatInterface->focusedPointer());
 
     Pointer *p = m_seat->createPointer(m_seat);
+    const Pointer &cp = *p;
     QVERIFY(p->isValid());
     QSignalSpy pointerCreatedSpy(m_seatInterface, SIGNAL(pointerCreated(KWayland::Server::PointerInterface*)));
     QVERIFY(pointerCreatedSpy.isValid());
@@ -321,6 +322,8 @@ void TestWaylandSeat::testPointer()
     QSignalSpy buttonSpy(p, SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWayland::Client::Pointer::ButtonState)));
     QVERIFY(buttonSpy.isValid());
 
+    QVERIFY(!p->enteredSurface());
+    QVERIFY(!cp.enteredSurface());
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(10, 15));
     QCOMPARE(m_seatInterface->focusedPointerSurface(), serverSurface);
     QVERIFY(enteredSpy.wait());
@@ -328,6 +331,8 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(enteredSpy.first().last().toPoint(), QPoint(10, 3));
     PointerInterface *serverPointer = m_seatInterface->focusedPointer();
     QVERIFY(serverPointer);
+    QCOMPARE(p->enteredSurface(), s);
+    QCOMPARE(cp.enteredSurface(), s);
 
     // test motion
     m_seatInterface->setTimestamp(1);
@@ -399,10 +404,14 @@ void TestWaylandSeat::testPointer()
     m_seatInterface->setFocusedPointerSurface(nullptr);
     QVERIFY(leftSpy.wait());
     QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial());
+    QVERIFY(!p->enteredSurface());
+    QVERIFY(!cp.enteredSurface());
 
     // enter it again
     m_seatInterface->setFocusedPointerSurface(serverSurface, QPoint(0, 0));
     QVERIFY(enteredSpy.wait());
+    QCOMPARE(p->enteredSurface(), s);
+    QCOMPARE(cp.enteredSurface(), s);
 
     delete s;
     wl_display_flush(m_connection->display());
