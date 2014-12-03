@@ -34,14 +34,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QDebug>
 #include <QDirIterator>
+#include <QOffscreenSurface>
+#include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
 #include <QPainter>
 #include <QQuickItem>
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+#define HAVE_RENDER_CONTROL 1
+#else
+#define HAVE_RENDER_CONTROL 0
+#endif
+
+#if HAVE_RENDER_CONTROL
+#include <QQuickRenderControl>
+#endif
 #include <QQuickWindow>
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QStandardPaths>
+#include <QTimer>
 
 K_PLUGIN_FACTORY_WITH_JSON(AuroraeDecoFactory,
                            "aurorae.json",
@@ -234,6 +247,18 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
 Decoration::~Decoration()
 {
     Helper::instance().unref();
+#if HAVE_RENDER_CONTROL
+    if (m_context) {
+        m_context->makeCurrent(m_offscreenSurface.data());
+
+        delete m_renderControl;
+        delete m_view.data();
+        m_fbo.reset();
+        delete m_item;
+
+        m_context->doneCurrent();
+    }
+#endif
 }
 
 void Decoration::init()
@@ -241,6 +266,7 @@ void Decoration::init()
     KDecoration2::Decoration::init();
     auto s = settings();
     // recreate scene when compositing gets disabled, TODO: remove with rendercontrol
+#if !HAVE_RENDER_CONTROL
     if (!m_recreateNonCompositedConnection) {
         m_recreateNonCompositedConnection = connect(s.data(), &KDecoration2::DecorationSettings::alphaChannelSupportedChanged,
                 this, [this](bool alpha) {
@@ -251,6 +277,7 @@ void Decoration::init()
                     }
                 });
     }
+#endif
 
     QQmlContext *context = new QQmlContext(Helper::instance().rootContext(), this);
     context->setContextProperty(QStringLiteral("decoration"), this);
@@ -282,6 +309,66 @@ void Decoration::init()
         m_item->setParentItem(visualParent.value<QQuickItem*>());
         visualParent.value<QQuickItem*>()->setProperty("drawBackground", false);
     } else {
+#if HAVE_RENDER_CONTROL
+        // first create the context
+        QSurfaceFormat format;
+        format.setDepthBufferSize(16);
+        format.setStencilBufferSize(8);
+        m_context.reset(new QOpenGLContext);
+        m_context->setFormat(format);
+        m_context->create();
+        // and the offscreen surface
+        m_offscreenSurface.reset(new QOffscreenSurface);
+        m_offscreenSurface->setFormat(m_context->format());
+        m_offscreenSurface->create();
+
+        m_renderControl = new QQuickRenderControl(this);
+        m_view = new QQuickWindow(m_renderControl);
+        m_view->setColor(Qt::transparent);
+
+        // delay rendering a little bit for better performance
+        m_updateTimer.reset(new QTimer);
+        m_updateTimer->setSingleShot(true);
+        m_updateTimer->setInterval(5);
+        connect(m_updateTimer.data(), &QTimer::timeout, this,
+            [this] {
+                if (!m_context->makeCurrent(m_offscreenSurface.data())) {
+                    return;
+                }
+                if (m_fbo.isNull() || m_fbo->size() != m_view->size()) {
+                    m_fbo.reset(new QOpenGLFramebufferObject(m_view->size(), QOpenGLFramebufferObject::CombinedDepthStencil));
+                    if (!m_fbo->isValid()) {
+                        qCWarning(AURORAE) << "Creating FBO as render target failed";
+                        m_fbo.reset();
+                        return;
+                    }
+                }
+                m_view->setRenderTarget(m_fbo.data());
+                m_renderControl->polishItems();
+                m_renderControl->sync();
+                m_renderControl->render();
+
+                m_view->resetOpenGLState();
+                m_buffer = m_fbo->toImage();
+                QOpenGLFramebufferObject::bindDefault();
+                update();
+            }
+        );
+        auto requestUpdate = [this] {
+            if (m_updateTimer->isActive()) {
+                return;
+            }
+            m_updateTimer->start();
+        };
+        connect(m_renderControl, &QQuickRenderControl::renderRequested, this, requestUpdate);
+        connect(m_renderControl, &QQuickRenderControl::sceneChanged, this, requestUpdate);
+
+        m_item->setParentItem(m_view->contentItem());
+
+        m_context->makeCurrent(m_offscreenSurface.data());
+        m_renderControl->initialize(m_context.data());
+        m_context->doneCurrent();
+#else
         // we need a QQuickWindow till we depend on Qt 5.4
         m_decorationWindow.reset(QWindow::fromWinId(client().data()->decorationId()));
         m_view = new QQuickWindow(m_decorationWindow.data());
@@ -314,6 +401,7 @@ void Decoration::init()
                 m_view.data(), &QQuickWindow::update);
         connect(m_view.data(), &QQuickWindow::afterRendering, this, [this] { update(); }, Qt::QueuedConnection);
         m_item->setParentItem(m_view->contentItem());
+#endif
     }
     setupBorders(m_item);
     if (m_extendedBorders) {
@@ -329,15 +417,19 @@ void Decoration::init()
     connect(client().data(), &KDecoration2::DecoratedClient::maximizedChanged, this, &Decoration::updateBorders, Qt::QueuedConnection);
     updateBorders();
     if (!m_view.isNull()) {
+#if !HAVE_RENDER_CONTROL
         m_view->setVisible(true);
+#endif
         auto resizeWindow = [this] {
             QRect rect(QPoint(0, 0), size());
             if (m_padding && !client().data()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
             m_view->setGeometry(rect);
+#if !HAVE_RENDER_CONTROL
             m_view->lower();
             m_view->update();
+#endif
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
         connect(client().data(), &KDecoration2::DecoratedClient::widthChanged, this, resizeWindow);
@@ -384,10 +476,12 @@ void Decoration::updateBorders()
 void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 {
     Q_UNUSED(repaintRegion)
+#if !HAVE_RENDER_CONTROL
     if (!settings()->isAlphaChannelSupported()) {
         return;
     }
     QMutexLocker locker(&m_mutex);
+#endif
     painter->fillRect(rect(), Qt::transparent);
     QRectF r(QPointF(0, 0), m_buffer.size());
     if (m_padding &&

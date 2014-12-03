@@ -22,10 +22,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 #include <QMutex>
 
+class QOffscreenSurface;
+class QOpenGLContext;
 class QOpenGLFramebufferObject;
 class QQmlComponent;
 class QQmlEngine;
 class QQuickItem;
+class QQuickRenderControl;
 class QQuickWindow;
 class QWindow;
 
@@ -79,6 +82,10 @@ private:
     QString m_themeName;
     QMutex m_mutex;
     QMetaObject::Connection m_recreateNonCompositedConnection;
+    QQuickRenderControl *m_renderControl = nullptr;
+    QScopedPointer<QTimer> m_updateTimer;
+    QScopedPointer<QOpenGLContext> m_context;
+    QScopedPointer<QOffscreenSurface> m_offscreenSurface;
 };
 
 class ThemeFinder : public QObject
