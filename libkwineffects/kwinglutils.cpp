@@ -40,11 +40,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMatrix4x4>
 #include <QVarLengthArray>
 
+#include <deque>
+
 #include <math.h>
 
 #define DEBUG_GLRENDERTARGET 0
 
 #define MAKE_GL_VERSION(major, minor, release)  ( ((major) << 16) | ((minor) << 8) | (release) )
+
+#ifdef __GNUC__
+#  define likely(x)   __builtin_expect(!!(x), 1)
+#  define unlikely(x) __builtin_expect(!!(x), 0)
+#else
+#  define likely(x)   (x)
+#  define unlikely(x) (x)
+#endif
 
 namespace KWin
 {
@@ -1492,6 +1502,33 @@ struct VertexAttrib
 };
 
 
+// ------------------------------------------------------------------
+
+
+
+struct BufferFence
+{
+    GLsync sync;
+    intptr_t nextEnd;
+
+    bool signaled() const
+    {
+        GLint value;
+        glGetSynciv(sync, GL_SYNC_STATUS, 1, nullptr, &value);
+        return value == GL_SIGNALED;
+    }
+};
+
+
+static void deleteAll(std::deque<BufferFence> &fences)
+{
+    for (const BufferFence &fence : fences)
+        glDeleteSync(fence.sync);
+
+    fences.clear();
+}
+
+
 //*********************************
 // GLVertexBufferPrivate
 //*********************************
@@ -1500,12 +1537,16 @@ class GLVertexBufferPrivate
 public:
     GLVertexBufferPrivate(GLVertexBuffer::UsageHint usageHint)
         : vertexCount(0)
+        , persistent(false)
         , useColor(false)
         , color(0, 0, 0, 255)
         , bufferSize(0)
+        , bufferEnd(0)
         , mappedSize(0)
+        , frameSize(0)
         , nextOffset(0)
         , baseAddress(0)
+        , map(nullptr)
     {
         glGenBuffers(1, &buffer);
 
@@ -1523,7 +1564,10 @@ public:
     }
 
     ~GLVertexBufferPrivate() {
+        deleteAll(fences);
+
         glDeleteBuffers(1, &buffer);
+        map = nullptr;
     }
 
     void interleaveArrays(float *array, int dim, const float *vertices, const float *texcoords, int count);
@@ -1531,21 +1575,31 @@ public:
     void unbindArrays();
     void reallocateBuffer(size_t size);
     GLvoid *mapNextFreeRange(size_t size);
+    void reallocatePersistentBuffer(size_t size);
+    bool awaitFence(intptr_t offset);
+    GLvoid *getIdleRange(size_t size);
 
     GLuint buffer;
     GLenum usage;
     int stride;
     int vertexCount;
     static GLVertexBuffer *streamingBuffer;
+    static bool haveBufferStorage;
+    static bool haveSyncFences;
     static bool hasMapBufferRange;
     static bool supportsIndexedQuads;
     QByteArray dataStore;
+    bool persistent;
     bool useColor;
     QVector4D color;
     size_t bufferSize;
+    intptr_t bufferEnd;
     size_t mappedSize;
+    size_t frameSize;
     intptr_t nextOffset;
     intptr_t baseAddress;
+    uint8_t *map;
+    std::deque<BufferFence> fences;
     VertexAttrib attrib[VertexAttributeCount];
     Bitfield enabledArrays;
 #ifndef KWIN_HAVE_OPENGLES
@@ -1556,6 +1610,8 @@ public:
 bool GLVertexBufferPrivate::hasMapBufferRange = false;
 bool GLVertexBufferPrivate::supportsIndexedQuads = false;
 GLVertexBuffer *GLVertexBufferPrivate::streamingBuffer = nullptr;
+bool GLVertexBufferPrivate::haveBufferStorage = false;
+bool GLVertexBufferPrivate::haveSyncFences = false;
 #ifndef KWIN_HAVE_OPENGLES
 IndexBuffer *GLVertexBufferPrivate::s_indexBuffer = nullptr;
 #endif
@@ -1624,6 +1680,95 @@ void GLVertexBufferPrivate::unbindArrays()
     BitfieldIterator it(enabledArrays);
     while (it.hasNext())
         glDisableVertexAttribArray(it.next());
+}
+
+void GLVertexBufferPrivate::reallocatePersistentBuffer(size_t size)
+{
+    if (buffer != 0) {
+        // This also unmaps and unbinds the buffer
+        glDeleteBuffers(1, &buffer);
+        buffer = 0;
+
+        deleteAll(fences);
+    }
+
+    if (buffer == 0)
+        glGenBuffers(1, &buffer);
+
+    // Round the size up to 64 kb
+    size_t minSize = 128 * 1024;
+    bufferSize = align(qMax(size, minSize), 64 * 1024);
+
+    const GLbitfield storage = GL_DYNAMIC_STORAGE_BIT;
+    const GLbitfield access = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT;
+
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferStorage(GL_ARRAY_BUFFER, bufferSize, nullptr, storage | access);
+
+    map = (uint8_t *) glMapBufferRange(GL_ARRAY_BUFFER, 0, bufferSize, access);
+
+    nextOffset = 0;
+    bufferEnd = bufferSize;
+}
+
+bool GLVertexBufferPrivate::awaitFence(intptr_t end)
+{
+    // Skip fences until we reach the end offset
+    while (!fences.empty() && fences.front().nextEnd < end) {
+        glDeleteSync(fences.front().sync);
+        fences.pop_front();
+    }
+
+    assert(!fences.empty());
+
+    // Wait on the next fence
+    const BufferFence &fence = fences.front();
+
+    if (!fence.signaled()) {
+        qDebug() << "Stalling on VBO fence";
+        const GLenum ret = glClientWaitSync(fence.sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000000);
+
+        if (ret == GL_TIMEOUT_EXPIRED || ret == GL_WAIT_FAILED) {
+            qCritical() << "Wait failed";
+            return false;
+        }
+    }
+
+    glDeleteSync(fence.sync);
+
+    // Update the end pointer
+    bufferEnd = fence.nextEnd;
+    fences.pop_front();
+
+    return true;
+}
+
+GLvoid *GLVertexBufferPrivate::getIdleRange(size_t size)
+{
+    if (unlikely(size > bufferSize))
+        reallocatePersistentBuffer(size * 2);
+
+    // Handle wrap-around
+    if (unlikely(nextOffset + size > bufferSize)) {
+        nextOffset = 0;
+        bufferEnd -= bufferSize;
+
+        for (BufferFence &fence : fences)
+            fence.nextEnd -= bufferSize;
+
+        // Emit a fence now
+        BufferFence fence;
+        fence.sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        fence.nextEnd = bufferSize;
+        fences.emplace_back(fence);
+    }
+
+    if (unlikely(nextOffset + intptr_t(size) > bufferEnd)) {
+        if (!awaitFence(nextOffset + size))
+            return nullptr;
+    }
+
+    return map + nextOffset;
 }
 
 void GLVertexBufferPrivate::reallocateBuffer(size_t size)
@@ -1700,6 +1845,10 @@ void GLVertexBuffer::setData(int vertexCount, int dim, const float* vertices, co
 GLvoid *GLVertexBuffer::map(size_t size)
 {
     d->mappedSize = size;
+    d->frameSize += size;
+
+    if (d->persistent)
+        return d->getIdleRange(size);
 
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
@@ -1719,6 +1868,13 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
 void GLVertexBuffer::unmap()
 {
+    if (d->persistent) {
+        d->baseAddress = d->nextOffset;
+        d->nextOffset += align(d->mappedSize, 16); // Align to 16 bytes for SSE
+        d->mappedSize = 0;
+        return;
+    }
+
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
     if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
@@ -1871,11 +2027,44 @@ void GLVertexBuffer::reset()
     d->vertexCount    = 0;
 }
 
+void GLVertexBuffer::endOfFrame()
+{
+    if (!d->persistent)
+        return;
+
+    // Emit a fence if we have uploaded data
+    if (d->frameSize > 0) {
+        BufferFence fence;
+        fence.sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+        fence.nextEnd = d->nextOffset + d->bufferSize;
+
+        d->fences.emplace_back(fence);
+        d->frameSize = 0;
+    }
+}
+
+void GLVertexBuffer::framePosted()
+{
+    if (!d->persistent)
+        return;
+
+    // Remove finished fences from the list and update the bufferEnd offset
+    while (d->fences.size() > 1 && d->fences.front().signaled()) {
+        const BufferFence &fence = d->fences.front();
+        glDeleteSync(fence.sync);
+
+        d->bufferEnd = fence.nextEnd;
+        d->fences.pop_front();
+    }
+}
+
 void GLVertexBuffer::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
     GLVertexBufferPrivate::hasMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
     GLVertexBufferPrivate::supportsIndexedQuads = false;
+    GLVertexBufferPrivate::haveBufferStorage = false;
+    GLVertexBufferPrivate::haveSyncFences = false;
 #else
     bool haveBaseVertex     = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
     bool haveCopyBuffer     = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
@@ -1884,8 +2073,16 @@ void GLVertexBuffer::initStatic()
     GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
     GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
     GLVertexBufferPrivate::s_indexBuffer = nullptr;
+    GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
+    GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
 #endif
     GLVertexBufferPrivate::streamingBuffer = new GLVertexBuffer(GLVertexBuffer::Stream);
+
+    if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
+        if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
+            GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
+        }
+    }
 }
 
 void GLVertexBuffer::cleanup()

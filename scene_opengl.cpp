@@ -664,7 +664,11 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     }
 #endif
 
+    GLVertexBuffer::streamingBuffer()->endOfFrame();
+
     m_backend->endRenderingFrame(validRegion, updateRegion);
+
+    GLVertexBuffer::streamingBuffer()->framePosted();
 
     if (m_currentFence) {
         if (!m_syncManager->updateFences()) {

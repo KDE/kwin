@@ -730,6 +730,20 @@ public:
     void reset();
 
     /**
+     * Notifies the vertex buffer that we are done painting the frame.
+     *
+     * @internal
+     */
+    void endOfFrame();
+
+    /**
+     * Notifies the vertex buffer that we have posted the frame.
+     *
+     * @internal
+     */
+    void framePosted();
+
+    /**
      * @internal
      */
     static void initStatic();
