@@ -43,7 +43,7 @@ Decoration {
     Item {
         id: titleRect
         x: decoration.client.maximized ? maximizedBorders.left : borders.left
-        y: 0
+        y: decoration.client.maximized ? 0 : root.borders.bottom
         width: decoration.client.width//parent.width - x - (decoration.client.maximized ? maximizedBorders.right : borders.right)
         height: decoration.client.maximized ? maximizedBorders.top : borders.top
         Component.onCompleted: {
