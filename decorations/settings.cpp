@@ -39,7 +39,7 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
 {
     readSettings();
 
-    connect(Compositor::self(), &Compositor::compositingToggled,
+    auto c = connect(Compositor::self(), &Compositor::compositingToggled,
             parent, &KDecoration2::DecorationSettings::alphaChannelSupportedChanged);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::countChanged, this,
         [parent](uint previous, uint current) {
@@ -47,6 +47,12 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
                 return;
             }
             emit parent->onAllDesktopsAvailableChanged(current > 1);
+        }
+    );
+    // prevent changes in Decoration due to Compositor being destroyed
+    connect(Compositor::self(), &Compositor::aboutToDestroy, this,
+        [this, c] {
+            disconnect(c);
         }
     );
 }

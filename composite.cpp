@@ -133,6 +133,7 @@ Compositor::Compositor(QObject* workspace)
 
 Compositor::~Compositor()
 {
+    emit aboutToDestroy();
     finish();
     deleteUnusedSupportProperties();
     delete cm_selection;
