@@ -317,13 +317,13 @@ public:
     virtual ~SceneOpenGLShadow();
 
     GLTexture *shadowTexture() {
-        return m_texture;
+        return m_texture.data();
     }
 protected:
     virtual void buildQuads();
     virtual bool prepareBackend();
 private:
-    GLTexture *m_texture;
+    QSharedPointer<GLTexture> m_texture;
 };
 
 /**

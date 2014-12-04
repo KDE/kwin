@@ -1930,16 +1930,88 @@ void SceneOpenGL::EffectFrame::cleanup()
 //****************************************
 // SceneOpenGL::Shadow
 //****************************************
+class DecorationShadowTextureCache
+{
+public:
+    ~DecorationShadowTextureCache();
+    DecorationShadowTextureCache(const DecorationShadowTextureCache&) = delete;
+    static DecorationShadowTextureCache &instance();
+
+    void unregister(SceneOpenGLShadow *shadow);
+    QSharedPointer<GLTexture> getTexture(SceneOpenGLShadow *shadow);
+
+private:
+    DecorationShadowTextureCache() = default;
+    struct Data {
+        QSharedPointer<GLTexture> texture;
+        QVector<SceneOpenGLShadow*> shadows;
+    };
+    QHash<KDecoration2::DecorationShadow*, Data> m_cache;
+};
+
+DecorationShadowTextureCache &DecorationShadowTextureCache::instance()
+{
+    static DecorationShadowTextureCache s_instance;
+    return s_instance;
+}
+
+DecorationShadowTextureCache::~DecorationShadowTextureCache()
+{
+    Q_ASSERT(m_cache.isEmpty());
+}
+
+void DecorationShadowTextureCache::unregister(SceneOpenGLShadow *shadow)
+{
+    auto it = m_cache.begin();
+    while (it != m_cache.end()) {
+        auto &d = it.value();
+        // check whether the Vector of Shadows contains our shadow and remove all of them
+        auto glIt = d.shadows.begin();
+        while (glIt != d.shadows.end()) {
+            if (*glIt == shadow) {
+                glIt = d.shadows.erase(glIt);
+            } else {
+                glIt++;
+            }
+        }
+        // if there are no shadows any more we can erase the cache entry
+        if (d.shadows.isEmpty()) {
+            it = m_cache.erase(it);
+        } else {
+            it++;
+        }
+    }
+}
+
+QSharedPointer<GLTexture> DecorationShadowTextureCache::getTexture(SceneOpenGLShadow *shadow)
+{
+    Q_ASSERT(shadow->hasDecorationShadow());
+    unregister(shadow);
+    const auto &decoShadow = shadow->decorationShadow();
+    Q_ASSERT(!decoShadow.isNull());
+    auto it = m_cache.find(decoShadow.data());
+    if (it != m_cache.end()) {
+        Q_ASSERT(!it.value().shadows.contains(shadow));
+        it.value().shadows << shadow;
+        return it.value().texture;
+    }
+    Data d;
+    d.shadows << shadow;
+    d.texture = QSharedPointer<GLTexture>::create(shadow->decorationShadowImage());
+    m_cache.insert(decoShadow.data(), d);
+    return d.texture;
+}
+
 SceneOpenGLShadow::SceneOpenGLShadow(Toplevel *toplevel)
     : Shadow(toplevel)
-    , m_texture(NULL)
 {
 }
 
 SceneOpenGLShadow::~SceneOpenGLShadow()
 {
     effects->makeOpenGLContextCurrent();
-    delete m_texture;
+    DecorationShadowTextureCache::instance().unregister(this);
+    m_texture.reset();
 }
 
 void SceneOpenGLShadow::buildQuads()
@@ -2056,8 +2128,7 @@ bool SceneOpenGLShadow::prepareBackend()
     if (hasDecorationShadow()) {
         // simplifies a lot by going directly to
         effects->makeOpenGLContextCurrent();
-        delete m_texture;
-        m_texture = new GLTexture(decorationShadowImage());
+        m_texture = DecorationShadowTextureCache::instance().getTexture(this);
 
         return true;
     }
@@ -2087,8 +2158,7 @@ bool SceneOpenGLShadow::prepareBackend()
     p.end();
 
     effects->makeOpenGLContextCurrent();
-    delete m_texture;
-    m_texture = new GLTexture(image);
+    m_texture = QSharedPointer<GLTexture>::create(image);
 
     return true;
 }

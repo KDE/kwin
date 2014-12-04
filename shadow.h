@@ -107,6 +107,10 @@ public:
     }
     QImage decorationShadowImage() const;
 
+    QWeakPointer<KDecoration2::DecorationShadow> decorationShadow() const {
+        return m_decorationShadow.toWeakRef();
+    }
+
 public Q_SLOTS:
     void geometryChanged();
 
