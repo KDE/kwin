@@ -31,6 +31,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QSortFilterProxyModel>
 #include <QStandardPaths>
 #include <QVBoxLayout>
 
@@ -59,9 +60,14 @@ static bool s_loading = false;
 ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_model(new DecorationsModel(this))
+    , m_proxyModel(new QSortFilterProxyModel(this))
     , m_ui(new ConfigurationForm(this))
 {
-    m_ui->view->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_model);
+    m_proxyModel->setSourceModel(m_model);
+    m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    connect(m_ui->filter, &QLineEdit::textChanged, m_proxyModel, &QSortFilterProxyModel::setFilterFixedString);
+
+    m_ui->view->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
     m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
     m_ui->view->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
     m_ui->view->setResizeMode(QQuickWidget::SizeRootObjectToView);
@@ -150,7 +156,7 @@ void ConfigurationModule::load()
     const KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", QString());
-    const QModelIndex index = m_model->findDecoration(plugin, theme);
+    const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme));
     if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
@@ -169,7 +175,7 @@ void ConfigurationModule::save()
     if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
         const int currentIndex = listView->property("currentIndex").toInt();
         if (currentIndex != -1) {
-            const QModelIndex index = m_model->index(currentIndex, 0);
+            const QModelIndex index = m_proxyModel->index(currentIndex, 0);
             if (index.isValid()) {
                 config.writeEntry("library", index.data(Qt::UserRole + 4).toString());
                 const QString theme = index.data(Qt::UserRole +5).toString();
@@ -193,7 +199,7 @@ void ConfigurationModule::save()
 void ConfigurationModule::defaults()
 {
     if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
-        const QModelIndex index = m_model->findDecoration(s_defaultPlugin);
+        const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(s_defaultPlugin));
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
     KCModule::defaults();

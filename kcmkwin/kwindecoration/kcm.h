@@ -23,6 +23,8 @@
 #include <kcmodule.h>
 #include <ui_kcm.h>
 
+class QSortFilterProxyModel;
+
 namespace KDecoration2
 {
 namespace Preview
@@ -56,6 +58,7 @@ protected:
 
 private:
     DecorationsModel *m_model;
+    QSortFilterProxyModel *m_proxyModel;
     ConfigurationForm *m_ui;
 };
 
