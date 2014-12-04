@@ -203,6 +203,8 @@ void ConfigurationModule::defaults()
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(s_defaultPlugin));
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
+    m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(QVariant::fromValue(stringToSize(s_borderSizeNormal))));
+    m_ui->closeWindowsDoubleClick->setChecked(false);
     KCModule::defaults();
 }
 
