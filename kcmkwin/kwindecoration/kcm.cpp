@@ -48,6 +48,7 @@ namespace Configuration
 {
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
+static const QString s_borderSizeNormal = QStringLiteral("Normal");
 
 ConfigurationForm::ConfigurationForm(QWidget *parent)
     : QWidget(parent)
@@ -127,7 +128,7 @@ static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDe
     {QStringLiteral("None"), BorderSize::None},
     {QStringLiteral("NoSides"), BorderSize::NoSides},
     {QStringLiteral("Tiny"), BorderSize::Tiny},
-    {QStringLiteral("Normal"), BorderSize::Normal},
+    {s_borderSizeNormal, BorderSize::Normal},
     {QStringLiteral("Large"), BorderSize::Large},
     {QStringLiteral("VeryLarge"), BorderSize::VeryLarge},
     {QStringLiteral("Huge"), BorderSize::Huge},
@@ -147,7 +148,7 @@ static BorderSize stringToSize(const QString &name)
 
 static QString sizeToString(BorderSize size)
 {
-    return s_sizes.key(size, QStringLiteral("Normal"));
+    return s_sizes.key(size, s_borderSizeNormal);
 }
 
 void ConfigurationModule::load()
@@ -161,7 +162,7 @@ void ConfigurationModule::load()
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
     m_ui->closeWindowsDoubleClick->setChecked(config.readEntry("CloseOnDoubleClickOnMenu", false));
-    const QVariant border = QVariant::fromValue(stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal"))));
+    const QVariant border = QVariant::fromValue(stringToSize(config.readEntry("BorderSize", s_borderSizeNormal)));
     m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(border));
     KCModule::load();
     s_loading = false;
