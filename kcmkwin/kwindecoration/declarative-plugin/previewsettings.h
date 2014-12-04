@@ -159,6 +159,7 @@ class Settings : public QObject
     Q_OBJECT
     Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration2::DecorationSettings *settings READ settingsPointer NOTIFY settingsChanged)
+    Q_PROPERTY(int borderSizesIndex READ borderSizesIndex WRITE setBorderSizesIndex NOTIFY borderSizesIndexChanged)
 public:
     explicit Settings(QObject *parent = nullptr);
     virtual ~Settings();
@@ -168,15 +169,22 @@ public:
 
     QSharedPointer<DecorationSettings> settings() const;
     DecorationSettings *settingsPointer() const;
+    int borderSizesIndex() const {
+        return m_borderSize;
+    }
+    void setBorderSizesIndex(int index);
 
 Q_SIGNALS:
     void bridgeChanged();
     void settingsChanged();
+    void borderSizesIndexChanged(int);
 
 private:
     void createSettings();
     QPointer<PreviewBridge> m_bridge;
     QSharedPointer<KDecoration2::DecorationSettings> m_settings;
+    PreviewSettings *m_previewSettings = nullptr;
+    int m_borderSize = 3;
 };
 
 }

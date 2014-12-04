@@ -21,8 +21,7 @@
 #define KDECORATIONS_KCM_H
 
 #include <kcmodule.h>
-
-class QQuickWidget;
+#include <ui_kcm.h>
 
 namespace KDecoration2
 {
@@ -33,6 +32,12 @@ class PreviewBridge;
 namespace Configuration
 {
 class DecorationsModel;
+
+class ConfigurationForm : public QWidget, public Ui::KCMForm
+{
+public:
+    explicit ConfigurationForm(QWidget* parent);
+};
 
 class ConfigurationModule : public KCModule
 {
@@ -50,8 +55,8 @@ protected:
     void showEvent(QShowEvent *ev) override;
 
 private:
-    QQuickWidget *m_view;
     DecorationsModel *m_model;
+    ConfigurationForm *m_ui;
 };
 
 }

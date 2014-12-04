@@ -34,6 +34,7 @@ ScrollView {
         }
         highlightMoveDuration: 250
         boundsBehavior: Flickable.StopAtBounds
+        property int borderSizesIndex: 3 // 3 == Normal
         delegate: Item {
             width: listView.width
             height: 150
@@ -45,6 +46,7 @@ ScrollView {
             KDecoration.Settings {
                 id: settingsItem
                 bridge: bridgeItem
+                borderSizesIndex: listView.borderSizesIndex
             }
             KDecoration.Decoration {
                 id: inactivePreview

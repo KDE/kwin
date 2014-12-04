@@ -58,6 +58,7 @@ private:
     QVector< KDecoration2::DecorationButtonType > m_leftButtons;
     QVector< KDecoration2::DecorationButtonType > m_rightButtons;
     KDecoration2::BorderSize m_borderSize;
+    bool m_closeDoubleClickMenu = false;
 };
 } // Decoration
 } // KWin

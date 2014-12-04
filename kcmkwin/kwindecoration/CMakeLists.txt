@@ -16,6 +16,7 @@ ki18n_wrap_ui(kcm_kwindecoration_PART_SRCS
     buttons.ui
     config.ui
     decoration.ui
+    kcm.ui
 )
 
 add_library(kcm_kwindecoration MODULE ${kcm_kwindecoration_PART_SRCS})

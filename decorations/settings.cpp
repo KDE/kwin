@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "composite.h"
 #include "virtualdesktops.h"
+#include "workspace.h"
 
 #include <config-kwin.h>
 
@@ -55,6 +56,7 @@ SettingsImpl::SettingsImpl(KDecoration2::DecorationSettings *parent)
             disconnect(c);
         }
     );
+    connect(Workspace::self(), &Workspace::configChanged, this, &SettingsImpl::readSettings);
 }
 
 SettingsImpl::~SettingsImpl() = default;
@@ -71,7 +73,7 @@ bool SettingsImpl::isOnAllDesktopsAvailable() const
 
 bool SettingsImpl::isCloseOnDoubleClickOnMenu() const
 {
-    return false;
+    return m_closeDoubleClickMenu;
 }
 
 static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
@@ -127,18 +129,57 @@ QVector< KDecoration2::DecorationButtonType > SettingsImpl::readDecorationButton
     return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
 }
 
+static KDecoration2::BorderSize stringToSize(const QString &name)
+{
+    static const QMap<QString, KDecoration2::BorderSize> s_sizes = QMap<QString, KDecoration2::BorderSize>({
+        {QStringLiteral("None"), KDecoration2::BorderSize::None},
+        {QStringLiteral("NoSides"), KDecoration2::BorderSize::NoSides},
+        {QStringLiteral("Tiny"), KDecoration2::BorderSize::Tiny},
+        {QStringLiteral("Normal"), KDecoration2::BorderSize::Normal},
+        {QStringLiteral("Large"), KDecoration2::BorderSize::Large},
+        {QStringLiteral("VeryLarge"), KDecoration2::BorderSize::VeryLarge},
+        {QStringLiteral("Huge"), KDecoration2::BorderSize::Huge},
+        {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
+        {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}
+    });
+    auto it = s_sizes.constFind(name);
+    if (it == s_sizes.constEnd()) {
+        // non sense values are interpreted just like normal
+        return KDecoration2::BorderSize::Normal;
+    }
+    return it.value();
+}
+
 void SettingsImpl::readSettings()
 {
     KConfigGroup config = KSharedConfig::openConfig(KWIN_CONFIG)->group(QStringLiteral("org.kde.kdecoration2"));
-    m_leftButtons = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >({
         KDecoration2::DecorationButtonType::Menu,
         KDecoration2::DecorationButtonType::OnAllDesktops
     }));
-    m_rightButtons = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >({
+    if (left != m_leftButtons) {
+        m_leftButtons = left;
+        emit decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
+    }
+    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >({
         KDecoration2::DecorationButtonType::Minimize,
         KDecoration2::DecorationButtonType::Maximize,
         KDecoration2::DecorationButtonType::Close
     }));
+    if (right != m_rightButtons) {
+        m_rightButtons = right;
+        emit decorationSettings()->decorationButtonsRightChanged(m_rightButtons);
+    }
+    const bool close = config.readEntry("CloseOnDoubleClickOnMenu", false);
+    if (close != m_closeDoubleClickMenu) {
+        m_closeDoubleClickMenu = close;
+        emit decorationSettings()->closeOnDoubleClickOnMenuChanged(m_closeDoubleClickMenu);
+    }
+    const auto size = stringToSize(config.readEntry("BorderSize", QStringLiteral("Normal")));
+    if (size != m_borderSize) {
+        m_borderSize = size;
+        emit decorationSettings()->borderSizeChanged(m_borderSize);
+    }
 }
 
 }

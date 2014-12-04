@@ -354,6 +354,9 @@ void Settings::createSettings()
         m_settings.clear();
     } else {
         m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(m_bridge.data());
+        m_previewSettings = m_bridge->lastCreatedSettings();
+        m_previewSettings->setBorderSizesIndex(m_borderSize);
+        connect(this, &Settings::borderSizesIndexChanged, m_previewSettings, &PreviewSettings::setBorderSizesIndex);
     }
     emit settingsChanged();
 }
@@ -366,6 +369,15 @@ QSharedPointer<DecorationSettings> Settings::settings() const
 DecorationSettings *Settings::settingsPointer() const
 {
     return m_settings.data();
+}
+
+void Settings::setBorderSizesIndex(int index)
+{
+    if (m_borderSize == index) {
+        return;
+    }
+    m_borderSize = index;
+    emit borderSizesIndexChanged(m_borderSize);
 }
 
 }
