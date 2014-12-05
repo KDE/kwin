@@ -1278,7 +1278,7 @@ void Client::closeWindow()
  */
 void Client::killWindow()
 {
-    qDebug() << "Client::killWindow():" << caption();
+    qCDebug(KWIN_CORE) << "Client::killWindow():" << caption();
     killProcess(false);
     m_client.kill();  // Always kill this client at the server
     destroyClient();
@@ -1299,7 +1299,7 @@ void Client::pingWindow()
     ping_timer = new QTimer(this);
     connect(ping_timer, &QTimer::timeout, this,
         [this]() {
-            qDebug() << "Ping timeout:" << caption();
+            qCDebug(KWIN_CORE) << "Ping timeout:" << caption();
             ping_timer->deleteLater();
             ping_timer = nullptr;
             killProcess(true, m_pingTimestamp);
@@ -1332,7 +1332,7 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
     pid_t pid = info->pid();
     if (pid <= 0 || clientMachine()->hostName().isEmpty())  // Needed properties missing
         return;
-    qDebug() << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
+    qCDebug(KWIN_CORE) << "Kill process:" << pid << "(" << clientMachine()->hostName() << ")";
     if (!ask) {
         if (!clientMachine()->isLocal()) {
             QStringList lst;
@@ -2249,13 +2249,13 @@ void Client::checkActivities()
     //otherwise, somebody else changed it. we need to validate before reacting
     QStringList allActivities = Activities::self()->all();
     if (allActivities.isEmpty()) {
-        qDebug() << "no activities!?!?";
+        qCDebug(KWIN_CORE) << "no activities!?!?";
         //don't touch anything, there's probably something bad going on and we don't wanna make it worse
         return;
     }
     for (int i = 0; i < newActivitiesList.size(); ++i) {
         if (! allActivities.contains(newActivitiesList.at(i))) {
-            qDebug() << "invalid:" << newActivitiesList.at(i);
+            qCDebug(KWIN_CORE) << "invalid:" << newActivitiesList.at(i);
             newActivitiesList.removeAt(i--);
         }
     }

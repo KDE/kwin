@@ -61,7 +61,7 @@ Xkb::Xkb()
     , m_modifiers(Qt::NoModifier)
 {
     if (!m_context) {
-        qDebug() << "Could not create xkb context";
+        qCDebug(KWIN_CORE) << "Could not create xkb context";
     }
 }
 
@@ -84,12 +84,12 @@ void Xkb::installKeymap(int fd, uint32_t size)
     xkb_keymap *keymap = xkb_keymap_new_from_string(m_context, map, XKB_KEYMAP_FORMAT_TEXT_V1, XKB_MAP_COMPILE_PLACEHOLDER);
     munmap(map, size);
     if (!keymap) {
-        qDebug() << "Could not map keymap from file";
+        qCDebug(KWIN_CORE) << "Could not map keymap from file";
         return;
     }
     xkb_state *state = xkb_state_new(keymap);
     if (!state) {
-        qDebug() << "Could not create XKB state";
+        qCDebug(KWIN_CORE) << "Could not create XKB state";
         xkb_keymap_unref(keymap);
         return;
     }

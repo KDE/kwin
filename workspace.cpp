@@ -766,7 +766,7 @@ bool Workspace::waitForCompositingSetup()
 
 void Workspace::slotReconfigure()
 {
-    qDebug() << "Workspace::slotReconfigure()";
+    qCDebug(KWIN_CORE) << "Workspace::slotReconfigure()";
     reconfigureTimer.stop();
 
     bool borderlessMaximizedWindows = options->borderlessMaximizedWindows();

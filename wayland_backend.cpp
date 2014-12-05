@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
+#include "utils.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -520,7 +521,7 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->quit();
     m_connectionThread->wait();
 
-    qDebug() << "Destroyed Wayland display";
+    qCDebug(KWIN_CORE) << "Destroyed Wayland display";
     s_self = NULL;
 }
 

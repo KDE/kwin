@@ -218,7 +218,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
                 if (errorName.isEmpty()) {
                     errorName = QByteArrayLiteral("Unknown");
                 }
-                qWarning("XCB error: %d (%s), sequence: %d, resource id: %d, major code: %d (%s), minor code: %d (%s)",
+                qCWarning(KWIN_CORE, "XCB error: %d (%s), sequence: %d, resource id: %d, major code: %d (%s), minor code: %d (%s)",
                          int(error->error_code), errorName.constData(),
                          int(error->sequence), int(error->resource_id),
                          int(error->major_code), extension.name.constData(),

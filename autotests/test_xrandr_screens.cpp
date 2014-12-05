@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QtTest/QtTest>
 
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
+
 // mocking
 namespace KWin
 {

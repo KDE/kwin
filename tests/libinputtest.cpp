@@ -22,10 +22,13 @@
 #include "../logind.h"
 
 #include <QCoreApplication>
+#include <QLoggingCategory>
 
 #include <linux/input.h>
 
 #include <iostream>
+
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 
 int main(int argc, char **argv)
 {

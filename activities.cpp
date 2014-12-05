@@ -125,7 +125,7 @@ bool Activities::start(const QString &id)
     if (ksmserver.isValid()) {
         ksmserver.asyncCall("restoreSubSession", id);
     } else {
-        qDebug() << "couldn't get ksmserver interface";
+        qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
         return false;
     }
     return true;
@@ -150,7 +150,7 @@ void Activities::reallyStop(const QString &id)
     if (ws->sessionSaving())
         return; //ksmserver doesn't queue requests (yet)
 
-    qDebug() << id;
+    qCDebug(KWIN_CORE) << id;
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
@@ -194,14 +194,14 @@ void Activities::reallyStop(const QString &id)
         }
     }
 
-    qDebug() << "saveActivity" << id << saveAndClose << saveOnly;
+    qCDebug(KWIN_CORE) << "saveActivity" << id << saveAndClose << saveOnly;
 
     //pass off to ksmserver
     QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
     if (ksmserver.isValid()) {
         ksmserver.asyncCall("saveSubSession", id, saveAndClose, saveOnly);
     } else {
-        qDebug() << "couldn't get ksmserver interface";
+        qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
     }
 }
 

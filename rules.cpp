@@ -975,7 +975,7 @@ WindowRules RuleBook::find(const Client* c, bool ignore_temporary)
         }
         if ((*it)->match(c)) {
             Rules* rule = *it;
-            qDebug() << "Rule found:" << rule << ":" << c;
+            qCDebug(KWIN_CORE) << "Rule found:" << rule << ":" << c;
             if (rule->isTemporary())
                 it = m_rules.erase(it);
             else

@@ -119,12 +119,12 @@ void Workspace::updateStackingOrder(bool propagate_new_clients)
     force_restacking = false;
     stacking_order = new_stacking_order;
 #if 0
-    qDebug() << "stacking:" << changed;
+    qCDebug(KWIN_CORE) << "stacking:" << changed;
     if (changed || propagate_new_clients) {
         for (ClientList::ConstIterator it = stacking_order.begin();
                 it != stacking_order.end();
                 ++it)
-            qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+            qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
     }
 #endif
     if (changed || propagate_new_clients) {
@@ -491,11 +491,11 @@ ToplevelList Workspace::constrainedStackingOrder()
     ToplevelList layer[ NumLayers ];
 
 #if 0
-    qDebug() << "stacking1:";
+    qCDebug(KWIN_CORE) << "stacking1:";
     for (ClientList::ConstIterator it = unconstrained_stacking_order.begin();
             it != unconstrained_stacking_order.end();
             ++it)
-        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // build the order from layers
     QVector< QMap<Group*, Layer> > minimum_layer(screens()->count());
@@ -524,11 +524,11 @@ ToplevelList Workspace::constrainedStackingOrder()
             ++lay)
         stacking += layer[ lay ];
 #if 0
-    qDebug() << "stacking2:";
+    qCDebug(KWIN_CORE) << "stacking2:";
     for (ClientList::ConstIterator it = stacking.begin();
             it != stacking.end();
             ++it)
-        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
+        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
 #endif
     // now keep transients above their mainwindows
     // TODO this could(?) use some optimization
@@ -590,12 +590,12 @@ ToplevelList Workspace::constrainedStackingOrder()
         stacking.insert(i2, current);
     }
 #if 0
-    qDebug() << "stacking3:";
+    qCDebug(KWIN_CORE) << "stacking3:";
     for (ClientList::ConstIterator it = stacking.begin();
             it != stacking.end();
             ++it)
-        qDebug() << (void*)(*it) << *it << ":" << (*it)->layer();
-    qDebug() << "\n\n";
+        qCDebug(KWIN_CORE) << (void*)(*it) << *it << ":" << (*it)->layer();
+    qCDebug(KWIN_CORE) << "\n\n";
 #endif
     return stacking;
 }

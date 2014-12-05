@@ -178,7 +178,7 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
         if (!sessionIds.contains(sessionId))
             continue;
 
-        qDebug() << "storing" << sessionId;
+        qCDebug(KWIN_CORE) << "storing" << sessionId;
         count++;
         if (c->isActive())
             active_client = count;

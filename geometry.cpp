@@ -114,7 +114,7 @@ void Workspace::updateClientArea(bool force)
     const Screens *s = Screens::self();
     int nscreens = s->count();
     const int numberOfDesktops = VirtualDesktopManager::self()->count();
-    qDebug() << "screens: " << nscreens << "desktops: " << numberOfDesktops;
+    qCDebug(KWIN_CORE) << "screens: " << nscreens << "desktops: " << numberOfDesktops;
     QVector< QRect > new_wareas(numberOfDesktops + 1);
     QVector< StrutRects > new_rmoveareas(numberOfDesktops + 1);
     QVector< QVector< QRect > > new_sareas(numberOfDesktops + 1);
@@ -187,7 +187,7 @@ void Workspace::updateClientArea(bool force)
         for (int iS = 0;
                 iS < nscreens;
                 iS ++)
-            qDebug() << "new_sarea: " << new_sareas[ i ][ iS ];
+            qCDebug(KWIN_CORE) << "new_sarea: " << new_sareas[ i ][ iS ];
     }
 #endif
 
@@ -238,7 +238,7 @@ void Workspace::updateClientArea(bool force)
         oldrestrictedmovearea.clear(); // reset, no longer valid or needed
     }
 
-    qDebug() << "Done.";
+    qCDebug(KWIN_CORE) << "Done.";
 }
 
 void Workspace::updateClientArea()
@@ -1260,7 +1260,7 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
     int w = wsize.width();
     int h = wsize.height();
     if (w < 1 || h < 1) {
-        qWarning() << "sizeForClientSize() with empty size!" ;
+        qCWarning(KWIN_CORE) << "sizeForClientSize() with empty size!" ;
     }
     if (w < 1) w = 1;
     if (h < 1) h = 1;
@@ -1606,7 +1606,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
 {
     // "maximized" is a user setting -> we do not allow the client to resize itself
     // away from this & against the users explicit wish
-    qDebug() << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<
+    qCDebug(KWIN_CORE) << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight)) <<
                             bool(maximizeMode() & MaximizeVertical) <<
                             bool(maximizeMode() & MaximizeHorizontal);
 
@@ -1638,11 +1638,11 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     }
 
     if (ignore) {
-        qDebug() << "DENIED";
+        qCDebug(KWIN_CORE) << "DENIED";
         return; // nothing to (left) to do for use - bugs #158974, #252314, #321491
     }
 
-    qDebug() << "PERMITTED" << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight));
+    qCDebug(KWIN_CORE) << "PERMITTED" << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight));
 
     if (gravity == 0)   // default (nonsense) value for the argument
         gravity = xSizeHint.win_gravity;
@@ -1735,7 +1735,7 @@ void Client::resizeWithChecks(int w, int h, ForceGeometry_t force)
     assert(!shade_geometry_change);
     if (isShade()) {
         if (h == borderTop() + borderBottom()) {
-            qWarning() << "Shaded geometry passed for size:" ;
+            qCWarning(KWIN_CORE) << "Shaded geometry passed for size:" ;
         }
     }
     int newx = x();
@@ -1887,7 +1887,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
         ; // nothing
     else if (isShade()) {
         if (h == borderTop() + borderBottom()) {
-            qDebug() << "Shaded geometry passed for size:";
+            qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
         } else {
             client_size = QSize(w - borderLeft() - borderRight(), h - borderTop() - borderBottom());
             h = borderTop() + borderBottom();
@@ -1897,7 +1897,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     }
     QRect g(x, y, w, h);
     if (block_geometry_updates == 0 && g != rules()->checkGeometry(g)) {
-        qDebug() << "forced geometry fail:" << g << ":" << rules()->checkGeometry(g);
+        qCDebug(KWIN_CORE) << "forced geometry fail:" << g << ":" << rules()->checkGeometry(g);
     }
     if (force == NormalGeometrySet && geom == g && pending_geometry_update == PendingGeometryNone)
         return;
@@ -1975,7 +1975,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
         ; // nothing
     else if (isShade()) {
         if (h == borderTop() + borderBottom()) {
-            qDebug() << "Shaded geometry passed for size:";
+            qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
         } else {
             client_size = QSize(w - borderLeft() - borderRight(), h - borderTop() - borderBottom());
             h = borderTop() + borderBottom();
@@ -1985,7 +1985,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     }
     QSize s(w, h);
     if (block_geometry_updates == 0 && s != rules()->checkSize(s)) {
-        qDebug() << "forced size fail:" << s << ":" << rules()->checkSize(s);
+        qCDebug(KWIN_CORE) << "forced size fail:" << s << ":" << rules()->checkSize(s);
     }
     // resuming geometry updates is handled only in setGeometry()
     assert(pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0);
@@ -2039,7 +2039,7 @@ void Client::move(int x, int y, ForceGeometry_t force)
     assert(pending_geometry_update == PendingGeometryNone || block_geometry_updates > 0);
     QPoint p(x, y);
     if (block_geometry_updates == 0 && p != rules()->checkPosition(p)) {
-        qDebug() << "forced position fail:" << p << ":" << rules()->checkPosition(p);
+        qCDebug(KWIN_CORE) << "forced position fail:" << p << ":" << rules()->checkPosition(p);
     }
     if (force == NormalGeometrySet && geom.topLeft() == p)
         return;
@@ -2457,7 +2457,7 @@ void Client::updateFullscreenMonitors(NETFullscreenMonitors topology)
             topology.bottom >= nscreens ||
             topology.left >= nscreens ||
             topology.right >= nscreens) {
-        qWarning() << "fullscreenMonitors update failed. request higher than number of screens.";
+        qCWarning(KWIN_CORE) << "fullscreenMonitors update failed. request higher than number of screens.";
         return;
     }
 

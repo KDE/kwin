@@ -380,7 +380,7 @@ void Workspace::takeActivity(Client* c, ActivityFlags flags)
     if (c->tabGroup() && c->tabGroup()->current() != c)
         c->tabGroup()->setCurrent(c);
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
-        qWarning() << "takeActivity: not shown" ;
+        qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
         return;
     }
 
@@ -565,18 +565,18 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     if (!ignore_desktop && !c->isOnCurrentDesktop())
         return false; // allow only with level == 0
     if (ac == NULL || ac->isDesktop()) {
-        qDebug() << "Activation: No client active, allowing";
+        qCDebug(KWIN_CORE) << "Activation: No client active, allowing";
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
     if (Client::belongToSameApplication(c, ac, true)) {
-        qDebug() << "Activation: Belongs to active application";
+        qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
     }
     if (level == 3)   // high
         return false;
     if (time == -1U) {  // no time known
-        qDebug() << "Activation: No timestamp at all";
+        qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
         if (level == 1)   // low
             return true;
         // no timestamp at all, don't activate - because there's also creation timestamp
@@ -586,7 +586,7 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     }
     // level == 2 // normal
     Time user_time = ac->userTime();
-    qDebug() << "Activation, compared:" << c << ":" << time << ":" << user_time
+    qCDebug(KWIN_CORE) << "Activation, compared:" << c << ":" << time << ":" << user_time
                  << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
     return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
@@ -607,18 +607,18 @@ bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t ti
     if (level == 4)   // extreme
         return false;
     if (ac == NULL || ac->isDesktop()) {
-        qDebug() << "Raising: No client active, allowing";
+        qCDebug(KWIN_CORE) << "Raising: No client active, allowing";
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
     if (Client::belongToSameApplication(c, ac, true)) {
-        qDebug() << "Raising: Belongs to active application";
+        qCDebug(KWIN_CORE) << "Raising: Belongs to active application";
         return true;
     }
     if (level == 3)   // high
         return false;
     xcb_timestamp_t user_time = ac->userTime();
-    qDebug() << "Raising, compared:" << time << ":" << user_time
+    qCDebug(KWIN_CORE) << "Raising, compared:" << time << ":" << user_time
                  << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
     return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
@@ -707,7 +707,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             time = asn_id->timestamp();
         }
     }
-    qDebug() << "User timestamp, ASN:" << time;
+    qCDebug(KWIN_CORE) << "User timestamp, ASN:" << time;
     if (time == -1U) {
         // The window doesn't have any timestamp.
         // If it's the first window for its application
@@ -740,7 +740,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             }
             // don't refuse if focus stealing prevention is turned off
             if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > 0) {
-                qDebug() << "User timestamp, already exists:" << 0;
+                qCDebug(KWIN_CORE) << "User timestamp, already exists:" << 0;
                 return 0; // refuse activation
             }
         }
@@ -757,7 +757,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
             return -1U;
         time = readUserCreationTime();
     }
-    qDebug() << "User timestamp, final:" << this << ":" << time;
+    qCDebug(KWIN_CORE) << "User timestamp, final:" << this << ":" << time;
     return time;
 }
 

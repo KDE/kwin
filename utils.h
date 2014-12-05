@@ -30,13 +30,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <netwm_def.h>
 // Qt
+#include <QLoggingCategory>
 #include <QList>
 #include <QPoint>
 #include <QRect>
 #include <QScopedPointer>
 // system
 #include <limits.h>
-
+Q_DECLARE_LOGGING_CATEGORY(KWIN_CORE)
 namespace KWin
 {
 

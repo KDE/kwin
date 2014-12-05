@@ -32,6 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/socket.h>
 #include <netdb.h>
 
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
+
 using namespace KWin;
 
 class TestClientMachine : public QObject

@@ -222,9 +222,9 @@ void GlxBackend::init()
                 setBlocksForRetrace(true);
                 haveWaitSync = true;
             } else
-                qWarning() << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
+                qCWarning(KWIN_CORE) << "NO VSYNC! glXSwapInterval is not supported, glXWaitVideoSync is supported but broken";
         } else
-            qWarning() << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
+            qCWarning(KWIN_CORE) << "NO VSYNC! neither glSwapInterval nor glXWaitVideoSync are supported";
     } else {
         // disable v-sync (if possible)
         setSwapInterval(0);
@@ -320,7 +320,7 @@ bool GlxBackend::initBuffer()
         // Try to create double-buffered window in the overlay
         XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
         if (!visual) {
-           qCritical() << "Failed to get visual from fbconfig";
+           qCCritical(KWIN_CORE) << "Failed to get visual from fbconfig";
            return false;
         }
         XSetWindowAttributes attrs;
@@ -332,7 +332,7 @@ bool GlxBackend::initBuffer()
         overlayWindow()->setup(window);
         XFree(visual);
     } else {
-        qCritical() << "Failed to create overlay window";
+        qCCritical(KWIN_CORE) << "Failed to create overlay window";
         return false;
     }
 
@@ -371,7 +371,7 @@ bool GlxBackend::initFbConfig()
     }
 
     if (fbconfig == NULL) {
-        qCritical() << "Failed to find a usable framebuffer configuration";
+        qCCritical(KWIN_CORE) << "Failed to find a usable framebuffer configuration";
         return false;
     }
 
@@ -416,7 +416,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     const xcb_render_directformat_t *direct = XRenderUtils::findPictFormatInfo(format);
 
     if (!direct) {
-        qCritical().nospace() << "Could not find a picture format for visual 0x" << hex << visual;
+        qCCritical(KWIN_CORE).nospace() << "Could not find a picture format for visual 0x" << hex << visual;
         return info;
     }
 
@@ -449,7 +449,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
     if (count < 1) {
-        qCritical().nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
+        qCCritical(KWIN_CORE).nospace() << "Could not find a framebuffer configuration for visual 0x" << hex << visual;
         return info;
     }
 
@@ -564,7 +564,7 @@ void GlxBackend::present()
                         if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                             options->setGlPreferBufferSwap(0);
                             setSwapInterval(0);
-                            qWarning() << "\nIt seems you are using the nvidia driver without triple buffering\n"
+                            qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                               "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                               "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
                                               "For this reason, the tearing prevention has been disabled.\n"

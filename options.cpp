@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "options.h"
 #include "config-kwin.h"
+#include "utils.h"
 
 #ifndef KCMRULES
 
@@ -65,7 +66,7 @@ int currentRefreshRate()
                     vtotal *= 2;
                 if (modeline.htotal*vtotal) // BUG 313996
                     rate = 1000*dotclock/(modeline.htotal*vtotal); // WTF was wikipedia 1998 when I nedded it?
-                qDebug() << "Vertical Refresh Rate (as detected by XF86VM): " << rate << "Hz";
+                qCDebug(KWIN_CORE) << "Vertical Refresh Rate (as detected by XF86VM): " << rate << "Hz";
             }
         }
         if (rate < 1)
@@ -85,7 +86,7 @@ int currentRefreshRate()
                     rate = -1;
                 else
                     rate = qRound(frate);
-                qDebug() << "Vertical Refresh Rate (as detected by nvidia-settings): " << rate << "Hz";
+                qCDebug(KWIN_CORE) << "Vertical Refresh Rate (as detected by nvidia-settings): " << rate << "Hz";
             }
         }
     }
@@ -102,7 +103,7 @@ int currentRefreshRate()
     // however, additional throttling prevents very high rates from taking place anyway
     else if (rate > 1000)
         rate = 1000;
-    qDebug() << "Vertical Refresh rate " << rate << "Hz";
+    qCDebug(KWIN_CORE) << "Vertical Refresh rate " << rate << "Hz";
     return rate;
 }
 
@@ -784,24 +785,24 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
     const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
     if (!envOpenGLInterface.isEmpty()) {
         if (qstrcmp(envOpenGLInterface, "egl") == 0) {
-            qDebug() << "Forcing EGL native interface through environment variable";
+            qCDebug(KWIN_CORE) << "Forcing EGL native interface through environment variable";
             interface = EglPlatformInterface;
         } else if (qstrcmp(envOpenGLInterface, "glx") == 0) {
-            qDebug() << "Forcing GLX native interface through environment variable";
+            qCDebug(KWIN_CORE) << "Forcing GLX native interface through environment variable";
             interface = GlxPlatformInterface;
         }
     }
     if (kwinApp()->shouldUseWaylandForCompositing() && interface == GlxPlatformInterface) {
         // Glx is impossible on Wayland, enforce egl
-        qDebug() << "Forcing EGL native interface for Wayland mode";
+        qCDebug(KWIN_CORE) << "Forcing EGL native interface for Wayland mode";
         interface = EglPlatformInterface;
     }
 #ifdef KWIN_HAVE_OPENGLES
-    qDebug() << "Forcing EGL native interface as compiled against OpenGL ES";
+    qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled against OpenGL ES";
     interface = EglPlatformInterface;
 #else
 #ifndef KWIN_HAVE_EGL
-    qDebug() << "Forcing GLX native interface as compiled without EGL support";
+    qCDebug(KWIN_CORE) << "Forcing GLX native interface as compiled without EGL support";
     interface = GlxPlatformInterface;
 #endif
 #endif
@@ -934,29 +935,29 @@ bool Options::loadCompositingConfig (bool force)
     if (const char *c = getenv("KWIN_COMPOSE")) {
         switch(c[0]) {
         case 'O':
-            qDebug() << "Compositing forced to OpenGL mode by environment variable";
+            qCDebug(KWIN_CORE) << "Compositing forced to OpenGL mode by environment variable";
             compositingMode = OpenGLCompositing;
             useCompositing = true;
             break;
         case 'X':
-            qDebug() << "Compositing forced to XRender mode by environment variable";
+            qCDebug(KWIN_CORE) << "Compositing forced to XRender mode by environment variable";
             compositingMode = XRenderCompositing;
             useCompositing = true;
             break;
         case 'Q':
-            qDebug() << "Compositing forced to QPainter mode by environment variable";
+            qCDebug(KWIN_CORE) << "Compositing forced to QPainter mode by environment variable";
             compositingMode = QPainterCompositing;
             useCompositing = true;
             break;
         case 'N':
             if (getenv("KDE_FAILSAFE"))
-                qDebug() << "Compositing disabled forcefully by KDE failsafe mode";
+                qCDebug(KWIN_CORE) << "Compositing disabled forcefully by KDE failsafe mode";
             else
-                qDebug() << "Compositing disabled forcefully by environment variable";
+                qCDebug(KWIN_CORE) << "Compositing disabled forcefully by environment variable";
             compositingMode = NoCompositing;
             break;
         default:
-            qDebug() << "Unknown KWIN_COMPOSE mode set, ignoring";
+            qCDebug(KWIN_CORE) << "Unknown KWIN_COMPOSE mode set, ignoring";
             break;
         }
     }

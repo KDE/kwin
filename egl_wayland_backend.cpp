@@ -46,7 +46,7 @@ EglWaylandBackend::EglWaylandBackend()
         setFailed("Wayland Backend has not been created");
         return;
     }
-    qDebug() << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
+    qCDebug(KWIN_CORE) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
     if (!m_wayland->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
@@ -57,9 +57,9 @@ EglWaylandBackend::EglWaylandBackend()
     // Egl is always direct rendering
     setIsDirectRendering(true);
 
-    qWarning() << "Using Wayland rendering backend";
-    qWarning() << "This is a highly experimental backend, do not use for productive usage!";
-    qWarning() << "Please do not report any issues you might encounter when using this backend!";
+    qCWarning(KWIN_CORE) << "Using Wayland rendering backend";
+    qCWarning(KWIN_CORE) << "This is a highly experimental backend, do not use for productive usage!";
+    qCWarning(KWIN_CORE) << "Please do not report any issues you might encounter when using this backend!";
 }
 
 EglWaylandBackend::~EglWaylandBackend()
@@ -108,20 +108,20 @@ bool EglWaylandBackend::initializeEgl()
         return false;
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qWarning() << "Error during eglInitialize " << error;
+        qCWarning(KWIN_CORE) << "Error during eglInitialize " << error;
         return false;
     }
-    qDebug() << "Egl Initialize succeeded";
+    qCDebug(KWIN_CORE) << "Egl Initialize succeeded";
 
 #ifdef KWIN_HAVE_OPENGLES
     eglBindAPI(EGL_OPENGL_ES_API);
 #else
     if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-        qCritical() << "bind OpenGL API failed";
+        qCCritical(KWIN_CORE) << "bind OpenGL API failed";
         return false;
     }
 #endif
-    qDebug() << "EGL version: " << major << "." << minor;
+    qCDebug(KWIN_CORE) << "EGL version: " << major << "." << minor;
     return true;
 }
 
@@ -183,7 +183,7 @@ bool EglWaylandBackend::initRenderingContext()
 #endif
 
     if (m_context == EGL_NO_CONTEXT) {
-        qCritical() << "Create Context failed";
+        qCCritical(KWIN_CORE) << "Create Context failed";
         return false;
     }
 
@@ -196,7 +196,7 @@ bool EglWaylandBackend::initRenderingContext()
     connect(s, &KWayland::Client::Surface::frameRendered, Compositor::self(), &Compositor::bufferSwapComplete);
     m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
-        qCritical() << "Creating Wayland Egl window failed";
+        qCCritical(KWIN_CORE) << "Creating Wayland Egl window failed";
         return false;
     }
 
@@ -206,7 +206,7 @@ bool EglWaylandBackend::initRenderingContext()
         m_surface = eglCreateWindowSurface(m_display, m_config, m_overlay, nullptr);
 
     if (m_surface == EGL_NO_SURFACE) {
-        qCritical() << "Create Window Surface failed";
+        qCCritical(KWIN_CORE) << "Create Window Surface failed";
         return false;
     }
 
@@ -216,13 +216,13 @@ bool EglWaylandBackend::initRenderingContext()
 bool EglWaylandBackend::makeContextCurrent()
 {
     if (eglMakeCurrent(m_display, m_surface, m_surface, m_context) == EGL_FALSE) {
-        qCritical() << "Make Context Current failed";
+        qCCritical(KWIN_CORE) << "Make Context Current failed";
         return false;
     }
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qWarning() << "Error occurred while creating context " << error;
+        qCWarning(KWIN_CORE) << "Error occurred while creating context " << error;
         return false;
     }
     return true;
@@ -248,11 +248,11 @@ bool EglWaylandBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(m_display, config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCritical() << "choose config failed";
+        qCCritical(KWIN_CORE) << "choose config failed";
         return false;
     }
     if (count != 1) {
-        qCritical() << "choose config did not return a config" << count;
+        qCCritical(KWIN_CORE) << "choose config did not return a config" << count;
         return false;
     }
     m_config = configs[0];

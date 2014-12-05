@@ -44,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #endif
 
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 namespace KWin
 {
 
@@ -135,7 +136,7 @@ void ungrabXKeyboard()
 {
     if (!keyboard_grabbed) {
         // grabXKeyboard() may fail sometimes, so don't fail, but at least warn anyway
-        qDebug() << "ungrabXKeyboard() called but keyboard not grabbed!";
+        qCDebug(KWIN_CORE) << "ungrabXKeyboard() called but keyboard not grabbed!";
     }
     keyboard_grabbed = false;
     xcb_ungrab_keyboard(connection(), XCB_TIME_CURRENT_TIME);

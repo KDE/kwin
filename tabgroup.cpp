@@ -243,7 +243,7 @@ void TabGroup::setCurrent(Client* c, bool force)
 void TabGroup::sync(const char *property, Client *c)
 {
     if (c->metaObject()->indexOfProperty(property) > -1) {
-        qWarning("caught attempt to sync non dynamic property: %s", property);
+        qCWarning(KWIN_CORE, "caught attempt to sync non dynamic property: %s", property);
         return;
     }
     QVariant v = c->property(property);
@@ -286,7 +286,7 @@ void TabGroup::blockStateUpdates(bool more) {
     more ? ++m_stateUpdatesBlocked : --m_stateUpdatesBlocked;
     if (m_stateUpdatesBlocked < 0) {
         m_stateUpdatesBlocked = 0;
-        qWarning("TabGroup: Something is messed up with TabGroup::blockStateUpdates() invocation\nReleased more than blocked!");
+        qCWarning(KWIN_CORE, "TabGroup: Something is messed up with TabGroup::blockStateUpdates() invocation\nReleased more than blocked!");
     }
 }
 

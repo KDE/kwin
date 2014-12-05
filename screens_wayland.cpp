@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wayland_backend.h"
 #include <KWayland/Client/output.h>
+#include "utils.h"
 #include "xcbutils.h"
 
 #include <QDebug>
@@ -115,7 +116,7 @@ static bool setNewScreenSize(const QSize &size)
     auto c = xcb_randr_set_screen_size_checked(connection(), rootWindow(), size.width(), size.height(), 1, 1);
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), c));
     if (!error.isNull()) {
-        qDebug() << "Error setting screen size: " << error->error_code;
+        qCDebug(KWIN_CORE) << "Error setting screen size: " << error->error_code;
         return false;
     }
     return true;
@@ -124,7 +125,7 @@ static bool setNewScreenSize(const QSize &size)
 static xcb_randr_crtc_t getCrtc(const xcb_randr_get_screen_resources_current_reply_t* r)
 {
     if (xcb_randr_get_screen_resources_current_crtcs_length(r) == 0) {
-        qDebug() << "No CRTCs";
+        qCDebug(KWIN_CORE) << "No CRTCs";
         return XCB_NONE;
     }
     return xcb_randr_get_screen_resources_current_crtcs(r)[0];
@@ -143,7 +144,7 @@ static xcb_randr_output_t getOutputForCrtc(xcb_randr_crtc_t crtc)
 static xcb_randr_mode_t createNewMode(const QSize &size)
 {
     // need to create the new mode
-    qDebug() << "Creating a new mode";
+    qCDebug(KWIN_CORE) << "Creating a new mode";
     QString name(QString::number(size.width()));
     name.append('x');
     name.append(QString::number(size.height()));
@@ -177,7 +178,7 @@ static xcb_randr_mode_t getModeForSize(const QSize &size, const xcb_randr_get_sc
     for (int i = 0; i < modeInfoLength; ++i) {
         xcb_randr_mode_info_t modeInfo = infos[i];
         if (modeInfo.width == size.width() && modeInfo.height == size.height()) {
-            qDebug() << "Found our required mode";
+            qCDebug(KWIN_CORE) << "Found our required mode";
             return modeInfo.id;
         }
     }
@@ -195,11 +196,11 @@ static bool addModeToOutput(xcb_randr_output_t output, xcb_randr_mode_t mode)
             return true;
         }
     }
-    qDebug() << "Need to add the mode to output";
+    qCDebug(KWIN_CORE) << "Need to add the mode to output";
     auto c = xcb_randr_add_output_mode_checked(connection(), output, mode);
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), c));
     if (!error.isNull()) {
-        qDebug() << "Error while adding mode to output: " << error->error_code;
+        qCDebug(KWIN_CORE) << "Error while adding mode to output: " << error->error_code;
         return false;
     }
     return true;
@@ -208,7 +209,7 @@ static bool addModeToOutput(xcb_randr_output_t output, xcb_randr_mode_t mode)
 void WaylandScreens::updateXRandr()
 {
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
-        qDebug() << "No RandR extension available, cannot sync with X";
+        qCDebug(KWIN_CORE) << "No RandR extension available, cannot sync with X";
         return;
     }
     QRegion screens;

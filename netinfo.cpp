@@ -47,7 +47,7 @@ RootInfo *RootInfo::create()
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(),
         xcb_configure_window_checked(connection(), supportWindow, XCB_CONFIG_WINDOW_STACK_MODE, lowerValues)));
     if (!error.isNull()) {
-        qDebug() << "Error occurred while lowering support window: " << error->error_code;
+        qCDebug(KWIN_CORE) << "Error occurred while lowering support window: " << error->error_code;
     }
 
     const NET::Properties properties = NET::Supported |

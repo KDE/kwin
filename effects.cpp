@@ -1307,7 +1307,7 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
 
     for (QMap< int, EffectPair >::iterator it = effect_order.begin(); it != effect_order.end(); ++it) {
         if (it.value().first == name) {
-            qDebug() << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
+            qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Unloading Effect : " << name;
             if (activeFullScreenEffect() == it.value().second) {
                 setActiveFullScreenEffect(0);
             }
@@ -1324,7 +1324,7 @@ void EffectsHandlerImpl::unloadEffect(const QString& name)
         }
     }
 
-    qDebug() << "EffectsHandler::unloadEffect : Effect not loaded : " << name;
+    qCDebug(KWIN_CORE) << "EffectsHandler::unloadEffect : Effect not loaded : " << name;
 }
 
 void EffectsHandlerImpl::reconfigureEffect(const QString& name)

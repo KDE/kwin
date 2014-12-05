@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "xcbutils.h"
 #include "kwinglplatform.h"
+#include "utils.h"
 
 #include <kconfiggroup.h>
 #include <KLocalizedString>
@@ -68,11 +69,11 @@ bool CompositingPrefs::compositingPossible()
     }
 
     if (!Xcb::Extensions::self()->isCompositeAvailable()) {
-        qDebug() << "No composite extension available";
+        qCDebug(KWIN_CORE) << "No composite extension available";
         return false;
     }
     if (!Xcb::Extensions::self()->isDamageAvailable()) {
-        qDebug() << "No damage extension available";
+        qCDebug(KWIN_CORE) << "No damage extension available";
         return false;
     }
     if (hasGlx())
@@ -84,7 +85,7 @@ bool CompositingPrefs::compositingPossible()
 #ifdef KWIN_HAVE_OPENGLES
     return true;
 #endif
-    qDebug() << "No OpenGL or XRender/XFixes support";
+    qCDebug(KWIN_CORE) << "No OpenGL or XRender/XFixes support";
     return false;
 }
 

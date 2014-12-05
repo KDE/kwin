@@ -70,7 +70,7 @@ void QPainterBackend::screenGeometryChanged(const QSize &size)
 
 void QPainterBackend::setFailed(const QString &reason)
 {
-    qWarning() << "Creating the XRender backend failed: " << reason;
+    qCWarning(KWIN_CORE) << "Creating the XRender backend failed: " << reason;
     m_failed = true;
 }
 
@@ -150,7 +150,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
     const QSize size(Wayland::WaylandBackend::self()->shellSurfaceSize());
     m_buffer = Wayland::WaylandBackend::self()->shmPool()->getBuffer(size, size.width() * 4);
     if (!m_buffer) {
-        qDebug() << "Did not get a new Buffer from Shm Pool";
+        qCDebug(KWIN_CORE) << "Did not get a new Buffer from Shm Pool";
         m_backBuffer = QImage();
         return;
     }
@@ -159,7 +159,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
     m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
     m_needsFullRepaint = true;
-    qDebug() << "Created a new back buffer";
+    qCDebug(KWIN_CORE) << "Created a new back buffer";
 }
 
 void WaylandQPainterBackend::remapBuffer()
@@ -173,7 +173,7 @@ void WaylandQPainterBackend::remapBuffer()
     }
     const QSize size = m_backBuffer.size();
     m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
-    qDebug() << "Remapped our back buffer";
+    qCDebug(KWIN_CORE) << "Remapped our back buffer";
 }
 
 bool WaylandQPainterBackend::needsFullRepaint() const

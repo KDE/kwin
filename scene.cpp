@@ -944,20 +944,20 @@ void WindowPixmap::create()
     Xcb::WindowAttributes windowAttributes(toplevel()->frameId());
     Xcb::WindowGeometry windowGeometry(toplevel()->frameId());
     if (xcb_generic_error_t *error = xcb_request_check(connection(), namePixmapCookie)) {
-        qDebug() << "Creating window pixmap failed: " << error->error_code;
+        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << error->error_code;
         free(error);
         return;
     }
     // check that the received pixmap is valid and actually matches what we
     // know about the window (i.e. size)
     if (!windowAttributes || windowAttributes->map_state != XCB_MAP_STATE_VIEWABLE) {
-        qDebug() << "Creating window pixmap failed: " << this;
+        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << this;
         xcb_free_pixmap(connection(), pix);
         return;
     }
     if (!windowGeometry ||
         windowGeometry->width != toplevel()->width() || windowGeometry->height != toplevel()->height()) {
-        qDebug() << "Creating window pixmap failed: " << this;
+        qCDebug(KWIN_CORE) << "Creating window pixmap failed: " << this;
         xcb_free_pixmap(connection(), pix);
         return;
     }

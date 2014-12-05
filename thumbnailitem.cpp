@@ -73,7 +73,7 @@ void AbstractThumbnailItem::findParentEffectWindow()
     if (effects) {
         QQuickWindow *qw = window();
         if (!qw) {
-            qDebug() << "No QQuickWindow assigned yet";
+            qCDebug(KWIN_CORE) << "No QQuickWindow assigned yet";
             return;
         }
         if (auto *w = static_cast<EffectWindowImpl*>(effects->findWindow(qw->winId()))) {

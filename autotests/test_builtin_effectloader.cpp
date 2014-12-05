@@ -33,6 +33,8 @@ Q_DECLARE_METATYPE(KWin::LoadEffectFlags)
 Q_DECLARE_METATYPE(KWin::BuiltInEffect)
 Q_DECLARE_METATYPE(KWin::Effect*)
 
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
+
 namespace KWin
 {
 

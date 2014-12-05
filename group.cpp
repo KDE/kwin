@@ -73,15 +73,15 @@ bool performTransiencyCheck()
         if ((*it1)->deleting)
             continue;
         if ((*it1)->in_group == NULL) {
-            qDebug() << "TC: " << *it1 << " in not in a group" << endl;
+            qCDebug(KWIN_CORE) << "TC: " << *it1 << " in not in a group" << endl;
             ret = false;
         } else if (!(*it1)->in_group->members().contains(*it1)) {
-            qDebug() << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
+            qCDebug(KWIN_CORE) << "TC: " << *it1 << " has a group " << (*it1)->in_group << " but group does not contain it" << endl;
             ret = false;
         }
         if (!(*it1)->isTransient()) {
             if (!(*it1)->mainClients().isEmpty()) {
-                qDebug() << "TC: " << *it1 << " is not transient, has main clients:" << (*it1)->mainClients() << endl;
+                qCDebug(KWIN_CORE) << "TC: " << *it1 << " is not transient, has main clients:" << (*it1)->mainClients() << endl;
                 ret = false;
             }
         } else {
@@ -92,8 +92,8 @@ bool performTransiencyCheck()
                 if (transiencyCheckNonExistent
                         && !Workspace::self()->clients.contains(*it2)
                         && !Workspace::self()->desktops.contains(*it2)) {
-                    qDebug() << "TC:" << *it1 << " has non-existent main client ";
-                    qDebug() << "TC2:" << *it2; // this may crash
+                    qCDebug(KWIN_CORE) << "TC:" << *it1 << " has non-existent main client ";
+                    qCDebug(KWIN_CORE) << "TC2:" << *it2; // this may crash
                     ret = false;
                     continue;
                 }
@@ -110,8 +110,8 @@ bool performTransiencyCheck()
             if (transiencyCheckNonExistent
                     && !Workspace::self()->clients.contains(*it2)
                     && !Workspace::self()->desktops.contains(*it2)) {
-                qDebug() << "TC:" << *it1 << " has non-existent transient ";
-                qDebug() << "TC2:" << *it2; // this may crash
+                qCDebug(KWIN_CORE) << "TC:" << *it1 << " has non-existent transient ";
+                qCDebug(KWIN_CORE) << "TC2:" << *it2; // this may crash
                 ret = false;
                 continue;
             }
@@ -130,7 +130,7 @@ bool performTransiencyCheck()
                 it2 != members.constEnd();
                 ++it2) {
             if ((*it2)->in_group != *it1) {
-                qDebug() << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
+                qCDebug(KWIN_CORE) << "TC: Group " << *it1 << " contains client " << *it2 << " but client is not in that group" << endl;
                 ret = false;
             }
         }
@@ -155,8 +155,8 @@ static void checkTransiency()
 {
     if (--transiencyCheck == 0) {
         if (!performTransiencyCheck()) {
-            qDebug() << "BT:" << transiencyCheckStartBt << endl;
-            qDebug() << "CLIENT:" << transiencyCheckClient << endl;
+            qCDebug(KWIN_CORE) << "BT:" << transiencyCheckStartBt << endl;
+            qCDebug(KWIN_CORE) << "CLIENT:" << transiencyCheckClient << endl;
             abort();
         }
         transiencyCheckNonExistent = false;
@@ -736,7 +736,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     }
     if (new_transient_for == window()) { // pointing to self
         // also fix the property itself
-        qWarning() << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
+        qCWarning(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to itself." ;
         new_property_value = new_transient_for = rootWindow();
     }
 //  The transient_for window may be embedded in another application,
@@ -754,7 +754,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     }
     if (Client* new_transient_for_client = workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         if (new_transient_for != before_search) {
-            qDebug() << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
+            qCDebug(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
                          << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
             new_property_value = new_transient_for; // also fix the property
         }
@@ -771,7 +771,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
             break;
         loop_pos = pos->m_transientForId;
         if (--count == 0 || pos == this) {
-            qWarning() << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
+            qCWarning(KWIN_CORE) << "Client " << this << " caused WM_TRANSIENT_FOR loop." ;
             new_transient_for = rootWindow();
         }
     }

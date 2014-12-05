@@ -317,7 +317,7 @@ void UserActionsMenu::init()
                 args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
                 QString error;
                 if (KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args, &error) != 0) {
-                    qDebug() << "Failed to start kcmshell5: " << error;
+                    qCDebug(KWIN_CORE) << "Failed to start kcmshell5: " << error;
                 }
             }
         );
@@ -441,7 +441,7 @@ void UserActionsMenu::showHideActivityMenu()
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     const QStringList &openActivities_ = Activities::self()->running();
-    qDebug() << "activities:" << openActivities_.size();
+    qCDebug(KWIN_CORE) << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
         delete m_activityMenu;
         m_activityMenu = 0;
@@ -1839,7 +1839,7 @@ void Workspace::slotInvertScreen()
                 continue;
             }
             if (gamma->size) {
-                qDebug() << "inverting screen using XRRSetCrtcGamma";
+                qCDebug(KWIN_CORE) << "inverting screen using XRRSetCrtcGamma";
                 const int half = gamma->size / 2 + 1;
 
                 uint16_t *red = gamma.red();
@@ -1872,7 +1872,7 @@ void Workspace::slotInvertScreen()
         green = new unsigned short[size];
         blue = new unsigned short[size];
         if (XF86VidModeGetGammaRamp(display(), scrn, size, red, green, blue)) {
-            qDebug() << "inverting screen using XF86VidModeSetGammaRamp";
+            qCDebug(KWIN_CORE) << "inverting screen using XF86VidModeSetGammaRamp";
             const int half = size / 2 + 1;
             unsigned short swap;
             for (int i = 0; i < half; ++i) {
@@ -1895,13 +1895,13 @@ void Workspace::slotInvertScreen()
     //BEGIN effect plugin inversion - atm only works with OpenGL and has an overhead to it
     if (effects) {
         if (Effect *inverter = static_cast<EffectsHandlerImpl*>(effects)->provides(Effect::ScreenInversion)) {
-            qDebug() << "inverting screen using Effect plugin";
+            qCDebug(KWIN_CORE) << "inverting screen using Effect plugin";
             QMetaObject::invokeMethod(inverter, "toggleScreenInversion", Qt::DirectConnection);
         }
     }
 
     if (!succeeded)
-        qDebug() << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
+        qCDebug(KWIN_CORE) << "sorry - neither Xrandr, nor XF86VidModeSetGammaRamp worked and there's no inversion supplying effect plugin either";
 
 }
 

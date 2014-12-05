@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 // own
 #include "client_machine.h"
+#include "utils.h"
 // KF5
 #include <KWindowInfo>
 // Qt
@@ -120,7 +121,7 @@ bool GetAddrInfo::resolved(QFutureWatcher< int >* watcher)
         return false;
     }
     if (watcher->result() != 0) {
-        qDebug() << "getaddrinfo failed with error:" << gai_strerror(watcher->result());
+        qCDebug(KWIN_CORE) << "getaddrinfo failed with error:" << gai_strerror(watcher->result());
         // call failed;
         deleteLater();
         return false;

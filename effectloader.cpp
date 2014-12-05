@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwineffects.h>
 #include "effects/effect_builtins.h"
 #include "scripting/scriptedeffect.h"
+#include "utils.h"
 // KDE
 #include <KConfigGroup>
 #include <KPluginTrader>
@@ -129,7 +130,7 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
         return false;
     }
     if (!flags.testFlag(LoadEffectFlag::Load)) {
-        qDebug() << "Loading flags disable effect: " << name;
+        qCDebug(KWIN_CORE) << "Loading flags disable effect: " << name;
         return false;
     }
     // check that it is not already loaded
@@ -142,13 +143,13 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
     effects->makeOpenGLContextCurrent();
 #endif
     if (!BuiltInEffects::supported(effect)) {
-        qDebug() << "Effect is not supported: " << name;
+        qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
         return false;
     }
 
     if (flags.testFlag(LoadEffectFlag::CheckDefaultFunction)) {
         if (!BuiltInEffects::checkEnabledByDefault(effect)) {
-            qDebug() << "Enabled by default function disables effect: " << name;
+            qCDebug(KWIN_CORE) << "Enabled by default function disables effect: " << name;
             return false;
         }
     }
@@ -156,7 +157,7 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
     // ok, now we can try to create the Effect
     Effect *e = BuiltInEffects::create(effect);
     if (!e) {
-        qDebug() << "Failed to create effect: " << name;
+        qCDebug(KWIN_CORE) << "Failed to create effect: " << name;
         return false;
     }
     // insert in our loaded effects
@@ -166,7 +167,7 @@ bool BuiltInEffectLoader::loadEffect(const QString &name, BuiltInEffect effect, 
             m_loadedEffects.remove(effect);
         }
     );
-    qDebug() << "Successfully loaded built-in effect: " << name;
+    qCDebug(KWIN_CORE) << "Successfully loaded built-in effect: " << name;
     emit effectLoaded(e, name);
     return true;
 }
@@ -224,17 +225,17 @@ bool ScriptedEffectLoader::loadEffect(KService::Ptr effect, LoadEffectFlags flag
 {
     const QString name = effect->property(s_nameProperty).toString();
     if (!flags.testFlag(LoadEffectFlag::Load)) {
-        qDebug() << "Loading flags disable effect: " << name;
+        qCDebug(KWIN_CORE) << "Loading flags disable effect: " << name;
         return false;
     }
     if (m_loadedEffects.contains(name)) {
-        qDebug() << name << "already loaded";
+        qCDebug(KWIN_CORE) << name << "already loaded";
         return false;
     }
 
     ScriptedEffect *e = ScriptedEffect::create(effect);
     if (!e) {
-        qDebug() << "Could not initialize scripted effect: " << name;
+        qCDebug(KWIN_CORE) << "Could not initialize scripted effect: " << name;
         return false;
     }
     connect(e, &ScriptedEffect::destroyed, this,
@@ -243,7 +244,7 @@ bool ScriptedEffectLoader::loadEffect(KService::Ptr effect, LoadEffectFlags flag
         }
     );
 
-    qDebug() << "Successfully loaded scripted effect: " << name;
+    qCDebug(KWIN_CORE) << "Successfully loaded scripted effect: " << name;
     emit effectLoaded(e, name);
     m_loadedEffects << name;
     return true;
@@ -328,12 +329,12 @@ EffectPluginFactory *PluginEffectLoader::factory(const KPluginInfo &info) const
     }
     KPluginLoader loader(info.libraryPath());
     if (loader.pluginVersion() != KWIN_EFFECT_API_VERSION) {
-        qDebug() << info.pluginName() << " has not matching plugin version, expected " << KWIN_EFFECT_API_VERSION << "got " << loader.pluginVersion();
+        qCDebug(KWIN_CORE) << info.pluginName() << " has not matching plugin version, expected " << KWIN_EFFECT_API_VERSION << "got " << loader.pluginVersion();
         return nullptr;
     }
     KPluginFactory *factory = loader.factory();
     if (!factory) {
-        qDebug() << "Did not get KPluginFactory for " << info.pluginName();
+        qCDebug(KWIN_CORE) << "Did not get KPluginFactory for " << info.pluginName();
         return nullptr;
     }
     return dynamic_cast< EffectPluginFactory* >(factory);
@@ -361,21 +362,21 @@ bool PluginEffectLoader::loadEffect(const QString &name)
 bool PluginEffectLoader::loadEffect(const KPluginInfo &info, LoadEffectFlags flags)
 {
     if (!info.isValid()) {
-        qDebug() << "Plugin info is not valid";
+        qCDebug(KWIN_CORE) << "Plugin info is not valid";
         return false;
     }
     const QString name = info.pluginName();
     if (!flags.testFlag(LoadEffectFlag::Load)) {
-        qDebug() << "Loading flags disable effect: " << name;
+        qCDebug(KWIN_CORE) << "Loading flags disable effect: " << name;
         return false;
     }
     if (m_loadedEffects.contains(name)) {
-        qDebug() << name << " already loaded";
+        qCDebug(KWIN_CORE) << name << " already loaded";
         return false;
     }
     EffectPluginFactory *effectFactory = factory(info);
     if (!effectFactory) {
-        qDebug() << "Couldn't get an EffectPluginFactory for: " << name;
+        qCDebug(KWIN_CORE) << "Couldn't get an EffectPluginFactory for: " << name;
         return false;
     }
 
@@ -383,13 +384,13 @@ bool PluginEffectLoader::loadEffect(const KPluginInfo &info, LoadEffectFlags fla
     effects->makeOpenGLContextCurrent();
 #endif
     if (!effectFactory->isSupported()) {
-        qDebug() << "Effect is not supported: " << name;
+        qCDebug(KWIN_CORE) << "Effect is not supported: " << name;
         return false;
     }
 
     if (flags.testFlag(LoadEffectFlag::CheckDefaultFunction)) {
         if (!effectFactory->enabledByDefault()) {
-            qDebug() << "Enabled by default function disables effect: " << name;
+            qCDebug(KWIN_CORE) << "Enabled by default function disables effect: " << name;
             return false;
         }
     }
@@ -397,7 +398,7 @@ bool PluginEffectLoader::loadEffect(const KPluginInfo &info, LoadEffectFlags fla
     // ok, now we can try to create the Effect
     Effect *e = effectFactory->createEffect();
     if (!e) {
-        qDebug() << "Failed to create effect: " << name;
+        qCDebug(KWIN_CORE) << "Failed to create effect: " << name;
         return false;
     }
     // insert in our loaded effects
@@ -407,7 +408,7 @@ bool PluginEffectLoader::loadEffect(const KPluginInfo &info, LoadEffectFlags fla
             m_loadedEffects.removeAll(name);
         }
     );
-    qDebug() << "Successfully loaded plugin effect: " << name;
+    qCDebug(KWIN_CORE) << "Successfully loaded plugin effect: " << name;
     emit effectLoaded(e, name);
     return true;
 }

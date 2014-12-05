@@ -156,10 +156,10 @@ void Compositor::setup()
         if (m_suspended & ScriptSuspend) {
             reasons << QStringLiteral("Disabled by Script");
         }
-        qDebug() << "Compositing is suspended, reason:" << reasons;
+        qCDebug(KWIN_CORE) << "Compositing is suspended, reason:" << reasons;
         return;
     } else if (!CompositingPrefs::compositingPossible()) {
-        qCritical() << "Compositing is not possible";
+        qCCritical(KWIN_CORE) << "Compositing is not possible";
         return;
     }
     m_starting = true;
@@ -195,14 +195,14 @@ void Compositor::slotCompositingOptionsInitialized()
 
     switch(options->compositingMode()) {
     case OpenGLCompositing: {
-        qDebug() << "Initializing OpenGL compositing";
+        qCDebug(KWIN_CORE) << "Initializing OpenGL compositing";
 
         // Some broken drivers crash on glXQuery() so to prevent constant KWin crashes:
         KSharedConfigPtr unsafeConfigPtr = KSharedConfig::openConfig();
         KConfigGroup unsafeConfig(unsafeConfigPtr, "Compositing");
         const QString openGLIsUnsafe = QStringLiteral("OpenGLIsUnsafe") + (is_multihead ? QString::number(screen_number) : QString());
         if (unsafeConfig.readEntry(openGLIsUnsafe, false))
-            qWarning() << "KWin has detected that your OpenGL library is unsafe to use";
+            qCWarning(KWIN_CORE) << "KWin has detected that your OpenGL library is unsafe to use";
         else {
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
@@ -210,7 +210,7 @@ void Compositor::slotCompositingOptionsInitialized()
             if (!CompositingPrefs::hasGlx()) {
                 unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
-                qDebug() << "No glx extensions available";
+                qCDebug(KWIN_CORE) << "No glx extensions available";
                 break;
             }
 #endif
@@ -234,36 +234,36 @@ void Compositor::slotCompositingOptionsInitialized()
     }
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
-        qDebug() << "Initializing XRender compositing";
+        qCDebug(KWIN_CORE) << "Initializing XRender compositing";
         m_scene = SceneXrender::createScene();
         break;
 #endif
     case QPainterCompositing:
-        qDebug() << "Initializing QPainter compositing";
+        qCDebug(KWIN_CORE) << "Initializing QPainter compositing";
         m_scene = SceneQPainter::createScene();
         break;
     default:
-        qDebug() << "No compositing enabled";
+        qCDebug(KWIN_CORE) << "No compositing enabled";
         m_starting = false;
         cm_selection->owning = false;
         cm_selection->release();
         if (kwinApp()->requiresCompositing()) {
-            qCritical() << "The used windowing system requires compositing";
-            qCritical() << "We are going to quit KWin now as it is broken";
+            qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
+            qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
         }
         return;
     }
     if (m_scene == NULL || m_scene->initFailed()) {
-        qCritical() << "Failed to initialize compositing, compositing disabled";
+        qCCritical(KWIN_CORE) << "Failed to initialize compositing, compositing disabled";
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
         cm_selection->owning = false;
         cm_selection->release();
         if (kwinApp()->requiresCompositing()) {
-            qCritical() << "The used windowing system requires compositing";
-            qCritical() << "We are going to quit KWin now as it is broken";
+            qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
+            qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
             qApp->quit();
         }
         return;
@@ -371,7 +371,7 @@ void Compositor::releaseCompositorSelection()
         m_releaseSelectionTimer.start();
         return;
     }
-    qDebug() << "Releasing compositor selection";
+    qCDebug(KWIN_CORE) << "Releasing compositor selection";
     cm_selection->owning = false;
     cm_selection->release();
 }
@@ -1105,10 +1105,10 @@ bool Toplevel::updateUnredirectedState()
     lastUnredirect.start();
     unredirect = should;
     if (unredirect) {
-        qDebug() << "Unredirecting:" << this;
+        qCDebug(KWIN_CORE) << "Unredirecting:" << this;
         xcb_composite_unredirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
     } else {
-        qDebug() << "Redirecting:" << this;
+        qCDebug(KWIN_CORE) << "Redirecting:" << this;
         xcb_composite_redirect_window(connection(), frameId(), XCB_COMPOSITE_REDIRECT_MANUAL);
         discardWindowPixmap();
     }

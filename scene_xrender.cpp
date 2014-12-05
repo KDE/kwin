@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_xrender.h"
 
+#include "utils.h"
+
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
 
 #include "toplevel.h"
@@ -98,7 +100,7 @@ void XRenderBackend::setBuffer(xcb_render_picture_t buffer)
 
 void XRenderBackend::setFailed(const QString& reason)
 {
-    qCritical() << "Creating the XRender backend failed: " << reason;
+    qCCritical(KWIN_CORE) << "Creating the XRender backend failed: " << reason;
     m_failed = true;
 }
 
@@ -270,7 +272,7 @@ void WaylandXRenderBackend::createBuffer()
     xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
     setBuffer(b);
 
-    qDebug() << "Offscreen shm pixmap created";
+    qCDebug(KWIN_CORE) << "Offscreen shm pixmap created";
 }
 
 void WaylandXRenderBackend::present(int mask, const QRegion &damage)
@@ -285,7 +287,7 @@ void WaylandXRenderBackend::present(int mask, const QRegion &damage)
     const QSize &size = wl->shellSurfaceSize();
     auto buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
     if (!buffer) {
-        qDebug() << "Did not get a buffer";
+        qCDebug(KWIN_CORE) << "Did not get a buffer";
         return;
     }
 

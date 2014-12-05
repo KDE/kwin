@@ -19,6 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "xcbutils.h"
+#include "utils.h"
 // Qt
 #include <QDebug>
 // xcb
@@ -467,7 +468,7 @@ void Extensions::init()
     if (m_sync.present) {
         initVersion<xcb_sync_initialize_reply_t>(syncVersion, &xcb_sync_initialize_reply, &m_sync);
     }
-    qDebug() << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
+    qCDebug(KWIN_CORE) << "Extensions: shape: 0x" << QString::number(m_shape.version, 16)
                  << " composite: 0x" << QString::number(m_composite.version, 16)
                  << " render: 0x" << QString::number(m_render.version, 16)
                  << " fixes: 0x" << QString::number(m_fixes.version, 16)
@@ -579,25 +580,25 @@ bool Shm::init()
 {
     const xcb_query_extension_reply_t *ext = xcb_get_extension_data(connection(), &xcb_shm_id);
     if (!ext || !ext->present) {
-        qDebug() << "SHM extension not available";
+        qCDebug(KWIN_CORE) << "SHM extension not available";
         return false;
     }
     ScopedCPointer<xcb_shm_query_version_reply_t> version(xcb_shm_query_version_reply(connection(),
         xcb_shm_query_version_unchecked(connection()), NULL));
     if (version.isNull()) {
-        qDebug() << "Failed to get SHM extension version information";
+        qCDebug(KWIN_CORE) << "Failed to get SHM extension version information";
         return false;
     }
     m_pixmapFormat = version->pixmap_format;
     const int MAXSIZE = 4096 * 2048 * 4; // TODO check there are not larger windows
     m_shmId = shmget(IPC_PRIVATE, MAXSIZE, IPC_CREAT | 0600);
     if (m_shmId < 0) {
-        qDebug() << "Failed to allocate SHM segment";
+        qCDebug(KWIN_CORE) << "Failed to allocate SHM segment";
         return false;
     }
     m_buffer = shmat(m_shmId, NULL, 0 /*read/write*/);
     if (-1 == reinterpret_cast<long>(m_buffer)) {
-        qDebug() << "Failed to attach SHM segment";
+        qCDebug(KWIN_CORE) << "Failed to attach SHM segment";
         shmctl(m_shmId, IPC_RMID, NULL);
         return false;
     }
@@ -607,7 +608,7 @@ bool Shm::init()
     const xcb_void_cookie_t cookie = xcb_shm_attach_checked(connection(), m_segment, m_shmId, false);
     ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
     if (!error.isNull()) {
-        qDebug() << "xcb_shm_attach error: " << error->error_code;
+        qCDebug(KWIN_CORE) << "xcb_shm_attach error: " << error->error_code;
         shmdt(m_buffer);
         return false;
     }
