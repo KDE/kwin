@@ -308,7 +308,8 @@ void Decoration::init()
 //         KConfigGroup themeGroup(&conf, themeName);
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
-//         m_theme->setBorderSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("BorderSize", KDecorationDefines::BorderNormal));
+        theme->setBorderSize(s->borderSize());
+        connect(s.data(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
 //         m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
 //         m_theme->setTabDragMimeType(tabDragMimeType());
         context->setContextProperty(QStringLiteral("auroraeTheme"), theme);

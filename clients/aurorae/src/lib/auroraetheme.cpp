@@ -45,16 +45,16 @@ public:
     Aurorae::ThemeConfig themeConfig;
     QHash< AuroraeButtonType, QString > pathes;
     bool activeCompositing;
-    AuroraeTheme::BorderSize borderSize;
-    AuroraeTheme::BorderSize buttonSize;
+    KDecoration2::BorderSize borderSize;
+    KDecoration2::BorderSize buttonSize;
     QString dragMimeType;
     QString decorationPath;
 };
 
 AuroraeThemePrivate::AuroraeThemePrivate()
     :activeCompositing(true)
-    , borderSize(AuroraeTheme::BorderNormal)
-    , buttonSize(AuroraeTheme::BorderNormal)
+    , borderSize(KDecoration2::BorderSize::Normal)
+    , buttonSize(KDecoration2::BorderSize::Normal)
 {
 }
 
@@ -106,8 +106,6 @@ void AuroraeTheme::loadTheme(const QString &name)
                    KConfig::FullConfig, QStandardPaths::GenericDataLocation);
     KConfigGroup themeGroup(&conf, name);
     loadTheme(name, config);
-    setBorderSize((BorderSize)themeGroup.readEntry<int>("BorderSize", BorderNormal));
-    setButtonSize((BorderSize)themeGroup.readEntry<int>("ButtonSize", BorderNormal));
 }
 
 void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
@@ -211,7 +209,7 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
         }
     } else {
         switch (d->borderSize) {
-        case BorderTiny:
+        case KDecoration2::BorderSize::Tiny:
             // TODO: this looks wrong
             if (isCompositingActive()) {
                 left = qMin(0, (int)left - d->themeConfig.borderLeft() - d->themeConfig.paddingLeft());
@@ -223,22 +221,22 @@ void AuroraeTheme::borders(int& left, int& top, int& right, int& bottom, bool ma
                 bottom = qMin(0, (int)bottom - d->themeConfig.borderBottom());
             }
             break;
-        case BorderLarge:
+        case KDecoration2::BorderSize::Large:
             left = right = bottom = top = 4;
             break;
-        case BorderVeryLarge:
+        case KDecoration2::BorderSize::VeryLarge:
             left = right = bottom = top = 8;
             break;
-        case BorderHuge:
+        case KDecoration2::BorderSize::Huge:
             left = right = bottom = top = 12;
             break;
-        case BorderVeryHuge:
+        case KDecoration2::BorderSize::VeryHuge:
             left = right = bottom = top = 23;
             break;
-        case BorderOversized:
+        case KDecoration2::BorderSize::Oversized:
             left = right = bottom = top = 36;
             break;
-        case BorderNormal:
+        case KDecoration2::BorderSize::Normal:
         default:
             left = right = bottom = top = 0;
         }
@@ -450,7 +448,7 @@ void AuroraeTheme::setCompositingActive(bool active)
     d->activeCompositing = active;
 }
 
-void AuroraeTheme::setBorderSize(BorderSize size)
+void AuroraeTheme::setBorderSize(KDecoration2::BorderSize size)
 {
     if (d->borderSize == size) {
         return;
@@ -459,7 +457,7 @@ void AuroraeTheme::setBorderSize(BorderSize size)
     emit borderSizesChanged();
 }
 
-void AuroraeTheme::setButtonSize(BorderSize size)
+void AuroraeTheme::setButtonSize(KDecoration2::BorderSize size)
 {
     if (d->buttonSize == size) {
         return;
@@ -481,19 +479,19 @@ const QString &AuroraeTheme::tabDragMimeType() const
 qreal AuroraeTheme::buttonSizeFactor() const
 {
     switch (d->buttonSize) {
-    case BorderTiny:
+    case KDecoration2::BorderSize::Tiny:
         return 0.8;
-    case BorderLarge:
+    case KDecoration2::BorderSize::Large:
         return 1.2;
-    case BorderVeryLarge:
+    case KDecoration2::BorderSize::VeryLarge:
         return 1.4;
-    case BorderHuge:
+    case KDecoration2::BorderSize::Huge:
         return 1.6;
-    case BorderVeryHuge:
+    case KDecoration2::BorderSize::VeryHuge:
         return 1.8;
-    case BorderOversized:
+    case KDecoration2::BorderSize::Oversized:
         return 2.0;
-    case BorderNormal: // fall through
+    case KDecoration2::BorderSize::Normal: // fall through
     default:
         return 1.0;
     }

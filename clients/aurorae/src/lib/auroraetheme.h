@@ -27,6 +27,8 @@
 
 #include <QLoggingCategory>
 
+#include <KDecoration2/DecorationButton>
+
 Q_DECLARE_LOGGING_CATEGORY(AURORAE)
 
 class KConfig;
@@ -113,18 +115,6 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment NOTIFY themeChanged)
 public:
-    enum BorderSize {
-        BorderTiny,      ///< Minimal borders
-        BorderNormal,    ///< Standard size borders, the default setting
-        BorderLarge,     ///< Larger borders
-        BorderVeryLarge, ///< Very large borders
-        BorderHuge,      ///< Huge borders
-        BorderVeryHuge,  ///< Very huge borders
-        BorderOversized, ///< Oversized borders
-        BorderNoSides,   ///< No borders on sides @since 4.11
-        BorderNone,      ///< No borders except title @since 4.11
-        BordersCount     ///< @internal
-    };
     explicit AuroraeTheme(QObject* parent = nullptr);
     virtual ~AuroraeTheme();
     // TODO: KSharedConfigPtr
@@ -194,13 +184,13 @@ public:
     * @returns true if the theme contains a FrameSvg for specified button.
     */
     bool hasButton(AuroraeButtonType button) const;
-    void setBorderSize(BorderSize size);
+    void setBorderSize(KDecoration2::BorderSize size);
     /**
     * Sets the size of the buttons.
     * The available sizes are identical to border sizes, therefore BorderSize is used.
     * @param size The buttons size
     */
-    void setButtonSize(BorderSize size);
+    void setButtonSize(KDecoration2::BorderSize size);
     qreal buttonSizeFactor() const;
 
     DecorationPosition decorationPosition() const;

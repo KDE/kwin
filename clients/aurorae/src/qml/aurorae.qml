@@ -22,14 +22,14 @@ Decoration {
     id: root
     property bool animate: false
     Component.onCompleted: {
-        borders.left   = Math.max(0, auroraeTheme.borderLeft);
-        borders.right  = Math.max(0, auroraeTheme.borderRight);
-        borders.top    = Math.max(0, auroraeTheme.borderTop);
-        borders.bottom = Math.max(0, auroraeTheme.borderBottom);
-        maximizedBorders.left   = Math.max(0, auroraeTheme.borderLeftMaximized);
-        maximizedBorders.right  = Math.max(0, auroraeTheme.borderRightMaximized);
-        maximizedBorders.bottom = Math.max(0, auroraeTheme.borderBottomMaximized);
-        maximizedBorders.top    = Math.max(0, auroraeTheme.borderTopMaximized);
+        borders.left   = Qt.binding(function() { return Math.max(0, auroraeTheme.borderLeft);});
+        borders.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.borderRight);});
+        borders.top    = Qt.binding(function() { return Math.max(0, auroraeTheme.borderTop);});
+        borders.bottom = Qt.binding(function() { return Math.max(0, auroraeTheme.borderBottom);});
+        maximizedBorders.left   = Qt.binding(function() { return Math.max(0, auroraeTheme.borderLeftMaximized);});
+        maximizedBorders.right  = Qt.binding(function() { return Math.max(0, auroraeTheme.borderRightMaximized);});
+        maximizedBorders.bottom = Qt.binding(function() { return Math.max(0, auroraeTheme.borderBottomMaximized);});
+        maximizedBorders.top    = Qt.binding(function() { return Math.max(0, auroraeTheme.borderTopMaximized);});
         padding.left   = auroraeTheme.paddingLeft;
         padding.right  = auroraeTheme.paddingRight;
         padding.bottom = auroraeTheme.paddingBottom;
