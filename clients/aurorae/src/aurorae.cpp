@@ -277,6 +277,7 @@ void Decoration::init()
 {
     KDecoration2::Decoration::init();
     auto s = settings();
+    connect(s.data(), &KDecoration2::DecorationSettings::reconfigured, this, &Decoration::configChanged);
     // recreate scene when compositing gets disabled, TODO: remove with rendercontrol
 #if !HAVE_RENDER_CONTROL
     if (!m_recreateNonCompositedConnection) {
@@ -713,44 +714,11 @@ void ConfigurationModule::init()
     uiFile.close();
     layout()->addWidget(customConfigForm);
     // connect the ui file with the skeleton
-    m_configManager = new KConfigDialogManager(customConfigForm, m_skeleton);
-    m_configManager->updateWidgets();
-    connect(m_configManager, &KConfigDialogManager::widgetModified,
-            this, static_cast<void (ConfigurationModule::*)()>(&KCModule::changed));
+    addConfig(m_skeleton, customConfigForm);
 
     // send a custom event to the translator to retranslate using our translator
     QEvent le(QEvent::LanguageChange);
     QCoreApplication::sendEvent(customConfigForm, &le);
-}
-
-void ConfigurationModule::defaults()
-{
-    if (m_configManager) {
-        m_configManager->updateWidgetsDefault();
-    }
-    KCModule::defaults();
-}
-
-void ConfigurationModule::load()
-{
-    if (m_skeleton) {
-        m_skeleton->load();
-    }
-    if (m_configManager) {
-        m_configManager->updateWidgets();
-    }
-    KCModule::load();
-}
-
-void ConfigurationModule::save()
-{
-    if (m_configManager) {
-        m_configManager->updateSettings();
-    }
-    if (m_skeleton) {
-        m_skeleton->save();
-    }
-    KCModule::save();
 }
 
 }

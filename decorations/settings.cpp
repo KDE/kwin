@@ -180,6 +180,8 @@ void SettingsImpl::readSettings()
         m_borderSize = size;
         emit decorationSettings()->borderSizeChanged(m_borderSize);
     }
+
+    emit decorationSettings()->reconfigured();
 }
 
 }

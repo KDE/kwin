@@ -11,6 +11,7 @@ add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})
 target_link_libraries(kdecorationprivatedeclarative
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
+    Qt5::DBus
     Qt5::Quick
     KF5::CoreAddons
     KF5::ConfigWidgets

@@ -31,6 +31,8 @@
 #include <KPluginTrader>
 
 #include <QDebug>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
@@ -195,7 +197,18 @@ void PreviewBridge::configure()
         return;
     }
 
-    connect(&dialog, &QDialog::accepted, kcm, &KCModule::save);
+    auto save = [this,kcm] {
+        kcm->save();
+        if (!m_lastCreatedSettings) {
+        }
+        emit m_lastCreatedSettings->decorationSettings()->reconfigured();
+        // Send signal to all kwin instances
+        QDBusMessage message = QDBusMessage::createSignal(QStringLiteral("/KWin"),
+                                                          QStringLiteral("org.kde.KWin"),
+                                                          QStringLiteral("reloadConfig"));
+        QDBusConnection::sessionBus().send(message);
+    };
+    connect(&dialog, &QDialog::accepted, this, save);
 
     QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok |
                                                      QDialogButtonBox::Cancel |
@@ -211,7 +224,7 @@ void PreviewBridge::configure()
     // Here we connect our buttons with the dialog
     connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
-    connect(apply, &QPushButton::clicked, kcm, &KCModule::save);
+    connect(apply, &QPushButton::clicked, this, save);
     connect(reset, &QPushButton::clicked, kcm, &KCModule::load);
     auto changedSignal = static_cast<void(KCModule::*)(bool)>(&KCModule::changed);
     connect(kcm, changedSignal, apply, &QPushButton::setEnabled);

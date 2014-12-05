@@ -34,7 +34,6 @@ class QQuickWindow;
 class QWindow;
 
 class KConfigLoader;
-class KConfigDialogManager;
 
 namespace KWin
 {
@@ -61,6 +60,9 @@ public:
 public Q_SLOTS:
     void init() override;
     void installTitleItem(QQuickItem *item);
+
+Q_SIGNALS:
+    void configChanged();
 
 protected:
     void hoverEnterEvent(QHoverEvent *event) override;
@@ -119,16 +121,10 @@ class ConfigurationModule : public KCModule
 public:
     ConfigurationModule(QWidget *parent, const QVariantList &args);
 
-public Q_SLOTS:
-    void defaults() override;
-    void load() override;
-    void save() override;
-
 private:
     void init();
     QString m_theme;
     KConfigLoader *m_skeleton = nullptr;
-    KConfigDialogManager *m_configManager = nullptr;
 };
 
 }

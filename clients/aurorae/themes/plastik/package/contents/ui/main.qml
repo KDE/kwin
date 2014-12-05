@@ -413,4 +413,8 @@ Decoration {
         maximizedBorders.setTitle(top.maximizedHeight);
         readConfig();
     }
+    Connections {
+        target: decoration
+        onConfigChanged: root.readConfig()
+    }
 }
