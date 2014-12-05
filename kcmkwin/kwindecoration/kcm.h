@@ -57,6 +57,7 @@ protected:
     void showEvent(QShowEvent *ev) override;
 
 private:
+    void showKNS(const QString &config);
     DecorationsModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     ConfigurationForm *m_ui;

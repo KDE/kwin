@@ -10,6 +10,7 @@
         "blur": true,
         "themes": true,
         "defaultTheme": "kwin4_decoration_qml_plastik",
-        "themeListKeyword": "themes"
+        "themeListKeyword": "themes",
+        "KNewStuff": "aurorae.knsrc"
     }
 }

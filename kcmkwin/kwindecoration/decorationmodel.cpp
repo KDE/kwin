@@ -97,9 +97,19 @@ static QString themeListKeyword(const QVariantMap &decoSettingsMap)
     return it.value().toString();
 }
 
+static QString findKNewStuff(const QVariantMap &decoSettingsMap)
+{
+    auto it = decoSettingsMap.find(QStringLiteral("KNewStuff"));
+    if (it == decoSettingsMap.end()) {
+        return QString();
+    }
+    return it.value().toString();
+}
+
 void DecorationsModel::init()
 {
     beginResetModel();
+    m_plugins.clear();
     const auto plugins = KPluginTrader::self()->query(s_pluginName, s_pluginName);
     for (const auto &info : plugins) {
         KPluginLoader loader(info.libraryPath());
@@ -110,6 +120,10 @@ void DecorationsModel::init()
         auto metadata = loader.metaData().value(QStringLiteral("MetaData")).toObject().value(s_pluginName);
         if (!metadata.isUndefined()) {
             const auto decoSettingsMap = metadata.toObject().toVariantMap();
+            const QString &kns = findKNewStuff(decoSettingsMap);
+            if (!kns.isEmpty()) {
+                m_knsProvides.insert(kns, info.name().isEmpty() ? info.pluginName() : info.name());
+            }
             if (isThemeEngine(decoSettingsMap)) {
                 const QString keyword = themeListKeyword(decoSettingsMap);
                 if (keyword.isNull()) {

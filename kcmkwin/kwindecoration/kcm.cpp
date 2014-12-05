@@ -25,9 +25,11 @@
 #include <KPluginFactory>
 #include <KSharedConfig>
 #include <KDecoration2/DecorationButton>
+#include <KNewStuff3/KNS3/DownloadDialog>
 // Qt
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QMenu>
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
@@ -49,6 +51,7 @@ namespace Configuration
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
 static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 static const QString s_borderSizeNormal = QStringLiteral("Normal");
+static const QString s_ghnsIcon = QStringLiteral("get-hot-new-stuff");
 
 ConfigurationForm::ConfigurationForm(QWidget *parent)
     : QWidget(parent)
@@ -91,6 +94,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     m_ui->borderSizesCombo->setItemData(6, QVariant::fromValue(BorderSize::Huge));
     m_ui->borderSizesCombo->setItemData(7, QVariant::fromValue(BorderSize::VeryHuge));
     m_ui->borderSizesCombo->setItemData(8, QVariant::fromValue(BorderSize::Oversized));
+    m_ui->knsButton->setIcon(QIcon::fromTheme(s_ghnsIcon));
 
     connect(m_ui->closeWindowsDoubleClick, &QCheckBox::stateChanged, this,
             static_cast<void (ConfigurationModule::*)()>(&ConfigurationModule::changed));
@@ -109,6 +113,33 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
                 listView->setProperty("borderSizesIndex", index);
             }
             changed();
+        }
+    );
+    connect(m_model, &QAbstractItemModel::modelReset, this,
+        [this] {
+            const auto &kns = m_model->knsProviders();
+            m_ui->knsButton->setEnabled(!kns.isEmpty());
+            if (kns.isEmpty()) {
+                return;
+            }
+            if (kns.count() > 1) {
+                QMenu *menu = new QMenu(m_ui->knsButton);
+                for (auto it = kns.begin(); it != kns.end(); ++it) {
+                    QAction *action = menu->addAction(QIcon::fromTheme(s_ghnsIcon), it.value());
+                    action->setData(it.key());
+                    connect(action, &QAction::triggered, this, [this, action] { showKNS(action->data().toString());});
+                }
+                m_ui->knsButton->setMenu(menu);
+            }
+        }
+    );
+    connect(m_ui->knsButton, &QPushButton::clicked, this,
+        [this] {
+            const auto &kns = m_model->knsProviders();
+            if (kns.isEmpty()) {
+                return;
+            }
+            showKNS(kns.firstKey());
         }
     );
 
@@ -206,6 +237,32 @@ void ConfigurationModule::defaults()
     m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(QVariant::fromValue(stringToSize(s_borderSizeNormal))));
     m_ui->closeWindowsDoubleClick->setChecked(false);
     KCModule::defaults();
+}
+
+void ConfigurationModule::showKNS(const QString &config)
+{
+    QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog(config, this);
+    if (downloadDialog->exec() == QDialog::Accepted && !downloadDialog->changedEntries().isEmpty()) {
+        auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView");
+        QString selectedPluginName;
+        QString selectedThemeName;
+        if (listView) {
+            const QModelIndex index = m_proxyModel->index(listView->property("currentIndex").toInt(), 0);
+            if (index.isValid()) {
+                selectedPluginName = index.data(Qt::UserRole + 4).toString();
+                selectedThemeName = index.data(Qt::UserRole + 5).toString();
+            }
+        }
+        m_model->init();
+        if (!selectedPluginName.isEmpty()) {
+            const QModelIndex index = m_model->findDecoration(selectedPluginName, selectedThemeName);
+            const QModelIndex proxyIndex = m_proxyModel->mapFromSource(index);
+            if (listView) {
+                listView->setProperty("currentIndex", proxyIndex.isValid() ? proxyIndex.row() : -1);
+            }
+        }
+    }
+    delete downloadDialog;
 }
 
 }

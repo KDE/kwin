@@ -41,6 +41,10 @@ public:
 
     QModelIndex findDecoration(const QString &pluginName, const QString &themeName = QString()) const;
 
+    QMap<QString, QString> knsProviders() const {
+        return m_knsProvides;
+    }
+
 public Q_SLOTS:
     void init();
 
@@ -51,6 +55,7 @@ private:
         QString visibleName;
     };
     std::vector<Data> m_plugins;
+    QMap<QString, QString> m_knsProvides;
 };
 
 }

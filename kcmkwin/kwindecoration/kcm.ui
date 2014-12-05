@@ -18,14 +18,28 @@
     <widget class="KMessageWidget" name="doubleClickMessage"/>
    </item>
    <item>
-    <widget class="QLineEdit" name="filter">
-     <property name="placeholderText">
-      <string>Search</string>
-     </property>
-     <property name="clearButtonEnabled">
-      <bool>true</bool>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="filter">
+       <property name="placeholderText">
+        <string>Search</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="knsButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Get New Decorations...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QQuickWidget" name="view">
