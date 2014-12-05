@@ -462,7 +462,7 @@ void Decoration::init()
 QVariant Decoration::readConfig(const QString &key, const QVariant &defaultValue)
 {
     KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
-    return config->group(QStringLiteral("Plastik")).readEntry(key, defaultValue);
+    return config->group(m_themeName).readEntry(key, defaultValue);
 }
 
 void Decoration::setupBorders(QQuickItem *item)
