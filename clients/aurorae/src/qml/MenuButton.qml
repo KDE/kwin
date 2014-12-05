@@ -19,7 +19,7 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 import org.kde.kwin.decoration 0.1
 
 DecorationButton {
-    property bool closeOnDoubleClick: false
+    property bool closeOnDoubleClick: decorationSettings.closeOnDoubleClickOnMenu
     id: menuButton
     buttonType: DecorationOptions.DecorationButtonMenu
     KQuickControlsAddons.QIconItem {
@@ -72,15 +72,6 @@ DecorationButton {
             if (menuButton.closeOnDoubleClick) {
                 decoration.requestClose();
             }
-        }
-    }
-    Component.onCompleted: {
-        menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", false);
-    }
-    Connections {
-        target: decoration
-        onConfigChanged: {
-            menuButton.closeOnDoubleClick = decoration.readConfig("CloseOnDoubleClickMenuButton", false);
         }
     }
 }

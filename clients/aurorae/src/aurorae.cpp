@@ -294,6 +294,7 @@ void Decoration::init()
 
     QQmlContext *context = new QQmlContext(Helper::instance().rootContext(), this);
     context->setContextProperty(QStringLiteral("decoration"), this);
+    context->setContextProperty(QStringLiteral("decorationSettings"), s.data());
     auto component = Helper::instance().component(m_themeName);
     if (!component) {
         return;
