@@ -26,7 +26,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationShadow>
 // KDE
 #include <KConfigGroup>
+#include <KConfigLoader>
+#include <KConfigDialogManager>
 #include <KDesktopFile>
+#include <KLocalizedTranslator>
 #include <KPluginFactory>
 #include <KSharedConfig>
 #include <KService>
@@ -55,11 +58,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlEngine>
 #include <QStandardPaths>
 #include <QTimer>
+#include <QUiLoader>
+#include <QVBoxLayout>
 
 K_PLUGIN_FACTORY_WITH_JSON(AuroraeDecoFactory,
                            "aurorae.json",
                            registerPlugin<Aurorae::Decoration>();
                            registerPlugin<Aurorae::ThemeFinder>(QStringLiteral("themes"));
+                           registerPlugin<Aurorae::ConfigurationModule>(QStringLiteral("kcmodule"));
                           )
 
 namespace Aurorae
@@ -223,6 +229,18 @@ void Helper::init()
     qmlRegisterType<KDecoration2::DecoratedClient>();
 }
 
+static QString findTheme(const QVariantList &args)
+{
+    if (args.isEmpty()) {
+        return QString();
+    }
+    const auto map = args.first().toMap();
+    auto it = map.constFind(QStringLiteral("theme"));
+    if (it == map.constEnd()) {
+        return QString();
+    }
+    return it.value().toString();
+}
 
 Decoration::Decoration(QObject *parent, const QVariantList &args)
     : KDecoration2::Decoration(parent, args)
@@ -234,13 +252,7 @@ Decoration::Decoration(QObject *parent, const QVariantList &args)
     , m_themeName(s_defaultTheme)
     , m_mutex(QMutex::Recursive)
 {
-    if (!args.isEmpty()) {
-        const auto map = args.first().toMap();
-        auto it = map.constFind(QStringLiteral("theme"));
-        if (it != map.constEnd()) {
-            m_themeName = it.value().toString();
-        }
-    }
+    m_themeName = findTheme(args);
     Helper::instance().ref();
 }
 
@@ -644,6 +656,101 @@ void ThemeFinder::findAllSvgThemes()
 
         m_themes.insert(name, QStringLiteral("__aurorae__svg__") + packageName);
     }
+}
+
+static const QString s_configUiPath = QStringLiteral("kwin/decorations/%1/contents/ui/config.ui");
+static const QString s_configXmlPath = QStringLiteral("kwin/decorations/%1/contents/config/main.xml");
+
+bool ThemeFinder::hasConfiguration(const QString &theme) const
+{
+    if (theme.startsWith(QLatin1String("__aurorae__svg__"))) {
+        return false;
+    }
+    const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                              s_configUiPath.arg(theme));
+    const QString xml = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                               s_configXmlPath.arg(theme));
+    return !(ui.isEmpty() || xml.isEmpty());
+}
+
+ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
+    : KCModule(parent, args)
+    , m_theme(findTheme(args))
+{
+    setLayout(new QVBoxLayout(this));
+    init();
+}
+
+void ConfigurationModule::init()
+{
+    const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                              s_configUiPath.arg(m_theme));
+    const QString xml = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                               s_configXmlPath.arg(m_theme));
+    if (ui.isEmpty() || xml.isEmpty()) {
+        return;
+    }
+    KLocalizedTranslator *translator = new KLocalizedTranslator(this);
+    QCoreApplication::instance()->installTranslator(translator);
+    const KDesktopFile metaData(QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                      QStringLiteral("kwin/decorations/%1/metadata.desktop").arg(m_theme)));
+    const QString translationDomain = metaData.desktopGroup().readEntry("X-KWin-Config-TranslationDomain", QString());
+    if (!translationDomain.isEmpty()) {
+        translator->setTranslationDomain(translationDomain);
+    }
+    // load the KConfigSkeleton
+    QFile configFile(xml);
+    KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig("auroraerc");
+    KConfigGroup configGroup = auroraeConfig->group(m_theme);
+    m_skeleton = new KConfigLoader(configGroup, &configFile, this);
+    // load the ui file
+    QUiLoader *loader = new QUiLoader(this);
+    loader->setLanguageChangeEnabled(true);
+    QFile uiFile(ui);
+    uiFile.open(QFile::ReadOnly);
+    QWidget *customConfigForm = loader->load(&uiFile, this);
+    translator->addContextToMonitor(customConfigForm->objectName());
+    uiFile.close();
+    layout()->addWidget(customConfigForm);
+    // connect the ui file with the skeleton
+    m_configManager = new KConfigDialogManager(customConfigForm, m_skeleton);
+    m_configManager->updateWidgets();
+    connect(m_configManager, &KConfigDialogManager::widgetModified,
+            this, static_cast<void (ConfigurationModule::*)()>(&KCModule::changed));
+
+    // send a custom event to the translator to retranslate using our translator
+    QEvent le(QEvent::LanguageChange);
+    QCoreApplication::sendEvent(customConfigForm, &le);
+}
+
+void ConfigurationModule::defaults()
+{
+    if (m_configManager) {
+        m_configManager->updateWidgetsDefault();
+    }
+    KCModule::defaults();
+}
+
+void ConfigurationModule::load()
+{
+    if (m_skeleton) {
+        m_skeleton->load();
+    }
+    if (m_configManager) {
+        m_configManager->updateWidgets();
+    }
+    KCModule::load();
+}
+
+void ConfigurationModule::save()
+{
+    if (m_configManager) {
+        m_configManager->updateSettings();
+    }
+    if (m_skeleton) {
+        m_skeleton->save();
+    }
+    KCModule::save();
 }
 
 }

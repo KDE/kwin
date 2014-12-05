@@ -69,6 +69,9 @@ public:
     KDecoration2::Decoration *createDecoration(QObject *parent = nullptr);
     KDecoration2::DecorationButton *createButton(KDecoration2::Decoration *decoration, KDecoration2::DecorationButtonType type, QObject *parent = nullptr);
 
+public Q_SLOTS:
+    void configure();
+
 Q_SIGNALS:
     void pluginChanged();
     void themeChanged();

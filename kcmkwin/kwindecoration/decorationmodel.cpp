@@ -64,6 +64,8 @@ QVariant DecorationsModel::data(const QModelIndex &index, int role) const
         return d.pluginName;
     case Qt::UserRole +5:
         return d.themeName;
+    case Qt::UserRole +6:
+        return d.configuration;
     }
 
     return QVariant();
@@ -74,7 +76,8 @@ QHash< int, QByteArray > DecorationsModel::roleNames() const
     QHash<int, QByteArray> roles({
         {Qt::DisplayRole, QByteArrayLiteral("display")},
         {Qt::UserRole + 4, QByteArrayLiteral("plugin")},
-        {Qt::UserRole + 5, QByteArrayLiteral("theme")}
+        {Qt::UserRole + 5, QByteArrayLiteral("theme")},
+        {Qt::UserRole +6, QByteArrayLiteral("configureable")}
     });
     return roles;
 }
@@ -82,6 +85,15 @@ QHash< int, QByteArray > DecorationsModel::roleNames() const
 static bool isThemeEngine(const QVariantMap &decoSettingsMap)
 {
     auto it = decoSettingsMap.find(QStringLiteral("themes"));
+    if (it == decoSettingsMap.end()) {
+        return false;
+    }
+    return it.value().toBool();
+}
+
+static bool isConfigureable(const QVariantMap &decoSettingsMap)
+{
+    auto it = decoSettingsMap.find(QStringLiteral("kcmodule"));
     if (it == decoSettingsMap.end()) {
         return false;
     }
@@ -118,6 +130,7 @@ void DecorationsModel::init()
             continue;
         }
         auto metadata = loader.metaData().value(QStringLiteral("MetaData")).toObject().value(s_pluginName);
+        bool config = false;
         if (!metadata.isUndefined()) {
             const auto decoSettingsMap = metadata.toObject().toVariantMap();
             const QString &kns = findKNewStuff(decoSettingsMap);
@@ -144,16 +157,21 @@ void DecorationsModel::init()
                     d.pluginName = info.pluginName();
                     d.themeName = it.value().toString();
                     d.visibleName = it.key();
+                    QMetaObject::invokeMethod(themeFinder.data(), "hasConfiguration",
+                                              Q_RETURN_ARG(bool, d.configuration),
+                                              Q_ARG(QString, d.themeName));
                     m_plugins.emplace_back(std::move(d));
                 }
 
                 // it's a theme engine, we don't want to show this entry
                 continue;
             }
+            config = isConfigureable(decoSettingsMap);
         }
         Data data;
         data.pluginName = info.pluginName();
         data.visibleName = info.name().isEmpty() ? info.pluginName() : info.name();
+        data.configuration = config;
 
         m_plugins.emplace_back(std::move(data));
     }

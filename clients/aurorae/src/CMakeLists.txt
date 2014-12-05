@@ -16,9 +16,12 @@ add_library(kwin5_aurorae MODULE ${kwin5_aurorae_PART_SRCS})
 
 target_link_libraries(kwin5_aurorae
     KDecoration2::KDecoration
+    KF5::ConfigWidgets
+    KF5::I18n
     KF5::Service
     KF5::WindowSystem
     Qt5::Quick
+    Qt5::UiTools
 )
 
 install(TARGETS kwin5_aurorae DESTINATION ${PLUGIN_INSTALL_DIR}/org.kde.kdecoration2)

@@ -53,6 +53,7 @@ private:
         QString pluginName;
         QString themeName;
         QString visibleName;
+        bool configuration = false;
     };
     std::vector<Data> m_plugins;
     QMap<QString, QString> m_knsProvides;

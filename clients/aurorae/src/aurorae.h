@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Decoration>
 #include <QVariant>
 #include <QMutex>
+#include <KCModule>
 
 class QOffscreenSurface;
 class QOpenGLContext;
@@ -31,6 +32,9 @@ class QQuickItem;
 class QQuickRenderControl;
 class QQuickWindow;
 class QWindow;
+
+class KConfigLoader;
+class KConfigDialogManager;
 
 namespace KWin
 {
@@ -99,11 +103,32 @@ public:
         return m_themes;
     }
 
+public Q_SLOTS:
+    bool hasConfiguration(const QString &theme) const;
+
 private:
     void init();
     void findAllQmlThemes();
     void findAllSvgThemes();
     QVariantMap m_themes;
+};
+
+class ConfigurationModule : public KCModule
+{
+    Q_OBJECT
+public:
+    ConfigurationModule(QWidget *parent, const QVariantList &args);
+
+public Q_SLOTS:
+    void defaults() override;
+    void load() override;
+    void save() override;
+
+private:
+    void init();
+    QString m_theme;
+    KConfigLoader *m_skeleton = nullptr;
+    KConfigDialogManager *m_configManager = nullptr;
 };
 
 }
