@@ -227,6 +227,7 @@ void Helper::init()
 
     qmlRegisterType<KDecoration2::Decoration>();
     qmlRegisterType<KDecoration2::DecoratedClient>();
+    qRegisterMetaType<KDecoration2::BorderSize>();
 }
 
 static QString findTheme(const QVariantList &args)

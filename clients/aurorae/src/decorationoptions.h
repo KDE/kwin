@@ -175,15 +175,15 @@ class DecorationOptions : public QObject
     Q_PROPERTY(QList<int> titleButtonsRight READ titleButtonsRight NOTIFY titleButtonsChanged)
 public:
     enum BorderSize {
+        BorderNone,      ///< No borders except title
+        BorderNoSides,   ///< No borders on sides
         BorderTiny,      ///< Minimal borders
         BorderNormal,    ///< Standard size borders, the default setting
         BorderLarge,     ///< Larger borders
         BorderVeryLarge, ///< Very large borders
         BorderHuge,      ///< Huge borders
         BorderVeryHuge,  ///< Very huge borders
-        BorderOversized, ///< Oversized borders
-        BorderNoSides,   ///< No borders on sides
-        BorderNone       ///< No borders except title
+        BorderOversized  ///< Oversized borders
     };
     /**
      * Enum values to identify the decorations buttons which should be used

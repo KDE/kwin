@@ -19,8 +19,8 @@ import org.kde.kwin.decoration 0.1
 import org.kde.kwin.decorations.plastik 1.0
 
 Decoration {
-    function readConfig() {
-        switch (decoration.readConfig("BorderSize", DecorationOptions.BorderNormal)) {
+    function readBorderSize() {
+        switch (borderSize) {
         case DecorationOptions.BorderTiny:
             borders.setBorders(3);
             extendedBorders.setAllBorders(0);
@@ -60,6 +60,8 @@ Decoration {
             extendedBorders.setAllBorders(0);
             break;
         }
+    }
+    function readConfig() {
         var titleAlignLeft = decoration.readConfig("titleAlignLeft", true);
         var titleAlignCenter = decoration.readConfig("titleAlignCenter", false);
         var titleAlignRight = decoration.readConfig("titleAlignRight", false);
@@ -87,6 +89,7 @@ Decoration {
         id: options
         deco: decoration
     }
+    property int borderSize: decorationSettings.borderSize
     property alias buttonSize: titleRow.captionHeight
     property alias titleAlignment: caption.horizontalAlignment
     property color titleBarColor: options.titleBarColor
@@ -411,10 +414,15 @@ Decoration {
         borders.setBorders(4);
         borders.setTitle(top.normalHeight);
         maximizedBorders.setTitle(top.maximizedHeight);
+        readBorderSize();
         readConfig();
     }
     Connections {
         target: decoration
         onConfigChanged: root.readConfig()
+    }
+    Connections {
+        target: decorationSettings
+        onBorderSizeChanged: root.readBorderSize();
     }
 }
