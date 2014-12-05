@@ -12,16 +12,16 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="glideEffectLabel">
      <property name="text">
       <string>Glide Effect:</string>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayoutGlideEffect">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="horizontalSpacerGlideEffect">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -37,7 +37,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="inGlideEffectLabel">
        <property name="text">
         <string>In</string>
        </property>
@@ -66,7 +66,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="outGlideEffectLabel">
        <property name="text">
         <string>Out</string>
        </property>
@@ -75,7 +75,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacerUnderGlideEffect">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
@@ -88,16 +88,16 @@
     </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="glideAngleLabel">
      <property name="text">
       <string>Glide Angle:</string>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayoutGlideAngle">
      <item>
-      <spacer name="horizontalSpacer">
+      <spacer name="horizontalSpacerGlideAngle">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -113,7 +113,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="glideAnglenegLabel">
        <property name="text">
         <string>-90</string>
        </property>
@@ -142,7 +142,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_3">
+      <widget class="QLabel" name="glideAngleposLabel">
        <property name="text">
         <string>90</string>
        </property>
@@ -151,7 +151,7 @@
     </layout>
    </item>
    <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacerUnderGlideAngle">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
