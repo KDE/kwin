@@ -538,6 +538,7 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(!m_seatInterface->focusedKeyboard());
 
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
+    const Keyboard &ckeyboard = *keyboard;
     QVERIFY(keyboard->isValid());
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
@@ -553,7 +554,8 @@ void TestWaylandSeat::testKeyboard()
     QSignalSpy modifierSpy(keyboard, SIGNAL(modifiersChanged(quint32,quint32,quint32,quint32)));
     QVERIFY(modifierSpy.isValid());
 
-    // TODO: add a signalspy for enter
+    QSignalSpy enteredSpy(keyboard, SIGNAL(entered(quint32)));
+    QVERIFY(enteredSpy.isValid());
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
@@ -565,6 +567,8 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.first().at(1).value<quint32>(), quint32(0));
     QCOMPARE(modifierSpy.first().at(2).value<quint32>(), quint32(0));
     QCOMPARE(modifierSpy.first().at(3).value<quint32>(), quint32(0));
+    QCOMPARE(enteredSpy.count(), 1);
+    QCOMPARE(enteredSpy.first().first().value<quint32>(), m_display->serial());
 
     QSignalSpy keyChangedSpy(keyboard, SIGNAL(keyChanged(quint32,KWayland::Client::Keyboard::KeyState,quint32)));
     QVERIFY(keyChangedSpy.isValid());
@@ -610,16 +614,27 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(modifierSpy.last().at(2).value<quint32>(), quint32(3));
     QCOMPARE(modifierSpy.last().at(3).value<quint32>(), quint32(4));
 
-    // TODO: add a test for leave signal
+    QSignalSpy leftSpy(keyboard, SIGNAL(left(quint32)));
+    QVERIFY(leftSpy.isValid());
     m_seatInterface->setFocusedKeyboardSurface(nullptr);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
     QVERIFY(!m_seatInterface->focusedKeyboard());
+    QVERIFY(leftSpy.wait());
+    QCOMPARE(leftSpy.count(), 1);
+    QCOMPARE(leftSpy.first().first().value<quint32>(), m_display->serial());
+
+    QVERIFY(!keyboard->enteredSurface());
+    QVERIFY(!ckeyboard.enteredSurface());
 
     // enter it again
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(m_seatInterface->focusedKeyboardSurface(), serverSurface);
     QCOMPARE(m_seatInterface->focusedKeyboard()->focusedSurface(), serverSurface);
+    QCOMPARE(enteredSpy.count(), 2);
+
+    QCOMPARE(keyboard->enteredSurface(), s);
+    QCOMPARE(ckeyboard.enteredSurface(), s);
 
     delete s;
     wl_display_flush(m_connection->display());
