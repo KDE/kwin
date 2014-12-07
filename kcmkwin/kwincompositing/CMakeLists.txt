@@ -72,6 +72,7 @@ target_link_libraries(effectModelTest
     KF5::Service
     KF5::KCMUtils
     KF5::NewStuff
+    kwineffects
     kwin4_effect_builtins
 )
 
