@@ -762,7 +762,7 @@ bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visuali
 
     const int attrs[] = {
         GLX_TEXTURE_FORMAT_EXT, info->bind_texture_format,
-        GLX_MIPMAP_TEXTURE_EXT, info->mipmap,
+        GLX_MIPMAP_TEXTURE_EXT, false,
         GLX_TEXTURE_TARGET_EXT, m_target == GL_TEXTURE_2D ? GLX_TEXTURE_2D_EXT : GLX_TEXTURE_RECTANGLE_EXT,
         0
     };
@@ -770,12 +770,12 @@ bool GlxTexture::loadTexture(xcb_pixmap_t pixmap, const QSize &size, xcb_visuali
     m_glxpixmap     = glXCreatePixmap(display(), info->fbconfig, pixmap, attrs);
     m_size          = size;
     m_yInverted     = info->y_inverted ? true : false;
-    m_canUseMipmaps = info->mipmap;
+    m_canUseMipmaps = false;
 
     glGenTextures(1, &m_texture);
 
     q->setDirty();
-    q->setFilter(info->mipmap > 0 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST);
+    q->setFilter(GL_NEAREST);
 
     glBindTexture(m_target, m_texture);
     glXBindTexImageEXT(display(), m_glxpixmap, GLX_FRONT_LEFT_EXT, nullptr);
