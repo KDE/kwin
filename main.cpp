@@ -141,6 +141,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_configLock(false)
     , m_operationMode(mode)
 {
+    qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
 }
 
 void Application::setConfigLock(bool lock)
