@@ -191,7 +191,7 @@ class Options : public QObject
     Q_PROPERTY(bool glStrictBindingFollowsDriver READ isGlStrictBindingFollowsDriver WRITE setGlStrictBindingFollowsDriver NOTIFY glStrictBindingFollowsDriverChanged)
     Q_PROPERTY(bool glCoreProfile READ glCoreProfile WRITE setGLCoreProfile NOTIFY glCoreProfileChanged)
     Q_PROPERTY(GlSwapStrategy glPreferBufferSwap READ glPreferBufferSwap WRITE setGlPreferBufferSwap NOTIFY glPreferBufferSwapChanged)
-    Q_PROPERTY(OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
+    Q_PROPERTY(KWin::OpenGLPlatformInterface glPlatformInterface READ glPlatformInterface WRITE setGlPlatformInterface NOTIFY glPlatformInterfaceChanged)
 public:
 
     explicit Options(QObject *parent = NULL);
@@ -945,5 +945,6 @@ extern Options* options;
 } // namespace
 
 Q_DECLARE_METATYPE(KWin::Options::WindowOperation)
+Q_DECLARE_METATYPE(KWin::OpenGLPlatformInterface)
 
 #endif
