@@ -38,6 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Qt
 #include <QDebug>
+#include <QMetaProperty>
 #include <QPainter>
 
 namespace KWin
@@ -202,6 +203,41 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
     return deco;
 }
 
+static
+QString settingsProperty(const QVariant &variant)
+{
+    if (QLatin1String(variant.typeName()) == QLatin1String("KDecoration2::BorderSize")) {
+        return QString::number(variant.toInt());
+    } else if (QLatin1String(variant.typeName()) == QLatin1String("QVector<KDecoration2::DecorationButtonType>")) {
+        const auto &b = variant.value<QVector<KDecoration2::DecorationButtonType>>();
+        QString buffer;
+        for (auto it = b.begin(); it != b.end(); ++it) {
+            if (it != b.begin()) {
+                buffer.append(QStringLiteral(", "));
+            }
+            buffer.append(QString::number(int(*it)));
+        }
+        return buffer;
+    }
+    return variant.toString();
+}
+
+QString DecorationBridge::supportInformation() const
+{
+    QString b;
+    b.append(QStringLiteral("Plugin: %1\n").arg(m_plugin));
+    b.append(QStringLiteral("Theme: %1\n").arg(m_theme));
+    b.append(QStringLiteral("Blur: %1\n").arg(m_blur));
+    const QMetaObject *metaOptions = m_settings->metaObject();
+    for (int i=0; i<metaOptions->propertyCount(); ++i) {
+        const QMetaProperty property = metaOptions->property(i);
+        if (QLatin1String(property.name()) == QLatin1String("objectName")) {
+            continue;
+        }
+        b.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(settingsProperty(m_settings->property(property.name()))));
+    }
+    return b;
+}
 
 } // Decoration
 } // KWin

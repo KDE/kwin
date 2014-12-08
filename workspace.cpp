@@ -1342,6 +1342,12 @@ QString Workspace::supportInformation() const
         break;
     }
     support.append(QStringLiteral("\n\n"));
+    if (auto bridge = Decoration::DecorationBridge::self()) {
+        support.append(QStringLiteral("Decoration\n"));
+        support.append(QStringLiteral("==========\n"));
+        support.append(bridge->supportInformation());
+        support.append(QStringLiteral("\n"));
+    }
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();

@@ -65,6 +65,8 @@ public:
         return m_settings;
     }
 
+    QString supportInformation() const;
+
 private:
     void loadMetaData(const QJsonObject &object);
     void findTheme(const QVariantMap &map);
