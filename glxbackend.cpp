@@ -323,20 +323,29 @@ bool GlxBackend::initBuffer()
         return false;
 
     if (overlayWindow()->create()) {
+        xcb_connection_t * const c = connection();
+
         // Try to create double-buffered window in the overlay
-        XVisualInfo* visual = glXGetVisualFromFBConfig(display(), fbconfig);
+        xcb_visualid_t visual;
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, (int *) &visual);
+
         if (!visual) {
-           qCCritical(KWIN_CORE) << "Failed to get visual from fbconfig";
+           qCCritical(KWIN_CORE) << "The GLXFBConfig does not have an associated X visual";
            return false;
         }
-        XSetWindowAttributes attrs;
-        attrs.colormap = XCreateColormap(display(), rootWindow(), visual->visual, AllocNone);
-        const QSize &screenSize = screens()->size();
-        window = XCreateWindow(display(), overlayWindow()->window(), 0, 0, screenSize.width(), screenSize.height(),
-                               0, visual->depth, InputOutput, visual->visual, CWColormap, &attrs);
+
+        xcb_colormap_t colormap = xcb_generate_id(c);
+        xcb_create_colormap(c, false, colormap, rootWindow(), visual);
+
+        const QSize size = screens()->size();
+
+        window = xcb_generate_id(c);
+        xcb_create_window(c, visualDepth(visual), window, overlayWindow()->window(),
+                          0, 0, size.width(), size.height(), 0, XCB_WINDOW_CLASS_INPUT_OUTPUT,
+                          visual, XCB_CW_COLORMAP, &colormap);
+
         glxWindow = glXCreateWindow(display(), fbconfig, window, NULL);
         overlayWindow()->setup(window);
-        XFree(visual);
     } else {
         qCCritical(KWIN_CORE) << "Failed to create overlay window";
         return false;
