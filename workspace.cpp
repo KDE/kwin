@@ -1351,12 +1351,23 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Options\n"));
     support.append(QStringLiteral("=======\n"));
     const QMetaObject *metaOptions = options->metaObject();
+    auto printProperty = [] (const QVariant &variant) {
+        if (variant.type() == QVariant::Size) {
+            const QSize &s = variant.toSize();
+            return QStringLiteral("%1x%2").arg(QString::number(s.width())).arg(QString::number(s.height()));
+        }
+        if (QLatin1String(variant.typeName()) == QLatin1String("KWin::OpenGLPlatformInterface") ||
+                QLatin1String(variant.typeName()) == QLatin1String("KWin::Options::WindowOperation")) {
+            return QString::number(variant.toInt());
+        }
+        return variant.toString();
+    };
     for (int i=0; i<metaOptions->propertyCount(); ++i) {
         const QMetaProperty property = metaOptions->property(i);
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QLatin1String(property.name()) + QStringLiteral(": ") + options->property(property.name()).toString() + QStringLiteral("\n"));
+        support.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(printProperty(options->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreen Edges\n"));
     support.append(QStringLiteral(  "============\n"));
@@ -1366,7 +1377,7 @@ QString Workspace::supportInformation() const
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QLatin1String(property.name()) + QStringLiteral(": ") + ScreenEdges::self()->property(property.name()).toString() + QStringLiteral("\n"));
+        support.append(QStringLiteral("%1: %2\n").arg(property.name()).arg(printProperty(ScreenEdges::self()->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral(  "=======\n"));
