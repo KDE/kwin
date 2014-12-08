@@ -43,6 +43,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <unistd.h>
 #include <xcb/glx.h>
 
+#include <deque>
+#include <algorithm>
+
 #ifndef XCB_GLX_BUFFER_SWAP_COMPLETE
 #define XCB_GLX_BUFFER_SWAP_COMPLETE 1
 typedef struct xcb_glx_buffer_swap_complete_event_t {
@@ -142,15 +145,20 @@ static bool gs_tripleBufferNeedsDetection = false;
 void GlxBackend::init()
 {
     initGLX();
-    // require at least GLX 1.3
+
+    // Require at least GLX 1.3
     if (!hasGLXVersion(1, 3)) {
         setFailed(QStringLiteral("Requires at least GLX 1.3"));
         return;
     }
+
+    initVisualDepthHashTable();
+
     if (!initBuffer()) {
         setFailed(QStringLiteral("Could not initialize the buffer"));
         return;
     }
+
     if (!initRenderingContext()) {
         setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
@@ -239,8 +247,6 @@ void GlxBackend::init()
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
     qDebug() << "Direct rendering:" << isDirectRendering() << endl;
-
-    initVisualDepthHashTable();
 }
 
 bool GlxBackend::initRenderingContext()
@@ -365,12 +371,40 @@ bool GlxBackend::initFbConfig()
     int count = 0;
     GLXFBConfig *configs = glXChooseFBConfig(display(), DefaultScreen(display()), attribs, &count);
 
-    if (count > 0) {
-        fbconfig = configs[0];
-        XFree(configs);
+    struct FBConfig {
+        GLXFBConfig config;
+        int depth;
+        int stencil;
+    };
+
+    std::deque<FBConfig> candidates;
+
+    for (int i = 0; i < count; i++) {
+        int depth, stencil;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE,   &depth);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_STENCIL_SIZE, &stencil);
+
+        candidates.emplace_back(FBConfig{configs[i], depth, stencil});
     }
 
-    if (fbconfig == NULL) {
+    if (count > 0)
+        XFree(configs);
+
+    std::stable_sort(candidates.begin(), candidates.end(), [](const FBConfig &left, const FBConfig &right) {
+        if (left.depth < right.depth)
+            return true;
+
+        if (left.stencil < right.stencil)
+            return true;
+
+        return false;
+    });
+
+    if (candidates.size() > 0) {
+        fbconfig = candidates.front().config;
+    }
+
+    if (fbconfig == nullptr) {
         qCCritical(KWIN_CORE) << "Failed to find a usable framebuffer configuration";
         return false;
     }
@@ -453,6 +487,15 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         return info;
     }
 
+    struct FBConfig {
+        GLXFBConfig config;
+        int depth;
+        int stencil;
+        int format;
+    };
+
+    std::deque<FBConfig> candidates;
+
     for (int i = 0; i < count; i++) {
         int red, green, blue;
         glXGetFBConfigAttrib(display(), configs[i], GLX_RED_SIZE,   &red);
@@ -475,26 +518,45 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         if (!bind_rgb && !bind_rgba)
             continue;
 
+        int depth, stencil;
+        glXGetFBConfigAttrib(display(), configs[i], GLX_DEPTH_SIZE,   &depth);
+        glXGetFBConfigAttrib(display(), configs[i], GLX_STENCIL_SIZE, &stencil);
+
         int texture_format;
         if (alpha_bits)
             texture_format = bind_rgba ? GLX_TEXTURE_FORMAT_RGBA_EXT : GLX_TEXTURE_FORMAT_RGB_EXT;
         else
             texture_format = bind_rgb ? GLX_TEXTURE_FORMAT_RGB_EXT : GLX_TEXTURE_FORMAT_RGBA_EXT;
 
-        int y_inverted, texture_targets;
-        glXGetFBConfigAttrib(display(), configs[i], GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
-        glXGetFBConfigAttrib(display(), configs[i], GLX_Y_INVERTED_EXT, &y_inverted);
-
-        info->fbconfig            = configs[i];
-        info->bind_texture_format = texture_format;
-        info->texture_targets     = texture_targets;
-        info->y_inverted          = y_inverted;
-        info->mipmap              = 0;
-        break;
+        candidates.emplace_back(FBConfig{configs[i], depth, stencil, texture_format});
     }
 
     if (count > 0)
         XFree(configs);
+
+    std::stable_sort(candidates.begin(), candidates.end(), [](const FBConfig &left, const FBConfig &right) {
+        if (left.depth < right.depth)
+            return true;
+
+        if (left.stencil < right.stencil)
+            return true;
+
+        return false;
+    });
+
+    if (candidates.size() > 0) {
+        const FBConfig &candidate = candidates.front();
+
+        int y_inverted, texture_targets;
+        glXGetFBConfigAttrib(display(), candidate.config, GLX_BIND_TO_TEXTURE_TARGETS_EXT, &texture_targets);
+        glXGetFBConfigAttrib(display(), candidate.config, GLX_Y_INVERTED_EXT, &y_inverted);
+
+        info->fbconfig            = candidate.config;
+        info->bind_texture_format = candidate.format;
+        info->texture_targets     = texture_targets;
+        info->y_inverted          = y_inverted;
+        info->mipmap              = 0;
+    }
 
     if (info->fbconfig) {
         int fbc_id = 0;
