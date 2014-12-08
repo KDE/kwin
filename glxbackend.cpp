@@ -342,12 +342,6 @@ bool GlxBackend::initBuffer()
         return false;
     }
 
-    int vis_buffer;
-    glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID, &vis_buffer);
-    XVisualInfo* visinfo_buffer = glXGetVisualFromFBConfig(display(), fbconfig);
-    qDebug() << "Buffer visual (depth " << visinfo_buffer->depth << "): 0x" << QString::number(vis_buffer, 16);
-    XFree(visinfo_buffer);
-
     return true;
 }
 
@@ -402,6 +396,19 @@ bool GlxBackend::initFbConfig()
 
     if (candidates.size() > 0) {
         fbconfig = candidates.front().config;
+
+        int fbconfig_id, visual_id, red, green, blue, alpha, depth, stencil;
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_FBCONFIG_ID,  &fbconfig_id);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_VISUAL_ID,    &visual_id);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_RED_SIZE,     &red);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_GREEN_SIZE,   &green);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_BLUE_SIZE,    &blue);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_ALPHA_SIZE,   &alpha);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_DEPTH_SIZE,   &depth);
+        glXGetFBConfigAttrib(display(), fbconfig, GLX_STENCIL_SIZE, &stencil);
+
+        qCDebug(KWIN_CORE, "Choosing GLXFBConfig %#x X visual %#x depth %d RGBA %d:%d:%d:%d ZS %d:%d",
+                fbconfig_id, visual_id, visualDepth(visual_id), red, green, blue, alpha, depth, stencil);
     }
 
     if (fbconfig == nullptr) {
