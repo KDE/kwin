@@ -162,6 +162,7 @@ void SettingsImpl::readSettings()
         emit decorationSettings()->decorationButtonsLeftChanged(m_leftButtons);
     }
     const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >({
+        KDecoration2::DecorationButtonType::ContextHelp,
         KDecoration2::DecorationButtonType::Minimize,
         KDecoration2::DecorationButtonType::Maximize,
         KDecoration2::DecorationButtonType::Close
