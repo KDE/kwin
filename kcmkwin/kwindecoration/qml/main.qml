@@ -20,90 +20,13 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
-import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 
-ScrollView {
-    ListView {
-        id: listView
-        objectName: "listView"
-        model: decorationsModel
-        highlight: Rectangle {
-            width: listView.width
-            height: 150
-            color: highlightColor
-            opacity: 0.5
-        }
-        highlightMoveDuration: 250
-        boundsBehavior: Flickable.StopAtBounds
-        property int borderSizesIndex: 3 // 3 == Normal
-        delegate: Item {
-            width: listView.width
-            height: 150
-            KDecoration.Bridge {
-                id: bridgeItem
-                plugin: model["plugin"]
-                theme: model["theme"]
-            }
-            KDecoration.Settings {
-                id: settingsItem
-                bridge: bridgeItem
-                borderSizesIndex: listView.borderSizesIndex
-            }
-            MouseArea {
-                hoverEnabled: false
-                anchors.fill: parent
-                onClicked: {
-                    listView.currentIndex = index;
-                }
-            }
-            RowLayout {
-                anchors.fill: parent
-                Item {
-                    KDecoration.Decoration {
-                        id: inactivePreview
-                        bridge: bridgeItem
-                        settings: settingsItem
-                        anchors.fill: parent
-                        Component.onCompleted: {
-                            client.caption = Qt.binding(function() { return model["display"]; });
-                            client.active = false;
-                            anchors.leftMargin = Qt.binding(function() { return 40 - (inactivePreview.shadow ? inactivePreview.shadow.paddingLeft : 0);});
-                            anchors.rightMargin = Qt.binding(function() { return 10 - (inactivePreview.shadow ? inactivePreview.shadow.paddingRight : 0);});
-                            anchors.topMargin = Qt.binding(function() { return 10 - (inactivePreview.shadow ? inactivePreview.shadow.paddingTop : 0);});
-                            anchors.bottomMargin = Qt.binding(function() { return 40 - (inactivePreview.shadow ? inactivePreview.shadow.paddingBottom : 0);});
-                        }
-                    }
-                    KDecoration.Decoration {
-                        id: activePreview
-                        bridge: bridgeItem
-                        settings: settingsItem
-                        anchors.fill: parent
-                        Component.onCompleted: {
-                            client.caption = Qt.binding(function() { return model["display"]; });
-                            client.active = true;
-                            anchors.leftMargin = Qt.binding(function() { return 10 - (activePreview.shadow ? activePreview.shadow.paddingLeft : 0);});
-                            anchors.rightMargin = Qt.binding(function() { return 40 - (activePreview.shadow ? activePreview.shadow.paddingRight : 0);});
-                            anchors.topMargin = Qt.binding(function() { return 40 - (activePreview.shadow ? activePreview.shadow.paddingTop : 0);});
-                            anchors.bottomMargin = Qt.binding(function() { return 10 - (activePreview.shadow ? activePreview.shadow.paddingBottom : 0);});
-                        }
-                    }
-                    MouseArea {
-                        hoverEnabled: false
-                        anchors.fill: parent
-                        onClicked: {
-                            listView.currentIndex = index;
-                        }
-                    }
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                }
-                Button {
-                    id: configureButton
-                    enabled: model["configureable"]
-                    iconName: "configure"
-                    onClicked: bridgeItem.configure()
-                }
-            }
-        }
+ColumnLayout {
+    Previews {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+    }
+    Buttons {
+        Layout.fillWidth: true
     }
 }

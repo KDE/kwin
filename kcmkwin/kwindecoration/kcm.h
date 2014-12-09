@@ -22,6 +22,7 @@
 
 #include <kcmodule.h>
 #include <ui_kcm.h>
+#include <QAbstractItemModel>
 
 class QSortFilterProxyModel;
 
@@ -30,6 +31,7 @@ namespace KDecoration2
 namespace Preview
 {
 class PreviewBridge;
+class ButtonsModel;
 }
 namespace Configuration
 {
@@ -44,9 +46,16 @@ public:
 class ConfigurationModule : public KCModule
 {
     Q_OBJECT
+    Q_PROPERTY(QAbstractItemModel* leftButtons READ leftButtons CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* rightButtons READ rightButtons CONSTANT)
+    Q_PROPERTY(QAbstractItemModel* availableButtons READ availableButtons CONSTANT)
 public:
     explicit ConfigurationModule(QWidget *parent = nullptr, const QVariantList &args = QVariantList());
     virtual ~ConfigurationModule();
+
+    QAbstractItemModel *leftButtons() const;
+    QAbstractItemModel *rightButtons() const;
+    QAbstractItemModel *availableButtons() const;
 
 public Q_SLOTS:
     void defaults() override;
@@ -61,6 +70,9 @@ private:
     DecorationsModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     ConfigurationForm *m_ui;
+    Preview::ButtonsModel *m_leftButtons;
+    Preview::ButtonsModel *m_rightButtons;
+    Preview::ButtonsModel *m_availableButtons;
 };
 
 }

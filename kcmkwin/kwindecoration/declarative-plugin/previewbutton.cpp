@@ -110,6 +110,7 @@ void PreviewButtonItem::createButton()
     client->setMinimizable(true);
     client->setMaximizable(true);
     client->setActive(false);
+    client->setProvidesContextHelp(true);
     m_decoration->setSettings(m_settings->settings());
     m_decoration->init();
     m_button = m_bridge->createButton(m_decoration, m_type);

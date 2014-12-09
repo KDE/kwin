@@ -19,6 +19,7 @@
  */
 #include "kcm.h"
 #include "decorationmodel.h"
+#include "declarative-plugin/buttonsmodel.h"
 
 // KDE
 #include <KConfigGroup>
@@ -26,6 +27,7 @@
 #include <KSharedConfig>
 #include <KDecoration2/DecorationButton>
 #include <KNewStuff3/KNS3/DownloadDialog>
+#include <kdeclarative/kdeclarative.h>
 // Qt
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -66,14 +68,24 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     , m_model(new DecorationsModel(this))
     , m_proxyModel(new QSortFilterProxyModel(this))
     , m_ui(new ConfigurationForm(this))
+    , m_leftButtons(new Preview::ButtonsModel(QVector<DecorationButtonType>(), this))
+    , m_rightButtons(new Preview::ButtonsModel(QVector<DecorationButtonType>(), this))
+    , m_availableButtons(new Preview::ButtonsModel(this))
 {
     m_proxyModel->setSourceModel(m_model);
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     connect(m_ui->filter, &QLineEdit::textChanged, m_proxyModel, &QSortFilterProxyModel::setFilterFixedString);
 
+    KDeclarative::KDeclarative kdeclarative;
+    kdeclarative.setDeclarativeEngine(m_ui->view->engine());
+    kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
+    kdeclarative.setupBindings();
+
+    qmlRegisterType<QAbstractItemModel>();
     m_ui->view->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
     m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
     m_ui->view->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
+    m_ui->view->rootContext()->setContextProperty("configurationModule", this);
     m_ui->view->setResizeMode(QQuickWidget::SizeRootObjectToView);
     m_ui->view->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
     if (m_ui->view->status() == QQuickWidget::Ready) {
@@ -96,8 +108,8 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     m_ui->borderSizesCombo->setItemData(8, QVariant::fromValue(BorderSize::Oversized));
     m_ui->knsButton->setIcon(QIcon::fromTheme(s_ghnsIcon));
 
-    connect(m_ui->closeWindowsDoubleClick, &QCheckBox::stateChanged, this,
-            static_cast<void (ConfigurationModule::*)()>(&ConfigurationModule::changed));
+    auto changedSlot = static_cast<void (ConfigurationModule::*)()>(&ConfigurationModule::changed);
+    connect(m_ui->closeWindowsDoubleClick, &QCheckBox::stateChanged, this, changedSlot);
     connect(m_ui->closeWindowsDoubleClick, &QCheckBox::toggled, this,
         [this] (bool toggled) {
             if (!toggled || s_loading) {
@@ -142,6 +154,12 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
             showKNS(kns.firstKey());
         }
     );
+    connect(m_leftButtons, &QAbstractItemModel::rowsInserted, this, changedSlot);
+    connect(m_leftButtons, &QAbstractItemModel::rowsMoved, this, changedSlot);
+    connect(m_leftButtons, &QAbstractItemModel::rowsRemoved, this, changedSlot);
+    connect(m_rightButtons, &QAbstractItemModel::rowsInserted, this, changedSlot);
+    connect(m_rightButtons, &QAbstractItemModel::rowsMoved, this, changedSlot);
+    connect(m_rightButtons, &QAbstractItemModel::rowsRemoved, this, changedSlot);
 
     QVBoxLayout *l = new QVBoxLayout(this);
     l->addWidget(m_ui);
@@ -182,6 +200,60 @@ static QString sizeToString(BorderSize size)
     return s_sizes.key(size, s_borderSizeNormal);
 }
 
+static QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames;
+static void initButtons()
+{
+    if (!s_buttonNames.isEmpty()) {
+        return;
+    }
+    s_buttonNames[KDecoration2::DecorationButtonType::Menu]            = QChar('M');
+    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
+    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops]   = QChar('S');
+    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp]     = QChar('H');
+    s_buttonNames[KDecoration2::DecorationButtonType::Minimize]        = QChar('I');
+    s_buttonNames[KDecoration2::DecorationButtonType::Maximize]        = QChar('A');
+    s_buttonNames[KDecoration2::DecorationButtonType::Close]           = QChar('X');
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove]       = QChar('F');
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow]       = QChar('B');
+    s_buttonNames[KDecoration2::DecorationButtonType::Shade]           = QChar('L');
+}
+
+static QString buttonsToString(const QVector<KDecoration2::DecorationButtonType> &buttons)
+{
+    auto buttonToString = [](KDecoration2::DecorationButtonType button) -> QChar {
+        const auto it = s_buttonNames.constFind(button);
+        if (it != s_buttonNames.constEnd()) {
+            return it.value();
+        }
+        return QChar();
+    };
+    QString ret;
+    for (auto button : buttons) {
+        ret.append(buttonToString(button));
+    }
+    return ret;
+}
+
+static
+QVector< KDecoration2::DecorationButtonType > readDecorationButtons(const KConfigGroup &config,
+                                                                    const char *key,
+                                                                    const QVector< KDecoration2::DecorationButtonType > &defaultValue)
+{
+    initButtons();
+    auto buttonsFromString = [](const QString &buttons) -> QVector<KDecoration2::DecorationButtonType> {
+        QVector<KDecoration2::DecorationButtonType> ret;
+        for (auto it = buttons.begin(); it != buttons.end(); ++it) {
+            for (auto it2 = s_buttonNames.constBegin(); it2 != s_buttonNames.constEnd(); ++it2) {
+                if (it2.value() == (*it)) {
+                    ret << it2.key();
+                }
+            }
+        }
+        return ret;
+    };
+    return buttonsFromString(config.readEntry(key, buttonsToString(defaultValue)));
+}
+
 void ConfigurationModule::load()
 {
     s_loading = true;
@@ -195,6 +267,31 @@ void ConfigurationModule::load()
     m_ui->closeWindowsDoubleClick->setChecked(config.readEntry("CloseOnDoubleClickOnMenu", false));
     const QVariant border = QVariant::fromValue(stringToSize(config.readEntry("BorderSize", s_borderSizeNormal)));
     m_ui->borderSizesCombo->setCurrentIndex(m_ui->borderSizesCombo->findData(border));
+
+    // buttons
+    const auto &left = readDecorationButtons(config, "ButtonsOnLeft", QVector<KDecoration2::DecorationButtonType >{
+        KDecoration2::DecorationButtonType::Menu,
+        KDecoration2::DecorationButtonType::OnAllDesktops
+    });
+    while (m_leftButtons->rowCount() > 0) {
+        m_leftButtons->remove(0);
+    }
+    for (auto it = left.begin(); it != left.end(); ++it) {
+        m_leftButtons->add(*it);
+    }
+    const auto &right = readDecorationButtons(config, "ButtonsOnRight", QVector<KDecoration2::DecorationButtonType >{
+        KDecoration2::DecorationButtonType::ContextHelp,
+        KDecoration2::DecorationButtonType::Minimize,
+        KDecoration2::DecorationButtonType::Maximize,
+        KDecoration2::DecorationButtonType::Close
+    });
+    while (m_rightButtons->rowCount() > 0) {
+        m_rightButtons->remove(0);
+    }
+    for (auto it = right.begin(); it != right.end(); ++it) {
+        m_rightButtons->add(*it);
+    }
+
     KCModule::load();
     s_loading = false;
 }
@@ -219,6 +316,8 @@ void ConfigurationModule::save()
             }
         }
     }
+    config.writeEntry("ButtonsOnLeft", buttonsToString(m_leftButtons->buttons()));
+    config.writeEntry("ButtonsOnRight", buttonsToString(m_rightButtons->buttons()));
     config.sync();
     KCModule::save();
     // Send signal to all kwin instances
@@ -263,6 +362,21 @@ void ConfigurationModule::showKNS(const QString &config)
         }
     }
     delete downloadDialog;
+}
+
+QAbstractItemModel *ConfigurationModule::leftButtons() const
+{
+    return m_leftButtons;
+}
+
+QAbstractItemModel *ConfigurationModule::rightButtons() const
+{
+    return m_rightButtons;
+}
+
+QAbstractItemModel *ConfigurationModule::availableButtons() const
+{
+    return m_availableButtons;
 }
 
 }

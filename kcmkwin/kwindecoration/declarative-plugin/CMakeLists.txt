@@ -5,6 +5,7 @@ set(plugin_SRCS
     previewitem.cpp
     previewsettings.cpp
     plugin.cpp
+    buttonsmodel.cpp
 )
 
 add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})

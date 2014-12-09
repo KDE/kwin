@@ -30,32 +30,8 @@ namespace KDecoration2
 
 namespace Preview
 {
+class ButtonsModel;
 class PreviewBridge;
-
-class ButtonsModel : public QAbstractListModel
-{
-    Q_OBJECT
-public:
-    explicit ButtonsModel(const QVector< DecorationButtonType > &buttons, QObject *parent = 0);
-    explicit ButtonsModel(QObject *parent = nullptr);
-    virtual ~ButtonsModel();
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QHash< int, QByteArray > roleNames() const override;
-
-    QVector< DecorationButtonType > buttons() const {
-        return m_buttons;
-    }
-
-    Q_INVOKABLE void remove(int index);
-    Q_INVOKABLE void up(int index);
-    Q_INVOKABLE void down(int index);
-
-    void add(DecorationButtonType type);
-
-private:
-    QVector< DecorationButtonType > m_buttons;
-};
 
 class BorderSizesModel : public QAbstractListModel
 {
@@ -106,15 +82,9 @@ public:
     void setAlphaChannelSupported(bool supported);
     void setCloseOnDoubleClickOnMenu(bool enabled);
 
-    QAbstractItemModel *leftButtonsModel() const {
-        return m_leftButtons;
-    }
-    QAbstractItemModel *rightButtonsModel() const {
-        return m_rightButtons;
-    }
-    QAbstractItemModel *availableButtonsModel() const {
-        return m_availableButtons;
-    }
+    QAbstractItemModel *leftButtonsModel() const;
+    QAbstractItemModel *rightButtonsModel() const;
+    QAbstractItemModel *availableButtonsModel() const;
     QAbstractItemModel *borderSizesModel() const {
         return m_borderSizes;
     }
