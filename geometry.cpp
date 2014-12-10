@@ -2640,8 +2640,6 @@ void Client::finishMoveResize(bool cancel)
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricMode);
         electricMaximizing = false;
-        outline()->hide();
-        elevate(false);
     } else if (!cancel) {
         if (!(maximizeMode() & MaximizeHorizontal)) {
             geom_restore.setX(geometry().x());
@@ -2684,6 +2682,10 @@ void Client::leaveMoveResize()
     syncRequest.timeout = NULL;
     if (ScreenEdges::self()->isDesktopSwitchingMovingClients())
         ScreenEdges::self()->reserveDesktopSwitching(false, Qt::Vertical|Qt::Horizontal);
+    if (isElectricBorderMaximizing()) {
+        outline()->hide();
+        elevate(false);
+    }
 }
 
 // This function checks if it actually makes sense to perform a restricted move/resize.
