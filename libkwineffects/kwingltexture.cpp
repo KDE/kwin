@@ -306,26 +306,34 @@ void GLTexture::bind()
         d->onDamage();
     }
     if (d->m_filterChanged) {
-        if (d->m_filter == GL_LINEAR_MIPMAP_LINEAR) {
-            // trilinear filtering requested, but is it possible?
-            if (d->s_supportsFramebufferObjects && d->m_canUseMipmaps) {
-                glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            } else {
-                // can't use trilinear, so use bilinear
-                d->m_filter = GL_LINEAR;
-                glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            }
-        } else if (d->m_filter == GL_LINEAR) {
-            glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        } else {
-            // if neither trilinear nor bilinear, default to fast filtering
-            d->m_filter = GL_NEAREST;
-            glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        GLenum minFilter = GL_NEAREST;
+        GLenum magFilter = GL_NEAREST;
+
+        switch (d->m_filter) {
+        case GL_NEAREST:
+            minFilter = magFilter = GL_NEAREST;
+            break;
+
+        case GL_LINEAR:
+            minFilter = magFilter = GL_LINEAR;
+            break;
+
+        case GL_NEAREST_MIPMAP_NEAREST:
+        case GL_NEAREST_MIPMAP_LINEAR:
+            magFilter = GL_NEAREST;
+            minFilter = d->m_canUseMipmaps ? d->m_filter : GL_NEAREST;
+            break;
+
+        case GL_LINEAR_MIPMAP_NEAREST:
+        case GL_LINEAR_MIPMAP_LINEAR:
+            magFilter = GL_LINEAR;
+            minFilter = d->m_canUseMipmaps ? d->m_filter : GL_LINEAR;
+            break;
         }
+
+        glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, minFilter);
+        glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, magFilter);
+
         d->m_filterChanged = false;
     }
     if (d->m_wrapModeChanged) {
