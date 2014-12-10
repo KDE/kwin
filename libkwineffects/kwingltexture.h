@@ -55,8 +55,8 @@ public:
     explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString& fileName);
-    GLTexture(int width, int height);
-    explicit GLTexture(const QSize &size);
+    GLTexture(int width, int height, int levels = 1);
+    explicit GLTexture(const QSize &size, int levels = 1);
     virtual ~GLTexture();
 
     GLTexture & operator = (const GLTexture& tex);

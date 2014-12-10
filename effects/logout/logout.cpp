@@ -109,7 +109,10 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             // TODO: It seems that it is not possible to create a GLRenderTarget that has
             //       a different size than the display right now. Most likely a KWin core bug.
             // Create texture and render target
-            blurTexture = new GLTexture(effects->virtualScreenSize());
+            const QSize size = effects->virtualScreenSize();
+
+            // The fragment shader uses a LOD bias of 1.75, so we need 3 mipmap levels.
+            blurTexture = new GLTexture(size, 3);
             blurTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
             blurTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 

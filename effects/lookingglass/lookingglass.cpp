@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kmessagebox.h>
 
+#include <cmath>
+
 namespace KWin
 {
 
@@ -99,7 +101,8 @@ bool LookingGlassEffect::loadData()
     int texh = screenSize.height();
 
     // Create texture and render target
-    m_texture = new GLTexture(texw, texh);
+    const int levels = std::log2(qMin(texw, texh)) + 1;
+    m_texture = new GLTexture(texw, texh, levels);
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 

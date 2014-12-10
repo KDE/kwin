@@ -58,6 +58,7 @@ public:
     bool m_markedDirty;
     bool m_filterChanged;
     bool m_wrapModeChanged;
+    int m_mipLevels;
 
     int m_unnormalizeActive; // 0 - no, otherwise refcount
     int m_normalizeActive; // 0 - no, otherwise refcount

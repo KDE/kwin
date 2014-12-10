@@ -77,15 +77,15 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
     if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
         d->m_scale.setWidth(1.0 / image.width());
         d->m_scale.setHeight(1.0 / image.height());
-        d->m_canUseMipmaps = true;
     } else {
         d->m_scale.setWidth(1.0);
         d->m_scale.setHeight(1.0);
-        d->m_canUseMipmaps = false;
     }
 
     d->m_size = image.size();
     d->m_yInverted = true;
+    d->m_canUseMipmaps = false;
+    d->m_mipLevels = 1;
 
     d->updateMatrix();
 
@@ -94,6 +94,7 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
     if (!GLPlatform::instance()->isGLES()) {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, d->m_mipLevels - 1);
         glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
                      GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
     } else {
@@ -122,7 +123,7 @@ GLTexture::GLTexture(const QString& fileName)
 {
 }
 
-GLTexture::GLTexture(int width, int height)
+GLTexture::GLTexture(int width, int height, int levels)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -131,7 +132,10 @@ GLTexture::GLTexture(int width, int height)
     d->m_scale.setWidth(1.0 / width);
     d->m_scale.setHeight(1.0 / height);
     d->m_size = QSize(width, height);
+    d->m_canUseMipmaps = levels > 1;
+    d->m_mipLevels = levels;
     d->m_canUseMipmaps = true;
+    d->m_filter = levels > 1 ? GL_NEAREST_MIPMAP_LINEAR : GL_NEAREST;
 
     d->updateMatrix();
 
@@ -139,6 +143,7 @@ GLTexture::GLTexture(int width, int height)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
+        glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
         glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0,
                      GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
     } else {
@@ -153,8 +158,8 @@ GLTexture::GLTexture(int width, int height)
     unbind();
 }
 
-GLTexture::GLTexture(const QSize &size)
-    : GLTexture(size.width(), size.height())
+GLTexture::GLTexture(const QSize &size, int levels)
+    : GLTexture(size.width(), size.height(), levels)
 {
 }
 
@@ -176,6 +181,7 @@ GLTexturePrivate::GLTexturePrivate()
     m_wrapMode = GL_REPEAT;
     m_yInverted = false;
     m_canUseMipmaps = false;
+    m_mipLevels = 1;
     m_markedDirty = false;
     m_unnormalizeActive = 0;
     m_normalizeActive = 0;
