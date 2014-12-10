@@ -58,6 +58,7 @@ public:
     bool m_markedDirty;
     bool m_filterChanged;
     bool m_wrapModeChanged;
+    bool m_immutable;
     int m_mipLevels;
 
     int m_unnormalizeActive; // 0 - no, otherwise refcount
@@ -70,6 +71,7 @@ public:
     static bool s_supportsFramebufferObjects;
     static bool s_supportsARGB32;
     static bool s_supportsUnpack;
+    static bool s_supportsTextureStorage;
     static GLuint s_fbo;
     static uint s_textureObjectCounter;
 private:

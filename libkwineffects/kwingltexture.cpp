@@ -45,6 +45,7 @@ namespace KWin
 bool GLTexturePrivate::s_supportsFramebufferObjects = false;
 bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
+bool GLTexturePrivate::s_supportsTextureStorage = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
@@ -94,9 +95,17 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
 
     if (!GLPlatform::instance()->isGLES()) {
         const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-        glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, d->m_mipLevels - 1);
-        glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
-                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+
+        if (d->s_supportsTextureStorage) {
+            glTexStorage2D(d->m_target, 1, GL_RGBA8, im.width(), im.height());
+            glTexSubImage2D(d->m_target, 0, 0, 0, im.width(), im.height(),
+                            GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+            d->m_immutable = true;
+        } else {
+            glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, d->m_mipLevels - 1);
+            glTexImage2D(d->m_target, 0, GL_RGBA8, im.width(), im.height(), 0,
+                         GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, im.bits());
+        }
     } else {
         if (d->s_supportsARGB32) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
@@ -143,9 +152,14 @@ GLTexture::GLTexture(int width, int height, int levels)
     bind();
 
     if (!GLPlatform::instance()->isGLES()) {
-        glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
-        glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0,
-                     GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
+        if (d->s_supportsTextureStorage) {
+            glTexStorage2D(d->m_target, levels, GL_RGBA8, width, height);
+            d->m_immutable = true;
+        } else {
+            glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
+            glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0,
+                         GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
+        }
     } else {
         // The format parameter in glTexSubImage() must match the internal format
         // of the texture, so it's important that we allocate the texture with
@@ -182,6 +196,7 @@ GLTexturePrivate::GLTexturePrivate()
     m_yInverted = false;
     m_canUseMipmaps = false;
     m_mipLevels = 1;
+    m_immutable = false;
     m_markedDirty = false;
     m_unnormalizeActive = 0;
     m_normalizeActive = 0;
@@ -211,10 +226,12 @@ void GLTexturePrivate::initStatic()
     if (!GLPlatform::instance()->isGLES()) {
         s_supportsFramebufferObjects = hasGLVersion(3, 0) ||
             hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
+        s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
         s_supportsFramebufferObjects = true;
+        s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
 
         // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
         // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
