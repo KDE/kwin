@@ -1429,7 +1429,7 @@ void SceneOpenGL2Window::performPaint(int mask, QRegion region, WindowPaintData 
     if (!shader) {
         ShaderTraits traits = ShaderTrait::MapTexture;
 
-        if (data.opacity() != 1.0 || data.brightness() != 1.0)
+        if (data.opacity() != 1.0 || data.brightness() != 1.0 || data.crossFadeProgress() != 1.0)
             traits |= ShaderTrait::Modulate;
 
         if (data.saturation() != 1.0)
