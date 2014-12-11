@@ -357,6 +357,7 @@ void LogoutEffect::renderBlurTexture()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     blurTexture->bind();
+    blurTexture->generateMipmaps();
     blurTexture->render(infiniteRegion(), effects->virtualScreenGeometry());
     blurTexture->unbind();
     glDisable(GL_BLEND);

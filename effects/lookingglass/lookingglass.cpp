@@ -239,6 +239,7 @@ void LookingGlassEffect::postPaintScreen()
         assert(target == m_fbo);
         Q_UNUSED(target);
         m_texture->bind();
+        m_texture->generateMipmaps();
 
         // Use the shader
         ShaderBinder binder(m_shader);

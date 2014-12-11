@@ -101,6 +101,8 @@ public:
     void setWrapMode(GLenum mode);
     void setDirty();
 
+    void generateMipmaps();
+
     static bool framebufferObjectSupported();
 
 protected:

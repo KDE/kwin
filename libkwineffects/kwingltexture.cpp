@@ -283,7 +283,6 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     }
 
     unbind();
-    setDirty();
 
     if (useUnpack) {
         glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
@@ -312,7 +311,6 @@ void GLTexture::bind()
             if (d->s_supportsFramebufferObjects && d->m_canUseMipmaps) {
                 glTexParameteri(d->m_target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
                 glTexParameteri(d->m_target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-                glGenerateMipmap(d->m_target);
             } else {
                 // can't use trilinear, so use bilinear
                 d->m_filter = GL_LINEAR;
@@ -335,6 +333,14 @@ void GLTexture::bind()
         glTexParameteri(d->m_target, GL_TEXTURE_WRAP_T, d->m_wrapMode);
         d->m_wrapModeChanged = false;
     }
+}
+
+void GLTexture::generateMipmaps()
+{
+    Q_D(GLTexture);
+
+    if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects)
+        glGenerateMipmap(d->m_target);
 }
 
 void GLTexture::unbind()
@@ -460,9 +466,7 @@ void GLTexture::setWrapMode(GLenum mode)
 
 void GLTexturePrivate::onDamage()
 {
-    if (m_filter == GL_LINEAR_MIPMAP_LINEAR && !m_filterChanged) {
-        glGenerateMipmap(m_target);
-    }
+    // No-op
 }
 
 void GLTexture::setDirty()
