@@ -37,7 +37,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QMimeType>
 #include <QThread>
-#include <QtConcurrent>
+#include <QtConcurrentRun>
 // system
 #include <unistd.h>
 
