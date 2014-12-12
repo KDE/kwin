@@ -508,7 +508,7 @@ void TestWaylandSurface::testOpaque()
 
     // let's install an opaque region
     s->setOpaqueRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
-    // the region should only be applied after the surface got commited
+    // the region should only be applied after the surface got committed
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCOMPARE(serverSurface->opaque(), QRegion());
@@ -564,7 +564,7 @@ void TestWaylandSurface::testInput()
 
     // let's install an input region
     s->setInputRegion(m_compositor->createRegion(QRegion(0, 10, 20, 30)).get());
-    // the region should only be applied after the surface got commited
+    // the region should only be applied after the surface got committed
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCOMPARE(serverSurface->input(), QRegion());

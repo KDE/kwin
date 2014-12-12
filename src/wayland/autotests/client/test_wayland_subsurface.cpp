@@ -346,7 +346,7 @@ void TestSubSurface::testPlaceAbove()
     // so far the stacking order should still be empty
     QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
 
-    // commiting the parent should create the stacking order
+    // committing the parent should create the stacking order
     parent->commit(Surface::CommitFlag::None);
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
@@ -446,7 +446,7 @@ void TestSubSurface::testPlaceBelow()
     // so far the stacking order should still be empty
     QVERIFY(serverSubSurface1->parentSurface()->childSubSurfaces().isEmpty());
 
-    // commiting the parent should create the stacking order
+    // committing the parent should create the stacking order
     parent->commit(Surface::CommitFlag::None);
     // ensure it's processed on server side
     wl_display_flush(m_connection->display());
