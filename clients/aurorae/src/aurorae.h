@@ -61,6 +61,8 @@ public Q_SLOTS:
     void init() override;
     void installTitleItem(QQuickItem *item);
 
+    void updateShadow();
+
 Q_SIGNALS:
     void configChanged();
 
@@ -92,6 +94,7 @@ private:
     QScopedPointer<QTimer> m_updateTimer;
     QScopedPointer<QOpenGLContext> m_context;
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
+    QSharedPointer<KDecoration2::DecorationShadow> m_scheduledShadow;
 };
 
 class ThemeFinder : public QObject

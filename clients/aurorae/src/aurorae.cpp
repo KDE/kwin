@@ -511,11 +511,17 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
                                     m_padding->top(),
                                     m_buffer.width() - m_padding->left() - m_padding->right(),
                                     m_buffer.height() - m_padding->top() - m_padding->bottom()));
-        setShadow(s);
+        m_scheduledShadow = s;
     } else {
-        setShadow(QSharedPointer<KDecoration2::DecorationShadow>());
+        m_scheduledShadow = QSharedPointer<KDecoration2::DecorationShadow>();
     }
+    QMetaObject::invokeMethod(this, "updateShadow", Qt::QueuedConnection);
     painter->drawImage(rect(), m_buffer, r);
+}
+
+void Decoration::updateShadow()
+{
+    setShadow(m_scheduledShadow);
 }
 
 QMouseEvent Decoration::translatedMouseEvent(QMouseEvent *orig)
