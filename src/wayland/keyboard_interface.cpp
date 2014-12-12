@@ -91,7 +91,7 @@ void KeyboardInterface::Private::sendKeymap()
     if (seat->isKeymapXkbCompatible()) {
         sendKeymap(seat->keymapFileDescriptor(), seat->keymapSize());
     } else {
-        int nullFd = open("/dev/null", O_RDONLY);
+        int nullFd = open("/dev/null", O_RDONLY); // krazy:exclude=syscalls
         wl_keyboard_send_keymap(resource, WL_KEYBOARD_KEYMAP_FORMAT_NO_KEYMAP, nullFd, 0);
         close(nullFd);
     }
