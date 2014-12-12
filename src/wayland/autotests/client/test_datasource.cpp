@@ -145,7 +145,7 @@ void TestDataSource::testOffer()
     QCOMPARE(serverDataSource->mimeTypes().count(), 0);
     QVERIFY(serverDataSource->parentResource());
 
-    QSignalSpy offeredSpy(serverDataSource.data(), SIGNAL(mimeTypeOffered(const QString&)));
+    QSignalSpy offeredSpy(serverDataSource.data(), SIGNAL(mimeTypeOffered(QString)));
     QVERIFY(offeredSpy.isValid());
 
     const QString plain = QStringLiteral("text/plain");

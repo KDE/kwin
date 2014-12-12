@@ -469,7 +469,7 @@ void TestWaylandSeat::testPointerButton()
 
     QScopedPointer<Pointer> p(m_seat->createPointer());
     QVERIFY(p->isValid());
-    QSignalSpy buttonChangedSpy(p.data(), SIGNAL(buttonStateChanged(quint32, quint32, quint32, KWayland::Client::Pointer::ButtonState)));
+    QSignalSpy buttonChangedSpy(p.data(), SIGNAL(buttonStateChanged(quint32,quint32,quint32,KWayland::Client::Pointer::ButtonState)));
     QVERIFY(buttonChangedSpy.isValid());
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
