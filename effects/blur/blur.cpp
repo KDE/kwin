@@ -98,9 +98,9 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
     QRegion region;
 
     const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
-    if (value.size() > 0 && !(value.size() % (4 * sizeof(unsigned long)))) {
-        const unsigned long *cardinals = reinterpret_cast<const unsigned long*>(value.constData());
-        for (unsigned int i = 0; i < value.size() / sizeof(unsigned long);) {
+    if (value.size() > 0 && !(value.size() % (4 * sizeof(uint32_t)))) {
+        const uint32_t *cardinals = reinterpret_cast<const uint32_t*>(value.constData());
+        for (unsigned int i = 0; i < value.size() / sizeof(uint32_t);) {
             int x = cardinals[i++];
             int y = cardinals[i++];
             int w = cardinals[i++];
