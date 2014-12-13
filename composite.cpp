@@ -663,7 +663,11 @@ void Compositor::performCompositing()
     // is called the next time. If there would be nothing pending, it will not restart the timer and
     // scheduleRepaint() would restart it again somewhen later, called from functions that
     // would again add something pending.
-    scheduleRepaint();
+    if (m_bufferSwapPending && m_scene->syncsToVBlank()) {
+        m_composeAtSwapCompletion = true;
+    } else {
+        scheduleRepaint();
+    }
 }
 
 bool Compositor::windowRepaintsPending() const
