@@ -75,6 +75,17 @@ public:
     void setYInverted(bool inverted);
 
     /**
+     * Specifies which component of a texel is placed in each respective
+     * component of the vector returned to the shader.
+     *
+     * Valid values are GL_RED, GL_GREEN, GL_BLUE, GL_ALPHA, GL_ONE and GL_ZERO.
+     *
+     * @see swizzleSupported()
+     * @since 5.2
+     */
+    void setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha);
+
+    /**
      * Returns a matrix that transforms texture coordinates of the given type,
      * taking the texture target and the y-inversion flag into account.
      *
@@ -106,6 +117,15 @@ public:
     void generateMipmaps();
 
     static bool framebufferObjectSupported();
+
+    /**
+     * Returns true if texture swizzle is supported, and false otherwise
+     *
+     * Texture swizzle requires OpenGL 3.3, GL_ARB_texture_swizzle, or OpenGL ES 3.0.
+     *
+     * @since 5.2
+     */
+    static bool supportsSwizzle();
 
 protected:
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;

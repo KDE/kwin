@@ -46,6 +46,7 @@ bool GLTexturePrivate::s_supportsFramebufferObjects = false;
 bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
+bool GLTexturePrivate::s_supportsTextureSwizzle = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
@@ -234,11 +235,13 @@ void GLTexturePrivate::initStatic()
         s_supportsFramebufferObjects = hasGLVersion(3, 0) ||
             hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
+        s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
         s_supportsFramebufferObjects = true;
         s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
+        s_supportsTextureSwizzle = hasGLVersion(3, 0);
 
         // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
         // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
@@ -551,6 +554,21 @@ void GLTexture::setYInverted(bool inverted)
     d->updateMatrix();
 }
 
+void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
+{
+    Q_D(GLTexture);
+
+    if (!GLPlatform::instance()->isGLES()) {
+        const GLuint swizzle[] = { red, green, blue, alpha };
+        glTexParameteriv(d->m_target, GL_TEXTURE_SWIZZLE_RGBA, (const GLint *) swizzle);
+    } else {
+        glTexParameteri(d->m_target, GL_TEXTURE_SWIZZLE_R, red);
+        glTexParameteri(d->m_target, GL_TEXTURE_SWIZZLE_G, green);
+        glTexParameteri(d->m_target, GL_TEXTURE_SWIZZLE_B, blue);
+        glTexParameteri(d->m_target, GL_TEXTURE_SWIZZLE_A, alpha);
+    }
+}
+
 int GLTexture::width() const
 {
     Q_D(const GLTexture);
@@ -572,6 +590,11 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 bool GLTexture::framebufferObjectSupported()
 {
     return GLTexturePrivate::s_supportsFramebufferObjects;
+}
+
+bool GLTexture::supportsSwizzle()
+{
+    return GLTexturePrivate::s_supportsTextureSwizzle;
 }
 
 } // namespace KWin
