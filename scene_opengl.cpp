@@ -2250,8 +2250,36 @@ bool SceneOpenGLShadow::prepareBackend()
     p.drawPixmap(bottomLeft.width() + bottom.width(), topRight.height() + right.height(), shadowPixmap(ShadowElementBottomRight));
     p.end();
 
+    // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
+    if (!GLPlatform::instance()->isGLES() && GLTexture::supportsSwizzle()) {
+        QImage alphaImage(image.size(), QImage::Format_Indexed8); // Change to Format_Alpha8 w/ Qt 5.5
+        bool alphaOnly = true;
+
+        for (ptrdiff_t y = 0; alphaOnly && y < image.height(); y++) {
+            const uint32_t * const src = reinterpret_cast<const uint32_t *>(image.scanLine(y));
+            uint8_t * const dst = reinterpret_cast<uint8_t *>(alphaImage.scanLine(y));
+
+            for (ptrdiff_t x = 0; x < image.width(); x++) {
+                if (src[x] & 0x00ffffff)
+                    alphaOnly = false;
+
+                dst[x] = qAlpha(src[x]);
+            }
+        }
+
+        if (alphaOnly) {
+            image = alphaImage;
+        }
+    }
+
     effects->makeOpenGLContextCurrent();
     m_texture = QSharedPointer<GLTexture>::create(image);
+
+    if (m_texture->internalFormat() == GL_R8) {
+        // Swizzle red to alpha and all other channels to zero
+        m_texture->bind();
+        m_texture->setSwizzle(GL_ZERO, GL_ZERO, GL_ZERO, GL_RED);
+    }
 
     return true;
 }
