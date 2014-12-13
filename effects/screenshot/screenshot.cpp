@@ -110,7 +110,7 @@ void ScreenShotEffect::postPaintScreen()
         QScopedPointer<GLTexture> offscreenTexture;
         QScopedPointer<GLRenderTarget> target;
         if (effects->isOpenGLCompositing()) {
-            offscreenTexture.reset(new GLTexture(width, height));
+            offscreenTexture.reset(new GLTexture(GL_RGBA8, width, height));
             offscreenTexture->setFilter(GL_LINEAR);
             offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
             target.reset(new GLRenderTarget(*offscreenTexture));
@@ -236,7 +236,7 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
             qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
             return QString();
         }
-        GLTexture tex(geometry.width(), geometry.height());
+        GLTexture tex(GL_RGBA8, geometry.width(), geometry.height());
         GLRenderTarget target(tex);
         target.blitFromFramebuffer(geometry);
         // copy content from framebuffer into image

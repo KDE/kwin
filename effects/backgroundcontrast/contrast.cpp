@@ -363,7 +363,7 @@ void ContrastEffect::doContrast(const QRegion& shape, const QRect& screen, const
 
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(r.width(), r.height());
+    GLTexture scratch(GL_RGBA8, r.width(), r.height());
     scratch.setFilter(GL_LINEAR);
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();

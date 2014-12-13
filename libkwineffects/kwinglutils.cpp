@@ -720,7 +720,7 @@ bool ShaderManager::selfTest()
     src.setFilter(GL_NEAREST);
 
     // Create the render target
-    GLTexture dst(32, 32);
+    GLTexture dst(GL_RGBA8, 32, 32);
 
     GLRenderTarget fbo(dst);
     GLRenderTarget::pushRenderTarget(&fbo);

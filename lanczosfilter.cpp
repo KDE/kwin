@@ -111,7 +111,7 @@ void LanczosFilter::updateOffscreenSurfaces()
             delete m_offscreenTex;
             delete m_offscreenTarget;
         }
-        m_offscreenTex = new GLTexture(w, h);
+        m_offscreenTex = new GLTexture(GL_RGBA8, w, h);
         m_offscreenTex->setFilter(GL_LINEAR);
         m_offscreenTex->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTarget = new GLRenderTarget(*m_offscreenTex);
@@ -254,7 +254,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             w->sceneWindow()->performPaint(mask, infiniteRegion(), thumbData);
 
             // Create a scratch texture and copy the rendered window into it
-            GLTexture tex(sw, sh);
+            GLTexture tex(GL_RGBA8, sw, sh);
             tex.setFilter(GL_LINEAR);
             tex.setWrapMode(GL_CLAMP_TO_EDGE);
             tex.bind();
@@ -293,7 +293,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             tex.discard();
 
             // create scratch texture for second rendering pass
-            GLTexture tex2(tw, sh);
+            GLTexture tex2(GL_RGBA8, tw, sh);
             tex2.setFilter(GL_LINEAR);
             tex2.setWrapMode(GL_CLAMP_TO_EDGE);
             tex2.bind();
@@ -326,7 +326,7 @@ void LanczosFilter::performPaint(EffectWindowImpl* w, int mask, QRegion region, 
             ShaderManager::instance()->popShader();
 
             // create cache texture
-            GLTexture *cache = new GLTexture(tw, th);
+            GLTexture *cache = new GLTexture(GL_RGBA8, tw, th);
 
             cache->setFilter(GL_LINEAR);
             cache->setWrapMode(GL_CLAMP_TO_EDGE);

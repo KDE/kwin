@@ -55,8 +55,8 @@ public:
     explicit GLTexture(const QImage& image, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QPixmap& pixmap, GLenum target = GL_TEXTURE_2D);
     explicit GLTexture(const QString& fileName);
-    GLTexture(int width, int height, int levels = 1);
-    explicit GLTexture(const QSize &size, int levels = 1);
+    GLTexture(GLenum internalFormat, int width, int height, int levels = 1);
+    explicit GLTexture(GLenum internalFormat, const QSize &size, int levels = 1);
     virtual ~GLTexture();
 
     GLTexture & operator = (const GLTexture& tex);
@@ -91,6 +91,8 @@ public:
     GLuint texture() const;
     GLenum target() const;
     GLenum filter() const;
+    GLenum internalFormat() const;
+
     /** @short
      * Make the texture fully transparent
      * Warning: this clobbers the current framebuffer binding except on fglrx

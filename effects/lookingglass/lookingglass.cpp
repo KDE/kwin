@@ -102,7 +102,7 @@ bool LookingGlassEffect::loadData()
 
     // Create texture and render target
     const int levels = std::log2(qMin(texw, texh)) + 1;
-    m_texture = new GLTexture(texw, texh, levels);
+    m_texture = new GLTexture(GL_RGBA8, texw, texh, levels);
     m_texture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
     m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
 

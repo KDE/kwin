@@ -74,6 +74,7 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
         return;
 
     d->m_target = target;
+    d->m_internalFormat = GL_RGBA8;
 
     if (d->m_target != GL_TEXTURE_RECTANGLE_ARB) {
         d->m_scale.setWidth(1.0 / image.width());
@@ -132,7 +133,7 @@ GLTexture::GLTexture(const QString& fileName)
 {
 }
 
-GLTexture::GLTexture(int width, int height, int levels)
+GLTexture::GLTexture(GLenum internalFormat, int width, int height, int levels)
      : d_ptr(new GLTexturePrivate())
 {
     Q_D(GLTexture);
@@ -153,13 +154,14 @@ GLTexture::GLTexture(int width, int height, int levels)
 
     if (!GLPlatform::instance()->isGLES()) {
         if (d->s_supportsTextureStorage) {
-            glTexStorage2D(d->m_target, levels, GL_RGBA8, width, height);
+            glTexStorage2D(d->m_target, levels, internalFormat, width, height);
             d->m_immutable = true;
         } else {
             glTexParameteri(d->m_target, GL_TEXTURE_MAX_LEVEL, levels - 1);
-            glTexImage2D(d->m_target, 0, GL_RGBA8, width, height, 0,
+            glTexImage2D(d->m_target, 0, internalFormat, width, height, 0,
                          GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, nullptr);
         }
+        d->m_internalFormat = internalFormat;
     } else {
         // The format parameter in glTexSubImage() must match the internal format
         // of the texture, so it's important that we allocate the texture with
@@ -167,13 +169,17 @@ GLTexture::GLTexture(int width, int height, int levels)
         const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
         glTexImage2D(d->m_target, 0, format, width, height, 0,
                      format, GL_UNSIGNED_BYTE, nullptr);
+
+        // This is technically not true, but it means that code that calls
+        // internalFormat() won't need to be specialized for GLES2.
+        d->m_internalFormat = GL_RGBA8;
     }
 
     unbind();
 }
 
-GLTexture::GLTexture(const QSize &size, int levels)
-    : GLTexture(size.width(), size.height(), levels)
+GLTexture::GLTexture(GLenum internalFormat, const QSize &size, int levels)
+    : GLTexture(internalFormat, size.width(), size.height(), levels)
 {
 }
 
@@ -191,6 +197,7 @@ GLTexturePrivate::GLTexturePrivate()
 {
     m_texture = 0;
     m_target = 0;
+    m_internalFormat = 0;
     m_filter = GL_NEAREST;
     m_wrapMode = GL_REPEAT;
     m_yInverted = false;
@@ -436,6 +443,12 @@ GLenum GLTexture::filter() const
 {
     Q_D(const GLTexture);
     return d->m_filter;
+}
+
+GLenum GLTexture::internalFormat() const
+{
+    Q_D(const GLTexture);
+    return d->m_internalFormat;
 }
 
 void GLTexture::clear()

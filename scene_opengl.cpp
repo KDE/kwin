@@ -2372,7 +2372,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
         return;
 
     if (!size.isEmpty()) {
-        m_texture.reset(new GLTexture(size.width(), size.height()));
+        m_texture.reset(new GLTexture(GL_RGBA8, size.width(), size.height()));
         m_texture->setYInverted(true);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->clear();

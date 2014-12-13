@@ -37,7 +37,7 @@ BlurEffect::BlurEffect()
 
     // Offscreen texture that's used as the target for the horizontal blur pass
     // and the source for the vertical pass.
-    tex = GLTexture(effects->virtualScreenSize());
+    tex = GLTexture(GL_RGBA8, effects->virtualScreenSize());
     tex.setFilter(GL_LINEAR);
     tex.setWrapMode(GL_CLAMP_TO_EDGE);
 
@@ -438,7 +438,7 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
 
     // Create a scratch texture and copy the area in the back buffer that we're
     // going to blur into it
-    GLTexture scratch(r.width(), r.height());
+    GLTexture scratch(GL_RGBA8, r.width(), r.height());
     scratch.setFilter(GL_LINEAR);
     scratch.setWrapMode(GL_CLAMP_TO_EDGE);
     scratch.bind();
@@ -511,13 +511,13 @@ void BlurEffect::doCachedBlur(EffectWindow *w, const QRegion& region, const floa
     CacheEntry it = windows.find(w);
     if (it == windows.end()) {
         BlurWindowInfo bwi;
-        bwi.blurredBackground = GLTexture(r.width(),r.height());
+        bwi.blurredBackground = GLTexture(GL_RGBA8, r.width(),r.height());
         bwi.damagedRegion = expanded;
         bwi.dropCache = false;
         bwi.windowPos = w->pos();
         it = windows.insert(w, bwi);
     } else if (it->blurredBackground.size() != r.size()) {
-        it->blurredBackground = GLTexture(r.width(),r.height());
+        it->blurredBackground = GLTexture(GL_RGBA8, r.width(),r.height());
         it->dropCache = false;
         it->windowPos = w->pos();
     } else if (it->windowPos != w->pos()) {

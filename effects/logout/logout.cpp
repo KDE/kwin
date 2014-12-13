@@ -112,7 +112,7 @@ void LogoutEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             const QSize size = effects->virtualScreenSize();
 
             // The fragment shader uses a LOD bias of 1.75, so we need 3 mipmap levels.
-            blurTexture = new GLTexture(size, 3);
+            blurTexture = new GLTexture(GL_RGBA8, size, 3);
             blurTexture->setFilter(GL_LINEAR_MIPMAP_LINEAR);
             blurTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 

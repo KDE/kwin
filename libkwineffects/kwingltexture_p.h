@@ -48,6 +48,7 @@ public:
 
     GLuint m_texture;
     GLenum m_target;
+    GLenum m_internalFormat;
     GLenum m_filter;
     GLenum m_wrapMode;
     QSize m_size;
