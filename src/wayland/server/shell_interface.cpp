@@ -68,6 +68,7 @@ public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
     void setFullscreen(bool fullscreen);
     void setToplevel(bool toplevel);
+    void setMaximized(bool maximized);
     void ping();
 
     SurfaceInterface *surface;
@@ -77,6 +78,7 @@ public:
     quint32 pingSerial = 0;
     bool fullscreen = false;
     bool toplevel = false;
+    bool maximized = false;
 
 private:
     // interface callbacks
@@ -188,6 +190,7 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
             }
             Q_D();
             d->setToplevel(false);
+            d->setMaximized(false);
         }
     );
     connect(this, &ShellSurfaceInterface::toplevelChanged, this,
@@ -197,6 +200,17 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
             }
             Q_D();
             d->setFullscreen(false);
+            d->setMaximized(false);
+        }
+    );
+    connect(this, &ShellSurfaceInterface::maximizedChanged, this,
+        [this] (bool maximized) {
+            if (!maximized) {
+                return;
+            }
+            Q_D();
+            d->setFullscreen(false);
+            d->setToplevel(false);
         }
     );
 }
@@ -345,7 +359,17 @@ void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_
     Q_UNUSED(output)
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    // TODO: implement
+    s->setMaximized(true);
+}
+
+void ShellSurfaceInterface::Private::setMaximized(bool set)
+{
+    if (maximized == set) {
+        return;
+    }
+    maximized = set;
+    Q_Q(ShellSurfaceInterface);
+    emit q->maximizedChanged(maximized);
 }
 
 void ShellSurfaceInterface::Private::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
@@ -410,6 +434,11 @@ bool ShellSurfaceInterface::isFullscreen() const {
 bool ShellSurfaceInterface::isToplevel() const {
     Q_D();
     return d->toplevel;
+}
+
+bool ShellSurfaceInterface::isMaximized() const {
+    Q_D();
+    return d->maximized;
 }
 
 ShellSurfaceInterface::Private *ShellSurfaceInterface::d_func() const

@@ -61,6 +61,7 @@ class KWAYLANDSERVER_EXPORT ShellSurfaceInterface : public Resource
     Q_PROPERTY(QByteArray windowClass READ windowClass NOTIFY windowClassChanged)
     Q_PROPERTY(bool fullscreen READ isFullscreen NOTIFY fullscreenChanged)
     Q_PROPERTY(bool toplevel READ isToplevel NOTIFY toplevelChanged)
+    Q_PROPERTY(bool maximized READ isMaximized NOTIFY maximizedChanged)
 public:
     virtual ~ShellSurfaceInterface();
 
@@ -76,6 +77,7 @@ public:
     QByteArray windowClass() const;
     bool isFullscreen() const;
     bool isToplevel() const;
+    bool isMaximized() const;
 
 Q_SIGNALS:
     void titleChanged(const QString&);
@@ -84,6 +86,7 @@ Q_SIGNALS:
     void pongReceived();
     void fullscreenChanged(bool);
     void toplevelChanged(bool);
+    void maximizedChanged(bool);
 
 private:
     friend class ShellInterface;
