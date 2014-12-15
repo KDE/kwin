@@ -79,6 +79,13 @@ void CompositorWindow::surfaceCreated(KWayland::Server::ShellSurfaceInterface *s
             }
         }
     );
+    connect(surface, &ShellSurfaceInterface::maximizedChanged, this,
+        [surface, this](bool maximized) {
+            if (maximized) {
+                surface->requestSize(size());
+            }
+        }
+    );
     connect(surface->surface(), &SurfaceInterface::damaged, this, static_cast<void (CompositorWindow::*)()>(&CompositorWindow::update));
     connect(surface, &ShellSurfaceInterface::destroyed, this,
         [surface, this] {
