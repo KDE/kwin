@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QDebug>
 #include <QDirIterator>
+#include <QGuiApplication>
+#include <QStyleHints>
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
 #include <QOpenGLFramebufferObject>
@@ -579,6 +581,13 @@ void Decoration::mousePressEvent(QMouseEvent *event)
     if (m_view) {
         QMouseEvent ev = translatedMouseEvent(event);
         QCoreApplication::sendEvent(m_view.data(), &ev);
+        if (ev.button() == Qt::LeftButton) {
+            if (!m_doubleClickTimer.hasExpired(QGuiApplication::styleHints()->mouseDoubleClickInterval())) {
+                QMouseEvent dc(QEvent::MouseButtonDblClick, ev.localPos(), ev.windowPos(), ev.screenPos(), ev.button(), ev.buttons(), ev.modifiers());
+                QCoreApplication::sendEvent(m_view.data(), &dc);
+            }
+        }
+        m_doubleClickTimer.invalidate();
         event->setAccepted(ev.isAccepted());
     }
     KDecoration2::Decoration::mousePressEvent(event);
@@ -590,6 +599,9 @@ void Decoration::mouseReleaseEvent(QMouseEvent *event)
         QMouseEvent ev = translatedMouseEvent(event);
         QCoreApplication::sendEvent(m_view.data(), &ev);
         event->setAccepted(ev.isAccepted());
+        if (ev.isAccepted() && ev.button() == Qt::LeftButton) {
+            m_doubleClickTimer.start();
+        }
     }
     KDecoration2::Decoration::mouseReleaseEvent(event);
 }

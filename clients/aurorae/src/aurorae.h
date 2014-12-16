@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AURORAE_H
 
 #include <KDecoration2/Decoration>
+#include <QElapsedTimer>
 #include <QVariant>
 #include <QMutex>
 #include <KCModule>
@@ -95,6 +96,7 @@ private:
     QScopedPointer<QOpenGLContext> m_context;
     QScopedPointer<QOffscreenSurface> m_offscreenSurface;
     QSharedPointer<KDecoration2::DecorationShadow> m_scheduledShadow;
+    QElapsedTimer m_doubleClickTimer;
 };
 
 class ThemeFinder : public QObject
