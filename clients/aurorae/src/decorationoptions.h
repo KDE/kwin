@@ -173,6 +173,7 @@ class DecorationOptions : public QObject
      * The buttons to be positioned on the right side of the titlebar from left to right.
      **/
     Q_PROPERTY(QList<int> titleButtonsRight READ titleButtonsRight NOTIFY titleButtonsChanged)
+    Q_PROPERTY(int mousePressAndHoldInterval READ mousePressAndHoldInterval CONSTANT)
 public:
     enum BorderSize {
         BorderNone,      ///< No borders except title
@@ -227,6 +228,8 @@ public:
     QList<int> titleButtonsRight() const;
     KDecoration2::Decoration *decoration() const;
     void setDecoration(KDecoration2::Decoration *decoration);
+
+    int mousePressAndHoldInterval() const;
 
 Q_SIGNALS:
     void colorsChanged();

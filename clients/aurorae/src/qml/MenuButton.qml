@@ -26,9 +26,13 @@ DecorationButton {
         icon: decoration.client.icon
         anchors.fill: parent
     }
+    DecorationOptions {
+        id: options
+        deco: decoration
+    }
     Timer {
         id: timer
-        interval: 150
+        interval: options.mousePressAndHoldInterval
         repeat: false
         onTriggered: decoration.requestShowWindowMenu()
     }

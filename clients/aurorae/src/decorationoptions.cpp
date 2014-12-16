@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationSettings>
 #include <KConfigGroup>
 #include <KSharedConfig>
+#include <QGuiApplication>
+#include <QStyleHints>
 
 namespace KWin
 {
@@ -191,6 +193,11 @@ void DecorationOptions::slotActiveChanged()
     m_active = m_decoration->client().data()->isActive();
     emit colorsChanged();
     emit fontChanged();
+}
+
+int DecorationOptions::mousePressAndHoldInterval() const
+{
+    return QGuiApplication::styleHints()->mousePressAndHoldInterval();
 }
 
 Borders::Borders(QObject *parent)
