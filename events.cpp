@@ -1369,6 +1369,11 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
             int x = x_root - geometry().x();// + padding_left;
             int y = y_root - geometry().y();// + padding_top;
             mousePos = QPoint(x, y);
+
+            if (m_decoration) {
+                QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
+                QCoreApplication::instance()->sendEvent(m_decoration, &event);
+            }
         }
         Position newmode = modKeyDown(state) ? PositionCenter : mousePosition(mousePos);
         if (newmode != mode) {
