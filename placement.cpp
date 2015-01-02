@@ -70,8 +70,8 @@ void Placement::place(Client* c, QRect& area)
         placeDialog(c, area, options->placement());
     else if (c->isSplash())
         placeOnMainWindow(c, area);   // on mainwindow, if any, otherwise centered
-    else if (c->isNotification())
-        placeNotification(c, area);
+    else if (c->isOnScreenDisplay() || c->isNotification())
+        placeOnScreenDisplay(c, area);
     else
         place(c, area, options->placement());
 }
@@ -483,7 +483,7 @@ void Placement::placeUtility(Client* c, QRect& area, Policy /*next*/)
     place(c, area, Default);
 }
 
-void Placement::placeNotification(Client* c, QRect& area)
+void Placement::placeOnScreenDisplay(Client* c, QRect& area)
 {
     // place at lower 1/3 of the screen
     const int x = area.left() + (area.width() -  c->width())  / 2;

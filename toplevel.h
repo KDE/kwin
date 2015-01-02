@@ -149,6 +149,10 @@ class Toplevel
      */
     Q_PROPERTY(bool notification READ isNotification)
     /**
+     * Returns whether the window is an On Screen Display.
+     */
+    Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
+    /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
@@ -222,6 +226,7 @@ public:
     bool isPopupMenu() const; // a context popup, not dropdown, not torn-off
     bool isTooltip() const;
     bool isNotification() const;
+    bool isOnScreenDisplay() const;
     bool isComboBox() const;
     bool isDNDIcon() const;
 
@@ -581,6 +586,11 @@ inline bool Toplevel::isTooltip() const
 inline bool Toplevel::isNotification() const
 {
     return windowType() == NET::Notification;
+}
+
+inline bool Toplevel::isOnScreenDisplay() const
+{
+    return windowType() == NET::OnScreenDisplay;
 }
 
 inline bool Toplevel::isComboBox() const

@@ -39,11 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  the clients were created.
 
  Every window has one layer assigned in which it is. There are 7 layers,
- from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer, NotificationLayer
- and ActiveLayer (see also NETWM sect.7.10.). The layer a window is in depends
+ from bottom : DesktopLayer, BelowLayer, NormalLayer, DockLayer, AboveLayer, NotificationLayer,
+ ActiveLayer and OnScreenDisplayLayer (see also NETWM sect.7.10.). The layer a window is in depends
  on the window type, and on other things like whether the window is active. We extend the layers
- provided in NETWM by the NotificationLayer, which contains notification windows. Those are kept
- above all windows except the active fullscreen window.
+ provided in NETWM by the NotificationLayer and OnScreenDisplayLayer.
+ The NoficationLayer contains notification windows which are kept above all windows except the active
+ fullscreen window. The OnScreenDisplayLayer is used for eg. volume and brightness change feedback and
+ is kept above all windows since it provides immediate response to a user action.
 
  NET::Splash clients belong to the Normal layer. NET::TopMenu clients
  belong to Dock layer. Clients that are both NET::Dock and NET::KeepBelow
@@ -826,6 +828,8 @@ Layer Client::belongsToLayer() const
             return AboveLayer;
         return DockLayer;
     }
+    if (isOnScreenDisplay())
+        return OnScreenDisplayLayer;
     if (isNotification())
         return NotificationLayer;
     if (keepBelow())
@@ -834,6 +838,7 @@ Layer Client::belongsToLayer() const
         return ActiveLayer;
     if (keepAbove())
         return AboveLayer;
+
     return NormalLayer;
 }
 
