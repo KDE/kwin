@@ -139,7 +139,10 @@ QQmlComponent *Helper::component(const QString &themeName)
             m_svgComponent.reset(new QQmlComponent(m_engine.data()));
             m_svgComponent->loadUrl(QUrl(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/aurorae/aurorae.qml"))));
         }
-        return m_svgComponent.data();
+        // verify that the theme exists
+        if (!QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("aurorae/themes/%1/%1rc").arg(themeName.mid(16))).isEmpty()) {
+            return m_svgComponent.data();
+        }
     }
     // try finding the QML package
     auto it = m_components.constFind(themeName);

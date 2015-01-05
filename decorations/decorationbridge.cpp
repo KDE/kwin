@@ -47,6 +47,7 @@ namespace Decoration
 {
 
 static const QString s_pluginName = QStringLiteral("org.kde.kdecoration2");
+static const QString s_defaultPlugin = QStringLiteral("org.kde.breeze");
 
 KWIN_SINGLETON_FACTORY(DecorationBridge)
 
@@ -65,7 +66,7 @@ DecorationBridge::~DecorationBridge()
 
 static QString readPlugin()
 {
-    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("library", QStringLiteral("org.kde.breeze"));
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("library", s_defaultPlugin);
 }
 
 QString DecorationBridge::readTheme() const
@@ -78,6 +79,18 @@ void DecorationBridge::init()
     m_plugin = readPlugin();
     m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(this);
     initPlugin();
+    if (!m_factory) {
+        if (m_plugin != s_defaultPlugin) {
+            // try loading default plugin
+            m_plugin = s_defaultPlugin;
+            initPlugin();
+        }
+        // default plugin failed to load, try fallback
+        if (!m_factory) {
+            m_plugin = QStringLiteral("org.kde.kwin.aurorae");
+            initPlugin();
+        }
+    }
 }
 
 void DecorationBridge::initPlugin()
