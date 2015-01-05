@@ -2203,7 +2203,8 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     }
 
     // call into decoration update borders
-    if (m_decoration && m_decoration->client()) {
+    if (m_decoration && m_decoration->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
+        changeMaximizeRecursion = true;
         const auto c = m_decoration->client().data();
         if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
             emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
@@ -2214,6 +2215,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
             emit c->maximizedChanged(max_mode & MaximizeFull);
         }
+        changeMaximizeRecursion = false;
     }
 
     // save sizes for restoring, if maximalizing
