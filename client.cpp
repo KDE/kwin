@@ -1178,6 +1178,7 @@ void Client::map()
         exportMappingState(NormalState);
     } else
         exportMappingState(IconicState);
+    addLayerRepaint(visibleRect());
 }
 
 /**
