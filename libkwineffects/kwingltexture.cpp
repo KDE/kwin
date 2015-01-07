@@ -447,6 +447,8 @@ void GLTexture::unbind()
 void GLTexture::render(QRegion region, const QRect& rect, bool hardwareClipping)
 {
     Q_D(GLTexture);
+    if (rect.isEmpty())
+        return; // nothing to paint and m_vbo is likely nullptr and d->m_cachedSize empty as well, #337090
     if (rect.size() != d->m_cachedSize) {
         d->m_cachedSize = rect.size();
         QRect r(rect);
