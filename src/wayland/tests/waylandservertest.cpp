@@ -87,6 +87,11 @@ int main(int argc, char **argv)
     compositor->create();
     ShellInterface *shell = display.createShell();
     shell->create();
+    OutputInterface *output = display.createOutput(&display);
+    output->setPhysicalSize(QSize(10, 10));
+    output->addMode(QSize(1024, 768));
+    output->create();
+    display.createShm();
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();
@@ -95,7 +100,7 @@ int main(int argc, char **argv)
     }
 
     // need four roundtrips to dispatch events
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         display.dispatchEvents(1000);
     }
 
@@ -105,11 +110,6 @@ int main(int argc, char **argv)
     QGuiApplication app(argc, argv);
     display.startLoop();
 
-    display.createShm();
-    OutputInterface *output = display.createOutput(&display);
-    output->setPhysicalSize(QSize(10, 10));
-    output->addMode(QSize(1024, 768));
-    output->create();
     SeatInterface *seat = display.createSeat();
     seat->setName(QStringLiteral("testSeat0"));
     seat->create();
