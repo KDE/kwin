@@ -1101,7 +1101,7 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
     int oldRightMax = oldScreenArea.x() + oldScreenArea.width();
     int oldBottomMax = oldScreenArea.y() + oldScreenArea.height();
     int oldLeftMax = oldScreenArea.x();
-    const QRect screenArea = workspace()->clientArea(ScreenArea, this);
+    const QRect screenArea = workspace()->clientArea(ScreenArea, geom_restore.center(), desktop());
     int topMax = screenArea.y();
     int rightMax = screenArea.x() + screenArea.width();
     int bottomMax = screenArea.y() + screenArea.height();
