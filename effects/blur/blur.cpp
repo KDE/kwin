@@ -296,7 +296,7 @@ void BlurEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& data, int t
     const QRegion blurArea = blurRegion(w).translated(w->pos()) & screen;
     const QRegion expandedBlur = expand(blurArea) & screen;
 
-    if (m_shouldCache) {
+    if (m_shouldCache && !w->isDeleted()) {
         // we are caching the horizontally blurred background texture
 
         // if a window underneath the blurred area is damaged we have to
@@ -403,7 +403,7 @@ void BlurEffect::drawWindow(EffectWindow *w, int mask, QRegion region, WindowPai
         }
 
         if (!shape.isEmpty()) {
-            if (m_shouldCache && !translated) {
+            if (m_shouldCache && !translated && !w->isDeleted()) {
                 doCachedBlur(w, region, data.opacity());
             } else {
                 doBlur(shape, screen, data.opacity());
