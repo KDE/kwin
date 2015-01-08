@@ -76,14 +76,31 @@ Cursor::~Cursor()
 
 void Cursor::loadThemeSettings()
 {
-    KConfigGroup mousecfg(KSharedConfig::openConfig("kcminputrc", KConfig::NoGlobals), "Mouse");
-    m_themeName = mousecfg.readEntry("cursorTheme", "default");
+    QString themeName = QString::fromUtf8(qgetenv("XCURSOR_THEME"));
     bool ok = false;
-    m_themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
-    if (!ok) {
-        m_themeSize = 24;
+    uint themeSize = qgetenv("XCURSOR_SIZE").toUInt(&ok);
+    if (!themeName.isEmpty() && ok) {
+        updateTheme(themeName, themeSize);
+        return;
     }
-    emit themeChanged();
+    // didn't get from environment variables, read from config file
+    KConfigGroup mousecfg(KSharedConfig::openConfig("kcminputrc", KConfig::NoGlobals), "Mouse");
+    themeName = mousecfg.readEntry("cursorTheme", "default");
+    ok = false;
+    themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
+    if (!ok) {
+        themeSize = 24;
+    }
+    updateTheme(themeName, themeSize);
+}
+
+void Cursor::updateTheme(const QString &name, int size)
+{
+    if (m_themeName != name || m_themeSize != size) {
+        m_themeName = name;
+        m_themeSize = size;
+        emit themeChanged();
+    }
 }
 
 QPoint Cursor::pos()

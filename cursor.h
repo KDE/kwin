@@ -192,6 +192,7 @@ private Q_SLOTS:
     void loadThemeSettings();
 
 private:
+    void updateTheme(const QString &name, int size);
     QPoint m_pos;
     int m_mousePollingCounter;
     int m_cursorTrackingCounter;
