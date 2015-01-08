@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KSharedConfig>
 // Qt
+#include <QDBusConnection>
 #include <QTimer>
 // Xlib
 #include <X11/Xcursor/Xcursor.h>
@@ -64,9 +65,8 @@ Cursor::Cursor(QObject *parent)
     , m_themeSize(24)
 {
     loadThemeSettings();
-    // TODO: we need to connect for cursor theme changes
-    // in KDE4 times this was done through KGlobaSettings::cursorChanged
-    // which got emitted from the cursors KCM, this needs porting
+    QDBusConnection::sessionBus().connect(QString(), QStringLiteral("/KGlobalSettings"), QStringLiteral("org.kde.KGlobalSettings"),
+                                          QStringLiteral("notifyChange"), this, SLOT(slotKGlobalSettingsNotifyChange(int,int)));
 }
 
 Cursor::~Cursor()
@@ -84,10 +84,15 @@ void Cursor::loadThemeSettings()
         return;
     }
     // didn't get from environment variables, read from config file
+    loadThemeFromKConfig();
+}
+
+void Cursor::loadThemeFromKConfig()
+{
     KConfigGroup mousecfg(KSharedConfig::openConfig("kcminputrc", KConfig::NoGlobals), "Mouse");
-    themeName = mousecfg.readEntry("cursorTheme", "default");
-    ok = false;
-    themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
+    const QString themeName = mousecfg.readEntry("cursorTheme", "default");
+    bool ok = false;
+    uint themeSize = mousecfg.readEntry("cursorSize", QString("24")).toUInt(&ok);
     if (!ok) {
         themeSize = 24;
     }
@@ -100,6 +105,17 @@ void Cursor::updateTheme(const QString &name, int size)
         m_themeName = name;
         m_themeSize = size;
         emit themeChanged();
+    }
+}
+
+void Cursor::slotKGlobalSettingsNotifyChange(int type, int arg)
+{
+    Q_UNUSED(arg)
+    if (type == 5 /*CursorChanged*/) {
+        loadThemeFromKConfig();
+        // sync to environment
+        qputenv("XCURSOR_THEME", m_themeName.toUtf8());
+        qputenv("XCURSOR_SIZE", QByteArray::number(m_themeSize));
     }
 }
 
@@ -224,6 +240,8 @@ X11Cursor::X11Cursor(QObject *parent)
     // TODO: How often do we really need to poll?
     m_mousePollingTimer->setInterval(50);
     connect(m_mousePollingTimer, SIGNAL(timeout()), SLOT(mousePolled()));
+
+    connect(this, &Cursor::themeChanged, this, [this] { m_cursors.clear(); });
 }
 
 X11Cursor::~X11Cursor()
