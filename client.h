@@ -773,6 +773,8 @@ Q_SIGNALS:
     void skipSwitcherChanged();
     void skipTaskbarChanged();
     void skipPagerChanged();
+    void paletteChanged(const QPalette &p);
+
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
      * another group, but not when a Client gets added or removed to the Client's ClientGroup.

@@ -95,6 +95,8 @@ DecoratedClientImpl::DecoratedClientImpl(Client *client, KDecoration2::Decorated
     connect(client, &Client::shadeableChanged, decoratedClient, &KDecoration2::DecoratedClient::shadeableChanged);
     connect(client, &Client::minimizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::minimizeableChanged);
     connect(client, &Client::maximizeableChanged, decoratedClient, &KDecoration2::DecoratedClient::maximizeableChanged);
+
+    connect(client, &Client::paletteChanged, decoratedClient, &KDecoration2::DecoratedClient::paletteChanged);
 }
 
 DecoratedClientImpl::~DecoratedClientImpl() = default;

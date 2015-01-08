@@ -2299,6 +2299,7 @@ void Client::updateColorScheme()
     } else {
         m_palette = QApplication::palette();
     }
+    emit paletteChanged(m_palette);
     triggerDecorationRepaint();
 }
 
