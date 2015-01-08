@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_opengl.h"
 #include "x11eventfilter.h"
 
+#include <xcb/glx.h>
 #include <memory>
 
 namespace KWin
@@ -44,11 +45,12 @@ public:
 class SwapEventFilter : public X11EventFilter
 {
 public:
-    SwapEventFilter(xcb_drawable_t drawable);
+    SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable);
     bool event(xcb_generic_event_t *event) override;
 
 private:
     xcb_drawable_t m_drawable;
+    xcb_glx_drawable_t m_glxDrawable;
 };
 
 

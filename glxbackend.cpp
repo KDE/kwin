@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QOpenGLContext>
 // system
 #include <unistd.h>
-#include <xcb/glx.h>
 
 #include <deque>
 #include <algorithm>
@@ -79,9 +78,10 @@ namespace std {
 namespace KWin
 {
 
-SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable)
+SwapEventFilter::SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable)
     : X11EventFilter(Xcb::Extensions::self()->glxEventBase() + XCB_GLX_BUFFER_SWAP_COMPLETE),
-      m_drawable(drawable)
+      m_drawable(drawable),
+      m_glxDrawable(glxDrawable)
 {
 }
 
@@ -90,7 +90,10 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
     xcb_glx_buffer_swap_complete_event_t *ev =
             reinterpret_cast<xcb_glx_buffer_swap_complete_event_t *>(event);
 
-    if (ev->drawable == m_drawable) {
+    // The drawable field is the X drawable when the event was synthesized
+    // by a WireToEvent handler, and the GLX drawable when the event was
+    // received over the wire
+    if (ev->drawable == m_drawable || ev->drawable == m_glxDrawable) {
         Compositor::self()->bufferSwapComplete();
         return true;
     }
@@ -192,7 +195,7 @@ void GlxBackend::init()
     }
 
     if (m_haveINTELSwapEvent) {
-        m_swapEventFilter = std::make_unique<SwapEventFilter>(window);
+        m_swapEventFilter = std::make_unique<SwapEventFilter>(window, glxWindow);
         glXSelectEvent(display(), glxWindow, GLX_BUFFER_SWAP_COMPLETE_INTEL_MASK);
     }
 
