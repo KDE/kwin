@@ -28,11 +28,63 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/server/shell_interface.h"
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDateTime>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QWidget>
+#include <QtConcurrent>
+
+#include <unistd.h>
+#include <iostream>
+
+static int startXServer()
+{
+    const QByteArray process = QByteArrayLiteral("Xwayland");
+    int pipeFds[2];
+    if (pipe(pipeFds) != 0) {
+        std::cerr << "FATAL ERROR failed to create pipe to start X Server "
+                  << process.constData()
+                  << std::endl;
+        exit(1);
+    }
+
+    pid_t pid = fork();
+    if (pid == 0) {
+        // child process - should be turned into Xwayland
+        // writes to pipe, closes read side
+        close(pipeFds[0]);
+        char fdbuf[16];
+        sprintf(fdbuf, "%d", pipeFds[1]);
+        execlp(process.constData(), process.constData(), "-displayfd", fdbuf, "-rootless", (char *)0);
+        close(pipeFds[1]);
+        exit(20);
+    }
+    // parent process - this is the wayland server
+    // reads from pipe, closes write side
+    close(pipeFds[1]);
+    return pipeFds[0];
+}
+
+static void readDisplayFromPipe(int pipe)
+{
+    QFile readPipe;
+    if (!readPipe.open(pipe, QIODevice::ReadOnly)) {
+        std::cerr << "FATAL ERROR failed to open pipe to start X Server XWayland" << std::endl;
+        exit(1);
+    }
+    QByteArray displayNumber = readPipe.readLine();
+
+    displayNumber.prepend(QByteArray(":"));
+    displayNumber.remove(displayNumber.size() -1, 1);
+    std::cout << "X-Server started on display " << displayNumber.constData() << std::endl;
+
+    setenv("DISPLAY", displayNumber.constData(), true);
+
+    // close our pipe
+    close(pipe);
+}
 
 class CompositorWindow : public QWidget
 {
@@ -202,6 +254,13 @@ int main(int argc, char **argv)
     using namespace KWayland::Server;
     QApplication app(argc, argv);
 
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    QCommandLineOption xwaylandOption(QStringList{QStringLiteral("x"), QStringLiteral("xwayland")},
+                                      QStringLiteral("Start a rootless Xwayland server"));
+    parser.addOption(xwaylandOption);
+    parser.process(app);
+
     Display display;
     display.start();
     DataDeviceManagerInterface *ddm = display.createDataDeviceManager();
@@ -229,6 +288,17 @@ int main(int argc, char **argv)
     compositorWindow.setGeometry(QRect(QPoint(0, 0), windowSize));
     compositorWindow.show();
     QObject::connect(shell, &ShellInterface::surfaceCreated, &compositorWindow, &CompositorWindow::surfaceCreated);
+
+    // start XWayland
+    if (parser.isSet(xwaylandOption)) {
+        // starts XWayland by forking and opening a pipe
+        const int pipe = startXServer();
+        if (pipe == -1) {
+            exit(1);
+        }
+
+        QtConcurrent::run([pipe] { readDisplayFromPipe(pipe); });
+    }
 
     return app.exec();
 }
