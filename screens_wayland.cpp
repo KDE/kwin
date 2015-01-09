@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "wayland_backend.h"
 #include <KWayland/Client/output.h>
+#include "main.h"
 #include "utils.h"
 #include "xcbutils.h"
 
@@ -208,6 +209,10 @@ static bool addModeToOutput(xcb_randr_output_t output, xcb_randr_mode_t mode)
 
 void WaylandScreens::updateXRandr()
 {
+    if (kwinApp()->operationMode() == Application::OperationModeXwayland) {
+        // no need to update, will be done automagically by Xwayland
+        return;
+    }
     if (!Xcb::Extensions::self()->isRandrAvailable()) {
         qCDebug(KWIN_CORE) << "No RandR extension available, cannot sync with X";
         return;
