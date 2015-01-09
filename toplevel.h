@@ -187,6 +187,11 @@ class Toplevel
      * window being captured.
      **/
     Q_PROPERTY(bool skipsCloseAnimation READ skipsCloseAnimation WRITE setSkipCloseAnimation NOTIFY skipCloseAnimationChanged)
+    /**
+     * The Id of the Wayland Surface associated with this Toplevel.
+     * On X11 only setups the value is @c 0.
+     **/
+    Q_PROPERTY(quint32 surfaceId READ surfaceId NOTIFY surfaceIdChanged)
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
@@ -338,6 +343,8 @@ public:
     bool skipsCloseAnimation() const;
     void setSkipCloseAnimation(bool set);
 
+    quint32 surfaceId() const;
+
     virtual void sendPointerMoveEvent(const QPointF &globalPos);
     virtual void sendPointerEnterEvent(const QPointF &globalPos);
     virtual void sendPointerLeaveEvent(const QPointF &globalPos);
@@ -395,6 +402,11 @@ Q_SIGNALS:
      * @since 5.0
      **/
     void windowClassChanged();
+    /**
+     * Emitted when a Wayland Surface gets associated with this Toplevel.
+     * @since 5.3
+     **/
+    void surfaceIdChanged(quint32);
 
 protected Q_SLOTS:
     /**
@@ -412,6 +424,7 @@ protected:
     void detectShape(Window id);
     virtual void propertyNotifyEvent(xcb_property_notify_event_t *e);
     virtual void damageNotifyEvent();
+    virtual void clientMessageEvent(xcb_client_message_event_t *e);
     void discardWindowPixmap();
     void addDamageFull();
     Xcb::Property fetchWmClientLeader() const;
@@ -468,6 +481,7 @@ private:
     xcb_xfixes_fetch_region_cookie_t m_regionCookie;
     int m_screen;
     bool m_skipCloseAnimation;
+    quint32 m_surfaceId = 0;
     // when adding new data members, check also copyToDeleted()
 };
 
@@ -697,6 +711,11 @@ inline bool Toplevel::unredirected() const
 inline const ClientMachine *Toplevel::clientMachine() const
 {
     return m_clientMachine;
+}
+
+inline quint32 Toplevel::surfaceId() const
+{
+    return m_surfaceId;
 }
 
 template <class T>

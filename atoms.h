@@ -67,6 +67,7 @@ public:
     Xcb::Atom gtk_frame_extents;
     Xcb::Atom kwin_dbus_service;
     Xcb::Atom utf8_string;
+    Xcb::Atom wl_surface_id;
 
     /**
      * @internal

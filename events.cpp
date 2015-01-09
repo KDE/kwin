@@ -823,6 +823,7 @@ void Client::destroyNotifyEvent(xcb_destroy_notify_event_t *e)
 */
 void Client::clientMessageEvent(xcb_client_message_event_t *e)
 {
+    Toplevel::clientMessageEvent(e);
     if (e->window != window())
         return; // ignore frame/wrapper
     // WM_STATE
@@ -1632,6 +1633,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
     case XCB_PROPERTY_NOTIFY:
         propertyNotifyEvent(reinterpret_cast<xcb_property_notify_event_t*>(e));
         break;
+    case XCB_CLIENT_MESSAGE:
+        clientMessageEvent(reinterpret_cast<xcb_client_message_event_t*>(e));
+        break;
     default: {
         if (eventType == Xcb::Extensions::self()->shapeNotifyEvent()) {
             detectShape(window());
@@ -1685,5 +1689,12 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
     emit propertyNotify(this, e->atom);
 }
 
+void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
+{
+    if (e->type == atoms->wl_surface_id) {
+        m_surfaceId = e->data.data32[0];
+        emit surfaceIdChanged(m_surfaceId);
+    }
+}
 
 } // namespace
