@@ -273,6 +273,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     if (parser.isSet(xwaylandOption)) {
         a.setOperationMode(KWin::Application::OperationModeXwayland);
+
+        // create selection owner for WM_S0 - magic X display number expected by XWayland
+        KSelectionOwner owner("WM_S0");
+        owner.claim(true);
     }
 
     // perform sanity checks
