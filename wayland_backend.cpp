@@ -351,6 +351,10 @@ wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
     if (!m_theme) {
         loadTheme();
     }
+    if (!m_theme) {
+        // loading cursor failed
+        return nullptr;
+    }
     wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, Cursor::self()->cursorName(shape).constData());
     if (!c || c->image_count <= 0) {
         return nullptr;
