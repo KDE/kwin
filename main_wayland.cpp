@@ -109,7 +109,7 @@ void ApplicationWayland::performStartup()
  * Starts the X-Server with binary name @p process on @p display.
  * The new process is started by forking into it.
  **/
-static void startXServer(const QByteArray &process, const QByteArray &display)
+static void startXServer(const QByteArray &process, const QByteArray &display, bool rootless = false)
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -128,11 +128,19 @@ static void startXServer(const QByteArray &process, const QByteArray &display)
         close(pipeFds[0]);
         char fdbuf[16];
         sprintf(fdbuf, "%d", pipeFds[1]);
-        if (display.isEmpty()) {
-            execlp(process.constData(), process.constData(), "-displayfd", fdbuf, (char *)0);
-        } else {
-            execlp(process.constData(), process.constData(), "-displayfd", fdbuf, display.constData(), (char *)0);
+        char *args[5];
+        char **index = args;
+        *index++ = const_cast<char*>(process.constData());
+        *index++ = "-displayfd";
+        *index++ = fdbuf;
+        if (rootless) {
+            *index++ = "-rootless";
         }
+        if (!display.isEmpty()) {
+            *index++ = const_cast<char*>(display.data());
+        }
+        *index++ = nullptr;
+        execvp(process.constData(), args);
         close(pipeFds[1]);
         exit(20);
     }
@@ -170,6 +178,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     bool startXephyr = false;
     bool startXvfb = false;
     bool startXwayland = false;
+    bool rootlessXwayland = false;
     QByteArray xDisplay;
     QByteArray xServer;
     for (int i = 1; i < argc; ++i) {
@@ -188,6 +197,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
             }
             continue;
         }
+        if (arg == "--xwayland") {
+            startXwayland = true;
+            rootlessXwayland = true;
+        }
         if (arg == "--display") {
             if (++i < argc) {
                 xDisplay = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
@@ -202,7 +215,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         KWin::startXServer(QByteArrayLiteral("Xvfb"), xDisplay);
     }
     if (startXwayland) {
-        KWin::startXServer(QByteArrayLiteral("Xwayland"), xDisplay);
+        KWin::startXServer(QByteArrayLiteral("Xwayland"), xDisplay, rootlessXwayland);
     }
 
     KWin::Application::setupMalloc();
@@ -234,6 +247,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineOption startXServerOption(QStringList({QStringLiteral("x"), QStringLiteral("x-server")}),
                                           i18n("Start a nested X Server."),
                                           QStringLiteral("xephyr|xvfb|xwayland"));
+    QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
+                                      i18n("Start a rootless Xwayland server. Implies --x-server=xwayland."));
     QCommandLineOption x11DisplayOption(QStringLiteral("display"),
                                         i18n("The X11 Display to connect to. If not set next free number will be picked."),
                                         QStringLiteral("display"));
@@ -241,6 +256,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(startXServerOption);
+    parser.addOption(xwaylandOption);
     parser.addOption(x11DisplayOption);
 #if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
@@ -254,6 +270,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 #if HAVE_INPUT
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
+
+    if (parser.isSet(xwaylandOption)) {
+        a.setOperationMode(KWin::Application::OperationModeXwayland);
+    }
 
     // perform sanity checks
     // TODO: remove those two

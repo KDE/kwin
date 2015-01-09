@@ -1332,6 +1332,9 @@ QString Workspace::supportInformation() const
     case Application::OperationModeWaylandAndX11:
         support.append(QStringLiteral("Wayland and X11"));
         break;
+    case Application::OperationModeXwayland:
+        support.append(QStringLiteral("Xwayland"));
+        break;
     }
     support.append(QStringLiteral("\n\n"));
     if (auto bridge = Decoration::DecorationBridge::self()) {

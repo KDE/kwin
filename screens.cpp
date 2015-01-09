@@ -42,7 +42,7 @@ Screens *Screens::create(QObject *parent)
     s_self = new MockScreens(parent);
 #else
 #if HAVE_WAYLAND
-    if (kwinApp()->operationMode() == Application::OperationModeWaylandAndX11) {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
         s_self = new WaylandScreens(parent);
     }
 #endif

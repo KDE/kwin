@@ -170,7 +170,7 @@ void Application::setOperationMode(OperationMode mode)
 
 bool Application::shouldUseWaylandForCompositing() const
 {
-    return m_operationMode == OperationModeWaylandAndX11;
+    return m_operationMode == OperationModeWaylandAndX11 || m_operationMode == OperationModeXwayland;
 }
 
 bool Application::requiresCompositing() const
