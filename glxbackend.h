@@ -98,12 +98,13 @@ private:
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;
     int m_bufferAge;
-    bool m_haveMESACopySubBuffer;
-    bool m_haveMESASwapControl;
-    bool m_haveEXTSwapControl;
-    bool m_haveSGISwapControl;
-    bool m_haveINTELSwapEvent;
-    bool haveSwapInterval, haveWaitSync;
+    bool m_haveMESACopySubBuffer = false;
+    bool m_haveMESASwapControl = false;
+    bool m_haveEXTSwapControl = false;
+    bool m_haveSGISwapControl = false;
+    bool m_haveINTELSwapEvent = false;
+    bool haveSwapInterval = false;
+    bool haveWaitSync = false;
     friend class GlxTexture;
 };
 
