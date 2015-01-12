@@ -312,10 +312,10 @@ void Application::registerDBusService()
 
 void Application::setupTranslator()
 {
-    QTranslator qtTranslator;
-    qtTranslator.load("qt_" + QLocale::system().name(),
-                      QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-    installTranslator(&qtTranslator);
+    QTranslator *qtTranslator = new QTranslator(qApp);
+    qtTranslator->load("qt_" + QLocale::system().name(),
+                       QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    installTranslator(qtTranslator);
 }
 
 void Application::setupMalloc()
