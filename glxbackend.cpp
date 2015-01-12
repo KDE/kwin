@@ -183,7 +183,9 @@ void GlxBackend::init()
     m_haveMESASwapControl   = hasGLExtension(QByteArrayLiteral("GLX_MESA_swap_control"));
     m_haveEXTSwapControl    = hasGLExtension(QByteArrayLiteral("GLX_EXT_swap_control"));
     m_haveSGISwapControl    = hasGLExtension(QByteArrayLiteral("GLX_SGI_swap_control"));
-    m_haveINTELSwapEvent    = hasGLExtension(QByteArrayLiteral("GLX_INTEL_swap_event"));
+    // only enable Intel swap event if env variable is set, see BUG 342582
+    m_haveINTELSwapEvent    = hasGLExtension(QByteArrayLiteral("GLX_INTEL_swap_event"))
+                                && qgetenv("KWIN_USE_INTEL_SWAP_EVENT") == QByteArrayLiteral("1");
 
     if (m_haveINTELSwapEvent) {
         const QList<QByteArray> tokens = QByteArray(qVersion()).split('.');
