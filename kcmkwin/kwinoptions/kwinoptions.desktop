@@ -129,11 +129,9 @@ Comment[sr@ijekavian]=Понашање прозора и радње над њи�
 Comment[sr@ijekavianlatin]=Ponašanje prozora i radnje nad njima
 Comment[sr@latin]=Ponašanje prozora i radnje nad njima
 Comment[sv]=Fönsteråtgärder och beteende
-Comment[tr]=Pencere Eylem ve Davranışları
 Comment[uk]=Реакція і поведінка вікон
 Comment[x-test]=xxWindow Actions and Behaviorxx
 Comment[zh_CN]=窗口行为
-Comment[zh_TW]=視窗動作與行為
 
 X-KDE-Keywords=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 X-KDE-Keywords[ca]=focus,emplaçament,comportament de finestra,accions de la finestra,animació,elevació,elevació automàtica,finestres,marc,barra de títol,clic doble
@@ -162,11 +160,9 @@ X-KDE-Keywords[sr@ijekavian]=focus,placement,window behavior,window actions,anim
 X-KDE-Keywords[sr@ijekavianlatin]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,fokus,postavljenje,ponašanje prozora,radnje nad prozorima,animacija,podigni,automatsko podizanje,prozor,okvir,naslovna traka,dvoklik
 X-KDE-Keywords[sr@latin]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,fokus,postavljenje,ponašanje prozora,radnje nad prozorima,animacija,podigni,automatsko podizanje,prozor,okvir,naslovna traka,dvoklik
 X-KDE-Keywords[sv]=fokus,placering,fönsterbeteende,animering,höj,höj automatiskt,fönster,ram,namnlist,dubbelklick
-X-KDE-Keywords[tr]=odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,yükselt,otomatik yükselt,pencereler,çerçeve,başlık çubuğu,çift tıklama
 X-KDE-Keywords[uk]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне
 X-KDE-Keywords[x-test]=xxfocus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclickxx
 X-KDE-Keywords[zh_CN]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,焦点,位置,窗口行为,窗口动作,动画,升起,自动升起,窗口,边框,标题栏,双击
-X-KDE-Keywords[zh_TW]=focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick
 
 Categories=Qt;KDE;X-KDE-settings-looknfeel;
 
