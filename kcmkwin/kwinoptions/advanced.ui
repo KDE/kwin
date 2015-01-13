@@ -110,8 +110,7 @@
          </sizepolicy>
         </property>
         <property name="whatsThis">
-         <string>The placement policy determines where a new window will appear on the desktop.
-&lt;ul&gt;
+         <string>The placement policy determines where a new window will appear on the desktop.&lt;br&gt;&lt;ul&gt;
 &lt;li&gt;&lt;em&gt;Smart&lt;/em&gt; will try to achieve a minimum overlap of windows&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Maximizing&lt;/em&gt; will try to maximize every window to fill the whole screen. It might be useful to selectively affect placement of some windows using the window-specific settings.&lt;/li&gt;
 &lt;li&gt;&lt;em&gt;Cascade&lt;/em&gt; will cascade the windows&lt;/li&gt;
