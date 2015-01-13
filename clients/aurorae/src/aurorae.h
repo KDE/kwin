@@ -128,8 +128,11 @@ public:
 
 private:
     void init();
+    void initSvg();
+    void initQml();
     QString m_theme;
     KConfigLoader *m_skeleton = nullptr;
+    int m_buttonSize;
 };
 
 }

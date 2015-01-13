@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigLoader>
 #include <KConfigDialogManager>
 #include <KDesktopFile>
+#include <KLocalizedString>
 #include <KLocalizedTranslator>
 #include <KPluginFactory>
 #include <KSharedConfig>
@@ -36,8 +37,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KServiceTypeTrader>
 // Qt
 #include <QDebug>
+#include <QComboBox>
 #include <QDirIterator>
 #include <QGuiApplication>
+#include <QLabel>
 #include <QStyleHints>
 #include <QOffscreenSurface>
 #include <QOpenGLContext>
@@ -122,6 +125,12 @@ void Helper::unref()
 }
 
 static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
+/*
+ * KDecoration2::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
+ * BorderSize defines None and NoSideBorder as index 0 and 1. These do not make sense for Button
+ * Size, thus we need to perform a mapping between the enum value and the config value.
+ **/
+static const int s_indexMapper = 2;
 
 QQmlComponent *Helper::component(const QString &themeName)
 {
@@ -310,12 +319,19 @@ void Decoration::init()
         const QString themeName = m_themeName.mid(16);
         KConfig config(QStringLiteral("aurorae/themes/") + themeName + QStringLiteral("/") + themeName + QStringLiteral("rc"),
                        KConfig::FullConfig, QStandardPaths::GenericDataLocation);
-//         KConfigGroup themeGroup(&conf, themeName);
         AuroraeTheme *theme = new AuroraeTheme(this);
         theme->loadTheme(themeName, config);
         theme->setBorderSize(s->borderSize());
         connect(s.data(), &KDecoration2::DecorationSettings::borderSizeChanged, theme, &AuroraeTheme::setBorderSize);
-//         m_theme->setButtonSize((KDecorationDefines::BorderSize)themeGroup.readEntry<int>("ButtonSize", KDecorationDefines::BorderNormal));
+        auto readButtonSize = [this, theme] {
+            const KSharedConfigPtr conf = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
+            const KConfigGroup themeGroup(conf, m_themeName.mid(16));
+            theme->setButtonSize((KDecoration2::BorderSize)(themeGroup.readEntry<int>("ButtonSize",
+                                                                                      int(KDecoration2::BorderSize::Normal) - s_indexMapper) + s_indexMapper));
+            updateBorders();
+        };
+        connect(this, &Decoration::configChanged, theme, readButtonSize);
+        readButtonSize();
 //         m_theme->setTabDragMimeType(tabDragMimeType());
         context->setContextProperty(QStringLiteral("auroraeTheme"), theme);
     }
@@ -689,7 +705,7 @@ static const QString s_configXmlPath = QStringLiteral("kwin/decorations/%1/conte
 bool ThemeFinder::hasConfiguration(const QString &theme) const
 {
     if (theme.startsWith(QLatin1String("__aurorae__svg__"))) {
-        return false;
+        return true;
     }
     const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                               s_configUiPath.arg(theme));
@@ -701,12 +717,53 @@ bool ThemeFinder::hasConfiguration(const QString &theme) const
 ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &args)
     : KCModule(parent, args)
     , m_theme(findTheme(args))
+    , m_buttonSize(int(KDecoration2::BorderSize::Normal) - s_indexMapper)
 {
     setLayout(new QVBoxLayout(this));
     init();
 }
 
 void ConfigurationModule::init()
+{
+    if (m_theme.startsWith(QLatin1String("__aurorae__svg__"))) {
+        // load the generic setting module
+        initSvg();
+    } else {
+        initQml();
+    }
+}
+
+void ConfigurationModule::initSvg()
+{
+    QWidget *form = new QWidget(this);
+    form->setLayout(new QHBoxLayout(form));
+    QComboBox *sizes = new QComboBox(form);
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Tiny"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Normal"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Large"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Very Large"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Huge"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Very Huge"));
+    sizes->addItem(i18nc("@item:inlistbox Button size:", "Oversized"));
+    sizes->setObjectName(QStringLiteral("kcfg_ButtonSize"));
+
+    QLabel *label = new QLabel(i18n("Button size:"), form);
+    label->setBuddy(sizes);
+    form->layout()->addWidget(label);
+    form->layout()->addWidget(sizes);
+
+    layout()->addWidget(form);
+
+    KCoreConfigSkeleton *skel = new KCoreConfigSkeleton(KSharedConfig::openConfig(QStringLiteral("auroraerc")), this);
+    skel->setCurrentGroup(m_theme.mid(16));
+    skel->addItemInt(QStringLiteral("ButtonSize"),
+                     m_buttonSize,
+                     int(KDecoration2::BorderSize::Normal) - s_indexMapper,
+                     QStringLiteral("ButtonSize"));
+    addConfig(skel, form);
+}
+
+void ConfigurationModule::initQml()
 {
     const QString ui = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                               s_configUiPath.arg(m_theme));
