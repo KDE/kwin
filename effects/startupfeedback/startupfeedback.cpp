@@ -197,7 +197,12 @@ void StartupFeedbackEffect::paintScreen(int mask, QRegion region, ScreenPaintDat
             }
         } else {
             useShader = true;
-            ShaderManager::instance()->pushShader(ShaderManager::SimpleShader);
+            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+            QMatrix4x4 mvp;
+            const QSize size = effects->virtualScreenSize();
+            mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
+            mvp.translate(m_currentGeometry.x(), m_currentGeometry.y());
+            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
         }
         texture->render(m_currentGeometry, m_currentGeometry);
         if (useShader) {
