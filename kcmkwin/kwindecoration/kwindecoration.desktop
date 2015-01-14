@@ -101,11 +101,9 @@ Comment[sr@ijekavian]=Изглед и осјећај за наслове про�
 Comment[sr@ijekavianlatin]=Izgled i osjećaj za naslove prozora
 Comment[sr@latin]=Izgled i osećaj za naslove prozora
 Comment[sv]=Namnlisternas utseende och känsla
-Comment[tr]=Pencere Başlıklarının Görünüm ve Davranışlarını Yapılandır
 Comment[uk]=Вигляд і поведінка смужок заголовків вікон
 Comment[x-test]=xxLook and Feel of Window Titlesxx
 Comment[zh_CN]=窗口标题的观感
-Comment[zh_TW]=視窗標題列的外觀與感覺
 
 X-KDE-Keywords=kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration
 X-KDE-Keywords[bs]=kwin,prozor,upravitelj,granica,stil,tema,izgled,osjećati,izgled,dugme,držati,ivica,kwm,dekoracija
