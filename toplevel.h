@@ -414,6 +414,8 @@ protected:
     virtual void damageNotifyEvent();
     void discardWindowPixmap();
     void addDamageFull();
+    Xcb::Property fetchWmClientLeader() const;
+    void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
     void getWmClientMachine();
     /**

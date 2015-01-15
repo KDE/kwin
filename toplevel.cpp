@@ -145,10 +145,20 @@ QRect Toplevel::visibleRect() const
     return r.translated(geometry().topLeft());
 }
 
+Xcb::Property Toplevel::fetchWmClientLeader() const
+{
+    return Xcb::Property(false, window(), atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
+}
+
+void Toplevel::readWmClientLeader(Xcb::Property &prop)
+{
+    wmClientLeaderWin = prop.value<xcb_window_t>(window());
+}
+
 void Toplevel::getWmClientLeader()
 {
-    Xcb::Property prop(false, window(), atoms->wm_client_leader, XCB_ATOM_WINDOW, 0, 10000);
-    wmClientLeaderWin = prop.value<xcb_window_t>(window());
+    auto prop = fetchWmClientLeader();
+    readWmClientLeader(prop);
 }
 
 /*!

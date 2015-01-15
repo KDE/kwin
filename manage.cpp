@@ -97,6 +97,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2Protocols |
         NET::WM2InitialMappingState;
 
+    auto wmClientLeaderCookie = fetchWmClientLeader();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -105,7 +106,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     m_colormap = attr->colormap;
 
     getResourceClass();
-    getWmClientLeader();
+    readWmClientLeader(wmClientLeaderCookie);
     getWmClientMachine();
     getSyncCounter();
     // First only read the caption text, so that setupWindowRules() can use it for matching,
