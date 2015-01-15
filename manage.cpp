@@ -71,15 +71,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     // SELI TODO: Order all these things in some sane manner
 
-    bool init_minimize = false;
-    XWMHints* hints = XGetWMHints(display(), w);
-    if (hints && (hints->flags & StateHint) && hints->initial_state == IconicState)
-        init_minimize = true;
-    if (hints)
-        XFree(hints);
-    if (isMapped)
-        init_minimize = false; // If it's already mapped, ignore hint
-
     const NET::Properties properties =
         NET::WMDesktop |
         NET::WMState |
@@ -103,9 +94,13 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2GroupLeader |
         NET::WM2Urgency |
         NET::WM2Input |
-        NET::WM2Protocols;
+        NET::WM2Protocols |
+        NET::WM2InitialMappingState;
 
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
+
+    // If it's already mapped, ignore hint
+    bool init_minimize = !isMapped && (info->initialMappingState() == NET::Iconic);
 
     m_colormap = attr->colormap;
 
