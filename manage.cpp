@@ -99,6 +99,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
+    auto gtkFrameExtentsCookie = fetchGtkFrameExtents();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -120,7 +121,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     if (Xcb::Extensions::self()->isShapeAvailable())
         xcb_shape_select_input(connection(), window(), true);
     detectShape(window());
-    detectGtkFrameExtents();
+    readGtkFrameExtents(gtkFrameExtentsCookie);
     detectNoBorder();
     fetchIconicName();
 

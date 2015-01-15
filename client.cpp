@@ -659,11 +659,21 @@ void Client::updateFrameExtents()
     info->setFrameExtents(strut);
 }
 
-void Client::detectGtkFrameExtents()
+Xcb::Property Client::fetchGtkFrameExtents() const
 {
-    Xcb::Property prop(false, m_client, atoms->gtk_frame_extents, XCB_ATOM_CARDINAL, 0, 4);
+    return Xcb::Property(false, m_client, atoms->gtk_frame_extents, XCB_ATOM_CARDINAL, 0, 4);
+}
+
+void Client::readGtkFrameExtents(Xcb::Property &prop)
+{
     m_clientSideDecorated = !prop.isNull() && prop->type != 0;
     emit clientSideDecoratedChanged();
+}
+
+void Client::detectGtkFrameExtents()
+{
+    Xcb::Property prop = fetchGtkFrameExtents();
+    readGtkFrameExtents(prop);
 }
 
 /**

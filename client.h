@@ -864,6 +864,8 @@ private:
 
     void embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth);
     void detectNoBorder();
+    Xcb::Property fetchGtkFrameExtents() const;
+    void readGtkFrameExtents(Xcb::Property &prop);
     void detectGtkFrameExtents();
     void destroyDecoration();
     void updateFrameExtents();
