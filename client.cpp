@@ -2299,10 +2299,14 @@ void Client::updateFirstInTabBox()
     setFirstInTabBox(property.toBool(32, atoms->kde_first_in_window_list));
 }
 
-void Client::updateColorScheme()
+Xcb::StringProperty Client::fetchColorScheme() const
 {
-    // TODO: move into KWindowInfo
-    QString path = QString::fromUtf8(Xcb::StringProperty(m_client, atoms->kde_color_sheme));
+    return Xcb::StringProperty(m_client, atoms->kde_color_sheme);
+}
+
+void Client::readColorScheme(Xcb::StringProperty &property)
+{
+    QString path = QString::fromUtf8(property);
     path = rules()->checkDecoColor(path);
     QPalette p = m_palette;
     if (!path.isEmpty()) {
@@ -2315,6 +2319,12 @@ void Client::updateColorScheme()
         emit paletteChanged(m_palette);
         triggerDecorationRepaint();
     }
+}
+
+void Client::updateColorScheme()
+{
+    Xcb::StringProperty property = fetchColorScheme();
+    readColorScheme(property);
 }
 
 bool Client::isClient() const

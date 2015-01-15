@@ -101,6 +101,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     auto gtkFrameExtentsCookie = fetchGtkFrameExtents();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
+    auto colorSchemeCookie = fetchColorScheme();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -635,7 +636,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setBlockingCompositing(info->isBlockingCompositing());
-    updateColorScheme();
+    readColorScheme(colorSchemeCookie);
     readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     // TODO: there's a small problem here - isManaged() depends on the mapping state,

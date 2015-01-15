@@ -655,6 +655,8 @@ public:
         m_firstInTabBox = enable;
     }
     void updateFirstInTabBox();
+    Xcb::StringProperty fetchColorScheme() const;
+    void readColorScheme(Xcb::StringProperty &property);
     void updateColorScheme();
 
     //sets whether the client should be treated as a SessionInteract window
