@@ -128,9 +128,11 @@ Comment[sr@ijekavian]=Радње мишем над прозорима
 Comment[sr@ijekavianlatin]=Radnje mišem nad prozorima
 Comment[sr@latin]=Radnje mišem nad prozorima
 Comment[sv]=Musåtgärder för fönster
+Comment[tr]=Pencerelerde Fare Eylemleri
 Comment[uk]=Дії над вікнами за допомогою миші
 Comment[x-test]=xxMouse Actions on Windowsxx
 Comment[zh_CN]=窗口的鼠标动作
+Comment[zh_TW]=視窗上的滑鼠動作
 
 X-KDE-Keywords=shade,maximise,maximize,minimize,minimise,lower,operations menu,titlebar,resize
 X-KDE-Keywords[bs]=sjena,povećali,povećala,smanjiti,umanjiti,sniziti,izbornik operacija,naslovnica,promjena veličine

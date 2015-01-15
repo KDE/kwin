@@ -124,9 +124,11 @@ Comment[sr@ijekavian]=Смерница активирања прозора
 Comment[sr@ijekavianlatin]=Smernica aktiviranja prozora
 Comment[sr@latin]=Smernica aktiviranja prozora
 Comment[sv]=Aktiv fönsterprincip
+Comment[tr]=Etkin Pencere Politikası
 Comment[uk]=Правила для задіяння вікон
 Comment[x-test]=xxActive Window Policyxx
 Comment[zh_CN]=活动窗口策略
+Comment[zh_TW]=作用中視窗政策
 
 X-KDE-Keywords=focus,placement,auto raise,raise,click raise,keyboard,CDE,alt-tab,all desktop,focus follows mouse,focus prevention,focus stealing,focus policy,window focus behavior,window screen behavior
 X-KDE-Keywords[bs]=fokus, smještaj, automatski rast, rast, kliknite na rast, tastatura, CDE, Alt-Tab, cijeli desktop, fokus slijedi miša, fokus prevenciju, usredotoči krade, fokus politike, fokus prozora ponašanje, prozor zaslon ponašanje

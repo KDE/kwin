@@ -102,9 +102,11 @@ Comment[sr@ijekavian]=Понашање појединачних прозора
 Comment[sr@ijekavianlatin]=Ponašanje pojedinačnih prozora
 Comment[sr@latin]=Ponašanje pojedinačnih prozora
 Comment[sv]=Individuellt fönsterbeteende
+Comment[tr]=Bireysel Pencere Davranışı
 Comment[uk]=Поведінка окремих вікон
 Comment[x-test]=xxIndividual Window Behaviorxx
 Comment[zh_CN]=个别窗口行为
+Comment[zh_TW]=個別視窗行為
 
 X-KDE-Keywords=size,position,state,window behavior,windows,specific,workarounds,remember,rules
 X-KDE-Keywords[bs]=veličina,pozicija,grad,reagiranje prozora,prozori,specifičan,workarounds,sjećati se,pravila
