@@ -2383,9 +2383,13 @@ xcb_window_t Client::frameId() const
     return m_frame;
 }
 
-void Client::updateShowOnScreenEdge()
+Xcb::Property Client::fetchShowOnScreenEdge() const
 {
-    Xcb::Property property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
+    return Xcb::Property(false, window(), atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 0, 1);
+}
+
+void Client::readShowOnScreenEdge(Xcb::Property &property)
+{
     const uint32_t value = property.value<uint32_t>(ElectricNone);
     ElectricBorder border = ElectricNone;
     switch (value) {
@@ -2415,6 +2419,12 @@ void Client::updateShowOnScreenEdge()
         ScreenEdges::self()->reserve(this, ElectricNone);
         hideClient(false);
     }
+}
+
+void Client::updateShowOnScreenEdge()
+{
+    Xcb::Property property = fetchShowOnScreenEdge();
+    readShowOnScreenEdge(property);
 }
 
 void Client::showOnScreenEdge()

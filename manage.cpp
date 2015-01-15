@@ -100,6 +100,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     auto gtkFrameExtentsCookie = fetchGtkFrameExtents();
+    auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -635,7 +636,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     setBlockingCompositing(info->isBlockingCompositing());
     updateColorScheme();
-    updateShowOnScreenEdge();
+    readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     // TODO: there's a small problem here - isManaged() depends on the mapping state,
     // but this client is not yet in Workspace's client list at this point, will

@@ -890,6 +890,8 @@ private:
 
     bool tabTo(Client *other, bool behind, bool activate);
 
+    Xcb::Property fetchShowOnScreenEdge() const;
+    void readShowOnScreenEdge(Xcb::Property &property);
     /**
      * Reads the property and creates/destroys the screen edge if required
      * and shows/hides the client.
