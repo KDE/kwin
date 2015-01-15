@@ -670,11 +670,22 @@ ToplevelList Workspace::xStackingOrder() const
     x_stacking.append(c);
 
     xcb_window_t *windows = tree.children();
+    const auto count = tree->children_len;
+    int foundUnmanagedCount = unmanaged.count();
     for (unsigned int i = 0;
-            i < tree->children_len;
+            i < count;
             ++i) {
-        if (Unmanaged* c = findUnmanaged(windows[i]))
-            x_stacking.append(c);
+        for (auto it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it) {
+            Unmanaged *u = *it;
+            if (u->window() == windows[i]) {
+                x_stacking.append(u);
+                foundUnmanagedCount--;
+                break;
+            }
+        }
+        if (foundUnmanagedCount == 0) {
+            break;
+        }
     }
     if (m_compositor) {
         const_cast< Workspace* >(this)->m_compositor->checkUnredirect();
