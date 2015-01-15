@@ -2294,13 +2294,17 @@ void Client::updateColorScheme()
     // TODO: move into KWindowInfo
     QString path = QString::fromUtf8(Xcb::StringProperty(m_client, atoms->kde_color_sheme));
     path = rules()->checkDecoColor(path);
-    if (!path.isNull()) {
-        m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
+    QPalette p = m_palette;
+    if (!path.isEmpty()) {
+        p = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
     } else {
-        m_palette = QApplication::palette();
+        p = QApplication::palette();
     }
-    emit paletteChanged(m_palette);
-    triggerDecorationRepaint();
+    if (p != m_palette) {
+        m_palette = p;
+        emit paletteChanged(m_palette);
+        triggerDecorationRepaint();
+    }
 }
 
 bool Client::isClient() const
