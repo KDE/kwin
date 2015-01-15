@@ -1036,6 +1036,8 @@ private:
 
     friend bool performTransiencyCheck();
 
+    Xcb::StringProperty fetchActivities() const;
+    void readActivities(Xcb::StringProperty &property);
     void checkActivities();
     bool activitiesDefined; //whether the x property was actually set
 

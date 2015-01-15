@@ -104,6 +104,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto colorSchemeCookie = fetchColorScheme();
     auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
+    auto activitiesCookie = fetchActivities();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -170,7 +171,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     init_minimize = rules()->checkMinimize(init_minimize, !isMapped);
     noborder = rules()->checkNoBorder(noborder, !isMapped);
 
-    checkActivities();
+    readActivities(activitiesCookie);
 
     // Initial desktop placement
     if (session) {

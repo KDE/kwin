@@ -2230,11 +2230,20 @@ void Client::debug(QDebug& stream) const
     print<QDebug>(stream);
 }
 
-void Client::checkActivities()
+Xcb::StringProperty Client::fetchActivities() const
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    return Xcb::StringProperty(window(), atoms->activities);
+#else
+    return Xcb::StringProperty();
+#endif
+}
+
+void Client::readActivities(Xcb::StringProperty &property)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList;
-    QByteArray prop = Xcb::StringProperty(window(), atoms->activities);
+    QByteArray prop = property;
     activitiesDefined = !prop.isEmpty();
     if (QString::fromUtf8(prop) == Activities::nullUuid()) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
@@ -2272,6 +2281,16 @@ void Client::checkActivities()
         }
     }
     setOnActivities(newActivitiesList);
+#else
+    Q_UNUSED(property)
+#endif
+}
+
+void Client::checkActivities()
+{
+#ifdef KWIN_BUILD_ACTIVITIES
+    Xcb::StringProperty property = fetchActivities();
+    readActivities(property);
 #endif
 }
 
