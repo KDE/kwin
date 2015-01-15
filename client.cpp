@@ -2291,12 +2291,22 @@ Client::Position Client::titlebarPosition() const
     return PositionTop;
 }
 
+Xcb::Property Client::fetchFirstInTabBox() const
+{
+    return Xcb::Property(false, m_client, atoms->kde_first_in_window_list,
+                         atoms->kde_first_in_window_list, 0, 1);
+}
+
+void Client::readFirstInTabBox(Xcb::Property &property)
+{
+    setFirstInTabBox(property.toBool(32, atoms->kde_first_in_window_list));
+}
+
 void Client::updateFirstInTabBox()
 {
     // TODO: move into KWindowInfo
-    Xcb::Property property(false, m_client, atoms->kde_first_in_window_list,
-                           atoms->kde_first_in_window_list, 0, 1);
-    setFirstInTabBox(property.toBool(32, atoms->kde_first_in_window_list));
+    Xcb::Property property = fetchFirstInTabBox();
+    readFirstInTabBox(property);
 }
 
 Xcb::StringProperty Client::fetchColorScheme() const

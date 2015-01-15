@@ -654,6 +654,8 @@ public:
     void setFirstInTabBox(bool enable) {
         m_firstInTabBox = enable;
     }
+    Xcb::Property fetchFirstInTabBox() const;
+    void readFirstInTabBox(Xcb::Property &property);
     void updateFirstInTabBox();
     Xcb::StringProperty fetchColorScheme() const;
     void readColorScheme(Xcb::StringProperty &property);

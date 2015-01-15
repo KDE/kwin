@@ -102,6 +102,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto gtkFrameExtentsCookie = fetchGtkFrameExtents();
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     auto colorSchemeCookie = fetchColorScheme();
+    auto firstInTabBoxCookie = fetchFirstInTabBox();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -144,7 +145,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     original_skip_taskbar = skip_taskbar = (info->state() & NET::SkipTaskbar) != 0;
     skip_pager = (info->state() & NET::SkipPager) != 0;
-    updateFirstInTabBox();
+    readFirstInTabBox(firstInTabBoxCookie);
 
     setupCompositing();
 
