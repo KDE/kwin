@@ -103,6 +103,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto showOnScreenEdgeCookie = fetchShowOnScreenEdge();
     auto colorSchemeCookie = fetchColorScheme();
     auto firstInTabBoxCookie = fetchFirstInTabBox();
+    auto transientCookie = fetchTransient();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -134,7 +135,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateAllowedActions(); // Group affects isMinimizable()
 
     modal = (info->state() & NET::Modal) != 0;   // Needs to be valid before handling groups
-    readTransient();
+    readTransientProperty(transientCookie);
     getIcons();
     getWmNormalHints(); // Get xSizeHint
     getMotifHints();

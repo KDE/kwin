@@ -942,6 +942,8 @@ private:
      */
     int quick_tile_mode;
 
+    Xcb::TransientFor fetchTransient() const;
+    void readTransientProperty(Xcb::TransientFor &transientFor);
     void readTransient();
     xcb_window_t verifyTransientFor(xcb_window_t transient_for, bool set);
     void addTransient(Client* cl);

@@ -550,10 +550,14 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
  - every window in the group : group()->members()
 */
 
-void Client::readTransient()
+Xcb::TransientFor Client::fetchTransient() const
+{
+    return Xcb::TransientFor(window());
+}
+
+void Client::readTransientProperty(Xcb::TransientFor &transientFor)
 {
     TRANSIENCY_CHECK(this);
-    Xcb::TransientFor transientFor(window());
     xcb_window_t new_transient_for_id = XCB_WINDOW_NONE;
     if (transientFor.getTransientFor(&new_transient_for_id)) {
         m_originalTransientForId = new_transient_for_id;
@@ -563,6 +567,12 @@ void Client::readTransient()
         new_transient_for_id = verifyTransientFor(XCB_WINDOW_NONE, false);
     }
     setTransient(new_transient_for_id);
+}
+
+void Client::readTransient()
+{
+    Xcb::TransientFor transientFor = fetchTransient();
+    readTransientProperty(transientFor);
 }
 
 void Client::setTransient(xcb_window_t new_transient_for_id)
