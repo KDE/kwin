@@ -98,6 +98,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2InitialMappingState;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
+    auto skipCloseAnimationCookie = fetchSkipCloseAnimation();
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -134,7 +135,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     getWmNormalHints(); // Get xSizeHint
     getMotifHints();
     getWmOpaqueRegion();
-    getSkipCloseAnimation();
+    readSkipCloseAnimation(skipCloseAnimationCookie);
 
     // TODO: Try to obey all state information from info->state()
 

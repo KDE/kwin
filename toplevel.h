@@ -430,6 +430,8 @@ protected:
     void getWmOpaqueRegion();
 
     void getResourceClass();
+    Xcb::Property fetchSkipCloseAnimation() const;
+    void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();
     virtual void debug(QDebug& stream) const = 0;
     void copyToDeleted(Toplevel* c);

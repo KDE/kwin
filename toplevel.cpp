@@ -438,10 +438,20 @@ xcb_window_t Toplevel::frameId() const
     return m_client;
 }
 
+Xcb::Property Toplevel::fetchSkipCloseAnimation() const
+{
+    return Xcb::Property(false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
+}
+
+void Toplevel::readSkipCloseAnimation(Xcb::Property &property)
+{
+    setSkipCloseAnimation(property.toBool());
+}
+
 void Toplevel::getSkipCloseAnimation()
 {
-    Xcb::Property property(false, window(), atoms->kde_skip_close_animation, XCB_ATOM_CARDINAL, 0, 1);
-    setSkipCloseAnimation(property.toBool());
+    Xcb::Property property = fetchSkipCloseAnimation();
+    readSkipCloseAnimation(property);
 }
 
 bool Toplevel::skipsCloseAnimation() const
