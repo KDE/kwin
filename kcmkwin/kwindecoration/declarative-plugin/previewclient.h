@@ -142,6 +142,8 @@ public:
     void setBordersRightEdge(bool enabled);
     void setBordersBottomEdge(bool enabled);
 
+    bool eventFilter(QObject *watched, QEvent *e) override;
+
 Q_SIGNALS:
     void captionChanged(const QString &);
     void iconChanged(const QIcon &);

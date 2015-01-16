@@ -57,6 +57,8 @@ public:
     QAbstractItemModel *rightButtons() const;
     QAbstractItemModel *availableButtons() const;
 
+    bool eventFilter(QObject *watched, QEvent *e) override;
+
 public Q_SLOTS:
     void defaults() override;
     void load() override;
@@ -67,6 +69,7 @@ protected:
 
 private:
     void showKNS(const QString &config);
+    void updateColors();
     DecorationsModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     ConfigurationForm *m_ui;

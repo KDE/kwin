@@ -21,24 +21,30 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
+import org.kde.plasma.core 2.0 as PlasmaCore;
 
 ScrollView {
     ListView {
         id: listView
         objectName: "listView"
         model: decorationsModel
+        Rectangle {
+            z: -1
+            anchors.fill: parent
+            color: SystemPalette.base;
+        }
         highlight: Rectangle {
             width: listView.width
-            height: 150
+            height: 10 * units.gridUnit
             color: highlightColor
             opacity: 0.5
         }
-        highlightMoveDuration: 250
+        highlightMoveDuration: units.longDuration
         boundsBehavior: Flickable.StopAtBounds
         property int borderSizesIndex: 3 // 3 == Normal
         delegate: Item {
             width: listView.width
-            height: 150
+            height: 10 * units.gridUnit
             KDecoration.Bridge {
                 id: bridgeItem
                 plugin: model["plugin"]
@@ -106,5 +112,6 @@ ScrollView {
             }
         }
     }
+    Layout.preferredHeight: 20 * units.gridUnit
 }
 

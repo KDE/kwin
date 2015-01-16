@@ -17,11 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import QtQuick 2.1
+import QtQuick 2.4
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons;
+import org.kde.plasma.core 2.0 as PlasmaCore;
 
 Item {
     Layout.preferredHeight: layout.height
@@ -33,154 +34,194 @@ Item {
         id: settingsItem
         bridge: bridgeItem
     }
-    ColumnLayout {
-        id: layout
-        width: parent.width
-        height: buttonPreviewRow.height + availableGrid.height
-        RowLayout {
-            id: buttonPreviewRow
-            height: 32
+    Rectangle {
+        anchors.fill: parent
+        anchors.topMargin: units.gridUnit / 2
+        border.width: Math.ceil(units.gridUnit / 16.0)
+        color: SystemPalette.base;
+        border.color: highlightColor;
+        ColumnLayout {
+            id: layout
             width: parent.width
-            ButtonGroup {
-                id: leftButtonsView
-                height: buttonPreviewRow.height
-                model: configurationModule.leftButtons
-                key: "decoButtonLeft"
-            }
-            Item {
+            height: titlebarRect.height + availableGrid.height + dragHint.height + 5*layout.spacing
+            Rectangle {
+                id: titlebarRect
+                height: buttonPreviewRow.height + units.smallSpacing
                 Layout.fillWidth: true
-                Label {
-                    anchors.centerIn: parent
-                    text: i18n("Drag to re-position buttons")
+                border.width: Math.ceil(units.gridUnit / 16.0)
+                border.color: highlightColor
+                color: SystemPalette.base;
+                RowLayout {
+                    id: buttonPreviewRow
+                    anchors.top: parent.top;
+                    anchors.left: parent.left;
+                    anchors.right: parent.right;
+                    anchors.margins: units.smallSpacing / 2
+                    height: Math.max(units.iconSizes.small, titlebar.implicitHeight) + units.smallSpacing/2
+                    ButtonGroup {
+                        id: leftButtonsView
+                        height: buttonPreviewRow.height
+                        model: configurationModule.leftButtons
+                        key: "decoButtonLeft"
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                        height: titlebar.implicitHeight
+                        Label {
+                            id: titlebar
+                            anchors.centerIn: parent
+                            font: titleFont
+                            text: i18n("Titlebar")
+                        }
+                    }
+                    ButtonGroup {
+                        id: rightButtonsView
+                        height: buttonPreviewRow.height
+                        model: configurationModule.rightButtons
+                        key: "decoButtonRight"
+                    }
+                    DropArea {
+                        anchors.fill: parent
+                        keys: [ "decoButtonAdd", "decoButtonRight", "decoButtonLeft" ]
+                        onEntered: {
+                            drag.accept();
+                        }
+                        onDropped: {
+                            var view = undefined;
+                            var left = drag.x - (leftButtonsView.x + leftButtonsView.width);
+                            var right = drag.x - rightButtonsView.x;
+                            if (Math.abs(left) <= Math.abs(right)) {
+                                view = leftButtonsView;
+                            } else {
+                                view = rightButtonsView;
+                            }
+                            if (!view) {
+                                return;
+                            }
+                            var point = mapToItem(view, drag.x, drag.y);
+                            var index = view.indexAt(point.x, point.y);
+                            if (index == -1 && (view.x + view.width <= drag.x)) {
+                                index = view.count - 1;
+                            }
+                            if (drop.keys.indexOf("decoButtonAdd") != -1) {
+                                view.model.add(index, drag.source.type);
+                            } else if (drop.keys.indexOf("decoButtonLeft") != -1) {
+                                if (view == leftButtonsView) {
+                                    // move in same view
+                                    if (index != drag.source.itemIndex) {
+                                        drag.source.buttonsModel.move(drag.source.itemIndex, index);
+                                    }
+                                } else  {
+                                    // move to right view
+                                    view.model.add(index, drag.source.type);
+                                    drag.source.buttonsModel.remove(drag.source.itemIndex);
+                                }
+                            } else if (drop.keys.indexOf("decoButtonRight") != -1) {
+                                if (view == rightButtonsView) {
+                                    // move in same view
+                                    if (index != drag.source.itemIndex) {
+                                        drag.source.buttonsModel.move(drag.source.itemIndex, index);
+                                    }
+                                } else {
+                                    // move to right view
+                                    view.model.add(index, drag.source.type);
+                                    drag.source.buttonsModel.remove(drag.source.itemIndex);
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            ButtonGroup {
-                id: rightButtonsView
-                height: buttonPreviewRow.height
-                model: configurationModule.rightButtons
-                key: "decoButtonRight"
+            Text {
+                id: iCannotBelieveIDoThis
+                text: "gnarf"
+                visible: false
+            }
+            GridView {
+                id: availableGrid
+                Layout.fillWidth: true
+                model: configurationModule.availableButtons
+                interactive: false
+                cellWidth: iconLabel.implicitWidth
+                cellHeight: units.iconSizes.small + iCannotBelieveIDoThis.implicitHeight + 4*units.smallSpacing
+                height: Math.ceil(cellHeight * 2.5)
+                opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.25 : 1.0
+                delegate: Item {
+                    id: availableDelegate
+                    width: availableGrid.cellWidth
+                    height: availableGrid.cellHeight
+                    KDecoration.Button {
+                        id: availableButton
+                        anchors.centerIn: Drag.active ? undefined : parent
+                        bridge: bridgeItem
+                        settings: settingsItem
+                        type: model["button"]
+                        width: units.iconSizes.small
+                        height: units.iconSizes.small
+                        Drag.keys: [ "decoButtonAdd" ]
+                        Drag.active: dragArea.drag.active
+                    }
+                    Label {
+                        id: iconLabel
+                        text: model["display"]
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        elide: Text.ElideRight
+                        wrapMode: Text.Wrap
+                    }
+                    MouseArea {
+                        id: dragArea
+                        anchors.fill: parent
+                        drag.target: availableButton
+                        cursorShape: Qt.PointingHandCursor
+                        onReleased: {
+                            if (availableButton.Drag.target) {
+                                availableButton.Drag.drop();
+                            } else {
+                                availableButton.Drag.cancel();
+                            }
+                        }
+                    }
+                }
+            }
+            Text {
+                id: dragHint
+                visible: !(leftButtonsView.dragging || rightButtonsView.dragging || availableGrid.dragging)
+                Layout.fillWidth: true
+                color: SystemPalette.text;
+                opacity: 0.66
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignTop
+                text: i18n("Drag buttons between here and the titlebar")
             }
             DropArea {
-                anchors.fill: parent
-                keys: [ "decoButtonAdd", "decoButtonRight", "decoButtonLeft" ]
+                anchors.fill: availableGrid
+                keys: [ "decoButtonRemove" ]
                 onEntered: {
                     drag.accept();
                 }
                 onDropped: {
-                    var view = undefined;
-                    var left = drag.x - (leftButtonsView.x + leftButtonsView.width);
-                    var right = drag.x - rightButtonsView.x;
-                    if (Math.abs(left) <= Math.abs(right)) {
-                        view = leftButtonsView;
-                    } else {
-                        view = rightButtonsView;
+                    drag.source.buttonsModel.remove(drag.source.itemIndex);
+                }
+                ColumnLayout {
+                    anchors.centerIn: parent
+                    visible: leftButtonsView.dragging || rightButtonsView.dragging
+                    Label {
+                        text: i18n("Drop here to remove button")
+                        font.bold: true
                     }
-                    if (!view) {
-                        return;
+                    KQuickControlsAddons.QIconItem {
+                        id: icon
+                        width: 64
+                        height: 64
+                        icon: "list-remove"
+                        Layout.alignment: Qt.AlignHCenter
                     }
-                    var point = mapToItem(view, drag.x, drag.y);
-                    var index = view.indexAt(point.x, point.y);
-                    if (index == -1 && (view.x + view.width <= drag.x)) {
-                        index = view.count - 1;
+                    Item {
+                        Layout.fillHeight: true
                     }
-                    if (drop.keys.indexOf("decoButtonAdd") != -1) {
-                        view.model.add(index, drag.source.type);
-                    } else if (drop.keys.indexOf("decoButtonLeft") != -1) {
-                        if (view == leftButtonsView) {
-                            // move in same view
-                            if (index != drag.source.itemIndex) {
-                                drag.source.buttonsModel.move(drag.source.itemIndex, index);
-                            }
-                        } else  {
-                            // move to right view
-                            view.model.add(index, drag.source.type);
-                            drag.source.buttonsModel.remove(drag.source.itemIndex);
-                        }
-                    } else if (drop.keys.indexOf("decoButtonRight") != -1) {
-                        if (view == rightButtonsView) {
-                            // move in same view
-                            if (index != drag.source.itemIndex) {
-                                drag.source.buttonsModel.move(drag.source.itemIndex, index);
-                            }
-                        } else {
-                            // move to right view
-                            view.model.add(index, drag.source.type);
-                            drag.source.buttonsModel.remove(drag.source.itemIndex);
-                        }
-                    }
-                }
-            }
-        }
-        GridView {
-            id: availableGrid
-            Layout.fillWidth: true
-            model: configurationModule.availableButtons
-            cellWidth: 96
-            cellHeight: 96
-            height: cellHeight * 2.5
-            opacity: (leftButtonsView.dragging || rightButtonsView.dragging) ? 0.25 : 1.0
-            delegate: Item {
-                width: availableGrid.cellWidth
-                height: availableGrid.cellHeight
-                KDecoration.Button {
-                    anchors.centerIn: Drag.active ? undefined : parent
-                    id: availableButton
-                    bridge: bridgeItem
-                    settings: settingsItem
-                    type: model["button"]
-                    width: 32
-                    height: 32
-                    Drag.keys: [ "decoButtonAdd" ]
-                    Drag.active: dragArea.drag.active
-                }
-                Label {
-                    text: model["display"]
-                    horizontalAlignment: Text.AlignHCenter
-                    anchors.bottom: parent.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    elide: Text.ElideRight
-                    wrapMode: Text.Wrap
-                }
-                MouseArea {
-                    id: dragArea
-                    anchors.fill: parent
-                    drag.target: availableButton
-                    onReleased: {
-                        if (availableButton.Drag.target) {
-                            availableButton.Drag.drop();
-                        } else {
-                            availableButton.Drag.cancel();
-                        }
-                    }
-                }
-            }
-        }
-        DropArea {
-            anchors.fill: availableGrid
-            keys: [ "decoButtonRemove" ]
-            onEntered: {
-                drag.accept();
-            }
-            onDropped: {
-                drag.source.buttonsModel.remove(drag.source.itemIndex);
-            }
-            ColumnLayout {
-                anchors.centerIn: parent
-                visible: leftButtonsView.dragging || rightButtonsView.dragging
-                Label {
-                    text: i18n("Drop here to remove button")
-                    font.bold: true
-                }
-                KQuickControlsAddons.QIconItem {
-                    id: icon
-                    width: 64
-                    height: 64
-                    icon: "list-remove"
-                    Layout.alignment: Qt.AlignHCenter
-                }
-                Item {
-                    Layout.fillHeight: true
                 }
             }
         }
