@@ -42,7 +42,7 @@ target_link_libraries(kwin_cube_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_cube_config cube_config.desktop)
+kcoreaddons_desktop_to_json(kwin_cube_config cube_config.desktop)
 
 # cube slide
 set(kwin_cubeslide_config_SRCS cubeslide_config.cpp)
@@ -59,7 +59,7 @@ target_link_libraries(kwin_cubeslide_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_cubeslide_config cubeslide_config.desktop)
+kcoreaddons_desktop_to_json(kwin_cubeslide_config cubeslide_config.desktop)
 
 install(
     TARGETS

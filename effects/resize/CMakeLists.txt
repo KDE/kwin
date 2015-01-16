@@ -14,7 +14,7 @@ target_link_libraries(kwin_resize_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_resize_config resize_config.desktop)
+kcoreaddons_desktop_to_json(kwin_resize_config resize_config.desktop)
 
 install(
     TARGETS

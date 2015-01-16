@@ -26,7 +26,7 @@ target_link_libraries(kwin_lookingglass_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_lookingglass_config lookingglass_config.desktop)
+kcoreaddons_desktop_to_json(kwin_lookingglass_config lookingglass_config.desktop)
 
 install(
     TARGETS

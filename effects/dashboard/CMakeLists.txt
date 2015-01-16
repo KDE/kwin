@@ -14,7 +14,7 @@ target_link_libraries(kwin_dashboard_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_dashboard_config dashboard_config.desktop)
+kcoreaddons_desktop_to_json(kwin_dashboard_config dashboard_config.desktop)
 
 install(
     TARGETS

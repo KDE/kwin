@@ -16,7 +16,7 @@ target_link_libraries(kwin_mouseclick_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_mouseclick_config mouseclick_config.desktop)
+kcoreaddons_desktop_to_json(kwin_mouseclick_config mouseclick_config.desktop)
 
 install(
     TARGETS

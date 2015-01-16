@@ -24,7 +24,7 @@ target_link_libraries(kwin_invert_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_invert_config invert_config.desktop)
+kcoreaddons_desktop_to_json(kwin_invert_config invert_config.desktop)
 
 install(
     TARGETS

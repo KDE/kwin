@@ -24,7 +24,7 @@ target_link_libraries(kwin_coverswitch_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_coverswitch_config coverswitch_config.desktop)
+kcoreaddons_desktop_to_json(kwin_coverswitch_config coverswitch_config.desktop)
 
 install(
     TARGETS

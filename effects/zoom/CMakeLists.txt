@@ -15,7 +15,7 @@ target_link_libraries(kwin_zoom_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_zoom_config zoom_config.desktop)
+kcoreaddons_desktop_to_json(kwin_zoom_config zoom_config.desktop)
 
 install(
     TARGETS

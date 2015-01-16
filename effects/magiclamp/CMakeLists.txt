@@ -14,7 +14,7 @@ target_link_libraries(kwin_magiclamp_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_magiclamp_config magiclamp_config.desktop)
+kcoreaddons_desktop_to_json(kwin_magiclamp_config magiclamp_config.desktop)
 
 install(
     TARGETS

@@ -15,7 +15,7 @@ target_link_libraries(kwin_showfps_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_showfps_config showfps_config.desktop)
+kcoreaddons_desktop_to_json(kwin_showfps_config showfps_config.desktop)
 
 install(
     TARGETS

@@ -14,7 +14,7 @@ target_link_libraries(kwin_glide_config
     KF5::Service
 )
 
-kservice_desktop_to_json(kwin_glide_config glide_config.desktop)
+kcoreaddons_desktop_to_json(kwin_glide_config glide_config.desktop)
 
 install(
     TARGETS

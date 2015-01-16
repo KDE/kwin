@@ -15,7 +15,7 @@ target_link_libraries(kwin_mousemark_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_mousemark_config mousemark_config.desktop)
+kcoreaddons_desktop_to_json(kwin_mousemark_config mousemark_config.desktop)
 
 install(
     TARGETS

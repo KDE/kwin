@@ -15,7 +15,7 @@ target_link_libraries(kwin_thumbnailaside_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_thumbnailaside_config thumbnailaside_config.desktop)
+kcoreaddons_desktop_to_json(kwin_thumbnailaside_config thumbnailaside_config.desktop)
 
 install(
     TARGETS

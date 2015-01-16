@@ -15,7 +15,7 @@ target_link_libraries(kwin_magnifier_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_magnifier_config magnifier_config.desktop)
+kcoreaddons_desktop_to_json(kwin_magnifier_config magnifier_config.desktop)
 
 install(
     TARGETS

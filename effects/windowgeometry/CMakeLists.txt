@@ -15,7 +15,7 @@ target_link_libraries(kwin_windowgeometry_config
     KF5::XmlGui
 )
 
-kservice_desktop_to_json(kwin_windowgeometry_config windowgeometry_config.desktop)
+kcoreaddons_desktop_to_json(kwin_windowgeometry_config windowgeometry_config.desktop)
 
 install(
     TARGETS
