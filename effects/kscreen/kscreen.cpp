@@ -122,7 +122,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
         return;
     }
     QByteArray byteData = effects->readRootProperty(m_atom, XCB_ATOM_CARDINAL, 32);
-    auto *data = reinterpret_cast<uint32_t *>(byteData.data());
+    const uint32_t *data = byteData.isEmpty() ? nullptr : reinterpret_cast<const uint32_t *>(byteData.data());
     if (!data // Property was deleted
         || data[0] == 0) { // normal state - KWin should have switched to it
         if (m_state != StateNormal) {
