@@ -53,6 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "decorations/decoratedclient.h"
 
+#include <array>
 #include <cmath>
 #include <unistd.h>
 #include <stddef.h>
