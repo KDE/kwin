@@ -78,8 +78,10 @@ void HighlightWindowEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& 
         if (oldOpacity != *opacity)
             effects->addRepaint(w->geometry().adjusted(-16,-16,16,32)); // ... see above ... because the window is pot. gone in the last pass
 
-        if (*opacity > 0.98f || *opacity < 0.02f)
+        if (*opacity > 0.98f || *opacity < 0.02f) {
             m_windowOpacity.remove(w);   // We default to 1.0
+            opacity = m_windowOpacity.end();
+        }
     }
 
     // Show tabbed windows and windows on other desktops if highlighted
