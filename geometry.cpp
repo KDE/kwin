@@ -3134,6 +3134,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
         if (maximizeMode() == MaximizeFull) {
             setMaximize(false, false);
         } else {
+            QRect prev_geom_restore = geom_restore; // setMaximize() would set moveResizeGeom as geom_restore
             setMaximize(true, true);
             QRect clientArea = workspace()->clientArea(MaximizeArea, this);
             if (geometry().top() != clientArea.top()) {
@@ -3142,6 +3143,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 setGeometry(r);
             }
             quick_tile_mode = QuickTileMaximize;
+            geom_restore = prev_geom_restore;
         }
         emit quickTileModeChanged();
         return;
