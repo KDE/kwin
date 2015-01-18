@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testCreateMultiple();
     void testFullscreen();
     void testMaximize();
+    void testToplevel();
     void testPing();
     void testTitle();
     void testWindowClass();
@@ -286,6 +287,46 @@ void TestWaylandShell::testMaximize()
     QVERIFY(maximizedSpy.wait());
     QCOMPARE(maximizedSpy.count(), 1);
     QVERIFY(!maximizedSpy.first().first().toBool());
+}
+
+void TestWaylandShell::testToplevel()
+{
+    using namespace KWayland::Server;
+    QScopedPointer<KWayland::Client::Surface> s(m_compositor->createSurface());
+    QVERIFY(!s.isNull());
+    QVERIFY(s->isValid());
+    KWayland::Client::ShellSurface *surface = m_shell->createSurface(s.data(), m_shell);
+    QSignalSpy sizeSpy(surface, SIGNAL(sizeChanged(QSize)));
+    QVERIFY(sizeSpy.isValid());
+    QCOMPARE(surface->size(), QSize());
+
+    QSignalSpy serverSurfaceSpy(m_shellInterface, SIGNAL(surfaceCreated(KWayland::Server::ShellSurfaceInterface*)));
+    QVERIFY(serverSurfaceSpy.isValid());
+    QVERIFY(serverSurfaceSpy.wait());
+    ShellSurfaceInterface *serverSurface = serverSurfaceSpy.first().first().value<ShellSurfaceInterface*>();
+    QVERIFY(serverSurface);
+    QVERIFY(serverSurface->parentResource());
+
+    QSignalSpy toplevelSpy(serverSurface, SIGNAL(toplevelChanged(bool)));
+    QVERIFY(toplevelSpy.isValid());
+
+    surface->setToplevel();
+    QVERIFY(toplevelSpy.wait());
+    QCOMPARE(toplevelSpy.count(), 1);
+    QVERIFY(toplevelSpy.first().first().toBool());
+    serverSurface->requestSize(QSize(1024, 768));
+
+    QVERIFY(sizeSpy.wait());
+    QCOMPARE(sizeSpy.count(), 1);
+    QCOMPARE(sizeSpy.first().first().toSize(), QSize(1024, 768));
+    QCOMPARE(surface->size(), QSize(1024, 768));
+
+    // set back to fullscreen
+    toplevelSpy.clear();
+    surface->setFullscreen();
+    QVERIFY(toplevelSpy.wait());
+    QCOMPARE(toplevelSpy.count(), 1);
+    QVERIFY(!toplevelSpy.first().first().toBool());
 }
 
 void TestWaylandShell::testPing()
