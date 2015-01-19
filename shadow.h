@@ -155,6 +155,7 @@ protected:
     };
     virtual bool prepareBackend() = 0;
     WindowQuadList m_shadowQuads;
+    void setShadowElement(const QPixmap &shadow, ShadowElements element);
 
 private:
     static Shadow *createShadowFromX11(Toplevel *toplevel);

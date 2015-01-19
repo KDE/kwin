@@ -356,4 +356,9 @@ QSize Shadow::elementSize(Shadow::ShadowElements element) const
     }
 }
 
+void Shadow::setShadowElement(const QPixmap &shadow, Shadow::ShadowElements element)
+{
+    m_shadowElements[element] = shadow;
+}
+
 } // namespace
