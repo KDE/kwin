@@ -1300,13 +1300,14 @@ SceneXRenderDecorationRenderer::~SceneXRenderDecorationRenderer()
 
 void SceneXRenderDecorationRenderer::render()
 {
-    const QRegion scheduled = getScheduled();
+    QRegion scheduled = getScheduled();
     if (scheduled.isEmpty()) {
         return;
     }
     if (areImageSizesDirty()) {
         resizePixmaps();
         resetImageSizesDirty();
+        scheduled = client()->client()->decorationRect();
     }
 
     const QRect top(QPoint(0, 0), m_sizes[int(DecorationPart::Top)]);
