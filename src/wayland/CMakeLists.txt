@@ -9,6 +9,7 @@ set(SERVER_LIB_SRCS
     display.cpp
     global.cpp
     keyboard_interface.cpp
+    logging.cpp
     output_interface.cpp
     pointer_interface.cpp
     region_interface.cpp

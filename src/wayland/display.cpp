@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "compositor_interface.h"
 #include "datadevicemanager_interface.h"
+#include "logging_p.h"
 #include "output_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
@@ -68,7 +69,7 @@ void Display::Private::installSocketNotifier()
     }
     int fd = wl_event_loop_get_fd(loop);
     if (fd == -1) {
-        qWarning() << "Did not get the file descriptor for the event loop";
+        qCWarning(KWAYLAND_SERVER) << "Did not get the file descriptor for the event loop";
         return;
     }
     QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, q);
@@ -94,7 +95,7 @@ void Display::Private::flush()
         return;
     }
     if (wl_event_loop_dispatch(loop, 0) != 0) {
-        qWarning() << "Error on dispatching Wayland event loop";
+        qCWarning(KWAYLAND_SERVER) << "Error on dispatching Wayland event loop";
     }
     wl_display_flush_clients(display);
 }
