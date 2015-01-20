@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_TABBOX_LAYOUTPREVIEW_H
 #define KWIN_TABBOX_LAYOUTPREVIEW_H
 
+#include <KService>
 #include <QAbstractListModel>
 #include <QQuickView>
 #include <QRect>
@@ -57,7 +58,11 @@ public:
 
 private:
     void init();
-    QStringList m_nameList;
+    QList<KService::Ptr> m_services;
+    KService::Ptr m_fileManager;
+    KService::Ptr m_browser;
+    KService::Ptr m_email;
+    KService::Ptr m_systemSettings;
 };
 
 

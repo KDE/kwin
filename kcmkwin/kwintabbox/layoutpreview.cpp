@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KDesktopFile>
 #include <KLocalizedString>
-#include <KService>
+#include <KMimeTypeTrader>
 
 namespace KWin
 {
@@ -132,14 +132,21 @@ ExampleClientModel::~ExampleClientModel()
 
 void ExampleClientModel::init()
 {
-    QList<QString> applications;
-    applications << "konqbrowser" << "KMail2" << "systemsettings" << "dolphin";
-
-    foreach (const QString& application, applications) {
-        KService::Ptr service = KService::serviceByStorageId("kde4-" + application + ".desktop");
-        if (service) {
-            m_nameList << service->entryPath();
-        }
+    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("inode/directory"))) {
+        m_services << s;
+        m_fileManager = s;
+    }
+    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("text/html"))) {
+        m_services << s;
+        m_browser = s;
+    }
+    if (const auto s = KMimeTypeTrader::self()->preferredService(QStringLiteral("message/rfc822"))) {
+        m_services << s;
+        m_email = s;
+    }
+    if (const auto s = KService::serviceByDesktopName(QStringLiteral("kdesystemsettings"))) {
+        m_services << s;
+        m_systemSettings = s;
     }
 }
 
@@ -151,22 +158,22 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case Qt::DisplayRole:
     case Qt::UserRole:
-        return KDesktopFile(m_nameList.at(index.row())).readName();
+        return m_services.at(index.row())->name();
     case Qt::UserRole+1:
         return false;
     case Qt::UserRole+2:
         return i18nc("An example Desktop Name", "Desktop 1");
     case Qt::UserRole+3:
-        return QIcon::fromTheme(KDesktopFile(m_nameList.at(index.row())).readIcon());
+        return m_services.at(index.row())->icon();
     case Qt::UserRole+4:
-        const QString desktopFile = KDesktopFile(m_nameList.at(index.row())).fileName().split('/').last();
-        if (desktopFile == "konqbrowser.desktop") {
+        const auto s = m_services.at(index.row());
+        if (s == m_browser) {
             return WindowThumbnailItem::Konqueror;
-        } else if (desktopFile == "KMail2.desktop") {
+        } else if (s == m_email) {
             return WindowThumbnailItem::KMail;
-        } else if (desktopFile == "systemsettings.desktop") {
+        } else if (s == m_systemSettings) {
             return WindowThumbnailItem::Systemsettings;
-        } else if (desktopFile == "dolphin.desktop") {
+        } else if (s == m_fileManager) {
             return WindowThumbnailItem::Dolphin;
         }
         return 0;
@@ -177,8 +184,8 @@ QVariant ExampleClientModel::data(const QModelIndex &index, int role) const
 QString ExampleClientModel::longestCaption() const
 {
     QString caption;
-    for (QString item : m_nameList) {
-        QString name = KDesktopFile(item).readName();
+    for (const auto item : m_services) {
+        const QString name = item->name();
         if (name.size() > caption.size()) {
             caption = name;
         }
@@ -189,7 +196,7 @@ QString ExampleClientModel::longestCaption() const
 int ExampleClientModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return m_nameList.size();
+    return m_services.size();
 }
 
 SwitcherItem::SwitcherItem(QObject *parent)
