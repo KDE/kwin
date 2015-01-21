@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KSharedConfig>
 // Qt
 #include <QDBusConnection>
+#include <QScreen>
 #include <QTimer>
 // Xlib
 #include <X11/Xcursor/Xcursor.h>
@@ -78,7 +79,17 @@ void Cursor::loadThemeSettings()
 {
     QString themeName = QString::fromUtf8(qgetenv("XCURSOR_THEME"));
     bool ok = false;
-    uint themeSize = qgetenv("XCURSOR_SIZE").toUInt(&ok);
+    // XCURSOR_SIZE might not be set (e.g. by startkde)
+    uint themeSize = 0;
+    if (qEnvironmentVariableIsSet("XCURSOR_SIZE")) {
+        themeSize = qgetenv("XCURSOR_SIZE").toUInt(&ok);
+    }
+    if (!ok) {
+        if (QScreen *s = QGuiApplication::primaryScreen()) {
+            themeSize = s->logicalDotsPerInchY() * 16 / 72;
+            ok = true;
+        }
+    }
     if (!themeName.isEmpty() && ok) {
         updateTheme(themeName, themeSize);
         return;
