@@ -473,8 +473,8 @@ public:
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet);
-    void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
+    void resizeWithChecks(int w, int h, xcb_gravity_t gravity = XCB_GRAVITY_BIT_FORGET, ForceGeometry_t force = NormalGeometrySet);
+    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity = XCB_GRAVITY_BIT_FORGET, ForceGeometry_t force = NormalGeometrySet);
     void keepInArea(QRect area, bool partial = false);
     void setElectricBorderMode(QuickTileMode mode);
     QuickTileMode electricBorderMode() const;
@@ -928,7 +928,7 @@ private:
     QPoint invertedMoveOffset;
     QRect moveResizeGeom;
     QRect initialMoveResizeGeom;
-    XSizeHints xSizeHint;
+    Xcb::GeometryHints m_geometryHints;
     void sendSyntheticConfigureNotify();
     enum MappingState {
         Withdrawn, ///< Not handled, as per ICCCM WithdrawnState
@@ -1268,9 +1268,9 @@ inline void Client::plainResize(const QSize& s, ForceGeometry_t force)
     plainResize(s.width(), s.height(), force);
 }
 
-inline void Client::resizeWithChecks(const QSize& s, ForceGeometry_t force)
+inline void Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
 {
-    resizeWithChecks(s.width(), s.height(), force);
+    resizeWithChecks(s.width(), s.height(), gravity, force);
 }
 
 inline bool Client::hasUserTimeSupport() const

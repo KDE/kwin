@@ -20,10 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifndef KWIN_GEOMETRY_TIP_H
 #define KWIN_GEOMETRY_TIP_H
+#include "xcbutils.h"
 
 #include <QLabel>
-#include <X11/Xutil.h>
-#include <fixx11h.h>
 
 namespace KWin
 {
@@ -32,12 +31,12 @@ class GeometryTip: public QLabel
 {
     Q_OBJECT
 public:
-    GeometryTip(const XSizeHints* xSizeHints);
+    GeometryTip(const Xcb::GeometryHints* xSizeHints);
     ~GeometryTip();
     void setGeometry(const QRect& geom);
 
 private:
-    const XSizeHints* sizeHints;
+    const Xcb::GeometryHints* sizeHints;
 };
 
 } // namespace

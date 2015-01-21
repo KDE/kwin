@@ -19,12 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "geometrytip.h"
-#include <QX11Info>
 
 namespace KWin
 {
 
-GeometryTip::GeometryTip(const XSizeHints* xSizeHints):
+GeometryTip::GeometryTip(const Xcb::GeometryHints* xSizeHints):
     QLabel(0)
 {
     setObjectName(QLatin1String("kwingeometry"));
@@ -47,9 +46,9 @@ void GeometryTip::setGeometry(const QRect& geom)
     int h = geom.height();
 
     if (sizeHints) {
-        if (sizeHints->flags & PResizeInc) {
-            w = (w - sizeHints->base_width) / sizeHints->width_inc;
-            h = (h - sizeHints->base_height) / sizeHints->height_inc;
+        if (sizeHints->hasResizeIncrements()) {
+            w = (w - sizeHints->baseSize().width()) / sizeHints->resizeIncrements().width();
+            h = (h - sizeHints->baseSize().height()) / sizeHints->resizeIncrements().height();
         }
     }
 

@@ -1288,13 +1288,13 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 
     int w1 = w;
     int h1 = h;
-    int width_inc = xSizeHint.width_inc;
-    int height_inc = xSizeHint.height_inc;
-    int basew_inc = xSizeHint.base_width;
-    int baseh_inc = xSizeHint.base_height;
-    if (!(xSizeHint.flags & PBaseSize)) {
-        basew_inc = xSizeHint.min_width;
-        baseh_inc = xSizeHint.min_height;
+    int width_inc = m_geometryHints.resizeIncrements().width();
+    int height_inc = m_geometryHints.resizeIncrements().height();
+    int basew_inc = m_geometryHints.baseSize().width();
+    int baseh_inc = m_geometryHints.baseSize().height();
+    if (!m_geometryHints.hasBaseSize()) {
+        basew_inc = m_geometryHints.minSize().width();
+        baseh_inc = m_geometryHints.minSize().height();
     }
     w = int((w - basew_inc) / width_inc) * width_inc + basew_inc;
     h = int((h - baseh_inc) / height_inc) * height_inc + baseh_inc;
@@ -1313,20 +1313,21 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
      * maxAspectX * dheight < maxAspectY * dwidth
      *
      */
-    if (xSizeHint.flags & PAspect) {
-        double min_aspect_w = xSizeHint.min_aspect.x; // use doubles, because the values can be MAX_INT
-        double min_aspect_h = xSizeHint.min_aspect.y; // and multiplying would go wrong otherwise
-        double max_aspect_w = xSizeHint.max_aspect.x;
-        double max_aspect_h = xSizeHint.max_aspect.y;
+    if (m_geometryHints.hasAspect()) {
+        double min_aspect_w = m_geometryHints.minAspect().width(); // use doubles, because the values can be MAX_INT
+        double min_aspect_h = m_geometryHints.minAspect().height(); // and multiplying would go wrong otherwise
+        double max_aspect_w = m_geometryHints.maxAspect().width();
+        double max_aspect_h = m_geometryHints.maxAspect().height();
         // According to ICCCM 4.1.2.3 PMinSize should be a fallback for PBaseSize for size increments,
         // but not for aspect ratio. Since this code comes from FVWM, handles both at the same time,
         // and I have no idea how it works, let's hope nobody relies on that.
-        w -= xSizeHint.base_width;
-        h -= xSizeHint.base_height;
-        int max_width = max_size.width() - xSizeHint.base_width;
-        int min_width = min_size.width() - xSizeHint.base_width;
-        int max_height = max_size.height() - xSizeHint.base_height;
-        int min_height = min_size.height() - xSizeHint.base_height;
+        const QSize baseSize = m_geometryHints.baseSize();
+        w -= baseSize.width();
+        h -= baseSize.height();
+        int max_width = max_size.width() - baseSize.width();
+        int min_width = min_size.width() - baseSize.width();
+        int max_height = max_size.height() - baseSize.height();
+        int min_height = min_size.height() - baseSize.height();
 #define ASPECT_CHECK_GROW_W \
     if ( min_aspect_w * h > min_aspect_h * w ) \
     { \
@@ -1407,8 +1408,8 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
 #undef ASPECT_CHECK_SHRINK_W_GROW_H
 #undef ASPECT_CHECK_GROW_W
 #undef ASPECT_CHECK_GROW_H
-        w += xSizeHint.base_width;
-        h += xSizeHint.base_height;
+        w += baseSize.width();
+        h += baseSize.height();
     }
     if (!rules()->checkStrictGeometry(!isFullScreen())) {
         // disobey increments and aspect by explicit rule
@@ -1428,52 +1429,15 @@ QSize Client::sizeForClientSize(const QSize& wsize, Sizemode mode, bool noframe)
  */
 void Client::getWmNormalHints()
 {
-    long msize;
-    const bool hadFixedAspect = xSizeHint.flags & PAspect;
-    if (XGetWMNormalHints(display(), window(), &xSizeHint, &msize) == 0)
-        xSizeHint.flags = 0;
-    // set defined values for the fields, even if they're not in flags
+    const bool hadFixedAspect = m_geometryHints.hasAspect();
+    // roundtrip to X server
+    m_geometryHints.fetch();
+    m_geometryHints.read();
 
-    if (!(xSizeHint.flags & PMinSize))
-        xSizeHint.min_width = xSizeHint.min_height = 0;
-    if (xSizeHint.flags & PBaseSize) {
-        // PBaseSize is a fallback for PMinSize according to ICCCM 4.1.2.3
-        // The other way around PMinSize is not a complete fallback for PBaseSize,
-        // so that's not handled here.
-        if (!(xSizeHint.flags & PMinSize)) {
-            xSizeHint.min_width = xSizeHint.base_width;
-            xSizeHint.min_height = xSizeHint.base_height;
-        }
-    } else
-        xSizeHint.base_width = xSizeHint.base_height = 0;
-    if (!(xSizeHint.flags & PMaxSize))
-        xSizeHint.max_width = xSizeHint.max_height = INT_MAX;
-    else {
-        xSizeHint.max_width = qMax(xSizeHint.max_width, 1);
-        xSizeHint.max_height = qMax(xSizeHint.max_height, 1);
+    if (!hadFixedAspect && m_geometryHints.hasAspect()) {
+        // align to eventual new contraints
+        maximize(max_mode);
     }
-    if (xSizeHint.flags & PResizeInc) {
-        xSizeHint.width_inc = qMax(xSizeHint.width_inc, 1);
-        xSizeHint.height_inc = qMax(xSizeHint.height_inc, 1);
-    } else {
-        xSizeHint.width_inc = 1;
-        xSizeHint.height_inc = 1;
-    }
-    if (xSizeHint.flags & PAspect) {
-        // no dividing by zero
-        xSizeHint.min_aspect.y = qMax(xSizeHint.min_aspect.y, 1);
-        xSizeHint.max_aspect.y = qMax(xSizeHint.max_aspect.y, 1);
-        if (!hadFixedAspect)
-            maximize(max_mode); // align to eventual new contraints
-    } else {
-        xSizeHint.min_aspect.x = 1;
-        xSizeHint.min_aspect.y = INT_MAX;
-        xSizeHint.max_aspect.x = INT_MAX;
-        xSizeHint.max_aspect.y = 1;
-    }
-    if (!(xSizeHint.flags & PWinGravity))
-        xSizeHint.win_gravity = NorthWestGravity;
-
     // Update min/max size of this group
     if (tabGroup())
         tabGroup()->updateMinMaxSize();
@@ -1501,17 +1465,17 @@ void Client::getWmNormalHints()
 
 QSize Client::minSize() const
 {
-    return rules()->checkMinSize(QSize(xSizeHint.min_width, xSizeHint.min_height));
+    return rules()->checkMinSize(m_geometryHints.minSize());
 }
 
 QSize Client::maxSize() const
 {
-    return rules()->checkMaxSize(QSize(xSizeHint.max_width, xSizeHint.max_height));
+    return rules()->checkMaxSize(m_geometryHints.maxSize());
 }
 
 QSize Client::basicUnit() const
 {
-    return QSize(xSizeHint.width_inc, xSizeHint.height_inc);
+    return m_geometryHints.resizeIncrements();
 }
 
 /*!
@@ -1543,7 +1507,7 @@ const QPoint Client::calculateGravitation(bool invert, int gravity) const
     dx = dy = 0;
 
     if (gravity == 0)   // default (nonsense) value for the argument
-        gravity = xSizeHint.win_gravity;
+        gravity = m_geometryHints.windowGravity();
 
 // dx, dy specify how the client window moves to make space for the frame
     switch(gravity) {
@@ -1645,7 +1609,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     qCDebug(KWIN_CORE) << "PERMITTED" << this << bool(value_mask & (CWX|CWWidth|CWY|CWHeight));
 
     if (gravity == 0)   // default (nonsense) value for the argument
-        gravity = xSizeHint.win_gravity;
+        gravity = m_geometryHints.windowGravity();
     if (value_mask & (CWX | CWY)) {
         QPoint new_pos = calculateGravitation(true, gravity);   // undo gravitation
         if (value_mask & CWX)
@@ -1707,11 +1671,8 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
         if (ns != size()) { // don't restore if some app sets its own size again
             QRect origClientGeometry(pos() + clientPos(), clientSize());
             GeometryUpdatesBlocker blocker(this);
-            int save_gravity = xSizeHint.win_gravity;
-            xSizeHint.win_gravity = gravity;
-            resizeWithChecks(ns);
-            xSizeHint.win_gravity = save_gravity;
-            updateFullScreenHack(QRect(calculateGravitation(true, xSizeHint.win_gravity), QSize(nw, nh)));
+            resizeWithChecks(ns, xcb_gravity_t(gravity));
+            updateFullScreenHack(QRect(calculateGravitation(true, m_geometryHints.windowGravity()), QSize(nw, nh)));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -1730,7 +1691,7 @@ void Client::configureRequest(int value_mask, int rx, int ry, int rw, int rh, in
     // Handling of the real ConfigureRequest event forces sending it, as there it's necessary.
 }
 
-void Client::resizeWithChecks(int w, int h, ForceGeometry_t force)
+void Client::resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force)
 {
     assert(!shade_geometry_change);
     if (isShade()) {
@@ -1749,7 +1710,10 @@ void Client::resizeWithChecks(int w, int h, ForceGeometry_t force)
     QSize tmp = adjustedSize(QSize(w, h));    // checks size constraints, including min/max size
     w = tmp.width();
     h = tmp.height();
-    switch(xSizeHint.win_gravity) {
+    if (gravity == 0) {
+        gravity = m_geometryHints.windowGravity();
+    }
+    switch(gravity) {
     case NorthWestGravity: // top left corner doesn't move
     default:
         break;
@@ -2171,17 +2135,19 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
 
     // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
     // out of screen bounds and take that as a "full maximization with aspect check" then
-    if ((xSizeHint.flags & PAspect) && // fixed aspect
+    if (m_geometryHints.hasAspect() && // fixed aspect
         (max_mode == MaximizeVertical || max_mode == MaximizeHorizontal) && // ondimensional maximization
         rules()->checkStrictGeometry(true)) { // obey aspect
+        const QSize minAspect = m_geometryHints.minAspect();
+        const QSize maxAspect = m_geometryHints.maxAspect();
         if (max_mode == MaximizeVertical || (old_mode & MaximizeVertical)) {
-            const double fx = xSizeHint.min_aspect.x; // use doubles, because the values can be MAX_INT
-            const double fy = xSizeHint.max_aspect.y; // use doubles, because the values can be MAX_INT
+            const double fx = minAspect.width(); // use doubles, because the values can be MAX_INT
+            const double fy = maxAspect.height(); // use doubles, because the values can be MAX_INT
             if (fx*clientArea.height()/fy > clientArea.width()) // too big
                 max_mode = old_mode & MaximizeHorizontal ? MaximizeRestore : MaximizeFull;
         } else { // max_mode == MaximizeHorizontal
-            const double fx = xSizeHint.max_aspect.x;
-            const double fy = xSizeHint.min_aspect.y;
+            const double fx = maxAspect.width();
+            const double fy = minAspect.height();
             if (fy*clientArea.width()/fx > clientArea.height()) // too big
                 max_mode = old_mode & MaximizeVertical ? MaximizeRestore : MaximizeFull;
         }
@@ -2328,7 +2294,7 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
                 restore.moveTop(geom_restore.y());
             geom_restore = restore; // relevant for mouse pos calculation, bug #298646
         }
-        if (xSizeHint.flags & PAspect) {
+        if (m_geometryHints.hasAspect()) {
             restore.setSize(adjustedSize(restore.size(), SizemodeAny));
         }
         setGeometry(restore, geom_mode);
@@ -2539,7 +2505,7 @@ void Client::positionGeometryTip()
         return; // some effect paints this for us
     if (options->showGeometryTip()) {
         if (!geometryTip) {
-            geometryTip = new GeometryTip(&xSizeHint);
+            geometryTip = new GeometryTip(&m_geometryHints);
         }
         QRect wgeom(moveResizeGeom);   // position of the frame, size of the window itself
         wgeom.setWidth(wgeom.width() - (width() - clientSize().width()));

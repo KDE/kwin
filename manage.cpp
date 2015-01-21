@@ -107,6 +107,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto firstInTabBoxCookie = fetchFirstInTabBox();
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
+    m_geometryHints.init(window());
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint
@@ -140,7 +141,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     modal = (info->state() & NET::Modal) != 0;   // Needs to be valid before handling groups
     readTransientProperty(transientCookie);
     getIcons();
-    getWmNormalHints(); // Get xSizeHint
+    m_geometryHints.read();
     getMotifHints();
     getWmOpaqueRegion();
     readSkipCloseAnimation(skipCloseAnimationCookie);
@@ -304,8 +305,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     else
         usePosition = true;
     if (!rules()->checkIgnoreGeometry(!usePosition, true)) {
-        if (((xSizeHint.flags & PPosition)) ||
-                (xSizeHint.flags & USPosition)) {
+        if (m_geometryHints.hasPosition()) {
             placementDone = true;
             // Disobey xinerama placement option for now (#70943)
             area = workspace()->clientArea(PlacementArea, geom.center(), desktop());
@@ -317,12 +317,12 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     //        // Keep in mind that we now actually have a size :-)
     //        }
 
-    if (xSizeHint.flags & PMaxSize)
+    if (m_geometryHints.hasMaxSize())
         geom.setSize(geom.size().boundedTo(
-                         rules()->checkMaxSize(QSize(xSizeHint.max_width, xSizeHint.max_height))));
-    if (xSizeHint.flags & PMinSize)
+                         rules()->checkMaxSize(m_geometryHints.maxSize())));
+    if (m_geometryHints.hasMinSize())
         geom.setSize(geom.size().expandedTo(
-                         rules()->checkMinSize(QSize(xSizeHint.min_width, xSizeHint.min_height))));
+                         rules()->checkMinSize(m_geometryHints.minSize())));
 
     if (isMovable() && (geom.x() > area.right() || geom.y() > area.bottom()))
         placementDone = false; // Weird, do not trust.

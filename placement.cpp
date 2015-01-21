@@ -716,8 +716,8 @@ void Client::growHorizontal()
     QRect geom = geometry();
     geom.setRight(workspace()->packPositionRight(this, geom.right(), true));
     QSize adjsize = adjustedSize(geom.size(), SizemodeFixedW);
-    if (geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.width_inc > 1) { // take care of size increments
-        int newright = workspace()->packPositionRight(this, geom.right() + xSizeHint.width_inc - 1, true);
+    if (geometry().size() == adjsize && geom.size() != adjsize && m_geometryHints.resizeIncrements().width() > 1) { // take care of size increments
+        int newright = workspace()->packPositionRight(this, geom.right() + m_geometryHints.resizeIncrements().width() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         // TODO this may be wrong?
         if (workspace()->clientArea(MovementArea,
@@ -760,8 +760,8 @@ void Client::growVertical()
     QRect geom = geometry();
     geom.setBottom(workspace()->packPositionDown(this, geom.bottom(), true));
     QSize adjsize = adjustedSize(geom.size(), SizemodeFixedH);
-    if (geometry().size() == adjsize && geom.size() != adjsize && xSizeHint.height_inc > 1) { // take care of size increments
-        int newbottom = workspace()->packPositionDown(this, geom.bottom() + xSizeHint.height_inc - 1, true);
+    if (geometry().size() == adjsize && geom.size() != adjsize && m_geometryHints.resizeIncrements().height() > 1) { // take care of size increments
+        int newbottom = workspace()->packPositionDown(this, geom.bottom() + m_geometryHints.resizeIncrements().height() - 1, true);
         // check that it hasn't grown outside of the area, due to size increments
         if (workspace()->clientArea(MovementArea,
                                    QPoint(geometry().center().x(), (y() + newbottom) / 2), desktop()).bottom() >= newbottom)
