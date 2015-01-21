@@ -81,6 +81,19 @@ target_link_libraries( testXcbWrapper
 add_test(kwin-testXcbWrapper testXcbWrapper)
 ecm_mark_as_test(testXcbWrapper)
 
+if (XCB_ICCCM_FOUND)
+    add_executable( testXcbSizeHints test_xcb_size_hints.cpp )
+    target_link_libraries( testXcbSizeHints
+                           Qt5::Test
+                           Qt5::X11Extras
+                           KF5::WindowSystem
+                           XCB::XCB
+                           XCB::ICCCM
+    )
+    add_test(kwin-testXcbSizeHints testXcbSizeHints)
+    ecm_mark_as_test(testXcbSizeHints)
+endif()
+
 ########################################################
 # Test XcbWindow
 ########################################################

@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/shm.h>
 
+class TestXcbSizeHints;
+
 namespace KWin {
 
 template <typename T> using ScopedCPointer = QScopedPointer<T, QScopedPointerPodDeleter>;
@@ -824,6 +826,156 @@ public:
         *prop = *windows;
         return true;
     }
+};
+
+class GeometryHints
+{
+public:
+    GeometryHints() = default;
+    void init(xcb_window_t window) {
+        Q_ASSERT(window);
+        if (m_window) {
+            // already initialized
+            return;
+        }
+        m_window = window;
+        fetch();
+    }
+    void fetch() {
+        if (!m_window) {
+            return;
+        }
+        m_sizeHints = nullptr;
+        m_hints = NormalHints(m_window);
+    }
+    void read() {
+        m_sizeHints = m_hints.sizeHints();
+    }
+
+    bool hasPosition() const {
+        return testFlag(NormalHints::SizeHints::UserPosition) || testFlag(NormalHints::SizeHints::ProgramPosition);
+    }
+    bool hasSize() const {
+        return testFlag(NormalHints::SizeHints::UserSize) || testFlag(NormalHints::SizeHints::ProgramSize);
+    }
+    bool hasMinSize() const {
+        return testFlag(NormalHints::SizeHints::MinSize);
+    }
+    bool hasMaxSize() const {
+        return testFlag(NormalHints::SizeHints::MaxSize);
+    }
+    bool hasResizeIncrements() const {
+        return testFlag(NormalHints::SizeHints::ResizeIncrements);
+    }
+    bool hasAspect() const {
+        return testFlag(NormalHints::SizeHints::Aspect);
+    }
+    bool hasBaseSize() const {
+        return testFlag(NormalHints::SizeHints::BaseSize);
+    }
+    bool hasWindowGravity() const {
+        return testFlag(NormalHints::SizeHints::WindowGravity);
+    }
+    QSize maxSize() const {
+        if (!hasMaxSize()) {
+            return QSize(INT_MAX, INT_MAX);
+        }
+        return QSize(qMax(m_sizeHints->maxWidth, 1), qMax(m_sizeHints->maxHeight, 1));
+    }
+    QSize minSize() const {
+        if (!hasMinSize()) {
+            // according to ICCCM 4.1.23 base size should be used as a fallback
+            return baseSize();
+        }
+        return QSize(m_sizeHints->minWidth, m_sizeHints->minHeight);
+    }
+    QSize baseSize() const {
+        // Note: not using minSize as fallback
+        if (!hasBaseSize()) {
+            return QSize(0, 0);
+        }
+        return QSize(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
+    }
+    QSize resizeIncrements() const {
+        if (!hasResizeIncrements()) {
+            return QSize(1, 1);
+        }
+        return QSize(qMax(m_sizeHints->widthInc, 1), qMax(m_sizeHints->heightInc, 1));
+    }
+    xcb_gravity_t windowGravity() const {
+        if (!hasWindowGravity()) {
+            return XCB_GRAVITY_NORTH_WEST;
+        }
+        return xcb_gravity_t(m_sizeHints->winGravity);
+    }
+    QSize minAspect() const {
+        if (!hasAspect()) {
+            return QSize(1, INT_MAX);
+        }
+        // prevent devision by zero
+        return QSize(m_sizeHints->minAspect[0], qMax(m_sizeHints->minAspect[1], 1));
+    }
+    QSize maxAspect() const {
+        if (!hasAspect()) {
+            return QSize(INT_MAX, 1);
+        }
+        // prevent devision by zero
+        return QSize(m_sizeHints->maxAspect[0], qMax(m_sizeHints->maxAspect[1], 1));
+    }
+
+private:
+    /**
+    * NormalHints as specified in ICCCM 4.1.2.3.
+    **/
+    class NormalHints : public Property
+    {
+    public:
+        struct SizeHints {
+            enum Flags {
+                UserPosition = 1,
+                UserSize = 2,
+                ProgramPosition = 4,
+                ProgramSize = 8,
+                MinSize = 16,
+                MaxSize = 32,
+                ResizeIncrements = 64,
+                Aspect = 128,
+                BaseSize = 256,
+                WindowGravity = 512
+            };
+            qint32 flags = 0;
+            qint32 pad[4] = {0, 0, 0, 0};
+            qint32 minWidth = 0;
+            qint32 minHeight = 0;
+            qint32 maxWidth = 0;
+            qint32 maxHeight = 0;
+            qint32 widthInc = 0;
+            qint32 heightInc = 0;
+            qint32 minAspect[2] = {0, 0};
+            qint32 maxAspect[2] = {0, 0};
+            qint32 baseWidth = 0;
+            qint32 baseHeight = 0;
+            qint32 winGravity = 0;
+        };
+        explicit NormalHints() : Property() {};
+        explicit NormalHints(WindowId window)
+            : Property(0, window, XCB_ATOM_WM_NORMAL_HINTS, XCB_ATOM_WM_SIZE_HINTS, 0, 18)
+        {
+        }
+        inline SizeHints *sizeHints() {
+            return value<SizeHints*>(32, XCB_ATOM_WM_SIZE_HINTS, nullptr);
+        }
+    };
+    friend TestXcbSizeHints;
+    bool testFlag(NormalHints::SizeHints::Flags flag) const {
+        if (!m_window || !m_sizeHints) {
+            return false;
+        }
+        return m_sizeHints->flags & flag;
+    }
+    xcb_window_t m_window = XCB_WINDOW_NONE;
+    NormalHints m_hints;
+    NormalHints::SizeHints *m_sizeHints = nullptr;
 };
 
 namespace RandR
