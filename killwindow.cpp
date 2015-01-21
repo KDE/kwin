@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // XLib
 #include <X11/cursorfont.h>
 #include <X11/Xcursor/Xcursor.h>
+#include <X11/Xutil.h>
+#include <fixx11h.h>
 // XCB
 #include <xcb/xcb_keysyms.h>
 

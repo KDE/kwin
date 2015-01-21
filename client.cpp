@@ -58,6 +58,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWhatsThis>
 // XLib
 #include <X11/extensions/sync.h>
+#include <X11/Xutil.h>
+#include <fixx11h.h>
 #include <xcb/xtest.h>
 // system
 #include <unistd.h>
