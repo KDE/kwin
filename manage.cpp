@@ -96,7 +96,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         NET::WM2Input |
         NET::WM2Protocols |
         NET::WM2InitialMappingState |
-        NET::WM2IconPixmap;
+        NET::WM2IconPixmap |
+        NET::WM2OpaqueRegion;
 
     auto wmClientLeaderCookie = fetchWmClientLeader();
     auto skipCloseAnimationCookie = fetchSkipCloseAnimation();

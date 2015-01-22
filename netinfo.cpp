@@ -106,7 +106,8 @@ RootInfo *RootInfo::create()
         NET::WM2DesktopLayout |
         NET::WM2FullPlacement |
         NET::WM2FullscreenMonitors |
-        NET::WM2KDEShadow;
+        NET::WM2KDEShadow |
+        NET::WM2OpaqueRegion;
 #ifdef KWIN_BUILD_ACTIVITIES
         properties2 |= NET::WM2Activities;
 #endif

@@ -364,38 +364,11 @@ bool Toplevel::wantsShadowToBeRendered() const
 
 void Toplevel::getWmOpaqueRegion()
 {
-    const int length=32768;
-    unsigned long bytes_after_return=0;
+    const auto rects = info->opaqueRegion();
     QRegion new_opaque_region;
-    do {
-        unsigned long* data;
-        Atom type;
-        int rformat;
-        unsigned long nitems;
-        if (XGetWindowProperty(display(), m_client,
-                               atoms->net_wm_opaque_region, 0, length, false, XCB_ATOM_CARDINAL,
-                               &type, &rformat, &nitems, &bytes_after_return,
-                               reinterpret_cast< unsigned char** >(&data)) == Success) {
-            if (type != XCB_ATOM_CARDINAL || rformat != 32 || nitems%4) {
-                // it can happen, that the window does not provide this property
-                XFree(data);
-                break;
-            }
-
-            for (unsigned int i = 0; i < nitems;) {
-                const int x = data[i++];
-                const int y = data[i++];
-                const int w = data[i++];
-                const int h = data[i++];
-
-                new_opaque_region += QRect(x,y,w,h);
-            }
-            XFree(data);
-        } else {
-            qCWarning(KWIN_CORE) << "XGetWindowProperty failed";
-            break;
-        }
-    } while (bytes_after_return > 0);
+    for (const auto &r : rects) {
+        new_opaque_region += QRect(r.pos.x, r.pos.y, r.size.width, r.size.height);
+    }
 
     opaque_region = new_opaque_region;
 }

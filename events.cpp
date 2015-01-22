@@ -638,6 +638,9 @@ bool Client::windowEvent(xcb_generic_event_t *e)
         if (dirtyProperties2.testFlag(NET::WM2Urgency)) {
             updateUrgency();
         }
+        if (dirtyProperties2 & NET::WM2OpaqueRegion) {
+            getWmOpaqueRegion();
+        }
     }
 
     const uint8_t eventType = e->response_type & ~0x80;
@@ -1587,6 +1590,9 @@ bool Unmanaged::windowEvent(xcb_generic_event_t *e)
             emit opacityChanged(this, old_opacity);
         }
     }
+    if (dirtyProperties2 & NET::WM2OpaqueRegion) {
+        getWmOpaqueRegion();
+    }
     if (dirtyProperties2.testFlag(NET::WM2WindowRole)) {
         emit windowRoleChanged();
     }
@@ -1671,8 +1677,6 @@ void Toplevel::propertyNotifyEvent(xcb_property_notify_event_t *e)
             getWmClientLeader();
         else if (e->atom == atoms->kde_net_wm_shadow)
             getShadow();
-        else if (e->atom == atoms->net_wm_opaque_region)
-            getWmOpaqueRegion();
         else if (e->atom == atoms->kde_skip_close_animation)
             getSkipCloseAnimation();
         break;

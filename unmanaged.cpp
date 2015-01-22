@@ -71,7 +71,8 @@ bool Unmanaged::track(Window w)
                           NET::WMWindowType | NET::WMPid,
                           NET::WM2Opacity |
                           NET::WM2WindowRole |
-                          NET::WM2WindowClass);
+                          NET::WM2WindowClass |
+                          NET::WM2OpaqueRegion);
     getResourceClass();
     getWmClientLeader();
     getWmClientMachine();
