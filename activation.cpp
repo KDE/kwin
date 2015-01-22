@@ -556,8 +556,10 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
     }
-    if (time == 0)   // explicitly asked not to get focus
-        return false;
+    if (time == 0) {   // explicitly asked not to get focus
+        if (!c->rules()->checkAcceptFocus(false))
+            return false;
+    }
     if (level == 0)   // none
         return true;
     if (level == 4)   // extreme
