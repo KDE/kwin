@@ -25,6 +25,8 @@
 #include <KColorSchemeManager>
 
 #include <QDebug>
+#include <QCoreApplication>
+#include <QEvent>
 #include <QModelIndex>
 
 namespace KDecoration2
@@ -120,6 +122,8 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     connect(this, &PreviewClient::bordersLeftEdgeChanged,   this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersRightEdgeChanged,  this, emitEdgesChanged);
     connect(this, &PreviewClient::bordersBottomEdgeChanged, this, emitEdgesChanged);
+
+    qApp->installEventFilter(this);
 }
 
 PreviewClient::~PreviewClient() = default;
@@ -448,6 +452,15 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 
 #undef SETTER2
 #undef SETTER
+
+bool PreviewClient::eventFilter(QObject *watched, QEvent *e)
+{
+    if (e->type() == QEvent::ApplicationPaletteChange) {
+        m_palette = QPalette();
+        emit paletteChanged(m_palette);
+    }
+    return false;
+}
 
 } // namespace Preview
 } // namespace KDecoration2

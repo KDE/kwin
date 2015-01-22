@@ -31,6 +31,7 @@
 // Qt
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QFontDatabase>
 #include <QMenu>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -83,9 +84,10 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
 
     qmlRegisterType<QAbstractItemModel>();
     m_ui->view->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
-    m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
+    updateColors();
     m_ui->view->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
     m_ui->view->rootContext()->setContextProperty("configurationModule", this);
+    m_ui->view->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
     m_ui->view->setResizeMode(QQuickWidget::SizeRootObjectToView);
     m_ui->view->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
     if (m_ui->view->status() == QQuickWidget::Ready) {
@@ -164,6 +166,8 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     QVBoxLayout *l = new QVBoxLayout(this);
     l->addWidget(m_ui);
     QMetaObject::invokeMethod(m_model, "init", Qt::QueuedConnection);
+
+    m_ui->installEventFilter(this);
 }
 
 ConfigurationModule::~ConfigurationModule() = default;
@@ -377,6 +381,23 @@ QAbstractItemModel *ConfigurationModule::rightButtons() const
 QAbstractItemModel *ConfigurationModule::availableButtons() const
 {
     return m_availableButtons;
+}
+
+bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
+{
+    if (watched != m_ui) {
+        return false;
+    }
+    if (e->type() == QEvent::PaletteChange) {
+        updateColors();
+    }
+    return false;
+}
+
+void ConfigurationModule::updateColors()
+{
+    m_ui->view->setClearColor(m_ui->view->palette().color(QPalette::Window));
+    m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
 }
 
 }

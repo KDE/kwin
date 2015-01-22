@@ -21,6 +21,7 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 import org.kde.kwin.private.kdecoration 1.0 as KDecoration
+import org.kde.plasma.core 2.0 as PlasmaCore;
 
 ListView {
     id: view
@@ -28,9 +29,10 @@ ListView {
     property bool dragging: false
     orientation: ListView.Horizontal
     interactive: false
+    spacing: units.smallSpacing
     delegate: Item {
-        width: 32
-        height: 32
+        width: units.iconSizes.small
+        height: units.iconSizes.small
         KDecoration.Button {
             id: button
             property int itemIndex: index
@@ -45,6 +47,7 @@ ListView {
         }
         MouseArea {
             id: dragArea
+            cursorShape: Qt.PointingHandCursor
             anchors.fill: parent
             drag.target: button
             onReleased: {
@@ -56,5 +59,16 @@ ListView {
             }
         }
     }
-    Layout.preferredWidth: count * 32
+    add: Transition {
+        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: units.longDuration/2 }
+        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: units.longDuration/2 }
+    }
+    move: Transition {
+        NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: units.longDuration/2 }
+        NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: units.longDuration/2 }
+    }
+    displaced: Transition {
+        NumberAnimation { properties: "x,y"; duration: units.longDuration; easing.type: Easing.OutBounce }
+    }
+    Layout.preferredWidth: count * (units.iconSizes.small + units.smallSpacing) - Math.min(1, count) * units.smallSpacing
 }
