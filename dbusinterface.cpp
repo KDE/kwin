@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingadaptor.h"
 
 // kwin
+#include "atoms.h"
 #include "composite.h"
 #include "compositingprefs.h"
 #include "main.h"
@@ -56,6 +57,8 @@ DBusInterface::DBusInterface(QObject *parent)
     if (!dbus.registerService(m_serviceName)) {
         QDBusServiceWatcher *dog = new QDBusServiceWatcher(m_serviceName, dbus, QDBusServiceWatcher::WatchForUnregistration, this);
         connect (dog, SIGNAL(serviceUnregistered(QString)), SLOT(becomeKWinService(QString)));
+    } else {
+        announceService();
     }
     dbus.connect(QString(), QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"),
                  Workspace::self(), SLOT(slotReloadConfig()));
@@ -67,6 +70,7 @@ void DBusInterface::becomeKWinService(const QString &service)
     // but it's probably no longer needed since we explicitly unregister the service with the deconstructor
     if (service == m_serviceName && QDBusConnection::sessionBus().registerService(m_serviceName) && sender()) {
         sender()->deleteLater(); // bye doggy :'(
+        announceService();
     }
 }
 
@@ -75,6 +79,14 @@ DBusInterface::~DBusInterface()
     QDBusConnection::sessionBus().unregisterService(m_serviceName);
     // KApplication automatically also grabs org.kde.kwin, so it's often been used externally - ensure to free it as well
     QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kwin"));
+    xcb_delete_property(connection(), rootWindow(), atoms->kwin_dbus_service);
+}
+
+void DBusInterface::announceService()
+{
+    const QByteArray service = m_serviceName.toUtf8();
+    xcb_change_property(connection(), XCB_PROP_MODE_REPLACE, rootWindow(), atoms->kwin_dbus_service,
+                        atoms->utf8_string, 8, service.size(), service.constData());
 }
 
 // wrap void methods with no arguments to Workspace
