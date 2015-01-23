@@ -82,8 +82,6 @@ public:
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 
-    void registerDBusService();
-
     static void setCrashCount(int count);
     static bool wasCrash();
 

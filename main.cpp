@@ -298,18 +298,6 @@ void Application::processCommandLine(QCommandLineParser *parser)
     Application::setCrashCount(parser->value(s_crashesOption).toInt());
 }
 
-void Application::registerDBusService()
-{
-    QString appname;
-    if (x11ScreenNumber() == 0)
-        appname = QStringLiteral("org.kde.kwin");
-    else
-        appname.sprintf("org.kde.kwin-screen-%d", KWin::Application::x11ScreenNumber());
-
-    QDBusConnection::sessionBus().interface()->registerService(
-        appname, QDBusConnectionInterface::DontQueueService);
-}
-
 void Application::setupTranslator()
 {
     QTranslator *qtTranslator = new QTranslator(qApp);

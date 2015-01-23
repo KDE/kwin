@@ -224,6 +224,12 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
             // acts exactly as previously
             if (i != KWin::Application::x11ScreenNumber() && fork() == 0) {
                 KWin::Application::setX11ScreenNumber(i);
+                QByteArray dBusSuffix = qgetenv("KWIN_DBUS_SERVICE_SUFFIX");
+                if (!dBusSuffix.isNull()) {
+                    dBusSuffix.append(".");
+                }
+                dBusSuffix.append(QByteArrayLiteral("head-")).append(QByteArray::number(i));
+                qputenv("KWIN_DBUS_SERVICE_SUFFIX", dBusSuffix);
                 // Break here because we are the child process, we don't
                 // want to fork() anymore
                 break;
@@ -287,9 +293,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::SessionManager weAreIndeed;
 #endif
     KWin::SessionSaveDoneHelper helper;
-
-    // TODO: is this still needed?
-    a.registerDBusService();
 
     return a.exec();
 }

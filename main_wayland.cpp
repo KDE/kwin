@@ -270,8 +270,5 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     a.start();
 
-    // TODO: is this still needed?
-    a.registerDBusService();
-
     return a.exec();
 }
