@@ -188,7 +188,7 @@ QString CompositorDBusInterface::compositingType() const
         return QStringLiteral("gl2");
 #endif
     case QPainterCompositing:
-        return "qpainter";
+        return QStringLiteral("qpainter");
     case NoCompositing:
     default:
         return QStringLiteral("none");

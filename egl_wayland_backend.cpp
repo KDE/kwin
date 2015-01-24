@@ -78,21 +78,22 @@ EglWaylandBackend::~EglWaylandBackend()
 bool EglWaylandBackend::initializeEgl()
 {
     // Get the list of client extensions
-    const QByteArray clientExtensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (clientExtensionString.isEmpty()) {
+    const char* clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
+    if (clientExtensionsString.isEmpty()) {
         // If eglQueryString() returned NULL, the implementation doesn't support
         // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
         (void) eglGetError();
     }
 
-    const QList<QByteArray> clientExtensions = clientExtensionString.split(' ');
+    const QList<QByteArray> clientExtensions = clientExtensionsString.split(' ');
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    m_havePlatformBase = clientExtensions.contains("EGL_EXT_platform_base");
+    m_havePlatformBase = clientExtensions.contains(QByteArrayLiteral("EGL_EXT_platform_base"));
     if (m_havePlatformBase) {
         // Make sure that the wayland platform is supported
-        if (!clientExtensions.contains("EGL_EXT_platform_wayland"))
+        if (!clientExtensions.contains(QByteArrayLiteral("EGL_EXT_platform_wayland")))
             return false;
 
         m_display = eglGetPlatformDisplayEXT(EGL_PLATFORM_WAYLAND_EXT, m_wayland->display(), nullptr);
@@ -171,11 +172,11 @@ bool EglWaylandBackend::initRenderingContext()
         EGL_NONE
     };
 
-    const QByteArray eglExtensions = eglQueryString(m_display, EGL_EXTENSIONS);
-    const QList<QByteArray> extensions = eglExtensions.split(' ');
+    const char* eglExtensionsCString = eglQueryString(m_display, EGL_EXTENSIONS);
+    const QList<QByteArray> extensions = QByteArray::fromRawData(eglExtensionsCString, qstrlen(eglExtensionsCString)).split(' ');
 
     // Try to create a 3.1 core context
-    if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
+    if (options->glCoreProfile() && extensions.contains(QByteArrayLiteral("EGL_KHR_create_context")))
         m_context = eglCreateContext(m_display, m_config, EGL_NO_CONTEXT, context_attribs_31_core);
 
     if (m_context == EGL_NO_CONTEXT)

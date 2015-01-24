@@ -71,7 +71,7 @@ void Activities::slotRemoved(const QString &activity)
         client->setOnActivity(activity, false);
     }
     //toss out any session data for it
-    KConfigGroup cg(KSharedConfig::openConfig(), QString("SubSession: ") + activity);
+    KConfigGroup cg(KSharedConfig::openConfig(), QByteArray("SubSession: ").append(activity.toUtf8()).constData());
     cg.deleteGroup();
 }
 

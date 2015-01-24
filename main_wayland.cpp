@@ -173,14 +173,14 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QByteArray xDisplay;
     QByteArray xServer;
     for (int i = 1; i < argc; ++i) {
-        QByteArray arg = argv[i];
+        QByteArray arg = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
         if (arg == "-x" || arg == "--x-server") {
             if (++i < argc) {
-                xServer = argv[i];
+                xServer = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
             }
-            startXephyr = (xServer == QStringLiteral("xephyr"));
-            startXvfb = (xServer == QStringLiteral("xvfb"));
-            startXwayland = (xServer == QStringLiteral("xwayland"));
+            startXephyr = (xServer == "xephyr");
+            startXvfb = (xServer == "xvfb");
+            startXwayland = (xServer == "xwayland");
             if (!startXephyr && !startXvfb && !startXwayland) {
                 fprintf(stderr, "%s: FATAL ERROR unknown X-Server %s specified to start\n",
                         argv[0], qPrintable(xServer));
@@ -190,7 +190,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         }
         if (arg == "--display") {
             if (++i < argc) {
-                xDisplay = argv[i];
+                xDisplay = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
             }
         }
     }
@@ -257,7 +257,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     // perform sanity checks
     // TODO: remove those two
-    if (a.platformName().toLower() != QStringLiteral("xcb")) {
+    if (a.platformName().toLower() != QLatin1String("xcb")) {
         fprintf(stderr, "%s: FATAL ERROR expecting platform xcb but got platform %s\n",
                 argv[0], qPrintable(a.platformName()));
         exit(1);
