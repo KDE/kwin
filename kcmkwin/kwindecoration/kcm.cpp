@@ -404,4 +404,3 @@ void ConfigurationModule::updateColors()
 }
 
 #include "kcm.moc"
-`
