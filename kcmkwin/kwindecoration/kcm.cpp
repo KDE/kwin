@@ -396,7 +396,9 @@ bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
 
 void ConfigurationModule::updateColors()
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     m_ui->view->setClearColor(m_ui->view->palette().color(QPalette::Window));
+#endif
     m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
 }
 
