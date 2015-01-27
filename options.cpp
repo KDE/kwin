@@ -55,7 +55,8 @@ int currentRefreshRate()
     else if (GLPlatform::instance()->driver() == Driver_NVidia) {
 #ifndef KWIN_NO_XF86VM
         int major, event, error;
-        if (XQueryExtension(display(), "XFree86-VidModeExtension", &major, &event, &error)) {
+        static const bool s_hasVidMode = XQueryExtension(display(), "XFree86-VidModeExtension", &major, &event, &error);
+        if (s_hasVidMode) {
             XF86VidModeModeLine modeline;
             int dotclock, vtotal;
             if (XF86VidModeGetModeLine(display(), 0, &dotclock, &modeline)) {
