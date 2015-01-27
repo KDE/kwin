@@ -56,6 +56,11 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
         if (toplevel->effectWindow() && toplevel->effectWindow()->sceneWindow()) {
             toplevel->effectWindow()->sceneWindow()->updateShadow(shadow);
         }
+        if (shadow->hasDecorationShadow()) {
+            if (toplevel->effectWindow()) {
+                toplevel->effectWindow()->buildQuads(true);
+            }
+        }
     }
     return shadow;
 }
