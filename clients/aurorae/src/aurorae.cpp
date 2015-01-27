@@ -521,22 +521,57 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
 #endif
     painter->fillRect(rect(), Qt::transparent);
     QRectF r(QPointF(0, 0), m_buffer.size());
+    bool updateShadow = false;
+    const auto oldShadow = shadow();
     if (m_padding &&
             (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) &&
             !client().data()->isMaximized()) {
         r = r.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
-        auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
-        s->setShadow(m_buffer);
-        s->setPadding(*m_padding);
-        s->setInnerShadowRect(QRect(m_padding->left(),
-                                    m_padding->top(),
-                                    m_buffer.width() - m_padding->left() - m_padding->right(),
-                                    m_buffer.height() - m_padding->top() - m_padding->bottom()));
-        m_scheduledShadow = s;
+        if (oldShadow.isNull()) {
+            updateShadow = true;
+        } else {
+            // compare padding
+            if (oldShadow->padding() != *m_padding) {
+                updateShadow = true;
+            }
+        }
+        QImage img(m_buffer.size(), QImage::Format_ARGB32_Premultiplied);
+        img.fill(Qt::transparent);
+        QPainter p(&img);
+        // top
+        p.drawImage(0, 0, m_buffer, 0, 0, img.width(), m_padding->top());
+        // left
+        p.drawImage(0, m_padding->top(), m_buffer, 0, m_padding->top(), m_padding->left(), m_buffer.height() - m_padding->top());
+        // bottom
+        p.drawImage(m_padding->left(), m_buffer.height() - m_padding->bottom(), m_buffer,
+                    m_padding->left(), m_buffer.height() - m_padding->bottom(),
+                    m_buffer.width() - m_padding->left(), m_padding->bottom());
+        // right
+        p.drawImage(m_buffer.width() - m_padding->right(), m_padding->top(), m_buffer,
+                    m_buffer.width() - m_padding->right(), m_padding->top(),
+                    m_padding->right(), m_buffer.height() - m_padding->top() - m_padding->bottom());
+        if (!updateShadow) {
+            updateShadow = (oldShadow->shadow() != img);
+        }
+        if (updateShadow) {
+            auto s = QSharedPointer<KDecoration2::DecorationShadow>::create();
+            s->setShadow(img);
+            s->setPadding(*m_padding);
+            s->setInnerShadowRect(QRect(m_padding->left(),
+                                        m_padding->top(),
+                                        m_buffer.width() - m_padding->left() - m_padding->right(),
+                                        m_buffer.height() - m_padding->top() - m_padding->bottom()));
+            m_scheduledShadow = s;
+        }
     } else {
-        m_scheduledShadow = QSharedPointer<KDecoration2::DecorationShadow>();
+        if (!oldShadow.isNull()) {
+            m_scheduledShadow = QSharedPointer<KDecoration2::DecorationShadow>();
+            updateShadow = true;
+        }
     }
-    QMetaObject::invokeMethod(this, "updateShadow", Qt::QueuedConnection);
+    if (updateShadow) {
+        QMetaObject::invokeMethod(this, "updateShadow", Qt::QueuedConnection);
+    }
     painter->drawImage(rect(), m_buffer, r);
 }
 
