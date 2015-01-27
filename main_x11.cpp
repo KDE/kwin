@@ -198,6 +198,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     }
 
     const int number_of_screens = xcb_setup_roots_length(xcb_get_setup(c));
+    xcb_disconnect(c);
+    c = nullptr;
 
     // multi head
     auto isMultiHead = []() -> bool {
@@ -212,8 +214,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         KWin::Application::setX11ScreenNumber(primaryScreen);
         int pos; // Temporarily needed to reconstruct DISPLAY var if multi-head
         QByteArray display_name = qgetenv("DISPLAY");
-        xcb_disconnect(c);
-        c = nullptr;
 
         if ((pos = display_name.lastIndexOf('.')) != -1)
             display_name.remove(pos, 10);   // 10 is enough to be sure we removed ".s"
