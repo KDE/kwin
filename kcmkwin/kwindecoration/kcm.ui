@@ -39,15 +39,12 @@
     </layout>
    </item>
    <item>
-    <widget class="QQuickWidget" name="view">
+    <widget class="QWidget" name="view">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
-     </property>
-     <property name="resizeMode">
-      <enum>QQuickWidget::SizeRootObjectToView</enum>
      </property>
     </widget>
    </item>

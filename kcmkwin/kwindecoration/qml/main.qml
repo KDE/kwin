@@ -21,12 +21,16 @@ import QtQuick 2.1
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
 
-ColumnLayout {
-    Previews {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-    }
-    Buttons {
-        Layout.fillWidth: true
+Rectangle {
+    color: backgroundColor
+    ColumnLayout {
+        anchors.fill: parent
+        Previews {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+        Buttons {
+            Layout.fillWidth: true
+        }
     }
 }
