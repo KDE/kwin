@@ -169,7 +169,7 @@ Item {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         elide: Text.ElideRight
-                        wrapMode: Text.Wrap
+                        wrapMode: Text.NoWrap
                     }
                     MouseArea {
                         id: dragArea
