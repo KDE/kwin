@@ -1241,7 +1241,7 @@ public:
     void clear();
     void setBackgroundPixmap(xcb_pixmap_t pixmap);
     void defineCursor(xcb_cursor_t cursor);
-    void focus(uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
+    void focus(uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);
     void selectInput(uint32_t events);
     void kill();
     operator xcb_window_t() const;
