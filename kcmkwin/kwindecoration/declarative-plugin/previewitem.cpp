@@ -53,6 +53,7 @@ PreviewItem::PreviewItem(QQuickItem *parent)
 
 PreviewItem::~PreviewItem()
 {
+    m_decoration->deleteLater();
     if (m_bridge){
         m_bridge->unregisterPreviewItem(this);
     }
@@ -74,7 +75,7 @@ void PreviewItem::createDecoration()
     if (m_bridge.isNull() || m_settings.isNull() || m_decoration) {
         return;
     }
-    m_decoration = m_bridge->createDecoration(this);
+    m_decoration = m_bridge->createDecoration(0);
     if (!m_decoration) {
         return;
     }
