@@ -24,11 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "workspace.h"
 #include "xcbutils.h"
-// Qt
-#include <QCursor>
 // XLib
 #include <X11/cursorfont.h>
-#include <X11/Xcursor/Xcursor.h>
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 // XCB
@@ -76,20 +73,15 @@ void KillWindow::start()
 
 xcb_cursor_t KillWindow::createCursor()
 {
-    // XCursor is an XLib only lib
-    const char *theme = XcursorGetTheme(display());
-    const int size = XcursorGetDefaultSize(display());
-    XcursorImage *ximg = XcursorLibraryLoadImage("pirate", theme, size);
-    if (ximg) {
-        xcb_cursor_t cursor = XcursorImageLoadCursor(display(), ximg);
-        XcursorImageDestroy(ximg);
+    xcb_cursor_t cursor = Cursor::x11Cursor(QByteArrayLiteral("pirate"));
+    if (cursor != XCB_CURSOR_NONE) {
         return cursor;
     }
     // fallback on font
     xcb_connection_t *c = connection();
     const xcb_font_t cursorFont = xcb_generate_id(c);
     xcb_open_font(c, cursorFont, strlen ("cursor"), "cursor");
-    xcb_cursor_t cursor = xcb_generate_id(c);
+    cursor = xcb_generate_id(c);
     xcb_create_glyph_cursor(c, cursor, cursorFont, cursorFont,
                             XC_pirate,         /* source character glyph */
                             XC_pirate + 1,     /* mask character glyph */
