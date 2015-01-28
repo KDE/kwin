@@ -36,6 +36,7 @@
 #include <QQmlContext>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <QQuickView>
 #include <QSortFilterProxyModel>
 #include <QStandardPaths>
 #include <QVBoxLayout>
@@ -77,21 +78,26 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     m_proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
     connect(m_ui->filter, &QLineEdit::textChanged, m_proxyModel, &QSortFilterProxyModel::setFilterFixedString);
 
+    m_quickView = new QQuickView(0);
     KDeclarative::KDeclarative kdeclarative;
-    kdeclarative.setDeclarativeEngine(m_ui->view->engine());
+    kdeclarative.setDeclarativeEngine(m_quickView->engine());
     kdeclarative.setTranslationDomain(QStringLiteral(TRANSLATION_DOMAIN));
     kdeclarative.setupBindings();
 
     qmlRegisterType<QAbstractItemModel>();
-    m_ui->view->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
+    QWidget *widget = QWidget::createWindowContainer(m_quickView, this);
+    QVBoxLayout* layout = new QVBoxLayout(m_ui->view);
+    layout->addWidget(widget);
+
+    m_quickView->rootContext()->setContextProperty(QStringLiteral("decorationsModel"), m_proxyModel);
     updateColors();
-    m_ui->view->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
-    m_ui->view->rootContext()->setContextProperty("configurationModule", this);
-    m_ui->view->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
-    m_ui->view->setResizeMode(QQuickWidget::SizeRootObjectToView);
-    m_ui->view->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
-    if (m_ui->view->status() == QQuickWidget::Ready) {
-        auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView");
+    m_quickView->rootContext()->setContextProperty("_borderSizesIndex", 3); // 3 is normal
+    m_quickView->rootContext()->setContextProperty("configurationModule", this);
+    m_quickView->rootContext()->setContextProperty("titleFont", QFontDatabase::systemFont(QFontDatabase::TitleFont));
+    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_quickView->setSource(QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/kcm_kwindecoration/main.qml"))));
+    if (m_quickView->status() == QQuickView::Ready) {
+        auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
         if (listView) {
             connect(listView, SIGNAL(currentIndexChanged()), this, SLOT(changed()));
         }
@@ -122,7 +128,7 @@ ConfigurationModule::ConfigurationModule(QWidget *parent, const QVariantList &ar
     );
     connect(m_ui->borderSizesCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, [this] (int index) {
-            auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView");
+            auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
             if (listView) {
                 listView->setProperty("borderSizesIndex", index);
             }
@@ -265,7 +271,7 @@ void ConfigurationModule::load()
     const QString plugin = config.readEntry("library", s_defaultPlugin);
     const QString theme = config.readEntry("theme", QString());
     const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(plugin, theme));
-    if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
+    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
     m_ui->closeWindowsDoubleClick->setChecked(config.readEntry("CloseOnDoubleClickOnMenu", false));
@@ -305,7 +311,7 @@ void ConfigurationModule::save()
     KConfigGroup config = KSharedConfig::openConfig("kwinrc")->group(s_pluginName);
     config.writeEntry("CloseOnDoubleClickOnMenu", m_ui->closeWindowsDoubleClick->isChecked());
     config.writeEntry("BorderSize", sizeToString(m_ui->borderSizesCombo->currentData().value<BorderSize>()));
-    if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
+    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
         const int currentIndex = listView->property("currentIndex").toInt();
         if (currentIndex != -1) {
             const QModelIndex index = m_proxyModel->index(currentIndex, 0);
@@ -333,7 +339,7 @@ void ConfigurationModule::save()
 
 void ConfigurationModule::defaults()
 {
-    if (auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView")) {
+    if (auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView")) {
         const QModelIndex index = m_proxyModel->mapFromSource(m_model->findDecoration(s_defaultPlugin));
         listView->setProperty("currentIndex", index.isValid() ? index.row() : -1);
     }
@@ -346,7 +352,7 @@ void ConfigurationModule::showKNS(const QString &config)
 {
     QPointer<KNS3::DownloadDialog> downloadDialog = new KNS3::DownloadDialog(config, this);
     if (downloadDialog->exec() == QDialog::Accepted && !downloadDialog->changedEntries().isEmpty()) {
-        auto listView = m_ui->view->rootObject()->findChild<QQuickItem*>("listView");
+        auto listView = m_quickView->rootObject()->findChild<QQuickItem*>("listView");
         QString selectedPluginName;
         QString selectedThemeName;
         if (listView) {
@@ -396,10 +402,8 @@ bool ConfigurationModule::eventFilter(QObject *watched, QEvent *e)
 
 void ConfigurationModule::updateColors()
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    m_ui->view->setClearColor(m_ui->view->palette().color(QPalette::Window));
-#endif
-    m_ui->view->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
+    m_quickView->rootContext()->setContextProperty("backgroundColor", QPalette().color(QPalette::Window));
+    m_quickView->rootContext()->setContextProperty("highlightColor", QPalette().color(QPalette::Highlight));
 }
 
 }

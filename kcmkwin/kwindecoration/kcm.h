@@ -25,6 +25,7 @@
 #include <QAbstractItemModel>
 
 class QSortFilterProxyModel;
+class QQuickView;
 
 namespace KDecoration2
 {
@@ -73,6 +74,7 @@ private:
     DecorationsModel *m_model;
     QSortFilterProxyModel *m_proxyModel;
     ConfigurationForm *m_ui;
+    QQuickView *m_quickView;
     Preview::ButtonsModel *m_leftButtons;
     Preview::ButtonsModel *m_rightButtons;
     Preview::ButtonsModel *m_availableButtons;
