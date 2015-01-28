@@ -3126,6 +3126,11 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (!isResizable() && maximizeMode() != MaximizeFull)
         return;
 
+    // this might move the window away from the cursor pos what will cause a leave event
+    // since this is not due to a cursor move and we didn't receive motion events in the active
+    // window, we need to udpate the focus mouse position here
+    workspace()->updateFocusMousePosition(Cursor::pos());
+
     GeometryUpdatesBlocker blocker(this);
 
     if (mode == QuickTileMaximize) {
