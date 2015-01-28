@@ -1695,7 +1695,7 @@ void Workspace::switchWindow(Direction direction)
             continue;
         }
         if (client->wantsTabFocus() && *i != c &&
-                client->desktop() == d && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
+                client->isOnDesktop(d) && !client->isMinimized() && (*i)->isOnCurrentActivity()) {
             // Centre of the other window
             QPoint other(client->pos().x() + client->geometry().width() / 2,
                          client->pos().y() + client->geometry().height() / 2);
