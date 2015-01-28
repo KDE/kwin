@@ -173,6 +173,7 @@ find_package(XCB
         GLX
     OPTIONAL_COMPONENTS
         ICCCM
+        CURSOR
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 
@@ -181,6 +182,7 @@ if (XCB_ICCCM_VERSION VERSION_LESS "0.4")
     set(XCB_ICCCM_FOUND FALSE)
 endif()
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
+add_feature_info("XCB-CURSOR" XCB_CURSOR_FOUND "Required for XCursor support")
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -258,6 +260,12 @@ else()
     set(HAVE_WAYLAND FALSE)
     set(HAVE_XKB FALSE)
     set(HAVE_WAYLAND_EGL FALSE)
+endif()
+
+if(XCB_CURSOR_FOUND)
+    set(HAVE_XCB_CURSOR ${XCB_CURSOR_FOUND})
+else()
+    set(HAVE_XCB_CURSOR FALSE)
 endif()
 
 include(CheckIncludeFiles)
@@ -464,7 +472,6 @@ set(kwin_KDE_LIBS
 set(kwin_XLIB_LIBS
     ${X11_X11_LIB}
     ${X11_Xext_LIB}
-    ${X11_Xcursor_LIB}
     ${X11_ICE_LIB}
     ${X11_SM_LIB}
 )
@@ -498,6 +505,10 @@ set(kwin_WAYLAND_EGL_LIBS
 
 if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
+endif()
+
+if(HAVE_XCB_CURSOR)
+    set(kwin_XCB_LIBS ${kwin_XCB_LIBS} XCB::CURSOR)
 endif()
 
 set(kwinLibs

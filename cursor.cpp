@@ -33,11 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDBusConnection>
 #include <QScreen>
 #include <QTimer>
-// Xlib
-#include <X11/Xcursor/Xcursor.h>
-#include <fixx11h.h>
 // xcb
 #include <xcb/xfixes.h>
+#if HAVE_XCB_CURSOR
+#include <xcb/xcb_cursor.h>
+#endif
 
 namespace KWin
 {
@@ -353,15 +353,20 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
     if (name.isEmpty()) {
         return XCB_CURSOR_NONE;
     }
-    // XCursor is an XLib only lib
-    XcursorImage *ximg = XcursorLibraryLoadImage(name.constData(), themeName().toUtf8().constData(), themeSize());
-    if (!ximg) {
+#if HAVE_XCB_CURSOR
+    xcb_cursor_context_t *ctx;
+    if (xcb_cursor_context_new(connection(), defaultScreen(), &ctx) < 0) {
         return XCB_CURSOR_NONE;
     }
-    xcb_cursor_t cursor = XcursorImageLoadCursor(display(), ximg);
-    XcursorImageDestroy(ximg);
-    m_cursors.insert(name, cursor);
+    const xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());
+    if (cursor != XCB_CURSOR_NONE) {
+        m_cursors.insert(name, cursor);
+    }
+    xcb_cursor_context_free(ctx);
     return cursor;
+#else
+    return XCB_CURSOR_NONE;
+#endif
 }
 
 QByteArray Cursor::cursorName(Qt::CursorShape shape) const

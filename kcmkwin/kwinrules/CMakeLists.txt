@@ -16,7 +16,6 @@ kf5_add_kdeinit_executable( kwin_rules_dialog ${kwin_rules_dialog_KDEINIT_SRCS})
 set(kwin_kcm_rules_XCB_LIBS
     XCB::XCB
     XCB::XFIXES
-    ${X11_Xcursor_LIB}
 )
 
 set(kcm_libs
@@ -33,6 +32,10 @@ set(kcm_libs
 
 if(KWIN_BUILD_ACTIVITIES)
     set(kcm_libs ${kcm_libs} KF5::Activities)
+endif()
+
+if(HAVE_XCB_CURSOR)
+    set(kwin_kcm_rules_XCB_LIBS ${kwin_kcm_rules_XCB_LIBS} XCB::CURSOR)
 endif()
 
 target_link_libraries(kdeinit_kwin_rules_dialog ${kcm_libs} ${kwin_kcm_rules_XCB_LIBS})

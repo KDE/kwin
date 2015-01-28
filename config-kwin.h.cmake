@@ -13,6 +13,7 @@
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_XKB
 #cmakedefine01 HAVE_INPUT
+#cmakedefine01 HAVE_XCB_CURSOR
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1
