@@ -157,9 +157,20 @@ xcb_cursor_t Cursor::getX11Cursor(Qt::CursorShape shape)
     return XCB_CURSOR_NONE;
 }
 
+xcb_cursor_t Cursor::getX11Cursor(const QByteArray &name)
+{
+    Q_UNUSED(name)
+    return XCB_CURSOR_NONE;
+}
+
 xcb_cursor_t Cursor::x11Cursor(Qt::CursorShape shape)
 {
     return s_self->getX11Cursor(shape);
+}
+
+xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
+{
+    return s_self->getX11Cursor(name);
 }
 
 void Cursor::doSetPos()
@@ -325,16 +336,20 @@ void X11Cursor::mousePolled()
 
 xcb_cursor_t X11Cursor::getX11Cursor(Qt::CursorShape shape)
 {
-    QHash<Qt::CursorShape, xcb_cursor_t>::const_iterator it = m_cursors.constFind(shape);
+    return getX11Cursor(cursorName(shape));
+}
+
+xcb_cursor_t X11Cursor::getX11Cursor(const QByteArray &name)
+{
+    auto it = m_cursors.constFind(name);
     if (it != m_cursors.constEnd()) {
         return it.value();
     }
-    return createCursor(shape);
+    return createCursor(name);
 }
 
-xcb_cursor_t X11Cursor::createCursor(Qt::CursorShape shape)
+xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
 {
-    const QByteArray name = cursorName(shape);
     if (name.isEmpty()) {
         return XCB_CURSOR_NONE;
     }
@@ -345,7 +360,7 @@ xcb_cursor_t X11Cursor::createCursor(Qt::CursorShape shape)
     }
     xcb_cursor_t cursor = XcursorImageLoadCursor(display(), ximg);
     XcursorImageDestroy(ximg);
-    m_cursors.insert(shape, cursor);
+    m_cursors.insert(name, cursor);
     return cursor;
 }
 

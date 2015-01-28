@@ -121,6 +121,11 @@ public:
     static void setPos(const QPoint &pos);
     static void setPos(int x, int y);
     static xcb_cursor_t x11Cursor(Qt::CursorShape shape);
+    /**
+     * Notice: if available always use the Qt::CursorShape variant to avoid cache duplicates for
+     * ambiguous cursor names in the non existing cursor name spcification
+     **/
+    static xcb_cursor_t x11Cursor(const QByteArray &name);
 
 Q_SIGNALS:
     void posChanged(QPoint pos);
@@ -146,6 +151,12 @@ protected:
      * mouse cursors.
      **/
     virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
+    /**
+     * Called from @link x11Cursor to actually retrieve the X11 cursor. Base implementation returns
+     * a null cursor, an implementing subclass should implement this method if it can provide X11
+     * mouse cursors.
+     **/
+    virtual xcb_cursor_t getX11Cursor(const QByteArray &name);
     /**
      * Performs the actual warping of the cursor.
      **/
@@ -211,6 +222,7 @@ public:
     virtual ~X11Cursor();
 protected:
     virtual xcb_cursor_t getX11Cursor(Qt::CursorShape shape);
+    xcb_cursor_t getX11Cursor(const QByteArray &name) override;
     virtual void doSetPos();
     virtual void doGetPos();
     virtual void doStartMousePolling();
@@ -228,8 +240,8 @@ private Q_SLOTS:
     void mousePolled();
 private:
     X11Cursor(QObject *parent);
-    xcb_cursor_t createCursor(Qt::CursorShape shape);
-    QHash<Qt::CursorShape, xcb_cursor_t > m_cursors;
+    xcb_cursor_t createCursor(const QByteArray &name);
+    QHash<QByteArray, xcb_cursor_t > m_cursors;
     xcb_timestamp_t m_timeStamp;
     uint16_t m_buttonMask;
     QTimer *m_resetTimeStampTimer;
