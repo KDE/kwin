@@ -1498,6 +1498,11 @@ class KWINEFFECTS_EXPORT EffectWindow : public QObject
      */
     Q_PROPERTY(bool notification READ isNotification)
     /**
+     * Returns whether the window is an on screen display window
+     * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
+     */
+    Q_PROPERTY(bool onScreenDisplay READ isOnScreenDisplay)
+    /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
@@ -1786,6 +1791,11 @@ public:
      * See _NET_WM_WINDOW_TYPE_NOTIFICATION at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
     bool isNotification() const;
+    /**
+     * Returns whether the window is an on screen display window
+     * using the non-standard _KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY
+     */
+    bool isOnScreenDisplay() const;
     /**
      * Returns whether the window is a combobox popup.
      * See _NET_WM_WINDOW_TYPE_COMBO at http://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
