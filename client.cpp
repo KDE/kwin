@@ -2086,7 +2086,7 @@ bool Client::wantsInput() const
 bool Client::isSpecialWindow() const
 {
     // TODO
-    return isDesktop() || isDock() || isSplash() || isToolbar();
+    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay();
 }
 
 /**
