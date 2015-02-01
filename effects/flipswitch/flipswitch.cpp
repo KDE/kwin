@@ -192,62 +192,6 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             }
         }
 
-        // multiscreen part taken from coverswitch.cpp
-        // TODO: move to kwinglutils
-        QMatrix4x4 origProjection;
-        QMatrix4x4 origModelview;
-        if (effects->numScreens() > 1) {
-            // unfortunatelly we have to change the projection matrix in dual screen mode
-            QRect fullRect = effects->clientArea(FullArea, effects->activeScreen(), effects->currentDesktop());
-            float fovy = 60.0f;
-            float aspect = 1.0f;
-            float zNear = 0.1f;
-            float zFar = 100.0f;
-            float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-            float ymin = -ymax;
-            float xmin =  ymin * aspect;
-            float xmax = ymax * aspect;
-            float xTranslate = 0.0;
-            float yTranslate = 0.0;
-            float xminFactor = 1.0;
-            float xmaxFactor = 1.0;
-            float yminFactor = 1.0;
-            float ymaxFactor = 1.0;
-            if (m_screenArea.x() == 0 && m_screenArea.width() != fullRect.width()) {
-                // horizontal layout: left screen
-                xminFactor = (float)m_screenArea.width() / (float)fullRect.width();
-                xmaxFactor = ((float)fullRect.width() - (float)m_screenArea.width() * 0.5f) / ((float)fullRect.width() * 0.5f);
-                xTranslate = (float)fullRect.width() * 0.5f - (float)m_screenArea.width() * 0.5f;
-            }
-            if (m_screenArea.x() != 0 && m_screenArea.width() != fullRect.width()) {
-                // horizontal layout: right screen
-                xminFactor = ((float)fullRect.width() - (float)m_screenArea.width() * 0.5f) / ((float)fullRect.width() * 0.5f);
-                xmaxFactor = (float)m_screenArea.width() / (float)fullRect.width();
-                xTranslate = (float)fullRect.width() * 0.5f - (float)m_screenArea.width() * 0.5f;
-            }
-            if (m_screenArea.y() == 0 && m_screenArea.height() != fullRect.height()) {
-                // vertical layout: top screen
-                yminFactor = ((float)fullRect.height() - (float)m_screenArea.height() * 0.5f) / ((float)fullRect.height() * 0.5f);
-                ymaxFactor = (float)m_screenArea.height() / (float)fullRect.height();
-                yTranslate = (float)fullRect.height() * 0.5f - (float)m_screenArea.height() * 0.5f;
-            }
-            if (m_screenArea.y() != 0 && m_screenArea.height() != fullRect.height()) {
-                // vertical layout: bottom screen
-                yminFactor = (float)m_screenArea.height() / (float)fullRect.height();
-                ymaxFactor = ((float)fullRect.height() - (float)m_screenArea.height() * 0.5f) / ((float)fullRect.height() * 0.5f);
-                yTranslate = (float)fullRect.height() * 0.5f - (float)m_screenArea.height() * 0.5f;
-            }
-            QMatrix4x4 projection;
-            projection.frustum(xmin * xminFactor, xmax * xmaxFactor, ymin * yminFactor, ymax * ymaxFactor, zNear, zFar);
-            QMatrix4x4 modelview;
-            modelview.translate(xTranslate, yTranslate, 0.0);
-            ShaderBinder binder(ShaderManager::GenericShader);
-            GLShader *shader = binder.shader();
-            origProjection = shader->getUniformMatrix4x4("projection");
-            origModelview = shader->getUniformMatrix4x4("modelview");
-            shader->setUniform("projection", projection);
-            shader->setUniform("modelview", origModelview * modelview);
-        }
 
         int winMask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         // fade in/out one window at the end of the stack during animation
@@ -255,6 +199,10 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             EffectWindow* w = m_flipOrderedWindows.last();
             if (ItemInfo *info = m_windows.value(w,0)) {
                 WindowPaintData data(w);
+                if (effects->numScreens() > 1) {
+                    data.setProjectionMatrix(m_projectionMatrix);
+                    data.setModelViewMatrix(m_modelviewMatrix);
+                }
                 data.setRotationAxis(Qt::YAxis);
                 data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
                 data.setOpacity(info->opacity);
@@ -286,6 +234,10 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             if (!info)
                 continue;
             WindowPaintData data(w);
+            if (effects->numScreens() > 1) {
+                data.setProjectionMatrix(m_projectionMatrix);
+                data.setModelViewMatrix(m_modelviewMatrix);
+            }
             data.setRotationAxis(Qt::YAxis);
             data.setRotationAngle(m_angle * m_startStopTimeLine.currentValue());
             data.setOpacity(info->opacity);
@@ -340,13 +292,6 @@ void FlipSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& da
             }
 
             effects->drawWindow(w, winMask, infiniteRegion(), data);
-        }
-
-        if (effects->numScreens() > 1) {
-            ShaderBinder binder(ShaderManager::GenericShader);
-            GLShader *shader = binder.shader();
-            shader->setUniform("projection", origProjection);
-            shader->setUniform("modelview", origModelview);
         }
 
         if (m_windowTitle) {
@@ -580,6 +525,62 @@ void FlipSwitchEffect::setActive(bool activate, FlipSwitchMode mode)
         m_startStopTimeLine.setCurveShape(QTimeLine::EaseInOutCurve);
         m_activeScreen = effects->activeScreen();
         m_screenArea = effects->clientArea(ScreenArea, m_activeScreen, effects->currentDesktop());
+
+        if (effects->numScreens() > 1) {
+            // unfortunatelly we have to change the projection matrix in dual screen mode
+            // code is copied from Coverswitch
+            QRect fullRect = effects->clientArea(FullArea, m_activeScreen, effects->currentDesktop());
+            float fovy = 60.0f;
+            float aspect = 1.0f;
+            float zNear = 0.1f;
+            float zFar = 100.0f;
+
+            float ymax = zNear * std::tan(fovy * M_PI / 360.0f);
+            float ymin = -ymax;
+            float xmin =  ymin * aspect;
+            float xmax = ymax * aspect;
+
+            if (m_screenArea.width() != fullRect.width()) {
+                if (m_screenArea.x() == 0) {
+                    // horizontal layout: left screen
+                    xmin *= (float)m_screenArea.width() / (float)fullRect.width();
+                    xmax *= (fullRect.width() - 0.5f * m_screenArea.width()) / (0.5f * fullRect.width());
+                } else {
+                    // horizontal layout: right screen
+                    xmin *= (fullRect.width() - 0.5f * m_screenArea.width()) / (0.5f * fullRect.width());
+                    xmax *= (float)m_screenArea.width() / (float)fullRect.width();
+                }
+            }
+            if (m_screenArea.height() != fullRect.height()) {
+                if (m_screenArea.y() == 0) {
+                    // vertical layout: top screen
+                    ymin *= (fullRect.height() - 0.5f * m_screenArea.height()) / (0.5f * fullRect.height());
+                    ymax *= (float)m_screenArea.height() / (float)fullRect.height();
+                } else {
+                    // vertical layout: bottom screen
+                    ymin *= (float)m_screenArea.height() / (float)fullRect.height();
+                    ymax *= (fullRect.height() - 0.5f * m_screenArea.height()) / (0.5f * fullRect.height());
+                }
+            }
+
+            m_projectionMatrix = QMatrix4x4();
+            m_projectionMatrix.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+
+            const float scaleFactor = 1.1f / zNear;
+
+            // Create a second matrix that transforms screen coordinates
+            // to world coordinates.
+            QMatrix4x4 matrix;
+            matrix.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+            matrix.scale( (xmax - xmin) * scaleFactor / fullRect.width(),
+                        -(ymax - ymin) * scaleFactor / fullRect.height(),
+                        0.001);
+            // Combine the matrices
+            m_projectionMatrix *= matrix;
+
+            m_modelviewMatrix = QMatrix4x4();
+            m_modelviewMatrix.translate(m_screenArea.x(), m_screenArea.y(), 0.0);
+        }
 
         if (m_stop) {
             // effect is still closing from last usage

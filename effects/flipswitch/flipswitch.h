@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_FLIPSWITCH_H
 
 #include <kwineffects.h>
+#include <QMatrix4x4>
 #include <QQueue>
 #include <QTimeLine>
 
@@ -133,6 +134,8 @@ private:
     QFont m_captionFont;
     EffectWindowList m_flipOrderedWindows;
     QHash< const EffectWindow*, ItemInfo* > m_windows;
+    QMatrix4x4 m_projectionMatrix;
+    QMatrix4x4 m_modelviewMatrix;
     // options
     bool m_tabbox;
     bool m_tabboxAlternative;

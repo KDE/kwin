@@ -157,6 +157,8 @@ private:
     bool secondaryTabBox;
 
     GLShader *m_reflectionShader;
+    QMatrix4x4 m_projectionMatrix;
+    QMatrix4x4 m_modelviewMatrix;
 };
 
 } // namespace

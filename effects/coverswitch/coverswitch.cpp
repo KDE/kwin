@@ -139,61 +139,6 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
     effects->paintScreen(mask, region, data);
 
     if (mActivated || stop || stopRequested) {
-        QMatrix4x4 origProjection;
-        QMatrix4x4 origModelview;
-        ShaderManager *shaderManager = ShaderManager::instance();
-        if (effects->numScreens() > 1) {
-            // unfortunatelly we have to change the projection matrix in dual screen mode
-            QRect fullRect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
-            float fovy = 60.0f;
-            float aspect = 1.0f;
-            float zNear = 0.1f;
-            float zFar = 100.0f;
-            float ymax = zNear * tan(fovy  * M_PI / 360.0f);
-            float ymin = -ymax;
-            float xmin =  ymin * aspect;
-            float xmax = ymax * aspect;
-            float xTranslate = 0.0;
-            float yTranslate = 0.0;
-            float xminFactor = 1.0;
-            float xmaxFactor = 1.0;
-            float yminFactor = 1.0;
-            float ymaxFactor = 1.0;
-            if (area.x() == 0 && area.width() != fullRect.width()) {
-                // horizontal layout: left screen
-                xminFactor = (float)area.width() / (float)fullRect.width();
-                xmaxFactor = ((float)fullRect.width() - (float)area.width() * 0.5f) / ((float)fullRect.width() * 0.5f);
-                xTranslate = (float)fullRect.width() * 0.5f - (float)area.width() * 0.5f;
-            }
-            if (area.x() != 0 && area.width() != fullRect.width()) {
-                // horizontal layout: right screen
-                xminFactor = ((float)fullRect.width() - (float)area.width() * 0.5f) / ((float)fullRect.width() * 0.5f);
-                xmaxFactor = (float)area.width() / (float)fullRect.width();
-                xTranslate = (float)fullRect.width() * 0.5f - (float)area.width() * 0.5f;
-            }
-            if (area.y() == 0 && area.height() != fullRect.height()) {
-                // vertical layout: top screen
-                yminFactor = ((float)fullRect.height() - (float)area.height() * 0.5f) / ((float)fullRect.height() * 0.5f);
-                ymaxFactor = (float)area.height() / (float)fullRect.height();
-                yTranslate = (float)fullRect.height() * 0.5f - (float)area.height() * 0.5f;
-            }
-            if (area.y() != 0 && area.height() != fullRect.height()) {
-                // vertical layout: bottom screen
-                yminFactor = (float)area.height() / (float)fullRect.height();
-                ymaxFactor = ((float)fullRect.height() - (float)area.height() * 0.5f) / ((float)fullRect.height() * 0.5f);
-                yTranslate = (float)fullRect.height() * 0.5f - (float)area.height() * 0.5f;
-            }
-            QMatrix4x4 projection;
-            projection.frustum(xmin * xminFactor, xmax * xmaxFactor, ymin * yminFactor, ymax * ymaxFactor, zNear, zFar);
-            QMatrix4x4 modelview;
-            modelview.translate(xTranslate, yTranslate, 0.0);
-            GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
-            origProjection = shader->getUniformMatrix4x4("projection");
-            origModelview = shader->getUniformMatrix4x4("modelview");
-            shader->setUniform("projection", projection);
-            shader->setUniform("modelview", origModelview * modelview);
-            shaderManager->popShader();
-        }
 
         QList< EffectWindow* > tempList = currentWindowList;
         int index = tempList.indexOf(selected_window);
@@ -296,7 +241,7 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
             glEnable(GL_SCISSOR_TEST);
 
             if (m_reflectionShader && m_reflectionShader->isValid()) {
-                shaderManager->pushShader(m_reflectionShader);
+                ShaderManager::instance()->pushShader(m_reflectionShader);
                 QMatrix4x4 windowTransformation;
                 windowTransformation.translate(area.x() + area.width() * 0.5f, 0.0, 0.0);
                 m_reflectionShader->setUniform("windowTransformation", windowTransformation);
@@ -324,19 +269,12 @@ void CoverSwitchEffect::paintScreen(int mask, QRegion region, ScreenPaintData& d
                 vbo->setData(6, 3, verts.data(), texcoords.data());
                 vbo->render(GL_TRIANGLES);
 
-                shaderManager->popShader();
+                ShaderManager::instance()->popShader();
             }
             glDisable(GL_SCISSOR_TEST);
             glDisable(GL_BLEND);
         }
         paintScene(frontWindow, leftWindows, rightWindows);
-
-        if (effects->numScreens() > 1) {
-            GLShader *shader = shaderManager->pushShader(ShaderManager::GenericShader);
-            shader->setUniform("projection", origProjection);
-            shader->setUniform("modelview", origModelview);
-            shaderManager->popShader();
-        }
 
         // Render the caption frame
         if (windowTitle) {
@@ -516,6 +454,62 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
                         if (screenSize.height() != area.height())
                             scaleFactor *= (float)area.width() / (float)(screenSize.width());
                     }
+                }
+
+                if (effects->numScreens() > 1) {
+                    // unfortunatelly we have to change the projection matrix in dual screen mode
+                    // code is adapted from SceneOpenGL2::createProjectionMatrix()
+                    QRect fullRect = effects->clientArea(FullArea, activeScreen, effects->currentDesktop());
+                    float fovy = 60.0f;
+                    float aspect = 1.0f;
+                    float zNear = 0.1f;
+                    float zFar = 100.0f;
+
+                    float ymax = zNear * std::tan(fovy * M_PI / 360.0f);
+                    float ymin = -ymax;
+                    float xmin =  ymin * aspect;
+                    float xmax = ymax * aspect;
+
+                    if (area.width() != fullRect.width()) {
+                        if (area.x() == 0) {
+                            // horizontal layout: left screen
+                            xmin *= (float)area.width() / (float)fullRect.width();
+                            xmax *= (fullRect.width() - 0.5f * area.width()) / (0.5f * fullRect.width());
+                        } else {
+                            // horizontal layout: right screen
+                            xmin *= (fullRect.width() - 0.5f * area.width()) / (0.5f * fullRect.width());
+                            xmax *= (float)area.width() / (float)fullRect.width();
+                        }
+                    }
+                    if (area.height() != fullRect.height()) {
+                        if (area.y() == 0) {
+                            // vertical layout: top screen
+                            ymin *= (fullRect.height() - 0.5f * area.height()) / (0.5f * fullRect.height());
+                            ymax *= (float)area.height() / (float)fullRect.height();
+                        } else {
+                            // vertical layout: bottom screen
+                            ymin *= (float)area.height() / (float)fullRect.height();
+                            ymax *= (fullRect.height() - 0.5f * area.height()) / (0.5f * fullRect.height());
+                        }
+                    }
+
+                    m_projectionMatrix = QMatrix4x4();
+                    m_projectionMatrix.frustum(xmin, xmax, ymin, ymax, zNear, zFar);
+
+                    const float scaleFactor = 1.1f / zNear;
+
+                    // Create a second matrix that transforms screen coordinates
+                    // to world coordinates.
+                    QMatrix4x4 matrix;
+                    matrix.translate(xmin * scaleFactor, ymax * scaleFactor, -1.1);
+                    matrix.scale( (xmax - xmin) * scaleFactor / fullRect.width(),
+                                -(ymax - ymin) * scaleFactor / fullRect.height(),
+                                0.001);
+                    // Combine the matrices
+                    m_projectionMatrix *= matrix;
+
+                    m_modelviewMatrix = QMatrix4x4();
+                    m_modelviewMatrix.translate(area.x(), area.y(), 0.0);
                 }
 
                 // Setup caption frame geometry
@@ -715,6 +709,10 @@ void CoverSwitchEffect::paintFrontWindow(EffectWindow* frontWindow, int width, i
         return;
     bool specialHandlingForward = false;
     WindowPaintData data(frontWindow);
+    if (effects->numScreens() > 1) {
+        data.setProjectionMatrix(m_projectionMatrix);
+        data.setModelViewMatrix(m_modelviewMatrix);
+    }
     data.setXTranslation(area.width() * 0.5 - frontWindow->geometry().x() - frontWindow->geometry().width() * 0.5);
     if (leftWindows == 0) {
         leftWindows = 1;
@@ -773,6 +771,10 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
     // has to appear on this side after half of the time
     if (animation && timeLine.currentValue() >= 0.5 && additionalWindow != NULL) {
         WindowPaintData data(additionalWindow);
+        if (effects->numScreens() > 1) {
+            data.setProjectionMatrix(m_projectionMatrix);
+            data.setModelViewMatrix(m_modelviewMatrix);
+        }
         data.setRotationAxis(Qt::YAxis);
         data.setRotationAngle(angle * rotateFactor);
         if (left) {
@@ -793,6 +795,10 @@ void CoverSwitchEffect::paintWindows(const EffectWindowList& windows, bool left,
             continue;
         }
         WindowPaintData data(window);
+        if (effects->numScreens() > 1) {
+            data.setProjectionMatrix(m_projectionMatrix);
+            data.setModelViewMatrix(m_modelviewMatrix);
+        }
         data.setRotationAxis(Qt::YAxis);
         data.setRotationAngle(angle);
         if (left)
