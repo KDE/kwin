@@ -14,6 +14,7 @@
 #cmakedefine01 HAVE_XKB
 #cmakedefine01 HAVE_INPUT
 #cmakedefine01 HAVE_XCB_CURSOR
+#cmakedefine01 HAVE_XCB_SYNC
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1

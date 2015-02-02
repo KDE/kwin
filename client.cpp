@@ -57,7 +57,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QScriptProgram>
 #include <QWhatsThis>
 // XLib
-#include <X11/extensions/sync.h>
 #include <X11/Xutil.h>
 #include <fixx11h.h>
 #include <xcb/xtest.h>
@@ -1989,6 +1988,7 @@ void Client::getIcons()
 
 void Client::getSyncCounter()
 {
+#if HAVE_XCB_SYNC
     if (!Xcb::Extensions::self()->isSyncAvailable())
         return;
 
@@ -2014,13 +2014,17 @@ void Client::getSyncCounter()
             if (!error.isNull()) {
                 syncRequest.alarm = XCB_NONE;
             } else {
-                XSyncAlarmAttributes attrs;
-                XSyncIntToValue(&attrs.trigger.wait_value, 1);
-                XSyncIntToValue(&attrs.delta, 1);
-                XSyncChangeAlarm(display(), syncRequest.alarm, XSyncCADelta | XSyncCAValue, &attrs);
+                xcb_sync_change_alarm_value_list_t value;
+                memset(&value, 0, sizeof(value));
+                value.value.hi = 0;
+                value.value.lo = 1;
+                value.delta.hi = 0;
+                value.delta.lo = 1;
+                xcb_sync_change_alarm_aux(c, syncRequest.alarm, XCB_SYNC_CA_DELTA | XCB_SYNC_CA_VALUE, &value);
             }
         }
     }
+#endif
 }
 
 /**

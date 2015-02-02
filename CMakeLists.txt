@@ -184,6 +184,12 @@ endif()
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
 add_feature_info("XCB-CURSOR" XCB_CURSOR_FOUND "Required for XCursor support")
 
+set(HAVE_XCB_SYNC TRUE)
+if (XCB_VERSION VERSION_LESS "1.10")
+    set(HAVE_XCB_SYNC FALSE)
+endif()
+add_feature_info("XCB-SYNC" HAVE_XCB_SYNC "XCB Sync version >= 1.10 required for synced window resizing")
+
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 ########### configure tests ###############
@@ -471,7 +477,6 @@ set(kwin_KDE_LIBS
 
 set(kwin_XLIB_LIBS
     ${X11_X11_LIB}
-    ${X11_Xext_LIB}
     ${X11_ICE_LIB}
     ${X11_SM_LIB}
 )
