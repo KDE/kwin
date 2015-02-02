@@ -41,6 +41,8 @@
 #include <X11/Xutil.h>
 
 #include "windows.h"
+#include <effect_builtins.h>
+#include <kwin_effects_interface.h>
 
 // kwin config keywords
 #define KWIN_FOCUS                 "FocusPolicy"
@@ -585,7 +587,8 @@ void KMovingConfig::save(void)
     cg.writeEntry(KWM_CNTR_SNAP_ZONE, getCenterSnapZone());
     cg.writeEntry("SnapOnlyWhenOverlapping", m_ui->OverlapSnap->isChecked());
 
-    KConfigGroup(config, "Plugins").writeEntry("windowgeometryEnabled", getGeometryTip());
+    const bool geometryTip = getGeometryTip();
+    KConfigGroup(config, "Plugins").writeEntry("windowgeometryEnabled", geometryTip);
 
     if (standAlone) {
         config->sync();
@@ -593,6 +596,15 @@ void KMovingConfig::save(void)
         QDBusMessage message =
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
+    }
+    // and reconfigure the effect
+    OrgKdeKwinEffectsInterface interface(QStringLiteral("org.kde.KWin"),
+                                         QStringLiteral("/Effects"),
+                                         QDBusConnection::sessionBus());
+    if (geometryTip) {
+        interface.loadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
+    } else {
+        interface.unloadEffect(KWin::BuiltInEffects::nameForEffect(KWin::BuiltInEffect::WindowGeometry));
     }
     emit KCModule::changed(false);
 }
