@@ -51,6 +51,9 @@ private Q_SLOTS:
     void testPropertyByteArray();
     void testPropertyBool();
     void testAtom();
+    void testMotifEmpty();
+    void testMotif_data();
+    void testMotif();
 private:
     void testEmpty(WindowGeometry &geometry);
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
@@ -419,6 +422,99 @@ void TestXcbWrapper::testAtom()
     //destroy before retrieved
     Atom atom3(QByteArrayLiteral("WM_CLIENT_MACHINE"));
     QCOMPARE(atom3.name(), QByteArrayLiteral("WM_CLIENT_MACHINE"));
+}
+
+void TestXcbWrapper::testMotifEmpty()
+{
+    Atom atom(QByteArrayLiteral("_MOTIF_WM_HINTS"));
+    MotifHints hints(atom);
+    // pre init
+    QCOMPARE(hints.hasDecoration(), false);
+    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.resize(), true);
+    QCOMPARE(hints.move(), true);
+    QCOMPARE(hints.minimize(), true);
+    QCOMPARE(hints.maximize(), true);
+    QCOMPARE(hints.close(), true);
+    // post init, pre read
+    hints.init(m_testWindow);
+    QCOMPARE(hints.hasDecoration(), false);
+    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.resize(), true);
+    QCOMPARE(hints.move(), true);
+    QCOMPARE(hints.minimize(), true);
+    QCOMPARE(hints.maximize(), true);
+    QCOMPARE(hints.close(), true);
+    // post read
+    hints.read();
+    QCOMPARE(hints.hasDecoration(), false);
+    QCOMPARE(hints.noBorder(), false);
+    QCOMPARE(hints.resize(), true);
+    QCOMPARE(hints.move(), true);
+    QCOMPARE(hints.minimize(), true);
+    QCOMPARE(hints.maximize(), true);
+    QCOMPARE(hints.close(), true);
+}
+
+void TestXcbWrapper::testMotif_data()
+{
+    QTest::addColumn<quint32>("flags");
+    QTest::addColumn<quint32>("funtions");
+    QTest::addColumn<quint32>("decorations");
+
+    QTest::addColumn<bool>("expectedHasDecoration");
+    QTest::addColumn<bool>("expectedNoBorder");
+    QTest::addColumn<bool>("expectedResize");
+    QTest::addColumn<bool>("expectedMove");
+    QTest::addColumn<bool>("expectedMinimize");
+    QTest::addColumn<bool>("expectedMaximize");
+    QTest::addColumn<bool>("expectedClose");
+
+    QTest::newRow("none")     << 0u <<  0u << 0u << false << false << true  << true  << true  << true  << true;
+    QTest::newRow("noborder") << 2u <<  5u << 0u << true  << true  << true  << true  << true  << true  << true;
+    QTest::newRow("border")   << 2u <<  5u << 1u << true  << false << true  << true  << true  << true  << true;
+    QTest::newRow("resize")   << 1u <<  2u << 1u << false << false << true  << false << false << false << false;
+    QTest::newRow("move")     << 1u <<  4u << 1u << false << false << false << true  << false << false << false;
+    QTest::newRow("minimize") << 1u <<  8u << 1u << false << false << false << false << true  << false << false;
+    QTest::newRow("maximize") << 1u << 16u << 1u << false << false << false << false << false << true  << false;
+    QTest::newRow("close")    << 1u << 32u << 1u << false << false << false << false << false << false << true;
+
+    QTest::newRow("resize/all")   << 1u <<  3u << 1u << false << false << false << true  << true  << true  << true;
+    QTest::newRow("move/all")     << 1u <<  5u << 1u << false << false << true  << false << true  << true  << true;
+    QTest::newRow("minimize/all") << 1u <<  9u << 1u << false << false << true  << true  << false << true  << true;
+    QTest::newRow("maximize/all") << 1u << 17u << 1u << false << false << true  << true  << true  << false << true;
+    QTest::newRow("close/all")    << 1u << 33u << 1u << false << false << true  << true  << true  << true  << false;
+
+    QTest::newRow("all") << 1u << 62u << 1u << false << false << true << true << true << true << true;
+    QTest::newRow("all/all") << 1u << 63u << 1u << false << false << false << false << false << false << false;
+    QTest::newRow("all/all/deco") << 3u << 63u << 1u << true << false << false << false << false << false << false;
+}
+
+void TestXcbWrapper::testMotif()
+{
+    Atom atom(QByteArrayLiteral("_MOTIF_WM_HINTS"));
+    QFETCH(quint32, flags);
+    QFETCH(quint32, funtions);
+    QFETCH(quint32, decorations);
+    quint32 data[] = {
+        flags,
+        funtions,
+        decorations,
+        0,
+        0
+    };
+    xcb_change_property(QX11Info::connection(), XCB_PROP_MODE_REPLACE, m_testWindow, atom, atom, 32, 5, data);
+    xcb_flush(QX11Info::connection());
+    MotifHints hints(atom);
+    hints.init(m_testWindow);
+    hints.read();
+    QTEST(hints.hasDecoration(), "expectedHasDecoration");
+    QTEST(hints.noBorder(), "expectedNoBorder");
+    QTEST(hints.resize(), "expectedResize");
+    QTEST(hints.move(), "expectedMove");
+    QTEST(hints.minimize(), "expectedMinimize");
+    QTEST(hints.maximize(), "expectedMaximize");
+    QTEST(hints.close(), "expectedClose");
 }
 
 KWIN_TEST_MAIN(TestXcbWrapper)

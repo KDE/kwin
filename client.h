@@ -963,16 +963,13 @@ private:
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
     uint skip_pager : 1;
     uint skip_switcher : 1;
-    uint motif_may_resize : 1;
-    uint motif_may_move : 1;
-    uint motif_may_close : 1;
+    Xcb::MotifHints m_motif;
     uint keep_below : 1; ///< NET::KeepBelow
     uint minimized : 1;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint modal : 1; ///< NET::Modal
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
-    uint motif_noborder : 1; ///< App requested no border via Motif WM hints
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
     uint demands_attention : 1;
     bool blocks_compositing;

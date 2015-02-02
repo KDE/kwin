@@ -108,6 +108,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     auto transientCookie = fetchTransient();
     auto activitiesCookie = fetchActivities();
     m_geometryHints.init(window());
+    m_motif.init(window());
     info = new WinInfo(this, m_client, rootWindow(), properties, properties2);
 
     // If it's already mapped, ignore hint

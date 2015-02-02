@@ -83,85 +83,6 @@ const long ClientWinMask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE
                            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                            XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 
-//************************************
-// Motif
-//************************************
-class Motif
-{
-public:
-    // Read a window's current settings from its _MOTIF_WM_HINTS
-    // property.  If it explicitly requests that decorations be shown
-    // or hidden, 'got_noborder' is set to true and 'noborder' is set
-    // appropriately.
-    static void readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
-                          bool& resize, bool& move, bool& minimize, bool& maximize,
-                          bool& close);
-    struct MwmHints {
-        ulong flags;
-        ulong functions;
-        ulong decorations;
-        long input_mode;
-        ulong status;
-    };
-    enum {
-        MWM_HINTS_FUNCTIONS = (1L << 0),
-        MWM_HINTS_DECORATIONS = (1L << 1),
-
-        MWM_FUNC_ALL = (1L << 0),
-        MWM_FUNC_RESIZE = (1L << 1),
-        MWM_FUNC_MOVE = (1L << 2),
-        MWM_FUNC_MINIMIZE = (1L << 3),
-        MWM_FUNC_MAXIMIZE = (1L << 4),
-        MWM_FUNC_CLOSE = (1L << 5)
-    };
-};
-
-void Motif::readFlags(xcb_window_t w, bool& got_noborder, bool& noborder,
-                      bool& resize, bool& move, bool& minimize, bool& maximize, bool& close)
-{
-    Atom type;
-    int format;
-    unsigned long length, after;
-    unsigned char* data;
-    MwmHints* hints = 0;
-    if (XGetWindowProperty(display(), w, atoms->motif_wm_hints, 0, 5,
-                          false, atoms->motif_wm_hints, &type, &format,
-                          &length, &after, &data) == Success) {
-        if (data)
-            hints = (MwmHints*) data;
-    }
-    got_noborder = false;
-    noborder = false;
-    resize = true;
-    move = true;
-    minimize = true;
-    maximize = true;
-    close = true;
-    if (hints) {
-        // To quote from Metacity 'We support those MWM hints deemed non-stupid'
-        if (hints->flags & MWM_HINTS_FUNCTIONS) {
-            // if MWM_FUNC_ALL is set, other flags say what to turn _off_
-            bool set_value = ((hints->functions & MWM_FUNC_ALL) == 0);
-            resize = move = minimize = maximize = close = !set_value;
-            if (hints->functions & MWM_FUNC_RESIZE)
-                resize = set_value;
-            if (hints->functions & MWM_FUNC_MOVE)
-                move = set_value;
-            if (hints->functions & MWM_FUNC_MINIMIZE)
-                minimize = set_value;
-            if (hints->functions & MWM_FUNC_MAXIMIZE)
-                maximize = set_value;
-            if (hints->functions & MWM_FUNC_CLOSE)
-                close = set_value;
-        }
-        if (hints->flags & MWM_HINTS_DECORATIONS) {
-            got_noborder = true;
-            noborder = !hints->decorations;
-        }
-        XFree(data);
-    }
-}
-
 // Creating a client:
 //  - only by calling Workspace::createClient()
 //      - it creates a new client and calls manage() for it
@@ -195,6 +116,7 @@ Client::Client()
     , m_originalTransientForId(XCB_WINDOW_NONE)
     , shade_below(NULL)
     , skip_switcher(false)
+    , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
     , m_cursor(Qt::ArrowCursor)
     , autoRaiseTimer(NULL)
@@ -248,9 +170,6 @@ Client::Client()
     deleting = false;
     keep_above = false;
     keep_below = false;
-    motif_may_move = true;
-    motif_may_resize = true;
-    motif_may_close = true;
     fullscreen_mode = FullScreenNone;
     skip_taskbar = false;
     original_skip_taskbar = false;
@@ -259,7 +178,6 @@ Client::Client()
     modal = false;
     noborder = false;
     app_noborder = false;
-    motif_noborder = false;
     ignore_focus_stealing = false;
     demands_attention = false;
     check_active_modal = false;
@@ -742,7 +660,7 @@ void Client::updateShape()
         xcb_shape_mask(connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder;
-        noborder = rules()->checkNoBorder(noborder || motif_noborder);
+        noborder = rules()->checkNoBorder(noborder || m_motif.noBorder());
         updateDecoration(true);
     }
 
@@ -1263,7 +1181,7 @@ void Client::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol
  */
 bool Client::isCloseable() const
 {
-    return rules()->checkCloseable(motif_may_close && !isSpecialWindow());
+    return rules()->checkCloseable(m_motif.close() && !isSpecialWindow());
 }
 
 /**
@@ -1915,29 +1833,22 @@ void Client::setClientShown(bool shown)
 
 void Client::getMotifHints()
 {
-    bool mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose;
-    Motif::readFlags(m_client, mgot_noborder, mnoborder, mresize, mmove, mminimize, mmaximize, mclose);
-    if (mgot_noborder && motif_noborder != mnoborder) {
-        motif_noborder = mnoborder;
+    const bool wasClosable = m_motif.close();
+    const bool wasNoBorder = m_motif.noBorder();
+    m_motif.read();
+    if (m_motif.hasDecoration() && m_motif.noBorder() != wasNoBorder) {
         // If we just got a hint telling us to hide decorations, we do so.
-        if (motif_noborder)
+        if (m_motif.noBorder())
             noborder = rules()->checkNoBorder(true);
         // If the Motif hint is now telling us to show decorations, we only do so if the app didn't
         // instruct us to hide decorations in some other way, though.
         else if (!app_noborder)
             noborder = rules()->checkNoBorder(false);
     }
-    if (!hasNETSupport()) {
-        // NETWM apps should set type and size constraints
-        motif_may_resize = mresize; // This should be set using minsize==maxsize, but oh well
-        motif_may_move = mmove;
-    } else
-        motif_may_resize = motif_may_move = true;
 
     // mminimize; - Ignore, bogus - E.g. shading or sending to another desktop is "minimizing" too
     // mmaximize; - Ignore, bogus - Maximizing is basically just resizing
-    const bool closabilityChanged = motif_may_close != mclose;
-    motif_may_close = mclose; // Motif apps like to crash when they set this hint and WM closes them anyway
+    const bool closabilityChanged = wasClosable != m_motif.close();
     if (isManaged())
         updateDecoration(true);   // Check if noborder state has changed
     if (closabilityChanged) {

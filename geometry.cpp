@@ -1774,7 +1774,10 @@ void Client::NETMoveResizeWindow(int flags, int x, int y, int width, int height)
  */
 bool Client::isMovable() const
 {
-    if (!motif_may_move || isFullScreen())
+    if (!hasNETSupport() && !m_motif.move()) {
+        return false;
+    }
+    if (isFullScreen())
         return false;
     if (isSpecialWindow() && !isSplash() && !isToolbar())  // allow moving of splashscreens :)
         return false;
@@ -1788,8 +1791,9 @@ bool Client::isMovable() const
  */
 bool Client::isMovableAcrossScreens() const
 {
-    if (!motif_may_move)
+    if (!hasNETSupport() && !m_motif.move()) {
         return false;
+    }
     if (isSpecialWindow() && !isSplash() && !isToolbar())  // allow moving of splashscreens :)
         return false;
     if (rules()->checkPosition(invalidPoint) != invalidPoint)     // forced position
@@ -1802,7 +1806,10 @@ bool Client::isMovableAcrossScreens() const
  */
 bool Client::isResizable() const
 {
-    if (!motif_may_resize || isFullScreen())
+    if (!hasNETSupport() && !m_motif.resize()) {
+        return false;
+    }
+    if (isFullScreen())
         return false;
     if (isSpecialWindow() || isSplash() || isToolbar())
         return false;
