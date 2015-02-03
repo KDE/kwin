@@ -2168,22 +2168,6 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         changeMaximize(false, false, false);   // restore
     }
 
-    // call into decoration update borders
-    if (m_decoration && m_decoration->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
-        changeMaximizeRecursion = true;
-        const auto c = m_decoration->client().data();
-        if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
-            emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
-        }
-        if ((max_mode & MaximizeHorizontal) != (old_mode & MaximizeHorizontal)) {
-            emit c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
-        }
-        if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
-            emit c->maximizedChanged(max_mode & MaximizeFull);
-        }
-        changeMaximizeRecursion = false;
-    }
-
     // save sizes for restoring, if maximalizing
     QSize sz;
     if (isShade())
@@ -2200,6 +2184,22 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
             geom_restore.setLeft(x());
             geom_restore.setWidth(sz.width());
         }
+    }
+
+    // call into decoration update borders
+    if (m_decoration && m_decoration->client() && !(options->borderlessMaximizedWindows() && max_mode == KWin::MaximizeFull)) {
+        changeMaximizeRecursion = true;
+        const auto c = m_decoration->client().data();
+        if ((max_mode & MaximizeVertical) != (old_mode & MaximizeVertical)) {
+            emit c->maximizedVerticallyChanged(max_mode & MaximizeVertical);
+        }
+        if ((max_mode & MaximizeHorizontal) != (old_mode & MaximizeHorizontal)) {
+            emit c->maximizedHorizontallyChanged(max_mode & MaximizeHorizontal);
+        }
+        if ((max_mode == MaximizeFull) != (old_mode == MaximizeFull)) {
+            emit c->maximizedChanged(max_mode & MaximizeFull);
+        }
+        changeMaximizeRecursion = false;
     }
 
     if (options->borderlessMaximizedWindows()) {
