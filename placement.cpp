@@ -879,8 +879,9 @@ int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) cons
     }
     if (oldx <= newx)
         return oldx;
+    const int desktop = cl->desktop() == 0 || cl->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : cl->desktop();
     for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, cl, cl->desktop()))
+        if (isIrrelevant(*it, cl, desktop))
             continue;
         int x = left_edge ? (*it)->geometry().right() + 1 : (*it)->geometry().left() - 1;
         if (x > newx && x < oldx
@@ -906,8 +907,9 @@ int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) co
     }
     if (oldx >= newx)
         return oldx;
+    const int desktop = cl->desktop() == 0 || cl->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : cl->desktop();
     for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, cl, cl->desktop()))
+        if (isIrrelevant(*it, cl, desktop))
             continue;
         int x = right_edge ? (*it)->geometry().left() - 1 : (*it)->geometry().right() + 1;
         if (x < newx && x > oldx
@@ -933,8 +935,9 @@ int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
     }
     if (oldy <= newy)
         return oldy;
+    const int desktop = cl->desktop() == 0 || cl->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : cl->desktop();
     for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, cl, cl->desktop()))
+        if (isIrrelevant(*it, cl, desktop))
             continue;
         int y = top_edge ? (*it)->geometry().bottom() + 1 : (*it)->geometry().top() - 1;
         if (y > newy && y < oldy
@@ -960,8 +963,9 @@ int Workspace::packPositionDown(const Client* cl, int oldy, bool bottom_edge) co
     }
     if (oldy >= newy)
         return oldy;
+    const int desktop = cl->desktop() == 0 || cl->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : cl->desktop();
     for (ClientList::ConstIterator it = clients.constBegin(), end = clients.constEnd(); it != end; ++it) {
-        if (isIrrelevant(*it, cl, cl->desktop()))
+        if (isIrrelevant(*it, cl, desktop))
             continue;
         int y = bottom_edge ? (*it)->geometry().top() - 1 : (*it)->geometry().bottom() + 1;
         if (y < newy && y > oldy
