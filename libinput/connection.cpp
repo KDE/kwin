@@ -36,7 +36,11 @@ Connection *Connection::s_self = nullptr;
 
 static Context *s_context = nullptr;
 
-Connection::Connection(QObject *parent) = delete;
+Connection::Connection(QObject *parent)
+    : Connection(nullptr, parent)
+{
+    // only here to fix build, using will crash, BUG 343529
+}
 
 Connection *Connection::create(QObject *parent)
 {
