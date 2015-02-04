@@ -496,13 +496,6 @@ set(kwin_WAYLAND_EGL_LIBS
     Wayland::Egl
 )
 
-find_library(XF86VM_LIBRARY Xxf86vm)
-if (XF86VM_LIBRARY)
-    set(kwin_XLIB_LIBS ${kwin_XLIB_LIBS} ${XF86VM_LIBRARY})
-else()
-    add_definitions(-DKWIN_NO_XF86VM)
-endif()
-
 if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
 endif()

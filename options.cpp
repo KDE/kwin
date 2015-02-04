@@ -33,12 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #include <kwinglplatform.h>
 
-#ifndef KWIN_HAVE_OPENGLES
-#ifndef KWIN_NO_XF86VM
-#include <X11/extensions/xf86vmode.h>
-#endif
-#endif
-
 #endif //KCMRULES
 
 namespace KWin
@@ -51,47 +45,6 @@ int currentRefreshRate()
     int rate = -1;
     if (options->refreshRate() > 0)   // use manually configured refresh rate
         rate = options->refreshRate();
-#ifndef KWIN_HAVE_OPENGLES
-    else if (GLPlatform::instance()->driver() == Driver_NVidia) {
-#ifndef KWIN_NO_XF86VM
-        int major, event, error;
-        static const bool s_hasVidMode = XQueryExtension(display(), "XFree86-VidModeExtension", &major, &event, &error);
-        if (s_hasVidMode) {
-            XF86VidModeModeLine modeline;
-            int dotclock, vtotal;
-            if (XF86VidModeGetModeLine(display(), 0, &dotclock, &modeline)) {
-                vtotal = modeline.vtotal;
-                if (modeline.flags & 0x0010) // V_INTERLACE
-                    dotclock *= 2;
-                if (modeline.flags & 0x0020) // V_DBLSCAN
-                    vtotal *= 2;
-                if (modeline.htotal*vtotal) // BUG 313996
-                    rate = 1000*dotclock/(modeline.htotal*vtotal); // WTF was wikipedia 1998 when I nedded it?
-                qCDebug(KWIN_CORE) << "Vertical Refresh Rate (as detected by XF86VM): " << rate << "Hz";
-            }
-        }
-        if (rate < 1)
-#endif
-        { // modeline approach failed
-            QProcess nvidia_settings;
-            QStringList env = QProcess::systemEnvironment();
-            env << QStringLiteral("LC_ALL=C");
-            nvidia_settings.setEnvironment(env);
-            nvidia_settings.start(QStringLiteral("nvidia-settings"), QStringList() << QStringLiteral("-t") << QStringLiteral("-q") << QStringLiteral("RefreshRate"), QIODevice::ReadOnly);
-            nvidia_settings.waitForFinished();
-            if (nvidia_settings.exitStatus() == QProcess::NormalExit) {
-                QString reply = QString::fromLocal8Bit(nvidia_settings.readAllStandardOutput()).split(QStringLiteral(" ")).first();
-                bool ok;
-                float frate = QLocale::c().toFloat(reply, &ok);
-                if (!ok)
-                    rate = -1;
-                else
-                    rate = qRound(frate);
-                qCDebug(KWIN_CORE) << "Vertical Refresh Rate (as detected by nvidia-settings): " << rate << "Hz";
-            }
-        }
-    }
-#endif
     else if (Xcb::Extensions::self()->isRandrAvailable()) {
         Xcb::RandR::ScreenInfo screenInfo(rootWindow());
         rate = screenInfo->rate;
