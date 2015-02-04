@@ -200,7 +200,7 @@
     <widget class="QComboBox" name="windowThumbnail">
      <item>
       <property name="text">
-       <string>Always</string>
+       <string>Never</string>
       </property>
      </item>
      <item>
@@ -210,7 +210,7 @@
      </item>
      <item>
       <property name="text">
-       <string>Never</string>
+       <string>Always</string>
       </property>
      </item>
     </widget>

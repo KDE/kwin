@@ -158,7 +158,7 @@ void KWinCompositingSettings::init()
     connect(m_form.windowThumbnail, currentIndexChangedSignal, m_compositing, &Compositing::setWindowThumbnail);
     connect(m_form.windowThumbnail, currentIndexChangedSignal,
         [this](int index) {
-            if (index == 0) {
+            if (index == 2) {
                 m_form.windowThumbnailWarning->animatedShow();
             } else {
                 m_form.windowThumbnailWarning->animatedHide();
