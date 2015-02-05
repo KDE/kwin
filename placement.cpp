@@ -663,10 +663,7 @@ const char* Placement::policyToString(Policy policy)
 
 void Client::packTo(int left, int top)
 {
-    // this might move the window away from the cursor pos what will cause a leave event
-    // since this is not due to a cursor move and we didn't receive motion events in the active
-    // window, we need to udpate the focus mouse position here
-    workspace()->updateFocusMousePosition(Cursor::pos());
+    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
 
     const int oldScreen = screen();
     move(left, top);
@@ -731,10 +728,7 @@ void Client::growHorizontal()
     }
     geom.setSize(adjustedSize(geom.size(), SizemodeFixedW));
     geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
-    // this might move an inactive window under the cursor pos what will cause an enter event
-    // since this is not due to a cursor move and we didn't receive motion events in the active
-    // window, we need to udpate the focus mouse position here
-    workspace()->updateFocusMousePosition(Cursor::pos());
+    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
     setGeometry(geom);
 }
 
@@ -754,10 +748,7 @@ void Client::shrinkHorizontal()
         return;
     geom.setSize(adjustedSize(geom.size(), SizemodeFixedW));
     if (geom.width() > 20) {
-        // this might move the window away from the cursor pos what will cause a leave event
-        // since this is not due to a cursor move and we didn't receive motion events in the active
-        // window, we need to udpate the focus mouse position here
-        workspace()->updateFocusMousePosition(Cursor::pos());
+        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
         setGeometry(geom);
     }
 }
@@ -783,10 +774,7 @@ void Client::growVertical()
             geom.setBottom(newbottom);
     }
     geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
-    // this might move an inactive window under the cursor pos what will cause an enter event
-    // since this is not due to a cursor move and we didn't receive motion events in the active
-    // window, we need to udpate the focus mouse position here
-    workspace()->updateFocusMousePosition(Cursor::pos());
+    workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
     setGeometry(geom);
 }
 
@@ -807,10 +795,7 @@ void Client::shrinkVertical()
         return;
     geom.setSize(adjustedSize(geom.size(), SizemodeFixedH));
     if (geom.height() > 20) {
-        // this might move the window away from the cursor pos what will cause a leave event
-        // since this is not due to a cursor move and we didn't receive motion events in the active
-        // window, we need to udpate the focus mouse position here
-        workspace()->updateFocusMousePosition(Cursor::pos());
+        workspace()->updateFocusMousePosition(Cursor::pos()); // may cause leave event;
         setGeometry(geom);
     }
 }

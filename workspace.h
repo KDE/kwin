@@ -314,6 +314,14 @@ public:
 
     void cancelDelayFocus();
     void requestDelayFocus(Client*);
+
+    /**
+    * updates the mouse position to track whether a focus follow mouse focus change was caused by
+    * an actual mouse move
+    * is esp. called on enter/motion events of inactive windows
+    * since an active window doesn't receive mouse events, it must also be invoked if a (potentially)
+    * active window might be moved/resize away from the cursor (causing a leave event)
+    */
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
