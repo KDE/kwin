@@ -60,7 +60,7 @@ public:
 
     void blockActivityUpdates(bool b = true) override;
     QString caption(bool full = true, bool stripped = false) const override;
-    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) override;
+    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2, QRect oldClientGeometry = QRect()) override;
     void closeWindow() override;
     AbstractClient *findModal(bool allow_itself = false) override;
     bool isCloseable() const override;

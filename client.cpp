@@ -386,6 +386,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
             ((m_decoration == NULL && noBorder()) || (m_decoration != NULL && !noBorder())))
         return;
     QRect oldgeom = geometry();
+    QRect oldClientGeom = oldgeom.adjusted(borderLeft(), borderTop(), -borderRight(), -borderBottom());
     blockGeometryUpdates(true);
     if (force)
         destroyDecoration();
@@ -395,7 +396,7 @@ void Client::updateDecoration(bool check_workspace_pos, bool force)
         destroyDecoration();
     getShadow();
     if (check_workspace_pos)
-        checkWorkspacePosition(oldgeom);
+        checkWorkspacePosition(oldgeom, -2, oldClientGeom);
     updateInputWindow();
     blockGeometryUpdates(false);
     updateFrameExtents();

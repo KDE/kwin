@@ -236,10 +236,11 @@ QString ShellClient::caption(bool full, bool stripped) const
     return m_shellSurface->title();
 }
 
-void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
+void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop, QRect oldClientGeometry)
 {
     Q_UNUSED(oldGeometry)
     Q_UNUSED(oldDesktop)
+    Q_UNUSED(oldClientGeometry)
 }
 
 void ShellClient::closeWindow()
