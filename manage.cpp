@@ -50,12 +50,9 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 {
     StackingUpdatesBlocker stacking_blocker(workspace());
 
-    grabXServer();
-
     Xcb::WindowAttributes attr(w);
     Xcb::WindowGeometry windowGeometry(w);
     if (attr.isNull() || windowGeometry.isNull()) {
-        ungrabXServer();
         return false;
     }
 
@@ -640,8 +637,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     //sendSyntheticConfigureNotify(); // Done when setting mapping state
 
     delete session;
-
-    ungrabXServer();
 
     client_rules.discardTemporary();
     applyWindowRules(); // Just in case
