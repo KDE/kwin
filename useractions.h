@@ -239,6 +239,7 @@ private:
     QAction* m_noBorderOperation;
     QAction* m_minimizeOperation;
     QAction* m_closeOperation;
+    QAction* m_shortcutOperation;
     /**
      * Remove client from group.
      **/

@@ -288,12 +288,12 @@ void UserActionsMenu::init()
 
     advancedMenu->addSeparator();
 
-    QAction *action = advancedMenu->addAction(i18n("Window &Shortcut..."));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
-    setShortcut(action, QStringLiteral("Setup Window Shortcut"));
-    action->setData(Options::SetupWindowShortcutOp);
+    m_shortcutOperation = advancedMenu->addAction(i18n("Window &Shortcut..."));
+    m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
+    setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
+    m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
 
-    action = advancedMenu->addAction(i18n("&Special Window Settings..."));
+    QAction *action = advancedMenu->addAction(i18n("&Special Window Settings..."));
     action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
     action->setData(Options::WindowRulesOp);
 
@@ -402,6 +402,7 @@ void UserActionsMenu::menuAboutToShow()
     m_noBorderOperation->setChecked(m_client.data()->noBorder());
     m_minimizeOperation->setEnabled(m_client.data()->isMinimizable());
     m_closeOperation->setEnabled(m_client.data()->isCloseable());
+    m_shortcutOperation->setEnabled(m_client.data()->rules()->checkShortcut(QString()).isNull());
 
     if (false) {
         initTabbingPopups();
