@@ -690,6 +690,8 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
             Cursor::x11Cursor(shape)
         };
         m_mouseInterceptionWindow.reset(Xcb::createInputWindow(geo, mask, values));
+    } else {
+        defineCursor(shape);
     }
     m_mouseInterceptionWindow.map();
     m_mouseInterceptionWindow.raise();
