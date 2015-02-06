@@ -311,6 +311,15 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
         w->elevate(b);
 }
 
+void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
+{
+    Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+    cl->cancelShadeHoverTimer(); // stop core shading action
+    if (!b && cl->shadeMode() == ShadeNormal)
+        cl->setShade(ShadeHover);
+    else if (b && cl->shadeMode() == ShadeHover)
+        cl->setShade(ShadeNormal);
+}
 
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::desktopClient() const
 {
@@ -1107,6 +1116,12 @@ void TabBox::slotWalkBackThroughDesktopList()
     }
 }
 
+void TabBox::shadeActivate(Client *c)
+{
+    if ((c->shadeMode() == ShadeNormal || c->shadeMode() == ShadeHover) && options->isShadeHover())
+        c->setShade(ShadeActivated);
+}
+
 bool TabBox::toggle(ElectricBorder eb)
 {
     if (!options->focusPolicyIsReasonable())
@@ -1216,8 +1231,7 @@ void TabBox::CDEWalkThroughWindows(bool forward)
             Workspace::self()->lowerClient(c);
         if (options->focusPolicyIsReasonable()) {
             Workspace::self()->activateClient(nc);
-            if (nc->isShade() && options->isShadeHover())
-                nc->setShade(ShadeActivated);
+            shadeActivate(nc);
         } else {
             if (!nc->isOnDesktop(currentDesktop()))
                 setCurrentDesktop(nc->desktop());
@@ -1233,8 +1247,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     nextPrev(forward);
     if (Client* c = currentClient()) {
         Workspace::self()->activateClient(c);
-        if (c->isShade() && options->isShadeHover())
-            c->setShade(ShadeActivated);
+        shadeActivate(c);
     }
 }
 
@@ -1426,8 +1439,7 @@ void TabBox::accept()
     close();
     if (c) {
         Workspace::self()->activateClient(c);
-        if (c->isShade() && options->isShadeHover())
-            c->setShade(ShadeActivated);
+        shadeActivate(c);
         if (c->isDesktop())
             Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop());
     }

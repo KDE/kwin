@@ -67,6 +67,7 @@ public:
     virtual void elevateClient(TabBoxClient* c, WId tabbox, bool elevate) const;
     virtual void raiseClient(TabBoxClient *client) const;
     virtual void restack(TabBoxClient *c, TabBoxClient *under);
+    virtual void shadeClient(TabBoxClient *c, bool b) const;
     virtual QWeakPointer< TabBoxClient > clientToAddToList(KWin::TabBox::TabBoxClient* client, int desktop) const;
     virtual QWeakPointer< TabBoxClient > desktopClient() const;
     virtual void activateAndClose();
@@ -230,6 +231,8 @@ private:
     void removeTabBoxGrab();
     template <typename Slot>
     void key(const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
+
+    void shadeActivate(Client *c);
 
 private Q_SLOTS:
     void reconfigure();

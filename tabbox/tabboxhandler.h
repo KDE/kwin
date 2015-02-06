@@ -181,6 +181,13 @@ public:
     virtual void restack(TabBoxClient *c, TabBoxClient *under) = 0;
 
     /**
+     * Toggle between ShadeHover and ShadeNormal - not shaded windows are unaffected
+     * @param c The client to be shaded
+     * @param b Whether to un- or shade
+     */
+    virtual void shadeClient(TabBoxClient *c, bool b) const = 0;
+
+    /**
     * @return The current stacking order of TabBoxClients
     */
     virtual TabBoxClientList stackingOrder() const = 0;
@@ -334,7 +341,7 @@ Q_SIGNALS:
     void selectedIndexChanged();
 
 private Q_SLOTS:
-    void updateHighlightWindows();
+    void initHighlightWindows();
 
 private:
     friend class TabBoxHandlerPrivate;

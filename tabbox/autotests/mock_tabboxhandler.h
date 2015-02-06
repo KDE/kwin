@@ -56,6 +56,10 @@ public:
         Q_UNUSED(tabbox)
         Q_UNUSED(elevate)
     }
+    virtual void shadeClient(TabBox::TabBoxClient *c, bool b) const {
+        Q_UNUSED(c)
+        Q_UNUSED(b)
+    }
     virtual void hideOutline() {
     }
     virtual QWeakPointer< TabBox::TabBoxClient > nextClientFocusChain(TabBox::TabBoxClient *client) const;
