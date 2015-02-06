@@ -884,7 +884,7 @@ void Client::setShade(ShadeMode mode)
         shade_geometry_change = false;
         if (was_shade_mode == ShadeHover) {
             if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1)
-                    workspace()->restack(this, shade_below);
+                    workspace()->restack(this, shade_below, true);
             if (isActive())
                 workspace()->activateNextClient(this);
         } else if (isActive()) {

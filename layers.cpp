@@ -432,10 +432,10 @@ void Workspace::lowerClientRequest(KWin::Client *c, NET::RequestSource src, xcb_
 }
 
 
-void Workspace::restack(Client* c, Client* under)
+void Workspace::restack(Client* c, Client* under, bool force)
 {
     assert(unconstrained_stacking_order.contains(under));
-    if (!Client::belongToSameApplication(under, c)) {
+    if (!force && !Client::belongToSameApplication(under, c)) {
          // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
             Client *other = qobject_cast<Client*>(unconstrained_stacking_order.at(i));
