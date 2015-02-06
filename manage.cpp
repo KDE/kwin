@@ -255,9 +255,10 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     QRect area;
     bool partial_keep_in_area = isMapped || session;
-    if (isMapped || session)
+    if (isMapped || session) {
         area = workspace()->clientArea(FullArea, geom.center(), desktop());
-    else {
+        checkOffscreenPosition(&geom, area);
+    } else {
         int screen = asn_data.xinerama() == -1 ? screens()->current() : asn_data.xinerama();
         screen = rules()->checkScreen(screen, !isMapped);
         area = workspace()->clientArea(PlacementArea, screens()->geometry(screen).center(), desktop());
@@ -517,6 +518,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             setFullScreen(true, false);
             geom_fs_restore = session->fsrestore;
         }
+        checkOffscreenPosition(&geom_restore, area);
+        checkOffscreenPosition(&geom_fs_restore, area);
     } else {
         // Window may want to be maximized
         // done after checking that the window isn't larger than the workarea, so that
