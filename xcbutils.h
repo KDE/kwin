@@ -605,6 +605,43 @@ public:
     }
 };
 
+struct QueryKeymapData : public WrapperData< xcb_query_keymap_reply_t, xcb_query_keymap_cookie_t >
+{
+    static constexpr request_func requestFunc = &xcb_query_keymap_unchecked;
+    static constexpr reply_func replyFunc = &xcb_query_keymap_reply;
+};
+
+class QueryKeymap : public Wrapper<QueryKeymapData>
+{
+public:
+    QueryKeymap() : Wrapper<QueryKeymapData>() {}
+};
+
+struct ModifierMappingData : public WrapperData< xcb_get_modifier_mapping_reply_t, xcb_get_modifier_mapping_cookie_t >
+{
+    static constexpr request_func requestFunc = &xcb_get_modifier_mapping_unchecked;
+    static constexpr reply_func replyFunc = &xcb_get_modifier_mapping_reply;
+};
+
+class ModifierMapping : public Wrapper<ModifierMappingData>
+{
+public:
+    ModifierMapping() : Wrapper<ModifierMappingData>() {}
+
+    inline xcb_keycode_t *keycodes() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_get_modifier_mapping_keycodes(data());
+    }
+    inline int size() {
+        if (isNull()) {
+            return 0;
+        }
+        return xcb_get_modifier_mapping_keycodes_length(data());
+    }
+};
+
 XCB_WRAPPER_DATA(PropertyData, xcb_get_property, uint8_t, xcb_window_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t)
 class Property : public Wrapper<PropertyData, uint8_t, xcb_window_t, xcb_atom_t, xcb_atom_t, uint32_t, uint32_t>
 {

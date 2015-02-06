@@ -55,6 +55,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // X11
 #include <X11/keysym.h>
 #include <X11/keysymdef.h>
+// xcb
+#include <xcb/xcb_keysyms.h>
 
 // specify externals before namespace
 
@@ -900,19 +902,40 @@ void TabBox::grabbedKeyEvent(QKeyEvent* event)
     m_tabBox->grabbedKeyEvent(event);
 }
 
+struct KeySymbolsDeleter
+{
+    static inline void cleanup(xcb_key_symbols_t *symbols)
+    {
+        xcb_key_symbols_free(symbols);
+    }
+};
+
 /*!
   Handles alt-tab / control-tab
  */
 static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) {
-    char keymap[32];
 
     qDebug() << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
 
-    XQueryKeymap(display(), keymap);
+    Xcb::QueryKeymap keys;
+
+    QScopedPointer<xcb_key_symbols_t, KeySymbolsDeleter> symbols(xcb_key_symbols_alloc(connection()));
+    if (symbols.isNull() || !keys) {
+        return false;
+    }
+    const auto keymap = keys->keys;
 
     for (int iKeySym = 0; iKeySym < nKeySyms; iKeySym++) {
         uint keySymX = keySyms[ iKeySym ];
-        uchar keyCodeX = XKeysymToKeycode(display(), keySymX);
+        xcb_keycode_t *keyCodes = xcb_key_symbols_get_keycode(symbols.data(), keySymX);
+        if (!keyCodes) {
+            continue;
+        }
+        xcb_keycode_t keyCodeX = keyCodes[0];
+        free(keyCodes);
+        if (keyCodeX == XCB_NO_SYMBOL) {
+            continue;
+        }
         int i = keyCodeX / 8;
         char mask = 1 << (keyCodeX - (i * 8));
 
@@ -1440,12 +1463,20 @@ void TabBox::keyRelease(const xcb_key_release_event_t *ev)
     if (mod_index == -1)
         release = true;
     else {
-        XModifierKeymap* xmk = XGetModifierMapping(display());
-        for (int i = 0; i < xmk->max_keypermod; i++)
-            if (xmk->modifiermap[xmk->max_keypermod * mod_index + i]
-                    == ev->detail)
-                release = true;
-        XFreeModifiermap(xmk);
+        Xcb::ModifierMapping xmk;
+        if (xmk) {
+            xcb_keycode_t *keycodes = xmk.keycodes();
+            const int maxIndex = xmk.size();
+            for (int i = 0; i < xmk->keycodes_per_modifier; ++i) {
+                const int index = xmk->keycodes_per_modifier * mod_index + i;
+                if (index >= maxIndex) {
+                    continue;
+                }
+                if (keycodes[index] == ev->detail) {
+                    release = true;
+                }
+            }
+        }
     }
     if (!release)
         return;
