@@ -1225,13 +1225,15 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
 
 void Client::checkOffscreenPosition(QRect* geom, const QRect& screenArea)
 {
-    if (geom->x() > screenArea.right()) {
-        int screenWidth = screenArea.width();
-        geom->moveLeft(screenWidth - (screenWidth / 4));
+    if (geom->left() > screenArea.right()) {
+        geom->moveLeft(screenArea.right() - screenArea.width()/4);
+    } else if (geom->right() < screenArea.left()) {
+        geom->moveRight(screenArea.left() + screenArea.width()/4);
     }
-    if (geom->y() > screenArea.bottom()) {
-        int screenHeight = screenArea.height();
-        geom->moveBottom(screenHeight - (screenHeight / 4));
+    if (geom->top() > screenArea.bottom()) {
+        geom->moveTop(screenArea.bottom() - screenArea.height()/4);
+    } else if (geom->bottom() < screenArea.top()) {
+        geom->moveBottom(screenArea.top() + screenArea.width()/4);
     }
 }
 
