@@ -93,10 +93,10 @@ private Q_SLOTS:
     void slotMouseChanged(const QPoint& pos, const QPoint& old,
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
+    void recreateTexture();
 private:
     void showCursor();
     void hideCursor();
-    void recreateTexture();
     void moveZoom(int x, int y);
 private:
     double zoom;

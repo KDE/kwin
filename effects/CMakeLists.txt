@@ -31,7 +31,6 @@ set(kwin_effect_QT_LIBS
 
 set(kwin_effect_XLIB_LIBS
     ${X11_X11_LIB}
-    ${X11_Xcursor_LIB}
 )
 
 set(kwin_effect_XCB_LIBS

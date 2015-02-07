@@ -40,8 +40,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include <xcb/xfixes.h>
 
-#include <X11/Xcursor/Xcursor.h>
-
 namespace KWin
 {
 
@@ -153,6 +151,7 @@ ZoomEffect::~ZoomEffect()
 void ZoomEffect::showCursor()
 {
     if (isMouseHidden) {
+        disconnect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
         // show the previously hidden mouse-pointer again and free the loaded texture/picture.
         xcb_xfixes_show_cursor(xcbConnection(), x11RootWindow());
         texture.reset();
@@ -180,6 +179,7 @@ void ZoomEffect::hideCursor()
         }
         if (shouldHide) {
             xcb_xfixes_hide_cursor(xcbConnection(), x11RootWindow());
+            connect(effects, &EffectsHandler::cursorShapeChanged, this, &ZoomEffect::recreateTexture);
             isMouseHidden = true;
         }
     }
@@ -200,22 +200,22 @@ void ZoomEffect::recreateTexture()
         iconSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
 
     // load the cursor-theme image from the Xcursor-library
-    XcursorImage *ximg = XcursorLibraryLoadImage("left_ptr", theme.toLocal8Bit().constData(), iconSize);
-    if (!ximg) // default is better then nothing, so keep it as backup
-        ximg = XcursorLibraryLoadImage("left_ptr", "default", iconSize);
+    xcb_xfixes_get_cursor_image_cookie_t keks = xcb_xfixes_get_cursor_image_unchecked(xcbConnection());
+    xcb_xfixes_get_cursor_image_reply_t *ximg = xcb_xfixes_get_cursor_image_reply(xcbConnection(), keks, 0);
     if (ximg) {
         // turn the XcursorImage into a QImage that will be used to create the GLTexture/XRenderPicture.
         imageWidth = ximg->width;
         imageHeight = ximg->height;
         cursorHotSpot = QPoint(ximg->xhot, ximg->yhot);
-        QImage img((uchar*)ximg->pixels, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+        uint32_t *bits = xcb_xfixes_get_cursor_image_cursor_image(ximg);
+        QImage img((uchar*)bits, imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
         if (effects->isOpenGLCompositing())
             texture.reset(new GLTexture(img));
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
         if (effects->compositingType() == XRenderCompositing)
             xrenderPicture.reset(new XRenderPicture(img));
 #endif
-        XcursorImageDestroy(ximg);
+        free(ximg);
     }
     else {
         qCDebug(KWINEFFECTS) << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
