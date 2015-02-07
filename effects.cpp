@@ -198,6 +198,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     , m_desktopRendering(false)
     , m_currentRenderedDesktop(0)
     , m_effectLoader(new EffectLoader(this))
+    , m_trackingCursorChanges(0)
 {
     connect(m_effectLoader, &AbstractEffectLoader::effectLoaded, this,
         [this](Effect *effect, const QString &name) {
@@ -1224,6 +1225,31 @@ bool EffectsHandlerImpl::checkInputWindowEvent(QMouseEvent *e)
     }
     return true;
 }
+
+void EffectsHandlerImpl::connectNotify(const QMetaMethod &signal)
+{
+    if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
+        if (!m_trackingCursorChanges) {
+            connect(Cursor::self(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
+            Cursor::self()->startCursorTracking();
+        }
+        ++m_trackingCursorChanges;
+    }
+    EffectsHandler::connectNotify(signal);
+}
+
+void EffectsHandlerImpl::disconnectNotify(const QMetaMethod &signal)
+{
+    if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
+        Q_ASSERT(m_trackingCursorChanges > 0);
+        if (!--m_trackingCursorChanges) {
+            Cursor::self()->stopCursorTracking();
+            disconnect(Cursor::self(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
+        }
+    }
+    EffectsHandler::disconnectNotify(signal);
+}
+
 
 void EffectsHandlerImpl::checkInputWindowStacking()
 {

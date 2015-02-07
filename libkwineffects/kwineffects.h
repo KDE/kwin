@@ -1323,6 +1323,12 @@ Q_SIGNALS:
                               Qt::MouseButtons buttons, Qt::MouseButtons oldbuttons,
                               Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
     /**
+     * Signal emitted when the cursor shape changed.
+     * You'll likely want to query the current cursor as reaction: xcb_xfixes_get_cursor_image_unchecked
+     * Connection to this signal is tracked, so if you don't need it anymore, disconnect from it to stop cursor event filtering
+     */
+    void cursorShapeChanged();
+    /**
      * Receives events registered for using @link registerPropertyType.
      * Use readProperty() to get the property data.
      * Note that the property may be already set on the window, so doing the same

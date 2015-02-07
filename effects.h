@@ -245,6 +245,8 @@ protected Q_SLOTS:
     void slotPropertyNotify(KWin::Toplevel *t, long atom);
 
 protected:
+    void connectNotify(const QMetaMethod &signal) override;
+    void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
     void setupClientConnections(KWin::Client *c);
     void setupUnmanagedConnections(KWin::Unmanaged *u);
@@ -276,6 +278,7 @@ private:
     Xcb::Window m_mouseInterceptionWindow;
     QList<Effect*> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
+    int m_trackingCursorChanges;
 };
 
 class EffectWindowImpl : public EffectWindow
