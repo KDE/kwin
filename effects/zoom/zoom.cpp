@@ -282,9 +282,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 
     if (zoom == 1.0) {
         showCursor();
-        // reset the generic shader to avoid artifacts in plenty other effects
-        if (altered && effects->isOpenGLCompositing())
-            ShaderBinder binder(ShaderManager::GenericShader, true);
     } else {
         hideCursor();
         data.mask |= PAINT_SCREEN_TRANSFORMED;
@@ -373,7 +370,14 @@ void ZoomEffect::paintScreen(int mask, QRegion region, ScreenPaintData& data)
             texture->bind();
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+            QMatrix4x4 mvp;
+            const QSize size = effects->virtualScreenSize();
+            mvp.ortho(0, size.width(), size.height(), 0, 0, 65535);
+            mvp.translate(rect.x(), rect.y());
+            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
             texture->render(region, rect);
+            ShaderManager::instance()->popShader();
             texture->unbind();
             glDisable(GL_BLEND);
         }
