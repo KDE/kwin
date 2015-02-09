@@ -210,7 +210,7 @@ DataDeviceManagerInterface *Display::createDataDeviceManager(QObject *parent)
 
 void Display::createShm()
 {
-    Q_ASSERT(d->running);
+    Q_ASSERT(d->display);
     wl_display_init_shm(d->display);
 }
 
