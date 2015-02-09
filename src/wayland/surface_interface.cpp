@@ -419,6 +419,11 @@ SurfaceInterface *SurfaceInterface::get(wl_resource *native)
     return Private::get<SurfaceInterface>(native);
 }
 
+SurfaceInterface *SurfaceInterface::get(quint32 id)
+{
+    return Private::get<SurfaceInterface>(id);
+}
+
 QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const
 {
     Q_D();

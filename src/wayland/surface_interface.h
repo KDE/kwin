@@ -69,6 +69,11 @@ public:
     QList<QPointer<SubSurfaceInterface>> childSubSurfaces() const;
 
     static SurfaceInterface *get(wl_resource *native);
+    /**
+     * @returns The SurfaceInterface with given @p id, if it exists, otherwise @c nullptr.
+     * @since 5.3
+     **/
+    static SurfaceInterface *get(quint32 id);
 
 Q_SIGNALS:
     void damaged(const QRegion&);

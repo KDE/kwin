@@ -165,6 +165,10 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWayland::Client::Surface::all().first(), s1);
     QCOMPARE(KWayland::Client::Surface::get(*s1), s1);
     QVERIFY(serverSurfaceCreated.wait());
+    auto serverSurface1 = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface1);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface1->id()), serverSurface1);
 
     QVERIFY(!s1->size().isValid());
     QSignalSpy sizeChangedSpy(s1, SIGNAL(sizeChanged(QSize)));
@@ -185,6 +189,12 @@ void TestWaylandSurface::testStaticAccessor()
     QCOMPARE(KWayland::Client::Surface::get(*s2), s2);
     serverSurfaceCreated.clear();
     QVERIFY(serverSurfaceCreated.wait());
+    auto serverSurface2 = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface2);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface1->resource()), serverSurface1);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface1->id()), serverSurface1);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface2->resource()), serverSurface2);
+    QCOMPARE(KWayland::Server::SurfaceInterface::get(serverSurface2->id()), serverSurface2);
 
     // delete s2 again
     delete s2;
