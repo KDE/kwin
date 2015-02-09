@@ -122,6 +122,7 @@ public:
      */
     Unmanaged *findUnmanaged(xcb_window_t w) const;
     void forEachUnmanaged(std::function<void (Unmanaged*)> func);
+    Toplevel *findToplevel(std::function<bool (const Toplevel*)> func) const;
 
     QRect clientArea(clientAreaOption, const QPoint& p, int desktop) const;
     QRect clientArea(clientAreaOption, const Client* c) const;

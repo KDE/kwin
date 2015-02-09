@@ -1576,6 +1576,20 @@ Client *Workspace::findClient(Predicate predicate, xcb_window_t w) const
     return nullptr;
 }
 
+Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) const
+{
+    if (Client *ret = Toplevel::findInList(clients, func)) {
+        return ret;
+    }
+    if (Client *ret = Toplevel::findInList(desktops, func)) {
+        return ret;
+    }
+    if (Unmanaged *ret = Toplevel::findInList(unmanaged, func)) {
+        return ret;
+    }
+    return nullptr;
+}
+
 } // namespace
 
 #include "workspace.moc"

@@ -361,8 +361,8 @@ public:
      * @param func The condition function (compare std::find_if)
      * @return T* The found Toplevel or @c null if there is no matching Toplevel
      */
-    template <class T>
-    static T *findInList(const QList<T*> &list, std::function<bool (const T*)> func);
+    template <class T, class U>
+    static T *findInList(const QList<T*> &list, std::function<bool (const U*)> func);
 
 Q_SIGNALS:
     void opacityChanged(KWin::Toplevel* toplevel, qreal oldOpacity);
@@ -718,9 +718,11 @@ inline quint32 Toplevel::surfaceId() const
     return m_surfaceId;
 }
 
-template <class T>
-inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const T*)> func)
+template <class T, class U>
+inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const U*)> func)
 {
+    static_assert(std::is_base_of<U, T>::value,
+                 "U must be derived from T");
     const auto it = std::find_if(list.begin(), list.end(), func);
     if (it == list.end()) {
         return nullptr;
