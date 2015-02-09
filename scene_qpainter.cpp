@@ -30,6 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/surface_interface.h>
 #endif
 #include "workspace.h"
 #include "xcbutils.h"
@@ -461,7 +463,7 @@ Decoration::Renderer *SceneQPainter::createDecorationRenderer(Decoration::Decora
 //****************************************
 QPainterWindowPixmap::QPainterWindowPixmap(Scene::Window *window)
     : WindowPixmap(window)
-    , m_shm(new Xcb::Shm)
+    , m_shm(kwinApp()->shouldUseWaylandForCompositing() ? nullptr : new Xcb::Shm)
 {
 }
 
@@ -471,19 +473,46 @@ QPainterWindowPixmap::~QPainterWindowPixmap()
 
 void QPainterWindowPixmap::create()
 {
-    if (isValid() || !m_shm->isValid()) {
+    if (isValid()) {
+        return;
+    }
+    if (!kwinApp()->shouldUseWaylandForCompositing() && !m_shm->isValid()) {
         return;
     }
     KWin::WindowPixmap::create();
     if (!isValid()) {
         return;
     }
+#if HAVE_WAYLAND
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        // performing deep copy, this could probably be improved
+        m_image = buffer()->data().copy();
+        return;
+    }
+#endif
     m_image = QImage((uchar*)m_shm->buffer(), size().width(), size().height(), QImage::Format_ARGB32_Premultiplied);
 }
 
 bool QPainterWindowPixmap::update(const QRegion &damage)
 {
-    Q_UNUSED(damage)
+#if HAVE_WAYLAND
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        const auto oldBuffer = buffer();
+        updateBuffer();
+        const auto &b = buffer();
+        if (b == oldBuffer || b.isNull()) {
+            return false;
+        }
+        QPainter p(&m_image);
+        const QImage &data = b->data();
+        p.setCompositionMode(QPainter::CompositionMode_Source);
+        for (const QRect &rect : damage.rects()) {
+            p.drawImage(rect, data, rect);
+        }
+        return true;
+    }
+#endif
+
     if (!m_shm->isValid()) {
         return false;
     }

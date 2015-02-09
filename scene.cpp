@@ -81,6 +81,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailitem.h"
 #include "workspace.h"
 
+#if HAVE_WAYLAND
+#include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/surface_interface.h>
+#endif
+
 namespace KWin
 {
 
@@ -928,7 +933,7 @@ WindowPixmap::WindowPixmap(Scene::Window *window)
 
 WindowPixmap::~WindowPixmap()
 {
-    if (isValid()) {
+    if (isValid() && !kwinApp()->shouldUseWaylandForCompositing()) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
 }
@@ -938,6 +943,16 @@ void WindowPixmap::create()
     if (isValid() || toplevel()->isDeleted()) {
         return;
     }
+#if HAVE_WAYLAND
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        // use Buffer
+        updateBuffer();
+        if (m_buffer) {
+            m_window->unreferencePreviousPixmap();
+        }
+        return;
+    }
+#endif
     XServerGrabber grabber;
     xcb_pixmap_t pix = xcb_generate_id(connection());
     xcb_void_cookie_t namePixmapCookie = xcb_composite_name_window_pixmap_checked(connection(), toplevel()->frameId(), pix);
@@ -966,6 +981,27 @@ void WindowPixmap::create()
     m_contentsRect = QRect(toplevel()->clientPos(), toplevel()->clientSize());
     m_window->unreferencePreviousPixmap();
 }
+
+bool WindowPixmap::isValid() const
+{
+#if HAVE_WAYLAND
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        return !m_buffer.isNull();
+    }
+#endif
+    return m_pixmap != XCB_PIXMAP_NONE;
+}
+
+#if HAVE_WAYLAND
+void WindowPixmap::updateBuffer()
+{
+    if (auto s = toplevel()->surface()) {
+        if (auto b = s->buffer()) {
+            m_buffer = b;
+        }
+    }
+}
+#endif
 
 //****************************************
 // Scene::EffectFrame
