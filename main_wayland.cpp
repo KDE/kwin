@@ -21,8 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "wayland_backend.h"
+#include "wayland_server.h"
 #include "xcbutils.h"
 
+// KWayland
+#include <KWayland/Server/display.h>
 // KDE
 #include <KLocalizedString>
 // Qt
@@ -109,7 +112,7 @@ void ApplicationWayland::performStartup()
  * Starts the X-Server with binary name @p process on @p display.
  * The new process is started by forking into it.
  **/
-static void startXServer(const QByteArray &process, const QByteArray &display, bool rootless = false)
+static int startXServer(const QByteArray &process, const QByteArray &display, bool rootless = false, const QByteArray &waylandSocket = QByteArray())
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -140,6 +143,7 @@ static void startXServer(const QByteArray &process, const QByteArray &display, b
             *index++ = const_cast<char*>(display.data());
         }
         *index++ = nullptr;
+        qputenv("WAYLAND_DISPLAY", waylandSocket.isEmpty() ? QByteArrayLiteral("wayland-0") : waylandSocket);
         execvp(process.constData(), args);
         close(pipeFds[1]);
         exit(20);
@@ -147,14 +151,14 @@ static void startXServer(const QByteArray &process, const QByteArray &display, b
     // parent process - this is KWin
     // reads from pipe, closes write side
     close(pipeFds[1]);
+    return pipeFds[0];
+}
 
+static void readDisplay(int pipe)
+{
     QFile readPipe;
-    if (!readPipe.open(pipeFds[0], QIODevice::ReadOnly)) {
-        std::cerr << "FATAL ERROR failed to open pipe to start X Server "
-                  << process.constData()
-                  << " with arguments "
-                  << display.constData()
-                  << std::endl;
+    if (!readPipe.open(pipe, QIODevice::ReadOnly)) {
+        std::cerr << "FATAL ERROR failed to open pipe to start X Server" << std::endl;
         exit(1);
     }
     QByteArray displayNumber = readPipe.readLine();
@@ -166,7 +170,7 @@ static void startXServer(const QByteArray &process, const QByteArray &display, b
     setenv("DISPLAY", displayNumber.constData(), true);
 
     // close our pipe
-    close(pipeFds[0]);
+    close(pipe);
 }
 
 } // namespace
@@ -181,6 +185,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     bool rootlessXwayland = false;
     QByteArray xDisplay;
     QByteArray xServer;
+    QByteArray waylandSocket;
     for (int i = 1; i < argc; ++i) {
         QByteArray arg = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
         if (arg == "-x" || arg == "--x-server") {
@@ -206,16 +211,42 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                 xDisplay = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
             }
         }
+        if (arg == "--socket" || arg == "-s") {
+            if (++i < argc) {
+                waylandSocket = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
+            }
+            continue;
+        }
+        if (arg.startsWith("--socket=")) {
+            waylandSocket = arg.mid(9);
+        }
     }
 
+    KWin::WaylandServer *server = KWin::WaylandServer::create(nullptr);
+    server->init(waylandSocket);
+
+    int xDisplayPipe = -1;
     if (startXephyr) {
-        KWin::startXServer(QByteArrayLiteral("Xephyr"), xDisplay);
+        xDisplayPipe = KWin::startXServer(QByteArrayLiteral("Xephyr"), xDisplay);
     }
     if (startXvfb) {
-        KWin::startXServer(QByteArrayLiteral("Xvfb"), xDisplay);
+        xDisplayPipe = KWin::startXServer(QByteArrayLiteral("Xvfb"), xDisplay);
     }
     if (startXwayland) {
-        KWin::startXServer(QByteArrayLiteral("Xwayland"), xDisplay, rootlessXwayland);
+        xDisplayPipe = KWin::startXServer(QByteArrayLiteral("Xwayland"), xDisplay, rootlessXwayland, waylandSocket);
+        fd_set rfds;
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 0;
+        do {
+            server->display()->dispatchEvents(1000);
+            FD_ZERO(&rfds);
+            FD_SET(xDisplayPipe, &rfds);
+        } while (select(xDisplayPipe + 1, &rfds, NULL, NULL, &tv) == 0);
+    }
+
+    if (xDisplayPipe != -1) {
+        KWin::readDisplay(xDisplayPipe);
     }
 
     KWin::Application::setupMalloc();
@@ -242,6 +273,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
 
+    server->setParent(&a);
+    server->display()->startLoop();
+
     KWin::Application::createAboutData();
 
     QCommandLineOption startXServerOption(QStringList({QStringLiteral("x"), QStringLiteral("x-server")}),
@@ -252,12 +286,16 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineOption x11DisplayOption(QStringLiteral("display"),
                                         i18n("The X11 Display to connect to. If not set next free number will be picked."),
                                         QStringLiteral("display"));
+    QCommandLineOption waylandSocketOption(QStringList{QStringLiteral("s"), QStringLiteral("socket")},
+                                           i18n("Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."),
+                                           QStringLiteral("socket"));
 
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(startXServerOption);
     parser.addOption(xwaylandOption);
     parser.addOption(x11DisplayOption);
+    parser.addOption(waylandSocketOption);
 #if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));

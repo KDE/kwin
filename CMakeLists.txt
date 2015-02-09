@@ -416,6 +416,7 @@ if(HAVE_WAYLAND)
             ${kwin_KDEINIT_SRCS}
             screens_wayland.cpp
             wayland_backend.cpp
+            wayland_server.cpp
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
@@ -503,6 +504,7 @@ set(kwin_WAYLAND_LIBS
     XCB::XTEST
     XKB::XKB
     KF5::WaylandClient
+    KF5::WaylandServer
 )
 
 set(kwin_WAYLAND_EGL_LIBS
