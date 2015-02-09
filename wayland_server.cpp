@@ -18,6 +18,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
+#include "toplevel.h"
+#include "workspace.h"
 
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/display.h>
@@ -47,6 +49,22 @@ void WaylandServer::init(const QByteArray &socketName)
     m_display->start();
     m_compositor = m_display->createCompositor(m_display);
     m_compositor->create();
+    connect(m_compositor, &CompositorInterface::surfaceCreated, this,
+        [this] (SurfaceInterface *surface) {
+            // check whether we have a Toplevel with the Surface's id
+            Workspace *ws = Workspace::self();
+            if (!ws) {
+                // it's possible that a Surface gets created before Workspace is created
+                return;
+            }
+            auto check = [surface] (const Toplevel *t) {
+                return t->surfaceId() == surface->id();
+            };
+            if (Toplevel *t = ws->findToplevel(check)) {
+                t->setSurface(surface);
+            }
+        }
+    );
     m_shell = m_display->createShell(m_display);
     m_shell->create();
     m_display->createShm();

@@ -66,6 +66,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "killwindow.h"
 #include "x11eventfilter.h"
 
+#if HAVE_WAYLAND
+#include <KWayland/Server/surface_interface.h>
+#endif
+
 #ifndef XCB_GE_GENERIC
 #define XCB_GE_GENERIC 35
 typedef struct xcb_ge_generic_event_t {
@@ -1693,6 +1697,9 @@ void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
 {
     if (e->type == atoms->wl_surface_id) {
         m_surfaceId = e->data.data32[0];
+#if HAVE_WAYLAND
+        m_surface = KWayland::Server::SurfaceInterface::get(m_surfaceId);
+#endif
         emit surfaceIdChanged(m_surfaceId);
     }
 }
