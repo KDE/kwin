@@ -46,6 +46,13 @@ public:
     ClientConnection *client();
     Global *global();
     wl_resource *parentResource() const;
+    /**
+     * @returns The id of this Resource if it is created, otherwise @c 0.
+     *
+     * This is a convenient wrapper for wl_resource_get_id.
+     * @since 5.3
+     **/
+    quint32 id() const;
 
 protected:
     class Private;

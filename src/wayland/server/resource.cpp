@@ -100,5 +100,13 @@ wl_resource *Resource::parentResource() const
     return d->parentResource;
 }
 
+quint32 Resource::id() const
+{
+    if (!d->resource) {
+        return 0;
+    }
+    return wl_resource_get_id(d->resource);
+}
+
 }
 }
