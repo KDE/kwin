@@ -157,7 +157,8 @@ class SceneOpenGL::TexturePrivate
 public:
     virtual ~TexturePrivate();
 
-    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) = 0;
+    virtual bool loadTexture(WindowPixmap *pixmap) = 0;
+    virtual void updateTexture(WindowPixmap *pixmap);
     virtual OpenGLBackend *backend() = 0;
 
 protected:
@@ -179,7 +180,8 @@ public:
     void discard() override final;
 
 protected:
-    bool load(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t);
+    bool load(WindowPixmap *pixmap);
+    void updateFromPixmap(WindowPixmap *pixmap);
 
     Texture(TexturePrivate& dd);
 

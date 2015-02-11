@@ -1140,17 +1140,23 @@ void SceneOpenGL::Texture::discard()
     d_ptr = d_func()->backend()->createBackendTexture(this);
 }
 
-bool SceneOpenGL::Texture::load(xcb_pixmap_t pix, const QSize &size,
-                                xcb_visualid_t visual)
+bool SceneOpenGL::Texture::load(WindowPixmap *pixmap)
 {
-    if (pix == XCB_NONE)
+    if (!pixmap->isValid()) {
         return false;
+    }
 
     // decrease the reference counter for the old texture
     d_ptr = d_func()->backend()->createBackendTexture(this); //new TexturePrivate();
 
     Q_D(Texture);
-    return d->loadTexture(pix, size, visual);
+    return d->loadTexture(pixmap);
+}
+
+void SceneOpenGL::Texture::updateFromPixmap(WindowPixmap *pixmap)
+{
+    Q_D(Texture);
+    d->updateTexture(pixmap);
 }
 
 //****************************************
@@ -1162,6 +1168,11 @@ SceneOpenGL::TexturePrivate::TexturePrivate()
 
 SceneOpenGL::TexturePrivate::~TexturePrivate()
 {
+}
+
+void SceneOpenGL::TexturePrivate::updateTexture(WindowPixmap *pixmap)
+{
+    Q_UNUSED(pixmap)
 }
 
 //****************************************
@@ -1579,6 +1590,10 @@ bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
         if (!toplevel()->damage().isEmpty()) {
+#if HAVE_WAYLAND
+            updateBuffer();
+            m_texture->updateFromPixmap(this);
+#endif
             // mipmaps need to be updated
             m_texture->setDirty();
             toplevel()->resetDamage();
@@ -1589,7 +1604,7 @@ bool OpenGLWindowPixmap::bind()
         return false;
     }
 
-    bool success = m_texture->load(pixmap(), toplevel()->size(), toplevel()->visual());
+    bool success = m_texture->load(this);
 
     if (success)
         toplevel()->resetDamage();

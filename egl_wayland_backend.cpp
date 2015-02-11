@@ -24,10 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "wayland_backend.h"
 #include <KWayland/Client/surface.h>
-#include "xcbutils.h"
 // kwin libs
 #include <kwinglplatform.h>
 // KDE
+#include <KWayland/Server/buffer_interface.h>
 // Qt
 #include <QOpenGLContext>
 
@@ -355,14 +355,6 @@ void EglWaylandBackend::doneCurrent()
     eglMakeCurrent(m_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 }
 
-Xcb::Shm *EglWaylandBackend::shm()
-{
-    if (m_shm.isNull()) {
-        m_shm.reset(new Xcb::Shm);
-    }
-    return m_shm.data();
-}
-
 void EglWaylandBackend::overlaySizeChanged(const QSize &size)
 {
     wl_egl_window_resize(m_overlay, size.width(), size.height(), 0, 0);
@@ -381,7 +373,6 @@ EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGL::Texture *texture, KWin::
     : SceneOpenGL::TexturePrivate()
     , q(texture)
     , m_backend(backend)
-    , m_referencedPixmap(XCB_PIXMAP_NONE)
 {
     m_target = GL_TEXTURE_2D;
 }
@@ -395,42 +386,42 @@ OpenGLBackend *EglWaylandTexture::backend()
     return m_backend;
 }
 
-bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
+bool EglWaylandTexture::loadTexture(WindowPixmap *pixmap)
 {
-    Q_UNUSED(visual)
-
-    // HACK: egl wayland platform doesn't support texture from X11 pixmap through the KHR_image_pixmap
-    // extension. To circumvent this problem we copy the pixmap content into a SHM image and from there
-    // to the OpenGL texture. This is a temporary solution. In future we won't need to get the content
-    // from X11 pixmaps. That's what we have XWayland for to get the content into a nice Wayland buffer.
-    if (pix == XCB_PIXMAP_NONE)
-        return false;
-
-    m_referencedPixmap = pix;
-
-    Xcb::Shm *shm = m_backend->shm();
-    if (!shm->isValid()) {
+    if (GLPlatform::instance()->isGLES()) {
+        // FIXME
         return false;
     }
-
-    xcb_shm_get_image_cookie_t cookie = xcb_shm_get_image_unchecked(connection(), pix, 0, 0, size.width(),
-        size.height(), ~0, XCB_IMAGE_FORMAT_Z_PIXMAP, shm->segment(), 0);
+    const auto &buffer = pixmap->buffer();
+    if (buffer.isNull()) {
+        return false;
+    }
+    const QImage &image = buffer->data();
+    if (image.isNull()) {
+        return false;
+    }
 
     glGenTextures(1, &m_texture);
     q->setWrapMode(GL_CLAMP_TO_EDGE);
     q->setFilter(GL_LINEAR);
     q->bind();
 
-    ScopedCPointer<xcb_shm_get_image_reply_t> image(xcb_shm_get_image_reply(connection(), cookie, NULL));
-    if (image.isNull()) {
+    const QSize &size = image.size();
+    // TODO: this should be shared with GLTexture(const QImage&, GLenum)
+    GLenum format = 0;
+    switch (image.format()) {
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+        format = GL_RGBA8;
+        break;
+    case QImage::Format_RGB32:
+        format = GL_RGB8;
+        break;
+    default:
         return false;
     }
-
-    // TODO: other formats
-#ifndef KWIN_HAVE_OPENGLES
-    glTexImage2D(m_target, 0, GL_RGBA8, size.width(), size.height(), 0,
-                 GL_BGRA, GL_UNSIGNED_BYTE, shm->buffer());
-#endif
+    glTexImage2D(m_target, 0, format, size.width(), size.height(), 0,
+                 GL_BGRA, GL_UNSIGNED_BYTE, image.bits());
 
     q->unbind();
     q->setYInverted(true);
@@ -439,37 +430,32 @@ bool EglWaylandTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_vis
     return true;
 }
 
-bool EglWaylandTexture::update(const QRegion &damage)
+
+void EglWaylandTexture::updateTexture(WindowPixmap *pixmap)
 {
-    if (m_referencedPixmap == XCB_PIXMAP_NONE) {
-        return false;
+    if (GLPlatform::instance()->isGLES()) {
+        // FIXME
+        return;
     }
-
-    Xcb::Shm *shm = m_backend->shm();
-    if (!shm->isValid()) {
-        return false;
+    const auto &buffer = pixmap->buffer();
+    if (buffer.isNull()) {
+        return;
     }
-
-    // TODO: optimize by only updating the damaged areas
-    const QRect &damagedRect = damage.boundingRect();
-    xcb_shm_get_image_cookie_t cookie = xcb_shm_get_image_unchecked(connection(), m_referencedPixmap,
-        damagedRect.x(), damagedRect.y(), damagedRect.width(), damagedRect.height(),
-        ~0, XCB_IMAGE_FORMAT_Z_PIXMAP, shm->segment(), 0);
-
-    q->bind();
-
-    ScopedCPointer<xcb_shm_get_image_reply_t> image(xcb_shm_get_image_reply(connection(), cookie, NULL));
+    const QImage &image = buffer->data();
     if (image.isNull()) {
-        return false;
+        return;
     }
+    Q_ASSERT(image.size() == m_size);
+    q->bind();
+    const QRegion &damage = pixmap->toplevel()->damage();
 
-    // TODO: other formats
-#ifndef KWIN_HAVE_OPENGLES
-    glTexSubImage2D(m_target, 0, damagedRect.x(), damagedRect.y(), damagedRect.width(), damagedRect.height(), GL_BGRA, GL_UNSIGNED_BYTE, shm->buffer());
-#endif
-
+    // TODO: this should be shared with GLTexture::update
+    const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    for (const QRect &rect : damage.rects()) {
+        glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                        GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+    }
     q->unbind();
-    return true;
 }
 
 } // namespace

@@ -386,14 +386,14 @@ public:
      * contentsRect tells where inside the complete pixmap the real content is.
      */
     const QRect &contentsRect() const;
-
-protected:
-    explicit WindowPixmap(Scene::Window *window);
     /**
      * @brief Returns the Toplevel this WindowPixmap belongs to.
      * Note: the Toplevel can change over the lifetime of the WindowPixmap in case the Toplevel is copied to Deleted.
      */
     Toplevel *toplevel();
+
+protected:
+    explicit WindowPixmap(Scene::Window *window);
     /**
      * @return The Window this WindowPixmap belongs to
      */

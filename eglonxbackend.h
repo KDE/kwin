@@ -69,12 +69,13 @@ class EglTexture : public SceneOpenGL::TexturePrivate
 public:
     virtual ~EglTexture();
     virtual void onDamage();
-    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
+    virtual bool loadTexture(WindowPixmap *pixmap) override;
     virtual OpenGLBackend *backend();
 
 private:
     friend class EglOnXBackend;
     EglTexture(SceneOpenGL::Texture *texture, EglOnXBackend *backend);
+    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
     SceneOpenGL::Texture *q;
     EglOnXBackend *m_backend;
     EGLImageKHR m_image;

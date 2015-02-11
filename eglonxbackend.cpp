@@ -496,10 +496,8 @@ OpenGLBackend *EglTexture::backend()
     return m_backend;
 }
 
-bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual)
+bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
 {
-    Q_UNUSED(visual)
-
     if (pix == XCB_NONE)
         return false;
 
@@ -526,6 +524,11 @@ bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t
     m_size = size;
     updateMatrix();
     return true;
+}
+
+bool EglTexture::loadTexture(WindowPixmap *pixmap)
+{
+    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
 }
 
 void KWin::EglTexture::onDamage()

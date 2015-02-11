@@ -116,12 +116,13 @@ class GlxTexture : public SceneOpenGL::TexturePrivate
 public:
     virtual ~GlxTexture();
     virtual void onDamage();
-    virtual bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual) override;
+    virtual bool loadTexture(WindowPixmap *pixmap) override;
     virtual OpenGLBackend *backend();
 
 private:
     friend class GlxBackend;
     GlxTexture(SceneOpenGL::Texture *texture, GlxBackend *backend);
+    bool loadTexture(xcb_pixmap_t pix, const QSize &size, xcb_visualid_t visual);
     SceneOpenGL::Texture *q;
     GlxBackend *m_backend;
     GLXPixmap m_glxpixmap; // the glx pixmap the texture is bound to
