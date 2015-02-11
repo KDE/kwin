@@ -338,7 +338,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     QImage tmpImage;
 
     if (!src.isNull()) {
-        if (d->s_supportsUnpack) {
+        if (useUnpack) {
             glPixelStorei(GL_UNPACK_ROW_LENGTH, image.width());
             glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
             glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
