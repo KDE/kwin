@@ -310,6 +310,11 @@ void TestWaylandShell::testToplevel()
     QSignalSpy toplevelSpy(serverSurface, SIGNAL(toplevelChanged(bool)));
     QVERIFY(toplevelSpy.isValid());
 
+    surface->setFullscreen();
+    QVERIFY(toplevelSpy.wait());
+    QCOMPARE(toplevelSpy.count(), 1);
+    QVERIFY(!toplevelSpy.first().first().toBool());
+    toplevelSpy.clear();
     surface->setToplevel();
     QVERIFY(toplevelSpy.wait());
     QCOMPARE(toplevelSpy.count(), 1);

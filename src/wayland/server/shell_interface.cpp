@@ -66,9 +66,6 @@ class ShellSurfaceInterface::Private : public Resource::Private
 {
 public:
     Private(ShellSurfaceInterface *q, ShellInterface *shell, SurfaceInterface *surface, wl_resource *parentResource);
-    void setFullscreen(bool fullscreen);
-    void setToplevel(bool toplevel);
-    void setMaximized(bool maximized);
     void ping();
 
     SurfaceInterface *surface;
@@ -76,9 +73,13 @@ public:
     QByteArray windowClass;
     QScopedPointer<QTimer> pingTimer;
     quint32 pingSerial = 0;
-    bool fullscreen = false;
-    bool toplevel = false;
-    bool maximized = false;
+    enum class WindowMode {
+        Fullscreen,
+        Toplevel,
+        Maximized
+    };
+    WindowMode windowMode = WindowMode::Toplevel;
+    void setWindowMode(WindowMode newWindowMode);
 
 private:
     // interface callbacks
@@ -183,36 +184,6 @@ ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInter
 {
     Q_D();
     connect(d->pingTimer.data(), &QTimer::timeout, this, &ShellSurfaceInterface::pingTimeout);
-    connect(this, &ShellSurfaceInterface::fullscreenChanged, this,
-        [this] (bool fullscreen) {
-            if (!fullscreen) {
-                return;
-            }
-            Q_D();
-            d->setToplevel(false);
-            d->setMaximized(false);
-        }
-    );
-    connect(this, &ShellSurfaceInterface::toplevelChanged, this,
-        [this] (bool toplevel) {
-            if (!toplevel) {
-                return;
-            }
-            Q_D();
-            d->setFullscreen(false);
-            d->setMaximized(false);
-        }
-    );
-    connect(this, &ShellSurfaceInterface::maximizedChanged, this,
-        [this] (bool maximized) {
-            if (!maximized) {
-                return;
-            }
-            Q_D();
-            d->setFullscreen(false);
-            d->setToplevel(false);
-        }
-    );
 }
 
 ShellSurfaceInterface::~ShellSurfaceInterface() = default;
@@ -293,17 +264,7 @@ void ShellSurfaceInterface::Private::setToplevelCallback(wl_client *client, wl_r
 {
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    s->setToplevel(true);
-}
-
-void ShellSurfaceInterface::Private::setToplevel(bool t)
-{
-    if (toplevel == t) {
-        return;
-    }
-    toplevel = t;
-    Q_Q(ShellSurfaceInterface);
-    emit q->toplevelChanged(toplevel);
+    s->setWindowMode(WindowMode::Toplevel);
 }
 
 void ShellSurfaceInterface::Private::setTransientCallback(wl_client *client, wl_resource *resource, wl_resource *parent,
@@ -327,17 +288,26 @@ void ShellSurfaceInterface::Private::setFullscreenCallback(wl_client *client, wl
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
     // TODO: add method, framerate and output
-    s->setFullscreen(true);
+    s->setWindowMode(WindowMode::Fullscreen);
 }
 
-void ShellSurfaceInterface::Private::setFullscreen(bool f)
+void ShellSurfaceInterface::Private::setWindowMode(WindowMode newWindowMode)
 {
-    if (fullscreen == f) {
+    if (windowMode == newWindowMode) {
         return;
     }
-    fullscreen = f;
+    const WindowMode oldWindowMode = windowMode;
+    windowMode = newWindowMode;
     Q_Q(ShellSurfaceInterface);
-    emit q->fullscreenChanged(fullscreen);
+    if (oldWindowMode == WindowMode::Fullscreen || newWindowMode == WindowMode::Fullscreen) {
+        emit q->fullscreenChanged(windowMode == WindowMode::Fullscreen);
+    }
+    if (oldWindowMode == WindowMode::Toplevel || newWindowMode == WindowMode::Toplevel) {
+        emit q->toplevelChanged(windowMode == WindowMode::Toplevel);
+    }
+    if (oldWindowMode == WindowMode::Maximized || newWindowMode == WindowMode::Maximized) {
+        emit q->maximizedChanged(windowMode == WindowMode::Maximized);
+    }
 }
 
 void ShellSurfaceInterface::Private::setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
@@ -359,17 +329,7 @@ void ShellSurfaceInterface::Private::setMaximizedCallback(wl_client *client, wl_
     Q_UNUSED(output)
     auto s = cast<Private>(resource);
     Q_ASSERT(client == *s->client);
-    s->setMaximized(true);
-}
-
-void ShellSurfaceInterface::Private::setMaximized(bool set)
-{
-    if (maximized == set) {
-        return;
-    }
-    maximized = set;
-    Q_Q(ShellSurfaceInterface);
-    emit q->maximizedChanged(maximized);
+    s->setWindowMode(WindowMode::Maximized);
 }
 
 void ShellSurfaceInterface::Private::setTitleCallback(wl_client *client, wl_resource *resource, const char *title)
@@ -428,17 +388,17 @@ QByteArray ShellSurfaceInterface::windowClass() const {
 
 bool ShellSurfaceInterface::isFullscreen() const {
     Q_D();
-    return d->fullscreen;
+    return d->windowMode == Private::WindowMode::Fullscreen;
 }
 
 bool ShellSurfaceInterface::isToplevel() const {
     Q_D();
-    return d->toplevel;
+    return d->windowMode == Private::WindowMode::Toplevel;
 }
 
 bool ShellSurfaceInterface::isMaximized() const {
     Q_D();
-    return d->maximized;
+    return d->windowMode == Private::WindowMode::Maximized;
 }
 
 ShellSurfaceInterface::Private *ShellSurfaceInterface::d_func() const
