@@ -50,6 +50,11 @@ Activities::~Activities()
     s_self = NULL;
 }
 
+KActivities::Consumer::ServiceStatus Activities::serviceStatus() const
+{
+    return m_controller->serviceStatus();
+}
+
 void Activities::setCurrent(const QString &activity)
 {
     m_controller->setCurrentActivity(activity);

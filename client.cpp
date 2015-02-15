@@ -1415,9 +1415,11 @@ void Client::setOnActivities(QStringList newActivitiesList)
     newActivitiesList = joinedActivitiesList.split(QStringLiteral(","), QString::SkipEmptyParts);
 
     QStringList allActivities = Activities::self()->all();
-    if ( newActivitiesList.isEmpty() ||
-        (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count()) ||
-        (newActivitiesList.count() == 1 && newActivitiesList.at(0) == Activities::nullUuid())) {
+    if (// If we got the request to be on all activities explicitly
+        newActivitiesList.isEmpty() || joinedActivitiesList == Activities::nullUuid() ||
+        // If we got a list of activities that covers all activities
+        (newActivitiesList.count() > 1 && newActivitiesList.count() == allActivities.count())) {
+
         activityList.clear();
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
@@ -2160,9 +2162,10 @@ void Client::readActivities(Xcb::StringProperty &property)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
     QStringList newActivitiesList;
-    QByteArray prop = property;
+    QString prop = QString::fromUtf8(property);
     activitiesDefined = !prop.isEmpty();
-    if (QString::fromUtf8(prop) == Activities::nullUuid()) {
+
+    if (prop == Activities::nullUuid()) {
         //copied from setOnAllActivities to avoid a redundant XChangeProperty.
         if (!activityList.isEmpty()) {
             activityList.clear();
@@ -2179,22 +2182,29 @@ void Client::readActivities(Xcb::StringProperty &property)
         return;
     }
 
-    newActivitiesList = QString::fromUtf8(prop).split(QStringLiteral(","));
+    newActivitiesList = prop.split(QStringLiteral(","));
 
     if (newActivitiesList == activityList)
         return; //expected change, it's ok.
 
-    //otherwise, somebody else changed it. we need to validate before reacting
-    QStringList allActivities = Activities::self()->all();
-    if (allActivities.isEmpty()) {
-        qCDebug(KWIN_CORE) << "no activities!?!?";
-        //don't touch anything, there's probably something bad going on and we don't wanna make it worse
-        return;
-    }
-    for (int i = 0; i < newActivitiesList.size(); ++i) {
-        if (! allActivities.contains(newActivitiesList.at(i))) {
-            qCDebug(KWIN_CORE) << "invalid:" << newActivitiesList.at(i);
-            newActivitiesList.removeAt(i--);
+    //otherwise, somebody else changed it. we need to validate before reacting.
+    //if the activities are not synced, and there are existing clients with
+    //activities specified, somebody has restarted kwin. we can not validate
+    //activities in this case. we need to trust the old values.
+    if (Activities::self()->serviceStatus() != KActivities::Consumer::Unknown) {
+        QStringList allActivities = Activities::self()->all();
+        if (allActivities.isEmpty()) {
+            qCDebug(KWIN_CORE) << "no activities!?!?";
+            //don't touch anything, there's probably something bad going on and we don't wanna make it worse
+            return;
+        }
+
+
+        for (int i = 0; i < newActivitiesList.size(); ++i) {
+            if (! allActivities.contains(newActivitiesList.at(i))) {
+                qCDebug(KWIN_CORE) << "invalid:" << newActivitiesList.at(i);
+                newActivitiesList.removeAt(i--);
+            }
         }
     }
     setOnActivities(newActivitiesList);

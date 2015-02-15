@@ -59,6 +59,8 @@ public:
 
     static QString nullUuid();
 
+    KActivities::Controller::ServiceStatus serviceStatus() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the global
