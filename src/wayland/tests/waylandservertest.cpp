@@ -99,10 +99,15 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    // need four roundtrips to dispatch events
-    for (int i = 0; i < 5; i++) {
+    fd_set rfds;
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    do {
         display.dispatchEvents(1000);
-    }
+        FD_ZERO(&rfds);
+        FD_SET(pipe, &rfds);
+    } while (select(pipe + 1, &rfds, NULL, NULL, &tv) == 0);
 
     // now Xwayland is ready and we can read the pipe to get the display
     readDisplayFromPipe(pipe);
