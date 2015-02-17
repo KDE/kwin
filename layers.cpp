@@ -90,7 +90,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "deleted.h"
 #include "effects.h"
-#include <QX11Info>
 #include "composite.h"
 #include "screenedge.h"
 

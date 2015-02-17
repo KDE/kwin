@@ -37,7 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kstartupinfo.h>
 #include <KWindowSystem>
 #include <QDebug>
-#include <QX11Info>
 
 
 /*

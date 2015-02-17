@@ -46,7 +46,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "useractions.h"
 #include <QDebug>
-#include <QX11Info>
 
 namespace KWin
 {

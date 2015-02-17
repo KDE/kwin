@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QQmlEngine>
 #include <QQuickItem>
 #include <QQuickWindow>
-#include <QX11Info>
 #include <X11/Xlib.h>
 // KDE
 #include <KLocalizedString>
