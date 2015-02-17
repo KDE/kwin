@@ -223,8 +223,9 @@ QIcon Group::icon() const
         return leader_client->icon();
     else if (leader_wid != None) {
         QIcon ic;
-        auto readIcon = [&ic, this](int size, bool scale = true) {
-            const QPixmap pix = KWindowSystem::icon(leader_wid, size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints);
+        NETWinInfo info(connection(), leader_wid, rootWindow(), NET::WMIcon, NET::WM2IconPixmap);
+        auto readIcon = [&ic, &info, this](int size, bool scale = true) {
+            const QPixmap pix = KWindowSystem::icon(leader_wid, size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, &info);
             if (!pix.isNull()) {
                 ic.addPixmap(pix);
             }
