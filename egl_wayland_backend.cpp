@@ -1,3 +1,4 @@
+
 /********************************************************************
  KWin - the KDE window manager
  This file is part of the KDE project.
@@ -23,16 +24,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "options.h"
 #include "wayland_backend.h"
+#include "wayland_server.h"
 #include <KWayland/Client/surface.h>
 // kwin libs
 #include <kwinglplatform.h>
 // KDE
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/display.h>
 // Qt
 #include <QOpenGLContext>
 
 namespace KWin
 {
+
+typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
+eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
 
 EglWaylandBackend::EglWaylandBackend()
     : QObject(NULL)
@@ -64,6 +72,9 @@ EglWaylandBackend::EglWaylandBackend()
 
 EglWaylandBackend::~EglWaylandBackend()
 {
+    if (eglUnbindWaylandDisplayWL && m_display != EGL_NO_DISPLAY) {
+        eglUnbindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()));
+    }
     cleanupGL();
     doneCurrent();
     eglDestroyContext(m_display, m_context);
@@ -146,6 +157,14 @@ void EglWaylandBackend::init()
 
         if (useBufferAge != "0")
             setSupportsBufferAge(true);
+    }
+
+    if (hasGLExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
+        eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
+        eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
+        if (!eglBindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()))) {
+            eglUnbindWaylandDisplayWL = nullptr;
+        }
     }
 }
 
