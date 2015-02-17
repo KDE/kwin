@@ -66,7 +66,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KStartupInfo>
-#include <KWindowInfo>
 // Qt
 #include <QtConcurrentRun>
 
@@ -484,8 +483,6 @@ Unmanaged* Workspace::createUnmanaged(xcb_window_t w)
 void Workspace::addClient(Client* c)
 {
     Group* grp = findGroup(c->window());
-
-    KWindowInfo info(c->window(), NET::WMAllProperties, NET::WM2WindowClass);
 
     emit clientAdded(c);
 
