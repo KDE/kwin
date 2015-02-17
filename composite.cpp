@@ -178,7 +178,7 @@ extern bool is_multihead;
 void Compositor::slotCompositingOptionsInitialized()
 {
     char selection_name[ 100 ];
-    sprintf(selection_name, "_NET_WM_CM_S%d", QX11Info::appScreen());
+    sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
     if (!cm_selection) {
         cm_selection = new CompositorSelectionOwner(selection_name);
         connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));

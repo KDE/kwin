@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_XCB_UTILS_H
 
 #include <kwinglobals.h>
+#include "main.h"
 
 #include <QRect>
 #include <QRegion>
@@ -1713,7 +1714,7 @@ static inline int defaultDepth()
     if (depth != 0) {
         return depth;
     }
-    int screen = QX11Info::appScreen();
+    int screen = Application::x11ScreenNumber();
     for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection()));
             it.rem;
             --screen, xcb_screen_next(&it)) {
