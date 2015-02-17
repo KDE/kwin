@@ -212,9 +212,6 @@
         <entry name="AutogroupInForeground" type="Bool">
             <default>true</default>
         </entry>
-        <entry name="ShowDesktopIsMinimizeAll" type="Bool">
-            <default>false</default>
-        </entry>
         <entry name="BorderlessMaximizedWindows" type="Bool">
             <default>false</default>
         </entry>

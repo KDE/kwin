@@ -103,7 +103,6 @@ class Options : public QObject
      * snap only when windows will overlap
      */
     Q_PROPERTY(bool snapOnlyWhenOverlapping READ isSnapOnlyWhenOverlapping WRITE setSnapOnlyWhenOverlapping NOTIFY snapOnlyWhenOverlappingChanged)
-    Q_PROPERTY(bool showDesktopIsMinimizeAll READ isShowDesktopIsMinimizeAll WRITE setShowDesktopIsMinimizeAll NOTIFY showDesktopIsMinimizeAllChanged)
     /**
      * whether or not we roll over to the other edge when switching desktops past the edge
      */
@@ -321,10 +320,6 @@ public:
      */
     bool isSnapOnlyWhenOverlapping() const {
         return m_snapOnlyWhenOverlapping;
-    }
-
-    bool isShowDesktopIsMinimizeAll() const {
-        return m_showDesktopIsMinimizeAll;
     }
 
     /**
@@ -609,7 +604,6 @@ public:
     void setWindowSnapZone(int windowSnapZone);
     void setCenterSnapZone(int centerSnapZone);
     void setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping);
-    void setShowDesktopIsMinimizeAll(bool showDesktopIsMinimizeAll);
     void setRollOverDesktops(bool rollOverDesktops);
     void setFocusStealingPreventionLevel(int focusStealingPreventionLevel);
     void setLegacyFullscreenSupport(bool legacyFullscreenSupport);
@@ -805,7 +799,6 @@ Q_SIGNALS:
     void windowSnapZoneChanged();
     void centerSnapZoneChanged();
     void snapOnlyWhenOverlappingChanged();
-    void showDesktopIsMinimizeAllChanged();
     void rollOverDesktopsChanged(bool enabled);
     void focusStealingPreventionLevelChanged();
     void legacyFullscreenSupportChanged();
@@ -878,7 +871,6 @@ private:
     int m_windowSnapZone;
     int m_centerSnapZone;
     bool m_snapOnlyWhenOverlapping;
-    bool m_showDesktopIsMinimizeAll;
     bool m_rollOverDesktops;
     int m_focusStealingPreventionLevel;
     bool m_legacyFullscreenSupport;

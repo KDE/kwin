@@ -78,7 +78,6 @@ Options::Options(QObject *parent)
     , m_windowSnapZone(0)
     , m_centerSnapZone(0)
     , m_snapOnlyWhenOverlapping(false)
-    , m_showDesktopIsMinimizeAll(false)
     , m_rollOverDesktops(false)
     , m_focusStealingPreventionLevel(0)
     , m_legacyFullscreenSupport(false)
@@ -282,15 +281,6 @@ void Options::setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping)
     }
     m_snapOnlyWhenOverlapping = snapOnlyWhenOverlapping;
     emit snapOnlyWhenOverlappingChanged();
-}
-
-void Options::setShowDesktopIsMinimizeAll(bool showDesktopIsMinimizeAll)
-{
-    if (m_showDesktopIsMinimizeAll == showDesktopIsMinimizeAll) {
-        return;
-    }
-    m_showDesktopIsMinimizeAll = showDesktopIsMinimizeAll;
-    emit showDesktopIsMinimizeAllChanged();
 }
 
 void Options::setRollOverDesktops(bool rollOverDesktops)
@@ -864,7 +854,6 @@ void Options::syncFromKcfgc()
     setInactiveTabsSkipTaskbar(m_settings->inactiveTabsSkipTaskbar());
     setAutogroupSimilarWindows(m_settings->autogroupSimilarWindows());
     setAutogroupInForeground(m_settings->autogroupInForeground());
-    setShowDesktopIsMinimizeAll(m_settings->showDesktopIsMinimizeAll());
     setBorderlessMaximizedWindows(m_settings->borderlessMaximizedWindows());
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
