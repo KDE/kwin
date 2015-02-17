@@ -206,7 +206,7 @@ void TabBoxHandlerPrivate::updateHighlightWindows()
         data.resize(2);
         data[ 1 ] = wId;
     } else {
-        wId = QX11Info::appRootWindow();
+        wId = rootWindow();
         data.resize(1);
     }
     data[ 0 ] = currentClient ? currentClient->window() : 0L;
