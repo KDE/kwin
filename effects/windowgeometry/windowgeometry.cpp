@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStringBuilder>
 #include <kwinconfig.h>
 #include <kconfiggroup.h>
-#include <kwindowsystem.h>
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
