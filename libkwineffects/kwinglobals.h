@@ -142,7 +142,7 @@ KWIN_EXPORT xcb_connection_t *connection()
 {
     static xcb_connection_t *s_con = nullptr;
     if (!s_con) {
-        s_con = QX11Info::connection();
+        s_con = reinterpret_cast<xcb_connection_t*>(qApp->property("x11Connection").value<void*>());
     }
     return s_con;
 }

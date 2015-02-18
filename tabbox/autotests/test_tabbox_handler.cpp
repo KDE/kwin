@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mock_tabboxhandler.h"
 #include "clientmodel.h"
 #include <QtTest/QtTest>
+#include <QX11Info>
 
 using namespace KWin;
 
@@ -27,6 +28,7 @@ class TestTabBoxHandler : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
     /**
      * Test to verify that update outline does not crash
      * if the ModelIndex for which the outline should be
@@ -36,6 +38,11 @@ private slots:
      **/
     void testDontCrashUpdateOutlineNullClient();
 };
+
+void TestTabBoxHandler::initTestCase()
+{
+    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+}
 
 void TestTabBoxHandler::testDontCrashUpdateOutlineNullClient()
 {

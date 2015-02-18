@@ -135,6 +135,7 @@ private Q_SLOTS:
 void TestScreenEdges::initTestCase()
 {
     qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
+    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
     KWin::atoms = new KWin::Atoms;
     qRegisterMetaType<KWin::ElectricBorder>();
 }

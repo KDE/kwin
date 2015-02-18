@@ -49,6 +49,7 @@ class TestBuiltInEffectLoader : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void testHasEffect_data();
     void testHasEffect();
     void testKnownEffects();
@@ -60,6 +61,11 @@ private Q_SLOTS:
     void testLoadBuiltInEffect();
     void testLoadAllEffects();
 };
+
+void TestBuiltInEffectLoader::initTestCase()
+{
+    qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+}
 
 void TestBuiltInEffectLoader::testHasEffect_data()
 {

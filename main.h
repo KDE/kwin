@@ -47,6 +47,7 @@ class KWIN_EXPORT Application : public  QApplication
     Q_OBJECT
     Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
     Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
+    Q_PROPERTY(void *x11Connection READ x11Connection NOTIFY x11ConnectionChanged)
 public:
     /**
     * @brief This enum provides the various operation modes of KWin depending on the available
@@ -127,12 +128,22 @@ public:
         return m_rootWindow;
     }
 
+    /**
+     * @returns the X11 xcb connection
+     **/
+    xcb_connection_t *x11Connection() const {
+        return m_connection;
+    }
+
     static void setupMalloc();
     static void setupLocalizedString();
     static void setupLoggingCategoryFilters();
 
     static bool usesLibinput();
     static void setUseLibinput(bool use);
+
+Q_SIGNALS:
+    void x11ConnectionChanged();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
@@ -151,6 +162,14 @@ protected:
     void setX11RootWindow(xcb_window_t root) {
         m_rootWindow = root;
     }
+    /**
+     * Inheriting classes should use this method to set the xcb connection
+     * before accessing any X11 specific code pathes.
+     **/
+    void setX11Connection(xcb_connection_t *c) {
+        m_connection = c;
+        emit x11ConnectionChanged();
+    }
 
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
@@ -165,6 +184,7 @@ private:
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
+    xcb_connection_t *m_connection = nullptr;
     static int crashes;
 };
 
