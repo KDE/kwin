@@ -30,6 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 #include <QAbstractEventDispatcher>
 #include <QSocketNotifier>
+#include <QThread>
 
 #include <wayland-server.h>
 
@@ -64,7 +65,7 @@ Display::Private::Private(Display *q)
 
 void Display::Private::installSocketNotifier()
 {
-    if (!QCoreApplication::instance()) {
+    if (!QThread::currentThread()) {
         return;
     }
     int fd = wl_event_loop_get_fd(loop);
@@ -74,7 +75,7 @@ void Display::Private::installSocketNotifier()
     }
     QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, q);
     QObject::connect(m_notifier, &QSocketNotifier::activated, q, [this] { flush(); } );
-    QObject::connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, q, [this] { flush(); });
+    QObject::connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, q, [this] { flush(); });
     setRunning(true);
 }
 
