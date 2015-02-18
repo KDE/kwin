@@ -730,6 +730,7 @@ void TabBox::show()
         m_isShown = false;
         return;
     }
+    workspace()->setShowingDesktop(false);
     reference();
     m_isShown = true;
     m_tabBox->show();

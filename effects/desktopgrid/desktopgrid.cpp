@@ -1039,9 +1039,11 @@ void DesktopGridEffect::setActive(bool active)
         return; // Already in that state
 
     activated = active;
-    if (activated && timeline.currentValue() == 0)
-        setup();
-    if (!activated) {
+    if (activated) {
+        effects->setShowingDesktop(false);
+        if (timeline.currentValue() == 0)
+            setup();
+    } else {
         if (isUsingPresentWindows()) {
             QList<WindowMotionManager>::iterator it;
             for (it = m_managers.begin(); it != m_managers.end(); ++it) {
