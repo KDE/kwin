@@ -34,6 +34,7 @@ class TestXcbWrapper : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
     void defaultCtor();
@@ -59,6 +60,11 @@ private:
     void testGeometry(WindowGeometry &geometry, const QRect &rect);
     Window m_testWindow;
 };
+
+void TestXcbWrapper::initTestCase()
+{
+    qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
+}
 
 void TestXcbWrapper::init()
 {

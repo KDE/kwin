@@ -32,6 +32,7 @@ class TestXcbWindow : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void defaultCtor();
     void ctor();
     void classCtor();
@@ -41,6 +42,11 @@ private Q_SLOTS:
     void destroy();
     void destroyNotManaged();
 };
+
+void TestXcbWindow::initTestCase()
+{
+    qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
+}
 
 void TestXcbWindow::defaultCtor()
 {

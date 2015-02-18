@@ -82,6 +82,8 @@ void TestClientMachine::initTestCase()
         }
     }
     freeaddrinfo(res);
+
+    qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
 }
 
 void TestClientMachine::cleanupTestCase()

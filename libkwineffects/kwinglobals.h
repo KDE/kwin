@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QCoreApplication>
 #include <QVariant>
 #include <QtX11Extras/QX11Info>
+#include <QCoreApplication>
+#include <QVariant>
 
 #include <kwin_export.h>
 
@@ -150,7 +152,7 @@ KWIN_EXPORT xcb_window_t rootWindow()
 {
     static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
     if (s_rootWindow == XCB_WINDOW_NONE) {
-        s_rootWindow = QX11Info::appRootWindow();
+        s_rootWindow = qApp->property("x11RootWindow").value<quint32>();
     }
     return s_rootWindow;
 }

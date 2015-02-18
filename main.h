@@ -46,6 +46,7 @@ class KWIN_EXPORT Application : public  QApplication
 {
     Q_OBJECT
     Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
+    Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
 public:
     /**
     * @brief This enum provides the various operation modes of KWin depending on the available
@@ -119,6 +120,13 @@ public:
      */
     static void setX11MultiHead(bool multiHead);
 
+    /**
+     * @returns the X11 root window.
+     **/
+    xcb_window_t x11RootWindow() const {
+        return m_rootWindow;
+    }
+
     static void setupMalloc();
     static void setupLocalizedString();
     static void setupLoggingCategoryFilters();
@@ -136,6 +144,13 @@ protected:
     void createOptions();
     void setupEventFilters();
     void destroyWorkspace();
+    /**
+     * Inheriting classes should use this method to set the X11 root window
+     * before accessing any X11 specific code pathes.
+     **/
+    void setX11RootWindow(xcb_window_t root) {
+        m_rootWindow = root;
+    }
 
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
@@ -149,6 +164,7 @@ private:
     bool m_configLock;
     OperationMode m_operationMode;
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
+    xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     static int crashes;
 };
 

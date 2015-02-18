@@ -39,10 +39,6 @@ QPoint Cursor::pos()
 static xcb_window_t s_rootWindow = XCB_WINDOW_NONE;
 static xcb_connection_t *s_connection = nullptr;
 
-unsigned long QX11Info::appRootWindow(int)
-{
-    return s_rootWindow;
-}
 xcb_connection_t *QX11Info::connection()
 {
     return s_connection;
@@ -101,6 +97,7 @@ void TestXRandRScreens::initTestCase()
         }
     }
     QVERIFY(s_rootWindow != XCB_WINDOW_NONE);
+    qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(s_rootWindow));
 
     // get the extensions
     if (!Extensions::self()->isRandrAvailable()) {

@@ -35,6 +35,7 @@ class TestXcbSizeHints : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
     void testSizeHints_data();
@@ -47,6 +48,11 @@ private Q_SLOTS:
 private:
     Window m_testWindow;
 };
+
+void TestXcbSizeHints::initTestCase()
+{
+    qApp->setProperty("x11RootWindow", QVariant::fromValue<quint32>(QX11Info::appRootWindow()));
+}
 
 void TestXcbSizeHints::init()
 {
