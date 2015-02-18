@@ -121,12 +121,10 @@ GLTexture::GLTexture(const QImage& image, GLenum target)
             { GL_RGB8,     GL_RGBA, GL_UNSIGNED_BYTE               }, // QImage::Format_RGBX8888
             { 0,           0,       0                              }, // QImage::Format_RGBA8888
             { GL_RGBA8,    GL_RGBA, GL_UNSIGNED_BYTE               }, // QImage::Format_RGBA8888_Premultiplied
-#if QT_VERSION >= QT_VERSION_CHECK(5, 4, 0)
             { GL_RGB10,    GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_BGR30
             { GL_RGB10_A2, GL_RGBA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_A2BGR30_Premultiplied
             { GL_RGB10,    GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_RGB30
             { GL_RGB10_A2, GL_BGRA, GL_UNSIGNED_INT_2_10_10_10_REV }, // QImage::Format_A2RGB30_Premultiplied
-#endif
         };
 
         QImage im;

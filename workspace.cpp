@@ -184,12 +184,6 @@ Workspace::Workspace(bool restore)
     // Select windowmanager privileges
     selectWmInputEventMask();
 
-#if QT_VERSION < 0x050302
-    // WORKAROUND: QXcbScreen before 5.3.2 overrides them, see bug #335926, QTBUG-39648
-    // TODO once we depend on Qt 5.4 remove it
-    connect(qApp, SIGNAL(screenAdded(QScreen*)), this, SLOT(selectWmInputEventMask()));
-#endif
-
     ScreenEdges::create(this);
 
     // VirtualDesktopManager needs to be created prior to init shortcuts

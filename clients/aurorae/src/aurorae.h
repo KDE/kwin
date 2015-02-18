@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/Decoration>
 #include <QElapsedTimer>
 #include <QVariant>
-#include <QMutex>
 #include <KCModule>
 
 class QOffscreenSurface;
@@ -32,7 +31,6 @@ class QQmlEngine;
 class QQuickItem;
 class QQuickRenderControl;
 class QQuickWindow;
-class QWindow;
 
 class KConfigLoader;
 
@@ -81,7 +79,6 @@ private:
     QMouseEvent translatedMouseEvent(QMouseEvent *orig);
     QScopedPointer<QOpenGLFramebufferObject> m_fbo;
     QImage m_buffer;
-    QScopedPointer<QWindow> m_decorationWindow;
     QPointer<QQuickWindow> m_view;
     QQuickItem *m_item;
     KWin::Borders *m_borders;
@@ -89,8 +86,6 @@ private:
     KWin::Borders *m_extendedBorders;
     KWin::Borders *m_padding;
     QString m_themeName;
-    QMutex m_mutex;
-    QMetaObject::Connection m_recreateNonCompositedConnection;
     QQuickRenderControl *m_renderControl = nullptr;
     QScopedPointer<QTimer> m_updateTimer;
     QScopedPointer<QOpenGLContext> m_context;
