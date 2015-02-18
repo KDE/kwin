@@ -84,6 +84,7 @@ OutputInterface::OutputInterface(Display *display, QObject *parent)
                 d->sendMode((*it).resource, *currentModeIt);
                 d->sendDone(*it);
             }
+            wl_display_flush_clients(*(d->display));
         }
     );
     connect(this, &OutputInterface::subPixelChanged,       this, [this, d] { d->updateGeometry(); });
@@ -288,6 +289,7 @@ void OutputInterface::Private::bind(wl_client *client, uint32_t version, uint32_
     }
 
     sendDone(r);
+    c->flush();
 }
 
 void OutputInterface::Private::unbind(wl_resource *resource)
