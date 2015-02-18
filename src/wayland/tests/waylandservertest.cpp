@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QGuiApplication>
 #include <QFile>
+#include <QtCore/private/qeventdispatcher_glib_p.h>
 
 #include <unistd.h>
 #include <iostream>
@@ -80,9 +81,14 @@ int main(int argc, char **argv)
 {
     using namespace KWayland::Server;
 
+    // set our own event dispatcher to be able to dispatch events before the event loop is started
+    QAbstractEventDispatcher *eventDispatcher = new QEventDispatcherGlib();
+    QCoreApplication::setEventDispatcher(eventDispatcher);
+
     // first create the Server and setup with minimum to get an XWayland connected
     Display display;
     display.start();
+    display.createShm();
     CompositorInterface *compositor = display.createCompositor(&display);
     compositor->create();
     ShellInterface *shell = display.createShell();
@@ -91,7 +97,6 @@ int main(int argc, char **argv)
     output->setPhysicalSize(QSize(10, 10));
     output->addMode(QSize(1024, 768));
     output->create();
-    display.createShm();
 
     // starts XWayland by forking and opening a pipe
     const int pipe = startXServer();
@@ -104,7 +109,7 @@ int main(int argc, char **argv)
     tv.tv_sec = 0;
     tv.tv_usec = 0;
     do {
-        display.dispatchEvents(1000);
+        eventDispatcher->processEvents(QEventLoop::WaitForMoreEvents);
         FD_ZERO(&rfds);
         FD_SET(pipe, &rfds);
     } while (select(pipe + 1, &rfds, NULL, NULL, &tv) == 0);
@@ -113,7 +118,6 @@ int main(int argc, char **argv)
     readDisplayFromPipe(pipe);
 
     QGuiApplication app(argc, argv);
-    display.startLoop();
 
     SeatInterface *seat = display.createSeat();
     seat->setName(QStringLiteral("testSeat0"));
