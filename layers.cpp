@@ -827,7 +827,7 @@ Layer Client::layer() const
 Layer Client::belongsToLayer() const
 {
     if (isDesktop())
-        return DesktopLayer;
+        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
     if (isSplash())          // no damn annoying splashscreens
         return NormalLayer; // getting in the way of everything else
     if (isDock()) {

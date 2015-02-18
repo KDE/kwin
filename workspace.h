@@ -277,7 +277,6 @@ public:
     void setCurrentScreen(int new_screen);
 
     void setShowingDesktop(bool showing);
-    void resetShowingDesktop(bool keep_hidden);
     bool showingDesktop() const;
 
     void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
@@ -535,8 +534,6 @@ private:
     ClientList attention_chain;
 
     bool showing_desktop;
-    ClientList showing_desktop_clients;
-    int block_showing_desktop;
 
     GroupList groups;
 

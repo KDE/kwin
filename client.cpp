@@ -990,12 +990,12 @@ void Client::updateVisibility()
         return;
     }
     if (isManaged())
-        resetShowingDesktop(true);
+        resetShowingDesktop();
     internalShow();
 }
 
 
-void Client::resetShowingDesktop(bool keep_hidden)
+void Client::resetShowingDesktop()
 {
     if (isDock() || !workspace()->showingDesktop())
         return;
@@ -1006,7 +1006,7 @@ void Client::resetShowingDesktop(bool keep_hidden)
             break;
 
     if (!belongs_to_desktop)
-        workspace()->resetShowingDesktop(keep_hidden);
+        workspace()->setShowingDesktop(false);
 }
 
 /**

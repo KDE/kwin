@@ -717,7 +717,7 @@ private:
     bool processDecorationButtonPress(int button, int state, int x, int y, int x_root, int y_root,
                                       bool ignoreMenu = false);
     Client* findAutogroupCandidate() const;
-    void resetShowingDesktop(bool keep_hidden);
+    void resetShowingDesktop();
 
 protected:
     virtual void debug(QDebug& stream) const;

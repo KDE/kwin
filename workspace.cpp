@@ -113,7 +113,6 @@ Workspace::Workspace(bool restore)
     , force_restacking(false)
     , x_stacking_dirty(true)
     , showing_desktop(false)
-    , block_showing_desktop(0)
     , was_user_interaction(false)
     , session_saving(false)
     , block_focus(0)
@@ -550,7 +549,6 @@ void Workspace::removeClient(Client* c)
     desktops.removeAll(c);
     x_stacking_dirty = true;
     attention_chain.removeAll(c);
-    showing_desktop_clients.removeAll(c);
     Group* group = findGroup(c->window());
     if (group != NULL)
         group->lostLeader();
@@ -849,7 +847,6 @@ void Workspace::slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop)
 
 void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop)
 {
-    ++block_showing_desktop;
     ObscuringWindows obs_wins;
     for (ToplevelList::ConstIterator it = stacking_order.constBegin();
             it != stacking_order.constEnd();
@@ -879,9 +876,8 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newD
         if (c->isOnDesktop(newDesktop) && c->isOnCurrentActivity())
             c->updateVisibility();
     }
-    --block_showing_desktop;
     if (showingDesktop())   // Do this only after desktop change to avoid flicker
-        resetShowingDesktop(false);
+        setShowingDesktop(false);
 }
 
 void Workspace::activateClientOnNewDesktop(uint desktop)
@@ -956,7 +952,6 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date
     StackingUpdatesBlocker blocker(this);
 
-    ++block_showing_desktop; //FIXME should I be using that?
     // Optimized Desktop switching: unmapping done from back to front
     // mapping done from front to back => less exposure events
     //Notify::raise((Notify::Event) (Notify::DesktopChange+new_desktop));
@@ -997,10 +992,9 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
             c->updateVisibility();
     }
 
-    --block_showing_desktop;
     //FIXME not sure if I should do this either
     if (showingDesktop())   // Do this only after desktop change to avoid flicker
-        resetShowingDesktop(false);
+        setShowingDesktop(false);
 
     // Restore the focus on this desktop
     --block_focus;
@@ -1206,68 +1200,12 @@ void Workspace::setShowingDesktop(bool showing)
 {
     rootInfo()->setShowingDesktop(showing);
     showing_desktop = showing;
-    ++block_showing_desktop;
-    if (showing_desktop) {
-        showing_desktop_clients.clear();
-        ++block_focus;
-        ToplevelList cls = stackingOrder();
-        // Find them first, then minimize, otherwise transients may get minimized with the window
-        // they're transient for
-        for (ToplevelList::ConstIterator it = cls.constBegin();
-                it != cls.constEnd();
-                ++it) {
-            Client *c = qobject_cast<Client*>(*it);
-            if (!c) {
-                continue;
-            }
-            if (c->isOnCurrentActivity() && c->isOnCurrentDesktop() && c->isShown(true) && !c->isSpecialWindow())
-                showing_desktop_clients.prepend(c);   // Topmost first to reduce flicker
-        }
-        for (ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-                it != showing_desktop_clients.constEnd();
-                ++it)
-            (*it)->minimize();
-        --block_focus;
-        if (Client* desk = findDesktop(true, VirtualDesktopManager::self()->current()))
+    if (Client* desk = findDesktop(true, VirtualDesktopManager::self()->current())) {
+        desk->updateLayer();
+        lowerClient(desk);
+        if (showing_desktop)
             requestFocus(desk);
-    } else {
-        for (ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-                it != showing_desktop_clients.constEnd();
-                ++it)
-            (*it)->unminimize();
-        if (showing_desktop_clients.count() > 0)
-            requestFocus(showing_desktop_clients.first());
-        showing_desktop_clients.clear();
     }
-    --block_showing_desktop;
-}
-
-/**
- * Following Kicker's behavior:
- * Changing a virtual desktop resets the state and shows the windows again.
- * Unminimizing a window resets the state but keeps the windows hidden (except
- * the one that was unminimized).
- * A new window resets the state and shows the windows again, with the new window
- * being active. Due to popular demand (#67406) by people who apparently
- * don't see a difference between "show desktop" and "minimize all", this is not
- * true if "showDesktopIsMinimizeAll" is set in kwinrc. In such case showing
- * a new window resets the state but doesn't show windows.
- */
-void Workspace::resetShowingDesktop(bool keep_hidden)
-{
-    if (block_showing_desktop > 0)
-        return;
-    rootInfo()->setShowingDesktop(false);
-    showing_desktop = false;
-    ++block_showing_desktop;
-    if (!keep_hidden) {
-        for (ClientList::ConstIterator it = showing_desktop_clients.constBegin();
-                it != showing_desktop_clients.constEnd();
-                ++it)
-            (*it)->unminimize();
-    }
-    showing_desktop_clients.clear();
-    --block_showing_desktop;
 }
 
 void Workspace::disableGlobalShortcutsForClient(bool disable)
