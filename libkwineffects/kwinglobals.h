@@ -170,7 +170,7 @@ KWIN_EXPORT xcb_screen_t *defaultScreen()
     if (s_screen) {
         return s_screen;
     }
-    int screen = QX11Info::appScreen();
+    int screen = qApp->property("x11ScreenNumber").toInt();
     for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(connection()));
             it.rem;
             --screen, xcb_screen_next(&it)) {
