@@ -500,8 +500,7 @@ void TabBox::key(const char *actionName, Slot slot, const QKeySequence &shortcut
     a->setObjectName(QString::fromUtf8(actionName));
     a->setText(i18n(actionName));
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
-    connect(a, &QAction::triggered, TabBox::self(), slot);
-    input()->registerShortcut(shortcut, a);
+    input()->registerShortcut(shortcut, a, TabBox::self(), slot);
     auto cuts = KGlobalAccel::self()->shortcut(a);
     globalShortcutChanged(a, cuts.isEmpty() ? QKeySequence() : cuts.first());
 }

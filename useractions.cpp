@@ -937,8 +937,7 @@ void Workspace::initShortcut(const QString &actionName, const QString &descripti
     }
     KGlobalAccel::self()->setDefaultShortcut(a, QList<QKeySequence>() << shortcut);
     KGlobalAccel::self()->setShortcut(a, QList<QKeySequence>() << shortcut);
-    connect(a, &QAction::triggered, this, slot);
-    input()->registerShortcut(shortcut, a);
+    input()->registerShortcut(shortcut, a, this, slot);
 }
 
 /*!

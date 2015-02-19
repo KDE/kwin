@@ -551,6 +551,7 @@ Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
 {
     m_shortcuts->registerShortcut(action, shortcut);
+    registerShortcutForGlobalAccelTimestamp(action);
 }
 
 void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action)
@@ -561,6 +562,18 @@ void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+}
+
+void InputRedirection::registerShortcutForGlobalAccelTimestamp(QAction *action)
+{
+    connect(action, &QAction::triggered, kwinApp(), [action] {
+        QVariant timestamp = action->property("org.kde.kglobalaccel.activationTimestamp");
+        bool ok = false;
+        const quint32 t = timestamp.toULongLong(&ok);
+        if (ok) {
+            kwinApp()->setX11Time(t);
+        }
+    });
 }
 
 static bool screenContainsPos(const QPointF &pos)

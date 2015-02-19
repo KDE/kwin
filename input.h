@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_INPUT_H
 #define KWIN_INPUT_H
 #include <kwinglobals.h>
+#include <QAction>
 #include <QHash>
 #include <QObject>
 #include <QPoint>
@@ -27,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWeakPointer>
 #include <config-kwin.h>
 
-class QAction;
 class QKeySequence;
 
 struct xkb_context;
@@ -85,6 +85,16 @@ public:
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     void registerShortcut(const QKeySequence &shortcut, QAction *action);
+    /**
+     * @overload
+     *
+     * Like registerShortcut, but also connects QAction::triggered to the @p slot on @p receiver.
+     * It's recommended to use this method as it ensures that the X11 timestamp is updated prior
+     * to the @p slot being invoked. If not using this overload it's required to ensure that
+     * registerShortcut is called before connecting to QAction's triggered signal.
+     **/
+    template <typename T>
+    void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)());
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
 
@@ -158,6 +168,7 @@ private:
     void setupLibInput();
     void updatePointerPosition(const QPointF &pos);
     void updatePointerAfterScreenChange();
+    void registerShortcutForGlobalAccelTimestamp(QAction *action);
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB
@@ -220,6 +231,13 @@ InputRedirection::PointerButtonState InputRedirection::pointerButtonState(uint32
     } else {
         return KWin::InputRedirection::PointerButtonReleased;
     }
+}
+
+template <typename T>
+inline
+void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)()) {
+    registerShortcut(shortcut, action);
+    connect(action, &QAction::triggered, receiver, slot);
 }
 
 #if HAVE_XKB
