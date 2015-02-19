@@ -44,6 +44,7 @@ include(KDECMakeSettings)
 include(KDECompilerSettings)
 
 include(ECMInstallIcons)
+include(ECMOptionalAddSubdirectory)
 
 add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0)
 
