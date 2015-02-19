@@ -127,6 +127,15 @@ public:
      */
     static bool supportsSwizzle();
 
+    /**
+     * Returns @c true if texture formats R* are supported, and @c false otherwise.
+     *
+     * This requires OpenGL 3.0, GL_ARB_texture_rg or OpenGL ES 3.0 or GL_EXT_texture_rg.
+     *
+     * @since 5.2.1
+     **/
+    static bool supportsFormatRG();
+
 protected:
     QExplicitlySharedDataPointer<GLTexturePrivate> d_ptr;
     GLTexture(GLTexturePrivate& dd);

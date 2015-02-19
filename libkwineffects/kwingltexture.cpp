@@ -47,6 +47,7 @@ bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
 bool GLTexturePrivate::s_supportsTextureSwizzle = false;
+bool GLTexturePrivate::s_supportsTextureFormatRG = false;
 uint GLTexturePrivate::s_textureObjectCounter = 0;
 uint GLTexturePrivate::s_fbo = 0;
 
@@ -290,12 +291,16 @@ void GLTexturePrivate::initStatic()
             hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
         s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
+        // see https://www.opengl.org/registry/specs/ARB/texture_rg.txt
+        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rg"));
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
         s_supportsFramebufferObjects = true;
         s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
         s_supportsTextureSwizzle = hasGLVersion(3, 0);
+        // see https://www.khronos.org/registry/gles/extensions/EXT/EXT_texture_rg.txt
+        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_rg"));
 
         // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
         // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
@@ -651,6 +656,11 @@ bool GLTexture::framebufferObjectSupported()
 bool GLTexture::supportsSwizzle()
 {
     return GLTexturePrivate::s_supportsTextureSwizzle;
+}
+
+bool GLTexture::supportsFormatRG()
+{
+    return GLTexturePrivate::s_supportsTextureFormatRG;
 }
 
 } // namespace KWin

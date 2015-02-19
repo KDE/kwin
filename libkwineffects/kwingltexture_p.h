@@ -74,6 +74,7 @@ public:
     static bool s_supportsUnpack;
     static bool s_supportsTextureStorage;
     static bool s_supportsTextureSwizzle;
+    static bool s_supportsTextureFormatRG;
     static GLuint s_fbo;
     static uint s_textureObjectCounter;
 private:
