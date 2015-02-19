@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_LIB_KWINGLOBALS_H
 #define KWIN_LIB_KWINGLOBALS_H
 
+#include <QCoreApplication>
+#include <QVariant>
 #include <QtX11Extras/QX11Info>
 
 #include <kwin_export.h>
@@ -156,7 +158,7 @@ KWIN_EXPORT xcb_window_t rootWindow()
 inline
 KWIN_EXPORT xcb_timestamp_t xTime()
 {
-    return QX11Info::appTime();
+    return qApp->property("x11Time").value<xcb_timestamp_t>();
 }
 
 inline

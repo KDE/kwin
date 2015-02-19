@@ -82,7 +82,7 @@ void updateXTime()
     // NOTE: QX11Info::getTimestamp does not yet search the event queue as the old
     // solution did. This means there might be regressions currently. See the
     // documentation above on how it should be done properly.
-    QX11Info::setAppTime(QX11Info::getTimestamp());
+    kwinApp()->setX11Time(QX11Info::getTimestamp());
 }
 
 static int server_grab_count = 0;

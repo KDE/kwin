@@ -281,11 +281,11 @@ void X11Cursor::doSetPos()
 void X11Cursor::doGetPos()
 {
     if (m_timeStamp != XCB_TIME_CURRENT_TIME &&
-            m_timeStamp == QX11Info::appTime()) {
+            m_timeStamp == xTime()) {
         // time stamps did not change, no need to query again
         return;
     }
-    m_timeStamp = QX11Info::appTime();
+    m_timeStamp = xTime();
     Xcb::Pointer pointer(rootWindow());
     if (pointer.isNull()) {
         return;

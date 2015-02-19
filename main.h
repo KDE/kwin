@@ -45,6 +45,7 @@ public:
 class KWIN_EXPORT Application : public  QApplication
 {
     Q_OBJECT
+    Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
 public:
     /**
     * @brief This enum provides the various operation modes of KWin depending on the available
@@ -81,6 +82,16 @@ public:
     void setupTranslator();
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
+
+    xcb_timestamp_t x11Time() const {
+        return m_x11Time;
+    }
+    void setX11Time(xcb_timestamp_t timestamp) {
+        if (timestamp > m_x11Time) {
+            m_x11Time = timestamp;
+        }
+    }
+    void updateX11Time(xcb_generic_event_t *event);
 
     static void setCrashCount(int count);
     static bool wasCrash();
@@ -137,6 +148,7 @@ private:
     QScopedPointer<XcbEventFilter> m_eventFilter;
     bool m_configLock;
     OperationMode m_operationMode;
+    xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     static int crashes;
 };
 
