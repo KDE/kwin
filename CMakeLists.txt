@@ -440,7 +440,7 @@ qt5_add_dbus_interface( kwin_KDEINIT_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/org.freede
 
 qt5_add_resources( kwin_KDEINIT_SRCS resources.qrc )
 
-qt5_wrap_ui(kwin_KDEINIT_SRCS
+ki18n_wrap_ui(kwin_KDEINIT_SRCS
     shortcutdialog.ui
 )
 
