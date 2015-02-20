@@ -40,6 +40,7 @@ protected:
 
 private:
     void createX11Connection();
+    void continueStartupWithScreens();
     void continueStartupWithX();
 
     bool m_startXWayland = false;

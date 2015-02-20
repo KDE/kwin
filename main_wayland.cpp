@@ -79,24 +79,44 @@ ApplicationWayland::~ApplicationWayland()
 
 void ApplicationWayland::performStartup()
 {
-    if (m_startXWayland) {
-        setOperationMode(KWin::Application::OperationModeXwayland);
-        int sx[2];
-        if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-            exit(1);
-            return;
-        }
+    setOperationMode(m_startXWayland ? OperationModeXwayland : OperationModeWaylandAndX11);
 
-        m_xcbConnectionFd = sx[0];
-        const int xDisplayPipe = startXServer(WaylandServer::self()->display()->socketName().toUtf8(), sx[1]);
-        QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
-        QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
-        QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
-        watcher->setFuture(QtConcurrent::run(readDisplay, xDisplayPipe));
-    } else {
+    // try creating the Wayland Backend
+    createInput();
+    Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
+    connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
+        [] () {
+            fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
+            ::exit(1);
+        }
+    );
+    connect(backend, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+}
+
+void ApplicationWayland::continueStartupWithScreens()
+{
+    disconnect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    createScreens();
+    waylandServer()->initOutputs();
+
+    if (!m_startXWayland) {
         continueStartupWithX();
+        return;
     }
+
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+        exit(1);
+        return;
+    }
+
+    m_xcbConnectionFd = sx[0];
+    const int xDisplayPipe = startXServer(WaylandServer::self()->display()->socketName().toUtf8(), sx[1]);
+    QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+    QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
+    QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
+    watcher->setFuture(QtConcurrent::run(readDisplay, xDisplayPipe));
 }
 
 void ApplicationWayland::continueStartupWithX()
@@ -143,15 +163,6 @@ void ApplicationWayland::continueStartupWithX()
         fputs(i18n("kwin_wayland: an X11 window manager is running on the X11 Display.\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
     }
-
-    // try creating the Wayland Backend
-    Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
-    connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
-        [] () {
-            fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
-            ::exit(1);
-        }
-    );
 
     createWorkspace();
 
