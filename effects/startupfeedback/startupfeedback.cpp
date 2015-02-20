@@ -72,7 +72,7 @@ static const int s_startupDefaultTimeout = 5;
 StartupFeedbackEffect::StartupFeedbackEffect()
     : m_bounceSizesRatio(1.0)
     , m_startupInfo(new KStartupInfo(KStartupInfo::CleanOnCantDetect, this))
-    , m_selection(new KSelectionOwner("_KDE_STARTUP_FEEDBACK", -1, this))
+    , m_selection(new KSelectionOwner("_KDE_STARTUP_FEEDBACK", xcbConnection(), x11RootWindow(), this))
     , m_active(false)
     , m_frame(0)
     , m_progress(0)

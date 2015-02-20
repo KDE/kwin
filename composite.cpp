@@ -64,7 +64,7 @@ namespace KWin
 
 extern int currentRefreshRate();
 
-CompositorSelectionOwner::CompositorSelectionOwner(const char *selection) : KSelectionOwner(selection), owning(false)
+CompositorSelectionOwner::CompositorSelectionOwner(const char *selection) : KSelectionOwner(selection, connection(), rootWindow()), owning(false)
 {
     connect (this, SIGNAL(lostOwnership()), SLOT(looseOwnership()));
 }

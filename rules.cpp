@@ -943,7 +943,7 @@ RuleBook::RuleBook(QObject *parent)
     : QObject(parent)
     , m_updateTimer(new QTimer(this))
     , m_updatesDisabled(false)
-    , m_temporaryRulesMessages(new KXMessages("_KDE_NET_WM_TEMPORARY_RULES", NULL))
+    , m_temporaryRulesMessages(new KXMessages(connection(), rootWindow(), "_KDE_NET_WM_TEMPORARY_RULES", nullptr))
 {
     connect(m_temporaryRulesMessages.data(), SIGNAL(gotMessage(QString)), SLOT(temporaryRulesMessage(QString)));
     connect(m_updateTimer, SIGNAL(timeout()), SLOT(save()));
