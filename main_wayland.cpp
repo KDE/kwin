@@ -55,6 +55,9 @@ static void sighandler(int)
     QApplication::exit();
 }
 
+static int startXServer(const QByteArray &waylandSocket, int wmFd);
+static void readDisplay(int pipe);
+
 //************************************
 // ApplicationWayland
 //************************************
@@ -76,7 +79,34 @@ ApplicationWayland::~ApplicationWayland()
 
 void ApplicationWayland::performStartup()
 {
+    if (m_startXWayland) {
+        setOperationMode(KWin::Application::OperationModeXwayland);
+        int sx[2];
+        if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+            exit(1);
+            return;
+        }
+
+        m_xcbConnectionFd = sx[0];
+        const int xDisplayPipe = startXServer(WaylandServer::self()->display()->socketName().toUtf8(), sx[1]);
+        QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+        QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
+        QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
+        watcher->setFuture(QtConcurrent::run(readDisplay, xDisplayPipe));
+    } else {
+        continueStartupWithX();
+    }
+}
+
+void ApplicationWayland::continueStartupWithX()
+{
+    createX11Connection();
     xcb_connection_t *c = x11Connection();
+    if (!c) {
+        // about to quit
+        return;
+    }
     QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(c), QSocketNotifier::Read, this);
     auto processXcbEvents = [this, c] {
         while (auto event = xcb_poll_for_event(c)) {
@@ -92,9 +122,9 @@ void ApplicationWayland::performStartup()
     connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
     connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 
-    // we need to do an XSync here, otherwise the QPA might crash us later on
-    // TODO: remove
-    Xcb::sync();
+    // create selection owner for WM_S0 - magic X display number expected by XWayland
+    KSelectionOwner owner("WM_S0", c, x11RootWindow());
+    owner.claim(true);
 
     createAtoms();
 
@@ -130,17 +160,17 @@ void ApplicationWayland::performStartup()
     notifyKSplash();
 }
 
-void ApplicationWayland::createX11Connection(int fd)
+void ApplicationWayland::createX11Connection()
 {
     int screenNumber = 0;
     xcb_connection_t *c = nullptr;
-    if (fd == -1) {
+    if (m_xcbConnectionFd == -1) {
         c = xcb_connect(nullptr, &screenNumber);
     } else {
-        c = xcb_connect_to_fd(fd, nullptr);
+        c = xcb_connect_to_fd(m_xcbConnectionFd, nullptr);
     }
-    if (xcb_connection_has_error(c)) {
-        std::cerr << "FATAL ERROR: Creating connection to XServer failed" << std::endl;
+    if (int error = xcb_connection_has_error(c)) {
+        std::cerr << "FATAL ERROR: Creating connection to XServer failed: " << error << std::endl;
         exit(1);
         return;
     }
@@ -279,32 +309,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
 
-    if (parser.isSet(xwaylandOption)) {
-        a.setOperationMode(KWin::Application::OperationModeXwayland);
-        int sx[2];
-        if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-            return 1;
-        }
-
-        const int xDisplayPipe = KWin::startXServer(waylandSocket, sx[1]);
-        QFutureWatcher<void> *watcher = new QFutureWatcher<void>(&a);
-        QObject::connect(watcher, &QFutureWatcher<void>::finished,
-            [&a, watcher, sx] {
-                // create xcb connection
-                a.createX11Connection(sx[0]);
-                // create selection owner for WM_S0 - magic X display number expected by XWayland
-                KSelectionOwner owner("WM_S0", KWin::connection(), KWin::rootWindow());
-                owner.claim(true);
-                watcher->deleteLater();
-                a.start();
-            }
-        );
-        watcher->setFuture(QtConcurrent::run(KWin::readDisplay, xDisplayPipe));
-    } else {
-        a.createX11Connection();
-        a.start();
-    }
+    a.setStartXwayland(parser.isSet(xwaylandOption));
+    a.start();
 
     return a.exec();
 }

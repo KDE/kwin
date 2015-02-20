@@ -31,10 +31,19 @@ public:
     ApplicationWayland(int &argc, char **argv);
     virtual ~ApplicationWayland();
 
-    void createX11Connection(int fd = -1);
+    void setStartXwayland(bool start) {
+        m_startXWayland = start;
+    }
 
 protected:
     void performStartup() override;
+
+private:
+    void createX11Connection();
+    void continueStartupWithX();
+
+    bool m_startXWayland = false;
+    int m_xcbConnectionFd = -1;
 };
 
 }
