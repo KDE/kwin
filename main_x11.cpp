@@ -115,6 +115,8 @@ ApplicationX11::ApplicationX11(int &argc, char **argv)
     , owner()
     , m_replace(false)
 {
+    setX11Connection(QX11Info::connection());
+    setX11RootWindow(QX11Info::appRootWindow());
 }
 
 ApplicationX11::~ApplicationX11()

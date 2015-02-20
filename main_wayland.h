@@ -31,6 +31,8 @@ public:
     ApplicationWayland(int &argc, char **argv);
     virtual ~ApplicationWayland();
 
+    void createX11Connection(int fd = -1);
+
 protected:
     void performStartup() override;
 };

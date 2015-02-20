@@ -568,6 +568,7 @@ install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 if(HAVE_WAYLAND)
+    include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
     kf5_add_kdeinit_executable(kwin_wayland main_wayland.cpp)
     target_link_libraries(kdeinit_kwin_wayland kwin)
 

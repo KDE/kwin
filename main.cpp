@@ -148,8 +148,6 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     , m_configLock(false)
     , m_operationMode(mode)
 {
-    setX11RootWindow(QX11Info::appRootWindow());
-    setX11Connection(QX11Info::connection());
     qRegisterMetaType<Options::WindowOperation>("Options::WindowOperation");
 }
 

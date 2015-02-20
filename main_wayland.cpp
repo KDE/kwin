@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "main_wayland.h"
+#include "workspace.h"
 #include <config-kwin.h>
 // kwin
 #include "wayland_backend.h"
@@ -31,7 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <qplatformdefs.h>
 #include <QCommandLineParser>
+#include <QtConcurrentRun>
 #include <QFile>
+#include <QFutureWatcher>
+#include <QtCore/private/qeventdispatcher_unix_p.h>
+#include <QSocketNotifier>
+#include <QThread>
+#include <QDebug>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -61,14 +68,29 @@ ApplicationWayland::~ApplicationWayland()
 {
     destroyWorkspace();
     delete Wayland::WaylandBackend::self();
-    // TODO: only if we support X11
-    Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
+    if (x11Connection()) {
+        Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
+        xcb_disconnect(x11Connection());
+    }
 }
 
 void ApplicationWayland::performStartup()
 {
-    // we don't support X11 multi-head in Wayland
-    Application::setX11ScreenNumber(0);
+    xcb_connection_t *c = x11Connection();
+    QSocketNotifier *notifier = new QSocketNotifier(xcb_get_file_descriptor(c), QSocketNotifier::Read, this);
+    auto processXcbEvents = [this, c] {
+        while (auto event = xcb_poll_for_event(c)) {
+            updateX11Time(event);
+            if (Workspace::self()) {
+                Workspace::self()->workspaceEvent(event);
+            }
+            free(event);
+        }
+        xcb_flush(c);
+    };
+    connect(notifier, &QSocketNotifier::activated, this, processXcbEvents);
+    connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, processXcbEvents);
+    connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::awake, this, processXcbEvents);
 
     // we need to do an XSync here, otherwise the QPA might crash us later on
     // TODO: remove
@@ -108,11 +130,31 @@ void ApplicationWayland::performStartup()
     notifyKSplash();
 }
 
+void ApplicationWayland::createX11Connection(int fd)
+{
+    int screenNumber = 0;
+    xcb_connection_t *c = nullptr;
+    if (fd == -1) {
+        c = xcb_connect(nullptr, &screenNumber);
+    } else {
+        c = xcb_connect_to_fd(fd, nullptr);
+    }
+    if (xcb_connection_has_error(c)) {
+        std::cerr << "FATAL ERROR: Creating connection to XServer failed" << std::endl;
+        exit(1);
+        return;
+    }
+    setX11Connection(c);
+    // we don't support X11 multi-head in Wayland
+    setX11ScreenNumber(screenNumber);
+    setX11RootWindow(defaultScreen()->root);
+}
+
 /**
  * Starts the Xwayland-Server.
  * The new process is started by forking into it.
  **/
-static int startXServer(const QByteArray &waylandSocket)
+static int startXServer(const QByteArray &waylandSocket, int wmFd)
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -127,8 +169,16 @@ static int startXServer(const QByteArray &waylandSocket)
         close(pipeFds[0]);
         char fdbuf[16];
         sprintf(fdbuf, "%d", pipeFds[1]);
+        char wmfdbuf[16];
+        int fd = dup(wmFd);
+        if (fd < 0) {
+            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+            exit(20);
+            return -1;
+        }
+        sprintf(wmfdbuf, "%d", fd);
         qputenv("WAYLAND_DISPLAY", waylandSocket.isEmpty() ? QByteArrayLiteral("wayland-0") : waylandSocket);
-        execlp("Xwayland", "Xwayland", "-displayfd", fdbuf, "-rootless", (char *)0);
+        execlp("Xwayland", "Xwayland", "-displayfd", fdbuf, "-rootless", "-wm", wmfdbuf, (char *)0);
         close(pipeFds[1]);
         exit(20);
     }
@@ -163,13 +213,9 @@ extern "C"
 KWIN_EXPORT int kdemain(int argc, char * argv[])
 {
     // process command line arguments to figure out whether we have to start Xwayland and the Wayland socket
-    bool startXwayland = false;
     QByteArray waylandSocket;
     for (int i = 1; i < argc; ++i) {
         QByteArray arg = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
-        if (arg == "--xwayland") {
-            startXwayland = true;
-        }
         if (arg == "--socket" || arg == "-s") {
             if (++i < argc) {
                 waylandSocket = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
@@ -181,36 +227,15 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         }
     }
 
+    // set our own event dispatcher to be able to dispatch events before the event loop is started
+    QAbstractEventDispatcher *eventDispatcher = new QEventDispatcherUNIX();
+    QCoreApplication::setEventDispatcher(eventDispatcher);
     KWin::WaylandServer *server = KWin::WaylandServer::create(nullptr);
     server->init(waylandSocket);
-
-    if (startXwayland) {
-        const int xDisplayPipe = KWin::startXServer(waylandSocket);
-        fd_set rfds;
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 0;
-        do {
-            server->display()->dispatchEvents(1000);
-            FD_ZERO(&rfds);
-            FD_SET(xDisplayPipe, &rfds);
-        } while (select(xDisplayPipe + 1, &rfds, NULL, NULL, &tv) == 0);
-        KWin::readDisplay(xDisplayPipe);
-    }
 
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
     KWin::Application::setupLoggingCategoryFilters();
-
-    // TODO: check whether we have a wayland connection
-
-    // Disable the glib event loop integration, since it seems to be responsible
-    // for several bug reports about high CPU usage (bug #239963)
-    setenv("QT_NO_GLIB", "1", true);
-
-    // enforce xcb plugin, unfortunately command line switch has precedence
-    // TODO: ensure it's not xcb once we support the Wayland QPA
-    setenv("QT_QPA_PLATFORM", "xcb", true);
 
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
         signal(SIGTERM, SIG_IGN);
@@ -219,11 +244,15 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
 
+    // we want QtWayland to connect to our Wayland display, but the WaylandBackend to the existing Wayland backend
+    // so fiddling around with the env variables.
+    const QByteArray systemDisplay = qgetenv("WAYLAND_DISPLAY");
+    qputenv("WAYLAND_DISPLAY", waylandSocket.isEmpty() ? QByteArrayLiteral("wayland-0") : waylandSocket);
     KWin::ApplicationWayland a(argc, argv);
+    qputenv("WAYLAND_DISPLAY", systemDisplay);
     a.setupTranslator();
 
     server->setParent(&a);
-    server->display()->startLoop();
 
     KWin::Application::createAboutData();
 
@@ -252,26 +281,30 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     if (parser.isSet(xwaylandOption)) {
         a.setOperationMode(KWin::Application::OperationModeXwayland);
+        int sx[2];
+        if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+            return 1;
+        }
 
-        // create selection owner for WM_S0 - magic X display number expected by XWayland
-        KSelectionOwner owner("WM_S0");
-        owner.claim(true);
+        const int xDisplayPipe = KWin::startXServer(waylandSocket, sx[1]);
+        QFutureWatcher<void> *watcher = new QFutureWatcher<void>(&a);
+        QObject::connect(watcher, &QFutureWatcher<void>::finished,
+            [&a, watcher, sx] {
+                // create xcb connection
+                a.createX11Connection(sx[0]);
+                // create selection owner for WM_S0 - magic X display number expected by XWayland
+                KSelectionOwner owner("WM_S0", KWin::connection(), KWin::rootWindow());
+                owner.claim(true);
+                watcher->deleteLater();
+                a.start();
+            }
+        );
+        watcher->setFuture(QtConcurrent::run(KWin::readDisplay, xDisplayPipe));
+    } else {
+        a.createX11Connection();
+        a.start();
     }
-
-    // perform sanity checks
-    // TODO: remove those two
-    if (a.platformName().toLower() != QLatin1String("xcb")) {
-        fprintf(stderr, "%s: FATAL ERROR expecting platform xcb but got platform %s\n",
-                argv[0], qPrintable(a.platformName()));
-        exit(1);
-    }
-    if (!KWin::display()) {
-        fprintf(stderr, "%s: FATAL ERROR KWin requires Xlib support in the xcb plugin. Do not configure Qt with -no-xcb-xlib\n",
-                argv[0]);
-        exit(1);
-    }
-
-    a.start();
 
     return a.exec();
 }

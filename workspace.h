@@ -58,7 +58,7 @@ class Compositor;
 class X11EventFilter;
 enum class Predicate;
 
-class Workspace : public QObject
+class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
 public:
