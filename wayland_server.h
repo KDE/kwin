@@ -45,6 +45,7 @@ class KWIN_EXPORT WaylandServer : public QObject
 public:
     virtual ~WaylandServer();
     void init(const QByteArray &socketName = QByteArray());
+    void initOutputs();
 
     KWayland::Server::Display *display() {
         return m_display;

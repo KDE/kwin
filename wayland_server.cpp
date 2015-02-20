@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
+#include "screens.h"
 #include "toplevel.h"
 #include "workspace.h"
 
@@ -68,12 +69,19 @@ void WaylandServer::init(const QByteArray &socketName)
     m_shell = m_display->createShell(m_display);
     m_shell->create();
     m_display->createShm();
+}
 
-    // we need a dummy output
-    OutputInterface *output = m_display->createOutput(m_display);
-    output->setPhysicalSize(QSize(10, 10));
-    output->addMode(QSize(1024, 768));
-    output->create();
+void WaylandServer::initOutputs()
+{
+    Screens *s = screens();
+    Q_ASSERT(s);
+    for (int i = 0; i < s->count(); ++i) {
+        OutputInterface *output = m_display->createOutput(m_display);
+        // TODO: fixme
+        output->setPhysicalSize(QSize(269, 168));
+        output->addMode(s->size(i));
+        output->create();
+    }
 }
 
 }
