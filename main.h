@@ -99,6 +99,7 @@ public:
         }
     }
     void updateX11Time(xcb_generic_event_t *event);
+    void createScreens();
 
     static void setCrashCount(int count);
     static bool wasCrash();
@@ -155,6 +156,7 @@ protected:
     virtual void performStartup() = 0;
 
     void notifyKSplash();
+    void createInput();
     void createWorkspace();
     void createAtoms();
     void createOptions();

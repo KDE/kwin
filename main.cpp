@@ -23,7 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "atoms.h"
+#include "cursor.h"
+#include "input.h"
+#include "logind.h"
 #include "options.h"
+#include "screens.h"
 #include "sm.h"
 #include "workspace.h"
 #include "xcbutils.h"
@@ -368,6 +372,21 @@ void Application::createWorkspace()
 
     // create workspace.
     (void) new Workspace(isSessionRestored());
+}
+
+void Application::createInput()
+{
+    LogindIntegration::create(this);
+    InputRedirection::create(this);
+    Cursor::create(this);
+}
+
+void Application::createScreens()
+{
+    if (Screens::self()) {
+        return;
+    }
+    Screens::create(this);
 }
 
 void Application::createAtoms()

@@ -169,6 +169,7 @@ void ApplicationX11::performStartup()
             ::exit(1);
         }
 
+        createInput();
         createWorkspace();
 
         Xcb::sync(); // Trigger possible errors, there's still a chance to abort

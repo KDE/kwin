@@ -141,17 +141,12 @@ Workspace::Workspace(bool restore)
     // first initialize the extensions
     Xcb::Extensions::self();
 
-    LogindIntegration::create(this);
-    InputRedirection::create(this);
-
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
 #if HAVE_WAYLAND
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
     }
 #endif
-    // start the cursor support
-    Cursor::create(this);
 
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = Activities::create(this);
@@ -162,8 +157,7 @@ Workspace::Workspace(bool restore)
     reparseConfigFuture.waitForFinished();
 
     // get screen support
-    Screens *screens = Screens::create(this);
-    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
+    connect(screens(), SIGNAL(changed()), SLOT(desktopResized()));
 
     options->loadConfig();
     options->loadCompositingConfig(false);
@@ -224,6 +218,7 @@ void Workspace::init()
 {
     updateXTime(); // Needed for proper initialization of user_time in Client ctor
     KSharedConfigPtr config = KSharedConfig::openConfig();
+    kwinApp()->createScreens();
     Screens *screens = Screens::self();
     screens->setConfig(config);
     screens->reconfigure();
