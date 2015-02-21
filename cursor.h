@@ -186,6 +186,7 @@ protected:
      * to overwrite to disable platform specific code for the tracking.
      */
     virtual void doStopCursorTracking();
+    bool isCursorTracking() const;
     /**
      * Provides the actual internal cursor position to inheriting classes. If an inheriting class needs
      * access to the cursor position this method should be used instead of the static @link pos, as
@@ -293,6 +294,11 @@ inline const QString& Cursor::themeName() const
 inline int Cursor::themeSize() const
 {
     return m_themeSize;
+}
+
+inline bool Cursor::isCursorTracking() const
+{
+    return m_cursorTrackingCounter > 0;
 }
 
 }

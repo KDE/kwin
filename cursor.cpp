@@ -430,6 +430,13 @@ InputRedirectionCursor::InputRedirectionCursor(QObject *parent)
 #ifndef KCMRULES
     connect(input(), &InputRedirection::keyboardModifiersChanged,
             this, &InputRedirectionCursor::slotModifiersChanged);
+    connect(kwinApp(), &Application::x11ConnectionChanged, this,
+        [this] {
+            if (isCursorTracking()) {
+                doStartCursorTracking();
+            }
+        }, Qt::QueuedConnection
+    );
 #endif
 }
 
@@ -464,12 +471,18 @@ void InputRedirectionCursor::slotPointerButtonChanged()
 
 void InputRedirectionCursor::doStartCursorTracking()
 {
+    if (!kwinApp()->x11Connection()) {
+        return;
+    }
     xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
     // TODO: also track the Wayland cursor
 }
 
 void InputRedirectionCursor::doStopCursorTracking()
 {
+    if (!kwinApp()->x11Connection()) {
+        return;
+    }
     xcb_xfixes_select_cursor_input(connection(), rootWindow(), 0);
     // TODO: also track the Wayland cursor
 }
