@@ -190,6 +190,10 @@ public:
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
+
+protected:
+    void connectNotify(const QMetaMethod &signal) override;
+
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
@@ -217,6 +221,7 @@ private:
     KWayland::Client::FullscreenShell *m_fullscreenShell;
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
+    bool m_ready = false;
 
     KWIN_SINGLETON(WaylandBackend)
 };
