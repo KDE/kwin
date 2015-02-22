@@ -82,6 +82,7 @@ Name[zh_CN]=屏幕边缘
 Name[zh_TW]=螢幕邊緣
 
 Comment=Active Screen Corners and Edges
+Comment[bs]=Ivice i uglovi aktivnog ekrana
 Comment[ca]=Cantonades i vores de la pantalla activa
 Comment[cs]=Aktivní rohy a hrany obrazovky
 Comment[da]=Aktive skærmhjørner og -kanter
@@ -116,6 +117,7 @@ Comment[zh_CN]=活动屏幕边缘
 Comment[zh_TW]=作用中螢幕角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
+X-KDE-Keywords[bs]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners, prozor, menadćer, efekt, uigao, ivica, akcija, prebacivanje, desktop ivice, ivice ekrana, maksimitiranje prozora, ponašanje ekrana, virtualni desktop
 X-KDE-Keywords[ca]=kwin,finestra,gestor,efecte,cantonada,vora,borde,acció,canvi,escriptori,vores de pantalla del kwin,vores d'escriptori,vores de pantalla,maximitza finestres,mosaic de finestres,costat de pantalla,comportament de pantalla,canvi d'escriptori,escriptori virtual,cantonades de pantalla
 X-KDE-Keywords[da]=kwin,vindue,håndtering,manager,effekt,hjørne,kant,handling,skift,skrivebord,kwin skærmkanter,skrivebordskanter,skærmkanter,maksimer vinduer,tile windows,fliser,felter,siden af skærmen,skærmens opførsel,skift skrivebord,virtuelle skriveborde,skærmhjørner,hjørner
 X-KDE-Keywords[de]=KWin,Fenster,Verwaltung,Effekt,Kante,Rand,Aktion,Wechseln,Desktop,Arbeitsfläche,KWin Bildschirmkanten,Desktopkanten,Bildschirmkanten,Fenster maximieren,Fenster kacheln,Bildschirmseite,Bildschirmverhalten,Desktop wechseln,Arbeitsfläche wechseln,Virtueller Desktop,Virtuelle Arbeitsfläche,Bildschirmecken
