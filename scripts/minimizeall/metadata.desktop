@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=MinimizeAll
+Comment=Adds a shortcut to minimize all windows or unminize all such way minimized windows
+Icon=preferences-system-windows-script-test
+
+Type=Service
+
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+
+X-KDE-PluginInfo-Author=Thomas Lübking
+X-KDE-PluginInfo-Email=thomas.luebking@gmail.com
+X-KDE-PluginInfo-Name=minimizeall
+X-KDE-PluginInfo-Version=1.0
+
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-ServiceTypes=KWin/Script
+X-KDE-PluginKeyword=minimizeall
