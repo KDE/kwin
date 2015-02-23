@@ -62,7 +62,7 @@ static qint64 getXServerVersion()
     qint64 major, minor, patch;
 
     Display *dpy = display();
-    if (strstr(ServerVendor(dpy), "X.Org")) {
+    if (dpy && strstr(ServerVendor(dpy), "X.Org")) {
         const int release  = VendorRelease(dpy);
         major = (release / 10000000);
         minor = (release /   100000) % 100;
