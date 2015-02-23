@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "main.h"
 #include "overlaywindow.h"
-#include "workspace.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
 #if HAVE_WAYLAND
@@ -309,7 +308,7 @@ bool WaylandXRenderBackend::usesOverlayWindow() const
 //****************************************
 // SceneXrender
 //****************************************
-SceneXrender* SceneXrender::createScene()
+SceneXrender* SceneXrender::createScene(QObject *parent)
 {
     QScopedPointer<XRenderBackend> backend;
 #if HAVE_WAYLAND
@@ -318,18 +317,18 @@ SceneXrender* SceneXrender::createScene()
         if (backend->isFailed()) {
             return NULL;
         }
-        return new SceneXrender(backend.take());
+        return new SceneXrender(backend.take(), parent);
     }
 #endif
     backend.reset(new X11XRenderBackend);
     if (backend->isFailed()) {
         return NULL;
     }
-    return new SceneXrender(backend.take());
+    return new SceneXrender(backend.take(), parent);
 }
 
-SceneXrender::SceneXrender(XRenderBackend *backend)
-    : Scene(Workspace::self())
+SceneXrender::SceneXrender(XRenderBackend *backend, QObject *parent)
+    : Scene(parent)
     , m_backend(backend)
 {
 }

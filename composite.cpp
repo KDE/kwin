@@ -215,7 +215,7 @@ void Compositor::slotCompositingOptionsInitialized()
             }
 #endif
 
-            m_scene = SceneOpenGL::createScene();
+            m_scene = SceneOpenGL::createScene(this);
 
             // TODO: Add 30 second delay to protect against screen freezes as well
             unsafeConfig.writeEntry(openGLIsUnsafe, false);
@@ -235,12 +235,12 @@ void Compositor::slotCompositingOptionsInitialized()
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
     case XRenderCompositing:
         qCDebug(KWIN_CORE) << "Initializing XRender compositing";
-        m_scene = SceneXrender::createScene();
+        m_scene = SceneXrender::createScene(this);
         break;
 #endif
     case QPainterCompositing:
         qCDebug(KWIN_CORE) << "Initializing QPainter compositing";
-        m_scene = SceneQPainter::createScene();
+        m_scene = SceneQPainter::createScene(this);
         break;
     default:
         qCDebug(KWIN_CORE) << "No compositing enabled";
@@ -268,6 +268,7 @@ void Compositor::slotCompositingOptionsInitialized()
         }
         return;
     }
+    connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
     if (m_scene->syncsToVBlank()) {  // if we do vsync, set the fps to the next multiple of the vblank rate

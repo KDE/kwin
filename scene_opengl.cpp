@@ -50,7 +50,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "overlaywindow.h"
 #include "screens.h"
-#include "workspace.h"
 #include "decorations/decoratedclient.h"
 
 #include <array>
@@ -350,8 +349,8 @@ OverlayWindow* OpenGLBackend::overlayWindow()
  * SceneOpenGL
  ***********************************************/
 
-SceneOpenGL::SceneOpenGL(Workspace* ws, OpenGLBackend *backend)
-    : Scene(ws)
+SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
+    : Scene(parent)
     , init_ok(true)
     , m_backend(backend)
     , m_syncManager(nullptr)
@@ -471,7 +470,7 @@ void SceneOpenGL::initDebugOutput()
                          GL_DEBUG_SEVERITY_LOW, message.length(), message.constData());
 }
 
-SceneOpenGL *SceneOpenGL::createScene()
+SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 {
     OpenGLBackend *backend = NULL;
     OpenGLPlatformInterface platformInterface = options->glPlatformInterface();
@@ -506,7 +505,7 @@ SceneOpenGL *SceneOpenGL::createScene()
     SceneOpenGL *scene = NULL;
     // first let's try an OpenGL 2 scene
     if (SceneOpenGL2::supported(backend)) {
-        scene = new SceneOpenGL2(backend);
+        scene = new SceneOpenGL2(backend, parent);
         if (scene->initFailed()) {
             delete scene;
             scene = NULL;
@@ -904,8 +903,8 @@ bool SceneOpenGL2::supported(OpenGLBackend *backend)
     return true;
 }
 
-SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend)
-    : SceneOpenGL(Workspace::self(), backend)
+SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
+    : SceneOpenGL(backend, parent)
     , m_lanczosFilter(NULL)
     , m_colorCorrection()
 {

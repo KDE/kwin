@@ -144,14 +144,14 @@ public:
 
     QPainter *painter();
 
-    static SceneQPainter *createScene();
+    static SceneQPainter *createScene(QObject *parent);
 
 protected:
     virtual void paintBackground(QRegion region) override;
     virtual Scene::Window *createWindow(Toplevel *toplevel) override;
 
 private:
-    explicit SceneQPainter(QPainterBackend *backend);
+    explicit SceneQPainter(QPainterBackend *backend, QObject *parent = nullptr);
     QScopedPointer<QPainterBackend> m_backend;
     QScopedPointer<QPainter> m_painter;
     class Window;

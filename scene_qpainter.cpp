@@ -33,7 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #endif
-#include "workspace.h"
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 // Qt
@@ -188,7 +187,7 @@ bool WaylandQPainterBackend::needsFullRepaint() const
 //****************************************
 // SceneQPainter
 //****************************************
-SceneQPainter *SceneQPainter::createScene()
+SceneQPainter *SceneQPainter::createScene(QObject *parent)
 {
     QScopedPointer<QPainterBackend> backend;
 #if HAVE_WAYLAND
@@ -197,14 +196,14 @@ SceneQPainter *SceneQPainter::createScene()
         if (backend->isFailed()) {
             return NULL;
         }
-        return new SceneQPainter(backend.take());
+        return new SceneQPainter(backend.take(), parent);
     }
 #endif
     return NULL;
 }
 
-SceneQPainter::SceneQPainter(QPainterBackend* backend)
-    : Scene(Workspace::self())
+SceneQPainter::SceneQPainter(QPainterBackend *backend, QObject *parent)
+    : Scene(parent)
     , m_backend(backend)
     , m_painter(new QPainter())
 {

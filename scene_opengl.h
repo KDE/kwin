@@ -84,10 +84,10 @@ public:
     static void copyPixels(const QRegion &region);
 #endif
 
-    static SceneOpenGL *createScene();
+    static SceneOpenGL *createScene(QObject *parent);
 
 protected:
-    SceneOpenGL(Workspace* ws, OpenGLBackend *backend);
+    SceneOpenGL(OpenGLBackend *backend, QObject *parent = nullptr);
     virtual void paintBackground(QRegion region);
     virtual void extendPaintRegion(QRegion &region, bool opaqueFullscreen);
     QMatrix4x4 transformation(int mask, const ScreenPaintData &data) const;
@@ -115,7 +115,7 @@ class SceneOpenGL2 : public SceneOpenGL
 {
     Q_OBJECT
 public:
-    explicit SceneOpenGL2(OpenGLBackend *backend);
+    explicit SceneOpenGL2(OpenGLBackend *backend, QObject *parent = nullptr);
     virtual ~SceneOpenGL2();
     virtual CompositingType compositingType() const {
         return OpenGL2Compositing;

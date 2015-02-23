@@ -47,7 +47,6 @@ class Renderer;
 }
 
 class AbstractThumbnailItem;
-class Workspace;
 class Deleted;
 class EffectFrameImpl;
 class EffectWindowImpl;
@@ -60,7 +59,7 @@ class Scene : public QObject
 {
     Q_OBJECT
 public:
-    explicit Scene(Workspace* ws);
+    explicit Scene(QObject *parent = nullptr);
     virtual ~Scene() = 0;
     class EffectFrame;
     class Window;
@@ -209,7 +208,6 @@ protected:
     // time since last repaint
     int time_diff;
     QElapsedTimer last_time;
-    Workspace* wspace;
 private:
     void paintWindowThumbnails(Scene::Window *w, QRegion region, qreal opacity, qreal brightness, qreal saturation);
     void paintDesktopThumbnails(Scene::Window *w);

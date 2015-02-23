@@ -79,7 +79,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include "thumbnailitem.h"
-#include "workspace.h"
 
 #if HAVE_WAYLAND
 #include <KWayland/Server/buffer_interface.h>
@@ -93,12 +92,10 @@ namespace KWin
 // Scene
 //****************************************
 
-Scene::Scene(Workspace* ws)
-    : QObject(ws)
-    , wspace(ws)
+Scene::Scene(QObject *parent)
+    : QObject(parent)
 {
     last_time.invalidate(); // Initialize the timer
-    connect(Workspace::self(), SIGNAL(deletedRemoved(KWin::Deleted*)), SLOT(windowDeleted(KWin::Deleted*)));
 }
 
 Scene::~Scene()
