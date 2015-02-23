@@ -96,7 +96,7 @@ Compositor::Compositor(QObject* workspace)
     qRegisterMetaType<Compositor::SuspendReason>("Compositor::SuspendReason");
     connect(&unredirectTimer, SIGNAL(timeout()), SLOT(delayedCheckUnredirect()));
     connect(&compositeResetTimer, SIGNAL(timeout()), SLOT(restart()));
-    connect(workspace, SIGNAL(configChanged()), SLOT(slotConfigChanged()));
+    connect(options, &Options::configChanged, this, &Compositor::slotConfigChanged);
     connect(options, SIGNAL(unredirectFullscreenChanged()), SLOT(delayedCheckUnredirect()));
     unredirectTimer.setSingleShot(true);
     compositeResetTimer.setSingleShot(true);
