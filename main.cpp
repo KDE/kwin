@@ -372,6 +372,7 @@ void Application::createWorkspace()
 
     // create workspace.
     (void) new Workspace(isSessionRestored());
+    emit workspaceCreated();
 }
 
 void Application::createInput()
