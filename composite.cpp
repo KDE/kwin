@@ -207,7 +207,7 @@ void Compositor::slotCompositingOptionsInitialized()
             unsafeConfig.writeEntry(openGLIsUnsafe, true);
             unsafeConfig.sync();
 #ifndef KWIN_HAVE_OPENGLES
-            if (!CompositingPrefs::hasGlx()) {
+            if (!kwinApp()->shouldUseWaylandForCompositing() && !CompositingPrefs::hasGlx()) {
                 unsafeConfig.writeEntry(openGLIsUnsafe, false);
                 unsafeConfig.sync();
                 qCDebug(KWIN_CORE) << "No glx extensions available";
