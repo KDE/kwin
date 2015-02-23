@@ -192,7 +192,11 @@ Workspace::Workspace(bool restore)
 
     // init XRenderUtils
     XRenderUtils::init(connection(), rootWindow());
-    m_compositor = Compositor::create(this);
+    if (Compositor::self()) {
+        m_compositor = Compositor::self();
+    } else {
+        m_compositor = Compositor::create(this);
+    }
     connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
 
     auto decorationBridge = Decoration::DecorationBridge::create(this);

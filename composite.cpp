@@ -177,20 +177,13 @@ extern bool is_multihead;
 
 void Compositor::slotCompositingOptionsInitialized()
 {
-    char selection_name[ 100 ];
-    sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
-    if (!cm_selection) {
-        cm_selection = new CompositorSelectionOwner(selection_name);
-        connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
-    }
-    if (!cm_selection->owning) {
-        cm_selection->claim(true);   // force claiming
-        cm_selection->owning = true;
-    }
+    claimCompositorSelection();
 
     // There might still be a deleted around, needs to be cleared before creating the scene (BUG 333275)
-    while (!Workspace::self()->deletedList().isEmpty()) {
-        Workspace::self()->deletedList().first()->discard();
+    if (Workspace::self()) {
+        while (!Workspace::self()->deletedList().isEmpty()) {
+            Workspace::self()->deletedList().first()->discard();
+        }
     }
 
     switch(options->compositingMode()) {
@@ -245,8 +238,10 @@ void Compositor::slotCompositingOptionsInitialized()
     default:
         qCDebug(KWIN_CORE) << "No compositing enabled";
         m_starting = false;
-        cm_selection->owning = false;
-        cm_selection->release();
+        if (cm_selection) {
+            cm_selection->owning = false;
+            cm_selection->release();
+        }
         if (kwinApp()->requiresCompositing()) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
@@ -259,8 +254,10 @@ void Compositor::slotCompositingOptionsInitialized()
         delete m_scene;
         m_scene = NULL;
         m_starting = false;
-        cm_selection->owning = false;
-        cm_selection->release();
+        if (cm_selection) {
+            cm_selection->owning = false;
+            cm_selection->release();
+        }
         if (kwinApp()->requiresCompositing()) {
             qCCritical(KWIN_CORE) << "The used windowing system requires compositing";
             qCCritical(KWIN_CORE) << "We are going to quit KWin now as it is broken";
@@ -268,6 +265,38 @@ void Compositor::slotCompositingOptionsInitialized()
         }
         return;
     }
+
+    if (Workspace::self()) {
+        startupWithWorkspace();
+    } else {
+        connect(kwinApp(), &Application::workspaceCreated, this, &Compositor::startupWithWorkspace);
+    }
+}
+
+void Compositor::claimCompositorSelection()
+{
+    if (!cm_selection && kwinApp()->x11Connection()) {
+        char selection_name[ 100 ];
+        sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
+        cm_selection = new CompositorSelectionOwner(selection_name);
+        connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
+    } else {
+        // no X11 yet
+        return;
+    }
+    if (!cm_selection->owning) {
+        cm_selection->claim(true);   // force claiming
+        cm_selection->owning = true;
+    }
+}
+
+void Compositor::startupWithWorkspace()
+{
+    if (!m_starting) {
+        return;
+    }
+    Q_ASSERT(m_scene);
+    claimCompositorSelection();
     connect(Workspace::self(), &Workspace::deletedRemoved, m_scene, &Scene::windowDeleted);
     m_xrrRefreshRate = KWin::currentRefreshRate();
     fpsInterval = options->maxFpsInterval();
@@ -373,8 +402,10 @@ void Compositor::releaseCompositorSelection()
         return;
     }
     qCDebug(KWIN_CORE) << "Releasing compositor selection";
-    cm_selection->owning = false;
-    cm_selection->release();
+    if (cm_selection) {
+        cm_selection->owning = false;
+        cm_selection->release();
+    }
 }
 
 void Compositor::keepSupportProperty(xcb_atom_t atom)

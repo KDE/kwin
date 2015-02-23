@@ -210,8 +210,13 @@ private Q_SLOTS:
     void deleteUnusedSupportProperties();
 
 private:
+    void claimCompositorSelection();
     void setCompositeTimer();
     bool windowRepaintsPending() const;
+    /**
+     * Continues the startup after Scene And Workspace are created
+     **/
+    void startupWithWorkspace();
 
     /**
      * Whether the Compositor is currently suspended, 8 bits encoding the reason

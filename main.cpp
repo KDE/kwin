@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "atoms.h"
+#include "composite.h"
 #include "cursor.h"
 #include "input.h"
 #include "logind.h"
@@ -398,6 +399,11 @@ void Application::createAtoms()
 void Application::createOptions()
 {
     options = new Options;
+}
+
+void Application::createCompositor()
+{
+    Compositor::create(this);
 }
 
 void Application::setupEventFilters()

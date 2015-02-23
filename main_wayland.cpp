@@ -80,6 +80,8 @@ ApplicationWayland::~ApplicationWayland()
 void ApplicationWayland::performStartup()
 {
     setOperationMode(m_startXWayland ? OperationModeXwayland : OperationModeWaylandAndX11);
+    // first load options - done internally by a different thread
+    createOptions();
 
     // try creating the Wayland Backend
     createInput();
@@ -103,6 +105,7 @@ void ApplicationWayland::continueStartupWithScreens()
         continueStartupWithX();
         return;
     }
+    createCompositor();
 
     int sx[2];
     if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
@@ -149,8 +152,6 @@ void ApplicationWayland::continueStartupWithX()
     createAtoms();
 
     setupEventFilters();
-    // first load options - done internally by a different thread
-    createOptions();
 
     // Check  whether another windowmanager is running
     const uint32_t maskValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT};
