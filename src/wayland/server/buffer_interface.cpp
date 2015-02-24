@@ -186,5 +186,10 @@ wl_shm_buffer *BufferInterface::shmBuffer()
     return d->shmBuffer;
 }
 
+wl_resource *BufferInterface::resource() const
+{
+    return d->buffer;
+}
+
 }
 }

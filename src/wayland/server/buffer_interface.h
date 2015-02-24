@@ -46,6 +46,7 @@ public:
 
     SurfaceInterface *surface() const;
     wl_shm_buffer *shmBuffer();
+    wl_resource *resource() const;
 
     /**
      * Creates a QImage for the shared memory buffer.
