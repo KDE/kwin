@@ -441,6 +441,7 @@ protected:
     virtual void clientMessageEvent(xcb_client_message_event_t *e);
     void discardWindowPixmap();
     void addDamageFull();
+    virtual void addDamage(const QRegion &damage);
     Xcb::Property fetchWmClientLeader() const;
     void readWmClientLeader(Xcb::Property &p);
     void getWmClientLeader();
@@ -739,11 +740,6 @@ inline quint32 Toplevel::surfaceId() const
 inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
 {
     return m_surface;
-}
-
-inline void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
-{
-    m_surface = surface;
 }
 #endif
 

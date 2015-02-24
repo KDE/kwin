@@ -31,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "xcbutils.h"
 
+#if HAVE_WAYLAND
+#include <KWayland/Server/surface_interface.h>
+#endif
+
 #include <QDebug>
 
 namespace KWin
@@ -472,6 +476,31 @@ void Toplevel::sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeySt
 {
     Q_UNUSED(key)
     Q_UNUSED(state)
+}
+
+#if HAVE_WAYLAND
+void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
+{
+    if (m_surface == surface) {
+        return;
+    }
+    using namespace KWayland::Server;
+    if (m_surface) {
+        disconnect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
+    }
+    m_surface = surface;
+    connect(m_surface, &SurfaceInterface::damaged, this, &Toplevel::addDamage);
+}
+#endif
+
+void Toplevel::addDamage(const QRegion &damage)
+{
+    m_isDamaged = true;
+    damage_region += damage;
+    repaints_region += damage;
+    for (const QRect &r : damage.rects()) {
+        emit damaged(this, r);
+    }
 }
 
 } // namespace

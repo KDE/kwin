@@ -740,6 +740,7 @@ private:
 protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
+    void addDamage(const QRegion &damage) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();

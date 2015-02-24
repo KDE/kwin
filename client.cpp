@@ -2455,6 +2455,15 @@ void Client::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > clie
     m_decoratedClient = client;
 }
 
+void Client::addDamage(const QRegion &damage)
+{
+    if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
+        if (syncRequest.counter == XCB_NONE)   // cannot detect complete redraw, consider done now
+            setReadyForPainting();
+    }
+    Toplevel::addDamage(damage);
+}
+
 } // namespace
 
 #include "client.moc"

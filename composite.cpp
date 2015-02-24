@@ -898,8 +898,10 @@ bool Toplevel::setupCompositing()
     if (damage_handle != XCB_NONE)
         return false;
 
-    damage_handle = xcb_generate_id(connection());
-    xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        damage_handle = xcb_generate_id(connection());
+        xcb_damage_create(connection(), damage_handle, frameId(), XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
+    }
 
     damage_region = QRegion(0, 0, width(), height());
     effect_window = new EffectWindowImpl(this);
@@ -920,7 +922,7 @@ bool Toplevel::setupCompositing()
 
 void Toplevel::finishCompositing(ReleaseReason releaseReason)
 {
-    if (damage_handle == XCB_NONE)
+    if (kwinApp()->operationMode() == Application::OperationModeX11 && damage_handle == XCB_NONE)
         return;
     Compositor::self()->checkUnredirect(true);
     if (effect_window->window() == this) { // otherwise it's already passed to Deleted, don't free data
@@ -928,7 +930,8 @@ void Toplevel::finishCompositing(ReleaseReason releaseReason)
         delete effect_window;
     }
 
-    if (releaseReason != ReleaseReason::Destroyed) {
+    if (kwinApp()->operationMode() == Application::OperationModeX11 &&
+            releaseReason != ReleaseReason::Destroyed) {
         xcb_damage_destroy(connection(), damage_handle);
     }
 
@@ -980,6 +983,11 @@ bool Toplevel::resetAndFetchDamage()
 {
     if (!m_isDamaged)
         return false;
+
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        m_isDamaged = false;
+        return true;
+    }
 
     xcb_connection_t *conn = connection();
 
