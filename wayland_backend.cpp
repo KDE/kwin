@@ -335,7 +335,7 @@ void WaylandCursorTheme::loadTheme()
         destroyTheme();
     }
     m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
-                                   c->themeSize(), m_backend->shmPool()->shm());
+                                   c->themeSize() ? c->themeSize() : -1, m_backend->shmPool()->shm());
 }
 
 void WaylandCursorTheme::destroyTheme()
