@@ -42,6 +42,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "decorations/decoratedclient.h"
 
+#if HAVE_WAYLAND
+#include <KWayland/Server/surface_interface.h>
+#endif
+
 #include <stdio.h>
 
 #include <QtConcurrentRun>
@@ -667,6 +671,7 @@ void Compositor::performCompositing()
     if (repaints_region.isEmpty() && !windowRepaintsPending()) {
         m_scene->idle();
         m_timeSinceLastVBlank = fpsInterval - (options->vBlankTime() + 1); // means "start now"
+        m_timeSinceStart += m_timeSinceLastVBlank;
         // Note: It would seem here we should undo suspended unredirect, but when scenes need
         // it for some reason, e.g. transformations or translucency, the next pass that does not
         // need this anymore and paints normally will also reset the suspended unredirect.
@@ -688,6 +693,17 @@ void Compositor::performCompositing()
     repaints_region = QRegion();
 
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
+    m_timeSinceStart += m_timeSinceLastVBlank;
+
+#if HAVE_WAYLAND
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        for (Toplevel *win : damaged) {
+            if (auto surface = win->surface()) {
+                surface->frameRendered(m_timeSinceStart);
+            }
+        }
+    }
+#endif
 
     compositeTimer.stop(); // stop here to ensure *we* cause the next repaint schedule - not some effect through m_scene->paint()
 
