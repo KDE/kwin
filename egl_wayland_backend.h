@@ -97,8 +97,12 @@ public:
 private:
     friend class EglWaylandBackend;
     EglWaylandTexture(SceneOpenGL::Texture *texture, EglWaylandBackend *backend);
+    bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    EGLImage attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
     SceneOpenGL::Texture *q;
     EglWaylandBackend *m_backend;
+    EGLImageKHR m_image;
 };
 
 } // namespace

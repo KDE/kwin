@@ -39,8 +39,20 @@ namespace KWin
 
 typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
 typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
+typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
 eglBindWaylandDisplayWL_func eglBindWaylandDisplayWL = nullptr;
 eglUnbindWaylandDisplayWL_func eglUnbindWaylandDisplayWL = nullptr;
+eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
+
+#ifndef EGL_WAYLAND_BUFFER_WL
+#define EGL_WAYLAND_BUFFER_WL                   0x31D5
+#endif
+#ifndef EGL_WAYLAND_PLANE_WL
+#define EGL_WAYLAND_PLANE_WL                    0x31D6
+#endif
+#ifndef EGL_WAYLAND_Y_INVERTED_WL
+#define EGL_WAYLAND_Y_INVERTED_WL               0x31DB
+#endif
 
 EglWaylandBackend::EglWaylandBackend()
     : QObject(NULL)
@@ -162,8 +174,10 @@ void EglWaylandBackend::init()
     if (hasGLExtension(QByteArrayLiteral("EGL_WL_bind_wayland_display"))) {
         eglBindWaylandDisplayWL = (eglBindWaylandDisplayWL_func)eglGetProcAddress("eglBindWaylandDisplayWL");
         eglUnbindWaylandDisplayWL = (eglUnbindWaylandDisplayWL_func)eglGetProcAddress("eglUnbindWaylandDisplayWL");
+        eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
         if (!eglBindWaylandDisplayWL(m_display, *(WaylandServer::self()->display()))) {
             eglUnbindWaylandDisplayWL = nullptr;
+            eglQueryWaylandBufferWL = nullptr;
         }
     }
 }
@@ -398,6 +412,9 @@ EglWaylandTexture::EglWaylandTexture(KWin::SceneOpenGL::Texture *texture, KWin::
 
 EglWaylandTexture::~EglWaylandTexture()
 {
+    if (m_image != EGL_NO_IMAGE_KHR) {
+        eglDestroyImageKHR(m_backend->m_display, m_image);
+    }
 }
 
 OpenGLBackend *EglWaylandTexture::backend()
@@ -407,12 +424,21 @@ OpenGLBackend *EglWaylandTexture::backend()
 
 bool EglWaylandTexture::loadTexture(WindowPixmap *pixmap)
 {
-    if (GLPlatform::instance()->isGLES()) {
-        // FIXME
-        return false;
-    }
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
+        return false;
+    }
+    if (buffer->shmBuffer()) {
+        return loadShmTexture(buffer);
+    } else {
+        return loadEglTexture(buffer);
+    }
+}
+
+bool EglWaylandTexture::loadShmTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
+{
+    if (GLPlatform::instance()->isGLES()) {
+        // FIXME
         return false;
     }
     const QImage &image = buffer->data();
@@ -449,15 +475,50 @@ bool EglWaylandTexture::loadTexture(WindowPixmap *pixmap)
     return true;
 }
 
+bool EglWaylandTexture::loadEglTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
+{
+    if (!eglQueryWaylandBufferWL) {
+        return false;
+    }
+    if (!buffer->resource()) {
+        return false;
+    }
+
+    glGenTextures(1, &m_texture);
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    q->setFilter(GL_LINEAR);
+    q->bind();
+    m_image = attach(buffer);
+    q->unbind();
+
+    if (EGL_NO_IMAGE_KHR == m_image) {
+        qCDebug(KWIN_CORE) << "failed to create egl image";
+        q->discard();
+        return false;
+    }
+
+    return true;
+}
 
 void EglWaylandTexture::updateTexture(WindowPixmap *pixmap)
 {
-    if (GLPlatform::instance()->isGLES()) {
-        // FIXME
-        return;
-    }
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
+        return;
+    }
+    if (!buffer->shmBuffer()) {
+        q->bind();
+        EGLImage image = attach(buffer);
+        q->unbind();
+        if (image != EGL_NO_IMAGE_KHR) {
+            eglDestroyImageKHR(m_backend->m_display, m_image);
+            m_image = image;
+        }
+        return;
+    }
+    // shm fallback
+    if (GLPlatform::instance()->isGLES()) {
+        // FIXME
         return;
     }
     const QImage &image = buffer->data();
@@ -475,6 +536,33 @@ void EglWaylandTexture::updateTexture(WindowPixmap *pixmap)
                         GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
     }
     q->unbind();
+}
+
+EGLImage EglWaylandTexture::attach(const QPointer< KWayland::Server::BufferInterface > &buffer)
+{
+    EGLint format, width, height, yInverted;
+    eglQueryWaylandBufferWL(m_backend->m_display, buffer->resource(), EGL_TEXTURE_FORMAT, &format);
+    if (format != EGL_TEXTURE_RGB && format != EGL_TEXTURE_RGBA) {
+        qCDebug(KWIN_CORE) << "Unsupported texture format: " << format;
+        return EGL_NO_IMAGE_KHR;
+    }
+    eglQueryWaylandBufferWL(m_backend->m_display, buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted);
+    eglQueryWaylandBufferWL(m_backend->m_display, buffer->resource(), EGL_WIDTH, &width);
+    eglQueryWaylandBufferWL(m_backend->m_display, buffer->resource(), EGL_HEIGHT, &height);
+
+    const EGLint attribs[] = {
+        EGL_WAYLAND_PLANE_WL, 0,
+        EGL_NONE
+    };
+    EGLImage image = eglCreateImageKHR(m_backend->m_display, EGL_NO_CONTEXT, EGL_WAYLAND_BUFFER_WL,
+                                      (EGLClientBuffer)buffer->resource(), attribs);
+    if (image != EGL_NO_IMAGE_KHR) {
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
+        m_size = QSize(width, height);
+        updateMatrix();
+        q->setYInverted(yInverted);
+    }
+    return image;
 }
 
 } // namespace
