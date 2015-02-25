@@ -28,6 +28,7 @@ namespace KWayland
 {
 namespace Server
 {
+class ClientConnection;
 class CompositorInterface;
 class Display;
 class ShellInterface;
@@ -60,11 +61,17 @@ public:
         return m_shell;
     }
 
+    /**
+     * @returns file descriptor for Xwayland to connect to.
+     **/
+    int createXWaylandConnection();
+
 private:
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
+    KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

@@ -56,7 +56,7 @@ static void sighandler(int)
     QApplication::exit();
 }
 
-static int startXServer(const QByteArray &waylandSocket, int wmFd);
+static int startXServer(int waylandSocket, int wmFd);
 static void readDisplay(int pipe);
 
 //************************************
@@ -115,8 +115,15 @@ void ApplicationWayland::continueStartupWithScreens()
         return;
     }
 
+    const int fd = waylandServer()->createXWaylandConnection();
+    if (fd == -1) {
+        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+        exit(1);
+        return;
+    }
+
     m_xcbConnectionFd = sx[0];
-    const int xDisplayPipe = startXServer(WaylandServer::self()->display()->socketName().toUtf8(), sx[1]);
+    const int xDisplayPipe = startXServer(fd, sx[1]);
     QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
     QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
     QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
@@ -214,7 +221,7 @@ void ApplicationWayland::createX11Connection()
  * Starts the Xwayland-Server.
  * The new process is started by forking into it.
  **/
-static int startXServer(const QByteArray &waylandSocket, int wmFd)
+static int startXServer(int waylandSocket, int wmFd)
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
@@ -237,7 +244,14 @@ static int startXServer(const QByteArray &waylandSocket, int wmFd)
             return -1;
         }
         sprintf(wmfdbuf, "%d", fd);
-        qputenv("WAYLAND_DISPLAY", waylandSocket.isEmpty() ? QByteArrayLiteral("wayland-0") : waylandSocket);
+
+        int wlfd = dup(waylandSocket);
+        if (wlfd < 0) {
+            std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+            exit(20);
+            return -1;
+        }
+        qputenv("WAYLAND_SOCKET", QByteArray::number(wlfd));
         execlp("Xwayland", "Xwayland", "-displayfd", fdbuf, "-rootless", "-wm", wmfdbuf, (char *)0);
         close(pipeFds[1]);
         exit(20);

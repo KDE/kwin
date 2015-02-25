@@ -28,6 +28,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
+// system
+#include <sys/types.h>
+#include <sys/socket.h>
+
 using namespace KWayland::Server;
 
 namespace KWin
@@ -85,6 +89,17 @@ void WaylandServer::initOutputs()
         output->addMode(s->size(i));
         output->create();
     }
+}
+
+int WaylandServer::createXWaylandConnection()
+{
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        qCWarning(KWIN_CORE) << "Could not create socket";
+        return -1;
+    }
+    m_xwaylandConnection = m_display->createClient(sx[0]);
+    return sx[1];
 }
 
 }
