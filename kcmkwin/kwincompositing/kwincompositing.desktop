@@ -83,6 +83,7 @@ Comment[sv]=Sammansättningsinställningar för skrivbordseffekter
 Comment[uk]=Параметри засобу композиції для ефектів стільниці
 Comment[x-test]=xxCompositor Settings for Desktop Effectsxx
 Comment[zh_CN]=桌面特效混成器设置
+Comment[zh_TW]=桌面效果使用的組合器組態
 
 X-KDE-Keywords=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects
 X-KDE-Keywords[bs]=kwin,window,manager,compositing,effect,3D effects,2D effects,OpenGL,XRender,video settings,graphical effects,desktop effects, efekti, video postavke, kompozicija, desktop efekti, menadžer

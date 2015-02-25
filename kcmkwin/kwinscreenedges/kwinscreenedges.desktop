@@ -113,6 +113,7 @@ Comment[sv]=Aktiva skärmhörn och kanter
 Comment[uk]=Активні кути та краї екрана
 Comment[x-test]=xxActive Screen Corners and Edgesxx
 Comment[zh_CN]=活动屏幕边缘
+Comment[zh_TW]=作用中螢幕的角落與邊緣
 
 X-KDE-Keywords=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
 X-KDE-Keywords[bs]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners, prozor, menadćer, efekt, uigao, ivica, akcija, prebacivanje, desktop ivice, ivice ekrana, maksimitiranje prozora, ponašanje ekrana, virtualni desktop
@@ -145,3 +146,4 @@ X-KDE-Keywords[sv]=kwin,fönster,hanterare,effekt,kant,gräns,åtgärd,byta,skri
 X-KDE-Keywords[uk]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,вікно,керування,край,кут,межа,сторона,бік,дія,перемикання,стільниця,краї екрана,максимізація,мозаїка,плитка,край екрана,поведінка екрана,перемикання стільниць,віртуальна стільниця
 X-KDE-Keywords[x-test]=xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxcornerxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxkwin screen edgesxx,xxdesktop edgesxx,xxscreen edgesxx,xxmaximize windowsxx,xxtile windowsxx,xxside of screenxx,xxscreen behaviorxx,xxswitch desktopxx,xxvirtual desktopxx,xxscreen cornersxx
 X-KDE-Keywords[zh_CN]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,窗口,管理,特效,角,边缘,动作,切换,桌面,kwin 屏幕边缘,屏幕边缘,桌面边缘,最大化窗口,平铺窗口,屏幕行为,桌面切换,虚拟桌面,屏幕角落
+X-KDE-Keywords[zh_TW]=kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners
