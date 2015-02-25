@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSocketNotifier>
 #include <QThread>
 #include <QDebug>
+#include <QWindow>
 
 // system
 #ifdef HAVE_UNISTD_H
@@ -165,11 +166,28 @@ void ApplicationWayland::continueStartupWithX()
         ::exit(1);
     }
 
-    createWorkspace();
+    // HACK: create a QWindow in a thread to force QtWayland to create the client buffer integration
+    // this performs an eglInitialize which would block as it does a roundtrip to the Wayland server
+    // in the main thread. By moving into a thread we get the initialize without hitting the problem
+    // This needs to be done before creating the Workspace as from inside Workspace the dangerous code
+    // gets hit in the main thread
+    QFutureWatcher<void> *eglInitWatcher = new QFutureWatcher<void>(this);
+    connect(eglInitWatcher, &QFutureWatcher<void>::finished, this,
+        [this, eglInitWatcher] {
+            eglInitWatcher->deleteLater();
 
-    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+            createWorkspace();
 
-    notifyKSplash();
+            Xcb::sync(); // Trigger possible errors, there's still a chance to abort
+
+            notifyKSplash();
+        }
+    );
+    eglInitWatcher->setFuture(QtConcurrent::run([] {
+        QWindow w;
+        w.setSurfaceType(QSurface::RasterGLSurface);
+        w.create();
+    }));
 }
 
 void ApplicationWayland::createX11Connection()
