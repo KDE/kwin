@@ -60,6 +60,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // xcb
 #include <xcb/damage.h>
+#ifndef XCB_GE_GENERIC
+#define XCB_GE_GENERIC 35
+#endif
 
 namespace KWin
 {
