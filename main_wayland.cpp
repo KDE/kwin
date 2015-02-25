@@ -318,12 +318,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
 
-    // we want QtWayland to connect to our Wayland display, but the WaylandBackend to the existing Wayland backend
-    // so fiddling around with the env variables.
-    const QByteArray systemDisplay = qgetenv("WAYLAND_DISPLAY");
-    qputenv("WAYLAND_DISPLAY", waylandSocket.isEmpty() ? QByteArrayLiteral("wayland-0") : waylandSocket);
+    qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
     KWin::ApplicationWayland a(argc, argv);
-    qputenv("WAYLAND_DISPLAY", systemDisplay);
     a.setupTranslator();
 
     server->setParent(&a);
