@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "main.h"
 #include "utils.h"
+#include "wayland_server.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -40,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Server/seat_interface.h>
 // Qt
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -256,6 +258,15 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
             }
         }
     );
+    WaylandServer *server = waylandServer();
+    if (server) {
+        using namespace KWayland::Server;
+        SeatInterface *si = server->seat();
+        connect(m_seat, &Seat::hasKeyboardChanged, si, &SeatInterface::setHasKeyboard);
+        connect(m_seat, &Seat::hasPointerChanged, si, &SeatInterface::setHasPointer);
+        connect(m_seat, &Seat::hasTouchChanged, si, &SeatInterface::setHasTouch);
+        connect(m_seat, &Seat::nameChanged, si, &SeatInterface::setName);
+    }
 }
 
 WaylandSeat::~WaylandSeat()

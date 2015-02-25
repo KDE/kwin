@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
 using namespace KWayland::Server;
@@ -69,6 +70,8 @@ void WaylandServer::init(const QByteArray &socketName)
     m_shell = m_display->createShell(m_display);
     m_shell->create();
     m_display->createShm();
+    m_seat = m_display->createSeat(m_display);
+    m_seat->create();
 }
 
 void WaylandServer::initOutputs()
