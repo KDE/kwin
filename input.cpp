@@ -395,7 +395,6 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
-    Q_UNUSED(time)
 #if HAVE_XKB
     m_xkb->updateKey(key, state);
     // TODO: pass to internal parts of KWin
@@ -429,15 +428,27 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         }
     }
 #endif
-    // check unmanaged
-    if (!workspace()->unmanagedList().isEmpty()) {
-        // TODO: better check whether this unmanaged should get the key event
-        workspace()->unmanagedList().first()->sendKeybordKeyEvent(key, state);
-        return;
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        // TODO: this needs better integration
+        // check unmanaged
+        Toplevel *t = nullptr;
+        if (!workspace()->unmanagedList().isEmpty()) {
+            // TODO: better check whether this unmanaged should get the key event
+            t = workspace()->unmanagedList().first();
+        }
+        if (!t) {
+            t = workspace()->activeClient();
+        }
+        if (t && t->surface()) {
+            if (t->surface() != seat->focusedKeyboardSurface()) {
+                seat->setFocusedKeyboardSurface(t->surface());
+            }
+            state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
+        }
     }
-    if (Client *client = workspace()->activeClient()) {
-        client->sendKeybordKeyEvent(key, state);
-    }
+#endif
 }
 
 void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
