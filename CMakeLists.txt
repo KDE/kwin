@@ -170,7 +170,6 @@ find_package(XCB
         KEYSYMS
         IMAGE
         SHM
-        XTEST
         GLX
     OPTIONAL_COMPONENTS
         ICCCM
@@ -494,14 +493,12 @@ set(kwin_XCB_LIBS
     XCB::RANDR
     XCB::KEYSYMS
     XCB::SHM
-    XCB::XTEST
     XCB::GLX
 )
 
 set(kwin_WAYLAND_LIBS
     Wayland::Client
     Wayland::Cursor
-    XCB::XTEST
     XKB::XKB
     KF5::WaylandClient
     KF5::WaylandServer

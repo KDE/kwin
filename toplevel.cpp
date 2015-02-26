@@ -445,39 +445,6 @@ void Toplevel::setSkipCloseAnimation(bool set)
     emit skipCloseAnimationChanged();
 }
 
-void Toplevel::sendPointerEnterEvent(const QPointF &globalPos)
-{
-    Q_UNUSED(globalPos)
-}
-
-void Toplevel::sendPointerLeaveEvent(const QPointF &globalPos)
-{
-    Q_UNUSED(globalPos)
-}
-
-void Toplevel::sendPointerMoveEvent(const QPointF &globalPos)
-{
-    Q_UNUSED(globalPos)
-}
-
-void Toplevel::sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state)
-{
-    Q_UNUSED(button)
-    Q_UNUSED(state)
-}
-
-void Toplevel::sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta)
-{
-    Q_UNUSED(axis)
-    Q_UNUSED(delta)
-}
-
-void Toplevel::sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state)
-{
-    Q_UNUSED(key)
-    Q_UNUSED(state)
-}
-
 #if HAVE_WAYLAND
 void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
 {

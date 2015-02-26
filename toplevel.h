@@ -359,13 +359,6 @@ public:
     void setSurface(KWayland::Server::SurfaceInterface *surface);
 #endif
 
-    virtual void sendPointerMoveEvent(const QPointF &globalPos);
-    virtual void sendPointerEnterEvent(const QPointF &globalPos);
-    virtual void sendPointerLeaveEvent(const QPointF &globalPos);
-    virtual void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state);
-    virtual void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta);
-    virtual void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state);
-
     /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
      *

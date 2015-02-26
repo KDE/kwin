@@ -47,9 +47,6 @@ public:
     }
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
 
-    void sendPointerButtonEvent(uint32_t button, InputRedirection::PointerButtonState state) override;
-    void sendPointerAxisEvent(InputRedirection::PointerAxis axis, qreal delta) override;
-    void sendKeybordKeyEvent(uint32_t key, InputRedirection::KeyboardKeyState state) override;
 public Q_SLOTS:
     void release(ReleaseReason releaseReason = ReleaseReason::Release);
 protected:

@@ -49,7 +49,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMetaMethod>
 #include <QThread>
 // xcb
-#include <xcb/xtest.h>
 #include <xcb/xfixes.h>
 // Wayland
 #include <wayland-client-protocol.h>
