@@ -32,13 +32,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_INPUT
 #include "libinput/connection.h"
 #endif
+#if HAVE_WAYLAND
+#include "wayland_server.h"
+#include <KWayland/Server/seat_interface.h>
+#endif
 // Qt
 #include <QKeyEvent>
 #include <QMouseEvent>
 // KDE
 #include <kkeyserver.h>
-// TODO: remove xtest
-#include <xcb/xtest.h>
 #if HAVE_XKB
 #include <xkbcommon/xkbcommon.h>
 #endif
@@ -241,28 +243,68 @@ void InputRedirection::setupLibInput()
 #endif
 }
 
+#if HAVE_WAYLAND
+static KWayland::Server::SeatInterface *findSeat()
+{
+    auto server = waylandServer();
+    if (!server) {
+        return nullptr;
+    }
+    return server->seat();
+}
+#endif
+
 void InputRedirection::updatePointerWindow()
 {
     // TODO: handle pointer grab aka popups
     Toplevel *t = findToplevel(m_globalPointer.toPoint());
-    const bool oldWindowValid = !m_pointerWindow.isNull();
-    if (oldWindowValid && t == m_pointerWindow.data()) {
+    auto oldWindow = m_pointerWindow;
+    if (!oldWindow.isNull() && t == m_pointerWindow.data()) {
         return;
     }
-    if (oldWindowValid) {
-        m_pointerWindow.data()->sendPointerLeaveEvent(m_globalPointer);
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        // disconnect old surface
+        if (oldWindow) {
+            disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
+        }
+        if (t && t->surface()) {
+            seat->setFocusedPointerSurface(t->surface(), t->pos());
+            connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
+        } else {
+            seat->setFocusedPointerSurface(nullptr);
+            t = nullptr;
+        }
     }
+#endif
     if (!t) {
         m_pointerWindow.clear();
         return;
     }
     m_pointerWindow = QWeakPointer<Toplevel>(t);
-    t->sendPointerEnterEvent(m_globalPointer);
+}
+
+void InputRedirection::updateFocusedPointerPosition()
+{
+#if HAVE_WAYLAND
+    if (m_pointerWindow.isNull()) {
+        return;
+    }
+    if (workspace()->getMovingClient()) {
+        // don't update while moving
+        return;
+    }
+    if (auto seat = findSeat()) {
+        if (m_pointerWindow.data()->surface() != seat->focusedPointerSurface()) {
+            return;
+        }
+        seat->setFocusedPointerSurfacePosition(m_pointerWindow.data()->pos());
+    }
+#endif
 }
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 {
-    Q_UNUSED(time)
     // first update to new mouse position
 //     const QPointF oldPos = m_globalPointer;
     updatePointerPosition(pos);
@@ -277,19 +319,16 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
     }
     QWeakPointer<Toplevel> old = m_pointerWindow;
     updatePointerWindow();
-    if (!m_pointerWindow.isNull() && old.data() == m_pointerWindow.data()) {
-        m_pointerWindow.data()->sendPointerMoveEvent(pos);
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        seat->setPointerPos(pos);
     }
-
-    // TODO: don't use xtest
-    // still doing the fake event here as it requires the event to be send on the root window
-    xcb_test_fake_input(connection(), XCB_MOTION_NOTIFY, 0, XCB_TIME_CURRENT_TIME, XCB_WINDOW_NONE,
-                        pos.toPoint().x(), pos.toPoint().y(), 0);
+#endif
 }
 
 void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
 {
-    Q_UNUSED(time)
     m_pointerButtons[button] = state;
     emit pointerButtonStateChanged(button, state);
 
@@ -308,16 +347,16 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
     }
 #endif
     // TODO: check which part of KWin would like to intercept the event
-    if (m_pointerWindow.isNull()) {
-        // there is no window which can receive the
-        return;
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
     }
-    m_pointerWindow.data()->sendPointerButtonEvent(button, state);
+#endif
 }
 
 void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time)
 {
-    Q_UNUSED(time)
     if (delta == 0) {
         return;
     }
@@ -346,11 +385,12 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
     // TODO: check which part of KWin would like to intercept the event
     // TODO: Axis support for effect redirection
-    if (m_pointerWindow.isNull()) {
-        // there is no window which can receive the
-        return;
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        seat->pointerAxis(axis == InputRedirection::PointerAxisHorizontal ? Qt::Horizontal : Qt::Vertical, delta);
     }
-    m_pointerWindow.data()->sendPointerAxisEvent(axis, delta);
+#endif
 }
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)

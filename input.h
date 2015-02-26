@@ -169,6 +169,7 @@ private:
     void updatePointerPosition(const QPointF &pos);
     void updatePointerAfterScreenChange();
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
+    void updateFocusedPointerPosition();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB
