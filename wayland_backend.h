@@ -68,42 +68,6 @@ namespace Wayland
 class WaylandBackend;
 class WaylandSeat;
 
-class CursorData
-{
-public:
-    CursorData();
-    ~CursorData();
-    bool isValid() const;
-    const QPoint &hotSpot() const;
-    const QImage &cursor() const;
-private:
-    bool init();
-    QImage m_cursor;
-    QPoint m_hotSpot;
-    bool m_valid;
-};
-
-class X11CursorTracker : public QObject
-{
-    Q_OBJECT
-public:
-    explicit X11CursorTracker(WaylandBackend *backend, QObject* parent = 0);
-    virtual ~X11CursorTracker();
-    void resetCursor();
-
-Q_SIGNALS:
-    void cursorImageChanged(QWeakPointer<KWayland::Client::Buffer> image, const QSize &size, const QPoint &hotSpot);
-
-private Q_SLOTS:
-    void cursorChanged(uint32_t serial);
-private:
-    void installCursor(const CursorData &cursor);
-    QHash<uint32_t, CursorData> m_cursors;
-    WaylandBackend *m_backend;
-    uint32_t m_installedCursor;
-    uint32_t m_lastX11Cursor;
-};
-
 class WaylandCursorTheme : public QObject
 {
     Q_OBJECT
@@ -129,6 +93,7 @@ public:
 
     void installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
     void installCursorImage(Qt::CursorShape shape);
+    void installCursorImage(const QImage &image, const QPoint &hotspot);
     void setInstallCursor(bool install);
     bool isInstallCursor() const {
         return m_installCursor;
@@ -157,6 +122,7 @@ public:
         return m_hotSpot;
     }
     void setCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotspot);
+    void setCursorImage(const QImage &image, const QPoint &hotspot);
     void setCursorImage(Qt::CursorShape shape);
 
 Q_SIGNALS:
@@ -185,11 +151,11 @@ public:
     const QList<KWayland::Client::Output*> &outputs() const;
     KWayland::Client::ShmPool *shmPool();
     KWayland::Client::SubCompositor *subCompositor();
-    X11CursorTracker *cursorTracker();
 
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
     void installCursorImage(Qt::CursorShape shape);
+    void installCursorFromServer();
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;
@@ -214,7 +180,6 @@ private:
     KWayland::Client::ShellSurface *m_shellSurface;
     QScopedPointer<WaylandSeat> m_seat;
     KWayland::Client::ShmPool *m_shm;
-    QScopedPointer<X11CursorTracker> m_cursorTracker;
     QList<KWayland::Client::Output*> m_outputs;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
     QThread *m_connectionThread;
@@ -225,24 +190,6 @@ private:
 
     KWIN_SINGLETON(WaylandBackend)
 };
-
-inline
-bool CursorData::isValid() const
-{
-    return m_valid;
-}
-
-inline
-const QPoint& CursorData::hotSpot() const
-{
-    return m_hotSpot;
-}
-
-inline
-const QImage &CursorData::cursor() const
-{
-    return m_cursor;
-}
 
 inline
 wl_display *WaylandBackend::display()
@@ -266,12 +213,6 @@ inline
 KWayland::Client::ShmPool* WaylandBackend::shmPool()
 {
     return m_shm;
-}
-
-inline
-X11CursorTracker *WaylandBackend::cursorTracker()
-{
-    return m_cursorTracker.data();
 }
 
 inline

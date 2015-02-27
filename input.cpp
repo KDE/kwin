@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/connection.h"
 #endif
 #if HAVE_WAYLAND
+#include "wayland_backend.h"
 #include "wayland_server.h"
 #include <KWayland/Server/seat_interface.h>
 #endif
@@ -267,10 +268,17 @@ void InputRedirection::updatePointerWindow()
         // disconnect old surface
         if (oldWindow) {
             disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
+            if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
+                disconnect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, w, &Wayland::WaylandBackend::installCursorFromServer);
+            }
         }
         if (t && t->surface()) {
             seat->setFocusedPointerSurface(t->surface(), t->pos());
             connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
+            if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
+                w->installCursorFromServer();
+                connect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, w, &Wayland::WaylandBackend::installCursorFromServer);
+            }
         } else {
             seat->setFocusedPointerSurface(nullptr);
             t = nullptr;
