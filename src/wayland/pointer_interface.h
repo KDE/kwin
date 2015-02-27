@@ -29,6 +29,7 @@ namespace KWayland
 namespace Server
 {
 
+class Cursor;
 class SeatInterface;
 class SurfaceInterface;
 
@@ -39,6 +40,18 @@ public:
     virtual ~PointerInterface();
     SurfaceInterface *focusedSurface() const;
 
+    /**
+     * The Cursor set on this PointerInterface. Might be @c null.
+     * @since 5.3
+     **/
+    Cursor *cursor() const;
+
+Q_SIGNALS:
+    /**
+     * Signal emitted whenever the Cursor changes.
+     **/
+    void cursorChanged();
+
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
     void buttonPressed(quint32 button, quint32 serial);
@@ -48,6 +61,46 @@ private:
     explicit PointerInterface(SeatInterface *parent, wl_resource *parentResource);
     class Private;
     Private *d_func() const;
+};
+
+/**
+ * @brief Class encapsulating a Cursor image.
+ *
+ * @since 5.3
+ **/
+class KWAYLANDSERVER_EXPORT Cursor : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~Cursor();
+    /**
+     * The hotspot of the cursor image in surface-relative coordinates.
+     **/
+    QPoint hotspot() const;
+    /**
+     * The entered serial when the Cursor got set.
+     **/
+    quint32 enteredSerial() const;
+    /**
+     * The PointerInterface this Cursor belongs to.
+     **/
+    PointerInterface *pointer() const;
+    /**
+     * The SurfaceInterface for the image content of the Cursor.
+     **/
+    QPointer<SurfaceInterface> surface() const;
+
+Q_SIGNALS:
+    void hotspotChanged();
+    void enteredSerialChanged();
+    void surfaceChanged();
+    void changed();
+
+private:
+    friend class PointerInterface;
+    Cursor(PointerInterface *parent);
+    class Private;
+    const QScopedPointer<Private> d;
 };
 
 }
