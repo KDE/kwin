@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMetaMethod>
 #include <QThread>
 // Wayland
-#include <wayland-client-protocol.h>
 #include <wayland-cursor.h>
 
 namespace KWin
@@ -115,7 +114,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                         m_enteredSerial = serial;
                         if (!m_installCursor) {
                             // explicitly hide cursor
-                            wl_pointer_set_cursor(*m_pointer, m_enteredSerial, nullptr, 0, 0);
+                            m_pointer->hideCursor();
                         }
                     }
                 );
@@ -201,7 +200,7 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
     if (!m_cursor || !m_cursor->isValid()) {
         return;
     }
-    wl_pointer_set_cursor(*m_pointer, m_enteredSerial, *m_cursor, hotSpot.x(), hotSpot.y());
+    m_pointer->setCursor(m_cursor, hotSpot);
     m_cursor->attachBuffer(image);
     m_cursor->damage(QRect(QPoint(0,0), size));
     m_cursor->commit(Surface::CommitFlag::None);
