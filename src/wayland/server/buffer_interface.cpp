@@ -38,6 +38,7 @@ public:
     wl_shm_buffer *shmBuffer;
     SurfaceInterface *surface;
     int refCount;
+    QSize size;
 
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
@@ -86,6 +87,9 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
     s_buffers << this;
     listener.notify = destroyListenerCallback;
     wl_resource_add_destroy_listener(resource, &listener);
+    if (shmBuffer) {
+        size = QSize(wl_shm_buffer_get_width(shmBuffer), wl_shm_buffer_get_height(shmBuffer));
+    }
 }
 
 BufferInterface::Private::~Private()
@@ -164,8 +168,8 @@ QImage BufferInterface::Private::createImage()
     s_accessCounter++;
     wl_shm_buffer_begin_access(shmBuffer);
     return std::move(QImage((const uchar*)wl_shm_buffer_get_data(shmBuffer),
-                            wl_shm_buffer_get_width(shmBuffer),
-                            wl_shm_buffer_get_height(shmBuffer),
+                            size.width(),
+                            size.height(),
                             wl_shm_buffer_get_stride(shmBuffer),
                             imageFormat,
                             &imageBufferCleanupHandler, this));
@@ -189,6 +193,20 @@ wl_shm_buffer *BufferInterface::shmBuffer()
 wl_resource *BufferInterface::resource() const
 {
     return d->buffer;
+}
+
+QSize BufferInterface::size() const
+{
+    return d->size;
+}
+
+void BufferInterface::setSize(const QSize &size)
+{
+    if (d->shmBuffer || d->size == size) {
+        return;
+    }
+    d->size = size;
+    emit sizeChanged();
 }
 
 }

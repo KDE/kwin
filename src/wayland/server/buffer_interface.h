@@ -70,8 +70,30 @@ public:
      **/
     QImage data();
 
+    /**
+     * Returns the size of this BufferInterface.
+     * Note: only for shared memory buffers (shmBuffer) the size can be derived,
+     * for other buffers the user of the BufferInterface has to use setSize to
+     * provide the proper size.
+     * @see setSize
+     * @since 5.3
+     **/
+    QSize size() const;
+    /**
+     * Sets the @p size for non shared memory buffers.
+     * @see size
+     * @see sizeChanged
+     * @since 5.3
+     **/
+    void setSize(const QSize &size);
+
 Q_SIGNALS:
     void aboutToBeDestroyed(KWayland::Server::BufferInterface*);
+    /**
+     * Emitted when the size of the Buffer changes.
+     * @since 5.3
+     **/
+    void sizeChanged();
 
 private:
     friend class SurfaceInterface;
