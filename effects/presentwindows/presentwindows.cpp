@@ -132,6 +132,10 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     m_showCaptions = PresentWindowsConfig::drawWindowCaptions();
     m_showIcons = PresentWindowsConfig::drawWindowIcons();
     m_doNotCloseWindows = !PresentWindowsConfig::allowClosingWindows();
+    if (m_doNotCloseWindows) {
+        delete m_closeView;
+        m_closeView = nullptr;
+    }
     m_ignoreMinimized = PresentWindowsConfig::ignoreMinimized();
     m_accuracy = PresentWindowsConfig::accuracy() * 20;
     m_fillGaps = PresentWindowsConfig::fillGaps();
@@ -1421,7 +1425,7 @@ void PresentWindowsEffect::setActive(bool active)
         m_highlightedWindow = NULL;
         m_windowFilter.clear();
 
-        if (!m_doNotCloseWindows) {
+        if (!(m_doNotCloseWindows || m_closeView)) {
             m_closeView = new CloseWindowView();
             connect(m_closeView, &CloseWindowView::requestClose, this, &PresentWindowsEffect::closeWindow);
         }
@@ -1505,8 +1509,8 @@ void PresentWindowsEffect::setActive(bool active)
                 winData->visible = (w->isOnDesktop(desktop) || w->isOnAllDesktops()) &&
                                     !w->isMinimized() && (w->isCurrentTab() || winData->visible);
         }
-        delete m_closeView;
-        m_closeView = 0;
+        if (m_closeView)
+            m_closeView->hide();
 
         // Move all windows back to their original position
         foreach (EffectWindow * w, m_motionManager.managedWindows())
