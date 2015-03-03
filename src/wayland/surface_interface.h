@@ -45,6 +45,7 @@ class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 scale READ scale NOTIFY scaleChanged)
     Q_PROPERTY(KWayland::Server::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
+    Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
     virtual ~SurfaceInterface();
 
@@ -58,6 +59,11 @@ public:
     OutputInterface::Transform transform() const;
     BufferInterface *buffer();
     QPoint offset() const;
+    /**
+     * The size of the Surface.
+     * @since 5.3
+     **/
+    QSize size() const;
 
     /**
      * @returns The SubSurface for this Surface in case there is one.
@@ -85,6 +91,10 @@ Q_SIGNALS:
      * Emitted when the Surface removes its content
      **/
     void unmapped();
+    /**
+     * @since 5.3
+     **/
+    void sizeChanged();
 
 private:
     friend class CompositorInterface;

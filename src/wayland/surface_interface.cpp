@@ -182,13 +182,20 @@ void SurfaceInterface::Private::commit()
     const bool inputRegionChanged = pending.inputIsSet;
     const bool scaleFactorChanged = current.scale != pending.scale;
     const bool transformFactorChanged = current.transform != pending.transform;
+    bool sizeChanged = false;
     auto buffer = current.buffer;
     if (bufferChanged) {
+        QSize oldSize;
         if (current.buffer) {
+            oldSize = current.buffer->size();
             current.buffer->unref();
+            QObject::disconnect(current.buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
         }
         if (pending.buffer) {
             pending.buffer->ref();
+            QObject::connect(pending.buffer, &BufferInterface::sizeChanged, q, &SurfaceInterface::sizeChanged);
+            const QSize newSize = pending.buffer->size();
+            sizeChanged = newSize.isValid() && newSize != oldSize;
         }
         buffer = pending.buffer;
     }
@@ -225,6 +232,9 @@ void SurfaceInterface::Private::commit()
         } else if (!current.buffer) {
             emit q->unmapped();
         }
+    }
+    if (sizeChanged) {
+        emit q->sizeChanged();
     }
 }
 
@@ -434,6 +444,16 @@ QPointer< SubSurfaceInterface > SurfaceInterface::subSurface() const
 {
     Q_D();
     return d->subSurface;
+}
+
+QSize SurfaceInterface::size() const
+{
+    Q_D();
+    // TODO: apply transform and scale to the buffer size
+    if (d->current.buffer) {
+        return d->current.buffer->size();
+    }
+    return QSize();
 }
 
 SurfaceInterface::Private *SurfaceInterface::d_func() const
