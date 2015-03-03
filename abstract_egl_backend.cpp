@@ -144,6 +144,8 @@ void AbstractEglBackend::initWayland()
         if (!eglBindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()))) {
             eglUnbindWaylandDisplayWL = nullptr;
             eglQueryWaylandBufferWL = nullptr;
+        } else {
+            waylandServer()->display()->setEglDisplay(eglDisplay());
         }
     }
 #endif
@@ -360,15 +362,13 @@ bool AbstractEglTexture::loadEglTexture(const QPointer< KWayland::Server::Buffer
 
 EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
-    EGLint format, width, height, yInverted;
+    EGLint format, yInverted;
     eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_TEXTURE_FORMAT, &format);
     if (format != EGL_TEXTURE_RGB && format != EGL_TEXTURE_RGBA) {
         qCDebug(KWIN_CORE) << "Unsupported texture format: " << format;
         return EGL_NO_IMAGE_KHR;
     }
     eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted);
-    eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WIDTH, &width);
-    eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_HEIGHT, &height);
 
     const EGLint attribs[] = {
         EGL_WAYLAND_PLANE_WL, 0,
@@ -378,7 +378,7 @@ EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferI
                                       (EGLClientBuffer)buffer->resource(), attribs);
     if (image != EGL_NO_IMAGE_KHR) {
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
-        m_size = QSize(width, height);
+        m_size = buffer->size();
         updateMatrix();
         q->setYInverted(yInverted);
     }
