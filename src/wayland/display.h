@@ -123,6 +123,23 @@ public:
     ClientConnection *getConnection(wl_client *client);
     QVector<ClientConnection*> connections() const;
 
+    /**
+     * Set the EGL @p display for this Wayland display.
+     * The EGLDisplay can only be set once and must be alive as long as the Wayland display
+     * is alive. The user should have set up the binding between the EGLDisplay and the
+     * Wayland display prior to calling this method.
+     *
+     * @see eglDisplay
+     * @since 5.3
+     **/
+    void setEglDisplay(void *display);
+    /**
+     * @returns the EGLDisplay used for this Wayland display or EGL_NO_DISPLAY if not set.
+     * @see setEglDisplay
+     * @since 5.3
+     **/
+    void *eglDisplay() const;
+
 Q_SIGNALS:
     void socketNameChanged(const QString&);
     void runningChanged(bool);

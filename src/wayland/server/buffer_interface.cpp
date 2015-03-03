@@ -18,14 +18,24 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "buffer_interface.h"
+#include "display.h"
 #include "surface_interface.h"
 // Wayland
 #include <wayland-server.h>
+// EGL
+#include <EGL/egl.h>
+#include <QtGui/qopengl.h>
 
 namespace KWayland
 {
 namespace Server
 {
+
+namespace EGL
+{
+typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
+eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
+}
 
 class BufferInterface::Private
 {
@@ -89,6 +99,23 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
     wl_resource_add_destroy_listener(resource, &listener);
     if (shmBuffer) {
         size = QSize(wl_shm_buffer_get_width(shmBuffer), wl_shm_buffer_get_height(shmBuffer));
+    } else if (parent) {
+        EGLDisplay eglDisplay = parent->global()->display()->eglDisplay();
+        static bool resolved = false;
+        using namespace EGL;
+        if (!resolved && eglDisplay != EGL_NO_DISPLAY) {
+            eglQueryWaylandBufferWL = (eglQueryWaylandBufferWL_func)eglGetProcAddress("eglQueryWaylandBufferWL");
+            resolved = true;
+        }
+        if (eglQueryWaylandBufferWL) {
+            EGLint width, height;
+            bool valid = false;
+            valid = eglQueryWaylandBufferWL(eglDisplay, buffer, EGL_WIDTH, &width);
+            valid = valid && eglQueryWaylandBufferWL(eglDisplay, buffer, EGL_HEIGHT, &height);
+            if (valid) {
+                size = QSize(width, height);
+            }
+        }
     }
 }
 

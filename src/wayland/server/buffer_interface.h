@@ -73,9 +73,11 @@ public:
     /**
      * Returns the size of this BufferInterface.
      * Note: only for shared memory buffers (shmBuffer) the size can be derived,
-     * for other buffers the user of the BufferInterface has to use setSize to
+     * for other buffers it might be possible to derive the size if an EGL display
+     * is set on Display otherwise the user of the BufferInterface has to use setSize to
      * provide the proper size.
      * @see setSize
+     * @see Display::setEglDisplay
      * @since 5.3
      **/
     QSize size() const;

@@ -34,6 +34,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <wayland-server.h>
 
+#include <EGL/egl.h>
+
 namespace KWayland
 {
 namespace Server
@@ -53,6 +55,7 @@ public:
     bool running = false;
     QList<OutputInterface*> outputs;
     QVector<ClientConnection*> clients;
+    EGLDisplay eglDisplay = EGL_NO_DISPLAY;
 
 private:
     Display *q;
@@ -292,6 +295,20 @@ ClientConnection *Display::createClient(int fd)
         return nullptr;
     }
     return getConnection(c);
+}
+
+void Display::setEglDisplay(void *display)
+{
+    if (d->eglDisplay != EGL_NO_DISPLAY) {
+        qCWarning(KWAYLAND_SERVER) << "EGLDisplay cannot be changed";
+        return;
+    }
+    d->eglDisplay = (EGLDisplay)display;
+}
+
+void *Display::eglDisplay() const
+{
+    return d->eglDisplay;
 }
 
 }

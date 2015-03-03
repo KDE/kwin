@@ -35,7 +35,9 @@ target_include_directories(KF5WaylandServer INTERFACE "$<INSTALL_INTERFACE:${KF5
 
 target_link_libraries(KF5WaylandServer
     PUBLIC Qt5::Gui
-    PRIVATE Wayland::Server
+    PRIVATE
+        Wayland::Server
+        EGL::EGL
 )
 
 if(IS_ABSOLUTE "${KF5_INCLUDE_INSTALL_DIR}")
