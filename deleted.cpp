@@ -81,6 +81,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_frame = c->frameId();
     m_opacity = c->opacity();
     m_type = c->windowType(true);
+    m_windowRole = c->windowRole();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
@@ -187,6 +188,11 @@ xcb_window_t Deleted::frameId() const
 double Deleted::opacity() const
 {
     return m_opacity;
+}
+
+QByteArray Deleted::windowRole() const
+{
+    return m_windowRole;
 }
 
 } // namespace

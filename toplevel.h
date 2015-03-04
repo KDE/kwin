@@ -254,7 +254,7 @@ public:
     bool isOnAllDesktops() const;
     bool isOnAllActivities() const;
 
-    QByteArray windowRole() const;
+    virtual QByteArray windowRole() const;
     QByteArray sessionId() const;
     QByteArray resourceName() const;
     QByteArray resourceClass() const;
@@ -707,11 +707,6 @@ inline QByteArray Toplevel::resourceName() const
 inline QByteArray Toplevel::resourceClass() const
 {
     return resource_class; // it is always lowercase
-}
-
-inline QByteArray Toplevel::windowRole() const
-{
-    return QByteArray(info->windowRole());
 }
 
 inline bool Toplevel::unredirected() const

@@ -72,6 +72,7 @@ public:
         return m_wasClient;
     }
     double opacity() const override;
+    QByteArray windowRole() const override;
 
     const Decoration::Renderer *decorationRenderer() const {
         return m_decorationRenderer;
@@ -106,6 +107,7 @@ private:
     Decoration::Renderer *m_decorationRenderer;
     double m_opacity;
     NET::WindowType m_type = NET::Unknown;
+    QByteArray m_windowRole;
 };
 
 inline void Deleted::refWindow()

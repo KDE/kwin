@@ -470,6 +470,11 @@ void Toplevel::addDamage(const QRegion &damage)
     }
 }
 
+QByteArray Toplevel::windowRole() const
+{
+    return QByteArray(info->windowRole());
+}
+
 } // namespace
 
 #include "toplevel.moc"
