@@ -126,7 +126,7 @@ BufferInterface::Private::~Private()
 }
 
 BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent)
-    : QObject(parent)
+    : QObject()
     , d(new Private(this, resource, parent))
 {
 }
