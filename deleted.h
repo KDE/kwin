@@ -105,6 +105,7 @@ private:
     bool m_wasClient;
     Decoration::Renderer *m_decorationRenderer;
     double m_opacity;
+    NET::WindowType m_type = NET::Unknown;
 };
 
 inline void Deleted::refWindow()

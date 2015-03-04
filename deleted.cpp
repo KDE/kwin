@@ -80,6 +80,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     m_layer = c->layer();
     m_frame = c->frameId();
     m_opacity = c->opacity();
+    m_type = c->windowType(true);
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
@@ -169,11 +170,8 @@ bool Deleted::isDeleted() const
 NET::WindowType Deleted::windowType(bool direct, int supportedTypes) const
 {
     Q_UNUSED(direct)
-    // TODO: maybe retrieve the actual window type when copying to deleted?
-    if (supportedTypes == 0) {
-        supportedTypes = SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK;
-    }
-    return info->windowType(NET::WindowTypes(supportedTypes));
+    Q_UNUSED(supportedTypes)
+    return m_type;
 }
 
 void Deleted::mainClientClosed(Toplevel *client)
