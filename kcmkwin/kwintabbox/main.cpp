@@ -539,7 +539,7 @@ void KWinTabBoxConfig::configureEffectClicked()
         const QString name = BuiltInEffects::nameForEffect(effect == CoverSwitch ? BuiltInEffect::CoverSwitch : BuiltInEffect::FlipSwitch);
 
         KCModule *kcm = KPluginTrader::createInstanceFromQuery<KCModule>(QStringLiteral("kwin/effects/configs/"), QString(),
-                                                                        QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(name),
+                                                                         QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(name),
                                                                         configDialog);
         if (!kcm) {
             delete configDialog;
