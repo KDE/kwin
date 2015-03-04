@@ -65,7 +65,7 @@ void EffectConfig::openConfig(const QString &serviceName, bool scripted, const Q
         }
     } else {
         kcm = KPluginTrader::createInstanceFromQuery<KCModule>(s_pluginDir, QString(),
-                                                               QStringLiteral("[X-KDE-ParentComponents] == '%1'").arg(serviceName),
+                                                               QStringLiteral("'%1' in [X-KDE-ParentComponents]").arg(serviceName),
                                                                &dialog);
     }
     if (!kcm) {
