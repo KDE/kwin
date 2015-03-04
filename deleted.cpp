@@ -79,6 +79,7 @@ void Deleted::copyToDeleted(Toplevel* c)
     transparent_rect = c->transparentRect();
     m_layer = c->layer();
     m_frame = c->frameId();
+    m_opacity = c->opacity();
     if (WinInfo* cinfo = dynamic_cast< WinInfo* >(info))
         cinfo->disable();
     Client* client = dynamic_cast<Client*>(c);
@@ -183,6 +184,11 @@ void Deleted::mainClientClosed(Toplevel *client)
 xcb_window_t Deleted::frameId() const
 {
     return m_frame;
+}
+
+double Deleted::opacity() const
+{
+    return m_opacity;
 }
 
 } // namespace

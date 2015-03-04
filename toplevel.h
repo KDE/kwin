@@ -269,7 +269,7 @@ public:
     xcb_visualid_t visual() const;
     bool shape() const;
     void setOpacity(double opacity);
-    double opacity() const;
+    virtual double opacity() const;
     int depth() const;
     bool hasAlpha() const;
     virtual bool setupCompositing();

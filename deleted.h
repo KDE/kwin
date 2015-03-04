@@ -71,6 +71,7 @@ public:
     bool wasClient() const {
         return m_wasClient;
     }
+    double opacity() const override;
 
     const Decoration::Renderer *decorationRenderer() const {
         return m_decorationRenderer;
@@ -103,6 +104,7 @@ private:
     ClientList m_mainClients;
     bool m_wasClient;
     Decoration::Renderer *m_decorationRenderer;
+    double m_opacity;
 };
 
 inline void Deleted::refWindow()
