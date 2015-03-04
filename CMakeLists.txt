@@ -442,6 +442,7 @@ if(HAVE_WAYLAND)
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
             virtual_terminal.cpp
+            shell_client.cpp
             wayland_server.cpp
        )
     if(HAVE_WAYLAND_CURSOR)

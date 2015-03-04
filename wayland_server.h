@@ -44,6 +44,7 @@ class OutputInterface;
 
 namespace KWin
 {
+class ShellClient;
 
 class AbstractBackend;
 
@@ -67,6 +68,10 @@ public:
     KWayland::Server::ShellInterface *shell() {
         return m_shell;
     }
+    QList<ShellClient*> clients() const {
+        return m_clients;
+    }
+    void removeClient(ShellClient *c);
 
     AbstractBackend *backend() const {
         return m_backend;
@@ -98,6 +103,10 @@ public:
         return m_internalConnection.client;
     }
 
+Q_SIGNALS:
+    void shellClientAdded(ShellClient*);
+    void shellClientRemoved(ShellClient*);
+
 private:
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
@@ -112,6 +121,7 @@ private:
 
     } m_internalConnection;
     AbstractBackend *m_backend = nullptr;
+    QList<ShellClient*> m_clients;
     KWIN_SINGLETON(WaylandServer)
 };
 

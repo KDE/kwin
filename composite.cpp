@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #if HAVE_WAYLAND
 #include "abstract_backend.h"
+#include "shell_client.h"
 #include "wayland_server.h"
 #endif
 #include "decorations/decoratedclient.h"
@@ -743,6 +744,16 @@ bool Compositor::windowRepaintsPending() const
     foreach (Toplevel * c, Workspace::self()->deletedList())
     if (!c->repaints().isEmpty())
         return true;
+#if HAVE_WAYLAND
+    if (auto w = waylandServer()) {
+        const auto &clients = w->clients();
+        for (auto c : clients) {
+            if (!c->repaints().isEmpty()) {
+                return true;
+            }
+        }
+    }
+#endif
     return false;
 }
 

@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
 #include "abstract_backend.h"
+#include "composite.h"
 #include "screens.h"
-#include "toplevel.h"
+#include "shell_client.h"
 #include "workspace.h"
 
 // Client
@@ -78,6 +79,20 @@ void WaylandServer::init(const QByteArray &socketName)
     );
     m_shell = m_display->createShell(m_display);
     m_shell->create();
+    connect(m_shell, &ShellInterface::surfaceCreated, this,
+        [this] (ShellSurfaceInterface *surface) {
+            if (surface->client() == m_xwaylandConnection) {
+                // skip Xwayland clients, those are created using standard X11 way
+                return;
+            }
+            auto client = new ShellClient(surface);
+            if (auto c = Compositor::self()) {
+                connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
+            }
+            m_clients << client;
+            emit shellClientAdded(client);
+        }
+    );
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
@@ -161,6 +176,12 @@ void WaylandServer::uninstallBackend(AbstractBackend *backend)
 {
     Q_ASSERT(m_backend == backend);
     m_backend = nullptr;
+}
+
+void WaylandServer::removeClient(ShellClient *c)
+{
+    m_clients.removeAll(c);
+    emit shellClientRemoved(c);
 }
 
 }

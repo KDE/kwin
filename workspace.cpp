@@ -52,6 +52,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#if HAVE_WAYLAND
+#include "shell_client.h"
+#include "wayland_server.h"
+#endif
 #include "xcbutils.h"
 #include "main.h"
 #include "decorations/decorationbridge.h"
@@ -369,6 +373,27 @@ void Workspace::init()
         activateClient(new_active_client);
 
     Scripting::create(this);
+
+#if HAVE_WAYLAND
+    if (auto w = waylandServer()) {
+        connect(w, &WaylandServer::shellClientAdded, this,
+            [this] (ShellClient *c) {
+                if (!unconstrained_stacking_order.contains(c))
+                    unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
+                if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
+                    stacking_order.append(c);      // c to be in stacking_order
+                x_stacking_dirty = true;
+                updateStackingOrder(true);
+            }
+        );
+        connect(w, &WaylandServer::shellClientRemoved, this,
+            [this] {
+                x_stacking_dirty = true;
+                updateStackingOrder(true);
+            }
+        );
+    }
+#endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't

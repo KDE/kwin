@@ -57,6 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 #if HAVE_WAYLAND
 #include "abstract_backend.h"
+#include "shell_client.h"
 #include "wayland_server.h"
 #endif
 
@@ -297,6 +298,18 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
     }
+#if HAVE_WAYLAND
+    if (auto w = waylandServer()) {
+        connect(w, &WaylandServer::shellClientAdded, this,
+            [this](ShellClient *c) {
+                if (c->readyForPainting())
+                    slotShellClientShown(c);
+                else
+                    connect(c, &Toplevel::windowShown, this, &EffectsHandlerImpl::slotShellClientShown);
+            }
+        );
+    }
+#endif
     reconfigure();
 }
 
@@ -563,6 +576,16 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
     setupClientConnections(c);
     if (!c->tabGroup()) // the "window" has already been there
         emit windowAdded(c->effectWindow());
+}
+
+void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
+{
+#if HAVE_WAYLAND
+    ShellClient *c = static_cast<ShellClient*>(t);
+    connect(c, &ShellClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
+    connect(c, &ShellClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    emit windowAdded(t->effectWindow());
+#endif
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
