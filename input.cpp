@@ -341,7 +341,11 @@ void InputRedirection::updatePointerWindow()
         if (oldWindow) {
             disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
             if (AbstractBackend *b = waylandServer()->backend()) {
-                disconnect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+                if (auto p = seat->focusedPointer()) {
+                    if (auto c = p->cursor()) {
+                        disconnect(c, &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+                    }
+                }
             }
         }
         if (t && t->surface()) {
@@ -349,7 +353,11 @@ void InputRedirection::updatePointerWindow()
             connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
             if (AbstractBackend *b = waylandServer()->backend()) {
                 b->installCursorFromServer();
-                connect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+                if (auto p = seat->focusedPointer()) {
+                    if (auto c = p->cursor()) {
+                        connect(c, &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+                    }
+                }
             }
         } else {
             seat->setFocusedPointerSurface(nullptr);
