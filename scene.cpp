@@ -993,8 +993,15 @@ bool WindowPixmap::isValid() const
 void WindowPixmap::updateBuffer()
 {
     if (auto s = toplevel()->surface()) {
+        using namespace KWayland::Server;
         if (auto b = s->buffer()) {
+            if (m_buffer) {
+                QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
+                m_buffer->unref();
+            }
             m_buffer = b;
+            m_buffer->ref();
+            QObject::connect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
         }
     }
 }
