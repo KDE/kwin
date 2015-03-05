@@ -50,6 +50,7 @@ namespace Xcb
 class Window;
 }
 
+class AbstractClient;
 class Client;
 class KillWindow;
 class ShortcutDialog;
@@ -177,7 +178,7 @@ public:
     void raiseClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restackClientUnderActive(Client*);
-    void restack(Client *c, Client *under, bool force = false);
+    void restack(AbstractClient *c, AbstractClient *under, bool force = false);
     void updateClientLayer(Client* c);
     void raiseOrLowerClient(Client*);
     void resetUpdateToolWindowsTimer();
