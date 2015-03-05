@@ -100,7 +100,7 @@ std::shared_ptr<Decoration::DecorationPalette> Client::s_defaultPalette;
  * is done in manage().
  */
 Client::Client()
-    : Toplevel()
+    : AbstractClient()
     , m_client()
     , m_wrapper()
     , m_frame()
@@ -2439,6 +2439,15 @@ void Client::addDamage(const QRegion &damage)
             setReadyForPainting();
     }
     Toplevel::addDamage(damage);
+}
+
+bool Client::belongsToSameApplication(const AbstractClient *other, bool active_hack) const
+{
+    const Client *c2 = dynamic_cast<const Client*>(other);
+    if (!c2) {
+        return false;
+    }
+    return Client::belongToSameApplication(this, c2, active_hack);
 }
 
 } // namespace

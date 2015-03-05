@@ -349,6 +349,7 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1212)
 set(kwin_KDEINIT_SRCS
    workspace.cpp 
    dbusinterface.cpp
+   abstract_client.cpp
    client.cpp 
    client_machine.cpp
    cursor.cpp

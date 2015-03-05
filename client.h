@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "rules.h"
 #include "tabgroup.h"
-#include "toplevel.h"
+#include "abstract_client.h"
 #include "xcbutils.h"
 #include "decorations/decorationpalette.h"
 // Qt
@@ -53,11 +53,6 @@ class Decoration;
 
 namespace KWin
 {
-namespace TabBox
-{
-
-class TabBoxClientImpl;
-}
 
 namespace Decoration
 {
@@ -78,7 +73,7 @@ enum class Predicate {
 };
 
 class Client
-    : public Toplevel
+    : public AbstractClient
 {
     Q_OBJECT
     /**
@@ -354,7 +349,7 @@ public:
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
 
-    const QIcon &icon() const;
+    const QIcon &icon() const override;
 
     bool isActive() const;
     void setActive(bool);
@@ -373,7 +368,7 @@ public:
     void blockActivityUpdates(bool b = true);
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
-    bool isShown(bool shaded_is_shown) const;
+    bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const; // For compositing
 
     bool isShade() const; // True only for ShadeNormal
@@ -382,7 +377,7 @@ public:
     void setShade(ShadeMode mode);
     bool isShadeable() const;
 
-    bool isMinimized() const;
+    bool isMinimized() const override;
     bool isMaximizable() const;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const;
@@ -405,7 +400,7 @@ public:
     QRect iconGeometry() const;
 
     void setFullScreen(bool set, bool user = true);
-    bool isFullScreen() const;
+    bool isFullScreen() const override;
     bool isFullScreenable(bool fullscreen_hack = false) const;
     bool isActiveFullScreen() const;
     bool userCanSetFullScreen() const;
@@ -444,13 +439,13 @@ public:
     bool isModal() const;
 
     // Auxiliary functions, depend on the windowType
-    bool wantsTabFocus() const;
+    bool wantsTabFocus() const override;
     bool wantsInput() const;
 
     bool isResizable() const;
     bool isMovable() const;
     bool isMovableAcrossScreens() const;
-    bool isCloseable() const; ///< May be closed by the user (May have a close button)
+    bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
     void takeFocus();
     bool isDemandingAttention() const {
@@ -515,10 +510,10 @@ public:
     void setBlockingCompositing(bool block);
     inline bool isBlockingCompositing() { return blocks_compositing; }
 
-    QString caption(bool full = true, bool stripped = false) const;
+    QString caption(bool full = true, bool stripped = false) const override;
 
     void keyPressEvent(uint key_code, xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);   // FRAME ??
-    void updateMouseGrab();
+    void updateMouseGrab() override;
     xcb_window_t moveResizeGrabWindow() const;
 
     const QPoint calculateGravitation(bool invert, int gravity = 0) const;   // FRAME public?
@@ -644,10 +639,10 @@ public:
 
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
-    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
+    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const override {
         return m_tabBoxClient.toWeakRef();
     }
-    bool isFirstInTabBox() const {
+    bool isFirstInTabBox() const override {
         return m_firstInTabBox;
     }
     void setFirstInTabBox(bool enable) {
@@ -681,7 +676,7 @@ public:
     void showOnScreenEdge();
 
 public Q_SLOTS:
-    void closeWindow();
+    void closeWindow() override;
     void updateCaption();
 
 private Q_SLOTS:
@@ -723,6 +718,7 @@ protected:
     virtual void debug(QDebug& stream) const;
     virtual bool shouldUnredirect() const;
     void addDamage(const QRegion &damage) override;
+    bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
