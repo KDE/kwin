@@ -295,7 +295,7 @@ public:
 
     const Client* transientFor() const;
     Client* transientFor();
-    bool isTransient() const;
+    bool isTransient() const override;
     bool groupTransient() const;
     bool wasOriginallyGroupTransient() const;
     ClientList mainClients() const; // Call once before loop , is not indirect
@@ -321,7 +321,7 @@ public:
      * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
-    bool isSpecialWindow() const;
+    bool isSpecialWindow() const override;
     bool hasNETSupport() const;
 
     QSize minSize() const;
@@ -544,7 +544,7 @@ public:
     void toggleShade();
     void showContextHelp();
     void cancelShadeHoverTimer();
-    void cancelAutoRaise();
+    void cancelAutoRaise() override;
     void checkActiveModal();
     StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;

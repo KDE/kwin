@@ -47,6 +47,15 @@ public:
     virtual bool wantsTabFocus() const = 0;
     virtual bool isFullScreen() const = 0;
     virtual const QIcon &icon() const = 0;
+    virtual void cancelAutoRaise() = 0;
+    virtual bool isTransient() const;
+    /**
+     * Returns true for "special" windows and false for windows which are "normal"
+     * (normal=window which has a border, can be moved by the user, can be closed, etc.)
+     * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
+     * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
+     */
+    virtual bool isSpecialWindow() const = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

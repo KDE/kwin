@@ -38,4 +38,9 @@ bool AbstractClient::belongToSameApplication(const AbstractClient *c1, const Abs
     return c1->belongsToSameApplication(c2, active_hack);
 }
 
+bool AbstractClient::isTransient() const
+{
+    return false;
+}
+
 }

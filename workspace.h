@@ -174,14 +174,14 @@ public:
 
     QPoint adjustClientPosition(Client* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
     QRect adjustClientSize(Client* c, QRect moveResizeGeom, int mode);
-    void raiseClient(Client* c, bool nogroup = false);
-    void lowerClient(Client* c, bool nogroup = false);
+    void raiseClient(AbstractClient* c, bool nogroup = false);
+    void lowerClient(AbstractClient* c, bool nogroup = false);
     void raiseClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restackClientUnderActive(Client*);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
     void updateClientLayer(Client* c);
-    void raiseOrLowerClient(Client*);
+    void raiseOrLowerClient(AbstractClient*);
     void resetUpdateToolWindowsTimer();
     void restoreSessionStackingOrder(Client* c);
     void updateStackingOrder(bool propagate_new_clients = false);
@@ -515,7 +515,7 @@ private:
 
     Client* active_client;
     Client* last_active_client;
-    Client* most_recently_raised; // Used ONLY by raiseOrLowerClient()
+    AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     Client* movingClient;
 
     // Delay(ed) window focus timer and client

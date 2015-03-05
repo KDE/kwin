@@ -281,10 +281,10 @@ Client* Workspace::findDesktop(bool topmost, int desktop) const
     return NULL;
 }
 
-void Workspace::raiseOrLowerClient(Client *c)
+void Workspace::raiseOrLowerClient(AbstractClient *c)
 {
     if (!c) return;
-    Client* topmost = NULL;
+    AbstractClient* topmost = NULL;
 // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (most_recently_raised && stacking_order.contains(most_recently_raised) &&
             most_recently_raised->isShown(true) && c->isOnCurrentDesktop())
@@ -300,7 +300,7 @@ void Workspace::raiseOrLowerClient(Client *c)
 }
 
 
-void Workspace::lowerClient(Client* c, bool nogroup)
+void Workspace::lowerClient(AbstractClient* c, bool nogroup)
 {
     if (!c)
         return;
@@ -313,7 +313,7 @@ void Workspace::lowerClient(Client* c, bool nogroup)
     unconstrained_stacking_order.prepend(c);
     if (!nogroup && c->isTransient()) {
         // lower also all windows in the group, in their reversed stacking order
-        ClientList wins = ensureStackingOrder(c->group()->members());
+        ClientList wins = ensureStackingOrder(static_cast<Client*>(c)->group()->members());
         for (int i = wins.size() - 1;
                 i >= 0;
                 --i) {
@@ -356,7 +356,7 @@ void Workspace::lowerClientWithinApplication(Client* c)
     // ignore mainwindows
 }
 
-void Workspace::raiseClient(Client* c, bool nogroup)
+void Workspace::raiseClient(AbstractClient* c, bool nogroup)
 {
     if (!c)
         return;
@@ -367,7 +367,7 @@ void Workspace::raiseClient(Client* c, bool nogroup)
 
     if (!nogroup && c->isTransient()) {
         ClientList transients;
-        Client *transient_parent = c;
+        Client *transient_parent = static_cast<Client*>(c);
         while ((transient_parent = transient_parent->transientFor()))
             transients << transient_parent;
         foreach (transient_parent, transients)
