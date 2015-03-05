@@ -111,7 +111,7 @@ QString TabBoxHandlerImpl::desktopName(int desktop) const
 QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient* client) const
 {
     if (TabBoxClientImpl* c = static_cast< TabBoxClientImpl* >(client)) {
-        Client* next = FocusChain::self()->nextMostRecentlyUsed(c->client());
+        auto next = FocusChain::self()->nextMostRecentlyUsed(c->client());
         if (next)
             return next->tabBoxClient();
     }
@@ -120,7 +120,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::nextClientFocusChain(TabBoxClient*
 
 QWeakPointer< TabBoxClient > TabBoxHandlerImpl::firstClientFocusChain() const
 {
-    if (Client *c = FocusChain::self()->firstMostRecentlyUsed()) {
+    if (auto c = FocusChain::self()->firstMostRecentlyUsed()) {
         return QWeakPointer<TabBoxClient>(c->tabBoxClient());
     } else {
         return QWeakPointer<TabBoxClient>();

@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // forward declarations
+class AbstractClient;
 class Client;
 
 /**
@@ -79,7 +80,7 @@ public:
      * @param change Where to move the Client
      * @return void
      **/
-    void update(Client *client, Change change);
+    void update(AbstractClient *client, Change change);
     /**
      * @brief Moves @p client behind the @p reference Client in all focus chains.
      *
@@ -87,7 +88,7 @@ public:
      * @param reference The Client behind which the @p client should be moved
      * @return void
      **/
-    void moveAfterClient(Client *client, Client *reference);
+    void moveAfterClient(AbstractClient *client, AbstractClient *reference);
     /**
      * @brief Finds the best Client to become the new active Client in the focus chain for the given
      * virtual @p desktop.
@@ -120,7 +121,7 @@ public:
      * @param client The Client to look for.
      * @return bool @c true if the most recently used focus chain contains @p client, @c false otherwise.
      **/
-    bool contains(Client *client) const;
+    bool contains(AbstractClient *client) const;
     /**
      * @brief Checks whether the focus chain for the given @p desktop contains the given @p client.
      *
@@ -130,7 +131,7 @@ public:
      * @param desktop The virtual desktop whose focus chain should be used
      * @return bool @c true if the focus chain for @p desktop contains @p client, @c false otherwise.
      **/
-    bool contains(Client *client, uint desktop) const;
+    bool contains(AbstractClient *client, uint desktop) const;
     /**
      * @brief Queries the most recently used focus chain for the next Client after the given
      * @p reference Client.
@@ -144,7 +145,7 @@ public:
      * @param reference The start point in the focus chain to search
      * @return :Client* The relatively next Client in the most recently used chain.
      **/
-    Client *nextMostRecentlyUsed(Client *reference) const;
+    AbstractClient *nextMostRecentlyUsed(AbstractClient *reference) const;
     /**
      * @brief Queries the focus chain for @p desktop for the next Client in relation to the given
      * @p reference Client.
@@ -156,14 +157,14 @@ public:
      * @param desktop The virtual desktop whose focus chain should be used
      * @return :Client* The next usable Client or @c null if none can be found.
      **/
-    Client *nextForDesktop(Client *reference, uint desktop) const;
+    Client *nextForDesktop(AbstractClient *reference, uint desktop) const;
     /**
      * @brief Returns the first Client in the most recently used focus chain. First Client in this
      * case means really the first Client in the chain and not the most recently used Client.
      *
      * @return :Client* The first Client in the most recently used chain.
      **/
-    Client *firstMostRecentlyUsed() const;
+    AbstractClient *firstMostRecentlyUsed() const;
 
 public Q_SLOTS:
     /**
@@ -182,11 +183,11 @@ public Q_SLOTS:
      * @param client The Client to remove from all focus chains.
      * @return void
      **/
-    void remove(KWin::Client *client);
+    void remove(KWin::AbstractClient *client);
     void setSeparateScreenFocus(bool enabled);
-    void setActiveClient(KWin::Client *client);
+    void setActiveClient(KWin::AbstractClient *client);
     void setCurrentDesktop(uint previous, uint newDesktop);
-    bool isUsableFocusCandidate(Client *c, Client *prev) const;
+    bool isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev) const;
 
 private:
     /**
@@ -199,7 +200,7 @@ private:
      * @param chain The focus chain to operate on
      * @return void
      **/
-    void makeFirstInChain(Client *client, QList<Client*> &chain);
+    void makeFirstInChain(AbstractClient *client, QList<AbstractClient*> &chain);
     /**
      * @brief Makes @p client the last Client in the given focus @p chain.
      *
@@ -210,22 +211,22 @@ private:
      * @param chain The focus chain to operate on
      * @return void
      **/
-    void makeLastInChain(Client *client, QList<Client*> &chain);
-    void moveAfterClientInChain(Client *client, Client *reference, QList<Client*> &chain);
-    void updateClientInChain(Client *client, Change change, QList<Client*> &chain);
-    void insertClientIntoChain(Client *client, QList<Client*> &chain);
-    typedef QHash<uint, QList<Client*> > DesktopChains;
-    QList<Client*> m_mostRecentlyUsed;
+    void makeLastInChain(AbstractClient *client, QList<AbstractClient*> &chain);
+    void moveAfterClientInChain(AbstractClient *client, AbstractClient *reference, QList<AbstractClient*> &chain);
+    void updateClientInChain(AbstractClient *client, Change change, QList<AbstractClient*> &chain);
+    void insertClientIntoChain(AbstractClient *client, QList<AbstractClient*> &chain);
+    typedef QHash<uint, QList<AbstractClient*> > DesktopChains;
+    QList<AbstractClient*> m_mostRecentlyUsed;
     DesktopChains m_desktopFocusChains;
     bool m_separateScreenFocus;
-    Client *m_activeClient;
+    AbstractClient *m_activeClient;
     uint m_currentDesktop;
 
     KWIN_SINGLETON_VARIABLE(FocusChain, s_manager)
 };
 
 inline
-bool FocusChain::contains(Client *client) const
+bool FocusChain::contains(AbstractClient *client) const
 {
     return m_mostRecentlyUsed.contains(client);
 }
@@ -237,7 +238,7 @@ void FocusChain::setSeparateScreenFocus(bool enabled)
 }
 
 inline
-void FocusChain::setActiveClient(Client *client)
+void FocusChain::setActiveClient(AbstractClient *client)
 {
     m_activeClient = client;
 }
