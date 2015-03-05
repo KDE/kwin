@@ -902,12 +902,12 @@ ClientList Client::allMainClients() const
     return result;
 }
 
-Client* Client::findModal(bool allow_itself)
+AbstractClient* Client::findModal(bool allow_itself)
 {
     for (ClientList::ConstIterator it = transients().constBegin();
             it != transients().constEnd();
             ++it)
-        if (Client* ret = (*it)->findModal(true))
+        if (AbstractClient* ret = (*it)->findModal(true))
             return ret;
     if (isModal() && allow_itself)
         return this;
@@ -1054,7 +1054,7 @@ void Client::checkActiveModal()
     // exist loops, breaking findModal
     Client* check_modal = workspace()->mostRecentlyActivatedClient();
     if (check_modal != NULL && check_modal->check_active_modal) {
-        Client* new_modal = check_modal->findModal();
+        Client* new_modal = dynamic_cast<Client*>(check_modal->findModal());
         if (new_modal != NULL && new_modal != check_modal) {
             if (!new_modal->isManaged())
                 return; // postpone check until end of manage()

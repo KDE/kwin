@@ -155,7 +155,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::activeClient() const
 
 bool TabBoxHandlerImpl::checkDesktop(TabBoxClient* client, int desktop) const
 {
-    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    auto current = (static_cast< TabBoxClientImpl* >(client))->client();
 
     switch (config().clientDesktopMode()) {
     case TabBoxConfig::AllDesktopsClients:
@@ -169,7 +169,7 @@ bool TabBoxHandlerImpl::checkDesktop(TabBoxClient* client, int desktop) const
 
 bool TabBoxHandlerImpl::checkActivity(TabBoxClient* client) const
 {
-    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    auto current = (static_cast< TabBoxClientImpl* >(client))->client();
 
     switch (config().clientActivitiesMode()) {
     case TabBoxConfig::AllActivitiesClients:
@@ -183,7 +183,7 @@ bool TabBoxHandlerImpl::checkActivity(TabBoxClient* client) const
 
 bool TabBoxHandlerImpl::checkApplications(TabBoxClient* client) const
 {
-    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    auto current = (static_cast< TabBoxClientImpl* >(client))->client();
     TabBoxClientImpl* c;
     QListIterator< QWeakPointer<TabBoxClient> > i(clientList());
 
@@ -233,7 +233,7 @@ bool TabBoxHandlerImpl::checkMinimized(TabBoxClient* client) const
 
 bool TabBoxHandlerImpl::checkMultiScreen(TabBoxClient* client) const
 {
-    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    auto current = (static_cast< TabBoxClientImpl* >(client))->client();
 
     switch (config().clientMultiScreenMode()) {
     case TabBoxConfig::IgnoreMultiScreen:
@@ -250,8 +250,8 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
     if (!client) {
         return QWeakPointer<TabBoxClient>();
     }
-    Client* ret = nullptr;
-    Client* current = (static_cast< TabBoxClientImpl* >(client))->client();
+    AbstractClient* ret = nullptr;
+    AbstractClient* current = (static_cast< TabBoxClientImpl* >(client))->client();
 
     bool addClient = checkDesktop(client, desktop)
                   && checkActivity(client)
@@ -261,7 +261,7 @@ QWeakPointer<TabBoxClient> TabBoxHandlerImpl::clientToAddToList(TabBoxClient* cl
     addClient = addClient && current->wantsTabFocus() && !current->skipSwitcher();
     if (addClient) {
         // don't add windows that have modal dialogs
-        Client* modal = current->findModal();
+        AbstractClient* modal = current->findModal();
         if (modal == nullptr || modal == current)
             ret = current;
         else if (!clientList().contains(modal->tabBoxClient()))
@@ -305,7 +305,7 @@ void TabBoxHandlerImpl::restack(TabBoxClient *c, TabBoxClient *under)
 
 void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
 {
-    Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+    auto cl = static_cast<TabBoxClientImpl*>(c)->client();
     cl->elevate(b);
     if (Unmanaged *w = Workspace::self()->findUnmanaged(tabbox))
         w->elevate(b);
@@ -313,7 +313,11 @@ void TabBoxHandlerImpl::elevateClient(TabBoxClient *c, WId tabbox, bool b) const
 
 void TabBoxHandlerImpl::shadeClient(TabBoxClient *c, bool b) const
 {
-    Client *cl = static_cast<TabBoxClientImpl*>(c)->client();
+    Client *cl = dynamic_cast<Client*>(static_cast<TabBoxClientImpl*>(c)->client());
+    if (!cl) {
+        // shading is X11 specific
+        return;
+    }
     cl->cancelShadeHoverTimer(); // stop core shading action
     if (!b && cl->shadeMode() == ShadeNormal)
         cl->setShade(ShadeHover);
@@ -341,7 +345,7 @@ void TabBoxHandlerImpl::activateAndClose()
 * TabBoxClientImpl
 *********************************************************/
 
-TabBoxClientImpl::TabBoxClientImpl(Client *client)
+TabBoxClientImpl::TabBoxClientImpl(AbstractClient *client)
     : TabBoxClient()
     , m_client(client)
 {
@@ -640,7 +644,7 @@ void TabBox::nextPrev(bool next)
   Returns the currently displayed client ( only works in TabBoxWindowsMode ).
   Returns 0 if no client is displayed.
  */
-Client* TabBox::currentClient()
+AbstractClient* TabBox::currentClient()
 {
     if (TabBoxClientImpl* client = static_cast< TabBoxClientImpl* >(m_tabBox->client(m_tabBox->currentIndex()))) {
         if (!Workspace::self()->hasClient(client->client()))
@@ -655,10 +659,10 @@ Client* TabBox::currentClient()
   TabBoxWindowsMode ).
   Returns an empty list if no clients are available.
  */
-ClientList TabBox::currentClientList()
+QList<AbstractClient*> TabBox::currentClientList()
 {
     TabBoxClientList list = m_tabBox->clientList();
-    ClientList ret;
+    QList<AbstractClient*> ret;
     foreach (const QWeakPointer<TabBoxClient> &clientPointer, list) {
         QSharedPointer<TabBoxClient> client = clientPointer.toStrongRef();
         if (!client)
@@ -694,7 +698,7 @@ QList< int > TabBox::currentDesktopList()
 
   \sa setCurrentDesktop()
  */
-void TabBox::setCurrentClient(Client* newClient)
+void TabBox::setCurrentClient(AbstractClient *newClient)
 {
     setCurrentIndex(m_tabBox->index(newClient->tabBoxClient()));
 }
@@ -1245,7 +1249,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     setMode(mode);
     reset();
     nextPrev(forward);
-    if (Client* c = currentClient()) {
+    if (Client* c = dynamic_cast<Client*>(currentClient())) {
         Workspace::self()->activateClient(c);
         shadeActivate(c);
     }
@@ -1435,7 +1439,7 @@ void TabBox::close(bool abort)
 
 void TabBox::accept()
 {
-    Client* c = currentClient();
+    Client* c = dynamic_cast<Client*>(currentClient());
     close();
     if (c) {
         Workspace::self()->activateClient(c);

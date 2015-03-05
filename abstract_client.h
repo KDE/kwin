@@ -47,6 +47,9 @@ public:
     virtual bool wantsTabFocus() const = 0;
     virtual bool isFullScreen() const = 0;
     virtual const QIcon &icon() const = 0;
+    virtual bool skipSwitcher() const = 0;
+    // TODO: remove boolean trap
+    virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual void cancelAutoRaise() = 0;
     virtual bool isTransient() const;
     /**

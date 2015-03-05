@@ -303,7 +303,7 @@ public:
     bool hasTransient(const Client* c, bool indirect) const;
     const ClientList& transients() const; // Is not indirect
     void checkTransient(xcb_window_t w);
-    Client* findModal(bool allow_itself = false);
+    AbstractClient* findModal(bool allow_itself = false) override;
     const Group* group() const;
     Group* group();
     void checkGroup(Group* gr = NULL, bool force = false);
@@ -422,7 +422,7 @@ public:
     bool skipPager() const;
     void setSkipPager(bool);
 
-    bool skipSwitcher() const;
+    bool skipSwitcher() const override;
     void setSkipSwitcher(bool set);
 
     bool keepAbove() const;

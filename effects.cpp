@@ -1073,9 +1073,8 @@ EffectWindowList EffectsHandlerImpl::currentTabBoxWindowList() const
 {
 #ifdef KWIN_BUILD_TABBOX
     EffectWindowList ret;
-    ClientList clients;
-    clients = TabBox::TabBox::self()->currentClientList();
-    for (Client * c : clients)
+    const auto clients = TabBox::TabBox::self()->currentClientList();
+    for (auto c : clients)
     ret.append(c->effectWindow());
     return ret;
 #else
@@ -1123,7 +1122,7 @@ int EffectsHandlerImpl::currentTabBoxDesktop() const
 EffectWindow* EffectsHandlerImpl::currentTabBoxWindow() const
 {
 #ifdef KWIN_BUILD_TABBOX
-    if (Client* c = TabBox::TabBox::self()->currentClient())
+    if (auto c = TabBox::TabBox::self()->currentClient())
         return c->effectWindow();
 #endif
     return NULL;
@@ -1633,8 +1632,8 @@ void EffectWindowImpl::deleteProperty(long int atom) const
 
 EffectWindow* EffectWindowImpl::findModal()
 {
-    if (Client* c = dynamic_cast< Client* >(toplevel)) {
-        if (Client* c2 = c->findModal())
+    if (AbstractClient* c = dynamic_cast< AbstractClient* >(toplevel)) {
+        if (AbstractClient* c2 = c->findModal())
             return c2->effectWindow();
     }
     return NULL;

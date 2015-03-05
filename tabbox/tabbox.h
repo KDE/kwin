@@ -40,6 +40,7 @@ namespace KWin
 {
 
 class Workspace;
+class AbstractClient;
 class Client;
 namespace TabBox
 {
@@ -86,7 +87,7 @@ private:
 class TabBoxClientImpl : public TabBoxClient
 {
 public:
-    explicit TabBoxClientImpl(Client *client);
+    explicit TabBoxClientImpl(AbstractClient *client);
     virtual ~TabBoxClientImpl();
 
     virtual QString caption() const;
@@ -101,12 +102,12 @@ public:
     virtual void close();
     virtual bool isFirstInTabBox() const;
 
-    Client* client() const {
+    AbstractClient* client() const {
         return m_client;
     }
 
 private:
-    Client* m_client;
+    AbstractClient* m_client;
 };
 
 class TabBox : public QObject
@@ -115,12 +116,12 @@ class TabBox : public QObject
 public:
     ~TabBox();
 
-    Client* currentClient();
-    ClientList currentClientList();
+    AbstractClient *currentClient();
+    QList<AbstractClient*> currentClientList();
     int currentDesktop();
     QList< int > currentDesktopList();
 
-    void setCurrentClient(Client* newClient);
+    void setCurrentClient(AbstractClient *newClient);
     void setCurrentDesktop(int newDesktop);
 
     void setMode(TabBoxMode mode);

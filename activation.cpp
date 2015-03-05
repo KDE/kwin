@@ -349,7 +349,7 @@ void Workspace::takeActivity(Client* c, ActivityFlags flags)
     }
 
     if (flags & ActivityFocus) {
-        Client* modal = c->findModal();
+        Client* modal = dynamic_cast<Client*>(c->findModal());
         if (modal != NULL && modal != c) {
             if (!modal->isOnDesktop(c->desktop())) {
                 modal->setDesktop(c->desktop());
