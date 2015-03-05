@@ -59,6 +59,7 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     virtual bool isSpecialWindow() const = 0;
+    virtual bool isActive() const = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

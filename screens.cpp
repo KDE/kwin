@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "screens.h"
+#include <abstract_client.h>
 #include <client.h>
 #include "cursor.h"
 #include "settings.h"
@@ -131,7 +132,7 @@ void Screens::setCurrent(const QPoint &pos)
     setCurrent(number(pos));
 }
 
-void Screens::setCurrent(const Client *c)
+void Screens::setCurrent(const AbstractClient *c)
 {
     if (!c->isActive()) {
         return;

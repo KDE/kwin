@@ -351,7 +351,7 @@ public:
 
     const QIcon &icon() const override;
 
-    bool isActive() const;
+    bool isActive() const override;
     void setActive(bool);
 
     virtual int desktop() const;

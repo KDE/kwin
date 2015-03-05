@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
-class Client;
+class AbstractClient;
 
 class KWIN_EXPORT Screens : public QObject
 {
@@ -59,7 +59,7 @@ public:
     * Check whether a client moved completely out of what's considered the current screen,
     * if yes, set a new active screen.
     */
-    void setCurrent(const Client *c);
+    void setCurrent(const AbstractClient *c);
     bool isCurrentFollowsMouse() const;
     void setCurrentFollowsMouse(bool follows);
     virtual QRect geometry(int screen) const = 0;
