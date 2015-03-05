@@ -1654,6 +1654,15 @@ Toplevel *Workspace::findToplevel(std::function<bool (const Toplevel*)> func) co
     return nullptr;
 }
 
+bool Workspace::hasClient(const AbstractClient *c)
+{
+    if (auto cc = dynamic_cast<const Client*>(c)) {
+        return hasClient(cc);
+    }
+    // TODO: test for ShellClient
+    return false;
+}
+
 } // namespace
 
 #include "workspace.moc"

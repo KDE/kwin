@@ -74,6 +74,7 @@ public:
     bool workspaceEvent(QEvent*);
 
     bool hasClient(const Client*);
+    bool hasClient(const AbstractClient*);
 
     /**
      * @brief Finds the first Client matching the condition expressed by passed in @p func.
