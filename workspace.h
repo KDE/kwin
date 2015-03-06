@@ -248,8 +248,8 @@ public:
                                bool only_normal = true) const;
     Client* findDesktop(bool topmost, int desktop) const;
     void sendClientToDesktop(Client* c, int desktop, bool dont_activate);
-    void windowToPreviousDesktop(Client* c);
-    void windowToNextDesktop(Client* c);
+    void windowToPreviousDesktop(AbstractClient* c);
+    void windowToNextDesktop(AbstractClient* c);
     void sendClientToScreen(AbstractClient* c, int screen);
 
     /**

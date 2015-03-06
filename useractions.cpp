@@ -1566,7 +1566,7 @@ void Workspace::slotToggleShowDesktop()
 }
 
 template <typename Direction>
-void windowToDesktop(Client *c)
+void windowToDesktop(AbstractClient *c)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
@@ -1590,7 +1590,7 @@ void Workspace::slotWindowToNextDesktop()
         windowToNextDesktop(active_client);
 }
 
-void Workspace::windowToNextDesktop(Client* c)
+void Workspace::windowToNextDesktop(AbstractClient* c)
 {
     windowToDesktop<DesktopNext>(c);
 }
@@ -1604,7 +1604,7 @@ void Workspace::slotWindowToPreviousDesktop()
         windowToPreviousDesktop(active_client);
 }
 
-void Workspace::windowToPreviousDesktop(Client* c)
+void Workspace::windowToPreviousDesktop(AbstractClient* c)
 {
     windowToDesktop<DesktopPrevious>(c);
 }
