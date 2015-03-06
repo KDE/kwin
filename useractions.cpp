@@ -92,7 +92,7 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_closeOperation(NULL)
     , m_removeFromTabGroup(NULL)
     , m_closeTabGroup(NULL)
-    , m_client(QWeakPointer<Client>())
+    , m_client(QWeakPointer<AbstractClient>())
 {
 }
 
@@ -120,7 +120,7 @@ void UserActionsMenu::close()
     m_client.clear();
 }
 
-bool UserActionsMenu::isMenuClient(const Client *c) const
+bool UserActionsMenu::isMenuClient(const AbstractClient *c) const
 {
     if (!c || m_client.isNull()) {
         return false;
@@ -128,7 +128,7 @@ bool UserActionsMenu::isMenuClient(const Client *c) const
     return c == m_client.data();
 }
 
-void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
+void UserActionsMenu::show(const QRect &pos, const QWeakPointer<AbstractClient> &cl)
 {
     if (!KAuthorized::authorizeKAction(QStringLiteral("kwin_rmb")))
         return;
@@ -165,7 +165,7 @@ void UserActionsMenu::show(const QRect &pos, const QWeakPointer<Client> &cl)
     }
 }
 
-void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<Client> &c)
+void UserActionsMenu::helperDialog(const QString& message, const QWeakPointer<AbstractClient> &c)
 {
     QStringList args;
     QString type;
@@ -497,12 +497,16 @@ void UserActionsMenu::entabPopupClient(QAction* action)
 {
     if (m_client.isNull() || !action->data().isValid())
         return;
-    Client *other = action->data().value<Client*>();
+    Client *other = dynamic_cast<Client*>(action->data().value<AbstractClient*>());
     if (!Workspace::self()->clientList().contains(other)) // might have been lost betwenn pop-up and selection
         return;
-    m_client.data()->tabBehind(other, true);
+    Client *c = dynamic_cast<Client*>(m_client.data());
+    if (!c) {
+        return;
+    }
+    c->tabBehind(other, true);
     if (options->focusPolicyIsReasonable())
-        Workspace::self()->requestFocus(m_client.data());
+        Workspace::self()->requestFocus(c);
 }
 
 void UserActionsMenu::rebuildTabGroupPopup()
@@ -712,7 +716,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
         return;
 
     Options::WindowOperation op = static_cast< Options::WindowOperation >(action->data().toInt());
-    QWeakPointer<Client> c = (!m_client.isNull()) ? m_client : QWeakPointer<Client>(Workspace::self()->activeClient());
+    QWeakPointer<AbstractClient> c = (!m_client.isNull()) ? m_client : QWeakPointer<AbstractClient>(Workspace::self()->activeClient());
     if (c.isNull())
         return;
     QString type;
@@ -746,7 +750,8 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
     if (!ok) {
         return;
     }
-    if (m_client.isNull())
+    Client *c = dynamic_cast<Client*>(m_client.data());
+    if (c)
         return;
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -758,7 +763,7 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
         vds->setCount(desk);
     }
 
-    ws->sendClientToDesktop(m_client.data(), desk, false);
+    ws->sendClientToDesktop(c, desk, false);
 }
 
 void UserActionsMenu::slotSendToScreen(QAction *action)
@@ -786,7 +791,12 @@ void UserActionsMenu::slotToggleOnActivity(QAction *action)
         return;
     }
 
-    Activities::self()->toggleClientOnActivity(m_client.data(), activity, false);
+    Client *c = dynamic_cast<Client*>(m_client.data());
+    if (!c) {
+        return;
+    }
+
+    Activities::self()->toggleClientOnActivity(c, activity, false);
     if (m_activityMenu && m_activityMenu->isVisible() && m_activityMenu->actions().count()) {
         const bool isOnAll = m_client.data()->isOnAllActivities();
         m_activityMenu->actions().at(0)->setChecked(isOnAll);

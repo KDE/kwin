@@ -362,23 +362,23 @@ public:
 
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);
-    void setOnAllActivities(bool set);
+    void setOnAllActivities(bool set) override;
     void setOnActivities(QStringList newActivitiesList);
     void updateActivities(bool includeTransients);
-    void blockActivityUpdates(bool b = true);
+    void blockActivityUpdates(bool b = true) override;
 
     /// Is not minimized and not hidden. I.e. normally visible on some virtual desktop.
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const; // For compositing
 
-    bool isShade() const; // True only for ShadeNormal
-    ShadeMode shadeMode() const; // Prefer isShade()
-    void setShade(bool set);
-    void setShade(ShadeMode mode);
-    bool isShadeable() const;
+    bool isShade() const override; // True only for ShadeNormal
+    ShadeMode shadeMode() const override; // Prefer isShade()
+    void setShade(bool set) override;
+    void setShade(ShadeMode mode) override;
+    bool isShadeable() const override;
 
     bool isMinimized() const override;
-    bool isMaximizable() const;
+    bool isMaximizable() const override;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const override;
 
@@ -395,7 +395,7 @@ public:
 
     Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
     QuickTileMode quickTileMode() const;
-    bool isMinimizable() const;
+    bool isMinimizable() const override;
     void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;
 
@@ -403,7 +403,7 @@ public:
     bool isFullScreen() const override;
     bool isFullScreenable(bool fullscreen_hack = false) const;
     bool isActiveFullScreen() const;
-    bool userCanSetFullScreen() const;
+    bool userCanSetFullScreen() const override;
     QRect geometryFSRestore() const {
         return geom_fs_restore;    // Only for session saving
     }
@@ -413,7 +413,7 @@ public:
 
     bool noBorder() const override;
     void setNoBorder(bool set) override;
-    bool userCanSetNoBorder() const;
+    bool userCanSetNoBorder() const override;
     void checkNoBorder();
 
     bool skipTaskbar(bool from_outside = false) const;
@@ -442,9 +442,9 @@ public:
     bool wantsTabFocus() const override;
     bool wantsInput() const;
 
-    bool isResizable() const;
-    bool isMovable() const;
-    bool isMovableAcrossScreens() const;
+    bool isResizable() const override;
+    bool isMovable() const override;
+    bool isMovableAcrossScreens() const override;
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
     void takeFocus();
@@ -666,7 +666,7 @@ public:
 
     void cancelFocusOutTimer();
 
-    QPalette palette() const;
+    QPalette palette() const override;
     const Decoration::DecorationPalette *decorationPalette() const;
 
     /**

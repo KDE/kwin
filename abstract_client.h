@@ -80,6 +80,21 @@ public:
     virtual void maximize(MaximizeMode) = 0;
     virtual bool noBorder() const = 0;
     virtual void setNoBorder(bool set) = 0;
+    virtual void blockActivityUpdates(bool b = true) = 0;
+    virtual QPalette palette() const = 0;
+    virtual bool isResizable() const = 0;
+    virtual bool isMovable() const = 0;
+    virtual bool isMovableAcrossScreens() const = 0;
+    virtual bool isShade() const = 0; // True only for ShadeNormal
+    virtual ShadeMode shadeMode() const = 0; // Prefer isShade()
+    virtual void setShade(bool set) = 0;
+    virtual void setShade(ShadeMode mode) = 0;
+    virtual bool isShadeable() const = 0;
+    virtual bool isMaximizable() const = 0;
+    virtual bool isMinimizable() const = 0;
+    virtual bool userCanSetFullScreen() const = 0;
+    virtual bool userCanSetNoBorder() const = 0;
+    virtual void setOnAllActivities(bool set) = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
