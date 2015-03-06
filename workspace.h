@@ -445,7 +445,7 @@ Q_SIGNALS:
     void currentDesktopChanged(int, KWin::AbstractClient*);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
-    void clientActivated(KWin::Client*);
+    void clientActivated(KWin::AbstractClient*);
     void clientDemandsAttentionChanged(KWin::Client*, bool);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);

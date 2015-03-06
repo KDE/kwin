@@ -152,7 +152,7 @@ Workspace::Workspace(bool restore)
     options->loadConfig();
     options->loadCompositingConfig(false);
     ColorMapper *colormaps = new ColorMapper(this);
-    connect(this, SIGNAL(clientActivated(KWin::Client*)), colormaps, SLOT(update()));
+    connect(this, &Workspace::clientActivated, colormaps, &ColorMapper::update);
 
     delayFocusTimer = 0;
 
@@ -226,7 +226,7 @@ void Workspace::init()
     screenEdges->init();
     connect(options, SIGNAL(configChanged()), screenEdges, SLOT(reconfigure()));
     connect(VirtualDesktopManager::self(), SIGNAL(layoutChanged(int,int)), screenEdges, SLOT(updateLayout()));
-    connect(this, SIGNAL(clientActivated(KWin::Client*)), screenEdges, SIGNAL(checkBlocking()));
+    connect(this, &Workspace::clientActivated, screenEdges, &ScreenEdges::checkBlocking);
 
     FocusChain *focusChain = FocusChain::create(this);
     connect(this, &Workspace::clientRemoved, focusChain, &FocusChain::remove);

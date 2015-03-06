@@ -253,7 +253,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
     );
     connect(ws, &Workspace::clientActivated, this,
-        [this](KWin::Client *c) {
+        [this](KWin::AbstractClient *c) {
             emit windowActivated(c ? c->effectWindow() : nullptr);
         }
     );
