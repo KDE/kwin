@@ -352,7 +352,7 @@ public:
     const QIcon &icon() const override;
 
     bool isActive() const override;
-    void setActive(bool);
+    void setActive(bool) override;
 
     virtual int desktop() const;
     void setDesktop(int) override;
@@ -440,14 +440,14 @@ public:
 
     // Auxiliary functions, depend on the windowType
     bool wantsTabFocus() const override;
-    bool wantsInput() const;
+    bool wantsInput() const override;
 
     bool isResizable() const override;
     bool isMovable() const override;
     bool isMovableAcrossScreens() const override;
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
-    void takeFocus();
+    void takeFocus() override;
     bool isDemandingAttention() const {
         return demands_attention;
     }

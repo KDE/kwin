@@ -156,7 +156,7 @@ public:
         ActivityRaise = 1 << 2 // raise the window
     };
     Q_DECLARE_FLAGS(ActivityFlags, ActivityFlag)
-    void takeActivity(Client* c, ActivityFlags flags);
+    void takeActivity(AbstractClient* c, ActivityFlags flags);
     bool allowClientActivation(const Client* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     void restoreFocus();

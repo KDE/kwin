@@ -337,10 +337,10 @@ void Workspace::activateClient(AbstractClient* c, bool force)
  */
 void Workspace::requestFocus(AbstractClient* c, bool force)
 {
-    takeActivity(dynamic_cast<Client*>(c), force ? ActivityFocusForce : ActivityFocus);
+    takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
 }
 
-void Workspace::takeActivity(Client* c, ActivityFlags flags)
+void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
 {
     // the 'if ( c == active_client ) return;' optimization mustn't be done here
     if (!focusChangeEnabled() && (c != active_client))
@@ -352,7 +352,7 @@ void Workspace::takeActivity(Client* c, ActivityFlags flags)
     }
 
     if (flags & ActivityFocus) {
-        Client* modal = dynamic_cast<Client*>(c->findModal());
+        AbstractClient* modal = c->findModal();
         if (modal != NULL && modal != c) {
             if (!modal->isOnDesktop(c->desktop())) {
                 modal->setDesktop(c->desktop());
@@ -380,7 +380,7 @@ void Workspace::takeActivity(Client* c, ActivityFlags flags)
         flags &= ~ActivityFocus;
     }
     if (c->tabGroup() && c->tabGroup()->current() != c)
-        c->tabGroup()->setCurrent(c);
+        c->tabGroup()->setCurrent(dynamic_cast<Client*>(c));
     if (!c->isShown(true)) {  // shouldn't happen, call activateClient() if needed
         qCWarning(KWIN_CORE) << "takeActivity: not shown" ;
         return;
