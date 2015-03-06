@@ -988,7 +988,7 @@ WindowRules RuleBook::find(const Client* c, bool ignore_temporary)
     return WindowRules(ret);
 }
 
-void RuleBook::edit(Client* c, bool whole_app)
+void RuleBook::edit(AbstractClient* c, bool whole_app)
 {
     save();
     QStringList args;

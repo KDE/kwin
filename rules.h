@@ -38,6 +38,7 @@ class KXMessages;
 namespace KWin
 {
 
+class AbstractClient;
 class Client;
 class Rules;
 
@@ -292,7 +293,7 @@ public:
     void setUpdatesDisabled(bool disable);
     bool areUpdatesDisabled() const;
     void load();
-    void edit(Client* c, bool whole_app);
+    void edit(AbstractClient* c, bool whole_app);
     void requestDiskStorage();
 private Q_SLOTS:
     void temporaryRulesMessage(const QString&);
