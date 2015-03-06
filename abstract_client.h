@@ -71,6 +71,7 @@ public:
     virtual void setOnAllDesktops(bool set) = 0;
     virtual void setDesktop(int) = 0;
     virtual void minimize(bool avoid_animation = false) = 0;
+    virtual void unminimize(bool avoid_animation = false)= 0;
     virtual void setFullScreen(bool set, bool user = true) = 0;
     virtual bool keepAbove() const = 0;
     virtual void setKeepAbove(bool) = 0;

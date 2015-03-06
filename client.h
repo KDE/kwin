@@ -538,7 +538,7 @@ public:
 
     void setMinimized(bool set);
     void minimize(bool avoid_animation = false) override;
-    void unminimize(bool avoid_animation = false);
+    void unminimize(bool avoid_animation = false) override;
     void killWindow();
     void maximize(MaximizeMode) override;
     void toggleShade();

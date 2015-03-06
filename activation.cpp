@@ -287,7 +287,7 @@ void Workspace::setActiveClient(Client* c)
 
   \sa stActiveClient(), requestFocus()
  */
-void Workspace::activateClient(Client* c, bool force)
+void Workspace::activateClient(AbstractClient* c, bool force)
 {
     if (c == NULL) {
         focusToNull();
@@ -322,7 +322,10 @@ void Workspace::activateClient(Client* c, bool force)
     // E.g. typing URL in minicli which will show kio_uiserver dialog (with workaround),
     // and then kdesktop shows dialog about SSL certificate.
     // This needs also avoiding user creation time in Client::readUserTimeMapTimestamp().
-    c->updateUserTime();
+    if (Client *client = dynamic_cast<Client*>(c)) {
+        // updateUserTime is X11 specific
+        client->updateUserTime();
+    }
 }
 
 /*!
@@ -332,9 +335,9 @@ void Workspace::activateClient(Client* c, bool force)
 
   \sa Workspace::activateClient()
  */
-void Workspace::requestFocus(Client* c, bool force)
+void Workspace::requestFocus(AbstractClient* c, bool force)
 {
-    takeActivity(c, force ? ActivityFocusForce : ActivityFocus);
+    takeActivity(dynamic_cast<Client*>(c), force ? ActivityFocusForce : ActivityFocus);
 }
 
 void Workspace::takeActivity(Client* c, ActivityFlags flags)

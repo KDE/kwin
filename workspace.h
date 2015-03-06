@@ -148,8 +148,8 @@ public:
 
     Client* clientUnderMouse(int screen) const;
 
-    void activateClient(Client*, bool force = false);
-    void requestFocus(Client* c, bool force = false);
+    void activateClient(AbstractClient*, bool force = false);
+    void requestFocus(AbstractClient* c, bool force = false);
     enum ActivityFlag {
         ActivityFocus = 1 << 0, // focus the window
         ActivityFocusForce = 1 << 1 | ActivityFocus, // focus even if Dock etc.
