@@ -102,6 +102,7 @@ public:
     virtual const WindowRules* rules() const = 0;
     virtual void takeFocus() = 0;
     virtual bool wantsInput() const = 0;
+    virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

@@ -525,7 +525,7 @@ public:
 
     void gotPing(xcb_timestamp_t timestamp);
 
-    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2);
+    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) override;
     void updateUserTime(xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);
     xcb_timestamp_t userTime() const;
     bool hasUserTimeSupport() const;

@@ -1109,7 +1109,7 @@ void Workspace::selectWmInputEventMask()
  *
  * Takes care of transients as well.
  */
-void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
+void Workspace::sendClientToDesktop(AbstractClient* c, int desk, bool dont_activate)
 {
     if ((desk < 1 && desk != NET::OnAllDesktops) || desk > static_cast<int>(VirtualDesktopManager::self()->count()))
         return;
@@ -1132,11 +1132,14 @@ void Workspace::sendClientToDesktop(Client* c, int desk, bool dont_activate)
 
     c->checkWorkspacePosition( QRect(), old_desktop );
 
-    ClientList transients_stacking_order = ensureStackingOrder(c->transients());
-    for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
-            it != transients_stacking_order.constEnd();
-            ++it)
-        sendClientToDesktop(*it, desk, dont_activate);
+    if (Client *client = dynamic_cast<Client*>(c)) {
+        // TODO: adjust transients for non-X11
+        ClientList transients_stacking_order = ensureStackingOrder(client->transients());
+        for (ClientList::ConstIterator it = transients_stacking_order.constBegin();
+                it != transients_stacking_order.constEnd();
+                ++it)
+            sendClientToDesktop(*it, desk, dont_activate);
+    }
     updateClientArea();
 }
 
