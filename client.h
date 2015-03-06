@@ -489,8 +489,8 @@ public:
     void shrinkVertical();
 
     bool providesContextHelp() const;
-    const QKeySequence &shortcut() const;
-    void setShortcut(const QString& cut);
+    const QKeySequence &shortcut() const override;
+    void setShortcut(const QString& cut) override;
 
     Options::WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
     bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos);

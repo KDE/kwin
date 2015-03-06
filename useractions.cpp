@@ -954,7 +954,7 @@ void Workspace::initShortcuts()
     m_userActionsMenu->discard(); // so that it's recreated next time
 }
 
-void Workspace::setupWindowShortcut(Client* c)
+void Workspace::setupWindowShortcut(AbstractClient* c)
 {
     assert(client_keys_dialog == NULL);
     // TODO: PORT ME (KGlobalAccel related)

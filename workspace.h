@@ -467,7 +467,7 @@ private:
     template <typename Slot>
     void initShortcut(const QString &actionName, const QString &description, const QKeySequence &shortcut,
                       Slot slot, const QVariant &data = QVariant());
-    void setupWindowShortcut(Client* c);
+    void setupWindowShortcut(AbstractClient* c);
     enum Direction {
         DirectionNorth,
         DirectionEast,
@@ -503,7 +503,7 @@ private:
     Client *findClientToActivateOnDesktop(uint desktop);
 
     QWidget* active_popup;
-    Client* active_popup_client;
+    AbstractClient* active_popup_client;
 
     void loadSessionInfo();
     void addSessionInfo(KConfigGroup &cg);
@@ -556,7 +556,7 @@ private:
     void modalActionsSwitch(bool enabled);
 
     ShortcutDialog* client_keys_dialog;
-    Client* client_keys_client;
+    AbstractClient* client_keys_client;
     bool global_shortcuts_disabled_for_client;
 
     // Timer to collect requests for 'reconfigure'
