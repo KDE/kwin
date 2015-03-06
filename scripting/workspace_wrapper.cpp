@@ -93,7 +93,7 @@ void WorkspaceWrapper::setNumberOfDesktops(int count)
 rettype WorkspaceWrapper::getterName( ) const { \
     return Workspace::self()->getterName(); \
 }
-GETTER(KWin::Client*, activeClient)
+GETTER(KWin::AbstractClient*, activeClient)
 GETTER(QList< KWin::Client* >, clientList)
 
 #undef GETTER
@@ -192,9 +192,9 @@ SLOTWRAPPER(slotSwitchDesktopDown,DesktopBelow)
 
 #undef SLOTWRAPPER
 
-void WorkspaceWrapper::setActiveClient(KWin::Client* client)
+void WorkspaceWrapper::setActiveClient(KWin::AbstractClient* client)
 {
-    KWin::Workspace::self()->activateClient(client);
+    KWin::Workspace::self()->activateClient(dynamic_cast<Client*>(client));
 }
 
 QSize WorkspaceWrapper::workspaceSize() const

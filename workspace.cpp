@@ -87,7 +87,7 @@ ColorMapper::~ColorMapper()
 void ColorMapper::update()
 {
     xcb_colormap_t cmap = m_default;
-    if (Client *c = Workspace::self()->activeClient()) {
+    if (Client *c = dynamic_cast<Client*>(Workspace::self()->activeClient())) {
         if (c->colormap() != XCB_COLORMAP_NONE) {
             cmap = c->colormap();
         }
@@ -1661,6 +1661,11 @@ bool Workspace::hasClient(const AbstractClient *c)
     }
     // TODO: test for ShellClient
     return false;
+}
+
+AbstractClient *Workspace::activeClient() const
+{
+    return active_client;
 }
 
 } // namespace

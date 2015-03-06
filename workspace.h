@@ -138,7 +138,7 @@ public:
      * Returns the active client, i.e. the client that has the focus (or None
      * if no client has the focus)
      */
-    Client* activeClient() const;
+    AbstractClient* activeClient() const;
     /**
      * Client that was activated, but it's not yet really activeClient(), because
      * we didn't process yet the matching FocusIn event. Used mostly in focus
@@ -632,11 +632,6 @@ private:
 inline bool Workspace::initializing() const
 {
     return workspaceInit;
-}
-
-inline Client* Workspace::activeClient() const
-{
-    return active_client;
 }
 
 inline Client* Workspace::mostRecentlyActivatedClient() const

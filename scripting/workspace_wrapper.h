@@ -40,7 +40,7 @@ class WorkspaceWrapper : public QObject
     Q_ENUMS(ClientAreaOption)
     Q_ENUMS(ElectricBorder)
     Q_PROPERTY(int currentDesktop READ currentDesktop WRITE setCurrentDesktop NOTIFY currentDesktopChanged)
-    Q_PROPERTY(KWin::Client *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
+    Q_PROPERTY(KWin::AbstractClient *activeClient READ activeClient WRITE setActiveClient NOTIFY clientActivated)
     // TODO: write and notify?
     Q_PROPERTY(QSize desktopGridSize READ desktopGridSize NOTIFY desktopLayoutChanged)
     Q_PROPERTY(int desktopGridWidth READ desktopGridWidth NOTIFY desktopLayoutChanged)
@@ -204,7 +204,7 @@ rettype getter() const; \
 void setter( rettype val );
     GETTERSETTERDEF(int, numberOfDesktops, setNumberOfDesktops)
     GETTERSETTERDEF(int, currentDesktop, setCurrentDesktop)
-    GETTERSETTERDEF(KWin::Client*, activeClient, setActiveClient)
+    GETTERSETTERDEF(KWin::AbstractClient*, activeClient, setActiveClient)
 #undef GETTERSETTERDEF
     QSize desktopGridSize() const;
     int desktopGridWidth() const;

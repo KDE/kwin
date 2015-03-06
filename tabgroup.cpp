@@ -222,7 +222,7 @@ void TabGroup::move(Client *c, Client *other, bool after)
 
 bool TabGroup::isActive() const
 {
-    return contains(Workspace::self()->activeClient());
+    return contains(dynamic_cast<Client*>(Workspace::self()->activeClient()));
 }
 
 void TabGroup::setCurrent(Client* c, bool force)

@@ -1593,8 +1593,8 @@ bool TabBox::establishTabBoxGrab()
     // the active client, which may not have it.
     assert(!m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = true;
-    if (Workspace::self()->activeClient() != nullptr)
-        Workspace::self()->activeClient()->updateMouseGrab();
+    if (Client *c = dynamic_cast<Client*>(Workspace::self()->activeClient()))
+        c->updateMouseGrab();
     return true;
 }
 
@@ -1604,8 +1604,8 @@ void TabBox::removeTabBoxGrab()
     ungrabXKeyboard();
     assert(m_forcedGlobalMouseGrab);
     m_forcedGlobalMouseGrab = false;
-    if (Workspace::self()->activeClient() != nullptr)
-        Workspace::self()->activeClient()->updateMouseGrab();
+    if (Client *c = dynamic_cast<Client*>(Workspace::self()->activeClient()))
+        c->updateMouseGrab();
 }
 } // namespace TabBox
 } // namespace

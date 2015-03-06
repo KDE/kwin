@@ -381,7 +381,7 @@ void Edge::checkBlocking()
         return;
     }
     bool newValue = false;
-    if (Client *client = Workspace::self()->activeClient()) {
+    if (AbstractClient *client = Workspace::self()->activeClient()) {
         newValue = client->isFullScreen() && client->geometry().contains(m_geometry.center());
     }
     if (newValue == m_blocked) {
