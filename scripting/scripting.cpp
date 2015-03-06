@@ -332,7 +332,7 @@ void KWin::AbstractScript::registerUseractionsMenuCallback(QScriptValue callback
     m_userActionsMenuCallbacks.append(callback);
 }
 
-QList< QAction * > KWin::AbstractScript::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)
+QList< QAction * > KWin::AbstractScript::actionsForUserActionMenu(KWin::AbstractClient *c, QMenu *parent)
 {
     QList<QAction*> returnActions;
     for (QList<QScriptValue>::const_iterator it = m_userActionsMenuCallbacks.constBegin(); it != m_userActionsMenuCallbacks.constEnd(); ++it) {
@@ -785,7 +785,7 @@ KWin::Scripting::~Scripting()
     s_self = nullptr;
 }
 
-QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::Client *c, QMenu *parent)
+QList< QAction * > KWin::Scripting::actionsForUserActionMenu(KWin::AbstractClient *c, QMenu *parent)
 {
     QList<QAction*> actions;
     foreach (AbstractScript *script, scripts) {

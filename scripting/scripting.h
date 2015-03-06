@@ -48,6 +48,7 @@ typedef QList< QPair<bool, QPair<QString, QString > > > LoadScriptList;
 
 namespace KWin
 {
+class AbstractClient;
 class Client;
 class ScriptUnloaderAgent;
 class WorkspaceWrapper;
@@ -119,7 +120,7 @@ public:
      * @return QList< QAction* > List of QActions obtained from asking the registered callbacks
      * @see registerUseractionsMenuCallback
      **/
-    QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
+    QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
 
     KConfigGroup config() const;
     const QHash<QAction*, QScriptValue> &shortcutCallbacks() const {
@@ -351,7 +352,7 @@ public:
      * @param parent The parent menu to which to add created child menus and items
      * @return QList< QAction* > List of all actions aggregated from all scripts.
      **/
-    QList<QAction*> actionsForUserActionMenu(Client *c, QMenu *parent);
+    QList<QAction*> actionsForUserActionMenu(AbstractClient *c, QMenu *parent);
 
     QQmlEngine *qmlEngine() const;
     QQmlEngine *qmlEngine();
