@@ -356,7 +356,7 @@ public:
 
     virtual int desktop() const;
     void setDesktop(int);
-    void setOnAllDesktops(bool set);
+    void setOnAllDesktops(bool set) override;
 
     void sendToScreen(int screen) override;
 
@@ -380,7 +380,7 @@ public:
     bool isMinimized() const override;
     bool isMaximizable() const;
     QRect geometryRestore() const;
-    MaximizeMode maximizeMode() const;
+    MaximizeMode maximizeMode() const override;
 
     enum QuickTileFlag {
         QuickTileNone = 0,
@@ -399,7 +399,7 @@ public:
     void setMaximize(bool vertically, bool horizontally);
     QRect iconGeometry() const;
 
-    void setFullScreen(bool set, bool user = true);
+    void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
     bool isFullScreenable(bool fullscreen_hack = false) const;
     bool isActiveFullScreen() const;
@@ -411,8 +411,8 @@ public:
         return fullscreen_mode;    // only for session saving
     }
 
-    bool noBorder() const;
-    void setNoBorder(bool set);
+    bool noBorder() const override;
+    void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const;
     void checkNoBorder();
 
@@ -425,10 +425,10 @@ public:
     bool skipSwitcher() const override;
     void setSkipSwitcher(bool set);
 
-    bool keepAbove() const;
-    void setKeepAbove(bool);
-    bool keepBelow() const;
-    void setKeepBelow(bool);
+    bool keepAbove() const override;
+    void setKeepAbove(bool) override;
+    bool keepBelow() const override;
+    void setKeepBelow(bool) override;
     virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
@@ -493,7 +493,7 @@ public:
     void setShortcut(const QString& cut) override;
 
     Options::WindowOperation mouseButtonToWindowOperation(Qt::MouseButtons button);
-    bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos);
+    bool performMouseCommand(Options::MouseCommand, const QPoint& globalPos) override;
 
     QRect adjustedClientArea(const QRect& desktop, const QRect& area) const;
 
@@ -537,10 +537,10 @@ public:
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
 
     void setMinimized(bool set);
-    void minimize(bool avoid_animation = false);
+    void minimize(bool avoid_animation = false) override;
     void unminimize(bool avoid_animation = false);
     void killWindow();
-    void maximize(MaximizeMode);
+    void maximize(MaximizeMode) override;
     void toggleShade();
     void showContextHelp();
     void cancelShadeHoverTimer();
@@ -551,7 +551,7 @@ public:
     bool hasStrut() const;
 
     // Tabbing functions
-    TabGroup* tabGroup() const; // Returns a pointer to client_group
+    TabGroup* tabGroup() const override; // Returns a pointer to client_group
     Q_INVOKABLE inline bool tabBefore(Client *other, bool activate) { return tabTo(other, false, activate); }
     Q_INVOKABLE inline bool tabBehind(Client *other, bool activate) { return tabTo(other, true, activate); }
     /**
@@ -566,7 +566,7 @@ public:
      * WARNING: non dynamic properties are ignored - you're not supposed to alter/update such explicitly
      */
     Q_INVOKABLE void syncTabGroupFor(QString property, bool fromThisClient = false);
-    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
+    Q_INVOKABLE bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false) override;
     /**
      * Set tab group - this is to be invoked by TabGroup::add/remove(client) and NO ONE ELSE
      */

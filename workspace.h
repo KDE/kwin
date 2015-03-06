@@ -340,7 +340,7 @@ public:
     void unregisterEventFilter(X11EventFilter *filter);
 
 public Q_SLOTS:
-    void performWindowOperation(KWin::Client* c, Options::WindowOperation op);
+    void performWindowOperation(KWin::AbstractClient* c, Options::WindowOperation op);
     // Keybindings
     //void slotSwitchToWindow( int );
     void slotWindowToDesktop();

@@ -43,4 +43,16 @@ bool AbstractClient::isTransient() const
     return false;
 }
 
+TabGroup *AbstractClient::tabGroup() const
+{
+    return nullptr;
+}
+
+bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
+{
+    Q_UNUSED(toGeometry)
+    Q_UNUSED(clientRemoved)
+    return false;
+}
+
 }

@@ -735,7 +735,7 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     qRegisterMetaType<Options::WindowOperation>();
     QMetaObject::invokeMethod(workspace(), "performWindowOperation",
                               Qt::QueuedConnection,
-                              Q_ARG(KWin::Client*, c.data()),
+                              Q_ARG(KWin::AbstractClient*, c.data()),
                               Q_ARG(Options::WindowOperation, op));
 }
 
@@ -1019,7 +1019,7 @@ void Workspace::clientShortcutUpdated(Client* c)
     }
 }
 
-void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
+void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperation op)
 {
     if (!c)
         return;
@@ -1107,7 +1107,7 @@ void Workspace::performWindowOperation(Client* c, Options::WindowOperation op)
         break;
     case Options::RemoveTabFromGroupOp:
         if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
-             takeActivity(c, ActivityFocus | ActivityRaise);
+             takeActivity(dynamic_cast<Client*>(c), ActivityFocus | ActivityRaise);
         break;
     case Options::ActivateNextTabOp:
         if (c->tabGroup())

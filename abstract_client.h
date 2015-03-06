@@ -21,9 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_ABSTRACT_CLIENT_H
 
 #include "toplevel.h"
+#include "options.h"
 
 namespace KWin
 {
+
+class TabGroup;
 
 namespace TabBox
 {
@@ -63,6 +66,20 @@ public:
     virtual void sendToScreen(int screen) = 0;
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;
+    virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos) = 0;
+    virtual void setOnAllDesktops(bool set) = 0;
+    virtual void minimize(bool avoid_animation = false) = 0;
+    virtual void setFullScreen(bool set, bool user = true) = 0;
+    virtual bool keepAbove() const = 0;
+    virtual void setKeepAbove(bool) = 0;
+    virtual bool keepBelow() const = 0;
+    virtual void setKeepBelow(bool) = 0;
+    virtual TabGroup *tabGroup() const;
+    Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
+    virtual MaximizeMode maximizeMode() const = 0;
+    virtual void maximize(MaximizeMode) = 0;
+    virtual bool noBorder() const = 0;
+    virtual void setNoBorder(bool set) = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
