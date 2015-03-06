@@ -1793,7 +1793,7 @@ void Workspace::slotWindowOperations()
     showWindowMenu(QRect(pos, pos), active_client);
 }
 
-void Workspace::showWindowMenu(const QRect &pos, Client* cl)
+void Workspace::showWindowMenu(const QRect &pos, AbstractClient* cl)
 {
     m_userActionsMenu->show(pos, cl);
 }

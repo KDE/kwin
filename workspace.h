@@ -256,7 +256,7 @@ public:
      * Shows the menu operations menu for the client and makes it active if
      * it's not already.
      */
-    void showWindowMenu(const QRect& pos, Client* cl);
+    void showWindowMenu(const QRect& pos, AbstractClient* cl);
     const UserActionsMenu *userActionsMenu() const {
         return m_userActionsMenu;
     }
