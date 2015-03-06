@@ -178,7 +178,7 @@ public:
     void lowerClient(AbstractClient* c, bool nogroup = false);
     void raiseClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
-    void restackClientUnderActive(Client*);
+    void restackClientUnderActive(AbstractClient*);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
     void updateClientLayer(Client* c);
     void raiseOrLowerClient(AbstractClient*);

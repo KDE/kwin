@@ -454,7 +454,7 @@ void Workspace::restack(AbstractClient* c, AbstractClient* under, bool force)
     updateStackingOrder();
 }
 
-void Workspace::restackClientUnderActive(Client* c)
+void Workspace::restackClientUnderActive(AbstractClient* c)
 {
     if (!active_client || active_client == c || active_client->layer() != c->layer()) {
         raiseClient(c);
