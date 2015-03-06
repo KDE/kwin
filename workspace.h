@@ -218,7 +218,7 @@ public:
     void stackScreenEdgesUnderOverrideRedirect();
 
 public:
-    QPoint cascadeOffset(const Client *c) const;
+    QPoint cascadeOffset(const AbstractClient *c) const;
 
 private:
     Compositor *m_compositor;

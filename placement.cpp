@@ -361,7 +361,7 @@ void Placement::reinitCascading(int desktop)
     }
 }
 
-QPoint Workspace::cascadeOffset(const Client *c) const
+QPoint Workspace::cascadeOffset(const AbstractClient *c) const
 {
     QRect area = clientArea(PlacementArea, c->geometry().center(), c->desktop());
     return QPoint(area.width()/48, area.height()/48);
