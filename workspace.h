@@ -250,7 +250,7 @@ public:
     void sendClientToDesktop(Client* c, int desktop, bool dont_activate);
     void windowToPreviousDesktop(Client* c);
     void windowToNextDesktop(Client* c);
-    void sendClientToScreen(Client* c, int screen);
+    void sendClientToScreen(AbstractClient* c, int screen);
 
     /**
      * Shows the menu operations menu for the client and makes it active if

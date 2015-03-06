@@ -358,7 +358,7 @@ public:
     void setDesktop(int);
     void setOnAllDesktops(bool set);
 
-    void sendToScreen(int screen);
+    void sendToScreen(int screen) override;
 
     virtual QStringList activities() const;
     void setOnActivity(const QString &activity, bool enable);

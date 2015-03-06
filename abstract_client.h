@@ -60,6 +60,7 @@ public:
      */
     virtual bool isSpecialWindow() const = 0;
     virtual bool isActive() const = 0;
+    virtual void sendToScreen(int screen) = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
