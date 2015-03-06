@@ -311,7 +311,7 @@ QRect Workspace::clientArea(clientAreaOption opt, const QPoint& p, int desktop) 
     return clientArea(opt, screens()->number(p), desktop);
 }
 
-QRect Workspace::clientArea(clientAreaOption opt, const Client* c) const
+QRect Workspace::clientArea(clientAreaOption opt, const AbstractClient* c) const
 {
     return clientArea(opt, c->geometry().center(), c->desktop());
 }
