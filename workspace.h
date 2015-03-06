@@ -170,7 +170,7 @@ public:
     /**
      * Indicates that the client c is being moved around by the user.
      */
-    void setClientIsMoving(Client* c);
+    void setClientIsMoving(AbstractClient* c);
 
     QPoint adjustClientPosition(Client* c, QPoint pos, bool unrestricted, double snapAdjust = 1.0);
     QRect adjustClientSize(Client* c, QRect moveResizeGeom, int mode);
@@ -327,7 +327,7 @@ public:
     void updateFocusMousePosition(const QPoint& pos);
     QPoint focusMousePosition() const;
 
-    Client* getMovingClient() {
+    AbstractClient* getMovingClient() {
         return movingClient;
     }
 
@@ -442,7 +442,7 @@ Q_SIGNALS:
 
     //Signals required for the scripting interface
     void desktopPresenceChanged(KWin::Client*, int);
-    void currentDesktopChanged(int, KWin::Client*);
+    void currentDesktopChanged(int, KWin::AbstractClient*);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::Client*);
@@ -516,7 +516,7 @@ private:
     Client* active_client;
     Client* last_active_client;
     AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()
-    Client* movingClient;
+    AbstractClient* movingClient;
 
     // Delay(ed) window focus timer and client
     QTimer* delayFocusTimer;

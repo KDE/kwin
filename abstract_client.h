@@ -27,6 +27,7 @@ namespace KWin
 {
 
 class TabGroup;
+class WindowRules;
 
 namespace TabBox
 {
@@ -68,6 +69,7 @@ public:
     virtual void setShortcut(const QString &cut) = 0;
     virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos) = 0;
     virtual void setOnAllDesktops(bool set) = 0;
+    virtual void setDesktop(int) = 0;
     virtual void minimize(bool avoid_animation = false) = 0;
     virtual void setFullScreen(bool set, bool user = true) = 0;
     virtual bool keepAbove() const = 0;
@@ -95,6 +97,7 @@ public:
     virtual bool userCanSetFullScreen() const = 0;
     virtual bool userCanSetNoBorder() const = 0;
     virtual void setOnAllActivities(bool set) = 0;
+    virtual const WindowRules* rules() const = 0;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

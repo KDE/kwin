@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 // forward declarations
+class AbstractClient;
 class Client;
 
 class WorkspaceWrapper : public QObject
@@ -88,7 +89,7 @@ private:
 
 Q_SIGNALS:
     void desktopPresenceChanged(KWin::Client *client, int desktop);
-    void currentDesktopChanged(int desktop, KWin::Client *client);
+    void currentDesktopChanged(int desktop, KWin::AbstractClient *client);
     void clientAdded(KWin::Client *client);
     void clientRemoved(KWin::Client *client);
     void clientManaging(KWin::Client *client);

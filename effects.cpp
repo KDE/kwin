@@ -221,7 +221,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(ws, &Workspace::showingDesktopChanged,
             this, &EffectsHandlerImpl::showingDesktopChanged);
     connect(ws, &Workspace::currentDesktopChanged, this,
-        [this](int old, Client *c) {
+        [this](int old, AbstractClient *c) {
             const int newDesktop = VirtualDesktopManager::self()->current();
             if (old != 0 && newDesktop != old) {
                 emit desktopChanged(old, newDesktop, c ? c->effectWindow() : 0);

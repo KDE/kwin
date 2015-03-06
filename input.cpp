@@ -534,7 +534,7 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         return;
     }
     if (workspace()) {
-        if (Client *c = workspace()->getMovingClient()) {
+        if (Client *c = dynamic_cast<Client*>(workspace()->getMovingClient())) {
             // TODO: this does not yet fully support moving of the Client
             // cursor events change the cursor and on Wayland pointer warping is not possible
             c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));

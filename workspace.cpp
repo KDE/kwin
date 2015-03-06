@@ -189,7 +189,7 @@ Workspace::Workspace(bool restore)
     } else {
         m_compositor = Compositor::create(this);
     }
-    connect(this, SIGNAL(currentDesktopChanged(int,KWin::Client*)), m_compositor, SLOT(addRepaintFull()));
+    connect(this, &Workspace::currentDesktopChanged, m_compositor, &Compositor::addRepaintFull);
 
     auto decorationBridge = Decoration::DecorationBridge::create(this);
     decorationBridge->init();

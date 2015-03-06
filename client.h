@@ -308,7 +308,7 @@ public:
     Group* group();
     void checkGroup(Group* gr = NULL, bool force = false);
     void changeClientLeaderGroup(Group* gr);
-    const WindowRules* rules() const;
+    const WindowRules* rules() const override;
     void removeRule(Rules* r);
     void setupWindowRules(bool ignore_temporary);
     void applyWindowRules();
@@ -355,7 +355,7 @@ public:
     void setActive(bool);
 
     virtual int desktop() const;
-    void setDesktop(int);
+    void setDesktop(int) override;
     void setOnAllDesktops(bool set) override;
 
     void sendToScreen(int screen) override;
