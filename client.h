@@ -639,7 +639,7 @@ public:
     void setSessionInteract(bool needed);
     virtual bool isClient() const;
     // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving
-    void packTo(int left, int top);
+    void packTo(int left, int top) override;
 
     template <typename T>
     void print(T &stream) const;

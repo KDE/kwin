@@ -132,6 +132,9 @@ public:
     };
     virtual Position titlebarPosition() const = 0;
 
+    // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving
+    virtual void packTo(int left, int top);
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

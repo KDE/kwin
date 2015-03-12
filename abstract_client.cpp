@@ -76,4 +76,10 @@ void AbstractClient::shrinkVertical()
 {
 }
 
+void AbstractClient::packTo(int left, int top)
+{
+    Q_UNUSED(left)
+    Q_UNUSED(top)
+}
+
 }
