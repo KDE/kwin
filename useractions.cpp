@@ -750,8 +750,7 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
     if (!ok) {
         return;
     }
-    Client *c = dynamic_cast<Client*>(m_client.data());
-    if (c)
+    if (m_client.isNull())
         return;
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
@@ -763,7 +762,7 @@ void UserActionsMenu::slotSendToDesktop(QAction *action)
         vds->setCount(desk);
     }
 
-    ws->sendClientToDesktop(c, desk, false);
+    ws->sendClientToDesktop(m_client.data(), desk, false);
 }
 
 void UserActionsMenu::slotSendToScreen(QAction *action)
