@@ -534,7 +534,7 @@ void Workspace::setShouldGetFocus(Client* c)
 // focus_in -> the window got FocusIn event
 // ignore_desktop - call comes from _NET_ACTIVE_WINDOW message, don't refuse just because of window
 //     is on a different desktop
-bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
+bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timestamp_t time, bool focus_in, bool ignore_desktop)
 {
     // options->focusStealingPreventionLevel :
     // 0 - none    - old KWin behaviour, new windows always get focus
@@ -550,10 +550,12 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
     if (session_saving && level <= 2) { // <= normal
         return true;
     }
-    Client* ac = mostRecentlyActivatedClient();
+    AbstractClient* ac = mostRecentlyActivatedClient();
     if (focus_in) {
-        if (should_get_focus.contains(const_cast< Client* >(c)))
-            return true; // FocusIn was result of KWin's action
+        if (const Client *cc = dynamic_cast<const Client*>(c)) {
+            if (should_get_focus.contains(const_cast< Client* >(cc)))
+                return true; // FocusIn was result of KWin's action
+        }
         // Before getting FocusIn, the active Client already
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
@@ -573,7 +575,7 @@ bool Workspace::allowClientActivation(const KWin::Client *c, xcb_timestamp_t tim
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
-    if (Client::belongToSameApplication(c, ac, true)) {
+    if (AbstractClient::belongToSameApplication(c, ac, true)) {
         qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
         return true;
     }
