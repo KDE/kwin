@@ -514,7 +514,7 @@ private:
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
     Client* active_client;
-    Client* last_active_client;
+    AbstractClient* last_active_client;
     AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     AbstractClient* movingClient;
 
