@@ -29,7 +29,6 @@ namespace KWin
 {
 // forward declarations
 class AbstractClient;
-class Client;
 
 /**
  * @brief Singleton class to handle the various focus chains.
@@ -99,7 +98,7 @@ public:
      * @param desktop The virtual desktop to look for a Client for activation
      * @return :Client* The Client which could be activated or @c null if there is none.
      **/
-    Client *getForActivation(uint desktop) const;
+    AbstractClient *getForActivation(uint desktop) const;
     /**
      * @brief Finds the best Client to become the new active Client in the focus chain for the given
      * virtual @p desktop on the given @p screen.
@@ -112,7 +111,7 @@ public:
      * @param screen The screen to constrain the search on with separate screen focus
      * @return :Client* The Client which could be activated or @c null if there is none.
      **/
-    Client *getForActivation(uint desktop, int screen) const;
+    AbstractClient *getForActivation(uint desktop, int screen) const;
 
     /**
      * @brief Checks whether the most recently used focus chain contains the given @p client.
@@ -157,7 +156,7 @@ public:
      * @param desktop The virtual desktop whose focus chain should be used
      * @return :Client* The next usable Client or @c null if none can be found.
      **/
-    Client *nextForDesktop(AbstractClient *reference, uint desktop) const;
+    AbstractClient *nextForDesktop(AbstractClient *reference, uint desktop) const;
     /**
      * @brief Returns the first Client in the most recently used focus chain. First Client in this
      * case means really the first Client in the chain and not the most recently used Client.

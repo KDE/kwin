@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "focuschain.h"
 #include "abstract_client.h"
-#include "client.h"
 #include "screens.h"
 
 namespace KWin
@@ -60,12 +59,12 @@ void FocusChain::resize(uint previousSize, uint newSize)
     }
 }
 
-Client *FocusChain::getForActivation(uint desktop) const
+AbstractClient *FocusChain::getForActivation(uint desktop) const
 {
     return getForActivation(desktop, screens()->current());
 }
 
-Client *FocusChain::getForActivation(uint desktop, int screen) const
+AbstractClient *FocusChain::getForActivation(uint desktop, int screen) const
 {
     DesktopChains::const_iterator it = m_desktopFocusChains.find(desktop);
     if (it == m_desktopFocusChains.constEnd()) {
@@ -77,7 +76,7 @@ Client *FocusChain::getForActivation(uint desktop, int screen) const
         // TODO: move the check into Client
         if (tmp->isShown(false) && tmp->isOnCurrentActivity()
             && ( !m_separateScreenFocus || tmp->screen() == screen)) {
-            return dynamic_cast<Client*>(tmp);
+            return tmp;
         }
     }
     return NULL;
@@ -220,7 +219,7 @@ bool FocusChain::isUsableFocusCandidate(AbstractClient *c, AbstractClient *prev)
            (!m_separateScreenFocus || c->isOnScreen(prev ? prev->screen() : screens()->current()));
 }
 
-Client *FocusChain::nextForDesktop(AbstractClient *reference, uint desktop) const
+AbstractClient *FocusChain::nextForDesktop(AbstractClient *reference, uint desktop) const
 {
     DesktopChains::const_iterator it = m_desktopFocusChains.find(desktop);
     if (it == m_desktopFocusChains.end()) {
@@ -230,7 +229,7 @@ Client *FocusChain::nextForDesktop(AbstractClient *reference, uint desktop) cons
     for (int i = chain.size() - 1; i >= 0; --i) {
         auto client = chain.at(i);
         if (isUsableFocusCandidate(client, reference)) {
-            return dynamic_cast<Client*>(client);
+            return client;
         }
     }
     return NULL;

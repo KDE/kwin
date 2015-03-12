@@ -455,7 +455,7 @@ bool Workspace::activateNextClient(Client* c)
     if (!options->focusPolicyIsReasonable())
         return false;
 
-    Client* get_focus = NULL;
+    AbstractClient* get_focus = NULL;
 
     // precedence on keeping the current tabgroup active. to the user that's the same window
     if (c && c->tabGroup() && c->isShown(false)) {
@@ -506,7 +506,7 @@ void Workspace::setCurrentScreen(int new_screen)
         return;
     closeActivePopup();
     const int desktop = VirtualDesktopManager::self()->current();
-    Client *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
+    AbstractClient *get_focus = FocusChain::self()->getForActivation(desktop, new_screen);
     if (get_focus == NULL)
         get_focus = findDesktop(true, desktop);
     if (get_focus != NULL && get_focus != mostRecentlyActivatedClient())
