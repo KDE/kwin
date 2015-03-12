@@ -377,18 +377,6 @@ public:
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const override;
 
-    enum QuickTileFlag {
-        QuickTileNone = 0,
-        QuickTileLeft = 1,
-        QuickTileRight = 1<<1,
-        QuickTileTop = 1<<2,
-        QuickTileBottom = 1<<3,
-        QuickTileHorizontal = QuickTileLeft|QuickTileRight,
-        QuickTileVertical = QuickTileTop|QuickTileBottom,
-        QuickTileMaximize = QuickTileLeft|QuickTileRight|QuickTileTop|QuickTileBottom
-    };
-
-    Q_DECLARE_FLAGS(QuickTileMode, QuickTileFlag)
     QuickTileMode quickTileMode() const;
     bool isMinimizable() const override;
     void setMaximize(bool vertically, bool horizontally);
@@ -476,7 +464,7 @@ public:
      * This will also handle preserving and restoring of window geometry as necessary.
      * @param mode The tile mode (left/right) to give this window.
      */
-    void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
+    void setQuickTileMode(QuickTileMode mode, bool keyboard = false) override;
 
     void growHorizontal() override;
     void shrinkHorizontal() override;
@@ -1280,6 +1268,5 @@ inline void Client::print(T &stream) const
 } // namespace
 Q_DECLARE_METATYPE(KWin::Client*)
 Q_DECLARE_METATYPE(QList<KWin::Client*>)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Client::QuickTileMode)
 
 #endif
