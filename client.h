@@ -510,7 +510,7 @@ public:
 
     void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) override;
     void updateUserTime(xcb_timestamp_t time = XCB_TIME_CURRENT_TIME);
-    xcb_timestamp_t userTime() const;
+    xcb_timestamp_t userTime() const override;
     bool hasUserTimeSupport() const;
 
     /// Does 'delete c;'

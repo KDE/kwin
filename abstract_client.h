@@ -109,6 +109,7 @@ public:
     virtual void takeFocus() = 0;
     virtual bool wantsInput() const = 0;
     virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
+    virtual xcb_timestamp_t userTime() const;
 
     virtual void growHorizontal();
     virtual void shrinkHorizontal();

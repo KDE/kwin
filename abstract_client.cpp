@@ -82,4 +82,9 @@ void AbstractClient::packTo(int left, int top)
     Q_UNUSED(top)
 }
 
+xcb_timestamp_t AbstractClient::userTime() const
+{
+    return XCB_TIME_CURRENT_TIME;
+}
+
 }
