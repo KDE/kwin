@@ -1671,6 +1671,11 @@ AbstractClient *Workspace::activeClient() const
     return active_client;
 }
 
+AbstractClient *Workspace::mostRecentlyActivatedClient() const
+{
+    return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
+}
+
 } // namespace
 
 #include "workspace.moc"

@@ -144,7 +144,7 @@ public:
      * we didn't process yet the matching FocusIn event. Used mostly in focus
      * stealing prevention code.
      */
-    Client* mostRecentlyActivatedClient() const;
+    AbstractClient* mostRecentlyActivatedClient() const;
 
     Client* clientUnderMouse(int screen) const;
 
@@ -632,11 +632,6 @@ private:
 inline bool Workspace::initializing() const
 {
     return workspaceInit;
-}
-
-inline Client* Workspace::mostRecentlyActivatedClient() const
-{
-    return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
 }
 
 inline void Workspace::addGroup(Group* group)

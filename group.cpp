@@ -1052,7 +1052,7 @@ void Client::checkActiveModal()
     // if the active window got new modal transient, activate it.
     // cannot be done in AddTransient(), because there may temporarily
     // exist loops, breaking findModal
-    Client* check_modal = workspace()->mostRecentlyActivatedClient();
+    Client* check_modal = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient());
     if (check_modal != NULL && check_modal->check_active_modal) {
         Client* new_modal = dynamic_cast<Client*>(check_modal->findModal());
         if (new_modal != NULL && new_modal != check_modal) {

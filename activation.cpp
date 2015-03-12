@@ -722,7 +722,7 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
         // Otherwise, refuse activation of a window
         // from already running application if this application
         // is not the active one (unless focus stealing prevention is turned off).
-        Client* act = workspace()->mostRecentlyActivatedClient();
+        Client* act = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient());
         if (act != NULL && !belongToSameApplication(act, this, true)) {
             bool first_window = true;
             auto sameApplicationActiveHackPredicate = [this](const Client *cl) {

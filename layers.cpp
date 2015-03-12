@@ -880,7 +880,7 @@ bool Client::isActiveFullScreen() const
     if (!isFullScreen())
         return false;
 
-    const Client* ac = workspace()->mostRecentlyActivatedClient(); // instead of activeClient() - avoids flicker
+    const Client* ac = dynamic_cast<Client*>(workspace()->mostRecentlyActivatedClient()); // instead of activeClient() - avoids flicker
     // according to NETWM spec implementation notes suggests
     // "focused windows having state _NET_WM_STATE_FULLSCREEN" to be on the highest layer.
     // we'll also take the screen into account

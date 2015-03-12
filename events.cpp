@@ -491,7 +491,7 @@ bool Workspace::workspaceEvent(xcb_generic_event_t *e)
             updateXTime(); // focusToNull() uses xTime(), which is old now (FocusIn has no timestamp)
             if (!currentInput.isNull() && (currentInput->focus == XCB_WINDOW_NONE || currentInput->focus == XCB_INPUT_FOCUS_POINTER_ROOT)) {
                 //kWarning( 1212 ) << "X focus set to None/PointerRoot, reseting focus" ;
-                Client *c = mostRecentlyActivatedClient();
+                AbstractClient *c = mostRecentlyActivatedClient();
                 if (c != NULL)
                     requestFocus(c, true);
                 else if (activateNextClient(NULL))
