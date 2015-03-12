@@ -1249,7 +1249,7 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
     setMode(mode);
     reset();
     nextPrev(forward);
-    if (Client* c = dynamic_cast<Client*>(currentClient())) {
+    if (AbstractClient* c = currentClient()) {
         Workspace::self()->activateClient(c);
         shadeActivate(c);
     }
@@ -1439,7 +1439,7 @@ void TabBox::close(bool abort)
 
 void TabBox::accept()
 {
-    Client* c = dynamic_cast<Client*>(currentClient());
+    AbstractClient *c = currentClient();
     close();
     if (c) {
         Workspace::self()->activateClient(c);
