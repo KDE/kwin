@@ -43,6 +43,11 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
     /**
+     * Whether this Client is active or not. Use Workspace::activateClient() to activate a Client.
+     * @see Workspace::activateClient
+     **/
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    /**
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
@@ -70,6 +75,21 @@ public:
         return m_icon;
     }
 
+    bool isActive() const {
+        return m_active;
+    }
+    /**
+     * Sets the client's active state to \a act.
+     *
+     * This function does only change the visual appearance of the client,
+     * it does not change the focus setting. Use
+     * Workspace::activateClient() or Workspace::requestFocus() instead.
+     *
+     * If a client receives or looses the focus, it calls setActive() on
+     * its own.
+     **/
+    void setActive(bool);
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
@@ -89,8 +109,6 @@ public:
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
     virtual bool isSpecialWindow() const = 0;
-    virtual bool isActive() const = 0;
-    virtual void setActive(bool) =0;
     virtual void sendToScreen(int screen) = 0;
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;
@@ -185,6 +203,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void skipSwitcherChanged();
     void iconChanged();
+    void activeChanged();
 
 protected:
     AbstractClient();
@@ -192,6 +211,13 @@ protected:
         m_firstInTabBox = enable;
     }
     void setIcon(const QIcon &icon);
+    /**
+     * Called from ::setActive once the active value got updated, but before the changed signal
+     * is emitted.
+     *
+     * Default implementation does nothing.
+     **/
+    virtual void doSetActive();
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
@@ -200,6 +226,7 @@ private:
     bool m_firstInTabBox = false;
     bool m_skipSwitcher = false;
     QIcon m_icon;
+    bool m_active = false;
 };
 
 }

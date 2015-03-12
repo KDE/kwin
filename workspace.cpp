@@ -458,7 +458,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     StackingUpdatesBlocker blocker(this);
     Client* c = new Client();
     connect(c, SIGNAL(needsRepaint()), m_compositor, SLOT(scheduleRepaint()));
-    connect(c, SIGNAL(activeChanged()), m_compositor, SLOT(checkUnredirect()));
+    connect(c, &Client::activeChanged, m_compositor, static_cast<void (Compositor::*)()>(&Compositor::checkUnredirect));
     connect(c, SIGNAL(fullScreenChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryChanged()), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));

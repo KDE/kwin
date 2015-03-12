@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
+#include "workspace.h"
 
 namespace KWin
 {
@@ -107,6 +108,33 @@ void AbstractClient::setIcon(const QIcon &icon)
 {
     m_icon = icon;
     emit iconChanged();
+}
+
+void AbstractClient::setActive(bool act)
+{
+    if (m_active == act) {
+        return;
+    }
+    m_active = act;
+    const int ruledOpacity = m_active
+                             ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
+                             : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
+    setOpacity(ruledOpacity / 100.0);
+    workspace()->setActiveClient(act ? this : NULL);
+
+    if (!m_active)
+        cancelAutoRaise();
+
+    if (!m_active && shadeMode() == ShadeActivated)
+        setShade(ShadeNormal);
+
+    doSetActive();
+    emit activeChanged();
+    updateMouseGrab();
+}
+
+void AbstractClient::doSetActive()
+{
 }
 
 }

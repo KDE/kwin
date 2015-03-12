@@ -778,34 +778,8 @@ xcb_timestamp_t Client::userTime() const
     return time;
 }
 
-/*!
-  Sets the client's active state to \a act.
-
-  This function does only change the visual appearance of the client,
-  it does not change the focus setting. Use
-  Workspace::activateClient() or Workspace::requestFocus() instead.
-
-  If a client receives or looses the focus, it calls setActive() on
-  its own.
-
- */
-void Client::setActive(bool act)
+void Client::doSetActive()
 {
-    if (active == act)
-        return;
-    active = act;
-    const int ruledOpacity = active
-                             ? rules()->checkOpacityActive(qRound(opacity() * 100.0))
-                             : rules()->checkOpacityInactive(qRound(opacity() * 100.0));
-    setOpacity(ruledOpacity / 100.0);
-    workspace()->setActiveClient(act ? this : NULL);
-
-    if (!active)
-        cancelAutoRaise();
-
-    if (!active && shade_mode == ShadeActivated)
-        setShade(ShadeNormal);
-
     StackingUpdatesBlocker blocker(workspace());
     workspace()->updateClientLayer(this);   // active windows may get different layer
     ClientList mainclients = mainClients();
@@ -814,8 +788,7 @@ void Client::setActive(bool act)
             ++it)
         if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
             workspace()->updateClientLayer(*it);
-    emit activeChanged();
-    updateMouseGrab();
+
     updateUrgency(); // demand attention again if it's still urgent
 }
 

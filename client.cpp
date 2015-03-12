@@ -157,7 +157,6 @@ Client::Client()
     info = NULL;
 
     shade_mode = ShadeNone;
-    active = false;
     deleting = false;
     keep_above = false;
     keep_below = false;
