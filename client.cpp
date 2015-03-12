@@ -1837,11 +1837,11 @@ void Client::getMotifHints()
 void Client::getIcons()
 {
     // First read icons from the window itself
-    m_icon = QIcon();
-    auto readIcon = [this](int size, bool scale = true) {
+    QIcon icon;
+    auto readIcon = [this, &icon](int size, bool scale = true) {
         const QPixmap pix = KWindowSystem::icon(window(), size, size, scale, KWindowSystem::NETWM | KWindowSystem::WMHints, info);
         if (!pix.isNull()) {
-            m_icon.addPixmap(pix);
+            icon.addPixmap(pix);
         }
     };
     readIcon(16);
@@ -1849,30 +1849,30 @@ void Client::getIcons()
     readIcon(48, false);
     readIcon(64, false);
     readIcon(128, false);
-    if (m_icon.isNull()) {
+    if (icon.isNull()) {
         // Then try window group
-        m_icon = group()->icon();
+        icon = group()->icon();
     }
-    if (m_icon.isNull() && isTransient()) {
+    if (icon.isNull() && isTransient()) {
         // Then mainclients
         ClientList mainclients = mainClients();
         for (ClientList::ConstIterator it = mainclients.constBegin();
-                it != mainclients.constEnd() && m_icon.isNull();
+                it != mainclients.constEnd() && icon.isNull();
                 ++it) {
             if (!(*it)->icon().isNull()) {
-                m_icon = (*it)->icon();
+                icon = (*it)->icon();
                 break;
             }
         }
     }
-    if (m_icon.isNull()) {
+    if (icon.isNull()) {
         // And if nothing else, load icon from classhint or xapp icon
-        m_icon.addPixmap(KWindowSystem::icon(window(),  32,  32,  true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        m_icon.addPixmap(KWindowSystem::icon(window(),  16,  16,  true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        m_icon.addPixmap(KWindowSystem::icon(window(),  64,  64, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
-        m_icon.addPixmap(KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
+        icon.addPixmap(KWindowSystem::icon(window(),  32,  32,  true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
+        icon.addPixmap(KWindowSystem::icon(window(),  16,  16,  true, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
+        icon.addPixmap(KWindowSystem::icon(window(),  64,  64, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
+        icon.addPixmap(KWindowSystem::icon(window(), 128, 128, false, KWindowSystem::ClassHint | KWindowSystem::XApp, info));
     }
-    emit iconChanged();
+    setIcon(icon);
 }
 
 void Client::getSyncCounter()

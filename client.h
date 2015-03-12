@@ -216,7 +216,6 @@ class Client
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool wantsInput READ wantsInput)
-    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     /**
      * Indicates that the window should not be included on a taskbar.
      **/
@@ -334,8 +333,6 @@ public:
     };
     QSize adjustedSize(const QSize&, Sizemode mode = SizemodeAny) const;
     QSize adjustedSize() const;
-
-    const QIcon &icon() const override;
 
     bool isActive() const override;
     void setActive(bool) override;
@@ -697,7 +694,6 @@ Q_SIGNALS:
     void keepBelowChanged(bool);
     void minimizedChanged();
     void moveResizedChanged();
-    void iconChanged();
     void skipTaskbarChanged();
     void skipPagerChanged();
     void paletteChanged(const QPalette &p);
@@ -900,7 +896,6 @@ private:
     uint demands_attention : 1;
     bool blocks_compositing;
     WindowRules client_rules;
-    QIcon m_icon;
     Qt::CursorShape m_cursor;
     // DON'T reorder - Saved to config files !!!
     enum FullScreenMode {
@@ -1081,11 +1076,6 @@ inline bool Client::isShade() const
 inline ShadeMode Client::shadeMode() const
 {
     return shade_mode;
-}
-
-inline const QIcon &Client::icon() const
-{
-    return m_icon;
 }
 
 inline QRect Client::geometryRestore() const

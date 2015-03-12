@@ -103,4 +103,10 @@ void AbstractClient::setSkipSwitcher(bool set)
     emit skipSwitcherChanged();
 }
 
+void AbstractClient::setIcon(const QIcon &icon)
+{
+    m_icon = icon;
+    emit iconChanged();
+}
+
 }

@@ -51,6 +51,7 @@ class AbstractClient : public Toplevel
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool closeable READ isCloseable)
+    Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
 public:
     virtual ~AbstractClient();
 
@@ -65,6 +66,10 @@ public:
     }
     void setSkipSwitcher(bool set);
 
+    const QIcon &icon() const {
+        return m_icon;
+    }
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
@@ -73,7 +78,6 @@ public:
     virtual bool isShown(bool shaded_is_shown) const = 0;
     virtual bool wantsTabFocus() const = 0;
     virtual bool isFullScreen() const = 0;
-    virtual const QIcon &icon() const = 0;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual void cancelAutoRaise() = 0;
@@ -180,12 +184,14 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void skipSwitcherChanged();
+    void iconChanged();
 
 protected:
     AbstractClient();
     void setFirstInTabBox(bool enable) {
         m_firstInTabBox = enable;
     }
+    void setIcon(const QIcon &icon);
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
@@ -193,6 +199,7 @@ private:
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipSwitcher = false;
+    QIcon m_icon;
 };
 
 }
