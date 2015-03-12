@@ -434,7 +434,7 @@ public:
     bool isDemandingAttention() const {
         return demands_attention;
     }
-    void demandAttention(bool set = true);
+    void demandAttention(bool set = true) override;
 
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void triggerDecorationRepaint();

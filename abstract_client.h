@@ -110,6 +110,7 @@ public:
     virtual bool wantsInput() const = 0;
     virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
     virtual xcb_timestamp_t userTime() const;
+    virtual void demandAttention(bool set = true) = 0;
 
     virtual void growHorizontal();
     virtual void shrinkHorizontal();
