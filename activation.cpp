@@ -601,13 +601,13 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
 // a window to be fully raised upon its own request (XRaiseWindow),
 // if refused, it will be raised only on top of windows belonging
 // to the same application
-bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t time)
+bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timestamp_t time)
 {
     int level = c->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (session_saving && level <= 2) { // <= normal
         return true;
     }
-    Client* ac = mostRecentlyActivatedClient();
+    AbstractClient* ac = mostRecentlyActivatedClient();
     if (level == 0)   // none
         return true;
     if (level == 4)   // extreme
@@ -617,7 +617,7 @@ bool Workspace::allowFullClientRaising(const KWin::Client *c, xcb_timestamp_t ti
         return true; // no active client -> always allow
     }
     // TODO window urgency  -> return true?
-    if (Client::belongToSameApplication(c, ac, true)) {
+    if (AbstractClient::belongToSameApplication(c, ac, true)) {
         qCDebug(KWIN_CORE) << "Raising: Belongs to active application";
         return true;
     }

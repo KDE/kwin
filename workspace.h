@@ -480,7 +480,7 @@ private:
     ToplevelList constrainedStackingOrder();
     void raiseClientWithinApplication(Client* c);
     void lowerClientWithinApplication(Client* c);
-    bool allowFullClientRaising(const Client* c, xcb_timestamp_t timestamp);
+    bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
     bool keepTransientAbove(const Client* mainwindow, const Client* transient);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
