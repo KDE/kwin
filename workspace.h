@@ -284,7 +284,7 @@ public:
     void sendPingToWindow(xcb_window_t w, xcb_timestamp_t timestamp);   // Called from Client::pingWindow()
 
     void removeClient(Client*);   // Only called from Client::destroyClient() or Client::releaseWindow()
-    void setActiveClient(Client*);
+    void setActiveClient(AbstractClient*);
     Group* findGroup(xcb_window_t leader) const;
     void addGroup(Group* group);
     void removeGroup(Group* group);
@@ -500,7 +500,7 @@ private:
     void resetClientAreas(uint desktopCount);
     void updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newDesktop);
     void activateClientOnNewDesktop(uint desktop);
-    Client *findClientToActivateOnDesktop(uint desktop);
+    AbstractClient *findClientToActivateOnDesktop(uint desktop);
 
     QWidget* active_popup;
     AbstractClient* active_popup_client;
@@ -513,7 +513,7 @@ private:
     static NET::WindowType txtToWindowType(const char* txt);
     static bool sessionInfoWindowTypeMatch(Client* c, SessionInfo* info);
 
-    Client* active_client;
+    AbstractClient* active_client;
     AbstractClient* last_active_client;
     AbstractClient* most_recently_raised; // Used ONLY by raiseOrLowerClient()
     AbstractClient* movingClient;

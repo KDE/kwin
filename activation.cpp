@@ -227,7 +227,7 @@ namespace KWin
   activeClient(). And of course, to propagate the active client to the
   world.
  */
-void Workspace::setActiveClient(Client* c)
+void Workspace::setActiveClient(AbstractClient* c)
 {
     if (active_client == c)
         return;

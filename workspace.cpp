@@ -644,7 +644,7 @@ void Workspace::updateToolWindows(bool also_hide)
         return;
     }
     const Group* group = NULL;
-    const Client* client = active_client;
+    const Client* client = dynamic_cast<Client*>(active_client);
     // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
     // will be shown; if a group transient is group, all tools in the group will be shown
     while (client != NULL) {
@@ -903,7 +903,7 @@ void Workspace::updateClientVisibilityOnDesktopChange(uint oldDesktop, uint newD
 
 void Workspace::activateClientOnNewDesktop(uint desktop)
 {
-    Client* c = NULL;
+    AbstractClient* c = NULL;
     if (options->focusPolicyIsReasonable()) {
         c = findClientToActivateOnDesktop(desktop);
     }
@@ -927,7 +927,7 @@ void Workspace::activateClientOnNewDesktop(uint desktop)
         focusToNull();
 }
 
-Client *Workspace::findClientToActivateOnDesktop(uint desktop)
+AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
 {
     if (movingClient != NULL && active_client == movingClient &&
         FocusChain::self()->contains(active_client, desktop) &&
@@ -1019,7 +1019,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
 
     // Restore the focus on this desktop
     --block_focus;
-    Client* c = 0;
+    AbstractClient* c = 0;
 
     //FIXME below here is a lot of focuschain stuff, probably all wrong now
     if (options->focusPolicyIsReasonable()) {

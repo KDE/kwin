@@ -1689,7 +1689,7 @@ void Workspace::switchWindow(Direction direction)
 {
     if (!active_client)
         return;
-    Client *c = active_client;
+    AbstractClient *c = active_client;
     Client *switchTo = 0;
     int bestScore = 0;
     int d = c->desktop();
