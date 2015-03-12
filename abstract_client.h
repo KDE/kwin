@@ -37,6 +37,11 @@ class TabBoxClientImpl;
 class AbstractClient : public Toplevel
 {
     Q_OBJECT
+    /**
+     * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
+     * For change connect to the visibleChanged signal on the Client's Group.
+     **/
+    Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
 public:
     virtual ~AbstractClient();
 
@@ -80,6 +85,7 @@ public:
     virtual void setKeepBelow(bool) = 0;
     virtual TabGroup *tabGroup() const;
     Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
+    virtual bool isCurrentTab() const;
     virtual MaximizeMode maximizeMode() const = 0;
     virtual void maximize(MaximizeMode) = 0;
     virtual bool noBorder() const = 0;

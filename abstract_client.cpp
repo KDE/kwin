@@ -55,6 +55,11 @@ bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
     return false;
 }
 
+bool AbstractClient::isCurrentTab() const
+{
+    return true;
+}
+
 void AbstractClient::growHorizontal()
 {
 }
