@@ -533,7 +533,7 @@ private:
     bool force_restacking;
     mutable ToplevelList x_stacking; // From XQueryTree()
     mutable bool x_stacking_dirty;
-    ClientList should_get_focus; // Last is most recent
+    QList<AbstractClient*> should_get_focus; // Last is most recent
     ClientList attention_chain;
 
     bool showing_desktop;
