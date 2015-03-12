@@ -607,12 +607,6 @@ public:
 
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
-    bool isFirstInTabBox() const override {
-        return m_firstInTabBox;
-    }
-    void setFirstInTabBox(bool enable) {
-        m_firstInTabBox = enable;
-    }
     Xcb::Property fetchFirstInTabBox() const;
     void readFirstInTabBox(Xcb::Property &property);
     void updateFirstInTabBox();
@@ -969,7 +963,6 @@ private:
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
-    bool m_firstInTabBox;
 
     bool electricMaximizing;
     QuickTileMode electricMode;

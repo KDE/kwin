@@ -48,12 +48,14 @@ public:
     QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
         return m_tabBoxClient.toWeakRef();
     }
+    bool isFirstInTabBox() const {
+        return m_firstInTabBox;
+    }
 
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
     virtual bool isCloseable() const = 0;
-    virtual bool isFirstInTabBox() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
     virtual bool wantsTabFocus() const = 0;
@@ -165,11 +167,15 @@ public Q_SLOTS:
 
 protected:
     AbstractClient();
+    void setFirstInTabBox(bool enable) {
+        m_firstInTabBox = enable;
+    }
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
 private:
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
+    bool m_firstInTabBox = false;
 };
 
 }
