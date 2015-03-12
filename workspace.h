@@ -634,6 +634,16 @@ inline bool Workspace::initializing() const
     return workspaceInit;
 }
 
+inline AbstractClient *Workspace::activeClient() const
+{
+    return active_client;
+}
+
+inline AbstractClient *Workspace::mostRecentlyActivatedClient() const
+{
+    return should_get_focus.count() > 0 ? should_get_focus.last() : active_client;
+}
+
 inline void Workspace::addGroup(Group* group)
 {
     emit groupAdded(group);
