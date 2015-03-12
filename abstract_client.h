@@ -46,6 +46,11 @@ class AbstractClient : public Toplevel
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
+    /**
+     * Whether the window can be closed by the user. The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(bool closeable READ isCloseable)
 public:
     virtual ~AbstractClient();
 

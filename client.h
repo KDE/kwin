@@ -87,11 +87,6 @@ class Client
      **/
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
     /**
-     * Whether the window can be closed by the user. The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     **/
-    Q_PROPERTY(bool closeable READ isCloseable)
-    /**
      * The desktop this Client is on. If the Client is on all desktops the property has value -1.
      **/
     Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
