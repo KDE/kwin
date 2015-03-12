@@ -111,7 +111,6 @@ Client::Client()
     , m_transientForId(XCB_WINDOW_NONE)
     , m_originalTransientForId(XCB_WINDOW_NONE)
     , shade_below(NULL)
-    , skip_switcher(false)
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
     , m_cursor(Qt::ArrowCursor)
@@ -1297,16 +1296,6 @@ void Client::setSkipPager(bool b)
     info->setState(b ? NET::SkipPager : NET::States(0), NET::SkipPager);
     updateWindowRules(Rules::SkipPager);
     emit skipPagerChanged();
-}
-
-void Client::setSkipSwitcher(bool set)
-{
-    set = rules()->checkSkipSwitcher(set);
-    if (set == skipSwitcher())
-        return;
-    skip_switcher = set;
-    updateWindowRules(Rules::SkipSwitcher);
-    emit skipSwitcherChanged();
 }
 
 void Client::setModal(bool m)

@@ -93,4 +93,14 @@ xcb_timestamp_t AbstractClient::userTime() const
     return XCB_TIME_CURRENT_TIME;
 }
 
+void AbstractClient::setSkipSwitcher(bool set)
+{
+    set = rules()->checkSkipSwitcher(set);
+    if (set == skipSwitcher())
+        return;
+    m_skipSwitcher = set;
+    updateWindowRules(Rules::SkipSwitcher);
+    emit skipSwitcherChanged();
+}
+
 }

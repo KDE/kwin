@@ -223,10 +223,6 @@ class Client
     Q_PROPERTY(bool wantsInput READ wantsInput)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
     /**
-     * Whether the Client should be excluded from window switching effects.
-     **/
-    Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
-    /**
      * Indicates that the window should not be included on a taskbar.
      **/
     Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
@@ -307,7 +303,7 @@ public:
     void removeRule(Rules* r);
     void setupWindowRules(bool ignore_temporary);
     void applyWindowRules();
-    void updateWindowRules(Rules::Types selection);
+    void updateWindowRules(Rules::Types selection) override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);
 
     /**
@@ -404,9 +400,6 @@ public:
 
     bool skipPager() const;
     void setSkipPager(bool);
-
-    bool skipSwitcher() const override;
-    void setSkipSwitcher(bool set);
 
     bool keepAbove() const override;
     void setKeepAbove(bool) override;
@@ -710,7 +703,6 @@ Q_SIGNALS:
     void minimizedChanged();
     void moveResizedChanged();
     void iconChanged();
-    void skipSwitcherChanged();
     void skipTaskbarChanged();
     void skipPagerChanged();
     void paletteChanged(const QPalette &p);
@@ -902,7 +894,6 @@ private:
     uint skip_taskbar : 1;
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
     uint skip_pager : 1;
-    uint skip_switcher : 1;
     Xcb::MotifHints m_motif;
     uint keep_below : 1; ///< NET::KeepBelow
     uint minimized : 1;
@@ -1125,11 +1116,6 @@ inline bool Client::skipTaskbar(bool from_outside) const
 inline bool Client::skipPager() const
 {
     return skip_pager;
-}
-
-inline bool Client::skipSwitcher() const
-{
-    return skip_switcher;
 }
 
 inline bool Client::keepAbove() const

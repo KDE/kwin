@@ -22,12 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "toplevel.h"
 #include "options.h"
+#include "rules.h"
 
 namespace KWin
 {
 
 class TabGroup;
-class WindowRules;
 
 namespace TabBox
 {
@@ -42,6 +42,10 @@ class AbstractClient : public Toplevel
      * For change connect to the visibleChanged signal on the Client's Group.
      **/
     Q_PROPERTY(bool isCurrentTab READ isCurrentTab)
+    /**
+     * Whether the Client should be excluded from window switching effects.
+     **/
+    Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
 public:
     virtual ~AbstractClient();
 
@@ -51,6 +55,10 @@ public:
     bool isFirstInTabBox() const {
         return m_firstInTabBox;
     }
+    bool skipSwitcher() const {
+        return m_skipSwitcher;
+    }
+    void setSkipSwitcher(bool set);
 
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
@@ -61,7 +69,6 @@ public:
     virtual bool wantsTabFocus() const = 0;
     virtual bool isFullScreen() const = 0;
     virtual const QIcon &icon() const = 0;
-    virtual bool skipSwitcher() const = 0;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual void cancelAutoRaise() = 0;
@@ -116,6 +123,7 @@ public:
     virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
     virtual xcb_timestamp_t userTime() const;
     virtual void demandAttention(bool set = true) = 0;
+    virtual void updateWindowRules(Rules::Types selection) = 0;
 
     virtual void growHorizontal();
     virtual void shrinkHorizontal();
@@ -165,6 +173,9 @@ public:
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
+Q_SIGNALS:
+    void skipSwitcherChanged();
+
 protected:
     AbstractClient();
     void setFirstInTabBox(bool enable) {
@@ -176,6 +187,7 @@ protected:
 private:
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
+    bool m_skipSwitcher = false;
 };
 
 }
