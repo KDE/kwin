@@ -552,10 +552,8 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     }
     AbstractClient* ac = mostRecentlyActivatedClient();
     if (focus_in) {
-        if (const Client *cc = dynamic_cast<const Client*>(c)) {
-            if (should_get_focus.contains(const_cast< Client* >(cc)))
-                return true; // FocusIn was result of KWin's action
-        }
+        if (should_get_focus.contains(const_cast< AbstractClient* >(c)))
+            return true; // FocusIn was result of KWin's action
         // Before getting FocusIn, the active Client already
         // got FocusOut, and therefore got deactivated.
         ac = last_active_client;
