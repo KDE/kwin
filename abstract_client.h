@@ -104,6 +104,11 @@ public:
     virtual bool wantsInput() const = 0;
     virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
 
+    virtual void growHorizontal();
+    virtual void shrinkHorizontal();
+    virtual void growVertical();
+    virtual void shrinkVertical();
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

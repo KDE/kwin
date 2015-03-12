@@ -483,10 +483,10 @@ public:
      */
     void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
 
-    void growHorizontal();
-    void shrinkHorizontal();
-    void growVertical();
-    void shrinkVertical();
+    void growHorizontal() override;
+    void shrinkHorizontal() override;
+    void growVertical() override;
+    void shrinkVertical() override;
 
     bool providesContextHelp() const;
     const QKeySequence &shortcut() const override;

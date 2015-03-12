@@ -55,4 +55,20 @@ bool AbstractClient::untab(const QRect &toGeometry, bool clientRemoved)
     return false;
 }
 
+void AbstractClient::growHorizontal()
+{
+}
+
+void AbstractClient::growVertical()
+{
+}
+
+void AbstractClient::shrinkHorizontal()
+{
+}
+
+void AbstractClient::shrinkVertical()
+{
+}
+
 }
