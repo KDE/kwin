@@ -233,7 +233,7 @@ private:
     template <typename Slot>
     void key(const char *actionName, Slot slot, const QKeySequence &shortcut = QKeySequence());
 
-    void shadeActivate(Client *c);
+    void shadeActivate(AbstractClient *c);
 
 private Q_SLOTS:
     void reconfigure();

@@ -1120,7 +1120,7 @@ void TabBox::slotWalkBackThroughDesktopList()
     }
 }
 
-void TabBox::shadeActivate(Client *c)
+void TabBox::shadeActivate(AbstractClient *c)
 {
     if ((c->shadeMode() == ShadeNormal || c->shadeMode() == ShadeHover) && options->isShadeHover())
         c->setShade(ShadeActivated);
