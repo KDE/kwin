@@ -1116,7 +1116,7 @@ void Workspace::performWindowOperation(AbstractClient* c, Options::WindowOperati
         break;
     case Options::RemoveTabFromGroupOp:
         if (c->untab(c->geometry().translated(cascadeOffset(c))) && options->focusPolicyIsReasonable())
-             takeActivity(dynamic_cast<Client*>(c), ActivityFocus | ActivityRaise);
+             takeActivity(c, ActivityFocus | ActivityRaise);
         break;
     case Options::ActivateNextTabOp:
         if (c->tabGroup())
