@@ -309,10 +309,10 @@ public:
     bool wasUserInteraction() const;
     bool sessionSaving() const;
 
-    int packPositionLeft(const Client* cl, int oldx, bool left_edge) const;
-    int packPositionRight(const Client* cl, int oldx, bool right_edge) const;
-    int packPositionUp(const Client* cl, int oldy, bool top_edge) const;
-    int packPositionDown(const Client* cl, int oldy, bool bottom_edge) const;
+    int packPositionLeft(const AbstractClient* cl, int oldx, bool left_edge) const;
+    int packPositionRight(const AbstractClient* cl, int oldx, bool right_edge) const;
+    int packPositionUp(const AbstractClient* cl, int oldy, bool top_edge) const;
+    int packPositionDown(const AbstractClient* cl, int oldy, bool bottom_edge) const;
 
     void cancelDelayFocus();
     void requestDelayFocus(Client*);

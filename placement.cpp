@@ -865,7 +865,7 @@ void Workspace::slotWindowQuickTileBottomRight()
     active_client->setQuickTileMode(Client::QuickTileBottom|Client::QuickTileRight, true);
 }
 
-int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) const
+int Workspace::packPositionLeft(const AbstractClient* cl, int oldx, bool left_edge) const
 {
     int newx = clientArea(MaximizeArea, cl).left();
     if (oldx <= newx)   // try another Xinerama screen
@@ -893,7 +893,7 @@ int Workspace::packPositionLeft(const Client* cl, int oldx, bool left_edge) cons
     return newx;
 }
 
-int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) const
+int Workspace::packPositionRight(const AbstractClient* cl, int oldx, bool right_edge) const
 {
     int newx = clientArea(MaximizeArea, cl).right();
     if (oldx >= newx)   // try another Xinerama screen
@@ -921,7 +921,7 @@ int Workspace::packPositionRight(const Client* cl, int oldx, bool right_edge) co
     return newx;
 }
 
-int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
+int Workspace::packPositionUp(const AbstractClient* cl, int oldy, bool top_edge) const
 {
     int newy = clientArea(MaximizeArea, cl).top();
     if (oldy <= newy)   // try another Xinerama screen
@@ -949,7 +949,7 @@ int Workspace::packPositionUp(const Client* cl, int oldy, bool top_edge) const
     return newy;
 }
 
-int Workspace::packPositionDown(const Client* cl, int oldy, bool bottom_edge) const
+int Workspace::packPositionDown(const AbstractClient* cl, int oldy, bool bottom_edge) const
 {
     int newy = clientArea(MaximizeArea, cl).bottom();
     if (oldy >= newy)   // try another Xinerama screen
