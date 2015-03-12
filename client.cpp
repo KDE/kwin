@@ -32,9 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "focuschain.h"
 #include "group.h"
 #include "shadow.h"
-#ifdef KWIN_BUILD_TABBOX
-#include "tabbox.h"
-#endif
 #include "workspace.h"
 #include "screenedge.h"
 #include "decorations/decorationbridge.h"
@@ -184,11 +181,6 @@ Client::Client()
 
     //Client to workspace connections require that each
     //client constructed be connected to the workspace wrapper
-
-#ifdef KWIN_BUILD_TABBOX
-    // TabBoxClient
-    m_tabBoxClient = QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this));
-#endif
 
     geom = QRect(0, 0, 100, 100);   // So that decorations don't start with size being (0,0)
     client_size = QSize(100, 100);

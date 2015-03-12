@@ -607,9 +607,6 @@ public:
 
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
-    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const override {
-        return m_tabBoxClient.toWeakRef();
-    }
     bool isFirstInTabBox() const override {
         return m_firstInTabBox;
     }
@@ -972,7 +969,6 @@ private:
     int sm_stacking_order;
     friend struct ResetupRulesProcedure;
     friend class GeometryUpdatesBlocker;
-    QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox;
 
     bool electricMaximizing;

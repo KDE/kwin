@@ -45,7 +45,10 @@ class AbstractClient : public Toplevel
 public:
     virtual ~AbstractClient();
 
-    virtual QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const = 0;
+    QWeakPointer<TabBox::TabBoxClientImpl> tabBoxClient() const {
+        return m_tabBoxClient.toWeakRef();
+    }
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
@@ -164,6 +167,9 @@ protected:
     AbstractClient();
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
+
+private:
+    QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
 };
 
 }

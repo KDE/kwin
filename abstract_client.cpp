@@ -18,12 +18,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
+#ifdef KWIN_BUILD_TABBOX
+#include "tabbox.h"
+#endif
 
 namespace KWin
 {
 
 AbstractClient::AbstractClient()
     : Toplevel()
+#ifdef KWIN_BUILD_TABBOX
+    , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this)))
+#endif
 {
 }
 
