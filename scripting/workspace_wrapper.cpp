@@ -194,7 +194,7 @@ SLOTWRAPPER(slotSwitchDesktopDown,DesktopBelow)
 
 void WorkspaceWrapper::setActiveClient(KWin::AbstractClient* client)
 {
-    KWin::Workspace::self()->activateClient(dynamic_cast<Client*>(client));
+    KWin::Workspace::self()->activateClient(client);
 }
 
 QSize WorkspaceWrapper::workspaceSize() const
