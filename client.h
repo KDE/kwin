@@ -517,8 +517,6 @@ public:
     bool isClientSideDecorated() const;
     bool wantsShadowToBeRendered() const override;
 
-    Position titlebarPosition() const override;
-
     void layoutDecorationRects(QRect &left, QRect &top, QRect &right, QRect &bottom) const;
 
     Xcb::Property fetchFirstInTabBox() const;

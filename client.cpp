@@ -2142,12 +2142,6 @@ QRect Client::decorationRect() const
     return QRect(0, 0, width(), height());
 }
 
-Client::Position Client::titlebarPosition() const
-{
-    // TODO: still needed, remove?
-    return PositionTop;
-}
-
 Xcb::Property Client::fetchFirstInTabBox() const
 {
     return Xcb::Property(false, m_client, atoms->kde_first_in_window_list,

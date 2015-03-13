@@ -242,7 +242,7 @@ public:
         PositionBottomLeft     = PositionLeft | PositionBottom,
         PositionBottomRight    = PositionRight | PositionBottom
     };
-    virtual Position titlebarPosition() const = 0;
+    Position titlebarPosition() const;
 
     // a helper for the workspace window packing. tests for screen validity and updates since in maximization case as with normal moving
     virtual void packTo(int left, int top);

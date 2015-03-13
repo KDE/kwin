@@ -300,4 +300,10 @@ ShadeMode AbstractClient::shadeMode() const
     return ShadeNone;
 }
 
+AbstractClient::Position AbstractClient::titlebarPosition() const
+{
+    // TODO: still needed, remove?
+    return PositionTop;
+}
+
 }
