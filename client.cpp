@@ -461,9 +461,9 @@ void Client::destroyDecoration()
 {
     QRect oldgeom = geometry();
     if (m_decoration) {
+        QPoint grav = calculateGravitation(true);
         delete m_decoration;
         m_decoration = nullptr;
-        QPoint grav = calculateGravitation(true);
         plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
         move(grav);
         if (compositing())
