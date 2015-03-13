@@ -809,10 +809,6 @@ bool Client::isShadeable() const
     return !isSpecialWindow() && !noBorder() && (rules()->checkShade(ShadeNormal) != rules()->checkShade(ShadeNone));
 }
 
-void Client::setShade(bool set) {
-    set ? setShade(ShadeNormal) : setShade(ShadeNone);
-}
-
 void Client::setShade(ShadeMode mode)
 {
     if (mode == ShadeHover && isMove())

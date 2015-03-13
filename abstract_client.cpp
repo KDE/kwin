@@ -280,4 +280,24 @@ void AbstractClient::setOnAllDesktops(bool b)
         setDesktop(VirtualDesktopManager::self()->current());
 }
 
+bool AbstractClient::isShadeable() const
+{
+    return false;
+}
+
+void AbstractClient::setShade(bool set)
+{
+    set ? setShade(ShadeNormal) : setShade(ShadeNone);
+}
+
+void AbstractClient::setShade(ShadeMode mode)
+{
+    Q_UNUSED(mode)
+}
+
+ShadeMode AbstractClient::shadeMode() const
+{
+    return ShadeNone;
+}
+
 }

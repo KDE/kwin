@@ -74,6 +74,15 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
     /**
+     * Whether the Client can be shaded. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
+    Q_PROPERTY(bool shadeable READ isShadeable)
+    /**
+     * Whether the Client is shaded.
+     **/
+    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
+    /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
@@ -182,11 +191,25 @@ public:
     virtual bool isResizable() const = 0;
     virtual bool isMovable() const = 0;
     virtual bool isMovableAcrossScreens() const = 0;
-    virtual bool isShade() const = 0; // True only for ShadeNormal
-    virtual ShadeMode shadeMode() const = 0; // Prefer isShade()
-    virtual void setShade(bool set) = 0;
-    virtual void setShade(ShadeMode mode) = 0;
-    virtual bool isShadeable() const = 0;
+    /**
+     * @c true only for @c ShadeNormal
+     **/
+    bool isShade() const {
+        return shadeMode() == ShadeNormal;
+    }
+    /**
+     * Default implementation returns @c ShadeNone
+     **/
+    virtual ShadeMode shadeMode() const; // Prefer isShade()
+    void setShade(bool set);
+    /**
+     * Default implementation does nothing
+     **/
+    virtual void setShade(ShadeMode mode);
+    /**
+     * Whether the Client can be shaded. Default implementation returns @c false.
+     **/
+    virtual bool isShadeable() const;
     virtual bool isMaximizable() const = 0;
     virtual bool isMinimizable() const = 0;
     virtual bool userCanSetFullScreen() const = 0;
@@ -260,6 +283,7 @@ Q_SIGNALS:
     void demandsAttentionChanged();
     void desktopPresenceChanged(KWin::AbstractClient*, int); // to be forwarded by Workspace
     void desktopChanged();
+    void shadeChanged();
 
 protected:
     AbstractClient();

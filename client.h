@@ -140,15 +140,6 @@ class Client
      **/
     Q_PROPERTY(bool resizeable READ isResizable)
     /**
-     * Whether the Client can be shaded. The property is evaluated each time it is invoked.
-     * Because of that there is no notify signal.
-     **/
-    Q_PROPERTY(bool shadeable READ isShadeable)
-    /**
-     * Whether the Client is shaded.
-     **/
-    Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
-    /**
      * Whether the Client is a transient Window to another Window.
      * @see transientFor
      **/
@@ -304,9 +295,7 @@ public:
     bool isShown(bool shaded_is_shown) const override;
     bool isHiddenInternal() const; // For compositing
 
-    bool isShade() const override; // True only for ShadeNormal
     ShadeMode shadeMode() const override; // Prefer isShade()
-    void setShade(bool set) override;
     void setShade(ShadeMode mode) override;
     bool isShadeable() const override;
 
@@ -629,7 +618,6 @@ Q_SIGNALS:
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
-    void shadeChanged();
     void minimizedChanged();
     void moveResizedChanged();
     void skipTaskbarChanged();
@@ -989,11 +977,6 @@ inline bool Client::isShown(bool shaded_is_shown) const
 inline bool Client::isHiddenInternal() const
 {
     return hidden;
-}
-
-inline bool Client::isShade() const
-{
-    return shade_mode == ShadeNormal;
 }
 
 inline ShadeMode Client::shadeMode() const
