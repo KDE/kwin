@@ -158,8 +158,6 @@ Client::Client()
 
     shade_mode = ShadeNone;
     deleting = false;
-    keep_above = false;
-    keep_below = false;
     fullscreen_mode = FullScreenNone;
     skip_taskbar = false;
     original_skip_taskbar = false;

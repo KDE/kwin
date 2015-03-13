@@ -141,4 +141,56 @@ void AbstractClient::updateLayer()
 {
 }
 
+void AbstractClient::setKeepAbove(bool b)
+{
+    b = rules()->checkKeepAbove(b);
+    if (b && !rules()->checkKeepBelow(false))
+        setKeepBelow(false);
+    if (b == keepAbove()) {
+        // force hint change if different
+        if (info && bool(info->state() & NET::KeepAbove) != keepAbove())
+            info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
+        return;
+    }
+    m_keepAbove = b;
+    if (info) {
+        info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
+    }
+    workspace()->updateClientLayer(this);
+    updateWindowRules(Rules::Above);
+
+    doSetKeepAbove();
+    emit keepAboveChanged(m_keepAbove);
+}
+
+void AbstractClient::doSetKeepAbove()
+{
+}
+
+void AbstractClient::setKeepBelow(bool b)
+{
+    b = rules()->checkKeepBelow(b);
+    if (b && !rules()->checkKeepAbove(false))
+        setKeepAbove(false);
+    if (b == keepBelow()) {
+        // force hint change if different
+        if (info && bool(info->state() & NET::KeepBelow) != keepBelow())
+            info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
+        return;
+    }
+    m_keepBelow = b;
+    if (info) {
+        info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
+    }
+    workspace()->updateClientLayer(this);
+    updateWindowRules(Rules::Below);
+
+    doSetKeepBelow();
+    emit keepBelowChanged(m_keepBelow);
+}
+
+void AbstractClient::doSetKeepBelow()
+{
+}
+
 }

@@ -106,14 +106,6 @@ class Client
      **/
     Q_PROPERTY(QRect geometry READ geometry WRITE setGeometry)
     /**
-     * Whether the Client is set to be kept above other windows.
-     **/
-    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
-    /**
-     * Whether the Client is set to be kept below other windows.
-     **/
-    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
-    /**
      * Whether the Client can be maximized both horizontally and vertically.
      * The property is evaluated each time it is invoked.
      * Because of that there is no notify signal.
@@ -385,10 +377,6 @@ public:
     bool skipPager() const;
     void setSkipPager(bool);
 
-    bool keepAbove() const override;
-    void setKeepAbove(bool) override;
-    bool keepBelow() const override;
-    void setKeepBelow(bool) override;
     virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
@@ -656,6 +644,8 @@ protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
     void doSetActive() override;
+    void doSetKeepAbove() override;
+    void doSetKeepBelow() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -682,8 +672,6 @@ Q_SIGNALS:
     void transientChanged();
     void modalChanged();
     void shadeChanged();
-    void keepAboveChanged(bool);
-    void keepBelowChanged(bool);
     void minimizedChanged();
     void moveResizedChanged();
     void skipTaskbarChanged();
@@ -872,12 +860,10 @@ private:
     ShadeMode shade_mode;
     Client *shade_below;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
-    uint keep_above : 1; ///< NET::KeepAbove (was stays_on_top)
     uint skip_taskbar : 1;
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
     uint skip_pager : 1;
     Xcb::MotifHints m_motif;
-    uint keep_below : 1; ///< NET::KeepBelow
     uint minimized : 1;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint modal : 1; ///< NET::Modal
@@ -1087,16 +1073,6 @@ inline bool Client::skipTaskbar(bool from_outside) const
 inline bool Client::skipPager() const
 {
     return skip_pager;
-}
-
-inline bool Client::keepAbove() const
-{
-    return keep_above;
-}
-
-inline bool Client::keepBelow() const
-{
-    return keep_below;
 }
 
 inline bool Client::isFullScreen() const

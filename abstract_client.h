@@ -57,6 +57,14 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool closeable READ isCloseable)
     Q_PROPERTY(QIcon icon READ icon NOTIFY iconChanged)
+    /**
+     * Whether the Client is set to be kept above other windows.
+     **/
+    Q_PROPERTY(bool keepAbove READ keepAbove WRITE setKeepAbove NOTIFY keepAboveChanged)
+    /**
+     * Whether the Client is set to be kept below other windows.
+     **/
+    Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
 public:
     virtual ~AbstractClient();
 
@@ -90,6 +98,15 @@ public:
      **/
     void setActive(bool);
 
+    bool keepAbove() const {
+        return m_keepAbove;
+    }
+    void setKeepAbove(bool);
+    bool keepBelow() const {
+        return m_keepBelow;
+    }
+    void setKeepBelow(bool);
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
@@ -118,10 +135,6 @@ public:
     virtual void minimize(bool avoid_animation = false) = 0;
     virtual void unminimize(bool avoid_animation = false)= 0;
     virtual void setFullScreen(bool set, bool user = true) = 0;
-    virtual bool keepAbove() const = 0;
-    virtual void setKeepAbove(bool) = 0;
-    virtual bool keepBelow() const = 0;
-    virtual void setKeepBelow(bool) = 0;
     virtual TabGroup *tabGroup() const;
     Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
     virtual bool isCurrentTab() const;
@@ -205,6 +218,8 @@ Q_SIGNALS:
     void skipSwitcherChanged();
     void iconChanged();
     void activeChanged();
+    void keepAboveChanged(bool);
+    void keepBelowChanged(bool);
 
 protected:
     AbstractClient();
@@ -219,6 +234,20 @@ protected:
      * Default implementation does nothing.
      **/
     virtual void doSetActive();
+    /**
+     * Called from ::setKeepAbove once the keepBelow value got updated, but before the changed signal
+     * is emitted.
+     *
+     * Default implementation does nothing.
+     **/
+    virtual void doSetKeepAbove();
+    /**
+     * Called from ::setKeepBelow once the keepBelow value got updated, but before the changed signal
+     * is emitted.
+     *
+     * Default implementation does nothing.
+     **/
+    virtual void doSetKeepBelow();
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
@@ -228,6 +257,8 @@ private:
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;
+    bool m_keepAbove = false;
+    bool m_keepBelow = false;
 };
 
 }

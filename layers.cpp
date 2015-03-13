@@ -773,48 +773,18 @@ void Client::restackWindow(xcb_window_t above, int detail, NET::RequestSource sr
         sendSyntheticConfigureNotify();
 }
 
-void Client::setKeepAbove(bool b)
+void Client::doSetKeepAbove()
 {
-    b = rules()->checkKeepAbove(b);
-    if (b && !rules()->checkKeepBelow(false))
-        setKeepBelow(false);
-    if (b == keepAbove()) {
-        // force hint change if different
-        if (bool(info->state() & NET::KeepAbove) != keepAbove())
-            info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
-        return;
-    }
-    keep_above = b;
-    info->setState(keepAbove() ? NET::KeepAbove : NET::States(0), NET::KeepAbove);
-    workspace()->updateClientLayer(this);
-    updateWindowRules(Rules::Above);
-
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Layer);
-    emit keepAboveChanged(keep_above);
 }
 
-void Client::setKeepBelow(bool b)
+void Client::doSetKeepBelow()
 {
-    b = rules()->checkKeepBelow(b);
-    if (b && !rules()->checkKeepAbove(false))
-        setKeepAbove(false);
-    if (b == keepBelow()) {
-        // force hint change if different
-        if (bool(info->state() & NET::KeepBelow) != keepBelow())
-            info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
-        return;
-    }
-    keep_below = b;
-    info->setState(keepBelow() ? NET::KeepBelow : NET::States(0), NET::KeepBelow);
-    workspace()->updateClientLayer(this);
-    updateWindowRules(Rules::Below);
-
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Layer);
-    emit keepBelowChanged(keep_below);
 }
 
 Layer Client::layer() const
