@@ -147,7 +147,6 @@ Client::Client()
     // Set the initial mapping state
     mapping_state = Withdrawn;
     quick_tile_mode = QuickTileNone;
-    desk = 0; // No desktop yet
 
     mode = PositionCenter;
     buttonDown = false;
@@ -262,7 +261,6 @@ void Client::releaseWindow(bool on_shutdown)
         workspace()->removeClient(this);
         // Only when the window is being unmapped, not when closing down KWin (NETWM sections 5.5,5.7)
         info->setDesktop(0);
-        desk = 0;
         info->setState(0, info->state());  // Reset all state flags
     } else
         untab();
@@ -1304,18 +1302,8 @@ void Client::setModal(bool m)
     // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
 }
 
-void Client::setDesktop(int desktop)
+void Client::doSetDesktop(int desktop, int was_desk)
 {
-    const int numberOfDesktops = VirtualDesktopManager::self()->count();
-    if (desktop != NET::OnAllDesktops)   // Do range check
-        desktop = qMax(1, qMin(numberOfDesktops, desktop));
-    desktop = qMin(numberOfDesktops, rules()->checkDesktop(desktop));
-    if (desk == desktop)
-        return;
-
-    int was_desk = desk;
-    const bool wasOnCurrentDesktop = isOnCurrentDesktop();
-    desk = desktop;
     info->setDesktop(desktop);
     if ((was_desk == NET::OnAllDesktops) != (desktop == NET::OnAllDesktops)) {
         // onAllDesktops changed
@@ -1335,17 +1323,11 @@ void Client::setDesktop(int desktop)
         foreach (Client * c2, mainClients())
         c2->setDesktop(desktop);
     }
-
-    FocusChain::self()->update(this, FocusChain::MakeFirst);
     updateVisibility();
-    updateWindowRules(Rules::Desktop);
 
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Desktop);
-    emit desktopChanged();
-    if (wasOnCurrentDesktop != isOnCurrentDesktop())
-        emit desktopPresenceChanged(this, was_desk);
 }
 
 /**
@@ -1450,7 +1432,7 @@ int Client::desktop() const
     if (needsSessionInteract) {
         return NET::OnAllDesktops;
     }
-    return desk;
+    return AbstractClient::desktop();
 }
 
 /**
@@ -1464,21 +1446,6 @@ QStringList Client::activities() const
         return QStringList();
     }
     return activityList;
-}
-
-void Client::setOnAllDesktops(bool b)
-{
-    if ((b && isOnAllDesktops()) ||
-            (!b && !isOnAllDesktops()))
-        return;
-    if (b)
-        setDesktop(NET::OnAllDesktops);
-    else
-        setDesktop(VirtualDesktopManager::self()->current());
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Desktop);
 }
 
 /**

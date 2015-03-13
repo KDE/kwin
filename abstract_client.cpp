@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
+#include "focuschain.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
 #endif
@@ -237,6 +238,46 @@ void AbstractClient::demandAttention(bool set)
     }
     workspace()->clientAttentionChanged(this, set);
     emit demandsAttentionChanged();
+}
+
+void AbstractClient::setDesktop(int desktop)
+{
+    const int numberOfDesktops = VirtualDesktopManager::self()->count();
+    if (desktop != NET::OnAllDesktops)   // Do range check
+        desktop = qMax(1, qMin(numberOfDesktops, desktop));
+    desktop = qMin(numberOfDesktops, rules()->checkDesktop(desktop));
+    if (m_desktop == desktop)
+        return;
+
+    int was_desk = m_desktop;
+    const bool wasOnCurrentDesktop = isOnCurrentDesktop();
+    m_desktop = desktop;
+
+    doSetDesktop(desktop, was_desk);
+
+    FocusChain::self()->update(this, FocusChain::MakeFirst);
+    updateWindowRules(Rules::Desktop);
+
+    emit desktopChanged();
+    if (wasOnCurrentDesktop != isOnCurrentDesktop())
+        emit desktopPresenceChanged(this, was_desk);
+}
+
+void AbstractClient::doSetDesktop(int desktop, int was_desk)
+{
+    Q_UNUSED(desktop)
+    Q_UNUSED(was_desk)
+}
+
+void AbstractClient::setOnAllDesktops(bool b)
+{
+    if ((b && isOnAllDesktops()) ||
+            (!b && !isOnAllDesktops()))
+        return;
+    if (b)
+        setDesktop(NET::OnAllDesktops);
+    else
+        setDesktop(VirtualDesktopManager::self()->current());
 }
 
 }

@@ -48,6 +48,14 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     /**
+     * The desktop this Client is on. If the Client is on all desktops the property has value -1.
+     **/
+    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
+    /**
+     * Whether the Client is on all desktops. That is desktop is -1.
+     **/
+    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
+    /**
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
@@ -154,8 +162,11 @@ public:
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;
     virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos) = 0;
-    virtual void setOnAllDesktops(bool set) = 0;
-    virtual void setDesktop(int) = 0;
+    void setOnAllDesktops(bool set);
+    void setDesktop(int);
+    int desktop() const override {
+        return m_desktop;
+    }
     virtual void minimize(bool avoid_animation = false) = 0;
     virtual void unminimize(bool avoid_animation = false)= 0;
     virtual void setFullScreen(bool set, bool user = true) = 0;
@@ -248,6 +259,7 @@ Q_SIGNALS:
      **/
     void demandsAttentionChanged();
     void desktopPresenceChanged(KWin::AbstractClient*, int); // to be forwarded by Workspace
+    void desktopChanged();
 
 protected:
     AbstractClient();
@@ -278,6 +290,15 @@ protected:
      * Default implementation does nothing.
      **/
     virtual void doSetKeepBelow();
+    /**
+     * Called from ::setDeskop once the desktop value got updated, but before the changed signal
+     * is emitted.
+     *
+     * Default implementation does nothing.
+     * @param desktop The new desktop the Client is on
+     * @param was_desk The desktop the Client was on before
+     **/
+    virtual void doSetDesktop(int desktop, int was_desk);
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
@@ -291,6 +312,7 @@ private:
     bool m_keepBelow = false;
     bool m_demandsAttention = false;
     QTimer *m_autoRaiseTimer = nullptr;
+    int m_desktop = 0; // 0 means not on any desktop yet
 };
 
 }

@@ -177,6 +177,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     readActivities(activitiesCookie);
 
     // Initial desktop placement
+    int desk = 0;
     if (session) {
         desk = session->desktop;
         if (session->onAllDesktops)
@@ -236,6 +237,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     desk = rules()->checkDesktop(desk, !isMapped);
     if (desk != NET::OnAllDesktops)   // Do range check
         desk = qBound(1, desk, static_cast<int>(VirtualDesktopManager::self()->count()));
+    setDesktop(desk);
     info->setDesktop(desk);
     workspace()->updateOnAllDesktopsOfTransients(this);   // SELI TODO
     //onAllDesktopsChange(); // Decoration doesn't exist here yet

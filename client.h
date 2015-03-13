@@ -82,14 +82,6 @@ class Client
      **/
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
     /**
-     * The desktop this Client is on. If the Client is on all desktops the property has value -1.
-     **/
-    Q_PROPERTY(int desktop READ desktop WRITE setDesktop NOTIFY desktopChanged)
-    /**
-     * Whether the Client is on all desktops. That is desktop is -1.
-     **/
-    Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
-    /**
      * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
      * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
@@ -298,8 +290,6 @@ public:
     QSize adjustedSize() const;
 
     virtual int desktop() const;
-    void setDesktop(int) override;
-    void setOnAllDesktops(bool set) override;
 
     void sendToScreen(int screen) override;
 
@@ -615,6 +605,7 @@ protected:
     void doSetActive() override;
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
+    void doSetDesktop(int desktop, int was_desk) override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -635,7 +626,6 @@ Q_SIGNALS:
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
     void captionChanged();
-    void desktopChanged();
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
@@ -775,7 +765,6 @@ private:
     KDecoration2::Decoration *m_decoration;
     QPointer<Decoration::DecoratedClientImpl> m_decoratedClient;
     QElapsedTimer m_decorationDoubleClickTimer;
-    int desk;
     QStringList activityList;
     int m_activityUpdatesBlocked;
     bool m_blockedActivityUpdatesRequireTransients;
