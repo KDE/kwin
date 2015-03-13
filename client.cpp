@@ -114,7 +114,6 @@ Client::Client()
     , m_motif(atoms->motif_wm_hints)
     , blocks_compositing(false)
     , m_cursor(Qt::ArrowCursor)
-    , autoRaiseTimer(NULL)
     , shadeHoverTimer(NULL)
     , delayedMoveResizeTimer(NULL)
     , m_colormap(XCB_COLORMAP_NONE)
@@ -2103,18 +2102,6 @@ void Client::updateAllowedActions(bool force)
             emit maximizeableChanged(allowed_actions & NET::ActionMax);
         }
     }
-}
-
-void Client::autoRaise()
-{
-    workspace()->raiseClient(this);
-    cancelAutoRaise();
-}
-
-void Client::cancelAutoRaise()
-{
-    delete autoRaiseTimer;
-    autoRaiseTimer = 0;
 }
 
 void Client::debug(QDebug& stream) const

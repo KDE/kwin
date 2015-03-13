@@ -193,4 +193,25 @@ void AbstractClient::doSetKeepBelow()
 {
 }
 
+void AbstractClient::startAutoRaise()
+{
+    delete m_autoRaiseTimer;
+    m_autoRaiseTimer = new QTimer(this);
+    connect(m_autoRaiseTimer, &QTimer::timeout, this, &AbstractClient::autoRaise);
+    m_autoRaiseTimer->setSingleShot(true);
+    m_autoRaiseTimer->start(options->autoRaiseInterval());
+}
+
+void AbstractClient::cancelAutoRaise()
+{
+    delete m_autoRaiseTimer;
+    m_autoRaiseTimer = nullptr;
+}
+
+void AbstractClient::autoRaise()
+{
+    workspace()->raiseClient(this);
+    cancelAutoRaise();
+}
+
 }

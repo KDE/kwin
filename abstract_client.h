@@ -107,6 +107,8 @@ public:
     }
     void setKeepBelow(bool);
 
+    void cancelAutoRaise();
+
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
     virtual bool isMinimized() const = 0;
@@ -117,7 +119,6 @@ public:
     virtual bool isFullScreen() const = 0;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
-    virtual void cancelAutoRaise() = 0;
     virtual bool isTransient() const;
     /**
      * Returns true for "special" windows and false for windows which are "normal"
@@ -227,6 +228,8 @@ protected:
         m_firstInTabBox = enable;
     }
     void setIcon(const QIcon &icon);
+    void startAutoRaise();
+    void autoRaise();
     /**
      * Called from ::setActive once the active value got updated, but before the changed signal
      * is emitted.
@@ -259,6 +262,7 @@ private:
     bool m_active = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
+    QTimer *m_autoRaiseTimer = nullptr;
 };
 
 }

@@ -492,7 +492,6 @@ public:
     void toggleShade();
     void showContextHelp();
     void cancelShadeHoverTimer();
-    void cancelAutoRaise() override;
     void checkActiveModal();
     StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;
@@ -604,7 +603,6 @@ public Q_SLOTS:
     void updateCaption();
 
 private Q_SLOTS:
-    void autoRaise();
     void shadeHover();
     void shadeUnhover();
 
@@ -884,7 +882,6 @@ private:
     MaximizeMode max_mode;
     QRect geom_restore;
     QRect geom_fs_restore;
-    QTimer* autoRaiseTimer;
     QTimer* shadeHoverTimer;
     QTimer* delayedMoveResizeTimer;
     xcb_colormap_t m_colormap;

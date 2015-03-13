@@ -957,11 +957,7 @@ void Client::enterNotifyEvent(xcb_enter_notify_event_t *e)
                 currentPos != workspace()->focusMousePosition() &&
                 workspace()->topClientOnDesktop(VirtualDesktopManager::self()->current(),
                                                 options->isSeparateScreenFocus() ? screen() : -1) != this) {
-            delete autoRaiseTimer;
-            autoRaiseTimer = new QTimer(this);
-            connect(autoRaiseTimer, SIGNAL(timeout()), this, SLOT(autoRaise()));
-            autoRaiseTimer->setSingleShot(true);
-            autoRaiseTimer->start(options->autoRaiseInterval());
+            startAutoRaise();
         }
 
         if (isDesktop() || isDock())
