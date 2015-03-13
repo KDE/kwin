@@ -642,7 +642,7 @@ void Workspace::restoreFocus()
         requestFocus(last_active_client);
 }
 
-void Workspace::clientAttentionChanged(Client* c, bool set)
+void Workspace::clientAttentionChanged(AbstractClient* c, bool set)
 {
     if (set) {
         attention_chain.removeAll(c);

@@ -118,7 +118,7 @@ Q_SIGNALS:
      * @param c The Client for which demands attention changed
      * @param set New value of demands attention
      **/
-    void clientDemandsAttentionChanged(KWin::Client *client, bool set);
+    void clientDemandsAttentionChanged(KWin::AbstractClient *client, bool set);
     /**
      * Signal emitted when the number of screens changes.
      * @param count The new number of screens

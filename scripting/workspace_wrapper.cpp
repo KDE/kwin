@@ -46,7 +46,7 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(ws, &Workspace::clientActivated, this, &WorkspaceWrapper::clientActivated);
     connect(vds, SIGNAL(countChanged(uint,uint)), SIGNAL(numberDesktopsChanged(uint)));
     connect(vds, SIGNAL(layoutChanged(int,int)), SIGNAL(desktopLayoutChanged()));
-    connect(ws, SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)), SIGNAL(clientDemandsAttentionChanged(KWin::Client*,bool)));
+    connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
     KWin::Activities *activities = KWin::Activities::self();
     connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));

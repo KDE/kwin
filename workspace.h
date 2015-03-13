@@ -188,7 +188,7 @@ public:
     void forceRestacking();
 
     void clientHidden(Client*);
-    void clientAttentionChanged(Client* c, bool set);
+    void clientAttentionChanged(AbstractClient* c, bool set);
 
     /**
      * @return List of clients currently managed by Workspace
@@ -446,7 +446,7 @@ Q_SIGNALS:
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);
     void clientActivated(KWin::AbstractClient*);
-    void clientDemandsAttentionChanged(KWin::Client*, bool);
+    void clientDemandsAttentionChanged(KWin::AbstractClient*, bool);
     void groupAdded(KWin::Group*);
     void unmanagedAdded(KWin::Unmanaged*);
     void unmanagedRemoved(KWin::Unmanaged*);
@@ -534,7 +534,7 @@ private:
     mutable ToplevelList x_stacking; // From XQueryTree()
     mutable bool x_stacking_dirty;
     QList<AbstractClient*> should_get_focus; // Last is most recent
-    ClientList attention_chain;
+    QList<AbstractClient*> attention_chain;
 
     bool showing_desktop;
 
