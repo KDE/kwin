@@ -104,15 +104,6 @@ class Client
      **/
     Q_PROPERTY(bool maximizable READ isMaximizable)
     /**
-     * Whether the Client can be minimized. The property is evaluated each time it is invoked.
-     * Because of that there is no notify signal.
-     **/
-    Q_PROPERTY(bool minimizable READ isMinimizable)
-    /**
-     * Whether the Client is minimized.
-     **/
-    Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
-    /**
      * Whether the Client represents a modal window.
      **/
     Q_PROPERTY(bool modal READ isModal NOTIFY modalChanged)
@@ -299,7 +290,6 @@ public:
     void setShade(ShadeMode mode) override;
     bool isShadeable() const override;
 
-    bool isMinimized() const override;
     bool isMaximizable() const override;
     QRect geometryRestore() const;
     MaximizeMode maximizeMode() const override;
@@ -434,9 +424,6 @@ public:
     static bool belongToSameApplication(const Client* c1, const Client* c2, bool active_hack = false);
     static bool sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack);
 
-    void setMinimized(bool set);
-    void minimize(bool avoid_animation = false) override;
-    void unminimize(bool avoid_animation = false) override;
     void killWindow();
     void maximize(MaximizeMode) override;
     void toggleShade();
@@ -593,6 +580,7 @@ protected:
     void doSetKeepAbove() override;
     void doSetKeepBelow() override;
     void doSetDesktop(int desktop, int was_desk) override;
+    void doMinimize() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -607,8 +595,6 @@ Q_SIGNALS:
     void clientFullScreenSet(KWin::Client*, bool, bool);
     void clientMaximizedStateChanged(KWin::Client*, MaximizeMode);
     void clientMaximizedStateChanged(KWin::Client* c, bool h, bool v);
-    void clientMinimized(KWin::Client* client, bool animate);
-    void clientUnminimized(KWin::Client* client, bool animate);
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
@@ -616,7 +602,6 @@ Q_SIGNALS:
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
-    void minimizedChanged();
     void moveResizedChanged();
     void skipTaskbarChanged();
     void skipPagerChanged();
@@ -803,7 +788,6 @@ private:
     uint original_skip_taskbar : 1; ///< Unaffected by KWin
     uint skip_pager : 1;
     Xcb::MotifHints m_motif;
-    uint minimized : 1;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint modal : 1; ///< NET::Modal
     uint noborder : 1;
@@ -959,11 +943,6 @@ inline Group* Client::group()
 inline TabGroup* Client::tabGroup() const
 {
     return tab_group;
-}
-
-inline bool Client::isMinimized() const
-{
-    return minimized;
 }
 
 inline bool Client::isShown(bool shaded_is_shown) const

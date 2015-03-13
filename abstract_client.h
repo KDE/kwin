@@ -83,6 +83,15 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool shade READ isShade WRITE setShade NOTIFY shadeChanged)
     /**
+     * Whether the Client can be minimized. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
+    Q_PROPERTY(bool minimizable READ isMinimizable)
+    /**
+     * Whether the Client is minimized.
+     **/
+    Q_PROPERTY(bool minimized READ isMinimized WRITE setMinimized NOTIFY minimizedChanged)
+    /**
      * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
      * i.e. window types that usually don't have a window frame and the user does not use window
      * management (moving, raising,...) on them.
@@ -152,7 +161,6 @@ public:
 
     virtual void updateMouseGrab();
     virtual QString caption(bool full = true, bool stripped = false) const = 0;
-    virtual bool isMinimized() const = 0;
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
@@ -176,8 +184,15 @@ public:
     int desktop() const override {
         return m_desktop;
     }
-    virtual void minimize(bool avoid_animation = false) = 0;
-    virtual void unminimize(bool avoid_animation = false)= 0;
+    void setMinimized(bool set);
+    /**
+    * Minimizes this client plus its transients
+    */
+    void minimize(bool avoid_animation = false);
+    void unminimize(bool avoid_animation = false);
+    bool isMinimized() const {
+        return m_minimized;
+    }
     virtual void setFullScreen(bool set, bool user = true) = 0;
     virtual TabGroup *tabGroup() const;
     Q_INVOKABLE virtual bool untab(const QRect &toGeometry = QRect(), bool clientRemoved = false);
@@ -284,6 +299,9 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::AbstractClient*, int); // to be forwarded by Workspace
     void desktopChanged();
     void shadeChanged();
+    void minimizedChanged();
+    void clientMinimized(KWin::AbstractClient* client, bool animate);
+    void clientUnminimized(KWin::AbstractClient* client, bool animate);
 
 protected:
     AbstractClient();
@@ -323,6 +341,13 @@ protected:
      * @param was_desk The desktop the Client was on before
      **/
     virtual void doSetDesktop(int desktop, int was_desk);
+    /**
+     * Called from ::minimize and ::unminimize once the minimized value got updated, but before the
+     * changed signal is emitted.
+     *
+     * Default implementation does nothig.
+     **/
+    virtual void doMinimize();
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
@@ -335,6 +360,7 @@ private:
     bool m_keepAbove = false;
     bool m_keepBelow = false;
     bool m_demandsAttention = false;
+    bool m_minimized = false;
     QTimer *m_autoRaiseTimer = nullptr;
     int m_desktop = 0; // 0 means not on any desktop yet
 };

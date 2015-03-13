@@ -93,8 +93,8 @@ Q_SIGNALS:
     void clientAdded(KWin::Client *client);
     void clientRemoved(KWin::Client *client);
     void clientManaging(KWin::Client *client);
-    void clientMinimized(KWin::Client *client);
-    void clientUnminimized(KWin::Client *client);
+    void clientMinimized(KWin::AbstractClient *client);
+    void clientUnminimized(KWin::AbstractClient *client);
     void clientRestored(KWin::Client *client);
     void clientMaximizeSet(KWin::Client *client, bool h, bool v);
     void killWindowCalled(KWin::Client *client);

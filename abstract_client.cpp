@@ -306,4 +306,53 @@ AbstractClient::Position AbstractClient::titlebarPosition() const
     return PositionTop;
 }
 
+void AbstractClient::setMinimized(bool set)
+{
+    set ? minimize() : unminimize();
+}
+
+void AbstractClient::minimize(bool avoid_animation)
+{
+    if (!isMinimizable() || isMinimized())
+        return;
+
+    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
+        info->setState(0, NET::Shaded);
+
+    m_minimized = true;
+
+    doMinimize();
+
+    updateWindowRules(Rules::Minimize);
+    FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
+    // TODO: merge signal with s_minimized
+    emit clientMinimized(this, !avoid_animation);
+    emit minimizedChanged();
+}
+
+void AbstractClient::unminimize(bool avoid_animation)
+{
+    if (!isMinimized())
+        return;
+
+    if (rules()->checkMinimize(false)) {
+        return;
+    }
+
+    if (isShade() && info) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
+        info->setState(NET::Shaded, NET::Shaded);
+
+    m_minimized = false;
+
+    doMinimize();
+
+    updateWindowRules(Rules::Minimize);
+    emit clientUnminimized(this, !avoid_animation);
+    emit minimizedChanged();
+}
+
+void AbstractClient::doMinimize()
+{
+}
+
 }

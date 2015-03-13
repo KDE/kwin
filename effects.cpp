@@ -354,7 +354,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
     );
     connect(c, &Client::opacityChanged, this, &EffectsHandlerImpl::slotOpacityChanged);
     connect(c, &Client::clientMinimized, this,
-        [this](Client *c, bool animate) {
+        [this](AbstractClient *c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
                 emit windowMinimized(c->effectWindow());
@@ -362,7 +362,7 @@ void EffectsHandlerImpl::setupClientConnections(Client* c)
         }
     );
     connect(c, &Client::clientUnminimized, this,
-        [this](Client* c, bool animate) {
+        [this](AbstractClient* c, bool animate) {
             // TODO: notify effects even if it should not animate?
             if (animate) {
                 emit windowUnminimized(c->effectWindow());

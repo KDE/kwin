@@ -159,7 +159,6 @@ Client::Client()
     fullscreen_mode = FullScreenNone;
     skip_taskbar = false;
     original_skip_taskbar = false;
-    minimized = false;
     hidden = false;
     modal = false;
     noborder = false;
@@ -729,61 +728,14 @@ bool Client::isMinimizable() const
     return true;
 }
 
-void Client::setMinimized(bool set)
+void Client::doMinimize()
 {
-    set ? minimize() : unminimize();
-}
-
-/**
- * Minimizes this client plus its transients
- */
-void Client::minimize(bool avoid_animation)
-{
-    if (!isMinimizable() || isMinimized())
-        return;
-
-    if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(0, NET::Shaded);
-
-    minimized = true;
-
     updateVisibility();
     updateAllowedActions();
     workspace()->updateMinimizedOfTransients(this);
-    updateWindowRules(Rules::Minimize);
-    FocusChain::self()->update(this, FocusChain::MakeFirstMinimized);
-    // TODO: merge signal with s_minimized
-    emit clientMinimized(this, !avoid_animation);
-
     // Update states of all other windows in this group
     if (tabGroup())
         tabGroup()->updateStates(this, TabGroup::Minimized);
-    emit minimizedChanged();
-}
-
-void Client::unminimize(bool avoid_animation)
-{
-    if (!isMinimized())
-        return;
-
-    if (rules()->checkMinimize(false)) {
-        return;
-    }
-
-    if (isShade()) // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
-        info->setState(NET::Shaded, NET::Shaded);
-
-    minimized = false;
-    updateVisibility();
-    updateAllowedActions();
-    workspace()->updateMinimizedOfTransients(this);
-    updateWindowRules(Rules::Minimize);
-    emit clientUnminimized(this, !avoid_animation);
-
-    // Update states of all other windows in this group
-    if (tabGroup())
-        tabGroup()->updateStates(this, TabGroup::Minimized);
-    emit minimizedChanged();
 }
 
 QRect Client::iconGeometry() const
@@ -945,7 +897,7 @@ void Client::updateVisibility()
     }
     if (isCurrentTab())
         setSkipTaskbar(original_skip_taskbar, false);   // Reset from 'hidden'
-    if (minimized) {
+    if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep();

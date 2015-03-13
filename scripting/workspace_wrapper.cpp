@@ -244,8 +244,8 @@ QString WorkspaceWrapper::supportInformation() const
 
 void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
 {
-    connect(client, SIGNAL(clientMinimized(KWin::Client*,bool)), SIGNAL(clientMinimized(KWin::Client*)));
-    connect(client, SIGNAL(clientUnminimized(KWin::Client*,bool)), SIGNAL(clientUnminimized(KWin::Client*)));
+    connect(client, &Client::clientMinimized, this, &WorkspaceWrapper::clientMinimized);
+    connect(client, &Client::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
     connect(client, SIGNAL(clientManaging(KWin::Client*)), SIGNAL(clientManaging(KWin::Client*)));
     connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
     connect(client, SIGNAL(clientMaximizedStateChanged(KWin::Client*,bool,bool)), SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)));
