@@ -1967,12 +1967,6 @@ bool Client::wantsInput() const
     return rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
 }
 
-bool Client::isSpecialWindow() const
-{
-    // TODO
-    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay();
-}
-
 /**
  * Sets an appropriate cursor shape for the logical mouse position \a m
  */

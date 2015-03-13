@@ -219,4 +219,10 @@ bool AbstractClient::wantsTabFocus() const
     return (isNormalWindow() || isDialog()) && wantsInput();
 }
 
+bool AbstractClient::isSpecialWindow() const
+{
+    // TODO
+    return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay();
+}
+
 }

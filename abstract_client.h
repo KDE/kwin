@@ -65,6 +65,14 @@ class AbstractClient : public Toplevel
      * Whether the Client is set to be kept below other windows.
      **/
     Q_PROPERTY(bool keepBelow READ keepBelow WRITE setKeepBelow NOTIFY keepBelowChanged)
+    /**
+     * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
+     * i.e. window types that usually don't have a window frame and the user does not use window
+     * management (moving, raising,...) on them.
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(bool specialWindow READ isSpecialWindow)
 public:
     virtual ~AbstractClient();
 
@@ -127,7 +135,7 @@ public:
      * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
      * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
      */
-    virtual bool isSpecialWindow() const = 0;
+    bool isSpecialWindow() const;
     virtual void sendToScreen(int screen) = 0;
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;

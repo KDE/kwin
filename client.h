@@ -190,14 +190,6 @@ class Client
      **/
     Q_PROPERTY(QRect iconGeometry READ iconGeometry)
     /**
-     * Returns whether the window is any of special windows types (desktop, dock, splash, ...),
-     * i.e. window types that usually don't have a window frame and the user does not use window
-     * management (moving, raising,...) on them.
-     * The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     **/
-    Q_PROPERTY(bool specialWindow READ isSpecialWindow)
-    /**
      * Whether the Client can accept keyboard focus.
      * The value is evaluated each time the getter is called.
      * Because of that no changed signal is provided.
@@ -287,13 +279,6 @@ public:
     void updateWindowRules(Rules::Types selection) override;
     void updateFullscreenMonitors(NETFullscreenMonitors topology);
 
-    /**
-     * Returns true for "special" windows and false for windows which are "normal"
-     * (normal=window which has a border, can be moved by the user, can be closed, etc.)
-     * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)
-     * false for Normal, Dialog, Utility and Menu (and Toolbar??? - not yet) TODO
-     */
-    bool isSpecialWindow() const override;
     bool hasNETSupport() const;
 
     QSize minSize() const;
