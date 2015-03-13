@@ -2,5 +2,5 @@
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Switching Layouts
 StandardResource=tmp
-InstallationCommand=plasmapkg -t windowswitcher -i %f
-UninstallCommand=plasmapkg -t windowswitcher -r %f
+InstallationCommand=plasmapkg2 -t windowswitcher -i %f
+UninstallCommand=plasmapkg2 -t windowswitcher -r %f

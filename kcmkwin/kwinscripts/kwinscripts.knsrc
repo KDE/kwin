@@ -2,5 +2,5 @@
 ProvidersUrl=http://download.kde.org/ocs/providers.xml
 Categories=KWin Scripts
 StandardResource=tmp
-InstallationCommand=plasmapkg -t kwinscript -i %f
-UninstallCommand=plasmapkg -t kwinscript -r %f
+InstallationCommand=plasmapkg2 -t kwinscript -i %f
+UninstallCommand=plasmapkg2 -t kwinscript -r %f
