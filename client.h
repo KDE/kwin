@@ -223,15 +223,6 @@ class Client
      **/
     Q_PROPERTY(bool noBorder READ noBorder WRITE setNoBorder)
     /**
-     * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
-     * action in or with the window happened. For example, it may be set by the Window Manager if
-     * the window requested activation but the Window Manager refused it, or the application may set
-     * it if it finished some work. This state may be set by both the Client and the Window Manager.
-     * It should be unset by the Window Manager when it decides the window got the required attention
-     * (usually, that it got activated).
-     **/
-    Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
-    /**
      * A client can block compositing. That is while the Client is alive and the state is set,
      * Compositing is suspended and is resumed when there are no Clients blocking compositing any
      * more.
@@ -380,10 +371,6 @@ public:
     bool isCloseable() const override; ///< May be closed by the user (May have a close button)
 
     void takeFocus() override;
-    bool isDemandingAttention() const {
-        return demands_attention;
-    }
-    void demandAttention(bool set = true) override;
 
     void updateDecoration(bool check_workspace_pos, bool force = false);
     void triggerDecorationRepaint();
@@ -684,10 +671,6 @@ Q_SIGNALS:
     void appMenuUnavailable();
 
     /**
-     * Emitted whenever the demands attention state changes.
-     **/
-    void demandsAttentionChanged();
-    /**
      * Emitted whenever the Client's block compositing state changes.
      **/
     void blockingCompositingChanged(KWin::Client *client);
@@ -852,7 +835,6 @@ private:
     uint noborder : 1;
     uint app_noborder : 1; ///< App requested no border via window type, shape extension, etc.
     uint ignore_focus_stealing : 1; ///< Don't apply focus stealing prevention to this client
-    uint demands_attention : 1;
     bool blocks_compositing;
     WindowRules client_rules;
     Qt::CursorShape m_cursor;

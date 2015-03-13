@@ -73,6 +73,15 @@ class AbstractClient : public Toplevel
      * Because of that no changed signal is provided.
      **/
     Q_PROPERTY(bool specialWindow READ isSpecialWindow)
+    /**
+     * Whether window state _NET_WM_STATE_DEMANDS_ATTENTION is set. This state indicates that some
+     * action in or with the window happened. For example, it may be set by the Window Manager if
+     * the window requested activation but the Window Manager refused it, or the application may set
+     * it if it finished some work. This state may be set by both the Client and the Window Manager.
+     * It should be unset by the Window Manager when it decides the window got the required attention
+     * (usually, that it got activated).
+     **/
+    Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
 public:
     virtual ~AbstractClient();
 
@@ -114,6 +123,11 @@ public:
         return m_keepBelow;
     }
     void setKeepBelow(bool);
+
+    void demandAttention(bool set = true);
+    bool isDemandingAttention() const {
+        return m_demandsAttention;
+    }
 
     void cancelAutoRaise();
 
@@ -172,7 +186,6 @@ public:
     virtual bool wantsInput() const = 0;
     virtual void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) = 0;
     virtual xcb_timestamp_t userTime() const;
-    virtual void demandAttention(bool set = true) = 0;
     virtual void updateWindowRules(Rules::Types selection) = 0;
 
     virtual void growHorizontal();
@@ -230,6 +243,10 @@ Q_SIGNALS:
     void activeChanged();
     void keepAboveChanged(bool);
     void keepBelowChanged(bool);
+    /**
+     * Emitted whenever the demands attention state changes.
+     **/
+    void demandsAttentionChanged();
 
 protected:
     AbstractClient();
@@ -271,6 +288,7 @@ private:
     bool m_active = false;
     bool m_keepAbove = false;
     bool m_keepBelow = false;
+    bool m_demandsAttention = false;
     QTimer *m_autoRaiseTimer = nullptr;
 };
 

@@ -166,7 +166,6 @@ Client::Client()
     noborder = false;
     app_noborder = false;
     ignore_focus_stealing = false;
-    demands_attention = false;
     check_active_modal = false;
 
     skip_pager = false;

@@ -225,4 +225,18 @@ bool AbstractClient::isSpecialWindow() const
     return isDesktop() || isDock() || isSplash() || isToolbar() || isNotification() || isOnScreenDisplay();
 }
 
+void AbstractClient::demandAttention(bool set)
+{
+    if (isActive())
+        set = false;
+    if (m_demandsAttention == set)
+        return;
+    m_demandsAttention = set;
+    if (info) {
+        info->setState(set ? NET::DemandsAttention : NET::States(0), NET::DemandsAttention);
+    }
+    workspace()->clientAttentionChanged(this, set);
+    emit demandsAttentionChanged();
+}
+
 }

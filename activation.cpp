@@ -684,18 +684,6 @@ xcb_timestamp_t Client::readUserCreationTime() const
     return prop.value<xcb_timestamp_t>(-1);
 }
 
-void Client::demandAttention(bool set)
-{
-    if (isActive())
-        set = false;
-    if (demands_attention == set)
-        return;
-    demands_attention = set;
-    info->setState(set ? NET::DemandsAttention : NET::States(0), NET::DemandsAttention);
-    workspace()->clientAttentionChanged(this, set);
-    emit demandsAttentionChanged();
-}
-
 xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
                                                  bool session) const
 {
