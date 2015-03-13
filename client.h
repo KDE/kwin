@@ -387,7 +387,6 @@ public:
     bool isModal() const;
 
     // Auxiliary functions, depend on the windowType
-    bool wantsTabFocus() const override;
     bool wantsInput() const override;
 
     bool isResizable() const override;

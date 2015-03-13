@@ -214,4 +214,9 @@ void AbstractClient::autoRaise()
     cancelAutoRaise();
 }
 
+bool AbstractClient::wantsTabFocus() const
+{
+    return (isNormalWindow() || isDialog()) && wantsInput();
+}
+
 }

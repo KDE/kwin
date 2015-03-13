@@ -1962,11 +1962,6 @@ void Client::sendSyncRequest()
     syncRequest.lastTimestamp = xTime();
 }
 
-bool Client::wantsTabFocus() const
-{
-    return (isNormalWindow() || isDialog()) && wantsInput();
-}
-
 bool Client::wantsInput() const
 {
     return rules()->checkAcceptFocus(info->input() || info->supportsProtocol(NET::TakeFocusProtocol));
