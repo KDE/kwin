@@ -137,4 +137,8 @@ void AbstractClient::doSetActive()
 {
 }
 
+void AbstractClient::updateLayer()
+{
+}
+
 }

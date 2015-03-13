@@ -180,7 +180,7 @@ public:
     void lowerClientRequest(Client* c, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restackClientUnderActive(AbstractClient*);
     void restack(AbstractClient *c, AbstractClient *under, bool force = false);
-    void updateClientLayer(Client* c);
+    void updateClientLayer(AbstractClient* c);
     void raiseOrLowerClient(AbstractClient*);
     void resetUpdateToolWindowsTimer();
     void restoreSessionStackingOrder(Client* c);

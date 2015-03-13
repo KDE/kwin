@@ -193,6 +193,7 @@ public:
      * @param mode The tile mode (left/right) to give this window.
      */
     virtual void setQuickTileMode(QuickTileMode mode, bool keyboard = false) = 0;
+    virtual void updateLayer();
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

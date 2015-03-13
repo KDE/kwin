@@ -102,7 +102,7 @@ namespace KWin
 // Workspace
 //*******************************
 
-void Workspace::updateClientLayer(Client* c)
+void Workspace::updateClientLayer(AbstractClient* c)
 {
     if (c)
         c->updateLayer();

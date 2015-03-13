@@ -392,7 +392,7 @@ public:
     virtual Layer layer() const;
     Layer belongsToLayer() const;
     void invalidateLayer();
-    void updateLayer();
+    void updateLayer() override;
     int sessionStackingOrder() const;
 
     void setModal(bool modal);
