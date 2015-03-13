@@ -464,7 +464,7 @@ Client* Workspace::createClient(xcb_window_t w, bool is_mapped)
     connect(c, SIGNAL(geometryShapeChanged(KWin::Toplevel*,QRect)), m_compositor, SLOT(checkUnredirect()));
     connect(c, SIGNAL(blockingCompositingChanged(KWin::Client*)), m_compositor, SLOT(updateCompositeBlocking(KWin::Client*)));
     connect(c, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), ScreenEdges::self(), SIGNAL(checkBlocking()));
-    connect(c, SIGNAL(desktopPresenceChanged(KWin::Client*,int)), SIGNAL(desktopPresenceChanged(KWin::Client*,int)), Qt::QueuedConnection);
+    connect(c, &Client::desktopPresenceChanged, this, &Workspace::desktopPresenceChanged, Qt::QueuedConnection);
     if (!c->manage(w, is_mapped)) {
         Client::deleteClient(c);
         return NULL;

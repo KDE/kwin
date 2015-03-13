@@ -231,7 +231,7 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
         }
     );
     connect(ws, &Workspace::desktopPresenceChanged, this,
-        [this](Client *c, int old) {
+        [this](AbstractClient *c, int old) {
             if (!c->effectWindow()) {
                 return;
             }

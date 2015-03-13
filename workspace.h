@@ -441,7 +441,7 @@ Q_SIGNALS:
     void workspaceInitialized();
 
     //Signals required for the scripting interface
-    void desktopPresenceChanged(KWin::Client*, int);
+    void desktopPresenceChanged(KWin::AbstractClient*, int);
     void currentDesktopChanged(int, KWin::AbstractClient*);
     void clientAdded(KWin::Client*);
     void clientRemoved(KWin::Client*);

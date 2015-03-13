@@ -636,7 +636,6 @@ Q_SIGNALS:
     void clientFinishUserMovedResized(KWin::Client*);
     void captionChanged();
     void desktopChanged();
-    void desktopPresenceChanged(KWin::Client*, int); // to be forwarded by Workspace
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();
