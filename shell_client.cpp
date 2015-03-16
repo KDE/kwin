@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "deleted.h"
 #include "wayland_server.h"
+#include "virtualdesktops.h"
 
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -31,7 +32,7 @@ namespace KWin
 {
 
 ShellClient::ShellClient(ShellSurfaceInterface *surface)
-    : Toplevel()
+    : AbstractClient()
     , m_shellSurface(surface)
 {
     setSurface(surface->surface());
@@ -43,6 +44,8 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         ready_for_painting = false;
     }
     setGeometry(QRect(QPoint(0, 0), m_clientSize));
+
+    setDesktop(VirtualDesktopManager::self()->current());
 
     connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
         [this] {
@@ -93,12 +96,6 @@ void ShellClient::debug(QDebug &stream) const
 {
     // TODO: implement
     Q_UNUSED(stream)
-}
-
-int ShellClient::desktop() const
-{
-    // TODO: implement
-    return -1;
 }
 
 Layer ShellClient::layer() const
@@ -161,6 +158,174 @@ void ShellClient::setGeometry(const QRect &rect)
 QByteArray ShellClient::windowRole() const
 {
     return QByteArray();
+}
+
+bool ShellClient::belongsToSameApplication(const AbstractClient *other, bool active_hack) const
+{
+    Q_UNUSED(active_hack)
+    if (auto s = other->surface()) {
+        return s->client() == surface()->client();
+    }
+    return false;
+}
+
+void ShellClient::blockActivityUpdates(bool b)
+{
+    Q_UNUSED(b)
+}
+
+QString ShellClient::caption(bool full, bool stripped) const
+{
+    Q_UNUSED(full)
+    Q_UNUSED(stripped)
+    return QString();
+}
+
+void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
+{
+    Q_UNUSED(oldGeometry)
+    Q_UNUSED(oldDesktop)
+}
+
+void ShellClient::closeWindow()
+{
+}
+
+AbstractClient *ShellClient::findModal(bool allow_itself)
+{
+    Q_UNUSED(allow_itself)
+    return nullptr;
+}
+
+bool ShellClient::isCloseable() const
+{
+    return false;
+}
+
+bool ShellClient::isFullScreen() const
+{
+    return false;
+}
+
+bool ShellClient::isMaximizable() const
+{
+    return false;
+}
+
+bool ShellClient::isMinimizable() const
+{
+    return false;
+}
+
+bool ShellClient::isMovable() const
+{
+    return false;
+}
+
+bool ShellClient::isMovableAcrossScreens() const
+{
+    return false;
+}
+
+bool ShellClient::isResizable() const
+{
+    return false;
+}
+
+bool ShellClient::isShown(bool shaded_is_shown) const
+{
+    Q_UNUSED(shaded_is_shown)
+    return true;
+}
+
+void ShellClient::maximize(MaximizeMode)
+{
+}
+
+MaximizeMode ShellClient::maximizeMode() const
+{
+    return KWin::MaximizeRestore;
+}
+
+bool ShellClient::noBorder() const
+{
+    return true;
+}
+
+bool ShellClient::performMouseCommand(Options::MouseCommand cmd, const QPoint &globalPos)
+{
+    Q_UNUSED(cmd)
+    Q_UNUSED(globalPos)
+    return false;
+}
+
+const WindowRules *ShellClient::rules() const
+{
+    static WindowRules s_rules;
+    return &s_rules;
+}
+
+void ShellClient::sendToScreen(int screen)
+{
+    Q_UNUSED(screen)
+}
+
+void ShellClient::setFullScreen(bool set, bool user)
+{
+    Q_UNUSED(set)
+    Q_UNUSED(user)
+}
+
+void ShellClient::setNoBorder(bool set)
+{
+    Q_UNUSED(set)
+}
+
+void ShellClient::setOnAllActivities(bool set)
+{
+    Q_UNUSED(set)
+}
+
+void ShellClient::setQuickTileMode(AbstractClient::QuickTileMode mode, bool keyboard)
+{
+    Q_UNUSED(mode)
+    Q_UNUSED(keyboard)
+}
+
+void ShellClient::setShortcut(const QString &cut)
+{
+    Q_UNUSED(cut)
+}
+
+const QKeySequence &ShellClient::shortcut() const
+{
+    static QKeySequence seq;
+    return seq;
+}
+
+void ShellClient::takeFocus()
+{
+    setActive(true);
+}
+
+void ShellClient::updateWindowRules(Rules::Types selection)
+{
+    Q_UNUSED(selection)
+}
+
+bool ShellClient::userCanSetFullScreen() const
+{
+    return false;
+}
+
+bool ShellClient::userCanSetNoBorder() const
+{
+    return false;
+}
+
+bool ShellClient::wantsInput() const
+{
+    return true;
 }
 
 }

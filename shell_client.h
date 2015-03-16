@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_SHELL_CLIENT_H
 #define KWIN_SHELL_CLIENT_H
 
-#include "toplevel.h"
+#include "abstract_client.h"
 
 namespace KWayland
 {
@@ -33,7 +33,7 @@ class ShellSurfaceInterface;
 namespace KWin
 {
 
-class ShellClient : public Toplevel
+class ShellClient : public AbstractClient
 {
     Q_OBJECT
 public:
@@ -43,7 +43,6 @@ public:
     QStringList activities() const override;
     QPoint clientPos() const override;
     QSize clientSize() const override;
-    int desktop() const override;
     Layer layer() const override;
     QRect transparentRect() const override;
     bool shouldUnredirect() const override;
@@ -57,8 +56,40 @@ public:
         return m_shellSurface;
     }
 
+    void blockActivityUpdates(bool b = true) override;
+    QString caption(bool full = true, bool stripped = false) const override;
+    void checkWorkspacePosition(QRect oldGeometry = QRect(), int oldDesktop = -2) override;
+    void closeWindow() override;
+    AbstractClient *findModal(bool allow_itself = false) override;
+    bool isCloseable() const override;
+    bool isFullScreen() const override;
+    bool isMaximizable() const override;
+    bool isMinimizable() const override;
+    bool isMovable() const override;
+    bool isMovableAcrossScreens() const override;
+    bool isResizable() const override;
+    bool isShown(bool shaded_is_shown) const override;
+    void maximize(MaximizeMode) override;
+    MaximizeMode maximizeMode() const override;
+    bool noBorder() const override;
+    const WindowRules *rules() const override;
+    bool performMouseCommand(Options::MouseCommand cmd, const QPoint &globalPos) override;
+    void sendToScreen(int screen) override;
+    void setFullScreen(bool set, bool user = true) override;
+    void setNoBorder(bool set) override;
+    void setOnAllActivities(bool set) override;
+    void setQuickTileMode(QuickTileMode mode, bool keyboard = false) override;
+    void setShortcut(const QString &cut) override;
+    const QKeySequence &shortcut() const override;
+    void takeFocus() override;
+    void updateWindowRules(Rules::Types selection) override;
+    bool userCanSetFullScreen() const override;
+    bool userCanSetNoBorder() const override;
+    bool wantsInput() const override;
+
 protected:
     void addDamage(const QRegion &damage) override;
+    bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
 
 private:
     void setGeometry(const QRect &rect);
