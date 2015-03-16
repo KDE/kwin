@@ -50,6 +50,7 @@ public:
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const override;
     void debug(QDebug &stream) const override;
     double opacity() const override;
+    void setOpacity(double opacity) override;
     QByteArray windowRole() const override;
 
     KWayland::Server::ShellSurfaceInterface *shellSurface() const {

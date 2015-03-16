@@ -132,6 +132,11 @@ double ShellClient::opacity() const
     return 1.0;
 }
 
+void ShellClient::setOpacity(double opacity)
+{
+    Q_UNUSED(opacity)
+}
+
 void ShellClient::addDamage(const QRegion &damage)
 {
     setReadyForPainting();

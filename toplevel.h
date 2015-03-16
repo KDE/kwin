@@ -268,7 +268,7 @@ public:
     bool readyForPainting() const; // true if the window has been already painted its contents
     xcb_visualid_t visual() const;
     bool shape() const;
-    void setOpacity(double opacity);
+    virtual void setOpacity(double opacity);
     virtual double opacity() const;
     int depth() const;
     bool hasAlpha() const;
