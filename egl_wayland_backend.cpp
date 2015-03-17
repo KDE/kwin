@@ -508,7 +508,7 @@ void EglWaylandTexture::updateTexture(WindowPixmap *pixmap)
     }
     if (!buffer->shmBuffer()) {
         q->bind();
-        EGLImage image = attach(buffer);
+        EGLImageKHR image = attach(buffer);
         q->unbind();
         if (image != EGL_NO_IMAGE_KHR) {
             eglDestroyImageKHR(m_backend->m_display, m_image);
@@ -538,7 +538,7 @@ void EglWaylandTexture::updateTexture(WindowPixmap *pixmap)
     q->unbind();
 }
 
-EGLImage EglWaylandTexture::attach(const QPointer< KWayland::Server::BufferInterface > &buffer)
+EGLImageKHR EglWaylandTexture::attach(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
     EGLint format, width, height, yInverted;
     eglQueryWaylandBufferWL(m_backend->m_display, buffer->resource(), EGL_TEXTURE_FORMAT, &format);
@@ -554,7 +554,7 @@ EGLImage EglWaylandTexture::attach(const QPointer< KWayland::Server::BufferInter
         EGL_WAYLAND_PLANE_WL, 0,
         EGL_NONE
     };
-    EGLImage image = eglCreateImageKHR(m_backend->m_display, EGL_NO_CONTEXT, EGL_WAYLAND_BUFFER_WL,
+    EGLImageKHR image = eglCreateImageKHR(m_backend->m_display, EGL_NO_CONTEXT, EGL_WAYLAND_BUFFER_WL,
                                       (EGLClientBuffer)buffer->resource(), attribs);
     if (image != EGL_NO_IMAGE_KHR) {
         glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)image);
