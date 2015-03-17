@@ -318,6 +318,13 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
 
+    // enforce wayland plugin, unfortunately command line switch has precedence
+    setenv("QT_QPA_PLATFORM", "wayland", true);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 4, 2))
+    // TODO: remove warning once we depend on Qt 5.5
+    qWarning() << "QtWayland 5.4.2 required, application might freeze if not present!";
+#endif
+
     qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
