@@ -684,13 +684,13 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
     if (!m_mouseInterceptionWindow.isValid()) {
         const QSize &s = screens()->size();
         const QRect geo(0, 0, s.width(), s.height());
-        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK | XCB_CW_CURSOR;
+        const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
         const uint32_t values[] = {
             true,
-            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION,
-            Cursor::x11Cursor(shape)
+            XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION
         };
         m_mouseInterceptionWindow.reset(Xcb::createInputWindow(geo, mask, values));
+        defineCursor(shape);
     } else {
         defineCursor(shape);
     }
@@ -1177,7 +1177,10 @@ void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 #endif
         return;
     }
-    m_mouseInterceptionWindow.defineCursor(Cursor::x11Cursor(shape));
+    const xcb_cursor_t c = Cursor::x11Cursor(shape);
+    if (c != XCB_CURSOR_NONE) {
+        m_mouseInterceptionWindow.defineCursor(c);
+    }
 }
 
 bool EffectsHandlerImpl::checkInputWindowEvent(xcb_button_press_event_t *e)
