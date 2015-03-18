@@ -744,6 +744,9 @@ void Compositor::setCompositeTimer()
 {
     if (!hasScene())  // should not really happen, but there may be e.g. some damage events still pending
         return;
+    if (!Workspace::self()) {
+        return;
+    }
 
     // Don't start the timer if we're waiting for a swap event
     if (m_bufferSwapPending && m_composeAtSwapCompletion)
