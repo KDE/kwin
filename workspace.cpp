@@ -191,7 +191,9 @@ Workspace::Workspace(bool restore)
 #endif
 
     // init XRenderUtils
-    XRenderUtils::init(connection(), rootWindow());
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        XRenderUtils::init(connection(), rootWindow());
+    }
     if (Compositor::self()) {
         m_compositor = Compositor::self();
     } else {
