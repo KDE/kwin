@@ -457,9 +457,10 @@ public:
 class Atom
 {
 public:
-    explicit Atom(const QByteArray &name, bool onlyIfExists = false)
-        : m_retrieved(false)
-        , m_cookie(xcb_intern_atom_unchecked(connection(), onlyIfExists, name.length(), name.constData()))
+    explicit Atom(const QByteArray &name, bool onlyIfExists = false, xcb_connection_t *c = connection())
+        : m_connection(c)
+        , m_retrieved(false)
+        , m_cookie(xcb_intern_atom_unchecked(m_connection, onlyIfExists, name.length(), name.constData()))
         , m_atom(XCB_ATOM_NONE)
         , m_name(name)
         {
@@ -469,7 +470,7 @@ public:
 
     ~Atom() {
         if (!m_retrieved && m_cookie.sequence) {
-            xcb_discard_reply(connection(), m_cookie.sequence);
+            xcb_discard_reply(m_connection, m_cookie.sequence);
         }
     }
 
@@ -495,12 +496,13 @@ private:
         if (m_retrieved || !m_cookie.sequence) {
             return;
         }
-        ScopedCPointer<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(connection(), m_cookie, nullptr));
+        ScopedCPointer<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(m_connection, m_cookie, nullptr));
         if (!reply.isNull()) {
             m_atom = reply->atom;
         }
         m_retrieved = true;
     }
+    xcb_connection_t *m_connection;
     bool m_retrieved;
     xcb_intern_atom_cookie_t m_cookie;
     xcb_atom_t m_atom;
