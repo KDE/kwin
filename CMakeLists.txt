@@ -415,8 +415,10 @@ if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
             screens_wayland.cpp
+            screens_x11windowed.cpp
             wayland_backend.cpp
             wayland_server.cpp
+            x11windowed_backend.cpp
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)

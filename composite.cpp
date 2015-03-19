@@ -118,8 +118,12 @@ Compositor::Compositor(QObject* workspace)
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
 #if HAVE_WAYLAND
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::systemCompositorDied, this, &Compositor::finish);
-        connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::backendReady, this, &Compositor::setup);
+        if (Wayland::WaylandBackend::self()) {
+            connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::systemCompositorDied, this, &Compositor::finish);
+            connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::backendReady, this, &Compositor::setup);
+        } else {
+            QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
+        }
     } else
 #endif
 

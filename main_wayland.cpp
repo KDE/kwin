@@ -24,9 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
+#include "x11windowed_backend.h"
 
 // KWayland
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/seat_interface.h>
 // KDE
 #include <KLocalizedString>
 // Qt
@@ -86,19 +88,26 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     createInput();
-    Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
-    connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
-        [] () {
-            fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
-            ::exit(1);
-        }
-    );
-    connect(backend, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    if (!X11WindowedBackend::self()) {
+        // only create WaylandBackend if we do not use X11WindowedBackend
+        Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
+        connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
+            [] () {
+                fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
+                ::exit(1);
+            }
+        );
+        connect(backend, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    } else {
+        continueStartupWithScreens();
+    }
 }
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    disconnect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    if (Wayland::WaylandBackend::self()) {
+        disconnect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    }
     createScreens();
     waylandServer()->initOutputs();
 
@@ -338,11 +347,28 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineOption waylandSocketOption(QStringList{QStringLiteral("s"), QStringLiteral("socket")},
                                            i18n("Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."),
                                            QStringLiteral("socket"));
+    QCommandLineOption windowedOption(QStringLiteral("windowed"),
+                                      i18n("Use a nested compositor in windowed mode."));
+    QCommandLineOption x11DisplayOption(QStringLiteral("x11-display"),
+                                        i18n("The X11 Display to use in windowed mode on platform X11."),
+                                        QStringLiteral("display"));
+    QCommandLineOption widthOption(QStringLiteral("width"),
+                                   i18n("The width for windowed mode. Default width is 1024."),
+                                   QStringLiteral("width"));
+    widthOption.setDefaultValue(QString::number(1024));
+    QCommandLineOption heightOption(QStringLiteral("height"),
+                                    i18n("The height for windowed mode. Default height is 768."),
+                                    QStringLiteral("height"));
+    heightOption.setDefaultValue(QString::number(768));
 
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
     parser.addOption(xwaylandOption);
     parser.addOption(waylandSocketOption);
+    parser.addOption(windowedOption);
+    parser.addOption(x11DisplayOption);
+    parser.addOption(widthOption);
+    parser.addOption(heightOption);
 #if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
@@ -355,6 +381,27 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 #if HAVE_INPUT
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
+
+    if (parser.isSet(windowedOption)) {
+        bool ok = false;
+        const int width = parser.value(widthOption).toInt(&ok);
+        if (!ok) {
+            std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
+            return 1;
+        }
+        const int height = parser.value(heightOption).toInt(&ok);
+        if (!ok) {
+            std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
+            return 1;
+        }
+        KWin::X11WindowedBackend *x11Backend = KWin::X11WindowedBackend::create(parser.value(x11DisplayOption), QSize(width, height), &a);
+        if (!x11Backend->isValid()) {
+            std::cerr << "FATAL ERROR failed to connet to X Server" << std::endl;
+            return 1;
+        }
+        server->seat()->setHasPointer(true);
+        server->seat()->setHasKeyboard(true);
+    }
 
     a.setStartXwayland(parser.isSet(xwaylandOption));
     a.start();

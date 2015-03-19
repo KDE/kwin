@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "x11windowed_backend.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
@@ -182,6 +183,66 @@ bool WaylandQPainterBackend::needsFullRepaint() const
     return m_needsFullRepaint;
 }
 
+//****************************************
+// X11WindowedBackend
+//****************************************
+X11WindowedQPainterBackend::X11WindowedQPainterBackend()
+    : QPainterBackend()
+    , m_backBuffer(X11WindowedBackend::self()->size(), QImage::Format_RGB32)
+{
+}
+
+X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
+{
+    if (m_gc) {
+        xcb_free_gc(X11WindowedBackend::self()->connection(), m_gc);
+    }
+}
+
+QImage *X11WindowedQPainterBackend::buffer()
+{
+    return &m_backBuffer;
+}
+
+bool X11WindowedQPainterBackend::needsFullRepaint() const
+{
+    return m_needsFullRepaint;
+}
+
+void X11WindowedQPainterBackend::prepareRenderingFrame()
+{
+}
+
+void X11WindowedQPainterBackend::screenGeometryChanged(const QSize &size)
+{
+    if (m_backBuffer.size() != size) {
+        m_backBuffer = QImage(size, QImage::Format_RGB32);
+        m_backBuffer.fill(Qt::black);
+        m_needsFullRepaint = true;
+    }
+}
+
+void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
+{
+    Q_UNUSED(mask)
+    Q_UNUSED(damage)
+    xcb_connection_t *c = X11WindowedBackend::self()->connection();
+    const xcb_window_t window = X11WindowedBackend::self()->window();
+    if (m_gc == XCB_NONE) {
+        m_gc = xcb_generate_id(c);
+        xcb_create_gc(c, m_gc, window, 0, nullptr);
+    }
+    // TODO: only update changes?
+    xcb_put_image(c, XCB_IMAGE_FORMAT_Z_PIXMAP, window, m_gc,
+                    m_backBuffer.width(), m_backBuffer.height(), 0, 0, 0, 24,
+                    m_backBuffer.byteCount(), m_backBuffer.constBits());
+}
+
+bool X11WindowedQPainterBackend::usesOverlayWindow() const
+{
+    return false;
+}
+
 #endif
 
 //****************************************
@@ -192,7 +253,11 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
     QScopedPointer<QPainterBackend> backend;
 #if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        backend.reset(new WaylandQPainterBackend);
+        if (X11WindowedBackend::self()) {
+            backend.reset(new X11WindowedQPainterBackend);
+        } else {
+            backend.reset(new WaylandQPainterBackend);
+        }
         if (backend->isFailed()) {
             return NULL;
         }
@@ -278,6 +343,12 @@ Scene::EffectFrame *SceneQPainter::createEffectFrame(EffectFrameImpl *frame)
 Shadow *SceneQPainter::createShadow(Toplevel *toplevel)
 {
     return new SceneQPainterShadow(toplevel);
+}
+
+void SceneQPainter::screenGeometryChanged(const QSize &size)
+{
+    Scene::screenGeometryChanged(size);
+    m_backend->screenGeometryChanged(size);
 }
 
 //****************************************

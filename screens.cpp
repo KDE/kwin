@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_xrandr.h"
 #if HAVE_WAYLAND
 #include "screens_wayland.h"
+#include "wayland_backend.h"
+#include "x11windowed_backend.h"
+#include "screens_x11windowed.h"
 #endif
 #ifdef KWIN_UNIT_TEST
 #include <mock_screens.h>
@@ -43,13 +46,18 @@ Screens *Screens::create(QObject *parent)
 #else
 #if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        s_self = new WaylandScreens(parent);
+        if (X11WindowedBackend::self()) {
+            s_self = new X11WindowedScreens(parent);
+        } else if (Wayland::WaylandBackend::self()) {
+            s_self = new WaylandScreens(parent);
+        }
     }
 #endif
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         s_self = new XRandRScreens(parent);
     }
 #endif
+    Q_ASSERT(s_self);
     s_self->init();
     return s_self;
 }

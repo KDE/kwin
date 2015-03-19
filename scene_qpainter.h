@@ -124,6 +124,26 @@ private:
     QImage m_backBuffer;
     QWeakPointer<KWayland::Client::Buffer> m_buffer;
 };
+
+class X11WindowedQPainterBackend : public QObject, public QPainterBackend
+{
+    Q_OBJECT
+public:
+    X11WindowedQPainterBackend();
+    virtual ~X11WindowedQPainterBackend();
+
+    QImage *buffer() override;
+    bool needsFullRepaint() const override;
+    bool usesOverlayWindow() const override;
+    void prepareRenderingFrame() override;
+    void present(int mask, const QRegion &damage) override;
+    void screenGeometryChanged(const QSize &size);
+
+private:
+    bool m_needsFullRepaint = true;
+    xcb_gcontext_t m_gc = XCB_NONE;
+    QImage m_backBuffer;
+};
 #endif
 
 class SceneQPainter : public Scene
@@ -141,6 +161,7 @@ public:
     virtual EffectFrame *createEffectFrame(EffectFrameImpl *frame) override;
     virtual Shadow *createShadow(Toplevel *toplevel) override;
     Decoration::Renderer *createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
+    void screenGeometryChanged(const QSize &size) override;
 
     QPainter *painter();
 
