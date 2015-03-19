@@ -32,6 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // for Wayland
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
+#include "wayland_backend.h"
+#endif
+#if HAVE_X11_XCB
+#include "x11windowed_backend.h"
 #endif
 #endif
 #ifndef KWIN_HAVE_OPENGLES
@@ -483,15 +487,20 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         break;
     case EglPlatformInterface:
 #ifdef KWIN_HAVE_EGL
-#if HAVE_WAYLAND_EGL
         if (kwinApp()->shouldUseWaylandForCompositing()) {
-            backend = new EglWaylandBackend();
+#if HAVE_WAYLAND_EGL
+            if (Wayland::WaylandBackend::self()) {
+                backend = new EglWaylandBackend();
+            }
+#endif
+#if HAVE_X11_XCB
+            if (!backend && X11WindowedBackend::self()) {
+                backend = new EglOnXBackend(X11WindowedBackend::self());
+            }
+#endif
         } else {
             backend = new EglOnXBackend();
         }
-#else
-        backend = new EglOnXBackend();
-#endif
 #endif
         break;
     default:

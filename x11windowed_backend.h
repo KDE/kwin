@@ -52,6 +52,7 @@ public:
     Display *display() const {
         return m_display;
     }
+    xcb_window_t rootWindow() const;
 
     bool isValid() const {
         return m_connection != nullptr && m_window != XCB_WINDOW_NONE;

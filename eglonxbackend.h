@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class X11WindowedBackend;
+
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
  **/
@@ -31,6 +33,9 @@ class EglOnXBackend : public OpenGLBackend
 {
 public:
     EglOnXBackend();
+#if HAVE_X11_XCB
+    explicit EglOnXBackend(X11WindowedBackend *backend);
+#endif
     virtual ~EglOnXBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
@@ -58,6 +63,14 @@ private:
     EGLContext ctx;
     int surfaceHasSubPost;
     int m_bufferAge;
+    bool m_usesOverlayWindow;
+#if HAVE_X11_XCB
+    X11WindowedBackend *m_x11Backend = nullptr;
+#endif
+    xcb_connection_t *m_connection;
+    Display *m_x11Display;
+    xcb_window_t m_rootWindow;
+    int m_x11ScreenNumber;
     friend class EglTexture;
 };
 

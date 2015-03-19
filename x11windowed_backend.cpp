@@ -294,4 +294,12 @@ void X11WindowedBackend::installCursorFromServer()
     // TODO: unset cursor
 }
 
+xcb_window_t X11WindowedBackend::rootWindow() const
+{
+    if (!m_screen) {
+        return XCB_WINDOW_NONE;
+    }
+    return m_screen->root;
+}
+
 }

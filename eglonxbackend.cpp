@@ -19,9 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "eglonxbackend.h"
 // kwin
+#include "main.h"
 #include "options.h"
 #include "overlaywindow.h"
+#include "screens.h"
 #include "xcbutils.h"
+#if HAVE_X11_XCB
+#include "x11windowed_backend.h"
+#endif
 // kwin libs
 #include <kwinglplatform.h>
 // Qt
@@ -33,23 +38,47 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-extern int screen_number; // main.cpp
-
 EglOnXBackend::EglOnXBackend()
     : OpenGLBackend()
     , m_overlayWindow(new OverlayWindow())
     , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
+    , m_usesOverlayWindow(true)
+    , m_connection(connection())
+    , m_x11Display(display())
+    , m_rootWindow(rootWindow())
+    , m_x11ScreenNumber(kwinApp()->x11ScreenNumber())
 {
     init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
 }
 
+#if HAVE_X11_XCB
+EglOnXBackend::EglOnXBackend(X11WindowedBackend *backend)
+    : OpenGLBackend()
+    , m_overlayWindow(nullptr)
+    , ctx(EGL_NO_CONTEXT)
+    , surfaceHasSubPost(0)
+    , m_bufferAge(0)
+    , m_usesOverlayWindow(false)
+    , m_x11Backend(backend)
+    , m_connection(backend->connection())
+    , m_x11Display(backend->display())
+    , m_rootWindow(backend->rootWindow())
+    , m_x11ScreenNumber(backend->screenNumer())
+{
+    init();
+    // Egl is always direct rendering
+    setIsDirectRendering(true);
+}
+#endif
+
+
 EglOnXBackend::~EglOnXBackend()
 {
-    if (isFailed()) {
+    if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
     cleanupGL();
@@ -58,10 +87,12 @@ EglOnXBackend::~EglOnXBackend()
     eglDestroySurface(dpy, surface);
     eglTerminate(dpy);
     eglReleaseThread();
-    if (overlayWindow()->window()) {
-        overlayWindow()->destroy();
+    if (m_overlayWindow) {
+        if (overlayWindow()->window()) {
+            overlayWindow()->destroy();
+        }
+        delete m_overlayWindow;
     }
-    delete m_overlayWindow;
 }
 
 static bool gs_tripleBufferUndetected = true;
@@ -178,13 +209,13 @@ bool EglOnXBackend::initRenderingContext()
             return false;
 
         const int attribs[] = {
-            EGL_PLATFORM_X11_SCREEN_EXT, screen_number,
+            EGL_PLATFORM_X11_SCREEN_EXT, m_x11ScreenNumber,
             EGL_NONE
         };
 
-        dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, display(), attribs);
+        dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_X11_EXT, m_x11Display, attribs);
     } else {
-        dpy = eglGetDisplay(display());
+        dpy = eglGetDisplay(m_x11Display);
     }
 
     if (dpy == EGL_NO_DISPLAY)
@@ -205,11 +236,26 @@ bool EglOnXBackend::initRenderingContext()
 
     initBufferConfigs();
 
-    if (!overlayWindow()->create()) {
-        qCCritical(KWIN_CORE) << "Could not get overlay window";
+    if (m_usesOverlayWindow) {
+        if (!overlayWindow()->create()) {
+            qCCritical(KWIN_CORE) << "Could not get overlay window";
+            return false;
+        } else {
+            overlayWindow()->setup(None);
+        }
+    }
+
+    xcb_window_t window = XCB_WINDOW_NONE;
+    if (m_overlayWindow) {
+        window = m_overlayWindow->window();
+    }
+#if HAVE_X11_XCB
+    else if (m_x11Backend) {
+        window = m_x11Backend->window();
+    }
+#endif
+    if (window == XCB_WINDOW_NONE) {
         return false;
-    } else {
-        overlayWindow()->setup(None);
     }
 
     if (havePlatformBase) {
@@ -217,10 +263,9 @@ bool EglOnXBackend::initRenderingContext()
         //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
         //       native_window parameter to be pointer to a Window, so this variable
         //       cannot be an xcb_window_t.
-        const Window window = overlayWindow()->window();
         surface = eglCreatePlatformWindowSurfaceEXT(dpy, config, (void *) &window, nullptr);
     } else {
-        surface = eglCreateWindowSurface(dpy, config, overlayWindow()->window(), nullptr);
+        surface = eglCreateWindowSurface(dpy, config, window, nullptr);
     }
 
 #ifdef KWIN_HAVE_OPENGLES
@@ -297,7 +342,9 @@ bool EglOnXBackend::initBufferConfigs()
         return false;
     }
 
-    Xcb::WindowAttributes attribs(rootWindow());
+    ScopedCPointer<xcb_get_window_attributes_reply_t> attribs(xcb_get_window_attributes_reply(m_connection,
+                                                                                              xcb_get_window_attributes_unchecked(m_connection, m_rootWindow),
+                                                                                              nullptr));
     if (!attribs) {
         qCCritical(KWIN_CORE) << "Failed to get window attributes of root window";
         return false;
@@ -322,7 +369,8 @@ void EglOnXBackend::present()
     if (lastDamage().isEmpty())
         return;
 
-    const QRegion displayRegion(0, 0, displayWidth(), displayHeight());
+    const QSize screenSize = screens()->size();
+    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
     const bool fullRepaint = supportsBufferAge() || (lastDamage() == displayRegion);
 
     if (fullRepaint || !surfaceHasSubPost) {
@@ -357,14 +405,14 @@ void EglOnXBackend::present()
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
         foreach (const QRect & r, lastDamage().rects()) {
-            eglPostSubBufferNV(dpy, surface, r.left(), displayHeight() - r.bottom() - 1, r.width(), r.height());
+            eglPostSubBufferNV(dpy, surface, r.left(), screenSize.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
 
     setLastDamage(QRegion());
     if (!supportsBufferAge()) {
         eglWaitGL();
-        xcb_flush(connection());
+        xcb_flush(m_connection);
     }
 }
 
@@ -438,7 +486,7 @@ void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         glFlush();
     }
 
-    if (overlayWindow()->window())  // show the window only after the first pass,
+    if (m_overlayWindow && overlayWindow()->window())  // show the window only after the first pass,
         overlayWindow()->show();   // since that pass may take long
 
     // Save the damaged region to history
@@ -463,7 +511,7 @@ void EglOnXBackend::doneCurrent()
 
 bool EglOnXBackend::usesOverlayWindow() const
 {
-    return true;
+    return m_usesOverlayWindow;
 }
 
 OverlayWindow* EglOnXBackend::overlayWindow()
