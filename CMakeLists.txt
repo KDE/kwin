@@ -415,7 +415,7 @@ if(KWIN_BUILD_ACTIVITIES)
 endif()
 
 if(KWIN_HAVE_EGL)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} eglonxbackend.cpp)
+    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} abstract_egl_backend.cpp eglonxbackend.cpp)
 endif()
 
 if(HAVE_WAYLAND)

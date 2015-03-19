@@ -39,9 +39,8 @@ namespace KWin
 {
 
 EglOnXBackend::EglOnXBackend()
-    : OpenGLBackend()
+    : AbstractEglBackend()
     , m_overlayWindow(new OverlayWindow())
-    , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
     , m_usesOverlayWindow(true)
@@ -57,9 +56,8 @@ EglOnXBackend::EglOnXBackend()
 
 #if HAVE_X11_XCB
 EglOnXBackend::EglOnXBackend(X11WindowedBackend *backend)
-    : OpenGLBackend()
+    : AbstractEglBackend()
     , m_overlayWindow(nullptr)
-    , ctx(EGL_NO_CONTEXT)
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
     , m_usesOverlayWindow(false)
@@ -81,12 +79,7 @@ EglOnXBackend::~EglOnXBackend()
     if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
-    cleanupGL();
-    doneCurrent();
-    eglDestroyContext(dpy, ctx);
-    eglDestroySurface(dpy, surface);
-    eglTerminate(dpy);
-    eglReleaseThread();
+    cleanup();
     if (m_overlayWindow) {
         if (overlayWindow()->window()) {
             overlayWindow()->destroy();
@@ -105,22 +98,13 @@ void EglOnXBackend::init()
         return;
     }
 
-    initEGL();
+    initKWinGL();
     if (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image")) &&
         (!hasGLExtension(QByteArrayLiteral("EGL_KHR_image_base")) ||
          !hasGLExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
-    GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect(EglPlatformInterface);
-    if (GLPlatform::instance()->driver() == Driver_Intel)
-        options->setUnredirectFullscreen(false); // bug #252817
-    options->setGlPreferBufferSwap(options->glPreferBufferSwap()); // resolve autosetting
-    if (options->glPreferBufferSwap() == Options::AutoSwapStrategy)
-        options->setGlPreferBufferSwap('e'); // for unknown drivers - should not happen
-    glPlatform->printResults();
-    initGL(EglPlatformInterface);
     if (!hasGLExtension(QByteArrayLiteral("GL_OES_EGL_image"))) {
         setFailed(QStringLiteral("Required extension GL_OES_EGL_image not found, disabling compositing"));
         return;
@@ -128,7 +112,7 @@ void EglOnXBackend::init()
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
     if (hasGLExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
-        if (eglQuerySurface(dpy, surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
+        if (eglQuerySurface(eglDisplay(), surface(), EGL_POST_SUB_BUFFER_SUPPORTED_NV, &surfaceHasSubPost) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
                 setFailed(QStringLiteral("query surface failed"));
@@ -139,14 +123,7 @@ void EglOnXBackend::init()
         }
     }
 
-    setSupportsBufferAge(false);
-
-    if (hasGLExtension(QByteArrayLiteral("EGL_EXT_buffer_age"))) {
-        const QByteArray useBufferAge = qgetenv("KWIN_USE_BUFFER_AGE");
-
-        if (useBufferAge != "0")
-            setSupportsBufferAge(true);
-    }
+    initBufferAge();
 
     setSyncsToVBlank(false);
     setBlocksForRetrace(false);
@@ -158,9 +135,9 @@ void EglOnXBackend::init()
         if (options->glPreferBufferSwap() != Options::NoSwapEncourage) {
             // check if swap interval 1 is supported
             EGLint val;
-            eglGetConfigAttrib(dpy, config, EGL_MAX_SWAP_INTERVAL, &val);
+            eglGetConfigAttrib(eglDisplay(), config(), EGL_MAX_SWAP_INTERVAL, &val);
             if (val >= 1) {
-                if (eglSwapInterval(dpy, 1)) {
+                if (eglSwapInterval(eglDisplay(), 1)) {
                     qCDebug(KWIN_CORE) << "Enabled v-sync";
                     setSyncsToVBlank(true);
                     const QByteArray tripleBuffer = qgetenv("KWIN_TRIPLE_BUFFER");
@@ -175,7 +152,7 @@ void EglOnXBackend::init()
             }
         } else {
             // disable v-sync
-            eglSwapInterval(dpy, 0);
+            eglSwapInterval(eglDisplay(), 0);
         }
     } else {
         /* In the GLX backend, we fall back to using glCopyPixels if we have no extension providing support for partial screen updates.
@@ -184,28 +161,23 @@ void EglOnXBackend::init()
          * eglSwapBuffers() for each frame. eglSwapBuffers() then does the copy (no page flip possible in this mode),
          * which means it is slow and not synced to the v-blank. */
         qCWarning(KWIN_CORE) << "eglPostSubBufferNV not supported, have to enable buffer preservation - which breaks v-sync and performance";
-        eglSurfaceAttrib(dpy, surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+        eglSurfaceAttrib(eglDisplay(), surface(), EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
     }
+
+    initWayland();
 }
 
 bool EglOnXBackend::initRenderingContext()
 {
-    // Get the list of client extensions
-    const QByteArray clientExtensionString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
-    if (clientExtensionString.isEmpty()) {
-        // If eglQueryString() returned NULL, the implementation doesn't support
-        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
-        (void) eglGetError();
-    }
-
-    const QList<QByteArray> clientExtensions = clientExtensionString.split(' ');
+    initClientExtensions();
+    EGLDisplay dpy;
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
-    const bool havePlatformBase = clientExtensions.contains("EGL_EXT_platform_base");
+    const bool havePlatformBase = hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_base"));
     if (havePlatformBase) {
         // Make sure that the X11 platform is supported
-        if (!clientExtensions.contains("EGL_EXT_platform_x11"))
+        if (!hasClientExtension(QByteArrayLiteral("EGL_EXT_platform_x11")))
             return false;
 
         const int attribs[] = {
@@ -220,19 +192,8 @@ bool EglOnXBackend::initRenderingContext()
 
     if (dpy == EGL_NO_DISPLAY)
         return false;
-
-    EGLint major, minor;
-    if (eglInitialize(dpy, &major, &minor) == EGL_FALSE)
-        return false;
-
-#ifdef KWIN_HAVE_OPENGLES
-    eglBindAPI(EGL_OPENGL_ES_API);
-#else
-    if (eglBindAPI(EGL_OPENGL_API) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "bind OpenGL API failed";
-        return false;
-    }
-#endif
+    setEglDisplay(dpy);
+    initEglAPI();
 
     initBufferConfigs();
 
@@ -258,23 +219,30 @@ bool EglOnXBackend::initRenderingContext()
         return false;
     }
 
+    EGLSurface surface = EGL_NO_SURFACE;
     if (havePlatformBase) {
         // Note: Window is 64 bits on a 64-bit architecture whereas xcb_window_t is
         //       always 32 bits. eglCreatePlatformWindowSurfaceEXT() expects the
         //       native_window parameter to be pointer to a Window, so this variable
         //       cannot be an xcb_window_t.
-        surface = eglCreatePlatformWindowSurfaceEXT(dpy, config, (void *) &window, nullptr);
+        surface = eglCreatePlatformWindowSurfaceEXT(dpy, config(), (void *) &window, nullptr);
     } else {
-        surface = eglCreateWindowSurface(dpy, config, window, nullptr);
+        surface = eglCreateWindowSurface(dpy, config(), window, nullptr);
     }
 
+    if (surface == EGL_NO_SURFACE) {
+        return false;
+    }
+    setSurface(surface);
+
+    EGLContext ctx = EGL_NO_CONTEXT;
 #ifdef KWIN_HAVE_OPENGLES
     const EGLint context_attribs[] = {
         EGL_CONTEXT_CLIENT_VERSION, 2,
         EGL_NONE
     };
 
-    ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs);
+    ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs);
 #else
     const EGLint context_attribs_31_core[] = {
         EGL_CONTEXT_MAJOR_VERSION_KHR, 3,
@@ -291,23 +259,22 @@ bool EglOnXBackend::initRenderingContext()
 
     // Try to create a 3.1 core context
     if (options->glCoreProfile() && extensions.contains("EGL_KHR_create_context"))
-        ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs_31_core);
+        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_31_core);
 
     if (ctx == EGL_NO_CONTEXT)
-        ctx = eglCreateContext(dpy, config, EGL_NO_CONTEXT, context_attribs_legacy);
+        ctx = eglCreateContext(dpy, config(), EGL_NO_CONTEXT, context_attribs_legacy);
 #endif
 
     if (ctx == EGL_NO_CONTEXT) {
         qCCritical(KWIN_CORE) << "Create Context failed";
         return false;
     }
+    setContext(ctx);
 
     if (eglMakeCurrent(dpy, surface, surface, ctx) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "Make Context Current failed";
         return false;
     }
-
-    qCDebug(KWIN_CORE) << "EGL version: " << major << "." << minor;
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
@@ -337,7 +304,7 @@ bool EglOnXBackend::initBufferConfigs()
 
     EGLint count;
     EGLConfig configs[1024];
-    if (eglChooseConfig(dpy, config_attribs, configs, 1024, &count) == EGL_FALSE) {
+    if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1024, &count) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "choose config failed";
         return false;
     }
@@ -350,14 +317,14 @@ bool EglOnXBackend::initBufferConfigs()
         return false;
     }
 
-    config = configs[0];
+    setConfig(configs[0]);
     for (int i = 0; i < count; i++) {
         EGLint val;
-        if (eglGetConfigAttrib(dpy, configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
+        if (eglGetConfigAttrib(eglDisplay(), configs[i], EGL_NATIVE_VISUAL_ID, &val) == EGL_FALSE) {
             qCCritical(KWIN_CORE) << "egl get config attrib failed";
         }
         if (uint32_t(val) == attribs->visual) {
-            config = configs[i];
+            setConfig(configs[i]);
             break;
         }
     }
@@ -379,7 +346,7 @@ void EglOnXBackend::present()
             m_swapProfiler.begin();
         }
         // the entire screen changed, or we cannot do partial updates (which implies we enabled surface preservation)
-        eglSwapBuffers(dpy, surface);
+        eglSwapBuffers(eglDisplay(), surface());
         if (gs_tripleBufferNeedsDetection) {
             eglWaitGL();
             if (char result = m_swapProfiler.end()) {
@@ -388,7 +355,7 @@ void EglOnXBackend::present()
                     // TODO this is a workaround, we should get __GL_YIELD set before libGL checks it
                     if (qstrcmp(qgetenv("__GL_YIELD"), "USLEEP")) {
                         options->setGlPreferBufferSwap(0);
-                        eglSwapInterval(dpy, 0);
+                        eglSwapInterval(eglDisplay(), 0);
                         qCWarning(KWIN_CORE) << "\nIt seems you are using the nvidia driver without triple buffering\n"
                                           "You must export __GL_YIELD=\"USLEEP\" to prevent large CPU overhead on synced swaps\n"
                                           "Preferably, enable the TripleBuffer Option in the xorg.conf Device\n"
@@ -400,12 +367,12 @@ void EglOnXBackend::present()
             }
         }
         if (supportsBufferAge()) {
-            eglQuerySurface(dpy, surface, EGL_BUFFER_AGE_EXT, &m_bufferAge);
+            eglQuerySurface(eglDisplay(), surface(), EGL_BUFFER_AGE_EXT, &m_bufferAge);
         }
     } else {
         // a part of the screen changed, and we can use eglPostSubBufferNV to copy the updated area
         foreach (const QRect & r, lastDamage().rects()) {
-            eglPostSubBufferNV(dpy, surface, r.left(), screenSize.height() - r.bottom() - 1, r.width(), r.height());
+            eglPostSubBufferNV(eglDisplay(), surface(), r.left(), screenSize.height() - r.bottom() - 1, r.width(), r.height());
         }
     }
 
@@ -494,21 +461,6 @@ void EglOnXBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         addToDamageHistory(damagedRegion);
 }
 
-bool EglOnXBackend::makeCurrent()
-{
-    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
-        // Workaround to tell Qt that no QOpenGLContext is current
-        context->doneCurrent();
-    }
-    const bool current = eglMakeCurrent(dpy, surface, surface, ctx);
-    return current;
-}
-
-void EglOnXBackend::doneCurrent()
-{
-    eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-}
-
 bool EglOnXBackend::usesOverlayWindow() const
 {
     return m_usesOverlayWindow;
@@ -524,60 +476,11 @@ OverlayWindow* EglOnXBackend::overlayWindow()
  ************************************************/
 
 EglTexture::EglTexture(KWin::SceneOpenGL::Texture *texture, KWin::EglOnXBackend *backend)
-    : SceneOpenGL::TexturePrivate()
-    , q(texture)
-    , m_backend(backend)
-    , m_image(EGL_NO_IMAGE_KHR)
+    : AbstractEglTexture(texture, backend)
 {
-    m_target = GL_TEXTURE_2D;
 }
 
-EglTexture::~EglTexture()
-{
-    if (m_image != EGL_NO_IMAGE_KHR) {
-        eglDestroyImageKHR(m_backend->dpy, m_image);
-    }
-}
-
-OpenGLBackend *EglTexture::backend()
-{
-    return m_backend;
-}
-
-bool EglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
-{
-    if (pix == XCB_NONE)
-        return false;
-
-    glGenTextures(1, &m_texture);
-    q->setWrapMode(GL_CLAMP_TO_EDGE);
-    q->setFilter(GL_LINEAR);
-    q->bind();
-    const EGLint attribs[] = {
-        EGL_IMAGE_PRESERVED_KHR, EGL_TRUE,
-        EGL_NONE
-    };
-    m_image = eglCreateImageKHR(m_backend->dpy, EGL_NO_CONTEXT, EGL_NATIVE_PIXMAP_KHR,
-                                          (EGLClientBuffer)pix, attribs);
-
-    if (EGL_NO_IMAGE_KHR == m_image) {
-        qCDebug(KWIN_CORE) << "failed to create egl image";
-        q->unbind();
-        q->discard();
-        return false;
-    }
-    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES)m_image);
-    q->unbind();
-    q->setYInverted(true);
-    m_size = size;
-    updateMatrix();
-    return true;
-}
-
-bool EglTexture::loadTexture(WindowPixmap *pixmap)
-{
-    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
-}
+EglTexture::~EglTexture() = default;
 
 void KWin::EglTexture::onDamage()
 {
@@ -585,7 +488,7 @@ void KWin::EglTexture::onDamage()
         // This is just implemented to be consistent with
         // the example in mesa/demos/src/egl/opengles1/texture_from_pixmap.c
         eglWaitNative(EGL_CORE_NATIVE_ENGINE);
-        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) m_image);
+        glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, (GLeglImageOES) image());
     }
     GLTexturePrivate::onDamage();
 }

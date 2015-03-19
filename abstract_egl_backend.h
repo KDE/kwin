@@ -1,0 +1,105 @@
+/********************************************************************
+ KWin - the KDE window manager
+ This file is part of the KDE project.
+
+Copyright (C) 2015 Martin Gräßlin <mgraesslin@kde.org>
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*********************************************************************/
+#ifndef KWIN_ABSTRACT_EGL_BACKEND_H
+#define KWIN_ABSTRACT_EGL_BACKEND_H
+#include "scene_opengl.h"
+
+namespace KWin
+{
+
+class AbstractEglBackend : public OpenGLBackend
+{
+public:
+    virtual ~AbstractEglBackend();
+    bool makeCurrent() override;
+    void doneCurrent() override;
+
+    EGLDisplay eglDisplay() const {
+        return m_display;
+    }
+
+protected:
+    AbstractEglBackend();
+    EGLContext context() const {
+        return m_context;
+    }
+    EGLSurface surface() const {
+        return m_surface;
+    }
+    EGLConfig config() const {
+        return m_config;
+    }
+    void setEglDisplay(const EGLDisplay &display) {
+        m_display = display;
+    }
+    void setContext(const EGLContext &context) {
+        m_context = context;
+    }
+    void setSurface(const EGLSurface &surface) {
+        m_surface = surface;
+    }
+    void setConfig(const EGLConfig &config) {
+        m_config = config;
+    }
+    void cleanup();
+    bool initEglAPI();
+    void initKWinGL();
+    void initBufferAge();
+    void initClientExtensions();
+    void initWayland();
+    bool hasClientExtension(const QByteArray &ext) const;
+
+private:
+    EGLDisplay m_display = EGL_NO_DISPLAY;
+    EGLSurface m_surface = EGL_NO_SURFACE;
+    EGLContext m_context = EGL_NO_CONTEXT;
+    EGLConfig m_config = nullptr;
+    QList<QByteArray> m_clientExtensions;
+};
+
+class AbstractEglTexture : public SceneOpenGL::TexturePrivate
+{
+public:
+    virtual ~AbstractEglTexture();
+    bool loadTexture(WindowPixmap *pixmap) override;
+    void updateTexture(WindowPixmap *pixmap) override;
+    OpenGLBackend *backend() override;
+
+protected:
+    AbstractEglTexture(SceneOpenGL::Texture *texture, AbstractEglBackend *backend);
+    EGLImageKHR image() const {
+        return m_image;
+    }
+
+private:
+    bool loadTexture(xcb_pixmap_t pix, const QSize &size);
+#if HAVE_WAYLAND
+    bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
+#endif
+    SceneOpenGL::Texture *q;
+    AbstractEglBackend *m_backend;
+    EGLImageKHR m_image;
+};
+
+}
+
+#endif

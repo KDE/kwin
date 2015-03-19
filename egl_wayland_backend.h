@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_EGL_WAYLAND_BACKEND_H
 #define KWIN_EGL_WAYLAND_BACKEND_H
+#include "abstract_egl_backend.h"
 #include "scene_opengl.h"
 // wayland
 #include <wayland-egl.h>
@@ -46,7 +47,7 @@ namespace Wayland {
  * repaints, which is obviously not optimal. Best solution is probably to go for buffer_age extension
  * and make it the only available solution next to fullscreen repaints.
  **/
-class EglWaylandBackend : public QObject, public OpenGLBackend
+class EglWaylandBackend : public QObject, public AbstractEglBackend
 {
     Q_OBJECT
 public:
@@ -56,8 +57,6 @@ public:
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);
     virtual QRegion prepareRenderingFrame();
     virtual void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
-    virtual bool makeCurrent() override;
-    virtual void doneCurrent() override;
     virtual bool usesOverlayWindow() const override;
 
 protected:
@@ -72,10 +71,6 @@ private:
     bool initBufferConfigs();
     bool initRenderingContext();
     bool makeContextCurrent();
-    EGLDisplay m_display;
-    EGLConfig m_config;
-    EGLSurface m_surface;
-    EGLContext m_context;
     int m_bufferAge;
     Wayland::WaylandBackend *m_wayland;
     wl_egl_window *m_overlay;
@@ -86,23 +81,14 @@ private:
 /**
  * @brief Texture using an EGLImageKHR.
  **/
-class EglWaylandTexture : public SceneOpenGL::TexturePrivate
+class EglWaylandTexture : public AbstractEglTexture
 {
 public:
     virtual ~EglWaylandTexture();
-    virtual bool loadTexture(WindowPixmap *pixmap) override;
-    virtual void updateTexture(WindowPixmap *pixmap) override;
-    virtual OpenGLBackend *backend();
 
 private:
     friend class EglWaylandBackend;
     EglWaylandTexture(SceneOpenGL::Texture *texture, EglWaylandBackend *backend);
-    bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
-    bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
-    EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
-    SceneOpenGL::Texture *q;
-    EglWaylandBackend *m_backend;
-    EGLImageKHR m_image;
 };
 
 } // namespace
