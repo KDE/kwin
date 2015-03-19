@@ -34,6 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 // system
 #include <linux/input.h>
+#if HAVE_X11_XCB
+#include <X11/Xlib-xcb.h>
+#endif
 
 namespace KWin
 {
@@ -52,10 +55,23 @@ X11WindowedBackend::X11WindowedBackend(const QString &display, const QSize &size
     , m_size(size)
 {
     int screen = 0;
-    auto c = xcb_connect(display.toUtf8().constData(), &screen);
-    if (!xcb_connection_has_error(c)) {
+    xcb_connection_t *c = nullptr;
+#if HAVE_X11_XCB
+    Display *xDisplay = XOpenDisplay(display.toUtf8().constData());
+    if (xDisplay) {
+        c = XGetXCBConnection(xDisplay);
+        XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
+        screen = XDefaultScreen(xDisplay);
+    }
+#else
+    c = xcb_connect(display.toUtf8().constData(), &screen);
+#endif
+    if (c && !xcb_connection_has_error(c)) {
         m_connection = c;
         m_screenNumber = screen;
+#if HAVE_X11_XCB
+        m_display = xDisplay;
+#endif
         for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
             it.rem;
             --screen, xcb_screen_next(&it)) {

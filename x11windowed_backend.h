@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <xcb/xcb.h>
 
+struct _XDisplay;
+typedef struct _XDisplay Display;
+
 namespace KWin
 {
 
@@ -45,6 +48,9 @@ public:
     }
     xcb_window_t window() const {
         return m_window;
+    }
+    Display *display() const {
+        return m_display;
     }
 
     bool isValid() const {
@@ -81,6 +87,7 @@ private:
     xcb_atom_t m_protocols = XCB_ATOM_NONE;
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
+    Display *m_display = nullptr;
     static X11WindowedBackend *s_self;
 };
 

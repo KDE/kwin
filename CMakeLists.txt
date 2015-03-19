@@ -191,6 +191,11 @@ if (XCB_VERSION VERSION_LESS "1.10")
 endif()
 add_feature_info("XCB-SYNC" HAVE_XCB_SYNC "XCB Sync version >= 1.10 required for synced window resizing")
 
+find_package(X11_XCB)
+set_package_properties(X11_XCB PROPERTIES
+                       PURPOSE "Required for OpenGL support in X11 windowed backend of kwin_wayland"
+                       TYPE OPTIONAL)
+
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 ########### configure tests ###############
@@ -274,6 +279,8 @@ if(XCB_CURSOR_FOUND)
 else()
     set(HAVE_XCB_CURSOR FALSE)
 endif()
+
+set(HAVE_X11_XCB ${X11_XCB_FOUND})
 
 include(CheckIncludeFiles)
 check_include_files(unistd.h HAVE_UNISTD_H)
@@ -509,6 +516,10 @@ set(kwin_WAYLAND_LIBS
 set(kwin_WAYLAND_EGL_LIBS
     Wayland::Egl
 )
+
+if(X11_XCB_FOUND)
+    set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} X11::XCB)
+endif()
 
 if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
