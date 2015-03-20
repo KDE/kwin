@@ -58,7 +58,6 @@ target_link_libraries( testClientMachine
                        XCB::XCB
                        XCB::XFIXES
                        ${X11_X11_LIB} # to make jenkins happy
-                       ${X11_Xcursor_LIB}
 )
 add_test(kwin-testClientMachine testClientMachine)
 ecm_mark_as_test(testClientMachine)
