@@ -532,6 +532,9 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
 
 Toplevel *InputRedirection::findToplevel(const QPoint &pos)
 {
+    if (!Workspace::self()) {
+        return nullptr;
+    }
     // TODO: check whether the unmanaged wants input events at all
     const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
     foreach (Unmanaged *u, unmanaged) {
