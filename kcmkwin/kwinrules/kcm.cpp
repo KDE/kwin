@@ -24,6 +24,7 @@
 #include <KLocalizedString>
 #include <kaboutdata.h>
 #include <QtDBus/QtDBus>
+#include <QX11Info>
 
 #include "ruleslist.h"
 #include <KPluginFactory>
@@ -40,6 +41,10 @@ KCMRules::KCMRules(QWidget *parent, const QVariantList &)
     : KCModule(parent)
     , config("kwinrulesrc")
 {
+    if (QX11Info::isPlatformX11()) {
+        qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        qApp->setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
+    }
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
 
