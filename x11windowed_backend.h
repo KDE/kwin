@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_X11WINDOWED_BACKEND_H
 #define KWIN_X11WINDOWED_BACKEND_H
+#include "abstract_backend.h"
 
 #include <kwin_export.h>
 
@@ -33,7 +34,7 @@ typedef struct _XDisplay Display;
 namespace KWin
 {
 
-class KWIN_EXPORT X11WindowedBackend : public QObject
+class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
 {
     Q_OBJECT
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
@@ -62,7 +63,7 @@ public:
         return m_size;
     }
 
-    void installCursorFromServer();
+    void installCursorFromServer() override;
 
     static X11WindowedBackend *self();
     static X11WindowedBackend *create(const QString &display, const QSize &size, QObject *parent);

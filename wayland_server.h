@@ -40,6 +40,8 @@ class OutputInterface;
 namespace KWin
 {
 
+class AbstractBackend;
+
 class KWIN_EXPORT WaylandServer : public QObject
 {
     Q_OBJECT
@@ -61,6 +63,12 @@ public:
         return m_shell;
     }
 
+    AbstractBackend *backend() const {
+        return m_backend;
+    }
+    void installBackend(AbstractBackend *backend);
+    void uninstallBackend(AbstractBackend *backend);
+
     /**
      * @returns file descriptor for Xwayland to connect to.
      **/
@@ -78,6 +86,7 @@ private:
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
+    AbstractBackend *m_backend = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

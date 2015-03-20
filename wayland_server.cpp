@@ -113,4 +113,16 @@ int WaylandServer::createQtConnection()
     return sx[1];
 }
 
+void WaylandServer::installBackend(AbstractBackend *backend)
+{
+    Q_ASSERT(!m_backend);
+    m_backend = backend;
+}
+
+void WaylandServer::uninstallBackend(AbstractBackend *backend)
+{
+    Q_ASSERT(m_backend == backend);
+    m_backend = nullptr;
+}
+
 }

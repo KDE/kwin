@@ -56,7 +56,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "xcbutils.h"
 #if HAVE_WAYLAND
-#include "wayland_backend.h"
+#include "abstract_backend.h"
+#include "wayland_server.h"
 #endif
 
 #include "decorations/decorationbridge.h"
@@ -673,7 +674,7 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
     }
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
 #if HAVE_WAYLAND
-        if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
+        if (AbstractBackend *w = waylandServer()->backend()) {
             w->installCursorImage(shape);
         }
 #endif
@@ -1171,8 +1172,10 @@ void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
     if (!m_mouseInterceptionWindow.isValid()) {
 #if HAVE_WAYLAND
-        if (Wayland::WaylandBackend *w = Wayland::WaylandBackend::self()) {
-            w->installCursorImage(shape);
+        if (waylandServer()) {
+            if (AbstractBackend *w = waylandServer()->backend()) {
+                w->installCursorImage(shape);
+            }
         }
 #endif
         return;

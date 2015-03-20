@@ -421,6 +421,7 @@ endif()
 if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
+            abstract_backend.cpp
             screens_wayland.cpp
             screens_x11windowed.cpp
             wayland_backend.cpp

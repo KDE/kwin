@@ -51,7 +51,7 @@ X11WindowedBackend *X11WindowedBackend::create(const QString &display, const QSi
 }
 
 X11WindowedBackend::X11WindowedBackend(const QString &display, const QSize &size, QObject *parent)
-    : QObject(parent)
+    : AbstractBackend(parent)
     , m_size(size)
 {
     int screen = 0;

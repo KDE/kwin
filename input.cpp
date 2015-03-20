@@ -33,9 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput/connection.h"
 #endif
 #if HAVE_WAYLAND
-#include "wayland_backend.h"
+#include "abstract_backend.h"
 #include "wayland_server.h"
-#include "x11windowed_backend.h"
 #include <KWayland/Server/seat_interface.h>
 #endif
 // Qt
@@ -256,25 +255,6 @@ static KWayland::Server::SeatInterface *findSeat()
 }
 #endif
 
-template <typename T>
-static
-void disconnectSeat(KWayland::Server::SeatInterface *seat)
-{
-    if (T *w = T::self()) {
-        QObject::disconnect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, w, &T::installCursorFromServer);
-    }
-}
-
-template <typename T>
-static
-void connectSeat(KWayland::Server::SeatInterface *seat)
-{
-    if (T *w = T::self()) {
-        w->installCursorFromServer();
-        QObject::connect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, w, &T::installCursorFromServer);
-    }
-}
-
 void InputRedirection::updatePointerWindow()
 {
     // TODO: handle pointer grab aka popups
@@ -288,14 +268,17 @@ void InputRedirection::updatePointerWindow()
         // disconnect old surface
         if (oldWindow) {
             disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
-            disconnectSeat<Wayland::WaylandBackend>(seat);
-            disconnectSeat<X11WindowedBackend>(seat);
+            if (AbstractBackend *b = waylandServer()->backend()) {
+                disconnect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+            }
         }
         if (t && t->surface()) {
             seat->setFocusedPointerSurface(t->surface(), t->pos());
             connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedPointerPosition);
-            connectSeat<Wayland::WaylandBackend>(seat);
-            connectSeat<X11WindowedBackend>(seat);
+            if (AbstractBackend *b = waylandServer()->backend()) {
+                b->installCursorFromServer();
+                connect(seat->focusedPointer()->cursor(), &KWayland::Server::Cursor::changed, b, &AbstractBackend::installCursorFromServer);
+            }
         } else {
             seat->setFocusedPointerSurface(nullptr);
             t = nullptr;

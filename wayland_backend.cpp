@@ -354,7 +354,7 @@ WaylandBackend *WaylandBackend::create(QObject *parent)
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)
-    : QObject(parent)
+    : AbstractBackend(parent)
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
     , m_registry(new Registry(this))

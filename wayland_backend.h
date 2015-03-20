@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_WAYLAND_BACKEND_H
 #define KWIN_WAYLAND_BACKEND_H
 // KWin
+#include "abstract_backend.h"
 #include <kwinglobals.h>
 // Qt
 #include <QHash>
@@ -141,7 +142,7 @@ private:
 * It creates the connection to the Wayland Compositor, sets up the registry and creates
 * the Wayland surface and its shell mapping.
 */
-class KWIN_EXPORT WaylandBackend : public QObject
+class KWIN_EXPORT WaylandBackend : public AbstractBackend
 {
     Q_OBJECT
 public:
@@ -154,8 +155,8 @@ public:
 
     KWayland::Client::Surface *surface() const;
     QSize shellSurfaceSize() const;
-    void installCursorImage(Qt::CursorShape shape);
-    void installCursorFromServer();
+    void installCursorImage(Qt::CursorShape shape) override;
+    void installCursorFromServer() override;
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;
