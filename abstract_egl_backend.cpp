@@ -247,6 +247,7 @@ bool AbstractEglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
 
 void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
+#if HAVE_WAYLAND
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
         return;
@@ -281,6 +282,7 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
                         GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
     }
     q->unbind();
+#endif
 }
 
 #if HAVE_WAYLAND
