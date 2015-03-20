@@ -131,7 +131,7 @@ public:
         return nullptr;
     }
     bool grabKeyboard(KWin::Effect *) override {
-        return nullptr;
+        return false;
     }
     bool hasDecorationShadows() const override {
         return false;
