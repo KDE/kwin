@@ -143,22 +143,26 @@ InputRedirection::PointerButtonState PointerEvent::buttonState() const
     abort();
 }
 
-InputRedirection::PointerAxis PointerEvent::axis() const
+QVector<InputRedirection::PointerAxis> PointerEvent::axis() const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
-    switch (libinput_event_pointer_get_axis(m_pointerEvent)) {
-    case LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL:
-        return InputRedirection::PointerAxisHorizontal;
-    case LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL:
-        return InputRedirection::PointerAxisVertical;
+    QVector<InputRedirection::PointerAxis> a;
+    if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL)) {
+        a << InputRedirection::PointerAxisHorizontal;
     }
-    abort();
+    if (libinput_event_pointer_has_axis(m_pointerEvent, LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL)) {
+        a << InputRedirection::PointerAxisVertical;
+    }
+    return a;
 }
 
-qreal PointerEvent::axisValue() const
+qreal PointerEvent::axisValue(InputRedirection::PointerAxis axis) const
 {
     Q_ASSERT(type() == LIBINPUT_EVENT_POINTER_AXIS);
-    return libinput_event_pointer_get_axis_value(m_pointerEvent);
+    const libinput_pointer_axis a = axis == InputRedirection::PointerAxisHorizontal
+                                          ? LIBINPUT_POINTER_AXIS_SCROLL_HORIZONTAL
+                                          : LIBINPUT_POINTER_AXIS_SCROLL_VERTICAL;
+    return libinput_event_pointer_get_axis_value(m_pointerEvent, a);
 }
 
 }

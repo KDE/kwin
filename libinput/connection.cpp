@@ -115,7 +115,10 @@ void Connection::handleEvent()
             }
             case LIBINPUT_EVENT_POINTER_AXIS: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                emit pointerAxisChanged(pe->axis(), pe->axisValue(), pe->time());
+                const auto axis = pe->axis();
+                for (auto it = axis.begin(); it != axis.end(); ++it) {
+                    emit pointerAxisChanged(*it, pe->axisValue(*it), pe->time());
+                }
                 break;
             }
             case LIBINPUT_EVENT_POINTER_BUTTON: {

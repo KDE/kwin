@@ -87,8 +87,8 @@ public:
     uint32_t button() const;
     InputRedirection::PointerButtonState buttonState() const;
     uint32_t time() const;
-    InputRedirection::PointerAxis axis() const;
-    qreal axisValue() const;
+    QVector<InputRedirection::PointerAxis> axis() const;
+    qreal axisValue(InputRedirection::PointerAxis a) const;
 
     operator libinput_event_pointer*() {
         return m_pointerEvent;

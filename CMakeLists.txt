@@ -137,7 +137,7 @@ set_package_properties(XKB PROPERTIES
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 
-find_package(Libinput 0.5)
+find_package(Libinput 0.10)
 set_package_properties(Libinput PROPERTIES TYPE OPTIONAL PURPOSE "Required for input handling on Wayland.")
 
 find_package(UDev)
@@ -147,7 +147,7 @@ set_package_properties(UDev PROPERTIES  URL "http://www.freedesktop.org/software
                                         PURPOSE "Required for input handling on Wayland."
                         )
 set(HAVE_INPUT FALSE)
-if (Libinput_FOUND AND UDEV_FOUND AND Libinput_VERSION VERSION_LESS 0.8)
+if (Libinput_FOUND AND UDEV_FOUND)
     set(HAVE_INPUT TRUE)
 endif()
 
