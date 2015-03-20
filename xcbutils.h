@@ -574,7 +574,7 @@ public:
     explicit Tree(WindowId window) : Wrapper<TreeData, xcb_window_t>(window) {}
 
     inline WindowId *children() {
-        if (data()->children_len == 0) {
+        if (isNull() || data()->children_len == 0) {
             return nullptr;
         }
         return xcb_query_tree_children(data());

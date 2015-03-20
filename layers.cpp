@@ -668,22 +668,24 @@ ToplevelList Workspace::xStackingOrder() const
     foreach (Toplevel * c, stacking_order)
     x_stacking.append(c);
 
-    xcb_window_t *windows = tree.children();
-    const auto count = tree->children_len;
-    int foundUnmanagedCount = unmanaged.count();
-    for (unsigned int i = 0;
-            i < count;
-            ++i) {
-        for (auto it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it) {
-            Unmanaged *u = *it;
-            if (u->window() == windows[i]) {
-                x_stacking.append(u);
-                foundUnmanagedCount--;
+    if (!tree.isNull()) {
+        xcb_window_t *windows = tree.children();
+        const auto count = tree->children_len;
+        int foundUnmanagedCount = unmanaged.count();
+        for (unsigned int i = 0;
+                i < count;
+                ++i) {
+            for (auto it = unmanaged.constBegin(); it != unmanaged.constEnd(); ++it) {
+                Unmanaged *u = *it;
+                if (u->window() == windows[i]) {
+                    x_stacking.append(u);
+                    foundUnmanagedCount--;
+                    break;
+                }
+            }
+            if (foundUnmanagedCount == 0) {
                 break;
             }
-        }
-        if (foundUnmanagedCount == 0) {
-            break;
         }
     }
     if (m_compositor) {
