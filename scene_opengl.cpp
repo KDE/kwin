@@ -123,6 +123,17 @@ SyncObject::SyncObject()
 
 SyncObject::~SyncObject()
 {
+    // If glDeleteSync is called before the xcb fence is signalled
+    // the nvidia driver (the only one to implement GL_SYNC_X11_FENCE_EXT)
+    // deadlocks waiting for the fence to be signalled.
+    // To avoid this, make sure the fence is signalled before
+    // deleting the sync.
+    if (m_state == Resetting || m_state == Ready){
+        trigger();
+        // The flush is necessary!
+        // The trigger command needs to be sent to the X server.
+        xcb_flush(connection());
+    }
     xcb_sync_destroy_fence(connection(), m_fence);
     glDeleteSync(m_sync);
 
