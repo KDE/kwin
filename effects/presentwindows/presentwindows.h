@@ -59,6 +59,8 @@ private:
     QScopedPointer<QElapsedTimer> m_armTimer;
     QScopedPointer<QQuickView> m_window;
     bool m_visible;
+    QPoint m_pos;
+    bool m_posIsValid;
 };
 
 /**
