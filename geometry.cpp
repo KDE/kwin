@@ -3133,7 +3133,7 @@ void Client::setQuickTileMode(QuickTileMode mode, bool keyboard)
     setElectricBorderMode(mode); // used by ::electricBorderMaximizeGeometry(.)
 
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
-    if (maximizeMode() == MaximizeFull) {
+    if (maximizeMode() != MaximizeRestore) {
 
         TabSynchronizer syncer(this, TabGroup::QuickTile|TabGroup::Geometry|TabGroup::Maximized);
 
