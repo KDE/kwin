@@ -196,8 +196,6 @@ set_package_properties(X11_XCB PROPERTIES
                        PURPOSE "Required for OpenGL support in X11 windowed backend of kwin_wayland"
                        TYPE OPTIONAL)
 
-feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
 ########### configure tests ###############
 include(CMakeDependentOption)
 
@@ -623,6 +621,8 @@ add_subdirectory(tests)
 if (KF5DocTools_FOUND)
     add_subdirectory(doc)
 endif()
+
+feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 include(ECMPackageConfigHelpers)
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KWinDBusInterface")
