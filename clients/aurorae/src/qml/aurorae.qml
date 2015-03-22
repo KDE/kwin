@@ -61,7 +61,7 @@ Decoration {
     }
     PlasmaCore.FrameSvgItem {
         id: decorationActive
-        property bool shown: (!decoration.client.maxized || !backgroundSvg.supportsMaximized) && (decoration.client.active || !backgroundSvg.supportsInactive)
+        property bool shown: (!decoration.client.maximized || !backgroundSvg.supportsMaximized) && (decoration.client.active || !backgroundSvg.supportsInactive)
         anchors.fill: parent
         imagePath: backgroundSvg.imagePath
         prefix: "decoration"
