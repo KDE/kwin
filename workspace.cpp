@@ -1292,6 +1292,8 @@ void Workspace::disableGlobalShortcutsForClient(bool disable)
 QString Workspace::supportInformation() const
 {
     QString support;
+    const QString yes = QStringLiteral("yes\n");
+    const QString no = QStringLiteral("no\n");
 
     support.append(ki18nc("Introductory text shown in the support information.",
         "KWin Support Information:\n"
@@ -1327,6 +1329,78 @@ QString Workspace::supportInformation() const
         break;
     }
     support.append(QStringLiteral("\n\n"));
+
+    support.append(QStringLiteral("Build Options\n"));
+    support.append(QStringLiteral("=============\n"));
+
+    support.append(QStringLiteral("KWIN_BUILD_DECORATIONS: "));
+#ifdef KWIN_BUILD_DECORATIONS
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("KWIN_BUILD_TABBOX: "));
+#ifdef KWIN_BUILD_TABBOX
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("KWIN_BUILD_ACTIVITIES: "));
+#ifdef KWIN_BUILD_ACTIVITIES
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_WAYLAND: "));
+#if HAVE_WAYLAND
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_WAYLAND_EGL: "));
+#if HAVE_WAYLAND_EGL
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_WAYLAND_CURSOR: "));
+#if HAVE_WAYLAND_CURSOR
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_XKB: "));
+#if HAVE_XKB
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_INPUT: "));
+#if HAVE_INPUT
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_XCB_CURSOR: "));
+#if HAVE_XCB_CURSOR
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_XCB_SYNC: "));
+#if HAVE_XCB_SYNC
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("HAVE_X11_XCB: "));
+#if HAVE_X11_XCB
+    support.append(yes);
+#else
+    support.append(no);
+#endif
+    support.append(QStringLiteral("\n"));
+
     if (auto bridge = Decoration::DecorationBridge::self()) {
         support.append(QStringLiteral("Decoration\n"));
         support.append(QStringLiteral("==========\n"));
