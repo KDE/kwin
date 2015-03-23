@@ -123,7 +123,7 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
-find_package(Wayland 1.2 COMPONENTS Client Egl Cursor Server)
+find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
 set_package_properties(Wayland PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
