@@ -129,6 +129,7 @@ set_package_properties(Wayland PROPERTIES
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
+add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for cursor support in Wayland backend of kwin_wayland")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
 
 find_package(XKB 0.4.1)
@@ -266,11 +267,13 @@ if(Wayland_Client_FOUND AND XKB_FOUND AND KF5Wayland_FOUND)
     set(HAVE_WAYLAND ${Wayland_Client_FOUND})
     set(HAVE_XKB ${XKB_FOUND})
     set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
+    set(HAVE_WAYLAND_CURSOR ${Wayland_Cursor_FOUND})
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
 else()
     set(HAVE_WAYLAND FALSE)
     set(HAVE_XKB FALSE)
     set(HAVE_WAYLAND_EGL FALSE)
+    set(HAVE_WAYLAND_CURSOR FALSE)
     set(HAVE_X11_XCB FALSE)
 endif()
 
@@ -506,7 +509,6 @@ set(kwin_XCB_LIBS
 )
 
 set(kwin_WAYLAND_LIBS
-    Wayland::Cursor
     XKB::XKB
     KF5::WaylandClient
     KF5::WaylandServer
@@ -518,6 +520,10 @@ set(kwin_WAYLAND_EGL_LIBS
 
 if(X11_XCB_FOUND)
     set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} X11::XCB)
+endif()
+
+if(Wayland_Cursor_FOUND)
+    set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} Wayland::Cursor)
 endif()
 
 if(KWIN_BUILD_ACTIVITIES)

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_WAYLAND_BACKEND_H
 // KWin
 #include "abstract_backend.h"
+#include <config-kwin.h>
 #include <kwinglobals.h>
 // Qt
 #include <QHash>
@@ -69,6 +70,7 @@ namespace Wayland
 class WaylandBackend;
 class WaylandSeat;
 
+#if HAVE_WAYLAND_CURSOR
 class WaylandCursorTheme : public QObject
 {
     Q_OBJECT
@@ -84,6 +86,7 @@ private:
     wl_cursor_theme *m_theme;
     WaylandBackend *m_backend;
 };
+#endif
 
 class WaylandSeat : public QObject
 {
@@ -106,7 +109,9 @@ private:
     KWayland::Client::Pointer *m_pointer;
     KWayland::Client::Keyboard *m_keyboard;
     KWayland::Client::Surface *m_cursor;
+#if HAVE_WAYLAND_CURSOR
     WaylandCursorTheme *m_theme;
+#endif
     uint32_t m_enteredSerial;
     WaylandBackend *m_backend;
     bool m_installCursor;
@@ -133,7 +138,9 @@ private:
     WaylandBackend *m_backend;
     QPoint m_hotSpot;
     KWayland::Client::SubSurface *m_subSurface;
+#if HAVE_WAYLAND_CURSOR
     WaylandCursorTheme *m_theme;
+#endif
 };
 
 /**

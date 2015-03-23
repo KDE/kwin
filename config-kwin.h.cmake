@@ -11,6 +11,7 @@
 #define KWIN_KILLER_BIN "${CMAKE_INSTALL_PREFIX}/${LIBEXEC_INSTALL_DIR}/kwin_killer_helper"
 #cmakedefine01 HAVE_WAYLAND
 #cmakedefine01 HAVE_WAYLAND_EGL
+#cmakedefine01 HAVE_WAYLAND_CURSOR
 #cmakedefine01 HAVE_XKB
 #cmakedefine01 HAVE_INPUT
 #cmakedefine01 HAVE_XCB_CURSOR
