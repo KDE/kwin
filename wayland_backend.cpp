@@ -45,8 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // Qt
-#include <QAbstractEventDispatcher>
-#include <QCoreApplication>
 #include <QDebug>
 #include <QMetaMethod>
 #include <QThread>
