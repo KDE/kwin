@@ -165,6 +165,11 @@ public:
     void installCursorImage(Qt::CursorShape shape) override;
     void installCursorFromServer() override;
 
+    static WaylandBackend *create(const QByteArray &display, QObject *parent = nullptr);
+    static WaylandBackend *self() {
+        return s_self;
+    }
+
 protected:
     void connectNotify(const QMetaMethod &signal) override;
 
@@ -175,6 +180,7 @@ Q_SIGNALS:
     void outputsChanged();
     void connectionFailed();
 private:
+    explicit WaylandBackend(const QByteArray &display, QObject *parent = nullptr);
     void initConnection();
     void createSurface();
     void destroyOutputs();
@@ -195,8 +201,7 @@ private:
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
     bool m_ready = false;
-
-    KWIN_SINGLETON(WaylandBackend)
+    static WaylandBackend *s_self;
 };
 
 inline

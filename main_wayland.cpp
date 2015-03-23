@@ -73,7 +73,6 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
 ApplicationWayland::~ApplicationWayland()
 {
     destroyWorkspace();
-    delete Wayland::WaylandBackend::self();
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         xcb_disconnect(x11Connection());
@@ -88,18 +87,42 @@ void ApplicationWayland::performStartup()
 
     // try creating the Wayland Backend
     createInput();
-    if (!X11WindowedBackend::self()) {
-        // only create WaylandBackend if we do not use X11WindowedBackend
-        Wayland::WaylandBackend *backend = Wayland::WaylandBackend::create();
-        connect(backend, &Wayland::WaylandBackend::connectionFailed, this,
-            [] () {
-                fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
-                ::exit(1);
-            }
-        );
-        connect(backend, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
-    } else {
+    createBackend();
+    if (X11WindowedBackend::self()) {
         continueStartupWithScreens();
+    }
+}
+
+void ApplicationWayland::createBackend()
+{
+    AbstractBackend *backend = nullptr;
+    if (m_windowed) {
+        if (!m_waylandDisplay.isEmpty()) {
+            Wayland::WaylandBackend *b = Wayland::WaylandBackend::create(m_waylandDisplay, this);
+            connect(b, &Wayland::WaylandBackend::connectionFailed, this,
+                [] () {
+                    fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
+                    ::exit(1);
+                }
+            );
+            connect(b, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+            backend = b;
+        }
+        if (!backend && !m_x11Display.isEmpty()) {
+            KWin::X11WindowedBackend *x11Backend = KWin::X11WindowedBackend::create(m_x11Display, m_backendSize, this);
+            if (x11Backend->isValid()) {
+                backend = x11Backend;
+                waylandServer()->seat()->setHasPointer(true);
+                waylandServer()->seat()->setHasKeyboard(true);
+            } else {
+                delete x11Backend;
+            }
+        }
+    }
+
+    if (!backend) {
+        std::cerr <<  "FATAL ERROR: could not create a backend, exiting now" << std::endl;
+        ::exit(1);
     }
 }
 
@@ -352,6 +375,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineOption x11DisplayOption(QStringLiteral("x11-display"),
                                         i18n("The X11 Display to use in windowed mode on platform X11."),
                                         QStringLiteral("display"));
+    QCommandLineOption waylandDisplayOption(QStringLiteral("wayland-display"),
+                                            i18n("The Wayland Display to use in windowed mode on platform Wayland."),
+                                            QStringLiteral("display"));
     QCommandLineOption widthOption(QStringLiteral("width"),
                                    i18n("The width for windowed mode. Default width is 1024."),
                                    QStringLiteral("width"));
@@ -367,6 +393,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     parser.addOption(waylandSocketOption);
     parser.addOption(windowedOption);
     parser.addOption(x11DisplayOption);
+    parser.addOption(waylandDisplayOption);
     parser.addOption(widthOption);
     parser.addOption(heightOption);
 #if HAVE_INPUT
@@ -382,6 +409,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
 
+    a.setWindowed(parser.isSet(windowedOption));
     if (parser.isSet(windowedOption)) {
         bool ok = false;
         const int width = parser.value(widthOption).toInt(&ok);
@@ -394,13 +422,17 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
             std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
             return 1;
         }
-        KWin::X11WindowedBackend *x11Backend = KWin::X11WindowedBackend::create(parser.value(x11DisplayOption), QSize(width, height), &a);
-        if (!x11Backend->isValid()) {
-            std::cerr << "FATAL ERROR failed to connet to X Server" << std::endl;
-            return 1;
+        a.setBackendSize(QSize(width, height));
+        if (parser.isSet(x11DisplayOption)) {
+            a.setX11Display(parser.value(x11DisplayOption).toUtf8());
+        } else if (!parser.isSet(waylandDisplayOption)) {
+            a.setX11Display(qgetenv("DISPLAY"));
         }
-        server->seat()->setHasPointer(true);
-        server->seat()->setHasKeyboard(true);
+        if (parser.isSet(waylandDisplayOption)) {
+            a.setWaylandDisplay(parser.value(waylandDisplayOption).toUtf8());
+        } else if (!parser.isSet(x11DisplayOption)) {
+            a.setWaylandDisplay(qgetenv("WAYLAND_DISPLAY"));
+        }
     }
 
     a.setStartXwayland(parser.isSet(xwaylandOption));

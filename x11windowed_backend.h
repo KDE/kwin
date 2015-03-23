@@ -66,13 +66,13 @@ public:
     void installCursorFromServer() override;
 
     static X11WindowedBackend *self();
-    static X11WindowedBackend *create(const QString &display, const QSize &size, QObject *parent);
+    static X11WindowedBackend *create(const QByteArray &display, const QSize &size, QObject *parent);
 
 Q_SIGNALS:
     void sizeChanged();
 
 private:
-    X11WindowedBackend(const QString &display, const QSize &size, QObject *parent);
+    X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent);
     void createWindow();
     void startEventReading();
     void handleEvent(xcb_generic_event_t *event);

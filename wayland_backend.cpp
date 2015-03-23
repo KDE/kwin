@@ -356,14 +356,14 @@ void WaylandCursor::setCursorImage(Qt::CursorShape shape)
 }
 
 WaylandBackend *WaylandBackend::s_self = 0;
-WaylandBackend *WaylandBackend::create(QObject *parent)
+WaylandBackend *WaylandBackend::create(const QByteArray &display, QObject *parent)
 {
     Q_ASSERT(!s_self);
-    s_self = new WaylandBackend(parent);
+    s_self = new WaylandBackend(display, parent);
     return s_self;
 }
 
-WaylandBackend::WaylandBackend(QObject *parent)
+WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
     : AbstractBackend(parent)
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
@@ -374,7 +374,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
     , m_shellSurface(NULL)
     , m_seat()
     , m_shm(new ShmPool(this))
-    , m_connectionThreadObject(nullptr)
+    , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_connectionThread(nullptr)
     , m_fullscreenShell(new FullscreenShell(this))
     , m_subCompositor(new SubCompositor(this))
@@ -423,6 +423,7 @@ WaylandBackend::WaylandBackend(QObject *parent)
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
+    m_connectionThreadObject->setSocketName(display);
     initConnection();
 }
 
@@ -459,7 +460,6 @@ void WaylandBackend::destroyOutputs()
 
 void WaylandBackend::initConnection()
 {
-    m_connectionThreadObject = new ConnectionThread(nullptr);
     connect(m_connectionThreadObject, &ConnectionThread::connected, this,
         [this]() {
             // create the event queue for the main gui thread

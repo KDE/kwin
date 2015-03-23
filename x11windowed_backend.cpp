@@ -43,28 +43,28 @@ namespace KWin
 
 X11WindowedBackend *X11WindowedBackend::s_self = nullptr;
 
-X11WindowedBackend *X11WindowedBackend::create(const QString &display, const QSize &size, QObject *parent)
+X11WindowedBackend *X11WindowedBackend::create(const QByteArray &display, const QSize &size, QObject *parent)
 {
     Q_ASSERT(!s_self);
     s_self = new X11WindowedBackend(display, size, parent);
     return s_self;
 }
 
-X11WindowedBackend::X11WindowedBackend(const QString &display, const QSize &size, QObject *parent)
+X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent)
     : AbstractBackend(parent)
     , m_size(size)
 {
     int screen = 0;
     xcb_connection_t *c = nullptr;
 #if HAVE_X11_XCB
-    Display *xDisplay = XOpenDisplay(display.toUtf8().constData());
+    Display *xDisplay = XOpenDisplay(display.constData());
     if (xDisplay) {
         c = XGetXCBConnection(xDisplay);
         XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
         screen = XDefaultScreen(xDisplay);
     }
 #else
-    c = xcb_connect(display.toUtf8().constData(), &screen);
+    c = xcb_connect(display.constData(), &screen);
 #endif
     if (c && !xcb_connection_has_error(c)) {
         m_connection = c;
@@ -97,6 +97,7 @@ X11WindowedBackend::~X11WindowedBackend()
         }
         xcb_disconnect(m_connection);
     }
+    s_self = nullptr;
 }
 
 void X11WindowedBackend::createWindow()
