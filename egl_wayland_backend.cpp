@@ -37,11 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-EglWaylandBackend::EglWaylandBackend()
+EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
     : QObject(NULL)
     , AbstractEglBackend()
     , m_bufferAge(0)
-    , m_wayland(Wayland::WaylandBackend::self())
+    , m_wayland(b)
     , m_overlay(NULL)
 {
     if (!m_wayland) {

@@ -41,15 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-X11WindowedBackend *X11WindowedBackend::s_self = nullptr;
-
-X11WindowedBackend *X11WindowedBackend::create(const QByteArray &display, const QSize &size, QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new X11WindowedBackend(display, size, parent);
-    return s_self;
-}
-
 X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent)
     : AbstractBackend(parent)
     , m_size(size)
@@ -97,7 +88,6 @@ X11WindowedBackend::~X11WindowedBackend()
         }
         xcb_disconnect(m_connection);
     }
-    s_self = nullptr;
 }
 
 void X11WindowedBackend::createWindow()

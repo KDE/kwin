@@ -32,8 +32,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-WaylandScreens::WaylandScreens(QObject* parent)
+WaylandScreens::WaylandScreens(Wayland::WaylandBackend *backend, QObject* parent)
     : Screens(parent)
+    , m_backend(backend)
 {
 }
 
@@ -44,7 +45,7 @@ WaylandScreens::~WaylandScreens()
 void WaylandScreens::init()
 {
     Screens::init();
-    connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::outputsChanged,
+    connect(m_backend, &Wayland::WaylandBackend::outputsChanged,
             this, &WaylandScreens::startChangedTimer);
     updateCount();
 }
@@ -87,7 +88,7 @@ void WaylandScreens::updateCount()
 {
     m_geometries.clear();
     int count = 0;
-    const QList<KWayland::Client::Output*> &outputs = Wayland::WaylandBackend::self()->outputs();
+    const QList<KWayland::Client::Output*> &outputs = m_backend->outputs();
     for (auto it = outputs.begin(); it != outputs.end(); ++it) {
         if ((*it)->pixelSize().isEmpty()) {
             continue;

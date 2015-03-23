@@ -51,7 +51,7 @@ class EglWaylandBackend : public QObject, public AbstractEglBackend
 {
     Q_OBJECT
 public:
-    EglWaylandBackend();
+    EglWaylandBackend(Wayland::WaylandBackend *b);
     virtual ~EglWaylandBackend();
     virtual void screenGeometryChanged(const QSize &size);
     virtual SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture);

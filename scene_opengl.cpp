@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #include "wayland_backend.h"
+#include "wayland_server.h"
 #endif
 #if HAVE_X11_XCB
 #include "x11windowed_backend.h"
@@ -500,13 +501,15 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 #ifdef KWIN_HAVE_EGL
         if (kwinApp()->shouldUseWaylandForCompositing()) {
 #if HAVE_WAYLAND_EGL
-            if (Wayland::WaylandBackend::self()) {
-                backend = new EglWaylandBackend();
+            if (Wayland::WaylandBackend *b = dynamic_cast<Wayland::WaylandBackend*>(waylandServer()->backend())) {
+                backend = new EglWaylandBackend(b);
             }
 #endif
 #if HAVE_X11_XCB
-            if (!backend && X11WindowedBackend::self()) {
-                backend = new EglOnXBackend(X11WindowedBackend::self());
+            if (!backend) {
+                if (X11WindowedBackend *b = dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
+                    backend = new EglOnXBackend(b);
+                }
             }
 #endif
         } else {

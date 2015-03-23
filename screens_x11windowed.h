@@ -23,18 +23,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWin
 {
+class X11WindowedBackend;
 
 class X11WindowedScreens : public Screens
 {
     Q_OBJECT
 public:
-    X11WindowedScreens(QObject *parent = nullptr);
+    X11WindowedScreens(X11WindowedBackend *backend, QObject *parent = nullptr);
     virtual ~X11WindowedScreens();
     void init() override;
     QRect geometry(int screen) const override;
     int number(const QPoint &pos) const override;
     QSize size(int screen) const override;
     void updateCount() override;
+
+private:
+    X11WindowedBackend *m_backend;
 };
 
 }

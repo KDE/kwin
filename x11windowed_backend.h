@@ -39,6 +39,7 @@ class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
     Q_OBJECT
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
+    X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent);
     virtual ~X11WindowedBackend();
 
     xcb_connection_t *connection() const {
@@ -65,14 +66,10 @@ public:
 
     void installCursorFromServer() override;
 
-    static X11WindowedBackend *self();
-    static X11WindowedBackend *create(const QByteArray &display, const QSize &size, QObject *parent);
-
 Q_SIGNALS:
     void sizeChanged();
 
 private:
-    X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent);
     void createWindow();
     void startEventReading();
     void handleEvent(xcb_generic_event_t *event);
@@ -90,13 +87,7 @@ private:
     xcb_atom_t m_deleteWindowProtocol = XCB_ATOM_NONE;
     xcb_cursor_t m_cursor = XCB_CURSOR_NONE;
     Display *m_display = nullptr;
-    static X11WindowedBackend *s_self;
 };
-
-inline X11WindowedBackend *X11WindowedBackend::self()
-{
-    return s_self;
-}
 
 }
 

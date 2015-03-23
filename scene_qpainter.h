@@ -40,6 +40,12 @@ namespace Xcb {
     class Shm;
 }
 
+namespace Wayland
+{
+class WaylandBackend;
+}
+class X11WindowedBackend;
+
 class QPainterBackend
 {
 public:
@@ -108,7 +114,7 @@ class WaylandQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT
 public:
-    WaylandQPainterBackend();
+    explicit WaylandQPainterBackend(Wayland::WaylandBackend *b);
     virtual ~WaylandQPainterBackend();
 
     virtual void present(int mask, const QRegion& damage) override;
@@ -120,6 +126,7 @@ public:
 private Q_SLOTS:
     void remapBuffer();
 private:
+    Wayland::WaylandBackend *m_backend;
     bool m_needsFullRepaint;
     QImage m_backBuffer;
     QWeakPointer<KWayland::Client::Buffer> m_buffer;
@@ -129,7 +136,7 @@ class X11WindowedQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT
 public:
-    X11WindowedQPainterBackend();
+    X11WindowedQPainterBackend(X11WindowedBackend *backend);
     virtual ~X11WindowedQPainterBackend();
 
     QImage *buffer() override;
@@ -143,6 +150,7 @@ private:
     bool m_needsFullRepaint = true;
     xcb_gcontext_t m_gc = XCB_NONE;
     QImage m_backBuffer;
+    X11WindowedBackend *m_backend;
 };
 #endif
 

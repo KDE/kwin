@@ -25,11 +25,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+namespace Wayland
+{
+class WaylandBackend;
+}
+
 class WaylandScreens : public Screens
 {
     Q_OBJECT
 public:
-    explicit WaylandScreens(QObject *parent);
+    explicit WaylandScreens(Wayland::WaylandBackend *backend, QObject *parent);
     virtual ~WaylandScreens();
     void init() override;
     QRect geometry(int screen) const override;
@@ -40,6 +45,7 @@ protected Q_SLOTS:
     void updateCount() override;
 private:
     void updateXRandr();
+    Wayland::WaylandBackend *m_backend;
     QList<QRect> m_geometries;
 };
 

@@ -153,6 +153,7 @@ class KWIN_EXPORT WaylandBackend : public AbstractBackend
 {
     Q_OBJECT
 public:
+    explicit WaylandBackend(const QByteArray &display, QObject *parent = nullptr);
     virtual ~WaylandBackend();
     wl_display *display();
     KWayland::Client::Compositor *compositor();
@@ -165,11 +166,6 @@ public:
     void installCursorImage(Qt::CursorShape shape) override;
     void installCursorFromServer() override;
 
-    static WaylandBackend *create(const QByteArray &display, QObject *parent = nullptr);
-    static WaylandBackend *self() {
-        return s_self;
-    }
-
 protected:
     void connectNotify(const QMetaMethod &signal) override;
 
@@ -180,7 +176,6 @@ Q_SIGNALS:
     void outputsChanged();
     void connectionFailed();
 private:
-    explicit WaylandBackend(const QByteArray &display, QObject *parent = nullptr);
     void initConnection();
     void createSurface();
     void destroyOutputs();
@@ -201,7 +196,6 @@ private:
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
     bool m_ready = false;
-    static WaylandBackend *s_self;
 };
 
 inline

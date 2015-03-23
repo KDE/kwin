@@ -23,8 +23,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-X11WindowedScreens::X11WindowedScreens(QObject *parent)
+X11WindowedScreens::X11WindowedScreens(X11WindowedBackend *backend, QObject *parent)
     : Screens(parent)
+    , m_backend(backend)
 {
 }
 
@@ -33,7 +34,7 @@ X11WindowedScreens::~X11WindowedScreens() = default;
 void X11WindowedScreens::init()
 {
     KWin::Screens::init();
-    connect(X11WindowedBackend::self(), &X11WindowedBackend::sizeChanged,
+    connect(m_backend, &X11WindowedBackend::sizeChanged,
             this, &X11WindowedScreens::startChangedTimer);
     updateCount();
     emit changed();
@@ -50,7 +51,7 @@ QRect X11WindowedScreens::geometry(int screen) const
 QSize X11WindowedScreens::size(int screen) const
 {
     if (screen == 0) {
-        return X11WindowedBackend::self()->size();
+        return m_backend->size();
     }
     return QSize();
 }

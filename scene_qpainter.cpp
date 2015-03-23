@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #include "wayland_backend.h"
+#include "wayland_server.h"
 #include "x11windowed_backend.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
@@ -81,16 +82,17 @@ void QPainterBackend::setFailed(const QString &reason)
 // WaylandQPainterBackend
 //****************************************
 
-WaylandQPainterBackend::WaylandQPainterBackend()
+WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)
     : QPainterBackend()
+    , m_backend(b)
     , m_needsFullRepaint(true)
     , m_backBuffer(QImage(QSize(), QImage::Format_RGB32))
     , m_buffer()
 {
-    connect(Wayland::WaylandBackend::self()->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
-    connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
+    connect(b->shmPool(), SIGNAL(poolResized()), SLOT(remapBuffer()));
+    connect(b, &Wayland::WaylandBackend::shellSurfaceSizeChanged,
             this, &WaylandQPainterBackend::screenGeometryChanged);
-    connect(Wayland::WaylandBackend::self()->surface(), &KWayland::Client::Surface::frameRendered,
+    connect(b->surface(), &KWayland::Client::Surface::frameRendered,
             Compositor::self(), &Compositor::bufferSwapComplete);
 }
 
@@ -114,7 +116,7 @@ void WaylandQPainterBackend::present(int mask, const QRegion &damage)
     }
     Compositor::self()->aboutToSwapBuffers();
     m_needsFullRepaint = false;
-    auto s = Wayland::WaylandBackend::self()->surface();
+    auto s = m_backend->surface();
     s->attachBuffer(m_buffer);
     s->damage(damage);
     s->commit();
@@ -149,8 +151,8 @@ void WaylandQPainterBackend::prepareRenderingFrame()
         }
     }
     m_buffer.clear();
-    const QSize size(Wayland::WaylandBackend::self()->shellSurfaceSize());
-    m_buffer = Wayland::WaylandBackend::self()->shmPool()->getBuffer(size, size.width() * 4);
+    const QSize size(m_backend->shellSurfaceSize());
+    m_buffer = m_backend->shmPool()->getBuffer(size, size.width() * 4);
     if (!m_buffer) {
         qCDebug(KWIN_CORE) << "Did not get a new Buffer from Shm Pool";
         m_backBuffer = QImage();
@@ -186,16 +188,17 @@ bool WaylandQPainterBackend::needsFullRepaint() const
 //****************************************
 // X11WindowedBackend
 //****************************************
-X11WindowedQPainterBackend::X11WindowedQPainterBackend()
+X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)
     : QPainterBackend()
-    , m_backBuffer(X11WindowedBackend::self()->size(), QImage::Format_RGB32)
+    , m_backBuffer(backend->size(), QImage::Format_RGB32)
+    , m_backend(backend)
 {
 }
 
 X11WindowedQPainterBackend::~X11WindowedQPainterBackend()
 {
     if (m_gc) {
-        xcb_free_gc(X11WindowedBackend::self()->connection(), m_gc);
+        xcb_free_gc(m_backend->connection(), m_gc);
     }
 }
 
@@ -226,8 +229,8 @@ void X11WindowedQPainterBackend::present(int mask, const QRegion &damage)
 {
     Q_UNUSED(mask)
     Q_UNUSED(damage)
-    xcb_connection_t *c = X11WindowedBackend::self()->connection();
-    const xcb_window_t window = X11WindowedBackend::self()->window();
+    xcb_connection_t *c = m_backend->connection();
+    const xcb_window_t window = m_backend->window();
     if (m_gc == XCB_NONE) {
         m_gc = xcb_generate_id(c);
         xcb_create_gc(c, m_gc, window, 0, nullptr);
@@ -253,10 +256,10 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
     QScopedPointer<QPainterBackend> backend;
 #if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        if (X11WindowedBackend::self()) {
-            backend.reset(new X11WindowedQPainterBackend);
-        } else {
-            backend.reset(new WaylandQPainterBackend);
+        if (X11WindowedBackend *b = dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
+            backend.reset(new X11WindowedQPainterBackend(b));
+        } else if (Wayland::WaylandBackend *b = dynamic_cast<Wayland::WaylandBackend*>(waylandServer()->backend())) {
+            backend.reset(new WaylandQPainterBackend(b));
         }
         if (backend->isFailed()) {
             return NULL;

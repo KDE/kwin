@@ -355,14 +355,6 @@ void WaylandCursor::setCursorImage(Qt::CursorShape shape)
 #endif
 }
 
-WaylandBackend *WaylandBackend::s_self = 0;
-WaylandBackend *WaylandBackend::create(const QByteArray &display, QObject *parent)
-{
-    Q_ASSERT(!s_self);
-    s_self = new WaylandBackend(display, parent);
-    return s_self;
-}
-
 WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
     : AbstractBackend(parent)
     , m_display(nullptr)
@@ -449,7 +441,6 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->wait();
 
     qCDebug(KWIN_CORE) << "Destroyed Wayland display";
-    s_self = NULL;
 }
 
 void WaylandBackend::destroyOutputs()

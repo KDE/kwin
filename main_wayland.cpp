@@ -88,7 +88,7 @@ void ApplicationWayland::performStartup()
     // try creating the Wayland Backend
     createInput();
     createBackend();
-    if (X11WindowedBackend::self()) {
+    if (dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
         continueStartupWithScreens();
     }
 }
@@ -98,7 +98,7 @@ void ApplicationWayland::createBackend()
     AbstractBackend *backend = nullptr;
     if (m_windowed) {
         if (!m_waylandDisplay.isEmpty()) {
-            Wayland::WaylandBackend *b = Wayland::WaylandBackend::create(m_waylandDisplay, this);
+            Wayland::WaylandBackend *b = new Wayland::WaylandBackend(m_waylandDisplay, this);
             connect(b, &Wayland::WaylandBackend::connectionFailed, this,
                 [] () {
                     fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
@@ -109,7 +109,7 @@ void ApplicationWayland::createBackend()
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
-            KWin::X11WindowedBackend *x11Backend = KWin::X11WindowedBackend::create(m_x11Display, m_backendSize, this);
+            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, m_backendSize, this);
             if (x11Backend->isValid()) {
                 backend = x11Backend;
                 waylandServer()->seat()->setHasPointer(true);
@@ -128,8 +128,8 @@ void ApplicationWayland::createBackend()
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    if (Wayland::WaylandBackend::self()) {
-        disconnect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+    if (Wayland::WaylandBackend *w = dynamic_cast<Wayland::WaylandBackend *>(waylandServer()->backend())) {
+        disconnect(w, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
     }
     createScreens();
     waylandServer()->initOutputs();

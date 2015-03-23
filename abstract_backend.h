@@ -19,12 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_ABSTRACT_BACKEND_H
 #define KWIN_ABSTRACT_BACKEND_H
+#include <kwin_export.h>
 #include <QObject>
 
 namespace KWin
 {
 
-class AbstractBackend : public QObject
+class KWIN_EXPORT AbstractBackend : public QObject
 {
     Q_OBJECT
 public:

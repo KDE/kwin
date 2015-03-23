@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND
 #include "screens_wayland.h"
 #include "wayland_backend.h"
+#include "wayland_server.h"
 #include "x11windowed_backend.h"
 #include "screens_x11windowed.h"
 #endif
@@ -46,10 +47,10 @@ Screens *Screens::create(QObject *parent)
 #else
 #if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        if (X11WindowedBackend::self()) {
-            s_self = new X11WindowedScreens(parent);
-        } else if (Wayland::WaylandBackend::self()) {
-            s_self = new WaylandScreens(parent);
+        if (X11WindowedBackend *b = dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
+            s_self = new X11WindowedScreens(b, parent);
+        } else if (Wayland::WaylandBackend *b = dynamic_cast<Wayland::WaylandBackend*>(waylandServer()->backend())) {
+            s_self = new WaylandScreens(b, parent);
         }
     }
 #endif
