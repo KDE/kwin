@@ -101,7 +101,7 @@ Decoration {
         }
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized"
-        height: parent.borderTopMaximized
+        height: parent.maximizedBorders.top
         opacity: shown ? 1 : 0
         enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
