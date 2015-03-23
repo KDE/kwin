@@ -24,9 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#ifdef KWIN_BUILD_KAPPMENU
-#include "appmenu.h"
-#endif
 #include "atoms.h"
 #include "client_machine.h"
 #include "composite.h"
@@ -139,9 +136,6 @@ Client::Client()
     , activitiesDefined(false)
     , needsSessionInteract(false)
     , needsXWindowMove(false)
-#ifdef KWIN_BUILD_KAPPMENU
-    , m_menuAvailable(false)
-#endif
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
     , m_palette(QApplication::palette())
@@ -2286,25 +2280,6 @@ bool Client::isClient() const
 {
     return true;
 }
-
-#ifdef KWIN_BUILD_KAPPMENU
-void Client::setAppMenuAvailable()
-{
-    m_menuAvailable = true;
-    emit appMenuAvailable();
-}
-
-void Client::setAppMenuUnavailable()
-{
-    m_menuAvailable = false;
-    emit appMenuUnavailable();
-}
-
-void Client::showApplicationMenu(const QPoint &p)
-{
-    ApplicationMenu::self()->showApplicationMenu(p, window());
-}
-#endif
 
 NET::WindowType Client::windowType(bool direct, int supportedTypes) const
 {

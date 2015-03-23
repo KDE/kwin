@@ -27,9 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
-#ifdef KWIN_BUILD_KAPPMENU
-#include "appmenu.h"
-#endif
 #include "atoms.h"
 #include "client.h"
 #include "composite.h"
@@ -131,10 +128,6 @@ Workspace::Workspace(bool restore)
 {
     // If KWin was already running it saved its configuration after loosing the selection -> Reread
     QFuture<void> reparseConfigFuture = QtConcurrent::run(options, &Options::reparseConfiguration);
-
-#ifdef KWIN_BUILD_KAPPMENU
-    ApplicationMenu::create(this);
-#endif
 
     _self = this;
 
@@ -514,10 +507,6 @@ void Workspace::addClient(Client* c)
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self()->isDisplayed())
         TabBox::TabBox::self()->reset(true);
-#endif
-#ifdef KWIN_BUILD_KAPPMENU
-        if (ApplicationMenu::self()->hasMenu(c->window()))
-            c->setAppMenuAvailable();
 #endif
 }
 
