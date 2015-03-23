@@ -29,6 +29,7 @@ namespace Client
 {
 class Compositor;
 class ConnectionThread;
+class EventQueue;
 class Output;
 class Registry;
 class ShmPool;
@@ -38,7 +39,6 @@ class Surface;
 
 class QThread;
 class QTimer;
-struct wl_event_queue;
 
 class WaylandClientTest : public QObject
 {
@@ -55,7 +55,7 @@ private:
     void toggleTimer();
     QThread *m_connectionThread;
     KWayland::Client::ConnectionThread *m_connectionThreadObject;
-    wl_event_queue *m_eventQueue;
+    KWayland::Client::EventQueue *m_eventQueue;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::Output *m_output;
     KWayland::Client::Surface *m_surface;

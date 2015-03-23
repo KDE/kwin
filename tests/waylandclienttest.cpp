@@ -22,6 +22,7 @@
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/pointer.h>
@@ -37,8 +38,6 @@
 #include <QPainter>
 #include <QThread>
 #include <QTimer>
-// Wayland
-#include <wayland-client-protocol.h>
 
 #include <linux/input.h>
 
@@ -58,10 +57,10 @@ WaylandClientTest::WaylandClientTest(QObject *parent)
     , m_connectionThread(new QThread(this))
     , m_connectionThreadObject(new ConnectionThread(nullptr))
     , m_eventQueue(nullptr)
-    , m_compositor(new Compositor(this))
-    , m_output(new Output(this))
+    , m_compositor(nullptr)
+    , m_output(nullptr)
     , m_surface(nullptr)
-    , m_shm(new ShmPool(this))
+    , m_shm(nullptr)
     , m_timer(new QTimer(this))
 {
     init();
@@ -79,27 +78,11 @@ void WaylandClientTest::init()
     connect(m_connectionThreadObject, &ConnectionThread::connected, this,
         [this]() {
             // create the event queue for the main gui thread
-            wl_display *display = m_connectionThreadObject->display();
-            m_eventQueue = wl_display_create_queue(display);
+            m_eventQueue = new EventQueue(this);
+            m_eventQueue->setup(m_connectionThreadObject);
             // setup registry
             Registry *registry = new Registry(this);
             setupRegistry(registry);
-
-            QAbstractEventDispatcher *dispatcher = QCoreApplication::instance()->eventDispatcher();
-            connect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this,
-                [this]() {
-                    wl_display_flush(m_connectionThreadObject->display());
-                }
-            );
-        },
-        Qt::QueuedConnection);
-    connect(m_connectionThreadObject, &ConnectionThread::eventsRead, this,
-        [this]() {
-            if (!m_eventQueue) {
-                return;
-            }
-            wl_display_dispatch_queue_pending(m_connectionThreadObject->display(), m_eventQueue);
-            wl_display_flush(m_connectionThreadObject->display());
         },
         Qt::QueuedConnection);
 
@@ -122,14 +105,13 @@ void WaylandClientTest::setupRegistry(Registry *registry)
 {
     connect(registry, &Registry::compositorAnnounced, this,
         [this, registry](quint32 name) {
-            m_compositor->setup(registry->bindCompositor(name, 1));
+            m_compositor = registry->createCompositor(name, 1, this);
             m_surface = m_compositor->createSurface(this);
         }
     );
     connect(registry, &Registry::shellAnnounced, this,
         [this, registry](quint32 name) {
-            Shell *shell = new Shell(this);
-            shell->setup(registry->bindShell(name, 1));
+            Shell *shell = registry->createShell(name, 1, this);
             ShellSurface *shellSurface = shell->createSurface(m_surface, m_surface);
             shellSurface->setFullscreen(m_output);
             connect(shellSurface, &ShellSurface::sizeChanged, this, static_cast<void(WaylandClientTest::*)(const QSize&)>(&WaylandClientTest::render));
@@ -137,20 +119,20 @@ void WaylandClientTest::setupRegistry(Registry *registry)
     );
     connect(registry, &Registry::outputAnnounced, this,
         [this, registry](quint32 name) {
-            if (m_output->isValid()) {
+            if (m_output) {
                 return;
             }
-            m_output->setup(registry->bindOutput(name, 2));
+            m_output = registry->createOutput(name, 2, this);
         }
     );
     connect(registry, &Registry::shmAnnounced, this,
         [this, registry](quint32 name) {
-            m_shm->setup(registry->bindShm(name, 1));
+            m_shm = registry->createShmPool(name, 1, this);
         }
     );
     connect(registry, &Registry::seatAnnounced, this,
         [this, registry](quint32 name) {
-            Seat *s = new Seat(this);
+            Seat *s = registry->createSeat(name, 2, this);
             connect(s, &Seat::hasKeyboardChanged, this,
                 [this, s](bool has) {
                     if (!has) {
@@ -192,11 +174,10 @@ void WaylandClientTest::setupRegistry(Registry *registry)
                     );
                 }
             );
-            s->setup(registry->bindSeat(name, 2));
         }
     );
     registry->create(m_connectionThreadObject->display());
-    wl_proxy_set_queue((wl_proxy*)registry->registry(), m_eventQueue);
+    registry->setEventQueue(m_eventQueue);
     registry->setup();
 }
 
