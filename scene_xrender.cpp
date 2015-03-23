@@ -34,11 +34,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "xcbutils.h"
 #include "kwinxrenderutils.h"
-#if HAVE_WAYLAND
-#include "wayland_backend.h"
-#include <KWayland/Client/shm_pool.h>
-#include <KWayland/Client/surface.h>
-#endif
 #include "decorations/decoratedclient.h"
 
 #include <xcb/xfixes.h>
@@ -216,110 +211,11 @@ bool X11XRenderBackend::usesOverlayWindow() const
 }
 
 //****************************************
-// WaylandXRenderBackend
-//****************************************
-#if HAVE_WAYLAND
-
-WaylandXRenderBackend::WaylandXRenderBackend()
-    : m_shm(new Xcb::Shm)
-    , m_format(0)
-{
-    if (!m_shm->isValid()) {
-        setFailed("Could not create XShm");
-    }
-    if (m_shm->pixmapFormat() != XCB_IMAGE_FORMAT_Z_PIXMAP) {
-        setFailed("XShm pixmap does not have Z format");
-    }
-    init();
-    connect(Wayland::WaylandBackend::self(), &Wayland::WaylandBackend::shellSurfaceSizeChanged,
-            this, &WaylandXRenderBackend::createBuffer);
-    connect(Wayland::WaylandBackend::self()->surface(), &KWayland::Client::Surface::frameRendered,
-            Compositor::self(), &Compositor::bufferSwapComplete);
-}
-
-WaylandXRenderBackend::~WaylandXRenderBackend()
-{
-}
-
-void WaylandXRenderBackend::init()
-{
-    m_format = XRenderUtils::findPictFormat(defaultScreen()->root_visual);
-    if (m_format == 0) {
-        setFailed("Failed to find XRender format for root window");
-        return; // error
-    }
-    createBuffer();
-}
-
-void WaylandXRenderBackend::createBuffer()
-{
-    xcb_pixmap_t pixmap = xcb_generate_id(connection());
-    const QSize &size = Wayland::WaylandBackend::self()->shellSurfaceSize();
-    xcb_void_cookie_t cookie = xcb_shm_create_pixmap_checked(connection(), pixmap, rootWindow(),
-                                                             size.width(), size.height(),
-                                                             24, m_shm->segment(), 0);
-    // let's check whether the pixmap got created
-    ScopedCPointer<xcb_generic_error_t> error(xcb_request_check(connection(), cookie));
-    if (error) {
-        setFailed("Creating shm pixmap failed: " + QString::number(error->error_code));
-        return;
-    }
-
-    // create the render picture
-    xcb_render_picture_t b = xcb_generate_id(connection());
-    xcb_render_create_picture(connection(), b, pixmap, m_format, 0, NULL);
-    xcb_free_pixmap(connection(), pixmap);   // The picture owns the pixmap now
-    setBuffer(b);
-
-    qCDebug(KWIN_CORE) << "Offscreen shm pixmap created";
-}
-
-void WaylandXRenderBackend::present(int mask, const QRegion &damage)
-{
-    Q_UNUSED(mask)
-
-    // we need to sync
-    ScopedCPointer<xcb_get_input_focus_reply_t> sync(xcb_get_input_focus_reply(
-        connection(), xcb_get_input_focus_unchecked(connection()), NULL));
-
-    Wayland::WaylandBackend *wl = Wayland::WaylandBackend::self();
-    const QSize &size = wl->shellSurfaceSize();
-    auto buffer = wl->shmPool()->createBuffer(size, size.width() * 4, m_shm->buffer());
-    if (!buffer) {
-        qCDebug(KWIN_CORE) << "Did not get a buffer";
-        return;
-    }
-
-    Compositor::self()->aboutToSwapBuffers();
-
-    auto s = wl->surface();
-    s->attachBuffer(buffer);
-    s->damage(damage);
-    s->commit();
-}
-
-bool WaylandXRenderBackend::usesOverlayWindow() const
-{
-    return false;
-}
-
-#endif
-
-//****************************************
 // SceneXrender
 //****************************************
 SceneXrender* SceneXrender::createScene(QObject *parent)
 {
     QScopedPointer<XRenderBackend> backend;
-#if HAVE_WAYLAND
-    if (kwinApp()->shouldUseWaylandForCompositing()) {
-        backend.reset(new WaylandXRenderBackend);
-        if (backend->isFailed()) {
-            return NULL;
-        }
-        return new SceneXrender(backend.take(), parent);
-    }
-#endif
     backend.reset(new X11XRenderBackend);
     if (backend->isFailed()) {
         return NULL;

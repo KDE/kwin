@@ -145,24 +145,6 @@ private:
     xcb_render_pictformat_t m_format;
 };
 
-#if HAVE_WAYLAND
-class WaylandXRenderBackend :  public QObject, public XRenderBackend
-{
-    Q_OBJECT
-public:
-    WaylandXRenderBackend();
-    virtual ~WaylandXRenderBackend();
-    virtual void present(int mask, const QRegion &damage);
-    virtual bool usesOverlayWindow() const;
-
-private:
-    void createBuffer();
-    void init();
-    QScopedPointer<Xcb::Shm> m_shm;
-    xcb_render_pictformat_t m_format;
-};
-#endif
-
 class SceneXrender
     : public Scene
 {
