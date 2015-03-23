@@ -123,12 +123,11 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
-find_package(Wayland 1.2 COMPONENTS Client Egl Cursor)
+find_package(Wayland 1.2 COMPONENTS Egl Cursor)
 set_package_properties(Wayland PROPERTIES
                        TYPE OPTIONAL
                        PURPOSE "Required for building KWin with Wayland support"
                       )
-add_feature_info("Wayland-Client" Wayland_Client_FOUND "Required for building the Wayland backend in KWin")
 add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for cursor support in Wayland backend of kwin_wayland")
 add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
 
@@ -263,8 +262,8 @@ include_directories(${epoxy_INCLUDE_DIR})
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
-if(Wayland_Client_FOUND AND XKB_FOUND AND KF5Wayland_FOUND)
-    set(HAVE_WAYLAND ${Wayland_Client_FOUND})
+if(XKB_FOUND AND KF5Wayland_FOUND)
+    set(HAVE_WAYLAND TRUE)
     set(HAVE_XKB ${XKB_FOUND})
     set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
     set(HAVE_WAYLAND_CURSOR ${Wayland_Cursor_FOUND})
