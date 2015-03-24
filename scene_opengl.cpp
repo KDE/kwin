@@ -30,18 +30,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"
 // for Wayland
+#if HAVE_WAYLAND
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #include "wayland_backend.h"
 #include "wayland_server.h"
-#endif
+#endif // HAVE_WAYLAND_EGL
 #if HAVE_X11_XCB
 #include "x11windowed_backend.h"
-#endif
-#endif
+#endif // HAVE_X11_XCB
+#endif // HAVE_WAYLAND
+#endif // KWIN_HAVE_EGL
 #ifndef KWIN_HAVE_OPENGLES
 #include "glxbackend.h"
-#endif
+#endif // KWIN_HAVE_OPENGLES
 
 #include <kwinglcolorcorrection.h>
 #include <kwinglplatform.h>
@@ -499,23 +501,26 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         break;
     case EglPlatformInterface:
 #ifdef KWIN_HAVE_EGL
+#if HAVE_WAYLAND
         if (kwinApp()->shouldUseWaylandForCompositing()) {
 #if HAVE_WAYLAND_EGL
             if (Wayland::WaylandBackend *b = dynamic_cast<Wayland::WaylandBackend*>(waylandServer()->backend())) {
                 backend = new EglWaylandBackend(b);
             }
-#endif
+#endif // HAVE_WAYLAND_EGL
 #if HAVE_X11_XCB
             if (!backend) {
                 if (X11WindowedBackend *b = dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
                     backend = new EglOnXBackend(b);
                 }
             }
-#endif
-        } else {
+#endif // HAVE_X11_XCB
+        } else
+#endif // HAVE_WAYLAND
+        {
             backend = new EglOnXBackend();
         }
-#endif
+#endif // KWIN_HAVE_EGL
         break;
     default:
         // no backend available
