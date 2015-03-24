@@ -61,7 +61,7 @@ Decoration {
     }
     PlasmaCore.FrameSvgItem {
         id: decorationActive
-        property bool shown: (!decoration.client.maxized || !backgroundSvg.supportsMaximized) && (decoration.client.active || !backgroundSvg.supportsInactive)
+        property bool shown: (!decoration.client.maximized || !backgroundSvg.supportsMaximized) && (decoration.client.active || !backgroundSvg.supportsInactive)
         anchors.fill: parent
         imagePath: backgroundSvg.imagePath
         prefix: "decoration"
@@ -101,7 +101,7 @@ Decoration {
         }
         imagePath: backgroundSvg.imagePath
         prefix: "decoration-maximized"
-        height: parent.borderTopMaximized
+        height: parent.maximizedBorders.top
         opacity: shown ? 1 : 0
         enabledBorders: PlasmaCore.FrameSvg.NoBorder
         Behavior on opacity {
