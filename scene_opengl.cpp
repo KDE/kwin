@@ -31,10 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eglonxbackend.h"
 // for Wayland
 #if HAVE_WAYLAND
+#include "wayland_server.h"
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #include "wayland_backend.h"
-#include "wayland_server.h"
 #endif // HAVE_WAYLAND_EGL
 #if HAVE_X11_XCB
 #include "x11windowed_backend.h"
