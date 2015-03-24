@@ -29,3 +29,6 @@ if (Qt5Concurrent_FOUND)
     target_link_libraries(pasteClient Qt5::Concurrent KF5::WaylandClient)
     ecm_mark_as_test(pasteClient)
 endif()
+
+add_executable(touchClientTest touchclienttest.cpp)
+target_link_libraries(touchClientTest KF5::WaylandClient)
