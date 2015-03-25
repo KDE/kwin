@@ -930,7 +930,6 @@ void TestWaylandSeat::testTouch()
     QSignalSpy touchCreatedSpy(m_seatInterface, SIGNAL(touchCreated(KWayland::Server::TouchInterface*)));
     QVERIFY(touchCreatedSpy.isValid());
     Touch *touch = m_seat->createTouch(m_seat);
-    const Touch &ctouch = *touch;
     QVERIFY(touch->isValid());
     QVERIFY(touchCreatedSpy.wait());
     QVERIFY(m_seatInterface->focusedTouch());
@@ -1078,6 +1077,7 @@ void TestWaylandSeat::testTouch()
     QVERIFY(!m_seatInterface->isTouchSequence());
 
     // try cancel
+    m_seatInterface->setFocusedTouchSurface(serverSurface, QPointF(15, 26));
     m_seatInterface->setTimestamp(7);
     QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
     m_seatInterface->touchFrame();
@@ -1090,6 +1090,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(pointAddedSpy.count(), 2);
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(pointRemovedSpy.count(), 3);
+    QCOMPARE(touch->sequence().first()->position(), QPointF(0, 0));
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)

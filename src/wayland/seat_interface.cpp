@@ -820,6 +820,7 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
     }
     d->touchInterface.focus = Private::Touch::Focus();
     d->touchInterface.focus.surface = surface;
+    d->touchInterface.focus.offset = surfacePosition;
     TouchInterface *t = d->touchForSurface(surface);
     d->touchInterface.focus.touch = t;
     if (d->touchInterface.focus.surface) {
