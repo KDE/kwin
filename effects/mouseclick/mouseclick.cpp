@@ -64,9 +64,7 @@ MouseClickEffect::~MouseClickEffect()
 {
     if (m_enabled)
         effects->stopMousePolling();
-    foreach (const MouseEvent* click, m_clicks) {
-        delete click;
-    }
+    qDeleteAll(m_clicks);
     m_clicks.clear();
 
     for (int i = 0; i < BUTTON_COUNT; ++i) {
@@ -166,13 +164,16 @@ void MouseClickEffect::slotMouseChanged(const QPoint& pos, const QPoint&,
         return;
 
     MouseEvent* m = NULL;
-    for (int i = 0; i < BUTTON_COUNT; ++i) {
+    int i = BUTTON_COUNT;
+    while (--i >= 0) {
         MouseButton* b = m_buttons[i];
         if (isPressed(b->m_button, buttons, oldButtons)) {
             m = new MouseEvent(i, pos, 0, createEffectFrame(pos, b->m_labelDown), true);
+            break;
         } else if (isReleased(b->m_button, buttons, oldButtons) && (!b->m_isPressed || b->m_time > m_ringLife)) {
             // we might miss a press, thus also check !b->m_isPressed, bug #314762
             m = new MouseEvent(i, pos, 0, createEffectFrame(pos, b->m_labelUp), false);
+            break;
         }
         b->setPressed(b->m_button & buttons);
     }
@@ -234,11 +235,7 @@ void MouseClickEffect::toggleEnabled()
         effects->stopMousePolling();
     }
 
-    if (m_clicks.size() > 0) {
-        foreach (const MouseEvent* click, m_clicks) {
-            delete click;
-        }
-    }
+    qDeleteAll(m_clicks);
     m_clicks.clear();
 
     for (int i = 0; i < BUTTON_COUNT; ++i) {
