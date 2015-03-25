@@ -58,6 +58,7 @@ class ShellSurface;
 class SubCompositor;
 class SubSurface;
 class Surface;
+class Touch;
 }
 }
 
@@ -105,9 +106,11 @@ public:
 private:
     void destroyPointer();
     void destroyKeyboard();
+    void destroyTouch();
     KWayland::Client::Seat *m_seat;
     KWayland::Client::Pointer *m_pointer;
     KWayland::Client::Keyboard *m_keyboard;
+    KWayland::Client::Touch *m_touch;
     KWayland::Client::Surface *m_cursor;
 #if HAVE_WAYLAND_CURSOR
     WaylandCursorTheme *m_theme;

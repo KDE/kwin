@@ -311,6 +311,21 @@ void InputRedirection::updateFocusedPointerPosition()
 #endif
 }
 
+void InputRedirection::updateFocusedTouchPosition()
+{
+#if HAVE_WAYLAND
+    if (m_touchWindow.isNull()) {
+        return;
+    }
+    if (auto seat = findSeat()) {
+        if (m_touchWindow.data()->surface() != seat->focusedTouchSurface()) {
+            return;
+        }
+        seat->setFocusedTouchSurfacePosition(m_touchWindow.data()->pos());
+    }
+#endif
+}
+
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 {
     // first update to new mouse position
@@ -484,6 +499,109 @@ void InputRedirection::processKeymapChange(int fd, uint32_t size)
 #else
     Q_UNUSED(fd)
     Q_UNUSED(size)
+#endif
+}
+
+void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
+{
+    // TODO: internal handling?
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        if (!seat->isTouchSequence()) {
+            updateTouchWindow(pos);
+        }
+        m_touchIdMapper.insert(id, seat->touchDown(pos));
+    }
+#else
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+#endif
+}
+
+void InputRedirection::updateTouchWindow(const QPointF &pos)
+{
+    // TODO: handle pointer grab aka popups
+    Toplevel *t = findToplevel(pos.toPoint());
+    auto oldWindow = m_touchWindow;
+    if (!oldWindow.isNull() && t == oldWindow.data()) {
+        return;
+    }
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        // disconnect old surface
+        if (oldWindow) {
+            disconnect(oldWindow.data(), &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedTouchPosition);
+        }
+        if (t && t->surface()) {
+            seat->setFocusedTouchSurface(t->surface(), t->pos());
+            connect(t, &Toplevel::geometryChanged, this, &InputRedirection::updateFocusedTouchPosition);
+        } else {
+            seat->setFocusedTouchSurface(nullptr);
+            t = nullptr;
+        }
+    }
+#endif
+    if (!t) {
+        m_touchWindow.clear();
+        return;
+    }
+    m_touchWindow = QWeakPointer<Toplevel>(t);
+}
+
+
+void InputRedirection::processTouchUp(qint32 id, quint32 time)
+{
+    // TODO: internal handling?
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        auto it = m_touchIdMapper.constFind(id);
+        if (it != m_touchIdMapper.constEnd()) {
+            seat->setTimestamp(time);
+            seat->touchUp(it.value());
+        }
+    }
+#else
+    Q_UNUSED(id)
+    Q_UNUSED(time)
+#endif
+}
+
+void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32 time)
+{
+    // TODO: internal handling?
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->setTimestamp(time);
+        auto it = m_touchIdMapper.constFind(id);
+        if (it != m_touchIdMapper.constEnd()) {
+            seat->setTimestamp(time);
+            seat->touchMove(it.value(), pos);
+        }
+    }
+#else
+    Q_UNUSED(id)
+    Q_UNUSED(pos)
+    Q_UNUSED(time)
+#endif
+}
+
+void InputRedirection::cancelTouch()
+{
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->cancelTouchSequence();
+    }
+#endif
+}
+
+void InputRedirection::touchFrame()
+{
+#if HAVE_WAYLAND
+    if (auto seat = findSeat()) {
+        seat->touchFrame();
+    }
 #endif
 }
 

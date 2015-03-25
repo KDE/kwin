@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/subcompositor.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
+#include <KWayland/Client/touch.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
@@ -159,6 +160,37 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
             }
         }
     );
+    connect(m_seat, &Seat::hasTouchChanged,
+        [this] (bool hasTouch) {
+            if (hasTouch && !m_touch) {
+                m_touch = m_seat->createTouch(this);
+                connect(m_touch, &Touch::sequenceCanceled, input(), &InputRedirection::cancelTouch);
+                connect(m_touch, &Touch::frameEnded, input(), &InputRedirection::touchFrame);
+                connect(m_touch, &Touch::sequenceStarted, this,
+                    [] (TouchPoint *tp) {
+                        input()->processTouchDown(tp->id(), tp->position(), tp->time());
+                    }
+                );
+                connect(m_touch, &Touch::pointAdded, this,
+                    [] (TouchPoint *tp) {
+                        input()->processTouchDown(tp->id(), tp->position(), tp->time());
+                    }
+                );
+                connect(m_touch, &Touch::pointRemoved, this,
+                    [] (TouchPoint *tp) {
+                        input()->processTouchUp(tp->id(), tp->time());
+                    }
+                );
+                connect(m_touch, &Touch::pointMoved, this,
+                    [] (TouchPoint *tp) {
+                        input()->processTouchMotion(tp->id(), tp->position(), tp->time());
+                    }
+                );
+            } else {
+                destroyTouch();
+            }
+        }
+    );
     WaylandServer *server = waylandServer();
     if (server) {
         using namespace KWayland::Server;
@@ -174,6 +206,7 @@ WaylandSeat::~WaylandSeat()
 {
     destroyPointer();
     destroyKeyboard();
+    destroyTouch();
 }
 
 void WaylandSeat::destroyPointer()
@@ -186,6 +219,12 @@ void WaylandSeat::destroyKeyboard()
 {
     delete m_keyboard;
     m_keyboard = nullptr;
+}
+
+void WaylandSeat::destroyTouch()
+{
+    delete m_touch;
+    m_touch = nullptr;
 }
 
 void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const QPoint &hotSpot)

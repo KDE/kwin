@@ -122,6 +122,11 @@ public:
      * @internal
      **/
     void processKeymapChange(int fd, uint32_t size);
+    void processTouchDown(qint32 id, const QPointF &pos, quint32 time);
+    void processTouchUp(qint32 id, quint32 time);
+    void processTouchMotion(qint32 id, const QPointF &pos, quint32 time);
+    void cancelTouch();
+    void touchFrame();
 
     static uint8_t toXPointerButton(uint32_t button);
     static uint8_t toXPointerButton(PointerAxis axis, qreal delta);
@@ -170,6 +175,8 @@ private:
     void updatePointerAfterScreenChange();
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
     void updateFocusedPointerPosition();
+    void updateFocusedTouchPosition();
+    void updateTouchWindow(const QPointF &pos);
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB
@@ -179,6 +186,14 @@ private:
      * @brief The Toplevel which currently receives pointer events
      */
     QWeakPointer<Toplevel> m_pointerWindow;
+    /**
+     * @brief The Toplevel which currently receives touch events
+     */
+    QWeakPointer<Toplevel> m_touchWindow;
+    /**
+     * external/kwayland
+     **/
+    QHash<qint32, qint32> m_touchIdMapper;
 
     GlobalShortcutsManager *m_shortcuts;
 
