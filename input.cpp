@@ -232,6 +232,11 @@ void InputRedirection::setupLibInput()
                 processPointerMotion(screen, time);
             }
         );
+        connect(conn, &LibInput::Connection::touchDown, this, &InputRedirection::processTouchDown);
+        connect(conn, &LibInput::Connection::touchUp, this, &InputRedirection::processTouchUp);
+        connect(conn, &LibInput::Connection::touchMotion, this, &InputRedirection::processTouchMotion);
+        connect(conn, &LibInput::Connection::touchCanceled, this, &InputRedirection::cancelTouch);
+        connect(conn, &LibInput::Connection::touchFrame, this, &InputRedirection::touchFrame);
         connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
         // set pos to center of all screens
         if (screens()) {

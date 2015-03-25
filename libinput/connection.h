@@ -54,6 +54,11 @@ Q_SIGNALS:
     void pointerMotionAbsolute(QPointF orig, QPointF screen, uint32_t time);
     void pointerMotion(QPointF delta, uint32_t time);
     void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, uint32_t time);
+    void touchFrame();
+    void touchCanceled();
+    void touchDown(qint32 id, const QPointF &absolutePos, quint32 time);
+    void touchUp(qint32 id, quint32 time);
+    void touchMotion(qint32 id, const QPointF &absolutePos, quint32 time);
 
 private:
     Connection(Context *input, QObject *parent = nullptr);

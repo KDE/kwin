@@ -136,6 +136,29 @@ void Connection::handleEvent()
                 emit pointerMotionAbsolute(pe->absolutePos(), pe->absolutePos(m_size), pe->time());
                 break;
             }
+            case LIBINPUT_EVENT_TOUCH_DOWN: {
+                TouchEvent *te = static_cast<TouchEvent*>(event.data());
+                emit touchDown(te->id(), te->absolutePos(m_size), te->time());
+                break;
+            }
+            case LIBINPUT_EVENT_TOUCH_UP: {
+                TouchEvent *te = static_cast<TouchEvent*>(event.data());
+                emit touchUp(te->id(), te->time());
+                break;
+            }
+            case LIBINPUT_EVENT_TOUCH_MOTION: {
+                TouchEvent *te = static_cast<TouchEvent*>(event.data());
+                emit touchMotion(te->id(), te->absolutePos(m_size), te->time());
+                break;
+            }
+            case LIBINPUT_EVENT_TOUCH_CANCEL: {
+                emit touchCanceled();
+                break;
+            }
+            case LIBINPUT_EVENT_TOUCH_FRAME: {
+                emit touchFrame();
+                break;
+            }
             default:
                 // nothing
                 break;

@@ -83,6 +83,31 @@ int main(int argc, char **argv)
                     std::cout << "Axis: " << axis << " with delta" << delta << std::endl;
                 }
             );
+            QObject::connect(conn, &Connection::touchDown,
+                [](qint32 id, const QPointF &position, quint32 time) {
+                    std::cout << "Touch down at: " << position.x() << "/" << position.y() << " id " << id << " timestamp: " << time << std::endl;
+                }
+            );
+            QObject::connect(conn, &Connection::touchMotion,
+                [](qint32 id, const QPointF &position, quint32 time) {
+                    std::cout << "Touch motion at: " << position.x() << "/" << position.y() << " id " << id << " timestamp: " << time << std::endl;
+                }
+            );
+            QObject::connect(conn, &Connection::touchUp,
+                [](qint32 id, quint32 time) {
+                    std::cout << "Touch up for id " << id << " timestamp: " << time << std::endl;
+                }
+            );
+            QObject::connect(conn, &Connection::touchCanceled,
+                []() {
+                    std::cout << "Touch canceled" << std::endl;
+                }
+            );
+            QObject::connect(conn, &Connection::touchFrame,
+                []() {
+                    std::cout << "Touch frame " << std::endl;
+                }
+            );
             QObject::connect(&app, &QCoreApplication::aboutToQuit, [conn] { delete conn; });
         }
     );
