@@ -74,5 +74,6 @@ install(FILES
   shell_interface.h
   subcompositor_interface.h
   surface_interface.h
+  touch_interface.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
 )
