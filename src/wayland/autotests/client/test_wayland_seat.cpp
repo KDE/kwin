@@ -32,6 +32,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/client/registry.h"
 #include "../../src/client/seat.h"
 #include "../../src/client/shm_pool.h"
+#include "../../src/client/touch.h"
 #include "../../src/server/buffer_interface.h"
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/datadevicemanager_interface.h"
@@ -65,6 +66,7 @@ private Q_SLOTS:
     void testCast();
     void testDestroy();
     void testSelection();
+    void testTouch();
     // TODO: add test for keymap
 
 private:
@@ -792,6 +794,13 @@ void TestWaylandSeat::testDestroy()
     Pointer *p = m_seat->createPointer(m_seat);
     QVERIFY(p->isValid());
 
+    QSignalSpy touchSpy(m_seat, SIGNAL(hasTouchChanged(bool)));
+    QVERIFY(touchSpy.isValid());
+    m_seatInterface->setHasTouch(true);
+    QVERIFY(touchSpy.wait());
+    Touch *t = m_seat->createTouch(m_seat);
+    QVERIFY(t->isValid());
+
     delete m_compositor;
     m_compositor = nullptr;
     connect(m_connection, &ConnectionThread::connectionDied, m_seat, &Seat::destroy);
@@ -811,11 +820,13 @@ void TestWaylandSeat::testDestroy()
     QVERIFY(!m_seat->isValid());
     QVERIFY(!k->isValid());
     QVERIFY(!p->isValid());
+    QVERIFY(!t->isValid());
 
     // calling destroy again should not fail
     m_seat->destroy();
     k->destroy();
     p->destroy();
+    t->destroy();
 }
 
 void TestWaylandSeat::testSelection()
@@ -891,6 +902,194 @@ void TestWaylandSeat::testSelection()
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     QCOMPARE(selectionSpy.count(), 1);
+}
+
+void TestWaylandSeat::testTouch()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QSignalSpy touchSpy(m_seat, SIGNAL(hasTouchChanged(bool)));
+    QVERIFY(touchSpy.isValid());
+    m_seatInterface->setHasTouch(true);
+    QVERIFY(touchSpy.wait());
+
+    // create the surface
+    QSignalSpy surfaceCreatedSpy(m_compositorInterface, SIGNAL(surfaceCreated(KWayland::Server::SurfaceInterface*)));
+    QVERIFY(surfaceCreatedSpy.isValid());
+    Surface *s = m_compositor->createSurface(m_compositor);
+    QVERIFY(surfaceCreatedSpy.wait());
+    SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWayland::Server::SurfaceInterface*>();
+    QVERIFY(serverSurface);
+
+    m_seatInterface->setFocusedTouchSurface(serverSurface);
+    // no keyboard yet
+    QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
+    QVERIFY(!m_seatInterface->focusedTouch());
+
+    QSignalSpy touchCreatedSpy(m_seatInterface, SIGNAL(touchCreated(KWayland::Server::TouchInterface*)));
+    QVERIFY(touchCreatedSpy.isValid());
+    Touch *touch = m_seat->createTouch(m_seat);
+    const Touch &ctouch = *touch;
+    QVERIFY(touch->isValid());
+    QVERIFY(touchCreatedSpy.wait());
+    QVERIFY(m_seatInterface->focusedTouch());
+    QCOMPARE(touchCreatedSpy.first().first().value<KWayland::Server::TouchInterface*>(), m_seatInterface->focusedTouch());
+
+    QSignalSpy sequenceStartedSpy(touch, SIGNAL(sequenceStarted(KWayland::Client::TouchPoint*)));
+    QVERIFY(sequenceStartedSpy.isValid());
+    QSignalSpy sequenceEndedSpy(touch, SIGNAL(sequenceEnded()));
+    QVERIFY(sequenceEndedSpy.isValid());
+    QSignalSpy sequenceCanceledSpy(touch, SIGNAL(sequenceCanceled()));
+    QVERIFY(sequenceCanceledSpy.isValid());
+    QSignalSpy frameEndedSpy(touch, SIGNAL(frameEnded()));
+    QVERIFY(frameEndedSpy.isValid());
+    QSignalSpy pointAddedSpy(touch, SIGNAL(pointAdded(KWayland::Client::TouchPoint*)));
+    QVERIFY(pointAddedSpy.isValid());
+    QSignalSpy pointMovedSpy(touch, SIGNAL(pointMoved(KWayland::Client::TouchPoint*)));
+    QVERIFY(pointMovedSpy.isValid());
+    QSignalSpy pointRemovedSpy(touch, SIGNAL(pointRemoved(KWayland::Client::TouchPoint*)));
+    QVERIFY(pointRemovedSpy.isValid());
+
+    // try a few things
+    m_seatInterface->setFocusedTouchSurfacePosition(QPointF(10, 20));
+    QCOMPARE(m_seatInterface->focusedTouchSurfacePosition(), QPointF(10, 20));
+    m_seatInterface->setTimestamp(1);
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    QVERIFY(sequenceStartedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+    QCOMPARE(sequenceEndedSpy.count(), 0);
+    QCOMPARE(sequenceCanceledSpy.count(), 0);
+    QCOMPARE(frameEndedSpy.count(), 0);
+    QCOMPARE(pointAddedSpy.count(), 0);
+    QCOMPARE(pointMovedSpy.count(), 0);
+    QCOMPARE(pointRemovedSpy.count(), 0);
+    TouchPoint *tp = sequenceStartedSpy.first().first().value<TouchPoint*>();
+    QVERIFY(tp);
+    QCOMPARE(tp->downSerial(), m_seatInterface->display()->serial());
+    QCOMPARE(tp->id(), 0);
+    QVERIFY(tp->isDown());
+    QCOMPARE(tp->position(), QPointF(5, 6));
+    QCOMPARE(tp->positions().size(), 1);
+    QCOMPARE(tp->time(), 1u);
+    QCOMPARE(tp->timestamps().count(), 1);
+    QCOMPARE(tp->upSerial(), 0u);
+    QCOMPARE(tp->surface().data(), s);
+    QCOMPARE(touch->sequence().count(), 1);
+    QCOMPARE(touch->sequence().first(), tp);
+
+    // let's end the frame
+    m_seatInterface->touchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(frameEndedSpy.count(), 1);
+
+    // move the one point
+    m_seatInterface->setTimestamp(2);
+    m_seatInterface->touchMove(0, QPointF(10, 20));
+    m_seatInterface->touchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+    QCOMPARE(sequenceEndedSpy.count(), 0);
+    QCOMPARE(sequenceCanceledSpy.count(), 0);
+    QCOMPARE(frameEndedSpy.count(), 2);
+    QCOMPARE(pointAddedSpy.count(), 0);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 0);
+    QCOMPARE(pointMovedSpy.first().first().value<TouchPoint*>(), tp);
+
+    QCOMPARE(tp->id(), 0);
+    QVERIFY(tp->isDown());
+    QCOMPARE(tp->position(), QPointF(0, 0));
+    QCOMPARE(tp->positions().size(), 2);
+    QCOMPARE(tp->time(), 2u);
+    QCOMPARE(tp->timestamps().count(), 2);
+    QCOMPARE(tp->upSerial(), 0u);
+    QCOMPARE(tp->surface().data(), s);
+
+    // add onther point
+    m_seatInterface->setTimestamp(3);
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->touchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+    QCOMPARE(sequenceEndedSpy.count(), 0);
+    QCOMPARE(sequenceCanceledSpy.count(), 0);
+    QCOMPARE(frameEndedSpy.count(), 3);
+    QCOMPARE(pointAddedSpy.count(), 1);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 0);
+    QCOMPARE(touch->sequence().count(), 2);
+    QCOMPARE(touch->sequence().first(), tp);
+    TouchPoint *tp2 = pointAddedSpy.first().first().value<TouchPoint*>();
+    QVERIFY(tp2);
+    QCOMPARE(touch->sequence().last(), tp2);
+    QCOMPARE(tp2->id(), 1);
+    QVERIFY(tp2->isDown());
+    QCOMPARE(tp2->position(), QPointF(5, 6));
+    QCOMPARE(tp2->positions().size(), 1);
+    QCOMPARE(tp2->time(), 3u);
+    QCOMPARE(tp2->timestamps().count(), 1);
+    QCOMPARE(tp2->upSerial(), 0u);
+    QCOMPARE(tp2->surface().data(), s);
+
+    // send it an up
+    m_seatInterface->setTimestamp(4);
+    m_seatInterface->touchUp(1);
+    m_seatInterface->touchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+    QCOMPARE(sequenceEndedSpy.count(), 0);
+    QCOMPARE(sequenceCanceledSpy.count(), 0);
+    QCOMPARE(frameEndedSpy.count(), 4);
+    QCOMPARE(pointAddedSpy.count(), 1);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.first().first().value<TouchPoint*>(), tp2);
+    QCOMPARE(tp2->id(), 1);
+    QVERIFY(!tp2->isDown());
+    QCOMPARE(tp2->position(), QPointF(5, 6));
+    QCOMPARE(tp2->positions().size(), 1);
+    QCOMPARE(tp2->time(), 4u);
+    QCOMPARE(tp2->timestamps().count(), 2);
+    QCOMPARE(tp2->upSerial(), m_seatInterface->display()->serial());
+    QCOMPARE(tp2->surface().data(), s);
+
+    // send another down and up
+    m_seatInterface->setTimestamp(5);
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 1);
+    m_seatInterface->touchFrame();
+    m_seatInterface->setTimestamp(6);
+    m_seatInterface->touchUp(1);
+    // and send an up for the first point
+    m_seatInterface->touchUp(0);
+    m_seatInterface->touchFrame();
+    QVERIFY(frameEndedSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 1);
+    QCOMPARE(sequenceEndedSpy.count(), 1);
+    QCOMPARE(sequenceCanceledSpy.count(), 0);
+    QCOMPARE(frameEndedSpy.count(), 6);
+    QCOMPARE(pointAddedSpy.count(), 2);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 3);
+    QCOMPARE(touch->sequence().count(), 3);
+    QVERIFY(!touch->sequence().at(0)->isDown());
+    QVERIFY(!touch->sequence().at(1)->isDown());
+    QVERIFY(!touch->sequence().at(2)->isDown());
+    QVERIFY(!m_seatInterface->isTouchSequence());
+
+    // try cancel
+    m_seatInterface->setTimestamp(7);
+    QCOMPARE(m_seatInterface->touchDown(QPointF(15, 26)), 0);
+    m_seatInterface->touchFrame();
+    m_seatInterface->cancelTouchSequence();
+    QVERIFY(sequenceCanceledSpy.wait());
+    QCOMPARE(sequenceStartedSpy.count(), 2);
+    QCOMPARE(sequenceEndedSpy.count(), 1);
+    QCOMPARE(sequenceCanceledSpy.count(), 1);
+    QCOMPARE(frameEndedSpy.count(), 7);
+    QCOMPARE(pointAddedSpy.count(), 2);
+    QCOMPARE(pointMovedSpy.count(), 1);
+    QCOMPARE(pointRemovedSpy.count(), 3);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandSeat)

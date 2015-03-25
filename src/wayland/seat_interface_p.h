@@ -44,6 +44,7 @@ public:
     void sendName(wl_resource *r);
     PointerInterface *pointerForSurface(SurfaceInterface *surface) const;
     KeyboardInterface *keyboardForSurface(SurfaceInterface *surface) const;
+    TouchInterface *touchForSurface(SurfaceInterface *surface) const;
     DataDeviceInterface *dataDeviceForSurface(SurfaceInterface *surface) const;
     void registerDataDevice(DataDeviceInterface *dataDevice);
 
@@ -55,6 +56,7 @@ public:
     quint32 timestamp = 0;
     QVector<PointerInterface*> pointers;
     QVector<KeyboardInterface*> keyboards;
+    QVector<TouchInterface*> touchs;
     QVector<DataDeviceInterface*> dataDevices;
     DataDeviceInterface *currentSelection = nullptr;
 
@@ -114,6 +116,18 @@ public:
     Keyboard keys;
     void updateKey(quint32 key, Keyboard::State state);
 
+    struct Touch {
+        struct Focus {
+            SurfaceInterface *surface = nullptr;
+            TouchInterface *touch = nullptr;
+            QMetaObject::Connection destroyConnection;
+            QPointF offset = QPointF();
+        };
+        Focus focus;
+        QVector<qint32> ids;
+    };
+    Touch touchInterface;
+
     static SeatInterface *get(wl_resource *native) {
         auto s = cast(native);
         return s ? s->q : nullptr;
@@ -122,6 +136,7 @@ public:
 private:
     void getPointer(wl_client *client, wl_resource *resource, uint32_t id);
     void getKeyboard(wl_client *client, wl_resource *resource, uint32_t id);
+    void getTouch(wl_client *client, wl_resource *resource, uint32_t id);
     void updateSelection(DataDeviceInterface *dataDevice, bool set);
     static Private *cast(wl_resource *r);
     static void unbind(wl_resource *r);

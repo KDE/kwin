@@ -185,6 +185,11 @@ KeyboardInterface *SeatInterface::Private::keyboardForSurface(SurfaceInterface *
     return interfaceForSurface(surface, keyboards);
 }
 
+TouchInterface *SeatInterface::Private::touchForSurface(SurfaceInterface *surface) const
+{
+    return interfaceForSurface(surface, touchs);
+}
+
 DataDeviceInterface *SeatInterface::Private::dataDeviceForSurface(SurfaceInterface *surface) const
 {
     return interfaceForSurface(surface, dataDevices);
@@ -359,9 +364,38 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
 
 void SeatInterface::Private::getTouchCallback(wl_client *client, wl_resource *resource, uint32_t id)
 {
-    Q_UNUSED(client)
-    Q_UNUSED(resource)
-    Q_UNUSED(id)
+    cast(resource)->getTouch(client, resource, id);
+}
+
+void SeatInterface::Private::getTouch(wl_client *client, wl_resource *resource, uint32_t id)
+{
+    // TODO: only create if seat has touch?
+    TouchInterface *touch = new TouchInterface(q, resource);
+    touch->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    if (!touch->resource()) {
+        wl_resource_post_no_memory(resource);
+        delete touch;
+        return;
+    }
+    touchs << touch;
+    if (touchInterface.focus.surface && touchInterface.focus.surface->client()->client() == client) {
+        // this is a touch for the currently focused touch surface
+        if (!touchInterface.focus.touch) {
+            touchInterface.focus.touch = touch;
+            if (!touchInterface.ids.isEmpty()) {
+                // TODO: send out all the points
+            }
+        }
+    }
+    QObject::connect(touch, &QObject::destroyed, q,
+        [touch,this] {
+            touchs.removeAt(touchs.indexOf(touch));
+            if (touchInterface.focus.touch == touch) {
+                touchInterface.focus.touch = nullptr;
+            }
+        }
+    );
+    emit q->touchCreated(touch);
 }
 
 QString SeatInterface::name() const
@@ -739,6 +773,111 @@ KeyboardInterface *SeatInterface::focusedKeyboard() const
 {
     Q_D();
     return d->keys.focus.keyboard;
+}
+
+void SeatInterface::cancelTouchSequence()
+{
+    Q_D();
+    if (d->touchInterface.focus.touch) {
+        d->touchInterface.focus.touch->cancel();
+    }
+    d->touchInterface.ids.clear();
+}
+
+TouchInterface *SeatInterface::focusedTouch() const
+{
+    Q_D();
+    return d->touchInterface.focus.touch;
+}
+
+SurfaceInterface *SeatInterface::focusedTouchSurface() const
+{
+    Q_D();
+    return d->touchInterface.focus.surface;
+}
+
+QPointF SeatInterface::focusedTouchSurfacePosition() const
+{
+    Q_D();
+    return d->touchInterface.focus.offset;
+}
+
+bool SeatInterface::isTouchSequence() const
+{
+    Q_D();
+    return !d->touchInterface.ids.isEmpty();
+}
+
+void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition)
+{
+    if (isTouchSequence()) {
+        // changing surface not allowed during a touch sequence
+        return;
+    }
+    Q_D();
+    if (d->touchInterface.focus.surface) {
+        disconnect(d->touchInterface.focus.destroyConnection);
+    }
+    d->touchInterface.focus = Private::Touch::Focus();
+    d->touchInterface.focus.surface = surface;
+    TouchInterface *t = d->touchForSurface(surface);
+    d->touchInterface.focus.touch = t;
+    if (d->touchInterface.focus.surface) {
+        d->touchInterface.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
+            [this] {
+                Q_D();
+                if (isTouchSequence() && d->touchInterface.focus.touch) {
+                    // Surface destroyed during touch sequence - send a cancel
+                    d->touchInterface.focus.touch->cancel();
+                }
+                d->touchInterface.focus = Private::Touch::Focus();
+            }
+        );
+    }
+}
+
+void SeatInterface::setFocusedTouchSurfacePosition(const QPointF &surfacePosition)
+{
+    Q_D();
+    d->touchInterface.focus.offset = surfacePosition;
+}
+
+qint32 SeatInterface::touchDown(const QPointF &globalPosition)
+{
+    Q_D();
+    const qint32 id = d->touchInterface.ids.isEmpty() ? 0 : d->touchInterface.ids.last() + 1;
+    const quint32 serial = display()->nextSerial();
+    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
+        d->touchInterface.focus.touch->down(id, serial, globalPosition - d->touchInterface.focus.offset);
+    }
+    d->touchInterface.ids << id;
+    return id;
+}
+
+void SeatInterface::touchMove(qint32 id, const QPointF &globalPosition)
+{
+    Q_D();
+    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
+        d->touchInterface.focus.touch->move(id, globalPosition - d->touchInterface.focus.offset);
+    }
+}
+
+void SeatInterface::touchUp(qint32 id)
+{
+    Q_D();
+    Q_ASSERT(d->touchInterface.ids.contains(id));
+    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
+        d->touchInterface.focus.touch->up(id, display()->nextSerial());
+    }
+    d->touchInterface.ids.removeAll(id);
+}
+
+void SeatInterface::touchFrame()
+{
+    Q_D();
+    if (d->touchInterface.focus.touch && d->touchInterface.focus.surface) {
+        d->touchInterface.focus.touch->frame();
+    }
 }
 
 }

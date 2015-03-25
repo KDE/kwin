@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 #include "keyboard_interface.h"
 #include "pointer_interface.h"
+#include "touch_interface.h"
 
 struct wl_client;
 struct wl_resource;
@@ -102,6 +103,19 @@ public:
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *focusedKeyboard() const;
 
+    // touch related methods
+    void setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPointF());
+    SurfaceInterface *focusedTouchSurface() const;
+    TouchInterface *focusedTouch() const;
+    void setFocusedTouchSurfacePosition(const QPointF &surfacePosition);
+    QPointF focusedTouchSurfacePosition() const;
+    qint32 touchDown(const QPointF &globalPosition);
+    void touchUp(qint32 id);
+    void touchMove(qint32 id, const QPointF &globalPosition);
+    void touchFrame();
+    void cancelTouchSequence();
+    bool isTouchSequence() const;
+
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
@@ -114,6 +128,7 @@ Q_SIGNALS:
 
     void pointerCreated(KWayland::Server::PointerInterface*);
     void keyboardCreated(KWayland::Server::KeyboardInterface*);
+    void touchCreated(KWayland::Server::TouchInterface*);
 
 private:
     friend class Display;

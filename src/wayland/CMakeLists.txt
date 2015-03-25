@@ -18,6 +18,7 @@ set(SERVER_LIB_SRCS
     shell_interface.cpp
     surface_interface.cpp
     subcompositor_interface.cpp
+    touch_interface.cpp
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
