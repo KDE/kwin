@@ -97,6 +97,7 @@ void Connection::setup()
             active ? m_input->resume() : m_input->suspend();
         }
     );
+    handleEvent();
 }
 
 void Connection::handleEvent()
