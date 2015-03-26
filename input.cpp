@@ -203,6 +203,17 @@ InputRedirection::~InputRedirection()
     s_self = NULL;
 }
 
+#if HAVE_WAYLAND
+static KWayland::Server::SeatInterface *findSeat()
+{
+    auto server = waylandServer();
+    if (!server) {
+        return nullptr;
+    }
+    return server->seat();
+}
+#endif
+
 void InputRedirection::setupLibInput()
 {
 #if HAVE_INPUT
@@ -245,20 +256,19 @@ void InputRedirection::setupLibInput()
             // sanitize
             updatePointerAfterScreenChange();
         }
-    }
-#endif
-}
-
 #if HAVE_WAYLAND
-static KWayland::Server::SeatInterface *findSeat()
-{
-    auto server = waylandServer();
-    if (!server) {
-        return nullptr;
-    }
-    return server->seat();
-}
+        if (auto s = findSeat()) {
+            s->setHasKeyboard(conn->hasKeyboard());
+            s->setHasPointer(conn->hasPointer());
+            s->setHasTouch(conn->hasTouch());
+            connect(conn, &LibInput::Connection::hasKeyboardChanged, s, &KWayland::Server::SeatInterface::setHasKeyboard);
+            connect(conn, &LibInput::Connection::hasPointerChanged, s, &KWayland::Server::SeatInterface::setHasPointer);
+            connect(conn, &LibInput::Connection::hasTouchChanged, s, &KWayland::Server::SeatInterface::setHasTouch);
+        }
 #endif
+    }
+#endif
+}
 
 void InputRedirection::updatePointerWindow()
 {

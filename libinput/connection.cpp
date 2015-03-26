@@ -109,6 +109,46 @@ void Connection::handleEvent()
             break;
         }
         switch (event->type()) {
+            case LIBINPUT_EVENT_DEVICE_ADDED:
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_KEYBOARD)) {
+                    m_keyboard++;
+                    if (m_keyboard == 1) {
+                        emit hasKeyboardChanged(true);
+                    }
+                }
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_POINTER)) {
+                    m_pointer++;
+                    if (m_pointer == 1) {
+                        emit hasPointerChanged(true);
+                    }
+                }
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_TOUCH)) {
+                    m_touch++;
+                    if (m_touch == 1) {
+                        emit hasTouchChanged(true);
+                    }
+                }
+                break;
+            case LIBINPUT_EVENT_DEVICE_REMOVED:
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_KEYBOARD)) {
+                    m_keyboard--;
+                    if (m_keyboard == 0) {
+                        emit hasKeyboardChanged(false);
+                    }
+                }
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_POINTER)) {
+                    m_pointer--;
+                    if (m_pointer == 0) {
+                        emit hasPointerChanged(false);
+                    }
+                }
+                if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_TOUCH)) {
+                    m_touch--;
+                    if (m_touch == 0) {
+                        emit hasTouchChanged(false);
+                    }
+                }
+                break;
             case LIBINPUT_EVENT_KEYBOARD_KEY: {
                 KeyEvent *ke = static_cast<KeyEvent*>(event.data());
                 emit keyChanged(ke->key(), ke->state(), ke->time());
