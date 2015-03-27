@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
+#include "scene_qpainter.h"
 #include "screens_wayland.h"
 #include "utils.h"
 #include "wayland_server.h"
@@ -655,6 +656,11 @@ OpenGLBackend *WaylandBackend::createOpenGLBackend()
 #else
     return nullptr;
 #endif
+}
+
+QPainterBackend *WaylandBackend::createQPainterBackend()
+{
+    return new WaylandQPainterBackend(this);
 }
 
 }

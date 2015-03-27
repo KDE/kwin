@@ -54,4 +54,9 @@ OpenGLBackend *AbstractBackend::createOpenGLBackend()
     return nullptr;
 }
 
+QPainterBackend *AbstractBackend::createQPainterBackend()
+{
+    return nullptr;
+}
+
 }

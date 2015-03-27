@@ -26,6 +26,7 @@ namespace KWin
 {
 
 class OpenGLBackend;
+class QPainterBackend;
 class Screens;
 
 class KWIN_EXPORT AbstractBackend : public QObject
@@ -38,6 +39,7 @@ public:
     virtual void installCursorImage(Qt::CursorShape shape);
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
+    virtual QPainterBackend *createQPainterBackend();
 
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);

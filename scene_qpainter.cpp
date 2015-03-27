@@ -256,10 +256,9 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
     QScopedPointer<QPainterBackend> backend;
 #if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        if (X11WindowedBackend *b = dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
-            backend.reset(new X11WindowedQPainterBackend(b));
-        } else if (Wayland::WaylandBackend *b = dynamic_cast<Wayland::WaylandBackend*>(waylandServer()->backend())) {
-            backend.reset(new WaylandQPainterBackend(b));
+        backend.reset(waylandServer()->backend()->createQPainterBackend());
+        if (backend.isNull()) {
+            return nullptr;
         }
         if (backend->isFailed()) {
             return NULL;

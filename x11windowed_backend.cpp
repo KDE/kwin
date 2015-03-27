@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11windowed_backend.h"
 #include "composite.h"
 #include "input.h"
+#include "scene_qpainter.h"
 #include "screens_x11windowed.h"
 #include "utils.h"
 #include "wayland_server.h"
@@ -312,6 +313,11 @@ OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 #endif
 #endif
     return nullptr;
+}
+
+QPainterBackend *X11WindowedBackend::createQPainterBackend()
+{
+    return new X11WindowedQPainterBackend(this);
 }
 
 }
