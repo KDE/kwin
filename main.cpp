@@ -389,6 +389,7 @@ void Application::createScreens()
         return;
     }
     Screens::create(this);
+    emit screensCreated();
 }
 
 void Application::createAtoms()

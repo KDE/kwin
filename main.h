@@ -151,6 +151,7 @@ public:
 Q_SIGNALS:
     void x11ConnectionChanged();
     void workspaceCreated();
+    void screensCreated();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
