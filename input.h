@@ -215,6 +215,7 @@ public:
     Qt::Key toQtKey(xkb_keysym_t keysym);
     Qt::KeyboardModifiers modifiers() const;
 private:
+    void updateKeymap(xkb_keymap *keymap);
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     xkb_state *m_state;

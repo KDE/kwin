@@ -65,6 +65,14 @@ Xkb::Xkb()
 {
     if (!m_context) {
         qCDebug(KWIN_CORE) << "Could not create xkb context";
+    } else {
+        // load default keymap
+        xkb_keymap *keymap = xkb_keymap_new_from_names(m_context, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
+        if (keymap) {
+            updateKeymap(keymap);
+        } else {
+            qCDebug(KWIN_CORE) << "Could not create default xkb keymap";
+        }
     }
 }
 
@@ -90,6 +98,12 @@ void Xkb::installKeymap(int fd, uint32_t size)
         qCDebug(KWIN_CORE) << "Could not map keymap from file";
         return;
     }
+    updateKeymap(keymap);
+}
+
+void Xkb::updateKeymap(xkb_keymap *keymap)
+{
+    Q_ASSERT(keymap);
     xkb_state *state = xkb_state_new(keymap);
     if (!state) {
         qCDebug(KWIN_CORE) << "Could not create XKB state";
