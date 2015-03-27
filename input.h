@@ -197,6 +197,8 @@ private:
 
     GlobalShortcutsManager *m_shortcuts;
 
+    QMetaObject::Connection m_sessionControlConnection;
+
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
 };

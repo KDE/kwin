@@ -206,7 +206,7 @@ InputRedirection::InputRedirection(QObject *parent)
                 setupLibInput();
             } else {
                 logind->takeControl();
-                connect(logind, &LogindIntegration::hasSessionControlChanged, this, &InputRedirection::setupLibInput);
+                m_sessionControlConnection = connect(logind, &LogindIntegration::hasSessionControlChanged, this, &InputRedirection::setupLibInput);
             }
         };
         if (logind->isConnected()) {
@@ -239,6 +239,10 @@ void InputRedirection::setupLibInput()
 #if HAVE_INPUT
     if (!Application::usesLibinput()) {
         return;
+    }
+    if (m_sessionControlConnection) {
+        disconnect(m_sessionControlConnection);
+        m_sessionControlConnection = QMetaObject::Connection();
     }
     LibInput::Connection *conn = LibInput::Connection::create(this);
     if (conn) {
