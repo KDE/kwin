@@ -247,12 +247,14 @@ void InputRedirection::setupLibInput()
     LibInput::Connection *conn = LibInput::Connection::create(this);
     if (conn) {
         conn->setup();
-        conn->setScreenSize(screens()->size());
-        connect(screens(), &Screens::sizeChanged, this,
-            [this, conn] {
-                conn->setScreenSize(screens()->size());
-            }
-        );
+        if (screens()) {
+            conn->setScreenSize(screens()->size());
+            connect(screens(), &Screens::sizeChanged, this,
+                [this, conn] {
+                    conn->setScreenSize(screens()->size());
+                }
+            );
+        }
         connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
@@ -272,9 +274,9 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::touchMotion, this, &InputRedirection::processTouchMotion);
         connect(conn, &LibInput::Connection::touchCanceled, this, &InputRedirection::cancelTouch);
         connect(conn, &LibInput::Connection::touchFrame, this, &InputRedirection::touchFrame);
-        connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
         // set pos to center of all screens
         if (screens()) {
+            connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
             m_globalPointer = screens()->geometry().center();
             emit globalPointerChanged(m_globalPointer);
             // sanitize
@@ -465,7 +467,7 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     }
     // TODO: pass to internal parts of KWin
 #ifdef KWIN_BUILD_TABBOX
-    if (TabBox::TabBox::self()->isGrabbed()) {
+    if (TabBox::TabBox::self() && TabBox::TabBox::self()->isGrabbed()) {
         if (state == KWin::InputRedirection::KeyboardKeyPressed) {
             TabBox::TabBox::self()->keyPress(m_xkb->modifiers() | m_xkb->toQtKey(m_xkb->toKeysym(key)));
         }
@@ -481,11 +483,13 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(&event);
         return;
     }
-    if (Client *c = workspace()->getMovingClient()) {
-        // TODO: this does not yet fully support moving of the Client
-        // cursor events change the cursor and on Wayland pointer warping is not possible
-        c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));
-        return;
+    if (workspace()) {
+        if (Client *c = workspace()->getMovingClient()) {
+            // TODO: this does not yet fully support moving of the Client
+            // cursor events change the cursor and on Wayland pointer warping is not possible
+            c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));
+            return;
+        }
     }
     // process global shortcuts
     if (state == KeyboardKeyPressed) {
