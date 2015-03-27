@@ -175,6 +175,11 @@ void LogindIntegration::takeControl()
     if (!m_connected || m_sessionPath.isEmpty() || m_sessionControl) {
         return;
     }
+    static bool s_recursionCheck = false;
+    if (s_recursionCheck) {
+        return;
+    }
+    s_recursionCheck = true;
 
     QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
                                                           m_sessionPath,
@@ -185,6 +190,7 @@ void LogindIntegration::takeControl()
     QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(session, this);
     connect(watcher, &QDBusPendingCallWatcher::finished, this,
         [this](QDBusPendingCallWatcher *self) {
+            s_recursionCheck = false;
             QDBusPendingReply<void> reply = *self;
             self->deleteLater();
             if (!reply.isValid()) {
