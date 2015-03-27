@@ -24,6 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "utils.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
+#ifdef KWIN_HAVE_EGL
+#if HAVE_X11_XCB
+#include "eglonxbackend.h"
+#endif
+#endif
 #include <kwinxrenderutils.h>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -297,6 +302,16 @@ xcb_window_t X11WindowedBackend::rootWindow() const
 Screens *X11WindowedBackend::createScreens(QObject *parent)
 {
     return new X11WindowedScreens(this, parent);
+}
+
+OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
+{
+#ifdef KWIN_HAVE_EGL
+#if HAVE_X11_XCB
+    return  new EglOnXBackend(this);
+#endif
+#endif
+    return nullptr;
 }
 
 }

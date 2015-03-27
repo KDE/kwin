@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_wayland.h"
 #include "utils.h"
 #include "wayland_server.h"
+#if HAVE_WAYLAND_EGL
+#include "egl_wayland_backend.h"
+#endif
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -643,6 +646,15 @@ void WaylandBackend::connectNotify(const QMetaMethod &signal)
 Screens *WaylandBackend::createScreens(QObject *parent)
 {
     return new WaylandScreens(this, parent);
+}
+
+OpenGLBackend *WaylandBackend::createOpenGLBackend()
+{
+#if HAVE_WAYLAND_EGL
+    return new EglWaylandBackend(this);
+#else
+    return nullptr;
+#endif
 }
 
 }

@@ -49,4 +49,9 @@ Screens *AbstractBackend::createScreens(QObject *parent)
     return nullptr;
 }
 
+OpenGLBackend *AbstractBackend::createOpenGLBackend()
+{
+    return nullptr;
+}
+
 }

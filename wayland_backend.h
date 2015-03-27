@@ -170,6 +170,7 @@ public:
     void installCursorFromServer() override;
 
     Screens *createScreens(QObject *parent = nullptr) override;
+    OpenGLBackend *createOpenGLBackend() override;
 
 protected:
     void connectNotify(const QMetaMethod &signal) override;

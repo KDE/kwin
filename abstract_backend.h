@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class OpenGLBackend;
 class Screens;
 
 class KWIN_EXPORT AbstractBackend : public QObject
@@ -36,6 +37,7 @@ public:
     virtual void installCursorFromServer();
     virtual void installCursorImage(Qt::CursorShape shape);
     virtual Screens *createScreens(QObject *parent = nullptr);
+    virtual OpenGLBackend *createOpenGLBackend();
 
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);
