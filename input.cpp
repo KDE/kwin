@@ -129,6 +129,20 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
         return;
     }
     xkb_state_update_mask(m_state, modsDepressed, modsLatched, modsLocked, 0, 0, group);
+    updateModifiers();
+}
+
+void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
+{
+    if (!m_keymap || !m_state) {
+        return;
+    }
+    xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
+    updateModifiers();
+}
+
+void Xkb::updateModifiers()
+{
     Qt::KeyboardModifiers mods = Qt::NoModifier;
     if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::ShiftModifier;
@@ -143,14 +157,6 @@ void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t
         mods |= Qt::MetaModifier;
     }
     m_modifiers = mods;
-}
-
-void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
-{
-    if (!m_keymap || !m_state) {
-        return;
-    }
-    xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
 }
 
 xkb_keysym_t Xkb::toKeysym(uint32_t key)
@@ -448,7 +454,11 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
 #if HAVE_XKB
+    const Qt::KeyboardModifiers oldMods = keyboardModifiers();
     m_xkb->updateKey(key, state);
+    if (oldMods != keyboardModifiers()) {
+        emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
+    }
     // TODO: pass to internal parts of KWin
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self()->isGrabbed()) {

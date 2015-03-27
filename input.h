@@ -216,6 +216,7 @@ public:
     Qt::KeyboardModifiers modifiers() const;
 private:
     void updateKeymap(xkb_keymap *keymap);
+    void updateModifiers();
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     xkb_state *m_state;
