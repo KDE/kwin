@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class Screens;
+
 class KWIN_EXPORT AbstractBackend : public QObject
 {
     Q_OBJECT
@@ -33,6 +35,7 @@ public:
 
     virtual void installCursorFromServer();
     virtual void installCursorImage(Qt::CursorShape shape);
+    virtual Screens *createScreens(QObject *parent = nullptr);
 
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);

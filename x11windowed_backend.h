@@ -66,6 +66,8 @@ public:
 
     void installCursorFromServer() override;
 
+    Screens *createScreens(QObject *parent = nullptr) override;
+
 Q_SIGNALS:
     void sizeChanged();
 

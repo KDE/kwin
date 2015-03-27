@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11windowed_backend.h"
 #include "composite.h"
 #include "input.h"
+#include "screens_x11windowed.h"
 #include "utils.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -291,6 +292,11 @@ xcb_window_t X11WindowedBackend::rootWindow() const
         return XCB_WINDOW_NONE;
     }
     return m_screen->root;
+}
+
+Screens *X11WindowedBackend::createScreens(QObject *parent)
+{
+    return new X11WindowedScreens(this, parent);
 }
 
 }

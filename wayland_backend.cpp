@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "main.h"
+#include "screens_wayland.h"
 #include "utils.h"
 #include "wayland_server.h"
 #include <KWayland/Client/buffer.h>
@@ -637,6 +638,11 @@ void WaylandBackend::connectNotify(const QMetaMethod &signal)
         // backend is already ready, let's emit the signal
         signal.invoke(this, Qt::QueuedConnection);
     }
+}
+
+Screens *WaylandBackend::createScreens(QObject *parent)
+{
+    return new WaylandScreens(this, parent);
 }
 
 }

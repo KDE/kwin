@@ -169,6 +169,8 @@ public:
     void installCursorImage(Qt::CursorShape shape) override;
     void installCursorFromServer() override;
 
+    Screens *createScreens(QObject *parent = nullptr) override;
+
 protected:
     void connectNotify(const QMetaMethod &signal) override;
 

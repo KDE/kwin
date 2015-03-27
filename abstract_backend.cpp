@@ -43,4 +43,10 @@ void AbstractBackend::installCursorImage(Qt::CursorShape shape)
     Q_UNUSED(shape)
 }
 
+Screens *AbstractBackend::createScreens(QObject *parent)
+{
+    Q_UNUSED(parent)
+    return nullptr;
+}
+
 }
