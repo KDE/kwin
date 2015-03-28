@@ -30,59 +30,11 @@ class QScriptValue;
 
 namespace KWin
 {
-class ScriptedEffect;
-class AnimationData : public QObject
-{
-    Q_OBJECT
-    Q_ENUMS(Axis)
-    Q_PROPERTY(KWin::AnimationEffect::Anchor sourceAnchor READ sourceAnchor WRITE setSourceAnchor)
-    Q_PROPERTY(KWin::AnimationEffect::Anchor targetAnchor READ targetAnchor WRITE setTargetAnchor)
-    Q_PROPERTY(int relativeSourceX READ relativeSourceX WRITE setRelativeSourceX)
-    Q_PROPERTY(int relativeSourceY READ relativeSourceY WRITE setRelativeSourceY)
-    Q_PROPERTY(int relativeTargetX READ relativeTargetX WRITE setRelativeTargetX)
-    Q_PROPERTY(int relativeTargetY READ relativeTargetY WRITE setRelativeTargetY)
-    Q_PROPERTY(Axis axis READ axis WRITE setAxis)
-public:
-    enum Axis {
-        XAxis = 1,
-        YAxis,
-        ZAxis
-    };
-    explicit AnimationData(QObject* parent = nullptr);
-
-    // getter
-    AnimationEffect::Anchor sourceAnchor() const;
-    AnimationEffect::Anchor targetAnchor() const;
-    int relativeSourceX() const;
-    int relativeSourceY() const;
-    int relativeTargetX() const;
-    int relativeTargetY() const;
-    Axis axis() const;
-
-    // setter
-    void setSourceAnchor(AnimationEffect::Anchor sourceAnchor);
-    void setTargetAnchor(AnimationEffect::Anchor targetAnchor);
-    void setRelativeSourceX(int relativeSourceX);
-    void setRelativeSourceY(int relativeSourceY);
-    void setRelativeTargetX(int relativeTargetX);
-    void setRelativeTargetY(int relativeTargetY);
-    void setAxis(Axis axis);
-
-private:
-    AnimationEffect::Anchor m_sourceAnchor;
-    AnimationEffect::Anchor m_targetAnchor;
-    int m_relativeSourceX;
-    int m_relativeSourceY;
-    int m_relativeTargetX;
-    int m_relativeTargetY;
-    Axis m_axis;
-};
-
 class ScriptedEffect : public KWin::AnimationEffect
 {
     Q_OBJECT
     Q_ENUMS(DataRole)
-    Q_ENUMS(KWin::AnimationData::Axis)
+    Q_ENUMS(Qt::Axis)
     Q_ENUMS(Anchor)
     Q_ENUMS(MetaType)
 public:
@@ -135,8 +87,8 @@ public:
     }
 
 public Q_SLOTS:
-    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = nullptr, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
-    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), KWin::AnimationData *data = nullptr, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    quint64 animate(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
+    quint64 set(KWin::EffectWindow *w, Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from = KWin::FPx2(), uint metaData = 0, QEasingCurve::Type curve = QEasingCurve::Linear, int delay = 0);
     bool cancel(quint64 animationId) { return AnimationEffect::cancel(animationId); }
     virtual bool borderActivated(ElectricBorder border);
 
