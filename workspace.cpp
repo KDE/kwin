@@ -1198,6 +1198,7 @@ void Workspace::focusToNull()
 
 void Workspace::setShowingDesktop(bool showing)
 {
+    const bool changed = showing != showing_desktop;
     rootInfo()->setShowingDesktop(showing);
     showing_desktop = showing;
     if (Client* desk = findDesktop(true, VirtualDesktopManager::self()->current())) {
@@ -1206,6 +1207,8 @@ void Workspace::setShowingDesktop(bool showing)
         if (showing_desktop)
             requestFocus(desk);
     }
+    if (changed)
+        emit showingDesktopChanged(showing);
 }
 
 void Workspace::disableGlobalShortcutsForClient(bool disable)

@@ -452,6 +452,7 @@ Q_SIGNALS:
     void propertyNotify(long a);
     void configChanged();
     void reinitializeCompositing();
+    void showingDesktopChanged(bool showing);
     /**
      * This signels is emitted when ever the stacking order is change, ie. a window is risen
      * or lowered
