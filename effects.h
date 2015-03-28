@@ -125,7 +125,7 @@ public:
     void stopMousePolling() override;
     EffectWindow* findWindow(WId id) const override;
     EffectWindowList stackingOrder() const override;
-    void setElevatedWindow(EffectWindow* w, bool set) override;
+    void setElevatedWindow(KWin::EffectWindow* w, bool set) override;
 
     void setTabBoxWindow(EffectWindow*) override;
     void setTabBoxDesktop(int) override;

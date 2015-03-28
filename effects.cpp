@@ -1019,7 +1019,7 @@ EffectWindowList EffectsHandlerImpl::stackingOrder() const
     return ret;
 }
 
-void EffectsHandlerImpl::setElevatedWindow(EffectWindow* w, bool set)
+void EffectsHandlerImpl::setElevatedWindow(KWin::EffectWindow* w, bool set)
 {
     elevated_windows.removeAll(w);
     if (set)

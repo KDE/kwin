@@ -929,7 +929,7 @@ public:
     Q_SCRIPTABLE virtual KWin::EffectWindow* findWindow(WId id) const = 0;
     virtual EffectWindowList stackingOrder() const = 0;
     // window will be temporarily painted as if being at the top of the stack
-    virtual void setElevatedWindow(EffectWindow* w, bool set) = 0;
+    Q_SCRIPTABLE virtual void setElevatedWindow(KWin::EffectWindow* w, bool set) = 0;
 
     virtual void setTabBoxWindow(EffectWindow*) = 0;
     virtual void setTabBoxDesktop(int) = 0;
