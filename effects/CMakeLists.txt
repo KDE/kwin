@@ -137,6 +137,7 @@ add_subdirectory( login )
 add_subdirectory( maximize )
 add_subdirectory( scalein )
 add_subdirectory( translucency )
+add_subdirectory( windowaperture )
 
 ###############################################################################
 # Built-in effects go here
