@@ -1126,6 +1126,13 @@ Q_SIGNALS:
      **/
     void numberScreensChanged();
     /**
+     * Signal emitted when the desktop showing ("dashboard") state changed
+     * The desktop is risen to the keepAbove layer, you may want to elevate
+     * windows or such.
+     * @since 5.3
+     **/
+    void showingDesktopChanged(bool);
+    /**
      * Signal emitted when a new window has been added to the Workspace.
      * @param w The added window
      * @since 4.7

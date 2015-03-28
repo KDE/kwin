@@ -217,6 +217,8 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
 
     Workspace *ws = Workspace::self();
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    connect(ws, &Workspace::showingDesktopChanged,
+            this, &EffectsHandlerImpl::showingDesktopChanged);
     connect(ws, &Workspace::currentDesktopChanged, this,
         [this](int old, Client *c) {
             const int newDesktop = VirtualDesktopManager::self()->current();
