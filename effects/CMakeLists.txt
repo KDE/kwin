@@ -131,6 +131,7 @@ kconfig_add_kcfg_files(kwin4_effect_builtins_sources
 
 # scripted effects
 add_subdirectory( dialogparent )
+add_subdirectory( eyeonscreen )
 add_subdirectory( fade )
 add_subdirectory( fadedesktop )
 add_subdirectory( login )

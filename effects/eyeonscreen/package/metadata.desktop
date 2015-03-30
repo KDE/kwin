@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=eye On Screen
+Icon=preferences-system-windows-effect-eyeonscreen
+Comment=Suck windows into desktop to show the latter. This might remind you of something.
+
+Type=Service
+X-Plasma-API=javascript
+X-Plasma-MainScript=code/main.js
+X-KDE-ServiceTypes=KWin/Effect
+X-KDE-PluginInfo-Author=Thomas Lübking
+X-KDE-PluginInfo-Email=thomas.luebking@gmail.com
+X-KDE-PluginInfo-Name=kwin4_effect_eyeonscreen
+X-KDE-PluginInfo-Version=0.1.0
+X-KDE-PluginInfo-Category=Appearance
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+X-KDE-Ordering=50
