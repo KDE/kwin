@@ -498,6 +498,12 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     return true;
 }
 
+void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint meta)
+{
+    AnimationEffect::animationEnded(w, a, meta);
+    emit animationEnded(w, 0);
+}
+
 void ScriptedEffect::signalHandlerException(const QScriptValue &value)
 {
     if (value.isError()) {
@@ -514,12 +520,22 @@ void ScriptedEffect::signalHandlerException(const QScriptValue &value)
 
 quint64 ScriptedEffect::animate(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, QEasingCurve::Type curve, int delay)
 {
-    return AnimationEffect::animate(w, a, metaData, ms, to, QEasingCurve(curve), delay, from);
+    QEasingCurve qec;
+    if (curve < QEasingCurve::Custom)
+        qec.setType(curve);
+    else if (static_cast<int>(curve) == static_cast<int>(GaussianCurve))
+        qec.setCustomType(qecGaussian);
+    return AnimationEffect::animate(w, a, metaData, ms, to, qec, delay, from);
 }
 
 quint64 ScriptedEffect::set(KWin::EffectWindow* w, KWin::AnimationEffect::Attribute a, int ms, KWin::FPx2 to, KWin::FPx2 from, uint metaData, QEasingCurve::Type curve, int delay)
 {
-    return AnimationEffect::set(w, a, metaData, ms, to, QEasingCurve(curve), delay, from);
+    QEasingCurve qec;
+    if (curve < QEasingCurve::Custom)
+        qec.setType(curve);
+    else if (static_cast<int>(curve) == static_cast<int>(GaussianCurve))
+        qec.setCustomType(qecGaussian);
+    return AnimationEffect::set(w, a, metaData, ms, to, qec, delay, from);
 }
 
 bool ScriptedEffect::isGrabbed(EffectWindow* w, ScriptedEffect::DataRole grabRole)

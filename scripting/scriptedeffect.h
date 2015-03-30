@@ -37,6 +37,7 @@ class ScriptedEffect : public KWin::AnimationEffect
     Q_ENUMS(Qt::Axis)
     Q_ENUMS(Anchor)
     Q_ENUMS(MetaType)
+    Q_ENUMS(EasingCurve)
 public:
     // copied from kwineffects.h
     enum DataRole {
@@ -51,6 +52,9 @@ public:
         WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
         WindowBackgroundContrastRole, ///< For single windows to enable Background contrast
         LanczosCacheRole
+    };
+    enum EasingCurve {
+        GaussianCurve = 128
     };
     const QString &scriptFile() const {
         return m_scriptFile;
@@ -97,6 +101,10 @@ Q_SIGNALS:
      * Signal emitted whenever the effect's config changed.
      **/
     void configChanged();
+    void animationEnded(KWin::EffectWindow *w, quint64 animationId);
+
+protected:
+    void animationEnded(KWin::EffectWindow *w, Attribute a, uint meta);
 
 private Q_SLOTS:
     void signalHandlerException(const QScriptValue &value);
