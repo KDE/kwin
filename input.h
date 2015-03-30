@@ -42,6 +42,11 @@ class GlobalShortcutsManager;
 class Toplevel;
 class Xkb;
 
+namespace LibInput
+{
+    class Connection;
+}
+
 /**
  * @brief This class is responsible for redirecting incoming input to the surface which currently
  * has input or send enter/leave events.
@@ -171,6 +176,7 @@ private:
     static Qt::MouseButton buttonToQtMouseButton(uint32_t button);
     Toplevel *findToplevel(const QPoint &pos);
     void setupLibInput();
+    void setupLibInputWithScreens();
     void updatePointerPosition(const QPointF &pos);
     void updatePointerAfterScreenChange();
     void registerShortcutForGlobalAccelTimestamp(QAction *action);
@@ -198,6 +204,8 @@ private:
     GlobalShortcutsManager *m_shortcuts;
 
     QMetaObject::Connection m_sessionControlConnection;
+
+    LibInput::Connection *m_libInput = nullptr;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();

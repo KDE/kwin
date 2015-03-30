@@ -244,17 +244,13 @@ void InputRedirection::setupLibInput()
         disconnect(m_sessionControlConnection);
         m_sessionControlConnection = QMetaObject::Connection();
     }
+    if (m_libInput) {
+        return;
+    }
     LibInput::Connection *conn = LibInput::Connection::create(this);
+    m_libInput = conn;
     if (conn) {
         conn->setup();
-        if (screens()) {
-            conn->setScreenSize(screens()->size());
-            connect(screens(), &Screens::sizeChanged, this,
-                [this, conn] {
-                    conn->setScreenSize(screens()->size());
-                }
-            );
-        }
         connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
@@ -274,13 +270,10 @@ void InputRedirection::setupLibInput()
         connect(conn, &LibInput::Connection::touchMotion, this, &InputRedirection::processTouchMotion);
         connect(conn, &LibInput::Connection::touchCanceled, this, &InputRedirection::cancelTouch);
         connect(conn, &LibInput::Connection::touchFrame, this, &InputRedirection::touchFrame);
-        // set pos to center of all screens
         if (screens()) {
-            connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
-            m_globalPointer = screens()->geometry().center();
-            emit globalPointerChanged(m_globalPointer);
-            // sanitize
-            updatePointerAfterScreenChange();
+            setupLibInputWithScreens();
+        } else {
+            connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
         }
 #if HAVE_WAYLAND
         if (auto s = findSeat()) {
@@ -293,6 +286,27 @@ void InputRedirection::setupLibInput()
         }
 #endif
     }
+#endif
+}
+
+void InputRedirection::setupLibInputWithScreens()
+{
+#if HAVE_INPUT
+    if (!screens() || !m_libInput) {
+        return;
+    }
+    m_libInput->setScreenSize(screens()->size());
+    connect(screens(), &Screens::sizeChanged, this,
+        [this] {
+            m_libInput->setScreenSize(screens()->size());
+        }
+    );
+    // set pos to center of all screens
+    connect(screens(), &Screens::changed, this, &InputRedirection::updatePointerAfterScreenChange);
+    m_globalPointer = screens()->geometry().center();
+    emit globalPointerChanged(m_globalPointer);
+    // sanitize
+    updatePointerAfterScreenChange();
 #endif
 }
 
