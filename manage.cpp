@@ -377,6 +377,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         }
     }
 
+    readColorScheme(colorSchemeCookie);
+
     updateDecoration(false);   // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?
     plainResize(rules()->checkSize(sizeForClientSize(geom.size()), !isMapped));
@@ -641,7 +643,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     updateWindowRules(Rules::All); // Was blocked while !isManaged()
 
     setBlockingCompositing(info->isBlockingCompositing());
-    readColorScheme(colorSchemeCookie);
     readShowOnScreenEdge(showOnScreenEdgeCookie);
 
     // TODO: there's a small problem here - isManaged() depends on the mapping state,

@@ -79,6 +79,9 @@ const long ClientWinMask = XCB_EVENT_MASK_KEY_PRESS | XCB_EVENT_MASK_KEY_RELEASE
                            XCB_EVENT_MASK_STRUCTURE_NOTIFY |
                            XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT;
 
+QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> Client::s_palettes;
+std::shared_ptr<Decoration::DecorationPalette> Client::s_defaultPalette;
+
 // Creating a client:
 //  - only by calling Workspace::createClient()
 //      - it creates a new client and calls manage() for it
@@ -138,7 +141,7 @@ Client::Client()
     , needsXWindowMove(false)
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
-    , m_palette(QApplication::palette())
+    , m_colorScheme(QStringLiteral("kdeglobals"))
     , m_clientSideDecorated(false)
 {
     // TODO: Do all as initialization
@@ -2257,15 +2260,43 @@ void Client::readColorScheme(Xcb::StringProperty &property)
 {
     QString path = QString::fromUtf8(property);
     path = rules()->checkDecoColor(path);
-    QPalette p = m_palette;
-    if (!path.isEmpty()) {
-        p = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(path));
-    } else {
-        p = QApplication::palette();
+
+    if (path.isEmpty()) {
+        path = QStringLiteral("kdeglobals");
     }
-    if (p != m_palette) {
-        m_palette = p;
-        emit paletteChanged(m_palette);
+
+    if (!m_palette || m_colorScheme != path) {
+        m_colorScheme = path;
+
+        if (m_palette) {
+            disconnect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Client::handlePaletteChange);
+        }
+
+        auto it = s_palettes.find(m_colorScheme);
+
+        if (it == s_palettes.end() || it->expired()) {
+            m_palette = std::make_shared<Decoration::DecorationPalette>(m_colorScheme);
+            if (m_palette->isValid()) {
+                s_palettes[m_colorScheme] = m_palette;
+            } else {
+                if (!s_defaultPalette) {
+                    s_defaultPalette = std::make_shared<Decoration::DecorationPalette>(QStringLiteral("kdeglobals"));
+                    s_palettes[QStringLiteral("kdeglobals")] = s_defaultPalette;
+                }
+
+                m_palette = s_defaultPalette;
+            }
+
+            if (m_colorScheme == QStringLiteral("kdeglobals")) {
+                s_defaultPalette = m_palette;
+            }
+        } else {
+            m_palette = it->lock();
+        }
+
+        connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &Client::handlePaletteChange);
+
+        emit paletteChanged(palette());
         triggerDecorationRepaint();
     }
 }
@@ -2274,6 +2305,12 @@ void Client::updateColorScheme()
 {
     Xcb::StringProperty property = fetchColorScheme();
     readColorScheme(property);
+}
+
+void Client::handlePaletteChange()
+{
+    emit paletteChanged(palette());
+    triggerDecorationRepaint();
 }
 
 bool Client::isClient() const

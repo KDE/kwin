@@ -61,6 +61,7 @@ public:
     bool isShadeable() const override;
     bool isShaded() const override;
     QPalette palette() const override;
+    QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
     bool providesContextHelp() const override;
     int width() const override;
     WId windowId() const override;

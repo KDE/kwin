@@ -378,6 +378,7 @@ set(kwin_KDEINIT_SRCS
     scripting/screenedgeitem.cpp
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
+    decorations/decorationpalette.cpp
     decorations/settings.cpp
     decorations/decorationrenderer.cpp
    )

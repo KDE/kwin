@@ -166,6 +166,16 @@ DELEGATE(requestClose, closeWindow)
 
 #undef DELEGATE
 
+QColor DecoratedClientImpl::color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const
+{
+    auto dp = m_client->decorationPalette();
+    if (dp) {
+        return dp->color(group, role);
+    }
+
+    return QColor();
+}
+
 void DecoratedClientImpl::requestShowWindowMenu()
 {
     // TODO: add rect to requestShowWindowMenu

@@ -41,6 +41,7 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
     , m_colorSchemeIndex(0)
     , m_icon(QIcon::fromTheme(QStringLiteral("start-here-kde")))
     , m_iconName(m_icon.name())
+    , m_palette(QStringLiteral("kdeglobals"))
     , m_active(true)
     , m_closeable(true)
     , m_keepBelow(false)
@@ -107,14 +108,9 @@ PreviewClient::PreviewClient(DecoratedClient *c, Decoration *decoration)
             emit onAllDesktopsChanged(isOnAllDesktops());
         }
     );
-    connect(this, &PreviewClient::colorSchemeIndexChanged, this,
-        [this]() {
-            const QModelIndex index = m_colorSchemeManager->model()->index(m_colorSchemeIndex, 0);
-            qDebug() << "Scheme: " << index.data(Qt::UserRole).toString();
-            m_palette = KColorScheme::createApplicationPalette(KSharedConfig::openConfig(index.data(Qt::UserRole).toString()));
-            emit paletteChanged(m_palette);
-        }
-    );
+    connect(&m_palette, &KWin::Decoration::DecorationPalette::changed, [this]() {
+        emit paletteChanged(m_palette.palette());
+    });
     auto emitEdgesChanged = [this, c]() {
         c->adjacentScreenEdgesChanged(adjacentScreenEdges());
     };
@@ -268,7 +264,12 @@ WId PreviewClient::windowId() const
 
 QPalette PreviewClient::palette() const
 {
-    return m_palette;
+    return m_palette.palette();
+}
+
+QColor PreviewClient::color(ColorGroup group, ColorRole role) const
+{
+    return m_palette.color(group, role);
 }
 
 QAbstractItemModel *PreviewClient::colorSchemeModel() const
@@ -452,15 +453,6 @@ SETTER2(setProvidesContextHelp, providesContextHelp)
 
 #undef SETTER2
 #undef SETTER
-
-bool PreviewClient::eventFilter(QObject *watched, QEvent *e)
-{
-    if (e->type() == QEvent::ApplicationPaletteChange) {
-        m_palette = QPalette();
-        emit paletteChanged(m_palette);
-    }
-    return false;
-}
 
 } // namespace Preview
 } // namespace KDecoration2

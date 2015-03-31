@@ -20,6 +20,8 @@
 #ifndef KDECOARTIONS_PREVIEW_CLIENT_H
 #define KDECOARTIONS_PREVIEW_CLIENT_H
 
+#include "../../../decorations/decorationpalette.h"
+
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
@@ -92,6 +94,7 @@ public:
     int width() const override;
     int height() const override;
     QPalette palette() const override;
+    QColor color(ColorGroup group, ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
 
     void requestClose() override;
@@ -142,8 +145,6 @@ public:
     void setBordersRightEdge(bool enabled);
     void setBordersBottomEdge(bool enabled);
 
-    bool eventFilter(QObject *watched, QEvent *e) override;
-
 Q_SIGNALS:
     void captionChanged(const QString &);
     void iconChanged(const QIcon &);
@@ -184,7 +185,7 @@ private:
     QString m_caption;
     QIcon m_icon;
     QString m_iconName;
-    QPalette m_palette;
+    KWin::Decoration::DecorationPalette m_palette;
     bool m_active;
     bool m_closeable;
     bool m_keepBelow;

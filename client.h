@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 #include "toplevel.h"
 #include "xcbutils.h"
+#include "decorations/decorationpalette.h"
 // Qt
 #include <QElapsedTimer>
 #include <QFlags>
@@ -671,6 +672,7 @@ public:
     void cancelFocusOutTimer();
 
     QPalette palette() const;
+    const Decoration::DecorationPalette *decorationPalette() const;
 
     /**
      * Restores the Client after it had been hidden due to show on screen edge functionality.
@@ -881,6 +883,8 @@ private:
      **/
     void updateShowOnScreenEdge();
 
+    void handlePaletteChange();
+
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;
@@ -1025,7 +1029,11 @@ private:
 
     QTimer *m_focusOutTimer;
 
-    QPalette m_palette;
+    QString m_colorScheme;
+    std::shared_ptr<Decoration::DecorationPalette> m_palette;
+    static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
+    static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
+
     QList<QMetaObject::Connection> m_connections;
     bool m_clientSideDecorated;
 };
@@ -1278,7 +1286,12 @@ inline bool Client::hiddenPreview() const
 
 inline QPalette Client::palette() const
 {
-    return m_palette;
+    return m_palette->palette();
+}
+
+inline const Decoration::DecorationPalette *Client::decorationPalette() const
+{
+    return m_palette.get();
 }
 
 template <typename T>
