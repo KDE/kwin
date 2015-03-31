@@ -66,6 +66,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_seat(new Seat(this))
     , m_pointer(NULL)
     , m_keyboard(NULL)
+    , m_touch(nullptr)
     , m_cursor(NULL)
 #if HAVE_WAYLAND_CURSOR
     , m_theme(new WaylandCursorTheme(backend, this))
