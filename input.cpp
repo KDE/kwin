@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "wayland_server.h"
+#include "virtual_terminal.h"
 #include <KWayland/Server/seat_interface.h>
 #endif
 // Qt
@@ -44,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kkeyserver.h>
 #if HAVE_XKB
 #include <xkbcommon/xkbcommon.h>
+#include <xkbcommon/xkbcommon-keysyms.h>
 #endif
 // system
 #include <linux/input.h>
@@ -500,6 +502,17 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     if (oldMods != keyboardModifiers()) {
         emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
     }
+#if HAVE_WAYLAND
+    // check for vt-switch
+    if (VirtualTerminal::self()) {
+        const xkb_keysym_t keysym = m_xkb->toKeysym(key);
+        if (state == KWin::InputRedirection::KeyboardKeyPressed &&
+                (keysym >= XKB_KEY_XF86Switch_VT_1 && keysym <= XKB_KEY_XF86Switch_VT_12)) {
+            VirtualTerminal::self()->activate(keysym - XKB_KEY_XF86Switch_VT_1 + 1);
+            return;
+        }
+    }
+#endif
     // TODO: pass to internal parts of KWin
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self() && TabBox::TabBox::self()->isGrabbed()) {
