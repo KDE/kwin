@@ -125,6 +125,7 @@ void LogindIntegration::logindServiceRegistered()
             m_connected = true;
             connectSessionPropertiesChanged();
             getSessionActive();
+            getVirtualTerminal();
 
             emit connectedChanged();
         }
@@ -139,6 +140,12 @@ void LogindIntegration::connectSessionPropertiesChanged()
                   QStringLiteral("PropertiesChanged"),
                   this,
                   SLOT(getSessionActive()));
+    m_bus.connect(s_login1Service,
+                  m_sessionPath,
+                  s_dbusPropertiesInterface,
+                  QStringLiteral("PropertiesChanged"),
+                  this,
+                  SLOT(getVirtualTerminal()));
 }
 
 void LogindIntegration::getSessionActive()
@@ -165,6 +172,35 @@ void LogindIntegration::getSessionActive()
             if (m_sessionActive != active) {
                 m_sessionActive = active;
                 emit sessionActiveChanged(m_sessionActive);
+            }
+        }
+    );
+}
+
+void LogindIntegration::getVirtualTerminal()
+{
+    if (!m_connected || m_sessionPath.isEmpty()) {
+        return;
+    }
+    QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service,
+                                                          m_sessionPath,
+                                                          s_dbusPropertiesInterface,
+                                                          QStringLiteral("Get"));
+    message.setArguments(QVariantList({s_login1SessionInterface, QStringLiteral("VTNr")}));
+    QDBusPendingReply<QVariant> reply = m_bus.asyncCall(message);
+    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this,
+        [this](QDBusPendingCallWatcher *self) {
+            QDBusPendingReply<QVariant> reply = *self;
+            self->deleteLater();
+            if (!reply.isValid()) {
+                qCDebug(KWIN_CORE) << "Failed to get VTNr Property of logind session:" << reply.error().message();
+                return;
+            }
+            const int vt = reply.value().toUInt();
+            if (m_vt != (int)vt) {
+                m_vt = vt;
+                emit virtualTerminalChanged(m_vt);
             }
         }
     );

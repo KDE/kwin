@@ -45,6 +45,9 @@ public:
     bool isActiveSession() const {
         return m_sessionActive;
     }
+    int vt() const {
+        return m_vt;
+    }
 
     void takeControl();
     void releaseControl();
@@ -56,9 +59,11 @@ Q_SIGNALS:
     void connectedChanged();
     void hasSessionControlChanged(bool);
     void sessionActiveChanged(bool);
+    void virtualTerminalChanged(int);
 
 private Q_SLOTS:
     void getSessionActive();
+    void getVirtualTerminal();
 
 private:
     friend class LogindTest;
@@ -77,6 +82,7 @@ private:
     QString m_sessionPath;
     bool m_sessionControl;
     bool m_sessionActive;
+    int m_vt = -1;
     KWIN_SINGLETON(LogindIntegration)
 };
 
