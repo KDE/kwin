@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
+#include "fb_backend.h"
 #include "wayland_backend.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -118,6 +119,13 @@ void ApplicationWayland::createBackend()
                 delete x11Backend;
             }
         }
+    }
+    if (!m_framebuffer.isEmpty()) {
+        FramebufferBackend *b = new FramebufferBackend(this);
+        connect(b, &FramebufferBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+        b->setDevice(m_framebuffer);
+        b->init();
+        backend = b;
     }
 
     if (!backend) {
@@ -378,6 +386,12 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                                            QStringLiteral("socket"));
     QCommandLineOption windowedOption(QStringLiteral("windowed"),
                                       i18n("Use a nested compositor in windowed mode."));
+    QCommandLineOption framebufferOption(QStringLiteral("framebuffer"),
+                                         i18n("Render to framebuffer."));
+    QCommandLineOption framebufferDeviceOption(QStringLiteral("fb-device"),
+                                               i18n("The framebuffer device to render to."),
+                                               QStringLiteral("fbdev"));
+    framebufferDeviceOption.setDefaultValue(QStringLiteral("/dev/fb0"));
     QCommandLineOption x11DisplayOption(QStringLiteral("x11-display"),
                                         i18n("The X11 Display to use in windowed mode on platform X11."),
                                         QStringLiteral("display"));
@@ -400,6 +414,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     parser.addOption(windowedOption);
     parser.addOption(x11DisplayOption);
     parser.addOption(waylandDisplayOption);
+    parser.addOption(framebufferOption);
+    parser.addOption(framebufferDeviceOption);
     parser.addOption(widthOption);
     parser.addOption(heightOption);
 #if HAVE_INPUT
@@ -414,6 +430,11 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 #if HAVE_INPUT
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
+
+    if (parser.isSet(windowedOption) && parser.isSet(framebufferOption)) {
+        std::cerr << "FATAL ERROR Cannot have both --windowed and --framebuffer" << std::endl;
+        return 1;
+    }
 
     a.setWindowed(parser.isSet(windowedOption));
     if (parser.isSet(windowedOption)) {
@@ -439,6 +460,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         } else if (!parser.isSet(x11DisplayOption)) {
             a.setWaylandDisplay(qgetenv("WAYLAND_DISPLAY"));
         }
+    }
+    if (parser.isSet(framebufferOption)) {
+        a.setFramebuffer(parser.value(framebufferDeviceOption));
     }
 
     a.setStartXwayland(parser.isSet(xwaylandOption));

@@ -46,6 +46,9 @@ public:
     void setWaylandDisplay(const QByteArray &display) {
         m_waylandDisplay = display;
     }
+    void setFramebuffer(const QString &fbdev) {
+        m_framebuffer = fbdev;
+    }
 
 protected:
     void performStartup() override;
@@ -62,6 +65,7 @@ private:
     bool m_windowed = false;
     QByteArray m_x11Display;
     QByteArray m_waylandDisplay;
+    QString m_framebuffer;
 };
 
 }

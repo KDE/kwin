@@ -44,6 +44,7 @@ namespace Wayland
 {
 class WaylandBackend;
 }
+class FramebufferBackend;
 class X11WindowedBackend;
 
 class QPainterBackend
@@ -151,6 +152,25 @@ private:
     xcb_gcontext_t m_gc = XCB_NONE;
     QImage m_backBuffer;
     X11WindowedBackend *m_backend;
+};
+
+class FramebufferQPainterBackend : public QObject, public QPainterBackend
+{
+    Q_OBJECT
+public:
+    FramebufferQPainterBackend(FramebufferBackend *backend);
+    virtual ~FramebufferQPainterBackend();
+
+    QImage *buffer() override;
+    bool needsFullRepaint() const override;
+    bool usesOverlayWindow() const override;
+    void prepareRenderingFrame() override;
+    void present(int mask, const QRegion &damage) override;
+
+private:
+    QImage m_renderBuffer;
+    QImage m_backBuffer;
+    FramebufferBackend *m_backend;
 };
 #endif
 

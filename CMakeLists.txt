@@ -421,6 +421,8 @@ if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
+            fb_backend.cpp
+            screens_fb.cpp
             screens_wayland.cpp
             screens_x11windowed.cpp
             virtual_terminal.cpp
