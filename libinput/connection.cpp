@@ -94,7 +94,25 @@ void Connection::setup()
     LogindIntegration *logind = LogindIntegration::self();
     connect(logind, &LogindIntegration::sessionActiveChanged, this,
         [this](bool active) {
-            active ? m_input->resume() : m_input->suspend();
+            if (active) {
+                m_input->resume();
+                handleEvent();
+                if (m_keyboardBeforeSuspend && !m_keyboard) {
+                    emit hasKeyboardChanged(false);
+                }
+                if (m_pointerBeforeSuspend && !m_pointer) {
+                    emit hasPointerChanged(false);
+                }
+                if (m_touchBeforeSuspend && !m_touch) {
+                    emit hasTouchChanged(false);
+                }
+            } else {
+                m_keyboardBeforeSuspend = hasKeyboard();
+                m_pointerBeforeSuspend = hasPointer();
+                m_touchBeforeSuspend = hasTouch();
+                m_input->suspend();
+                handleEvent();
+            }
         }
     );
     handleEvent();
@@ -210,6 +228,14 @@ void Connection::handleEvent()
 void Connection::setScreenSize(const QSize &size)
 {
     m_size = size;
+}
+
+bool Connection::isSuspended() const
+{
+    if (!s_context) {
+        return false;
+    }
+    return s_context->isSuspended();
 }
 
 }

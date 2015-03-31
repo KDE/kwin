@@ -280,9 +280,30 @@ void InputRedirection::setupLibInput()
             s->setHasKeyboard(conn->hasKeyboard());
             s->setHasPointer(conn->hasPointer());
             s->setHasTouch(conn->hasTouch());
-            connect(conn, &LibInput::Connection::hasKeyboardChanged, s, &KWayland::Server::SeatInterface::setHasKeyboard);
-            connect(conn, &LibInput::Connection::hasPointerChanged, s, &KWayland::Server::SeatInterface::setHasPointer);
-            connect(conn, &LibInput::Connection::hasTouchChanged, s, &KWayland::Server::SeatInterface::setHasTouch);
+            connect(conn, &LibInput::Connection::hasKeyboardChanged, this,
+                [this, s] (bool set) {
+                    if (m_libInput->isSuspended()) {
+                        return;
+                    }
+                    s->setHasKeyboard(set);
+                }
+            );
+            connect(conn, &LibInput::Connection::hasPointerChanged, this,
+                [this, s] (bool set) {
+                    if (m_libInput->isSuspended()) {
+                        return;
+                    }
+                    s->setHasPointer(set);
+                }
+            );
+            connect(conn, &LibInput::Connection::hasTouchChanged, this,
+                [this, s] (bool set) {
+                    if (m_libInput->isSuspended()) {
+                        return;
+                    }
+                    s->setHasTouch(set);
+                }
+            );
         }
 #endif
     }

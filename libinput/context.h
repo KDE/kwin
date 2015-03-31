@@ -59,6 +59,9 @@ public:
     bool isValid() const {
         return m_libinput != nullptr;
     }
+    bool isSuspended() const {
+        return m_suspended;
+    }
 
     int fileDescriptor();
     void dispatch();

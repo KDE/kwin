@@ -58,6 +58,8 @@ public:
         return m_pointer > 0;
     }
 
+    bool isSuspended() const;
+
 Q_SIGNALS:
     void keyChanged(uint32_t key, InputRedirection::KeyboardKeyState, uint32_t time);
     void pointerButtonChanged(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time);
@@ -82,6 +84,9 @@ private:
     int m_keyboard = 0;
     int m_pointer = 0;
     int m_touch = 0;
+    bool m_keyboardBeforeSuspend = false;
+    bool m_pointerBeforeSuspend = false;
+    bool m_touchBeforeSuspend = false;
 
     KWIN_SINGLETON(Connection)
 };
