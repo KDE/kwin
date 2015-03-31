@@ -817,6 +817,22 @@ void Workspace::slotWindowQuickTileRight()
     active_client->setQuickTileMode(Client::QuickTileRight, true);
 }
 
+void Workspace::slotWindowQuickTileTop()
+{
+    if (!active_client)
+        return;
+
+    active_client->setQuickTileMode(Client::QuickTileTop, true);
+}
+
+void Workspace::slotWindowQuickTileBottom()
+{
+    if (!active_client)
+        return;
+
+    active_client->setQuickTileMode(Client::QuickTileBottom, true);
+}
+
 void Workspace::slotWindowQuickTileTopLeft()
 {
     if (!active_client) {

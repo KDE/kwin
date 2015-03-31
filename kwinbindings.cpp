@@ -97,6 +97,10 @@ DEF2("Window Quick Tile Left", I18N_NOOP("Quick Tile Window to the Left"),
      0, slotWindowQuickTileLeft);
 DEF2("Window Quick Tile Right", I18N_NOOP("Quick Tile Window to the Right"),
      0, slotWindowQuickTileRight);
+DEF2("Window Quick Tile Top", I18N_NOOP("Quick Tile Window to the Top"),
+     0, slotWindowQuickTileTop);
+DEF2("Window Quick Tile Bottom", I18N_NOOP("Quick Tile Window to the Bottom"),
+     0, slotWindowQuickTileBottom);
 DEF2("Window Quick Tile Top Left", I18N_NOOP("Quick Tile Window to the Top Left"),
      0, slotWindowQuickTileTopLeft);
 DEF2("Window Quick Tile Bottom Left", I18N_NOOP("Quick Tile Window to the Bottom Left"),

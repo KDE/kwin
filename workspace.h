@@ -372,6 +372,8 @@ public Q_SLOTS:
     void slotWindowShrinkVertical();
     void slotWindowQuickTileLeft();
     void slotWindowQuickTileRight();
+    void slotWindowQuickTileTop();
+    void slotWindowQuickTileBottom();
     void slotWindowQuickTileTopLeft();
     void slotWindowQuickTileTopRight();
     void slotWindowQuickTileBottomLeft();
