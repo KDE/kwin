@@ -349,6 +349,12 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         signal(SIGINT, SIG_IGN);
     if (signal(SIGHUP, KWin::sighandler) == SIG_IGN)
         signal(SIGHUP, SIG_IGN);
+    // ensure that no thread takes SIGUSR
+    sigset_t userSiganls;
+    sigemptyset(&userSiganls);
+    sigaddset(&userSiganls, SIGUSR1);
+    sigaddset(&userSiganls, SIGUSR2);
+    pthread_sigmask(SIG_BLOCK, &userSiganls, nullptr);
 
     // enforce wayland plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland", true);

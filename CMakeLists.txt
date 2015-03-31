@@ -88,6 +88,12 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     XmlGui
 )
 
+find_package(Threads)
+set_package_properties(Threads PROPERTIES
+         PURPOSE "Needed for VirtualTerminal support in KWin Wayland"
+         TYPE REQUIRED
+         )
+
 # optional frameworks
 find_package(KF5Activities ${KF5_MIN_VERSION} CONFIG)
 set_package_properties(KF5Activities PROPERTIES
@@ -417,6 +423,7 @@ if(HAVE_WAYLAND)
             abstract_backend.cpp
             screens_wayland.cpp
             screens_x11windowed.cpp
+            virtual_terminal.cpp
             wayland_backend.cpp
             wayland_server.cpp
             x11windowed_backend.cpp
@@ -504,6 +511,7 @@ set(kwin_WAYLAND_LIBS
     XKB::XKB
     KF5::WaylandClient
     KF5::WaylandServer
+    ${CMAKE_THREAD_LIBS_INIT}
 )
 
 set(kwin_WAYLAND_EGL_LIBS
