@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_ABSTRACT_BACKEND_H
 #define KWIN_ABSTRACT_BACKEND_H
 #include <kwin_export.h>
+#include <QImage>
 #include <QObject>
 
 namespace KWin
@@ -41,8 +42,29 @@ public:
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
 
+    bool usesSoftwareCursor() const {
+        return m_softWareCursor;
+    }
+    QImage softwareCursor() const {
+        return m_cursor.image;
+    }
+    QPoint softwareCursorHotspot() const {
+        return m_cursor.hotspot;
+    }
+    void markCursorAsRendered();
+
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);
+    void setSoftWareCursor(bool set);
+
+private:
+    void triggerCursorRepaint();
+    bool m_softWareCursor = false;
+    struct {
+        QPoint hotspot;
+        QImage image;
+        QPoint lastRenderedPosition;
+    } m_cursor;
 };
 
 }

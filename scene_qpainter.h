@@ -93,6 +93,7 @@ public:
 
     virtual QImage *buffer() = 0;
     virtual bool needsFullRepaint() const = 0;
+    virtual void renderCursor(QPainter *painter);
 
 protected:
     QPainterBackend();
@@ -166,6 +167,7 @@ public:
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
+    void renderCursor(QPainter *painter) override;
 
 private:
     QImage m_renderBuffer;

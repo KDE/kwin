@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "client.h"
 #include "composite.h"
+#include "cursor.h"
 #include "deleted.h"
 #include "effects.h"
 #include "main.h"
@@ -77,6 +78,11 @@ void QPainterBackend::setFailed(const QString &reason)
 {
     qCWarning(KWIN_CORE) << "Creating the XRender backend failed: " << reason;
     m_failed = true;
+}
+
+void QPainterBackend::renderCursor(QPainter *painter)
+{
+    Q_UNUSED(painter)
 }
 
 #if HAVE_WAYLAND
@@ -311,6 +317,21 @@ bool FramebufferQPainterBackend::usesOverlayWindow() const
     return false;
 }
 
+void FramebufferQPainterBackend::renderCursor(QPainter *painter)
+{
+    if (!m_backend->usesSoftwareCursor()) {
+        return;
+    }
+    const QImage img = m_backend->softwareCursor();
+    if (img.isNull()) {
+        return;
+    }
+    const QPoint cursorPos = Cursor::pos();
+    const QPoint hotspot = m_backend->softwareCursorHotspot();
+    painter->drawImage(cursorPos - hotspot, img);
+    m_backend->markCursorAsRendered();
+}
+
 #endif
 
 //****************************************
@@ -380,6 +401,7 @@ qint64 SceneQPainter::paint(QRegion damage, ToplevelList toplevels)
     }
     QRegion updateRegion, validRegion;
     paintScreen(&mask, damage, QRegion(), &updateRegion, &validRegion);
+    m_backend->renderCursor(m_painter.data());
 
     m_backend->showOverlay();
 
