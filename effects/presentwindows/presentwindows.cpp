@@ -212,6 +212,7 @@ void PresentWindowsEffect::postPaintScreen()
         foreach (EffectWindow * w, effects->stackingOrder()) {
             if (w->isDock()) {
                 w->setData(WindowForceBlurRole, QVariant(false));
+                w->setData(WindowForceBackgroundContrastRole, QVariant(false));
             }
         }
         effects->setActiveFullScreenEffect(NULL);
@@ -446,6 +447,7 @@ void PresentWindowsEffect::slotWindowAdded(EffectWindow *w)
         winData->highlight = 1.0;
         m_closeWindow = w;
         w->setData(WindowForceBlurRole, QVariant(true));
+        w->setData(WindowForceBackgroundContrastRole, QVariant(true));
     }
 }
 
@@ -1493,6 +1495,7 @@ void PresentWindowsEffect::setActive(bool active)
         foreach (EffectWindow * w, effects->stackingOrder()) {
             if (w->isDock()) {
                 w->setData(WindowForceBlurRole, QVariant(true));
+                w->setData(WindowForceBackgroundContrastRole, QVariant(true));
             }
         }
     } else {
