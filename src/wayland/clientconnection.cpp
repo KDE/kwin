@@ -100,6 +100,11 @@ wl_resource *ClientConnection::createResource(const wl_interface *interface, qui
     return wl_resource_create(d->client, interface, version, id);
 }
 
+wl_resource *ClientConnection::getResource(quint32 id)
+{
+    return wl_client_get_object(d->client, id);
+}
+
 wl_client *ClientConnection::client()
 {
     return d->client;

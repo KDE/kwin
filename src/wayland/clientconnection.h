@@ -43,6 +43,11 @@ public:
 
     void flush();
     wl_resource *createResource(const wl_interface *interface, quint32 version, quint32 id);
+    /**
+     * Get the wl_resource associated with the given @p id.
+     * @since 5.3
+     **/
+    wl_resource *getResource(quint32 id);
 
     wl_client *client();
     Display *display();
