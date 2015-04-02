@@ -76,7 +76,7 @@ class WaylandCursorTheme : public QObject
 {
     Q_OBJECT
 public:
-    explicit WaylandCursorTheme(WaylandBackend *backend, QObject *parent = nullptr);
+    explicit WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent = nullptr);
     virtual ~WaylandCursorTheme();
 
     wl_cursor_image *get(Qt::CursorShape shape);
@@ -85,7 +85,7 @@ private:
     void loadTheme();
     void destroyTheme();
     wl_cursor_theme *m_theme;
-    WaylandBackend *m_backend;
+    KWayland::Client::ShmPool *m_shm = nullptr;
 };
 #endif
 

@@ -74,7 +74,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_touch(nullptr)
     , m_cursor(NULL)
 #if HAVE_WAYLAND_CURSOR
-    , m_theme(new WaylandCursorTheme(backend, this))
+    , m_theme(new WaylandCursorTheme(backend->shmPool(), this))
 #endif
     , m_enteredSerial(0)
     , m_backend(backend)
@@ -278,10 +278,10 @@ void WaylandSeat::setInstallCursor(bool install)
 }
 
 #if HAVE_WAYLAND_CURSOR
-WaylandCursorTheme::WaylandCursorTheme(WaylandBackend *backend, QObject *parent)
+WaylandCursorTheme::WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent)
     : QObject(parent)
     , m_theme(nullptr)
-    , m_backend(backend)
+    , m_shm(shm)
 {
 }
 
@@ -292,6 +292,9 @@ WaylandCursorTheme::~WaylandCursorTheme()
 
 void WaylandCursorTheme::loadTheme()
 {
+    if (!m_shm->isValid()) {
+        return;
+    }
     Cursor *c = Cursor::self();
     if (!m_theme) {
         // so far the theme had not been created, this means we need to start tracking theme changes
@@ -300,7 +303,7 @@ void WaylandCursorTheme::loadTheme()
         destroyTheme();
     }
     m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
-                                   c->themeSize() ? c->themeSize() : -1, m_backend->shmPool()->shm());
+                                   c->themeSize() ? c->themeSize() : -1, m_shm->shm());
 }
 
 void WaylandCursorTheme::destroyTheme()
@@ -333,7 +336,7 @@ WaylandCursor::WaylandCursor(Surface *parentSurface, WaylandBackend *backend)
     : QObject(backend)
     , m_backend(backend)
 #if HAVE_WAYLAND_CURSOR
-    , m_theme(new WaylandCursorTheme(backend, this))
+    , m_theme(new WaylandCursorTheme(backend->shmPool(), this))
 #endif
 {
     auto surface = backend->compositor()->createSurface(this);
