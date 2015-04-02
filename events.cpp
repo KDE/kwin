@@ -67,6 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11eventfilter.h"
 
 #if HAVE_WAYLAND
+#include "wayland_server.h"
 #include <KWayland/Server/surface_interface.h>
 #endif
 
@@ -1698,7 +1699,9 @@ void Toplevel::clientMessageEvent(xcb_client_message_event_t *e)
     if (e->type == atoms->wl_surface_id) {
         m_surfaceId = e->data.data32[0];
 #if HAVE_WAYLAND
-        m_surface = KWayland::Server::SurfaceInterface::get(m_surfaceId);
+        if (auto w = waylandServer()) {
+            m_surface = KWayland::Server::SurfaceInterface::get(m_surfaceId, w->xWaylandConnection());
+        }
 #endif
         emit surfaceIdChanged(m_surfaceId);
     }

@@ -79,6 +79,10 @@ public:
      **/
     int createQtConnection();
 
+    KWayland::Server::ClientConnection *xWaylandConnection() const {
+        return m_xwaylandConnection;
+    }
+
 private:
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
