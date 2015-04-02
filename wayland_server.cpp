@@ -22,6 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #include "workspace.h"
 
+// Client
+#include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/registry.h>
+// Server
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
@@ -111,6 +115,32 @@ int WaylandServer::createQtConnection()
     }
     m_qtConnection = m_display->createClient(sx[0]);
     return sx[1];
+}
+
+void WaylandServer::createInternalConnection()
+{
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        qCWarning(KWIN_CORE) << "Could not create socket";
+        return;
+    }
+    m_internalConnection.server = m_display->createClient(sx[0]);
+    using namespace KWayland::Client;
+    m_internalConnection.client = new ConnectionThread(this);
+    m_internalConnection.client->setSocketFd(sx[1]);
+    connect(m_internalConnection.client, &ConnectionThread::connected, this,
+        [this] {
+            Registry *registry = new Registry(m_internalConnection.client);
+            registry->create(m_internalConnection.client);
+            connect(registry, &Registry::shmAnnounced, this,
+                [this, registry] (quint32 name, quint32 version) {
+                    m_internalConnection.shm = registry->createShmPool(name, version, m_internalConnection.client);
+                }
+            );
+            registry->setup();
+        }
+    );
+    m_internalConnection.client->initConnection();
 }
 
 void WaylandServer::installBackend(AbstractBackend *backend)

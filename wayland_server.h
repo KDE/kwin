@@ -26,6 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace KWayland
 {
+namespace Client
+{
+class ConnectionThread;
+class ShmPool;
+}
 namespace Server
 {
 class ClientConnection;
@@ -78,9 +83,19 @@ public:
      * @returns file descriptor for QtWayland
      **/
     int createQtConnection();
+    void createInternalConnection();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
         return m_xwaylandConnection;
+    }
+    KWayland::Server::ClientConnection *internalConnection() const {
+        return m_internalConnection.server;
+    }
+    KWayland::Client::ShmPool *internalShmPool() {
+        return m_internalConnection.shm;
+    }
+    KWayland::Client::ConnectionThread *internalClientConection() {
+        return m_internalConnection.client;
     }
 
 private:
@@ -90,6 +105,12 @@ private:
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
+    struct {
+        KWayland::Server::ClientConnection *server = nullptr;
+        KWayland::Client::ConnectionThread *client = nullptr;
+        KWayland::Client::ShmPool *shm = nullptr;
+
+    } m_internalConnection;
     AbstractBackend *m_backend = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };

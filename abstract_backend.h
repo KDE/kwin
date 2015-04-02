@@ -30,6 +30,11 @@ class OpenGLBackend;
 class QPainterBackend;
 class Screens;
 
+namespace Wayland
+{
+class WaylandCursorTheme;
+}
+
 class KWIN_EXPORT AbstractBackend : public QObject
 {
     Q_OBJECT
@@ -57,6 +62,9 @@ protected:
     explicit AbstractBackend(QObject *parent = nullptr);
     void setSoftWareCursor(bool set);
 
+private Q_SLOTS:
+    void installThemeCursor(quint32 id, const QPoint &hotspot);
+
 private:
     void triggerCursorRepaint();
     bool m_softWareCursor = false;
@@ -65,6 +73,7 @@ private:
         QImage image;
         QPoint lastRenderedPosition;
     } m_cursor;
+    Wayland::WaylandCursorTheme *m_cursorTheme = nullptr;
 };
 
 }

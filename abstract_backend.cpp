@@ -18,13 +18,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_backend.h"
+#include <config-kwin.h>
 #include "composite.h"
 #include "cursor.h"
 #include "wayland_server.h"
+#if HAVE_WAYLAND_CURSOR
+#include "wayland_backend.h"
+#endif
 // KWayland
+#include <KWayland/Client/buffer.h>
+#include <KWayland/Client/connection_thread.h>
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/clientconnection.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
+// Wayland
+#if HAVE_WAYLAND_CURSOR
+#include <wayland-cursor.h>
+#endif
 
 namespace KWin
 {
@@ -67,7 +78,47 @@ void AbstractBackend::installCursorFromServer()
 
 void AbstractBackend::installCursorImage(Qt::CursorShape shape)
 {
+    if (!m_softWareCursor) {
+        return;
+    }
+#if HAVE_WAYLAND_CURSOR
+    if (!m_cursorTheme) {
+        // check whether we can create it
+        if (waylandServer() && waylandServer()->internalShmPool()) {
+            m_cursorTheme = new Wayland::WaylandCursorTheme(waylandServer()->internalShmPool(), this);
+        }
+    }
+    if (!m_cursorTheme) {
+        return;
+    }
+    wl_cursor_image *cursor = m_cursorTheme->get(shape);
+    if (!cursor) {
+        return;
+    }
+    wl_buffer *b = wl_cursor_image_get_buffer(cursor);
+    if (!b) {
+        return;
+    }
+    waylandServer()->internalClientConection()->flush();
+    QMetaObject::invokeMethod(this,
+                              "installThemeCursor",
+                              Qt::QueuedConnection,
+                              Q_ARG(quint32, KWayland::Client::Buffer::getId(b)),
+                              Q_ARG(QPoint, QPoint(cursor->hotspot_x, cursor->hotspot_y)));
+#else
     Q_UNUSED(shape)
+#endif
+}
+
+void AbstractBackend::installThemeCursor(quint32 id, const QPoint &hotspot)
+{
+    auto buffer = KWayland::Server::BufferInterface::get(waylandServer()->internalConnection()->getResource(id));
+    if (!buffer) {
+        return;
+    }
+    triggerCursorRepaint();
+    m_cursor.hotspot = hotspot;
+    m_cursor.image = buffer->data().copy();
 }
 
 Screens *AbstractBackend::createScreens(QObject *parent)

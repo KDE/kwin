@@ -85,6 +85,7 @@ void ApplicationWayland::performStartup()
     setOperationMode(m_startXWayland ? OperationModeXwayland : OperationModeWaylandAndX11);
     // first load options - done internally by a different thread
     createOptions();
+    waylandServer()->createInternalConnection();
 
     // try creating the Wayland Backend
     createInput();
