@@ -832,7 +832,7 @@ void SceneQPainterDecorationRenderer::render()
         painter.save();
         // clear existing part
         painter.setCompositionMode(QPainter::CompositionMode_Source);
-        painter.fillRect(rect, Qt::red);
+        painter.fillRect(rect, Qt::transparent);
         painter.restore();
         client()->decoration()->paint(&painter, rect);
     };
