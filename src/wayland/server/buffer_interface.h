@@ -89,6 +89,8 @@ public:
      **/
     void setSize(const QSize &size);
 
+    static BufferInterface *get(wl_resource *r);
+
 Q_SIGNALS:
     void aboutToBeDestroyed(KWayland::Server::BufferInterface*);
     /**

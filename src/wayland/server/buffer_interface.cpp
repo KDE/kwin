@@ -50,6 +50,8 @@ public:
     int refCount;
     QSize size;
 
+    static BufferInterface *get(wl_resource *r);
+
 private:
     static void destroyListenerCallback(wl_listener *listener, void *data);
     static Private *cast(wl_resource *r);
@@ -73,6 +75,15 @@ BufferInterface::Private *BufferInterface::Private::cast(wl_resource *r)
         return nullptr;
     }
     return *it;
+}
+
+BufferInterface *BufferInterface::Private::get(wl_resource *r)
+{
+    Private *p = cast(r);
+    if (!p) {
+        return nullptr;
+    }
+    return p->q;
 }
 
 void BufferInterface::Private::imageBufferCleanupHandler(void *info)
@@ -123,6 +134,19 @@ BufferInterface::Private::~Private()
 {
     wl_list_remove(&listener.link);
     s_buffers.removeAll(this);
+}
+
+BufferInterface *BufferInterface::get(wl_resource *r)
+{
+    if (!r) {
+        return nullptr;
+    }
+    // TODO: verify it's a buffer
+    BufferInterface *b = Private::get(r);
+    if (b) {
+        return b;
+    }
+    return new BufferInterface(r, nullptr);
 }
 
 BufferInterface::BufferInterface(wl_resource *resource, SurfaceInterface *parent)
