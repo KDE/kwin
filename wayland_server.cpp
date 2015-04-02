@@ -88,8 +88,7 @@ void WaylandServer::initOutputs()
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {
         OutputInterface *output = m_display->createOutput(m_display);
-        // TODO: fixme
-        output->setPhysicalSize(QSize(269, 168));
+        output->setPhysicalSize(s->size(i) / 3.8);
         output->addMode(s->size(i));
         output->create();
     }
