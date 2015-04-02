@@ -55,12 +55,12 @@ public:
         return reinterpret_cast<ResourceDerived*>((*it)->q);
     }
     template <typename ResourceDerived>
-    static ResourceDerived *get(quint32 id) {
+    static ResourceDerived *get(quint32 id, const ClientConnection *c) {
         static_assert(std::is_base_of<Resource, ResourceDerived>::value,
                       "ResourceDerived must be derived from Resource");
         auto it = std::find_if(s_allResources.constBegin(), s_allResources.constEnd(),
-            [id](Private *p) {
-                return wl_resource_get_id(p->resource) == id;
+            [id, c](Private *p) {
+                return c == p->client && wl_resource_get_id(p->resource) == id;
             }
         );
         if (it == s_allResources.constEnd()) {

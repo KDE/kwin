@@ -429,9 +429,9 @@ SurfaceInterface *SurfaceInterface::get(wl_resource *native)
     return Private::get<SurfaceInterface>(native);
 }
 
-SurfaceInterface *SurfaceInterface::get(quint32 id)
+SurfaceInterface *SurfaceInterface::get(quint32 id, const ClientConnection *client)
 {
-    return Private::get<SurfaceInterface>(id);
+    return Private::get<SurfaceInterface>(id, client);
 }
 
 QList< QPointer< SubSurfaceInterface > > SurfaceInterface::childSubSurfaces() const

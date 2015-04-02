@@ -76,10 +76,10 @@ public:
 
     static SurfaceInterface *get(wl_resource *native);
     /**
-     * @returns The SurfaceInterface with given @p id, if it exists, otherwise @c nullptr.
+     * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
      * @since 5.3
      **/
-    static SurfaceInterface *get(quint32 id);
+    static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
 Q_SIGNALS:
     void damaged(const QRegion&);
