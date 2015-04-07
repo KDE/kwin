@@ -2,7 +2,6 @@
 Name=Scale In
 Name[af]=Rek-verskyn
 Name[ar]=تحجيم النوافذ
-Name[ast]=Escalar
 Name[bg]=Увеличаване
 Name[bs]=Uvećana razmjera
 Name[ca]=Escalat
@@ -79,7 +78,6 @@ Name[zh_TW]=縮放
 Icon=preferences-system-windows-effect-scale-in
 Comment=Animate the appearing of windows
 Comment[ar]=يحرك عملية ظهور النوافذ
-Comment[ast]=Anima l'aparición de ventanes
 Comment[be@latin]=Animuje źjaŭleńnie akon.
 Comment[bg]=Анимирано показване на прозорците
 Comment[bs]=Animira pojavljivanje prozora
