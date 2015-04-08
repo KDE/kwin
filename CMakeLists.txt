@@ -435,6 +435,13 @@ if(HAVE_WAYLAND)
     endif()
 endif()
 
+if(UDEV_FOUND)
+    set(kwin_KDEINIT_SRCS
+        ${kwin_KDEINIT_SRCS}
+        udev.cpp
+    )
+endif()
+
 if(HAVE_INPUT)
     set(kwin_KDEINIT_SRCS
         ${kwin_KDEINIT_SRCS}
@@ -551,8 +558,12 @@ if(HAVE_WAYLAND)
     endif()
 endif()
 
+if(UDEV_FOUND)
+    set(kwinLibs ${kwinLibs} ${UDEV_LIBS})
+endif()
+
 if(HAVE_INPUT)
-    set(kwinLibs ${kwinLibs} Libinput::Libinput ${UDEV_LIBS})
+    set(kwinLibs ${kwinLibs} Libinput::Libinput)
 endif()
 
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})

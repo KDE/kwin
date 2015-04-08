@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "context.h"
 #include "events.h"
 #include "../logind.h"
+#include "../udev.h"
 
-#include <libudev.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
@@ -30,18 +30,6 @@ namespace KWin
 {
 namespace LibInput
 {
-
-Udev::Udev()
-    : m_udev(udev_new())
-{
-}
-
-Udev::~Udev()
-{
-    if (m_udev) {
-        udev_unref(m_udev);
-    }
-}
 
 Context::Context(const Udev &udev)
     : m_libinput(libinput_udev_create_context(&Context::s_interface, this, udev))

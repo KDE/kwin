@@ -22,33 +22,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <libinput.h>
 
-struct udev;
-
 namespace KWin
 {
+
+class Udev;
+
 namespace LibInput
 {
 
 class Event;
-
-class Udev
-{
-public:
-    Udev();
-    ~Udev();
-
-    bool isValid() const {
-        return m_udev != nullptr;
-    }
-    operator udev*() const {
-        return m_udev;
-    }
-    operator udev*() {
-        return m_udev;
-    }
-private:
-    struct udev *m_udev;
-};
 
 class Context
 {
