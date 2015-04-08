@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=MinimizeAll
-Comment=Adds a shortcut to minimize all windows or unminize all such way minimized windows
+Comment=Adds a shortcut to minimize all windows or unminimize all such way minimized windows
 Icon=preferences-system-windows-script-test
 
 Type=Service
