@@ -19,11 +19,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #ifndef KWIN_UDEV_H
 #define KWIN_UDEV_H
+#include <memory>
 
 struct udev;
+struct udev_device;
 
 namespace KWin
 {
+
+
+class UdevDevice
+{
+public:
+    UdevDevice(udev_device *device);
+    ~UdevDevice();
+
+    udev_device *getParentWithSubsystemDevType(const char *subsystem, const char *devtype = nullptr) const;
+    const char *devNode();
+
+    operator udev_device*() const {
+        return m_device;
+    }
+    operator udev_device*() {
+        return m_device;
+    }
+    typedef std::unique_ptr<UdevDevice> Ptr;
+
+private:
+    udev_device *m_device;
+};
 
 class Udev
 {
@@ -34,6 +58,8 @@ public:
     bool isValid() const {
         return m_udev != nullptr;
     }
+    UdevDevice::Ptr primaryGpu();
+    UdevDevice::Ptr deviceFromSyspath(const char *syspath);
     operator udev*() const {
         return m_udev;
     }
