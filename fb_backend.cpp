@@ -76,12 +76,12 @@ void FramebufferBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
-    auto v = VirtualTerminal::create(this);
-    v->init();
+    VirtualTerminal::create(this);
 }
 
 void FramebufferBackend::openFrameBuffer()
 {
+    VirtualTerminal::self()->init();
     int fd = LogindIntegration::self()->takeDevice(m_device.toUtf8().constData());
     if (fd < 0) {
         qCWarning(KWIN_CORE) << "Failed to open frame buffer device through logind, trying without";
