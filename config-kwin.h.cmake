@@ -15,6 +15,7 @@
 #cmakedefine01 HAVE_XCB_CURSOR
 #cmakedefine01 HAVE_XCB_SYNC
 #cmakedefine01 HAVE_X11_XCB
+#cmakedefine01 HAVE_DRM
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H 1

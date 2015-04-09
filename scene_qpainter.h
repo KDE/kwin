@@ -44,6 +44,8 @@ namespace Wayland
 {
 class WaylandBackend;
 }
+class DrmBackend;
+class DrmBuffer;
 class FramebufferBackend;
 class X11WindowedBackend;
 
@@ -174,6 +176,28 @@ private:
     QImage m_backBuffer;
     FramebufferBackend *m_backend;
 };
+
+#if HAVE_DRM
+class DrmQPainterBackend : public QObject, public QPainterBackend
+{
+    Q_OBJECT
+public:
+    DrmQPainterBackend(DrmBackend *backend);
+    virtual ~DrmQPainterBackend();
+
+    QImage *buffer() override;
+    bool needsFullRepaint() const override;
+    bool usesOverlayWindow() const override;
+    void prepareRenderingFrame() override;
+    void present(int mask, const QRegion &damage) override;
+
+private:
+    DrmBackend *m_backend;
+    DrmBuffer *m_buffer[2];
+    int m_bufferIndex = 0;
+};
+#endif
+
 #endif
 
 class SceneQPainter : public Scene

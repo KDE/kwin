@@ -27,6 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "toplevel.h"
 #if HAVE_WAYLAND
+#if HAVE_DRM
+#include "drm_backend.h"
+#endif
 #include "fb_backend.h"
 #include "virtual_terminal.h"
 #include "wayland_backend.h"
@@ -331,6 +334,72 @@ void FramebufferQPainterBackend::renderCursor(QPainter *painter)
     painter->drawImage(cursorPos - hotspot, img);
     m_backend->markCursorAsRendered();
 }
+
+#if HAVE_DRM
+//****************************************
+// DrmQPainterBackend
+//****************************************
+DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
+    : QObject()
+    , QPainterBackend()
+    , m_backend(backend)
+{
+
+    m_buffer[0] = m_backend->createBuffer(m_backend->size());
+    m_buffer[0]->map();
+    m_buffer[1] = m_backend->createBuffer(m_backend->size());
+    m_buffer[1]->map();
+    m_buffer[0]->image()->fill(Qt::black);
+    m_buffer[1]->image()->fill(Qt::black);
+
+    connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, this,
+        [this] (bool active) {
+            if (active) {
+                Compositor::self()->bufferSwapComplete();
+                Compositor::self()->addRepaintFull();
+            } else {
+                Compositor::self()->aboutToSwapBuffers();
+            }
+        }
+    );
+}
+
+DrmQPainterBackend::~DrmQPainterBackend()
+{
+    delete m_buffer[0];
+    delete m_buffer[1];
+}
+
+QImage *DrmQPainterBackend::buffer()
+{
+    return m_buffer[m_bufferIndex]->image();
+}
+
+bool DrmQPainterBackend::needsFullRepaint() const
+{
+    return true;
+}
+
+void DrmQPainterBackend::prepareRenderingFrame()
+{
+    m_bufferIndex = (m_bufferIndex + 1) % 2;
+}
+
+void DrmQPainterBackend::present(int mask, const QRegion &damage)
+{
+    Q_UNUSED(mask)
+    Q_UNUSED(damage)
+    if (!VirtualTerminal::self()->isActive()) {
+        return;
+    }
+    m_backend->present(m_buffer[m_bufferIndex]);
+}
+
+bool DrmQPainterBackend::usesOverlayWindow() const
+{
+    return false;
+}
+#endif
 
 #endif
 

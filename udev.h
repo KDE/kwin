@@ -36,6 +36,7 @@ public:
 
     udev_device *getParentWithSubsystemDevType(const char *subsystem, const char *devtype = nullptr) const;
     const char *devNode();
+    int sysNum() const;
 
     operator udev_device*() const {
         return m_device;

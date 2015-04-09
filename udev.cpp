@@ -181,4 +181,12 @@ const char *UdevDevice::devNode()
     return udev_device_get_devnode(m_device);
 }
 
+int UdevDevice::sysNum() const
+{
+    if (!m_device) {
+        return 0;
+    }
+    return QByteArray(udev_device_get_sysnum(m_device)).toInt();
+}
+
 }

@@ -157,6 +157,13 @@ if (Libinput_FOUND AND UDEV_FOUND)
     set(HAVE_INPUT TRUE)
 endif()
 
+find_package(Libdrm)
+set_package_properties(Libdrm PROPERTIES TYPE OPTIONAL PURPOSE "Required for drm output on Wayland.")
+set(HAVE_DRM FALSE)
+if(Libdrm_FOUND AND UDEV_FOUND)
+    set(HAVE_DRM TRUE)
+endif()
+
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         URL "http://www.x.org"
@@ -281,6 +288,7 @@ else()
     set(HAVE_WAYLAND_EGL FALSE)
     set(HAVE_WAYLAND_CURSOR FALSE)
     set(HAVE_X11_XCB FALSE)
+    set(HAVE_DRM FALSE)
 endif()
 
 if(XCB_CURSOR_FOUND)
@@ -433,6 +441,13 @@ if(HAVE_WAYLAND)
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
     endif()
+    if(HAVE_DRM)
+        set(kwin_KDEINIT_SRCS
+                ${kwin_KDEINIT_SRCS}
+                drm_backend.cpp
+                screens_drm.cpp
+            )
+    endif()
 endif()
 
 if(UDEV_FOUND)
@@ -564,6 +579,10 @@ endif()
 
 if(HAVE_INPUT)
     set(kwinLibs ${kwinLibs} Libinput::Libinput)
+endif()
+
+if(HAVE_DRM)
+    set(kwinLibs ${kwinLibs} Libdrm::Libdrm)
 endif()
 
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})

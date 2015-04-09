@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 // kwin
 #include "fb_backend.h"
+#if HAVE_DRM
+#include "drm_backend.h"
+#endif
 #include "wayland_backend.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
@@ -122,6 +125,14 @@ void ApplicationWayland::createBackend()
             }
         }
     }
+#if HAVE_DRM
+    if (m_drm) {
+        DrmBackend *b = new DrmBackend(this);
+        connect(b, &DrmBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+        b->init();
+        backend = b;
+    }
+#endif
     if (!m_framebuffer.isEmpty()) {
         FramebufferBackend *b = new FramebufferBackend(this);
         connect(b, &FramebufferBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
@@ -448,6 +459,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
     parser.addOption(libinputOption);
 #endif
+#if HAVE_DRM
+    QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
+    parser.addOption(drmOption);
+#endif
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
@@ -463,6 +478,13 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         std::cerr << "FATAL ERROR Cannot have both --windowed and --framebuffer" << std::endl;
         return 1;
     }
+#if HAVE_DRM
+    if (parser.isSet(drmOption) && (parser.isSet(windowedOption) || parser.isSet(framebufferOption))) {
+        std::cerr << "FATAL ERROR Cannot have both --windowed/--framebuffer and --drm" << std::endl;
+        return 1;
+    }
+    a.setDrm(parser.isSet(drmOption));
+#endif
 
     a.setWindowed(parser.isSet(windowedOption));
     if (parser.isSet(windowedOption)) {
