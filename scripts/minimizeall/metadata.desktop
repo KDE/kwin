@@ -1,6 +1,13 @@
 [Desktop Entry]
 Name=MinimizeAll
+Name[gl]=Minimizalo todo
+Name[nl]=Alles-minimaliseren
+Name[pt]=Maximização Total
+Name[sk]=Minimalizovať všetko
+Name[uk]=Мінімізувати усі
+Name[x-test]=xxMinimizeAllxx
 Comment=Adds a shortcut to minimize all windows or unminimize all such way minimized windows
+Comment[uk]=Додає кнопку для мінімізації усіх вікон або скасування такої мінімізації для усіх вікон
 Icon=preferences-system-windows-script-test
 
 Type=Service

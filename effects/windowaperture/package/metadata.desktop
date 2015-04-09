@@ -1,7 +1,19 @@
 [Desktop Entry]
 Name=Window Aperture
+Name[gl]=Apertura das xanelas
+Name[nl]=Vensteropening
+Name[pt]=Aperto das Janelas
+Name[sk]=Otvor okien
+Name[uk]=Апертура вікна
+Name[x-test]=xxWindow Aperturexx
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move window into the corners while showing desktop
+Comment[gl]=Mover a xanela ás esquinas mentres se mostra o escritorio.
+Comment[nl]=Schuif venster in de hoeken tijdens het tonen van het bureaublad
+Comment[pt]=Mover a janela para os cantos, enquanto mostra o ecrã
+Comment[sk]=Posun okna do rohov počas zobrazenia plochy
+Comment[uk]=Пересувати вікна в куток на час перегляду стільниці
+Comment[x-test]=xxMove window into the corners while showing desktopxx
 
 Type=Service
 X-Plasma-API=javascript

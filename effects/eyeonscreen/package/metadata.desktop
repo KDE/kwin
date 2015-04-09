@@ -1,7 +1,19 @@
 [Desktop Entry]
 Name=eye On Screen
+Name[gl]=Ollo na pantalla
+Name[nl]=eye On Screen
+Name[pt]=Olho no Ecrã
+Name[sk]=oko na obrazovke
+Name[uk]=Око на екрані
+Name[x-test]=xxeye On Screenxx
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into desktop to show the latter. This might remind you of something.
+Comment[gl]=Que o escritorio succione as xanelas para mostrarse. Isto pode que lle recorde a algo.
+Comment[nl]=Laat vensters wegzinken in het bureaublad om deze te tonen. Dit kan u aan iets herinneren.
+Comment[pt]=Suga as janelas para o ecrã mostrar a última. Isto podê-lo-á recordar de algo.
+Comment[sk]=Prisaje okná na plochu na zobrazenie druhého. 
+Comment[uk]=Втягнути вікна до стільниці, щоб показати останню. Так вам простіше буде щось згадати.
+Comment[x-test]=xxSuck windows into desktop to show the latter. This might remind you of something.xx
 
 Type=Service
 X-Plasma-API=javascript
