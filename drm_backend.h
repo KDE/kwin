@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 #include <xf86drmMode.h>
 
+struct gbm_bo;
+struct gbm_surface;
+
 namespace KWin
 {
 
@@ -41,9 +44,11 @@ public:
 
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
+    OpenGLBackend* createOpenGLBackend() override;
 
     void init();
     DrmBuffer *createBuffer(const QSize &size);
+    DrmBuffer *createBuffer(gbm_surface *surface);
     void present(DrmBuffer *buffer);
 
     QSize size() const {
@@ -85,7 +90,10 @@ public:
 private:
     friend class DrmBackend;
     DrmBuffer(DrmBackend *backend, const QSize &size);
+    DrmBuffer(DrmBackend *backend, gbm_surface *surface);
     DrmBackend *m_backend;
+    gbm_surface *m_surface = nullptr;
+    gbm_bo *m_bo = nullptr;
     QSize m_size;
     quint32 m_handle = 0;
     quint32 m_bufferId = 0;

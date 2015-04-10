@@ -25,6 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "udev.h"
 #include "utils.h"
 #include "virtual_terminal.h"
+#if HAVE_GBM
+#include "egl_gbm_backend.h"
+#endif
 // Qt
 #include <QSocketNotifier>
 // system
@@ -34,6 +37,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 #include <libdrm/drm_mode.h>
+#if HAVE_GBM
+#include <gbm.h>
+#endif
 
 #include <QDebug>
 
@@ -80,6 +86,12 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     Q_UNUSED(usec)
     DrmBuffer *buffer = reinterpret_cast<DrmBuffer*>(data);
     buffer->m_backend->m_pageFlipPending = false;
+#if HAVE_GBM
+    if (buffer->m_bo) {
+        gbm_surface_release_buffer(buffer->m_surface, buffer->m_bo);
+        buffer->m_bo = nullptr;
+    }
+#endif
     Compositor::self()->bufferSwapComplete();
 }
 
@@ -186,9 +198,24 @@ QPainterBackend *DrmBackend::createQPainterBackend()
     return new DrmQPainterBackend(this);
 }
 
+OpenGLBackend *DrmBackend::createOpenGLBackend()
+{
+#if HAVE_GBM
+    return new EglGbmBackend(this);
+#endif
+    return AbstractBackend::createOpenGLBackend();
+}
+
 DrmBuffer *DrmBackend::createBuffer(const QSize &size)
 {
     return new DrmBuffer(this, size);
+}
+
+DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
+{
+#if HAVE_GBM
+    return new DrmBuffer(this, surface);
+#endif
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
@@ -210,6 +237,34 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
                  m_stride, createArgs.handle, &m_bufferId);
 }
 
+
+#if HAVE_GBM
+static void gbmCallback(gbm_bo *bo, void *data)
+{
+    Q_UNUSED(bo);
+    delete reinterpret_cast<DrmBuffer*>(data);
+}
+#endif
+
+DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
+    : m_backend(backend)
+    , m_surface(surface)
+{
+#if HAVE_GBM
+    m_bo = gbm_surface_lock_front_buffer(surface);
+    if (!m_bo) {
+        qWarning(KWIN_CORE) << "Locking front buffer failed";
+        return;
+    }
+    m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
+    m_stride = gbm_bo_get_stride(m_bo);
+    if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, m_stride, gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
+        qWarning(KWIN_CORE) << "drmModeAddFB failed";
+    }
+    gbm_bo_set_user_data(m_bo, this, gbmCallback);
+#endif
+}
+
 DrmBuffer::~DrmBuffer()
 {
     delete m_image;
@@ -224,6 +279,11 @@ DrmBuffer::~DrmBuffer()
         destroyArgs.handle = m_handle;
         drmIoctl(m_backend->fd(), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
     }
+#if HAVE_GBM
+    if (m_bo) {
+        gbm_surface_release_buffer(m_surface, m_bo);
+    }
+#endif
 }
 
 bool DrmBuffer::map()

@@ -164,6 +164,13 @@ if(Libdrm_FOUND AND UDEV_FOUND)
     set(HAVE_DRM TRUE)
 endif()
 
+find_package(gbm)
+set_package_properties(gbm PROPERTIES TYPE OPTIONAL PURPOSE "Required for egl ouput of drm backend.")
+set(HAVE_GBM FALSE)
+if(HAVE_DRM AND gbm_FOUND)
+    set(HAVE_GBM TRUE)
+endif()
+
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         URL "http://www.x.org"
@@ -448,6 +455,12 @@ if(HAVE_WAYLAND)
                 screens_drm.cpp
             )
     endif()
+    if(HAVE_GBM)
+        set(kwin_KDEINIT_SRCS
+                ${kwin_KDEINIT_SRCS}
+                egl_gbm_backend.cpp
+            )
+    endif()
 endif()
 
 if(UDEV_FOUND)
@@ -583,6 +596,10 @@ endif()
 
 if(HAVE_DRM)
     set(kwinLibs ${kwinLibs} Libdrm::Libdrm)
+endif()
+
+if(HAVE_GBM)
+    set(kwinLibs ${kwinLibs} gbm::gbm)
 endif()
 
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
