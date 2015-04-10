@@ -15,8 +15,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2013-06-02</date>
-<releaseinfo>4.11</releaseinfo>
+<date>2015-04-09</date>
+<releaseinfo>Plasma 5.3</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -25,46 +25,6 @@
 </keywordset>
 </articleinfo>
 
-<!--not in kde 4
-<sect1 id="desktop">
-
-<title>Desktop</title>
-
-<sect2 id="desktop-appearance">
-<title><guilabel>Appearance Tab</guilabel></title>
-
-<para>Here you can configure how icons on your desktop appear.</para>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Standard font:</guilabel></term>
-<listitem><para>This option can be used to change the typeface used on the
-desktop.  Simply select your typeface from the dropdown box.</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Font size:</guilabel></term>
-<listitem><para>You can change the relative size of the text on the Desktop.
-</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Normal text color:</guilabel></term>
-<listitem><para>This option lets you select the color of normal (or
-unhighlighted) text.</para></listitem>
-</varlistentry>
-<varlistentry><term><guilabel>Text background color:</guilabel></term>
-<listitem><para>This option lets you select the background color of
-normal text.  If left unchecked, the text has a transparent
-background.  If selected, you can choose the color by pressing the button.
-</para></listitem>
-</varlistentry>
-<varlistentry>
-<term><guilabel>Underline filenames:</guilabel></term>
-<listitem><para>Determines if file names are underlined on the
-Desktop.</para></listitem>
-</varlistentry>
-</variablelist>
-</sect2>
--->
 <sect1 id="virtual-desktops">
 
 <title>Virtual Desktops</title>
@@ -77,15 +37,10 @@ desktops. In this tab you can configure the number of desktops, the number of ro
 as well as their names. Just use the input box to adjust the number of
 desktops. You can assign names to the desktops by entering text into the
 text fields below.</para> 
-
+<!-- not in 5.3
 <para>Enable <guilabel>Different widgets for each desktop</guilabel> 
 to use independent widgets and wallpapers on each individual desktop.
 </para>
-<!--not in kde4
-<para>If you enable <guilabel>Mouse wheel over desktop switches
-desktop</guilabel> then scrolling the wheel over an empty space on the
-desktop will change to the next virtual desktop numerically, in the
-direction you scrolled (either up or down).</para>
 -->
 </sect2>
 
@@ -134,7 +89,9 @@ and allows you to edit them.
 <para>Scrolling the mouse wheel over an empty space on the
 desktop or on the <guilabel>Pager</guilabel> icon in the panel will change to the next 
 virtual desktop numerically, in the direction you scrolled (either up or down).</para>
-
+<para>You can change this default behavior on the page <guilabel>Mouse Actions</guilabel> in 
+the <guilabel>Desktop Settings</guilabel> (<keycombo action="simul">&Alt;<keycap>D</keycap></keycombo>, 
+<keycombo action="simul">&Alt;<keycap>S</keycap></keycombo>).</para>
 </sect2>
 </sect1>
 
