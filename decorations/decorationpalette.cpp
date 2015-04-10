@@ -106,7 +106,7 @@ void DecorationPalette::update()
     auto config = KSharedConfig::openConfig(m_colorScheme, KConfig::SimpleConfig);
     KConfigGroup wmConfig(config, QStringLiteral("WM"));
 
-    if (!wmConfig.exists()) {
+    if (!wmConfig.exists() && !m_colorScheme.endsWith(QStringLiteral("/kdeglobals"))) {
         qWarning() << "Invalid color scheme" << m_colorScheme << "lacks WM group";
         return;
     }
