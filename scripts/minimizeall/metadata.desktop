@@ -4,10 +4,15 @@ Name[gl]=Minimizalo todo
 Name[nl]=Alles-minimaliseren
 Name[pt]=Maximização Total
 Name[sk]=Minimalizovať všetko
+Name[sv]=Minimera alla
 Name[uk]=Мінімізувати усі
-Name[x-test]=xxMinimizeAllxx
+Name[zh_CN]=最小化所有
 Comment=Adds a shortcut to minimize all windows or unminimize all such way minimized windows
+Comment[nl]=Voegt een sneltoets toe om alle vensters te minimaliseren of maakt de minimalisatie van dezen ongedaan
+Comment[pt]=Adiciona um atalho para minimizar todas as janelas ou retirá-las desse estado
+Comment[sv]=Lägger till en genväg för att minimera alla fönster eller återställa alla fönster som minimerats på detta sätt
 Comment[uk]=Додає кнопку для мінімізації усіх вікон або скасування такої мінімізації для усіх вікон
+Comment[zh_CN]=添加快捷键来最小化所有窗口或者取消最小化用此方式最小化的窗口
 Icon=preferences-system-windows-script-test
 
 Type=Service
