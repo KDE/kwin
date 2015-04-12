@@ -1,20 +1,26 @@
 [Desktop Entry]
 Name=Window Aperture
+Name[ca]=Obertura de finestra
 Name[gl]=Apertura das xanelas
 Name[nl]=Vensteropening
 Name[pt]=Aperto das Janelas
+Name[pt_BR]=Aperto das janelas
 Name[sk]=Otvor okien
 Name[sv]=Fönsteröppning
 Name[uk]=Апертура вікна
+Name[x-test]=xxWindow Aperturexx
 Name[zh_CN]=窗口光圈
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move window into the corners while showing desktop
+Comment[ca]=Mou la finestra cap a les cantonades en mostrar l'escriptori
 Comment[gl]=Mover a xanela ás esquinas mentres se mostra o escritorio.
 Comment[nl]=Schuif venster in de hoeken tijdens het tonen van het bureaublad
 Comment[pt]=Mover a janela para os cantos, enquanto mostra o ecrã
+Comment[pt_BR]=Move a janela para os cantos, enquanto mostra a área de trabalho
 Comment[sk]=Posun okna do rohov počas zobrazenia plochy
 Comment[sv]=Flytta fönster till hörnen medan skrivbordet visas
 Comment[uk]=Пересувати вікна в куток на час перегляду стільниці
+Comment[x-test]=xxMove window into the corners while showing desktopxx
 Comment[zh_CN]=显示桌面时将窗口移动到角落
 
 Type=Service
