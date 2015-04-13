@@ -58,6 +58,7 @@ Q_SIGNALS:
     void screensQueried();
 
 private:
+    static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
     void openDrm();
     void queryResources();
     QScopedPointer<Udev> m_udev;
@@ -68,6 +69,7 @@ private:
     quint32 m_crtcId = 0;
     quint32 m_connector = 0;
     drmModeModeInfo m_mode;
+    bool m_pageFlipPending = false;
 };
 
 class DrmBuffer

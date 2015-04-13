@@ -18,12 +18,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_backend.h"
+#include "composite.h"
 #include "logind.h"
 #include "scene_qpainter.h"
 #include "screens_drm.h"
 #include "udev.h"
 #include "utils.h"
 #include "virtual_terminal.h"
+// Qt
+#include <QSocketNotifier>
 // system
 #include <unistd.h>
 #include <sys/mman.h>
@@ -69,6 +72,17 @@ void DrmBackend::init()
     VirtualTerminal::create(this);
 }
 
+void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
+{
+    Q_UNUSED(fd)
+    Q_UNUSED(frame)
+    Q_UNUSED(sec)
+    Q_UNUSED(usec)
+    DrmBuffer *buffer = reinterpret_cast<DrmBuffer*>(data);
+    buffer->m_backend->m_pageFlipPending = false;
+    Compositor::self()->bufferSwapComplete();
+}
+
 void DrmBackend::openDrm()
 {
     VirtualTerminal::self()->init();
@@ -83,6 +97,16 @@ void DrmBackend::openDrm()
         return;
     }
     m_fd = fd;
+    QSocketNotifier *notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
+    connect(notifier, &QSocketNotifier::activated, this,
+        [this] {
+            drmEventContext e;
+            memset(&e, 0, sizeof e);
+            e.version = DRM_EVENT_CONTEXT_VERSION;
+            e.page_flip_handler = pageFlipHandler;
+            drmHandleEvent(m_fd, &e);
+        }
+    );
     m_drmId = device->sysNum();
     queryResources();
     emit screensQueried();
@@ -129,6 +153,11 @@ void DrmBackend::queryResources()
         m_crtcId = encoder->crtc_id;
         m_connector = connector->connector_id;
         m_mode = crtc->mode;
+        // TODO: improve
+        DrmBuffer *b = new DrmBuffer(this, m_resolution);
+        b->map();
+        b->image()->fill(Qt::black);
+        drmModeSetCrtc(m_fd, m_crtcId, b->m_bufferId, 0, 0, &m_connector, 1, &m_mode);
         // for the moment only one crtc
         break;
     }
@@ -136,7 +165,15 @@ void DrmBackend::queryResources()
 
 void DrmBackend::present(DrmBuffer *buffer)
 {
-    drmModeSetCrtc(m_fd, m_crtcId, buffer->m_bufferId, 0, 0, &m_connector, 1, &m_mode);
+    if (!buffer || buffer->m_bufferId == 0) {
+        return;
+    }
+    if (m_pageFlipPending) {
+        return;
+    }
+    m_pageFlipPending = true;
+    Compositor::self()->aboutToSwapBuffers();
+    drmModePageFlip(m_fd, m_crtcId, buffer->m_bufferId, DRM_MODE_PAGE_FLIP_EVENT, buffer);
 }
 
 Screens *DrmBackend::createScreens(QObject *parent)
