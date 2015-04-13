@@ -45,6 +45,8 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
     OpenGLBackend* createOpenGLBackend() override;
+    void installCursorFromServer() override;
+    void installCursorImage(Qt::CursorShape shape) override;
 
     void init();
     DrmBuffer *createBuffer(const QSize &size);
@@ -66,6 +68,11 @@ private:
     static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
     void openDrm();
     void queryResources();
+    void setCursor();
+    void updateCursor();
+    void hideCursor();
+    void moveCursor();
+    void initCursor();
     QScopedPointer<Udev> m_udev;
     int m_fd = -1;
     int m_drmId = 0;
@@ -75,6 +82,8 @@ private:
     quint32 m_connector = 0;
     drmModeModeInfo m_mode;
     bool m_pageFlipPending = false;
+    DrmBuffer *m_cursor[2];
+    int m_cursorIndex = 0;
 };
 
 class DrmBuffer
@@ -82,7 +91,7 @@ class DrmBuffer
 public:
     ~DrmBuffer();
 
-    bool map();
+    bool map(QImage::Format format = QImage::Format_RGB32);
     QImage *image() const {
         return m_image;
     }

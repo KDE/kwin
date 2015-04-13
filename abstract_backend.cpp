@@ -56,6 +56,12 @@ void AbstractBackend::installCursorFromServer()
     if (!m_softWareCursor) {
         return;
     }
+    triggerCursorRepaint();
+    updateCursorFromServer();
+}
+
+void AbstractBackend::updateCursorFromServer()
+{
     if (!waylandServer() || !waylandServer()->seat()->focusedPointer()) {
         return;
     }
@@ -71,9 +77,9 @@ void AbstractBackend::installCursorFromServer()
     if (!buffer) {
         return;
     }
-    triggerCursorRepaint();
     m_cursor.hotspot = c->hotspot();
     m_cursor.image = buffer->data().copy();
+    emit cursorChanged();
 }
 
 void AbstractBackend::installCursorImage(Qt::CursorShape shape)
@@ -81,6 +87,11 @@ void AbstractBackend::installCursorImage(Qt::CursorShape shape)
     if (!m_softWareCursor) {
         return;
     }
+    updateCursorImage(shape);
+}
+
+void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
+{
 #if HAVE_WAYLAND_CURSOR
     if (!m_cursorTheme) {
         // check whether we can create it
@@ -116,9 +127,12 @@ void AbstractBackend::installThemeCursor(quint32 id, const QPoint &hotspot)
     if (!buffer) {
         return;
     }
-    triggerCursorRepaint();
+    if (m_softWareCursor) {
+        triggerCursorRepaint();
+    }
     m_cursor.hotspot = hotspot;
     m_cursor.image = buffer->data().copy();
+    emit cursorChanged();
 }
 
 Screens *AbstractBackend::createScreens(QObject *parent)

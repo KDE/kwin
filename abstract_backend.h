@@ -58,9 +58,14 @@ public:
     }
     void markCursorAsRendered();
 
+Q_SIGNALS:
+    void cursorChanged();
+
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);
     void setSoftWareCursor(bool set);
+    void updateCursorFromServer();
+    void updateCursorImage(Qt::CursorShape shape);
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);

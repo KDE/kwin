@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "drm_backend.h"
 #include "composite.h"
+#include "cursor.h"
 #include "logind.h"
 #include "scene_qpainter.h"
 #include "screens_drm.h"
@@ -30,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 // Qt
 #include <QSocketNotifier>
+#include <QPainter>
 // system
 #include <unistd.h>
 #include <sys/mman.h>
@@ -41,6 +43,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <gbm.h>
 #endif
 
+#ifndef DRM_CAP_CURSOR_WIDTH
+#define DRM_CAP_CURSOR_WIDTH 0x8
+#endif
+
+#ifndef DRM_CAP_CURSOR_HEIGHT
+#define DRM_CAP_CURSOR_HEIGHT 0x9
+#endif
+
 #include <QDebug>
 
 namespace KWin
@@ -50,11 +60,16 @@ DrmBackend::DrmBackend(QObject *parent)
     : AbstractBackend(parent)
     , m_udev(new Udev)
 {
+    m_cursor[0] = nullptr;
+    m_cursor[1] = nullptr;
 }
 
 DrmBackend::~DrmBackend()
 {
     if (m_fd >= 0) {
+        hideCursor();
+        delete m_cursor[0];
+        delete m_cursor[1];
         close(m_fd);
     }
 }
@@ -122,6 +137,8 @@ void DrmBackend::openDrm()
     m_drmId = device->sysNum();
     queryResources();
     emit screensQueried();
+
+    initCursor();
 }
 
 template <typename Pointer, void (*cleanupFunc)(Pointer*)>
@@ -186,6 +203,78 @@ void DrmBackend::present(DrmBuffer *buffer)
     m_pageFlipPending = true;
     Compositor::self()->aboutToSwapBuffers();
     drmModePageFlip(m_fd, m_crtcId, buffer->m_bufferId, DRM_MODE_PAGE_FLIP_EVENT, buffer);
+}
+
+void DrmBackend::installCursorFromServer()
+{
+    updateCursorFromServer();
+}
+
+void DrmBackend::installCursorImage(Qt::CursorShape shape)
+{
+    updateCursorImage(shape);
+}
+
+void DrmBackend::initCursor()
+{
+    uint64_t capability = 0;
+    QSize cursorSize;
+    if (drmGetCap(m_fd, DRM_CAP_CURSOR_WIDTH, &capability) == 0) {
+        cursorSize.setWidth(capability);
+    } else {
+        cursorSize.setWidth(64);
+    }
+    if (drmGetCap(m_fd, DRM_CAP_CURSOR_HEIGHT, &capability) == 0) {
+        cursorSize.setHeight(capability);
+    } else {
+        cursorSize.setHeight(64);
+    }
+    m_cursor[0] = createBuffer(cursorSize);
+    m_cursor[0]->map(QImage::Format_ARGB32_Premultiplied);
+    m_cursor[0]->image()->fill(Qt::transparent);
+    m_cursor[1] = createBuffer(cursorSize);
+    m_cursor[1]->map(QImage::Format_ARGB32_Premultiplied);
+    m_cursor[0]->image()->fill(Qt::transparent);
+    // now we have screens and can set cursors, so start tracking
+    connect(this, &DrmBackend::cursorChanged, this, &DrmBackend::updateCursor);
+    connect(Cursor::self(), &Cursor::posChanged, this, &DrmBackend::moveCursor);
+    installCursorImage(Qt::ArrowCursor);
+}
+
+void DrmBackend::setCursor()
+{
+    DrmBuffer *c = m_cursor[m_cursorIndex];
+    m_cursorIndex = (m_cursorIndex + 1) % 2;
+    drmModeSetCursor(m_fd, m_crtcId, c->m_handle, c->m_size.width(), c->m_size.height());
+}
+
+void DrmBackend::updateCursor()
+{
+    const QImage &cursorImage = softwareCursor();
+    if (cursorImage.isNull()) {
+        hideCursor();
+        return;
+    }
+    QImage *c = m_cursor[m_cursorIndex]->image();
+    c->fill(Qt::transparent);
+    QPainter p;
+    p.begin(c);
+    p.drawImage(QPoint(0, 0), cursorImage);
+    p.end();
+
+    setCursor();
+    moveCursor();
+}
+
+void DrmBackend::hideCursor()
+{
+    drmModeSetCursor(m_fd, m_crtcId, 0, 0, 0);
+}
+
+void DrmBackend::moveCursor()
+{
+    const QPoint p = Cursor::pos() - softwareCursorHotspot();
+    drmModeMoveCursor(m_fd, m_crtcId, p.x(), p.y());
 }
 
 Screens *DrmBackend::createScreens(QObject *parent)
@@ -286,7 +375,7 @@ DrmBuffer::~DrmBuffer()
 #endif
 }
 
-bool DrmBuffer::map()
+bool DrmBuffer::map(QImage::Format format)
 {
     if (!m_handle || !m_bufferId) {
         return false;
@@ -302,7 +391,7 @@ bool DrmBuffer::map()
         return false;
     }
     m_memory = address;
-    m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, QImage::Format_RGB32);
+    m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, format);
     return !m_image->isNull();
 }
 
