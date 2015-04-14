@@ -67,7 +67,11 @@ DrmBackend::DrmBackend(QObject *parent)
 DrmBackend::~DrmBackend()
 {
     if (m_fd >= 0) {
-        hideCursor();
+        // wait for pageflips
+        while (m_pageFlipsPending != 0) {
+            QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+        }
+        qDeleteAll(m_outputs);
         delete m_cursor[0];
         delete m_cursor[1];
         close(m_fd);
@@ -99,15 +103,16 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
     Q_UNUSED(frame)
     Q_UNUSED(sec)
     Q_UNUSED(usec)
-    DrmBuffer *buffer = reinterpret_cast<DrmBuffer*>(data);
-    buffer->m_backend->m_pageFlipPending = false;
-#if HAVE_GBM
-    if (buffer->m_bo) {
-        gbm_surface_release_buffer(buffer->m_surface, buffer->m_bo);
-        buffer->m_bo = nullptr;
+    auto output = reinterpret_cast<DrmOutput*>(data);
+    output->pageFlipped();
+    output->m_backend->m_pageFlipsPending--;
+    if (output->m_backend->m_pageFlipsPending == 0) {
+        // TODO: improve, this currently means we wait for all page flips or all outputs.
+        // It would be better to driver the repaint per output
+        if (Compositor::self()) {
+            Compositor::self()->bufferSwapComplete();
+        }
     }
-#endif
-    Compositor::self()->bufferSwapComplete();
 }
 
 void DrmBackend::openDrm()
@@ -178,31 +183,28 @@ void DrmBackend::queryResources()
         if (!crtc) {
             continue;
         }
-        m_resolution = QSize(crtc->mode.hdisplay, crtc->mode.vdisplay);
-        m_crtcId = encoder->crtc_id;
-        m_connector = connector->connector_id;
-        m_mode = crtc->mode;
-        // TODO: improve
-        DrmBuffer *b = new DrmBuffer(this, m_resolution);
-        b->map();
-        b->image()->fill(Qt::black);
-        drmModeSetCrtc(m_fd, m_crtcId, b->m_bufferId, 0, 0, &m_connector, 1, &m_mode);
-        // for the moment only one crtc
-        break;
+        DrmOutput *drmOutput = new DrmOutput(this);
+        drmOutput->m_crtcId = encoder->crtc_id;
+        drmOutput->m_mode = crtc->mode;
+        drmOutput->m_connector = connector->connector_id;
+        drmOutput->init();
+        m_outputs << drmOutput;
     }
+    // TODO: install global space
 }
 
 void DrmBackend::present(DrmBuffer *buffer)
 {
-    if (!buffer || buffer->m_bufferId == 0) {
+    if (m_outputs.isEmpty()) {
         return;
     }
-    if (m_pageFlipPending) {
-        return;
+    // TODO: correct output
+    if (m_outputs.first()->present(buffer)) {
+        m_pageFlipsPending++;
+        if (m_pageFlipsPending == 1 && Compositor::self()) {
+            Compositor::self()->aboutToSwapBuffers();
+        }
     }
-    m_pageFlipPending = true;
-    Compositor::self()->aboutToSwapBuffers();
-    drmModePageFlip(m_fd, m_crtcId, buffer->m_bufferId, DRM_MODE_PAGE_FLIP_EVENT, buffer);
 }
 
 void DrmBackend::installCursorFromServer()
@@ -245,7 +247,9 @@ void DrmBackend::setCursor()
 {
     DrmBuffer *c = m_cursor[m_cursorIndex];
     m_cursorIndex = (m_cursorIndex + 1) % 2;
-    drmModeSetCursor(m_fd, m_crtcId, c->m_handle, c->m_size.width(), c->m_size.height());
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->showCursor(c);
+    }
 }
 
 void DrmBackend::updateCursor()
@@ -268,13 +272,25 @@ void DrmBackend::updateCursor()
 
 void DrmBackend::hideCursor()
 {
-    drmModeSetCursor(m_fd, m_crtcId, 0, 0, 0);
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->hideCursor();
+    }
 }
 
 void DrmBackend::moveCursor()
 {
     const QPoint p = Cursor::pos() - softwareCursorHotspot();
-    drmModeMoveCursor(m_fd, m_crtcId, p.x(), p.y());
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        (*it)->moveCursor(p);
+    }
+}
+
+QSize DrmBackend::size() const
+{
+    if (m_outputs.isEmpty()) {
+        return QSize();
+    }
+    return m_outputs.first()->size();
 }
 
 Screens *DrmBackend::createScreens(QObject *parent)
@@ -305,6 +321,79 @@ DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 #if HAVE_GBM
     return new DrmBuffer(this, surface);
 #endif
+}
+
+DrmOutput::DrmOutput(DrmBackend *backend)
+    : m_backend(backend)
+{
+}
+
+DrmOutput::~DrmOutput()
+{
+    hideCursor();
+    if (!m_savedCrtc.isNull()) {
+        drmModeSetCrtc(m_backend->fd(), m_savedCrtc->crtc_id, m_savedCrtc->buffer_id,
+                       m_savedCrtc->x, m_savedCrtc->y, &m_connector, 1, &m_savedCrtc->mode);
+    }
+    cleanupBlackBuffer();
+}
+
+void DrmOutput::hideCursor()
+{
+    drmModeSetCursor(m_backend->fd(), m_crtcId, 0, 0, 0);
+}
+
+void DrmOutput::showCursor(DrmBuffer *c)
+{
+    const QSize &s = c->size();
+    drmModeSetCursor(m_backend->fd(), m_crtcId, c->handle(), s.width(), s.height());
+}
+
+void DrmOutput::moveCursor(const QPoint &globalPos)
+{
+    const QPoint p = globalPos - m_globalPos;
+    drmModeMoveCursor(m_backend->fd(), m_crtcId, p.x(), p.y());
+}
+
+QSize DrmOutput::size() const
+{
+    return QSize(m_mode.hdisplay, m_mode.vdisplay);
+}
+
+bool DrmOutput::present(DrmBuffer *buffer)
+{
+    if (!buffer || buffer->bufferId() == 0) {
+        return false;
+    }
+    if (m_currentBuffer) {
+        return false;
+    }
+    m_currentBuffer = buffer;
+    return drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+}
+
+void DrmOutput::pageFlipped()
+{
+    m_currentBuffer->releaseGbm();
+    m_currentBuffer = nullptr;
+    cleanupBlackBuffer();
+}
+
+void DrmOutput::cleanupBlackBuffer()
+{
+    if (m_blackBuffer) {
+        delete m_blackBuffer;
+        m_blackBuffer = nullptr;
+    }
+}
+
+void DrmOutput::init()
+{
+    m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
+    m_blackBuffer = m_backend->createBuffer(size());
+    m_blackBuffer->map();
+    m_blackBuffer->image()->fill(Qt::black);
+    drmModeSetCrtc(m_backend->fd(), m_crtcId, m_blackBuffer->bufferId(), 0, 0, &m_connector, 1, &m_mode);
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
@@ -368,11 +457,7 @@ DrmBuffer::~DrmBuffer()
         destroyArgs.handle = m_handle;
         drmIoctl(m_backend->fd(), DRM_IOCTL_MODE_DESTROY_DUMB, &destroyArgs);
     }
-#if HAVE_GBM
-    if (m_bo) {
-        gbm_surface_release_buffer(m_surface, m_bo);
-    }
-#endif
+    releaseGbm();
 }
 
 bool DrmBuffer::map(QImage::Format format)
@@ -393,6 +478,16 @@ bool DrmBuffer::map(QImage::Format format)
     m_memory = address;
     m_image = new QImage((uchar*)m_memory, m_size.width(), m_size.height(), m_stride, format);
     return !m_image->isNull();
+}
+
+void DrmBuffer::releaseGbm()
+{
+#if HAVE_GBM
+    if (m_bo) {
+        gbm_surface_release_buffer(m_surface, m_bo);
+        m_bo = nullptr;
+    }
+#endif
 }
 
 }

@@ -34,6 +34,7 @@ namespace KWin
 class Udev;
 
 class DrmBuffer;
+class DrmOutput;
 
 class KWIN_EXPORT DrmBackend : public AbstractBackend
 {
@@ -53,10 +54,7 @@ public:
     DrmBuffer *createBuffer(gbm_surface *surface);
     void present(DrmBuffer *buffer);
 
-    QSize size() const {
-        // TODO: this is wrong
-        return m_resolution;
-    }
+    QSize size() const;
     int fd() const {
         return m_fd;
     }
@@ -76,14 +74,43 @@ private:
     QScopedPointer<Udev> m_udev;
     int m_fd = -1;
     int m_drmId = 0;
-    // TODO: this is wrong
-    QSize m_resolution;
+    QVector<DrmOutput*> m_outputs;
+    DrmBuffer *m_cursor[2];
+    int m_cursorIndex = 0;
+    int m_pageFlipsPending = 0;
+};
+
+class DrmOutput
+{
+public:
+    virtual ~DrmOutput();
+    void showCursor(DrmBuffer *buffer);
+    void hideCursor();
+    void moveCursor(const QPoint &globalPos);
+    bool present(DrmBuffer *buffer);
+    void pageFlipped();
+    void init();
+
+    QSize size() const;
+
+private:
+    friend class DrmBackend;
+    DrmOutput(DrmBackend *backend);
+    void cleanupBlackBuffer();
+
+    DrmBackend *m_backend;
+    QPoint m_globalPos;
     quint32 m_crtcId = 0;
     quint32 m_connector = 0;
     drmModeModeInfo m_mode;
-    bool m_pageFlipPending = false;
-    DrmBuffer *m_cursor[2];
-    int m_cursorIndex = 0;
+    DrmBuffer *m_currentBuffer = nullptr;
+    DrmBuffer *m_blackBuffer = nullptr;
+    struct CrtcCleanup {
+        static void inline cleanup(_drmModeCrtc *ptr) {
+            drmModeFreeCrtc(ptr);
+        }
+    };
+    QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
 };
 
 class DrmBuffer
@@ -95,6 +122,16 @@ public:
     QImage *image() const {
         return m_image;
     }
+    quint32 handle() const {
+        return m_handle;
+    }
+    const QSize &size() const {
+        return m_size;
+    }
+    quint32 bufferId() const {
+        return m_bufferId;
+    }
+    void releaseGbm();
 
 private:
     friend class DrmBackend;
