@@ -60,6 +60,8 @@ public:
 
     bool isSuspended() const;
 
+    void deactivate();
+
 Q_SIGNALS:
     void keyChanged(uint32_t key, InputRedirection::KeyboardKeyState, uint32_t time);
     void pointerButtonChanged(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time);

@@ -152,6 +152,7 @@ Q_SIGNALS:
     void x11ConnectionChanged();
     void workspaceCreated();
     void screensCreated();
+    void virtualTerminalCreated();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);

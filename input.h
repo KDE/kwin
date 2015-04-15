@@ -203,8 +203,6 @@ private:
 
     GlobalShortcutsManager *m_shortcuts;
 
-    QMetaObject::Connection m_sessionControlConnection;
-
     LibInput::Connection *m_libInput = nullptr;
 
     KWIN_SINGLETON(InputRedirection)

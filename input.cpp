@@ -202,19 +202,10 @@ InputRedirection::InputRedirection(QObject *parent)
 {
 #if HAVE_INPUT
     if (Application::usesLibinput()) {
-        LogindIntegration *logind = LogindIntegration::self();
-        auto takeControl = [logind, this]() {
-            if (logind->hasSessionControl()) {
-                setupLibInput();
-            } else {
-                logind->takeControl();
-                m_sessionControlConnection = connect(logind, &LogindIntegration::hasSessionControlChanged, this, &InputRedirection::setupLibInput);
-            }
-        };
-        if (logind->isConnected()) {
-            takeControl();
+        if (VirtualTerminal::self()) {
+            setupLibInput();
         } else {
-            connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
+            connect(kwinApp(), &Application::virtualTerminalCreated, this, &InputRedirection::setupLibInput);
         }
     }
 #endif
@@ -241,10 +232,6 @@ void InputRedirection::setupLibInput()
 #if HAVE_INPUT
     if (!Application::usesLibinput()) {
         return;
-    }
-    if (m_sessionControlConnection) {
-        disconnect(m_sessionControlConnection);
-        m_sessionControlConnection = QMetaObject::Connection();
     }
     if (m_libInput) {
         return;
@@ -307,6 +294,13 @@ void InputRedirection::setupLibInput()
                 }
             );
         }
+        connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, m_libInput,
+            [this] (bool active) {
+                if (!active) {
+                    m_libInput->deactivate();
+                }
+            }
+        );
 #endif
     }
 #endif

@@ -96,6 +96,9 @@ void Connection::setup()
     connect(logind, &LogindIntegration::sessionActiveChanged, this,
         [this](bool active) {
             if (active) {
+                if (!m_input->isSuspended()) {
+                    return;
+                }
                 m_input->resume();
                 handleEvent();
                 if (m_keyboardBeforeSuspend && !m_keyboard) {
@@ -108,14 +111,22 @@ void Connection::setup()
                     emit hasTouchChanged(false);
                 }
             } else {
-                m_keyboardBeforeSuspend = hasKeyboard();
-                m_pointerBeforeSuspend = hasPointer();
-                m_touchBeforeSuspend = hasTouch();
-                m_input->suspend();
-                handleEvent();
+                deactivate();
             }
         }
     );
+    handleEvent();
+}
+
+void Connection::deactivate()
+{
+    if (m_input->isSuspended()) {
+        return;
+    }
+    m_keyboardBeforeSuspend = hasKeyboard();
+    m_pointerBeforeSuspend = hasPointer();
+    m_touchBeforeSuspend = hasTouch();
+    m_input->suspend();
     handleEvent();
 }
 

@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtual_terminal.h"
 // kwin
 #include "logind.h"
+#include "main.h"
 #include "utils.h"
 // Qt
 #include <QDebug>
@@ -126,6 +127,7 @@ void VirtualTerminal::setup(int vtNr)
         return;
     }
     setActive(true);
+    emit kwinApp()->virtualTerminalCreated();
 }
 
 void VirtualTerminal::closeFd()
