@@ -64,6 +64,7 @@ Q_SIGNALS:
 private Q_SLOTS:
     void getSessionActive();
     void getVirtualTerminal();
+    void pauseDevice(uint major, uint minor, const QString &type);
 
 private:
     friend class LogindTest;

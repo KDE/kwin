@@ -237,6 +237,9 @@ void LogindIntegration::takeControl()
             qCDebug(KWIN_CORE) << "Gained session control";
             m_sessionControl = true;
             emit hasSessionControlChanged(true);
+            m_bus.connect(s_login1Service, m_sessionPath,
+                          s_login1SessionInterface, QStringLiteral("PauseDevice"),
+                          this, SLOT(pauseDevice(uint,uint,QString)));
         }
     );
 }
@@ -290,6 +293,16 @@ void LogindIntegration::releaseDevice(int fd)
                                                           QStringLiteral("ReleaseDevice"));
     message.setArguments(QVariantList({QVariant(major(st.st_rdev)), QVariant(minor(st.st_rdev))}));
     m_bus.asyncCall(message);
+}
+
+void LogindIntegration::pauseDevice(uint devMajor, uint devMinor, const QString &type)
+{
+    if (QString::compare(type, QStringLiteral("pause"), Qt::CaseInsensitive) == 0) {
+        // unconditionally call complete
+        QDBusMessage message = QDBusMessage::createMethodCall(s_login1Service, m_sessionPath, s_login1SessionInterface, QStringLiteral("PauseDeviceComplete"));
+        message.setArguments(QVariantList({QVariant(devMajor), QVariant(devMinor)}));
+        m_bus.asyncCall(message);
+    }
 }
 
 } // namespace
