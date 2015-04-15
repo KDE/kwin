@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSocketNotifier>
 // linux
 #include <linux/major.h>
+#include <linux/kd.h>
 #include <linux/vt.h>
 // system
 #include <fcntl.h>
@@ -106,6 +107,11 @@ void VirtualTerminal::setup(int vtNr)
     }
     if (!isTty(m_vt)) {
         qCWarning(KWIN_CORE) << vtNr << " is no tty";
+        closeFd();
+        return;
+    }
+    if (ioctl(m_vt, KDSETMODE, KD_GRAPHICS) < 0) {
+        qCWarning(KWIN_CORE()) << "Failed to set tty " << vtNr << " in graphics mode";
         closeFd();
         return;
     }
