@@ -351,17 +351,6 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     m_buffer[1]->map();
     m_buffer[0]->image()->fill(Qt::black);
     m_buffer[1]->image()->fill(Qt::black);
-
-    connect(VirtualTerminal::self(), &VirtualTerminal::activeChanged, this,
-        [this] (bool active) {
-            if (active) {
-                Compositor::self()->bufferSwapComplete();
-                Compositor::self()->addRepaintFull();
-            } else {
-                Compositor::self()->aboutToSwapBuffers();
-            }
-        }
-    );
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()

@@ -65,6 +65,9 @@ Q_SIGNALS:
 private:
     static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
     void openDrm();
+    void activate(bool active);
+    void reactivate();
+    void deactivate();
     void queryResources();
     void setCursor();
     void updateCursor();
@@ -78,6 +81,7 @@ private:
     DrmBuffer *m_cursor[2];
     int m_cursorIndex = 0;
     int m_pageFlipsPending = 0;
+    bool m_active = false;
 };
 
 class DrmOutput
@@ -90,6 +94,8 @@ public:
     bool present(DrmBuffer *buffer);
     void pageFlipped();
     void init();
+    void restoreSaved();
+    void blank();
 
     QSize size() const;
 

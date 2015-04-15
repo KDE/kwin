@@ -94,7 +94,58 @@ void DrmBackend::init()
     } else {
         connect(logind, &LogindIntegration::connectedChanged, this, takeControl);
     }
-    VirtualTerminal::create(this);
+    auto v = VirtualTerminal::create(this);
+    connect(v, &VirtualTerminal::activeChanged, this, &DrmBackend::activate);
+}
+
+void DrmBackend::activate(bool active)
+{
+    if (active) {
+        reactivate();
+    } else {
+        deactivate();
+    }
+}
+
+void DrmBackend::reactivate()
+{
+    if (m_active) {
+        return;
+    }
+    m_active = true;
+    DrmBuffer *c = m_cursor[(m_cursorIndex + 1) % 2];
+    const QPoint cp = Cursor::pos() - softwareCursorHotspot();
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        DrmOutput *o = *it;
+        o->pageFlipped();
+        o->blank();
+        o->showCursor(c);
+        o->moveCursor(cp);
+    }
+    // restart compositor
+    m_pageFlipsPending = 0;
+    if (Compositor *compositor = Compositor::self()) {
+        compositor->bufferSwapComplete();
+        compositor->addRepaintFull();
+    }
+}
+
+void DrmBackend::deactivate()
+{
+    if (!m_active) {
+        return;
+    }
+    // block compositor
+    if (m_pageFlipsPending == 0 && Compositor::self()) {
+        Compositor::self()->aboutToSwapBuffers();
+    }
+    // hide cursor and disable
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        DrmOutput *o = *it;
+        o->hideCursor();
+        o->restoreSaved();
+    }
+    m_active = false;
 }
 
 void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data)
@@ -117,6 +168,7 @@ void DrmBackend::pageFlipHandler(int fd, unsigned int frame, unsigned int sec, u
 
 void DrmBackend::openDrm()
 {
+    connect(LogindIntegration::self(), &LogindIntegration::sessionActiveChanged, this, &DrmBackend::activate);
     VirtualTerminal::self()->init();
     UdevDevice::Ptr device = m_udev->primaryGpu();
     if (!device) {
@@ -129,9 +181,13 @@ void DrmBackend::openDrm()
         return;
     }
     m_fd = fd;
+    m_active = true;
     QSocketNotifier *notifier = new QSocketNotifier(m_fd, QSocketNotifier::Read, this);
     connect(notifier, &QSocketNotifier::activated, this,
         [this] {
+            if (!VirtualTerminal::self()->isActive()) {
+                return;
+            }
             drmEventContext e;
             memset(&e, 0, sizeof e);
             e.version = DRM_EVENT_CONTEXT_VERSION;
@@ -331,16 +387,20 @@ DrmOutput::DrmOutput(DrmBackend *backend)
 DrmOutput::~DrmOutput()
 {
     hideCursor();
-    if (!m_savedCrtc.isNull()) {
-        drmModeSetCrtc(m_backend->fd(), m_savedCrtc->crtc_id, m_savedCrtc->buffer_id,
-                       m_savedCrtc->x, m_savedCrtc->y, &m_connector, 1, &m_savedCrtc->mode);
-    }
     cleanupBlackBuffer();
 }
 
 void DrmOutput::hideCursor()
 {
     drmModeSetCursor(m_backend->fd(), m_crtcId, 0, 0, 0);
+}
+
+void DrmOutput::restoreSaved()
+{
+    if (!m_savedCrtc.isNull()) {
+        drmModeSetCrtc(m_backend->fd(), m_savedCrtc->crtc_id, m_savedCrtc->buffer_id,
+                       m_savedCrtc->x, m_savedCrtc->y, &m_connector, 1, &m_savedCrtc->mode);
+    }
 }
 
 void DrmOutput::showCursor(DrmBuffer *c)
@@ -365,6 +425,10 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (!buffer || buffer->bufferId() == 0) {
         return false;
     }
+    if (!VirtualTerminal::self()->isActive()) {
+        m_currentBuffer = buffer;
+        return false;
+    }
     if (m_currentBuffer) {
         return false;
     }
@@ -374,6 +438,9 @@ bool DrmOutput::present(DrmBuffer *buffer)
 
 void DrmOutput::pageFlipped()
 {
+    if (!m_currentBuffer) {
+        return;
+    }
     m_currentBuffer->releaseGbm();
     m_currentBuffer = nullptr;
     cleanupBlackBuffer();
@@ -390,9 +457,16 @@ void DrmOutput::cleanupBlackBuffer()
 void DrmOutput::init()
 {
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
-    m_blackBuffer = m_backend->createBuffer(size());
-    m_blackBuffer->map();
-    m_blackBuffer->image()->fill(Qt::black);
+    blank();
+}
+
+void DrmOutput::blank()
+{
+    if (!m_blackBuffer) {
+        m_blackBuffer = m_backend->createBuffer(size());
+        m_blackBuffer->map();
+        m_blackBuffer->image()->fill(Qt::black);
+    }
     drmModeSetCrtc(m_backend->fd(), m_crtcId, m_blackBuffer->bufferId(), 0, 0, &m_connector, 1, &m_mode);
 }
 
