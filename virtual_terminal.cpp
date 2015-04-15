@@ -179,8 +179,8 @@ bool VirtualTerminal::createSignalHandler()
                 }
                 switch (sigInfo.ssi_signo) {
                 case RELEASE_SIGNAL:
-                    ioctl(m_vt, VT_RELDISP, 1);
                     setActive(false);
+                    ioctl(m_vt, VT_RELDISP, 1);
                     break;
                 case ACQUISITION_SIGNAL:
                     ioctl(m_vt, VT_RELDISP, VT_ACKACQ);
