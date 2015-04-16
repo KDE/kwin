@@ -103,11 +103,13 @@ private:
     friend class DrmBackend;
     DrmOutput(DrmBackend *backend);
     void cleanupBlackBuffer();
+    bool setMode(DrmBuffer *buffer);
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
     quint32 m_crtcId = 0;
     quint32 m_connector = 0;
+    quint32 m_lastStride = 0;
     drmModeModeInfo m_mode;
     DrmBuffer *m_currentBuffer = nullptr;
     DrmBuffer *m_blackBuffer = nullptr;
@@ -136,6 +138,9 @@ public:
     }
     quint32 bufferId() const {
         return m_bufferId;
+    }
+    quint32 stride() const {
+        return m_stride;
     }
     void releaseGbm();
 

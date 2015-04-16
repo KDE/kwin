@@ -432,8 +432,20 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (m_currentBuffer) {
         return false;
     }
-    m_currentBuffer = buffer;
-    return drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    if (m_lastStride != buffer->stride()) {
+        // need to set a new mode first
+        if (!setMode(buffer)) {
+            return false;
+        }
+    }
+    const bool ok = drmModePageFlip(m_backend->fd(), m_crtcId, buffer->bufferId(), DRM_MODE_PAGE_FLIP_EVENT, this) == 0;
+    if (ok) {
+        m_currentBuffer = buffer;
+    } else {
+        qWarning(KWIN_CORE) << "Page flip failed";
+        buffer->releaseGbm();
+    }
+    return ok;
 }
 
 void DrmOutput::pageFlipped()
@@ -467,7 +479,18 @@ void DrmOutput::blank()
         m_blackBuffer->map();
         m_blackBuffer->image()->fill(Qt::black);
     }
-    drmModeSetCrtc(m_backend->fd(), m_crtcId, m_blackBuffer->bufferId(), 0, 0, &m_connector, 1, &m_mode);
+    setMode(m_blackBuffer);
+}
+
+bool DrmOutput::setMode(DrmBuffer *buffer)
+{
+    if (drmModeSetCrtc(m_backend->fd(), m_crtcId, buffer->bufferId(), 0, 0, &m_connector, 1, &m_mode) == 0) {
+        m_lastStride = buffer->stride();
+        return true;
+    } else {
+        qCWarning(KWIN_CORE) << "Mode setting failed";
+        return false;
+    }
 }
 
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
