@@ -262,6 +262,8 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     // enforce xcb plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "xcb", true);
 
+    qunsetenv("QT_DEVICE_PIXEL_RATIO");
+
     KWin::ApplicationX11 a(argc, argv);
     a.setupTranslator();
 

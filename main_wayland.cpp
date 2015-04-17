@@ -372,6 +372,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     qWarning() << "QtWayland 5.4.2 required, application might freeze if not present!";
 #endif
 
+    qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
