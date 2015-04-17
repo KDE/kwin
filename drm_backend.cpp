@@ -231,22 +231,68 @@ void DrmBackend::queryResources()
         if (connector->connection != DRM_MODE_CONNECTED) {
             continue;
         }
-        ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, connector->encoder_id));
-        if (!encoder) {
+        bool crtcFound = false;
+        const quint32 crtcId = findCrtc(resources.data(), connector.data(), &crtcFound);
+        if (!crtcFound) {
             continue;
         }
-        ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> crtc(drmModeGetCrtc(m_fd, encoder->crtc_id));
+        ScopedDrmPointer<_drmModeCrtc, &drmModeFreeCrtc> crtc(drmModeGetCrtc(m_fd, crtcId));
         if (!crtc) {
             continue;
         }
         DrmOutput *drmOutput = new DrmOutput(this);
-        drmOutput->m_crtcId = encoder->crtc_id;
+        drmOutput->m_crtcId = crtcId;
         drmOutput->m_mode = crtc->mode;
         drmOutput->m_connector = connector->connector_id;
         drmOutput->init();
         m_outputs << drmOutput;
     }
     // TODO: install global space
+}
+
+quint32 DrmBackend::findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok)
+{
+    if (ok) {
+        *ok = false;
+    }
+    ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, connector->encoder_id));
+    if (encoder) {
+        if (!crtcIsUsed(encoder->crtc_id)) {
+            if (ok) {
+                *ok = true;
+            }
+            return encoder->crtc_id;
+        }
+    }
+    // let's iterate over all encoders to find a suitable crtc
+    for (int i = 0; i < connector->count_encoders; ++i) {
+        ScopedDrmPointer<_drmModeEncoder, &drmModeFreeEncoder> encoder(drmModeGetEncoder(m_fd, connector->encoders[i]));
+        if (!encoder) {
+            continue;
+        }
+        for (int j = 0; j < res->count_crtcs; ++j) {
+            if (!(encoder->possible_crtcs & (1 << j))) {
+                continue;
+            }
+            if (!crtcIsUsed(res->crtcs[j])) {
+                if (ok) {
+                    *ok = true;
+                }
+                return res->crtcs[j];
+            }
+        }
+    }
+    return 0;
+}
+
+bool DrmBackend::crtcIsUsed(quint32 crtc)
+{
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(),
+        [crtc] (DrmOutput *o) {
+            return o->m_crtcId == crtc;
+        }
+    );
+    return it != m_outputs.constEnd();
 }
 
 void DrmBackend::present(DrmBuffer *buffer)

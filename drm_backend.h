@@ -78,6 +78,8 @@ private:
     void hideCursor();
     void moveCursor();
     void initCursor();
+    quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
+    bool crtcIsUsed(quint32 crtc);
     QScopedPointer<Udev> m_udev;
     int m_fd = -1;
     int m_drmId = 0;
