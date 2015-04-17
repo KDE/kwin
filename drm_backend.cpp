@@ -295,15 +295,6 @@ bool DrmBackend::crtcIsUsed(quint32 crtc)
     return it != m_outputs.constEnd();
 }
 
-void DrmBackend::present(DrmBuffer *buffer)
-{
-    if (m_outputs.isEmpty()) {
-        return;
-    }
-    // TODO: correct output
-    present(buffer, m_outputs.first());
-}
-
 void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
 {
     if (output->present(buffer)) {
