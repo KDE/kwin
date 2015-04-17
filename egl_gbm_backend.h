@@ -29,6 +29,7 @@ namespace KWin
 {
 class DrmBackend;
 class DrmBuffer;
+class DrmOutput;
 
 /**
  * @brief OpenGL Backend using Egl on a GBM surface.
@@ -44,21 +45,29 @@ public:
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
+    bool perScreenRendering() const override;
+    void prepareRenderingForScreen(int screenId) override;
 
 protected:
     void present() override;
+    void cleanupSurfaces() override;
 
 private:
     void init();
     bool initializeEgl();
     bool initBufferConfigs();
     bool initRenderingContext();
-    bool makeContextCurrent();
+    struct Output {
+        DrmOutput *output = nullptr;
+        DrmBuffer *buffer = nullptr;
+        gbm_surface *gbmSurface = nullptr;
+        EGLSurface eglSurface = EGL_NO_SURFACE;
+        int bufferAge = 0;
+    };
+    bool makeContextCurrent(const Output &output);
     DrmBackend *m_backend;
     gbm_device *m_device = nullptr;
-    gbm_surface *m_gbmSurface = nullptr;
-    DrmBuffer *m_frontBuffer = nullptr;
-    int m_bufferAge = 0;
+    QVector<Output> m_outputs;
     friend class EglGbmTexture;
 };
 

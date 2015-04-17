@@ -48,11 +48,21 @@ EglGbmBackend::~EglGbmBackend()
 {
     // TODO: cleanup front buffer?
     cleanup();
-    if (m_gbmSurface) {
-        gbm_surface_destroy(m_gbmSurface);
-    }
     if (m_device) {
         gbm_device_destroy(m_device);
+    }
+}
+
+void EglGbmBackend::cleanupSurfaces()
+{
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        const Output &o = *it;
+        if (o.eglSurface != EGL_NO_SURFACE) {
+            eglDestroySurface(eglDisplay(), o.eglSurface);
+        }
+        if ((*it).gbmSurface) {
+            gbm_surface_destroy((*it).gbmSurface);
+        }
     }
 }
 
@@ -136,27 +146,41 @@ bool EglGbmBackend::initRenderingContext()
     }
     setContext(context);
 
-    EGLSurface surface = EGL_NO_SURFACE;
-    m_gbmSurface = gbm_surface_create(m_device, m_backend->size().width(), m_backend->size().height(),
-                                      GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-    if (!m_gbmSurface) {
-        qCCritical(KWIN_CORE) << "Create gbm surface failed";
+    const auto outputs = m_backend->outputs();
+    for (DrmOutput *drmOutput: outputs) {
+        Output o;
+        o.output = drmOutput;
+        o.gbmSurface = gbm_surface_create(m_device, drmOutput->size().width(), drmOutput->size().height(),
+                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+        if (!o.gbmSurface) {
+            qCCritical(KWIN_CORE) << "Create gbm surface failed";
+            continue;
+        }
+        o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)o.gbmSurface, nullptr);
+        if (o.eglSurface == EGL_NO_SURFACE) {
+            qCCritical(KWIN_CORE) << "Create Window Surface failed";
+            gbm_surface_destroy(o.gbmSurface);
+            continue;
+        }
+        m_outputs << o;
+    }
+    if (m_outputs.isEmpty()) {
+        qCCritical(KWIN_CORE) << "Create Window Surfaces failed";
         return false;
     }
-    surface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *) m_gbmSurface, nullptr);
+    // set our first surface as the one for the abstract backend, just to make it happy
+    setSurface(m_outputs.first().eglSurface);
 
-    if (surface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_CORE) << "Create Window Surface failed";
-        return false;
-    }
-    setSurface(surface);
-
-    return makeContextCurrent();
+    return makeContextCurrent(m_outputs.first());
 }
 
-bool EglGbmBackend::makeContextCurrent()
+bool EglGbmBackend::makeContextCurrent(const Output &output)
 {
-    if (eglMakeCurrent(eglDisplay(), surface(), surface(), context()) == EGL_FALSE) {
+    const EGLSurface surface = output.eglSurface;
+    if (surface == EGL_NO_SURFACE) {
+        return false;
+    }
+    if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
         qCCritical(KWIN_CORE) << "Make Context Current failed";
         return false;
     }
@@ -166,6 +190,11 @@ bool EglGbmBackend::makeContextCurrent()
         qCWarning(KWIN_CORE) << "Error occurred while creating context " << error;
         return false;
     }
+    // TODO: ensure the viewport is set correctly each time
+    const QSize &overall = screens()->size();
+    const QRect &v = output.output->geometry();
+    // TODO: are the values correct?
+    glViewport(-v.x(), v.height() - overall.height() - v.y(), overall.width(), overall.height());
     return true;
 }
 
@@ -203,13 +232,16 @@ bool EglGbmBackend::initBufferConfigs()
 
 void EglGbmBackend::present()
 {
-    eglSwapBuffers(eglDisplay(), surface());
-    auto oldBuffer = m_frontBuffer;
-    m_frontBuffer = m_backend->createBuffer(m_gbmSurface);
-    m_backend->present(m_frontBuffer);
-    delete oldBuffer;
-    if (supportsBufferAge()) {
-        eglQuerySurface(eglDisplay(), surface(), EGL_BUFFER_AGE_EXT, &m_bufferAge);
+    for (auto &o: m_outputs) {
+        makeContextCurrent(o);
+        eglSwapBuffers(eglDisplay(), o.eglSurface);
+        auto oldBuffer = o.buffer;
+        o.buffer = m_backend->createBuffer(o.gbmSurface);
+        m_backend->present(o.buffer, o.output);
+        delete oldBuffer;
+        if (supportsBufferAge()) {
+            eglQuerySurface(eglDisplay(), o.eglSurface, EGL_BUFFER_AGE_EXT, &o.bufferAge);
+        }
     }
 }
 
@@ -227,10 +259,18 @@ SceneOpenGL::TexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGL::Te
 QRegion EglGbmBackend::prepareRenderingFrame()
 {
     QRegion repaint;
-    if (supportsBufferAge())
-        repaint = accumulatedDamageHistory(m_bufferAge);
+    if (supportsBufferAge()) {
+        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+            repaint = repaint.united(accumulatedDamageHistory((*it).bufferAge));
+        }
+    }
     startRenderTimer();
     return repaint;
+}
+
+void EglGbmBackend::prepareRenderingForScreen(int screenId)
+{
+    makeContextCurrent(m_outputs.at(screenId));
 }
 
 void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -247,7 +287,9 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         if (!renderedRegion.isEmpty())
             glFlush();
 
-        m_bufferAge = 1;
+        for (auto &o: m_outputs) {
+            o.bufferAge = 1;
+        }
         return;
     }
     present();
@@ -260,6 +302,11 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
 bool EglGbmBackend::usesOverlayWindow() const
 {
     return false;
+}
+
+bool EglGbmBackend::perScreenRendering() const
+{
+    return true;
 }
 
 /************************************************

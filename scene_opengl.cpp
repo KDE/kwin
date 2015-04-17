@@ -357,6 +357,16 @@ OverlayWindow* OpenGLBackend::overlayWindow()
     return NULL;
 }
 
+void OpenGLBackend::prepareRenderingForScreen(int screenId)
+{
+    Q_UNUSED(screenId)
+}
+
+bool OpenGLBackend::perScreenRendering() const
+{
+    return false;
+}
+
 /************************************************
  * SceneOpenGL
  ***********************************************/
@@ -658,7 +668,19 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     // by prepareRenderingFrame(). validRegion is the region that has been
     // repainted, and may be larger than updateRegion.
     QRegion updateRegion, validRegion;
-    paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
+    if (m_backend->perScreenRendering()) {
+        for (int i = 0; i < screens()->count(); ++i) {
+            const QRect &geo = screens()->geometry(i);
+            QRegion update;
+            QRegion valid;
+            m_backend->prepareRenderingForScreen(i);
+            paintScreen(&mask, damage.intersected(geo), repaint.intersected(geo), &update, &valid);   // call generic implementation
+            updateRegion = updateRegion.united(update);
+            validRegion = validRegion.united(valid);
+        }
+    } else {
+        paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
+    }
 
 #ifndef KWIN_HAVE_OPENGLES
     const QSize &screenSize = screens()->size();

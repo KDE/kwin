@@ -404,6 +404,12 @@ public:
     virtual void doneCurrent() = 0;
     virtual bool usesOverlayWindow() const = 0;
     /**
+     * Whether the rendering needs to be split per screen.
+     * Default implementation returns @c false.
+     **/
+    virtual bool perScreenRendering() const;
+    virtual void prepareRenderingForScreen(int screenId);
+    /**
      * @brief Compositor is going into idle mode, flushes any pending paints.
      **/
     void idle();

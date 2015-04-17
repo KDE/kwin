@@ -59,6 +59,7 @@ protected:
         m_config = config;
     }
     void cleanup();
+    virtual void cleanupSurfaces();
     bool initEglAPI();
     void initKWinGL();
     void initBufferAge();

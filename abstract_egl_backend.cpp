@@ -68,9 +68,16 @@ void AbstractEglBackend::cleanup()
     cleanupGL();
     doneCurrent();
     eglDestroyContext(m_display, m_context);
-    eglDestroySurface(m_display, m_surface);
+    cleanupSurfaces();
     eglTerminate(m_display);
     eglReleaseThread();
+}
+
+void AbstractEglBackend::cleanupSurfaces()
+{
+    if (m_surface != EGL_NO_SURFACE) {
+        eglDestroySurface(m_display, m_surface);
+    }
 }
 
 bool AbstractEglBackend::initEglAPI()
