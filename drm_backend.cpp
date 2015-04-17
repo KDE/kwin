@@ -420,6 +420,11 @@ QSize DrmOutput::size() const
     return QSize(m_mode.hdisplay, m_mode.vdisplay);
 }
 
+QRect DrmOutput::geometry() const
+{
+    return QRect(m_globalPos, size());
+}
+
 bool DrmOutput::present(DrmBuffer *buffer)
 {
     if (!buffer || buffer->bufferId() == 0) {

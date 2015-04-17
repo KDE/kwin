@@ -58,6 +58,9 @@ public:
     int fd() const {
         return m_fd;
     }
+    QVector<DrmOutput*> outputs() const {
+        return m_outputs;
+    }
 
 Q_SIGNALS:
     void screensQueried();
@@ -98,6 +101,7 @@ public:
     void blank();
 
     QSize size() const;
+    QRect geometry() const;
 
 private:
     friend class DrmBackend;

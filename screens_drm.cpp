@@ -40,29 +40,47 @@ void DrmScreens::init()
 
 QRect DrmScreens::geometry(int screen) const
 {
-    if (screen == 0) {
-        return QRect(QPoint(0, 0), size(screen));
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return QRect();
     }
-    return QRect();
+    return outputs.at(screen)->geometry();
 }
 
 QSize DrmScreens::size(int screen) const
 {
-    if (screen == 0) {
-        return m_backend->size();
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return QSize();
     }
-    return QSize();
+    return outputs.at(screen)->size();
 }
 
 void DrmScreens::updateCount()
 {
-    setCount(1);
+    setCount(m_backend->outputs().size());
 }
 
 int DrmScreens::number(const QPoint &pos) const
 {
-    Q_UNUSED(pos)
-    return 0;
+    int bestScreen = 0;
+    int minDistance = INT_MAX;
+    const auto outputs = m_backend->outputs();
+    for (int i = 0; i < outputs.size(); ++i) {
+        const QRect &geo = outputs.at(i)->geometry();
+        if (geo.contains(pos)) {
+            return i;
+        }
+        int distance = QPoint(geo.topLeft() - pos).manhattanLength();
+        distance = qMin(distance, QPoint(geo.topRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomRight() - pos).manhattanLength());
+        distance = qMin(distance, QPoint(geo.bottomLeft() - pos).manhattanLength());
+        if (distance < minDistance) {
+            minDistance = distance;
+            bestScreen = i;
+        }
+    }
+    return bestScreen;
 }
 
 }
