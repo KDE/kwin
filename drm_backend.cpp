@@ -255,7 +255,12 @@ void DrmBackend::present(DrmBuffer *buffer)
         return;
     }
     // TODO: correct output
-    if (m_outputs.first()->present(buffer)) {
+    present(buffer, m_outputs.first());
+}
+
+void DrmBackend::present(DrmBuffer *buffer, DrmOutput *output)
+{
+    if (output->present(buffer)) {
         m_pageFlipsPending++;
         if (m_pageFlipsPending == 1 && Compositor::self()) {
             Compositor::self()->aboutToSwapBuffers();
