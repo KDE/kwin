@@ -356,24 +356,38 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     , QPainterBackend()
     , m_backend(backend)
 {
-
-    m_buffer[0] = m_backend->createBuffer(m_backend->size());
-    m_buffer[0]->map();
-    m_buffer[1] = m_backend->createBuffer(m_backend->size());
-    m_buffer[1]->map();
-    m_buffer[0]->image()->fill(Qt::black);
-    m_buffer[1]->image()->fill(Qt::black);
+    const auto outputs = m_backend->outputs();
+    for (auto output: outputs) {
+        Output o;
+        auto initBuffer = [&o, output, this] (int index) {
+            o.buffer[index] = m_backend->createBuffer(output->size());
+            o.buffer[index]->map();
+            o.buffer[index]->image()->fill(Qt::black);
+        };
+        initBuffer(0);
+        initBuffer(1);
+        o.output = output;
+        m_outputs << o;
+    }
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()
 {
-    delete m_buffer[0];
-    delete m_buffer[1];
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        delete (*it).buffer[0];
+        delete (*it).buffer[1];
+    }
 }
 
 QImage *DrmQPainterBackend::buffer()
 {
-    return m_buffer[m_bufferIndex]->image();
+    return bufferForScreen(0);
+}
+
+QImage *DrmQPainterBackend::bufferForScreen(int screenId)
+{
+    const Output &o = m_outputs.at(screenId);
+    return o.buffer[o.index]->image();
 }
 
 bool DrmQPainterBackend::needsFullRepaint() const
@@ -383,7 +397,9 @@ bool DrmQPainterBackend::needsFullRepaint() const
 
 void DrmQPainterBackend::prepareRenderingFrame()
 {
-    m_bufferIndex = (m_bufferIndex + 1) % 2;
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        (*it).index = ((*it).index + 1) % 2;
+    }
 }
 
 void DrmQPainterBackend::present(int mask, const QRegion &damage)
@@ -393,13 +409,22 @@ void DrmQPainterBackend::present(int mask, const QRegion &damage)
     if (!VirtualTerminal::self()->isActive()) {
         return;
     }
-    m_backend->present(m_buffer[m_bufferIndex]);
+    for (auto it = m_outputs.begin(); it != m_outputs.end(); ++it) {
+        const Output &o = *it;
+        m_backend->present(o.buffer[o.index], o.output);
+    }
 }
 
 bool DrmQPainterBackend::usesOverlayWindow() const
 {
     return false;
 }
+
+bool DrmQPainterBackend::perScreenRendering() const
+{
+    return true;
+}
+
 #endif
 
 #endif

@@ -46,6 +46,7 @@ class WaylandBackend;
 }
 class DrmBackend;
 class DrmBuffer;
+class DrmOutput;
 class FramebufferBackend;
 class X11WindowedBackend;
 
@@ -198,15 +199,21 @@ public:
     virtual ~DrmQPainterBackend();
 
     QImage *buffer() override;
+    QImage *bufferForScreen(int screenId);
     bool needsFullRepaint() const override;
     bool usesOverlayWindow() const override;
     void prepareRenderingFrame() override;
     void present(int mask, const QRegion &damage) override;
+    bool perScreenRendering() const override;
 
 private:
+    struct Output {
+        DrmBuffer *buffer[2];
+        DrmOutput *output;
+        int index = 0;
+    };
+    QVector<Output> m_outputs;
     DrmBackend *m_backend;
-    DrmBuffer *m_buffer[2];
-    int m_bufferIndex = 0;
 };
 #endif
 
