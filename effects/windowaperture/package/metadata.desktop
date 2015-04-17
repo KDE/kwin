@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=Window Aperture
 Name[ca]=Obertura de finestra
+Name[fi]=Ikkunoiden siirto näytön kulmiin
 Name[gl]=Apertura das xanelas
 Name[nl]=Vensteropening
 Name[pt]=Aperto das Janelas
 Name[pt_BR]=Aperto das janelas
 Name[sk]=Otvor okien
+Name[sl]=Zaslonka okna
 Name[sv]=Fönsteröppning
 Name[uk]=Апертура вікна
 Name[x-test]=xxWindow Aperturexx
@@ -19,6 +21,7 @@ Comment[nl]=Schuif venster in de hoeken tijdens het tonen van het bureaublad
 Comment[pt]=Mover a janela para os cantos, enquanto mostra o ecrã
 Comment[pt_BR]=Move a janela para os cantos, enquanto mostra a área de trabalho
 Comment[sk]=Posun okna do rohov počas zobrazenia plochy
+Comment[sl]=Premakne okno v kote med prikazovanjem namizja
 Comment[sv]=Flytta fönster till hörnen medan skrivbordet visas
 Comment[uk]=Пересувати вікна в куток на час перегляду стільниці
 Comment[x-test]=xxMove window into the corners while showing desktopxx
