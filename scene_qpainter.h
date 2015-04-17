@@ -94,8 +94,20 @@ public:
     }
 
     virtual QImage *buffer() = 0;
+    /**
+     * Overload for the case that there is a different buffer per screen.
+     * Default implementation just calls buffer.
+     * @param screenId The id of the screen as used in Screens
+     * @todo Get a better identifier for screen then a counter variable
+     **/
+    virtual QImage *bufferForScreen(int screenId);
     virtual bool needsFullRepaint() const = 0;
     virtual void renderCursor(QPainter *painter);
+    /**
+     * Whether the rendering needs to be split per screen.
+     * Default implementation returns @c false.
+     **/
+    virtual bool perScreenRendering() const;
 
 protected:
     QPainterBackend();
