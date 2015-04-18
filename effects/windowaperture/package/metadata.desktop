@@ -1,6 +1,8 @@
 [Desktop Entry]
 Name=Window Aperture
 Name[ca]=Obertura de finestra
+Name[cs]=Mřížka oken
+Name[es]=Apertura de ventanas
 Name[fi]=Ikkunoiden siirto näytön kulmiin
 Name[gl]=Apertura das xanelas
 Name[nl]=Vensteropening
@@ -15,6 +17,7 @@ Name[zh_CN]=窗口光圈
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move window into the corners while showing desktop
 Comment[ca]=Mou la finestra cap a les cantonades en mostrar l'escriptori
+Comment[es]=Mover las ventanas a las esquinas cuando se muestra el escritorio
 Comment[fi]=Siirrä ikkunat näytön kulmiin työpöydän näyttämisen ajaksi
 Comment[gl]=Mover a xanela ás esquinas mentres se mostra o escritorio.
 Comment[nl]=Schuif venster in de hoeken tijdens het tonen van het bureaublad
