@@ -94,7 +94,7 @@ void RegionInterface::Private::subtractCallback(wl_client *client, wl_resource *
 void RegionInterface::Private::destroyCallback(wl_client *client, wl_resource *r)
 {
     Q_UNUSED(client)
-    cast<Private>(r)->q_func()->deleteLater();
+    wl_resource_destroy(r);
 }
 
 RegionInterface::RegionInterface(CompositorInterface *parent, wl_resource *parentResource)

@@ -307,7 +307,7 @@ void SurfaceInterface::Private::destroyFrameCallback(wl_resource *r)
 void SurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q->deleteLater();
+    wl_resource_destroy(resource);
 }
 
 void SurfaceInterface::Private::attachCallback(wl_client *client, wl_resource *resource, wl_resource *buffer, int32_t sx, int32_t sy)

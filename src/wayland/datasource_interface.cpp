@@ -67,7 +67,7 @@ DataSourceInterface::Private::~Private() = default;
 void DataSourceInterface::Private::destroyCallack(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q_func()->deleteLater();
+    wl_resource_destroy(resource);
 }
 
 void DataSourceInterface::Private::offerCallback(wl_client *client, wl_resource *resource, const char *mimeType)

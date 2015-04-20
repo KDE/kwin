@@ -78,7 +78,7 @@ void DataOfferInterface::Private::acceptCallback(wl_client *client, wl_resource 
 void DataOfferInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q_func()->deleteLater();
+    wl_resource_destroy(resource);
 }
 
 void DataOfferInterface::Private::receiveCallback(wl_client *client, wl_resource *resource, const char *mimeType, int32_t fd)

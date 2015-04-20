@@ -84,6 +84,7 @@ void SubCompositorInterface::Private::destroyCallback(wl_client *client, wl_reso
 {
     Q_UNUSED(client)
     Q_UNUSED(resource)
+    wl_resource_destroy(resource);
 }
 
 void SubCompositorInterface::Private::subsurfaceCallback(wl_client *client, wl_resource *resource, uint32_t id, wl_resource *surface, wl_resource *sparent)
@@ -173,7 +174,7 @@ void SubSurfaceInterface::Private::commit()
 void SubSurfaceInterface::Private::destroyCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    cast<Private>(resource)->q_func()->deleteLater();
+    wl_resource_destroy(resource);
 }
 
 void SubSurfaceInterface::Private::setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y)
