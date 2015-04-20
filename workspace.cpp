@@ -1201,12 +1201,24 @@ void Workspace::setShowingDesktop(bool showing)
     const bool changed = showing != showing_desktop;
     rootInfo()->setShowingDesktop(showing);
     showing_desktop = showing;
-    if (Client* desk = findDesktop(true, VirtualDesktopManager::self()->current())) {
-        desk->updateLayer();
-        lowerClient(desk);
-        if (showing_desktop)
-            requestFocus(desk);
+
+    Client *topDesk = nullptr;
+
+    { // for the blocker RAII
+    StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
+    for (int i = stacking_order.count() - 1; i > -1; --i) {
+        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        if (c && c->isOnCurrentDesktop() && c->isDesktop() && c->isShown(true)) {
+            c->updateLayer();
+            lowerClient(c);
+            if (!topDesk)
+                topDesk = c;
+        }
     }
+    } // ~StackingUpdatesBlocker
+
+    if (showing_desktop && topDesk)
+        requestFocus(topDesk);
     if (changed)
         emit showingDesktopChanged(showing);
 }
