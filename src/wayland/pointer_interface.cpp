@@ -101,7 +101,7 @@ PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentRes
 {
     connect(parent, &SeatInterface::pointerPosChanged, this, [this] {
         Q_D();
-        if (d->focusedSurface) {
+        if (d->focusedSurface && d->resource) {
             const QPointF pos = d->seat->pointerPos() - d->seat->focusedPointerSurfacePosition();
             wl_pointer_send_motion(d->resource, d->seat->timestamp(),
                                    wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
@@ -141,6 +141,9 @@ void PointerInterface::buttonPressed(quint32 button, quint32 serial)
 {
     Q_D();
     Q_ASSERT(d->focusedSurface);
+    if (!d->resource) {
+        return;
+    }
     wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_PRESSED);
 }
 
@@ -148,6 +151,9 @@ void PointerInterface::buttonReleased(quint32 button, quint32 serial)
 {
     Q_D();
     Q_ASSERT(d->focusedSurface);
+    if (!d->resource) {
+        return;
+    }
     wl_pointer_send_button(d->resource, serial, d->seat->timestamp(), button, WL_POINTER_BUTTON_STATE_RELEASED);
 }
 
@@ -155,6 +161,9 @@ void PointerInterface::axis(Qt::Orientation orientation, quint32 delta)
 {
     Q_D();
     Q_ASSERT(d->focusedSurface);
+    if (!d->resource) {
+        return;
+    }
     wl_pointer_send_axis(d->resource, d->seat->timestamp(),
                          (orientation == Qt::Vertical) ? WL_POINTER_AXIS_VERTICAL_SCROLL : WL_POINTER_AXIS_HORIZONTAL_SCROLL,
                          wl_fixed_from_int(delta));
