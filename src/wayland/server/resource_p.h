@@ -60,7 +60,7 @@ public:
                       "ResourceDerived must be derived from Resource");
         auto it = std::find_if(s_allResources.constBegin(), s_allResources.constEnd(),
             [id, c](Private *p) {
-                return c == p->client && wl_resource_get_id(p->resource) == id;
+                return c == p->client && p->resource && wl_resource_get_id(p->resource) == id;
             }
         );
         if (it == s_allResources.constEnd()) {
