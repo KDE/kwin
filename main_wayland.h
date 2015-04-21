@@ -49,6 +49,9 @@ public:
     void setFramebuffer(const QString &fbdev) {
         m_framebuffer = fbdev;
     }
+    void setApplicationsToStart(const QStringList &applications) {
+        m_applicationsToStart = applications;
+    }
 
 protected:
     void performStartup() override;
@@ -66,6 +69,7 @@ private:
     QByteArray m_x11Display;
     QByteArray m_waylandDisplay;
     QString m_framebuffer;
+    QStringList m_applicationsToStart;
 };
 
 }

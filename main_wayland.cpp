@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QFile>
 #include <QFutureWatcher>
 #include <QtCore/private/qeventdispatcher_unix_p.h>
+#include <QProcess>
 #include <QSocketNotifier>
 #include <QThread>
 #include <QDebug>
@@ -212,6 +213,23 @@ void ApplicationWayland::continueStartupWithX()
     if (!redirectCheck.isNull()) {
         fputs(i18n("kwin_wayland: an X11 window manager is running on the X11 Display.\n").toLocal8Bit().constData(), stderr);
         ::exit(1);
+    }
+
+    // start the applications passed to us as command line arguments
+    if (!m_applicationsToStart.isEmpty()) {
+        QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+        environment.remove(QStringLiteral("WAYLAND_SOCKET"));
+        environment.remove(QStringLiteral("QT_QPA_PLATFORM"));
+        environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
+        // TODO: maybe create a socket per process?
+        environment.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandServer()->display()->socketName());
+        for (const QString &application: m_applicationsToStart) {
+            // note: this will kill the started process when we exit
+            // this is going to happen anyway as we are the wayland and X server the app connects to
+            QProcess *p = new QProcess(this);
+            p->setProcessEnvironment(environment);
+            p->start(application);
+        }
     }
 
     // HACK: create a QWindow in a thread to force QtWayland to create the client buffer integration
@@ -425,6 +443,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
     parser.addOption(libinputOption);
 #endif
+    parser.addPositionalArgument(QStringLiteral("applications"),
+                                 i18n("Applications to start once Wayland and Xwayland server are started"),
+                                 QStringLiteral("[/path/to/application...]"));
 
     parser.process(a);
     a.processCommandLine(&parser);
@@ -468,6 +489,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     }
 
     a.setStartXwayland(parser.isSet(xwaylandOption));
+    a.setApplicationsToStart(parser.positionalArguments());
     a.start();
 
     return a.exec();
