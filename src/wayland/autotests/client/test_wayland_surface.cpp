@@ -358,7 +358,7 @@ void TestWaylandSurface::testAttachBuffer()
     QVERIFY(!buffer2->isReferenced());
     delete buffer2;
     // TODO: we should have a signal on when the Buffer gets released
-    QTest::qWait(100);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
     QVERIFY(redBuffer.data()->isReleased());
 
     KWayland::Server::BufferInterface *buffer3 = serverSurface->buffer();

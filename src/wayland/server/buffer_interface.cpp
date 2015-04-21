@@ -181,6 +181,7 @@ void BufferInterface::unref()
     if (d->refCount == 0) {
         if (d->buffer) {
             wl_buffer_send_release(d->buffer);
+            wl_client_flush(wl_resource_get_client(d->buffer));
         }
         deleteLater();
     }

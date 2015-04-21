@@ -135,6 +135,7 @@ void PointerInterface::setFocusedSurface(SurfaceInterface *surface, quint32 seri
     wl_pointer_send_enter(d->resource, serial,
                           d->focusedSurface->resource(),
                           wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+    d->client->flush();
 }
 
 void PointerInterface::buttonPressed(quint32 button, quint32 serial)

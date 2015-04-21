@@ -46,6 +46,7 @@ class Display::Private
 public:
     Private(Display *q);
     void flush();
+    void dispatch();
     void setRunning(bool running);
     void installSocketNotifier();
 
@@ -77,7 +78,7 @@ void Display::Private::installSocketNotifier()
         return;
     }
     QSocketNotifier *m_notifier = new QSocketNotifier(fd, QSocketNotifier::Read, q);
-    QObject::connect(m_notifier, &QSocketNotifier::activated, q, [this] { flush(); } );
+    QObject::connect(m_notifier, &QSocketNotifier::activated, q, [this] { dispatch(); } );
     QObject::connect(QThread::currentThread()->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, q, [this] { flush(); });
     setRunning(true);
 }
@@ -98,10 +99,17 @@ void Display::Private::flush()
     if (!display || !loop) {
         return;
     }
+    wl_display_flush_clients(display);
+}
+
+void Display::Private::dispatch()
+{
+    if (!display || !loop) {
+        return;
+    }
     if (wl_event_loop_dispatch(loop, 0) != 0) {
         qCWarning(KWAYLAND_SERVER) << "Error on dispatching Wayland event loop";
     }
-    wl_display_flush_clients(display);
 }
 
 void Display::setSocketName(const QString &name)

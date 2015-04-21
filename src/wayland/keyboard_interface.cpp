@@ -143,6 +143,7 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     wl_array_release(&keys);
 
     d->sendModifiers();
+    d->client->flush();
 }
 
 void KeyboardInterface::keyPressed(quint32 key, quint32 serial)
