@@ -102,6 +102,11 @@ int WaylandServer::createXWaylandConnection()
         return -1;
     }
     m_xwaylandConnection = m_display->createClient(sx[0]);
+    connect(m_xwaylandConnection, &KWayland::Server::ClientConnection::disconnected, this,
+        [] {
+            qFatal("Xwayland Connection died");
+        }
+    );
     return sx[1];
 }
 
