@@ -168,7 +168,7 @@ void BufferInterface::Private::destroyListenerCallback(wl_listener *listener, vo
     auto b = cast(reinterpret_cast<wl_resource*>(data));
     b->buffer = nullptr;
     emit b->q->aboutToBeDestroyed(b->q);
-    b->q->deleteLater();
+    delete b->q;
 }
 
 void BufferInterface::ref()
