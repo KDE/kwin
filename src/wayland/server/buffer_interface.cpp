@@ -107,6 +107,8 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
 {
     s_buffers << this;
     listener.notify = destroyListenerCallback;
+    listener.link.prev = nullptr;
+    listener.link.next = nullptr;
     wl_resource_add_destroy_listener(resource, &listener);
     if (shmBuffer) {
         size = QSize(wl_shm_buffer_get_width(shmBuffer), wl_shm_buffer_get_height(shmBuffer));
