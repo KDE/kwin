@@ -148,9 +148,6 @@ Workspace::Workspace(bool restore)
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
     reparseConfigFuture.waitForFinished();
 
-    // get screen support
-    connect(screens(), SIGNAL(changed()), SLOT(desktopResized()));
-
     options->loadConfig();
     options->loadCompositingConfig(false);
     ColorMapper *colormaps = new ColorMapper(this);
@@ -218,6 +215,8 @@ void Workspace::init()
     KSharedConfigPtr config = KSharedConfig::openConfig();
     kwinApp()->createScreens();
     Screens *screens = Screens::self();
+    // get screen support
+    connect(screens, SIGNAL(changed()), SLOT(desktopResized()));
     screens->setConfig(config);
     screens->reconfigure();
     connect(options, SIGNAL(configChanged()), screens, SLOT(reconfigure()));
