@@ -245,6 +245,10 @@ KWIN_EXPORT int kdemain(int argc, char* argv[])
     app.setApplicationDisplayName(i18n("KWin"));
     app.setApplicationName("kwin_rules_dialog");
     app.setApplicationVersion("1.0");
+    if (QX11Info::isPlatformX11()) {
+        app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        app.setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
+    }
     bool whole_app = false;
     bool id_ok = false;
     Window id = None;
