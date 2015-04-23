@@ -189,4 +189,21 @@ int UdevDevice::sysNum() const
     return QByteArray(udev_device_get_sysnum(m_device)).toInt();
 }
 
+const char *UdevDevice::property(const char *key)
+{
+    if (!m_device) {
+        return nullptr;
+    }
+    return udev_device_get_property_value(m_device, key);
+}
+
+bool UdevDevice::hasProperty(const char *key, const char *value)
+{
+    const char *p = property(key);
+    if (!p) {
+        return false;
+    }
+    return qstrcmp(p, value) == 0;
+}
+
 }
