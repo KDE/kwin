@@ -153,6 +153,16 @@ UdevDevice::Ptr Udev::deviceFromSyspath(const char *syspath)
     return std::move(UdevDevice::Ptr(new UdevDevice(udev_device_new_from_syspath(m_udev, syspath))));
 }
 
+UdevMonitor *Udev::monitor()
+{
+    UdevMonitor *m = new UdevMonitor(this);
+    if (!m->isValid()) {
+        delete m;
+        m = nullptr;
+    }
+    return m;
+}
+
 UdevDevice::UdevDevice(udev_device *device)
     : m_device(device)
 {
@@ -204,6 +214,51 @@ bool UdevDevice::hasProperty(const char *key, const char *value)
         return false;
     }
     return qstrcmp(p, value) == 0;
+}
+
+UdevMonitor::UdevMonitor(Udev *udev)
+    : m_udev(udev)
+    , m_monitor(udev_monitor_new_from_netlink(*udev, "udev"))
+{
+}
+
+UdevMonitor::~UdevMonitor()
+{
+    if (m_monitor) {
+        udev_monitor_unref(m_monitor);
+    }
+}
+
+int UdevMonitor::fd() const
+{
+    if (m_monitor) {
+        return udev_monitor_get_fd(m_monitor);
+    }
+    return -1;
+}
+
+void UdevMonitor::filterSubsystemDevType(const char *subSystem, const char *devType)
+{
+    if (!m_monitor) {
+        return;
+    }
+    udev_monitor_filter_add_match_subsystem_devtype(m_monitor, subSystem, devType);
+}
+
+void UdevMonitor::enable()
+{
+    if (!m_monitor) {
+        return;
+    }
+    udev_monitor_enable_receiving(m_monitor);
+}
+
+UdevDevice::Ptr UdevMonitor::getDevice()
+{
+    if (!m_monitor) {
+        return std::move(UdevDevice::Ptr());
+    }
+    return std::move(UdevDevice::Ptr(new UdevDevice(udev_monitor_receive_device(m_monitor))));
 }
 
 }

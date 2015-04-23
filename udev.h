@@ -23,10 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 struct udev;
 struct udev_device;
+struct udev_monitor;
 
 namespace KWin
 {
-
+class Udev;
 
 class UdevDevice
 {
@@ -52,6 +53,25 @@ private:
     udev_device *m_device;
 };
 
+class UdevMonitor
+{
+public:
+    explicit UdevMonitor(Udev *udev);
+    ~UdevMonitor();
+
+    int fd() const;
+    bool isValid() const {
+        return m_monitor != nullptr;
+    }
+    void filterSubsystemDevType(const char *subSystem, const char *devType = nullptr);
+    void enable();
+    UdevDevice::Ptr getDevice();
+
+private:
+    Udev *m_udev;
+    udev_monitor *m_monitor;
+};
+
 class Udev
 {
 public:
@@ -63,6 +83,7 @@ public:
     }
     UdevDevice::Ptr primaryGpu();
     UdevDevice::Ptr deviceFromSyspath(const char *syspath);
+    UdevMonitor *monitor();
     operator udev*() const {
         return m_udev;
     }
