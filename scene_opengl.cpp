@@ -357,9 +357,17 @@ OverlayWindow* OpenGLBackend::overlayWindow()
     return NULL;
 }
 
-void OpenGLBackend::prepareRenderingForScreen(int screenId)
+QRegion OpenGLBackend::prepareRenderingForScreen(int screenId)
+{
+    // fallback to repaint complete screen
+    return screens()->geometry(screenId);
+}
+
+void OpenGLBackend::endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion)
 {
     Q_UNUSED(screenId)
+    Q_UNUSED(damage)
+    Q_UNUSED(damagedRegion)
 }
 
 bool OpenGLBackend::perScreenRendering() const
@@ -651,17 +659,6 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     // actually paint the frame, flushed with the NEXT frame
     createStackingOrder(toplevels);
 
-    m_backend->makeCurrent();
-    QRegion repaint = m_backend->prepareRenderingFrame();
-
-    const GLenum status = glGetGraphicsResetStatus();
-    if (status != GL_NO_ERROR) {
-        handleGraphicsReset(status);
-        return 0;
-    }
-
-    int mask = 0;
-
     // After this call, updateRegion will contain the damaged region in the
     // back buffer. This is the region that needs to be posted to repair
     // the front buffer. It doesn't include the additional damage returned
@@ -669,39 +666,64 @@ qint64 SceneOpenGL::paint(QRegion damage, ToplevelList toplevels)
     // repainted, and may be larger than updateRegion.
     QRegion updateRegion, validRegion;
     if (m_backend->perScreenRendering()) {
+        // trigger start render timer
+        m_backend->prepareRenderingFrame();
         for (int i = 0; i < screens()->count(); ++i) {
             const QRect &geo = screens()->geometry(i);
             QRegion update;
             QRegion valid;
-            m_backend->prepareRenderingForScreen(i);
-            paintScreen(&mask, damage.intersected(geo), repaint.intersected(geo), &update, &valid);   // call generic implementation
-            updateRegion = updateRegion.united(update);
-            validRegion = validRegion.united(valid);
+            // prepare rendering makes context current on the output
+            QRegion repaint = m_backend->prepareRenderingForScreen(i);
+
+            const GLenum status = glGetGraphicsResetStatus();
+            if (status != GL_NO_ERROR) {
+                handleGraphicsReset(status);
+                return 0;
+            }
+
+            int mask = 0;
+            paintScreen(&mask, damage.intersected(geo), repaint, &update, &valid);   // call generic implementation
+
+            GLVertexBuffer::streamingBuffer()->endOfFrame();
+
+            m_backend->endRenderingFrameForScreen(i, valid, update);
+
+            GLVertexBuffer::streamingBuffer()->framePosted();
         }
     } else {
+        m_backend->makeCurrent();
+        QRegion repaint = m_backend->prepareRenderingFrame();
+
+        const GLenum status = glGetGraphicsResetStatus();
+        if (status != GL_NO_ERROR) {
+            handleGraphicsReset(status);
+            return 0;
+        }
+
+        int mask = 0;
         paintScreen(&mask, damage, repaint, &updateRegion, &validRegion);   // call generic implementation
-    }
 
 #ifndef KWIN_HAVE_OPENGLES
-    const QSize &screenSize = screens()->size();
-    const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
+        const QSize &screenSize = screens()->size();
+        const QRegion displayRegion(0, 0, screenSize.width(), screenSize.height());
 
-    // copy dirty parts from front to backbuffer
-    if (!m_backend->supportsBufferAge() &&
-        options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
-        validRegion != displayRegion) {
-        glReadBuffer(GL_FRONT);
-        copyPixels(displayRegion - validRegion);
-        glReadBuffer(GL_BACK);
-        validRegion = displayRegion;
-    }
+        // copy dirty parts from front to backbuffer
+        if (!m_backend->supportsBufferAge() &&
+            options->glPreferBufferSwap() == Options::CopyFrontBuffer &&
+            validRegion != displayRegion) {
+            glReadBuffer(GL_FRONT);
+            copyPixels(displayRegion - validRegion);
+            glReadBuffer(GL_BACK);
+            validRegion = displayRegion;
+        }
 #endif
 
-    GLVertexBuffer::streamingBuffer()->endOfFrame();
+        GLVertexBuffer::streamingBuffer()->endOfFrame();
 
-    m_backend->endRenderingFrame(validRegion, updateRegion);
+        m_backend->endRenderingFrame(validRegion, updateRegion);
 
-    GLVertexBuffer::streamingBuffer()->framePosted();
+        GLVertexBuffer::streamingBuffer()->framePosted();
+    }
 
     if (m_currentFence) {
         if (!m_syncManager->updateFences()) {

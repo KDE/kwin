@@ -234,15 +234,21 @@ void EglGbmBackend::present()
 {
     for (auto &o: m_outputs) {
         makeContextCurrent(o);
-        eglSwapBuffers(eglDisplay(), o.eglSurface);
-        auto oldBuffer = o.buffer;
-        o.buffer = m_backend->createBuffer(o.gbmSurface);
-        m_backend->present(o.buffer, o.output);
-        delete oldBuffer;
-        if (supportsBufferAge()) {
-            eglQuerySurface(eglDisplay(), o.eglSurface, EGL_BUFFER_AGE_EXT, &o.bufferAge);
-        }
+        presentOnOutput(o);
     }
+}
+
+void EglGbmBackend::presentOnOutput(EglGbmBackend::Output &o)
+{
+    eglSwapBuffers(eglDisplay(), o.eglSurface);
+    auto oldBuffer = o.buffer;
+    o.buffer = m_backend->createBuffer(o.gbmSurface);
+    m_backend->present(o.buffer, o.output);
+    delete oldBuffer;
+    if (supportsBufferAge()) {
+        eglQuerySurface(eglDisplay(), o.eglSurface, EGL_BUFFER_AGE_EXT, &o.bufferAge);
+    }
+
 }
 
 void EglGbmBackend::screenGeometryChanged(const QSize &size)
@@ -258,24 +264,40 @@ SceneOpenGL::TexturePrivate *EglGbmBackend::createBackendTexture(SceneOpenGL::Te
 
 QRegion EglGbmBackend::prepareRenderingFrame()
 {
-    QRegion repaint;
-    if (supportsBufferAge()) {
-        for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-            repaint = repaint.united(accumulatedDamageHistory((*it).bufferAge));
-        }
-    }
     startRenderTimer();
-    return repaint;
+    return QRegion();
 }
 
-void EglGbmBackend::prepareRenderingForScreen(int screenId)
+QRegion EglGbmBackend::prepareRenderingForScreen(int screenId)
 {
-    makeContextCurrent(m_outputs.at(screenId));
+    const Output &o = m_outputs.at(screenId);
+    makeContextCurrent(o);
+    if (supportsBufferAge()) {
+        QRegion region;
+
+        // Note: An age of zero means the buffer contents are undefined
+        if (o.bufferAge > 0 && o.bufferAge <= o.damageHistory.count()) {
+            for (int i = 0; i < o.bufferAge - 1; i++)
+                region |= o.damageHistory[i];
+        } else {
+            region = o.output->geometry();
+        }
+
+        return region;
+    }
+    return QRegion();
 }
 
 void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    if (damagedRegion.isEmpty()) {
+    Q_UNUSED(renderedRegion)
+    Q_UNUSED(damagedRegion)
+}
+
+void EglGbmBackend::endRenderingFrameForScreen(int screenId, const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    Output &o = m_outputs[screenId];
+    if (damagedRegion.intersected(o.output->geometry()).isEmpty() && screenId == 0) {
 
         // If the damaged region of a window is fully occluded, the only
         // rendering done, if any, will have been to repair a reused back
@@ -284,7 +306,7 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         // In this case we won't post the back buffer. Instead we'll just
         // set the buffer age to 1, so the repaired regions won't be
         // rendered again in the next frame.
-        if (!renderedRegion.isEmpty())
+        if (!renderedRegion.intersected(o.output->geometry()).isEmpty())
             glFlush();
 
         for (auto &o: m_outputs) {
@@ -292,11 +314,23 @@ void EglGbmBackend::endRenderingFrame(const QRegion &renderedRegion, const QRegi
         }
         return;
     }
-    present();
+    presentOnOutput(o);
 
     // Save the damaged region to history
-    if (supportsBufferAge())
-        addToDamageHistory(damagedRegion);
+    // Note: damage history is only collected for the first screen. For any other screen full repaints
+    // are triggered. This is due to a limitation in Scene::paintGenericScreen which resets the Toplevel's
+    // repaint. So multiple calls to Scene::paintScreen as it's done in multi-output rendering only
+    // have correct damage information for the first screen. If we try to track damage nevertheless,
+    // it creates artifacts. So for the time being we work around the problem by only supporting buffer
+    // age on the first output. To properly support buffer age on all outputs the rendering needs to
+    // be refactored in general.
+    if (supportsBufferAge() && screenId == 0) {
+        if (o.damageHistory.count() > 10) {
+            o.damageHistory.removeLast();
+        }
+
+        o.damageHistory.prepend(damagedRegion.intersected(o.output->geometry()));
+    }
 }
 
 bool EglGbmBackend::usesOverlayWindow() const

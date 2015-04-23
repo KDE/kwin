@@ -44,9 +44,10 @@ public:
     SceneOpenGL::TexturePrivate *createBackendTexture(SceneOpenGL::Texture *texture) override;
     QRegion prepareRenderingFrame() override;
     void endRenderingFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    void endRenderingFrameForScreen(int screenId, const QRegion &damage, const QRegion &damagedRegion) override;
     bool usesOverlayWindow() const override;
     bool perScreenRendering() const override;
-    void prepareRenderingForScreen(int screenId) override;
+    QRegion prepareRenderingForScreen(int screenId) override;
 
 protected:
     void present() override;
@@ -63,8 +64,13 @@ private:
         gbm_surface *gbmSurface = nullptr;
         EGLSurface eglSurface = EGL_NO_SURFACE;
         int bufferAge = 0;
+        /**
+        * @brief The damage history for the past 10 frames.
+        */
+        QList<QRegion> damageHistory;
     };
     bool makeContextCurrent(const Output &output);
+    void presentOnOutput(Output &output);
     DrmBackend *m_backend;
     gbm_device *m_device = nullptr;
     QVector<Output> m_outputs;
