@@ -226,8 +226,6 @@ void DrmBackend::openDrm()
         }
     }
 
-    emit screensQueried();
-
     initCursor();
 }
 
@@ -307,6 +305,7 @@ void DrmBackend::queryResources()
         }
     }
     m_outputs = connectedOutputs;
+    emit screensQueried();
     // TODO: install global space
 }
 

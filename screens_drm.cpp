@@ -27,6 +27,8 @@ DrmScreens::DrmScreens(DrmBackend *backend, QObject *parent)
     : Screens(parent)
     , m_backend(backend)
 {
+    connect(backend, &DrmBackend::screensQueried, this, &DrmScreens::updateCount);
+    connect(backend, &DrmBackend::screensQueried, this, &DrmScreens::changed);
 }
 
 DrmScreens::~DrmScreens() = default;

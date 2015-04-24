@@ -152,6 +152,11 @@ void ApplicationWayland::continueStartupWithScreens()
     if (Wayland::WaylandBackend *w = dynamic_cast<Wayland::WaylandBackend *>(waylandServer()->backend())) {
         disconnect(w, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
     }
+#if HAVE_DRM
+    if (DrmBackend *b = dynamic_cast<DrmBackend*>(waylandServer()->backend())) {
+        disconnect(b, &DrmBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    }
+#endif
     createScreens();
     waylandServer()->initOutputs();
 
