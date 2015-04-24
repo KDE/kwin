@@ -358,17 +358,24 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
 {
     const auto outputs = m_backend->outputs();
     for (auto output: outputs) {
-        Output o;
-        auto initBuffer = [&o, output, this] (int index) {
-            o.buffer[index] = m_backend->createBuffer(output->size());
-            o.buffer[index]->map();
-            o.buffer[index]->image()->fill(Qt::black);
-        };
-        initBuffer(0);
-        initBuffer(1);
-        o.output = output;
-        m_outputs << o;
+        initOutput(output);
     }
+    connect(m_backend, &DrmBackend::outputAdded, this, &DrmQPainterBackend::initOutput);
+    connect(m_backend, &DrmBackend::outputRemoved, this,
+        [this] (DrmOutput *o) {
+            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                [o] (const Output &output) {
+                    return output.output == o;
+                }
+            );
+            if (it == m_outputs.end()) {
+                return;
+            }
+            delete (*it).buffer[0];
+            delete (*it).buffer[1];
+            m_outputs.erase(it);
+        }
+    );
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()
@@ -377,6 +384,20 @@ DrmQPainterBackend::~DrmQPainterBackend()
         delete (*it).buffer[0];
         delete (*it).buffer[1];
     }
+}
+
+void DrmQPainterBackend::initOutput(DrmOutput *output)
+{
+    Output o;
+    auto initBuffer = [&o, output, this] (int index) {
+        o.buffer[index] = m_backend->createBuffer(output->size());
+        o.buffer[index]->map();
+        o.buffer[index]->image()->fill(Qt::black);
+    };
+    initBuffer(0);
+    initBuffer(1);
+    o.output = output;
+    m_outputs << o;
 }
 
 QImage *DrmQPainterBackend::buffer()

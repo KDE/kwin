@@ -207,6 +207,7 @@ public:
     bool perScreenRendering() const override;
 
 private:
+    void initOutput(DrmOutput *output);
     struct Output {
         DrmBuffer *buffer[2];
         DrmOutput *output;
