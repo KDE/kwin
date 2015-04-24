@@ -32,6 +32,7 @@ namespace KWin
 {
 
 class Udev;
+class UdevMonitor;
 
 class DrmBuffer;
 class DrmOutput;
@@ -64,6 +65,8 @@ public:
 
 Q_SIGNALS:
     void screensQueried();
+    void outputRemoved(KWin::DrmOutput *output);
+    void outputAdded(KWin::DrmOutput *output);
 
 private:
     static void pageFlipHandler(int fd, unsigned int frame, unsigned int sec, unsigned int usec, void *data);
@@ -79,7 +82,9 @@ private:
     void initCursor();
     quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
     bool crtcIsUsed(quint32 crtc);
+    DrmOutput *findOutput(quint32 connector);
     QScopedPointer<Udev> m_udev;
+    QScopedPointer<UdevMonitor> m_udevMonitor;
     int m_fd = -1;
     int m_drmId = 0;
     QVector<DrmOutput*> m_outputs;
@@ -167,6 +172,8 @@ private:
 };
 
 }
+
+Q_DECLARE_METATYPE(KWin::DrmOutput*)
 
 #endif
 

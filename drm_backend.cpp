@@ -59,6 +59,7 @@ namespace KWin
 DrmBackend::DrmBackend(QObject *parent)
     : AbstractBackend(parent)
     , m_udev(new Udev)
+    , m_udevMonitor(m_udev->monitor())
 {
     m_cursor[0] = nullptr;
     m_cursor[1] = nullptr;
@@ -197,6 +198,34 @@ void DrmBackend::openDrm()
     );
     m_drmId = device->sysNum();
     queryResources();
+
+    // setup udevMonitor
+    if (m_udevMonitor) {
+        m_udevMonitor->filterSubsystemDevType("drm");
+        const int fd = m_udevMonitor->fd();
+        if (fd != -1) {
+            QSocketNotifier *notifier = new QSocketNotifier(fd, QSocketNotifier::Read, this);
+            connect(notifier, &QSocketNotifier::activated, this,
+                [this] {
+                    auto device = m_udevMonitor->getDevice();
+                    if (!device) {
+                        return;
+                    }
+                    if (device->sysNum() != m_drmId) {
+                        return;
+                    }
+                    if (device->hasProperty("HOTPLUG", "1")) {
+                        qCDebug(KWIN_CORE()) << "Received hot plug event for monitored drm device";
+                        queryResources();
+                        m_cursorIndex = (m_cursorIndex + 1) % 2;
+                        updateCursor();
+                    }
+                }
+            );
+            m_udevMonitor->enable();
+        }
+    }
+
     emit screensQueried();
 
     initCursor();
@@ -222,6 +251,8 @@ void DrmBackend::queryResources()
         qCWarning(KWIN_CORE) << "drmModeGetResources failed";
         return;
     }
+
+    QVector<DrmOutput*> connectedOutputs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const auto id = resources->connectors[i];
         ScopedDrmPointer<_drmModeConnector, &drmModeFreeConnector> connector(drmModeGetConnector(m_fd, id));
@@ -229,6 +260,13 @@ void DrmBackend::queryResources()
             continue;
         }
         if (connector->connection != DRM_MODE_CONNECTED) {
+            continue;
+        }
+        if (connector->count_modes == 0) {
+            continue;
+        }
+        if (DrmOutput *o = findOutput(connector->connector_id)) {
+            connectedOutputs << o;
             continue;
         }
         bool crtcFound = false;
@@ -242,12 +280,45 @@ void DrmBackend::queryResources()
         }
         DrmOutput *drmOutput = new DrmOutput(this);
         drmOutput->m_crtcId = crtcId;
-        drmOutput->m_mode = crtc->mode;
+        if (crtc->mode_valid) {
+            drmOutput->m_mode = crtc->mode;
+        } else {
+            drmOutput->m_mode = connector->modes[0];
+        }
         drmOutput->m_connector = connector->connector_id;
         drmOutput->init();
-        m_outputs << drmOutput;
+        connectedOutputs << drmOutput;
     }
+    // check for outputs which got removed
+    auto it = m_outputs.begin();
+    while (it != m_outputs.end()) {
+        if (connectedOutputs.contains(*it)) {
+            it++;
+            continue;
+        }
+        DrmOutput *removed = *it;
+        it = m_outputs.erase(it);
+        emit outputRemoved(removed);
+        delete removed;
+    }
+    for (auto it = connectedOutputs.constBegin(); it != connectedOutputs.constEnd(); ++it) {
+        if (!m_outputs.contains(*it)) {
+            emit outputAdded(*it);
+        }
+    }
+    m_outputs = connectedOutputs;
     // TODO: install global space
+}
+
+DrmOutput *DrmBackend::findOutput(quint32 connector)
+{
+    auto it = std::find_if(m_outputs.constBegin(), m_outputs.constEnd(), [connector] (DrmOutput *o) {
+        return o->m_connector == connector;
+    });
+    if (it != m_outputs.constEnd()) {
+        return *it;
+    }
+    return nullptr;
 }
 
 quint32 DrmBackend::findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok)
