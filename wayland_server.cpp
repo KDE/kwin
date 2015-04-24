@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
+#include "abstract_backend.h"
 #include "screens.h"
 #include "toplevel.h"
 #include "workspace.h"
@@ -84,6 +85,9 @@ void WaylandServer::init(const QByteArray &socketName)
 
 void WaylandServer::initOutputs()
 {
+    if (m_backend && m_backend->handlesOutputs()) {
+        return;
+    }
     Screens *s = screens();
     Q_ASSERT(s);
     for (int i = 0; i < s->count(); ++i) {

@@ -58,6 +58,10 @@ public:
     }
     void markCursorAsRendered();
 
+    bool handlesOutputs() const {
+        return m_handlesOutputs;
+    }
+
 Q_SIGNALS:
     void cursorChanged();
 
@@ -66,6 +70,9 @@ protected:
     void setSoftWareCursor(bool set);
     void updateCursorFromServer();
     void updateCursorImage(Qt::CursorShape shape);
+    void handleOutputs() {
+        m_handlesOutputs = true;
+    }
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);
@@ -79,6 +86,7 @@ private:
         QPoint lastRenderedPosition;
     } m_cursor;
     Wayland::WaylandCursorTheme *m_cursorTheme = nullptr;
+    bool m_handlesOutputs = false;
 };
 
 }
