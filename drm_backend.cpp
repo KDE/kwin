@@ -480,8 +480,9 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 {
 #if HAVE_GBM
     return new EglGbmBackend(this);
-#endif
+#else
     return AbstractBackend::createOpenGLBackend();
+#endif
 }
 
 DrmBuffer *DrmBackend::createBuffer(const QSize &size)
@@ -497,6 +498,8 @@ DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
     DrmBuffer *b = new DrmBuffer(this, surface);
     m_buffers << b;
     return b;
+#else
+    return nullptr;
 #endif
 }
 
