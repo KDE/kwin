@@ -42,6 +42,21 @@ EglGbmBackend::EglGbmBackend(DrmBackend *b)
     init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
+    connect(m_backend, &DrmBackend::outputAdded, this, &EglGbmBackend::createOutput);
+    connect(m_backend, &DrmBackend::outputRemoved, this,
+        [this] (DrmOutput *output) {
+            auto it = std::find_if(m_outputs.begin(), m_outputs.end(),
+                [output] (const Output &o) {
+                    return o.output == output;
+                }
+            );
+            if (it == m_outputs.end()) {
+                return;
+            }
+            cleanupOutput(*it);
+            m_outputs.erase(it);
+        }
+    );
 }
 
 EglGbmBackend::~EglGbmBackend()
@@ -56,13 +71,18 @@ EglGbmBackend::~EglGbmBackend()
 void EglGbmBackend::cleanupSurfaces()
 {
     for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
-        const Output &o = *it;
-        if (o.eglSurface != EGL_NO_SURFACE) {
-            eglDestroySurface(eglDisplay(), o.eglSurface);
-        }
-        if ((*it).gbmSurface) {
-            gbm_surface_destroy((*it).gbmSurface);
-        }
+        cleanupOutput(*it);
+    }
+}
+
+void EglGbmBackend::cleanupOutput(const Output &o)
+{
+    // TODO: cleanup front buffer?
+    if (o.eglSurface != EGL_NO_SURFACE) {
+        eglDestroySurface(eglDisplay(), o.eglSurface);
+    }
+    if (o.gbmSurface) {
+        gbm_surface_destroy(o.gbmSurface);
     }
 }
 
@@ -148,21 +168,7 @@ bool EglGbmBackend::initRenderingContext()
 
     const auto outputs = m_backend->outputs();
     for (DrmOutput *drmOutput: outputs) {
-        Output o;
-        o.output = drmOutput;
-        o.gbmSurface = gbm_surface_create(m_device, drmOutput->size().width(), drmOutput->size().height(),
-                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
-        if (!o.gbmSurface) {
-            qCCritical(KWIN_CORE) << "Create gbm surface failed";
-            continue;
-        }
-        o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)o.gbmSurface, nullptr);
-        if (o.eglSurface == EGL_NO_SURFACE) {
-            qCCritical(KWIN_CORE) << "Create Window Surface failed";
-            gbm_surface_destroy(o.gbmSurface);
-            continue;
-        }
-        m_outputs << o;
+        createOutput(drmOutput);
     }
     if (m_outputs.isEmpty()) {
         qCCritical(KWIN_CORE) << "Create Window Surfaces failed";
@@ -172,6 +178,25 @@ bool EglGbmBackend::initRenderingContext()
     setSurface(m_outputs.first().eglSurface);
 
     return makeContextCurrent(m_outputs.first());
+}
+
+void EglGbmBackend::createOutput(DrmOutput *drmOutput)
+{
+    Output o;
+    o.output = drmOutput;
+    o.gbmSurface = gbm_surface_create(m_device, drmOutput->size().width(), drmOutput->size().height(),
+                                        GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
+    if (!o.gbmSurface) {
+        qCCritical(KWIN_CORE) << "Create gbm surface failed";
+        return;
+    }
+    o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)o.gbmSurface, nullptr);
+    if (o.eglSurface == EGL_NO_SURFACE) {
+        qCCritical(KWIN_CORE) << "Create Window Surface failed";
+        gbm_surface_destroy(o.gbmSurface);
+        return;
+    }
+    m_outputs << o;
 }
 
 bool EglGbmBackend::makeContextCurrent(const Output &output)

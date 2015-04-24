@@ -71,6 +71,8 @@ private:
     };
     bool makeContextCurrent(const Output &output);
     void presentOnOutput(Output &output);
+    void cleanupOutput(const Output &output);
+    void createOutput(DrmOutput *output);
     DrmBackend *m_backend;
     gbm_device *m_device = nullptr;
     QVector<Output> m_outputs;
