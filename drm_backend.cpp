@@ -26,9 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "udev.h"
 #include "utils.h"
 #include "virtual_terminal.h"
+#include "wayland_server.h"
 #if HAVE_GBM
 #include "egl_gbm_backend.h"
 #endif
+// KWayland
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/output_interface.h>
 // Qt
 #include <QSocketNotifier>
 #include <QPainter>
@@ -61,6 +65,7 @@ DrmBackend::DrmBackend(QObject *parent)
     , m_udev(new Udev)
     , m_udevMonitor(m_udev->monitor())
 {
+    handleOutputs();
     m_cursor[0] = nullptr;
     m_cursor[1] = nullptr;
 }
@@ -596,6 +601,10 @@ void DrmOutput::init()
 {
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
     blank();
+    m_waylandOutput.reset(waylandServer()->display()->createOutput());
+    m_waylandOutput->setPhysicalSize(size() / 3.8);
+    m_waylandOutput->addMode(size());
+    m_waylandOutput->create();
 }
 
 void DrmOutput::blank()

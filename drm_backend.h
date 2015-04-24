@@ -28,6 +28,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 struct gbm_bo;
 struct gbm_surface;
 
+namespace KWayland
+{
+namespace Server
+{
+class OutputInterface;
+}
+}
+
 namespace KWin
 {
 
@@ -135,6 +143,7 @@ private:
         }
     };
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
+    QScopedPointer<KWayland::Server::OutputInterface> m_waylandOutput;
 };
 
 class DrmBuffer
