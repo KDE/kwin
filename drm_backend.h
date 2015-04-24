@@ -62,6 +62,10 @@ public:
     QVector<DrmOutput*> outputs() const {
         return m_outputs;
     }
+    QVector<DrmBuffer*> buffers() const {
+        return m_buffers;
+    }
+    void bufferDestroyed(DrmBuffer *b);
 
 Q_SIGNALS:
     void screensQueried();
@@ -92,6 +96,7 @@ private:
     int m_cursorIndex = 0;
     int m_pageFlipsPending = 0;
     bool m_active = false;
+    QVector<DrmBuffer*> m_buffers;
 };
 
 class DrmOutput
@@ -152,6 +157,9 @@ public:
     }
     quint32 stride() const {
         return m_stride;
+    }
+    gbm_bo *gbm() const {
+        return m_bo;
     }
     void releaseGbm();
 

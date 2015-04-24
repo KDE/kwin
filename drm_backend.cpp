@@ -481,14 +481,23 @@ OpenGLBackend *DrmBackend::createOpenGLBackend()
 
 DrmBuffer *DrmBackend::createBuffer(const QSize &size)
 {
-    return new DrmBuffer(this, size);
+    DrmBuffer *b = new DrmBuffer(this, size);
+    m_buffers << b;
+    return b;
 }
 
 DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 {
 #if HAVE_GBM
-    return new DrmBuffer(this, surface);
+    DrmBuffer *b = new DrmBuffer(this, surface);
+    m_buffers << b;
+    return b;
 #endif
+}
+
+void DrmBackend::bufferDestroyed(DrmBuffer *b)
+{
+    m_buffers.removeAll(b);
 }
 
 DrmOutput::DrmOutput(DrmBackend *backend)
@@ -633,8 +642,14 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
 #if HAVE_GBM
 static void gbmCallback(gbm_bo *bo, void *data)
 {
-    Q_UNUSED(bo);
-    delete reinterpret_cast<DrmBuffer*>(data);
+    DrmBackend *backend = reinterpret_cast<DrmBackend*>(data);
+    const auto &buffers = backend->buffers();
+    for (auto buffer: buffers) {
+        if (buffer->gbm() == bo) {
+            delete buffer;
+            return;
+        }
+    }
 }
 #endif
 
@@ -653,12 +668,13 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
     if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, m_stride, gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
         qWarning(KWIN_CORE) << "drmModeAddFB failed";
     }
-    gbm_bo_set_user_data(m_bo, this, gbmCallback);
+    gbm_bo_set_user_data(m_bo, m_backend, gbmCallback);
 #endif
 }
 
 DrmBuffer::~DrmBuffer()
 {
+    m_backend->bufferDestroyed(this);
     delete m_image;
     if (m_memory) {
         munmap(m_memory, m_bufferSize);
