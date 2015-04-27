@@ -110,13 +110,19 @@ private:
 class DrmOutput
 {
 public:
+    struct Edid {
+        QByteArray eisaId;
+        QByteArray monitorName;
+        QByteArray serialNumber;
+        QSize physicalSize;
+    };
     virtual ~DrmOutput();
     void showCursor(DrmBuffer *buffer);
     void hideCursor();
     void moveCursor(const QPoint &globalPos);
     bool present(DrmBuffer *buffer);
     void pageFlipped();
-    void init();
+    void init(drmModeConnector *connector);
     void restoreSaved();
     void blank();
 
@@ -128,6 +134,7 @@ private:
     DrmOutput(DrmBackend *backend);
     void cleanupBlackBuffer();
     bool setMode(DrmBuffer *buffer);
+    void initEdid(drmModeConnector *connector);
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
@@ -142,6 +149,7 @@ private:
             drmModeFreeCrtc(ptr);
         }
     };
+    Edid m_edid;
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QScopedPointer<KWayland::Server::OutputInterface> m_waylandOutput;
 };
