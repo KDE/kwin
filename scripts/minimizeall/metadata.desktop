@@ -2,6 +2,7 @@
 Name=MinimizeAll
 Name[ca]=MinimitzaTot
 Name[cs]=MinimalizovatVše
+Name[en_GB]=MinimiseAll
 Name[es]=Maximizar todo
 Name[fi]=Pienennä kaikki
 Name[gl]=Minimizalo todo
@@ -23,6 +24,7 @@ Name[x-test]=xxMinimizeAllxx
 Name[zh_CN]=最小化所有
 Comment=Adds a shortcut to minimize all windows or unminimize all such way minimized windows
 Comment[ca]=Afegeix una drecera per a minimitzar totes les finestres o desminimitzar-les si estan minimitzades
+Comment[en_GB]=Adds a shortcut to minimise all windows or unminimise all such way minimised windows
 Comment[es]=Añade un acceso rápido para minimizar todas la ventanas o restaurar todas las minimizadas de este modo
 Comment[fi]=Lisää pikanäppäimen, joka pienentää kaikki ikkunat tai palauttaa kaikki samalla tavalla pienennetyt ikkunat
 Comment[gl]=Engade un atallo para minimizar todas as xanelas e restauralas de novo.
