@@ -135,6 +135,7 @@ private:
     void cleanupBlackBuffer();
     bool setMode(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
+    bool isCurrentMode(const drmModeModeInfo *mode) const;
 
     DrmBackend *m_backend;
     QPoint m_globalPos;

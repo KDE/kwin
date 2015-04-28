@@ -640,8 +640,52 @@ void DrmOutput::init(drmModeConnector *connector)
     }
     m_waylandOutput->setPhysicalSize(physicalSize);
 
-    m_waylandOutput->addMode(size());
+    // read in mode information
+    for (int i = 0; i < connector->count_modes; ++i) {
+        auto *m = &connector->modes[i];
+        KWayland::Server::OutputInterface::ModeFlags flags;
+        if (isCurrentMode(m)) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Current;
+        }
+        if (m->type & DRM_MODE_TYPE_PREFERRED) {
+            flags |= KWayland::Server::OutputInterface::ModeFlag::Preferred;
+        }
+
+        // Calculate higher precision (mHz) refresh rate
+        // logic based on Weston, see compositor-drm.c
+        quint64 refreshRate = (m->clock * 1000000LL / m->htotal + m->vtotal / 2) / m->vtotal;
+        if (m->flags & DRM_MODE_FLAG_INTERLACE) {
+            refreshRate *= 2;
+        }
+        if (m->flags & DRM_MODE_FLAG_DBLSCAN) {
+            refreshRate /= 2;
+        }
+        if (m->vscan > 1) {
+            refreshRate /= m->vscan;
+        }
+        m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
+    }
+
     m_waylandOutput->create();
+}
+
+bool DrmOutput::isCurrentMode(const drmModeModeInfo *mode) const
+{
+    return mode->clock       == m_mode.clock
+        && mode->hdisplay    == m_mode.hdisplay
+        && mode->hsync_start == m_mode.hsync_start
+        && mode->hsync_end   == m_mode.hsync_end
+        && mode->htotal      == m_mode.htotal
+        && mode->hskew       == m_mode.hskew
+        && mode->vdisplay    == m_mode.vdisplay
+        && mode->vsync_start == m_mode.vsync_start
+        && mode->vsync_end   == m_mode.vsync_end
+        && mode->vtotal      == m_mode.vtotal
+        && mode->vscan       == m_mode.vscan
+        && mode->vrefresh    == m_mode.vrefresh
+        && mode->flags       == m_mode.flags
+        && mode->type        == m_mode.type
+        && qstrcmp(mode->name, m_mode.name) == 0;
 }
 
 void DrmOutput::blank()
