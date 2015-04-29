@@ -28,7 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 #include "abstract_client.h"
 #include "xcbutils.h"
-#include "decorations/decorationpalette.h"
 // Qt
 #include <QElapsedTimer>
 #include <QFlags>
@@ -524,9 +523,6 @@ public:
 
     void cancelFocusOutTimer();
 
-    QPalette palette() const override;
-    const Decoration::DecorationPalette *decorationPalette() const;
-
     /**
      * Restores the Client after it had been hidden due to show on screen edge functionality.
      * In addition the property gets deleted so that the Client knows that it is visible again.
@@ -605,7 +601,6 @@ Q_SIGNALS:
     void moveResizedChanged();
     void skipTaskbarChanged();
     void skipPagerChanged();
-    void paletteChanged(const QPalette &p);
 
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
@@ -725,8 +720,6 @@ private:
      * and shows/hides the client.
      **/
     void updateShowOnScreenEdge();
-
-    void handlePaletteChange();
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
@@ -860,11 +853,6 @@ private:
     QPoint input_offset;
 
     QTimer *m_focusOutTimer;
-
-    QString m_colorScheme;
-    std::shared_ptr<Decoration::DecorationPalette> m_palette;
-    static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
-    static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
     QList<QMetaObject::Connection> m_connections;
     bool m_clientSideDecorated;
@@ -1079,16 +1067,6 @@ inline void Client::removeRule(Rules* rule)
 inline bool Client::hiddenPreview() const
 {
     return mapping_state == Kept;
-}
-
-inline QPalette Client::palette() const
-{
-    return m_palette->palette();
-}
-
-inline const Decoration::DecorationPalette *Client::decorationPalette() const
-{
-    return m_palette.get();
 }
 
 template <typename T>

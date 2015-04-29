@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "options.h"
 #include "rules.h"
 
+#include <memory>
+
 namespace KWin
 {
 
@@ -32,6 +34,11 @@ class TabGroup;
 namespace TabBox
 {
 class TabBoxClientImpl;
+}
+
+namespace Decoration
+{
+class DecorationPalette;
 }
 
 class AbstractClient : public Toplevel
@@ -202,7 +209,8 @@ public:
     virtual bool noBorder() const = 0;
     virtual void setNoBorder(bool set) = 0;
     virtual void blockActivityUpdates(bool b = true) = 0;
-    virtual QPalette palette() const = 0;
+    QPalette palette() const;
+    const Decoration::DecorationPalette *decorationPalette() const;
     virtual bool isResizable() const = 0;
     virtual bool isMovable() const = 0;
     virtual bool isMovableAcrossScreens() const = 0;
@@ -302,6 +310,7 @@ Q_SIGNALS:
     void minimizedChanged();
     void clientMinimized(KWin::AbstractClient* client, bool animate);
     void clientUnminimized(KWin::AbstractClient* client, bool animate);
+    void paletteChanged(const QPalette &p);
 
 protected:
     AbstractClient();
@@ -351,7 +360,10 @@ protected:
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
+    void updateColorScheme(QString path);
+
 private:
+    void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
     bool m_skipSwitcher = false;
@@ -363,6 +375,11 @@ private:
     bool m_minimized = false;
     QTimer *m_autoRaiseTimer = nullptr;
     int m_desktop = 0; // 0 means not on any desktop yet
+
+    QString m_colorScheme;
+    std::shared_ptr<Decoration::DecorationPalette> m_palette;
+    static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
+    static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 };
 
 }

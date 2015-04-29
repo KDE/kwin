@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_client.h"
+#include "decorations/decorationpalette.h"
 #include "focuschain.h"
 #ifdef KWIN_BUILD_TABBOX
 #include "tabbox.h"
@@ -27,11 +28,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> AbstractClient::s_palettes;
+std::shared_ptr<Decoration::DecorationPalette> AbstractClient::s_defaultPalette;
+
 AbstractClient::AbstractClient()
     : Toplevel()
 #ifdef KWIN_BUILD_TABBOX
     , m_tabBoxClient(QSharedPointer<TabBox::TabBoxClientImpl>(new TabBox::TabBoxClientImpl(this)))
 #endif
+    , m_colorScheme(QStringLiteral("kdeglobals"))
 {
 }
 
@@ -353,6 +358,65 @@ void AbstractClient::unminimize(bool avoid_animation)
 
 void AbstractClient::doMinimize()
 {
+}
+
+QPalette AbstractClient::palette() const
+{
+    if (!m_palette) {
+        return QPalette();
+    }
+    return m_palette->palette();
+}
+
+const Decoration::DecorationPalette *AbstractClient::decorationPalette() const
+{
+    return m_palette.get();
+}
+
+void AbstractClient::updateColorScheme(QString path)
+{
+    if (path.isEmpty()) {
+        path = QStringLiteral("kdeglobals");
+    }
+
+    if (!m_palette || m_colorScheme != path) {
+        m_colorScheme = path;
+
+        if (m_palette) {
+            disconnect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &AbstractClient::handlePaletteChange);
+        }
+
+        auto it = s_palettes.find(m_colorScheme);
+
+        if (it == s_palettes.end() || it->expired()) {
+            m_palette = std::make_shared<Decoration::DecorationPalette>(m_colorScheme);
+            if (m_palette->isValid()) {
+                s_palettes[m_colorScheme] = m_palette;
+            } else {
+                if (!s_defaultPalette) {
+                    s_defaultPalette = std::make_shared<Decoration::DecorationPalette>(QStringLiteral("kdeglobals"));
+                    s_palettes[QStringLiteral("kdeglobals")] = s_defaultPalette;
+                }
+
+                m_palette = s_defaultPalette;
+            }
+
+            if (m_colorScheme == QStringLiteral("kdeglobals")) {
+                s_defaultPalette = m_palette;
+            }
+        } else {
+            m_palette = it->lock();
+        }
+
+        connect(m_palette.get(), &Decoration::DecorationPalette::changed, this, &AbstractClient::handlePaletteChange);
+
+        emit paletteChanged(palette());
+    }
+}
+
+void AbstractClient::handlePaletteChange()
+{
+    emit paletteChanged(palette());
 }
 
 }
