@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
+class AbstractClient;
 class Client;
 class X11EventFilter;
 
@@ -38,14 +39,14 @@ class MockWorkspace : public QObject
 public:
     explicit MockWorkspace(QObject *parent = nullptr);
     virtual ~MockWorkspace();
-    Client *activeClient() const;
-    Client *getMovingClient() const;
+    AbstractClient *activeClient() const;
+    AbstractClient *getMovingClient() const;
     void setShowingDesktop(bool showing);
     bool showingDesktop() const;
     QRect clientArea(clientAreaOption, int screen, int desktop) const;
 
-    void setActiveClient(Client *c);
-    void setMovingClient(Client *c);
+    void setActiveClient(AbstractClient *c);
+    void setMovingClient(AbstractClient *c);
 
     void registerEventFilter(X11EventFilter *filter);
     void unregisterEventFilter(X11EventFilter *filter);
@@ -56,8 +57,8 @@ Q_SIGNALS:
     void clientRemoved(KWin::Client*);
 
 private:
-    Client *m_activeClient;
-    Client *m_movingClient;
+    AbstractClient *m_activeClient;
+    AbstractClient *m_movingClient;
     bool m_showingDesktop;
     static Workspace *s_self;
 };

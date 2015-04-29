@@ -197,6 +197,7 @@ target_link_libraries(effectversionplugin kwineffects)
 ########################################################
 set( testScreens_SRCS
     test_screens.cpp
+    mock_abstract_client.cpp
     mock_client.cpp
     mock_screens.cpp
     mock_workspace.cpp
@@ -224,6 +225,7 @@ ecm_mark_as_test(testScreens)
 ########################################################
 set( testXRandRScreens_SRCS
      test_xrandr_screens.cpp
+     mock_abstract_client.cpp
      mock_client.cpp
      mock_screens.cpp
      mock_workspace.cpp
@@ -259,6 +261,7 @@ ecm_mark_as_test(testXRandRScreens)
 ########################################################
 set( testScreenEdges_SRCS
     test_screen_edges.cpp
+    mock_abstract_client.cpp
     mock_client.cpp
     mock_screens.cpp
     mock_workspace.cpp

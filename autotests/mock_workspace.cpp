@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "mock_workspace.h"
-#include "mock_client.h"
+#include "mock_abstract_client.h"
 
 namespace KWin
 {
@@ -39,22 +39,22 @@ MockWorkspace::~MockWorkspace()
     s_self = nullptr;
 }
 
-Client *MockWorkspace::activeClient() const
+AbstractClient *MockWorkspace::activeClient() const
 {
     return m_activeClient;
 }
 
-void MockWorkspace::setActiveClient(Client *c)
+void MockWorkspace::setActiveClient(AbstractClient *c)
 {
     m_activeClient = c;
 }
 
-Client *MockWorkspace::getMovingClient() const
+AbstractClient *MockWorkspace::getMovingClient() const
 {
     return m_movingClient;
 }
 
-void MockWorkspace::setMovingClient(Client *c)
+void MockWorkspace::setMovingClient(AbstractClient *c)
 {
     m_movingClient = c;
 }
