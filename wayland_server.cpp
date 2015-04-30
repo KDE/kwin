@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Client/registry.h>
 // Server
 #include <KWayland/Server/compositor_interface.h>
+#include <KWayland/Server/datadevicemanager_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
@@ -96,6 +97,7 @@ void WaylandServer::init(const QByteArray &socketName)
     m_display->createShm();
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
+    m_display->createDataDeviceManager(m_display)->create();
 }
 
 void WaylandServer::initOutputs()
