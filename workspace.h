@@ -162,7 +162,7 @@ public:
     void restoreFocus();
     void gotFocusIn(const Client*);
     void setShouldGetFocus(Client*);
-    bool activateNextClient(Client* c);
+    bool activateNextClient(AbstractClient* c);
     bool focusChangeEnabled() {
         return block_focus == 0;
     }
@@ -187,7 +187,7 @@ public:
     void updateStackingOrder(bool propagate_new_clients = false);
     void forceRestacking();
 
-    void clientHidden(Client*);
+    void clientHidden(AbstractClient*);
     void clientAttentionChanged(AbstractClient* c, bool set);
 
     /**

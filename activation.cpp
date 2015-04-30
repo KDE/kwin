@@ -402,7 +402,7 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
 
   \a c may already be destroyed
  */
-void Workspace::clientHidden(Client* c)
+void Workspace::clientHidden(AbstractClient* c)
 {
     assert(!c->isShown(true) || !c->isOnCurrentDesktop() || !c->isOnCurrentActivity());
     activateNextClient(c);
@@ -431,7 +431,7 @@ Client *Workspace::clientUnderMouse(int screen) const
 }
 
 // deactivates 'c' and activates next client
-bool Workspace::activateNextClient(Client* c)
+bool Workspace::activateNextClient(AbstractClient* c)
 {
     // if 'c' is not the active or the to-become active one, do nothing
     if (!(c == active_client || (should_get_focus.count() > 0 && c == should_get_focus.last())))
@@ -478,7 +478,10 @@ bool Workspace::activateNextClient(Client* c)
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
-        if (c  && (get_focus = c->transientFor()) && FocusChain::self()->isUsableFocusCandidate(get_focus, c)) {
+        if (Client *client = qobject_cast<Client*>(c)) {
+            get_focus = client->transientFor();
+        }
+        if (c  && get_focus && FocusChain::self()->isUsableFocusCandidate(get_focus, c)) {
             raiseClient(get_focus);   // also raise - we don't know where it came from
         } else {
             // nope, ask the focus chain for the next candidate
