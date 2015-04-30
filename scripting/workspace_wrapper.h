@@ -91,7 +91,7 @@ Q_SIGNALS:
     void desktopPresenceChanged(KWin::AbstractClient *client, int desktop);
     void currentDesktopChanged(int desktop, KWin::AbstractClient *client);
     void clientAdded(KWin::Client *client);
-    void clientRemoved(KWin::Client *client);
+    void clientRemoved(KWin::AbstractClient *client);
     void clientManaging(KWin::Client *client);
     void clientMinimized(KWin::AbstractClient *client);
     void clientUnminimized(KWin::AbstractClient *client);

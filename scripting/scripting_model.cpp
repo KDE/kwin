@@ -38,7 +38,7 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     : AbstractLevel(model, parent)
 {
     connect(Workspace::self(), SIGNAL(clientAdded(KWin::Client*)), SLOT(clientAdded(KWin::Client*)));
-    connect(Workspace::self(), SIGNAL(clientRemoved(KWin::Client*)), SLOT(clientRemoved(KWin::Client*)));
+    connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
     connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
 }
 
@@ -52,9 +52,11 @@ void ClientLevel::clientAdded(Client *client)
     checkClient(client);
 }
 
-void ClientLevel::clientRemoved(Client *client)
+void ClientLevel::clientRemoved(AbstractClient *client)
 {
-    removeClient(client);
+    if (Client *c = qobject_cast<Client*>(client)) {
+        removeClient(c);
+    }
 }
 
 void ClientLevel::setupClientConnections(Client *client)

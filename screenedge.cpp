@@ -640,7 +640,11 @@ ScreenEdges::ScreenEdges(QObject *parent)
     QWidget w;
     m_cornerOffset = (w.physicalDpiX() + w.physicalDpiY() + 5) / 6;
 
-    connect(workspace(), &Workspace::clientRemoved, [this](KWin::Client *client) {
+    connect(workspace(), &Workspace::clientRemoved, [this](KWin::AbstractClient *c) {
+        Client *client = qobject_cast<Client*>(c);
+        if (!client) {
+            return;
+        }
         deleteEdgeForClient(client);
         QObject::disconnect(client, &Client::geometryChanged,
                             ScreenEdges::self(), &ScreenEdges::handleClientGeometryChanged);

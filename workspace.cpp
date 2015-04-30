@@ -387,7 +387,8 @@ void Workspace::init()
             }
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
-            [this] {
+            [this] (ShellClient *c) {
+                emit clientRemoved(c);
                 x_stacking_dirty = true;
                 updateStackingOrder(true);
             }

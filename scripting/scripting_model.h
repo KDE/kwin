@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QList>
 
 namespace KWin {
+class AbstractClient;
 class Client;
 
 namespace ScriptingClientModel {
@@ -228,7 +229,7 @@ public:
     virtual AbstractLevel *parentForId(quint32 child) const;
 public Q_SLOTS:
     void clientAdded(KWin::Client *client);
-    void clientRemoved(KWin::Client *client);
+    void clientRemoved(KWin::AbstractClient *client);
 private Q_SLOTS:
     // uses sender()
     void checkClient();
