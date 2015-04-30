@@ -420,6 +420,7 @@ void CoverSwitchEffect::slotTabBoxAdded(int mode)
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
     if (!mActivated) {
+        effects->setShowingDesktop(false);
         // only for windows mode
         if (((mode == TabBoxWindowsMode && primaryTabBox) ||
                 (mode == TabBoxWindowsAlternativeMode && secondaryTabBox) ||
