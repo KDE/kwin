@@ -98,6 +98,7 @@ private:
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     QSize m_clientSize;
+    bool m_closing = false;
 };
 
 }

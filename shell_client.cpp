@@ -61,6 +61,7 @@ ShellClient::~ShellClient() = default;
 
 void ShellClient::destroyClient()
 {
+    m_closing = true;
     Deleted *del = Deleted::create(this);
     emit windowClosed(this, del);
     waylandServer()->removeClient(this);
@@ -235,7 +236,7 @@ bool ShellClient::isResizable() const
 bool ShellClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return true;
+    return !m_closing;
 }
 
 void ShellClient::maximize(MaximizeMode)
