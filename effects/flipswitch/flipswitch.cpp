@@ -407,6 +407,7 @@ void FlipSwitchEffect::slotTabBoxAdded(int mode)
     if (effects->activeFullScreenEffect() && effects->activeFullScreenEffect() != this)
         return;
     // only for windows mode
+    effects->setShowingDesktop(false);
     if (((mode == TabBoxWindowsMode && m_tabbox) ||
             (mode == TabBoxWindowsAlternativeMode && m_tabboxAlternative) ||
             (mode == TabBoxCurrentAppWindowsMode && m_tabbox) ||
