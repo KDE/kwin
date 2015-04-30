@@ -70,6 +70,10 @@ void WaylandServer::init(const QByteArray &socketName)
                 // it's possible that a Surface gets created before Workspace is created
                 return;
             }
+            if (surface->client() != xWaylandConnection()) {
+                // setting surface is only relevat for Xwayland clients
+                return;
+            }
             auto check = [surface] (const Toplevel *t) {
                 return t->surfaceId() == surface->id();
             };
