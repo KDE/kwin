@@ -42,7 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KSharedConfig>
 // Qt
 #include <qplatformdefs.h>
-#include <QDebug>
 #include <QComboBox>
 #include <qcommandlineparser.h>
 #include <QDialog>
@@ -378,7 +377,7 @@ void Application::createWorkspace()
     // critical startup section where x errors cause kwin to abort.
 
     // create workspace.
-    (void) new Workspace(isSessionRestored());
+    (void) new Workspace(m_originalSessionKey);
     emit workspaceCreated();
 }
 

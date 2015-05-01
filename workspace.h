@@ -63,7 +63,7 @@ class KWIN_EXPORT Workspace : public QObject
 {
     Q_OBJECT
 public:
-    explicit Workspace(bool restore = false);
+    explicit Workspace(const QString &sessionKey = QString());
     virtual ~Workspace();
 
     static Workspace* self() {
@@ -433,6 +433,10 @@ private Q_SLOTS:
     void slotDesktopCountChanged(uint previousCount, uint newCount);
     void slotCurrentDesktopChanged(uint oldDesktop, uint newDesktop);
 
+    // session management
+    void saveState(QSessionManager &sm);
+    void commitData(QSessionManager &sm);
+
 Q_SIGNALS:
     /**
      * Emitted after the Workspace has setup the complete initialization process.
@@ -505,7 +509,8 @@ private:
     QWidget* active_popup;
     AbstractClient* active_popup_client;
 
-    void loadSessionInfo();
+    int m_initialDesktop;
+    void loadSessionInfo(const QString &key);
     void addSessionInfo(KConfigGroup &cg);
 
     QList<SessionInfo*> session;

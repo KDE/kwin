@@ -100,12 +100,13 @@ void ColorMapper::update()
 
 Workspace* Workspace::_self = 0;
 
-Workspace::Workspace(bool restore)
+Workspace::Workspace(const QString &sessionKey)
     : QObject(0)
     , m_compositor(NULL)
     // Unsorted
     , active_popup(NULL)
     , active_popup_client(NULL)
+    , m_initialDesktop(1)
     , active_client(0)
     , last_active_client(0)
     , most_recently_raised(0)
@@ -156,8 +157,10 @@ Workspace::Workspace(bool restore)
 
     delayFocusTimer = 0;
 
-    if (restore)
-        loadSessionInfo();
+    if (!sessionKey.isEmpty())
+        loadSessionInfo(sessionKey);
+    connect(qApp, &QGuiApplication::commitDataRequest, this, &Workspace::commitData);
+    connect(qApp, &QGuiApplication::saveStateRequest, this, &Workspace::saveState);
 
     RuleBook::create(this)->load();
 
@@ -261,18 +264,9 @@ void Workspace::init()
 
     // Extra NETRootInfo instance in Client mode is needed to get the values of the properties
     NETRootInfo client_info(connection(), NET::ActiveWindow | NET::CurrentDesktop);
-    int initial_desktop;
     if (!qApp->isSessionRestored())
-        initial_desktop = client_info.currentDesktop();
-    else {
-#if KWIN_QT5_PORTING
-        KConfigGroup group(kapp->sessionConfig(), "Session");
-        initial_desktop = group.readEntry("desktop", 1);
-#else
-        initial_desktop = 1;
-#endif
-    }
-    if (!VirtualDesktopManager::self()->setCurrent(initial_desktop))
+        m_initialDesktop = client_info.currentDesktop();
+    if (!VirtualDesktopManager::self()->setCurrent(m_initialDesktop))
         VirtualDesktopManager::self()->setCurrent(1);
 
     reconfigureTimer.setSingleShot(true);

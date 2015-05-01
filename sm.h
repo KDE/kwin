@@ -25,9 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDataStream>
 #include <kwinglobals.h>
 #include <QStringList>
-#if KWIN_QT5_PORTING
-#include <ksessionmanager.h>
-#endif
 #include <netwm_def.h>
 #include <QRect>
 
@@ -100,16 +97,6 @@ private:
     QSocketNotifier* notifier;
     SmcConn conn;
 };
-
-#if KWIN_QT5_PORTING
-class SessionManager
-    : public KSessionManager
-{
-public:
-    virtual bool saveState(QSessionManager& sm);
-    virtual bool commitData(QSessionManager& sm);
-};
-#endif
 
 } // namespace
 

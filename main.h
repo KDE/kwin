@@ -187,6 +187,9 @@ protected:
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);
 
+protected:
+    QString m_originalSessionKey;
+
 private Q_SLOTS:
     void resetCrashesCount();
 

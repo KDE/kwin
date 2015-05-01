@@ -30,14 +30,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include "client.h"
 #include <QDebug>
+#include <QFile>
 #include <QSocketNotifier>
 #include <QSessionManager>
 
 namespace KWin
 {
 
-#if KWIN_QT5_PORTING
-bool SessionManager::saveState(QSessionManager& sm)
+static bool gs_sessionManagerIsKSMServer = false;
+static KConfig *sessionConfig(QString id, QString key)
+{
+    static KConfig *config = nullptr;
+    static QString lastId;
+    static QString lastKey;
+    static QString pattern = QString(QLatin1String("session/%1_%2_%3")).arg(qApp->applicationName());
+    if (id != lastId || key != lastKey) {
+        delete config;
+        config = nullptr;
+    }
+    lastId = id;
+    lastKey = key;
+    if (!config) {
+        config = new KConfig(pattern.arg(id).arg(key), KConfig::SimpleConfig);
+    }
+    return config;
+}
+
+void Workspace::saveState(QSessionManager &sm)
 {
     // If the session manager is ksmserver, save stacking
     // order, active window, active desktop etc. in phase 1,
@@ -45,37 +64,34 @@ bool SessionManager::saveState(QSessionManager& sm)
     // before the WM finishes phase 1. Saving in phase 2 is
     // too late, as possible user interaction may change some things.
     // Phase2 is still needed though (ICCCM 5.2)
-#if KWIN_QT5_PORTING
-    char* sm_vendor = SmcVendor(static_cast< SmcConn >(sm.handle()));
-    bool ksmserver = qstrcmp(sm_vendor, "KDE") == 0;
-    free(sm_vendor);
-#else
-#warning need to figure out whether the used SessionManager is ksmserver
-    bool ksmserver = false;
-#endif
+    KConfig *config = sessionConfig(sm.sessionId(), sm.sessionKey());
     if (!sm.isPhase2()) {
-        Workspace::self()->sessionSaveStarted();
-        if (ksmserver)   // save stacking order etc. before "save file?" etc. dialogs change it
-            Workspace::self()->storeSession(kapp->sessionConfig(), SMSavePhase0);
+        KConfigGroup cg(config, "Session");
+        cg.writeEntry("AllowsInteraction", sm.allowsInteraction());
+        sessionSaveStarted();
+        if (gs_sessionManagerIsKSMServer)   // save stacking order etc. before "save file?" etc. dialogs change it
+            storeSession(config, SMSavePhase0);
+        config->markAsClean(); // don't write Phase #1 data to disk
         sm.release(); // Qt doesn't automatically release in this case (bug?)
         sm.requestPhase2();
-        return true;
+        return;
     }
-    Workspace::self()->storeSession(kapp->sessionConfig(), ksmserver ? SMSavePhase2 : SMSavePhase2Full);
-#if KWIN_QT5_PORTING
-    kapp->sessionConfig()->sync();
-#endif
-    return true;
+    storeSession(config, gs_sessionManagerIsKSMServer ? SMSavePhase2 : SMSavePhase2Full);
+    config->sync();
+
+    // inform the smserver on how to clean-up after us
+    const QString localFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QLatin1Char('/') + config->name();
+    if (QFile::exists(localFilePath)) { // expectable for the sync
+        sm.setDiscardCommand(QStringList() << QLatin1String("rm") << localFilePath);
+    }
 }
 
 // I bet this is broken, just like everywhere else in KDE
-bool SessionManager::commitData(QSessionManager& sm)
+void Workspace::commitData(QSessionManager &sm)
 {
     if (!sm.isPhase2())
-        Workspace::self()->sessionSaveStarted();
-    return true;
+        sessionSaveStarted();
 }
-#endif
 
 // Workspace
 
@@ -194,18 +210,18 @@ void Workspace::storeSubSession(const QString &name, QSet<QByteArray> sessionIds
 
   \sa storeSession()
  */
-void Workspace::loadSessionInfo()
+void Workspace::loadSessionInfo(const QString &key)
 {
+    // NOTICE: qApp->sessionKey() is outdated when this gets invoked
+    // the key parameter is cached from the application constructor.
     session.clear();
-#if KWIN_QT5_PORTING
-    KConfigGroup cg(kapp->sessionConfig(), "Session");
-
+    KConfigGroup cg(sessionConfig(qApp->sessionId(), key), "Session");
     addSessionInfo(cg);
-#endif
 }
 
 void Workspace::addSessionInfo(KConfigGroup &cg)
 {
+    m_initialDesktop = cg.readEntry(QStringLiteral("desktop"), 1);
     int count =  cg.readEntry("count", 0);
     int active_client = cg.readEntry("active", 0);
     for (int i = 1; i <= count; i++) {
@@ -408,9 +424,8 @@ static void shutdown_cancelled(SmcConn conn_P, SmPointer ptr)
 
 void SessionSaveDoneHelper::saveDone()
 {
-#if KWIN_QT5_PORTING
-    Workspace::self()->sessionSaveDone();
-#endif
+    if (Workspace::self())
+        Workspace::self()->sessionSaveDone();
 }
 
 SessionSaveDoneHelper::SessionSaveDoneHelper()
@@ -433,6 +448,15 @@ SessionSaveDoneHelper::SessionSaveDoneHelper()
         free(id);
     if (conn == NULL)
         return; // no SM
+
+    // detect ksmserver
+    // NOTICE: no idea whether the assumptions about it in Workspace::saveState()
+    // still hold for KF5/Plasma 5
+#warning assuming special behavior in ksmserver to be still present in KF5
+    char* vendor = SmcVendor(conn);
+    gs_sessionManagerIsKSMServer = qstrcmp(vendor, "KDE") == 0;
+    free(vendor);
+
     // set the required properties, mostly dummy values
     SmPropValue propvalue[ 5 ];
     SmProp props[ 5 ];

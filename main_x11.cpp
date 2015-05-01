@@ -146,6 +146,11 @@ void ApplicationX11::performStartup()
         Application::setX11ScreenNumber(QX11Info::appScreen());
     }
 
+    // QSessionManager for some reason triggers a very early commitDataRequest
+    // and updates the key - before we create the workspace and load the session
+    // data -> store and pass to the workspace constructor
+    m_originalSessionKey = sessionKey();
+
     owner.reset(new KWinSelectionOwner(Application::x11ScreenNumber()));
     connect(owner.data(), &KSelectionOwner::failedToClaimOwnership, []{
         fputs(i18n("kwin: unable to claim manager selection, another wm running? (try using --replace)\n").toLocal8Bit().constData(), stderr);
@@ -293,10 +298,6 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     a.start();
 
-#warning SessionManager needs porting
-#if KWIN_QT5_PORTING
-    KWin::SessionManager weAreIndeed;
-#endif
     KWin::SessionSaveDoneHelper helper;
     Q_UNUSED(helper); // The sessionsavedonehelper opens a side channel to the smserver,
                       // listens for events and talks to it, so it needs to be created.
