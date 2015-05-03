@@ -188,7 +188,11 @@ void Edge::handle(const QPoint &cursorPos)
         unreserve();
         return;
     }
-    if ((edges()->isDesktopSwitchingMovingClients() && Workspace::self()->getMovingClient()) ||
+    AbstractClient *movingClient = Workspace::self()->getMovingClient();
+    bool isResize = false;
+    if (Client *movingClientClient = qobject_cast<Client*>(movingClient))
+        isResize = movingClientClient->isResize();
+    if ((edges()->isDesktopSwitchingMovingClients() && movingClient && !isResize) ||
         (edges()->isDesktopSwitching() && isScreenEdge())) {
         // always switch desktops in case:
         // moving a Client and option for switch on client move is enabled
@@ -196,7 +200,7 @@ void Edge::handle(const QPoint &cursorPos)
         switchDesktop(cursorPos);
         return;
     }
-    if (Workspace::self()->getMovingClient()) {
+    if (movingClient) {
         // if we are moving a window we don't want to trigger the actions. This just results in
         // problems, e.g. Desktop Grid activated or screen locker activated which just cannot
         // work as we hold a grab.
