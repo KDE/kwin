@@ -155,7 +155,7 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData& data, int time)
             m_progress = (m_progress + time) % BOUNCE_DURATION;
             m_frame = qRound((qreal)m_progress / (qreal)BOUNCE_FRAME_DURATION) % BOUNCE_FRAMES;
             m_currentGeometry = feedbackRect(); // bounce alters geometry with m_frame
-            data.paint.unite(m_currentGeometry);
+            data.paint = data.paint.united(m_currentGeometry);
             break;
         case BlinkingFeedback:
             m_progress = (m_progress + time) % BLINKING_DURATION;
