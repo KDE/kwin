@@ -85,6 +85,11 @@ void Client::setHiddenInternal(bool set)
     m_hiddenInternal = set;
 }
 
+bool Client::isResize() const
+{
+    return false;
+}
+
 void Client::setGeometry(const QRect &rect)
 {
     m_geometry = rect;

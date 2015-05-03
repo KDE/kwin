@@ -38,6 +38,7 @@ public:
     bool isActive() const;
     bool isFullScreen() const;
     bool isHiddenInternal() const;
+    bool isResize() const;
     QRect geometry() const;
 
     void setActive(bool active);
