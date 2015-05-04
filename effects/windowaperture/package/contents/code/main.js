@@ -39,7 +39,26 @@ var badBadWindowsEffect = {
                 break;
 
             // ignore invisible windows and such that do not have to be restored
-            if (!w.visible || (!showing && w.offToCornerId === undefined)) {
+            if (!w.visible) {
+                if (!(showing || w.offToCornerId === undefined)) { // we still need to stop this
+                    cancel(w.offToCornerId);
+                    delete w.offToCornerId;
+                    effects.setElevatedWindow(w, false);
+                    if (!w.dock) {
+                        animate({
+                            window: w,
+                            duration: badBadWindowsEffect.duration,
+                            animations: [{
+                                type: Effect.Opacity,
+                                from: 0.2,
+                                to: 0.0
+                            }]
+                        });
+                    }
+                }
+                continue;
+            }
+            if (!showing && w.offToCornerId === undefined) {
                 continue;
             }
 
