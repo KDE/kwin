@@ -1,0 +1,6 @@
+if(HAVE_DRM)
+    add_subdirectory(drm)
+endif()
+add_subdirectory(fbdev)
+add_subdirectory(wayland)
+add_subdirectory(x11)

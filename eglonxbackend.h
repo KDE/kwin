@@ -28,7 +28,7 @@ namespace KWin
 /**
  * @brief OpenGL Backend using Egl windowing system over an X overlay window.
  **/
-class EglOnXBackend : public AbstractEglBackend
+class KWIN_EXPORT EglOnXBackend : public AbstractEglBackend
 {
 public:
     EglOnXBackend();

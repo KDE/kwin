@@ -126,4 +126,6 @@ private:
 
 }
 
+Q_DECLARE_INTERFACE(KWin::AbstractBackend, "org.kde.kwin.AbstractBackend")
+
 #endif

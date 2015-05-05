@@ -206,9 +206,6 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 
 void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
 {
-    if (!input()) {
-        return;
-    }
     bool const pressed = (event->response_type & ~0x80) == XCB_BUTTON_PRESS;
     if (event->detail >= XCB_BUTTON_INDEX_4 && event->detail <= 7) {
         // wheel

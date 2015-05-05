@@ -31,7 +31,7 @@ namespace Xcb {
     class Shm;
 }
 
-class QPainterBackend
+class KWIN_EXPORT QPainterBackend
 {
 public:
     virtual ~QPainterBackend();

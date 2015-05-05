@@ -34,7 +34,7 @@ namespace KWin
 {
 class Client;
 
-class Screens : public QObject
+class KWIN_EXPORT Screens : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(int count READ count WRITE setCount NOTIFY countChanged)

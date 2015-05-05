@@ -37,9 +37,11 @@ namespace KWin
 class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
 {
     Q_OBJECT
+    Q_INTERFACES(KWin::AbstractBackend)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "x11.json")
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
-    X11WindowedBackend(QObject *parent);
+    X11WindowedBackend(QObject *parent = nullptr);
     virtual ~X11WindowedBackend();
     void init() override;
 

@@ -28,7 +28,7 @@ class QSocketNotifier;
 namespace KWin
 {
 
-class VirtualTerminal : public QObject
+class KWIN_EXPORT VirtualTerminal : public QObject
 {
     Q_OBJECT
 public:

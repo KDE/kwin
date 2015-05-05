@@ -132,6 +132,8 @@ private:
 class KWIN_EXPORT WaylandBackend : public AbstractBackend
 {
     Q_OBJECT
+    Q_INTERFACES(KWin::AbstractBackend)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "wayland.json")
 public:
     explicit WaylandBackend(QObject *parent = nullptr);
     virtual ~WaylandBackend();

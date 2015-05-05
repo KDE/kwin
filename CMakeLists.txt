@@ -436,39 +436,9 @@ if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
-            backends/fbdev/fb_backend.cpp
-            backends/fbdev/logging.cpp
-            backends/fbdev/scene_qpainter_fb_backend.cpp
-            backends/fbdev/screens_fb.cpp
-            backends/wayland/scene_qpainter_wayland_backend.cpp
-            backends/wayland/screens_wayland.cpp
-            backends/x11/scene_qpainter_x11_backend.cpp
-            backends/x11/screens_x11windowed.cpp
             virtual_terminal.cpp
-            backends/wayland/logging.cpp
-            backends/wayland/wayland_backend.cpp
             wayland_server.cpp
-            backends/x11/x11windowed_backend.cpp
-            backends/x11/logging.cpp
        )
-    if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
-        set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} backends/wayland/egl_wayland_backend.cpp)
-    endif()
-    if(HAVE_DRM)
-        set(kwin_KDEINIT_SRCS
-                ${kwin_KDEINIT_SRCS}
-                backends/drm/drm_backend.cpp
-                backends/drm/logging.cpp
-                backends/drm/screens_drm.cpp
-                backends/drm/scene_qpainter_drm_backend.cpp
-            )
-    endif()
-    if(HAVE_GBM)
-        set(kwin_KDEINIT_SRCS
-                ${kwin_KDEINIT_SRCS}
-                backends/drm/egl_gbm_backend.cpp
-            )
-    endif()
     if(HAVE_WAYLAND_CURSOR)
         set(kwin_KDEINIT_SRCS
                 ${kwin_KDEINIT_SRCS}
@@ -565,14 +535,6 @@ set(kwin_WAYLAND_LIBS
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
-set(kwin_WAYLAND_EGL_LIBS
-    Wayland::Egl
-)
-
-if(X11_XCB_FOUND)
-    set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} X11::XCB)
-endif()
-
 if(Wayland_Cursor_FOUND)
     set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} Wayland::Cursor)
 endif()
@@ -595,9 +557,6 @@ set(kwinLibs
 
 if(HAVE_WAYLAND)
     set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
-    if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
-        set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_EGL_LIBS})
-    endif()
 endif()
 
 if(UDEV_FOUND)
@@ -606,14 +565,6 @@ endif()
 
 if(HAVE_INPUT)
     set(kwinLibs ${kwinLibs} Libinput::Libinput)
-endif()
-
-if(HAVE_DRM)
-    set(kwinLibs ${kwinLibs} Libdrm::Libdrm)
-endif()
-
-if(HAVE_GBM)
-    set(kwinLibs ${kwinLibs} gbm::gbm)
 endif()
 
 add_library(kwin SHARED ${kwin_KDEINIT_SRCS})
@@ -652,6 +603,8 @@ if(HAVE_WAYLAND)
 
     install(TARGETS kdeinit_kwin_wayland ${INSTALL_TARGETS_DEFAULT_ARGS} )
     install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+    add_subdirectory(backends)
 endif()
 
 ########### install files ###############

@@ -21,20 +21,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
-#include "backends/fbdev/fb_backend.h"
-#if HAVE_DRM
-#include "backends/drm/drm_backend.h"
-#endif
-#include "backends/wayland/wayland_backend.h"
+#include "abstract_backend.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
-#include "backends/x11/x11windowed_backend.h"
 
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/seat_interface.h>
 // KDE
 #include <KLocalizedString>
+#include <KPluginLoader>
+#include <KPluginMetaData>
 // Qt
 #include <qplatformdefs.h>
 #include <QCommandLineParser>
@@ -98,45 +95,15 @@ void ApplicationWayland::performStartup()
 
 void ApplicationWayland::createBackend()
 {
-    AbstractBackend *backend = nullptr;
-    if (m_windowed) {
-        if (!m_waylandDisplay.isEmpty()) {
-            Wayland::WaylandBackend *b = new Wayland::WaylandBackend(this);
-            b->setDeviceIdentifier(m_waylandDisplay);
-            backend = b;
+    AbstractBackend *backend = waylandServer()->backend();
+    connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+    connect(backend, &AbstractBackend::initFailed, this,
+        [] () {
+            std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
+            ::exit(1);
         }
-        if (!backend && !m_x11Display.isEmpty()) {
-            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(this);
-            x11Backend->setDeviceIdentifier(m_x11Display);
-            backend = x11Backend;
-        }
-    }
-#if HAVE_DRM
-    if (m_drm) {
-        DrmBackend *b = new DrmBackend(this);
-        backend = b;
-    }
-#endif
-    if (!m_framebuffer.isEmpty()) {
-        FramebufferBackend *b = new FramebufferBackend(this);
-        b->setDeviceIdentifier(m_framebuffer.toUtf8());
-        backend = b;
-    }
-
-    if (backend) {
-        connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-        connect(backend, &AbstractBackend::initFailed, this,
-            [] () {
-                std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
-                ::exit(1);
-            }
-        );
-        backend->setInitialWindowSize(m_backendSize);
-        backend->init();
-    } else {
-        std::cerr <<  "FATAL ERROR: could not create a backend, exiting now" << std::endl;
-        ::exit(1);
-    }
+    );
+    backend->init();
 }
 
 void ApplicationWayland::continueStartupWithScreens()
@@ -464,6 +431,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     KWin::Application::setUseLibinput(parser.isSet(libinputOption));
 #endif
 
+    QString pluginName;
+    QSize initialWindowSize;
+    QByteArray deviceIdentifier;
     if (parser.isSet(windowedOption) && parser.isSet(framebufferOption)) {
         std::cerr << "FATAL ERROR Cannot have both --windowed and --framebuffer" << std::endl;
         return 1;
@@ -473,10 +443,11 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         std::cerr << "FATAL ERROR Cannot have both --windowed/--framebuffer and --drm" << std::endl;
         return 1;
     }
-    a.setDrm(parser.isSet(drmOption));
+    if (parser.isSet(drmOption)) {
+        pluginName = QStringLiteral("KWinWaylandDrmBackend");
+    }
 #endif
 
-    a.setWindowed(parser.isSet(windowedOption));
     if (parser.isSet(windowedOption)) {
         bool ok = false;
         const int width = parser.value(widthOption).toInt(&ok);
@@ -489,20 +460,54 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
             std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
             return 1;
         }
-        a.setBackendSize(QSize(width, height));
+        initialWindowSize = QSize(width, height);
         if (parser.isSet(x11DisplayOption)) {
-            a.setX11Display(parser.value(x11DisplayOption).toUtf8());
+            deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
         } else if (!parser.isSet(waylandDisplayOption)) {
-            a.setX11Display(qgetenv("DISPLAY"));
+            deviceIdentifier = qgetenv("DISPLAY");
         }
-        if (parser.isSet(waylandDisplayOption)) {
-            a.setWaylandDisplay(parser.value(waylandDisplayOption).toUtf8());
-        } else if (!parser.isSet(x11DisplayOption)) {
-            a.setWaylandDisplay(qgetenv("WAYLAND_DISPLAY"));
+        if (!deviceIdentifier.isEmpty()) {
+            pluginName = QStringLiteral("KWinWaylandX11Backend");
+        } else {
+            if (parser.isSet(waylandDisplayOption)) {
+                deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
+            } else if (!parser.isSet(x11DisplayOption)) {
+                deviceIdentifier = qgetenv("WAYLAND_DISPLAY");
+            }
+            if (!deviceIdentifier.isEmpty()) {
+                pluginName = QStringLiteral("KWinWaylandWaylandBackend");
+            }
         }
     }
     if (parser.isSet(framebufferOption)) {
-        a.setFramebuffer(parser.value(framebufferDeviceOption));
+        pluginName = QStringLiteral("KWinWaylandFbdevBackend");
+        deviceIdentifier = parser.value(framebufferDeviceOption).toUtf8();
+    }
+
+    const auto pluginCandidates = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"),
+        [&pluginName] (const KPluginMetaData &plugin) {
+            return plugin.pluginId() == pluginName;
+        }
+    );
+    if (pluginCandidates.isEmpty()) {
+        std::cerr << "FATAL ERROR: could not find a backend" << std::endl;
+        return 1;
+    }
+    for (const auto &candidate: pluginCandidates) {
+        if (qobject_cast<KWin::AbstractBackend*>(candidate.instantiate())) {
+            break;
+        }
+    }
+    if (!server->backend()) {
+        std::cerr << "FATAL ERROR: could not instantiate a backend" << std::endl;
+        return 1;
+    }
+    server->backend()->setParent(server);
+    if (!deviceIdentifier.isEmpty()) {
+        server->backend()->setDeviceIdentifier(deviceIdentifier);
+    }
+    if (initialWindowSize.isValid()) {
+        server->backend()->setInitialWindowSize(initialWindowSize);
     }
 
     a.setStartXwayland(parser.isSet(xwaylandOption));

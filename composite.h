@@ -49,7 +49,7 @@ private Q_SLOTS:
     void looseOwnership();
 };
 
-class Compositor : public QObject {
+class KWIN_EXPORT Compositor : public QObject {
     Q_OBJECT
 public:
     enum SuspendReason { NoReasonSuspend = 0, UserSuspend = 1<<0, BlockRuleSuspend = 1<<1, ScriptSuspend = 1<<2, AllReasonSuspend = 0xff };

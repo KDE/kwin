@@ -1192,7 +1192,7 @@ public:
     QVector<QByteArray> errorCodes;
 };
 
-class Extensions
+class KWIN_EXPORT Extensions
 {
 public:
     bool isShapeAvailable() const {

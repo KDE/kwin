@@ -370,7 +370,7 @@ private:
  *
  * @author Martin Gräßlin <mgraesslin@kde.org>
  **/
-class OpenGLBackend
+class KWIN_EXPORT OpenGLBackend
 {
 public:
     OpenGLBackend();

@@ -30,6 +30,8 @@ namespace KWin
 class KWIN_EXPORT FramebufferBackend : public AbstractBackend
 {
     Q_OBJECT
+    Q_INTERFACES(KWin::AbstractBackend)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "fbdev.json")
 public:
     explicit FramebufferBackend(QObject *parent = nullptr);
     virtual ~FramebufferBackend();

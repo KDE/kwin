@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_UDEV_H
 #define KWIN_UDEV_H
 #include <memory>
+#include <kwin_export.h>
 
 struct udev;
 struct udev_device;
@@ -29,7 +30,7 @@ namespace KWin
 {
 class Udev;
 
-class UdevDevice
+class KWIN_EXPORT UdevDevice
 {
 public:
     UdevDevice(udev_device *device);
@@ -53,7 +54,7 @@ private:
     udev_device *m_device;
 };
 
-class UdevMonitor
+class KWIN_EXPORT UdevMonitor
 {
 public:
     explicit UdevMonitor(Udev *udev);
@@ -72,7 +73,7 @@ private:
     udev_monitor *m_monitor;
 };
 
-class Udev
+class KWIN_EXPORT Udev
 {
 public:
     Udev();

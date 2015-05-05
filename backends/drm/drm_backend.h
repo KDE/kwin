@@ -48,6 +48,8 @@ class DrmOutput;
 class KWIN_EXPORT DrmBackend : public AbstractBackend
 {
     Q_OBJECT
+    Q_INTERFACES(KWin::AbstractBackend)
+    Q_PLUGIN_METADATA(IID "org.kde.kwin.AbstractBackend" FILE "drm.json")
 public:
     explicit DrmBackend(QObject *parent = nullptr);
     virtual ~DrmBackend();

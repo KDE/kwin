@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class AbstractEglBackend : public OpenGLBackend
+class KWIN_EXPORT AbstractEglBackend : public OpenGLBackend
 {
 public:
     virtual ~AbstractEglBackend();
@@ -75,7 +75,7 @@ private:
     QList<QByteArray> m_clientExtensions;
 };
 
-class AbstractEglTexture : public SceneOpenGL::TexturePrivate
+class KWIN_EXPORT AbstractEglTexture : public SceneOpenGL::TexturePrivate
 {
 public:
     virtual ~AbstractEglTexture();

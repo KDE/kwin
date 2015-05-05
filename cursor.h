@@ -51,7 +51,7 @@ namespace KWin
  * fetch the position and warp pointer to set the position. It uses a timer based mouse polling and
  * can provide X11 cursors through the XCursor library.
  **/
-class Cursor : public QObject
+class KWIN_EXPORT Cursor : public QObject
 {
     Q_OBJECT
 public:
