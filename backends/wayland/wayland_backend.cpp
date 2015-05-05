@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "cursor.h"
 #include "main.h"
-#include "scene_qpainter.h"
+#include "scene_qpainter_wayland_backend.h"
 #include "screens_wayland.h"
 #include "utils.h"
 #include "wayland_server.h"

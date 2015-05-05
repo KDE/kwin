@@ -24,15 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 
 #include "decorations/decorationrenderer.h"
-#if HAVE_WAYLAND
-namespace KWayland
-{
-namespace Client
-{
-class Buffer;
-}
-}
-#endif
 
 namespace KWin {
 
@@ -40,10 +31,6 @@ namespace Xcb {
     class Shm;
 }
 
-namespace Wayland
-{
-class WaylandBackend;
-}
 class X11WindowedBackend;
 
 class QPainterBackend
@@ -123,28 +110,6 @@ private:
 };
 
 #if HAVE_WAYLAND
-class WaylandQPainterBackend : public QObject, public QPainterBackend
-{
-    Q_OBJECT
-public:
-    explicit WaylandQPainterBackend(Wayland::WaylandBackend *b);
-    virtual ~WaylandQPainterBackend();
-
-    virtual void present(int mask, const QRegion& damage) override;
-    virtual bool usesOverlayWindow() const override;
-    virtual void screenGeometryChanged(const QSize &size) override;
-    virtual QImage *buffer() override;
-    virtual void prepareRenderingFrame() override;
-    virtual bool needsFullRepaint() const override;
-private Q_SLOTS:
-    void remapBuffer();
-private:
-    Wayland::WaylandBackend *m_backend;
-    bool m_needsFullRepaint;
-    QImage m_backBuffer;
-    QWeakPointer<KWayland::Client::Buffer> m_buffer;
-};
-
 class X11WindowedQPainterBackend : public QObject, public QPainterBackend
 {
     Q_OBJECT

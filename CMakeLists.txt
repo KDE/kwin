@@ -439,6 +439,7 @@ if(HAVE_WAYLAND)
             backends/fbdev/fb_backend.cpp
             backends/fbdev/scene_qpainter_fb_backend.cpp
             backends/fbdev/screens_fb.cpp
+            backends/wayland/scene_qpainter_wayland_backend.cpp
             backends/wayland/screens_wayland.cpp
             backends/x11/screens_x11windowed.cpp
             virtual_terminal.cpp
