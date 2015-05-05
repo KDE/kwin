@@ -436,29 +436,29 @@ if(HAVE_WAYLAND)
     set(kwin_KDEINIT_SRCS
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
-            fb_backend.cpp
-            screens_fb.cpp
-            screens_wayland.cpp
-            screens_x11windowed.cpp
+            backends/fbdev/fb_backend.cpp
+            backends/fbdev/screens_fb.cpp
+            backends/wayland/screens_wayland.cpp
+            backends/x11/screens_x11windowed.cpp
             virtual_terminal.cpp
-            wayland_backend.cpp
+            backends/wayland/wayland_backend.cpp
             wayland_server.cpp
-            x11windowed_backend.cpp
+            backends/x11/x11windowed_backend.cpp
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
-        set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} egl_wayland_backend.cpp)
+        set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} backends/wayland/egl_wayland_backend.cpp)
     endif()
     if(HAVE_DRM)
         set(kwin_KDEINIT_SRCS
                 ${kwin_KDEINIT_SRCS}
-                drm_backend.cpp
-                screens_drm.cpp
+                backends/drm/drm_backend.cpp
+                backends/drm/screens_drm.cpp
             )
     endif()
     if(HAVE_GBM)
         set(kwin_KDEINIT_SRCS
                 ${kwin_KDEINIT_SRCS}
-                egl_gbm_backend.cpp
+                backends/drm/egl_gbm_backend.cpp
             )
     endif()
     if(HAVE_WAYLAND_CURSOR)

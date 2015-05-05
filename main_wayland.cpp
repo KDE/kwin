@@ -21,14 +21,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace.h"
 #include <config-kwin.h>
 // kwin
-#include "fb_backend.h"
+#include "backends/fbdev/fb_backend.h"
 #if HAVE_DRM
-#include "drm_backend.h"
+#include "backends/drm/drm_backend.h"
 #endif
-#include "wayland_backend.h"
+#include "backends/wayland/wayland_backend.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
-#include "x11windowed_backend.h"
+#include "backends/x11/x11windowed_backend.h"
 
 // KWayland
 #include <KWayland/Server/display.h>

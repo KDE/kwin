@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingprefs.h"
 #include "xcbutils.h"
 #if HAVE_WAYLAND
-#include "wayland_backend.h"
+#include "backends/wayland/wayland_backend.h"
 #include "wayland_server.h"
 #endif
 #include "decorations/decoratedclient.h"

@@ -29,13 +29,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "toplevel.h"
 #if HAVE_WAYLAND
 #if HAVE_DRM
-#include "drm_backend.h"
+#include "backends/drm/drm_backend.h"
 #endif
-#include "fb_backend.h"
+#include "backends/fbdev/fb_backend.h"
 #include "virtual_terminal.h"
-#include "wayland_backend.h"
+#include "backends/wayland/wayland_backend.h"
 #include "wayland_server.h"
-#include "x11windowed_backend.h"
+#include "backends/x11/x11windowed_backend.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>

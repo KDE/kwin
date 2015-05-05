@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens.h"
 #include "xcbutils.h"
 #if HAVE_X11_XCB
-#include "x11windowed_backend.h"
+#include "backends/x11/x11windowed_backend.h"
 #endif
 // kwin libs
 #include <kwinglplatform.h>
