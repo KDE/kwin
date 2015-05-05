@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "egl_wayland_backend.h"
 // kwin
 #include "composite.h"
+#include "logging.h"
 #include "options.h"
 #include "wayland_backend.h"
 #include "wayland_server.h"
@@ -48,7 +49,7 @@ EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
         setFailed("Wayland Backend has not been created");
         return;
     }
-    qCDebug(KWIN_CORE) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Connected to Wayland display?" << (m_wayland->display() ? "yes" : "no" );
     if (!m_wayland->display()) {
         setFailed("Could not connect to Wayland compositor");
         return;
@@ -59,9 +60,9 @@ EglWaylandBackend::EglWaylandBackend(Wayland::WaylandBackend *b)
     // Egl is always direct rendering
     setIsDirectRendering(true);
 
-    qCWarning(KWIN_CORE) << "Using Wayland rendering backend";
-    qCWarning(KWIN_CORE) << "This is a highly experimental backend, do not use for productive usage!";
-    qCWarning(KWIN_CORE) << "Please do not report any issues you might encounter when using this backend!";
+    qCWarning(KWIN_WAYLAND_BACKEND) << "Using Wayland rendering backend";
+    qCWarning(KWIN_WAYLAND_BACKEND) << "This is a highly experimental backend, do not use for productive usage!";
+    qCWarning(KWIN_WAYLAND_BACKEND) << "Please do not report any issues you might encounter when using this backend!";
 }
 
 EglWaylandBackend::~EglWaylandBackend()
@@ -144,7 +145,7 @@ bool EglWaylandBackend::initRenderingContext()
 #endif
 
     if (context == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_CORE) << "Create Context failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Context failed";
         return false;
     }
     setContext(context);
@@ -158,7 +159,7 @@ bool EglWaylandBackend::initRenderingContext()
     connect(s, &KWayland::Client::Surface::frameRendered, Compositor::self(), &Compositor::bufferSwapComplete);
     m_overlay = wl_egl_window_create(*s, size.width(), size.height());
     if (!m_overlay) {
-        qCCritical(KWIN_CORE) << "Creating Wayland Egl window failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Egl window failed";
         return false;
     }
 
@@ -169,7 +170,7 @@ bool EglWaylandBackend::initRenderingContext()
         surface = eglCreateWindowSurface(eglDisplay(), config(), m_overlay, nullptr);
 
     if (surface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_CORE) << "Create Window Surface failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Create Window Surface failed";
         return false;
     }
     setSurface(surface);
@@ -180,13 +181,13 @@ bool EglWaylandBackend::initRenderingContext()
 bool EglWaylandBackend::makeContextCurrent()
 {
     if (eglMakeCurrent(eglDisplay(), surface(), surface(), context()) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "Make Context Current failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return false;
     }
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_CORE) << "Error occurred while creating context " << error;
+        qCWarning(KWIN_WAYLAND_BACKEND) << "Error occurred while creating context " << error;
         return false;
     }
     return true;
@@ -212,11 +213,11 @@ bool EglWaylandBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "choose config failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config failed";
         return false;
     }
     if (count != 1) {
-        qCCritical(KWIN_CORE) << "choose config did not return a config" << count;
+        qCCritical(KWIN_WAYLAND_BACKEND) << "choose config did not return a config" << count;
         return false;
     }
     setConfig(configs[0]);

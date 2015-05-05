@@ -19,12 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_qpainter_wayland_backend.h"
 #include "composite.h"
+#include "logging.h"
 #include "wayland_backend.h"
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/shm_pool.h>
 #include <KWayland/Client/surface.h>
-// Qt
-#include <QDebug>
 
 namespace KWin
 {
@@ -101,7 +100,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
     const QSize size(m_backend->shellSurfaceSize());
     m_buffer = m_backend->shmPool()->getBuffer(size, size.width() * 4);
     if (!m_buffer) {
-        qCDebug(KWIN_CORE) << "Did not get a new Buffer from Shm Pool";
+        qCDebug(KWIN_WAYLAND_BACKEND) << "Did not get a new Buffer from Shm Pool";
         m_backBuffer = QImage();
         return;
     }
@@ -110,7 +109,7 @@ void WaylandQPainterBackend::prepareRenderingFrame()
     m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
     m_backBuffer.fill(Qt::transparent);
     m_needsFullRepaint = true;
-    qCDebug(KWIN_CORE) << "Created a new back buffer";
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Created a new back buffer";
 }
 
 void WaylandQPainterBackend::remapBuffer()
@@ -124,7 +123,7 @@ void WaylandQPainterBackend::remapBuffer()
     }
     const QSize size = m_backBuffer.size();
     m_backBuffer = QImage(b->address(), size.width(), size.height(), QImage::Format_RGB32);
-    qCDebug(KWIN_CORE) << "Remapped our back buffer";
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Remapped our back buffer";
 }
 
 bool WaylandQPainterBackend::needsFullRepaint() const

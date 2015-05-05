@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // kwin
 #include "composite.h"
 #include "drm_backend.h"
+#include "logging.h"
 #include "options.h"
 #include "screens.h"
 // kwin libs
@@ -161,7 +162,7 @@ bool EglGbmBackend::initRenderingContext()
 #endif
 
     if (context == EGL_NO_CONTEXT) {
-        qCCritical(KWIN_CORE) << "Create Context failed";
+        qCCritical(KWIN_DRM) << "Create Context failed";
         return false;
     }
     setContext(context);
@@ -171,7 +172,7 @@ bool EglGbmBackend::initRenderingContext()
         createOutput(drmOutput);
     }
     if (m_outputs.isEmpty()) {
-        qCCritical(KWIN_CORE) << "Create Window Surfaces failed";
+        qCCritical(KWIN_DRM) << "Create Window Surfaces failed";
         return false;
     }
     // set our first surface as the one for the abstract backend, just to make it happy
@@ -187,12 +188,12 @@ void EglGbmBackend::createOutput(DrmOutput *drmOutput)
     o.gbmSurface = gbm_surface_create(m_device, drmOutput->size().width(), drmOutput->size().height(),
                                         GBM_FORMAT_XRGB8888, GBM_BO_USE_SCANOUT | GBM_BO_USE_RENDERING);
     if (!o.gbmSurface) {
-        qCCritical(KWIN_CORE) << "Create gbm surface failed";
+        qCCritical(KWIN_DRM) << "Create gbm surface failed";
         return;
     }
     o.eglSurface = eglCreatePlatformWindowSurfaceEXT(eglDisplay(), config(), (void *)o.gbmSurface, nullptr);
     if (o.eglSurface == EGL_NO_SURFACE) {
-        qCCritical(KWIN_CORE) << "Create Window Surface failed";
+        qCCritical(KWIN_DRM) << "Create Window Surface failed";
         gbm_surface_destroy(o.gbmSurface);
         return;
     }
@@ -206,13 +207,13 @@ bool EglGbmBackend::makeContextCurrent(const Output &output)
         return false;
     }
     if (eglMakeCurrent(eglDisplay(), surface, surface, context()) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "Make Context Current failed";
+        qCCritical(KWIN_DRM) << "Make Context Current failed";
         return false;
     }
 
     EGLint error = eglGetError();
     if (error != EGL_SUCCESS) {
-        qCWarning(KWIN_CORE) << "Error occurred while creating context " << error;
+        qCWarning(KWIN_DRM) << "Error occurred while creating context " << error;
         return false;
     }
     // TODO: ensure the viewport is set correctly each time
@@ -243,11 +244,11 @@ bool EglGbmBackend::initBufferConfigs()
     EGLint count;
     EGLConfig configs[1024];
     if (eglChooseConfig(eglDisplay(), config_attribs, configs, 1, &count) == EGL_FALSE) {
-        qCCritical(KWIN_CORE) << "choose config failed";
+        qCCritical(KWIN_DRM) << "choose config failed";
         return false;
     }
     if (count != 1) {
-        qCCritical(KWIN_CORE) << "choose config did not return a config" << count;
+        qCCritical(KWIN_DRM) << "choose config did not return a config" << count;
         return false;
     }
     setConfig(configs[0]);

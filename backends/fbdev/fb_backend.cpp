@@ -19,12 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "fb_backend.h"
 #include "composite.h"
+#include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_fb_backend.h"
 #include "screens_fb.h"
 #include "virtual_terminal.h"
-// Qt
-#include <QDebug>
 // system
 #include <fcntl.h>
 #include <unistd.h>
@@ -84,11 +83,11 @@ void FramebufferBackend::openFrameBuffer()
     VirtualTerminal::self()->init();
     int fd = LogindIntegration::self()->takeDevice(m_device.toUtf8().constData());
     if (fd < 0) {
-        qCWarning(KWIN_CORE) << "Failed to open frame buffer device through logind, trying without";
+        qCWarning(KWIN_FB) << "Failed to open frame buffer device through logind, trying without";
     }
     fd = open(m_device.toUtf8().constData(), O_RDWR | O_CLOEXEC);
     if (fd < 0) {
-        qCWarning(KWIN_CORE) << "failed to open frame buffer device";
+        qCWarning(KWIN_FB) << "failed to open frame buffer device";
         return;
     }
     m_fd = fd;
@@ -135,7 +134,7 @@ void FramebufferBackend::map()
     }
     void *mem = mmap(nullptr, m_bufferLength, PROT_WRITE, MAP_SHARED, m_fd, 0);
     if (mem == MAP_FAILED) {
-        qCWarning(KWIN_CORE) << "Failed to mmap frame buffer";
+        qCWarning(KWIN_FB) << "Failed to mmap frame buffer";
         return;
     }
     m_memory = mem;
@@ -147,7 +146,7 @@ void FramebufferBackend::unmap()
         return;
     }
     if (munmap(m_memory, m_bufferLength) < 0) {
-        qCWarning(KWIN_CORE) << "Failed to munmap frame buffer";
+        qCWarning(KWIN_FB) << "Failed to munmap frame buffer";
     }
     m_memory = nullptr;
 }

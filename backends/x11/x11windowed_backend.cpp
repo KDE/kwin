@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "x11windowed_backend.h"
 #include "scene_qpainter_x11_backend.h"
 #include "screens_x11windowed.h"
-#include "utils.h"
+#include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
 #ifdef KWIN_HAVE_EGL
@@ -31,7 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinxrenderutils.h>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
-#include <QDebug>
 #include <QSocketNotifier>
 // kwayland
 #include <KWayland/Server/buffer_interface.h>
@@ -189,7 +188,7 @@ void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
     }
     if (event->type == m_protocols && m_protocols != XCB_ATOM_NONE) {
         if (event->data.data32[0] == m_deleteWindowProtocol && m_deleteWindowProtocol != XCB_ATOM_NONE) {
-            qCDebug(KWIN_CORE) << "Backend window is going to be closed, shutting down.";
+            qCDebug(KWIN_X11WINDOWED) << "Backend window is going to be closed, shutting down.";
             QCoreApplication::quit();
         }
     }

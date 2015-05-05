@@ -21,10 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 // KWin
 #include "cursor.h"
+#include "logging.h"
 #include "main.h"
 #include "scene_qpainter_wayland_backend.h"
 #include "screens_wayland.h"
-#include "utils.h"
 #include "wayland_server.h"
 #if HAVE_WAYLAND_CURSOR
 #include "wayland_cursor_theme.h"
@@ -53,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // Qt
-#include <QDebug>
 #include <QMetaMethod>
 #include <QThread>
 // Wayland
@@ -435,7 +434,7 @@ WaylandBackend::~WaylandBackend()
     m_connectionThread->quit();
     m_connectionThread->wait();
 
-    qCDebug(KWIN_CORE) << "Destroyed Wayland display";
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
 void WaylandBackend::destroyOutputs()

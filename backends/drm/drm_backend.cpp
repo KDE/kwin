@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 #include "composite.h"
 #include "cursor.h"
+#include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_drm_backend.h"
 #include "screens_drm.h"
 #include "udev.h"
-#include "utils.h"
 #include "virtual_terminal.h"
 #include "wayland_server.h"
 #if HAVE_GBM
@@ -58,8 +58,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DRM_CAP_CURSOR_HEIGHT
 #define DRM_CAP_CURSOR_HEIGHT 0x9
 #endif
-
-#include <QDebug>
 
 namespace KWin
 {
@@ -182,12 +180,12 @@ void DrmBackend::openDrm()
     VirtualTerminal::self()->init();
     UdevDevice::Ptr device = m_udev->primaryGpu();
     if (!device) {
-        qCWarning(KWIN_CORE) << "Did not find a GPU";
+        qCWarning(KWIN_DRM) << "Did not find a GPU";
         return;
     }
     int fd = LogindIntegration::self()->takeDevice(device->devNode());
     if (fd < 0) {
-        qCWarning(KWIN_CORE) << "failed to open drm device at" << device->devNode();
+        qCWarning(KWIN_DRM) << "failed to open drm device at" << device->devNode();
         return;
     }
     m_fd = fd;
@@ -224,7 +222,7 @@ void DrmBackend::openDrm()
                         return;
                     }
                     if (device->hasProperty("HOTPLUG", "1")) {
-                        qCDebug(KWIN_CORE()) << "Received hot plug event for monitored drm device";
+                        qCDebug(KWIN_DRM) << "Received hot plug event for monitored drm device";
                         queryResources();
                         m_cursorIndex = (m_cursorIndex + 1) % 2;
                         updateCursor();
@@ -255,7 +253,7 @@ void DrmBackend::queryResources()
     }
     ScopedDrmPointer<_drmModeRes, &drmModeFreeResources> resources(drmModeGetResources(m_fd));
     if (!resources) {
-        qCWarning(KWIN_CORE) << "drmModeGetResources failed";
+        qCWarning(KWIN_DRM) << "drmModeGetResources failed";
         return;
     }
 
@@ -580,7 +578,7 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (ok) {
         m_currentBuffer = buffer;
     } else {
-        qWarning(KWIN_CORE) << "Page flip failed";
+        qWarning(KWIN_DRM) << "Page flip failed";
         buffer->releaseGbm();
     }
     return ok;
@@ -635,7 +633,7 @@ void DrmOutput::init(drmModeConnector *connector)
     KConfigGroup group = config->group("EdidOverwrite").group(m_edid.eisaId).group(m_edid.monitorName).group(m_edid.serialNumber);
     if (group.hasKey("PhysicalSize")) {
         const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
-        qCWarning(KWIN_CORE) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
+        qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
         physicalSize = overwriteSize;
     }
     m_waylandOutput->setPhysicalSize(physicalSize);
@@ -704,7 +702,7 @@ bool DrmOutput::setMode(DrmBuffer *buffer)
         m_lastStride = buffer->stride();
         return true;
     } else {
-        qCWarning(KWIN_CORE) << "Mode setting failed";
+        qCWarning(KWIN_DRM) << "Mode setting failed";
         return false;
     }
 }
@@ -909,13 +907,13 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
 #if HAVE_GBM
     m_bo = gbm_surface_lock_front_buffer(surface);
     if (!m_bo) {
-        qWarning(KWIN_CORE) << "Locking front buffer failed";
+        qWarning(KWIN_DRM) << "Locking front buffer failed";
         return;
     }
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
     m_stride = gbm_bo_get_stride(m_bo);
     if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, m_stride, gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
-        qWarning(KWIN_CORE) << "drmModeAddFB failed";
+        qWarning(KWIN_DRM) << "drmModeAddFB failed";
     }
     gbm_bo_set_user_data(m_bo, m_backend, gbmCallback);
 #endif

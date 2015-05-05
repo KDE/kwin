@@ -437,6 +437,7 @@ if(HAVE_WAYLAND)
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
             backends/fbdev/fb_backend.cpp
+            backends/fbdev/logging.cpp
             backends/fbdev/scene_qpainter_fb_backend.cpp
             backends/fbdev/screens_fb.cpp
             backends/wayland/scene_qpainter_wayland_backend.cpp
@@ -444,9 +445,11 @@ if(HAVE_WAYLAND)
             backends/x11/scene_qpainter_x11_backend.cpp
             backends/x11/screens_x11windowed.cpp
             virtual_terminal.cpp
+            backends/wayland/logging.cpp
             backends/wayland/wayland_backend.cpp
             wayland_server.cpp
             backends/x11/x11windowed_backend.cpp
+            backends/x11/logging.cpp
        )
     if(KWIN_HAVE_EGL AND Wayland_Egl_FOUND)
         set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} backends/wayland/egl_wayland_backend.cpp)
@@ -455,6 +458,7 @@ if(HAVE_WAYLAND)
         set(kwin_KDEINIT_SRCS
                 ${kwin_KDEINIT_SRCS}
                 backends/drm/drm_backend.cpp
+                backends/drm/logging.cpp
                 backends/drm/screens_drm.cpp
                 backends/drm/scene_qpainter_drm_backend.cpp
             )
