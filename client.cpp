@@ -1435,8 +1435,10 @@ void Client::takeFocus()
         m_client.focus();
     else
         demandAttention(false); // window cannot take input, at least withdraw urgency
-    if (info->supportsProtocol(NET::TakeFocusProtocol))
+    if (info->supportsProtocol(NET::TakeFocusProtocol)) {
+        updateXTime();
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
+    }
     workspace()->setShouldGetFocus(this);
 }
 
