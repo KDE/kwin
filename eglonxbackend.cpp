@@ -24,9 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "overlaywindow.h"
 #include "screens.h"
 #include "xcbutils.h"
-#if HAVE_X11_XCB
-#include "backends/x11/x11windowed_backend.h"
-#endif
 // kwin libs
 #include <kwinglplatform.h>
 // Qt
@@ -54,25 +51,22 @@ EglOnXBackend::EglOnXBackend()
     setIsDirectRendering(true);
 }
 
-#if HAVE_X11_XCB
-EglOnXBackend::EglOnXBackend(X11WindowedBackend *backend)
+EglOnXBackend::EglOnXBackend(xcb_connection_t *connection, Display *display, xcb_window_t rootWindow, int screenNumber, xcb_window_t renderingWindow)
     : AbstractEglBackend()
     , m_overlayWindow(nullptr)
     , surfaceHasSubPost(0)
     , m_bufferAge(0)
     , m_usesOverlayWindow(false)
-    , m_x11Backend(backend)
-    , m_connection(backend->connection())
-    , m_x11Display(backend->display())
-    , m_rootWindow(backend->rootWindow())
-    , m_x11ScreenNumber(backend->screenNumer())
+    , m_connection(connection)
+    , m_x11Display(display)
+    , m_rootWindow(rootWindow)
+    , m_x11ScreenNumber(screenNumber)
+    , m_renderingWindow(renderingWindow)
 {
     init();
     // Egl is always direct rendering
     setIsDirectRendering(true);
 }
-#endif
-
 
 EglOnXBackend::~EglOnXBackend()
 {
@@ -209,12 +203,9 @@ bool EglOnXBackend::initRenderingContext()
     xcb_window_t window = XCB_WINDOW_NONE;
     if (m_overlayWindow) {
         window = m_overlayWindow->window();
+    } else if (m_renderingWindow) {
+        window = m_renderingWindow;
     }
-#if HAVE_X11_XCB
-    else if (m_x11Backend) {
-        window = m_x11Backend->window();
-    }
-#endif
     if (window == XCB_WINDOW_NONE) {
         return false;
     }

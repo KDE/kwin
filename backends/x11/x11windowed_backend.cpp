@@ -312,7 +312,7 @@ OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
 #ifdef KWIN_HAVE_EGL
 #if HAVE_X11_XCB
-    return  new EglOnXBackend(this);
+    return  new EglOnXBackend(connection(), display(), rootWindow(), screenNumer(), window());
 #endif
 #endif
     return nullptr;
