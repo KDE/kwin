@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <config-kwin.h>
 #include "composite.h"
 #include "cursor.h"
+#include "input.h"
 #include "wayland_server.h"
 #if HAVE_WAYLAND_CURSOR
 #include "wayland_backend.h"
@@ -177,6 +178,118 @@ void AbstractBackend::triggerCursorRepaint()
 void AbstractBackend::markCursorAsRendered()
 {
     m_cursor.lastRenderedPosition = Cursor::pos();
+}
+
+void AbstractBackend::keyboardKeyPressed(quint32 key, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processKeyboardKey(key, InputRedirection::KeyboardKeyPressed, time);
+}
+
+void AbstractBackend::keyboardKeyReleased(quint32 key, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processKeyboardKey(key, InputRedirection::KeyboardKeyReleased, time);
+}
+
+void AbstractBackend::keyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processKeyboardModifiers(modsDepressed, modsLatched, modsLocked, group);
+}
+
+void AbstractBackend::keymapChange(int fd, uint32_t size)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processKeymapChange(fd, size);
+}
+
+void AbstractBackend::pointerAxisHorizontal(qreal delta, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processPointerAxis(InputRedirection::PointerAxisHorizontal, delta, time);
+}
+
+void AbstractBackend::pointerAxisVertical(qreal delta, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processPointerAxis(InputRedirection::PointerAxisVertical, delta, time);
+}
+
+void AbstractBackend::pointerButtonPressed(quint32 button, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processPointerButton(button, InputRedirection::PointerButtonPressed, time);
+}
+
+void AbstractBackend::pointerButtonReleased(quint32 button, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processPointerButton(button, InputRedirection::PointerButtonReleased, time);
+}
+
+void AbstractBackend::pointerMotion(const QPointF &position, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processPointerMotion(position, time);
+}
+
+void AbstractBackend::touchCancel()
+{
+    if (!input()) {
+        return;
+    }
+    input()->cancelTouch();
+}
+
+void AbstractBackend::touchDown(qint32 id, const QPointF &pos, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processTouchDown(id, pos, time);
+}
+
+void AbstractBackend::touchFrame()
+{
+    if (!input()) {
+        return;
+    }
+    input()->touchFrame();
+}
+
+void AbstractBackend::touchMotion(qint32 id, const QPointF &pos, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processTouchMotion(id, pos, time);
+}
+
+void AbstractBackend::touchUp(qint32 id, quint32 time)
+{
+    if (!input()) {
+        return;
+    }
+    input()->processTouchUp(id, time);
 }
 
 }

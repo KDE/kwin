@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11windowed_backend.h"
 #include "composite.h"
-#include "input.h"
 #include "scene_qpainter.h"
 #include "screens_x11windowed.h"
 #include "utils.h"
@@ -150,26 +149,27 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
     case XCB_BUTTON_RELEASE:
         handleButtonPress(reinterpret_cast<xcb_button_press_event_t*>(e));
         break;
-    case XCB_MOTION_NOTIFY:
-        if (input()) {
+    case XCB_MOTION_NOTIFY: {
             auto event = reinterpret_cast<xcb_motion_notify_event_t*>(e);
-            input()->processPointerMotion(QPointF(event->event_x, event->event_y), event->time);
+            pointerMotion(QPointF(event->event_x, event->event_y), event->time);
         }
         break;
     case XCB_KEY_PRESS:
-    case XCB_KEY_RELEASE:
-        if (input()) {
+    case XCB_KEY_RELEASE: {
             auto event = reinterpret_cast<xcb_key_press_event_t*>(e);
-            input()->processKeyboardKey(event->detail - 8, eventType == XCB_KEY_PRESS ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, event->time);
+            if (eventType == XCB_KEY_PRESS) {
+                keyboardKeyPressed(event->detail - 8, event->time);
+            } else {
+                keyboardKeyReleased(event->detail - 8, event->time);
+            }
         }
         break;
     case XCB_CONFIGURE_NOTIFY:
         updateSize(reinterpret_cast<xcb_configure_notify_event_t*>(e));
         break;
-    case XCB_ENTER_NOTIFY:
-        if (input()) {
+    case XCB_ENTER_NOTIFY: {
             auto event = reinterpret_cast<xcb_enter_notify_event_t*>(e);
-            input()->processPointerMotion(QPointF(event->event_x, event->event_y), event->time);
+            pointerMotion(QPointF(event->event_x, event->event_y), event->time);
         }
         break;
     case XCB_CLIENT_MESSAGE:
@@ -208,9 +208,12 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
             return;
         }
         const int delta = (event->detail == XCB_BUTTON_INDEX_4 || event->detail == 6) ? -1 : 1;
-        InputRedirection::PointerAxis axis = (event->detail > 5) ? InputRedirection::PointerAxisHorizontal : InputRedirection::PointerAxisVertical;
         static const qreal s_defaultAxisStepDistance = 10.0;
-        input()->processPointerAxis(axis, delta * s_defaultAxisStepDistance, event->time);
+        if (event->detail > 5) {
+            pointerAxisHorizontal(delta * s_defaultAxisStepDistance, event->time);
+        } else {
+            pointerAxisVertical(delta * s_defaultAxisStepDistance, event->time);
+        }
         return;
     }
     uint32_t button = 0;
@@ -228,8 +231,12 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
         button = event->detail + BTN_LEFT - 1;
         return;
     }
-    input()->processPointerMotion(QPointF(event->event_x, event->event_y), event->time);
-    input()->processPointerButton(button, pressed ? InputRedirection::PointerButtonPressed : InputRedirection::PointerButtonReleased, event->time);
+    pointerMotion(QPointF(event->event_x, event->event_y), event->time);
+    if (pressed) {
+        pointerButtonPressed(button, event->time);
+    } else {
+        pointerButtonReleased(button, event->time);
+    }
 }
 
 void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)

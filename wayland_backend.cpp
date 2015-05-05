@@ -21,7 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_backend.h"
 // KWin
 #include "cursor.h"
-#include "input.h"
 #include "main.h"
 #include "scene_qpainter.h"
 #include "screens_wayland.h"
@@ -87,26 +86,26 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                 m_keyboard = m_seat->createKeyboard(this);
                 connect(m_keyboard, &Keyboard::keyChanged, this,
                     [this](quint32 key, Keyboard::KeyState state, quint32 time) {
-                        auto toState = [state] {
-                            switch (state) {
-                            case Keyboard::KeyState::Pressed:
-                                return InputRedirection::KeyboardKeyPressed;
-                            case Keyboard::KeyState::Released:
-                                return InputRedirection::KeyboardKeyReleased;
-                            }
-                            abort();
-                        };
-                        input()->processKeyboardKey(key, toState(), time);
+                        switch (state) {
+                        case Keyboard::KeyState::Pressed:
+                            m_backend->keyboardKeyPressed(key, time);
+                            break;
+                        case Keyboard::KeyState::Released:
+                            m_backend->keyboardKeyReleased(key, time);
+                            break;
+                        default:
+                            Q_UNREACHABLE();
+                        }
                     }
                 );
                 connect(m_keyboard, &Keyboard::modifiersChanged, this,
                     [this](quint32 depressed, quint32 latched, quint32 locked, quint32 group) {
-                        input()->processKeyboardModifiers(depressed, latched, locked, group);
+                        m_backend->keyboardModifiers(depressed, latched, locked, group);
                     }
                 );
                 connect(m_keyboard, &Keyboard::keymapChanged, this,
                     [this](int fd, quint32 size) {
-                        input()->processKeymapChange(fd, size);
+                        m_backend->keymapChange(fd, size);
                     }
                 );
             } else {
@@ -129,36 +128,36 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
                 );
                 connect(m_pointer, &Pointer::motion, this,
                     [this](const QPointF &relativeToSurface, quint32 time) {
-                        input()->processPointerMotion(relativeToSurface.toPoint(), time);
+                        m_backend->pointerMotion(relativeToSurface, time);
                     }
                 );
                 connect(m_pointer, &Pointer::buttonStateChanged, this,
                     [this](quint32 serial, quint32 time, quint32 button, Pointer::ButtonState state) {
                         Q_UNUSED(serial)
-                        auto toState = [state] {
-                            switch (state) {
-                            case Pointer::ButtonState::Pressed:
-                                return InputRedirection::PointerButtonPressed;
-                            case Pointer::ButtonState::Released:
-                                return InputRedirection::PointerButtonReleased;
-                            }
-                            abort();
-                        };
-                        input()->processPointerButton(button, toState(), time);
+                        switch (state) {
+                        case Pointer::ButtonState::Pressed:
+                            m_backend->pointerButtonPressed(button, time);
+                            break;
+                        case Pointer::ButtonState::Released:
+                            m_backend->pointerButtonReleased(button, time);
+                            break;
+                        default:
+                            Q_UNREACHABLE();
+                        }
                     }
                 );
                 connect(m_pointer, &Pointer::axisChanged, this,
                     [this](quint32 time, Pointer::Axis axis, qreal delta) {
-                        auto toAxis = [axis] {
-                            switch (axis) {
-                            case Pointer::Axis::Horizontal:
-                                return InputRedirection::PointerAxisHorizontal;
-                            case Pointer::Axis::Vertical:
-                                return InputRedirection::PointerAxisVertical;
-                            }
-                            abort();
-                        };
-                        input()->processPointerAxis(toAxis(), delta, time);
+                        switch (axis) {
+                        case Pointer::Axis::Horizontal:
+                            m_backend->pointerAxisHorizontal(delta, time);
+                            break;
+                        case Pointer::Axis::Vertical:
+                            m_backend->pointerAxisVertical(delta, time);
+                            break;
+                        default:
+                            Q_UNREACHABLE();
+                        }
                     }
                 );
             } else {
@@ -170,26 +169,26 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
         [this] (bool hasTouch) {
             if (hasTouch && !m_touch) {
                 m_touch = m_seat->createTouch(this);
-                connect(m_touch, &Touch::sequenceCanceled, input(), &InputRedirection::cancelTouch);
-                connect(m_touch, &Touch::frameEnded, input(), &InputRedirection::touchFrame);
+                connect(m_touch, &Touch::sequenceCanceled, m_backend, &AbstractBackend::touchCancel);
+                connect(m_touch, &Touch::frameEnded, m_backend, &AbstractBackend::touchFrame);
                 connect(m_touch, &Touch::sequenceStarted, this,
-                    [] (TouchPoint *tp) {
-                        input()->processTouchDown(tp->id(), tp->position(), tp->time());
+                    [this] (TouchPoint *tp) {
+                        m_backend->touchDown(tp->id(), tp->position(), tp->time());
                     }
                 );
                 connect(m_touch, &Touch::pointAdded, this,
-                    [] (TouchPoint *tp) {
-                        input()->processTouchDown(tp->id(), tp->position(), tp->time());
+                    [this] (TouchPoint *tp) {
+                        m_backend->touchDown(tp->id(), tp->position(), tp->time());
                     }
                 );
                 connect(m_touch, &Touch::pointRemoved, this,
-                    [] (TouchPoint *tp) {
-                        input()->processTouchUp(tp->id(), tp->time());
+                    [this] (TouchPoint *tp) {
+                        m_backend->touchUp(tp->id(), tp->time());
                     }
                 );
                 connect(m_touch, &Touch::pointMoved, this,
-                    [] (TouchPoint *tp) {
-                        input()->processTouchMotion(tp->id(), tp->position(), tp->time());
+                    [this] (TouchPoint *tp) {
+                        m_backend->touchMotion(tp->id(), tp->position(), tp->time());
                     }
                 );
             } else {
