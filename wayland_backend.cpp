@@ -26,6 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "screens_wayland.h"
 #include "utils.h"
 #include "wayland_server.h"
+#if HAVE_WAYLAND_CURSOR
+#include "wayland_cursor_theme.h"
+#endif
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #endif
@@ -275,61 +278,6 @@ void WaylandSeat::setInstallCursor(bool install)
     // TODO: remove, add?
     m_installCursor = install;
 }
-
-#if HAVE_WAYLAND_CURSOR
-WaylandCursorTheme::WaylandCursorTheme(KWayland::Client::ShmPool *shm, QObject *parent)
-    : QObject(parent)
-    , m_theme(nullptr)
-    , m_shm(shm)
-{
-}
-
-WaylandCursorTheme::~WaylandCursorTheme()
-{
-    destroyTheme();
-}
-
-void WaylandCursorTheme::loadTheme()
-{
-    if (!m_shm->isValid()) {
-        return;
-    }
-    Cursor *c = Cursor::self();
-    if (!m_theme) {
-        // so far the theme had not been created, this means we need to start tracking theme changes
-        connect(c, &Cursor::themeChanged, this, &WaylandCursorTheme::loadTheme);
-    } else {
-        destroyTheme();
-    }
-    m_theme = wl_cursor_theme_load(c->themeName().toUtf8().constData(),
-                                   c->themeSize() ? c->themeSize() : -1, m_shm->shm());
-}
-
-void WaylandCursorTheme::destroyTheme()
-{
-    if (!m_theme) {
-        return;
-    }
-    wl_cursor_theme_destroy(m_theme);
-    m_theme = nullptr;
-}
-
-wl_cursor_image *WaylandCursorTheme::get(Qt::CursorShape shape)
-{
-    if (!m_theme) {
-        loadTheme();
-    }
-    if (!m_theme) {
-        // loading cursor failed
-        return nullptr;
-    }
-    wl_cursor *c = wl_cursor_theme_get_cursor(m_theme, Cursor::self()->cursorName(shape).constData());
-    if (!c || c->image_count <= 0) {
-        return nullptr;
-    }
-    return c->images[0];
-}
-#endif
 
 WaylandCursor::WaylandCursor(Surface *parentSurface, WaylandBackend *backend)
     : QObject(backend)

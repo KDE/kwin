@@ -29,11 +29,7 @@ namespace KWin
 class OpenGLBackend;
 class QPainterBackend;
 class Screens;
-
-namespace Wayland
-{
 class WaylandCursorTheme;
-}
 
 class KWIN_EXPORT AbstractBackend : public QObject
 {
@@ -101,7 +97,7 @@ private:
         QImage image;
         QPoint lastRenderedPosition;
     } m_cursor;
-    Wayland::WaylandCursorTheme *m_cursorTheme = nullptr;
+    WaylandCursorTheme *m_cursorTheme = nullptr;
     bool m_handlesOutputs = false;
 };
 

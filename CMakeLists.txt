@@ -461,6 +461,12 @@ if(HAVE_WAYLAND)
                 egl_gbm_backend.cpp
             )
     endif()
+    if(HAVE_WAYLAND_CURSOR)
+        set(kwin_KDEINIT_SRCS
+                ${kwin_KDEINIT_SRCS}
+                wayland_cursor_theme.cpp
+            )
+    endif()
 endif()
 
 if(UDEV_FOUND)

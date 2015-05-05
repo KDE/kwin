@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "cursor.h"
 #include "input.h"
 #include "wayland_server.h"
-#if HAVE_WAYLAND_CURSOR
-#include "wayland_backend.h"
-#endif
+#include "wayland_cursor_theme.h"
 // KWayland
 #include <KWayland/Client/buffer.h>
 #include <KWayland/Client/connection_thread.h>
@@ -97,7 +95,7 @@ void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
     if (!m_cursorTheme) {
         // check whether we can create it
         if (waylandServer() && waylandServer()->internalShmPool()) {
-            m_cursorTheme = new Wayland::WaylandCursorTheme(waylandServer()->internalShmPool(), this);
+            m_cursorTheme = new WaylandCursorTheme(waylandServer()->internalShmPool(), this);
         }
     }
     if (!m_cursorTheme) {
