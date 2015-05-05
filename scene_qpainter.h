@@ -31,8 +31,6 @@ namespace Xcb {
     class Shm;
 }
 
-class X11WindowedBackend;
-
 class QPainterBackend
 {
 public:
@@ -108,30 +106,6 @@ protected:
 private:
     bool m_failed;
 };
-
-#if HAVE_WAYLAND
-class X11WindowedQPainterBackend : public QObject, public QPainterBackend
-{
-    Q_OBJECT
-public:
-    X11WindowedQPainterBackend(X11WindowedBackend *backend);
-    virtual ~X11WindowedQPainterBackend();
-
-    QImage *buffer() override;
-    bool needsFullRepaint() const override;
-    bool usesOverlayWindow() const override;
-    void prepareRenderingFrame() override;
-    void present(int mask, const QRegion &damage) override;
-    void screenGeometryChanged(const QSize &size);
-
-private:
-    bool m_needsFullRepaint = true;
-    xcb_gcontext_t m_gc = XCB_NONE;
-    QImage m_backBuffer;
-    X11WindowedBackend *m_backend;
-};
-
-#endif
 
 class SceneQPainter : public Scene
 {

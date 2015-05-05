@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11windowed_backend.h"
-#include "scene_qpainter.h"
+#include "scene_qpainter_x11_backend.h"
 #include "screens_x11windowed.h"
 #include "utils.h"
 #include "wayland_server.h"
