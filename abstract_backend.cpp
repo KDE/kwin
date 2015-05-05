@@ -292,4 +292,12 @@ void AbstractBackend::touchUp(qint32 id, quint32 time)
     input()->processTouchUp(id, time);
 }
 
+void AbstractBackend::repaint(const QRect &rect)
+{
+    if (!Compositor::self()) {
+        return;
+    }
+    Compositor::self()->addRepaint(rect);
+}
+
 }

@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "x11windowed_backend.h"
-#include "composite.h"
 #include "scene_qpainter.h"
 #include "screens_x11windowed.h"
 #include "utils.h"
@@ -241,10 +240,7 @@ void X11WindowedBackend::handleButtonPress(xcb_button_press_event_t *event)
 
 void X11WindowedBackend::handleExpose(xcb_expose_event_t *event)
 {
-    if (!Compositor::self()) {
-        return;
-    }
-    Compositor::self()->addRepaint(QRect(event->x, event->y, event->width, event->height));
+    repaint(QRect(event->x, event->y, event->width, event->height));
 }
 
 void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)

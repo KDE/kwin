@@ -88,6 +88,7 @@ protected:
     void handleOutputs() {
         m_handlesOutputs = true;
     }
+    void repaint(const QRect &rect);
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);
