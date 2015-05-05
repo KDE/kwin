@@ -458,7 +458,7 @@ void WaylandBackend::initConnection()
         Qt::QueuedConnection);
     connect(m_connectionThreadObject, &ConnectionThread::connectionDied, this,
         [this]() {
-            m_ready = false;
+            setReady(false);
             emit systemCompositorDied();
             m_seat.reset();
             m_shm->destroy();
@@ -581,16 +581,7 @@ void WaylandBackend::checkBackendReady()
         return;
     }
     disconnect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
-    m_ready = true;
-    emit backendReady();
-}
-
-void WaylandBackend::connectNotify(const QMetaMethod &signal)
-{
-    if (m_ready && signal == QMetaMethod::fromSignal(&WaylandBackend::backendReady)) {
-        // backend is already ready, let's emit the signal
-        signal.invoke(this, Qt::QueuedConnection);
-    }
+    setReady(true);
 }
 
 Screens *WaylandBackend::createScreens(QObject *parent)

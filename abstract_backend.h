@@ -57,6 +57,9 @@ public:
     bool handlesOutputs() const {
         return m_handlesOutputs;
     }
+    bool isReady() const {
+        return m_ready;
+    }
 
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -75,6 +78,7 @@ public:
 
 Q_SIGNALS:
     void cursorChanged();
+    void readyChanged(bool);
 
 protected:
     explicit AbstractBackend(QObject *parent = nullptr);
@@ -85,6 +89,7 @@ protected:
         m_handlesOutputs = true;
     }
     void repaint(const QRect &rect);
+    void setReady(bool ready);
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);
@@ -99,6 +104,7 @@ private:
     } m_cursor;
     WaylandCursorTheme *m_cursorTheme = nullptr;
     bool m_handlesOutputs = false;
+    bool m_ready = false;
 };
 
 }

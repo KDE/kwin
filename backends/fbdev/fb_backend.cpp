@@ -92,6 +92,7 @@ void FramebufferBackend::openFrameBuffer()
     }
     m_fd = fd;
     queryScreenInfo();
+    setReady(true);
     emit screensQueried();
 }
 

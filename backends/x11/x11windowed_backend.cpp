@@ -77,6 +77,7 @@ X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &s
         XRenderUtils::init(m_connection, m_screen->root);
         createWindow();
         startEventReading();
+        setReady(true);
     }
 }
 

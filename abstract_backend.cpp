@@ -298,4 +298,13 @@ void AbstractBackend::repaint(const QRect &rect)
     Compositor::self()->addRepaint(rect);
 }
 
+void AbstractBackend::setReady(bool ready)
+{
+    if (m_ready == ready) {
+        return;
+    }
+    m_ready = ready;
+    emit readyChanged(m_ready);
+}
+
 }

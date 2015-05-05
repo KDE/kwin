@@ -150,13 +150,9 @@ public:
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend *createQPainterBackend() override;
 
-protected:
-    void connectNotify(const QMetaMethod &signal) override;
-
 Q_SIGNALS:
     void shellSurfaceSizeChanged(const QSize &size);
     void systemCompositorDied();
-    void backendReady();
     void outputsChanged();
     void connectionFailed();
 private:
@@ -179,7 +175,6 @@ private:
     KWayland::Client::FullscreenShell *m_fullscreenShell;
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
-    bool m_ready = false;
 };
 
 inline

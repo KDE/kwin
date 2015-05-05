@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "compositingprefs.h"
 #include "xcbutils.h"
 #if HAVE_WAYLAND
-#include "backends/wayland/wayland_backend.h"
+#include "abstract_backend.h"
 #include "wayland_server.h"
 #endif
 #include "decorations/decoratedclient.h"
@@ -119,12 +119,18 @@ Compositor::Compositor(QObject* workspace)
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
 #if HAVE_WAYLAND
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-        if (Wayland::WaylandBackend *w = dynamic_cast<Wayland::WaylandBackend *>(waylandServer()->backend())) {
-            connect(w, &Wayland::WaylandBackend::systemCompositorDied, this, &Compositor::finish);
-            connect(w, &Wayland::WaylandBackend::backendReady, this, &Compositor::setup);
-        } else {
+        if (waylandServer()->backend()->isReady()) {
             QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
         }
+        connect(waylandServer()->backend(), &AbstractBackend::readyChanged, this,
+            [this] (bool ready) {
+                if (ready) {
+                    setup();
+                } else {
+                    finish();
+                }
+            }, Qt::QueuedConnection
+        );
     } else
 #endif
 
