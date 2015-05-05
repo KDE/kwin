@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "fb_backend.h"
 #include "composite.h"
 #include "logind.h"
-#include "scene_qpainter.h"
+#include "scene_qpainter_fb_backend.h"
 #include "screens_fb.h"
 #include "virtual_terminal.h"
 // Qt

@@ -437,6 +437,7 @@ if(HAVE_WAYLAND)
             ${kwin_KDEINIT_SRCS}
             abstract_backend.cpp
             backends/fbdev/fb_backend.cpp
+            backends/fbdev/scene_qpainter_fb_backend.cpp
             backends/fbdev/screens_fb.cpp
             backends/wayland/screens_wayland.cpp
             backends/x11/screens_x11windowed.cpp
