@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "cursor.h"
 #include "logind.h"
-#include "scene_qpainter.h"
+#include "scene_qpainter_drm_backend.h"
 #include "screens_drm.h"
 #include "udev.h"
 #include "utils.h"

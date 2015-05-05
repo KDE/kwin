@@ -453,6 +453,7 @@ if(HAVE_WAYLAND)
                 ${kwin_KDEINIT_SRCS}
                 backends/drm/drm_backend.cpp
                 backends/drm/screens_drm.cpp
+                backends/drm/scene_qpainter_drm_backend.cpp
             )
     endif()
     if(HAVE_GBM)

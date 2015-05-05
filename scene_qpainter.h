@@ -44,9 +44,6 @@ namespace Wayland
 {
 class WaylandBackend;
 }
-class DrmBackend;
-class DrmBuffer;
-class DrmOutput;
 class FramebufferBackend;
 class X11WindowedBackend;
 
@@ -189,34 +186,6 @@ private:
     QImage m_backBuffer;
     FramebufferBackend *m_backend;
 };
-
-#if HAVE_DRM
-class DrmQPainterBackend : public QObject, public QPainterBackend
-{
-    Q_OBJECT
-public:
-    DrmQPainterBackend(DrmBackend *backend);
-    virtual ~DrmQPainterBackend();
-
-    QImage *buffer() override;
-    QImage *bufferForScreen(int screenId);
-    bool needsFullRepaint() const override;
-    bool usesOverlayWindow() const override;
-    void prepareRenderingFrame() override;
-    void present(int mask, const QRegion &damage) override;
-    bool perScreenRendering() const override;
-
-private:
-    void initOutput(DrmOutput *output);
-    struct Output {
-        DrmBuffer *buffer[2];
-        DrmOutput *output;
-        int index = 0;
-    };
-    QVector<Output> m_outputs;
-    DrmBackend *m_backend;
-};
-#endif
 
 #endif
 
