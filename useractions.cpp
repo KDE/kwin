@@ -1691,7 +1691,7 @@ void Workspace::switchWindow(Direction direction)
     AbstractClient *c = active_client;
     Client *switchTo = 0;
     int bestScore = 0;
-    int d = c->desktop();
+    int d = c->isOnAllDesktops() ? VirtualDesktopManager::self()->current() : c->desktop();
     // Centre of the active window
     QPoint curPos(c->pos().x() + c->geometry().width() / 2,
                   c->pos().y() + c->geometry().height() / 2);
