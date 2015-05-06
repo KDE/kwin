@@ -1117,18 +1117,34 @@ void DesktopGridEffect::setup()
     }
     bool enableAdd = effects->numberOfDesktops() < 20;
     bool enableRemove = effects->numberOfDesktops() > 1;
+
+    QHash< DesktopButtonsView*, EffectWindow* >::iterator it = m_desktopButtonsViews.begin();
     for (int i = 0; i < effects->numScreens(); ++i) {
-        DesktopButtonsView* view = new DesktopButtonsView();
+        DesktopButtonsView *view;
+        if (it == m_desktopButtonsViews.end()) {
+            view = new DesktopButtonsView();
+            m_desktopButtonsViews.insert(view, NULL);
+            it = m_desktopButtonsViews.end(); // changed through insert!
+            connect(view, SIGNAL(addDesktop()), SLOT(slotAddDesktop()));
+            connect(view, SIGNAL(removeDesktop()), SLOT(slotRemoveDesktop()));
+        } else {
+            view = it.key();
+            ++it;
+        }
         view->setAddDesktopEnabled(enableAdd);
         view->setRemoveDesktopEnabled(enableRemove);
-        connect(view, SIGNAL(addDesktop()), SLOT(slotAddDesktop()));
-        connect(view, SIGNAL(removeDesktop()), SLOT(slotRemoveDesktop()));
         const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
         view->setGeometry(screenRect.right() + 1 - view->width(),
                           screenRect.bottom() + 1 - view->height(),
                           view->width(), view->height());
         view->show();
-        m_desktopButtonsViews.insert(view, NULL);
+    }
+    while (it != m_desktopButtonsViews.end()) {
+        if (*it && (*it)->isDeleted())
+            (*it)->unrefWindow();
+        DesktopButtonsView *view = it.key();
+        it = m_desktopButtonsViews.erase(it);
+        view->deleteLater();
     }
 }
 
@@ -1207,15 +1223,6 @@ void DesktopGridEffect::finish()
             m_managers.removeFirst();
         }
         m_proxy = 0;
-    }
-
-    QHash< DesktopButtonsView*, EffectWindow* >::iterator i = m_desktopButtonsViews.begin();
-    while (i != m_desktopButtonsViews.end()) {
-        if (*i && (*i)->isDeleted())
-            (*i)->unrefWindow();
-        DesktopButtonsView *view = i.key();
-        i = m_desktopButtonsViews.erase(i);
-        view->deleteLater();
     }
 }
 
