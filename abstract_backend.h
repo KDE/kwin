@@ -64,6 +64,9 @@ public:
     void setInitialWindowSize(const QSize &size) {
         m_initialWindowSize = size;
     }
+    void setDeviceIdentifier(const QByteArray &identifier) {
+        m_deviceIdentifier = identifier;
+    }
 
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -99,6 +102,9 @@ protected:
     QSize initialWindowSize() const {
         return m_initialWindowSize;
     }
+    QByteArray deviceIdentifier() const {
+        return m_deviceIdentifier;
+    }
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);
@@ -115,6 +121,7 @@ private:
     bool m_handlesOutputs = false;
     bool m_ready = false;
     QSize m_initialWindowSize;
+    QByteArray m_deviceIdentifier;
 };
 
 }

@@ -101,11 +101,13 @@ void ApplicationWayland::createBackend()
     AbstractBackend *backend = nullptr;
     if (m_windowed) {
         if (!m_waylandDisplay.isEmpty()) {
-            Wayland::WaylandBackend *b = new Wayland::WaylandBackend(m_waylandDisplay, this);
+            Wayland::WaylandBackend *b = new Wayland::WaylandBackend(this);
+            b->setDeviceIdentifier(m_waylandDisplay);
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
-            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, this);
+            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(this);
+            x11Backend->setDeviceIdentifier(m_x11Display);
             backend = x11Backend;
         }
     }
@@ -117,7 +119,7 @@ void ApplicationWayland::createBackend()
 #endif
     if (!m_framebuffer.isEmpty()) {
         FramebufferBackend *b = new FramebufferBackend(this);
-        b->setDevice(m_framebuffer);
+        b->setDeviceIdentifier(m_framebuffer.toUtf8());
         backend = b;
     }
 

@@ -45,9 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-X11WindowedBackend::X11WindowedBackend(const QByteArray &display, QObject *parent)
+X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : AbstractBackend(parent)
-    , m_displayName(display)
 {
 }
 
@@ -70,14 +69,14 @@ void X11WindowedBackend::init()
     int screen = 0;
     xcb_connection_t *c = nullptr;
 #if HAVE_X11_XCB
-    Display *xDisplay = XOpenDisplay(m_displayName.constData());
+    Display *xDisplay = XOpenDisplay(deviceIdentifier().constData());
     if (xDisplay) {
         c = XGetXCBConnection(xDisplay);
         XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
         screen = XDefaultScreen(xDisplay);
     }
 #else
-    c = xcb_connect(m_displayName.constData(), &screen);
+    c = xcb_connect(deviceIdentifier().constData(), &screen);
 #endif
     if (c && !xcb_connection_has_error(c)) {
         m_connection = c;

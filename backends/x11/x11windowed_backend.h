@@ -39,7 +39,7 @@ class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
     Q_OBJECT
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
-    X11WindowedBackend(const QByteArray &display, QObject *parent);
+    X11WindowedBackend(QObject *parent);
     virtual ~X11WindowedBackend();
     void init() override;
 
@@ -79,7 +79,6 @@ private:
     void handleExpose(xcb_expose_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
 
-    QByteArray m_displayName;
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;
     int m_screenNumber = 0;

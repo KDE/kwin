@@ -38,9 +38,6 @@ public:
     QPainterBackend *createQPainterBackend() override;
 
     void init() override;
-    void setDevice(const QString &device) {
-        m_device = device;
-    }
 
     bool isValid() const {
         return m_fd >= 0;
@@ -72,7 +69,6 @@ public:
 private:
     void openFrameBuffer();
     bool queryScreenInfo();
-    QString m_device = QStringLiteral("/dev/fb0");
     QSize m_resolution;
     QSize m_physicalSize;
     QByteArray m_id;

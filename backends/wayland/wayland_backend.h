@@ -133,7 +133,7 @@ class KWIN_EXPORT WaylandBackend : public AbstractBackend
 {
     Q_OBJECT
 public:
-    explicit WaylandBackend(const QByteArray &display, QObject *parent = nullptr);
+    explicit WaylandBackend(QObject *parent = nullptr);
     virtual ~WaylandBackend();
     void init() override;
     wl_display *display();
@@ -176,7 +176,6 @@ private:
     KWayland::Client::FullscreenShell *m_fullscreenShell;
     KWayland::Client::SubCompositor *m_subCompositor;
     WaylandCursor *m_cursor;
-    QByteArray m_displayName;
 };
 
 inline

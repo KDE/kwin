@@ -349,7 +349,7 @@ void WaylandCursor::setCursorImage(Qt::CursorShape shape)
 #endif
 }
 
-WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
+WaylandBackend::WaylandBackend(QObject *parent)
     : AbstractBackend(parent)
     , m_display(nullptr)
     , m_eventQueue(new EventQueue(this))
@@ -365,7 +365,6 @@ WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
     , m_fullscreenShell(new FullscreenShell(this))
     , m_subCompositor(new SubCompositor(this))
     , m_cursor(nullptr)
-    , m_displayName(display)
 {
     connect(this, &WaylandBackend::outputsChanged, this, &WaylandBackend::screensQueried);
     connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
@@ -440,7 +439,7 @@ void WaylandBackend::init()
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
-    m_connectionThreadObject->setSocketName(m_displayName);
+    m_connectionThreadObject->setSocketName(deviceIdentifier());
     initConnection();
 }
 

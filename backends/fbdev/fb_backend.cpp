@@ -81,11 +81,11 @@ void FramebufferBackend::init()
 void FramebufferBackend::openFrameBuffer()
 {
     VirtualTerminal::self()->init();
-    int fd = LogindIntegration::self()->takeDevice(m_device.toUtf8().constData());
+    int fd = LogindIntegration::self()->takeDevice(deviceIdentifier().constData());
     if (fd < 0) {
         qCWarning(KWIN_FB) << "Failed to open frame buffer device through logind, trying without";
     }
-    fd = open(m_device.toUtf8().constData(), O_RDWR | O_CLOEXEC);
+    fd = open(deviceIdentifier().constData(), O_RDWR | O_CLOEXEC);
     if (fd < 0) {
         qCWarning(KWIN_FB) << "failed to open frame buffer device";
         return;
