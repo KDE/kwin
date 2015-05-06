@@ -120,8 +120,6 @@ void ApplicationWayland::createBackend()
             x11Backend->init();
             if (x11Backend->isValid()) {
                 backend = x11Backend;
-                waylandServer()->seat()->setHasPointer(true);
-                waylandServer()->seat()->setHasKeyboard(true);
             } else {
                 delete x11Backend;
             }

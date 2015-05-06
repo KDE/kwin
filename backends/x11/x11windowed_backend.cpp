@@ -97,6 +97,8 @@ void X11WindowedBackend::init()
         createWindow();
         startEventReading();
         setReady(true);
+        waylandServer()->seat()->setHasPointer(true);
+        waylandServer()->seat()->setHasKeyboard(true);
     }
 }
 
