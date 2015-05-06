@@ -78,6 +78,7 @@ public:
     void touchFrame();
 
 Q_SIGNALS:
+    void screensQueried();
     void cursorChanged();
     void readyChanged(bool);
 

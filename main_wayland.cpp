@@ -94,9 +94,6 @@ void ApplicationWayland::performStartup()
     // try creating the Wayland Backend
     createInput();
     createBackend();
-    if (dynamic_cast<X11WindowedBackend*>(waylandServer()->backend())) {
-        continueStartupWithScreens();
-    }
 }
 
 void ApplicationWayland::createBackend()
@@ -111,37 +108,29 @@ void ApplicationWayland::createBackend()
                     ::exit(1);
                 }
             );
-            connect(b, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
-            b->init();
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
             KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, m_backendSize, this);
-            x11Backend->init();
-            if (x11Backend->isValid()) {
-                backend = x11Backend;
-            } else {
-                delete x11Backend;
-            }
+            backend = x11Backend;
         }
     }
 #if HAVE_DRM
     if (m_drm) {
         DrmBackend *b = new DrmBackend(this);
-        connect(b, &DrmBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-        b->init();
         backend = b;
     }
 #endif
     if (!m_framebuffer.isEmpty()) {
         FramebufferBackend *b = new FramebufferBackend(this);
-        connect(b, &FramebufferBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
         b->setDevice(m_framebuffer);
-        b->init();
         backend = b;
     }
 
-    if (!backend) {
+    if (backend) {
+        connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+        backend->init();
+    } else {
         std::cerr <<  "FATAL ERROR: could not create a backend, exiting now" << std::endl;
         ::exit(1);
     }
@@ -149,14 +138,7 @@ void ApplicationWayland::createBackend()
 
 void ApplicationWayland::continueStartupWithScreens()
 {
-    if (Wayland::WaylandBackend *w = dynamic_cast<Wayland::WaylandBackend *>(waylandServer()->backend())) {
-        disconnect(w, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
-    }
-#if HAVE_DRM
-    if (DrmBackend *b = dynamic_cast<DrmBackend*>(waylandServer()->backend())) {
-        disconnect(b, &DrmBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
-    }
-#endif
+    disconnect(waylandServer()->backend(), &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
     createScreens();
     waylandServer()->initOutputs();
 

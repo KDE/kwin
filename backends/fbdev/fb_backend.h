@@ -69,9 +69,6 @@ public:
     }
     QImage::Format imageFormat() const;
 
-Q_SIGNALS:
-    void screensQueried();
-
 private:
     void openFrameBuffer();
     bool queryScreenInfo();

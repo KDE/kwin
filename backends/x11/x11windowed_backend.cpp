@@ -99,6 +99,7 @@ void X11WindowedBackend::init()
         setReady(true);
         waylandServer()->seat()->setHasPointer(true);
         waylandServer()->seat()->setHasKeyboard(true);
+        emit screensQueried();
     }
 }
 

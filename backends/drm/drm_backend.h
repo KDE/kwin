@@ -76,7 +76,6 @@ public:
     void bufferDestroyed(DrmBuffer *b);
 
 Q_SIGNALS:
-    void screensQueried();
     void outputRemoved(KWin::DrmOutput *output);
     void outputAdded(KWin::DrmOutput *output);
 
