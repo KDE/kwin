@@ -411,6 +411,10 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     parser.addOption(framebufferDeviceOption);
     parser.addOption(widthOption);
     parser.addOption(heightOption);
+#if HAVE_LIBHYBRIS
+    QCommandLineOption hwcomposerOption(QStringLiteral("hwcomposer"), i18n("Use libhybris hwcomposer"));
+    parser.addOption(hwcomposerOption);
+#endif
 #if HAVE_INPUT
     QCommandLineOption libinputOption(QStringLiteral("libinput"),
                                       i18n("Enable libinput support for input events processing. Note: never use in a nested session."));
@@ -483,6 +487,11 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         pluginName = QStringLiteral("KWinWaylandFbdevBackend");
         deviceIdentifier = parser.value(framebufferDeviceOption).toUtf8();
     }
+#if HAVE_LIBHYBRIS
+    if (parser.isSet(hwcomposerOption)) {
+        pluginName = QStringLiteral("KWinWaylandHwcomposerBackend");
+    }
+#endif
 
     const auto pluginCandidates = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"),
         [&pluginName] (const KPluginMetaData &plugin) {

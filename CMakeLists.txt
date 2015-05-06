@@ -171,6 +171,10 @@ if(HAVE_DRM AND gbm_FOUND)
     set(HAVE_GBM TRUE)
 endif()
 
+find_package(libhybris)
+set_package_properties(libhybris PROPERTIES TYPE OPTIONAL PURPOSE "Required for libhybris backend")
+set(HAVE_LIBHYBRIS libhybris_FOUND)
+
 find_package(X11)
 set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                         URL "http://www.x.org"
