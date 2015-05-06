@@ -39,7 +39,7 @@ class KWIN_EXPORT X11WindowedBackend : public AbstractBackend
     Q_OBJECT
     Q_PROPERTY(QSize size READ size NOTIFY sizeChanged)
 public:
-    X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent);
+    X11WindowedBackend(const QByteArray &display, QObject *parent);
     virtual ~X11WindowedBackend();
     void init() override;
 

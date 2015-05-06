@@ -61,6 +61,9 @@ public:
     bool isReady() const {
         return m_ready;
     }
+    void setInitialWindowSize(const QSize &size) {
+        m_initialWindowSize = size;
+    }
 
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
@@ -93,6 +96,9 @@ protected:
     }
     void repaint(const QRect &rect);
     void setReady(bool ready);
+    QSize initialWindowSize() const {
+        return m_initialWindowSize;
+    }
 
 private Q_SLOTS:
     void installThemeCursor(quint32 id, const QPoint &hotspot);
@@ -108,6 +114,7 @@ private:
     WaylandCursorTheme *m_cursorTheme = nullptr;
     bool m_handlesOutputs = false;
     bool m_ready = false;
+    QSize m_initialWindowSize;
 };
 
 }

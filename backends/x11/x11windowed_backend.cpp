@@ -45,10 +45,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent)
+X11WindowedBackend::X11WindowedBackend(const QByteArray &display, QObject *parent)
     : AbstractBackend(parent)
     , m_displayName(display)
-    , m_size(size)
 {
 }
 
@@ -123,6 +122,7 @@ void X11WindowedBackend::createWindow()
         XCB_EVENT_MASK_STRUCTURE_NOTIFY |
         XCB_EVENT_MASK_EXPOSURE
     };
+    m_size = initialWindowSize();
     xcb_create_window(m_connection, XCB_COPY_FROM_PARENT, m_window, m_screen->root,
                       0, 0, m_size.width(), m_size.height(),
                       0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, mask, values);

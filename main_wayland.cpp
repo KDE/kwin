@@ -105,7 +105,7 @@ void ApplicationWayland::createBackend()
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
-            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, m_backendSize, this);
+            KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, this);
             backend = x11Backend;
         }
     }
@@ -129,6 +129,7 @@ void ApplicationWayland::createBackend()
                 ::exit(1);
             }
         );
+        backend->setInitialWindowSize(m_backendSize);
         backend->init();
     } else {
         std::cerr <<  "FATAL ERROR: could not create a backend, exiting now" << std::endl;
