@@ -365,6 +365,35 @@ WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
     , m_fullscreenShell(new FullscreenShell(this))
     , m_subCompositor(new SubCompositor(this))
     , m_cursor(nullptr)
+    , m_displayName(display)
+{
+}
+
+WaylandBackend::~WaylandBackend()
+{
+    destroyOutputs();
+    if (m_shellSurface) {
+        m_shellSurface->release();
+    }
+    m_fullscreenShell->release();
+    if (m_surface) {
+        m_surface->release();
+    }
+    m_shell->release();
+    m_compositor->release();
+    m_registry->release();
+    m_seat.reset();
+    m_shm->release();
+    m_eventQueue->release();
+
+    m_connectionThreadObject->deleteLater();
+    m_connectionThread->quit();
+    m_connectionThread->wait();
+
+    qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
+}
+
+void WaylandBackend::init()
 {
     connect(this, &WaylandBackend::shellSurfaceSizeChanged, this, &WaylandBackend::checkBackendReady);
     connect(m_registry, &Registry::compositorAnnounced, this,
@@ -409,32 +438,8 @@ WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
         }
     );
     connect(m_registry, &Registry::interfacesAnnounced, this, &WaylandBackend::createSurface);
-    m_connectionThreadObject->setSocketName(display);
+    m_connectionThreadObject->setSocketName(m_displayName);
     initConnection();
-}
-
-WaylandBackend::~WaylandBackend()
-{
-    destroyOutputs();
-    if (m_shellSurface) {
-        m_shellSurface->release();
-    }
-    m_fullscreenShell->release();
-    if (m_surface) {
-        m_surface->release();
-    }
-    m_shell->release();
-    m_compositor->release();
-    m_registry->release();
-    m_seat.reset();
-    m_shm->release();
-    m_eventQueue->release();
-
-    m_connectionThreadObject->deleteLater();
-    m_connectionThread->quit();
-    m_connectionThread->wait();
-
-    qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
 void WaylandBackend::destroyOutputs()

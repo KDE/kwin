@@ -112,10 +112,12 @@ void ApplicationWayland::createBackend()
                 }
             );
             connect(b, &Wayland::WaylandBackend::outputsChanged, this, &ApplicationWayland::continueStartupWithScreens);
+            b->init();
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
             KWin::X11WindowedBackend *x11Backend = new KWin::X11WindowedBackend(m_x11Display, m_backendSize, this);
+            x11Backend->init();
             if (x11Backend->isValid()) {
                 backend = x11Backend;
                 waylandServer()->seat()->setHasPointer(true);

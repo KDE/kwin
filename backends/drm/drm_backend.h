@@ -58,7 +58,7 @@ public:
     void installCursorFromServer() override;
     void installCursorImage(Qt::CursorShape shape) override;
 
-    void init();
+    void init() override;
     DrmBuffer *createBuffer(const QSize &size);
     DrmBuffer *createBuffer(gbm_surface *surface);
     void present(DrmBuffer *buffer, DrmOutput *output);

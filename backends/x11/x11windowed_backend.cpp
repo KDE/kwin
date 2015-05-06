@@ -47,19 +47,38 @@ namespace KWin
 
 X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &size, QObject *parent)
     : AbstractBackend(parent)
+    , m_displayName(display)
     , m_size(size)
+{
+}
+
+X11WindowedBackend::~X11WindowedBackend()
+{
+    if (m_connection) {
+        if (m_window) {
+            xcb_unmap_window(m_connection, m_window);
+            xcb_destroy_window(m_connection, m_window);
+        }
+        if (m_cursor) {
+            xcb_free_cursor(m_connection, m_cursor);
+        }
+        xcb_disconnect(m_connection);
+    }
+}
+
+void X11WindowedBackend::init()
 {
     int screen = 0;
     xcb_connection_t *c = nullptr;
 #if HAVE_X11_XCB
-    Display *xDisplay = XOpenDisplay(display.constData());
+    Display *xDisplay = XOpenDisplay(m_displayName.constData());
     if (xDisplay) {
         c = XGetXCBConnection(xDisplay);
         XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
         screen = XDefaultScreen(xDisplay);
     }
 #else
-    c = xcb_connect(display.constData(), &screen);
+    c = xcb_connect(m_displayName.constData(), &screen);
 #endif
     if (c && !xcb_connection_has_error(c)) {
         m_connection = c;
@@ -78,20 +97,6 @@ X11WindowedBackend::X11WindowedBackend(const QByteArray &display, const QSize &s
         createWindow();
         startEventReading();
         setReady(true);
-    }
-}
-
-X11WindowedBackend::~X11WindowedBackend()
-{
-    if (m_connection) {
-        if (m_window) {
-            xcb_unmap_window(m_connection, m_window);
-            xcb_destroy_window(m_connection, m_window);
-        }
-        if (m_cursor) {
-            xcb_free_cursor(m_connection, m_cursor);
-        }
-        xcb_disconnect(m_connection);
     }
 }
 

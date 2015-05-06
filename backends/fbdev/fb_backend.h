@@ -37,7 +37,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     QPainterBackend *createQPainterBackend() override;
 
-    void init();
+    void init() override;
     void setDevice(const QString &device) {
         m_device = device;
     }

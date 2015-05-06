@@ -37,6 +37,7 @@ class KWIN_EXPORT AbstractBackend : public QObject
 public:
     virtual ~AbstractBackend();
 
+    virtual void init() = 0;
     virtual void installCursorFromServer();
     virtual void installCursorImage(Qt::CursorShape shape);
     virtual Screens *createScreens(QObject *parent = nullptr);
