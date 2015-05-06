@@ -79,6 +79,7 @@ public:
 
 Q_SIGNALS:
     void screensQueried();
+    void initFailed();
     void cursorChanged();
     void readyChanged(bool);
 

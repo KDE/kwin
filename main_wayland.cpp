@@ -102,12 +102,6 @@ void ApplicationWayland::createBackend()
     if (m_windowed) {
         if (!m_waylandDisplay.isEmpty()) {
             Wayland::WaylandBackend *b = new Wayland::WaylandBackend(m_waylandDisplay, this);
-            connect(b, &Wayland::WaylandBackend::connectionFailed, this,
-                [] () {
-                    fputs(i18n("kwin_wayland: could not connect to Wayland Server, ensure WAYLAND_DISPLAY is set.\n").toLocal8Bit().constData(), stderr);
-                    ::exit(1);
-                }
-            );
             backend = b;
         }
         if (!backend && !m_x11Display.isEmpty()) {
@@ -129,6 +123,12 @@ void ApplicationWayland::createBackend()
 
     if (backend) {
         connect(backend, &AbstractBackend::screensQueried, this, &ApplicationWayland::continueStartupWithScreens);
+        connect(backend, &AbstractBackend::initFailed, this,
+            [] () {
+                std::cerr <<  "FATAL ERROR: backend failed to initialize, exiting now" << std::endl;
+                ::exit(1);
+            }
+        );
         backend->init();
     } else {
         std::cerr <<  "FATAL ERROR: could not create a backend, exiting now" << std::endl;

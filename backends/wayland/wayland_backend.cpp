@@ -368,6 +368,7 @@ WaylandBackend::WaylandBackend(const QByteArray &display, QObject *parent)
     , m_displayName(display)
 {
     connect(this, &WaylandBackend::outputsChanged, this, &WaylandBackend::screensQueried);
+    connect(this, &WaylandBackend::connectionFailed, this, &WaylandBackend::initFailed);
 }
 
 WaylandBackend::~WaylandBackend()

@@ -57,10 +57,6 @@ public:
     }
     xcb_window_t rootWindow() const;
 
-    bool isValid() const {
-        return m_connection != nullptr && m_window != XCB_WINDOW_NONE;
-    }
-
     QSize size() const {
         return m_size;
     }
