@@ -257,6 +257,7 @@ endif()
 if(${Qt5Gui_OPENGL_IMPLEMENTATION} STREQUAL "GLESv2")
     set(KWIN_BUILD_OPENGLES TRUE)
     message("Building KWin with OpenGL ES 2 support")
+    add_definitions(-DKWIN_HAVE_OPENGLES)
 endif()
 
 if(NOT KWIN_BUILD_OPENGL AND NOT KWIN_BUILD_OPENGLES)
