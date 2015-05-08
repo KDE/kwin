@@ -37,6 +37,11 @@ QRect MockScreens::geometry(int screen) const
     return m_geometries.at(screen);
 }
 
+float MockScreens::refreshRate(int screen) const
+{
+    return 60.0f;
+}
+
 QSize MockScreens::size(int screen) const
 {
     return geometry(screen).size();

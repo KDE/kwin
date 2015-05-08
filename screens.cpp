@@ -85,6 +85,18 @@ void Screens::init()
     m_currentFollowsMouse = settings.activeMouseScreen();
 }
 
+QString Screens::name(int screen) const
+{
+    qWarning("%s::name(int screen) is a stub, please reimplement it!", metaObject()->className());
+    return QLatin1String("DUMMY");
+}
+
+float Screens::refreshRate(int screen) const
+{
+    qWarning("%s::refreshRate(int screen) is a stub, please reimplement it!", metaObject()->className());
+    return 60.0f;
+}
+
 void Screens::reconfigure()
 {
     if (!m_config) {

@@ -33,6 +33,7 @@ public:
     virtual ~MockScreens();
     QRect geometry(int screen) const override;
     int number(const QPoint &pos) const override;
+    float refreshRate(int screen) const override;
     QSize size(int screen) const override;
     void init() override;
 

@@ -37,6 +37,7 @@ public:
     void init() override;
     QRect geometry(int screen) const override;
     int number(const QPoint& pos) const override;
+    float refreshRate(int screen) const override;
     QSize size(int screen) const override;
 
     using QObject::event;
@@ -49,6 +50,7 @@ private:
     template <typename T>
     void update();
     QVector<QRect> m_geometries;
+    QVector<float> m_refreshRates;
 };
 
 } // namespace
