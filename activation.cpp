@@ -479,11 +479,15 @@ bool Workspace::activateNextClient(AbstractClient* c)
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
         if (Client *client = qobject_cast<Client*>(c)) {
-            get_focus = client->transientFor();
+            if (client->isTransient()) {
+                ClientList leaders = client->mainClients();
+                if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
+                    get_focus = leaders.at(0);
+                    raiseClient(get_focus);   // also raise - we don't know where it came from
+                }
+            }
         }
-        if (c  && get_focus && FocusChain::self()->isUsableFocusCandidate(get_focus, c)) {
-            raiseClient(get_focus);   // also raise - we don't know where it came from
-        } else {
+        if (!get_focus) {
             // nope, ask the focus chain for the next candidate
             get_focus = FocusChain::self()->nextForDesktop(c, desktop);
         }
