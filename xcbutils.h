@@ -1125,6 +1125,12 @@ public:
         }
         return xcb_randr_get_screen_resources_crtcs(data());
     }
+    inline xcb_randr_mode_info_t *modes() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_modes(data());
+    }
 };
 
 XCB_WRAPPER_DATA(CrtcGammaData, xcb_randr_get_crtc_gamma, xcb_randr_crtc_t)
@@ -1172,6 +1178,12 @@ public:
             return nullptr;
         }
         return xcb_randr_get_screen_resources_current_crtcs(data());
+    }
+    inline xcb_randr_mode_info_t *modes() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_current_modes(data());
     }
 };
 
