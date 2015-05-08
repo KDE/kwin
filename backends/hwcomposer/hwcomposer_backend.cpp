@@ -21,6 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "hwcomposer_backend.h"
 #include "logging.h"
 #include "screens_hwcomposer.h"
+#include "wayland_server.h"
+// KWayland
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/output_interface.h>
+// hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
 
@@ -32,6 +37,7 @@ namespace KWin
 HwcomposerBackend::HwcomposerBackend(QObject *parent)
     : AbstractBackend(parent)
 {
+    handleOutputs();
 }
 
 HwcomposerBackend::~HwcomposerBackend()
@@ -41,23 +47,44 @@ HwcomposerBackend::~HwcomposerBackend()
     }
 }
 
-static QSize getDisplaySize(hwc_composer_device_1_t *device)
+static KWayland::Server::OutputInterface *createOutput(hwc_composer_device_1_t *device)
 {
     uint32_t configs[5];
     size_t numConfigs = 5;
     if (device->getDisplayConfigs(device, 0, configs, &numConfigs) != 0) {
         qCWarning(KWIN_HWCOMPOSER) << "Failed to get hwcomposer display configurations";
-        return QSize();
+        return nullptr;
     }
 
-    int32_t attr_values[2];
+    int32_t attr_values[4];
     uint32_t attributes[] = {
         HWC_DISPLAY_WIDTH,
         HWC_DISPLAY_HEIGHT,
+        HWC_DISPLAY_DPI_X,
+        HWC_DISPLAY_DPI_Y,
         HWC_DISPLAY_NO_ATTRIBUTE
     };
     device->getDisplayAttributes(device, 0, configs[0], attributes, attr_values);
-    return QSize(attr_values[0], attr_values[1]);
+    QSize pixel(attr_values[0], attr_values[1]);
+    if (pixel.isEmpty()) {
+        return nullptr;
+    }
+
+    using namespace KWayland::Server;
+    OutputInterface *o = waylandServer()->display()->createOutput(waylandServer()->display());
+    // TODO: get refresh rate
+    o->addMode(pixel, OutputInterface::ModeFlag::Current | OutputInterface::ModeFlag::Preferred);
+
+    if (attr_values[2] != 0 && attr_values[3] != 0) {
+         static const qreal factor = 25.4;
+         o->setPhysicalSize(QSizeF(qreal(pixel.width() * 1000) / qreal(attr_values[2]) * factor,
+                                   qreal(pixel.height() * 1000) / qreal(attr_values[3]) * factor).toSize());
+    } else {
+         // couldn't read physical size, assume 96 dpi
+         o->setPhysicalSize(pixel / 3.8);
+    }
+    o->create();
+    return o;
 }
 
 void HwcomposerBackend::init()
@@ -80,11 +107,12 @@ void HwcomposerBackend::init()
     hwcDevice->blank(hwcDevice, 0, 0);
 
     // get display configuration
-    m_displaySize = getDisplaySize(hwcDevice);
-    if (!m_displaySize.isValid()) {
+    auto output = createOutput(hwcDevice);
+    if (!output) {
         emit initFailed();
         return;
     }
+    m_displaySize = output->pixelSize();
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     m_device = hwcDevice;
 
