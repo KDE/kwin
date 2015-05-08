@@ -106,11 +106,12 @@ void initGL(OpenGLPlatformInterface platformInterface)
 {
     // Get OpenGL version
     QString glversionstring = QString::fromUtf8((const char*)glGetString(GL_VERSION));
+    if (glversionstring.startsWith(QLatin1String("OpenGL ES "))) {
+        glversionstring = glversionstring.mid(10);
+    }
     QStringList glversioninfo = glversionstring.left(glversionstring.indexOf(QStringLiteral(" "))).split(QStringLiteral("."));
     while (glversioninfo.count() < 3)
         glversioninfo << QStringLiteral("0");
-
-#ifndef KWIN_HAVE_OPENGLES
     glVersion = MAKE_GL_VERSION(glversioninfo[0].toInt(), glversioninfo[1].toInt(), glversioninfo[2].toInt());
 
     // Get list of supported OpenGL extensions
@@ -123,7 +124,6 @@ void initGL(OpenGLPlatformInterface platformInterface)
             glExtensions << name;
         }
     } else
-#endif
         glExtensions = QByteArray((const char*)glGetString(GL_EXTENSIONS)).split(' ');
 
     // handle OpenGL extensions functions
