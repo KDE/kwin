@@ -70,6 +70,10 @@ public:
      **/
     QRect geometry() const;
     /**
+     * @returns current refreshrate of the @p screen.
+     **/
+    virtual float refreshRate(int screen) const;
+    /**
      * @returns size of the @p screen.
      *
      * To get the size of all screens combined use size().
