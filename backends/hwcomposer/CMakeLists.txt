@@ -11,6 +11,7 @@ target_link_libraries(KWinWaylandHwcomposerBackend
     libhybris::libhardware
     libhybris::hwcomposer
     libhybris::hybriseglplatform
+    libhybris::inputstack
     libhybris::sync
 )
 

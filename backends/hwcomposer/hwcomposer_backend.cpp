@@ -25,9 +25,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KWayland
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/seat_interface.h>
 // hybris/android
 #include <hardware/hardware.h>
 #include <hardware/hwcomposer.h>
+#include <hybris/input/input_stack_compatibility_layer.h>
+#include <hybris/input/input_stack_compatibility_layer_flags_key.h>
+#include <hybris/input/input_stack_compatibility_layer_flags_motion.h>
 
 // based on test_hwcomposer.c from libhybris project (Apache 2 licensed)
 
@@ -44,6 +48,68 @@ HwcomposerBackend::~HwcomposerBackend()
 {
     if (m_device) {
         hwc_close_1(m_device);
+    }
+    if (m_inputListener) {
+        android_input_stack_stop();
+        android_input_stack_shutdown();
+        delete m_inputListener;
+    }
+}
+
+static QPointF eventPosition(Event *event)
+{
+    return QPointF(event->details.motion.pointer_coordinates[0].x,
+                   event->details.motion.pointer_coordinates[0].y);
+}
+
+void HwcomposerBackend::inputEvent(Event *event, void *context)
+{
+    HwcomposerBackend *backend = reinterpret_cast<HwcomposerBackend*>(context);
+    switch (event->type) {
+    case KEY_EVENT_TYPE:
+        switch (event->action) {
+        case ISCL_KEY_EVENT_ACTION_DOWN:
+            // TODO: implement
+            break;
+        case ISCL_KEY_EVENT_ACTION_UP:
+            // TODO: implement
+            break;
+        case ISCL_KEY_EVENT_ACTION_MULTIPLE: // TODO: implement
+        default:
+            break;
+        }
+        break;
+    case MOTION_EVENT_TYPE: {
+        const uint buttonIndex = (event->action & ISCL_MOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> ISCL_MOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+        switch (event->action & ISCL_MOTION_EVENT_ACTION_MASK) {
+        case ISCL_MOTION_EVENT_ACTION_DOWN:
+        case ISCL_MOTION_EVENT_ACTION_POINTER_DOWN:
+            backend->touchDown(buttonIndex, eventPosition(event), event->details.motion.event_time);
+            break;
+        case ISCL_MOTION_EVENT_ACTION_UP:
+        case ISCL_MOTION_EVENT_ACTION_POINTER_UP:
+            // first update position - up events can contain additional motion events
+            backend->touchMotion(0, eventPosition(event), event->details.motion.event_time);
+            backend->touchFrame();
+            backend->touchUp(buttonIndex, event->details.motion.event_time);
+            break;
+        case ISCL_MOTION_EVENT_ACTION_MOVE:
+            // it's always for the first index, other touch points seem not to be provided
+            backend->touchMotion(0, eventPosition(event), event->details.motion.event_time);
+            backend->touchFrame();
+            break;
+        case ISCL_MOTION_EVENT_ACTION_CANCEL:
+            backend->touchCancel();
+            break;
+        default:
+            // TODO: implement
+            break;
+        }
+        break;
+    }
+    case HW_SWITCH_EVENT_TYPE:
+        qCDebug(KWIN_HWCOMPOSER) << "HW switch event:";
+        break;
     }
 }
 
@@ -116,8 +182,34 @@ void HwcomposerBackend::init()
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
     m_device = hwcDevice;
 
+    initInput();
+
     emit screensQueried();
     setReady(true);
+}
+
+void HwcomposerBackend::initInput()
+{
+    Q_ASSERT(!m_inputListener);
+    m_inputListener = new AndroidEventListener;
+    m_inputListener->on_new_event = inputEvent;
+    m_inputListener->context = this;
+
+    struct InputStackConfiguration config = {
+        true,
+        10000,
+        m_displaySize.width(),
+        m_displaySize.height()
+    };
+
+    android_input_stack_initialize(m_inputListener, &config);
+    android_input_stack_start();
+
+    // we don't know what is really supported, but there is touch
+    // and kind of keyboard
+    waylandServer()->seat()->setHasPointer(false);
+    waylandServer()->seat()->setHasKeyboard(true);
+    waylandServer()->seat()->setHasTouch(true);
 }
 
 HwcomposerWindow *HwcomposerBackend::createSurface()
