@@ -1131,6 +1131,12 @@ public:
         }
         return xcb_randr_get_screen_resources_modes(data());
     }
+    inline uint8_t *names() {
+        if (isNull()) {
+            return nullptr;
+        }
+        return xcb_randr_get_screen_resources_names(data());
+    }
 };
 
 XCB_WRAPPER_DATA(CrtcGammaData, xcb_randr_get_crtc_gamma, xcb_randr_crtc_t)
@@ -1164,6 +1170,30 @@ public:
             return QRect();
         }
         return QRect(info->x, info->y, info->width, info->height);
+    }
+    inline xcb_randr_output_t *outputs() {
+        const CrtcInfoData::reply_type *info = data();
+        if (!info || info->num_outputs == 0 || info->mode == XCB_NONE || info->status != XCB_RANDR_SET_CONFIG_SUCCESS) {
+            return nullptr;
+        }
+        return xcb_randr_get_crtc_info_outputs(info);
+    }
+};
+
+XCB_WRAPPER_DATA(OutputInfoData, xcb_randr_get_output_info, xcb_randr_output_t, xcb_timestamp_t)
+class OutputInfo : public Wrapper<OutputInfoData, xcb_randr_output_t, xcb_timestamp_t>
+{
+public:
+    OutputInfo() = default;
+    OutputInfo(const OutputInfo&) = default;
+    explicit OutputInfo(xcb_randr_output_t c, xcb_timestamp_t t) : Wrapper<OutputInfoData, xcb_randr_output_t, xcb_timestamp_t>(c, t) {}
+
+    inline QString name() {
+        const OutputInfoData::reply_type *info = data();
+        if (!info || info->num_crtcs == 0 || info->num_modes == 0 || info->status != XCB_RANDR_SET_CONFIG_SUCCESS) {
+            return QString();
+        }
+        return QString::fromUtf8(reinterpret_cast<char*>(xcb_randr_get_output_info_name(info)), info->name_len);
     }
 };
 
