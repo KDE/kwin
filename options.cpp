@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QProcess>
 
 #include "compositingprefs.h"
+#include "screens.h"
 #include "settings.h"
 #include "xcbutils.h"
 #include <kwinglplatform.h>
@@ -43,21 +44,44 @@ namespace KWin
 int currentRefreshRate()
 {
     int rate = -1;
-    if (options->refreshRate() > 0)   // use manually configured refresh rate
+    QString syncScreenName(QLatin1String("primary screen"));
+    if (options->refreshRate() > 0) {  // use manually configured refresh rate
         rate = options->refreshRate();
-    else if (Xcb::Extensions::self()->isRandrAvailable()) {
+    } else if (GLPlatform::instance()->driver() == Driver_NVidia &&
+               Screens::self()->count() > 0) {
+        // prefer the refreshrate calculated from the screens mode information
+        // at least the nvidia driver reports 50Hz BS ... *again*!
+        int syncScreen = 0;
+        if (Screens::self()->count() > 1) {
+            const QByteArray syncDisplayDevice(qgetenv("__GL_SYNC_DISPLAY_DEVICE"));
+            // if __GL_SYNC_DISPLAY_DEVICE is exported, the GPU shall sync to that device
+            // so we try to use its refresh rate
+            if (!syncDisplayDevice.isEmpty()) {
+                for (int i = 0; i < Screens::self()->count(); ++i) {
+                    if (Screens::self()->name(i) == syncDisplayDevice) {
+                        syncScreenName = Screens::self()->name(i);
+                        syncScreen = i;
+                        break;
+                    }
+                }
+            }
+        }
+        rate = qRound(Screens::self()->refreshRate(syncScreen)); // TODO forward float precision?
+    } else if (Xcb::Extensions::self()->isRandrAvailable()) {
+        // last restort - query XRandR screenInfo rate - probably wrong on nvidia systems
         Xcb::RandR::ScreenInfo screenInfo(rootWindow());
         rate = screenInfo->rate;
     }
 
     // 0Hz or less is invalid, so we fallback to a default rate
     if (rate <= 0)
-        rate = 60;
+        rate = 60; // and not shitty 50Hz for sure! *grrr*
+
     // QTimer gives us 1msec (1000Hz) at best, so we ignore anything higher;
     // however, additional throttling prevents very high rates from taking place anyway
     else if (rate > 1000)
         rate = 1000;
-    qCDebug(KWIN_CORE) << "Vertical Refresh rate " << rate << "Hz";
+    qCDebug(KWIN_CORE) << "Vertical Refresh rate " << rate << "Hz (" << syncScreenName << ")";
     return rate;
 }
 
