@@ -41,6 +41,7 @@ void XRandRScreens::update()
         setCount(1);
     };
     m_geometries.clear();
+    m_names.clear();
     T resources(rootWindow());
     if (resources.isNull()) {
         fallback();
@@ -55,8 +56,17 @@ void XRandRScreens::update()
     }
 
     for (int i = 0; i < resources->num_crtcs; ++i) {
-        float refreshRate = -1.0f;
         Xcb::RandR::CrtcInfo info(infos.at(i));
+
+        xcb_randr_output_t *outputs = info.outputs();
+        QVector<Xcb::RandR::OutputInfo> outputInfos(outputs ? resources->num_outputs : 0);
+        if (outputs) {
+            for (int i = 0; i < resources->num_outputs; ++i) {
+                outputInfos[i] = Xcb::RandR::OutputInfo(outputs[i], resources->config_timestamp);
+            }
+        }
+
+        float refreshRate = -1.0f;
         for (int j = 0; j < resources->num_modes; ++j) {
             if (info->mode == modes[j].id) {
                 if (modes[j].htotal*modes[j].vtotal) { // BUG 313996
@@ -72,10 +82,20 @@ void XRandRScreens::update()
                 break; // found mode
             }
         }
+
         const QRect geo = info.rect();
         if (geo.isValid()) {
             m_geometries << geo;
             m_refreshRates << refreshRate;
+            QString name;
+            for (int j = 0; j < info->num_outputs; ++j) {
+                Xcb::RandR::OutputInfo outputInfo(outputInfos.at(j));
+                if (crtcs[i] == outputInfo->crtc) {
+                    name = outputInfo.name();
+                    break;
+                }
+            }
+            m_names << name;
         }
     }
     if (m_geometries.isEmpty()) {
@@ -101,6 +121,14 @@ QRect XRandRScreens::geometry(int screen) const
         return QRect();
     }
     return m_geometries.at(screen);
+}
+
+QString XRandRScreens::name(int screen) const
+{
+    if (screen >= m_names.size() || screen < 0) {
+        return QString();
+    }
+    return m_names.at(screen);
 }
 
 int XRandRScreens::number(const QPoint &pos) const
