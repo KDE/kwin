@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "hwcomposer_backend.h"
 #include "logging.h"
 #include "screens_hwcomposer.h"
+#include "composite.h"
 #include "wayland_server.h"
 // KWayland
 #include <KWayland/Server/display.h>
@@ -298,12 +299,23 @@ void HwcomposerBackend::inputEvent(Event *event, void *context)
             if (key == KEY_RESERVED) {
                 break;
             }
+            if (key == KEY_POWER) {
+                // this key is handled internally
+                // TODO: trigger timer to decide what should be done: short press/release (un)blank screen
+                // long press should emit the normal key pressed
+                break;
+            }
             backend->keyboardKeyPressed(key, event->details.key.event_time);
             break;
         }
         case ISCL_KEY_EVENT_ACTION_UP: {
             const qint32 key = translateKey(event->details.key.key_code);
             if (key == KEY_RESERVED) {
+                break;
+            }
+            if (key == KEY_POWER) {
+                // this key is handled internally
+                QMetaObject::invokeMethod(backend, "toggleBlankOutput", Qt::QueuedConnection);
                 break;
             }
             backend->keyboardKeyReleased(key, event->details.key.event_time);
@@ -405,7 +417,8 @@ void HwcomposerBackend::init()
     }
 
     // unblank, setPowerMode?
-    hwcDevice->blank(hwcDevice, 0, 0);
+    m_device = hwcDevice;
+    toggleBlankOutput();
 
     // get display configuration
     auto output = createOutput(hwcDevice);
@@ -415,7 +428,6 @@ void HwcomposerBackend::init()
     }
     m_displaySize = output->pixelSize();
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
-    m_device = hwcDevice;
 
     initInput();
 
@@ -445,6 +457,24 @@ void HwcomposerBackend::initInput()
     waylandServer()->seat()->setHasPointer(false);
     waylandServer()->seat()->setHasKeyboard(true);
     waylandServer()->seat()->setHasTouch(true);
+}
+
+void HwcomposerBackend::toggleBlankOutput()
+{
+    if (!m_device) {
+        return;
+    }
+    m_outputBlank = !m_outputBlank;
+    m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
+    // enable/disable compositor repainting when blanked
+    if (Compositor *compositor = Compositor::self()) {
+        if (m_outputBlank) {
+            compositor->aboutToSwapBuffers();
+        } else {
+            compositor->bufferSwapComplete();
+            compositor->addRepaintFull();
+        }
+    }
 }
 
 HwcomposerWindow *HwcomposerBackend::createSurface()

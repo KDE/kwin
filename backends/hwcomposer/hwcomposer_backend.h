@@ -60,12 +60,16 @@ public:
         return m_device;
     }
 
+private Q_SLOTS:
+    void toggleBlankOutput();
+
 private:
     static void inputEvent(Event *event, void *context);
     void initInput();
     QSize m_displaySize;
     hwc_composer_device_1_t *m_device = nullptr;
     AndroidEventListener *m_inputListener = nullptr;
+    bool m_outputBlank = true;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow
