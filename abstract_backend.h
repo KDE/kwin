@@ -68,6 +68,7 @@ public:
         m_deviceIdentifier = identifier;
     }
 
+public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
     void pointerButtonPressed(quint32 button, quint32 time);
     void pointerButtonReleased(quint32 button, quint32 time);

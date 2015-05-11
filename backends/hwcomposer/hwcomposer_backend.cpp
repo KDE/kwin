@@ -305,7 +305,9 @@ void HwcomposerBackend::inputEvent(Event *event, void *context)
                 // long press should emit the normal key pressed
                 break;
             }
-            backend->keyboardKeyPressed(key, event->details.key.event_time);
+            QMetaObject::invokeMethod(backend, "keyboardKeyPressed", Qt::QueuedConnection,
+                                      Q_ARG(quint32, key),
+                                      Q_ARG(quint32, event->details.key.event_time));
             break;
         }
         case ISCL_KEY_EVENT_ACTION_UP: {
@@ -318,7 +320,9 @@ void HwcomposerBackend::inputEvent(Event *event, void *context)
                 QMetaObject::invokeMethod(backend, "toggleBlankOutput", Qt::QueuedConnection);
                 break;
             }
-            backend->keyboardKeyReleased(key, event->details.key.event_time);
+            QMetaObject::invokeMethod(backend, "keyboardKeyReleased", Qt::QueuedConnection,
+                                      Q_ARG(quint32, key),
+                                      Q_ARG(quint32, event->details.key.event_time));
             break;
         }
         case ISCL_KEY_EVENT_ACTION_MULTIPLE: // TODO: implement
@@ -331,22 +335,33 @@ void HwcomposerBackend::inputEvent(Event *event, void *context)
         switch (event->action & ISCL_MOTION_EVENT_ACTION_MASK) {
         case ISCL_MOTION_EVENT_ACTION_DOWN:
         case ISCL_MOTION_EVENT_ACTION_POINTER_DOWN:
-            backend->touchDown(buttonIndex, eventPosition(event), event->details.motion.event_time);
+            QMetaObject::invokeMethod(backend, "touchDown", Qt::QueuedConnection,
+                                      Q_ARG(qint32, buttonIndex),
+                                      Q_ARG(QPointF, eventPosition(event)),
+                                      Q_ARG(quint32, event->details.motion.event_time));
             break;
         case ISCL_MOTION_EVENT_ACTION_UP:
         case ISCL_MOTION_EVENT_ACTION_POINTER_UP:
             // first update position - up events can contain additional motion events
-            backend->touchMotion(0, eventPosition(event), event->details.motion.event_time);
-            backend->touchFrame();
-            backend->touchUp(buttonIndex, event->details.motion.event_time);
+            QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
+                                      Q_ARG(qint32, buttonIndex),
+                                      Q_ARG(QPointF, eventPosition(event)),
+                                      Q_ARG(quint32, event->details.motion.event_time));
+            QMetaObject::invokeMethod(backend, "touchFrame", Qt::QueuedConnection);
+            QMetaObject::invokeMethod(backend, "touchUp", Qt::QueuedConnection,
+                                      Q_ARG(qint32, buttonIndex),
+                                      Q_ARG(quint32, event->details.motion.event_time));
             break;
         case ISCL_MOTION_EVENT_ACTION_MOVE:
             // it's always for the first index, other touch points seem not to be provided
-            backend->touchMotion(0, eventPosition(event), event->details.motion.event_time);
-            backend->touchFrame();
+            QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
+                                      Q_ARG(qint32, 0),
+                                      Q_ARG(QPointF, eventPosition(event)),
+                                      Q_ARG(quint32, event->details.motion.event_time));
+            QMetaObject::invokeMethod(backend, "touchFrame", Qt::QueuedConnection);
             break;
         case ISCL_MOTION_EVENT_ACTION_CANCEL:
-            backend->touchCancel();
+            QMetaObject::invokeMethod(backend, "touchCancel", Qt::QueuedConnection);
             break;
         default:
             // TODO: implement
