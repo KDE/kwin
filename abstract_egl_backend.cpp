@@ -272,10 +272,6 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         return;
     }
     // shm fallback
-    if (GLPlatform::instance()->isGLES()) {
-        // FIXME
-        return;
-    }
     const QImage &image = buffer->data();
     if (image.isNull()) {
         return;
@@ -285,10 +281,26 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
     const QRegion &damage = pixmap->toplevel()->damage();
 
     // TODO: this should be shared with GLTexture::update
-    const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
-    for (const QRect &rect : damage.rects()) {
-        glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
-                        GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+    if (GLPlatform::instance()->isGLES()) {
+        if (s_supportsARGB32 && (image.format() == QImage::Format_ARGB32 || image.format() == QImage::Format_ARGB32_Premultiplied)) {
+            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            for (const QRect &rect : damage.rects()) {
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+            }
+        } else {
+            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            for (const QRect &rect : damage.rects()) {
+                glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                                GL_RGBA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+            }
+        }
+    } else {
+        const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        for (const QRect &rect : damage.rects()) {
+            glTexSubImage2D(m_target, 0, rect.x(), rect.y(), rect.width(), rect.height(),
+                            GL_BGRA, GL_UNSIGNED_BYTE, im.copy(rect).bits());
+        }
     }
     q->unbind();
 #endif
@@ -297,10 +309,6 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 #if HAVE_WAYLAND
 bool AbstractEglTexture::loadShmTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
-    if (GLPlatform::instance()->isGLES()) {
-        // FIXME
-        return false;
-    }
     const QImage &image = buffer->data();
     if (image.isNull()) {
         return false;
@@ -325,8 +333,20 @@ bool AbstractEglTexture::loadShmTexture(const QPointer< KWayland::Server::Buffer
     default:
         return false;
     }
-    glTexImage2D(m_target, 0, format, size.width(), size.height(), 0,
-                 GL_BGRA, GL_UNSIGNED_BYTE, image.bits());
+    if (GLPlatform::instance()->isGLES()) {
+        if (s_supportsARGB32 && format == GL_RGBA8) {
+            const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+            glTexImage2D(m_target, 0, GL_BGRA_EXT, im.width(), im.height(),
+                         0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.bits());
+        } else {
+            const QImage im = image.convertToFormat(QImage::Format_RGBA8888_Premultiplied);
+            glTexImage2D(m_target, 0, GL_RGBA, im.width(), im.height(),
+                         0, GL_RGBA, GL_UNSIGNED_BYTE, im.bits());
+        }
+    } else {
+        glTexImage2D(m_target, 0, format, size.width(), size.height(), 0,
+                    GL_BGRA, GL_UNSIGNED_BYTE, image.bits());
+    }
 
     q->unbind();
     q->setYInverted(true);
