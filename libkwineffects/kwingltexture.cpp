@@ -318,7 +318,7 @@ void GLTexturePrivate::cleanup()
 bool GLTexture::isNull() const
 {
     Q_D(const GLTexture);
-    return None == d->m_texture;
+    return GL_NONE == d->m_texture;
 }
 
 QSize GLTexture::size() const
