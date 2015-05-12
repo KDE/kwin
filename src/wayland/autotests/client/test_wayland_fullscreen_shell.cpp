@@ -60,10 +60,11 @@ void TestWaylandFullscreenShell::init()
     m_westonProcess->setProgram(QStringLiteral("weston"));
 
     m_westonProcess->setArguments(QStringList({QStringLiteral("--socket=%1").arg(s_socketName),
-                                               QStringLiteral("--use-pixman"),
+                                               QStringLiteral("--backend=headless-backend.so"),
                                                QStringLiteral("--shell=fullscreen-shell.so")}));
     m_westonProcess->start();
     QVERIFY(m_westonProcess->waitForStarted());
+    QTest::qWait(500);
 
     // wait for the socket to appear
     QDir runtimeDir(qgetenv("XDG_RUNTIME_DIR"));
