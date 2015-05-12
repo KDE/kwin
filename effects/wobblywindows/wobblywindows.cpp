@@ -303,7 +303,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow* w, WindowPrePaintData& da
 
 void WobblyWindowsEffect::paintWindow(EffectWindow* w, int mask, QRegion region, WindowPaintData& data)
 {
-    if (windows.contains(w)) {
+    if (!(mask & PAINT_SCREEN_TRANSFORMED) && windows.contains(w)) {
         WindowWobblyInfos& wwi = windows[w];
         int tx = w->geometry().x();
         int ty = w->geometry().y();
