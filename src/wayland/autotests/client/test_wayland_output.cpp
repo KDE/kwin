@@ -21,6 +21,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtTest/QtTest>
 // KWin
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/client/output.h"
 #include "../../src/client/registry.h"
 #include "../../src/server/display.h"
@@ -51,6 +52,7 @@ private:
     KWayland::Server::Display *m_display;
     KWayland::Server::OutputInterface *m_serverOutput;
     KWayland::Client::ConnectionThread *m_connection;
+    KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
 
@@ -92,10 +94,19 @@ void TestWaylandOutput::init()
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
+
+    m_queue = new KWayland::Client::EventQueue(this);
+    QVERIFY(!m_queue->isValid());
+    m_queue->setup(m_connection);
+    QVERIFY(m_queue->isValid());
 }
 
 void TestWaylandOutput::cleanup()
 {
+    if (m_queue) {
+        delete m_queue;
+        m_queue = nullptr;
+    }
     if (m_thread) {
         m_thread->quit();
         m_thread->wait();
@@ -164,6 +175,7 @@ void TestWaylandOutput::testModeChanges()
     using namespace KWayland::Client;
     KWayland::Client::Registry registry;
     QSignalSpy announced(&registry, SIGNAL(outputAnnounced(quint32,quint32)));
+    registry.setEventQueue(m_queue);
     registry.create(m_connection->display());
     QVERIFY(registry.isValid());
     registry.setup();
@@ -201,7 +213,7 @@ void TestWaylandOutput::testModeChanges()
 
     // change the current mode
     outputChanged.clear();
-    QSignalSpy modeChangedSpy(&output, SIGNAL(modeChanged(KWayland::Client::Output::Mode)));
+    QSignalSpy modeChangedSpy(&output, &KWayland::Client::Output::modeChanged);
     QVERIFY(modeChangedSpy.isValid());
     m_serverOutput->setCurrentMode(QSize(800, 600));
     QVERIFY(modeChangedSpy.wait());
