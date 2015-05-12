@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QDebug>
 
 #include <sys/utsname.h>
+#include <X11/Xlib.h>
 
 #include <iostream>
 #include <iomanip>
