@@ -121,14 +121,6 @@ void TestWaylandSeat::init()
     m_connection->moveToThread(m_thread);
     m_thread->start();
 
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, m_connection,
-        [this]() {
-            if (m_connection->display()) {
-                wl_display_flush(m_connection->display());
-            }
-        }
-    );
-
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
