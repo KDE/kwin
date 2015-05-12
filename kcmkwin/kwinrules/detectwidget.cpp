@@ -171,6 +171,8 @@ QByteArray DetectDialog::selectedMachine() const
 void DetectDialog::selectWindow()
 {
     if (!KWin::Cursor::self()) {
+        qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        qApp->setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
         KWin::Cursor::create(this);
     }
     // use a dialog, so that all user input is blocked
