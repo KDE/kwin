@@ -301,6 +301,11 @@ else()
     set(HAVE_WAYLAND_CURSOR FALSE)
     set(HAVE_X11_XCB FALSE)
     set(HAVE_DRM FALSE)
+    set(HAVE_GBM FALSE)
+endif()
+
+if(!KWIN_HAVE_EGL)
+    set(HAVE_GBM FALSE)
 endif()
 
 if(XCB_CURSOR_FOUND)
