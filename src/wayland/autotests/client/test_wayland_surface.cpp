@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/event_queue.h"
 #include "../../src/client/surface.h"
 #include "../../src/client/region.h"
 #include "../../src/client/registry.h"
@@ -58,6 +59,7 @@ private:
     KWayland::Client::ConnectionThread *m_connection;
     KWayland::Client::Compositor *m_compositor;
     KWayland::Client::ShmPool *m_shm;
+    KWayland::Client::EventQueue *m_queue;
     QThread *m_thread;
 };
 
@@ -97,18 +99,24 @@ void TestWaylandSurface::init()
     m_connection->moveToThread(m_thread);
     m_thread->start();
 
-    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, m_connection,
+    /*connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, m_connection,
         [this]() {
             if (m_connection->display()) {
                 wl_display_flush(m_connection->display());
             }
         }
-    );
+    );*/
 
     m_connection->initConnection();
     QVERIFY(connectedSpy.wait());
 
+    m_queue = new KWayland::Client::EventQueue(this);
+    QVERIFY(!m_queue->isValid());
+    m_queue->setup(m_connection);
+    QVERIFY(m_queue->isValid());
+
     KWayland::Client::Registry registry;
+    registry.setEventQueue(m_queue);
     QSignalSpy compositorSpy(&registry, SIGNAL(compositorAnnounced(quint32,quint32)));
     QSignalSpy shmSpy(&registry, SIGNAL(shmAnnounced(quint32,quint32)));
     QSignalSpy allAnnounced(&registry, SIGNAL(interfacesAnnounced()));
@@ -136,6 +144,10 @@ void TestWaylandSurface::cleanup()
     if (m_shm) {
         delete m_shm;
         m_shm = nullptr;
+    }
+    if (m_queue) {
+        delete m_queue;
+        m_queue = nullptr;
     }
     if (m_thread) {
         m_thread->quit();
@@ -359,6 +371,9 @@ void TestWaylandSurface::testAttachBuffer()
     delete buffer2;
     // TODO: we should have a signal on when the Buffer gets released
     QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+    if (!redBuffer.data()->isReleased()) {
+        QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents);
+    }
     QVERIFY(redBuffer.data()->isReleased());
 
     KWayland::Server::BufferInterface *buffer3 = serverSurface->buffer();
@@ -624,6 +639,7 @@ void TestWaylandSurface::testDestroy()
     connect(m_connection, &ConnectionThread::connectionDied, s, &Surface::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_compositor, &Compositor::destroy);
     connect(m_connection, &ConnectionThread::connectionDied, m_shm, &ShmPool::destroy);
+    connect(m_connection, &ConnectionThread::connectionDied, m_queue, &EventQueue::destroy);
     QVERIFY(s->isValid());
 
     QSignalSpy connectionDiedSpy(m_connection, SIGNAL(connectionDied()));
