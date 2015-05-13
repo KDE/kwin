@@ -826,11 +826,18 @@ Layer Client::layer() const
 
 Layer Client::belongsToLayer() const
 {
+    // NOTICE while showingDesktop, desktops move to the AboveLayer
+    // (interchangeable w/ eg. yakuake etc. which will at first remain visible)
+    // and the docks move into the NotificationLayer (which is between Above- and
+    // ActiveLayer, so that active fullscreen windows will still cover everything)
+    // Since the desktop is also activated, nothing should be in the ActiveLayer, though
     if (isDesktop())
         return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
     if (isSplash())          // no damn annoying splashscreens
         return NormalLayer; // getting in the way of everything else
     if (isDock()) {
+        if (workspace()->showingDesktop())
+            return NotificationLayer;
         // slight hack for the 'allow window to cover panel' Kicker setting
         // don't move keepbelow docks below normal window, but only to the same
         // layer, so that both may be raised to cover the other
