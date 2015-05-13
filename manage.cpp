@@ -603,8 +603,6 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             }
         }
 
-        resetShowingDesktop();
-
         if (isOnCurrentDesktop() && !isMapped && !allow && (!session || session->stackingOrder < 0))
             workspace()->restackClientUnderActive(this);
 
