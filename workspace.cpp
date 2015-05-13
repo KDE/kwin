@@ -1215,6 +1215,9 @@ void Workspace::setShowingDesktop(bool showing)
                 lowerClient(c);
                 if (!topDesk)
                     topDesk = c;
+                foreach (Client *cm, c->group()->members()) {
+                    cm->updateLayer();
+                }
             }
         }
     }

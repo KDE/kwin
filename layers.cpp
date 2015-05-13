@@ -851,6 +851,12 @@ Layer Client::belongsToLayer() const
         return OnScreenDisplayLayer;
     if (isNotification())
         return NotificationLayer;
+    if (workspace()->showingDesktop()) {
+        foreach (const Client *c, group()->members()) {
+            if (c->isDesktop())
+                return AboveLayer;
+        }
+    }
     if (keepBelow())
         return BelowLayer;
     if (isActiveFullScreen())
