@@ -463,6 +463,11 @@ bool Workspace::activateNextClient(Client* c)
             get_focus = NULL;
     }
 
+    const int desktop = VirtualDesktopManager::self()->current();
+
+    if (!get_focus && showingDesktop())
+        get_focus = findDesktop(true, desktop); // to not break the state
+
     if (!get_focus && options->isNextFocusPrefersMouse()) {
         get_focus = clientUnderMouse(c ? c->screen() : screens()->current());
         if (get_focus && (get_focus == c || get_focus->isDesktop())) {
@@ -470,8 +475,6 @@ bool Workspace::activateNextClient(Client* c)
             get_focus = NULL;
         }
     }
-
-    const int desktop = VirtualDesktopManager::self()->current();
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
