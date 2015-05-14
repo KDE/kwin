@@ -60,10 +60,17 @@ HwcomposerBackend::~HwcomposerBackend()
     }
 }
 
-static QPointF eventPosition(Event *event)
+static uint eventTouchId(Event *event, uint index)
 {
-    return QPointF(event->details.motion.pointer_coordinates[0].x,
-                   event->details.motion.pointer_coordinates[0].y);
+    Q_ASSERT(index < event->details.motion.pointer_count);
+    return event->details.motion.pointer_coordinates[index].id;
+}
+
+static QPointF eventTouchPosition(Event *event, uint index)
+{
+    Q_ASSERT(index < event->details.motion.pointer_count);
+    return QPointF(event->details.motion.pointer_coordinates[index].x,
+                   event->details.motion.pointer_coordinates[index].y);
 }
 
 static qint32 translateKey(qint32 key)
@@ -336,28 +343,33 @@ void HwcomposerBackend::inputEvent(Event *event, void *context)
         case ISCL_MOTION_EVENT_ACTION_DOWN:
         case ISCL_MOTION_EVENT_ACTION_POINTER_DOWN:
             QMetaObject::invokeMethod(backend, "touchDown", Qt::QueuedConnection,
-                                      Q_ARG(qint32, buttonIndex),
-                                      Q_ARG(QPointF, eventPosition(event)),
-                                      Q_ARG(quint32, event->details.motion.event_time));
-            break;
-        case ISCL_MOTION_EVENT_ACTION_UP:
-        case ISCL_MOTION_EVENT_ACTION_POINTER_UP:
-            // first update position - up events can contain additional motion events
-            QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
-                                      Q_ARG(qint32, buttonIndex),
-                                      Q_ARG(QPointF, eventPosition(event)),
+                                      Q_ARG(qint32, eventTouchId(event, buttonIndex)),
+                                      Q_ARG(QPointF, eventTouchPosition(event, buttonIndex)),
                                       Q_ARG(quint32, event->details.motion.event_time));
             QMetaObject::invokeMethod(backend, "touchFrame", Qt::QueuedConnection);
+            break;
+        case ISCL_MOTION_EVENT_ACTION_UP:
+        case ISCL_MOTION_EVENT_ACTION_POINTER_UP: {
+            // first update position - up events can contain additional motion events
+            QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
+                                      Q_ARG(qint32, eventTouchId(event, buttonIndex)),
+                                      Q_ARG(QPointF, eventTouchPosition(event, buttonIndex)),
+                                      Q_ARG(quint32, event->details.motion.event_time));
+            QMetaObject::invokeMethod(backend, "touchFrame", Qt::QueuedConnection);
+
             QMetaObject::invokeMethod(backend, "touchUp", Qt::QueuedConnection,
-                                      Q_ARG(qint32, buttonIndex),
+                                      Q_ARG(qint32, eventTouchId(event, buttonIndex)),
                                       Q_ARG(quint32, event->details.motion.event_time));
             break;
+        }
         case ISCL_MOTION_EVENT_ACTION_MOVE:
-            // it's always for the first index, other touch points seem not to be provided
-            QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
-                                      Q_ARG(qint32, 0),
-                                      Q_ARG(QPointF, eventPosition(event)),
-                                      Q_ARG(quint32, event->details.motion.event_time));
+            //move events affect all pointers
+            for (uint i = 0 ; i < event->details.motion.pointer_count ; i++) {
+                QMetaObject::invokeMethod(backend, "touchMotion", Qt::QueuedConnection,
+                                        Q_ARG(qint32, eventTouchId(event, i)),
+                                        Q_ARG(QPointF, eventTouchPosition(event, i)),
+                                        Q_ARG(quint32, event->details.motion.event_time));
+            }
             QMetaObject::invokeMethod(backend, "touchFrame", Qt::QueuedConnection);
             break;
         case ISCL_MOTION_EVENT_ACTION_CANCEL:
