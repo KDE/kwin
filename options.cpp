@@ -47,8 +47,7 @@ int currentRefreshRate()
     QString syncScreenName(QLatin1String("primary screen"));
     if (options->refreshRate() > 0) {  // use manually configured refresh rate
         rate = options->refreshRate();
-    } else if (GLPlatform::instance()->driver() == Driver_NVidia &&
-               Screens::self()->count() > 0) {
+    } else if (Screens::self()->count() > 0) {
         // prefer the refreshrate calculated from the screens mode information
         // at least the nvidia driver reports 50Hz BS ... *again*!
         int syncScreen = 0;
