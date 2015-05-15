@@ -304,7 +304,7 @@ else()
     set(HAVE_GBM FALSE)
 endif()
 
-if(!KWIN_HAVE_EGL)
+if(NOT KWIN_HAVE_EGL)
     set(HAVE_GBM FALSE)
 endif()
 
