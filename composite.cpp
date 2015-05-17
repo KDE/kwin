@@ -296,10 +296,11 @@ void Compositor::claimCompositorSelection()
         sprintf(selection_name, "_NET_WM_CM_S%d", Application::x11ScreenNumber());
         cm_selection = new CompositorSelectionOwner(selection_name);
         connect(cm_selection, SIGNAL(lostOwnership()), SLOT(finish()));
-    } else {
-        // no X11 yet
-        return;
     }
+
+    if (!cm_selection) // no X11 yet
+        return;
+
     if (!cm_selection->owning) {
         cm_selection->claim(true);   // force claiming
         cm_selection->owning = true;
