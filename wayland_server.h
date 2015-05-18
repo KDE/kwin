@@ -106,6 +106,7 @@ public:
     KWayland::Client::ConnectionThread *internalClientConection() {
         return m_internalConnection.client;
     }
+    void dispatch();
 
 Q_SIGNALS:
     void shellClientAdded(ShellClient*);
@@ -119,6 +120,7 @@ private:
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
+    KWayland::Client::ConnectionThread *m_qtClientConnection = nullptr;
     struct {
         KWayland::Server::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;

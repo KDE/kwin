@@ -324,6 +324,7 @@ EventDispatcher::~EventDispatcher() = default;
 
 bool EventDispatcher::processEvents(QEventLoop::ProcessEventsFlags flags)
 {
+    waylandServer()->dispatch();
     const bool didSendEvents = QEventDispatcherUNIX::processEvents(flags);
     return QWindowSystemInterface::sendWindowSystemEvents(flags) || didSendEvents;
 }

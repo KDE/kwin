@@ -104,6 +104,13 @@ void WaylandServer::init(const QByteArray &socketName)
                     fakeDummyQtWindowInput();
                     return;
                 }
+                // HACK: in order to get Qt to not block for frame rendered, we immediatelly emit the
+                // frameRendered once we get a new damage event.
+                auto s = surface->surface();
+                connect(s, &SurfaceInterface::damaged, this, [this, s] {
+                    s->frameRendered(0);
+                    m_qtConnection->flush();
+                });
             }
             auto client = new ShellClient(surface);
             if (auto c = Compositor::self()) {
@@ -236,6 +243,22 @@ void WaylandServer::fakeDummyQtWindowInput()
     m_dummyWindow->hide();
     m_seat->setFocusedPointerSurface(oldSeatSurface, oldPos);
 #endif
+}
+
+void WaylandServer::dispatch()
+{
+    if (!m_display) {
+        return;
+    }
+    if (!m_qtClientConnection) {
+        if (m_qtConnection && QGuiApplication::instance()) {
+            m_qtClientConnection = KWayland::Client::ConnectionThread::fromApplication(this);
+        }
+    }
+    if (m_qtClientConnection) {
+        m_qtClientConnection->flush();
+    }
+    m_display->dispatchEvents(0);
 }
 
 }
