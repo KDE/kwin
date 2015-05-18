@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_MAIN_WAYLAND_H
 #define KWIN_MAIN_WAYLAND_H
 #include "main.h"
+#include <QtCore/private/qeventdispatcher_unix_p.h>
 
 namespace KWin
 {
@@ -50,6 +51,17 @@ private:
     bool m_startXWayland = false;
     int m_xcbConnectionFd = -1;
     QStringList m_applicationsToStart;
+};
+
+class EventDispatcher : public QEventDispatcherUNIX
+{
+    Q_OBJECT
+public:
+    explicit EventDispatcher(QObject *parent = nullptr);
+    virtual ~EventDispatcher();
+
+    bool processEvents(QEventLoop::ProcessEventsFlags flags) override;
+    bool hasPendingEvents() override;
 };
 
 }

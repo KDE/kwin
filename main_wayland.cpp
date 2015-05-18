@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtConcurrentRun>
 #include <QFile>
 #include <QFutureWatcher>
-#include <QtCore/private/qeventdispatcher_unix_p.h>
+#include <qpa/qwindowsysteminterface.h>
 #include <QProcess>
 #include <QSocketNotifier>
 #include <QThread>
@@ -314,6 +314,24 @@ static void readDisplay(int pipe)
     close(pipe);
 }
 
+EventDispatcher::EventDispatcher(QObject *parent)
+    : QEventDispatcherUNIX(parent)
+{
+}
+
+EventDispatcher::~EventDispatcher() = default;
+
+bool EventDispatcher::processEvents(QEventLoop::ProcessEventsFlags flags)
+{
+    const bool didSendEvents = QEventDispatcherUNIX::processEvents(flags);
+    return QWindowSystemInterface::sendWindowSystemEvents(flags) || didSendEvents;
+}
+
+bool EventDispatcher::hasPendingEvents()
+{
+    return QEventDispatcherUNIX::hasPendingEvents() || QWindowSystemInterface::windowSystemEventsQueued();
+}
+
 } // namespace
 
 extern "C"
@@ -335,7 +353,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     }
 
     // set our own event dispatcher to be able to dispatch events before the event loop is started
-    QAbstractEventDispatcher *eventDispatcher = new QEventDispatcherUNIX();
+    QAbstractEventDispatcher *eventDispatcher = new KWin::EventDispatcher();
     QCoreApplication::setEventDispatcher(eventDispatcher);
     KWin::WaylandServer *server = KWin::WaylandServer::create(nullptr);
     server->init(waylandSocket);
