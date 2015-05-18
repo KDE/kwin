@@ -150,10 +150,13 @@ void Display::startLoop()
 
 void Display::dispatchEvents(int msecTimeout)
 {
-    Q_ASSERT(!d->running);
     Q_ASSERT(d->display);
-    wl_event_loop_dispatch(d->loop, msecTimeout);
-    wl_display_flush_clients(d->display);
+    if (d->running) {
+        d->dispatch();
+    } else {
+        wl_event_loop_dispatch(d->loop, msecTimeout);
+        wl_display_flush_clients(d->display);
+    }
 }
 
 void Display::terminate()

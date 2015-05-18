@@ -81,7 +81,8 @@ public:
     /**
      * Dispatches pending events in a blocking way. May only be used if the Display is
      * created and started before the QCoreApplication is created. Once the QCoreApplication
-     * is created and the event loop is started this method may no longer be invoked.
+     * is created and the event loop is started this method delegates to the normal dispatch
+     * handling.
      * @see startLoop
      **/
     void dispatchEvents(int msecTimeout = -1);
