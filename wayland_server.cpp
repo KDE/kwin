@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Client
 #include <KWayland/Client/connection_thread.h>
 #include <KWayland/Client/registry.h>
+#include <KWayland/Client/surface.h>
 // Server
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/datadevicemanager_interface.h>
@@ -34,6 +35,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
+
+// Qt
+#include <QWindow>
 
 // system
 #include <sys/types.h>
@@ -93,6 +97,13 @@ void WaylandServer::init(const QByteArray &socketName)
             if (surface->client() == m_xwaylandConnection) {
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
+            }
+            if (surface->client() == m_qtConnection) {
+                // one of Qt's windows
+                if (m_dummyWindowSurface && (m_dummyWindowSurface->id() == surface->surface()->id())) {
+                    fakeDummyQtWindowInput();
+                    return;
+                }
             }
             auto client = new ShellClient(surface);
             if (auto c = Compositor::self()) {
@@ -192,6 +203,39 @@ void WaylandServer::removeClient(ShellClient *c)
 {
     m_clients.removeAll(c);
     emit shellClientRemoved(c);
+}
+
+void WaylandServer::createDummyQtWindow()
+{
+    if (m_dummyWindow) {
+        return;
+    }
+    m_dummyWindow.reset(new QWindow());
+    m_dummyWindow->setSurfaceType(QSurface::RasterSurface);
+    m_dummyWindow->show();
+    m_dummyWindowSurface = KWayland::Client::Surface::fromWindow(m_dummyWindow.data());
+}
+
+void WaylandServer::fakeDummyQtWindowInput()
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
+    // we need to fake Qt into believing it has got any seat events
+    // this is done only when receiving either a key press or button.
+    // we simulate by sending a button press and release
+    auto surface = KWayland::Server::SurfaceInterface::get(m_dummyWindowSurface->id(), m_qtConnection);
+    if (!surface) {
+        return;
+    }
+    const auto oldSeatSurface = m_seat->focusedPointerSurface();
+    const auto oldPos = m_seat->focusedPointerSurfacePosition();
+    m_seat->setFocusedPointerSurface(surface, QPoint(0, 0));
+    m_seat->setPointerPos(QPointF(0, 0));
+    m_seat->pointerButtonPressed(Qt::LeftButton);
+    m_seat->pointerButtonReleased(Qt::LeftButton);
+    m_qtConnection->flush();
+    m_dummyWindow->hide();
+    m_seat->setFocusedPointerSurface(oldSeatSurface, oldPos);
+#endif
 }
 
 }

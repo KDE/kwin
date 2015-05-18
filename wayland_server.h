@@ -24,12 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+class QWindow;
+
 namespace KWayland
 {
 namespace Client
 {
 class ConnectionThread;
 class ShmPool;
+class Surface;
 }
 namespace Server
 {
@@ -89,6 +92,7 @@ public:
      **/
     int createQtConnection();
     void createInternalConnection();
+    void createDummyQtWindow();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
         return m_xwaylandConnection;
@@ -108,6 +112,7 @@ Q_SIGNALS:
     void shellClientRemoved(ShellClient*);
 
 private:
+    void fakeDummyQtWindowInput();
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
@@ -122,6 +127,8 @@ private:
     } m_internalConnection;
     AbstractBackend *m_backend = nullptr;
     QList<ShellClient*> m_clients;
+    QScopedPointer<QWindow> m_dummyWindow;
+    KWayland::Client::Surface *m_dummyWindowSurface = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

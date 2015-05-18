@@ -221,6 +221,7 @@ void ApplicationWayland::continueStartupWithX()
             Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
             notifyKSplash();
+            waylandServer()->createDummyQtWindow();
         }
     );
     eglInitWatcher->setFuture(QtConcurrent::run([] {
