@@ -775,6 +775,9 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
                 continue;
             }
         }
+        if (!t->readyForPainting()) {
+            continue;
+        }
         if (t->geometry().contains(pos)) {
             return t;
         }
