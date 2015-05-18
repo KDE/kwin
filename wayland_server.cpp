@@ -86,6 +86,10 @@ void WaylandServer::init(const QByteArray &socketName)
     m_shell->create();
     connect(m_shell, &ShellInterface::surfaceCreated, this,
         [this] (ShellSurfaceInterface *surface) {
+            if (!Workspace::self()) {
+                // it's possible that a Surface gets created before Workspace is created
+                return;
+            }
             if (surface->client() == m_xwaylandConnection) {
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
