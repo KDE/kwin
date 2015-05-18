@@ -75,6 +75,7 @@ public:
         return m_clients;
     }
     void removeClient(ShellClient *c);
+    ShellClient *findClient(quint32 id) const;
 
     AbstractBackend *backend() const {
         return m_backend;
@@ -96,6 +97,9 @@ public:
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
         return m_xwaylandConnection;
+    }
+    KWayland::Server::ClientConnection *qtConnection() const {
+        return m_qtConnection;
     }
     KWayland::Server::ClientConnection *internalConnection() const {
         return m_internalConnection.server;

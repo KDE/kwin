@@ -87,6 +87,10 @@ public:
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
 
+    quint32 windowId() const {
+        return m_windowId;
+    }
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
@@ -94,11 +98,15 @@ protected:
 private:
     void setGeometry(const QRect &rect);
     void destroyClient();
+    void createWindowId();
+    void findInternalWindow();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     QSize m_clientSize;
     bool m_closing = false;
+    quint32 m_windowId = 0;
+    QWindow *m_internalWindow = nullptr;
 };
 
 }

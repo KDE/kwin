@@ -261,4 +261,20 @@ void WaylandServer::dispatch()
     m_display->dispatchEvents(0);
 }
 
+ShellClient *WaylandServer::findClient(quint32 id) const
+{
+    if (id == 0) {
+        return nullptr;
+    }
+    auto it = std::find_if(m_clients.constBegin(), m_clients.constEnd(),
+        [id] (ShellClient *c) {
+            return c->windowId() == id;
+        }
+    );
+    if (it == m_clients.constEnd()) {
+        return nullptr;
+    }
+    return *it;
+}
+
 }

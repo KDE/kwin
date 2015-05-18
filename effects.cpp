@@ -1032,6 +1032,13 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
         return w->effectWindow();
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
+#if HAVE_WAYLAND
+    if (waylandServer()) {
+        if (ShellClient *w = waylandServer()->findClient(id)) {
+            return w->effectWindow();
+        }
+    }
+#endif
     return NULL;
 }
 

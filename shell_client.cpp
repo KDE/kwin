@@ -22,9 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "virtualdesktops.h"
 
+#include <KWayland/Client/surface.h>
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
+
+#include <QWindow>
 
 using namespace KWayland::Server;
 
@@ -36,6 +39,8 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     , m_shellSurface(surface)
 {
     setSurface(surface->surface());
+    findInternalWindow();
+    createWindowId();
     setupCompositing();
     if (surface->surface()->buffer()) {
         setReadyForPainting();
@@ -43,7 +48,11 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     } else {
         ready_for_painting = false;
     }
-    setGeometry(QRect(QPoint(0, 0), m_clientSize));
+    if (m_internalWindow) {
+        setGeometry(m_internalWindow->geometry());
+    } else {
+        setGeometry(QRect(QPoint(0, 0), m_clientSize));
+    }
 
     setDesktop(VirtualDesktopManager::self()->current());
 
@@ -327,6 +336,33 @@ bool ShellClient::userCanSetNoBorder() const
 bool ShellClient::wantsInput() const
 {
     return true;
+}
+
+void ShellClient::createWindowId()
+{
+    if (m_internalWindow) {
+        m_windowId = m_internalWindow->winId();
+    }
+    // TODO: create internal window ids
+}
+
+void ShellClient::findInternalWindow()
+{
+    if (m_shellSurface->client() != waylandServer()->qtConnection()) {
+        return;
+    }
+    const QWindowList windows = kwinApp()->topLevelWindows();
+    for (QWindow *w: windows) {
+        QScopedPointer<KWayland::Client::Surface> s(KWayland::Client::Surface::fromWindow(w));
+        if (!s) {
+            continue;
+        }
+        if (s->id() != surface()->id()) {
+            continue;
+        }
+        m_internalWindow = w;
+        return;
+    }
 }
 
 }
