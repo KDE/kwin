@@ -50,7 +50,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
         [this] {
             m_clientSize = m_shellSurface->surface()->buffer()->size();
-            setGeometry(QRect(QPoint(0, 0), m_clientSize));
+            setGeometry(QRect(geom.topLeft(), m_clientSize));
         }
     );
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
@@ -140,7 +140,7 @@ void ShellClient::addDamage(const QRegion &damage)
     setReadyForPainting();
     if (m_shellSurface->surface()->buffer()->size().isValid()) {
         m_clientSize = m_shellSurface->surface()->buffer()->size();
-        setGeometry(QRect(QPoint(0, 0), m_clientSize));
+        setGeometry(QRect(geom.topLeft(), m_clientSize));
     }
     Toplevel::addDamage(damage);
 }
