@@ -193,6 +193,7 @@ void ApplicationWayland::continueStartupWithX()
         QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
         environment.remove(QStringLiteral("WAYLAND_SOCKET"));
         environment.remove(QStringLiteral("QT_QPA_PLATFORM"));
+        environment.remove(QStringLiteral("QT_WAYLAND_DISABLE_WINDOWDECORATION"));
         environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
         // TODO: maybe create a socket per process?
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandServer()->display()->socketName());
@@ -365,6 +366,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
+    qputenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
 
