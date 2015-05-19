@@ -199,6 +199,34 @@ static inline int bitCount(uint32_t mask)
 #endif
 }
 
+
+/**
+ * Separate the concept of an unet QPoint and 0,0
+ */
+class ClearablePoint
+{
+public:
+    inline bool isValid() {
+        return m_valid;
+    }
+
+    inline void clear(){
+        m_valid = false;
+    }
+
+    inline void setPoint(const QPoint &point) {
+        m_point = point; m_valid = true;
+    }
+
+    inline QPoint point() const {
+        return m_point;
+    }
+
+private:
+    QPoint m_point;
+    bool m_valid = false;
+};
+
 } // namespace
 
 // Must be outside namespace

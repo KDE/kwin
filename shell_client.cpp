@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wayland_server.h"
 #include "workspace.h"
 #include "virtualdesktops.h"
+#include "workspace.h"
 
 #include <KWayland/Client/surface.h>
 #include <KWayland/Server/shell_interface.h>
@@ -69,6 +70,8 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::destroyClient);
     connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
+
+    connect(surface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
 }
 
 ShellClient::~ShellClient() = default;
@@ -115,7 +118,9 @@ void ShellClient::debug(QDebug &stream) const
 
 Layer ShellClient::layer() const
 {
-    // TODO: implement
+    // TODO: implement the rest
+    if (isFullScreen() && isActive())
+        return ActiveLayer;
     return KWin::NormalLayer;
 }
 
@@ -153,7 +158,12 @@ void ShellClient::addDamage(const QRegion &damage)
 {
     if (m_shellSurface->surface()->buffer()->size().isValid()) {
         m_clientSize = m_shellSurface->surface()->buffer()->size();
-        setGeometry(QRect(geom.topLeft(), m_clientSize));
+        QPoint position = geom.topLeft();
+        if (m_positionAfterResize.isValid()) {
+            position = m_positionAfterResize.point();
+            m_positionAfterResize.clear();
+        }
+        setGeometry(QRect(position, m_clientSize));
     }
     setReadyForPainting();
     Toplevel::addDamage(damage);
@@ -224,7 +234,7 @@ bool ShellClient::isFullScreenable() const
 
 bool ShellClient::isFullScreen() const
 {
-    return false;
+    return m_shellSurface->isFullscreen();
 }
 
 bool ShellClient::isMaximizable() const
@@ -398,6 +408,30 @@ bool ShellClient::isInternal() const
 xcb_window_t ShellClient::window() const
 {
     return windowId();
+}
+
+void ShellClient::requestGeometry(const QRect &rect)
+{
+    m_positionAfterResize.setPoint(rect.topLeft());
+    m_shellSurface->requestSize(rect.size());
+}
+
+void ShellClient::clientFullScreenChanged(bool fullScreen)
+{
+    StackingUpdatesBlocker blocker(workspace());
+    workspace()->updateClientLayer(this);   // active fullscreens get different layer
+
+    if (fullScreen) {
+        m_geomFsRestore = geometry();
+        requestGeometry(workspace()->clientArea(FullScreenArea, this));
+        workspace()->raiseClient(this);
+    } else {
+        if (m_geomFsRestore.isValid()) {
+            requestGeometry(m_geomFsRestore);
+        } else {
+            requestGeometry(workspace()->clientArea(MaximizeArea, this));
+        }
+    }
 }
 
 void ShellClient::move(int x, int y, ForceGeometry_t force)

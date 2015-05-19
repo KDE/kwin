@@ -102,7 +102,11 @@ protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
 
+private Q_SLOTS:
+    void clientFullScreenChanged(bool fullScreen);
+
 private:
+    void requestGeometry(const QRect &rect);
     void setGeometry(const QRect &rect);
     void destroyClient();
     void createWindowId();
@@ -112,6 +116,9 @@ private:
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
     QSize m_clientSize;
+
+    ClearablePoint m_positionAfterResize; // co-ordinates saved from a requestGeometry call, real geometry will be updated after the next damage event when the client has resized
+    QRect m_geomFsRestore; //size and position of the window before it was set to fullscreen
     bool m_closing = false;
     quint32 m_windowId = 0;
     QWindow *m_internalWindow = nullptr;
