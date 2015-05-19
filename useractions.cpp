@@ -652,10 +652,9 @@ void UserActionsMenu::screenPopupAboutToShow()
     QActionGroup *group = new QActionGroup(m_screenMenu);
 
     for (int i = 0; i<screens()->count(); ++i) {
-        // TODO: retrieve the screen name?
         // assumption: there are not more than 9 screens attached.
-        QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to",
-                                                        "Screen &%1", (i+1)));
+        QAction *action = m_screenMenu->addAction(i18nc("@item:inmenu List of all Screens to send a window to. First argument is a number, second the output identifier. E.g. Screen 1 (HDMI1)",
+                                                        "Screen &%1 (%2)", (i+1), screens()->name(i)));
         action->setData(i);
         action->setCheckable(true);
         if (!m_client.isNull() && i == m_client.data()->screen()) {
