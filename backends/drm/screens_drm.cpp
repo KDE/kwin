@@ -94,4 +94,13 @@ QString DrmScreens::name(int screen) const
     return outputs.at(screen)->name();
 }
 
+float DrmScreens::refreshRate(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return Screens::refreshRate(screen);
+    }
+    return outputs.at(screen)->currentRefreshRate() / 1000.0f;
+}
+
 }

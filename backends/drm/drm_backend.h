@@ -130,6 +130,7 @@ public:
     QSize size() const;
     QRect geometry() const;
     QString name() const;
+    int currentRefreshRate() const;
 
 private:
     friend class DrmBackend;

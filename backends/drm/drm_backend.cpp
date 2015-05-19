@@ -875,6 +875,14 @@ QString DrmOutput::name() const
     return QStringLiteral("%1 %2").arg(m_waylandOutput->manufacturer()).arg(m_waylandOutput->model());
 }
 
+int DrmOutput::currentRefreshRate() const
+{
+    if (!m_waylandOutput) {
+        return 60000;
+    }
+    return m_waylandOutput->refreshRate();
+}
+
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
     : m_backend(backend)
     , m_size(size)
