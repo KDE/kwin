@@ -867,6 +867,14 @@ void DrmOutput::initEdid(drmModeConnector *connector)
     m_edid.physicalSize = extractPhysicalSize(edid.data());
 }
 
+QString DrmOutput::name() const
+{
+    if (!m_waylandOutput) {
+        return i18n("unknown");
+    }
+    return QStringLiteral("%1 %2").arg(m_waylandOutput->manufacturer()).arg(m_waylandOutput->model());
+}
+
 DrmBuffer::DrmBuffer(DrmBackend *backend, const QSize &size)
     : m_backend(backend)
     , m_size(size)

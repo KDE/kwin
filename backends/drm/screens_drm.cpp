@@ -85,4 +85,13 @@ int DrmScreens::number(const QPoint &pos) const
     return bestScreen;
 }
 
+QString DrmScreens::name(int screen) const
+{
+    const auto outputs = m_backend->outputs();
+    if (screen >= outputs.size()) {
+        return Screens::name(screen);
+    }
+    return outputs.at(screen)->name();
+}
+
 }

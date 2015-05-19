@@ -36,6 +36,7 @@ public:
     int number(const QPoint &pos) const override;
     QSize size(int screen) const override;
     void updateCount() override;
+    QString name(int screen) const override;
 
 private:
     DrmBackend *m_backend;
