@@ -631,7 +631,10 @@ void DrmOutput::init(drmModeConnector *connector)
     // the size might be completely borked. E.g. Samsung SyncMaster 2494HS reports 160x90 while in truth it's 520x292
     // as this information is used to calculate DPI info, it's going to result in everything being huge
     KSharedConfig::Ptr config = KSharedConfig::openConfig(KWIN_CONFIG);
-    KConfigGroup group = config->group("EdidOverwrite").group(m_edid.eisaId).group(m_edid.monitorName).group(m_edid.serialNumber);
+    const QByteArray unknown = QByteArrayLiteral("unkown");
+    KConfigGroup group = config->group("EdidOverwrite").group(m_edid.eisaId.isEmpty() ? unknown : m_edid.eisaId)
+                                                       .group(m_edid.monitorName.isEmpty() ? unknown : m_edid.monitorName)
+                                                       .group(m_edid.serialNumber.isEmpty() ? unknown : m_edid.serialNumber);
     if (group.hasKey("PhysicalSize")) {
         const QSize overwriteSize = group.readEntry("PhysicalSize", physicalSize);
         qCWarning(KWIN_DRM) << "Overwriting monitor physical size for" << m_edid.eisaId << "/" << m_edid.monitorName << "/" << m_edid.serialNumber << " from " << physicalSize << "to " << overwriteSize;
