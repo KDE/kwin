@@ -135,6 +135,7 @@ void PresentWindowsEffect::reconfigure(ReconfigureFlags)
     if (m_doNotCloseWindows) {
         delete m_closeView;
         m_closeView = nullptr;
+        m_closeWindow = nullptr;
     }
     m_ignoreMinimized = PresentWindowsConfig::ignoreMinimized();
     m_accuracy = PresentWindowsConfig::accuracy() * 20;
