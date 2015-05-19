@@ -1457,15 +1457,18 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral(" yes\n"));
     else
         support.append(QStringLiteral(" no\n"));
-    support.append(QStringLiteral("Number of Screens: %1\n").arg(screens()->count()));
+    support.append(QStringLiteral("Number of Screens: %1\n\n").arg(screens()->count()));
     for (int i=0; i<screens()->count(); ++i) {
         const QRect geo = screens()->geometry(i);
-        support.append(QStringLiteral("Screen %1 Geometry: %2,%3,%4x%5\n")
-                              .arg(i)
+        support.append(QStringLiteral("Screen %1:\n").arg(i));
+        support.append(QStringLiteral("---------\n").arg(i));
+        support.append(QStringLiteral("Name: %1\n").arg(screens()->name(i)));
+        support.append(QStringLiteral("Geometry: %1,%2,%3x%4\n")
                               .arg(geo.x())
                               .arg(geo.y())
                               .arg(geo.width())
                               .arg(geo.height()));
+        support.append(QStringLiteral("Refresh Rate: %1\n\n").arg(screens()->refreshRate(i)));
     }
     support.append(QStringLiteral("\nCompositing\n"));
     support.append(QStringLiteral(  "===========\n"));
