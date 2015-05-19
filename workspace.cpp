@@ -1234,11 +1234,18 @@ void Workspace::setShowingDesktop(bool showing)
     StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
     for (int i = stacking_order.count() - 1; i > -1; --i) {
         Client *c = qobject_cast<Client*>(stacking_order.at(i));
-        if (c && c->isOnCurrentDesktop() && c->isDesktop() && c->isShown(true)) {
-            c->updateLayer();
-            lowerClient(c);
-            if (!topDesk)
-                topDesk = c;
+        if (c && c->isOnCurrentDesktop()) {
+            if (c->isDock()) {
+                c->updateLayer();
+            } else if (c->isDesktop() && c->isShown(true)) {
+                c->updateLayer();
+                lowerClient(c);
+                if (!topDesk)
+                    topDesk = c;
+                foreach (Client *cm, c->group()->members()) {
+                    cm->updateLayer();
+                }
+            }
         }
     }
     } // ~StackingUpdatesBlocker

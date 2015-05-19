@@ -917,25 +917,9 @@ void Client::updateVisibility()
             internalHide();
         return;
     }
-    if (isManaged())
-        resetShowingDesktop();
     internalShow();
 }
 
-
-void Client::resetShowingDesktop()
-{
-    if (isDock() || !workspace()->showingDesktop())
-        return;
-    bool belongs_to_desktop = false;
-    for (ClientList::ConstIterator it = group()->members().constBegin(),
-                                    end = group()->members().constEnd(); it != end; ++it)
-        if ((belongs_to_desktop = (*it)->isDesktop()))
-            break;
-
-    if (!belongs_to_desktop)
-        workspace()->setShowingDesktop(false);
-}
 
 /**
  * Sets the client window's mapping state. Possible values are
@@ -1440,6 +1424,18 @@ void Client::takeFocus()
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     }
     workspace()->setShouldGetFocus(this);
+
+    bool breakShowingDesktop = !keepAbove();
+    if (breakShowingDesktop) {
+        foreach (const Client *c, group()->members()) {
+            if (c->isDesktop()) {
+                breakShowingDesktop = false;
+                break;
+            }
+        }
+    }
+    if (breakShowingDesktop)
+        workspace()->setShowingDesktop(false);
 }
 
 /**
