@@ -88,12 +88,14 @@ void Screens::init()
 
 QString Screens::name(int screen) const
 {
+    Q_UNUSED(screen)
     qWarning("%s::name(int screen) is a stub, please reimplement it!", metaObject()->className());
     return QLatin1String("DUMMY");
 }
 
 float Screens::refreshRate(int screen) const
 {
+    Q_UNUSED(screen)
     qWarning("%s::refreshRate(int screen) is a stub, please reimplement it!", metaObject()->className());
     return 60.0f;
 }
