@@ -100,6 +100,7 @@ private:
     void destroyClient();
     void createWindowId();
     void findInternalWindow();
+    void updateInternalWindowGeometry();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;

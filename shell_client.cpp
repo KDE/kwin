@@ -49,7 +49,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         ready_for_painting = false;
     }
     if (m_internalWindow) {
-        setGeometry(m_internalWindow->geometry());
+        updateInternalWindowGeometry();
     } else {
         setGeometry(QRect(QPoint(0, 0), m_clientSize));
     }
@@ -361,8 +361,18 @@ void ShellClient::findInternalWindow()
             continue;
         }
         m_internalWindow = w;
+        connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
+        connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
         return;
     }
+}
+
+void ShellClient::updateInternalWindowGeometry()
+{
+    if (!m_internalWindow) {
+        return;
+    }
+    setGeometry(m_internalWindow->geometry());
 }
 
 }
