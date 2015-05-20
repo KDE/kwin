@@ -64,6 +64,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     );
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
     connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::destroyClient);
+    connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
 }
 
 ShellClient::~ShellClient() = default;
@@ -188,7 +189,7 @@ QString ShellClient::caption(bool full, bool stripped) const
 {
     Q_UNUSED(full)
     Q_UNUSED(stripped)
-    return QString();
+    return m_shellSurface->title();
 }
 
 void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
