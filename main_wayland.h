@@ -39,6 +39,8 @@ public:
         m_applicationsToStart = applications;
     }
 
+    bool notify(QObject *o, QEvent *e) override;
+
 protected:
     void performStartup() override;
 
