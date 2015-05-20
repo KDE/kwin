@@ -76,11 +76,6 @@ class Client
 {
     Q_OBJECT
     /**
-     * The Caption of the Client. Read from WM_NAME property together with a suffix for hostname and shortcut.
-     * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
-     **/
-    Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
-    /**
      * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
      * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
      * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
@@ -593,7 +588,6 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-    void captionChanged();
     void fullScreenChanged();
     void transientChanged();
     void modalChanged();

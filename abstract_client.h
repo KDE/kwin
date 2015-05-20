@@ -115,6 +115,11 @@ class AbstractClient : public Toplevel
      * (usually, that it got activated).
      **/
     Q_PROPERTY(bool demandsAttention READ isDemandingAttention WRITE demandAttention NOTIFY demandsAttentionChanged)
+    /**
+     * The Caption of the Client. Read from WM_NAME property together with a suffix for hostname and shortcut.
+     * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
+     **/
+    Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
 public:
     virtual ~AbstractClient();
 
@@ -311,6 +316,7 @@ Q_SIGNALS:
     void clientMinimized(KWin::AbstractClient* client, bool animate);
     void clientUnminimized(KWin::AbstractClient* client, bool animate);
     void paletteChanged(const QPalette &p);
+    void captionChanged();
 
 protected:
     AbstractClient();
