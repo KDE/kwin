@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-class Client;
+class AbstractClient;
 class EffectWindow;
 class EffectWindowImpl;
 
@@ -77,7 +77,7 @@ class WindowThumbnailItem : public AbstractThumbnailItem
 {
     Q_OBJECT
     Q_PROPERTY(qulonglong wId READ wId WRITE setWId NOTIFY wIdChanged SCRIPTABLE true)
-    Q_PROPERTY(KWin::Client *client READ client WRITE setClient NOTIFY clientChanged)
+    Q_PROPERTY(KWin::AbstractClient *client READ client WRITE setClient NOTIFY clientChanged)
 public:
     explicit WindowThumbnailItem(QQuickItem *parent = 0);
     virtual ~WindowThumbnailItem();
@@ -86,8 +86,8 @@ public:
         return m_wId;
     }
     void setWId(qulonglong wId);
-    Client *client() const;
-    void setClient(Client *client);
+    AbstractClient *client() const;
+    void setClient(AbstractClient *client);
     virtual void paint(QPainter *painter);
 Q_SIGNALS:
     void wIdChanged(qulonglong wid);
@@ -96,7 +96,7 @@ protected Q_SLOTS:
     virtual void repaint(KWin::EffectWindow* w);
 private:
     qulonglong m_wId;
-    Client *m_client;
+    AbstractClient *m_client;
 };
 
 class DesktopThumbnailItem : public AbstractThumbnailItem
@@ -139,7 +139,7 @@ QQuickItem* AbstractThumbnailItem::clipTo() const
 }
 
 inline
-Client *WindowThumbnailItem::client() const
+AbstractClient *WindowThumbnailItem::client() const
 {
     return m_client;
 }

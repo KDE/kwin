@@ -146,7 +146,7 @@ void WindowThumbnailItem::setWId(qulonglong wId)
     emit wIdChanged(wId);
 }
 
-void WindowThumbnailItem::setClient(Client *client)
+void WindowThumbnailItem::setClient(AbstractClient *client)
 {
     if (m_client == client) {
         return;
