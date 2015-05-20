@@ -203,9 +203,9 @@ bool TrackMouseEffect::init()
 {
     effects->makeOpenGLContextCurrent();
 #ifdef KWIN_HAVE_XRENDER_COMPOSITING
-    if (!(m_texture[0] || m_picture[0] || m_image[0].isNull())) {
+    if (!(m_texture[0] || m_picture[0] || !m_image[0].isNull())) {
         loadTexture();
-        if (!(m_texture[0] || m_picture[0] || m_image[0].isNull()))
+        if (!(m_texture[0] || m_picture[0] || !m_image[0].isNull()))
             return false;
     }
 #else
