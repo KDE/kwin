@@ -236,6 +236,8 @@ void BlurEffect::uploadRegion(QVector2D *&map, const QRegion &region)
 void BlurEffect::uploadGeometry(GLVertexBuffer *vbo, const QRegion &horizontal, const QRegion &vertical)
 {
     const int vertexCount = (horizontal.rectCount() + vertical.rectCount()) * 6;
+    if (!vertexCount)
+        return;
 
     QVector2D *map = (QVector2D *) vbo->map(vertexCount * sizeof(QVector2D));
     uploadRegion(map, horizontal);
