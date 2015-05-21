@@ -693,9 +693,13 @@ void Scene::Window::unreferencePreviousPixmap()
 
 void Scene::Window::pixmapDiscarded()
 {
-    if (!m_currentPixmap.isNull() && m_currentPixmap->isValid()) {
-        m_previousPixmap.reset(m_currentPixmap.take());
-        m_previousPixmap->markAsDiscarded();
+    if (!m_currentPixmap.isNull()) {
+        if (m_currentPixmap->isValid()) {
+            m_previousPixmap.reset(m_currentPixmap.take());
+            m_previousPixmap->markAsDiscarded();
+        } else {
+            m_currentPixmap.reset();
+        }
     }
 }
 
