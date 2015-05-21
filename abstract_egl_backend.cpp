@@ -388,7 +388,10 @@ EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferI
         qCDebug(KWIN_CORE) << "Unsupported texture format: " << format;
         return EGL_NO_IMAGE_KHR;
     }
-    eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted);
+    if (!eglQueryWaylandBufferWL(m_backend->eglDisplay(), buffer->resource(), EGL_WAYLAND_Y_INVERTED_WL, &yInverted)) {
+        // if EGL_WAYLAND_Y_INVERTED_WL is not supported wl_buffer should be treated as if value were EGL_TRUE
+        yInverted = EGL_TRUE;
+    }
 
     const EGLint attribs[] = {
         EGL_WAYLAND_PLANE_WL, 0,
