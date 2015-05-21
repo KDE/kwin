@@ -277,4 +277,46 @@ ShellClient *WaylandServer::findClient(quint32 id) const
     return *it;
 }
 
+quint32 WaylandServer::createWindowId(SurfaceInterface *surface)
+{
+    auto it = m_clientIds.constFind(surface->client());
+    quint16 clientId = 0;
+    if (it != m_clientIds.constEnd()) {
+        clientId = it.value();
+    } else {
+        clientId = createClientId(surface->client());
+    }
+    Q_ASSERT(clientId != 0);
+    quint32 id = clientId;
+    // TODO: this does not prevent that two surfaces of same client get same id
+    id = (id << 16) | (surface->id() & 0xFFFF);
+    if (findClient(id)) {
+        qCWarning(KWIN_CORE) << "Invalid client windowId generated:" << id;
+        return 0;
+    }
+    return id;
+}
+
+quint16 WaylandServer::createClientId(ClientConnection *c)
+{
+    auto ids = m_clientIds.values().toSet();
+    quint16 id = 1;
+    if (!ids.isEmpty()) {
+        for (quint16 i = ids.count() + 1; i >= 1 ; i--) {
+            if (!ids.contains(i)) {
+                id = i;
+                break;
+            }
+        }
+    }
+    Q_ASSERT(!ids.contains(id));
+    m_clientIds.insert(c, id);
+    connect(c, &ClientConnection::disconnected, this,
+        [this] (ClientConnection *c) {
+            m_clientIds.remove(c);
+        }
+    );
+    return id;
+}
+
 }

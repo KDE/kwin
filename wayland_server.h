@@ -41,6 +41,7 @@ class CompositorInterface;
 class Display;
 class ShellInterface;
 class SeatInterface;
+class SurfaceInterface;
 class OutputInterface;
 }
 }
@@ -111,6 +112,7 @@ public:
         return m_internalConnection.client;
     }
     void dispatch();
+    quint32 createWindowId(KWayland::Server::SurfaceInterface *surface);
 
 Q_SIGNALS:
     void shellClientAdded(ShellClient*);
@@ -118,6 +120,7 @@ Q_SIGNALS:
 
 private:
     void fakeDummyQtWindowInput();
+    quint16 createClientId(KWayland::Server::ClientConnection *c);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
@@ -135,6 +138,7 @@ private:
     QList<ShellClient*> m_clients;
     QScopedPointer<QWindow> m_dummyWindow;
     KWayland::Client::Surface *m_dummyWindowSurface = nullptr;
+    QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     KWIN_SINGLETON(WaylandServer)
 };
 

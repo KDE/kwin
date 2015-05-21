@@ -343,8 +343,9 @@ void ShellClient::createWindowId()
 {
     if (m_internalWindow) {
         m_windowId = m_internalWindow->winId();
+    } else {
+        m_windowId = waylandServer()->createWindowId(m_shellSurface->surface());
     }
-    // TODO: create internal window ids
 }
 
 void ShellClient::findInternalWindow()
