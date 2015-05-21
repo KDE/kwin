@@ -377,4 +377,10 @@ void ShellClient::updateInternalWindowGeometry()
     setGeometry(m_internalWindow->geometry());
 }
 
+bool ShellClient::isInternal() const
+{
+    return m_shellSurface->client() == waylandServer()->internalConnection() ||
+           m_shellSurface->client() == waylandServer()->qtConnection();
+}
+
 }

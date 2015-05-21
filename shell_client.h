@@ -90,6 +90,7 @@ public:
     quint32 windowId() const {
         return m_windowId;
     }
+    bool isInternal() const;
 
 protected:
     void addDamage(const QRegion &damage) override;
