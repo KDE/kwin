@@ -60,7 +60,6 @@ static void sighandler(int)
     QApplication::exit();
 }
 
-static int startXServer(int waylandSocket, int wmFd);
 static void readDisplay(int pipe);
 
 //************************************
@@ -78,6 +77,10 @@ ApplicationWayland::~ApplicationWayland()
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
         xcb_disconnect(x11Connection());
+    }
+    if (m_xwaylandProcess) {
+        m_xwaylandProcess->terminate();
+        m_xwaylandProcess->waitForFinished();
     }
 }
 
@@ -118,26 +121,7 @@ void ApplicationWayland::continueStartupWithScreens()
     }
     createCompositor();
 
-    int sx[2];
-    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-        exit(1);
-        return;
-    }
-
-    const int fd = waylandServer()->createXWaylandConnection();
-    if (fd == -1) {
-        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
-        exit(1);
-        return;
-    }
-
-    m_xcbConnectionFd = sx[0];
-    const int xDisplayPipe = startXServer(fd, sx[1]);
-    QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
-    QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
-    QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
-    watcher->setFuture(QtConcurrent::run(readDisplay, xDisplayPipe));
+    startXwaylandServer();
 }
 
 void ApplicationWayland::continueStartupWithX()
@@ -264,49 +248,73 @@ bool ApplicationWayland::notify(QObject *o, QEvent *e)
     return Application::notify(o, e);
 }
 
-/**
- * Starts the Xwayland-Server.
- * The new process is started by forking into it.
- **/
-static int startXServer(int waylandSocket, int wmFd)
+void ApplicationWayland::startXwaylandServer()
 {
     int pipeFds[2];
     if (pipe(pipeFds) != 0) {
         std::cerr << "FATAL ERROR failed to create pipe to start Xwayland " << std::endl;
         exit(1);
+        return;
     }
-
-    pid_t pid = fork();
-    if (pid == 0) {
-        // child process - should be turned into X-Server
-        // writes to pipe, closes read side
-        close(pipeFds[0]);
-        char fdbuf[16];
-        sprintf(fdbuf, "%d", pipeFds[1]);
-        char wmfdbuf[16];
-        int fd = dup(wmFd);
-        if (fd < 0) {
-            std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
-            exit(20);
-            return -1;
-        }
-        sprintf(wmfdbuf, "%d", fd);
-
-        int wlfd = dup(waylandSocket);
-        if (wlfd < 0) {
-            std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
-            exit(20);
-            return -1;
-        }
-        qputenv("WAYLAND_SOCKET", QByteArray::number(wlfd));
-        execlp("Xwayland", "Xwayland", "-displayfd", fdbuf, "-rootless", "-wm", wmfdbuf, (char *)0);
-        close(pipeFds[1]);
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
+        exit(1);
+        return;
+    }
+    int fd = dup(sx[1]);
+    if (fd < 0) {
+        std::cerr << "FATAL ERROR: failed to open socket to open XCB connection" << std::endl;
         exit(20);
+        return;
     }
-    // parent process - this is KWin
-    // reads from pipe, closes write side
+
+    const int waylandSocket = waylandServer()->createXWaylandConnection();
+    if (waylandSocket == -1) {
+        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+        exit(1);
+        return;
+    }
+    const int wlfd = dup(waylandSocket);
+    if (wlfd < 0) {
+        std::cerr << "FATAL ERROR: failed to open socket for Xwayland" << std::endl;
+        exit(20);
+        return;
+    }
+
+    m_xcbConnectionFd = sx[0];
+
+    m_xwaylandProcess = new QProcess(kwinApp());
+    m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
+    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
+    m_xwaylandProcess->setProcessEnvironment(env);
+    m_xwaylandProcess->setArguments({QStringLiteral("-displayfd"),
+                           QString::number(pipeFds[1]),
+                           QStringLiteral("-rootless"),
+                           QStringLiteral("-wm"),
+                           QString::number(fd)});
+    connect(m_xwaylandProcess, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+        [] (QProcess::ProcessError error) {
+            if (error == QProcess::FailedToStart) {
+                std::cerr << "FATAL ERROR: failed to start Xwayland" << std::endl;
+            } else {
+                std::cerr << "FATAL ERROR: Xwayland failed, going to exit now" << std::endl;
+            }
+            exit(1);
+        }
+    );
+    const int xDisplayPipe = pipeFds[0];
+    connect(m_xwaylandProcess, &QProcess::started, this,
+        [this, xDisplayPipe] {
+            QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+            QObject::connect(watcher, &QFutureWatcher<void>::finished, this, &ApplicationWayland::continueStartupWithX, Qt::QueuedConnection);
+            QObject::connect(watcher, &QFutureWatcher<void>::finished, watcher, &QFutureWatcher<void>::deleteLater, Qt::QueuedConnection);
+            watcher->setFuture(QtConcurrent::run(readDisplay, xDisplayPipe));
+        }
+    );
+    m_xwaylandProcess->start();
     close(pipeFds[1]);
-    return pipeFds[0];
 }
 
 static void readDisplay(int pipe)

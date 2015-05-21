@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include <QtCore/private/qeventdispatcher_unix_p.h>
 
+class QProcess;
+
 namespace KWin
 {
 
@@ -49,10 +51,12 @@ private:
     void createX11Connection();
     void continueStartupWithScreens();
     void continueStartupWithX();
+    void startXwaylandServer();
 
     bool m_startXWayland = false;
     int m_xcbConnectionFd = -1;
     QStringList m_applicationsToStart;
+    QProcess *m_xwaylandProcess = nullptr;
 };
 
 class EventDispatcher : public QEventDispatcherUNIX
