@@ -92,6 +92,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "composite.h"
 #include "screenedge.h"
+#if HAVE_WAYLAND
+#include "shell_client.h"
+#include "wayland_server.h"
+#endif
 
 #include <QDebug>
 
@@ -688,6 +692,14 @@ ToplevelList Workspace::xStackingOrder() const
             }
         }
     }
+#if HAVE_WAYLAND
+    if (waylandServer()) {
+        const auto clients = waylandServer()->internalClients();
+        for (auto c: clients) {
+            x_stacking << c;
+        }
+    }
+#endif
     if (m_compositor) {
         const_cast< Workspace* >(this)->m_compositor->checkUnredirect();
     }

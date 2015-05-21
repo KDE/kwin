@@ -116,7 +116,11 @@ void WaylandServer::init(const QByteArray &socketName)
             if (auto c = Compositor::self()) {
                 connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
             }
-            m_clients << client;
+            if (client->isInternal()) {
+                m_internalClients << client;
+            } else {
+                m_clients << client;
+            }
             emit shellClientAdded(client);
         }
     );
@@ -209,6 +213,7 @@ void WaylandServer::uninstallBackend(AbstractBackend *backend)
 void WaylandServer::removeClient(ShellClient *c)
 {
     m_clients.removeAll(c);
+    m_internalClients.removeAll(c);
     emit shellClientRemoved(c);
 }
 
@@ -261,20 +266,31 @@ void WaylandServer::dispatch()
     m_display->dispatchEvents(0);
 }
 
+static ShellClient *findClientInList(const QList<ShellClient*> &clients, quint32 id)
+{
+    auto it = std::find_if(clients.begin(), clients.end(),
+        [id] (ShellClient *c) {
+            return c->windowId() == id;
+        }
+    );
+    if (it == clients.end()) {
+        return nullptr;
+    }
+    return *it;
+}
+
 ShellClient *WaylandServer::findClient(quint32 id) const
 {
     if (id == 0) {
         return nullptr;
     }
-    auto it = std::find_if(m_clients.constBegin(), m_clients.constEnd(),
-        [id] (ShellClient *c) {
-            return c->windowId() == id;
-        }
-    );
-    if (it == m_clients.constEnd()) {
-        return nullptr;
+    if (ShellClient *c = findClientInList(m_clients, id)) {
+        return c;
     }
-    return *it;
+    if (ShellClient *c = findClientInList(m_internalClients, id)) {
+        return c;
+    }
+    return nullptr;
 }
 
 quint32 WaylandServer::createWindowId(SurfaceInterface *surface)

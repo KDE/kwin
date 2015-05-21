@@ -75,6 +75,9 @@ public:
     QList<ShellClient*> clients() const {
         return m_clients;
     }
+    QList<ShellClient*> internalClients() const {
+        return m_internalClients;
+    }
     void removeClient(ShellClient *c);
     ShellClient *findClient(quint32 id) const;
 
@@ -136,6 +139,7 @@ private:
     } m_internalConnection;
     AbstractBackend *m_backend = nullptr;
     QList<ShellClient*> m_clients;
+    QList<ShellClient*> m_internalClients;
     QScopedPointer<QWindow> m_dummyWindow;
     KWayland::Client::Surface *m_dummyWindowSurface = nullptr;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;

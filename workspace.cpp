@@ -378,10 +378,12 @@ void Workspace::init()
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
             [this] (ShellClient *c) {
-                if (!unconstrained_stacking_order.contains(c))
-                    unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
-                if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
-                    stacking_order.append(c);      // c to be in stacking_order
+                if (!c->isInternal()) {
+                    if (!unconstrained_stacking_order.contains(c))
+                        unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
+                    if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
+                        stacking_order.append(c);      // c to be in stacking_order
+                }
                 x_stacking_dirty = true;
                 updateStackingOrder(true);
             }
