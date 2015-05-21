@@ -121,7 +121,15 @@ void WaylandServer::init(const QByteArray &socketName)
             } else {
                 m_clients << client;
             }
-            emit shellClientAdded(client);
+            if (client->readyForPainting()) {
+                emit shellClientAdded(client);
+            } else {
+                connect(client, &ShellClient::windowShown, this,
+                    [this, client] {
+                        emit shellClientAdded(client);
+                    }
+                );
+            }
         }
     );
     m_display->createShm();
