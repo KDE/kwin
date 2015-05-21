@@ -2342,6 +2342,11 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
     emit quickTileModeChanged();
 }
 
+bool Client::isFullScreenable() const
+{
+    return isFullScreenable(false);
+}
+
 bool Client::isFullScreenable(bool fullscreen_hack) const
 {
     if (!rules()->checkFullScreen(true))

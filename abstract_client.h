@@ -45,6 +45,17 @@ class AbstractClient : public Toplevel
 {
     Q_OBJECT
     /**
+     * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
+     * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
+     * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
+     **/
+    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
+    /**
+     * Whether the Client can be set to fullScreen. The property is evaluated each time it is invoked.
+     * Because of that there is no notify signal.
+     **/
+    Q_PROPERTY(bool fullScreenable READ isFullScreenable)
+    /**
      * Whether this Client is the currently visible Client in its Client Group (Window Tabs).
      * For change connect to the visibleChanged signal on the Client's Group.
      **/
@@ -176,6 +187,7 @@ public:
     virtual bool isCloseable() const = 0;
     // TODO: remove boolean trap
     virtual bool isShown(bool shaded_is_shown) const = 0;
+    virtual bool isFullScreenable() const = 0;
     virtual bool isFullScreen() const = 0;
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
@@ -300,6 +312,7 @@ public Q_SLOTS:
     virtual void closeWindow() = 0;
 
 Q_SIGNALS:
+    void fullScreenChanged();
     void skipSwitcherChanged();
     void iconChanged();
     void activeChanged();

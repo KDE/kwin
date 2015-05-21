@@ -214,6 +214,11 @@ bool ShellClient::isCloseable() const
     return false;
 }
 
+bool ShellClient::isFullScreenable() const
+{
+    return false;
+}
+
 bool ShellClient::isFullScreen() const
 {
     return false;

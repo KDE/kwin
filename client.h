@@ -76,17 +76,6 @@ class Client
 {
     Q_OBJECT
     /**
-     * Whether this Client is fullScreen. A Client might either be fullScreen due to the _NET_WM property
-     * or through a legacy support hack. The fullScreen state can only be changed if the Client does not
-     * use the legacy hack. To be sure whether the state changed, connect to the notify signal.
-     **/
-    Q_PROPERTY(bool fullScreen READ isFullScreen WRITE setFullScreen NOTIFY fullScreenChanged)
-    /**
-     * Whether the Client can be set to fullScreen. The property is evaluated each time it is invoked.
-     * Because of that there is no notify signal.
-     **/
-    Q_PROPERTY(bool fullScreenable READ isFullScreenable)
-    /**
      * The geometry of this Client. Be aware that depending on resize mode the geometryChanged signal
      * might be emitted at each resize step or only at the end of the resize operation.
      **/
@@ -295,7 +284,8 @@ public:
 
     void setFullScreen(bool set, bool user = true) override;
     bool isFullScreen() const override;
-    bool isFullScreenable(bool fullscreen_hack = false) const;
+    bool isFullScreenable() const override;
+    bool isFullScreenable(bool fullscreen_hack) const;
     bool isActiveFullScreen() const;
     bool userCanSetFullScreen() const override;
     QRect geometryFSRestore() const {
@@ -588,7 +578,6 @@ Q_SIGNALS:
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
-    void fullScreenChanged();
     void transientChanged();
     void modalChanged();
     void moveResizedChanged();
