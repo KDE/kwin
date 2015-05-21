@@ -60,6 +60,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         [this] {
             m_clientSize = m_shellSurface->surface()->buffer()->size();
             setGeometry(QRect(geom.topLeft(), m_clientSize));
+            discardWindowPixmap();
         }
     );
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
