@@ -336,6 +336,9 @@ bool ShellClient::userCanSetNoBorder() const
 
 bool ShellClient::wantsInput() const
 {
+    if (isInternal()) {
+        return false;
+    }
     return true;
 }
 
