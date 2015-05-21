@@ -205,7 +205,7 @@ class Toplevel
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;
-    xcb_window_t window() const;
+    virtual xcb_window_t window() const;
     QRect geometry() const;
     QSize size() const;
     QPoint pos() const;

@@ -86,6 +86,7 @@ public:
     bool userCanSetFullScreen() const override;
     bool userCanSetNoBorder() const override;
     bool wantsInput() const override;
+    xcb_window_t window() const override;
 
     quint32 windowId() const {
         return m_windowId;

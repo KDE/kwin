@@ -386,4 +386,9 @@ bool ShellClient::isInternal() const
            m_shellSurface->client() == waylandServer()->qtConnection();
 }
 
+xcb_window_t ShellClient::window() const
+{
+    return windowId();
+}
+
 }
