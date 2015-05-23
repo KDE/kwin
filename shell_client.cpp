@@ -296,6 +296,10 @@ bool ShellClient::isShown(bool shaded_is_shown) const
     return !m_closing && !m_unmapped;
 }
 
+void ShellClient::hideClient(bool hide)
+{
+}
+
 void ShellClient::maximize(MaximizeMode mode)
 {
     if (m_maximizeMode == mode) {

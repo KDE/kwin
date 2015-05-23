@@ -311,6 +311,9 @@ void Workspace::activateClient(AbstractClient* c, bool force)
     if (c->isMinimized())
         c->unminimize();
 
+    // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083
+    c->hideClient(false);
+
 // TODO force should perhaps allow this only if the window already contains the mouse
     if (options->focusPolicyIsReasonable() || force)
         requestFocus(c, force);
@@ -354,11 +357,10 @@ void Workspace::takeActivity(AbstractClient* c, ActivityFlags flags)
     if (flags & ActivityFocus) {
         AbstractClient* modal = c->findModal();
         if (modal != NULL && modal != c) {
-            if (!modal->isOnDesktop(c->desktop())) {
+            if (!modal->isOnDesktop(c->desktop()))
                 modal->setDesktop(c->desktop());
-                if (modal->desktop() != c->desktop())  // forced desktop
-                    activateClient(modal);
-            }
+            if (!modal->isShown(true) && !modal->isMinimized())  // forced desktop or utility window
+                activateClient(modal);   // activating a minimized blocked window will unminimize its modal implicitly
             // if the click was inside the window (i.e. handled is set),
             // but it has a modal, there's no need to use handled mode, because
             // the modal doesn't get the click anyway

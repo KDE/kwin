@@ -356,7 +356,7 @@ public:
     /// Updates visibility depending on being shaded, virtual desktop, etc.
     void updateVisibility();
     /// Hides a client - Basically like minimize, but without effects, it's simply hidden
-    void hideClient(bool hide);
+    void hideClient(bool hide) override;
     bool hiddenPreview() const; ///< Window is mapped in order to get a window pixmap
 
     virtual bool setupCompositing();
