@@ -1216,7 +1216,8 @@ void Client::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
 
     checkOffscreenPosition(&newGeom, screenArea);
     // Obey size hints. TODO: We really should make sure it stays in the right place
-    newGeom.setSize(adjustedSize(newGeom.size()));
+    if (!isShade())
+        newGeom.setSize(adjustedSize(newGeom.size()));
 
     if (newGeom != geometry())
         setGeometry(newGeom);
