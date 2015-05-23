@@ -411,11 +411,14 @@ void Client::createDecoration(const QRect& oldgeom)
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
                 GeometryUpdatesBlocker blocker(this);
-                move(calculateGravitation(true));
-                move(calculateGravitation(false));
+                // TODO: this is obviously idempotent
+                // calculateGravitation(true) would have to operate on the old border sizes
+//                 move(calculateGravitation(true));
+//                 move(calculateGravitation(false));
                 QRect oldgeom = geometry();
                 plainResize(sizeForClientSize(clientSize()), ForceGeometrySet);
-                checkWorkspacePosition(oldgeom);
+                if (!isShade())
+                    checkWorkspacePosition(oldgeom);
                 emit geometryShapeChanged(this, oldgeom);
             }
         );
