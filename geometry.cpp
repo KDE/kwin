@@ -1243,7 +1243,7 @@ QSize Client::adjustedSize(const QSize& frame, Sizemode mode) const
     QSize wsize(frame.width() - (borderLeft() + borderRight()),
                 frame.height() - (borderTop() + borderBottom()));
     if (wsize.isEmpty())
-        wsize = QSize(1, 1);
+        wsize = QSize(qMax(wsize.width(), 1), qMax(wsize.height(), 1));
 
     return sizeForClientSize(wsize, mode, false);
 }
