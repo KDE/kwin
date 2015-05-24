@@ -819,6 +819,7 @@ void Client::setShade(ShadeMode mode)
         QSize s(sizeForClientSize(clientSize()));
         shade_geometry_change = false;
         plainResize(s);
+        geom_restore = geometry();
         if ((shade_mode == ShadeHover || shade_mode == ShadeActivated) && rules()->checkAcceptFocus(info->input()))
             setActive(true);
         if (shade_mode == ShadeHover) {
