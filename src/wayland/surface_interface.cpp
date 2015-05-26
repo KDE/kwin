@@ -228,6 +228,10 @@ void SurfaceInterface::Private::commit()
     }
     if (bufferChanged) {
         if (!current.damage.isEmpty()) {
+            const QRegion windowRegion = QRegion(0, 0, q->size().width(), q->size().height());
+            if (!windowRegion.isEmpty()) {
+                current.damage = windowRegion.intersected(current.damage);
+            }
             emit q->damaged(current.damage);
         } else if (!current.buffer) {
             emit q->unmapped();
@@ -244,7 +248,6 @@ void SurfaceInterface::Private::damage(const QRect &rect)
         // TODO: should we send an error?
         return;
     }
-    // TODO: documentation says we need to remove the parts outside of the surface
     pending.damage = pending.damage.united(rect);
 }
 
