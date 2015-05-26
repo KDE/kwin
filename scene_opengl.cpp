@@ -436,9 +436,11 @@ SceneOpenGL::SceneOpenGL(OpenGLBackend *backend, QObject *parent)
     }
 }
 
+static SceneOpenGL *gs_debuggedScene = nullptr;
 SceneOpenGL::~SceneOpenGL()
 {
     // do cleanup after initBuffer()
+    gs_debuggedScene = nullptr;
     SceneOpenGL::EffectFrame::cleanup();
     if (init_ok) {
         delete m_syncManager;
@@ -448,11 +450,31 @@ SceneOpenGL::~SceneOpenGL()
     }
 }
 
+static void scheduleVboReInit()
+{
+    if (!gs_debuggedScene)
+        return;
+
+    static QPointer<QTimer> timer;
+    if (!timer) {
+        delete timer;
+        timer = new QTimer(gs_debuggedScene);
+        timer->setSingleShot(true);
+        QObject::connect(timer, &QTimer::timeout, gs_debuggedScene, []() {
+            GLVertexBuffer::cleanup();
+            GLVertexBuffer::initStatic();
+        });
+    }
+    timer->start(250);
+}
+
 void SceneOpenGL::initDebugOutput()
 {
     const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
     if (!have_KHR_debug && !hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output")))
         return;
+
+    gs_debuggedScene = this;
 
     // Set the callback function
     auto callback = [](GLenum source, GLenum type, GLuint id,
@@ -469,10 +491,17 @@ void SceneOpenGL::initDebugOutput()
             qCWarning(KWIN_CORE, "%#x: %.*s", id, length, message);
             break;
 
+        case GL_DEBUG_TYPE_OTHER:
+            // at least the nvidia driver seems prone to end up with invalid VBOs after
+            // transferring them between system heap and VRAM
+            // so we re-init them whenever this happens (typically when switching VT, resuming
+            // from STR and XRandR events - #344326
+            if (strstr(message, "Buffer detailed info:") && strstr(message, "has been updated"))
+                scheduleVboReInit();
+            // fall through! for general message printing
         case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
         case GL_DEBUG_TYPE_PORTABILITY:
         case GL_DEBUG_TYPE_PERFORMANCE:
-        case GL_DEBUG_TYPE_OTHER:
         default:
             qCDebug(KWIN_CORE, "%#x: %.*s", id, length, message);
             break;
