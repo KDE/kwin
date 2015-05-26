@@ -237,12 +237,22 @@ void ApplicationWayland::createX11Connection()
 
 bool ApplicationWayland::notify(QObject *o, QEvent *e)
 {
-    if (qobject_cast< QWindow* >(o)) {
+    if (QWindow *w = qobject_cast< QWindow* >(o)) {
         if (e->type() == QEvent::Expose) {
             // ensure all Wayland events both on client and server side are dispatched
             // otherwise it is possible that Qt starts rendering and blocks the main gui thread
             // as it waits for the callback of the last frame
             waylandServer()->dispatch();
+        }
+        if (e->type() == QEvent::Show) {
+            // on QtWayland windows with X11BypassWindowManagerHint are not shown, thus we need to remove it
+            // as the flag is interpreted only before the PlatformWindow is created we need to destroy the window first
+            if (w->flags() & Qt::X11BypassWindowManagerHint) {
+                w->setFlags(w->flags() & ~Qt::X11BypassWindowManagerHint);
+                w->destroy();
+                w->show();
+                return false;
+            }
         }
     }
     return Application::notify(o, e);
