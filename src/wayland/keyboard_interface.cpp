@@ -118,7 +118,9 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
 {
     Q_D();
     if (d->focusedSurface) {
-        wl_keyboard_send_leave(d->resource, serial, d->focusedSurface->resource());
+        if (d->resource && d->focusedSurface->resource()) {
+            wl_keyboard_send_leave(d->resource, serial, d->focusedSurface->resource());
+        }
         disconnect(d->destroyConnection);
     }
     d->focusedSurface = surface;
