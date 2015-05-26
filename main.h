@@ -181,6 +181,7 @@ protected:
         m_connection = c;
         emit x11ConnectionChanged();
     }
+    void destroyAtoms();
 
     bool notify(QObject* o, QEvent* e);
     static void crashHandler(int signal);

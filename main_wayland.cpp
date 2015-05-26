@@ -76,6 +76,7 @@ ApplicationWayland::~ApplicationWayland()
     destroyWorkspace();
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);
+        destroyAtoms();
         xcb_disconnect(x11Connection());
     }
     if (m_xwaylandProcess) {

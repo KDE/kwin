@@ -200,7 +200,13 @@ void Application::start()
 Application::~Application()
 {
     delete options;
+    destroyAtoms();
+}
+
+void Application::destroyAtoms()
+{
     delete atoms;
+    atoms = nullptr;
 }
 
 void Application::crashChecking()
