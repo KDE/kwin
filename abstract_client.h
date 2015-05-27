@@ -131,6 +131,14 @@ class AbstractClient : public Toplevel
      * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
      **/
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
+    /**
+     * Minimum size as specified in WM_NORMAL_HINTS
+     **/
+    Q_PROPERTY(QSize minSize READ minSize)
+    /**
+     * Maximum size as specified in WM_NORMAL_HINTS
+     **/
+    Q_PROPERTY(QSize maxSize READ maxSize)
 public:
     virtual ~AbstractClient();
 
@@ -311,6 +319,8 @@ public:
     virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     void keepInArea(QRect area, bool partial = false);
+    virtual QSize minSize() const;
+    virtual QSize maxSize() const;
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);

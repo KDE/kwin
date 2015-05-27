@@ -448,4 +448,14 @@ void AbstractClient::keepInArea(QRect area, bool partial)
         move(tx, ty);
 }
 
+QSize AbstractClient::maxSize() const
+{
+    return rules()->checkMaxSize(QSize(INT_MAX, INT_MAX));
+}
+
+QSize AbstractClient::minSize() const
+{
+    return rules()->checkMinSize(QSize(0, 0));
+}
+
 }

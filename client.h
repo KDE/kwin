@@ -165,14 +165,6 @@ class Client
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
     /**
-     * Minimum size as specified in WM_NORMAL_HINTS
-     **/
-    Q_PROPERTY(QSize minSize READ minSize)
-    /**
-     * Maximum size as specified in WM_NORMAL_HINTS
-     **/
-    Q_PROPERTY(QSize maxSize READ maxSize)
-    /**
      * Whether the window has a decoration or not.
      * This property is not allowed to be set by applications themselves.
      * The decision whether a window has a border or not belongs to the window manager.
@@ -229,8 +221,8 @@ public:
 
     bool hasNETSupport() const;
 
-    QSize minSize() const;
-    QSize maxSize() const;
+    QSize minSize() const override;
+    QSize maxSize() const override;
     QSize basicUnit() const;
     virtual QPoint clientPos() const; // Inside of geometry()
     virtual QSize clientSize() const;
