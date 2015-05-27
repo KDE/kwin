@@ -64,7 +64,7 @@ public:
 
     void place(Client* c, QRect& area);
 
-    void placeAtRandom(Client* c, const QRect& area, Policy next = Unknown);
+    void placeAtRandom(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeCascaded(Client* c, QRect& area, Policy next = Unknown);
     void placeSmart(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeMaximizing(Client* c, QRect& area, Policy next = Unknown);

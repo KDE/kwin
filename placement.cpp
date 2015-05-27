@@ -129,7 +129,7 @@ void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacemen
 /*!
   Place the client \a c according to a simply "random" placement algorithm.
  */
-void Placement::placeAtRandom(Client* c, const QRect& area, Policy /*next*/)
+void Placement::placeAtRandom(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     const int step  = 24;
     static int px = step;
