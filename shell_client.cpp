@@ -18,8 +18,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "shell_client.h"
+#include "composite.h"
 #include "deleted.h"
+#include "screens.h"
 #include "wayland_server.h"
+#include "workspace.h"
 #include "virtualdesktops.h"
 
 #include <KWayland/Client/surface.h>
@@ -395,6 +398,27 @@ bool ShellClient::isInternal() const
 xcb_window_t ShellClient::window() const
 {
     return windowId();
+}
+
+void ShellClient::move(int x, int y, ForceGeometry_t force)
+{
+    QPoint p(x, y);
+    if (force == NormalGeometrySet && geom.topLeft() == p) {
+        return;
+    }
+    const QRect oldGeom = visibleRect();
+    geom.moveTopLeft(p);
+    updateWindowRules(Rules::Position);
+    screens()->setCurrent(this);
+    workspace()->updateStackingOrder();
+    if (Compositor::isCreated()) {
+        // TODO: is this really needed here?
+        Compositor::self()->checkUnredirect();
+    }
+
+    addLayerRepaint(oldGeom);
+    addLayerRepaint(visibleRect());
+    emit geometryChanged();
 }
 
 }

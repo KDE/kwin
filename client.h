@@ -330,11 +330,10 @@ public:
 
     void updateShape();
 
-    enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     void setGeometry(int x, int y, int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void setGeometry(const QRect& r, ForceGeometry_t force = NormalGeometrySet);
-    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet);
-    void move(const QPoint& p, ForceGeometry_t force = NormalGeometrySet);
+    using AbstractClient::move;
+    void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     /// plainResize() simply resizes
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
@@ -1002,11 +1001,6 @@ inline QSize Client::clientSize() const
 inline void Client::setGeometry(const QRect& r, ForceGeometry_t force)
 {
     setGeometry(r.x(), r.y(), r.width(), r.height(), force);
-}
-
-inline void Client::move(const QPoint& p, ForceGeometry_t force)
-{
-    move(p.x(), p.y(), force);
 }
 
 inline void Client::plainResize(const QSize& s, ForceGeometry_t force)

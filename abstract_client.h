@@ -305,6 +305,10 @@ public:
     virtual void setQuickTileMode(QuickTileMode mode, bool keyboard = false) = 0;
     virtual void updateLayer();
 
+    enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
+    virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) = 0;
+    void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 
@@ -400,6 +404,11 @@ private:
     static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 };
+
+inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
+{
+    move(p.x(), p.y(), force);
+}
 
 }
 
