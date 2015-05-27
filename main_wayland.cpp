@@ -73,6 +73,7 @@ ApplicationWayland::ApplicationWayland(int &argc, char **argv)
 
 ApplicationWayland::~ApplicationWayland()
 {
+    destroyCompositor();
     destroyWorkspace();
     if (x11Connection()) {
         Xcb::setInputFocus(XCB_INPUT_FOCUS_POINTER_ROOT);

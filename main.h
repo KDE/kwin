@@ -166,6 +166,7 @@ protected:
     void createCompositor();
     void setupEventFilters();
     void destroyWorkspace();
+    void destroyCompositor();
     /**
      * Inheriting classes should use this method to set the X11 root window
      * before accessing any X11 specific code pathes.

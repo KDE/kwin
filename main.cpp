@@ -423,6 +423,15 @@ void Application::destroyWorkspace()
     delete Workspace::self();
 }
 
+void Application::destroyCompositor()
+{
+    if (Workspace::self()) {
+        // compositor is destroyed together with Workspace
+        return;
+    }
+    delete Compositor::self();
+}
+
 void Application::updateX11Time(xcb_generic_event_t *event)
 {
     xcb_timestamp_t time = XCB_TIME_CURRENT_TIME;
