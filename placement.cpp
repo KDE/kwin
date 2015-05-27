@@ -467,7 +467,7 @@ void Placement::placeCentered(Client* c, const QRect& area, Policy /*next*/)
 /*!
   Place windows in the (0,0) corner, on top of all others
 */
-void Placement::placeZeroCornered(Client* c, const QRect& area, Policy /*next*/)
+void Placement::placeZeroCornered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     // get the maximum allowed windows space and desk's origin
     c->move(checkArea(c, area).topLeft());

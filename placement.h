@@ -69,7 +69,7 @@ public:
     void placeSmart(Client* c, const QRect& area, Policy next = Unknown);
     void placeMaximizing(Client* c, QRect& area, Policy next = Unknown);
     void placeCentered(Client* c, const QRect& area, Policy next = Unknown);
-    void placeZeroCornered(Client* c, const QRect& area, Policy next = Unknown);
+    void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeDialog(Client* c, QRect& area, Policy next = Unknown);
     void placeUtility(Client* c, QRect& area, Policy next = Unknown);
     void placeOnScreenDisplay(Client* c, QRect& area);
