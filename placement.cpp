@@ -56,7 +56,7 @@ Placement::~Placement()
 /*!
   Places the client \a c according to the workspace's layout policy
  */
-void Placement::place(Client* c, QRect& area)
+void Placement::place(AbstractClient* c, QRect& area)
 {
     Policy policy = c->rules()->checkPlacement(Default);
     if (policy != Default) {
@@ -76,7 +76,7 @@ void Placement::place(Client* c, QRect& area)
         place(c, area, options->placement());
 }
 
-void Placement::place(Client* c, QRect& area, Policy policy, Policy nextPlacement)
+void Placement::place(AbstractClient* c, QRect& area, Policy policy, Policy nextPlacement)
 {
     if (policy == Unknown)
         policy = Default;
@@ -370,7 +370,7 @@ QPoint Workspace::cascadeOffset(const AbstractClient *c) const
 /*!
   Place windows in a cascading order, remembering positions for each desktop
 */
-void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
+void Placement::placeCascaded(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
     /* cascadePlacement by Cristian Tibirna (tibirna@kde.org) (30Jan98)
      */
@@ -473,7 +473,7 @@ void Placement::placeZeroCornered(AbstractClient* c, const QRect& area, Policy /
     c->move(checkArea(c, area).topLeft());
 }
 
-void Placement::placeUtility(Client* c, QRect& area, Policy /*next*/)
+void Placement::placeUtility(AbstractClient* c, QRect& area, Policy /*next*/)
 {
 // TODO kwin should try to place utility windows next to their mainwindow,
 // preferably at the right edge, and going down if there are more of them
@@ -492,7 +492,7 @@ void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
     c->move(QPoint(x, y));
 }
 
-void Placement::placeDialog(Client* c, QRect& area, Policy nextPlacement)
+void Placement::placeDialog(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
     placeOnMainWindow(c, area, nextPlacement);
 }
@@ -506,16 +506,19 @@ void Placement::placeUnderMouse(AbstractClient* c, QRect& area, Policy /*next*/)
     c->keepInArea(area);   // make sure it's kept inside workarea
 }
 
-void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement)
+void Placement::placeOnMainWindow(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
     if (nextPlacement == Unknown)
         nextPlacement = Centered;
     if (nextPlacement == Maximizing)   // maximize if needed
         placeMaximizing(c, area, NoPlacement);
     area = checkArea(c, area);
-    ClientList mainwindows = c->mainClients();
-    Client* place_on = NULL;
-    Client* place_on2 = NULL;
+    ClientList mainwindows;
+    if (Client *client = qobject_cast<Client*>(c)) {
+        mainwindows = client->mainClients();
+    }
+    AbstractClient* place_on = nullptr;
+    AbstractClient* place_on2 = nullptr;
     int mains_count = 0;
     for (ClientList::ConstIterator it = mainwindows.constBegin();
             it != mainwindows.constEnd();
@@ -559,7 +562,7 @@ void Placement::placeOnMainWindow(Client* c, QRect& area, Policy nextPlacement)
     c->keepInArea(area);   // make sure it's kept inside workarea
 }
 
-void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement)
+void Placement::placeMaximizing(AbstractClient* c, QRect& area, Policy nextPlacement)
 {
     if (nextPlacement == Unknown)
         nextPlacement = Smart;
@@ -568,7 +571,9 @@ void Placement::placeMaximizing(Client* c, QRect& area, Policy nextPlacement)
             c->maximize(MaximizeFull);
         else { // if the geometry doesn't match default maximize area (xinerama case?),
             // it's probably better to use the given area
-            c->setGeometry(area);
+            if (Client *client = qobject_cast<Client*>(c)) {
+                client->setGeometry(area);
+            }
         }
     } else {
         c->resizeWithChecks(c->maxSize().boundedTo(area.size()));

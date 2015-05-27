@@ -62,16 +62,16 @@ public:
         Maximizing
     };
 
-    void place(Client* c, QRect& area);
+    void place(AbstractClient* c, QRect& area);
 
     void placeAtRandom(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeCascaded(Client* c, QRect& area, Policy next = Unknown);
+    void placeCascaded(AbstractClient* c, QRect& area, Policy next = Unknown);
     void placeSmart(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeMaximizing(Client* c, QRect& area, Policy next = Unknown);
+    void placeMaximizing(AbstractClient* c, QRect& area, Policy next = Unknown);
     void placeCentered(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
-    void placeDialog(Client* c, QRect& area, Policy next = Unknown);
-    void placeUtility(Client* c, QRect& area, Policy next = Unknown);
+    void placeDialog(AbstractClient* c, QRect& area, Policy next = Unknown);
+    void placeUtility(AbstractClient* c, QRect& area, Policy next = Unknown);
     void placeOnScreenDisplay(AbstractClient* c, QRect& area);
 
     void reinitCascading(int desktop);
@@ -89,9 +89,9 @@ public:
     static const char* policyToString(Policy policy);
 
 private:
-    void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
+    void place(AbstractClient* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(AbstractClient* c, QRect& area, Policy next = Unknown);
-    void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown);
+    void placeOnMainWindow(AbstractClient* c, QRect& area, Policy next = Unknown);
     QRect checkArea(const AbstractClient*c, const QRect& area);
 
     //CT needed for cascading+
