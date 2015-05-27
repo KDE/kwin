@@ -451,7 +451,7 @@ void Placement::placeCascaded(Client* c, QRect& area, Policy nextPlacement)
 /*!
   Place windows centered, on top of all others
 */
-void Placement::placeCentered(Client* c, const QRect& area, Policy /*next*/)
+void Placement::placeCentered(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
 
     // get the maximum allowed windows space and desk's origin
