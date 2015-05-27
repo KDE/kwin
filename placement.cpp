@@ -190,7 +190,7 @@ static inline bool isIrrelevant(const AbstractClient *client, const AbstractClie
 /*!
   Place the client \a c according to a really smart placement algorithm :-)
 */
-void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
+void Placement::placeSmart(AbstractClient* c, const QRect& area, Policy /*next*/)
 {
     /*
      * SmartPlacement by Cristian Tibirna (tibirna@kde.org)
@@ -236,7 +236,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             cyt = y; cyb = y + ch;
             ToplevelList::ConstIterator l;
             for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                Client *client = qobject_cast<Client*>(*l);
+                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -285,7 +285,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             // compare to the position of each client on the same desk
             ToplevelList::ConstIterator l;
             for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                Client *client = qobject_cast<Client*>(*l);
+                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
@@ -316,7 +316,7 @@ void Placement::placeSmart(Client* c, const QRect& area, Policy /*next*/)
             //test the position of each window on the desk
             ToplevelList::ConstIterator l;
             for (l = workspace()->stackingOrder().constBegin(); l != workspace()->stackingOrder().constEnd() ; ++l) {
-                Client *client = qobject_cast<Client*>(*l);
+                AbstractClient *client = qobject_cast<AbstractClient*>(*l);
                 if (isIrrelevant(client, c, desktop)) {
                     continue;
                 }
