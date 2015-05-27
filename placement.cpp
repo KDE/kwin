@@ -497,7 +497,7 @@ void Placement::placeDialog(Client* c, QRect& area, Policy nextPlacement)
     placeOnMainWindow(c, area, nextPlacement);
 }
 
-void Placement::placeUnderMouse(Client* c, QRect& area, Policy /*next*/)
+void Placement::placeUnderMouse(AbstractClient* c, QRect& area, Policy /*next*/)
 {
     area = checkArea(c, area);
     QRect geom = c->geometry();

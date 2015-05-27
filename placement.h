@@ -90,7 +90,7 @@ public:
 
 private:
     void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
-    void placeUnderMouse(Client* c, QRect& area, Policy next = Unknown);
+    void placeUnderMouse(AbstractClient* c, QRect& area, Policy next = Unknown);
     void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown);
     QRect checkArea(const AbstractClient*c, const QRect& area);
 
