@@ -34,6 +34,7 @@ class QObject;
 namespace KWin
 {
 
+class AbstractClient;
 class Client;
 
 class Placement
@@ -91,7 +92,7 @@ private:
     void place(Client* c, QRect& area, Policy policy, Policy nextPlacement = Unknown);
     void placeUnderMouse(Client* c, QRect& area, Policy next = Unknown);
     void placeOnMainWindow(Client* c, QRect& area, Policy next = Unknown);
-    QRect checkArea(const Client*c, const QRect& area);
+    QRect checkArea(const AbstractClient*c, const QRect& area);
 
     //CT needed for cascading+
     struct DesktopCascadingInfo {

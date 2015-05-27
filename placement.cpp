@@ -610,7 +610,7 @@ void Placement::unclutterDesktop()
     }
 }
 
-QRect Placement::checkArea(const Client* c, const QRect& area)
+QRect Placement::checkArea(const AbstractClient* c, const QRect& area)
 {
     if (area.isNull())
         return workspace()->clientArea(PlacementArea, c->geometry().center(), c->desktop());
