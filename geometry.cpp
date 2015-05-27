@@ -825,36 +825,6 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
 // Client
 //********************************************
 
-
-void Client::keepInArea(QRect area, bool partial)
-{
-    if (partial) {
-        // increase the area so that can have only 100 pixels in the area
-        area.setLeft(qMin(area.left() - width() + 100, area.left()));
-        area.setTop(qMin(area.top() - height() + 100, area.top()));
-        area.setRight(qMax(area.right() + width() - 100, area.right()));
-        area.setBottom(qMax(area.bottom() + height() - 100, area.bottom()));
-    }
-    if (!partial) {
-        // resize to fit into area
-        if (area.width() < width() || area.height() < height())
-            resizeWithChecks(qMin(area.width(), width()), qMin(area.height(), height()));
-    }
-    int tx = x(), ty = y();
-    if (geometry().right() > area.right() && width() <= area.width())
-        tx = area.right() - width() + 1;
-    if (geometry().bottom() > area.bottom() && height() <= area.height())
-        ty = area.bottom() - height() + 1;
-    if (!area.contains(geometry().topLeft())) {
-        if (tx < area.x())
-            tx = area.x();
-        if (ty < area.y())
-            ty = area.y();
-    }
-    if (tx != x() || ty != y())
-        move(tx, ty);
-}
-
 /*!
   Returns \a area with the client's strut taken into account.
 

@@ -310,6 +310,7 @@ public:
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
     virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
     void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
+    void keepInArea(QRect area, bool partial = false);
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
