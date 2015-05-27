@@ -90,6 +90,8 @@ public:
     xcb_window_t window() const override;
     using AbstractClient::move;
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
+    using AbstractClient::resizeWithChecks;
+    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
 
     quint32 windowId() const {
         return m_windowId;

@@ -421,4 +421,18 @@ void ShellClient::move(int x, int y, ForceGeometry_t force)
     emit geometryChanged();
 }
 
+void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
+{
+    Q_UNUSED(force)
+    QRect area = workspace()->clientArea(WorkArea, this);
+    // don't allow growing larger than workarea
+    if (w > area.width()) {
+        w = area.width();
+    }
+    if (h > area.height()) {
+        h = area.height();
+    }
+    m_shellSurface->requestSize(QSize(w, h));
+}
+
 }

@@ -308,6 +308,8 @@ public:
     enum ForceGeometry_t { NormalGeometrySet, ForceGeometrySet };
     virtual void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) = 0;
     void move(const QPoint &p, ForceGeometry_t force = NormalGeometrySet);
+    virtual void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) = 0;
+    void resizeWithChecks(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
 
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
@@ -408,6 +410,11 @@ private:
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
 {
     move(p.x(), p.y(), force);
+}
+
+inline void AbstractClient::resizeWithChecks(const QSize& s, AbstractClient::ForceGeometry_t force)
+{
+    resizeWithChecks(s.width(), s.height(), force);
 }
 
 }

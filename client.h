@@ -338,8 +338,10 @@ public:
     void plainResize(int w, int h, ForceGeometry_t force = NormalGeometrySet);
     void plainResize(const QSize& s, ForceGeometry_t force = NormalGeometrySet);
     /// resizeWithChecks() resizes according to gravity, and checks workarea position
-    void resizeWithChecks(int w, int h, xcb_gravity_t gravity = XCB_GRAVITY_BIT_FORGET, ForceGeometry_t force = NormalGeometrySet);
-    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity = XCB_GRAVITY_BIT_FORGET, ForceGeometry_t force = NormalGeometrySet);
+    using AbstractClient::resizeWithChecks;
+    void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    void resizeWithChecks(int w, int h, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
+    void resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force = NormalGeometrySet);
     void keepInArea(QRect area, bool partial = false);
     void setElectricBorderMode(QuickTileMode mode);
     QuickTileMode electricBorderMode() const;
@@ -1006,6 +1008,11 @@ inline void Client::setGeometry(const QRect& r, ForceGeometry_t force)
 inline void Client::plainResize(const QSize& s, ForceGeometry_t force)
 {
     plainResize(s.width(), s.height(), force);
+}
+
+inline void Client::resizeWithChecks(int w, int h, AbstractClient::ForceGeometry_t force)
+{
+    resizeWithChecks(w, h, XCB_GRAVITY_BIT_FORGET, force);
 }
 
 inline void Client::resizeWithChecks(const QSize& s, xcb_gravity_t gravity, ForceGeometry_t force)
