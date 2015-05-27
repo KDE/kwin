@@ -362,41 +362,45 @@ void Compositor::finish()
         return;
     m_finishing = true;
     m_releaseSelectionTimer.start();
-    foreach (Client * c, Workspace::self()->clientList())
-        m_scene->windowClosed(c, NULL);
-    foreach (Client * c, Workspace::self()->desktopList())
-        m_scene->windowClosed(c, NULL);
-    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
-        m_scene->windowClosed(c, NULL);
-    foreach (Deleted * c, Workspace::self()->deletedList())
-        m_scene->windowDeleted(c);
-    foreach (Client * c, Workspace::self()->clientList())
-    c->finishCompositing();
-    foreach (Client * c, Workspace::self()->desktopList())
-    c->finishCompositing();
-    foreach (Unmanaged * c, Workspace::self()->unmanagedList())
-    c->finishCompositing();
-    foreach (Deleted * c, Workspace::self()->deletedList())
-    c->finishCompositing();
-    xcb_composite_unredirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+    if (Workspace::self()) {
+        foreach (Client * c, Workspace::self()->clientList())
+            m_scene->windowClosed(c, NULL);
+        foreach (Client * c, Workspace::self()->desktopList())
+            m_scene->windowClosed(c, NULL);
+        foreach (Unmanaged * c, Workspace::self()->unmanagedList())
+            m_scene->windowClosed(c, NULL);
+        foreach (Deleted * c, Workspace::self()->deletedList())
+            m_scene->windowDeleted(c);
+        foreach (Client * c, Workspace::self()->clientList())
+        c->finishCompositing();
+        foreach (Client * c, Workspace::self()->desktopList())
+        c->finishCompositing();
+        foreach (Unmanaged * c, Workspace::self()->unmanagedList())
+        c->finishCompositing();
+        foreach (Deleted * c, Workspace::self()->deletedList())
+        c->finishCompositing();
+        xcb_composite_unredirect_subwindows(connection(), rootWindow(), XCB_COMPOSITE_REDIRECT_MANUAL);
+    }
     delete effects;
     effects = NULL;
     delete m_scene;
     m_scene = NULL;
     compositeTimer.stop();
     repaints_region = QRegion();
-    for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
-            it != Workspace::self()->clientList().constEnd();
-            ++it) {
-        // forward all opacity values to the frame in case there'll be other CM running
-        if ((*it)->opacity() != 1.0) {
-            NETWinInfo i(connection(), (*it)->frameId(), rootWindow(), 0, 0);
-            i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
+    if (Workspace::self()) {
+        for (ClientList::ConstIterator it = Workspace::self()->clientList().constBegin();
+                it != Workspace::self()->clientList().constEnd();
+                ++it) {
+            // forward all opacity values to the frame in case there'll be other CM running
+            if ((*it)->opacity() != 1.0) {
+                NETWinInfo i(connection(), (*it)->frameId(), rootWindow(), 0, 0);
+                i.setOpacity(static_cast< unsigned long >((*it)->opacity() * 0xffffffff));
+            }
         }
+        // discard all Deleted windows (#152914)
+        while (!Workspace::self()->deletedList().isEmpty())
+            Workspace::self()->deletedList().first()->discard();
     }
-    // discard all Deleted windows (#152914)
-    while (!Workspace::self()->deletedList().isEmpty())
-        Workspace::self()->deletedList().first()->discard();
     m_finishing = false;
     emit compositingToggled(false);
 }
