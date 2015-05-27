@@ -72,7 +72,7 @@ public:
     void placeZeroCornered(AbstractClient* c, const QRect& area, Policy next = Unknown);
     void placeDialog(Client* c, QRect& area, Policy next = Unknown);
     void placeUtility(Client* c, QRect& area, Policy next = Unknown);
-    void placeOnScreenDisplay(Client* c, QRect& area);
+    void placeOnScreenDisplay(AbstractClient* c, QRect& area);
 
     void reinitCascading(int desktop);
 

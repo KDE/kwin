@@ -483,7 +483,7 @@ void Placement::placeUtility(Client* c, QRect& area, Policy /*next*/)
     place(c, area, Default);
 }
 
-void Placement::placeOnScreenDisplay(Client* c, QRect& area)
+void Placement::placeOnScreenDisplay(AbstractClient* c, QRect& area)
 {
     // place at lower 1/3 of the screen
     const int x = area.left() + (area.width() -  c->width())  / 2;
