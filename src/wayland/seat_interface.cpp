@@ -343,6 +343,9 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
         delete keyboard;
         return;
     }
+    if (keys.keymap.xkbcommonCompatible) {
+        keyboard->setKeymap(keys.keymap.fd, keys.keymap.size);
+    }
     keyboards << keyboard;
     if (keys.focus.surface && keys.focus.surface->client()->client() == client) {
         // this is a keyboard for the currently focused keyboard surface
