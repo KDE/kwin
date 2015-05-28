@@ -127,7 +127,7 @@ void WaylandServer::init(const QByteArray &socketName)
                 connect(client, &ShellClient::windowShown, this,
                     [this, client] {
                         emit shellClientAdded(client);
-                    }, Qt::QueuedConnection
+                    }
                 );
             }
         }

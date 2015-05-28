@@ -151,11 +151,11 @@ void ShellClient::setOpacity(double opacity)
 
 void ShellClient::addDamage(const QRegion &damage)
 {
-    setReadyForPainting();
     if (m_shellSurface->surface()->buffer()->size().isValid()) {
         m_clientSize = m_shellSurface->surface()->buffer()->size();
         setGeometry(QRect(geom.topLeft(), m_clientSize));
     }
+    setReadyForPainting();
     Toplevel::addDamage(damage);
 }
 
