@@ -213,7 +213,7 @@ private:
 class Xkb
 {
 public:
-    Xkb();
+    Xkb(InputRedirection *input);
     ~Xkb();
     void installKeymap(int fd, uint32_t size);
     void updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group);
@@ -224,7 +224,9 @@ public:
     Qt::KeyboardModifiers modifiers() const;
 private:
     void updateKeymap(xkb_keymap *keymap);
+    void createKeymapFile();
     void updateModifiers();
+    InputRedirection *m_input;
     xkb_context *m_context;
     xkb_keymap *m_keymap;
     xkb_state *m_state;

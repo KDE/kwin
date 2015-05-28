@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QTemporaryFile>
 // KDE
 #include <kkeyserver.h>
 #if HAVE_XKB
@@ -50,13 +51,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // system
 #include <linux/input.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 namespace KWin
 {
 
 #if HAVE_XKB
-Xkb::Xkb()
-    : m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
+Xkb::Xkb(InputRedirection *input)
+    : m_input(input)
+    , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
     , m_keymap(NULL)
     , m_state(NULL)
     , m_shiftModifier(0)
@@ -123,6 +126,47 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_controlModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_CTRL);
     m_altModifier     = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
     m_metaModifier    = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
+
+    createKeymapFile();
+}
+
+void Xkb::createKeymapFile()
+{
+#if HAVE_WAYLAND
+    if (!waylandServer()) {
+        return;
+    }
+    // TODO: uninstall keymap on server?
+    if (!m_keymap) {
+        return;
+    }
+
+    ScopedCPointer<char> keymapString(xkb_keymap_get_as_string(m_keymap, XKB_KEYMAP_FORMAT_TEXT_V1));
+    if (keymapString.isNull()) {
+        return;
+    }
+    const uint size = qstrlen(keymapString.data()) + 1;
+
+    QTemporaryFile *tmp = new QTemporaryFile(m_input);
+    if (!tmp->open()) {
+        delete tmp;
+        return;
+    }
+    unlink(tmp->fileName().toUtf8().constData());
+    if (!tmp->resize(size)) {
+        delete tmp;
+        return;
+    }
+    uchar *address = tmp->map(0, size);
+    if (!address) {
+        return;
+    }
+    if (qstrncpy(reinterpret_cast<char*>(address), keymapString.data(), size) == nullptr) {
+        delete tmp;
+        return;
+    }
+    waylandServer()->seat()->setKeymap(tmp->handle(), size);
+#endif
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -195,7 +239,7 @@ KWIN_SINGLETON_FACTORY(InputRedirection)
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
 #if HAVE_XKB
-    , m_xkb(new Xkb())
+    , m_xkb(new Xkb(this))
 #endif
     , m_pointerWindow()
     , m_shortcuts(new GlobalShortcutsManager(this))
