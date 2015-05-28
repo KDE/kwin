@@ -238,7 +238,6 @@ void WaylandServer::createDummyQtWindow()
 
 void WaylandServer::fakeDummyQtWindowInput()
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     // we need to fake Qt into believing it has got any seat events
     // this is done only when receiving either a key press or button.
     // we simulate by sending a button press and release
@@ -255,7 +254,6 @@ void WaylandServer::fakeDummyQtWindowInput()
     m_qtConnection->flush();
     m_dummyWindow->hide();
     m_seat->setFocusedPointerSurface(oldSeatSurface, oldPos);
-#endif
 }
 
 void WaylandServer::dispatch()
