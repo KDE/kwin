@@ -68,6 +68,12 @@ static void saveRules(const QList< Rules* >& rules)
 
 static Rules* findRule(const QList< Rules* >& rules, Window wid, bool whole_app)
 {
+    // ClientMachine::resolve calls NETWinInfo::update() which requires properties
+    // bug #348472 ./. bug #346748
+    if (QX11Info::isPlatformX11()) {
+        qApp->setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
+        qApp->setProperty("x11RootWindow", QVariant::fromValue(QX11Info::appRootWindow()));
+    }
     KWindowInfo info = KWindowInfo(wid,
                        NET::WMName | NET::WMWindowType,
                        NET::WM2WindowClass | NET::WM2WindowRole | NET::WM2ClientMachine);
