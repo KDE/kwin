@@ -191,6 +191,9 @@ void BufferInterface::unref()
 
 QImage::Format BufferInterface::Private::format() const
 {
+    if (!shmBuffer) {
+        return QImage::Format_Invalid;
+    }
     switch (wl_shm_buffer_get_format(shmBuffer)) {
     case WL_SHM_FORMAT_ARGB8888:
         return QImage::Format_ARGB32;
