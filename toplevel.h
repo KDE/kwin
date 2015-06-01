@@ -71,7 +71,7 @@ class Toplevel
     : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool alpha READ hasAlpha CONSTANT)
+    Q_PROPERTY(bool alpha READ hasAlpha NOTIFY hasAlphaChanged)
     Q_PROPERTY(qulonglong frameId READ frameId)
     Q_PROPERTY(QRect geometry READ geometry NOTIFY geometryChanged)
     Q_PROPERTY(QRect visibleRect READ visibleRect)
@@ -414,6 +414,10 @@ Q_SIGNALS:
      * @since 5.3
      **/
     void surfaceIdChanged(quint32);
+    /**
+     * @since 5.4
+     **/
+    void hasAlphaChanged();
 
 protected Q_SLOTS:
     /**
@@ -460,6 +464,7 @@ protected:
     friend QDebug& operator<<(QDebug& stream, const Toplevel*);
     void deleteEffectWindow();
     virtual bool shouldUnredirect() const = 0;
+    void setDepth(int depth);
     QRect geom;
     xcb_visualid_t m_visual;
     int bit_depth;

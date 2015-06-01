@@ -42,6 +42,7 @@ namespace KWin
 
 Toplevel::Toplevel()
     : m_visual(XCB_NONE)
+    , bit_depth(24)
     , info(NULL)
     , ready_for_painting(true)
     , m_isDamaged(false)
@@ -473,6 +474,18 @@ void Toplevel::addDamage(const QRegion &damage)
 QByteArray Toplevel::windowRole() const
 {
     return QByteArray(info->windowRole());
+}
+
+void Toplevel::setDepth(int depth)
+{
+    if (bit_depth == depth) {
+        return;
+    }
+    const bool oldAlpha = hasAlpha();
+    bit_depth = depth;
+    if (oldAlpha != hasAlpha()) {
+        emit hasAlphaChanged();
+    }
 }
 
 } // namespace
