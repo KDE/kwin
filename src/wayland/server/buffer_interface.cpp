@@ -49,6 +49,7 @@ public:
     SurfaceInterface *surface;
     int refCount;
     QSize size;
+    bool alpha;
 
     static BufferInterface *get(wl_resource *r);
 
@@ -103,6 +104,7 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
     , shmBuffer(wl_shm_buffer_get(resource))
     , surface(parent)
     , refCount(0)
+    , alpha(false)
     , q(q)
 {
     s_buffers << this;
@@ -112,6 +114,16 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
     wl_resource_add_destroy_listener(resource, &listener);
     if (shmBuffer) {
         size = QSize(wl_shm_buffer_get_width(shmBuffer), wl_shm_buffer_get_height(shmBuffer));
+        // check alpha
+        switch (wl_shm_buffer_get_format(shmBuffer)) {
+        case WL_SHM_FORMAT_ARGB8888:
+            alpha = true;
+            break;
+        case WL_SHM_FORMAT_XRGB8888:
+        default:
+            alpha = false;
+            break;
+        }
     } else if (parent) {
         EGLDisplay eglDisplay = parent->global()->display()->eglDisplay();
         static bool resolved = false;
@@ -127,6 +139,19 @@ BufferInterface::Private::Private(BufferInterface *q, wl_resource *resource, Sur
             valid = valid && eglQueryWaylandBufferWL(eglDisplay, buffer, EGL_HEIGHT, &height);
             if (valid) {
                 size = QSize(width, height);
+            }
+            // check alpha
+            EGLint format;
+            if (eglQueryWaylandBufferWL(eglDisplay, buffer, EGL_TEXTURE_FORMAT, &format)) {
+                switch (format) {
+                case EGL_TEXTURE_RGBA:
+                    alpha = true;
+                    break;
+                case EGL_TEXTURE_RGB:
+                default:
+                    alpha = false;
+                    break;
+                }
             }
         }
     }
@@ -264,6 +289,11 @@ void BufferInterface::setSize(const QSize &size)
     }
     d->size = size;
     emit sizeChanged();
+}
+
+bool BufferInterface::hasAlphaChannel() const
+{
+    return d->alpha;
 }
 
 }

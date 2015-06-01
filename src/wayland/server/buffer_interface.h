@@ -89,6 +89,20 @@ public:
      **/
     void setSize(const QSize &size);
 
+    /**
+     * Returns whether the format of the BufferInterface has an alpha channel.
+     * For shared memory buffers returns @c true for format @c WL_SHM_FORMAT_ARGB8888,
+     * for all other formats returns @c false.
+     *
+     * For EGL buffers returns @c true for format @c EGL_TEXTURE_RGBA, for all other formats
+     * returns @c false.
+     *
+     * If the format cannot be queried the default value (@c false) is returned.
+     *
+     * @since 5.4
+     **/
+    bool hasAlphaChannel() const;
+
     static BufferInterface *get(wl_resource *r);
 
 Q_SIGNALS:
