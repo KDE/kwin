@@ -29,6 +29,12 @@
 #include "ui_ruleswidgetbase.h"
 #include "ui_editshortcut.h"
 
+#ifdef KWIN_BUILD_ACTIVITIES
+namespace KActivities {
+    class Consumer;
+} // namespace KActivities
+#endif
+
 namespace KWin
 {
 
@@ -102,6 +108,8 @@ private:
 #ifdef KWIN_BUILD_ACTIVITIES
     int activityToCombo(QString d) const;
     QString comboToActivity(int val) const;
+    void updateActivitiesList();
+    KActivities::Consumer *m_activities;
 #endif
     int comboToTiling(int val) const;
     int inc(int i) const { return i+1; }

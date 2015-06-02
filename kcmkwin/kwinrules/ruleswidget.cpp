@@ -149,15 +149,12 @@ RulesWidget::RulesWidget(QWidget* parent)
     desktop->addItem(i18n("All Desktops"));
 
 #ifdef KWIN_BUILD_ACTIVITIES
-    static KActivities::Consumer activities;
-    foreach (const QString & activityId, activities.activities()) {
-        const KActivities::Info info(activityId);
-        activity->addItem(info.name(), activityId);
-    }
-    // cloned from kactivities/src/lib/core/consumer.cpp
-    #define NULL_UUID "00000000-0000-0000-0000-000000000000"
-    activity->addItem(i18n("All Activities"), QString::fromLatin1(NULL_UUID));
-    #undef NULL_UUID
+    m_activities = new KActivities::Consumer(this);
+    connect(m_activities, &KActivities::Consumer::activitiesChanged,
+            this, [this] { updateActivitiesList(); });
+    connect(m_activities, &KActivities::Consumer::serviceStatusChanged,
+            this, [this] { updateActivitiesList(); });
+    updateActivitiesList();
 #endif
 
     KColorSchemeManager *schemes = new KColorSchemeManager(this);
@@ -319,6 +316,23 @@ QString RulesWidget::comboToActivity(int val) const
         return QString();
 
     return activity->itemData(val).toString();
+}
+
+void RulesWidget::updateActivitiesList()
+{
+    activity->clear();
+
+    // cloned from kactivities/src/lib/core/consumer.cpp
+    #define NULL_UUID "00000000-0000-0000-0000-000000000000"
+    activity->addItem(i18n("All Activities"), QString::fromLatin1(NULL_UUID));
+    #undef NULL_UUID
+
+    if (m_activities->serviceStatus() == KActivities::Consumer::Running) {
+        foreach (const QString & activityId, m_activities->activities(KActivities::Info::Running)) {
+            const KActivities::Info info(activityId);
+            activity->addItem(info.name(), activityId);
+        }
+    }
 }
 #endif
 static int placementToCombo(Placement::Policy placement)
