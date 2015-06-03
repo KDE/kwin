@@ -2287,10 +2287,12 @@ void Client::changeMaximize(bool vertical, bool horizontal, bool adjust)
         r.setTopLeft(rules()->checkPosition(r.topLeft()));
         r.setSize(adjustedSize(r.size(), SizemodeMax));
         if (r.size() != clientArea.size()) { // to avoid off-by-one errors...
-            if (isElectricBorderMaximizing() && r.width() < clientArea.width())
-                r.moveLeft(Cursor::pos().x() - r.width()/2);
-            else
+            if (isElectricBorderMaximizing() && r.width() < clientArea.width()) {
+                r.moveLeft(qMax(clientArea.left(), Cursor::pos().x() - r.width()/2));
+                r.moveRight(qMin(clientArea.right(), r.right()));
+            } else {
                 r.moveCenter(clientArea.center());
+            }
             r.moveTopLeft(rules()->checkPosition(r.topLeft()));
         }
         setGeometry(r, geom_mode);
