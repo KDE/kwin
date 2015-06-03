@@ -760,8 +760,8 @@ bool Scene::Window::isVisible() const
         return false;
     if (!toplevel->isOnCurrentActivity())
         return false;
-    if (toplevel->isClient())
-        return (static_cast< Client *>(toplevel))->isShown(true);
+    if (AbstractClient *c = dynamic_cast<AbstractClient*>(toplevel))
+        return c->isShown(true);
     return true; // Unmanaged is always visible
 }
 

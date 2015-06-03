@@ -48,6 +48,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     setupCompositing();
     if (surface->surface()->buffer()) {
         setReadyForPainting();
+        m_unmapped = false;
         m_clientSize = surface->surface()->buffer()->size();
     } else {
         ready_for_painting = false;
@@ -68,7 +69,7 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         }
     );
     connect(surface, &ShellSurfaceInterface::destroyed, this, &ShellClient::destroyClient);
-    connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::destroyClient);
+    connect(surface->surface(), &SurfaceInterface::unmapped, this, &ShellClient::unmap);
     connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
 
     connect(surface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
@@ -167,6 +168,7 @@ void ShellClient::addDamage(const QRegion &damage)
     }
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
     setReadyForPainting();
+    m_unmapped = false;
     Toplevel::addDamage(damage);
 }
 
@@ -266,7 +268,7 @@ bool ShellClient::isResizable() const
 bool ShellClient::isShown(bool shaded_is_shown) const
 {
     Q_UNUSED(shaded_is_shown)
-    return !m_closing;
+    return !m_closing && !m_unmapped;
 }
 
 void ShellClient::maximize(MaximizeMode)
@@ -468,6 +470,14 @@ void ShellClient::resizeWithChecks(int w, int h, ForceGeometry_t force)
         h = area.height();
     }
     m_shellSurface->requestSize(QSize(w, h));
+}
+
+void ShellClient::unmap()
+{
+    m_unmapped = true;
+    ready_for_painting = false;
+    addWorkspaceRepaint(visibleRect());
+    workspace()->clientHidden(this);
 }
 
 }

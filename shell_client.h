@@ -109,6 +109,7 @@ private:
     void requestGeometry(const QRect &rect);
     void setGeometry(const QRect &rect);
     void destroyClient();
+    void unmap();
     void createWindowId();
     void findInternalWindow();
     void updateInternalWindowGeometry();
@@ -122,6 +123,7 @@ private:
     bool m_closing = false;
     quint32 m_windowId = 0;
     QWindow *m_internalWindow = nullptr;
+    bool m_unmapped = true;
 };
 
 }
