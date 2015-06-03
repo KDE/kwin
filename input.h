@@ -183,6 +183,7 @@ private:
     void updateFocusedPointerPosition();
     void updateFocusedTouchPosition();
     void updateTouchWindow(const QPointF &pos);
+    bool areButtonsPressed() const;
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB

@@ -465,7 +465,10 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
         return;
     }
     QWeakPointer<Toplevel> old = m_pointerWindow;
-    updatePointerWindow();
+    if (!areButtonsPressed()) {
+        // update pointer window only if no button is pressed
+        updatePointerWindow();
+    }
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
@@ -500,6 +503,9 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
     }
 #endif
+    if (state == PointerButtonReleased && !areButtonsPressed()) {
+        updatePointerWindow();
+    }
 }
 
 void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qreal delta, uint32_t time)
@@ -787,6 +793,16 @@ Qt::MouseButtons InputRedirection::qtButtonStates() const
         }
     }
     return buttons;
+}
+
+bool InputRedirection::areButtonsPressed() const
+{
+    for (auto it = m_pointerButtons.constBegin(); it != m_pointerButtons.constEnd(); ++it) {
+        if (it.value() == KWin::InputRedirection::PointerButtonPressed) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Toplevel *InputRedirection::findToplevel(const QPoint &pos)
