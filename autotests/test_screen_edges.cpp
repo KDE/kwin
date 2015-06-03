@@ -785,15 +785,7 @@ void TestScreenEdges::testClientEdge()
     event.same_screen_focus = 1;
     event.time = QDateTime::currentMSecsSinceEpoch();
     QVERIFY(s->isEntered(&event));
-    // first attempt should be pushed back and not activated
-    QCOMPARE(client.isHiddenInternal(), true);
-    QCOMPARE(Cursor::pos(), QPoint(1, 50));
-
-    // but if we wait a little bit it should trigger
-    QTest::qWait(160);
-    Cursor::setPos(0, 50);
-    event.time = QDateTime::currentMSecsSinceEpoch();
-    QVERIFY(s->isEntered(&event));
+    // autohiding panels shall activate instantly
     QCOMPARE(client.isHiddenInternal(), false);
     QCOMPARE(Cursor::pos(), QPoint(1, 50));
 
@@ -829,12 +821,6 @@ void TestScreenEdges::testClientEdge()
     // now let's try to trigger the client showing with the check method instead of enter notify
     s->reserve(&client, KWin::ElectricTop);
     QCOMPARE(client.isHiddenInternal(), true);
-    Cursor::setPos(50, 0);
-    s->check(QPoint(50, 0), QDateTime::currentDateTime());
-    QCOMPARE(client.isHiddenInternal(), true);
-    QCOMPARE(Cursor::pos(), QPoint(50, 1));
-    // and trigger
-    QTest::qWait(160);
     Cursor::setPos(50, 0);
     s->check(QPoint(50, 0), QDateTime::currentDateTime());
     QCOMPARE(client.isHiddenInternal(), false);
