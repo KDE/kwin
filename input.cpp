@@ -38,6 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "virtual_terminal.h"
 #include <KWayland/Server/seat_interface.h>
 #endif
+#include <decorations/decoratedclient.h>
+#include <KDecoration2/Decoration>
 // Qt
 #include <QKeyEvent>
 #include <QMouseEvent>
@@ -375,6 +377,10 @@ void InputRedirection::updatePointerWindow()
 {
     // TODO: handle pointer grab aka popups
     Toplevel *t = findToplevel(m_globalPointer.toPoint());
+    updatePointerDecoration(t);
+    if (m_pointerDecoration) {
+        t = nullptr;
+    }
     auto oldWindow = m_pointerWindow;
     if (!oldWindow.isNull() && t == m_pointerWindow.data()) {
         return;
@@ -414,6 +420,38 @@ void InputRedirection::updatePointerWindow()
         return;
     }
     m_pointerWindow = QWeakPointer<Toplevel>(t);
+}
+
+void InputRedirection::updatePointerDecoration(Toplevel *t)
+{
+    const auto oldDeco = m_pointerDecoration;
+    if (Client *c = dynamic_cast<Client*>(t)) {
+        // check whether it's on a Decoration
+        if (c->decoratedClient()) {
+            const QRect clientRect = QRect(c->clientPos(), c->clientSize()).translated(c->pos());
+            if (!clientRect.contains(m_globalPointer.toPoint())) {
+                m_pointerDecoration = c->decoratedClient();
+            } else {
+                m_pointerDecoration.clear();
+            }
+        } else {
+            m_pointerDecoration.clear();
+        }
+    } else {
+        m_pointerDecoration.clear();
+    }
+
+    if (oldDeco && oldDeco != m_pointerDecoration) {
+        // send leave
+        QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
+        QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
+    }
+    if (m_pointerDecoration) {
+        const QPointF p = m_globalPointer - t->pos();
+        QHoverEvent event(QEvent::HoverMove, p, p);
+        QCoreApplication::instance()->sendEvent(m_pointerDecoration->decoration(), &event);
+        m_pointerDecoration->client()->processDecorationMove();
+    }
 }
 
 void InputRedirection::updateFocusedPointerPosition()
@@ -496,6 +534,23 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         }
     }
 #endif
+    if (m_pointerDecoration) {
+        const QPoint localPos = m_globalPointer.toPoint() - m_pointerDecoration->client()->pos();
+        QMouseEvent event(buttonStateToEvent(state),
+                          localPos,
+                          m_globalPointer.toPoint(),
+                          buttonToQtMouseButton(button), qtButtonStates(), keyboardModifiers());
+        event.setAccepted(false);
+        QCoreApplication::sendEvent(m_pointerDecoration->decoration(), &event);
+        if (!event.isAccepted()) {
+            if (state == PointerButtonPressed) {
+                m_pointerDecoration->client()->processDecorationButtonPress(&event);
+            }
+        }
+        if (state == PointerButtonReleased) {
+            m_pointerDecoration->client()->processDecorationButtonRelease(&event);
+        }
+    }
     // TODO: check which part of KWin would like to intercept the event
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
@@ -535,6 +590,25 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
         }
     }
 #endif
+
+    if (m_pointerDecoration) {
+        const QPointF localPos = m_globalPointer - m_pointerDecoration->client()->pos();
+        // TODO: add modifiers and buttons
+        QWheelEvent event(localPos, m_globalPointer, QPoint(),
+                          (axis == PointerAxisHorizontal) ? QPoint(delta, 0) : QPoint(0, delta),
+                          delta,
+                          (axis == PointerAxisHorizontal) ? Qt::Horizontal : Qt::Vertical,
+                          Qt::NoButton,
+                          Qt::NoModifier);
+        event.setAccepted(false);
+        QCoreApplication::sendEvent(m_pointerDecoration->decoration(), &event);
+        if (!event.isAccepted() && axis == PointerAxisVertical) {
+            if (m_pointerDecoration->decoration()->titleBar().contains(localPos.toPoint())) {
+                m_pointerDecoration->client()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
+                                                                   m_globalPointer.toPoint());
+            }
+        }
+    }
 
     // TODO: check which part of KWin would like to intercept the event
     // TODO: Axis support for effect redirection

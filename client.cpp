@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
+#include <QMouseEvent>
 #include <QProcess>
 #include <QStandardPaths>
 #include <QScriptEngine>
@@ -2255,6 +2256,45 @@ bool Client::belongsToSameApplication(const AbstractClient *other, bool active_h
         return false;
     }
     return Client::belongToSameApplication(this, c2, active_hack);
+}
+
+bool Client::processDecorationButtonPress(QMouseEvent *event)
+{
+    return processDecorationButtonPress(qtToX11Button(event->button()), 0,
+                                        event->x(), event->y(),
+                                        event->globalX(), event->globalY());
+}
+
+void Client::processDecorationButtonRelease(QMouseEvent *event)
+{
+    if (m_decoration) {
+        if (!event->isAccepted() && m_decoration->titleBar().contains(event->pos()) && event->button() == Qt::LeftButton) {
+            m_decorationDoubleClickTimer.start();
+        }
+    }
+
+    if (event->buttons() == Qt::NoButton) {
+        buttonDown = false;
+        stopDelayedMoveResize();
+        if (moveResizeMode) {
+            finishMoveResize(false);
+            mode = mousePosition();
+        }
+        updateCursor();
+    }
+}
+
+void Client::processDecorationMove()
+{
+    if (buttonDown) {
+        return;
+    }
+    // TODO: handle modifiers
+    Position newmode = mousePosition();
+    if (newmode != mode) {
+        mode = newmode;
+        updateCursor();
+    }
 }
 
 } // namespace

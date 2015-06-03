@@ -231,6 +231,9 @@ public:
     bool windowEvent(xcb_generic_event_t *e);
     void syncEvent(xcb_sync_alarm_notify_event_t* e);
     NET::WindowType windowType(bool direct = false, int supported_types = 0) const;
+    bool processDecorationButtonPress(QMouseEvent *event);
+    void processDecorationButtonRelease(QMouseEvent *event);
+    void processDecorationMove();
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);

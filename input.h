@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QHash>
 #include <QObject>
 #include <QPoint>
+#include <QPointer>
 #include <QEvent>
 #include <QWeakPointer>
 #include <config-kwin.h>
@@ -41,6 +42,11 @@ namespace KWin
 class GlobalShortcutsManager;
 class Toplevel;
 class Xkb;
+
+namespace Decoration
+{
+class DecoratedClientImpl;
+}
 
 namespace LibInput
 {
@@ -183,6 +189,7 @@ private:
     void updateFocusedPointerPosition();
     void updateFocusedTouchPosition();
     void updateTouchWindow(const QPointF &pos);
+    void updatePointerDecoration(Toplevel *t);
     bool areButtonsPressed() const;
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
@@ -193,6 +200,11 @@ private:
      * @brief The Toplevel which currently receives pointer events
      */
     QWeakPointer<Toplevel> m_pointerWindow;
+    /**
+     * @brief The Decoration which currently receives pointer events.
+     * Decoration belongs to the pointerWindow
+     **/
+    QPointer<Decoration::DecoratedClientImpl> m_pointerDecoration;
     /**
      * @brief The Toplevel which currently receives touch events
      */
