@@ -2589,6 +2589,7 @@ bool Client::startMoveResize()
     if (quick_tile_mode != QuickTileNone && mode != PositionCenter) { // Cannot use isResize() yet
         // Exit quick tile mode when the user attempts to resize a tiled window
         quick_tile_mode = QuickTileNone; // Do so without restoring original geometry
+        geom_restore = geometry();
         emit quickTileModeChanged();
     }
 
