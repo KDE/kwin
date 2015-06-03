@@ -174,9 +174,6 @@ void SurfaceInterface::Private::destroy()
 void SurfaceInterface::Private::commit()
 {
     Q_Q(SurfaceInterface);
-    for (wl_resource *c : current.callbacks) {
-        wl_resource_destroy(c);
-    }
     const bool bufferChanged = pending.bufferIsSet;
     const bool opaqueRegionChanged = pending.opaqueIsSet;
     const bool inputRegionChanged = pending.inputIsSet;
@@ -199,9 +196,12 @@ void SurfaceInterface::Private::commit()
         }
         buffer = pending.buffer;
     }
+    QList<wl_resource*> callbacks = current.callbacks;
+    callbacks.append(pending.callbacks);
     // copy values
     current = pending;
     current.buffer = buffer;
+    current.callbacks = callbacks;
     pending = State{};
     pending.children = current.children;
     pending.input = current.input;
