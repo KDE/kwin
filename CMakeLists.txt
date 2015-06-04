@@ -182,7 +182,7 @@ set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
                     )
 
 # All the required XCB components
-find_package(XCB
+find_package(XCB 1.10
     REQUIRED COMPONENTS
         XCB
         XFIXES
@@ -207,12 +207,6 @@ if (XCB_ICCCM_VERSION VERSION_LESS "0.4")
     set(XCB_ICCCM_FOUND FALSE)
 endif()
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
-
-set(HAVE_XCB_SYNC TRUE)
-if (XCB_VERSION VERSION_LESS "1.10")
-    set(HAVE_XCB_SYNC FALSE)
-endif()
-add_feature_info("XCB-SYNC" HAVE_XCB_SYNC "XCB Sync version >= 1.10 required for synced window resizing")
 
 find_package(X11_XCB)
 set_package_properties(X11_XCB PROPERTIES

@@ -12,7 +12,6 @@
 #cmakedefine01 HAVE_WAYLAND_CURSOR
 #cmakedefine01 HAVE_XKB
 #cmakedefine01 HAVE_INPUT
-#cmakedefine01 HAVE_XCB_SYNC
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_DRM
 #cmakedefine01 HAVE_GBM

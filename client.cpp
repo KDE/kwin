@@ -1782,7 +1782,6 @@ void Client::getIcons()
 
 void Client::getSyncCounter()
 {
-#if HAVE_XCB_SYNC
     if (!Xcb::Extensions::self()->isSyncAvailable())
         return;
 
@@ -1818,7 +1817,6 @@ void Client::getSyncCounter()
             }
         }
     }
-#endif
 }
 
 /**
