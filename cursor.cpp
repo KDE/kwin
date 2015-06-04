@@ -35,9 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTimer>
 // xcb
 #include <xcb/xfixes.h>
-#if HAVE_XCB_CURSOR
 #include <xcb/xcb_cursor.h>
-#endif
 
 namespace KWin
 {
@@ -353,7 +351,6 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
     if (name.isEmpty()) {
         return XCB_CURSOR_NONE;
     }
-#if HAVE_XCB_CURSOR
     xcb_cursor_context_t *ctx;
     if (xcb_cursor_context_new(connection(), defaultScreen(), &ctx) < 0) {
         return XCB_CURSOR_NONE;
@@ -460,9 +457,6 @@ xcb_cursor_t X11Cursor::createCursor(const QByteArray &name)
     }
     xcb_cursor_context_free(ctx);
     return cursor;
-#else
-    return XCB_CURSOR_NONE;
-#endif
 }
 
 QByteArray Cursor::cursorName(Qt::CursorShape shape) const

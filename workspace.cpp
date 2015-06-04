@@ -1383,12 +1383,6 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
-    support.append(QStringLiteral("HAVE_XCB_CURSOR: "));
-#if HAVE_XCB_CURSOR
-    support.append(yes);
-#else
-    support.append(no);
-#endif
     support.append(QStringLiteral("HAVE_XCB_SYNC: "));
 #if HAVE_XCB_SYNC
     support.append(yes);

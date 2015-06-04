@@ -196,9 +196,9 @@ find_package(XCB
         IMAGE
         SHM
         GLX
+        CURSOR
     OPTIONAL_COMPONENTS
         ICCCM
-        CURSOR
 )
 set_package_properties(XCB PROPERTIES TYPE REQUIRED)
 
@@ -207,7 +207,6 @@ if (XCB_ICCCM_VERSION VERSION_LESS "0.4")
     set(XCB_ICCCM_FOUND FALSE)
 endif()
 add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applications for KWin")
-add_feature_info("XCB-CURSOR" XCB_CURSOR_FOUND "Required for XCursor support")
 
 set(HAVE_XCB_SYNC TRUE)
 if (XCB_VERSION VERSION_LESS "1.10")
@@ -306,12 +305,6 @@ endif()
 
 if(NOT KWIN_HAVE_EGL)
     set(HAVE_GBM FALSE)
-endif()
-
-if(XCB_CURSOR_FOUND)
-    set(HAVE_XCB_CURSOR ${XCB_CURSOR_FOUND})
-else()
-    set(HAVE_XCB_CURSOR FALSE)
 endif()
 
 include(CheckIncludeFiles)
@@ -538,6 +531,7 @@ set(kwin_XCB_LIBS
     XCB::KEYSYMS
     XCB::SHM
     XCB::GLX
+    XCB::CURSOR
 )
 
 set(kwin_WAYLAND_LIBS
@@ -553,10 +547,6 @@ endif()
 
 if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
-endif()
-
-if(HAVE_XCB_CURSOR)
-    set(kwin_XCB_LIBS ${kwin_XCB_LIBS} XCB::CURSOR)
 endif()
 
 set(kwinLibs
