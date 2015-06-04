@@ -445,13 +445,28 @@ void InputRedirection::updatePointerDecoration(Toplevel *t)
         // send leave
         QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
         QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
+#if HAVE_WAYLAND
+        if (!m_pointerDecoration && waylandServer()) {
+            waylandServer()->backend()->installCursorImage(Qt::ArrowCursor);
+        }
+#endif
     }
     if (m_pointerDecoration) {
         const QPointF p = m_globalPointer - t->pos();
         QHoverEvent event(QEvent::HoverMove, p, p);
         QCoreApplication::instance()->sendEvent(m_pointerDecoration->decoration(), &event);
         m_pointerDecoration->client()->processDecorationMove();
+        installCursorFromDecoration();
     }
+}
+
+void InputRedirection::installCursorFromDecoration()
+{
+#if HAVE_WAYLAND
+    if (waylandServer() && m_pointerDecoration) {
+        waylandServer()->backend()->installCursorImage(m_pointerDecoration->client()->cursor());
+    }
+#endif
 }
 
 void InputRedirection::updateFocusedPointerPosition()
@@ -550,6 +565,7 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         if (state == PointerButtonReleased) {
             m_pointerDecoration->client()->processDecorationButtonRelease(&event);
         }
+        installCursorFromDecoration();
     }
     // TODO: check which part of KWin would like to intercept the event
 #if HAVE_WAYLAND

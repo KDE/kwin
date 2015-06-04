@@ -234,6 +234,7 @@ public:
     bool processDecorationButtonPress(QMouseEvent *event);
     void processDecorationButtonRelease(QMouseEvent *event);
     void processDecorationMove();
+    Qt::CursorShape cursor() const;
 
     bool manage(xcb_window_t w, bool isMapped);
     void releaseWindow(bool on_shutdown = false);
@@ -1049,6 +1050,11 @@ inline void Client::print(T &stream) const
 {
     stream << "\'ID:" << window() << ";WMCLASS:" << resourceClass() << ":"
            << resourceName() << ";Caption:" << caption() << "\'";
+}
+
+inline Qt::CursorShape Client::cursor() const
+{
+    return m_cursor;
 }
 
 } // namespace

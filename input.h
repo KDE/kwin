@@ -190,6 +190,7 @@ private:
     void updateFocusedTouchPosition();
     void updateTouchWindow(const QPointF &pos);
     void updatePointerDecoration(Toplevel *t);
+    void installCursorFromDecoration();
     bool areButtonsPressed() const;
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
