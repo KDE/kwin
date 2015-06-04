@@ -110,11 +110,8 @@ void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
         return;
     }
     waylandServer()->internalClientConection()->flush();
-    QMetaObject::invokeMethod(this,
-                              "installThemeCursor",
-                              Qt::QueuedConnection,
-                              Q_ARG(quint32, KWayland::Client::Buffer::getId(b)),
-                              Q_ARG(QPoint, QPoint(cursor->hotspot_x, cursor->hotspot_y)));
+    waylandServer()->dispatch();
+    installThemeCursor(KWayland::Client::Buffer::getId(b), QPoint(cursor->hotspot_x, cursor->hotspot_y));
 #else
     Q_UNUSED(shape)
 #endif

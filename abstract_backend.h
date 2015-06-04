@@ -107,11 +107,9 @@ protected:
         return m_deviceIdentifier;
     }
 
-private Q_SLOTS:
-    void installThemeCursor(quint32 id, const QPoint &hotspot);
-
 private:
     void triggerCursorRepaint();
+    void installThemeCursor(quint32 id, const QPoint &hotspot);
     bool m_softWareCursor = false;
     struct {
         QPoint hotspot;

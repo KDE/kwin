@@ -48,11 +48,6 @@ namespace KWin
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : AbstractBackend(parent)
 {
-    connect(this, &X11WindowedBackend::cursorChanged, this,
-        [this] {
-            createCursor(softwareCursor(), softwareCursorHotspot());
-        }
-    );
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -311,7 +306,9 @@ void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
 
 void X11WindowedBackend::installCursorImage(Qt::CursorShape shape)
 {
+    // TODO: only update if shape changed
     updateCursorImage(shape);
+    createCursor(softwareCursor(), softwareCursorHotspot());
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const
