@@ -1930,9 +1930,8 @@ void Client::setBlockingCompositing(bool block)
     }
 }
 
-Client::Position Client::mousePosition(const QPoint& p) const
+Client::Position Client::mousePosition() const
 {
-    Q_UNUSED(p)
     if (m_decoration) {
         switch (m_decoration->sectionUnderMouse()) {
             case Qt::BottomLeftSection:

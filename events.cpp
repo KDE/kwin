@@ -1255,7 +1255,7 @@ bool Client::processDecorationButtonPress(int button, int /*state*/, int x, int 
             && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
             && com != Options::MouseMinimize  // mouse release event
             && com != Options::MouseDragTab) {
-        mode = mousePosition(QPoint(x, y));
+        mode = mousePosition();
         buttonDown = true;
         moveOffset = QPoint(x/* - padding_left*/, y/* - padding_top*/);
         invertedMoveOffset = rect().bottomRight() - moveOffset;
@@ -1320,9 +1320,7 @@ bool Client::buttonReleaseEvent(xcb_window_t w, int button, int state, int x, in
         stopDelayedMoveResize();
         if (moveResizeMode) {
             finishMoveResize(false);
-            // mouse position is still relative to old Client position, adjust it
-            QPoint mousepos(x_root - x, y_root - y);
-            mode = mousePosition(mousepos);
+            mode = mousePosition();
         }
         updateCursor();
     }
@@ -1371,18 +1369,16 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
     if (w != frameId() && w != inputId() && w != moveResizeGrabWindow())
         return true; // care only about the whole frame
     if (!buttonDown) {
-        QPoint mousePos(x, y);
         if (w == inputId()) {
             int x = x_root - geometry().x();// + padding_left;
             int y = y_root - geometry().y();// + padding_top;
-            mousePos = QPoint(x, y);
 
             if (m_decoration) {
                 QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
                 QCoreApplication::instance()->sendEvent(m_decoration, &event);
             }
         }
-        Position newmode = modKeyDown(state) ? PositionCenter : mousePosition(mousePos);
+        Position newmode = modKeyDown(state) ? PositionCenter : mousePosition();
         if (newmode != mode) {
             mode = newmode;
             updateCursor();

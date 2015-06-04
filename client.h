@@ -518,7 +518,7 @@ private:
     // Use Workspace::createClient()
     virtual ~Client(); ///< Use destroyClient() or releaseWindow()
 
-    Position mousePosition(const QPoint&) const;
+    Position mousePosition() const;
     void updateCursor();
 
     // Handlers for X11 events
