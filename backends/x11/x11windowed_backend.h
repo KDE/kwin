@@ -64,6 +64,7 @@ public:
     }
 
     void installCursorFromServer() override;
+    void installCursorImage(Qt::CursorShape shape) override;
 
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
@@ -80,6 +81,7 @@ private:
     void handleButtonPress(xcb_button_press_event_t *event);
     void handleExpose(xcb_expose_event_t *event);
     void updateSize(xcb_configure_notify_event_t *event);
+    void createCursor(const QImage &img, const QPoint &hotspot);
 
     xcb_connection_t *m_connection = nullptr;
     xcb_screen_t *m_screen = nullptr;

@@ -48,6 +48,11 @@ namespace KWin
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : AbstractBackend(parent)
 {
+    connect(this, &X11WindowedBackend::cursorChanged, this,
+        [this] {
+            createCursor(softwareCursor(), softwareCursorHotspot());
+        }
+    );
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -272,33 +277,41 @@ void X11WindowedBackend::installCursorFromServer()
         if (!cursorSurface.isNull()) {
             auto buffer = cursorSurface.data()->buffer();
             if (buffer) {
-                // TODO: cache generated cursors?
-                const xcb_pixmap_t pix = xcb_generate_id(m_connection);
-                const xcb_gcontext_t gc = xcb_generate_id(m_connection);
-                const xcb_cursor_t cid = xcb_generate_id(m_connection);
-
-                xcb_create_pixmap(m_connection, 32, pix, m_screen->root, buffer->size().width(), buffer->size().height());
-                xcb_create_gc(m_connection, gc, pix, 0, nullptr);
-
-                const QImage img = buffer->data();
-                xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.byteCount(), img.constBits());
-
-                XRenderPicture pic(pix, 32);
-                xcb_render_create_cursor(m_connection, cid, pic, c->hotspot().x(), c->hotspot().y());
-                xcb_change_window_attributes(m_connection, m_window, XCB_CW_CURSOR, &cid);
-
-                xcb_free_pixmap(m_connection, pix);
-                xcb_free_gc(m_connection, gc);
-                if (m_cursor) {
-                    xcb_free_cursor(m_connection, m_cursor);
-                }
-                m_cursor = cid;
-                xcb_flush(m_connection);
+                createCursor(buffer->data(), c->hotspot());
                 return;
             }
         }
     }
     // TODO: unset cursor
+}
+
+void X11WindowedBackend::createCursor(const QImage &img, const QPoint &hotspot)
+{
+    const xcb_pixmap_t pix = xcb_generate_id(m_connection);
+    const xcb_gcontext_t gc = xcb_generate_id(m_connection);
+    const xcb_cursor_t cid = xcb_generate_id(m_connection);
+
+    xcb_create_pixmap(m_connection, 32, pix, m_screen->root, img.width(), img.height());
+    xcb_create_gc(m_connection, gc, pix, 0, nullptr);
+
+    xcb_put_image(m_connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.byteCount(), img.constBits());
+
+    XRenderPicture pic(pix, 32);
+    xcb_render_create_cursor(m_connection, cid, pic, hotspot.x(), hotspot.y());
+    xcb_change_window_attributes(m_connection, m_window, XCB_CW_CURSOR, &cid);
+
+    xcb_free_pixmap(m_connection, pix);
+    xcb_free_gc(m_connection, gc);
+    if (m_cursor) {
+        xcb_free_cursor(m_connection, m_cursor);
+    }
+    m_cursor = cid;
+    xcb_flush(m_connection);
+}
+
+void X11WindowedBackend::installCursorImage(Qt::CursorShape shape)
+{
+    updateCursorImage(shape);
 }
 
 xcb_window_t X11WindowedBackend::rootWindow() const
