@@ -1390,21 +1390,7 @@ bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_ro
         y = this->y();
     }
 
-    const QRect oldGeo = geometry();
-    handleMoveResize(x, y, x_root, y_root);
-    if (!isFullScreen() && isMove()) {
-        if (quick_tile_mode != QuickTileNone && oldGeo != geometry()) {
-            GeometryUpdatesBlocker blocker(this);
-            setQuickTileMode(QuickTileNone);
-            moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
-                                double(moveOffset.y()) / double(oldGeo.height()) * double(geom_restore.height()));
-            if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
-                moveResizeGeom = geom_restore;
-            handleMoveResize(x, y, x_root, y_root); // fix position
-        } else if (quick_tile_mode == QuickTileNone && isResizable()) {
-            checkQuickTilingMaximizationZones(x_root, y_root);
-        }
-    }
+    handleMoveResize(QPoint(x, y), QPoint(x_root, y_root));
     return true;
 }
 

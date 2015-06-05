@@ -274,6 +274,7 @@ public:
     virtual void shrinkHorizontal();
     virtual void growVertical();
     virtual void shrinkVertical();
+    virtual void updateMoveResize(const QPointF &currentGlobalCursor);
 
     /**
      * These values represent positions inside an area

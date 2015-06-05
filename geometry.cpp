@@ -2710,6 +2710,30 @@ void Client::stopDelayedMoveResize()
     delayedMoveResizeTimer = NULL;
 }
 
+void Client::updateMoveResize(const QPointF &currentGlobalCursor)
+{
+    handleMoveResize(pos(), currentGlobalCursor.toPoint());
+}
+
+void Client::handleMoveResize(const QPoint &local, const QPoint &global)
+{
+    const QRect oldGeo = geometry();
+    handleMoveResize(local.x(), local.y(), global.x(), global.y());
+    if (!isFullScreen() && isMove()) {
+        if (quick_tile_mode != QuickTileNone && oldGeo != geometry()) {
+            GeometryUpdatesBlocker blocker(this);
+            setQuickTileMode(QuickTileNone);
+            moveOffset = QPoint(double(moveOffset.x()) / double(oldGeo.width()) * double(geom_restore.width()),
+                                double(moveOffset.y()) / double(oldGeo.height()) * double(geom_restore.height()));
+            if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore)
+                moveResizeGeom = geom_restore;
+            handleMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
+        } else if (quick_tile_mode == QuickTileNone && isResizable()) {
+            checkQuickTilingMaximizationZones(global.x(), global.y());
+        }
+    }
+}
+
 void Client::handleMoveResize(int x, int y, int x_root, int y_root)
 {
     if (syncRequest.isPending && isResize())

@@ -517,15 +517,19 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
         // an effect grabbed the pointer, we do not forward the event to surfaces
         return;
     }
-    QWeakPointer<Toplevel> old = m_pointerWindow;
-    if (!areButtonsPressed()) {
-        // update pointer window only if no button is pressed
-        updatePointerWindow();
-    } else if (m_pointerDecoration) {
-        const QPointF p = m_globalPointer - m_pointerDecoration->client()->pos();
-        QHoverEvent event(QEvent::HoverMove, p, p);
-        QCoreApplication::instance()->sendEvent(m_pointerDecoration->decoration(), &event);
-        m_pointerDecoration->client()->processDecorationMove();
+    if (AbstractClient *c = workspace()->getMovingClient()) {
+        c->updateMoveResize(m_globalPointer);
+    } else {
+        QWeakPointer<Toplevel> old = m_pointerWindow;
+        if (!areButtonsPressed()) {
+            // update pointer window only if no button is pressed
+            updatePointerWindow();
+        } else if (m_pointerDecoration) {
+            const QPointF p = m_globalPointer - m_pointerDecoration->client()->pos();
+            QHoverEvent event(QEvent::HoverMove, p, p);
+            QCoreApplication::instance()->sendEvent(m_pointerDecoration->decoration(), &event);
+            m_pointerDecoration->client()->processDecorationMove();
+        }
     }
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {

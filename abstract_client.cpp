@@ -458,4 +458,9 @@ QSize AbstractClient::minSize() const
     return rules()->checkMinSize(QSize(0, 0));
 }
 
+void AbstractClient::updateMoveResize(const QPointF &currentGlobalCursor)
+{
+    Q_UNUSED(currentGlobalCursor)
+}
+
 }
