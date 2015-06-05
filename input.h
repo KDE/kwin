@@ -287,12 +287,6 @@ void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *a
     connect(action, &QAction::triggered, receiver, slot);
 }
 
-inline
-bool InputRedirection::supportsPointerWarping() const
-{
-    return m_pointerWarping;
-}
-
 #if HAVE_XKB
 inline
 Qt::KeyboardModifiers Xkb::modifiers() const

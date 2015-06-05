@@ -48,6 +48,7 @@ namespace KWin
 X11WindowedBackend::X11WindowedBackend(QObject *parent)
     : AbstractBackend(parent)
 {
+    setSupportsPointerWarping(true);
 }
 
 X11WindowedBackend::~X11WindowedBackend()
@@ -337,6 +338,12 @@ OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 QPainterBackend *X11WindowedBackend::createQPainterBackend()
 {
     return new X11WindowedQPainterBackend(this);
+}
+
+void X11WindowedBackend::warpPointer(const QPointF &globalPos)
+{
+    xcb_warp_pointer(m_connection, m_window, m_window, 0, 0, 0, 0, globalPos.x(), globalPos.y());
+    xcb_flush(m_connection);
 }
 
 }

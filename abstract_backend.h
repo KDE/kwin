@@ -43,6 +43,7 @@ public:
     virtual Screens *createScreens(QObject *parent = nullptr);
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
+    virtual void warpPointer(const QPointF &globalPos);
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;
@@ -66,6 +67,9 @@ public:
     }
     void setDeviceIdentifier(const QByteArray &identifier) {
         m_deviceIdentifier = identifier;
+    }
+    bool supportsPointerWarping() const {
+        return m_pointerWarping;
     }
 
 public Q_SLOTS:
@@ -106,6 +110,9 @@ protected:
     QByteArray deviceIdentifier() const {
         return m_deviceIdentifier;
     }
+    void setSupportsPointerWarping(bool set) {
+        m_pointerWarping = set;
+    }
 
 private:
     void triggerCursorRepaint();
@@ -121,6 +128,7 @@ private:
     bool m_ready = false;
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;
+    bool m_pointerWarping = false;
 };
 
 }

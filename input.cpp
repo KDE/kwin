@@ -1049,9 +1049,24 @@ void InputRedirection::updatePointerAfterScreenChange()
 
 void InputRedirection::warpPointer(const QPointF &pos)
 {
-    if (m_pointerWarping) {
+    if (supportsPointerWarping()) {
+#if HAVE_WAYLAND
+        if (waylandServer()) {
+            waylandServer()->backend()->warpPointer(pos);
+        }
+#endif
         updatePointerPosition(pos);
     }
+}
+
+bool InputRedirection::supportsPointerWarping() const
+{
+#if HAVE_WAYLAND
+    if (waylandServer() && waylandServer()->backend()->supportsPointerWarping()) {
+        return true;
+    }
+#endif
+    return m_pointerWarping;
 }
 
 } // namespace

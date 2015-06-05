@@ -304,4 +304,9 @@ void AbstractBackend::setReady(bool ready)
     emit readyChanged(m_ready);
 }
 
+void AbstractBackend::warpPointer(const QPointF &globalPos)
+{
+    Q_UNUSED(globalPos)
+}
+
 }

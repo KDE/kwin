@@ -69,6 +69,7 @@ public:
     Screens *createScreens(QObject *parent = nullptr) override;
     OpenGLBackend *createOpenGLBackend() override;
     QPainterBackend* createQPainterBackend() override;
+    void warpPointer(const QPointF &globalPos) override;
 
 Q_SIGNALS:
     void sizeChanged();
