@@ -139,6 +139,9 @@ public:
     void cancelTouch();
     void touchFrame();
 
+    bool supportsPointerWarping() const;
+    void warpPointer(const QPointF &pos);
+
     static uint8_t toXPointerButton(uint32_t button);
     static uint8_t toXPointerButton(PointerAxis axis, qreal delta);
 
@@ -219,6 +222,8 @@ private:
 
     LibInput::Connection *m_libInput = nullptr;
 
+    bool m_pointerWarping = false;
+
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
 };
@@ -280,6 +285,12 @@ inline
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)()) {
     registerShortcut(shortcut, action);
     connect(action, &QAction::triggered, receiver, slot);
+}
+
+inline
+bool InputRedirection::supportsPointerWarping() const
+{
+    return m_pointerWarping;
 }
 
 #if HAVE_XKB

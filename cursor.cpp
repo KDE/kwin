@@ -536,8 +536,11 @@ InputRedirectionCursor::~InputRedirectionCursor()
 
 void InputRedirectionCursor::doSetPos()
 {
-    // no support for pointer warping - reset to true position
+    if (input()->supportsPointerWarping()) {
+        input()->warpPointer(currentPos());
+    }
     slotPosChanged(input()->globalPointer());
+    emit posChanged(currentPos());
 }
 
 void InputRedirectionCursor::slotPosChanged(const QPointF &pos)

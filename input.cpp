@@ -286,6 +286,7 @@ void InputRedirection::setupLibInput()
     m_libInput = conn;
     if (conn) {
         conn->setup();
+        m_pointerWarping = true;
         connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
@@ -1044,6 +1045,13 @@ void InputRedirection::updatePointerAfterScreenChange()
     // pointer no longer on a screen, reposition to closes screen
     m_globalPointer = screens()->geometry(screens()->number(m_globalPointer.toPoint())).center();
     emit globalPointerChanged(m_globalPointer);
+}
+
+void InputRedirection::warpPointer(const QPointF &pos)
+{
+    if (m_pointerWarping) {
+        updatePointerPosition(pos);
+    }
 }
 
 } // namespace
