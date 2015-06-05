@@ -435,7 +435,7 @@ void KTitleBarActionsConfig::save()
 
 void KTitleBarActionsConfig::defaults()
 {
-    setComboText(m_ui->coTiDbl, "Shade");
+    setComboText(m_ui->coTiDbl, "Maximize");
     setComboText(m_ui->coTiAct1, "Raise");
     setComboText(m_ui->coTiAct2, "Start Window Tab Drag");
     setComboText(m_ui->coTiAct3, "Operations menu");
