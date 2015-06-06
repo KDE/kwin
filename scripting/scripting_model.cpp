@@ -37,7 +37,7 @@ static quint32 nextId() {
 ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     : AbstractLevel(model, parent)
 {
-    connect(Workspace::self(), SIGNAL(clientAdded(KWin::Client*)), SLOT(clientAdded(KWin::Client*)));
+    connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
     connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
 }
@@ -46,7 +46,7 @@ ClientLevel::~ClientLevel()
 {
 }
 
-void ClientLevel::clientAdded(Client *client)
+void ClientLevel::clientAdded(AbstractClient *client)
 {
     setupClientConnections(client);
     checkClient(client);
@@ -54,24 +54,20 @@ void ClientLevel::clientAdded(Client *client)
 
 void ClientLevel::clientRemoved(AbstractClient *client)
 {
-    if (Client *c = qobject_cast<Client*>(client)) {
-        removeClient(c);
-    }
+    removeClient(client);
 }
 
-void ClientLevel::setupClientConnections(Client *client)
+void ClientLevel::setupClientConnections(AbstractClient *client)
 {
-    connect(client, SIGNAL(desktopChanged()), SLOT(checkClient()));
-    connect(client, SIGNAL(screenChanged()), SLOT(checkClient()));
-    connect(client, SIGNAL(activitiesChanged(KWin::Toplevel*)), SLOT(checkClient()));
+    auto check = [this, client] {
+        checkClient(client);
+    };
+    connect(client, &AbstractClient::desktopChanged, this, check);
+    connect(client, &AbstractClient::screenChanged, this, check);
+    connect(client, &AbstractClient::activitiesChanged, this, check);
 }
 
-void ClientLevel::checkClient()
-{
-    checkClient(static_cast<Client*>(sender()));
-}
-
-void ClientLevel::checkClient(Client *client)
+void ClientLevel::checkClient(AbstractClient *client)
 {
     const bool shouldInclude = !exclude(client) && shouldAdd(client);
     const bool contains = containsClient(client);
@@ -83,7 +79,7 @@ void ClientLevel::checkClient(Client *client)
     }
 }
 
-bool ClientLevel::exclude(Client *client) const
+bool ClientLevel::exclude(AbstractClient *client) const
 {
     ClientModel::Exclusions exclusions = model()->exclusions();
     if (exclusions == ClientModel::NoExclusion) {
@@ -109,6 +105,7 @@ bool ClientLevel::exclude(Client *client) const
             return true;
         }
     }
+#if 0
     if (exclusions & ClientModel::SkipTaskbarExclusion) {
         if (client->skipTaskbar()) {
             return true;
@@ -119,6 +116,7 @@ bool ClientLevel::exclude(Client *client) const
             return true;
         }
     }
+#endif
     if (exclusions & ClientModel::SwitchSwitcherExclusion) {
         if (client->skipSwitcher()) {
             return true;
@@ -152,7 +150,7 @@ bool ClientLevel::exclude(Client *client) const
     return false;
 }
 
-bool ClientLevel::shouldAdd(Client *client) const
+bool ClientLevel::shouldAdd(AbstractClient *client) const
 {
     if (restrictions() == ClientModel::NoRestriction) {
         return true;
@@ -175,7 +173,7 @@ bool ClientLevel::shouldAdd(Client *client) const
     return true;
 }
 
-void ClientLevel::addClient(Client *client)
+void ClientLevel::addClient(AbstractClient *client)
 {
     if (containsClient(client)) {
         return;
@@ -185,10 +183,10 @@ void ClientLevel::addClient(Client *client)
     emit endInsert();
 }
 
-void ClientLevel::removeClient(Client *client)
+void ClientLevel::removeClient(AbstractClient *client)
 {
     int index = 0;
-    QMap<quint32, Client*>::iterator it = m_clients.begin();
+    auto it = m_clients.begin();
     for (; it != m_clients.end(); ++it, ++index) {
         if (it.value() == client) {
             break;
@@ -227,7 +225,7 @@ quint32 ClientLevel::idForRow(int row) const
     if (row >= m_clients.size()) {
         return 0;
     }
-    QMap<quint32, Client*>::const_iterator it = m_clients.constBegin();
+    auto it = m_clients.constBegin();
     for (int i=0; i<row; ++i) {
         ++it;
     }
@@ -242,7 +240,7 @@ bool ClientLevel::containsId(quint32 id) const
 int ClientLevel::rowForId(quint32 id) const
 {
     int row = 0;
-    for (QMap<quint32, Client*>::const_iterator it = m_clients.constBegin();
+    for (auto it = m_clients.constBegin();
             it != m_clients.constEnd();
             ++it, ++row) {
         if (it.key() == id) {
@@ -252,18 +250,18 @@ int ClientLevel::rowForId(quint32 id) const
     return -1;
 }
 
-Client *ClientLevel::clientForId(quint32 child) const
+AbstractClient *ClientLevel::clientForId(quint32 child) const
 {
-    QMap<quint32, Client*>::const_iterator it = m_clients.constFind(child);
+    auto it = m_clients.constFind(child);
     if (it == m_clients.constEnd()) {
         return nullptr;
     }
     return it.value();
 }
 
-bool ClientLevel::containsClient(Client *client) const
+bool ClientLevel::containsClient(AbstractClient *client) const
 {
-    for (QMap<quint32, Client*>::const_iterator it = m_clients.constBegin();
+    for (auto it = m_clients.constBegin();
             it != m_clients.constEnd();
             ++it) {
         if (it.value() == client) {
@@ -627,10 +625,10 @@ int ForkLevel::rowForId(quint32 child) const
     return -1;
 }
 
-Client *ForkLevel::clientForId(quint32 child) const
+AbstractClient *ForkLevel::clientForId(quint32 child) const
 {
     for (QList<AbstractLevel*>::const_iterator it = m_children.constBegin(); it != m_children.constEnd(); ++it) {
-        if (Client *client = (*it)->clientForId(child)) {
+        if (AbstractClient *client = (*it)->clientForId(child)) {
             return client;
         }
     }
@@ -698,7 +696,7 @@ QVariant ClientModel::data(const QModelIndex &index, int role) const
         }
     }
     if (role == Qt::DisplayRole || role == ClientRole) {
-        if (Client *client = m_root->clientForId(index.internalId())) {
+        if (AbstractClient *client = m_root->clientForId(index.internalId())) {
             return qVariantFromValue(client);
         }
     }
