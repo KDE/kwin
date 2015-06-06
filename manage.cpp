@@ -149,7 +149,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     // TODO: Try to obey all state information from info->state()
 
     original_skip_taskbar = skip_taskbar = (info->state() & NET::SkipTaskbar) != 0;
-    skip_pager = (info->state() & NET::SkipPager) != 0;
+    setSkipPager((info->state() & NET::SkipPager) != 0);
     readFirstInTabBox(firstInTabBoxCookie);
 
     setupCompositing();

@@ -110,6 +110,22 @@ void AbstractClient::setSkipSwitcher(bool set)
     emit skipSwitcherChanged();
 }
 
+void AbstractClient::setSkipPager(bool b)
+{
+    b = rules()->checkSkipPager(b);
+    if (b == skipPager())
+        return;
+    m_skipPager = b;
+    doSetSkipPager();
+    info->setState(b ? NET::SkipPager : NET::States(0), NET::SkipPager);
+    updateWindowRules(Rules::SkipPager);
+    emit skipPagerChanged();
+}
+
+void AbstractClient::doSetSkipPager()
+{
+}
+
 void AbstractClient::setIcon(const QIcon &icon)
 {
     m_icon = icon;

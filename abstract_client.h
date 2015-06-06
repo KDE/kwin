@@ -74,6 +74,10 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
     /**
+     * Indicates that the window should not be included on a Pager.
+     **/
+    Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
+    /**
      * Whether the Client should be excluded from window switching effects.
      **/
     Q_PROPERTY(bool skipSwitcher READ skipSwitcher WRITE setSkipSwitcher NOTIFY skipSwitcherChanged)
@@ -152,6 +156,11 @@ public:
         return m_skipSwitcher;
     }
     void setSkipSwitcher(bool set);
+
+    bool skipPager() const {
+        return m_skipPager;
+    }
+    void setSkipPager(bool set);
 
     const QIcon &icon() const {
         return m_icon;
@@ -331,6 +340,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void fullScreenChanged();
+    void skipPagerChanged();
     void skipSwitcherChanged();
     void iconChanged();
     void activeChanged();
@@ -397,12 +407,15 @@ protected:
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
+    virtual void doSetSkipPager();
+
     void updateColorScheme(QString path);
 
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
+    bool m_skipPager = false;
     bool m_skipSwitcher = false;
     QIcon m_icon;
     bool m_active = false;

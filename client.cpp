@@ -163,8 +163,6 @@ Client::Client()
     ignore_focus_stealing = false;
     check_active_modal = false;
 
-    skip_pager = false;
-
     max_mode = MaximizeRestore;
 
     //Client to workspace connections require that each
@@ -1210,15 +1208,9 @@ void Client::setSkipTaskbar(bool b, bool from_outside)
     emit skipTaskbarChanged();
 }
 
-void Client::setSkipPager(bool b)
+void Client::doSetSkipPager()
 {
-    b = rules()->checkSkipPager(b);
-    if (b == skipPager())
-        return;
-    skip_pager = b;
-    info->setState(b ? NET::SkipPager : NET::States(0), NET::SkipPager);
-    updateWindowRules(Rules::SkipPager);
-    emit skipPagerChanged();
+    info->setState(skipPager() ? NET::SkipPager : NET::States(0), NET::SkipPager);
 }
 
 void Client::setModal(bool m)
