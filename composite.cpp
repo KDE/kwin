@@ -757,6 +757,12 @@ bool Compositor::windowRepaintsPending() const
                 return true;
             }
         }
+        const auto &internalClients = w->internalClients();
+        for (auto c : internalClients) {
+            if (!c->repaints().isEmpty()) {
+                return true;
+            }
+        }
     }
 #endif
     return false;
