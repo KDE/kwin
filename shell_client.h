@@ -97,6 +97,9 @@ public:
         return m_windowId;
     }
     bool isInternal() const;
+    QWindow *internalWindow() const {
+        return m_internalWindow;
+    }
 
 protected:
     void addDamage(const QRegion &damage) override;

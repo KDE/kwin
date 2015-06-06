@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #if HAVE_WAYLAND
 #include "abstract_backend.h"
+#include "shell_client.h"
 #include "wayland_server.h"
 #include "virtual_terminal.h"
 #include <KWayland/Server/seat_interface.h>
@@ -378,8 +379,13 @@ void InputRedirection::updatePointerWindow()
 {
     // TODO: handle pointer grab aka popups
     Toplevel *t = findToplevel(m_globalPointer.toPoint());
-    updatePointerDecoration(t);
-    if (m_pointerDecoration) {
+    updatePointerInternalWindow();
+    if (!m_pointerInternalWindow) {
+        updatePointerDecoration(t);
+    } else {
+        m_pointerDecoration.clear();
+    }
+    if (m_pointerDecoration || m_pointerInternalWindow) {
         t = nullptr;
     }
     auto oldWindow = m_pointerWindow;
@@ -461,6 +467,67 @@ void InputRedirection::updatePointerDecoration(Toplevel *t)
     }
 }
 
+void InputRedirection::updatePointerInternalWindow()
+{
+    const auto oldInternalWindow = m_pointerInternalWindow;
+#if HAVE_WAYLAND
+    if (waylandServer()) {
+        bool found = false;
+        const auto &internalClients = waylandServer()->internalClients();
+        if (!internalClients.isEmpty()) {
+            auto it = internalClients.end();
+            do {
+                it--;
+                if (QWindow *w = (*it)->internalWindow()) {
+                    if (!w->isVisible()) {
+                        continue;
+                    }
+                    if (w->geometry().contains(m_globalPointer.toPoint())) {
+                        m_pointerInternalWindow = QPointer<QWindow>(w);
+                        found = true;
+                        break;
+                    }
+                }
+            } while (it != internalClients.begin());
+            if (!found) {
+                m_pointerInternalWindow.clear();
+            }
+        }
+    }
+#endif
+    if (oldInternalWindow != m_pointerInternalWindow) {
+        // changed
+        if (oldInternalWindow) {
+            disconnect(oldInternalWindow.data(), &QWindow::visibleChanged, this, &InputRedirection::pointerInternalWindowVisibilityChanged);
+            QEvent event(QEvent::Leave);
+            QCoreApplication::sendEvent(oldInternalWindow.data(), &event);
+        }
+        if (m_pointerInternalWindow) {
+            connect(oldInternalWindow.data(), &QWindow::visibleChanged, this, &InputRedirection::pointerInternalWindowVisibilityChanged);
+            QEnterEvent event(m_globalPointer - m_pointerInternalWindow->position(),
+                              m_globalPointer - m_pointerInternalWindow->position(),
+                              m_globalPointer);
+            QCoreApplication::sendEvent(m_pointerInternalWindow.data(), &event);
+            return;
+        }
+    }
+    if (m_pointerInternalWindow) {
+        // send mouse move
+        QMouseEvent event(QEvent::MouseMove,
+                          m_globalPointer.toPoint() - m_pointerInternalWindow->position(),
+                          m_globalPointer.toPoint(),
+                          Qt::NoButton, qtButtonStates(), keyboardModifiers());
+        QCoreApplication::sendEvent(m_pointerInternalWindow.data(), &event);
+    }
+}
+
+void InputRedirection::pointerInternalWindowVisibilityChanged(bool visible)
+{
+    if (!visible) {
+        updatePointerWindow();
+    }
+}
+
 void InputRedirection::installCursorFromDecoration()
 {
 #if HAVE_WAYLAND
@@ -506,6 +573,9 @@ void InputRedirection::updateFocusedTouchPosition()
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 {
+    if (!workspace()) {
+        return;
+    }
     // first update to new mouse position
 //     const QPointF oldPos = m_globalPointer;
     updatePointerPosition(pos);
@@ -559,6 +629,15 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         }
     }
 #endif
+    if (m_pointerInternalWindow) {
+        // send mouse move
+        QMouseEvent event(buttonStateToEvent(state),
+                          m_globalPointer.toPoint() - m_pointerInternalWindow->position(),
+                          m_globalPointer.toPoint(),
+                          buttonToQtMouseButton(button), qtButtonStates(), keyboardModifiers());
+        event.setAccepted(false);
+        QCoreApplication::sendEvent(m_pointerInternalWindow.data(), &event);
+    }
     if (m_pointerDecoration) {
         const QPoint localPos = m_globalPointer.toPoint() - m_pointerDecoration->client()->pos();
         QMouseEvent event(buttonStateToEvent(state),
@@ -617,8 +696,8 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
     }
 #endif
 
-    if (m_pointerDecoration) {
-        const QPointF localPos = m_globalPointer - m_pointerDecoration->client()->pos();
+    auto sendWheelEvent = [this, delta, axis] (const QPoint targetPos, QObject *target) -> bool {
+        const QPointF localPos = m_globalPointer - targetPos;
         // TODO: add modifiers and buttons
         QWheelEvent event(localPos, m_globalPointer, QPoint(),
                           (axis == PointerAxisHorizontal) ? QPoint(delta, 0) : QPoint(0, delta),
@@ -627,13 +706,20 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
                           Qt::NoButton,
                           Qt::NoModifier);
         event.setAccepted(false);
-        QCoreApplication::sendEvent(m_pointerDecoration->decoration(), &event);
-        if (!event.isAccepted() && axis == PointerAxisVertical) {
-            if (m_pointerDecoration->decoration()->titleBar().contains(localPos.toPoint())) {
+        QCoreApplication::sendEvent(target, &event);
+        return event.isAccepted();
+    };
+    if (m_pointerDecoration) {
+        if (!sendWheelEvent(m_pointerDecoration->client()->pos(), m_pointerDecoration.data())
+                && axis == PointerAxisVertical) {
+            if (m_pointerDecoration->decoration()->titleBar().contains(m_globalPointer.toPoint() - m_pointerDecoration->client()->pos())) {
                 m_pointerDecoration->client()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
                                                                    m_globalPointer.toPoint());
             }
         }
+    }
+    if (m_pointerInternalWindow) {
+        sendWheelEvent(m_pointerInternalWindow->position(), m_pointerInternalWindow.data());
     }
 
     // TODO: check which part of KWin would like to intercept the event

@@ -193,6 +193,8 @@ private:
     void updateFocusedTouchPosition();
     void updateTouchWindow(const QPointF &pos);
     void updatePointerDecoration(Toplevel *t);
+    void updatePointerInternalWindow();
+    void pointerInternalWindowVisibilityChanged(bool visible);
     void installCursorFromDecoration();
     bool areButtonsPressed() const;
     QPointF m_globalPointer;
@@ -209,6 +211,7 @@ private:
      * Decoration belongs to the pointerWindow
      **/
     QPointer<Decoration::DecoratedClientImpl> m_pointerDecoration;
+    QPointer<QWindow> m_pointerInternalWindow;
     /**
      * @brief The Toplevel which currently receives touch events
      */
