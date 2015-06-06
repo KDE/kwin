@@ -74,6 +74,10 @@ class AbstractClient : public Toplevel
      **/
     Q_PROPERTY(bool onAllDesktops READ isOnAllDesktops WRITE setOnAllDesktops NOTIFY desktopChanged)
     /**
+     * Indicates that the window should not be included on a taskbar.
+     **/
+    Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
+    /**
      * Indicates that the window should not be included on a Pager.
      **/
     Q_PROPERTY(bool skipPager READ skipPager WRITE setSkipPager NOTIFY skipPagerChanged)
@@ -156,6 +160,15 @@ public:
         return m_skipSwitcher;
     }
     void setSkipSwitcher(bool set);
+
+    bool skipTaskbar() const {
+        return m_skipTaskbar;
+    }
+    void setSkipTaskbar(bool set);
+    void setOriginalSkipTaskbar(bool set);
+    bool originalSkipTaskbar() const {
+        return m_originalSkipTaskbar;
+    }
 
     bool skipPager() const {
         return m_skipPager;
@@ -340,6 +353,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void fullScreenChanged();
+    void skipTaskbarChanged();
     void skipPagerChanged();
     void skipSwitcherChanged();
     void iconChanged();
@@ -407,6 +421,7 @@ protected:
     // TODO: remove boolean trap
     virtual bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const = 0;
 
+    virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
 
     void updateColorScheme(QString path);
@@ -415,6 +430,11 @@ private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
     bool m_firstInTabBox = false;
+    bool m_skipTaskbar = false;
+    /**
+     * Unaffected by KWin
+     **/
+    bool m_originalSkipTaskbar = false;
     bool m_skipPager = false;
     bool m_skipSwitcher = false;
     QIcon m_icon;

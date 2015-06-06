@@ -147,7 +147,7 @@ void Workspace::storeClient(KConfigGroup &cg, int num, Client *c)
     // the config entry is called "staysOnTop" for back. comp. reasons
     cg.writeEntry(QStringLiteral("staysOnTop") + n, c->keepAbove());
     cg.writeEntry(QStringLiteral("keepBelow") + n, c->keepBelow());
-    cg.writeEntry(QStringLiteral("skipTaskbar") + n, c->skipTaskbar(true));
+    cg.writeEntry(QStringLiteral("skipTaskbar") + n, c->originalSkipTaskbar());
     cg.writeEntry(QStringLiteral("skipPager") + n, c->skipPager());
     cg.writeEntry(QStringLiteral("skipSwitcher") + n, c->skipSwitcher());
     // not really just set by user, but name kept for back. comp. reasons

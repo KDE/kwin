@@ -891,7 +891,7 @@ void Client::applyWindowRules()
     else
         unminimize();
     setShade(shadeMode());
-    setSkipTaskbar(skipTaskbar(), true);
+    setOriginalSkipTaskbar(skipTaskbar());
     setSkipPager(skipPager());
     setSkipSwitcher(skipSwitcher());
     setKeepAbove(keepAbove());

@@ -148,7 +148,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
 
     // TODO: Try to obey all state information from info->state()
 
-    original_skip_taskbar = skip_taskbar = (info->state() & NET::SkipTaskbar) != 0;
+    setOriginalSkipTaskbar((info->state() & NET::SkipTaskbar) != 0);
     setSkipPager((info->state() & NET::SkipPager) != 0);
     readFirstInTabBox(firstInTabBoxCookie);
 
@@ -502,7 +502,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         // I.e. obey only forcing rules
         setKeepAbove(session->keepAbove);
         setKeepBelow(session->keepBelow);
-        setSkipTaskbar(session->skipTaskbar, true);
+        setOriginalSkipTaskbar(session->skipTaskbar);
         setSkipPager(session->skipPager);
         setSkipSwitcher(session->skipSwitcher);
         setShade(session->shaded ? ShadeNormal : ShadeNone);
@@ -536,7 +536,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         setShade(rules()->checkShade(info->state() & NET::Shaded ? ShadeNormal : ShadeNone, !isMapped));
         setKeepAbove(rules()->checkKeepAbove(info->state() & NET::KeepAbove, !isMapped));
         setKeepBelow(rules()->checkKeepBelow(info->state() & NET::KeepBelow, !isMapped));
-        setSkipTaskbar(rules()->checkSkipTaskbar(info->state() & NET::SkipTaskbar, !isMapped), true);
+        setOriginalSkipTaskbar(rules()->checkSkipTaskbar(info->state() & NET::SkipTaskbar, !isMapped));
         setSkipPager(rules()->checkSkipPager(info->state() & NET::SkipPager, !isMapped));
         setSkipSwitcher(rules()->checkSkipSwitcher(false, !isMapped));
         if (info->state() & NET::DemandsAttention)

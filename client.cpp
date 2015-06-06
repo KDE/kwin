@@ -154,8 +154,6 @@ Client::Client()
     shade_mode = ShadeNone;
     deleting = false;
     fullscreen_mode = FullScreenNone;
-    skip_taskbar = false;
-    original_skip_taskbar = false;
     hidden = false;
     modal = false;
     noborder = false;
@@ -884,7 +882,7 @@ void Client::updateVisibility()
         return;
     if (hidden && isCurrentTab()) {
         info->setState(NET::Hidden, NET::Hidden);
-        setSkipTaskbar(true, false);   // Also hide from taskbar
+        setSkipTaskbar(true);   // Also hide from taskbar
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
             internalKeep();
         else
@@ -892,7 +890,7 @@ void Client::updateVisibility()
         return;
     }
     if (isCurrentTab())
-        setSkipTaskbar(original_skip_taskbar, false);   // Reset from 'hidden'
+        setSkipTaskbar(originalSkipTaskbar());   // Reset from 'hidden'
     if (isMinimized()) {
         info->setState(NET::Hidden, NET::Hidden);
         if (compositing() && options->hiddenPreviews() == HiddenPreviewsAlways)
@@ -1190,22 +1188,9 @@ void Client::killProcess(bool ask, xcb_timestamp_t timestamp)
     }
 }
 
-void Client::setSkipTaskbar(bool b, bool from_outside)
+void Client::doSetSkipTaskbar()
 {
-    int was_wants_tab_focus = wantsTabFocus();
-    if (from_outside) {
-        b = rules()->checkSkipTaskbar(b);
-        original_skip_taskbar = b;
-    }
-    if (b == skipTaskbar())
-        return;
-    skip_taskbar = b;
-    info->setState(b ? NET::SkipTaskbar : NET::States(0), NET::SkipTaskbar);
-    updateWindowRules(Rules::SkipTaskbar);
-    if (was_wants_tab_focus != wantsTabFocus())
-        FocusChain::self()->update(this,
-                                          isActive() ? FocusChain::MakeFirst : FocusChain::Update);
-    emit skipTaskbarChanged();
+    info->setState(skipTaskbar() ? NET::SkipTaskbar : NET::States(0), NET::SkipTaskbar);
 }
 
 void Client::doSetSkipPager()
@@ -1692,7 +1677,7 @@ void Client::setClientShown(bool shown)
         return; // nothing to change
     hidden = !shown;
     if (options->isInactiveTabsSkipTaskbar())
-        setSkipTaskbar(hidden, false); // TODO: Causes reshuffle of the taskbar
+        setSkipTaskbar(hidden); // TODO: Causes reshuffle of the taskbar
     if (shown) {
         map();
         takeFocus();

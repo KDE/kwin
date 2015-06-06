@@ -126,6 +126,31 @@ void AbstractClient::doSetSkipPager()
 {
 }
 
+void AbstractClient::setSkipTaskbar(bool b)
+{
+    int was_wants_tab_focus = wantsTabFocus();
+    if (b == skipTaskbar())
+        return;
+    m_skipTaskbar = b;
+    doSetSkipTaskbar();
+    updateWindowRules(Rules::SkipTaskbar);
+    if (was_wants_tab_focus != wantsTabFocus()) {
+        FocusChain::self()->update(this, isActive() ? FocusChain::MakeFirst : FocusChain::Update);
+    }
+    emit skipTaskbarChanged();
+}
+
+void AbstractClient::setOriginalSkipTaskbar(bool b)
+{
+    m_originalSkipTaskbar = rules()->checkSkipTaskbar(b);
+    setSkipTaskbar(m_originalSkipTaskbar);
+}
+
+void AbstractClient::doSetSkipTaskbar()
+{
+
+}
+
 void AbstractClient::setIcon(const QIcon &icon)
 {
     m_icon = icon;

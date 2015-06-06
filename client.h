@@ -153,10 +153,6 @@ class Client
      **/
     Q_PROPERTY(bool wantsInput READ wantsInput)
     /**
-     * Indicates that the window should not be included on a taskbar.
-     **/
-    Q_PROPERTY(bool skipTaskbar READ skipTaskbar WRITE setSkipTaskbar NOTIFY skipTaskbarChanged)
-    /**
      * The "Window Tabs" Group this Client belongs to.
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)
@@ -291,9 +287,6 @@ public:
     void setNoBorder(bool set) override;
     bool userCanSetNoBorder() const override;
     void checkNoBorder();
-
-    bool skipTaskbar(bool from_outside = false) const;
-    void setSkipTaskbar(bool set, bool from_outside = false);
 
     virtual Layer layer() const;
     Layer belongsToLayer() const;
@@ -553,6 +546,7 @@ protected:
     void doSetDesktop(int desktop, int was_desk) override;
     void doMinimize() override;
     void doSetSkipPager() override;
+    void doSetSkipTaskbar() override;
 
 private Q_SLOTS:
     void delayedSetShortcut();
@@ -573,7 +567,6 @@ Q_SIGNALS:
     void transientChanged();
     void modalChanged();
     void moveResizedChanged();
-    void skipTaskbarChanged();
 
     /**
      * Emitted whenever the Client's TabGroup changed. That is whenever the Client is moved to
@@ -749,8 +742,6 @@ private:
     ShadeMode shade_mode;
     Client *shade_below;
     uint deleting : 1; ///< True when doing cleanup and destroying the client
-    uint skip_taskbar : 1;
-    uint original_skip_taskbar : 1; ///< Unaffected by KWin
     Xcb::MotifHints m_motif;
     uint hidden : 1; ///< Forcibly hidden by calling hide()
     uint modal : 1; ///< NET::Modal
@@ -933,11 +924,6 @@ inline MaximizeMode Client::maximizeMode() const
 inline Client::QuickTileMode Client::quickTileMode() const
 {
     return (Client::QuickTileMode)quick_tile_mode;
-}
-
-inline bool Client::skipTaskbar(bool from_outside) const
-{
-    return from_outside ? original_skip_taskbar : skip_taskbar;
 }
 
 inline bool Client::isFullScreen() const
