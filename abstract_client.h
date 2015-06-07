@@ -372,6 +372,8 @@ Q_SIGNALS:
     void clientUnminimized(KWin::AbstractClient* client, bool animate);
     void paletteChanged(const QPalette &p);
     void captionChanged();
+    void clientMaximizedStateChanged(KWin::AbstractClient*, MaximizeMode);
+    void clientMaximizedStateChanged(KWin::AbstractClient* c, bool h, bool v);
 
 protected:
     AbstractClient();

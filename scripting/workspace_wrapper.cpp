@@ -248,7 +248,8 @@ void WorkspaceWrapper::setupClientConnections(KWin::Client *client)
     connect(client, &Client::clientUnminimized, this, &WorkspaceWrapper::clientUnminimized);
     connect(client, SIGNAL(clientManaging(KWin::Client*)), SIGNAL(clientManaging(KWin::Client*)));
     connect(client, SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)), SIGNAL(clientFullScreenSet(KWin::Client*,bool,bool)));
-    connect(client, SIGNAL(clientMaximizedStateChanged(KWin::Client*,bool,bool)), SIGNAL(clientMaximizeSet(KWin::Client*,bool,bool)));
+    connect(client, static_cast<void (Client::*)(KWin::AbstractClient*, bool, bool)>(&Client::clientMaximizedStateChanged),
+            this, &WorkspaceWrapper::clientMaximizeSet);
 }
 
 void WorkspaceWrapper::showOutline(const QRect &geometry)

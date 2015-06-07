@@ -96,7 +96,7 @@ Q_SIGNALS:
     void clientMinimized(KWin::AbstractClient *client);
     void clientUnminimized(KWin::AbstractClient *client);
     void clientRestored(KWin::Client *client);
-    void clientMaximizeSet(KWin::Client *client, bool h, bool v);
+    void clientMaximizeSet(KWin::AbstractClient *client, bool h, bool v);
     void killWindowCalled(KWin::Client *client);
     void clientActivated(KWin::AbstractClient *client);
     void clientFullScreenSet(KWin::Client *client, bool fullScreen, bool user);

@@ -339,7 +339,7 @@ EffectsHandlerImpl::~EffectsHandlerImpl()
 void EffectsHandlerImpl::setupClientConnections(Client* c)
 {
     connect(c, &Client::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
-    connect(c, static_cast<void (Client::*)(KWin::Client*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
+    connect(c, static_cast<void (Client::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
     connect(c, &Client::clientStartUserMovedResized, this,
         [this](Client *c) {
@@ -540,7 +540,7 @@ void EffectsHandlerImpl::startPaint()
     m_currentPaintEffectFrameIterator = m_activeEffects.constBegin();
 }
 
-void EffectsHandlerImpl::slotClientMaximized(KWin::Client *c, MaximizeMode maxMode)
+void EffectsHandlerImpl::slotClientMaximized(KWin::AbstractClient *c, MaximizeMode maxMode)
 {
     bool horizontal = false;
     bool vertical = false;

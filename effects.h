@@ -237,7 +237,7 @@ protected Q_SLOTS:
     void slotShellClientShown(KWin::Toplevel*);
     void slotUnmanagedShown(KWin::Toplevel*);
     void slotWindowClosed(KWin::Toplevel *c);
-    void slotClientMaximized(KWin::Client *c, MaximizeMode maxMode);
+    void slotClientMaximized(KWin::AbstractClient *c, MaximizeMode maxMode);
     void slotOpacityChanged(KWin::Toplevel *t, qreal oldOpacity);
     void slotClientModalityChanged();
     void slotGeometryShapeChanged(KWin::Toplevel *t, const QRect &old);

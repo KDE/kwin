@@ -559,8 +559,6 @@ private Q_SLOTS:
 Q_SIGNALS:
     void clientManaging(KWin::Client*);
     void clientFullScreenSet(KWin::Client*, bool, bool);
-    void clientMaximizedStateChanged(KWin::Client*, MaximizeMode);
-    void clientMaximizedStateChanged(KWin::Client* c, bool h, bool v);
     void clientStartUserMovedResized(KWin::Client*);
     void clientStepUserMovedResized(KWin::Client *, const QRect&);
     void clientFinishUserMovedResized(KWin::Client*);
