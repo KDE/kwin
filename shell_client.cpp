@@ -73,6 +73,11 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     connect(surface, &ShellSurfaceInterface::titleChanged, this, &ShellClient::captionChanged);
 
     connect(surface, &ShellSurfaceInterface::fullscreenChanged, this, &ShellClient::clientFullScreenChanged);
+    connect(surface, &ShellSurfaceInterface::maximizedChanged, this,
+        [this] (bool maximized) {
+            maximize(maximized ? MaximizeFull : MaximizeRestore);
+        }
+    );
 }
 
 ShellClient::~ShellClient() = default;
@@ -243,7 +248,7 @@ bool ShellClient::isFullScreen() const
 
 bool ShellClient::isMaximizable() const
 {
-    return false;
+    return true;
 }
 
 bool ShellClient::isMinimizable() const
@@ -272,13 +277,37 @@ bool ShellClient::isShown(bool shaded_is_shown) const
     return !m_closing && !m_unmapped;
 }
 
-void ShellClient::maximize(MaximizeMode)
+void ShellClient::maximize(MaximizeMode mode)
 {
+    if (m_maximizeMode == mode) {
+        return;
+    }
+    // TODO: check rules
+    StackingUpdatesBlocker blocker(workspace());
+    const MaximizeMode oldMode = m_maximizeMode;
+    m_maximizeMode = mode;
+
+    if (m_maximizeMode == MaximizeFull) {
+        m_geomMaximizeRestore = geometry();
+        requestGeometry(workspace()->clientArea(MaximizeArea, this));
+        workspace()->raiseClient(this);
+    } else {
+        if (m_geomMaximizeRestore.isValid()) {
+            requestGeometry(m_geomMaximizeRestore);
+        } else {
+            requestGeometry(workspace()->clientArea(PlacementArea, this));
+        }
+    }
+    if (oldMode != maximizeMode()) {
+        emit clientMaximizedStateChanged(this, m_maximizeMode);
+        const bool set = m_maximizeMode == MaximizeFull;
+        emit clientMaximizedStateChanged(this, set, set);
+    }
 }
 
 MaximizeMode ShellClient::maximizeMode() const
 {
-    return KWin::MaximizeRestore;
+    return m_maximizeMode;
 }
 
 bool ShellClient::noBorder() const

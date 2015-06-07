@@ -588,6 +588,8 @@ void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
     ShellClient *c = static_cast<ShellClient*>(t);
     connect(c, &ShellClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
     connect(c, &ShellClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
+    connect(c, static_cast<void (ShellClient::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
+            this, &EffectsHandlerImpl::slotClientMaximized);
     emit windowAdded(t->effectWindow());
 #endif
 }
