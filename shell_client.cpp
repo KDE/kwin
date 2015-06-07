@@ -161,6 +161,7 @@ void ShellClient::addDamage(const QRegion &damage)
         m_clientSize = m_shellSurface->surface()->buffer()->size();
         QPoint position = geom.topLeft();
         if (m_positionAfterResize.isValid()) {
+            addLayerRepaint(geometry());
             position = m_positionAfterResize.point();
             m_positionAfterResize.clear();
         }
