@@ -61,6 +61,7 @@ WaylandClientTest::WaylandClientTest(QObject *parent)
     , m_output(nullptr)
     , m_surface(nullptr)
     , m_shm(nullptr)
+    , m_shellSurface(nullptr)
     , m_timer(new QTimer(this))
 {
     init();
@@ -112,9 +113,9 @@ void WaylandClientTest::setupRegistry(Registry *registry)
     connect(registry, &Registry::shellAnnounced, this,
         [this, registry](quint32 name) {
             Shell *shell = registry->createShell(name, 1, this);
-            ShellSurface *shellSurface = shell->createSurface(m_surface, m_surface);
-            shellSurface->setFullscreen(m_output);
-            connect(shellSurface, &ShellSurface::sizeChanged, this, static_cast<void(WaylandClientTest::*)(const QSize&)>(&WaylandClientTest::render));
+            m_shellSurface = shell->createSurface(m_surface, m_surface);
+            connect(m_shellSurface, &ShellSurface::sizeChanged, this, static_cast<void(WaylandClientTest::*)(const QSize&)>(&WaylandClientTest::render));
+            render(QSize(200, 200));
         }
     );
     connect(registry, &Registry::outputAnnounced, this,
@@ -168,6 +169,17 @@ void WaylandClientTest::setupRegistry(Registry *registry)
                                 }
                                 if (button == BTN_RIGHT) {
                                     QCoreApplication::instance()->quit();
+                                }
+                                if (button == BTN_MIDDLE) {
+                                    if (m_shellSurface) {
+                                        static bool s_maximized = false;
+                                        s_maximized = !s_maximized;
+                                        if (s_maximized) {
+                                            m_shellSurface->setMaximized();
+                                        } else {
+                                            m_shellSurface->setToplevel();
+                                        }
+                                    }
                                 }
                             }
                         }

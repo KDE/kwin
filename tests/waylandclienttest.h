@@ -32,6 +32,7 @@ class ConnectionThread;
 class EventQueue;
 class Output;
 class Registry;
+class ShellSurface;
 class ShmPool;
 class Surface;
 }
@@ -60,6 +61,7 @@ private:
     KWayland::Client::Output *m_output;
     KWayland::Client::Surface *m_surface;
     KWayland::Client::ShmPool *m_shm;
+    KWayland::Client::ShellSurface *m_shellSurface;
     QSize m_currentSize;
     QTimer *m_timer;
 };
