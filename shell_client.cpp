@@ -55,11 +55,11 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     }
     if (m_internalWindow) {
         updateInternalWindowGeometry();
+        setOnAllDesktops(true);
     } else {
         setGeometry(QRect(QPoint(0, 0), m_clientSize));
+        setDesktop(VirtualDesktopManager::self()->current());
     }
-
-    setDesktop(VirtualDesktopManager::self()->current());
 
     connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
         [this] {
