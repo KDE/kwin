@@ -388,6 +388,7 @@ void Workspace::init()
                 }
                 x_stacking_dirty = true;
                 updateStackingOrder(true);
+                updateClientArea();
             }
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
@@ -396,6 +397,7 @@ void Workspace::init()
                 emit clientRemoved(c);
                 x_stacking_dirty = true;
                 updateStackingOrder(true);
+                updateClientArea();
             }
         );
     }

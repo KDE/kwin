@@ -44,6 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVarLengthArray>
 
 #include "outline.h"
+#if HAVE_WAYLAND
+#include "shell_client.h"
+#include "wayland_server.h"
+#endif
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
@@ -180,6 +184,40 @@ void Workspace::updateClientArea(bool force)
             }
         }
     }
+#if HAVE_WAYLAND
+    if (waylandServer()) {
+        auto updateStrutsForWaylandClient = [&] (ShellClient *c) {
+            // assuming that only docks have "struts" and that all docks have a strut
+            // TODO: add windows can cover panels which don't have struts
+            if (!c->isShown(true) || !c->isDock()) {
+                return;
+            }
+            // TODO: implement restrictedMoveArea adjustments
+            QRegion r = QRegion(desktopArea).subtracted(c->geometry());
+            if (c->isOnAllDesktops()) {
+                for (int i = 1; i <= numberOfDesktops; ++i) {
+                    new_wareas[ i ] = new_wareas[ i ].intersected(r.boundingRect());
+                    for (int iS = 0; iS < nscreens; ++iS) {
+                        new_sareas[ i ][ iS ] = new_sareas[ i ][ iS ].intersected(QRegion(screens[iS]).subtracted(c->geometry()).boundingRect());
+                    }
+                }
+            } else {
+                new_wareas[c->desktop()] = new_wareas[c->desktop()].intersected(r.boundingRect());
+                for (int iS = 0; iS < nscreens; iS++) {
+                    new_sareas[c->desktop()][ iS ] = new_sareas[c->desktop()][ iS ].intersected(QRegion(screens[iS]).subtracted(c->geometry()).boundingRect());
+                }
+            }
+        };
+        const auto clients = waylandServer()->clients();
+        for (auto c : clients) {
+            updateStrutsForWaylandClient(c);
+        }
+        const auto internalClients = waylandServer()->internalClients();
+        for (auto c : internalClients) {
+            updateStrutsForWaylandClient(c);
+        }
+    }
+#endif
 #if 0
     for (int i = 1;
             i <= numberOfDesktops();
