@@ -129,6 +129,7 @@ private:
     bool m_unmapped = true;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
+    NET::WindowType m_windowType = NET::Normal;
 };
 
 }

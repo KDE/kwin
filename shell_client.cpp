@@ -147,7 +147,7 @@ NET::WindowType ShellClient::windowType(bool direct, int supported_types) const
     // TODO: implement
     Q_UNUSED(direct)
     Q_UNUSED(supported_types)
-    return NET::Normal;
+    return m_windowType;
 }
 
 double ShellClient::opacity() const
@@ -420,6 +420,13 @@ void ShellClient::findInternalWindow()
         m_internalWindow = w;
         connect(m_internalWindow, &QWindow::xChanged, this, &ShellClient::updateInternalWindowGeometry);
         connect(m_internalWindow, &QWindow::yChanged, this, &ShellClient::updateInternalWindowGeometry);
+
+        // Try reading the window type from the QWindow. PlasmaCore.Dialog provides a dynamic type property
+        // let's check whether it exists, if it does it's our window type
+        const QVariant windowType = m_internalWindow->property("type");
+        if (!windowType.isNull()) {
+            m_windowType = static_cast<NET::WindowType>(windowType.toInt());
+        }
         return;
     }
 }
