@@ -460,7 +460,7 @@ static void scheduleVboReInit()
         delete timer;
         timer = new QTimer(gs_debuggedScene);
         timer->setSingleShot(true);
-        QObject::connect(timer, &QTimer::timeout, gs_debuggedScene, []() {
+        QObject::connect(timer.data(), &QTimer::timeout, gs_debuggedScene, []() {
             GLVertexBuffer::cleanup();
             GLVertexBuffer::initStatic();
         });
