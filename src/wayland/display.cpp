@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging_p.h"
 #include "output_interface.h"
 #include "plasmashell_interface.h"
+#include "qtsurfaceextension_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
 #include "subcompositor_interface.h"
@@ -227,6 +228,13 @@ DataDeviceManagerInterface *Display::createDataDeviceManager(QObject *parent)
 PlasmaShellInterface *Display::createPlasmaShell(QObject* parent)
 {
     auto s = new PlasmaShellInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, s, [this, s] { delete s; });
+    return s;
+}
+
+QtSurfaceExtensionInterface *Display::createQtSurfaceExtension(QObject *parent)
+{
+    auto s = new QtSurfaceExtensionInterface(this, parent);
     connect(this, &Display::aboutToTerminate, s, [this, s] { delete s; });
     return s;
 }

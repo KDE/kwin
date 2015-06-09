@@ -40,6 +40,7 @@ class CompositorInterface;
 class DataDeviceManagerInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class QtSurfaceExtensionInterface;
 class SeatInterface;
 class ShellInterface;
 class SubCompositorInterface;
@@ -116,6 +117,7 @@ public:
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
     PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
+    QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.
