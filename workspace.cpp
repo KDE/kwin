@@ -1236,12 +1236,12 @@ void Workspace::setShowingDesktop(bool showing)
     rootInfo()->setShowingDesktop(showing);
     showing_desktop = showing;
 
-    Client *topDesk = nullptr;
+    AbstractClient *topDesk = nullptr;
 
     { // for the blocker RAII
     StackingUpdatesBlocker blocker(this); // updateLayer & lowerClient would invalidate stacking_order
     for (int i = stacking_order.count() - 1; i > -1; --i) {
-        Client *c = qobject_cast<Client*>(stacking_order.at(i));
+        AbstractClient *c = qobject_cast<AbstractClient*>(stacking_order.at(i));
         if (c && c->isOnCurrentDesktop()) {
             if (c->isDock()) {
                 c->updateLayer();
@@ -1250,8 +1250,10 @@ void Workspace::setShowingDesktop(bool showing)
                 lowerClient(c);
                 if (!topDesk)
                     topDesk = c;
-                foreach (Client *cm, c->group()->members()) {
-                    cm->updateLayer();
+                if (Client *client = qobject_cast<Client*>(c)) {
+                    foreach (Client *cm, client->group()->members()) {
+                        cm->updateLayer();
+                    }
                 }
             }
         }
