@@ -44,6 +44,7 @@ class SeatInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class QtSurfaceExtensionInterface;
 }
 }
 
@@ -131,6 +132,7 @@ private:
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
+    KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
     KWayland::Client::ConnectionThread *m_qtClientConnection = nullptr;

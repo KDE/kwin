@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
@@ -143,6 +144,15 @@ void WaylandServer::init(const QByteArray &socketName)
         [this] (PlasmaShellSurfaceInterface *surface) {
             if (ShellClient *client = findClient(surface->surface())) {
                 client->installPlasmaShellSurface(surface);
+            }
+        }
+    );
+    m_qtExtendedSurface = m_display->createQtSurfaceExtension(m_display);
+    m_qtExtendedSurface->create();
+    connect(m_qtExtendedSurface, &QtSurfaceExtensionInterface::surfaceCreated,
+        [this] (QtExtendedSurfaceInterface *surface) {
+            if (ShellClient *client = findClient(surface->surface())) {
+                client->installQtExtendedSurface(surface);
             }
         }
     );

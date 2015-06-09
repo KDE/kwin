@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/qtsurfaceextension_interface.h>
 
 #include <QWindow>
 
@@ -238,6 +239,9 @@ void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
 
 void ShellClient::closeWindow()
 {
+    if (m_qtExtendedSurface) {
+        m_qtExtendedSurface->close();
+    }
 }
 
 AbstractClient *ShellClient::findModal(bool allow_itself)
@@ -248,7 +252,7 @@ AbstractClient *ShellClient::findModal(bool allow_itself)
 
 bool ShellClient::isCloseable() const
 {
-    return false;
+    return m_qtExtendedSurface ? true : false;
 }
 
 bool ShellClient::isFullScreenable() const
@@ -569,6 +573,11 @@ bool ShellClient::isInitialPositionSet() const
         return m_plasmaShellSurface->isPositionSet();
     }
     return false;
+}
+
+void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
+{
+    m_qtExtendedSurface = surface;
 }
 
 }

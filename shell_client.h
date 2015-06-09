@@ -28,6 +28,7 @@ namespace Server
 {
 class ShellSurfaceInterface;
 class PlasmaShellSurfaceInterface;
+class QtExtendedSurfaceInterface;
 }
 }
 
@@ -103,6 +104,7 @@ public:
     }
 
     void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
+    void installQtExtendedSurface(KWayland::Server::QtExtendedSurfaceInterface *surface);
 
     bool isInitialPositionSet() const;
 
@@ -136,6 +138,7 @@ private:
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
     QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
+    QPointer<KWayland::Server::QtExtendedSurfaceInterface> m_qtExtendedSurface;
 };
 
 }
