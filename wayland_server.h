@@ -43,6 +43,7 @@ class ShellInterface;
 class SeatInterface;
 class SurfaceInterface;
 class OutputInterface;
+class PlasmaShellInterface;
 }
 }
 
@@ -80,6 +81,7 @@ public:
     }
     void removeClient(ShellClient *c);
     ShellClient *findClient(quint32 id) const;
+    ShellClient *findClient(KWayland::Server::SurfaceInterface *surface) const;
 
     AbstractBackend *backend() const {
         return m_backend;
@@ -128,6 +130,7 @@ private:
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
+    KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
     KWayland::Client::ConnectionThread *m_qtClientConnection = nullptr;

@@ -27,6 +27,7 @@ namespace KWayland
 namespace Server
 {
 class ShellSurfaceInterface;
+class PlasmaShellSurfaceInterface;
 }
 }
 
@@ -101,6 +102,10 @@ public:
         return m_internalWindow;
     }
 
+    void installPlasmaShellSurface(KWayland::Server::PlasmaShellSurfaceInterface *surface);
+
+    bool isInitialPositionSet() const;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
@@ -130,6 +135,7 @@ private:
     MaximizeMode m_maximizeMode = MaximizeRestore;
     QRect m_geomMaximizeRestore; // size and position of the window before it was set to maximize
     NET::WindowType m_windowType = NET::Normal;
+    QPointer<KWayland::Server::PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 };
 
 }

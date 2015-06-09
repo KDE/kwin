@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shell_interface.h>
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
+#include <KWayland/Server/plasmashell_interface.h>
 
 #include <QWindow>
 
@@ -125,6 +126,20 @@ void ShellClient::debug(QDebug &stream) const
 Layer ShellClient::layer() const
 {
     // TODO: implement the rest
+    if (isDesktop())
+        return workspace()->showingDesktop() ? AboveLayer : DesktopLayer;
+    if (isDock()) {
+        if (workspace()->showingDesktop())
+            return NotificationLayer;
+        // slight hack for the 'allow window to cover panel' Kicker setting
+        // don't move keepbelow docks below normal window, but only to the same
+        // layer, so that both may be raised to cover the other
+        if (keepBelow())
+            return NormalLayer;
+        if (keepAbove()) // slight hack for the autohiding panels
+            return AboveLayer;
+        return DockLayer;
+    }
     if (isFullScreen() && isActive())
         return ActiveLayer;
     return KWin::NormalLayer;
@@ -515,6 +530,45 @@ void ShellClient::unmap()
     ready_for_painting = false;
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
+}
+
+void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface)
+{
+    m_plasmaShellSurface = surface;
+    auto updatePosition = [this, surface] {
+        setGeometry(QRect(surface->position(), m_clientSize));
+    };
+    auto updateRole = [this, surface] {
+        NET::WindowType type = NET::Unknown;
+        switch (surface->role()) {
+        case PlasmaShellSurfaceInterface::Role::Desktop:
+            type = NET::Desktop;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Panel:
+            type = NET::Dock;
+            break;
+        case PlasmaShellSurfaceInterface::Role::Normal:
+        default:
+            type = NET::Normal;
+            break;
+        }
+        if (type != m_windowType) {
+            m_windowType = type;
+            workspace()->updateClientArea();
+        }
+    };
+    connect(surface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
+    connect(surface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
+    updatePosition();
+    updateRole();
+}
+
+bool ShellClient::isInitialPositionSet() const
+{
+    if (m_plasmaShellSurface) {
+        return m_plasmaShellSurface->isPositionSet();
+    }
+    return false;
 }
 
 }

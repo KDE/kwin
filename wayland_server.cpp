@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/datadevicemanager_interface.h>
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
+#include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
@@ -136,6 +137,15 @@ void WaylandServer::init(const QByteArray &socketName)
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
     m_display->createDataDeviceManager(m_display)->create();
+    m_plasmaShell = m_display->createPlasmaShell(m_display);
+    m_plasmaShell->create();
+    connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
+        [this] (PlasmaShellSurfaceInterface *surface) {
+            if (ShellClient *client = findClient(surface->surface())) {
+                client->installPlasmaShellSurface(surface);
+            }
+        }
+    );
 }
 
 void WaylandServer::initOutputs()
@@ -285,6 +295,19 @@ static ShellClient *findClientInList(const QList<ShellClient*> &clients, quint32
     return *it;
 }
 
+static ShellClient *findClientInList(const QList<ShellClient*> &clients, KWayland::Server::SurfaceInterface *surface)
+{
+    auto it = std::find_if(clients.begin(), clients.end(),
+        [surface] (ShellClient *c) {
+            return c->surface() == surface;
+        }
+    );
+    if (it == clients.end()) {
+        return nullptr;
+    }
+    return *it;
+}
+
 ShellClient *WaylandServer::findClient(quint32 id) const
 {
     if (id == 0) {
@@ -294,6 +317,20 @@ ShellClient *WaylandServer::findClient(quint32 id) const
         return c;
     }
     if (ShellClient *c = findClientInList(m_internalClients, id)) {
+        return c;
+    }
+    return nullptr;
+}
+
+ShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
+{
+    if (!surface) {
+        return nullptr;
+    }
+    if (ShellClient *c = findClientInList(m_clients, surface)) {
+        return c;
+    }
+    if (ShellClient *c = findClientInList(m_internalClients, surface)) {
         return c;
     }
     return nullptr;

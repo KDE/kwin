@@ -380,7 +380,9 @@ void Workspace::init()
             [this] (ShellClient *c) {
                 if (!c->isInternal()) {
                     QRect area = clientArea(PlacementArea, Screens::self()->current(), c->desktop());
-                    Placement::self()->place(c, area);
+                    if (!c->isInitialPositionSet()) {
+                        Placement::self()->place(c, area);
+                    }
                     if (!unconstrained_stacking_order.contains(c))
                         unconstrained_stacking_order.append(c);   // Raise if it hasn't got any stacking position yet
                     if (!stacking_order.contains(c))    // It'll be updated later, and updateToolWindows() requires
