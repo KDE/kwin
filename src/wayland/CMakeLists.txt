@@ -12,6 +12,7 @@ set(SERVER_LIB_SRCS
     logging.cpp
     output_interface.cpp
     pointer_interface.cpp
+    plasmashell_interface.cpp
     region_interface.cpp
     resource.cpp
     seat_interface.cpp
@@ -19,6 +20,11 @@ set(SERVER_LIB_SRCS
     surface_interface.cpp
     subcompositor_interface.cpp
     touch_interface.cpp
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/plasma-shell.xml
+    BASENAME plasma-shell
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
@@ -68,6 +74,7 @@ install(FILES
   keyboard_interface.h
   output_interface.h
   pointer_interface.h
+  plasmashell_interface.h
   region_interface.h
   resource.h
   seat_interface.h

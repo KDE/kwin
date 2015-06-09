@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "datadevicemanager_interface.h"
 #include "logging_p.h"
 #include "output_interface.h"
+#include "plasmashell_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
 #include "subcompositor_interface.h"
@@ -221,6 +222,13 @@ DataDeviceManagerInterface *Display::createDataDeviceManager(QObject *parent)
     auto m = new DataDeviceManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, m, [this,m] { delete m; });
     return m;
+}
+
+PlasmaShellInterface *Display::createPlasmaShell(QObject* parent)
+{
+    auto s = new PlasmaShellInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, s, [this, s] { delete s; });
+    return s;
 }
 
 void Display::createShm()

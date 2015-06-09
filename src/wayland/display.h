@@ -39,6 +39,7 @@ namespace Server
 class CompositorInterface;
 class DataDeviceManagerInterface;
 class OutputInterface;
+class PlasmaShellInterface;
 class SeatInterface;
 class ShellInterface;
 class SubCompositorInterface;
@@ -114,6 +115,7 @@ public:
     SeatInterface *createSeat(QObject *parent = nullptr);
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
+    PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.
