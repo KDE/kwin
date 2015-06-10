@@ -74,6 +74,8 @@ void ClientLevel::setupClientConnections(AbstractClient *client)
     connect(client, &AbstractClient::desktopChanged, this, check);
     connect(client, &AbstractClient::screenChanged, this, check);
     connect(client, &AbstractClient::activitiesChanged, this, check);
+    connect(client, &AbstractClient::windowHidden, this, check);
+    connect(client, &AbstractClient::windowShown, this, check);
 }
 
 void ClientLevel::checkClient(AbstractClient *client)

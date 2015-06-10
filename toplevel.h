@@ -380,6 +380,7 @@ Q_SIGNALS:
     void paddingChanged(KWin::Toplevel* toplevel, const QRect& old);
     void windowClosed(KWin::Toplevel* toplevel, KWin::Deleted* deleted);
     void windowShown(KWin::Toplevel* toplevel);
+    void windowHidden(KWin::Toplevel* toplevel);
     /**
      * Signal emitted when the window's shape state changed. That is if it did not have a shape
      * and received one or if the shape was withdrawn. Think of Chromium enabling/disabling KWin's

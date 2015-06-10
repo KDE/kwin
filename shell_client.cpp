@@ -538,6 +538,7 @@ void ShellClient::unmap()
     ready_for_painting = false;
     addWorkspaceRepaint(visibleRect());
     workspace()->clientHidden(this);
+    emit windowHidden(this);
 }
 
 void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface)
