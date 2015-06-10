@@ -414,7 +414,8 @@ bool ShellClient::wantsInput() const
     if (isInternal()) {
         return false;
     }
-    return true;
+    // if the window is not visible it doesn't get input
+    return isShown(true);
 }
 
 void ShellClient::createWindowId()
