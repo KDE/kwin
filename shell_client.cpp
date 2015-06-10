@@ -188,9 +188,9 @@ void ShellClient::addDamage(const QRegion &damage)
         }
         setGeometry(QRect(position, m_clientSize));
     }
+    m_unmapped = false;
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
     setReadyForPainting();
-    m_unmapped = false;
     Toplevel::addDamage(damage);
 }
 
