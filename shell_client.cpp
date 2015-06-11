@@ -239,7 +239,7 @@ void ShellClient::checkWorkspacePosition(QRect oldGeometry, int oldDesktop)
 
 void ShellClient::closeWindow()
 {
-    if (m_qtExtendedSurface) {
+    if (m_qtExtendedSurface && isCloseable()) {
         m_qtExtendedSurface->close();
     }
 }
@@ -252,6 +252,9 @@ AbstractClient *ShellClient::findModal(bool allow_itself)
 
 bool ShellClient::isCloseable() const
 {
+    if (m_windowType == NET::Desktop || m_windowType == NET::Dock) {
+        return false;
+    }
     return m_qtExtendedSurface ? true : false;
 }
 
