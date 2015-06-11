@@ -391,6 +391,9 @@ void Workspace::init()
                 x_stacking_dirty = true;
                 updateStackingOrder(true);
                 updateClientArea();
+                if (c->wantsInput()) {
+                    activateClient(c);
+                }
             }
         );
         connect(w, &WaylandServer::shellClientRemoved, this,
