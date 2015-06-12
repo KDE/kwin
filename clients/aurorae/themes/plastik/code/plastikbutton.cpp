@@ -113,6 +113,7 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
 
 QPixmap PlastikButtonProvider::icon(ButtonIcon icon, int size, bool active, bool shadow)
 {
+    Q_UNUSED(active);
     if (size%2 == 0)
         --size;
 
