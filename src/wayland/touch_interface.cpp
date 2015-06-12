@@ -77,6 +77,9 @@ TouchInterface::~TouchInterface() = default;
 void TouchInterface::cancel()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_touch_send_cancel(d->resource);
     d->client->flush();
 }
@@ -84,6 +87,9 @@ void TouchInterface::cancel()
 void TouchInterface::frame()
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_touch_send_frame(d->resource);
     d->client->flush();
 }
@@ -91,6 +97,9 @@ void TouchInterface::frame()
 void TouchInterface::move(qint32 id, const QPointF &localPos)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_touch_send_motion(d->resource, d->seat->timestamp(), id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     d->client->flush();
 }
@@ -98,6 +107,9 @@ void TouchInterface::move(qint32 id, const QPointF &localPos)
 void TouchInterface::up(qint32 id, quint32 serial)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_touch_send_up(d->resource, serial, d->seat->timestamp(), id);
     d->client->flush();
 }
@@ -105,6 +117,9 @@ void TouchInterface::up(qint32 id, quint32 serial)
 void TouchInterface::down(qint32 id, quint32 serial, const QPointF &localPos)
 {
     Q_D();
+    if (!d->resource) {
+        return;
+    }
     wl_touch_send_down(d->resource, serial, d->seat->timestamp(), d->seat->focusedTouchSurface()->resource(),
                        id, wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     d->client->flush();
