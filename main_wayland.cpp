@@ -597,6 +597,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         server->backend()->setInitialWindowSize(initialWindowSize);
     }
 
+    QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
     a.setStartXwayland(parser.isSet(xwaylandOption));
     a.setApplicationsToStart(parser.positionalArguments());
     a.setInputMethodServerToStart(parser.value(inputMethodOption));

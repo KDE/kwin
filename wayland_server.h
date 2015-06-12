@@ -44,6 +44,7 @@ class SeatInterface;
 class SurfaceInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 }
 }
@@ -106,6 +107,7 @@ public:
     int createQtConnection();
     void createInternalConnection();
     void createDummyQtWindow();
+    void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
         return m_xwaylandConnection;
@@ -140,6 +142,7 @@ private:
     KWayland::Server::SeatInterface *m_seat = nullptr;
     KWayland::Server::ShellInterface *m_shell = nullptr;
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
+    KWayland::Server::PlasmaWindowManagementInterface *m_windowManagement = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_inputMethodServerConnection = nullptr;

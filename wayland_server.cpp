@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shell_interface.h>
@@ -156,6 +157,47 @@ void WaylandServer::init(const QByteArray &socketName)
             }
         }
     );
+    m_windowManagement = m_display->createPlasmaWindowManagement(m_display);
+    m_windowManagement->create();
+    m_windowManagement->setShowingDesktopState(PlasmaWindowManagementInterface::ShowingDesktopState::Disabled);
+    connect(m_windowManagement, &PlasmaWindowManagementInterface::requestChangeShowingDesktop, this,
+        [] (PlasmaWindowManagementInterface::ShowingDesktopState state) {
+            if (!workspace()) {
+                return;
+            }
+            bool set = false;
+            switch (state) {
+            case PlasmaWindowManagementInterface::ShowingDesktopState::Disabled:
+                set = false;
+                break;
+            case PlasmaWindowManagementInterface::ShowingDesktopState::Enabled:
+                set = true;
+                break;
+            default:
+                Q_UNREACHABLE();
+                break;
+            }
+            if (set == workspace()->showingDesktop()) {
+                return;
+            }
+            workspace()->setShowingDesktop(set);
+        }
+    );
+}
+
+void WaylandServer::initWorkspace()
+{
+    if (m_windowManagement) {
+        connect(workspace(), &Workspace::showingDesktopChanged, this,
+            [this] (bool set) {
+                using namespace KWayland::Server;
+                m_windowManagement->setShowingDesktopState(set ?
+                    PlasmaWindowManagementInterface::ShowingDesktopState::Enabled :
+                    PlasmaWindowManagementInterface::ShowingDesktopState::Disabled
+                );
+            }
+        );
+    }
 }
 
 void WaylandServer::initOutputs()
