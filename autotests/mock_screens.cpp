@@ -39,11 +39,13 @@ QRect MockScreens::geometry(int screen) const
 
 QString MockScreens::name(int screen) const
 {
+    Q_UNUSED(screen);
     return QLatin1String("MoccaScreen"); // mock-a-screen =)
 }
 
 float MockScreens::refreshRate(int screen) const
 {
+    Q_UNUSED(screen);
     return 60.0f;
 }
 
