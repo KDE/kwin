@@ -188,17 +188,6 @@ void ZoomEffect::hideCursor()
 void ZoomEffect::recreateTexture()
 {
     effects->makeOpenGLContextCurrent();
-    // read details about the mouse-cursor theme define per default
-    KConfigGroup mousecfg(KSharedConfig::openConfig(QStringLiteral("kcminputrc")), "Mouse");
-    QString theme = mousecfg.readEntry("cursorTheme", QString());
-    QString size  = mousecfg.readEntry("cursorSize", QString());
-
-    // fetch a reasonable size for the cursor-theme image
-    bool ok;
-    int iconSize = size.toInt(&ok);
-    if (!ok)
-        iconSize = QApplication::style()->pixelMetric(QStyle::PM_LargeIconSize);
-
     // load the cursor-theme image from the Xcursor-library
     xcb_xfixes_get_cursor_image_cookie_t keks = xcb_xfixes_get_cursor_image_unchecked(xcbConnection());
     xcb_xfixes_get_cursor_image_reply_t *ximg = xcb_xfixes_get_cursor_image_reply(xcbConnection(), keks, 0);
@@ -218,7 +207,7 @@ void ZoomEffect::recreateTexture()
         free(ximg);
     }
     else {
-        qCDebug(KWINEFFECTS) << "Loading cursor image (" << theme << ") FAILED -> falling back to proportional mouse tracking!";
+        qCDebug(KWINEFFECTS) << "Falling back to proportional mouse tracking!";
         mouseTracking = MouseTrackingProportional;
     }
 }
