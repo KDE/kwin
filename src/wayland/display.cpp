@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging_p.h"
 #include "output_interface.h"
 #include "plasmashell_interface.h"
+#include "plasmawindowmanagement_interface.h"
 #include "qtsurfaceextension_interface.h"
 #include "seat_interface.h"
 #include "shell_interface.h"
@@ -230,6 +231,13 @@ PlasmaShellInterface *Display::createPlasmaShell(QObject* parent)
     auto s = new PlasmaShellInterface(this, parent);
     connect(this, &Display::aboutToTerminate, s, [this, s] { delete s; });
     return s;
+}
+
+PlasmaWindowManagementInterface *Display::createPlasmaWindowManagement(QObject *parent)
+{
+    auto wm = new PlasmaWindowManagementInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, wm, [this, wm] { delete wm; });
+    return wm;
 }
 
 QtSurfaceExtensionInterface *Display::createQtSurfaceExtension(QObject *parent)

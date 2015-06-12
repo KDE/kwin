@@ -13,6 +13,7 @@ set(SERVER_LIB_SRCS
     output_interface.cpp
     pointer_interface.cpp
     plasmashell_interface.cpp
+    plasmawindowmanagement_interface.cpp
     qtsurfaceextension_interface.cpp
     region_interface.cpp
     resource.cpp
@@ -26,6 +27,11 @@ set(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/plasma-shell.xml
     BASENAME plasma-shell
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/plasma-window-management.xml
+    BASENAME plasma-window-management
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -81,6 +87,7 @@ install(FILES
   output_interface.h
   pointer_interface.h
   plasmashell_interface.h
+  plasmawindowmanagement_interface.h
   qtsurfaceextension_interface.h
   region_interface.h
   resource.h

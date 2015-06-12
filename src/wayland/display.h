@@ -40,6 +40,7 @@ class CompositorInterface;
 class DataDeviceManagerInterface;
 class OutputInterface;
 class PlasmaShellInterface;
+class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class SeatInterface;
 class ShellInterface;
@@ -117,6 +118,7 @@ public:
     SubCompositorInterface *createSubCompositor(QObject *parent = nullptr);
     DataDeviceManagerInterface *createDataDeviceManager(QObject *parent = nullptr);
     PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
+    PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
     QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);
 
     /**
