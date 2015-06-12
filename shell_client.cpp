@@ -301,6 +301,7 @@ bool ShellClient::isShown(bool shaded_is_shown) const
 
 void ShellClient::hideClient(bool hide)
 {
+    Q_UNUSED(hide)
 }
 
 void ShellClient::maximize(MaximizeMode mode)
