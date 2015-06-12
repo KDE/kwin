@@ -259,9 +259,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData& data, int time)
 {
-    bool altered = false;
     if (zoom != target_zoom) {
-        altered = true;
         const float zoomDist = qAbs(target_zoom - source_zoom);
         if (target_zoom > zoom)
             zoom = qMin(zoom + ((zoomDist * time) / animationTime(150*zoomFactor)), target_zoom);
