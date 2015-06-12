@@ -148,7 +148,7 @@ namespace KWin
  them specially (blink, etc.). The state will be reset when the window
  eventually really becomes active.
 
- There are one more ways how a window can become obstrusive, window stealing
+ There are two more ways how a window can become obtrusive, window stealing
  focus: By showing above the active window, by either raising itself,
  or by moving itself on the active desktop.
      - KWin will refuse raising non-active window above the active one,
