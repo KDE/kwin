@@ -937,6 +937,13 @@ WindowPixmap::~WindowPixmap()
     if (isValid() && !kwinApp()->shouldUseWaylandForCompositing()) {
         xcb_free_pixmap(connection(), m_pixmap);
     }
+#if HAVE_WAYLAND
+    if (m_buffer) {
+        using namespace KWayland::Server;
+        QObject::disconnect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
+        m_buffer->unref();
+    }
+#endif
 }
 
 void WindowPixmap::create()
