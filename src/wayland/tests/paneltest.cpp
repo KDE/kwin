@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/client/event_queue.h"
 #include "../src/client/keyboard.h"
 #include "../src/client/plasmashell.h"
+#include "../src/client/plasmawindowmanagement.h"
 #include "../src/client/pointer.h"
 #include "../src/client/registry.h"
 #include "../src/client/seat.h"
@@ -40,6 +41,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QThread>
 // system
 #include <unistd.h>
+
+#include <linux/input.h>
 
 using namespace KWayland::Client;
 
@@ -66,6 +69,7 @@ private:
     Surface *m_surface = nullptr;
     PlasmaShell *m_plasmaShell = nullptr;
     PlasmaShellSurface *m_plasmaShellSurface = nullptr;
+    PlasmaWindowManagement *m_windowManagement = nullptr;
 };
 
 PanelTest::PanelTest(QObject *parent)
@@ -120,11 +124,45 @@ void PanelTest::setupRegistry(Registry *registry)
     connect(registry, &Registry::seatAnnounced, this,
         [this, registry](quint32 name, quint32 version) {
             m_seat = registry->createSeat(name, version, this);
+            connect(m_seat, &Seat::hasPointerChanged, this,
+                [this] (bool has) {
+                    if (!has) {
+                        return;
+                    }
+                    auto p = m_seat->createPointer(this);
+                    connect(p, &Pointer::buttonStateChanged, this,
+                        [this] (quint32 serial, quint32 time, quint32 button, KWayland::Client::Pointer::ButtonState state) {
+                            Q_UNUSED(serial)
+                            if (!m_windowManagement) {
+                                return;
+                            }
+                            if (state == Pointer::ButtonState::Released) {
+                                return;
+                            }
+                            if (button == BTN_LEFT) {
+                                m_windowManagement->showDesktop();
+                            } else if (button == BTN_RIGHT) {
+                                m_windowManagement->hideDesktop();
+                            }
+                        }
+                    );
+                }
+            );
         }
     );
     connect(registry, &Registry::plasmaShellAnnounced, this,
         [this, registry] (quint32 name, quint32 version) {
             m_plasmaShell = registry->createPlasmaShell(name, version, this);
+        }
+    );
+    connect(registry, &Registry::plasmaWindowManagementAnnounced, this,
+        [this, registry] (quint32 name, quint32 version) {
+            m_windowManagement = registry->createPlasmaWindowManagement(name, version, this);
+            connect(m_windowManagement, &PlasmaWindowManagement::showingDesktopChanged, this,
+                [] (bool set) {
+                    qDebug() << "Showing desktop changed, new state: " << set;
+                }
+            );
         }
     );
     connect(registry, &Registry::interfacesAnnounced, this,
