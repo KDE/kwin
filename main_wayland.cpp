@@ -182,6 +182,7 @@ void ApplicationWayland::continueStartupWithX()
             environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
             environment.remove("DISPLAY");
             environment.remove("WAYLAND_DISPLAY");
+            environment.remove(QStringLiteral("EGL_PLATFORM"));
             QProcess *p = new QProcess(this);
             p->setProcessEnvironment(environment);
             p->start(m_inputMethodServerToStart);
@@ -195,6 +196,7 @@ void ApplicationWayland::continueStartupWithX()
         environment.remove(QStringLiteral("WAYLAND_SOCKET"));
         environment.remove(QStringLiteral("QT_QPA_PLATFORM"));
         environment.remove(QStringLiteral("QT_WAYLAND_DISABLE_WINDOWDECORATION"));
+        environment.remove(QStringLiteral("EGL_PLATFORM"));
         environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
         // TODO: maybe create a socket per process?
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandServer()->display()->socketName());
