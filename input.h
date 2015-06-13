@@ -197,6 +197,8 @@ private:
     void pointerInternalWindowVisibilityChanged(bool visible);
     void installCursorFromDecoration();
     bool areButtonsPressed() const;
+    void updateKeyboardWindow();
+    void setupWorkspace();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
 #if HAVE_XKB

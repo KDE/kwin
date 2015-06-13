@@ -256,11 +256,21 @@ InputRedirection::InputRedirection(QObject *parent)
         }
     }
 #endif
+    connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
 }
 
 InputRedirection::~InputRedirection()
 {
     s_self = NULL;
+}
+
+void InputRedirection::setupWorkspace()
+{
+#if HAVE_WAYLAND
+    if (waylandServer()) {
+        connect(workspace(), &Workspace::clientActivated, this, &InputRedirection::updateKeyboardWindow);
+    }
+#endif
 }
 
 #if HAVE_WAYLAND
@@ -732,6 +742,32 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 #endif
 }
 
+void InputRedirection::updateKeyboardWindow()
+{
+#if HAVE_WAYLAND
+    if (!workspace()) {
+        return;
+    }
+    if (auto seat = findSeat()) {
+        // TODO: this needs better integration
+        // check unmanaged
+        Toplevel *t = nullptr;
+        if (!workspace()->unmanagedList().isEmpty()) {
+            // TODO: better check whether this unmanaged should get the key event
+            t = workspace()->unmanagedList().first();
+        }
+        if (!t) {
+            t = workspace()->activeClient();
+        }
+        if (t && t->surface()) {
+            if (t->surface() != seat->focusedKeyboardSurface()) {
+                seat->setFocusedKeyboardSurface(t->surface());
+            }
+        }
+    }
+#endif
+}
+
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
 #if HAVE_XKB
@@ -786,22 +822,7 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
-        // TODO: this needs better integration
-        // check unmanaged
-        Toplevel *t = nullptr;
-        if (!workspace()->unmanagedList().isEmpty()) {
-            // TODO: better check whether this unmanaged should get the key event
-            t = workspace()->unmanagedList().first();
-        }
-        if (!t) {
-            t = workspace()->activeClient();
-        }
-        if (t && t->surface()) {
-            if (t->surface() != seat->focusedKeyboardSurface()) {
-                seat->setFocusedKeyboardSurface(t->surface());
-            }
-            state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
-        }
+        state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
     }
 #endif
 }
