@@ -486,6 +486,9 @@ void SeatInterface::setFocusedPointerSurface(SurfaceInterface *surface, const QP
     d->globalPointer.focus = Private::Pointer::Focus();
     d->globalPointer.focus.surface = surface;
     PointerInterface *p = d->pointerForSurface(surface);
+    if (!p->resource()) {
+        p = nullptr;
+    }
     d->globalPointer.focus.pointer = p;
     if (d->globalPointer.focus.surface) {
         d->globalPointer.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
@@ -664,6 +667,9 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
     d->keys.focus = Private::Keyboard::Focus();
     d->keys.focus.surface = surface;
     KeyboardInterface *k = d->keyboardForSurface(surface);
+    if (!k->resource()) {
+        k = nullptr;
+    }
     d->keys.focus.keyboard = k;
     if (d->keys.focus.surface) {
         d->keys.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
@@ -825,6 +831,9 @@ void SeatInterface::setFocusedTouchSurface(SurfaceInterface *surface, const QPoi
     d->touchInterface.focus.surface = surface;
     d->touchInterface.focus.offset = surfacePosition;
     TouchInterface *t = d->touchForSurface(surface);
+    if (!t->resource()) {
+        t = nullptr;
+    }
     d->touchInterface.focus.touch = t;
     if (d->touchInterface.focus.surface) {
         d->touchInterface.focus.destroyConnection = connect(surface, &QObject::destroyed, this,
