@@ -180,7 +180,6 @@ void ApplicationWayland::continueStartupWithX()
             QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
             environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
             environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
-            environment.insert(QStringLiteral("QT_IM_MODULE"), QStringLiteral("maliit"));
             environment.remove("DISPLAY");
             environment.remove("WAYLAND_DISPLAY");
             QProcess *p = new QProcess(this);
