@@ -141,6 +141,8 @@ Layer ShellClient::layer() const
             return AboveLayer;
         return DockLayer;
     }
+    if (isOnScreenDisplay())
+        return OnScreenDisplayLayer;
     if (isFullScreen() && isActive())
         return ActiveLayer;
     return KWin::NormalLayer;
