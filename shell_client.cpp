@@ -62,6 +62,9 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
         setGeometry(QRect(QPoint(0, 0), m_clientSize));
         setDesktop(VirtualDesktopManager::self()->current());
     }
+    if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
+        m_windowType = NET::OnScreenDisplay;
+    }
 
     connect(surface->surface(), &SurfaceInterface::sizeChanged, this,
         [this] {
@@ -418,6 +421,9 @@ bool ShellClient::userCanSetNoBorder() const
 bool ShellClient::wantsInput() const
 {
     if (isInternal()) {
+        return false;
+    }
+    if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
         return false;
     }
     // if the window is not visible it doesn't get input

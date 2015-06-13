@@ -96,6 +96,11 @@ public:
     int createXWaylandConnection();
 
     /**
+     * @returns file descriptor to the input method server's socket.
+     **/
+    int createInputMethodConnection();
+
+    /**
      * @returns file descriptor for QtWayland
      **/
     int createQtConnection();
@@ -107,6 +112,9 @@ public:
     }
     KWayland::Server::ClientConnection *qtConnection() const {
         return m_qtConnection;
+    }
+    KWayland::Server::ClientConnection *inputMethodConnection() const {
+        return m_inputMethodServerConnection;
     }
     KWayland::Server::ClientConnection *internalConnection() const {
         return m_internalConnection.server;
@@ -134,6 +142,7 @@ private:
     KWayland::Server::PlasmaShellInterface *m_plasmaShell = nullptr;
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
+    KWayland::Server::ClientConnection *m_inputMethodServerConnection = nullptr;
     KWayland::Server::ClientConnection *m_qtConnection = nullptr;
     KWayland::Client::ConnectionThread *m_qtClientConnection = nullptr;
     struct {

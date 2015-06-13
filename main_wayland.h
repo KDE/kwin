@@ -40,6 +40,9 @@ public:
     void setApplicationsToStart(const QStringList &applications) {
         m_applicationsToStart = applications;
     }
+    void setInputMethodServerToStart(const QString &inputMethodServer) {
+        m_inputMethodServerToStart = inputMethodServer;
+    }
 
     bool notify(QObject *o, QEvent *e) override;
 
@@ -56,6 +59,7 @@ private:
     bool m_startXWayland = false;
     int m_xcbConnectionFd = -1;
     QStringList m_applicationsToStart;
+    QString m_inputMethodServerToStart;
     QProcess *m_xwaylandProcess = nullptr;
 };
 

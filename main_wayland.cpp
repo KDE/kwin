@@ -174,6 +174,22 @@ void ApplicationWayland::continueStartupWithX()
         ::exit(1);
     }
 
+    if (!m_inputMethodServerToStart.isEmpty()) {
+        int socket = dup(waylandServer()->createInputMethodConnection());
+        if (socket >= 0) {
+            QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+            environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
+            environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
+            environment.insert(QStringLiteral("QT_IM_MODULE"), QStringLiteral("maliit"));
+            environment.remove("DISPLAY");
+            environment.remove("WAYLAND_DISPLAY");
+            QProcess *p = new QProcess(this);
+            p->setProcessEnvironment(environment);
+            p->start(m_inputMethodServerToStart);
+            p->waitForStarted();
+        }
+    }
+
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
         QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
@@ -418,6 +434,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 #endif
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
+    qunsetenv("QT_IM_MODULE");
     qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
     qputenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
     KWin::ApplicationWayland a(argc, argv);
@@ -479,6 +496,12 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     QCommandLineOption drmOption(QStringLiteral("drm"), i18n("Render through drm node."));
     parser.addOption(drmOption);
 #endif
+
+    QCommandLineOption inputMethodOption(QStringLiteral("inputmethod"),
+                                         i18n("Input method that KWin starts."),
+                                         QStringLiteral("path/to/imserver"));
+    parser.addOption(inputMethodOption);
+
     parser.addPositionalArgument(QStringLiteral("applications"),
                                  i18n("Applications to start once Wayland and Xwayland server are started"),
                                  QStringLiteral("[/path/to/application...]"));
@@ -576,6 +599,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
 
     a.setStartXwayland(parser.isSet(xwaylandOption));
     a.setApplicationsToStart(parser.positionalArguments());
+    a.setInputMethodServerToStart(parser.value(inputMethodOption));
     a.start();
 
     return a.exec();

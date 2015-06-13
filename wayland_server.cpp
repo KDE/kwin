@@ -189,6 +189,17 @@ int WaylandServer::createXWaylandConnection()
     return sx[1];
 }
 
+int WaylandServer::createInputMethodConnection()
+{
+    int sx[2];
+    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
+        qCWarning(KWIN_CORE) << "Could not create socket";
+        return -1;
+    }
+    m_inputMethodServerConnection = m_display->createClient(sx[0]);
+    return sx[1];
+}
+
 int WaylandServer::createQtConnection()
 {
     int sx[2];
