@@ -25,6 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/kwaylandserver_export.h>
 
 #include "global.h"
+#include "resource.h"
 
 class QSize;
 
@@ -34,6 +35,7 @@ namespace Server
 {
 
 class Display;
+class PlasmaWindowInterface;
 
 class KWAYLANDSERVER_EXPORT PlasmaWindowManagementInterface : public Global
 {
@@ -46,6 +48,9 @@ public:
     };
     void setShowingDesktopState(ShowingDesktopState state);
 
+    PlasmaWindowInterface *createWindow(QObject *parent);
+    QList<PlasmaWindowInterface*> windows() const;
+
 Q_SIGNALS:
     void requestChangeShowingDesktop(ShowingDesktopState requestedState);
 
@@ -54,6 +59,24 @@ private:
     explicit PlasmaWindowManagementInterface(Display *display, QObject *parent);
     class Private;
     Private *d_func() const;
+};
+
+class KWAYLANDSERVER_EXPORT PlasmaWindowInterface : public QObject
+{
+    Q_OBJECT
+public:
+    virtual ~PlasmaWindowInterface();
+
+    void setTitle(const QString &title);
+    void setAppId(const QString &appId);
+    void setVirtualDesktop(quint32 desktop);
+
+private:
+    friend class PlasmaWindowManagementInterface;
+    explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);
+
+    class Private;
+    const QScopedPointer<Private> d;
 };
 
 }
