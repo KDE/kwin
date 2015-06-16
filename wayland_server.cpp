@@ -18,6 +18,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "wayland_server.h"
+#include "client.h"
 #include "abstract_backend.h"
 #include "composite.h"
 #include "screens.h"
@@ -197,7 +198,25 @@ void WaylandServer::initWorkspace()
                 );
             }
         );
+        connect(workspace(), &Workspace::clientAdded, this, &WaylandServer::announceClientToWindowManagement);
+        connect(this, &WaylandServer::shellClientAdded, this, &WaylandServer::announceClientToWindowManagement);
     }
+}
+
+void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
+{
+    auto w = m_windowManagement->createWindow(c);
+    w->setTitle(c->caption());
+    w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
+    connect(c, &AbstractClient::captionChanged, w, [w, c] { w->setTitle(c->caption()); });
+    connect(c, &AbstractClient::desktopChanged, w,
+        [w, c] {
+            if (c->isOnAllDesktops()) {
+                return;
+            }
+            w->setVirtualDesktop(c->desktop() - 1);
+        }
+    );
 }
 
 void WaylandServer::initOutputs()

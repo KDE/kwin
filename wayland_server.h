@@ -54,6 +54,7 @@ namespace KWin
 class ShellClient;
 
 class AbstractBackend;
+class AbstractClient;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -137,6 +138,7 @@ Q_SIGNALS:
 private:
     void fakeDummyQtWindowInput();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
+    void announceClientToWindowManagement(AbstractClient *c);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;
