@@ -163,6 +163,15 @@ void PanelTest::setupRegistry(Registry *registry)
                     qDebug() << "Showing desktop changed, new state: " << set;
                 }
             );
+            connect(m_windowManagement, &PlasmaWindowManagement::windowCreated, this,
+                [this] (PlasmaWindow *w) {
+                    connect(w, &PlasmaWindow::titleChanged, this,
+                        [w] {
+                            qDebug() << "Window title changed to: " << w->title();
+                        }
+                    );
+                }
+            );
         }
     );
     connect(registry, &Registry::interfacesAnnounced, this,
