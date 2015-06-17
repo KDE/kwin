@@ -66,6 +66,7 @@ public:
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setVirtualDesktop(quint32 desktop);
+    void unmap();
 
     struct WindowResource {
         wl_resource *resource;
@@ -228,6 +229,9 @@ void PlasmaWindowInterface::Private::unbind(wl_resource *resource)
             it++;
         }
     }
+    if (p->resources.isEmpty()) {
+        p->q->deleteLater();
+    }
 }
 
 void PlasmaWindowInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
@@ -299,6 +303,14 @@ void PlasmaWindowInterface::Private::setVirtualDesktop(quint32 desktop)
     }
 }
 
+void PlasmaWindowInterface::Private::unmap()
+{
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_unmapped((*it).resource);
+        wl_resource_destroy((*it).resource);
+    }
+}
+
 PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
     : QObject(parent)
     , d(new Private(wm, this))
@@ -320,6 +332,11 @@ void PlasmaWindowInterface::setTitle(const QString &title)
 void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 {
     d->setVirtualDesktop(desktop);
+}
+
+void PlasmaWindowInterface::unmap()
+{
+    d->unmap();
 }
 
 }

@@ -71,6 +71,8 @@ public:
     void setAppId(const QString &appId);
     void setVirtualDesktop(quint32 desktop);
 
+    void unmap();
+
 private:
     friend class PlasmaWindowManagementInterface;
     explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);
