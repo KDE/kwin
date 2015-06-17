@@ -87,6 +87,9 @@ void WaylandServer::init(const QByteArray &socketName)
             };
             if (Toplevel *t = ws->findToplevel(check)) {
                 t->setSurface(surface);
+                if (Client *c = dynamic_cast<Client*>(t)) {
+                    announceClientToWindowManagement(c);
+                }
             }
         }
     );
@@ -205,6 +208,9 @@ void WaylandServer::initWorkspace()
 
 void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
 {
+    if (!c->surface()) {
+        return;
+    }
     auto w = m_windowManagement->createWindow(c);
     w->setTitle(c->caption());
     w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
