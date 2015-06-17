@@ -211,7 +211,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     if (!c->surface()) {
         return;
     }
-    auto w = m_windowManagement->createWindow(c);
+    auto w = m_windowManagement->createWindow(m_windowManagement);
     w->setTitle(c->caption());
     w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
     connect(c, &AbstractClient::captionChanged, w, [w, c] { w->setTitle(c->caption()); });
@@ -223,6 +223,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
             w->setVirtualDesktop(c->desktop() - 1);
         }
     );
+    connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
 }
 
 void WaylandServer::initOutputs()
