@@ -588,10 +588,10 @@ void HwcomposerWindow::present()
     int oldrelease2 = m_list[0]->hwLayers[0].releaseFenceFd;
 
     hwc_composer_device_1_t *device = m_backend->device();
-    if (device->prepare(device, HWC_NUM_DISPLAY_TYPES, m_list) != 0) {
+    if (device->prepare(device, 1, m_list) != 0) {
         qCWarning(KWIN_HWCOMPOSER) << "Error preparing hwcomposer for frame";
     }
-    if (device->set(device, HWC_NUM_DISPLAY_TYPES, m_list) != 0) {
+    if (device->set(device, 1, m_list) != 0) {
         qCWarning(KWIN_HWCOMPOSER) << "Error setting device for frame";
     }
 
