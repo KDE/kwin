@@ -85,6 +85,9 @@ public:
 
     void unmap();
 
+Q_SIGNALS:
+    void closeRequested();
+
 private:
     friend class PlasmaWindowManagementInterface;
     explicit PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent);

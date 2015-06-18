@@ -78,6 +78,10 @@ public:
 private:
     static void unbind(wl_resource *resource);
     static void destroyListenerCallback(wl_listener *listener, void *data);
+    static void closeCallback(wl_client *client, wl_resource *resource);
+    static Private *cast(wl_resource *resource) {
+        return reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
+    }
 
     PlasmaWindowInterface *q;
     PlasmaWindowManagementInterface *wm;
@@ -86,7 +90,7 @@ private:
     quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
     wl_listener listener;
-//     static const struct org_kde_plasma_window_interface s_interface;
+    static const struct org_kde_plasma_window_interface s_interface;
 };
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
@@ -199,8 +203,9 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
     return window;
 }
 
-// const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_interface = {
-// };
+const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_interface = {
+    closeCallback
+};
 
 PlasmaWindowInterface::Private::Private(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q)
     : q(q)
@@ -255,7 +260,7 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent)
     r.destroyListener->notify = destroyListenerCallback;
     r.destroyListener->link.prev = nullptr;
     r.destroyListener->link.next = nullptr;
-    wl_resource_set_implementation(resource, nullptr, this, unbind);
+    wl_resource_set_implementation(resource, &s_interface, this, unbind);
     wl_resource_add_destroy_listener(resource, r.destroyListener);
     resources << r;
 
@@ -329,6 +334,13 @@ void PlasmaWindowInterface::Private::setState(org_kde_plasma_window_management_s
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_state_changed((*it).resource, m_state);
     }
+}
+
+void PlasmaWindowInterface::Private::closeCallback(wl_client *client, wl_resource *resource)
+{
+    Q_UNUSED(client)
+    Private *p = cast(resource);
+    emit p->q->closeRequested();
 }
 
 PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
