@@ -170,6 +170,66 @@ void PanelTest::setupRegistry(Registry *registry)
                             qDebug() << "Window title changed to: " << w->title();
                         }
                     );
+                    connect(w, &PlasmaWindow::activeChanged, this,
+                        [w] {
+                            qDebug() << "Window active changed: " << w->isActive();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::maximizedChanged, this,
+                        [w] {
+                            qDebug() << "Window maximized changed: " << w->isMaximized();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::maximizedChanged, this,
+                        [w] {
+                            qDebug() << "Window minimized changed: " << w->isMinimized();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::keepAboveChanged, this,
+                        [w] {
+                            qDebug() << "Window keep above changed: " << w->isKeepAbove();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::keepBelowChanged, this,
+                        [w] {
+                            qDebug() << "Window keep below changed: " << w->isKeepBelow();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::onAllDesktopsChanged, this,
+                        [w] {
+                            qDebug() << "Window on all desktops changed: " << w->isOnAllDesktops();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::fullscreenChanged, this,
+                        [w] {
+                            qDebug() << "Window full screen changed: " << w->isFullscreen();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::demandsAttentionChanged, this,
+                        [w] {
+                            qDebug() << "Window demands attention changed: " << w->isDemandingAttention();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::closeableChanged, this,
+                        [w] {
+                            qDebug() << "Window is closeable changed: " << w->isCloseable();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::minimizeableChanged, this,
+                        [w] {
+                            qDebug() << "Window is minimizeable changed: " << w->isMinimizeable();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::maximizeableChanged, this,
+                        [w] {
+                            qDebug() << "Window is maximizeable changed: " << w->isMaximizeable();
+                        }
+                    );
+                    connect(w, &PlasmaWindow::fullscreenableChanged, this,
+                        [w] {
+                            qDebug() << "Window is fullscreenable changed: " << w->isFullscreenable();
+                        }
+                    );
                 }
             );
         }

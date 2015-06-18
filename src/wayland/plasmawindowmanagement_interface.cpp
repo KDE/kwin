@@ -67,6 +67,7 @@ public:
     void setAppId(const QString &appId);
     void setVirtualDesktop(quint32 desktop);
     void unmap();
+    void setState(org_kde_plasma_window_management_state flag, bool set);
 
     struct WindowResource {
         wl_resource *resource;
@@ -83,6 +84,7 @@ private:
     QString m_title;
     QString m_appId;
     quint32 m_virtualDesktop = 0;
+    quint32 m_state = 0;
     wl_listener listener;
 //     static const struct org_kde_plasma_window_interface s_interface;
 };
@@ -265,6 +267,7 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent)
     if (!m_title.isEmpty()) {
         org_kde_plasma_window_send_title_changed(resource, m_title.toUtf8().constData());
     }
+    org_kde_plasma_window_send_state_changed(resource, m_state);
     c->flush();
 }
 
@@ -311,6 +314,23 @@ void PlasmaWindowInterface::Private::unmap()
     }
 }
 
+void PlasmaWindowInterface::Private::setState(org_kde_plasma_window_management_state flag, bool set)
+{
+    quint32 newState = m_state;
+    if (set) {
+        newState |= flag;
+    } else {
+        newState &= ~flag;
+    }
+    if (newState == m_state) {
+        return;
+    }
+    m_state = newState;
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_state_changed((*it).resource, m_state);
+    }
+}
+
 PlasmaWindowInterface::PlasmaWindowInterface(PlasmaWindowManagementInterface *wm, QObject *parent)
     : QObject(parent)
     , d(new Private(wm, this))
@@ -337,6 +357,66 @@ void PlasmaWindowInterface::setVirtualDesktop(quint32 desktop)
 void PlasmaWindowInterface::unmap()
 {
     d->unmap();
+}
+
+void PlasmaWindowInterface::setActive(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ACTIVE, set);
+}
+
+void PlasmaWindowInterface::setFullscreen(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREEN, set);
+}
+
+void PlasmaWindowInterface::setKeepAbove(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_KEEP_ABOVE, set);
+}
+
+void PlasmaWindowInterface::setKeepBelow(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_KEEP_BELOW, set);
+}
+
+void PlasmaWindowInterface::setMaximized(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MAXIMIZED, set);
+}
+
+void PlasmaWindowInterface::setMinimized(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZED, set);
+}
+
+void PlasmaWindowInterface::setOnAllDesktops(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_ON_ALL_DESKTOPS, set);
+}
+
+void PlasmaWindowInterface::setDemandsAttention(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_DEMANDS_ATTENTION, set);
+}
+
+void PlasmaWindowInterface::setCloseable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_CLOSEABLE, set);
+}
+
+void PlasmaWindowInterface::setFullscreenable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_FULLSCREENABLE, set);
+}
+
+void PlasmaWindowInterface::setMaximizeable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MAXIMIZABLE, set);
+}
+
+void PlasmaWindowInterface::setMinimizeable(bool set)
+{
+    d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZABLE, set);
 }
 
 }

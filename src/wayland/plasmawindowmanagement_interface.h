@@ -70,6 +70,18 @@ public:
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setVirtualDesktop(quint32 desktop);
+    void setActive(bool set);
+    void setMinimized(bool set);
+    void setMaximized(bool set);
+    void setFullscreen(bool set);
+    void setKeepAbove(bool set);
+    void setKeepBelow(bool set);
+    void setOnAllDesktops(bool set);
+    void setDemandsAttention(bool set);
+    void setCloseable(bool set);
+    void setMinimizeable(bool set);
+    void setMaximizeable(bool set);
+    void setFullscreenable(bool set);
 
     void unmap();
 
