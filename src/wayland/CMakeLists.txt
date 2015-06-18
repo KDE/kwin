@@ -98,3 +98,8 @@ install(FILES
   touch_interface.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KWayland/Server COMPONENT Devel
 )
+
+include(ECMGeneratePriFile)
+ecm_generate_pri_file(BASE_NAME KWaylandServer LIB_NAME KF5WaylandServer DEPS "core" FILENAME_VAR PRI_FILENAME INCLUDE_INSTALL_DIR ${KDE_INSTALL_INCLUDEDIR_KF5})
+install(FILES ${PRI_FILENAME}
+        DESTINATION ${ECM_MKSPECS_INSTALL_DIR})
