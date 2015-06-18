@@ -250,6 +250,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     );
     connect(c, &AbstractClient::demandsAttentionChanged, w, [w, c] { w->setDemandsAttention(c->isDemandingAttention()); });
     connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
+    connect(w, &PlasmaWindowInterface::closeRequested, c, [c] { c->closeWindow(); });
 }
 
 void WaylandServer::initOutputs()
