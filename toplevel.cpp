@@ -493,6 +493,17 @@ void Toplevel::setDepth(int depth)
     }
 }
 
+QRegion Toplevel::inputShape() const
+{
+#if HAVE_WAYLAND
+    if (m_surface) {
+        return m_surface->input();
+    } else
+#endif
+    // TODO: maybe also for X11?
+    return QRegion();
+}
+
 } // namespace
 
 #include "toplevel.moc"

@@ -1011,6 +1011,15 @@ bool InputRedirection::areButtonsPressed() const
     return false;
 }
 
+static bool acceptsInput(Toplevel *t, const QPoint &pos)
+{
+    const QRegion input = t->inputShape();
+    if (input.isEmpty()) {
+        return true;
+    }
+    return input.translated(t->pos()).contains(pos);
+}
+
 Toplevel *InputRedirection::findToplevel(const QPoint &pos)
 {
     if (!Workspace::self()) {
@@ -1019,7 +1028,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
     // TODO: check whether the unmanaged wants input events at all
     const UnmanagedList &unmanaged = Workspace::self()->unmanagedList();
     foreach (Unmanaged *u, unmanaged) {
-        if (u->geometry().contains(pos)) {
+        if (u->geometry().contains(pos) && acceptsInput(u, pos)) {
             return u;
         }
     }
@@ -1044,7 +1053,7 @@ Toplevel *InputRedirection::findToplevel(const QPoint &pos)
         if (!t->readyForPainting()) {
             continue;
         }
-        if (t->geometry().contains(pos)) {
+        if (t->geometry().contains(pos) && acceptsInput(t, pos)) {
             return t;
         }
     } while (it != stacking.begin());
