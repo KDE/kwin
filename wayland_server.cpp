@@ -211,18 +211,44 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     if (!c->surface()) {
         return;
     }
+    using namespace KWayland::Server;
     auto w = m_windowManagement->createWindow(m_windowManagement);
     w->setTitle(c->caption());
     w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
+    w->setActive(c->isActive());
+    w->setFullscreen(c->isFullScreen());
+    w->setKeepAbove(c->keepAbove());
+    w->setKeepBelow(c->keepBelow());
+    w->setMaximized(c->maximizeMode() == KWin::MaximizeFull);
+    w->setMinimized(c->isMinimized());
+    w->setOnAllDesktops(c->isOnAllDesktops());
+    w->setDemandsAttention(c->isDemandingAttention());
+    w->setCloseable(c->isCloseable());
+    w->setMaximizeable(c->isMaximizable());
+    w->setMinimizeable(c->isMinimizable());
+    w->setFullscreenable(c->isFullScreenable());
     connect(c, &AbstractClient::captionChanged, w, [w, c] { w->setTitle(c->caption()); });
     connect(c, &AbstractClient::desktopChanged, w,
         [w, c] {
             if (c->isOnAllDesktops()) {
+                w->setOnAllDesktops(true);
                 return;
             }
             w->setVirtualDesktop(c->desktop() - 1);
+            w->setOnAllDesktops(false);
         }
     );
+    connect(c, &AbstractClient::activeChanged, w, [w, c] { w->setActive(c->isActive()); });
+    connect(c, &AbstractClient::fullScreenChanged, w, [w, c] { w->setFullscreen(c->isFullScreen()); });
+    connect(c, &AbstractClient::keepAboveChanged, w, &PlasmaWindowInterface::setKeepAbove);
+    connect(c, &AbstractClient::keepBelowChanged, w, &PlasmaWindowInterface::setKeepBelow);
+    connect(c, &AbstractClient::minimizedChanged, w, [w, c] { w->setMinimized(c->isMinimized()); });
+    connect(c, static_cast<void (AbstractClient::*)(AbstractClient*,MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged), w,
+        [w] (KWin::AbstractClient *c, MaximizeMode mode) {
+            w->setMaximized(mode == KWin::MaximizeFull);
+        }
+    );
+    connect(c, &AbstractClient::demandsAttentionChanged, w, [w, c] { w->setDemandsAttention(c->isDemandingAttention()); });
     connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
 }
 
