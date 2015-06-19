@@ -33,6 +33,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 
+#include <KDesktopFile>
+
 #include <QWindow>
 
 using namespace KWayland::Server;
@@ -83,6 +85,8 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
             maximize(maximized ? MaximizeFull : MaximizeRestore);
         }
     );
+    connect(surface, &ShellSurfaceInterface::windowClassChanged, this, &ShellClient::updateIcon);
+    updateIcon();
 }
 
 ShellClient::~ShellClient() = default;
@@ -625,6 +629,15 @@ bool ShellClient::hasStrut() const
         return false;
     }
     return m_plasmaShellSurface->panelBehavior() != PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
+}
+
+void ShellClient::updateIcon()
+{
+    if (m_shellSurface->windowClass().isEmpty()) {
+        setIcon(QIcon());
+    }
+    KDesktopFile df(QStringLiteral("%0.desktop").arg(QString::fromUtf8(m_shellSurface->windowClass())));
+    setIcon(QIcon::fromTheme(df.readIcon()));
 }
 
 }
