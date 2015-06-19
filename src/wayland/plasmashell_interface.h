@@ -72,10 +72,18 @@ public:
         Panel
     };
     Role role() const;
+    enum class PanelBehavior {
+        AlwaysVisible,
+        AutoHide,
+        WindowsCanCover,
+        WindowsGoBelow
+    };
+    PanelBehavior panelBehavior() const;
 
 Q_SIGNALS:
     void positionChanged();
     void roleChanged();
+    void panelBehaviorChanged();
 
 private:
     friend class PlasmaShellInterface;

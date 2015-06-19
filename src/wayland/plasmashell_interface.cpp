@@ -72,6 +72,7 @@ public:
     QPoint m_globalPos;
     Role m_role;
     bool m_positionSet = false;
+    PanelBehavior m_panelBehavior = PanelBehavior::AlwaysVisible;
 
 private:
     // interface callbacks
@@ -79,9 +80,11 @@ private:
     static void setOutputCallback(wl_client *client, wl_resource *resource, wl_resource *output);
     static void setPositionCallback(wl_client *client, wl_resource *resource, int32_t x, int32_t y);
     static void setRoleCallback(wl_client *client, wl_resource *resource, uint32_t role);
+    static void setPanelBehaviorCallback(wl_client *client, wl_resource *resource, uint32_t flag);
 
     void setPosition(const QPoint &globalPos);
     void setRole(uint32_t role);
+    void setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior);
 
     PlasmaShellSurfaceInterface *q_func() {
         return reinterpret_cast<PlasmaShellSurfaceInterface *>(q);
@@ -149,7 +152,8 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     destroyCallback,
     setOutputCallback,
     setPositionCallback,
-    setRoleCallback
+    setRoleCallback,
+    setPanelBehaviorCallback
 };
 
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
@@ -236,6 +240,38 @@ void PlasmaShellSurfaceInterface::Private::setRole(uint32_t role)
     emit q->roleChanged();
 }
 
+void PlasmaShellSurfaceInterface::Private::setPanelBehaviorCallback(wl_client *client, wl_resource *resource, uint32_t flag)
+{
+    auto s = cast<Private>(resource);
+    Q_ASSERT(client == *s->client);
+    s->setPanelBehavior(org_kde_plasma_surface_panel_behavior(flag));
+}
+
+void PlasmaShellSurfaceInterface::Private::setPanelBehavior(org_kde_plasma_surface_panel_behavior behavior)
+{
+    PanelBehavior newBehavior = PanelBehavior::AlwaysVisible;
+    switch (behavior) {
+    case ORG_KDE_PLASMA_SURFACE_PANEL_BEHAVIOR_AUTO_HIDE:
+        newBehavior = PanelBehavior::AutoHide;
+        break;
+    case ORG_KDE_PLASMA_SURFACE_PANEL_BEHAVIOR_WINDOWS_CAN_COVER:
+        newBehavior = PanelBehavior::WindowsCanCover;
+        break;
+    case ORG_KDE_PLASMA_SURFACE_PANEL_BEHAVIOR_WINDOWS_GO_BELOW:
+        newBehavior = PanelBehavior::WindowsGoBelow;
+        break;
+    case ORG_KDE_PLASMA_SURFACE_PANEL_BEHAVIOR_ALWAYS_VISIBLE:
+    default:
+        break;
+    }
+    if (m_panelBehavior == newBehavior) {
+        return;
+    }
+    m_panelBehavior = newBehavior;
+    Q_Q(PlasmaShellSurfaceInterface);
+    emit q->panelBehaviorChanged();
+}
+
 QPoint PlasmaShellSurfaceInterface::position() const
 {
     Q_D();
@@ -252,6 +288,12 @@ bool PlasmaShellSurfaceInterface::isPositionSet() const
 {
     Q_D();
     return d->m_positionSet;
+}
+
+PlasmaShellSurfaceInterface::PanelBehavior PlasmaShellSurfaceInterface::panelBehavior() const
+{
+    Q_D();
+    return d->m_panelBehavior;
 }
 
 }
