@@ -87,6 +87,18 @@ public:
 
 Q_SIGNALS:
     void closeRequested();
+    void virtualDesktopRequested(quint32 desktop);
+    void activeRequested(bool set);
+    void minimizedRequested(bool set);
+    void maximizedRequested(bool set);
+    void fullscreenRequested(bool set);
+    void keepAboveRequested(bool set);
+    void keepBelowRequested(bool set);
+    void demandsAttentionRequested(bool set);
+    void closeableRequested(bool set);
+    void minimizeableRequested(bool set);
+    void maximizeableRequested(bool set);
+    void fullscreenableRequested(bool set);
 
 private:
     friend class PlasmaWindowManagementInterface;
