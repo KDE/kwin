@@ -188,8 +188,7 @@ void Workspace::updateClientArea(bool force)
     if (waylandServer()) {
         auto updateStrutsForWaylandClient = [&] (ShellClient *c) {
             // assuming that only docks have "struts" and that all docks have a strut
-            // TODO: add windows can cover panels which don't have struts
-            if (!c->isShown(true) || !c->isDock()) {
+            if (!c->hasStrut()) {
                 return;
             }
             // TODO: implement restrictedMoveArea adjustments

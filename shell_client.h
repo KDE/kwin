@@ -95,6 +95,7 @@ public:
     void move(int x, int y, ForceGeometry_t force = NormalGeometrySet) override;
     using AbstractClient::resizeWithChecks;
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
+    bool hasStrut() const override;
 
     quint32 windowId() const {
         return m_windowId;

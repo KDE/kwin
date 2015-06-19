@@ -135,6 +135,20 @@ Layer ShellClient::layer() const
     if (isDock()) {
         if (workspace()->showingDesktop())
             return NotificationLayer;
+        if (m_plasmaShellSurface) {
+            switch (m_plasmaShellSurface->panelBehavior()) {
+            case PlasmaShellSurfaceInterface::PanelBehavior::WindowsCanCover:
+                return NormalLayer;
+            case PlasmaShellSurfaceInterface::PanelBehavior::AutoHide:
+                return AboveLayer;
+            case PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow:
+            case PlasmaShellSurfaceInterface::PanelBehavior::AlwaysVisible:
+                return DockLayer;
+            default:
+                Q_UNREACHABLE();
+                break;
+            }
+        }
         // slight hack for the 'allow window to cover panel' Kicker setting
         // don't move keepbelow docks below normal window, but only to the same
         // layer, so that both may be raised to cover the other
@@ -597,6 +611,20 @@ bool ShellClient::isInitialPositionSet() const
 void ShellClient::installQtExtendedSurface(QtExtendedSurfaceInterface *surface)
 {
     m_qtExtendedSurface = surface;
+}
+
+bool ShellClient::hasStrut() const
+{
+    if (!isShown(true)) {
+        return false;
+    }
+    if (!m_plasmaShellSurface) {
+        return false;
+    }
+    if (m_plasmaShellSurface->role() != PlasmaShellSurfaceInterface::Role::Panel) {
+        return false;
+    }
+    return m_plasmaShellSurface->panelBehavior() != PlasmaShellSurfaceInterface::PanelBehavior::WindowsGoBelow;
 }
 
 }
