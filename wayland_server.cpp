@@ -245,6 +245,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     connect(c, &AbstractClient::minimizedChanged, w, [w, c] { w->setMinimized(c->isMinimized()); });
     connect(c, static_cast<void (AbstractClient::*)(AbstractClient*,MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged), w,
         [w] (KWin::AbstractClient *c, MaximizeMode mode) {
+            Q_UNUSED(c);
             w->setMaximized(mode == KWin::MaximizeFull);
         }
     );
