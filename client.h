@@ -398,7 +398,7 @@ public:
     void checkActiveModal();
     StrutRect strutRect(StrutArea area) const;
     StrutRects strutRects() const;
-    bool hasStrut() const;
+    bool hasStrut() const override;
 
     // Tabbing functions
     TabGroup* tabGroup() const override; // Returns a pointer to client_group

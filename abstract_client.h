@@ -347,6 +347,8 @@ public:
     virtual QSize minSize() const;
     virtual QSize maxSize() const;
 
+    virtual bool hasStrut() const;
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 

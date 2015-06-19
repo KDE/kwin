@@ -504,4 +504,9 @@ void AbstractClient::updateMoveResize(const QPointF &currentGlobalCursor)
     Q_UNUSED(currentGlobalCursor)
 }
 
+bool AbstractClient::hasStrut() const
+{
+    return false;
+}
+
 }
