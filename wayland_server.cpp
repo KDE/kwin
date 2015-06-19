@@ -251,6 +251,52 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     connect(c, &AbstractClient::demandsAttentionChanged, w, [w, c] { w->setDemandsAttention(c->isDemandingAttention()); });
     connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
     connect(w, &PlasmaWindowInterface::closeRequested, c, [c] { c->closeWindow(); });
+    connect(w, &PlasmaWindowInterface::virtualDesktopRequested, c,
+        [c] (quint32 desktop) {
+            workspace()->sendClientToDesktop(c, desktop + 1, true);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::fullscreenRequested, c,
+        [c] (bool set) {
+            c->setFullScreen(set, false);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::minimizedRequested, c,
+        [c] (bool set) {
+            if (set) {
+                c->minimize();
+            } else {
+                c->unminimize();
+            }
+        }
+    );
+    connect(w, &PlasmaWindowInterface::maximizedRequested, c,
+        [c] (bool set) {
+            c->maximize(set ? MaximizeFull : MaximizeRestore);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::keepAboveRequested, c,
+        [c] (bool set) {
+            c->setKeepAbove(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::keepBelowRequested, c,
+        [c] (bool set) {
+            c->setKeepBelow(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::demandsAttentionRequested, c,
+        [c] (bool set) {
+            c->demandAttention(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::activeRequested, c,
+        [c] (bool set) {
+            if (set) {
+                workspace()->activateClient(c, true);
+            }
+        }
+    );
 }
 
 void WaylandServer::initOutputs()
