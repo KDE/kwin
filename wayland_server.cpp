@@ -227,6 +227,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
     w->setMaximizeable(c->isMaximizable());
     w->setMinimizeable(c->isMinimizable());
     w->setFullscreenable(c->isFullScreenable());
+    w->setThemedIconName(c->icon().name().isEmpty() ? QStringLiteral("xorg") : c->icon().name());
     connect(c, &AbstractClient::captionChanged, w, [w, c] { w->setTitle(c->caption()); });
     connect(c, &AbstractClient::desktopChanged, w,
         [w, c] {
@@ -250,6 +251,12 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
         }
     );
     connect(c, &AbstractClient::demandsAttentionChanged, w, [w, c] { w->setDemandsAttention(c->isDemandingAttention()); });
+    connect(c, &AbstractClient::iconChanged, w,
+        [w, c] {
+            const QIcon icon = c->icon();
+            w->setThemedIconName(icon.name().isEmpty() ? QStringLiteral("xorg") : icon.name());
+        }
+    );
     connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
     connect(w, &PlasmaWindowInterface::closeRequested, c, [c] { c->closeWindow(); });
     connect(w, &PlasmaWindowInterface::virtualDesktopRequested, c,
