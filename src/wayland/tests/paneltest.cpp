@@ -33,7 +33,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../src/client/shm_pool.h"
 #include "../src/client/surface.h"
 // Qt
-#include <QCoreApplication>
+#include <QGuiApplication>
 #include <QDebug>
 #include <QFile>
 #include <QImage>
@@ -230,6 +230,11 @@ void PanelTest::setupRegistry(Registry *registry)
                             qDebug() << "Window is fullscreenable changed: " << w->isFullscreenable();
                         }
                     );
+                    connect(w, &PlasmaWindow::iconChanged, this,
+                        [w] {
+                            qDebug() << "Window icon changed: " << w->icon().name();
+                        }
+                    );
                 }
             );
         }
@@ -275,7 +280,7 @@ void PanelTest::render()
 
 int main(int argc, char **argv)
 {
-    QCoreApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
     PanelTest client;
     client.init();
 

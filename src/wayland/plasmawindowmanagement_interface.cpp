@@ -65,6 +65,7 @@ public:
     void createResource(wl_resource *parent);
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
+    void setThemedIconName(const QString &iconName);
     void setVirtualDesktop(quint32 desktop);
     void unmap();
     void setState(org_kde_plasma_window_management_state flag, bool set);
@@ -89,6 +90,7 @@ private:
     PlasmaWindowManagementInterface *wm;
     QString m_title;
     QString m_appId;
+    QString m_themedIconName;
     quint32 m_virtualDesktop = 0;
     quint32 m_state = 0;
     wl_listener listener;
@@ -277,6 +279,7 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent)
         org_kde_plasma_window_send_title_changed(resource, m_title.toUtf8().constData());
     }
     org_kde_plasma_window_send_state_changed(resource, m_state);
+    org_kde_plasma_window_send_themed_icon_name_changed(resource, m_themedIconName.toUtf8().constData());
     c->flush();
 }
 
@@ -289,6 +292,18 @@ void PlasmaWindowInterface::Private::setAppId(const QString &appId)
     const QByteArray utf8 = m_appId.toUtf8();
     for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
         org_kde_plasma_window_send_app_id_changed((*it).resource, utf8.constData());
+    }
+}
+
+void PlasmaWindowInterface::Private::setThemedIconName(const QString &iconName)
+{
+    if (m_themedIconName == iconName) {
+        return;
+    }
+    m_themedIconName = iconName;
+    const QByteArray utf8 = m_themedIconName.toUtf8();
+    for (auto it = resources.constBegin(); it != resources.constEnd(); ++it) {
+        org_kde_plasma_window_send_themed_icon_name_changed((*it).resource, utf8.constData());
     }
 }
 
@@ -479,6 +494,11 @@ void PlasmaWindowInterface::setMaximizeable(bool set)
 void PlasmaWindowInterface::setMinimizeable(bool set)
 {
     d->setState(ORG_KDE_PLASMA_WINDOW_MANAGEMENT_STATE_MINIMIZABLE, set);
+}
+
+void PlasmaWindowInterface::setThemedIconName(const QString &iconName)
+{
+    d->setThemedIconName(iconName);
 }
 
 }

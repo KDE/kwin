@@ -82,6 +82,7 @@ public:
     void setMinimizeable(bool set);
     void setMaximizeable(bool set);
     void setFullscreenable(bool set);
+    void setThemedIconName(const QString &iconName);
 
     void unmap();
 
