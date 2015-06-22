@@ -385,7 +385,7 @@ bool BlurEffect::shouldBlur(const EffectWindow *w, int mask, const WindowPaintDa
     bool blurBehindDecos = effects->decorationsHaveAlpha() &&
                 effects->decorationSupportsBlurBehind();
 
-    if (!w->hasAlpha() && !(blurBehindDecos && w->hasDecoration()))
+    if (!w->hasAlpha() && w->opacity() >= 1.0 && !(blurBehindDecos && w->hasDecoration()))
         return false;
 
     return true;
@@ -479,7 +479,14 @@ void BlurEffect::doBlur(const QRegion& shape, const QRect& screen, const float o
     // Modulate the blurred texture with the window opacity if the window isn't opaque
     if (opacity < 1.0) {
         glEnable(GL_BLEND);
-        glBlendColor(0, 0, 0, opacity);
+#if 1 // bow shape, always above y = x
+        float o = 1.0f-opacity;
+        o = 1.0f - o*o;
+#else // sigmoid shape, above y = x for x > 0.5, below y = x for x < 0.5
+        float o = 2.0f*opacity - 1.0f;
+        o = 0.5f + o / (1.0f + qAbs(o));
+#endif
+        glBlendColor(0, 0, 0, o);
         glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
     }
 
