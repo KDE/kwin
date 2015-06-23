@@ -420,6 +420,23 @@ const QKeySequence &ShellClient::shortcut() const
 void ShellClient::takeFocus()
 {
     setActive(true);
+
+    bool breakShowingDesktop = !keepAbove() && !isOnScreenDisplay();
+    if (breakShowingDesktop) {
+        // check that it doesn't belong to the desktop
+        const auto &clients = waylandServer()->clients();
+        for (auto c: clients) {
+            if (!belongsToSameApplication(c, false)) {
+                continue;
+            }
+            if (c->isDesktop()) {
+                breakShowingDesktop = false;
+                break;
+            }
+        }
+    }
+    if (breakShowingDesktop)
+        workspace()->setShowingDesktop(false);
 }
 
 void ShellClient::updateWindowRules(Rules::Types selection)
