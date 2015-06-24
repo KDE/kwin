@@ -1296,7 +1296,7 @@ void GLRenderTarget::initStatic()
 {
 #ifdef KWIN_HAVE_OPENGLES
     sSupported = true;
-    s_blitSupported = false;
+    s_blitSupported = hasGLVersion(3, 0);
 #else
     sSupported = hasGLVersion(3, 0) ||
         hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) ||
@@ -1488,11 +1488,6 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
     if (!GLRenderTarget::blitSupported()) {
         return;
     }
-#ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(source)
-    Q_UNUSED(destination)
-    Q_UNUSED(filter)
-#else
     GLRenderTarget::pushRenderTarget(this);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
@@ -1503,7 +1498,6 @@ void GLRenderTarget::blitFromFramebuffer(const QRect &source, const QRect &desti
                       d.x(), mTexture.height() - d.y() - d.height(), d.x() + d.width(), mTexture.height() - d.y(),
                       GL_COLOR_BUFFER_BIT, filter);
     GLRenderTarget::popRenderTarget();
-#endif
 }
 
 void GLRenderTarget::attachTexture(const GLTexture& target)
