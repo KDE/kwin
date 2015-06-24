@@ -224,11 +224,6 @@ QString ScreenShotEffect::screenshotArea(int x, int y, int width, int height)
 
 QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
 {
-#ifdef KWIN_HAVE_OPENGLES
-    Q_UNUSED(geometry)
-    qCDebug(KWINEFFECTS) << "Framebuffer Blit not supported";
-    return QString();
-#else
     QImage img;
     if (effects->isOpenGLCompositing())
     {
@@ -242,7 +237,11 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
         // copy content from framebuffer into image
         tex.bind();
         img = QImage(geometry.size(), QImage::Format_ARGB32);
+#ifdef KWIN_HAVE_OPENGLES
+        glReadPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+#else
         glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)img.bits());
+#endif
         tex.unbind();
         ScreenShotEffect::convertFromGLImage(img, geometry.width(), geometry.height());
     }
@@ -269,7 +268,6 @@ QString ScreenShotEffect::blitScreenshot(const QRect &geometry)
 #endif
     temp.close();
     return temp.fileName();
-#endif
 }
 
 void ScreenShotEffect::grabPointerImage(QImage& snapshot, int offsetx, int offsety)
