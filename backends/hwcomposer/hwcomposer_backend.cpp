@@ -481,7 +481,7 @@ void HwcomposerBackend::initInput()
 
     // we don't know what is really supported, but there is touch
     // and kind of keyboard
-    waylandServer()->seat()->setHasPointer(false);
+    waylandServer()->seat()->setHasPointer(true);
     waylandServer()->seat()->setHasKeyboard(true);
     waylandServer()->seat()->setHasTouch(true);
 }
