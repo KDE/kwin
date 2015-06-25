@@ -72,7 +72,10 @@ void EglHwcomposerBackend::init()
 bool EglHwcomposerBackend::initBufferConfigs()
 {
     const EGLint config_attribs[] = {
-        EGL_BUFFER_SIZE,          32,
+        EGL_RED_SIZE,             8,
+        EGL_GREEN_SIZE,           8,
+        EGL_BLUE_SIZE,            8,
+        EGL_ALPHA_SIZE,           0,
         EGL_RENDERABLE_TYPE,      EGL_OPENGL_ES2_BIT,
         EGL_NONE,
     };
