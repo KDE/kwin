@@ -617,6 +617,11 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
     };
     connect(surface, &PlasmaShellSurfaceInterface::positionChanged, this, updatePosition);
     connect(surface, &PlasmaShellSurfaceInterface::roleChanged, this, updateRole);
+    connect(surface, &PlasmaShellSurfaceInterface::panelBehaviorChanged, this,
+        [] {
+            workspace()->updateClientArea();
+        }
+    );
     updatePosition();
     updateRole();
 }
