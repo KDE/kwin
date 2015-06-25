@@ -396,12 +396,13 @@ static KWayland::Server::OutputInterface *createOutput(hwc_composer_device_1_t *
         return nullptr;
     }
 
-    int32_t attr_values[4];
+    int32_t attr_values[5];
     uint32_t attributes[] = {
         HWC_DISPLAY_WIDTH,
         HWC_DISPLAY_HEIGHT,
         HWC_DISPLAY_DPI_X,
         HWC_DISPLAY_DPI_Y,
+        HWC_DISPLAY_VSYNC_PERIOD ,
         HWC_DISPLAY_NO_ATTRIBUTE
     };
     device->getDisplayAttributes(device, 0, configs[0], attributes, attr_values);
@@ -412,8 +413,7 @@ static KWayland::Server::OutputInterface *createOutput(hwc_composer_device_1_t *
 
     using namespace KWayland::Server;
     OutputInterface *o = waylandServer()->display()->createOutput(waylandServer()->display());
-    // TODO: get refresh rate
-    o->addMode(pixel, OutputInterface::ModeFlag::Current | OutputInterface::ModeFlag::Preferred);
+    o->addMode(pixel, OutputInterface::ModeFlag::Current | OutputInterface::ModeFlag::Preferred, (attr_values[4] == 0) ? 60000 : 10E11/attr_values[4]);
 
     if (attr_values[2] != 0 && attr_values[3] != 0) {
          static const qreal factor = 25.4;
@@ -454,7 +454,9 @@ void HwcomposerBackend::init()
         return;
     }
     m_displaySize = output->pixelSize();
+    m_refreshRate = output->refreshRate();
     qCDebug(KWIN_HWCOMPOSER) << "Display size:" << m_displaySize;
+    qCDebug(KWIN_HWCOMPOSER) << "Refresh rate:" << m_refreshRate;
 
     initInput();
 

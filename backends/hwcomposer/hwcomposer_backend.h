@@ -59,6 +59,9 @@ public:
     hwc_composer_device_1_t *device() const {
         return m_device;
     }
+    int refreshRate() const {
+        return m_refreshRate;
+    }
 
 private Q_SLOTS:
     void toggleBlankOutput();
@@ -70,6 +73,7 @@ private:
     hwc_composer_device_1_t *m_device = nullptr;
     AndroidEventListener *m_inputListener = nullptr;
     bool m_outputBlank = true;
+    int m_refreshRate = 60000;
 };
 
 class HwcomposerWindow : public HWComposerNativeWindow

@@ -65,4 +65,10 @@ int HwcomposerScreens::number(const QPoint &pos) const
     return 0;
 }
 
+float HwcomposerScreens::refreshRate(int screen) const
+{
+    Q_UNUSED(screen)
+    return m_backend->refreshRate() / 1000.0f;
+}
+
 }

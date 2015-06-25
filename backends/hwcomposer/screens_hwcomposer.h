@@ -36,6 +36,7 @@ public:
     int number(const QPoint &pos) const override;
     QSize size(int screen) const override;
     void updateCount() override;
+    float refreshRate(int screen) const override;
 
 private:
     HwcomposerBackend *m_backend;
