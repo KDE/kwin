@@ -264,6 +264,11 @@ InputRedirection::~InputRedirection()
     s_self = NULL;
 }
 
+void InputRedirection::init()
+{
+    m_shortcuts->init();
+}
+
 void InputRedirection::setupWorkspace()
 {
 #if HAVE_WAYLAND
@@ -1117,6 +1122,11 @@ void InputRedirection::registerPointerShortcut(Qt::KeyboardModifiers modifiers, 
 void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action)
 {
     m_shortcuts->registerAxisShortcut(action, modifiers, axis);
+}
+
+void InputRedirection::registerGlobalAccel(KGlobalAccelInterface *interface)
+{
+    m_shortcuts->setKGlobalAccelInterface(interface);
 }
 
 void InputRedirection::registerShortcutForGlobalAccelTimestamp(QAction *action)

@@ -384,7 +384,8 @@ void Application::createWorkspace()
 void Application::createInput()
 {
     LogindIntegration::create(this);
-    InputRedirection::create(this);
+    auto input = InputRedirection::create(this);
+    input->init();
     Cursor::create(this);
 }
 

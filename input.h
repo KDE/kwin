@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QWeakPointer>
 #include <config-kwin.h>
 
+class KGlobalAccelInterface;
 class QKeySequence;
 
 struct xkb_context;
@@ -62,7 +63,7 @@ namespace LibInput
  * a full input grab.
  *
  */
-class InputRedirection : public QObject
+class KWIN_EXPORT InputRedirection : public QObject
 {
     Q_OBJECT
 public:
@@ -79,6 +80,7 @@ public:
         KeyboardKeyPressed
     };
     virtual ~InputRedirection();
+    void init();
 
     /**
      * @return const QPointF& The current global pointer position
@@ -108,6 +110,7 @@ public:
     void registerShortcut(const QKeySequence &shortcut, QAction *action, T *receiver, void (T::*slot)());
     void registerPointerShortcut(Qt::KeyboardModifiers modifiers, Qt::MouseButton pointerButtons, QAction *action);
     void registerAxisShortcut(Qt::KeyboardModifiers modifiers, PointerAxisDirection axis, QAction *action);
+    void registerGlobalAccel(KGlobalAccelInterface *interface);
 
     /**
      * @internal
