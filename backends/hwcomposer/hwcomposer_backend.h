@@ -59,9 +59,13 @@ public:
     hwc_composer_device_1_t *device() const {
         return m_device;
     }
+    void present();
     int refreshRate() const {
         return m_refreshRate;
     }
+
+public Q_SLOTS:
+    void vsync();
 
 private Q_SLOTS:
     void toggleBlankOutput();
@@ -70,6 +74,7 @@ private:
     QSize m_displaySize;
     hwc_composer_device_1_t *m_device = nullptr;
     bool m_outputBlank = true;
+    bool m_pageFlipPending = false;
     int m_refreshRate = 60000;
 };
 

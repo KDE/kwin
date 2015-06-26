@@ -110,6 +110,28 @@ void HwcomposerBackend::init()
 
     // unblank, setPowerMode?
     m_device = hwcDevice;
+
+    // register callbacks
+    hwc_procs_t *procs = new hwc_procs_t;
+    procs->invalidate = [] (const struct hwc_procs* procs) {
+        Q_UNUSED(procs)
+    };
+    procs->vsync = [] (const struct hwc_procs* procs, int disp, int64_t timestamp) {
+        Q_UNUSED(procs)
+        if (disp != 0) {
+            return;
+        }
+        QMetaObject::invokeMethod(dynamic_cast<HwcomposerBackend*>(waylandServer()->backend()),
+                                  "vsync",
+                                  Qt::QueuedConnection);
+    };
+    procs->hotplug = [] (const struct hwc_procs* procs, int disp, int connected) {
+        Q_UNUSED(procs)
+        Q_UNUSED(disp)
+        Q_UNUSED(connected)
+    };
+    m_device->registerProcs(m_device, procs);
+
     toggleBlankOutput();
 
     // get display configuration
@@ -136,6 +158,7 @@ void HwcomposerBackend::toggleBlankOutput()
     }
     m_outputBlank = !m_outputBlank;
     m_device->blank(m_device, 0, m_outputBlank ? 1 : 0);
+    m_device->eventControl(m_device, 0, HWC_EVENT_VSYNC, m_outputBlank ? 0 : 1);
     // enable/disable compositor repainting when blanked
     if (Compositor *compositor = Compositor::self()) {
         if (m_outputBlank) {
@@ -160,6 +183,27 @@ Screens *HwcomposerBackend::createScreens(QObject *parent)
 OpenGLBackend *HwcomposerBackend::createOpenGLBackend()
 {
     return new EglHwcomposerBackend(this);
+}
+
+void HwcomposerBackend::present()
+{
+    if (m_pageFlipPending) {
+        return;
+    }
+    m_pageFlipPending = true;
+    if (Compositor::self()) {
+        Compositor::self()->aboutToSwapBuffers();
+    }
+}
+
+void HwcomposerBackend::vsync()
+{
+    if (m_pageFlipPending) {
+        m_pageFlipPending = false;
+        if (Compositor::self()) {
+            Compositor::self()->bufferSwapComplete();
+        }
+    }
 }
 
 static void initLayer(hwc_layer_1_t *layer, const hwc_rect_t &rect)
@@ -217,6 +261,7 @@ HwcomposerWindow::~HwcomposerWindow()
 
 void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
 {
+    m_backend->present();
     hwc_composer_device_1_t *device = m_backend->device();
 
     auto fblayer = &m_list[0]->hwLayers[1];
@@ -235,6 +280,7 @@ void HwcomposerWindow::present(HWComposerNativeWindowBuffer *buffer)
         close(m_list[0]->retireFenceFd);
         m_list[0]->retireFenceFd = -1;
     }
+    m_list[0]->flags = 0;
 }
 
 }
