@@ -508,6 +508,11 @@ void SceneOpenGL::initDebugOutput()
         }
     };
 
+    // Expoxy fails to resolve glDebugMessageCallback on GLES
+    if (!glDebugMessageCallback) {
+        return;
+    }
+
     glDebugMessageCallback(callback, nullptr);
 
     // This state exists only in GL_KHR_debug
