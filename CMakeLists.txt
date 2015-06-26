@@ -498,6 +498,7 @@ set(kwin_KDE_LIBS
     KF5::ConfigWidgets
     KF5::Crash
     KF5::GlobalAccel
+    KF5::GlobalAccelPrivate
     KF5::I18n
     KF5::Notifications
     KF5::Service

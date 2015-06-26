@@ -21,9 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "globalshortcuts.h"
 // kwin
 #include <config-kwin.h>
+#include "main.h"
+#include "utils.h"
 // KDE
 #include <kkeyserver.h>
 #include <KConfigGroup>
+#include <KGlobalAccel/private/kglobalacceld.h>
 // Qt
 #include <QAction>
 
@@ -91,6 +94,16 @@ GlobalShortcutsManager::GlobalShortcutsManager(QObject *parent)
     : QObject(parent)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kglobalshortcutsrc"), KConfig::SimpleConfig))
 {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        m_kglobalAccel = new KGlobalAccelD(this);
+        if (!m_kglobalAccel->init()) {
+            qCDebug(KWIN_CORE) << "Init of kglobalaccel failed";
+            delete m_kglobalAccel;
+            m_kglobalAccel = nullptr;
+        } else {
+            qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
+        }
+    }
 }
 
 template <typename T>

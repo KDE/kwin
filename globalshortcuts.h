@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QKeySequence>
 
 class QAction;
+class KGlobalAccelD;
 
 namespace KWin
 {
@@ -104,6 +105,7 @@ private:
     QHash<Qt::KeyboardModifiers, QHash<Qt::MouseButtons, GlobalShortcut*> > m_pointerShortcuts;
     QHash<Qt::KeyboardModifiers, QHash<PointerAxisDirection, GlobalShortcut*> > m_axisShortcuts;
     KSharedConfigPtr m_config;
+    KGlobalAccelD *m_kglobalAccel = nullptr;
 };
 
 class GlobalShortcut
