@@ -44,10 +44,12 @@ public:
     ShowingDesktopState state = ShowingDesktopState::Disabled;
     QVector<wl_resource*> resources;
     QList<PlasmaWindowInterface*> windows;
+    quint32 windowIdCounter = 0;
 
 private:
     static void unbind(wl_resource *resource);
     static void showDesktopCallback(wl_client *client, wl_resource *resource, uint32_t state);
+    static void getWindowCallback(wl_client *client, wl_resource *resource, uint32_t id, uint32_t internalWindowId);
 
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
     void sendShowingDesktopState(wl_resource *r);
@@ -62,7 +64,7 @@ public:
     Private(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q);
     ~Private();
 
-    void createResource(wl_resource *parent);
+    void createResource(wl_resource *parent, uint32_t id);
     void setTitle(const QString &title);
     void setAppId(const QString &appId);
     void setThemedIconName(const QString &iconName);
@@ -75,6 +77,7 @@ public:
         wl_listener *destroyListener;
     };
     QList<WindowResource> resources;
+    quint32 windowId = 0;
 
 private:
     static void unbind(wl_resource *resource);
@@ -104,7 +107,8 @@ PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterfac
 }
 
 const struct org_kde_plasma_window_management_interface PlasmaWindowManagementInterface::Private::s_interface = {
-    showDesktopCallback
+    showDesktopCallback,
+    getWindowCallback
 };
 
 void PlasmaWindowManagementInterface::Private::sendShowingDesktopState()
@@ -147,6 +151,27 @@ void PlasmaWindowManagementInterface::Private::showDesktopCallback(wl_client *cl
     emit reinterpret_cast<Private*>(wl_resource_get_user_data(resource))->q->requestChangeShowingDesktop(s);
 }
 
+void PlasmaWindowManagementInterface::Private::getWindowCallback(wl_client *client, wl_resource *resource, uint32_t id, uint32_t internalWindowId)
+{
+    auto p = reinterpret_cast<Private*>(wl_resource_get_user_data(resource));
+    auto it = std::find_if(p->windows.constBegin(), p->windows.constEnd(),
+        [internalWindowId] (PlasmaWindowInterface *window) {
+            return window->d->windowId == internalWindowId;
+        }
+    );
+    if (it == p->windows.constEnd()) {
+        ClientConnection *c = p->q->display()->getConnection(client);
+        wl_resource *r = c->createResource(&org_kde_plasma_window_interface, wl_resource_get_version(resource), id);
+        if (!r) {
+            return;
+        }
+        org_kde_plasma_window_send_unmapped(r);
+        wl_resource_destroy(r);
+        return;
+    }
+    (*it)->d->createResource(resource, id);
+}
+
 PlasmaWindowManagementInterface::PlasmaWindowManagementInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
 {
@@ -165,7 +190,7 @@ void PlasmaWindowManagementInterface::Private::bind(wl_client *client, uint32_t 
     wl_resource_set_implementation(shell, &s_interface, this, unbind);
     resources << shell;
     for (auto it = windows.constBegin(); it != windows.constEnd(); ++it) {
-        (*it)->d->createResource(shell);
+        org_kde_plasma_window_management_send_window(shell, (*it)->d->windowId);
     }
 }
 
@@ -194,8 +219,10 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
 {
     Q_D();
     PlasmaWindowInterface *window = new PlasmaWindowInterface(this, parent);
+    // TODO: improve window ids so that it cannot wrap around
+    window->d->windowId = ++d->windowIdCounter;
     for (auto it = d->resources.constBegin(); it != d->resources.constEnd(); ++it) {
-        window->d->createResource(*it);
+        org_kde_plasma_window_management_send_window(*it, window->d->windowId);
     }
     d->windows << window;
     connect(window, &QObject::destroyed, this,
@@ -242,9 +269,6 @@ void PlasmaWindowInterface::Private::unbind(wl_resource *resource)
             it++;
         }
     }
-    if (p->resources.isEmpty()) {
-        p->q->deleteLater();
-    }
 }
 
 void PlasmaWindowInterface::Private::destroyListenerCallback(wl_listener *listener, void *data)
@@ -253,10 +277,10 @@ void PlasmaWindowInterface::Private::destroyListenerCallback(wl_listener *listen
     Private::unbind(reinterpret_cast<wl_resource*>(data));
 }
 
-void PlasmaWindowInterface::Private::createResource(wl_resource *parent)
+void PlasmaWindowInterface::Private::createResource(wl_resource *parent, uint32_t id)
 {
     ClientConnection *c = wm->display()->getConnection(wl_resource_get_client(parent));
-    wl_resource *resource = c->createResource(&org_kde_plasma_window_interface, wl_resource_get_version(parent), 0);
+    wl_resource *resource = c->createResource(&org_kde_plasma_window_interface, wl_resource_get_version(parent), id);
     if (!resource) {
         return;
     }
@@ -270,7 +294,6 @@ void PlasmaWindowInterface::Private::createResource(wl_resource *parent)
     wl_resource_add_destroy_listener(resource, r.destroyListener);
     resources << r;
 
-    org_kde_plasma_window_management_send_window_created(parent, resource);
     org_kde_plasma_window_send_virtual_desktop_changed(resource, m_virtualDesktop);
     if (!m_appId.isEmpty()) {
         org_kde_plasma_window_send_app_id_changed(resource, m_appId.toUtf8().constData());
