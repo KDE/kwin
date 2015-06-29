@@ -377,6 +377,35 @@ bool EventDispatcher::hasPendingEvents()
     return QEventDispatcherUNIX::hasPendingEvents() || QWindowSystemInterface::windowSystemEventsQueued();
 }
 
+static const QString s_waylandPlugin = QStringLiteral("KWinWaylandWaylandBackend");
+static const QString s_x11Plugin = QStringLiteral("KWinWaylandX11Backend");
+static const QString s_fbdevPlugin = QStringLiteral("KWinWaylandFbdevBackend");
+#if HAVE_DRM
+static const QString s_drmPlugin = QStringLiteral("KWinWaylandDrmBackend");
+#endif
+#if HAVE_LIBHYBRIS
+static const QString s_hwcomposerPlugin = QStringLiteral("KWinWaylandHwcomposerBackend");
+#endif
+
+static QString automaticBackendSelection()
+{
+    if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
+        return s_waylandPlugin;
+    }
+    if (qEnvironmentVariableIsSet("DISPLAY")) {
+        return s_x11Plugin;
+    }
+#if HAVE_LIBHYBRIS
+    if (qEnvironmentVariableIsSet("ANDROID_ROOT")) {
+        return s_hwcomposerPlugin;
+    }
+#endif
+#if HAVE_DRM
+    return s_drmPlugin;
+#endif
+    return s_fbdevPlugin;
+}
+
 } // namespace
 
 extern "C"
@@ -524,30 +553,32 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
         return 1;
     }
     if (parser.isSet(drmOption)) {
-        pluginName = QStringLiteral("KWinWaylandDrmBackend");
+        pluginName = KWin::s_drmPlugin;
     }
 #endif
 
+
+    bool ok = false;
+    const int width = parser.value(widthOption).toInt(&ok);
+    if (!ok) {
+        std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
+        return 1;
+    }
+    const int height = parser.value(heightOption).toInt(&ok);
+    if (!ok) {
+        std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
+        return 1;
+    }
+    initialWindowSize = QSize(width, height);
+
     if (parser.isSet(windowedOption)) {
-        bool ok = false;
-        const int width = parser.value(widthOption).toInt(&ok);
-        if (!ok) {
-            std::cerr << "FATAL ERROR incorrect value for width" << std::endl;
-            return 1;
-        }
-        const int height = parser.value(heightOption).toInt(&ok);
-        if (!ok) {
-            std::cerr << "FATAL ERROR incorrect value for height" << std::endl;
-            return 1;
-        }
-        initialWindowSize = QSize(width, height);
         if (parser.isSet(x11DisplayOption)) {
             deviceIdentifier = parser.value(x11DisplayOption).toUtf8();
         } else if (!parser.isSet(waylandDisplayOption)) {
             deviceIdentifier = qgetenv("DISPLAY");
         }
         if (!deviceIdentifier.isEmpty()) {
-            pluginName = QStringLiteral("KWinWaylandX11Backend");
+            pluginName = KWin::s_x11Plugin;
         } else {
             if (parser.isSet(waylandDisplayOption)) {
                 deviceIdentifier = parser.value(waylandDisplayOption).toUtf8();
@@ -555,19 +586,24 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
                 deviceIdentifier = qgetenv("WAYLAND_DISPLAY");
             }
             if (!deviceIdentifier.isEmpty()) {
-                pluginName = QStringLiteral("KWinWaylandWaylandBackend");
+                pluginName = KWin::s_waylandPlugin;
             }
         }
     }
     if (parser.isSet(framebufferOption)) {
-        pluginName = QStringLiteral("KWinWaylandFbdevBackend");
+        pluginName = KWin::s_fbdevPlugin;
         deviceIdentifier = parser.value(framebufferDeviceOption).toUtf8();
     }
 #if HAVE_LIBHYBRIS
     if (parser.isSet(hwcomposerOption)) {
-        pluginName = QStringLiteral("KWinWaylandHwcomposerBackend");
+        pluginName = KWin::s_hwcomposerPlugin;
     }
 #endif
+
+    if (pluginName.isEmpty()) {
+        std::cerr << "No backend specified through command line argument, trying auto resolution" << std::endl;
+        pluginName = KWin::automaticBackendSelection();
+    }
 
     const auto pluginCandidates = KPluginLoader::findPlugins(QStringLiteral("org.kde.kwin.waylandbackends"),
         [&pluginName] (const KPluginMetaData &plugin) {
