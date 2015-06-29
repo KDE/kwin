@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_MAIN_WAYLAND_H
 #include "main.h"
 #include <QtCore/private/qeventdispatcher_unix_p.h>
+#include <QProcessEnvironment>
 
 class QProcess;
 
@@ -43,6 +44,9 @@ public:
     void setInputMethodServerToStart(const QString &inputMethodServer) {
         m_inputMethodServerToStart = inputMethodServer;
     }
+    void setProcessStartupEnvironment(const QProcessEnvironment &environment) {
+        m_environment = environment;
+    }
 
     bool notify(QObject *o, QEvent *e) override;
 
@@ -61,6 +65,7 @@ private:
     QStringList m_applicationsToStart;
     QString m_inputMethodServerToStart;
     QProcess *m_xwaylandProcess = nullptr;
+    QProcessEnvironment m_environment;
 };
 
 class EventDispatcher : public QEventDispatcherUNIX

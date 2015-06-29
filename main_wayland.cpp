@@ -177,12 +177,11 @@ void ApplicationWayland::continueStartupWithX()
     if (!m_inputMethodServerToStart.isEmpty()) {
         int socket = dup(waylandServer()->createInputMethodConnection());
         if (socket >= 0) {
-            QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+            QProcessEnvironment environment = m_environment;
             environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
             environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
             environment.remove("DISPLAY");
             environment.remove("WAYLAND_DISPLAY");
-            environment.remove(QStringLiteral("EGL_PLATFORM"));
             QProcess *p = new QProcess(this);
             p->setProcessEnvironment(environment);
             p->start(m_inputMethodServerToStart);
@@ -192,14 +191,8 @@ void ApplicationWayland::continueStartupWithX()
 
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
-        QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-        environment.remove(QStringLiteral("WAYLAND_SOCKET"));
-        environment.remove(QStringLiteral("QT_QPA_PLATFORM"));
-        environment.remove(QStringLiteral("QT_WAYLAND_DISABLE_WINDOWDECORATION"));
-        environment.remove(QStringLiteral("EGL_PLATFORM"));
+        QProcessEnvironment environment = m_environment;
         environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
-        // TODO: maybe create a socket per process?
-        environment.insert(QStringLiteral("WAYLAND_DISPLAY"), waylandServer()->display()->socketName());
         for (const QString &application: m_applicationsToStart) {
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
@@ -315,7 +308,7 @@ void ApplicationWayland::startXwaylandServer()
 
     m_xwaylandProcess = new QProcess(kwinApp());
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
-    QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+    QProcessEnvironment env = m_environment;
     env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
     m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setArguments({QStringLiteral("-displayfd"),
@@ -427,6 +420,9 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     sigaddset(&userSiganls, SIGUSR2);
     pthread_sigmask(SIG_BLOCK, &userSiganls, nullptr);
 
+    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
+    environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());
+
     // enforce wayland plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland", true);
 #if (QT_VERSION < QT_VERSION_CHECK(5, 4, 2))
@@ -440,6 +436,7 @@ KWIN_EXPORT int kdemain(int argc, char * argv[])
     qputenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
+    a.setProcessStartupEnvironment(environment);
 
     server->setParent(&a);
 
