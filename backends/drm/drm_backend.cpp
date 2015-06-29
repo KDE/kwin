@@ -520,6 +520,7 @@ DrmOutput::~DrmOutput()
 {
     hideCursor();
     cleanupBlackBuffer();
+    delete m_waylandOutput.data();
 }
 
 void DrmOutput::hideCursor()
@@ -608,7 +609,11 @@ void DrmOutput::init(drmModeConnector *connector)
     initEdid(connector);
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
     blank();
-    m_waylandOutput.reset(waylandServer()->display()->createOutput());
+    if (!m_waylandOutput.isNull()) {
+        delete m_waylandOutput.data();
+        m_waylandOutput.clear();
+    }
+    m_waylandOutput = waylandServer()->display()->createOutput();
     if (!m_edid.eisaId.isEmpty()) {
         m_waylandOutput->setManufacturer(QString::fromLatin1(m_edid.eisaId));
     } else {

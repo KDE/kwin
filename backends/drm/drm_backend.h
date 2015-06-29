@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "abstract_backend.h"
 
 #include <QImage>
+#include <QPointer>
 #include <QSize>
 #include <xf86drmMode.h>
 
@@ -155,7 +156,7 @@ private:
     };
     Edid m_edid;
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
-    QScopedPointer<KWayland::Server::OutputInterface> m_waylandOutput;
+    QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
 };
 
 class DrmBuffer
