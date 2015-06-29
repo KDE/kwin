@@ -131,7 +131,7 @@ inline
 KWIN_EXPORT Display* display()
 {
     static Display *s_display = nullptr;
-    if (!s_display) {
+    if (!s_display && QX11Info::isPlatformX11()) {
         s_display = QX11Info::display();
     }
     return s_display;
