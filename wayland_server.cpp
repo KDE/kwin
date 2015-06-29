@@ -212,7 +212,7 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
         return;
     }
     using namespace KWayland::Server;
-    auto w = m_windowManagement->createWindow(m_windowManagement);
+    auto w = m_windowManagement->createWindow(c);
     w->setTitle(c->caption());
     w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
     w->setActive(c->isActive());
@@ -257,7 +257,6 @@ void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
             w->setThemedIconName(icon.name().isEmpty() ? QStringLiteral("xorg") : icon.name());
         }
     );
-    connect(c, &QObject::destroyed, w, &KWayland::Server::PlasmaWindowInterface::unmap);
     connect(w, &PlasmaWindowInterface::closeRequested, c, [c] { c->closeWindow(); });
     connect(w, &PlasmaWindowInterface::virtualDesktopRequested, c,
         [c] (quint32 desktop) {
