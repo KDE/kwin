@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     QApplication::setApplicationDisplayName(QStringLiteral("Screen Edge Show Test App"));
+    app.setProperty("x11Connection", QVariant::fromValue<void*>(QX11Info::connection()));
 
     QScopedPointer<QWidget> widget(new QWidget(nullptr, Qt::FramelessWindowHint));
 
