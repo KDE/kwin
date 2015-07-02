@@ -33,6 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/datadevicemanager_interface.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/idle_interface.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
@@ -140,6 +141,7 @@ void WaylandServer::init(const QByteArray &socketName)
     m_seat = m_display->createSeat(m_display);
     m_seat->create();
     m_display->createDataDeviceManager(m_display)->create();
+    m_display->createIdle(m_display)->create();
     m_plasmaShell = m_display->createPlasmaShell(m_display);
     m_plasmaShell->create();
     connect(m_plasmaShell, &PlasmaShellInterface::surfaceCreated,
