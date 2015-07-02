@@ -38,6 +38,7 @@ namespace Server
 
 class CompositorInterface;
 class DataDeviceManagerInterface;
+class IdleInterface;
 class OutputInterface;
 class PlasmaShellInterface;
 class PlasmaWindowManagementInterface;
@@ -120,6 +121,7 @@ public:
     PlasmaShellInterface *createPlasmaShell(QObject *parent = nullptr);
     PlasmaWindowManagementInterface *createPlasmaWindowManagement(QObject *parent = nullptr);
     QtSurfaceExtensionInterface *createQtSurfaceExtension(QObject *parent = nullptr);
+    IdleInterface *createIdle(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

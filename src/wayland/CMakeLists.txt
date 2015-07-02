@@ -8,6 +8,7 @@ set(SERVER_LIB_SRCS
     datasource_interface.cpp
     display.cpp
     global.cpp
+    idle_interface.cpp
     keyboard_interface.cpp
     logging.cpp
     output_interface.cpp
@@ -37,6 +38,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/surface-extension.xml
     BASENAME qt-surface-extension
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/idle.xml
+    BASENAME idle
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
@@ -83,6 +89,7 @@ install(FILES
   datasource_interface.h
   display.h
   global.h
+  idle_interface.h
   keyboard_interface.h
   output_interface.h
   pointer_interface.h
