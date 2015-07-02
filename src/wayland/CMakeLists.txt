@@ -9,6 +9,7 @@ set(SERVER_LIB_SRCS
     display.cpp
     global.cpp
     idle_interface.cpp
+    fakeinput_interface.cpp
     keyboard_interface.cpp
     logging.cpp
     output_interface.cpp
@@ -43,6 +44,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/idle.xml
     BASENAME idle
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/fake-input.xml
+    BASENAME fake-input
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
@@ -88,6 +94,7 @@ install(FILES
   dataoffer_interface.h
   datasource_interface.h
   display.h
+  fakeinput_interface.h
   global.h
   idle_interface.h
   keyboard_interface.h
