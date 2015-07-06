@@ -37,7 +37,7 @@ Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
 namespace KWin
 {
 
-ScriptedEffect *ScriptedEffect::create(KService::Ptr)
+ScriptedEffect *ScriptedEffect::create(const KPluginMetaData&)
 {
     return nullptr;
 }

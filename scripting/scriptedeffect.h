@@ -22,9 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_SCRIPTEDEFFECT_H
 
 #include <kwinanimationeffect.h>
-#include <KService>
 
 class KConfigLoader;
+class KPluginMetaData;
 class QScriptEngine;
 class QScriptValue;
 
@@ -65,8 +65,8 @@ public:
     }
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
-    static ScriptedEffect *create(KService::Ptr effect);
     static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition);
+    static ScriptedEffect *create(const KPluginMetaData &effect);
     virtual ~ScriptedEffect();
     /**
      * Whether another effect has grabbed the @p w with the given @p grabRole.

@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QHash>
 #include <Plasma/FrameSvg>
-#include <KService>
 
 namespace Plasma {
 class Theme;
@@ -38,7 +37,6 @@ class Theme;
 
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
-class KService;
 class OrgFreedesktopScreenSaverInterface;
 
 

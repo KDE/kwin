@@ -73,6 +73,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     Init
     Notifications
     Service
+    Package
     Plasma
     WidgetsAddons
     WindowSystem
@@ -502,6 +503,7 @@ set(kwin_KDE_LIBS
     KF5::I18n
     KF5::Notifications
     KF5::Service
+    KF5::Package
     KF5::Plasma
     KF5::WindowSystem
     KDecoration2::KDecoration

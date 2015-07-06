@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_EFFECT_LOADER_H
 #define KWIN_EFFECT_LOADER_H
 // KDE
+#include <KPluginMetaData>
 #include <KSharedConfig>
-#include <KService>
 // Qt
 #include <QObject>
 #include <QFlags>
@@ -304,13 +304,13 @@ public:
 
     void queryAndLoadAll() override;
     bool loadEffect(const QString &name) override;
-    bool loadEffect(KService::Ptr effect, LoadEffectFlags flags);
+    bool loadEffect(const KPluginMetaData &effect, LoadEffectFlags flags);
 
 private:
-    KService::List findAllEffects() const;
-    KService::Ptr findEffect(const QString &name) const;
+    QList<KPluginMetaData> findAllEffects() const;
+    KPluginMetaData findEffect(const QString &name) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< ScriptedEffectLoader, KService::Ptr > *m_queue;
+    EffectLoadQueue< ScriptedEffectLoader, KPluginMetaData > *m_queue;
 };
 
 class PluginEffectLoader : public AbstractEffectLoader

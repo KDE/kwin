@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfigGroup>
 #include <kconfigloader.h>
+#include <KPluginMetaData>
 // Qt
 #include <QDebug>
 #include <QFile>
@@ -384,10 +385,10 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
     }
 }
 
-ScriptedEffect *ScriptedEffect::create(KService::Ptr effect)
+ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
 {
-    const QString name = effect->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
-    const QString scriptName = effect->property(QStringLiteral("X-Plasma-MainScript")).toString();
+    const QString name = effect.pluginId();
+    const QString scriptName = effect.value(QStringLiteral("X-Plasma-MainScript"));
     if (scriptName.isEmpty()) {
         qDebug() << "X-Plasma-MainScript not set";
         return nullptr;
@@ -398,7 +399,7 @@ ScriptedEffect *ScriptedEffect::create(KService::Ptr effect)
         qDebug() << "Could not locate the effect script";
         return nullptr;
     }
-    return ScriptedEffect::create(name, scriptFile, effect->property(QStringLiteral("X-KDE-Ordering")).toInt());
+    return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering")).toInt());
 }
 
 ScriptedEffect *ScriptedEffect::create(const QString& effectName, const QString& pathToScript, int chainPosition)
