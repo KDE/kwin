@@ -408,8 +408,7 @@ static QString automaticBackendSelection()
 
 } // namespace
 
-extern "C"
-KWIN_EXPORT int kdemain(int argc, char * argv[])
+int main(int argc, char * argv[])
 {
     // process command line arguments to figure out whether we have to start Xwayland and the Wayland socket
     QByteArray waylandSocket;
