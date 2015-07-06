@@ -37,6 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shell_client.h"
 #include "wayland_server.h"
 #include "virtual_terminal.h"
+#include <KWayland/Server/display.h>
+#include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #endif
 #include <decorations/decoratedclient.h>
@@ -274,6 +276,56 @@ void InputRedirection::setupWorkspace()
 #if HAVE_WAYLAND
     if (waylandServer()) {
         connect(workspace(), &Workspace::clientActivated, this, &InputRedirection::updateKeyboardWindow);
+        using namespace KWayland::Server;
+        FakeInputInterface *fakeInput = waylandServer()->display()->createFakeInput(this);
+        fakeInput->create();
+        connect(fakeInput, &FakeInputInterface::deviceCreated, this,
+            [this] (FakeInputDevice *device) {
+                connect(device, &FakeInputDevice::authenticationRequested, this,
+                    [this, device] (const QString &application, const QString &reason) {
+                        // TODO: make secure
+                        device->setAuthentication(true);
+                    }
+                );
+                connect(device, &FakeInputDevice::pointerMotionRequested, this,
+                    [this] (const QSizeF &delta) {
+                        // TODO: Fix time
+                        processPointerMotion(globalPointer() + QPointF(delta.width(), delta.height()), 0);
+                    }
+                );
+                connect(device, &FakeInputDevice::pointerButtonPressRequested, this,
+                    [this] (quint32 button) {
+                        // TODO: Fix time
+                        processPointerButton(button, InputRedirection::PointerButtonPressed, 0);
+                    }
+                );
+                connect(device, &FakeInputDevice::pointerButtonReleaseRequested, this,
+                    [this] (quint32 button) {
+                        // TODO: Fix time
+                        processPointerButton(button, InputRedirection::PointerButtonReleased, 0);
+                    }
+                );
+                connect(device, &FakeInputDevice::pointerAxisRequested, this,
+                    [this] (Qt::Orientation orientation, qreal delta) {
+                        // TODO: Fix time
+                        InputRedirection::PointerAxis axis;
+                        switch (orientation) {
+                        case Qt::Horizontal:
+                            axis = InputRedirection::PointerAxisHorizontal;
+                            break;
+                        case Qt::Vertical:
+                            axis = InputRedirection::PointerAxisVertical;
+                            break;
+                        default:
+                            Q_UNREACHABLE();
+                            break;
+                        }
+                        // TODO: Fix time
+                        processPointerAxis(axis, delta, 0);
+                    }
+                );
+            }
+        );
     }
 #endif
 }
