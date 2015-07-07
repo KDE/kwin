@@ -33,8 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../workspace.h"
 // KDE
 #include <KConfigGroup>
-#include <KPluginInfo>
-#include <KServiceTypeTrader>
+#include <KPackage/PackageLoader>
 // Qt
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
@@ -661,30 +660,30 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         s_started = true;
     }
     QMap<QString,QString> pluginStates = KConfigGroup(_config, "Plugins").entryMap();
-    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Script"));
+    const QString scriptFolder = QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/");
+    const auto offers = KPackage::PackageLoader::self()->listPackages(QStringLiteral("KWin/Script"), scriptFolder);
 
     LoadScriptList scriptsToLoad;
 
-    foreach (const KService::Ptr & service, offers) {
-        KPluginInfo plugininfo(service);
-        const QString value = pluginStates.value(plugininfo.pluginName() + QString::fromLatin1("Enabled"), QString());
-        plugininfo.setPluginEnabled(value.isNull() ? plugininfo.isPluginEnabledByDefault() : QVariant(value).toBool());
-        const bool javaScript = service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("javascript");
-        const bool declarativeScript = service->property(QStringLiteral("X-Plasma-API")).toString() == QStringLiteral("declarativescript");
+    for (const KPluginMetaData &service: offers) {
+        const QString value = pluginStates.value(service.pluginId() + QString::fromLatin1("Enabled"), QString());
+        const bool enabled = value.isNull() ? service.isEnabledByDefault() : QVariant(value).toBool();
+        const bool javaScript = service.value(QStringLiteral("X-Plasma-API")) == QStringLiteral("javascript");
+        const bool declarativeScript = service.value(QStringLiteral("X-Plasma-API")) == QStringLiteral("declarativescript");
         if (!javaScript && !declarativeScript) {
             continue;
         }
 
-        if (!plugininfo.isPluginEnabled()) {
-            if (isScriptLoaded(plugininfo.pluginName())) {
+        if (!enabled) {
+            if (isScriptLoaded(service.pluginId())) {
                 // unload the script
-                unloadScript(plugininfo.pluginName());
+                unloadScript(service.pluginId());
             }
             continue;
         }
-        const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
-        const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/scripts/") + pluginName + QStringLiteral("/contents/") + scriptName);
+        const QString pluginName = service.pluginId();
+        const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
+        const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QStringLiteral("/contents/") + scriptName);
         if (file.isNull()) {
             qDebug() << "Could not find script file for " << pluginName;
             continue;
