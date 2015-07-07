@@ -143,8 +143,18 @@ Workspace::Workspace(const QString &sessionKey)
 #endif
 
 #ifdef KWIN_BUILD_ACTIVITIES
-    Activities *activities = Activities::create(this);
-    connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
+    Activities *activities = nullptr;
+    // HACK: do not use Activities on Wayland as it blocks the startup
+#if HAVE_WAYLAND
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        activities = Activities::create(this);
+    }
+#else
+    activities = Activities::create(this);
+#endif
+    if (activities) {
+        connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
+    }
 #endif
 
     // PluginMgr needs access to the config file, so we need to wait for it for finishing
@@ -975,6 +985,9 @@ AbstractClient *Workspace::findClientToActivateOnDesktop(uint desktop)
 void Workspace::updateCurrentActivity(const QString &new_activity)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
     //closeActivePopup();
     ++block_focus;
     // TODO: Q_ASSERT( block_stacking_updates == 0 ); // Make sure stacking_order is up to date

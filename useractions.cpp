@@ -437,6 +437,9 @@ void UserActionsMenu::menuAboutToShow()
 void UserActionsMenu::showHideActivityMenu()
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
     const QStringList &openActivities_ = Activities::self()->running();
     qCDebug(KWIN_CORE) << "activities:" << openActivities_.size();
     if (openActivities_.size() < 2) {
@@ -671,6 +674,9 @@ void UserActionsMenu::activityPopupAboutToShow()
         return;
 
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
     m_activityMenu->clear();
     m_activityMenu->setPalette(m_client.data()->palette());
     QAction *action = m_activityMenu->addAction(i18n("&All Activities"));
@@ -781,6 +787,9 @@ void UserActionsMenu::slotSendToScreen(QAction *action)
 void UserActionsMenu::slotToggleOnActivity(QAction *action)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
     QString activity = action->data().toString();
     if (m_client.isNull())
         return;

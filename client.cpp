@@ -1252,6 +1252,9 @@ void Client::doSetDesktop(int desktop, int was_desk)
 void Client::setOnActivity(const QString &activity, bool enable)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (! Activities::self()) {
+        return;
+    }
     QStringList newActivitiesList = activities();
     if (newActivitiesList.contains(activity) == enable)   //nothing to do
         return;
@@ -1275,6 +1278,9 @@ void Client::setOnActivity(const QString &activity, bool enable)
 void Client::setOnActivities(QStringList newActivitiesList)
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return;
+    }
     QString joinedActivitiesList = newActivitiesList.join(QStringLiteral(","));
     joinedActivitiesList = rules()->checkActivity(joinedActivitiesList, false);
     newActivitiesList = joinedActivitiesList.split(QStringLiteral(","), QString::SkipEmptyParts);
@@ -2029,7 +2035,7 @@ void Client::readActivities(Xcb::StringProperty &property)
     //if the activities are not synced, and there are existing clients with
     //activities specified, somebody has restarted kwin. we can not validate
     //activities in this case. we need to trust the old values.
-    if (Activities::self()->serviceStatus() != KActivities::Consumer::Unknown) {
+    if (Activities::self() && Activities::self()->serviceStatus() != KActivities::Consumer::Unknown) {
         QStringList allActivities = Activities::self()->all();
         if (allActivities.isEmpty()) {
             qCDebug(KWIN_CORE) << "no activities!?!?";

@@ -330,14 +330,16 @@ AbstractLevel *AbstractLevel::create(const QList< ClientModel::LevelRestriction 
     switch (restriction) {
     case ClientModel::ActivityRestriction: {
 #ifdef KWIN_BUILD_ACTIVITIES
-        const QStringList &activities = Activities::self()->all();
-        for (QStringList::const_iterator it = activities.begin(); it != activities.end(); ++it) {
-            AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
-            if (!childLevel) {
-                continue;
+        if (Activities::self()) {
+            const QStringList &activities = Activities::self()->all();
+            for (QStringList::const_iterator it = activities.begin(); it != activities.end(); ++it) {
+                AbstractLevel *childLevel = create(childRestrictions, childrenRestrictions, model, currentLevel);
+                if (!childLevel) {
+                    continue;
+                }
+                childLevel->setActivity(*it);
+                currentLevel->addChild(childLevel);
             }
-            childLevel->setActivity(*it);
-            currentLevel->addChild(childLevel);
         }
         break;
 #else
@@ -421,9 +423,10 @@ ForkLevel::ForkLevel(const QList<ClientModel::LevelRestriction> &childRestrictio
     connect(VirtualDesktopManager::self(), SIGNAL(countChanged(uint,uint)), SLOT(desktopCountChanged(uint,uint)));
     connect(screens(), SIGNAL(countChanged(int,int)), SLOT(screenCountChanged(int,int)));
 #ifdef KWIN_BUILD_ACTIVITIES
-    Activities *activities = Activities::self();
-    connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
-    connect(activities, SIGNAL(removed(QString)), SLOT(activityRemoved(QString)));
+    if (Activities *activities = Activities::self()) {
+        connect(activities, SIGNAL(added(QString)), SLOT(activityAdded(QString)));
+        connect(activities, SIGNAL(removed(QString)), SLOT(activityRemoved(QString)));
+    }
 #endif
 }
 

@@ -391,6 +391,9 @@ bool Toplevel::isDeleted() const
 bool Toplevel::isOnCurrentActivity() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return true;
+    }
     return isOnActivity(Activities::self()->current());
 #else
     return true;

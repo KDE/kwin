@@ -76,7 +76,9 @@ TabBoxHandlerImpl::TabBoxHandlerImpl(TabBox* tabBox)
     connect(vds, SIGNAL(countChanged(uint,uint)), m_desktopFocusChain, SLOT(resize(uint,uint)));
     connect(vds, SIGNAL(currentChanged(uint,uint)), m_desktopFocusChain, SLOT(addDesktop(uint,uint)));
 #ifdef KWIN_BUILD_ACTIVITIES
-    connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+    if (Activities::self()) {
+        connect(Activities::self(), SIGNAL(currentChanged(QString)), m_desktopFocusChain, SLOT(useChain(QString)));
+    }
 #endif
 }
 

@@ -219,7 +219,7 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         if (desktop() == 0 && asn_valid && asn_data.desktop() != 0)
             desk = asn_data.desktop();
 #ifdef KWIN_BUILD_ACTIVITIES
-        if (!isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
+        if (Activities::self() && !isMapped && !noborder && isNormalWindow() && !activitiesDefined) {
             //a new, regular window, when we're not recovering from a crash,
             //and it hasn't got an activity. let's try giving it the current one.
             //TODO: decide whether to keep this before the 4.6 release

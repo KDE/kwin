@@ -280,10 +280,11 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     connect(screens(), &Screens::sizeChanged,     this, &EffectsHandler::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &EffectsHandler::virtualScreenGeometryChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
-    Activities *activities = Activities::self();
-    connect(activities, &Activities::added,          this, &EffectsHandler::activityAdded);
-    connect(activities, &Activities::removed,        this, &EffectsHandler::activityRemoved);
-    connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
+    if (Activities *activities = Activities::self()) {
+        connect(activities, &Activities::added,          this, &EffectsHandler::activityAdded);
+        connect(activities, &Activities::removed,        this, &EffectsHandler::activityRemoved);
+        connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
+    }
 #endif
     connect(ws, &Workspace::stackingOrderChanged, this, &EffectsHandler::stackingOrderChanged);
 #ifdef KWIN_BUILD_TABBOX
@@ -919,6 +920,9 @@ void EffectsHandlerImpl::setShowingDesktop(bool showing)
 QString EffectsHandlerImpl::currentActivity() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return QString();
+    }
     return Activities::self()->current();
 #else
     return QString();

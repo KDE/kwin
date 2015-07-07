@@ -48,12 +48,13 @@ WorkspaceWrapper::WorkspaceWrapper(QObject* parent) : QObject(parent)
     connect(vds, SIGNAL(layoutChanged(int,int)), SIGNAL(desktopLayoutChanged()));
     connect(ws, &Workspace::clientDemandsAttentionChanged, this, &WorkspaceWrapper::clientDemandsAttentionChanged);
 #ifdef KWIN_BUILD_ACTIVITIES
-    KWin::Activities *activities = KWin::Activities::self();
-    connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
-    connect(activities, SIGNAL(added(QString)), SIGNAL(activitiesChanged(QString)));
-    connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
-    connect(activities, SIGNAL(removed(QString)), SIGNAL(activitiesChanged(QString)));
-    connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
+    if (KWin::Activities *activities = KWin::Activities::self()) {
+        connect(activities, SIGNAL(currentChanged(QString)), SIGNAL(currentActivityChanged(QString)));
+        connect(activities, SIGNAL(added(QString)), SIGNAL(activitiesChanged(QString)));
+        connect(activities, SIGNAL(added(QString)), SIGNAL(activityAdded(QString)));
+        connect(activities, SIGNAL(removed(QString)), SIGNAL(activitiesChanged(QString)));
+        connect(activities, SIGNAL(removed(QString)), SIGNAL(activityRemoved(QString)));
+    }
 #endif
     connect(screens(), &Screens::sizeChanged, this, &WorkspaceWrapper::virtualScreenSizeChanged);
     connect(screens(), &Screens::geometryChanged, this, &WorkspaceWrapper::virtualScreenGeometryChanged);
@@ -101,6 +102,9 @@ GETTER(QList< KWin::Client* >, clientList)
 QString WorkspaceWrapper::currentActivity() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return QString();
+    }
     return Activities::self()->current();
 #else
     return QString();
@@ -110,6 +114,9 @@ QString WorkspaceWrapper::currentActivity() const
 QStringList WorkspaceWrapper::activityList() const
 {
 #ifdef KWIN_BUILD_ACTIVITIES
+    if (!Activities::self()) {
+        return QStringList();
+    }
     return Activities::self()->all();
 #else
     return QStringList();
