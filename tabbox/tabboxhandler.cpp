@@ -45,7 +45,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KLocalizedString>
 #include <KProcess>
-#include <KServiceTypeTrader>
+#include <KPackage/Package>
+#include <KPackage/PackageLoader>
 
 namespace KWin
 {
@@ -243,34 +244,40 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                                               .arg(config.layoutName())
                                               .arg(desktopMode ? QStringLiteral("desktopswitcher/DesktopSwitcher.qml") : QStringLiteral("windowswitcher/WindowSwitcher.qml")));
     if (file.isNull()) {
-        auto findSwitcher = [this, desktopMode] {
-            QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(config.layoutName());
+        const QString folderName = QStringLiteral(KWIN_NAME) + (desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/"));
+        auto findSwitcher = [this, desktopMode, folderName] {
             const QString type = desktopMode ? QStringLiteral("KWin/DesktopSwitcher") : QStringLiteral("KWin/WindowSwitcher");
-            KService::List offers = KServiceTypeTrader::self()->query(type, constraint);
+            auto offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
+                [this] (const KPluginMetaData &data) {
+                    return data.pluginId().compare(config.layoutName(), Qt::CaseInsensitive) == 0;
+                }
+            );
             if (offers.isEmpty()) {
                 // load default
-                constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(QStringLiteral("informative"));
-                offers = KServiceTypeTrader::self()->query(type, constraint);
+                auto offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
+                    [this] (const KPluginMetaData &data) {
+                        return data.pluginId().compare(QStringLiteral("informative"), Qt::CaseInsensitive) == 0;
+                    }
+                );
                 if (offers.isEmpty()) {
                     qDebug() << "could not find default window switcher layout";
-                    return KService::Ptr();
+                    return KPluginMetaData();
                 }
             }
             return offers.first();
         };
-        KService::Ptr service = findSwitcher();
-        if (!service) {
+        auto service = findSwitcher();
+        if (!service.isValid()) {
             return nullptr;
         }
-        if (service->property(QStringLiteral("X-Plasma-API")).toString() != QStringLiteral("declarativeappletscript")) {
+        if (service.value(QStringLiteral("X-Plasma-API")) != QStringLiteral("declarativeappletscript")) {
             qDebug() << "Window Switcher Layout is no declarativeappletscript";
             return nullptr;
         }
-        auto findScriptFile = [desktopMode, service] {
-            const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
-            const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-            const QString type = desktopMode ? QStringLiteral("/desktoptabbox/") : QStringLiteral("/tabbox/");
-            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + type + pluginName + QStringLiteral("/contents/") + scriptName);
+        auto findScriptFile = [desktopMode, service, folderName] {
+            const QString pluginName = service.pluginId();
+            const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
+            return QStandardPaths::locate(QStandardPaths::GenericDataLocation, folderName + pluginName + QStringLiteral("/contents/") + scriptName);
         };
         file = findScriptFile();
     }
