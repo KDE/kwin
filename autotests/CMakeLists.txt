@@ -54,7 +54,6 @@ target_link_libraries( testClientMachine
                        Qt5::Widgets
                        KF5::ConfigCore
                        KF5::WindowSystem
-                       KF5::Service
                        XCB::XCB
                        XCB::XFIXES
                        ${X11_X11_LIB} # to make jenkins happy
@@ -217,7 +216,6 @@ target_link_libraries(testScreens
     KF5::ConfigCore
     KF5::ConfigGui
     KF5::WindowSystem
-    KF5::Service
 )
 
 add_test(kwin_testScreens testScreens)
@@ -245,7 +243,6 @@ target_link_libraries( testXRandRScreens
                        KF5::ConfigCore
                        KF5::ConfigGui
                        KF5::WindowSystem
-                       KF5::Service
                        XCB::XCB
                        XCB::RANDR
                        XCB::XFIXES
@@ -287,7 +284,6 @@ target_link_libraries(testScreenEdges
     KF5::I18n
     KF5::GlobalAccel
     KF5::WindowSystem
-    KF5::Service
     XCB::XCB
 )
 
