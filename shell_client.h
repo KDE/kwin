@@ -113,6 +113,7 @@ public:
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
+    void doSetActive() override;
 
 private Q_SLOTS:
     void clientFullScreenChanged(bool fullScreen);

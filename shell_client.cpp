@@ -439,6 +439,12 @@ void ShellClient::takeFocus()
         workspace()->setShowingDesktop(false);
 }
 
+void ShellClient::doSetActive()
+{
+    StackingUpdatesBlocker blocker(workspace());
+    workspace()->focusToNull();
+}
+
 void ShellClient::updateWindowRules(Rules::Types selection)
 {
     Q_UNUSED(selection)
