@@ -1,4 +1,8 @@
 {
+    "KPlugin": {
+        "Id": "org.kde.kwin.aurorae",
+        "ServiceTypes": ["org.kde.kdecoration2"]
+    },
     "Type": "Service",
     "X-KDE-Library": "kwin5_aurorae",
     "X-KDE-PluginInfo-EnabledByDefault": true,

@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KDecoration2/DecorationSettings>
 
 // Frameworks
-#include <KPluginTrader>
+#include <KPluginMetaData>
 #include <KPluginLoader>
 
 // Qt
@@ -95,15 +95,13 @@ void DecorationBridge::init()
 
 void DecorationBridge::initPlugin()
 {
-    const auto offers = KPluginTrader::self()->query(s_pluginName,
-                                                     s_pluginName,
-                                                     QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(m_plugin));
+    const auto offers = KPluginLoader::findPluginsById(s_pluginName, m_plugin);
     if (offers.isEmpty()) {
         qWarning() << "Could not locate decoration plugin";
         return;
     }
-    qDebug() << "Trying to load decoration plugin: " << offers.first().libraryPath();
-    KPluginLoader loader(offers.first().libraryPath());
+    qDebug() << "Trying to load decoration plugin: " << offers.first().fileName();
+    KPluginLoader loader(offers.first().fileName());
     KPluginFactory *factory = loader.factory();
     if (!factory) {
         qWarning() << "Error loading plugin:" << loader.errorString();
