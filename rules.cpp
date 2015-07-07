@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 #include <QFile>
 #include <QFileInfo>
-#include <ktoolinvocation.h>
 #include <QDebug>
 
 #ifndef KCMRULES
@@ -995,7 +994,19 @@ void RuleBook::edit(AbstractClient* c, bool whole_app)
     args << QStringLiteral("--wid") << QString::number(c->window());
     if (whole_app)
         args << QStringLiteral("--whole-app");
-    KToolInvocation::kdeinitExec(QStringLiteral("kwin_rules_dialog"), args);
+    QProcess *p = new QProcess(this);
+    p->setArguments(args);
+    p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
+    p->setProgram(QStringLiteral(KWIN_RULES_DIALOG_BIN));
+    connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &QProcess::deleteLater);
+    connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+        [p] (QProcess::ProcessError e) {
+            if (e == QProcess::FailedToStart) {
+                qCDebug(KWIN_CORE) << "Failed to start kwin_rules_dialog";
+            }
+        }
+    );
+    p->start();
 }
 
 void RuleBook::load()

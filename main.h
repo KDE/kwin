@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Qt
 #include <QApplication>
 #include <QAbstractNativeEventFilter>
+#include <QProcessEnvironment>
 
 class QCommandLineParser;
 
@@ -140,6 +141,8 @@ public:
     xcb_connection_t *x11Connection() const {
         return m_connection;
     }
+
+    virtual QProcessEnvironment processStartupEnvironment() const;
 
     static void setupMalloc();
     static void setupLocalizedString();

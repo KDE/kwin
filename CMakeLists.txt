@@ -72,7 +72,6 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     I18n
     Init
     Notifications
-    Service
     Package
     Plasma
     WidgetsAddons
@@ -86,6 +85,7 @@ find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
     KCMUtils
     KIO
     NewStuff
+    Service
     XmlGui
 )
 
@@ -502,7 +502,6 @@ set(kwin_KDE_LIBS
     KF5::GlobalAccelPrivate
     KF5::I18n
     KF5::Notifications
-    KF5::Service
     KF5::Package
     KF5::Plasma
     KF5::WindowSystem

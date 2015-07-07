@@ -533,6 +533,11 @@ bool Application::usesLibinput()
     return s_useLibinput;
 }
 
+QProcessEnvironment Application::processStartupEnvironment() const
+{
+    return QProcessEnvironment::systemEnvironment();
+}
+
 } // namespace
 
 #include "main.moc"

@@ -50,6 +50,10 @@ public:
 
     bool notify(QObject *o, QEvent *e) override;
 
+    QProcessEnvironment processStartupEnvironment() const override {
+        return m_environment;
+    }
+
 protected:
     void performStartup() override;
 

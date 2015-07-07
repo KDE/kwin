@@ -189,15 +189,14 @@ void ApplicationWayland::continueStartupWithX()
         }
     }
 
+    m_environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
     // start the applications passed to us as command line arguments
     if (!m_applicationsToStart.isEmpty()) {
-        QProcessEnvironment environment = m_environment;
-        environment.insert(QStringLiteral("DISPLAY"), QString::fromUtf8(qgetenv("DISPLAY")));
         for (const QString &application: m_applicationsToStart) {
             // note: this will kill the started process when we exit
             // this is going to happen anyway as we are the wayland and X server the app connects to
             QProcess *p = new QProcess(this);
-            p->setProcessEnvironment(environment);
+            p->setProcessEnvironment(m_environment);
             p->start(application);
         }
     }

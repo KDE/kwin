@@ -47,7 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #include <KProcess>
-#include <KToolInvocation>
 
 #include <QAction>
 #include <QCheckBox>
@@ -307,14 +306,23 @@ void UserActionsMenu::init()
                                         "Window &Manager Settings..."));
         action->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
         connect(action, &QAction::triggered, this,
-            []() {
+            [this]() {
                 // opens the KWin configuration
                 QStringList args;
                 args << QStringLiteral("--icon") << QStringLiteral("preferences-system-windows") << configModules(false);
-                QString error;
-                if (KToolInvocation::kdeinitExec(QStringLiteral("kcmshell5"), args, &error) != 0) {
-                    qCDebug(KWIN_CORE) << "Failed to start kcmshell5: " << error;
-                }
+                QProcess *p = new QProcess(this);
+                p->setArguments(args);
+                p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
+                p->setProgram(QStringLiteral("kcmshell5"));
+                connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &QProcess::deleteLater);
+                connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
+                    [p] (QProcess::ProcessError e) {
+                        if (e == QProcess::FailedToStart) {
+                            qCDebug(KWIN_CORE) << "Failed to start kcmshell5";
+                        }
+                    }
+                );
+                p->start();
             }
         );
     }
