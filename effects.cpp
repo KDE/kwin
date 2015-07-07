@@ -877,7 +877,7 @@ void EffectsHandlerImpl::deleteRootProperty(long atom) const
 
 void EffectsHandlerImpl::activateWindow(EffectWindow* c)
 {
-    if (Client* cl = dynamic_cast< Client* >(static_cast<EffectWindowImpl*>(c)->window()))
+    if (AbstractClient* cl = dynamic_cast< AbstractClient* >(static_cast<EffectWindowImpl*>(c)->window()))
         Workspace::self()->activateClient(cl, true);
 }
 
