@@ -33,8 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KLocalizedTranslator>
 #include <KPluginFactory>
 #include <KSharedConfig>
-#include <KService>
-#include <KServiceTypeTrader>
+#include <KPackage/PackageLoader>
 // Qt
 #include <QDebug>
 #include <QComboBox>
@@ -116,6 +115,7 @@ void Helper::unref()
 }
 
 static const QString s_defaultTheme = QStringLiteral("kwin4_decoration_qml_plastik");
+static const QString s_qmlPackageFolder = QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/");
 /*
  * KDecoration2::BorderSize doesn't map to the indices used for the Aurorae SVG Button Sizes.
  * BorderSize defines None and NoSideBorder as index 0 and 1. These do not make sense for Button
@@ -166,17 +166,20 @@ QQmlComponent *Helper::loadComponent(const QString &themeName)
     qCDebug(AURORAE) << "Trying to load QML Decoration " << themeName;
     const QString internalname = themeName.toLower();
 
-    QString constraint = QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(internalname);
-    KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"), constraint);
+    const auto offers = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Decoration"), s_qmlPackageFolder,
+        [internalname] (const KPluginMetaData &data) {
+            return data.pluginId().compare(internalname, Qt::CaseInsensitive) == 0;
+        }
+    );
     if (offers.isEmpty()) {
         qCCritical(AURORAE) << "Couldn't find QML Decoration " << themeName << endl;
         // TODO: what to do in error case?
         return nullptr;
     }
-    KService::Ptr service = offers.first();
-    const QString pluginName = service->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString();
-    const QString scriptName = service->property(QStringLiteral("X-Plasma-MainScript")).toString();
-    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral(KWIN_NAME) + QStringLiteral("/decorations/") + pluginName + QStringLiteral("/contents/") + scriptName);
+    const KPluginMetaData &service = offers.first();
+    const QString pluginName = service.pluginId();
+    const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
+    const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, s_qmlPackageFolder + pluginName + QStringLiteral("/contents/") + scriptName);
     if (file.isNull()) {
         qCDebug(AURORAE) << "Could not find script file for " << pluginName;
         // TODO: what to do in error case?
@@ -623,9 +626,9 @@ void ThemeFinder::init()
 
 void ThemeFinder::findAllQmlThemes()
 {
-    const KService::List offers = KServiceTypeTrader::self()->query(QStringLiteral("KWin/Decoration"));
+    const auto offers = KPackage::PackageLoader::self()->findPackages(QStringLiteral("KWin/Decoration"), s_qmlPackageFolder);
     for (const auto &offer : offers) {
-        m_themes.insert(offer->name(), offer->property(QStringLiteral("X-KDE-PluginInfo-Name")).toString());
+        m_themes.insert(offer.name(), offer.pluginId());
     }
 }
 
