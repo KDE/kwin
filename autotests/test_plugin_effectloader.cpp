@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
-#include <KPluginTrader>
+#include <KPluginLoader>
 // Qt
 #include <QtTest/QtTest>
 #include <QStringList>
@@ -286,9 +286,11 @@ void TestPluginEffectLoader::testLoadPluginEffect()
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     loader.setConfig(config);
 
-    const auto plugins = KPluginTrader::self()->query(QString(),
-                                                      QStringLiteral("KWin/Effect"),
-                                                      QStringLiteral("[X-KDE-PluginInfo-Name] == '%1'").arg(name));
+    const auto plugins = KPluginLoader::findPlugins(QString(),
+        [name] (const KPluginMetaData &data) {
+            return data.pluginId().compare(name, Qt::CaseInsensitive) == 0 && data.serviceTypes().contains(QStringLiteral("KWin/Effect"));
+        }
+    );
     QCOMPARE(plugins.size(), 1);
 
     qRegisterMetaType<KWin::Effect*>();

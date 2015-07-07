@@ -29,8 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPair>
 #include <QQueue>
 
-class KPluginInfo;
-
 namespace KWin
 {
 class Effect;
@@ -326,16 +324,16 @@ public:
 
     void queryAndLoadAll() override;
     bool loadEffect(const QString &name) override;
-    bool loadEffect(const KPluginInfo &info, LoadEffectFlags flags);
+    bool loadEffect(const KPluginMetaData &info, LoadEffectFlags flags);
 
     void setPluginSubDirectory(const QString &directory);
 
 private:
-    QList<KPluginInfo> findAllEffects() const;
-    KPluginInfo findEffect(const QString &name) const;
-    EffectPluginFactory *factory(const KPluginInfo &info) const;
+    QVector<KPluginMetaData> findAllEffects() const;
+    KPluginMetaData findEffect(const QString &name) const;
+    EffectPluginFactory *factory(const KPluginMetaData &info) const;
     QStringList m_loadedEffects;
-    EffectLoadQueue< PluginEffectLoader, KPluginInfo> *m_queue;
+    EffectLoadQueue< PluginEffectLoader, KPluginMetaData> *m_queue;
     QString m_pluginSubDirectory;
 };
 
