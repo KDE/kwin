@@ -526,9 +526,9 @@ void Workspace::setCurrentScreen(int new_screen)
     screens()->setCurrent(new_screen);
 }
 
-void Workspace::gotFocusIn(const Client* c)
+void Workspace::gotFocusIn(const AbstractClient* c)
 {
-    if (should_get_focus.contains(const_cast< Client* >(c))) {
+    if (should_get_focus.contains(const_cast< AbstractClient* >(c))) {
         // remove also all sooner elements that should have got FocusIn,
         // but didn't for some reason (and also won't anymore, because they were sooner)
         while (should_get_focus.first() != c)
@@ -537,7 +537,7 @@ void Workspace::gotFocusIn(const Client* c)
     }
 }
 
-void Workspace::setShouldGetFocus(Client* c)
+void Workspace::setShouldGetFocus(AbstractClient* c)
 {
     should_get_focus.append(c);
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active

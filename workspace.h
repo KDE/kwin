@@ -160,8 +160,8 @@ public:
     bool allowClientActivation(const AbstractClient* c, xcb_timestamp_t time = -1U, bool focus_in = false,
                                bool ignore_desktop = false);
     void restoreFocus();
-    void gotFocusIn(const Client*);
-    void setShouldGetFocus(Client*);
+    void gotFocusIn(const AbstractClient*);
+    void setShouldGetFocus(AbstractClient*);
     bool activateNextClient(AbstractClient* c);
     bool focusChangeEnabled() {
         return block_focus == 0;
