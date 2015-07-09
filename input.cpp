@@ -727,7 +727,19 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
-        state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
+        bool passThrough = true;
+        if (state == PointerButtonPressed) {
+            if (AbstractClient *c = dynamic_cast<AbstractClient*>(m_pointerWindow.data())) {
+                bool wasAction = false;
+                const Options::MouseCommand command = c->getMouseCommand(buttonToQtMouseButton(button), &wasAction);
+                if (wasAction) {
+                    passThrough = c->performMouseCommand(command, m_globalPointer.toPoint());
+                }
+            }
+        }
+        if (passThrough) {
+            state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
+        }
     }
 #endif
     if (state == PointerButtonReleased && !areButtonsPressed()) {
