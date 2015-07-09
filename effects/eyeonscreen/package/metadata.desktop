@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=eye On Screen
 Name[ca]=Ull a la pantalla
+Name[da]=øjet på skærmen
 Name[en_GB]=eye On Screen
 Name[es]=Ojo a la pantalla
 Name[fi]=eye On Screen
@@ -29,6 +30,7 @@ Name[zh_TW]=螢幕之眼
 Icon=preferences-system-windows-effect-eyeonscreen
 Comment=Suck windows into desktop to show the latter. This might remind you of something.
 Comment[ca]=Enganxa les finestres a l'escriptori per a mostrar la darrera. Això podria recordar-vos quelcom.
+Comment[da]=Sug vinduer ind i skrivebordet for at vise dette. Måske minder det dig om noget.
 Comment[en_GB]=Suck windows into desktop to show the latter. This might remind you of something.
 Comment[es]=Succionar las ventanas en el escritorio para mostrarlo. Esto debe recordarle algo.
 Comment[fi]=Imee ikkunat työpöytään näyttääkseen sen. Tämä saattaa muistuttaa sinua jostain.
