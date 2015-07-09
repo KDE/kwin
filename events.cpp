@@ -1135,30 +1135,12 @@ bool Client::buttonPressEvent(xcb_window_t w, int button, int state, int x, int 
                 break;
             }
         } else {
-            // inactive inner window
-            if (!isActive() && w == wrapperId() && button < 6) {
-                was_action = true;
-                switch(button) {
-                case XCB_BUTTON_INDEX_1:
-                    com = options->commandWindow1();
-                    break;
-                case XCB_BUTTON_INDEX_2:
-                    com = options->commandWindow2();
-                    break;
-                case XCB_BUTTON_INDEX_3:
-                    com = options->commandWindow3();
-                    break;
-                case XCB_BUTTON_INDEX_4:
-                case XCB_BUTTON_INDEX_5:
-                    com = options->commandWindowWheel();
-                    break;
+            if (w == wrapperId()) {
+                if (button < 4) {
+                    com = getMouseCommand(x11ToQtMouseButton(button), &was_action);
+                } else if (button < 6) {
+                    com = getWheelCommand(Qt::Vertical, &was_action);
                 }
-            }
-            // active inner window
-            if (isActive() && w == wrapperId()
-                    && options->isClickRaise() && button < 4) { // exclude wheel
-                com = Options::MouseActivateRaiseAndPassClick;
-                was_action = true;
             }
         }
         if (was_action) {

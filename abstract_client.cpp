@@ -634,6 +634,47 @@ void AbstractClient::destroyWindowManagementInterface()
 #endif
 }
 
+Options::MouseCommand AbstractClient::getMouseCommand(Qt::MouseButton button, bool *handled) const
+{
+    *handled = false;
+    if (button == Qt::NoButton) {
+        return Options::MouseNothing;
+    }
+    if (isActive()) {
+        if (options->isClickRaise()) {
+            *handled = true;
+            return Options::MouseActivateRaiseAndPassClick;
+        }
+    } else {
+        *handled = true;
+        switch (button) {
+        case Qt::LeftButton:
+            return options->commandWindow1();
+        case Qt::MiddleButton:
+            return options->commandWindow2();
+        case Qt::RightButton:
+            return options->commandWindow3();
+        default:
+            // all other buttons pass Activate & Pass Client
+            return Options::MouseActivateAndPassClick;
+        }
+    }
+    return Options::MouseNothing;
+}
+
+Options::MouseCommand AbstractClient::getWheelCommand(Qt::Orientation orientation, bool *handled) const
+{
+    *handled = false;
+    if (orientation != Qt::Vertical) {
+        return Options::MouseNothing;
+    }
+    if (!isActive()) {
+        *handled = true;
+        return options->commandWindowWheel();
+    }
+    return Options::MouseNothing;
+}
+
 bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint &globalPos)
 {
     bool replay = false;

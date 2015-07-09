@@ -357,6 +357,16 @@ public:
 
     virtual bool hasStrut() const;
 
+    /**
+     * Determines the mouse command for the given @p button in the current state.
+     *
+     * The @p handled argument specifies whether the button was handled or not.
+     * This value should be used to determine whether the mouse button should be
+     * passed to the AbstractClient or being filtered out.
+     **/
+    Options::MouseCommand getMouseCommand(Qt::MouseButton button, bool *handled) const;
+    Options::MouseCommand getWheelCommand(Qt::Orientation orientation, bool *handled) const;
+
     // TODO: remove boolean trap
     static bool belongToSameApplication(const AbstractClient* c1, const AbstractClient* c2, bool active_hack = false);
 
