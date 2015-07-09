@@ -1182,9 +1182,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
 {
     bool replay = false;
     switch(command) {
-    case Options::MouseRaise:
-        workspace()->raiseClient(this);
-        break;
     case Options::MouseLower: {
         workspace()->lowerClient(this);
         // used to be activateNextClient(this), then topClientOnDesktop
@@ -1207,54 +1204,6 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
     case Options::MouseUnsetShade:
         setShade(ShadeNone);
         cancelShadeHoverTimer();
-        break;
-    case Options::MouseOperationsMenu:
-        if (isActive() && options->isClickRaise())
-            autoRaise();
-        workspace()->showWindowMenu(QRect(globalPos, globalPos), this);
-        break;
-    case Options::MouseToggleRaiseAndLower:
-        workspace()->raiseOrLowerClient(this);
-        break;
-    case Options::MouseActivateAndRaise: {
-        replay = isActive(); // for clickraise mode
-        bool mustReplay = !rules()->checkAcceptFocus(info->input());
-        if (mustReplay) {
-            ToplevelList::const_iterator  it = workspace()->stackingOrder().constEnd(),
-                                     begin = workspace()->stackingOrder().constBegin();
-            while (mustReplay && --it != begin && *it != this) {
-                Client *c = qobject_cast<Client*>(*it);
-                if (!c || (c->keepAbove() && !keepAbove()) || (keepBelow() && !c->keepBelow()))
-                    continue; // can never raise above "it"
-                mustReplay = !(c->isOnCurrentDesktop() && c->isOnCurrentActivity() && c->geometry().intersects(geometry()));
-            }
-        }
-        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
-        screens()->setCurrent(globalPos);
-        replay = replay || mustReplay;
-        break;
-    }
-    case Options::MouseActivateAndLower:
-        workspace()->requestFocus(this);
-        workspace()->lowerClient(this);
-        screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(info->input());
-        break;
-    case Options::MouseActivate:
-        replay = isActive(); // for clickraise mode
-        workspace()->takeActivity(this, Workspace::ActivityFocus);
-        screens()->setCurrent(globalPos);
-        replay = replay || !rules()->checkAcceptFocus(info->input());
-        break;
-    case Options::MouseActivateRaiseAndPassClick:
-        workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
-        screens()->setCurrent(globalPos);
-        replay = true;
-        break;
-    case Options::MouseActivateAndPassClick:
-        workspace()->takeActivity(this, Workspace::ActivityFocus);
-        screens()->setCurrent(globalPos);
-        replay = true;
         break;
     case Options::MouseActivateRaiseAndMove:
     case Options::MouseActivateRaiseAndUnrestrictedMove:
@@ -1305,60 +1254,8 @@ bool Client::performMouseCommand(Options::MouseCommand command, const QPoint &gl
         updateCursor();
         break;
     }
-    case Options::MouseMaximize:
-        maximize(MaximizeFull);
-        break;
-    case Options::MouseRestore:
-        maximize(MaximizeRestore);
-        break;
-    case Options::MouseMinimize:
-        minimize();
-        break;
-    case Options::MouseAbove: {
-        StackingUpdatesBlocker blocker(workspace());
-        if (keepBelow())
-            setKeepBelow(false);
-        else
-            setKeepAbove(true);
-        break;
-    }
-    case Options::MouseBelow: {
-        StackingUpdatesBlocker blocker(workspace());
-        if (keepAbove())
-            setKeepAbove(false);
-        else
-            setKeepBelow(true);
-        break;
-    }
-    case Options::MousePreviousDesktop:
-        workspace()->windowToPreviousDesktop(this);
-        break;
-    case Options::MouseNextDesktop:
-        workspace()->windowToNextDesktop(this);
-        break;
-    case Options::MouseOpacityMore:
-        if (!isDesktop())   // No point in changing the opacity of the desktop
-            setOpacity(qMin(opacity() + 0.1, 1.0));
-        break;
-    case Options::MouseOpacityLess:
-        if (!isDesktop())   // No point in changing the opacity of the desktop
-            setOpacity(qMax(opacity() - 0.1, 0.1));
-        break;
-    case Options::MousePreviousTab:
-        if (tabGroup())
-            tabGroup()->activatePrev();
-    break;
-    case Options::MouseNextTab:
-        if (tabGroup())
-            tabGroup()->activateNext();
-    break;
-    case Options::MouseClose:
-        closeWindow();
-        break;
-    case Options::MouseDragTab:
-    case Options::MouseNothing:
-        replay = true;
-        break;
+    default:
+        return AbstractClient::performMouseCommand(command, globalPos);
     }
     return replay;
 }

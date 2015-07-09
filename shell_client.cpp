@@ -376,13 +376,6 @@ bool ShellClient::noBorder() const
     return true;
 }
 
-bool ShellClient::performMouseCommand(Options::MouseCommand cmd, const QPoint &globalPos)
-{
-    Q_UNUSED(cmd)
-    Q_UNUSED(globalPos)
-    return false;
-}
-
 const WindowRules *ShellClient::rules() const
 {
     static WindowRules s_rules;

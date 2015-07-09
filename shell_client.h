@@ -77,7 +77,6 @@ public:
     MaximizeMode maximizeMode() const override;
     bool noBorder() const override;
     const WindowRules *rules() const override;
-    bool performMouseCommand(Options::MouseCommand cmd, const QPoint &globalPos) override;
     void sendToScreen(int screen) override;
     void setFullScreen(bool set, bool user = true) override;
     void setNoBorder(bool set) override;

@@ -242,7 +242,7 @@ public:
     virtual void sendToScreen(int screen) = 0;
     virtual const QKeySequence &shortcut() const  = 0;
     virtual void setShortcut(const QString &cut) = 0;
-    virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos) = 0;
+    virtual bool performMouseCommand(Options::MouseCommand, const QPoint &globalPos);
     void setOnAllDesktops(bool set);
     void setDesktop(int);
     int desktop() const override {
