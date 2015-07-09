@@ -254,7 +254,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
             );
             if (offers.isEmpty()) {
                 // load default
-                auto offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
+                offers = KPackage::PackageLoader::self()->findPackages(type,  folderName,
                     [this] (const KPluginMetaData &data) {
                         return data.pluginId().compare(QStringLiteral("informative"), Qt::CaseInsensitive) == 0;
                     }
