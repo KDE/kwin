@@ -2,6 +2,7 @@
 Name=Window Aperture
 Name[ca]=Obertura de finestra
 Name[cs]=Mřížka oken
+Name[da]=Vinduesblænding
 Name[de]=Fensteröffnung
 Name[en_GB]=Window Aperture
 Name[es]=Apertura de ventanas
@@ -29,6 +30,7 @@ Name[zh_TW]=視窗光圈
 Icon=preferences-system-windows-effect-windowaperture
 Comment=Move window into the corners while showing desktop
 Comment[ca]=Mou la finestra cap a les cantonades en mostrar l'escriptori
+Comment[da]=Flyt vinduer til hjørnerne når skrivebordet vises
 Comment[de]=Verschiebt Fenster bei der Anzeige der Arbeitsfläche in die Ecken.
 Comment[en_GB]=Move window into the corners while showing desktop
 Comment[es]=Mover las ventanas a las esquinas cuando se muestra el escritorio
