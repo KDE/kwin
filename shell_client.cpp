@@ -422,7 +422,9 @@ const QKeySequence &ShellClient::shortcut() const
 
 void ShellClient::takeFocus()
 {
-    setActive(true);
+    if (rules()->checkAcceptFocus(wantsInput())) {
+        setActive(true);
+    }
 
     bool breakShowingDesktop = !keepAbove() && !isOnScreenDisplay();
     if (breakShowingDesktop) {
