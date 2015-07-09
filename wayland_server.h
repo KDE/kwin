@@ -76,6 +76,9 @@ public:
     KWayland::Server::ShellInterface *shell() {
         return m_shell;
     }
+    KWayland::Server::PlasmaWindowManagementInterface *windowManagement() {
+        return m_windowManagement;
+    }
     QList<ShellClient*> clients() const {
         return m_clients;
     }
@@ -138,7 +141,6 @@ Q_SIGNALS:
 private:
     void fakeDummyQtWindowInput();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
-    void announceClientToWindowManagement(AbstractClient *c);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
     KWayland::Server::SeatInterface *m_seat = nullptr;

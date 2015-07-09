@@ -25,6 +25,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #include "workspace.h"
 
+#if HAVE_WAYLAND
+#include "wayland_server.h"
+#include <KWayland/Server/plasmawindowmanagement_interface.h>
+#endif
+
 namespace KWin
 {
 
@@ -507,6 +512,124 @@ void AbstractClient::updateMoveResize(const QPointF &currentGlobalCursor)
 bool AbstractClient::hasStrut() const
 {
     return false;
+}
+
+void AbstractClient::setupWindowManagementInterface()
+{
+#if HAVE_WAYLAND
+    if (m_windowManagementInterface) {
+        // already setup
+        return;
+    }
+    if (!waylandServer() || !surface()) {
+        return;
+    }
+    if (!waylandServer()->windowManagement()) {
+        return;
+    }
+    using namespace KWayland::Server;
+    auto w = waylandServer()->windowManagement()->createWindow(this);
+    w->setTitle(caption());
+    w->setVirtualDesktop(isOnAllDesktops() ? 0 : desktop() - 1);
+    w->setActive(isActive());
+    w->setFullscreen(isFullScreen());
+    w->setKeepAbove(keepAbove());
+    w->setKeepBelow(keepBelow());
+    w->setMaximized(maximizeMode() == KWin::MaximizeFull);
+    w->setMinimized(isMinimized());
+    w->setOnAllDesktops(isOnAllDesktops());
+    w->setDemandsAttention(isDemandingAttention());
+    w->setCloseable(isCloseable());
+    w->setMaximizeable(isMaximizable());
+    w->setMinimizeable(isMinimizable());
+    w->setFullscreenable(isFullScreenable());
+    w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
+    connect(this, &AbstractClient::captionChanged, w, [w, this] { w->setTitle(caption()); });
+    connect(this, &AbstractClient::desktopChanged, w,
+        [w, this] {
+            if (isOnAllDesktops()) {
+                w->setOnAllDesktops(true);
+                return;
+            }
+            w->setVirtualDesktop(desktop() - 1);
+            w->setOnAllDesktops(false);
+        }
+    );
+    connect(this, &AbstractClient::activeChanged, w, [w, this] { w->setActive(isActive()); });
+    connect(this, &AbstractClient::fullScreenChanged, w, [w, this] { w->setFullscreen(isFullScreen()); });
+    connect(this, &AbstractClient::keepAboveChanged, w, &PlasmaWindowInterface::setKeepAbove);
+    connect(this, &AbstractClient::keepBelowChanged, w, &PlasmaWindowInterface::setKeepBelow);
+    connect(this, &AbstractClient::minimizedChanged, w, [w, this] { w->setMinimized(isMinimized()); });
+    connect(this, static_cast<void (AbstractClient::*)(AbstractClient*,MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged), w,
+        [w] (KWin::AbstractClient *c, MaximizeMode mode) {
+            Q_UNUSED(c);
+            w->setMaximized(mode == KWin::MaximizeFull);
+        }
+    );
+    connect(this, &AbstractClient::demandsAttentionChanged, w, [w, this] { w->setDemandsAttention(isDemandingAttention()); });
+    connect(this, &AbstractClient::iconChanged, w,
+        [w, this] {
+            const QIcon i = icon();
+            w->setThemedIconName(i.name().isEmpty() ? QStringLiteral("xorg") : i.name());
+        }
+    );
+    connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
+    connect(w, &PlasmaWindowInterface::virtualDesktopRequested, this,
+        [this] (quint32 desktop) {
+            workspace()->sendClientToDesktop(this, desktop + 1, true);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::fullscreenRequested, this,
+        [this] (bool set) {
+            setFullScreen(set, false);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::minimizedRequested, this,
+        [this] (bool set) {
+            if (set) {
+                minimize();
+            } else {
+                unminimize();
+            }
+        }
+    );
+    connect(w, &PlasmaWindowInterface::maximizedRequested, this,
+        [this] (bool set) {
+            maximize(set ? MaximizeFull : MaximizeRestore);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::keepAboveRequested, this,
+        [this] (bool set) {
+            setKeepAbove(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::keepBelowRequested, this,
+        [this] (bool set) {
+            setKeepBelow(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::demandsAttentionRequested, this,
+        [this] (bool set) {
+            demandAttention(set);
+        }
+    );
+    connect(w, &PlasmaWindowInterface::activeRequested, this,
+        [this] (bool set) {
+            if (set) {
+                workspace()->activateClient(this, true);
+            }
+        }
+    );
+    m_windowManagementInterface = w;
+#endif
+}
+
+void AbstractClient::destroyWindowManagementInterface()
+{
+#if HAVE_WAYLAND
+    delete m_windowManagementInterface;
+    m_windowManagementInterface = nullptr;
+#endif
 }
 
 }

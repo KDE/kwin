@@ -87,9 +87,6 @@ void WaylandServer::init(const QByteArray &socketName)
             };
             if (Toplevel *t = ws->findToplevel(check)) {
                 t->setSurface(surface);
-                if (Client *c = dynamic_cast<Client*>(t)) {
-                    announceClientToWindowManagement(c);
-                }
             }
         }
     );
@@ -201,109 +198,7 @@ void WaylandServer::initWorkspace()
                 );
             }
         );
-        connect(workspace(), &Workspace::clientAdded, this, &WaylandServer::announceClientToWindowManagement);
-        connect(this, &WaylandServer::shellClientAdded, this, &WaylandServer::announceClientToWindowManagement);
     }
-}
-
-void WaylandServer::announceClientToWindowManagement(AbstractClient *c)
-{
-    if (!c->surface()) {
-        return;
-    }
-    using namespace KWayland::Server;
-    auto w = m_windowManagement->createWindow(c);
-    w->setTitle(c->caption());
-    w->setVirtualDesktop(c->isOnAllDesktops() ? 0 : c->desktop() - 1);
-    w->setActive(c->isActive());
-    w->setFullscreen(c->isFullScreen());
-    w->setKeepAbove(c->keepAbove());
-    w->setKeepBelow(c->keepBelow());
-    w->setMaximized(c->maximizeMode() == KWin::MaximizeFull);
-    w->setMinimized(c->isMinimized());
-    w->setOnAllDesktops(c->isOnAllDesktops());
-    w->setDemandsAttention(c->isDemandingAttention());
-    w->setCloseable(c->isCloseable());
-    w->setMaximizeable(c->isMaximizable());
-    w->setMinimizeable(c->isMinimizable());
-    w->setFullscreenable(c->isFullScreenable());
-    w->setThemedIconName(c->icon().name().isEmpty() ? QStringLiteral("xorg") : c->icon().name());
-    connect(c, &AbstractClient::captionChanged, w, [w, c] { w->setTitle(c->caption()); });
-    connect(c, &AbstractClient::desktopChanged, w,
-        [w, c] {
-            if (c->isOnAllDesktops()) {
-                w->setOnAllDesktops(true);
-                return;
-            }
-            w->setVirtualDesktop(c->desktop() - 1);
-            w->setOnAllDesktops(false);
-        }
-    );
-    connect(c, &AbstractClient::activeChanged, w, [w, c] { w->setActive(c->isActive()); });
-    connect(c, &AbstractClient::fullScreenChanged, w, [w, c] { w->setFullscreen(c->isFullScreen()); });
-    connect(c, &AbstractClient::keepAboveChanged, w, &PlasmaWindowInterface::setKeepAbove);
-    connect(c, &AbstractClient::keepBelowChanged, w, &PlasmaWindowInterface::setKeepBelow);
-    connect(c, &AbstractClient::minimizedChanged, w, [w, c] { w->setMinimized(c->isMinimized()); });
-    connect(c, static_cast<void (AbstractClient::*)(AbstractClient*,MaximizeMode)>(&AbstractClient::clientMaximizedStateChanged), w,
-        [w] (KWin::AbstractClient *c, MaximizeMode mode) {
-            Q_UNUSED(c);
-            w->setMaximized(mode == KWin::MaximizeFull);
-        }
-    );
-    connect(c, &AbstractClient::demandsAttentionChanged, w, [w, c] { w->setDemandsAttention(c->isDemandingAttention()); });
-    connect(c, &AbstractClient::iconChanged, w,
-        [w, c] {
-            const QIcon icon = c->icon();
-            w->setThemedIconName(icon.name().isEmpty() ? QStringLiteral("xorg") : icon.name());
-        }
-    );
-    connect(w, &PlasmaWindowInterface::closeRequested, c, [c] { c->closeWindow(); });
-    connect(w, &PlasmaWindowInterface::virtualDesktopRequested, c,
-        [c] (quint32 desktop) {
-            workspace()->sendClientToDesktop(c, desktop + 1, true);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::fullscreenRequested, c,
-        [c] (bool set) {
-            c->setFullScreen(set, false);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::minimizedRequested, c,
-        [c] (bool set) {
-            if (set) {
-                c->minimize();
-            } else {
-                c->unminimize();
-            }
-        }
-    );
-    connect(w, &PlasmaWindowInterface::maximizedRequested, c,
-        [c] (bool set) {
-            c->maximize(set ? MaximizeFull : MaximizeRestore);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::keepAboveRequested, c,
-        [c] (bool set) {
-            c->setKeepAbove(set);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::keepBelowRequested, c,
-        [c] (bool set) {
-            c->setKeepBelow(set);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::demandsAttentionRequested, c,
-        [c] (bool set) {
-            c->demandAttention(set);
-        }
-    );
-    connect(w, &PlasmaWindowInterface::activeRequested, c,
-        [c] (bool set) {
-            if (set) {
-                workspace()->activateClient(c, true);
-            }
-        }
-    );
 }
 
 void WaylandServer::initOutputs()

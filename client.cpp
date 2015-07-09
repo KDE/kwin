@@ -223,6 +223,7 @@ void Client::releaseWindow(bool on_shutdown)
 {
     assert(!deleting);
     deleting = true;
+    destroyWindowManagementInterface();
     Deleted* del = NULL;
     if (!on_shutdown) {
         del = Deleted::create(this);
@@ -293,6 +294,7 @@ void Client::destroyClient()
 {
     assert(!deleting);
     deleting = true;
+    destroyWindowManagementInterface();
     Deleted* del = Deleted::create(this);
     if (moveResizeMode)
         emit clientFinishUserMovedResized(this);
@@ -1824,6 +1826,7 @@ void Client::sendSyncRequest()
                 if (!ready_for_painting) {
                     // failed on initial pre-show request
                     setReadyForPainting();
+                    setupWindowManagementInterface();
                     return;
                 }
                 // failed during resize
@@ -2231,8 +2234,10 @@ void Client::setDecoratedClient(QPointer< Decoration::DecoratedClientImpl > clie
 void Client::addDamage(const QRegion &damage)
 {
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == XCB_NONE)   // cannot detect complete redraw, consider done now
+        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
             setReadyForPainting();
+            setupWindowManagementInterface();
+        }
     }
     Toplevel::addDamage(damage);
 }

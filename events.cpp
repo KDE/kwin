@@ -1547,6 +1547,7 @@ void Client::syncEvent(xcb_sync_alarm_notify_event_t* e)
 {
     if (e->alarm == syncRequest.alarm && e->counter_value.hi == syncRequest.value.hi && e->counter_value.lo == syncRequest.value.lo) {
         setReadyForPainting();
+        setupWindowManagementInterface();
         syncRequest.isPending = false;
         if (syncRequest.failsafeTimeout)
             syncRequest.failsafeTimeout->stop();

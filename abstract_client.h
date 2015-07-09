@@ -26,6 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <memory>
 
+namespace KWayland
+{
+namespace Server
+{
+class PlasmaWindowInterface;
+}
+}
+
 namespace KWin
 {
 
@@ -430,6 +438,9 @@ protected:
     virtual void doSetSkipTaskbar();
     virtual void doSetSkipPager();
 
+    void setupWindowManagementInterface();
+    void destroyWindowManagementInterface();
+
     void updateColorScheme(QString path);
 
 private:
@@ -456,6 +467,8 @@ private:
     std::shared_ptr<Decoration::DecorationPalette> m_palette;
     static QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> s_palettes;
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
+
+    KWayland::Server::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)

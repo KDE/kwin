@@ -1024,8 +1024,10 @@ void Client::damageNotifyEvent()
     }
 
     if (!ready_for_painting) { // avoid "setReadyForPainting()" function calling overhead
-        if (syncRequest.counter == XCB_NONE)   // cannot detect complete redraw, consider done now
+        if (syncRequest.counter == XCB_NONE) {  // cannot detect complete redraw, consider done now
             setReadyForPainting();
+            setupWindowManagementInterface();
+        }
     }
 
     Toplevel::damageNotifyEvent();
