@@ -932,6 +932,17 @@ void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 t
         seat->setTimestamp(time);
         if (!seat->isTouchSequence()) {
             updateTouchWindow(pos);
+            if (AbstractClient *c = dynamic_cast<AbstractClient*>(m_touchWindow.data())) {
+                // perform same handling as if it were a left click
+                bool wasAction = false;
+                const Options::MouseCommand command = c->getMouseCommand(Qt::LeftButton, &wasAction);
+                if (wasAction) {
+                    // if no replay we filter out this touch point
+                    if (!c->performMouseCommand(command, pos.toPoint())) {
+                        return;
+                    }
+                }
+            }
         }
         m_touchIdMapper.insert(id, seat->touchDown(pos));
     }
