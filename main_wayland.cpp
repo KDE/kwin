@@ -461,6 +461,7 @@ int main(int argc, char * argv[])
     qunsetenv("QT_IM_MODULE");
     qputenv("WAYLAND_SOCKET", QByteArray::number(server->createQtConnection()));
     qputenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
+    qputenv("QSG_RENDER_LOOP", "basic");
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
     a.setProcessStartupEnvironment(environment);
