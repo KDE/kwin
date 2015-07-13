@@ -249,6 +249,9 @@ public:
     QString toString(xkb_keysym_t keysym);
     Qt::Key toQtKey(xkb_keysym_t keysym);
     Qt::KeyboardModifiers modifiers() const;
+
+    quint32 getMods(quint32 components);
+    quint32 getGroup();
 private:
     void updateKeymap(xkb_keymap *keymap);
     void createKeymapFile();

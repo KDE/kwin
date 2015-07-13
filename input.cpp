@@ -237,6 +237,23 @@ Qt::Key Xkb::toQtKey(xkb_keysym_t keysym)
     KKeyServer::symXToKeyQt(keysym, &key);
     return static_cast<Qt::Key>(key);
 }
+
+quint32 Xkb::getMods(quint32 components)
+{
+    if (!m_state) {
+        return 0;
+    }
+    return xkb_state_serialize_mods(m_state, xkb_state_component(components));
+}
+
+quint32 Xkb::getGroup()
+{
+    if (!m_state) {
+        return 0;
+    }
+    return xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
+}
+
 #endif
 
 KWIN_SINGLETON_FACTORY(InputRedirection)
@@ -326,6 +343,19 @@ void InputRedirection::setupWorkspace()
                 );
             }
         );
+#if HAVE_XKB
+        connect(this, &InputRedirection::keyboardModifiersChanged, waylandServer(),
+            [this] {
+                if (!waylandServer()->seat()) {
+                    return;
+                }
+                waylandServer()->seat()->updateKeyboardModifiers(m_xkb->getMods(XKB_STATE_MODS_DEPRESSED),
+                                                                 m_xkb->getMods(XKB_STATE_MODS_LATCHED),
+                                                                 m_xkb->getMods(XKB_STATE_MODS_LOCKED),
+                                                                 m_xkb->getGroup());
+            }
+        );
+#endif
     }
 #endif
 }
