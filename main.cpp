@@ -346,13 +346,6 @@ void Application::setupLocalizedString()
     KLocalizedString::setApplicationDomain("kwin");
 }
 
-void Application::setupLoggingCategoryFilters()
-{
-    QLoggingCategory::setFilterRules(QStringLiteral("aurorae.debug = true\n") +
-                                     QStringLiteral("kwineffects.debug = true\n") +
-                                     QStringLiteral("kwin_core.debug = true"));
-}
-
 void Application::notifyKSplash()
 {
     // Tell KSplash that KWin has started

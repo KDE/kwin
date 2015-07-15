@@ -1,0 +1,8 @@
+kwin_core KWin Core
+kwineffects KWin Effects
+kwin_wayland_drm KWin Wayland (DRM backend)
+kwin_wayland_framebuffer KWin Wayland (Framebuffer backend)
+kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend)
+kwin_wayland_backend KWin Wayland (Wayland backend)
+kwin_wayland_x11windowed KWin Wayland (X11 backend)
+aurorae KWin Aurorae Window Decoration Engine

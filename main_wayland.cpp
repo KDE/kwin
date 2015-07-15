@@ -432,7 +432,6 @@ int main(int argc, char * argv[])
 
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
-    KWin::Application::setupLoggingCategoryFilters();
 
     if (signal(SIGTERM, KWin::sighandler) == SIG_IGN)
         signal(SIGTERM, SIG_IGN);

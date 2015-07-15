@@ -146,7 +146,6 @@ public:
 
     static void setupMalloc();
     static void setupLocalizedString();
-    static void setupLoggingCategoryFilters();
 
     static bool usesLibinput();
     static void setUseLibinput(bool use);
