@@ -40,6 +40,7 @@ public:
         bool inputIsSet = false;
         bool opaqueIsSet = false;
         bool bufferIsSet = false;
+        bool shadowIsSet = false;
         bool inputIsInfinite = true;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
@@ -48,6 +49,7 @@ public:
         BufferInterface *buffer = nullptr;
         // stacking order: bottom (first) -> top (last)
         QList<QPointer<SubSurfaceInterface>> children;
+        QPointer<ShadowInterface> shadow;
     };
     Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource);
     ~Private();
@@ -58,6 +60,7 @@ public:
     void removeChild(QPointer<SubSurfaceInterface> subsurface);
     bool raiseChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
     bool lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
+    void setShadow(const QPointer<ShadowInterface> &shadow);
 
     State current;
     State pending;

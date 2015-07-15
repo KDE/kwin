@@ -35,6 +35,8 @@ namespace Server
 {
 class BufferInterface;
 class CompositorInterface;
+class ShadowManagerInterface;
+class ShadowInterface;
 class SubSurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
@@ -74,6 +76,12 @@ public:
      **/
     QList<QPointer<SubSurfaceInterface>> childSubSurfaces() const;
 
+    /**
+     * @returns The Shadow for this Surface.
+     * @since 5.4
+     **/
+    QPointer<ShadowInterface> shadow() const;
+
     static SurfaceInterface *get(wl_resource *native);
     /**
      * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
@@ -95,10 +103,15 @@ Q_SIGNALS:
      * @since 5.3
      **/
     void sizeChanged();
+    /**
+     * @since 5.4
+     **/
+    void shadowChanged();
 
 private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;
+    friend class ShadowManagerInterface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;

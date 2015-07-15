@@ -28,6 +28,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "plasmawindowmanagement_interface.h"
 #include "qtsurfaceextension_interface.h"
 #include "seat_interface.h"
+#include "shadow_interface.h"
 #include "shell_interface.h"
 #include "subcompositor_interface.h"
 
@@ -261,6 +262,13 @@ FakeInputInterface *Display::createFakeInput(QObject *parent)
     auto i = new FakeInputInterface(this, parent);
     connect(this, &Display::aboutToTerminate, i, [this, i] { delete i; });
     return i;
+}
+
+ShadowManagerInterface *Display::createShadowManager(QObject *parent)
+{
+    auto s = new ShadowManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, s, [this, s] { delete s; });
+    return s;
 }
 
 void Display::createShm()

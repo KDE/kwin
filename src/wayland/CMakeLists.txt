@@ -20,6 +20,7 @@ set(SERVER_LIB_SRCS
     region_interface.cpp
     resource.cpp
     seat_interface.cpp
+    shadow_interface.cpp
     shell_interface.cpp
     surface_interface.cpp
     subcompositor_interface.cpp
@@ -49,6 +50,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/fake-input.xml
     BASENAME fake-input
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/shadow.xml
+    BASENAME shadow
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})
@@ -106,6 +112,7 @@ install(FILES
   region_interface.h
   resource.h
   seat_interface.h
+  shadow_interface.h
   shell_interface.h
   subcompositor_interface.h
   surface_interface.h
