@@ -672,10 +672,14 @@ bool ShellClient::hasStrut() const
 
 void ShellClient::updateIcon()
 {
-    if (m_shellSurface->windowClass().isEmpty()) {
+    QString desktopFile = QString::fromUtf8(m_shellSurface->windowClass());
+    if (desktopFile.isEmpty()) {
         setIcon(QIcon());
     }
-    KDesktopFile df(QStringLiteral("%0.desktop").arg(QString::fromUtf8(m_shellSurface->windowClass())));
+    if (!desktopFile.endsWith(QLatin1String(".desktop"))) {
+        desktopFile.append(QLatin1String(".desktop"));
+    }
+    KDesktopFile df(desktopFile);
     setIcon(QIcon::fromTheme(df.readIcon()));
 }
 
