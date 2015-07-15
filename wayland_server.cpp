@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
+#include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
 // Qt
@@ -186,6 +187,8 @@ void WaylandServer::init(const QByteArray &socketName)
             workspace()->setShowingDesktop(set);
         }
     );
+    auto shadowManager = m_display->createShadowManager(m_display);
+    shadowManager->create();
 }
 
 void WaylandServer::initWorkspace()

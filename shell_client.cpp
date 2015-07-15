@@ -31,6 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
+#include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 
 #include <KDesktopFile>
@@ -88,6 +89,10 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     );
     connect(surface, &ShellSurfaceInterface::windowClassChanged, this, &ShellClient::updateIcon);
     updateIcon();
+
+    // setup shadow integration
+    getShadow();
+    connect(surface->surface(), &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
 }
 
 ShellClient::~ShellClient() = default;
