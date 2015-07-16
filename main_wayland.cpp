@@ -614,6 +614,19 @@ int main(int argc, char * argv[])
     }
     for (const auto &candidate: pluginCandidates) {
         if (qobject_cast<KWin::AbstractBackend*>(candidate.instantiate())) {
+#if HAVE_INPUT
+            // check whether it needs libinput
+            const QJsonObject &metaData = candidate.rawData();
+            auto it = metaData.find(QStringLiteral("input"));
+            if (it != metaData.constEnd()) {
+                if ((*it).isBool()) {
+                    if (!(*it).toBool()) {
+                        std::cerr << "Backend does not support input, enforcing libinput support" << std::endl;
+                        KWin::Application::setUseLibinput(true);
+                    }
+                }
+            }
+#endif
             break;
         }
     }
