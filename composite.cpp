@@ -753,13 +753,13 @@ bool Compositor::windowRepaintsPending() const
     if (auto w = waylandServer()) {
         const auto &clients = w->clients();
         for (auto c : clients) {
-            if (!c->repaints().isEmpty()) {
+            if (c->isShown(true) && !c->repaints().isEmpty()) {
                 return true;
             }
         }
         const auto &internalClients = w->internalClients();
         for (auto c : internalClients) {
-            if (!c->repaints().isEmpty()) {
+            if (c->isShown(true) && !c->repaints().isEmpty()) {
                 return true;
             }
         }
