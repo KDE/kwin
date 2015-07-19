@@ -129,6 +129,8 @@ Shadow *Shadow::createShadowFromWayland(Toplevel *toplevel)
         return nullptr;
     }
     return shadow;
+#else
+    return nullptr;
 #endif
 }
 
@@ -248,6 +250,8 @@ bool Shadow::init(const QPointer< KWayland::Server::ShadowInterface > &shadow)
     }
     buildQuads();
     return true;
+#else
+    return false;
 #endif
 }
 
