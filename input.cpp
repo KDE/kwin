@@ -702,7 +702,7 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
-        seat->setPointerPos(pos);
+        seat->setPointerPos(m_globalPointer);
     }
 #endif
 }
@@ -1259,10 +1259,18 @@ static bool screenContainsPos(const QPointF &pos)
 void InputRedirection::updatePointerPosition(const QPointF &pos)
 {
     // verify that at least one screen contains the pointer position
-    if (!screenContainsPos(pos)) {
-        return;
+    QPointF p = pos;
+    if (!screenContainsPos(p)) {
+        // allow either x or y to pass
+        p = QPointF(m_globalPointer.x(), pos.y());
+        if (!screenContainsPos(p)) {
+            p = QPointF(pos.x(), m_globalPointer.y());
+            if (!screenContainsPos(p)) {
+                return;
+            }
+        }
     }
-    m_globalPointer = pos;
+    m_globalPointer = p;
     emit globalPointerChanged(m_globalPointer);
 }
 
