@@ -93,6 +93,13 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
     // setup shadow integration
     getShadow();
     connect(surface->surface(), &SurfaceInterface::shadowChanged, this, &Toplevel::getShadow);
+
+    setResourceClass(surface->windowClass());
+    connect(surface, &ShellSurfaceInterface::windowClassChanged, this,
+        [this] {
+            setResourceClass(m_shellSurface->windowClass());
+        }
+    );
 }
 
 ShellClient::~ShellClient() = default;

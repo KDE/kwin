@@ -457,6 +457,7 @@ protected:
     void getWmOpaqueRegion();
 
     void getResourceClass();
+    void setResourceClass(const QByteArray &name, const QByteArray &className = QByteArray());
     Xcb::Property fetchSkipCloseAnimation() const;
     void readSkipCloseAnimation(Xcb::Property &prop);
     void getSkipCloseAnimation();

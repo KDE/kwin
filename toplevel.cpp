@@ -226,8 +226,13 @@ Window Toplevel::wmClientLeader() const
 
 void Toplevel::getResourceClass()
 {
-    resource_name  = QByteArray(info->windowClassName()).toLower();
-    resource_class = QByteArray(info->windowClassClass()).toLower();
+    setResourceClass(QByteArray(info->windowClassName()).toLower(), QByteArray(info->windowClassClass()).toLower());
+}
+
+void Toplevel::setResourceClass(const QByteArray &name, const QByteArray &className)
+{
+    resource_name  = name;
+    resource_class = className;
     emit windowClassChanged();
 }
 

@@ -546,6 +546,7 @@ void AbstractClient::setupWindowManagementInterface()
     w->setMinimizeable(isMinimizable());
     w->setFullscreenable(isFullScreenable());
     w->setThemedIconName(icon().name().isEmpty() ? QStringLiteral("xorg") : icon().name());
+    w->setAppId(QString::fromUtf8(resourceName()));
     connect(this, &AbstractClient::captionChanged, w, [w, this] { w->setTitle(caption()); });
     connect(this, &AbstractClient::desktopChanged, w,
         [w, this] {
@@ -573,6 +574,11 @@ void AbstractClient::setupWindowManagementInterface()
         [w, this] {
             const QIcon i = icon();
             w->setThemedIconName(i.name().isEmpty() ? QStringLiteral("xorg") : i.name());
+        }
+    );
+    connect(this, &AbstractClient::windowClassChanged, w,
+        [w, this] {
+            w->setAppId(QString::fromUtf8(resourceName()));
         }
     );
     connect(w, &PlasmaWindowInterface::closeRequested, this, [this] { closeWindow(); });
