@@ -51,6 +51,7 @@ private:
     int m_vt = -1;
     QSocketNotifier *m_notifier = nullptr;
     bool m_active = false;
+    int m_vtNumber = 0;
 
     KWIN_SINGLETON(VirtualTerminal)
 };

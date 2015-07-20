@@ -132,6 +132,7 @@ void VirtualTerminal::setup(int vtNr)
         closeFd();
         return;
     }
+    m_vtNumber = vtNr;
     setActive(true);
     emit kwinApp()->virtualTerminalCreated();
 }
@@ -196,6 +197,9 @@ bool VirtualTerminal::createSignalHandler()
 void VirtualTerminal::activate(int vt)
 {
     if (m_vt < 0) {
+        return;
+    }
+    if (vt == m_vtNumber) {
         return;
     }
     ioctl(m_vt, VT_ACTIVATE, vt);
