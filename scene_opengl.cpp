@@ -484,6 +484,8 @@ void SceneOpenGL::initDebugOutput()
         Q_UNUSED(source)
         Q_UNUSED(severity)
         Q_UNUSED(userParam)
+        while (message[length] == '\n' || message[length] == '\r')
+            --length;
 
         switch (type) {
         case GL_DEBUG_TYPE_ERROR:

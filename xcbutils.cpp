@@ -474,7 +474,7 @@ void Extensions::init()
                  << " fixes: 0x" << QString::number(m_fixes.version, 16)
                  << " randr: 0x" << QString::number(m_randr.version, 16)
                  << " sync: 0x" << QString::number(m_sync.version, 16)
-                 << " damage: 0x " << QString::number(m_damage.version, 16) << endl;
+                 << " damage: 0x " << QString::number(m_damage.version, 16);
 }
 
 void Extensions::extensionQueryReply(const xcb_query_extension_reply_t *extension, ExtensionData *dataToFill)

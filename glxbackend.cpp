@@ -242,7 +242,7 @@ void GlxBackend::init()
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
-    qDebug() << "Direct rendering:" << isDirectRendering() << endl;
+    qDebug() << "Direct rendering:" << isDirectRendering();
 }
 
 bool GlxBackend::initRenderingContext()

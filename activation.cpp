@@ -603,7 +603,7 @@ bool Workspace::allowClientActivation(const KWin::AbstractClient *c, xcb_timesta
     // level == 2 // normal
     Time user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Activation, compared:" << c << ":" << time << ":" << user_time
-                 << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
+                 << ":" << (NET::timestampCompare(time, user_time) >= 0);
     return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
 
@@ -635,7 +635,7 @@ bool Workspace::allowFullClientRaising(const KWin::AbstractClient *c, xcb_timest
         return false;
     xcb_timestamp_t user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Raising, compared:" << time << ":" << user_time
-                 << ":" << (NET::timestampCompare(time, user_time) >= 0) << endl;
+                 << ":" << (NET::timestampCompare(time, user_time) >= 0);
     return NET::timestampCompare(time, user_time) >= 0;   // time >= user_time
 }
 

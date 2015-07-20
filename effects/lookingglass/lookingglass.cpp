@@ -90,7 +90,7 @@ void LookingGlassEffect::reconfigure(ReconfigureFlags)
     LookingGlassConfig::self()->read();
     initialradius = LookingGlassConfig::radius();
     radius = initialradius;
-    qCDebug(KWINEFFECTS) << QStringLiteral("Radius from config: %1").arg(radius) << endl;
+    qCDebug(KWINEFFECTS) << "Radius from config:" << radius;
     m_valid = loadData();
 }
 
@@ -125,7 +125,7 @@ bool LookingGlassEffect::loadData()
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
     } else {
-        qCritical() << "The shader failed to load!" << endl;
+        qCritical() << "The shader failed to load!";
         return false;
     }
 

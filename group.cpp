@@ -765,7 +765,7 @@ xcb_window_t Client::verifyTransientFor(xcb_window_t new_transient_for, bool set
     if (Client* new_transient_for_client = workspace()->findClient(Predicate::WindowMatch, new_transient_for)) {
         if (new_transient_for != before_search) {
             qCDebug(KWIN_CORE) << "Client " << this << " has WM_TRANSIENT_FOR poiting to non-toplevel window "
-                         << before_search << ", child of " << new_transient_for_client << ", adjusting." << endl;
+                         << before_search << ", child of " << new_transient_for_client << ", adjusting.";
             new_property_value = new_transient_for; // also fix the property
         }
     } else

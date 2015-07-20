@@ -172,7 +172,7 @@ QQmlComponent *Helper::loadComponent(const QString &themeName)
         }
     );
     if (offers.isEmpty()) {
-        qCCritical(AURORAE) << "Couldn't find QML Decoration " << themeName << endl;
+        qCCritical(AURORAE) << "Couldn't find QML Decoration " << themeName;
         // TODO: what to do in error case?
         return nullptr;
     }

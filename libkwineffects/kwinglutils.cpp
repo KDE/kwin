@@ -249,14 +249,14 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
 {
     QFile vf(vertexFile);
     if (!vf.open(QIODevice::ReadOnly)) {
-        qCritical() << "Couldn't open" << vertexFile << "for reading!" << endl;
+        qCritical() << "Couldn't open" << vertexFile << "for reading!";
         return false;
     }
     const QByteArray vertexSource = vf.readAll();
 
     QFile ff(fragmentFile);
     if (!ff.open(QIODevice::ReadOnly)) {
-        qCritical() << "Couldn't open" << fragmentFile << "for reading!" << endl;
+        qCritical() << "Couldn't open" << fragmentFile << "for reading!";
         return false;
     }
     const QByteArray fragmentSource = ff.readAll();
@@ -283,7 +283,7 @@ bool GLShader::link()
     glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
 
     if (status == 0) {
-        qCritical() << "Failed to link shader:" << endl << log << endl;
+        qCritical() << "Failed to link shader:" << endl << log;
         mValid = false;
     } else if (length > 0) {
         qDebug() << "Shader link log:" << log;
@@ -342,7 +342,7 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
     if (status == 0) {
         const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
-        qCritical() << "Failed to compile" << typeName << "shader:" << endl << log << endl;
+        qCritical() << "Failed to compile" << typeName << "shader:" << endl << log;
     } else if (length > 0)
         qDebug() << "Shader compile log:" << log;
 
@@ -1356,7 +1356,7 @@ GLRenderTarget::GLRenderTarget(const GLTexture& color)
     if (sSupported && !mTexture.isNull()) {
         initFBO();
     } else
-        qCritical() << "Render targets aren't supported!" << endl;
+        qCritical() << "Render targets aren't supported!";
 }
 
 GLRenderTarget::~GLRenderTarget()
@@ -1369,7 +1369,7 @@ GLRenderTarget::~GLRenderTarget()
 bool GLRenderTarget::enable()
 {
     if (!valid()) {
-        qCritical() << "Can't enable invalid render target!" << endl;
+        qCritical() << "Can't enable invalid render target!";
         return false;
     }
 
@@ -1383,7 +1383,7 @@ bool GLRenderTarget::enable()
 bool GLRenderTarget::disable()
 {
     if (!valid()) {
-        qCritical() << "Can't disable invalid render target!" << endl;
+        qCritical() << "Can't disable invalid render target!";
         return false;
     }
 
