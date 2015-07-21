@@ -16,8 +16,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2013-11-15</date>
-<releaseinfo>&kde; 4.12</releaseinfo>
+<date>2015-07-14</date>
+<releaseinfo>Plasma 5.3</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -216,7 +216,11 @@ Once you have determined the focus policy, there are the window
 raising options.
 </para>
 
-<para>
+<para>With a click to focus policy by default <guilabel>Click raises active window</guilabel> 
+is enabled and raise on hover is not available.
+</para>
+
+<para>With a hover to focus policy you can alternativly use auto raise.
 By placing a mark in front of <guilabel>Raise on hover, delayed by</guilabel>, &kde; can
 bring a window to the front if the mouse is over that window for a
 specified period of time. You can determine the delay for this option by using the spin box control.
@@ -258,7 +262,8 @@ clicked on their titlebars.
 <para>
 In this drop down box you can select either
 <guilabel>Shade</guilabel>, several variations of
-<guilabel>Maximize</guilabel> or <guilabel>Lower</guilabel>.
+<guilabel>Maximize</guilabel> or <guilabel>Lower</guilabel>,
+<guilabel>Close</guilabel> and <guilabel>On All Desktops</guilabel>.
 </para>
 
 <para>
@@ -272,7 +277,9 @@ reduced to simply the titlebar.  Double clicking on the titlebar again,
 restores the window to its normal size.
 </para>
 
-<!--FIXME <guilabel>Wheel event</guilabel> missing -->
+<para>Similar options are available for <guilabel>Wheel event</guilabel>.
+</para>
+<!--FIXME Raise/Lower Shade/Unshade Maximize/Restore Keep Above/Below Move to Previous/Next Desktop Change Opacity  Switch to Window Tab to the Left/Reght -->
 
 <tip>
 <para>
@@ -301,11 +308,13 @@ Inactive, you can select the most appropriate choice.  The actions are
 as follows: </para>
 
 <variablelist>
+
 <varlistentry>
-<term><guilabel>Activate</guilabel></term>
+<term><guilabel>Raise</guilabel></term>
 <listitem>
 <para>
-Make this window active.
+Will bring the window to the top of the display.  All other windows
+which overlap with this one, will be hidden <quote>below</quote> it.
 </para>
 </listitem>
 </varlistentry>
@@ -319,6 +328,20 @@ window out of the way.
 </para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Toggle Raise &amp; Lower</guilabel></term>
+<listitem>
+<para>
+This will raise windows which are not on top, and lower windows which
+are already on top.
+</para>
+</listitem>
+</varlistentry>
+
+<!--FIXME missing:
+Minimize, Shade, Close, Start Window Tab Drag
+-->
 
 <varlistentry>
 <term><guilabel>Nothing</guilabel></term>
@@ -339,28 +362,6 @@ commands (&ie; Maximize, Minimize, Close, &etc;).
 </listitem>
 </varlistentry>
 
-<varlistentry>
-<term><guilabel>Raise</guilabel></term>
-<listitem>
-<para>
-Will bring the window to the top of the display.  All other windows
-which overlap with this one, will be hidden <quote>below</quote> it.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Toggle Raise &amp; Lower</guilabel></term>
-<listitem>
-<para>
-This will raise windows which are not on top, and lower windows which
-are already on top.
-</para>
-</listitem>
-</varlistentry>
-<!--FIXME missing:
-Shade, Close, Start Window Tab Drag
--->
 </variablelist>
 </sect3>
 
@@ -433,7 +434,7 @@ the window.
 </listitem>
 </varlistentry>
 
-<!--FIXME Mouse wheel Scroll, Activate & Scroll, Activate, Raise & Scroll-->
+<!--FIXME Wheel Scroll, Activate & Scroll, Activate, Raise & Scroll-->
 
 </variablelist>
 </sect3>
@@ -457,20 +458,20 @@ wheel</guilabel>.
 
 <variablelist>
 <varlistentry>
-<term><guilabel>Lower</guilabel></term>
+<term><guilabel>Move</guilabel></term>
 <listitem>
 <para>
-Will move this window to the bottom of the display.  This will get the
-window out of the way.
+Allows you to drag the selected window around the desktop.
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Move</guilabel></term>
+<term><guilabel>Lower</guilabel></term>
 <listitem>
 <para>
-Allows you to drag the selected window around the desktop.
+Will move this window to the bottom of the display.  This will get the
+window out of the way.
 </para>
 </listitem>
 </varlistentry>
@@ -512,6 +513,15 @@ are already on top.
 </para>
 </listitem>
 </varlistentry>
+<varlistentry>
+<term><guilabel>Activate</guilabel></term>
+<listitem>
+<para>
+Make this window active.
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 <!-- FIXME missing:
 Activate, Raise &amp; Move
