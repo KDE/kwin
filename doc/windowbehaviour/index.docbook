@@ -220,7 +220,7 @@ raising options.
 is enabled and raise on hover is not available.
 </para>
 
-<para>With a hover to focus policy you can alternativly use auto raise.
+<para>With a hover to focus policy you can alternatively use auto raise.
 By placing a mark in front of <guilabel>Raise on hover, delayed by</guilabel>, &kde; can
 bring a window to the front if the mouse is over that window for a
 specified period of time. You can determine the delay for this option by using the spin box control.
