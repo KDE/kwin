@@ -14,8 +14,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2010-10-28</date>
-<releaseinfo>&kde; 4.5</releaseinfo>
+<date>2015-07-14</date>
+<releaseinfo>Plasma 5.3</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -31,20 +31,33 @@ will get activated on each edge and corner of the screen.
 </para>
 
 <para>Click with any mouse button onto a square and select an effect 
-in the context menu. Edges with a black square have already an attached effect, 
+in the context menu. Edges with a blue square have already an attached effect, 
 a grey colored square indicates that no effect is selected for this edge.</para>
 
 <para>The number of accessible items in the context menu depends on the settings in the module
-<ulink url="help:/kcontrol/kwincompositing/index.html">
-<guilabel>Desktop Effects</guilabel></ulink> in the <guilabel>Workspace Appearance and Behavior</guilabel>
-category. Select <guilabel>Enable desktop 
-effects</guilabel> to activate compositing, select the compositing type 
-<guilabel>OpenGL</guilabel>, and then choose your favorite effects on the 
-<guilabel>All Effects</guilabel> tab from the <guilabel>Windows Management</guilabel> 
+	<ulink url="help:/kcontrol/kwineffects/index.html">
+<guilabel>Desktop Effects</guilabel></ulink> in the <guilabel>Workspace</guilabel>
+category. Select your favorite effects on the from the <guilabel>Window Management</guilabel> 
 group. This activates the corresponding items in the context menu.</para>
 
 <para>If you are looking for the setting to enable switching of desktops by 
 pushing your mouse cursor against the edge of the screen choose one of the <guilabel>Present 
 Windows</guilabel> effects from the context menu.</para>
 
+<para>In the <guilabel>Window Management</guilabel> section you can enable to 
+<guilabel>Maximize windows by dragging them to the top of the screen</guilabel>
+or to <guilabel>Tile windows by dragging them to the side of the window</guilabel>
+and set a percentage of the screen to trigger the tiling.
+</para>
+
+<para>In the <guilabel>Other Settings</guilabel> section configure if you want to switch 
+to another desktop when pushing the mouse cursor to an edge of the sreen, &eg; only when 
+moving windows.
+</para>
+<para><guilabel>Activation delay</guilabel> is the amount of time required for the mouse cursor 
+to be pushed against the edge of the screen before the action is triggered.
+</para>
+<para><guilabel>Reactivation delay</guilabel> is the amount of time required after triggering 
+an action until the next trigger can occur.
+</para>
 </article>
