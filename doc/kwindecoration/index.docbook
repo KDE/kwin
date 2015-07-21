@@ -7,15 +7,14 @@
 
 <article id="kwindecoration" lang="&language;">
 <articleinfo>
-<title>Window Decorations</title>
 <authorgroup>
 <author>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
 <author>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2013-12-05</date>
-<releaseinfo>&kde; 4.12</releaseinfo>
+<date>2015-07-14</date>
+<releaseinfo>Plasma 5.3</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -51,23 +50,23 @@ windows.</para>
 </para>
 
 <para>Choose a window decoration style from the preview list, using the 
-search field at the top of the screen.</para>
+search field at the top of the screen or download a new style using the 
+<guibutton>Get New Decorations</guibutton> button.</para>
 
-<para>The &kde; default window decoration is called "Oxygen".</para>
+<para>The default window decoration is called <quote>Breeze</quote>.</para>
 
 <para>Each style has a different look, but also a different
 <quote>feel</quote>. Some have (sometimes invisible)
 <quote>resize</quote> borders all around the edge, which make resizing
 easier but moving more difficult. Some have no borders on certain
-edges. One (<quote>BII</quote>) even has a dynamically sized and
-positioned title element.</para>
+edges.</para>
 
 <para>You are encouraged to experiment with the different styles until
 you find one which best suits your pattern of work.</para>
 
-<para>Below the preview pane you find three buttons to open configuration dialogs
-for decoration and buttons of the selected style or to download additional
-styles.</para>
+<para>In the preview pane at the right of each style you find a <inlinemediaobject><imageobject>
+<imagedata fileref="configure.png" format="PNG"/></imageobject></inlinemediaobject> 
+configure button to open configuration dialogs for the decoration.</para>
 
 </sect2>
 
@@ -80,13 +79,13 @@ The available options depend on the selected style.
 </para>
 <para>
 <screenshot>
-<screeninfo>Oxygen Decoration Options</screeninfo>
+<screeninfo>Breeze Decoration Options</screeninfo>
   <mediaobject>
     <imageobject>
       <imagedata fileref="decoration.png" format="PNG"/>
     </imageobject>
     <textobject>
-      <phrase>Oxygen Decoration Options</phrase>
+      <phrase>Breeze Decoration Options</phrase>
     </textobject>
   </mediaobject>
 </screenshot>
@@ -96,44 +95,10 @@ The available options depend on the selected style.
 <sect2>
 <title>Buttons</title>
 
-<para>This dialog allows you to customize the buttons location on the titlebar. You can move Close button to the left for example. Check the <guilabel>Use custom titlebar button positions</guilabel> option in order to customize your titlebars. Then use the &kde; titlebar below and the buttons on its left and right to rearrange them as you want them.
+<para>This section below the style list allows you to customize the button location on the titlebar. 
+You can drag buttons into the titlebar, remove them or drag around the
+buttons until you have the order that makes you comfortable.
 </para>
-
-<para>
-<screenshot>
-<screeninfo>Window Decoration Configuration Module</screeninfo>
-  <mediaobject>
-    <imageobject>
-      <imagedata fileref="buttons.png" format="PNG"/>
-    </imageobject>
-    <textobject>
-      <phrase>Window Decoration Configuration Module</phrase>
-    </textobject>
-  </mediaobject>
-</screenshot>
-</para>
-
-<para> By default, <guilabel>Show window button tooltips</guilabel> is checked and tooltips are shown.
-</para>
-
-<para>This page has instructions directly on it - just drag around the
-buttons until you have the order that makes you comfortable.</para>
-
-<note>
-<para>Not all the window decorations are able to comply with your custom
-set button order.  The ones that cannot are being converted, but at the
-time of this release they have not been all been changed.</para>
-</note>
-
-<para>Apart from choosing the window decoration itself, you can choose
-here two further options: if there should be a tooltip while you hover
-your mouse over a window decoration button, and if the window
-decoration should attempt to use a custom set button order.</para>
-
-<tip>
-<para>The tooltips can be quite useful if you have set a custom button
-order, and then changed to an unfamiliar window decoration.</para>
-</tip>
 
 <tip>
 <para>For accessibility purposes, some window decorations support
@@ -142,6 +107,10 @@ border size here.  These large borders are easier to see for low
 vision users, and easier to grab for people with limited mobility or
 difficulty using a mouse.</para>
 </tip>
+
+<para>Enable <guilabel>Close Windows by double clicking the menu button</guilabel>
+to have an additional option to the Close button or if you have removed the Close button from the titlebar.
+</para>
 
 </sect2>
 
