@@ -147,12 +147,6 @@ class Client
      **/
     Q_PROPERTY(QRect iconGeometry READ iconGeometry)
     /**
-     * Whether the Client can accept keyboard focus.
-     * The value is evaluated each time the getter is called.
-     * Because of that no changed signal is provided.
-     **/
-    Q_PROPERTY(bool wantsInput READ wantsInput)
-    /**
      * The "Window Tabs" Group this Client belongs to.
      **/
     Q_PROPERTY(KWin::TabGroup* tabGroup READ tabGroup NOTIFY tabGroupChanged SCRIPTABLE false)

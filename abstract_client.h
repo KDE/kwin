@@ -155,6 +155,12 @@ class AbstractClient : public Toplevel
      * Maximum size as specified in WM_NORMAL_HINTS
      **/
     Q_PROPERTY(QSize maxSize READ maxSize)
+    /**
+     * Whether the Client can accept keyboard focus.
+     * The value is evaluated each time the getter is called.
+     * Because of that no changed signal is provided.
+     **/
+    Q_PROPERTY(bool wantsInput READ wantsInput)
 public:
     virtual ~AbstractClient();
 
