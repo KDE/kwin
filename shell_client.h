@@ -126,7 +126,7 @@ private:
     void findInternalWindow();
     void updateInternalWindowGeometry();
     void updateIcon();
-    void markAsUnmapped();
+    void markAsMapped();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
