@@ -3,7 +3,7 @@ Exec=kcmshell5 kwincompositing
 Icon=preferences-desktop
 Type=Service
 X-KDE-ServiceTypes=KCModule
-X-DocPath=kcontrol/kwincompositing/index.html
+X-DocPath=https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings
 
 X-KDE-Library=kwincompositing
 X-KDE-PluginKeyword=compositing
