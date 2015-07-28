@@ -12,8 +12,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2010-10-28</date>
-<releaseinfo>&kde; 4.5</releaseinfo>
+<date>2015-07-24</date>
+<releaseinfo>&plasma; 5.4</releaseinfo>
 
 <keywordset>
 <keyword>KDE</keyword>
@@ -33,24 +33,21 @@
 <note><para>
 The first set of effects on the <guilabel>Main</guilabel> tab has predefined shortcuts. If you want to use the second set of effects on the <guilabel>Alternative</guilabel> tab, you have to set a shortcut for these effects in the Shortcut Editor manually.</para></note>
 
+<note><para>
+For navigating through windows without <keycombo>&Alt;&Tab;</keycombo>, you can define screen edge actions in the &systemsettings; module <ulink url="help:/kcontrol/kwinscreenedges/index.html"><guilabel>Screen Edges</guilabel></ulink>.
+</para></note>
+
 <para>The following documentation of options applies to the general settings and the alternative settings as well.</para>
 
-<sect2 id="sort-order">
-<title>List windows and Sort order</title>
-<para>You can configure which windows should be shown in the list initiated by pressing <keycombo>&Alt;&Tab;</keycombo> (predefined for the settings on the <guilabel>Main</guilabel> tab) or the user defined shortcut for the alternative settings. So it is possible to only show windows on the current desktop or windows from all desktops. It is also possible to influence the sort order, you can either use a sort order based on the last usage of the windows or the stacking order of the windows.
-</para>
-<para>If you check <guilabel>Include desktop</guilabel> an entry for the desktop will be added to list with application windows. Then you can select this entry in the list to minimize all windows.</para>
-</sect2>
+<sect2 id="visualization">
+<title>Visualization</title>
+<para>
+There are several effects which can be used instead of the normal window list when compositing is enabled. By default the <guilabel>Breeze</guilabel> effect is used. This effect displays a small thumbnail of each window in a list at the left of the screen and the currently selected window is highlighted.
+There are several additional predefined layouts which provide an informative or compact view, small or large icons, a grid  and window title only.</para>
+<para>Selecting one of these layouts you will have a button to show a preview.</para> 
+<para>If you enable <guilabel>Show selected window</guilabel> the currently selected window will be highlighted by fading out all other 
+windows. This option requires desktop effects to be active.</para>
 
-<sect2 id="desktop-effects">
-<title>Desktop Effects</title>
-<para>
-There are several effects which can be used instead of the normal window list when compositing is enabled. By default the <guilabel>Box Switch</guilabel> effect is used. This effect displays a small thumbnail of each window inside a box and the currently selected window is highlighted.
-</para>
-<para>
-The <guilabel>Present Windows</guilabel> effect arranges the windows in a regular grid and by that provides thumbnails in the best possible size. This effect can be used for navigating through windows without <keycombo>&Alt;&Tab;</keycombo> as well, if it is selected as screen edge action in the &systemsettings; module <ulink url="help:/kcontrol/kwinscreenedges/index.html">
-<guilabel>Screen Edges</guilabel></ulink>. This effect provides additional setting options and shortcuts in a dialog opened by clicking on the tools icon beside the drop down box.
-</para>
 <para>
 <guilabel>Cover Switch</guilabel> and <guilabel>Flip Switch</guilabel> effect are more fancy effects which require OpenGL. <guilabel>Cover Switch</guilabel> displays the windows in a gallery with a large thumbnail of the currently selected window in the center of the screen while all other windows are rotated on the left and right. <guilabel>Flip Switch</guilabel> displays all windows on a 3D stack. The selected window is on top of the stack and navigating through the windows will move the stack so that the new selected window is on the top.
 </para>
@@ -61,23 +58,29 @@ If the effect provides additional settings the configure button will be activate
 When compositing is not active or gets suspended the normal window list will be shown. There is no loss in functionality if an effect is selected and compositing is not active.</para></note>
 </sect2>
 
-<sect2 id="lists">
-<title>Display list</title>
-<para>
-When no effect is used an outline illustrating position and size of the selected window can be shown while switching. The list can be combined with the <guilabel>Highlight selected windows</guilabel> effect when compositing is active. This effect will highlight the currently selected window by fading out all other windows.
-</para>
-<para>
-If you want to configure the layout of one item you can use the dialog which opens by clicking <guibutton>Configure Layout</guibutton>. There are several predefined layouts which provide an informative or compact view, small or large icons and window title only. You can change the way the items are laid out: horizontal, vertical or in a tabular layout.
-</para>
-<para>
-There is an additional configuration group for an optional view of the selected item. It is possible to place this view next to the list with all items. This is useful if you use an icon only layout mode and want to see the name of the current selected window as well.
-</para>
-</sect2>
-
 <sect2 id="shortcuts">
 <title>Shortcuts</title>
 <para>
 The shortcut editor provides the configuration interface for the keyboard shortcuts for navigating through windows. Each of the two possible sets of effects has two shortcuts: one for the forward direction and one for the reverse direction. Please note that the window list can only be shown if you select a shortcut with a keyboard modifier such as the &Alt; or &Ctrl; key. This modifier has to be hold while switching. Selecting a shortcut without a modifier key can break the behaviour of navigating through windows.
+</para>
+</sect2>
+
+<sect2 id="content-and-sort-order">
+<title>Content</title>
+<para>It is possible to influence the sort order, you can either use a sort order based on the last usage of the windows or the stacking order of the windows.
+</para>
+<para>If you check <guilabel>Include "Show Desktop" icon</guilabel> an entry for the desktop will be added to list with application windows. Then you can select this entry in the list to minimize all windows.</para>
+<para>If <guilabel>Only one window per application</guilabel> is selected then only the last used instance of an application is contained in the list. Switching to other instances is possible only via the panel then.</para>
+</sect2>
+
+<sect2 id="filter">
+<title>Filter windows</title>
+<para>
+You can configure which windows should be shown in the list initiated by pressing <keycombo>&Alt;&Tab;</keycombo> (predefined for the settings on the <guilabel>Main</guilabel> tab) or the user defined shortcut for the alternative settings. 
+</para>
+<para>So it is possible to only show windows on the current virtual desktop or windows from all other desktops. Additionally you can apply similar rules for windows in activities or on screens for a multimonitor setup.
+</para>
+<para>The last option allows you to filter on the minimization status of windows.
 </para>
 </sect2>
 
