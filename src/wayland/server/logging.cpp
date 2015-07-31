@@ -18,4 +18,4 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "logging_p.h"
-Q_LOGGING_CATEGORY(KWAYLAND_SERVER, "kwayland-server");
+Q_LOGGING_CATEGORY(KWAYLAND_SERVER, "kwayland-server", QtCriticalMsg);
