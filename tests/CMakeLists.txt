@@ -24,6 +24,7 @@ if (HAVE_INPUT)
             ${KWIN_SOURCE_DIR}/libinput/context.cpp
             ${KWIN_SOURCE_DIR}/libinput/connection.cpp
             ${KWIN_SOURCE_DIR}/libinput/events.cpp
+            ${KWIN_SOURCE_DIR}/libinput/libinput_logging.cpp
             ${KWIN_SOURCE_DIR}/logind.cpp
             ${KWIN_SOURCE_DIR}/udev.cpp
     )

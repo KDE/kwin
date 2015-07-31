@@ -460,6 +460,7 @@ if(HAVE_INPUT)
         libinput/context.cpp
         libinput/connection.cpp
         libinput/events.cpp
+        libinput/libinput_logging.cpp
     )
 endif()
 
