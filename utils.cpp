@@ -44,7 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #endif
 
-Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core", QtCriticalMsg)
 namespace KWin
 {
 
