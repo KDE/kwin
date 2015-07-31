@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <abstract_client.h>
 #include <client.h>
 #include "cursor.h"
+#include "utils.h"
 #include "settings.h"
 #include <workspace.h>
 #include <config-kwin.h>
@@ -89,14 +90,14 @@ void Screens::init()
 QString Screens::name(int screen) const
 {
     Q_UNUSED(screen)
-    qWarning("%s::name(int screen) is a stub, please reimplement it!", metaObject()->className());
+    qCWarning(KWIN_CORE, "%s::name(int screen) is a stub, please reimplement it!", metaObject()->className());
     return QLatin1String("DUMMY");
 }
 
 float Screens::refreshRate(int screen) const
 {
     Q_UNUSED(screen)
-    qWarning("%s::refreshRate(int screen) is a stub, please reimplement it!", metaObject()->className());
+    qCWarning(KWIN_CORE, "%s::refreshRate(int screen) is a stub, please reimplement it!", metaObject()->className());
     return 60.0f;
 }
 

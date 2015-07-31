@@ -242,7 +242,7 @@ void GlxBackend::init()
 
     setIsDirectRendering(bool(glXIsDirect(display(), ctx)));
 
-    qDebug() << "Direct rendering:" << isDirectRendering();
+    qCDebug(KWIN_CORE) << "Direct rendering:" << isDirectRendering();
 }
 
 bool GlxBackend::initRenderingContext()
@@ -299,12 +299,12 @@ bool GlxBackend::initRenderingContext()
         ctx = glXCreateNewContext(display(), fbconfig, GLX_RGBA_TYPE, NULL, direct);
 
     if (!ctx) {
-        qDebug() << "Failed to create an OpenGL context.";
+        qCDebug(KWIN_CORE) << "Failed to create an OpenGL context.";
         return false;
     }
 
     if (!glXMakeCurrent(display(), glxWindow, ctx)) {
-        qDebug() << "Failed to make the OpenGL context current.";
+        qCDebug(KWIN_CORE) << "Failed to make the OpenGL context current.";
         glXDestroyContext(display(), ctx);
         ctx = 0;
         return false;
@@ -577,7 +577,7 @@ FBConfigInfo *GlxBackend::infoForVisual(xcb_visualid_t visual)
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_FBCONFIG_ID, &fbc_id);
         glXGetFBConfigAttrib(display(), info->fbconfig, GLX_VISUAL_ID,   &visual_id);
 
-        qDebug().nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
+        qCDebug(KWIN_CORE).nospace() << "Using FBConfig 0x" << hex << fbc_id << " for visual 0x" << hex << visual_id;
     }
 
     return info;

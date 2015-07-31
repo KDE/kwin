@@ -580,7 +580,7 @@ bool DrmOutput::present(DrmBuffer *buffer)
     if (ok) {
         m_currentBuffer = buffer;
     } else {
-        qWarning(KWIN_DRM) << "Page flip failed";
+        qCWarning(KWIN_DRM) << "Page flip failed";
         buffer->releaseGbm();
     }
     return ok;
@@ -932,13 +932,13 @@ DrmBuffer::DrmBuffer(DrmBackend *backend, gbm_surface *surface)
 #if HAVE_GBM
     m_bo = gbm_surface_lock_front_buffer(surface);
     if (!m_bo) {
-        qWarning(KWIN_DRM) << "Locking front buffer failed";
+        qCWarning(KWIN_DRM) << "Locking front buffer failed";
         return;
     }
     m_size = QSize(gbm_bo_get_width(m_bo), gbm_bo_get_height(m_bo));
     m_stride = gbm_bo_get_stride(m_bo);
     if (drmModeAddFB(m_backend->fd(), m_size.width(), m_size.height(), 24, 32, m_stride, gbm_bo_get_handle(m_bo).u32, &m_bufferId) != 0) {
-        qWarning(KWIN_DRM) << "drmModeAddFB failed";
+        qCWarning(KWIN_DRM) << "drmModeAddFB failed";
     }
     gbm_bo_set_user_data(m_bo, m_backend, gbmCallback);
 #endif

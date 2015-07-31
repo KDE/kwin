@@ -38,6 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <xcb/xcb.h>
 Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
+Q_LOGGING_CATEGORY(KWIN_CORE, "kwin_core")
+
 namespace KWin
 {
 

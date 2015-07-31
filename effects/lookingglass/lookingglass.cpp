@@ -125,7 +125,7 @@ bool LookingGlassEffect::loadData()
         ShaderBinder binder(m_shader);
         m_shader->setUniform("u_textureSize", QVector2D(screenSize.width(), screenSize.height()));
     } else {
-        qCritical() << "The shader failed to load!";
+        qCCritical(KWINEFFECTS) << "The shader failed to load!";
         return false;
     }
 

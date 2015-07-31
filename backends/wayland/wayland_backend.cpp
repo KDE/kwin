@@ -537,7 +537,7 @@ void WaylandBackend::createSurface()
 {
     m_surface = m_compositor->createSurface(this);
     if (!m_surface || !m_surface->isValid()) {
-        qCritical() << "Creating Wayland Surface failed";
+        qCCritical(KWIN_WAYLAND_BACKEND) << "Creating Wayland Surface failed";
         return;
     }
     if (m_subCompositor->isValid()) {

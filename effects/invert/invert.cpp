@@ -85,7 +85,7 @@ bool InvertEffect::loadData()
 
     m_shader = ShaderManager::instance()->loadFragmentShader(ShaderManager::GenericShader, fragmentshader);
     if (!m_shader->isValid()) {
-        qCritical() << "The shader failed to load!";
+        qCCritical(KWINEFFECTS) << "The shader failed to load!";
         return false;
     }
 

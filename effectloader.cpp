@@ -352,7 +352,7 @@ QStringList PluginEffectLoader::listOfKnownEffects() const
     for (const auto &plugin : plugins) {
         result << plugin.pluginId();
     }
-    qDebug() << result;
+    qCDebug(KWIN_CORE) << result;
     return result;
 }
 

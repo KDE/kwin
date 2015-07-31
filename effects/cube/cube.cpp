@@ -311,13 +311,13 @@ bool CubeEffect::loadShader()
     QString cylinderVertexshader =  QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("cylinder.vert"));
     QString sphereVertexshader   = QStandardPaths::locate(QStandardPaths::GenericDataLocation, m_shadersDir + QStringLiteral("sphere.vert"));
     if (cylinderVertexshader.isEmpty() || sphereVertexshader.isEmpty()) {
-        qCritical() << "Couldn't locate shader files";
+        qCCritical(KWINEFFECTS) << "Couldn't locate shader files";
         return false;
     }
 
     cylinderShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, cylinderVertexshader);
     if (!cylinderShader->isValid()) {
-        qCritical() << "The cylinder shader failed to load!";
+        qCCritical(KWINEFFECTS) << "The cylinder shader failed to load!";
         return false;
     } else {
         ShaderBinder binder(cylinderShader);
@@ -347,7 +347,7 @@ bool CubeEffect::loadShader()
     }
     sphereShader = ShaderManager::instance()->loadVertexShader(ShaderManager::GenericShader, sphereVertexshader);
     if (!sphereShader->isValid()) {
-        qCritical() << "The sphere shader failed to load!";
+        qCCritical(KWINEFFECTS) << "The sphere shader failed to load!";
         return false;
     } else {
         ShaderBinder binder(sphereShader);

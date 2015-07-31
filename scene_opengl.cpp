@@ -1006,7 +1006,7 @@ SceneOpenGL2::SceneOpenGL2(OpenGLBackend *backend, QObject *parent)
 
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
     if (!hasGLVersion(2, 0)) {
-        qDebug() << "OpenGL 2.0 is not supported";
+        qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
         init_ok = false;
         return;
     }
