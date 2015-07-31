@@ -141,6 +141,7 @@ set( testScriptedEffectLoader_SRCS
     ../effectloader.cpp
     ../scripting/scriptedeffect.cpp
     ../scripting/scriptingutils.cpp
+    ../scripting/scripting_logging.cpp
 )
 add_executable( testScriptedEffectLoader ${testScriptedEffectLoader_SRCS})
 

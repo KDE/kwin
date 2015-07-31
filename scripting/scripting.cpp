@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "workspace_wrapper.h"
 #include "screenedgeitem.h"
 #include "scripting_model.h"
+#include "scripting_logging.h"
 #include "../client.h"
 #include "../thumbnailitem.h"
 #include "../options.h"
@@ -81,7 +82,7 @@ QScriptValue kwinScriptReadConfig(QScriptContext *context, QScriptEngine *engine
         return engine->undefinedValue();
     }
     if (context->argumentCount() < 1 || context->argumentCount() > 2) {
-        qDebug() << "Incorrect number of arguments";
+        qCDebug(KWIN_SCRIPTING) << "Incorrect number of arguments";
         return engine->undefinedValue();
     }
     const QString key = context->argument(0).toString();
@@ -238,7 +239,7 @@ void KWin::AbstractScript::stop()
 
 void KWin::AbstractScript::printMessage(const QString &message)
 {
-    qDebug() << scriptFile().fileName() << ":" << message;
+    qCDebug(KWIN_SCRIPTING) << scriptFile().fileName() << ":" << message;
     emit print(message);
 }
 
@@ -310,7 +311,7 @@ int KWin::AbstractScript::registerCallback(QScriptValue value)
 void KWin::AbstractScript::slotPendingDBusCall(QDBusPendingCallWatcher* watcher)
 {
     if (watcher->isError()) {
-        qDebug() << "Received D-Bus message is error";
+        qCDebug(KWIN_SCRIPTING) << "Received D-Bus message is error";
         watcher->deleteLater();
         return;
     }
@@ -497,14 +498,14 @@ void KWin::Script::sigException(const QScriptValue& exception)
 {
     QScriptValue ret = exception;
     if (ret.isError()) {
-        qDebug() << "defaultscript encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
-        qDebug() << "Message: " << ret.toString();
-        qDebug() << "-----------------";
+        qCDebug(KWIN_SCRIPTING) << "defaultscript encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
+        qCDebug(KWIN_SCRIPTING) << "Message: " << ret.toString();
+        qCDebug(KWIN_SCRIPTING) << "-----------------";
 
         QScriptValueIterator iter(ret);
         while (iter.hasNext()) {
             iter.next();
-            qDebug() << " " << iter.name() << ": " << iter.value().toString();
+            qCDebug(KWIN_SCRIPTING) << " " << iter.name() << ": " << iter.value().toString();
         }
     }
     emit printError(exception.toString());
@@ -553,7 +554,7 @@ void KWin::DeclarativeScript::run()
 void KWin::DeclarativeScript::createComponent()
 {
     if (m_component->isError()) {
-        qDebug() << "Component failed to load: " << m_component->errors();
+        qCDebug(KWIN_SCRIPTING) << "Component failed to load: " << m_component->errors();
     } else {
         if (QObject *object = m_component->create(m_context)) {
             object->setParent(this);
@@ -685,7 +686,7 @@ LoadScriptList KWin::Scripting::queryScriptsToLoad()
         const QString scriptName = service.value(QStringLiteral("X-Plasma-MainScript"));
         const QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, scriptFolder + pluginName + QStringLiteral("/contents/") + scriptName);
         if (file.isNull()) {
-            qDebug() << "Could not find script file for " << pluginName;
+            qCDebug(KWIN_SCRIPTING) << "Could not find script file for " << pluginName;
             continue;
         }
         scriptsToLoad << qMakePair(javaScript, qMakePair(file, pluginName));

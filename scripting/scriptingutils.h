@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "input.h"
 #include "workspace.h"
 #include "screenedge.h"
+#include "scripting_logging.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
 #include <QAction>
-#include <QDebug>
 #include <QtScript/QScriptEngine>
 
 namespace KWin
@@ -110,7 +110,7 @@ QScriptValue globalShortcut(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
     if (context->argumentCount() != 4) {
-        qDebug() << "Incorrect number of arguments! Expected: title, text, keySequence, callback";
+        qCDebug(KWIN_SCRIPTING) << "Incorrect number of arguments! Expected: title, text, keySequence, callback";
         return engine->undefinedValue();
     }
     QAction* a = new QAction(script);

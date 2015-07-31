@@ -400,6 +400,7 @@ set(kwin_KDEINIT_SRCS
     scripting/scripting_model.cpp
     scripting/dbuscall.cpp
     scripting/screenedgeitem.cpp
+    scripting/scripting_logging.cpp
     decorations/decoratedclient.cpp
     decorations/decorationbridge.cpp
     decorations/decorationpalette.cpp

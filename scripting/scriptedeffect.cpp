@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scriptingutils.h"
 #include "workspace_wrapper.h"
 #include "../screenedge.h"
+#include "scripting_logging.h"
 // KDE
 #include <KConfigGroup>
 #include <kconfigloader.h>
 #include <KPluginMetaData>
 // Qt
-#include <QDebug>
 #include <QFile>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
@@ -49,7 +49,7 @@ QScriptValue kwinEffectScriptPrint(QScriptContext *context, QScriptEngine *engin
         }
         result.append(context->argument(i).toString());
     }
-    qDebug() << script->scriptFile() << ":" << result;
+    qCDebug(KWIN_SCRIPTING) << script->scriptFile() << ":" << result;
 
     return engine->undefinedValue();
 }
@@ -377,7 +377,7 @@ void fpx2FromScriptValue(const QScriptValue &value, KWin::FPx2 &fpx2)
         QScriptValue value1 = value.property(QStringLiteral("value1"));
         QScriptValue value2 = value.property(QStringLiteral("value2"));
         if (!value1.isValid() || !value2.isValid() || !value1.isNumber() || !value2.isNumber()) {
-            qDebug() << "Cannot cast scripted FPx2 to C++";
+            qCDebug(KWIN_SCRIPTING) << "Cannot cast scripted FPx2 to C++";
             fpx2 = FPx2();
             return;
         }
@@ -390,13 +390,13 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
     const QString name = effect.pluginId();
     const QString scriptName = effect.value(QStringLiteral("X-Plasma-MainScript"));
     if (scriptName.isEmpty()) {
-        qDebug() << "X-Plasma-MainScript not set";
+        qCDebug(KWIN_SCRIPTING) << "X-Plasma-MainScript not set";
         return nullptr;
     }
     const QString scriptFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
                                                       QStringLiteral(KWIN_NAME) + QStringLiteral("/effects/") + name + QStringLiteral("/contents/") + scriptName);
     if (scriptFile.isNull()) {
-        qDebug() << "Could not locate the effect script";
+        qCDebug(KWIN_SCRIPTING) << "Could not locate the effect script";
         return nullptr;
     }
     return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering")).toInt());
@@ -431,7 +431,7 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
 {
     QFile scriptFile(pathToScript);
     if (!scriptFile.open(QIODevice::ReadOnly)) {
-        qDebug() << "Could not open script file: " << pathToScript;
+        qCDebug(KWIN_SCRIPTING) << "Could not open script file: " << pathToScript;
         return false;
     }
     m_effectName = effectName;
@@ -508,13 +508,13 @@ void ScriptedEffect::animationEnded(KWin::EffectWindow *w, Attribute a, uint met
 void ScriptedEffect::signalHandlerException(const QScriptValue &value)
 {
     if (value.isError()) {
-        qDebug() << "KWin Effect script encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
-        qDebug() << "Message: " << value.toString();
+        qCDebug(KWIN_SCRIPTING) << "KWin Effect script encountered an error at [Line " << m_engine->uncaughtExceptionLineNumber() << "]";
+        qCDebug(KWIN_SCRIPTING) << "Message: " << value.toString();
 
         QScriptValueIterator iter(value);
         while (iter.hasNext()) {
             iter.next();
-            qDebug() << " " << iter.name() << ": " << iter.value().toString();
+            qCDebug(KWIN_SCRIPTING) << " " << iter.name() << ": " << iter.value().toString();
         }
     }
 }
