@@ -11,6 +11,7 @@ ecm_setup_version(${PROJECT_VERSION}
 ### xrenderutils lib ###
 set(kwin_XRENDERUTILS_SRCS
     kwinxrenderutils.cpp
+    logging.cpp
     )
 
 add_library(kwinxrenderutils SHARED ${kwin_XRENDERUTILS_SRCS})
@@ -37,6 +38,7 @@ set(kwin_EFFECTSLIB_SRCS
     kwineffects.cpp
     anidata.cpp
     kwinanimationeffect.cpp
+    logging.cpp
     )
 
 set(kwineffects_QT_LIBS
@@ -81,6 +83,7 @@ set(kwin_GLUTILSLIB_SRCS
     kwinglutils_funcs.cpp
     kwinglplatform.cpp
     kwinglcolorcorrection.cpp
+    logging.cpp
     )
 
 macro( KWIN4_ADD_GLUTILS_BACKEND name glinclude )

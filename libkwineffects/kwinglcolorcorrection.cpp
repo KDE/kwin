@@ -23,13 +23,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "kwinglplatform.h"
 #include "kwinglutils.h"
+#include "logging_p.h"
 
 #include <QByteArrayMatcher>
 #include <QDBusConnection>
 #include <QDBusError>
 #include <QDBusPendingCall>
 #include <QDBusPendingCallWatcher>
-#include <QDebug>
 #include <QPair>
 #include <QVector3D>
 
@@ -101,7 +101,7 @@ ColorServerInterface::~ColorServerInterface()
 uint ColorServerInterface::versionInfo() const
 {
     if (!m_versionInfoUpdated)
-        qWarning() << "Version info not updated";
+        qCWarning(LIBKWINGLUTILS) << "Version info not updated";
     return m_versionInfo;
 }
 
@@ -154,10 +154,10 @@ QDBusPendingReply< RegionalClutMap > ColorServerInterface::getRegionCluts()
 void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
 {
     if (watcher == m_versionInfoWatcher) {
-        qDebug() << "Version info call finished";
+        qCDebug(LIBKWINGLUTILS) << "Version info call finished";
         QDBusPendingReply< uint > reply = *watcher;
         if (reply.isError()) {
-            qWarning() << reply.error();
+            qCWarning(LIBKWINGLUTILS) << reply.error();
             if (!m_signaledFail)
                 emit updateFailed();
             m_signaledFail = true;
@@ -169,10 +169,10 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
     }
 
     if (watcher == m_outputClutsWatcher) {
-        qDebug() << "Output cluts call finished";
+        qCDebug(LIBKWINGLUTILS) << "Output cluts call finished";
         QDBusPendingReply< ClutList > reply = *watcher;
         if (reply.isError()) {
-            qWarning() << reply.error();
+            qCWarning(LIBKWINGLUTILS) << reply.error();
             if (!m_signaledFail)
                 emit updateFailed();
             m_signaledFail = true;
@@ -184,10 +184,10 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
     }
 
     if (watcher == m_regionClutsWatcher) {
-        qDebug() << "Region cluts call finished";
+        qCDebug(LIBKWINGLUTILS) << "Region cluts call finished";
         QDBusPendingReply< RegionalClutMap > reply = *watcher;
         if (reply.isError()) {
-            qWarning() << reply.error();
+            qCWarning(LIBKWINGLUTILS) << reply.error();
             if (!m_signaledFail)
                 emit updateFailed();
             m_signaledFail = true;
@@ -201,7 +201,7 @@ void ColorServerInterface::callFinishedSlot(QDBusPendingCallWatcher *watcher)
     if (m_versionInfoUpdated &&
         m_outputClutsUpdated &&
         m_regionClutsUpdated) {
-        qDebug() << "Update succeeded";
+        qCDebug(LIBKWINGLUTILS) << "Update succeeded";
         emit updateSucceeded();
     }
 }
@@ -284,14 +284,14 @@ bool ColorCorrection::setEnabled(bool enabled)
         return true;
 
     if (enabled && d->m_hasError) {
-        qCritical() << "cannot enable color correction because of a previous error";
+        qCCritical(LIBKWINGLUTILS) << "cannot enable color correction because of a previous error";
         return false;
     }
 
 #ifdef KWIN_HAVE_OPENGLES
     const GLPlatform *gl = GLPlatform::instance();
     if (enabled && gl->isGLES() && !d->m_haveTexture3D) {
-        qCritical() << "color correction is not supported on OpenGL ES without OES_texture_3D";
+        qCCritical(LIBKWINGLUTILS) << "color correction is not supported on OpenGL ES without OES_texture_3D";
         d->m_hasError = true;
         return false;
     }
@@ -300,14 +300,14 @@ bool ColorCorrection::setEnabled(bool enabled)
     if (enabled) {
         // Update all profiles and regions
         d->m_csi->update();
-        qDebug() << "color correction will be enabled after contacting KolorManager";
+        qCDebug(LIBKWINGLUTILS) << "color correction will be enabled after contacting KolorManager";
         d->m_duringEnablingPhase = true;
         // d->m_enabled will be set to true in colorServerUpdateSucceededSlot()
     } else {
         d->deleteCCTextures();
         d->m_enabled = false;
         GLShader::sColorCorrect = false;
-        qDebug() << "color correction has been disabled";
+        qCDebug(LIBKWINGLUTILS) << "color correction has been disabled";
 
         // Reload all shaders
         ShaderManager::cleanup();
@@ -326,7 +326,7 @@ void ColorCorrection::setupForOutput(int screen)
 
     GLShader *shader = ShaderManager::instance()->getBoundShader();
     if (!shader) {
-        qCritical() << "no bound shader for color correction setup";
+        qCCritical(LIBKWINGLUTILS) << "no bound shader for color correction setup";
         d->m_hasError = true;
         emit errorOccured();
         return;
@@ -339,14 +339,14 @@ void ColorCorrection::setupForOutput(int screen)
     }
 
     if (!shader->setUniform(GLShader::ColorCorrectionLookupTextureUnit, d->m_ccTextureUnit)) {
-        qCritical() << "unable to set uniform for the color correction lookup texture";
+        qCCritical(LIBKWINGLUTILS) << "unable to set uniform for the color correction lookup texture";
         d->m_hasError = true;
         emit errorOccured();
         return;
     }
 
     if (!d->setupCCTextures()) {
-        qCritical() << "unable to setup color correction textures";
+        qCCritical(LIBKWINGLUTILS) << "unable to setup color correction textures";
         d->m_hasError = true;
         emit errorOccured();
         return;
@@ -556,7 +556,7 @@ QByteArray ColorCorrection::prepareFragmentShader(const QByteArray &sourceCode)
 bool ColorCorrectionPrivate::setupCCTextures()
 {
     if (!m_enabled || m_hasError) {
-        qWarning() << "Color correction not enabled or an error occurred, refusing to set up textures";
+        qCWarning(LIBKWINGLUTILS) << "Color correction not enabled or an error occurred, refusing to set up textures";
         return false;
     }
 
@@ -564,7 +564,7 @@ bool ColorCorrectionPrivate::setupCCTextures()
     if (!m_dummyCCTexture) {
         glGenTextures(1, &m_dummyCCTexture);
         if (!setupCCTexture(m_dummyCCTexture, m_dummyClut)) {
-            qCritical() << "unable to setup dummy color correction texture";
+            qCCritical(LIBKWINGLUTILS) << "unable to setup dummy color correction texture";
             m_dummyCCTexture = 0;
             return false;
         }
@@ -574,7 +574,7 @@ bool ColorCorrectionPrivate::setupCCTextures()
 
     // Setup actual color correction textures
     if (m_outputCCTextures.isEmpty() && !m_outputCluts->isEmpty()) {
-        qDebug() << "setting up output color correction textures";
+        qCDebug(LIBKWINGLUTILS) << "setting up output color correction textures";
 
         const int outputCount = m_outputCluts->size();
         m_outputCCTextures.resize(outputCount);
@@ -582,7 +582,7 @@ bool ColorCorrectionPrivate::setupCCTextures()
 
         for (int i = 0; i < outputCount; ++i)
             if (!setupCCTexture(m_outputCCTextures[i], m_outputCluts->at(i))) {
-                qCritical() << "unable to set up color correction texture for output" << i;
+                qCCritical(LIBKWINGLUTILS) << "unable to set up color correction texture for output" << i;
                 success = false;
             }
     }
@@ -608,7 +608,7 @@ void ColorCorrectionPrivate::deleteCCTextures()
 bool ColorCorrectionPrivate::setupCCTexture(GLuint texture, const Clut& clut)
 {
     if ((uint) clut.size() != CLUT_ELEMENT_COUNT) {
-        qCritical() << "cannot setup CC texture: invalid color lookup table";
+        qCCritical(LIBKWINGLUTILS) << "cannot setup CC texture: invalid color lookup table";
         return false;
     }
 
@@ -647,7 +647,7 @@ void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
 {
     Q_Q(ColorCorrection);
 
-    qDebug() << "Update of color profiles succeeded";
+    qCDebug(LIBKWINGLUTILS) << "Update of color profiles succeeded";
 
     // Force the color correction textures to be recreated
     deleteCCTextures();
@@ -657,15 +657,15 @@ void ColorCorrectionPrivate::colorServerUpdateSucceededSlot()
         m_duringEnablingPhase = false;
         m_enabled = true;
         GLShader::sColorCorrect = true;
-        qDebug() << "Color correction has been enabled";
+        qCDebug(LIBKWINGLUTILS) << "Color correction has been enabled";
 
         // Reload all shaders
         ShaderManager::cleanup();
         if (!ShaderManager::instance()->isValid()) {
-            qCritical() << "Shader reinitialization failed, possible compile problems with the shaders "
+            qCCritical(LIBKWINGLUTILS) << "Shader reinitialization failed, possible compile problems with the shaders "
                 "altered for color-correction";
             m_hasError = true;
-            qDebug() << "Color correction has been disabled due to shader issues";
+            qCDebug(LIBKWINGLUTILS) << "Color correction has been disabled due to shader issues";
             m_enabled = false;
             GLShader::sColorCorrect = false;
             ShaderManager::cleanup();
@@ -682,7 +682,7 @@ void ColorCorrectionPrivate::colorServerUpdateFailedSlot()
 
     m_duringEnablingPhase = false;
 
-    qCritical() << "Update of color profiles failed";
+    qCCritical(LIBKWINGLUTILS) << "Update of color profiles failed";
     m_hasError = true;
     emit q->errorOccured();
 }

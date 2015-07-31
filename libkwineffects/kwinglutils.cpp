@@ -27,9 +27,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "kwinglcolorcorrection.h"
 #include "kwineffects.h"
 #include "kwinglplatform.h"
+#include "logging_p.h"
 
 
-#include <QDebug>
 #include <QPixmap>
 #include <QImage>
 #include <QHash>
@@ -193,7 +193,7 @@ bool checkGLError(const char* txt)
     GLenum err = glGetError();
     bool hasError = false;
     while (err != GL_NO_ERROR) {
-        qWarning() << "GL error (" << txt << "): " << formatGLError(err);
+        qCWarning(LIBKWINGLUTILS) << "GL error (" << txt << "): " << formatGLError(err);
         hasError = true;
         err = glGetError();
     }
@@ -249,14 +249,14 @@ bool GLShader::loadFromFiles(const QString &vertexFile, const QString &fragmentF
 {
     QFile vf(vertexFile);
     if (!vf.open(QIODevice::ReadOnly)) {
-        qCritical() << "Couldn't open" << vertexFile << "for reading!";
+        qCCritical(LIBKWINGLUTILS) << "Couldn't open" << vertexFile << "for reading!";
         return false;
     }
     const QByteArray vertexSource = vf.readAll();
 
     QFile ff(fragmentFile);
     if (!ff.open(QIODevice::ReadOnly)) {
-        qCritical() << "Couldn't open" << fragmentFile << "for reading!";
+        qCCritical(LIBKWINGLUTILS) << "Couldn't open" << fragmentFile << "for reading!";
         return false;
     }
     const QByteArray fragmentSource = ff.readAll();
@@ -283,10 +283,10 @@ bool GLShader::link()
     glGetProgramiv(mProgram, GL_LINK_STATUS, &status);
 
     if (status == 0) {
-        qCritical() << "Failed to link shader:" << endl << log;
+        qCCritical(LIBKWINGLUTILS) << "Failed to link shader:" << endl << log;
         mValid = false;
     } else if (length > 0) {
-        qDebug() << "Shader link log:" << log;
+        qCDebug(LIBKWINGLUTILS) << "Shader link log:" << log;
     }
 
     return mValid;
@@ -342,9 +342,9 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
 
     if (status == 0) {
         const char *typeName = (shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment");
-        qCritical() << "Failed to compile" << typeName << "shader:" << endl << log;
+        qCCritical(LIBKWINGLUTILS) << "Failed to compile" << typeName << "shader:" << endl << log;
     } else if (length > 0)
-        qDebug() << "Shader compile log:" << log;
+        qCDebug(LIBKWINGLUTILS) << "Shader compile log:" << log;
 
     if (status != 0)
         glAttachShader(program, shader);
@@ -358,7 +358,7 @@ bool GLShader::load(const QByteArray &vertexSource, const QByteArray &fragmentSo
 #ifndef KWIN_HAVE_OPENGLES
     // Make sure shaders are actually supported
     if (!GLPlatform::instance()->supports(GLSL) || GLPlatform::instance()->supports(LimitedNPOT)) {
-        qCritical() << "Shaders are not supported";
+        qCCritical(LIBKWINGLUTILS) << "Shaders are not supported";
         return false;
     }
 #endif
@@ -706,7 +706,7 @@ bool ShaderManager::selfTest()
     bool pass = true;
 
     if (!GLRenderTarget::supported()) {
-        qWarning() << "Framebuffer objects not supported - skipping shader tests";
+        qCWarning(LIBKWINGLUTILS) << "Framebuffer objects not supported - skipping shader tests";
         return true;
     }
 
@@ -992,11 +992,11 @@ GLShader *ShaderManager::generateShader(ShaderTraits traits)
     const QByteArray fragment = generateFragmentSource(traits);
 
 #if 0
-    qDebug() << "**************";
-    qDebug() << vertex;
-    qDebug() << "**************";
-    qDebug() << fragment;
-    qDebug() << "**************";
+    qCDebug(LIBKWINGLUTILS) << "**************";
+    qCDebug(LIBKWINGLUTILS) << vertex;
+    qCDebug(LIBKWINGLUTILS) << "**************";
+    qCDebug(LIBKWINGLUTILS) << fragment;
+    qCDebug(LIBKWINGLUTILS) << "**************";
 #endif
 
     GLShader *shader = new GLShader(GLShader::ExplicitLinking);
@@ -1356,7 +1356,7 @@ GLRenderTarget::GLRenderTarget(const GLTexture& color)
     if (sSupported && !mTexture.isNull()) {
         initFBO();
     } else
-        qCritical() << "Render targets aren't supported!";
+        qCCritical(LIBKWINGLUTILS) << "Render targets aren't supported!";
 }
 
 GLRenderTarget::~GLRenderTarget()
@@ -1369,7 +1369,7 @@ GLRenderTarget::~GLRenderTarget()
 bool GLRenderTarget::enable()
 {
     if (!valid()) {
-        qCritical() << "Can't enable invalid render target!";
+        qCCritical(LIBKWINGLUTILS) << "Can't enable invalid render target!";
         return false;
     }
 
@@ -1383,7 +1383,7 @@ bool GLRenderTarget::enable()
 bool GLRenderTarget::disable()
 {
     if (!valid()) {
-        qCritical() << "Can't disable invalid render target!";
+        qCCritical(LIBKWINGLUTILS) << "Can't disable invalid render target!";
         return false;
     }
 
@@ -1432,14 +1432,14 @@ void GLRenderTarget::initFBO()
 #if DEBUG_GLRENDERTARGET
     GLenum err = glGetError();
     if (err != GL_NO_ERROR)
-        qCritical() << "Error status when entering GLRenderTarget::initFBO: " << formatGLError(err);
+        qCCritical(LIBKWINGLUTILS) << "Error status when entering GLRenderTarget::initFBO: " << formatGLError(err);
 #endif
 
     glGenFramebuffers(1, &mFramebuffer);
 
 #if DEBUG_GLRENDERTARGET
     if ((err = glGetError()) != GL_NO_ERROR) {
-        qCritical() << "glGenFramebuffers failed: " << formatGLError(err);
+        qCCritical(LIBKWINGLUTILS) << "glGenFramebuffers failed: " << formatGLError(err);
         return;
     }
 #endif
@@ -1448,7 +1448,7 @@ void GLRenderTarget::initFBO()
 
 #if DEBUG_GLRENDERTARGET
     if ((err = glGetError()) != GL_NO_ERROR) {
-        qCritical() << "glBindFramebuffer failed: " << formatGLError(err);
+        qCCritical(LIBKWINGLUTILS) << "glBindFramebuffer failed: " << formatGLError(err);
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
     }
@@ -1459,7 +1459,7 @@ void GLRenderTarget::initFBO()
 
 #if DEBUG_GLRENDERTARGET
     if ((err = glGetError()) != GL_NO_ERROR) {
-        qCritical() << "glFramebufferTexture2D failed: " << formatGLError(err);
+        qCCritical(LIBKWINGLUTILS) << "glFramebufferTexture2D failed: " << formatGLError(err);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
@@ -1473,9 +1473,9 @@ void GLRenderTarget::initFBO()
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         // We have an incomplete framebuffer, consider it invalid
         if (status == 0)
-            qCritical() << "glCheckFramebufferStatus failed: " << formatGLError(glGetError());
+            qCCritical(LIBKWINGLUTILS) << "glCheckFramebufferStatus failed: " << formatGLError(glGetError());
         else
-            qCritical() << "Invalid framebuffer status: " << formatFramebufferStatus(status);
+            qCCritical(LIBKWINGLUTILS) << "Invalid framebuffer status: " << formatFramebufferStatus(status);
         glDeleteFramebuffers(1, &mFramebuffer);
         return;
     }
@@ -2120,11 +2120,11 @@ bool GLVertexBufferPrivate::awaitFence(intptr_t end)
     const BufferFence &fence = fences.front();
 
     if (!fence.signaled()) {
-        qDebug() << "Stalling on VBO fence";
+        qCDebug(LIBKWINGLUTILS) << "Stalling on VBO fence";
         const GLenum ret = glClientWaitSync(fence.sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000000);
 
         if (ret == GL_TIMEOUT_EXPIRED || ret == GL_WAIT_FAILED) {
-            qCritical() << "Wait failed";
+            qCCritical(LIBKWINGLUTILS) << "Wait failed";
             return false;
         }
     }

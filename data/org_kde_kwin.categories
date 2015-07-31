@@ -1,5 +1,8 @@
 kwin_core KWin Core
 kwineffects KWin Effects
+libkwineffects KWin Effects Library
+libkwinglutils KWin OpenGL utility Library
+libkwinxrenderutils KWin XRender utility Library
 kwin_wayland_drm KWin Wayland (DRM backend)
 kwin_wayland_framebuffer KWin Wayland (Framebuffer backend)
 kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend)
