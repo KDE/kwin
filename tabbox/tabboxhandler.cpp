@@ -30,8 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "thumbnailitem.h"
 #include "scripting/scripting.h"
 #include "switcheritem.h"
+#include "tabbox_logging.h"
 // Qt
-#include <QDebug>
 #include <QKeyEvent>
 #include <QModelIndex>
 #include <QStandardPaths>
@@ -260,7 +260,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
                     }
                 );
                 if (offers.isEmpty()) {
-                    qDebug() << "could not find default window switcher layout";
+                    qCDebug(KWIN_TABBOX) << "could not find default window switcher layout";
                     return KPluginMetaData();
                 }
             }
@@ -271,7 +271,7 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
             return nullptr;
         }
         if (service.value(QStringLiteral("X-Plasma-API")) != QStringLiteral("declarativeappletscript")) {
-            qDebug() << "Window Switcher Layout is no declarativeappletscript";
+            qCDebug(KWIN_TABBOX) << "Window Switcher Layout is no declarativeappletscript";
             return nullptr;
         }
         auto findScriptFile = [desktopMode, service, folderName] {
@@ -282,12 +282,12 @@ QObject *TabBoxHandlerPrivate::createSwitcherItem(bool desktopMode)
         file = findScriptFile();
     }
     if (file.isNull()) {
-        qDebug() << "Could not find QML file for window switcher";
+        qCDebug(KWIN_TABBOX) << "Could not find QML file for window switcher";
         return nullptr;
     }
     m_qmlComponent->loadUrl(QUrl::fromLocalFile(file));
     if (m_qmlComponent->isError()) {
-        qDebug() << "Component failed to load: " << m_qmlComponent->errors();
+        qCDebug(KWIN_TABBOX) << "Component failed to load: " << m_qmlComponent->errors();
         QStringList args;
         args << QStringLiteral("--passivepopup") << i18n("The Window Switcher installation is broken, resources are missing.\n"
                                             "Contact your distribution about this.") << QStringLiteral("20");

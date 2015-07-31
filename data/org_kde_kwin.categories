@@ -9,4 +9,5 @@ kwin_wayland_hwcomposer KWin Wayland (hwcomposer backend)
 kwin_wayland_backend KWin Wayland (Wayland backend)
 kwin_wayland_x11windowed KWin Wayland (X11 backend)
 kwin_libinput KWin Libinput Integration
+kwin_tabbox KWin Window Switcher
 aurorae KWin Aurorae Window Decoration Engine

@@ -417,6 +417,7 @@ if(KWIN_BUILD_TABBOX)
         tabbox/switcheritem.cpp
         tabbox/tabboxconfig.cpp
         tabbox/tabboxhandler.cpp
+        tabbox/tabbox_logging.cpp
   )
 endif()
 

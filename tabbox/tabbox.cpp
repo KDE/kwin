@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabbox/desktopmodel.h"
 #include "tabbox/tabboxconfig.h"
 #include "tabbox/desktopchain.h"
+#include "tabbox/tabbox_logging.h"
 // kwin
 #ifdef KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -44,7 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "xcbutils.h"
 // Qt
 #include <QAction>
-#include <QDebug>
 #include <QKeyEvent>
 // KDE
 #include <KConfig>
@@ -754,7 +754,7 @@ void TabBox::hide(bool abort)
     }
     emit tabBoxClosed();
     if (isDisplayed())
-        qDebug() << "Tab box was not properly closed by an effect";
+        qCDebug(KWIN_TABBOX) << "Tab box was not properly closed by an effect";
     m_tabBox->hide(abort);
     Xcb::sync();
 }
@@ -930,7 +930,7 @@ struct KeySymbolsDeleter
  */
 static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) {
 
-    qDebug() << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
+    qCDebug(KWIN_TABBOX) << "areKeySymXsDepressed: " << (bAll ? "all of " : "any of ") << nKeySyms;
 
     Xcb::QueryKeymap keys;
 
@@ -958,7 +958,7 @@ static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) 
         if (i < 0 || i >= 32)
             return false;
 
-        qDebug()    << iKeySym << ": keySymX=0x" << QString::number(keySymX, 16)
+        qCDebug(KWIN_TABBOX)    << iKeySym << ": keySymX=0x" << QString::number(keySymX, 16)
                     << " i=" << i << " mask=0x" << QString::number(mask, 16)
                     << " keymap[i]=0x" << QString::number(keymap[i], 16);
 
@@ -1342,7 +1342,7 @@ void TabBox::keyPress(int keyQt)
                 backwardShortcut = m_cutWalkThroughCurrentAppWindowsAlternativeReverse;
                 break;
             default:
-                qDebug() << "Invalid TabBoxMode";
+                qCDebug(KWIN_TABBOX) << "Invalid TabBoxMode";
                 return;
         }
         forward = contains(forwardShortcut, keyQt);
@@ -1373,7 +1373,7 @@ void TabBox::keyPress(int keyQt)
             }
         }
         if (forward || backward) {
-            qDebug() << "== " << forwardShortcut.toString()
+            qCDebug(KWIN_TABBOX) << "== " << forwardShortcut.toString()
                         << " or " << backwardShortcut.toString();
             KDEWalkThroughWindows(forward);
         }

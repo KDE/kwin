@@ -8,6 +8,7 @@ set( testTabBoxClientModel_SRCS
      ../desktopmodel.cpp
      ../tabboxconfig.cpp
      ../tabboxhandler.cpp
+     ../tabbox_logging.cpp
      test_tabbox_clientmodel.cpp
      mock_tabboxhandler.cpp
      mock_tabboxclient.cpp
@@ -36,6 +37,7 @@ set( testTabBoxHandler_SRCS
      ../desktopmodel.cpp
      ../tabboxconfig.cpp
      ../tabboxhandler.cpp
+     ../tabbox_logging.cpp
      test_tabbox_handler.cpp
      mock_tabboxhandler.cpp
      mock_tabboxclient.cpp
@@ -61,6 +63,7 @@ ecm_mark_as_test(testTabBoxHandler)
 ########################################################
 set( testTabBoxConfig_SRCS
     ../tabboxconfig.cpp
+    ../tabbox_logging.cpp
     test_tabbox_config.cpp
 )
 
@@ -75,6 +78,7 @@ ecm_mark_as_test(testTabBoxConfig)
 ########################################################
 set( testDesktopChain_SRCS
     ../desktopchain.cpp
+    ../tabbox_logging.cpp
     test_desktopchain.cpp
 )
 
