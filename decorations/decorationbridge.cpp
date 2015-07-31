@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "decorationbridge.h"
 #include "decoratedclient.h"
 #include "decorationrenderer.h"
+#include "decorations_logging.h"
 #include "settings.h"
 // KWin core
 #include "client.h"
@@ -37,7 +38,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginLoader>
 
 // Qt
-#include <QDebug>
 #include <QMetaProperty>
 #include <QPainter>
 
@@ -97,14 +97,14 @@ void DecorationBridge::initPlugin()
 {
     const auto offers = KPluginLoader::findPluginsById(s_pluginName, m_plugin);
     if (offers.isEmpty()) {
-        qWarning() << "Could not locate decoration plugin";
+        qCWarning(KWIN_DECORATIONS) << "Could not locate decoration plugin";
         return;
     }
-    qDebug() << "Trying to load decoration plugin: " << offers.first().fileName();
+    qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << offers.first().fileName();
     KPluginLoader loader(offers.first().fileName());
     KPluginFactory *factory = loader.factory();
     if (!factory) {
-        qWarning() << "Error loading plugin:" << loader.errorString();
+        qCWarning(KWIN_DECORATIONS) << "Error loading plugin:" << loader.errorString();
     } else {
         m_factory = factory;
         loadMetaData(loader.metaData().value(QStringLiteral("MetaData")).toObject());

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 
 #include "decorationpalette.h"
+#include "decorations_logging.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
@@ -29,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPalette>
 #include <QFileInfo>
 #include <QStandardPaths>
-#include <QDebug>
 
 namespace KWin
 {
@@ -116,7 +116,7 @@ void DecorationPalette::update()
     KConfigGroup wmConfig(config, QStringLiteral("WM"));
 
     if (!wmConfig.exists() && !m_colorScheme.endsWith(QStringLiteral("/kdeglobals"))) {
-        qWarning() << "Invalid color scheme" << m_colorScheme << "lacks WM group";
+        qCWarning(KWIN_DECORATIONS) << "Invalid color scheme" << m_colorScheme << "lacks WM group";
         return;
     }
 

@@ -405,6 +405,7 @@ set(kwin_KDEINIT_SRCS
     decorations/decorationpalette.cpp
     decorations/settings.cpp
     decorations/decorationrenderer.cpp
+    decorations/decorations_logging.cpp
    )
 
 if(KWIN_BUILD_TABBOX)

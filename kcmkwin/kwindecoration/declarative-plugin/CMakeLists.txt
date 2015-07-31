@@ -7,6 +7,7 @@ set(plugin_SRCS
     plugin.cpp
     buttonsmodel.cpp
     ../../../decorations/decorationpalette.cpp
+    ../../../decorations/decorations_logging.cpp
 )
 
 add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})
