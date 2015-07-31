@@ -1496,8 +1496,6 @@ void CubeEffect::toggleCylinder()
         useShaders = loadShader();
     if (useShaders)
         toggle(Cylinder);
-    else
-        qCritical() << "Sorry shaders are not available - cannot activate Cylinder";
 }
 
 void CubeEffect::toggleSphere()
@@ -1507,8 +1505,6 @@ void CubeEffect::toggleSphere()
         useShaders = loadShader();
     if (useShaders)
         toggle(Sphere);
-    else
-        qCritical() << "Sorry shaders are not available - cannot activate Sphere";
 }
 
 void CubeEffect::toggle(CubeMode newMode)
