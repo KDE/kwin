@@ -1930,6 +1930,7 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
             pending_geometry_update = PendingGeometryNormal;
         return;
     }
+    QSize oldClientSize = m_frame.geometry().size();
     bool resized = (geom_before_block.size() != geom.size() || pending_geometry_update == PendingGeometryForced);
     if (resized) {
         resizeDecoration();
@@ -1970,7 +1971,8 @@ void Client::setGeometry(int x, int y, int w, int h, ForceGeometry_t force)
     // - maximize mode is changed to MaximizeRestore, when size unchanged
     //   which can happen when untabbing maximized windows
     if (resized) {
-        discardWindowPixmap();
+        if (oldClientSize != QSize(w,h))
+            discardWindowPixmap();
         emit geometryShapeChanged(this, geom_before_block);
     }
     const QRect deco_rect = visibleRect();
@@ -2020,6 +2022,7 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
             pending_geometry_update = PendingGeometryNormal;
         return;
     }
+    QSize oldClientSize = m_frame.geometry().size();
     resizeDecoration();
     m_frame.resize(w, h);
 //     resizeDecoration( s );
@@ -2034,7 +2037,8 @@ void Client::plainResize(int w, int h, ForceGeometry_t force)
     updateWindowRules(Rules::Position|Rules::Size);
     screens()->setCurrent(this);
     workspace()->updateStackingOrder();
-    discardWindowPixmap();
+    if (oldClientSize != QSize(w,h))
+        discardWindowPixmap();
     emit geometryShapeChanged(this, geom_before_block);
     const QRect deco_rect = visibleRect();
     addLayerRepaint(deco_rect_before_block);
