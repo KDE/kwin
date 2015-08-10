@@ -44,10 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVarLengthArray>
 
 #include "outline.h"
-#if HAVE_WAYLAND
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecoratedClient>
@@ -184,7 +182,6 @@ void Workspace::updateClientArea(bool force)
             }
         }
     }
-#if HAVE_WAYLAND
     if (waylandServer()) {
         auto updateStrutsForWaylandClient = [&] (ShellClient *c) {
             // assuming that only docks have "struts" and that all docks have a strut
@@ -216,7 +213,6 @@ void Workspace::updateClientArea(bool force)
             updateStrutsForWaylandClient(c);
         }
     }
-#endif
 #if 0
     for (int i = 1;
             i <= numberOfDesktops();

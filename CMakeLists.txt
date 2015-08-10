@@ -261,7 +261,6 @@ include_directories(${epoxy_INCLUDE_DIR})
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
-set(HAVE_WAYLAND TRUE)
 set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
 set(HAVE_X11_XCB ${X11_XCB_FOUND})
 

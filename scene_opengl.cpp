@@ -32,10 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glxbackend.h"
 #endif // KWIN_HAVE_OPENGLES
 
-#if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "wayland_server.h"
-#endif // HAVE_WAYLAND
 
 #include <kwinglcolorcorrection.h>
 #include <kwinglplatform.h>
@@ -546,12 +544,9 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 #endif
         break;
     case EglPlatformInterface:
-#if HAVE_WAYLAND
         if (kwinApp()->shouldUseWaylandForCompositing()) {
             backend = waylandServer()->backend()->createOpenGLBackend();
-        } else
-#endif // HAVE_WAYLAND
-        {
+        } else {
             backend = new EglOnXBackend();
         }
         break;
@@ -1676,10 +1671,8 @@ bool OpenGLWindowPixmap::bind()
 {
     if (!m_texture->isNull()) {
         if (!toplevel()->damage().isEmpty()) {
-#if HAVE_WAYLAND
             updateBuffer();
             m_texture->updateFromPixmap(this);
-#endif
             // mipmaps need to be updated
             m_texture->setDirty();
             toplevel()->resetDamage();

@@ -27,12 +27,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main.h"
 #include "screens.h"
 #include "toplevel.h"
-#if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/surface_interface.h>
-#endif
 #include "xcbutils.h"
 #include "decorations/decoratedclient.h"
 // Qt
@@ -97,7 +95,6 @@ QImage *QPainterBackend::bufferForScreen(int screenId)
 SceneQPainter *SceneQPainter::createScene(QObject *parent)
 {
     QScopedPointer<QPainterBackend> backend;
-#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         backend.reset(waylandServer()->backend()->createQPainterBackend());
         if (backend.isNull()) {
@@ -108,7 +105,6 @@ SceneQPainter *SceneQPainter::createScene(QObject *parent)
         }
         return new SceneQPainter(backend.take(), parent);
     }
-#endif
     return NULL;
 }
 
@@ -428,19 +424,16 @@ void QPainterWindowPixmap::create()
     if (!isValid()) {
         return;
     }
-#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // performing deep copy, this could probably be improved
         m_image = buffer()->data().copy();
         return;
     }
-#endif
     m_image = QImage((uchar*)m_shm->buffer(), size().width(), size().height(), QImage::Format_ARGB32_Premultiplied);
 }
 
 bool QPainterWindowPixmap::update(const QRegion &damage)
 {
-#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         const auto oldBuffer = buffer();
         updateBuffer();
@@ -456,7 +449,6 @@ bool QPainterWindowPixmap::update(const QRegion &damage)
         }
         return true;
     }
-#endif
 
     if (!m_shm->isValid()) {
         return false;

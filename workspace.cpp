@@ -52,10 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "unmanaged.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
-#if HAVE_WAYLAND
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 #include "xcbutils.h"
 #include "main.h"
 #include "decorations/decorationbridge.h"
@@ -136,22 +134,16 @@ Workspace::Workspace(const QString &sessionKey)
     Xcb::Extensions::self();
 
     // start the Wayland Backend - will only be created if WAYLAND_DISPLAY is present
-#if HAVE_WAYLAND
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         connect(this, SIGNAL(stackingOrderChanged()), input(), SLOT(updatePointerWindow()));
     }
-#endif
 
 #ifdef KWIN_BUILD_ACTIVITIES
     Activities *activities = nullptr;
     // HACK: do not use Activities on Wayland as it blocks the startup
-#if HAVE_WAYLAND
     if (kwinApp()->operationMode() == Application::OperationModeX11) {
         activities = Activities::create(this);
     }
-#else
-    activities = Activities::create(this);
-#endif
     if (activities) {
         connect(activities, SIGNAL(currentChanged(QString)), SLOT(updateCurrentActivity(QString)));
     }
@@ -378,7 +370,6 @@ void Workspace::init()
 
     Scripting::create(this);
 
-#if HAVE_WAYLAND
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
             [this] (ShellClient *c) {
@@ -410,7 +401,6 @@ void Workspace::init()
             }
         );
     }
-#endif
 
     // SELI TODO: This won't work with unreasonable focus policies,
     // and maybe in rare cases also if the selected client doesn't
@@ -1353,12 +1343,6 @@ QString Workspace::supportInformation() const
 #endif
     support.append(QStringLiteral("KWIN_BUILD_ACTIVITIES: "));
 #ifdef KWIN_BUILD_ACTIVITIES
-    support.append(yes);
-#else
-    support.append(no);
-#endif
-    support.append(QStringLiteral("HAVE_WAYLAND: "));
-#if HAVE_WAYLAND
     support.append(yes);
 #else
     support.append(no);

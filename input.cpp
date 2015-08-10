@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if HAVE_INPUT
 #include "libinput/connection.h"
 #endif
-#if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "shell_client.h"
 #include "wayland_server.h"
@@ -40,7 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/display.h>
 #include <KWayland/Server/fakeinput_interface.h>
 #include <KWayland/Server/seat_interface.h>
-#endif
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
 // Qt
@@ -134,7 +132,6 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
 
 void Xkb::createKeymapFile()
 {
-#if HAVE_WAYLAND
     if (!waylandServer()) {
         return;
     }
@@ -168,7 +165,6 @@ void Xkb::createKeymapFile()
         return;
     }
     waylandServer()->seat()->setKeymap(tmp->handle(), size);
-#endif
 }
 
 void Xkb::updateModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -283,7 +279,6 @@ void InputRedirection::init()
 
 void InputRedirection::setupWorkspace()
 {
-#if HAVE_WAYLAND
     if (waylandServer()) {
         connect(workspace(), &Workspace::clientActivated, this, &InputRedirection::updateKeyboardWindow);
         using namespace KWayland::Server;
@@ -348,10 +343,8 @@ void InputRedirection::setupWorkspace()
             }
         );
     }
-#endif
 }
 
-#if HAVE_WAYLAND
 static KWayland::Server::SeatInterface *findSeat()
 {
     auto server = waylandServer();
@@ -360,7 +353,6 @@ static KWayland::Server::SeatInterface *findSeat()
     }
     return server->seat();
 }
-#endif
 
 void InputRedirection::setupLibInput()
 {
@@ -400,7 +392,6 @@ void InputRedirection::setupLibInput()
         } else {
             connect(kwinApp(), &Application::screensCreated, this, &InputRedirection::setupLibInputWithScreens);
         }
-#if HAVE_WAYLAND
         if (auto s = findSeat()) {
             s->setHasKeyboard(conn->hasKeyboard());
             s->setHasPointer(conn->hasPointer());
@@ -437,7 +428,6 @@ void InputRedirection::setupLibInput()
                 }
             }
         );
-#endif
     }
 #endif
 }
@@ -480,7 +470,6 @@ void InputRedirection::updatePointerWindow()
     if (!oldWindow.isNull() && t == m_pointerWindow.data()) {
         return;
     }
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         // disconnect old surface
         if (oldWindow) {
@@ -509,7 +498,6 @@ void InputRedirection::updatePointerWindow()
             t = nullptr;
         }
     }
-#endif
     if (!t) {
         m_pointerWindow.clear();
         return;
@@ -540,11 +528,9 @@ void InputRedirection::updatePointerDecoration(Toplevel *t)
         // send leave
         QHoverEvent event(QEvent::HoverLeave, QPointF(), QPointF());
         QCoreApplication::instance()->sendEvent(oldDeco->decoration(), &event);
-#if HAVE_WAYLAND
         if (!m_pointerDecoration && waylandServer()) {
             waylandServer()->backend()->installCursorImage(Qt::ArrowCursor);
         }
-#endif
     }
     if (m_pointerDecoration) {
         const QPointF p = m_globalPointer - t->pos();
@@ -558,7 +544,6 @@ void InputRedirection::updatePointerDecoration(Toplevel *t)
 void InputRedirection::updatePointerInternalWindow()
 {
     const auto oldInternalWindow = m_pointerInternalWindow;
-#if HAVE_WAYLAND
     if (waylandServer()) {
         bool found = false;
         const auto &internalClients = waylandServer()->internalClients();
@@ -582,7 +567,6 @@ void InputRedirection::updatePointerInternalWindow()
             }
         }
     }
-#endif
     if (oldInternalWindow != m_pointerInternalWindow) {
         // changed
         if (oldInternalWindow) {
@@ -618,16 +602,13 @@ void InputRedirection::pointerInternalWindowVisibilityChanged(bool visible)
 
 void InputRedirection::installCursorFromDecoration()
 {
-#if HAVE_WAYLAND
     if (waylandServer() && m_pointerDecoration) {
         waylandServer()->backend()->installCursorImage(m_pointerDecoration->client()->cursor());
     }
-#endif
 }
 
 void InputRedirection::updateFocusedPointerPosition()
 {
-#if HAVE_WAYLAND
     if (m_pointerWindow.isNull()) {
         return;
     }
@@ -641,12 +622,10 @@ void InputRedirection::updateFocusedPointerPosition()
         }
         seat->setFocusedPointerSurfacePosition(m_pointerWindow.data()->pos());
     }
-#endif
 }
 
 void InputRedirection::updateFocusedTouchPosition()
 {
-#if HAVE_WAYLAND
     if (m_touchWindow.isNull()) {
         return;
     }
@@ -656,7 +635,6 @@ void InputRedirection::updateFocusedTouchPosition()
         }
         seat->setFocusedTouchSurfacePosition(m_touchWindow.data()->pos());
     }
-#endif
 }
 
 void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
@@ -690,12 +668,10 @@ void InputRedirection::processPointerMotion(const QPointF &pos, uint32_t time)
             m_pointerDecoration->client()->processDecorationMove();
         }
     }
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         seat->setPointerPos(m_globalPointer);
     }
-#endif
 }
 
 void InputRedirection::processPointerButton(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time)
@@ -743,7 +719,6 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         installCursorFromDecoration();
     }
     // TODO: check which part of KWin would like to intercept the event
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         bool passThrough = true;
@@ -760,7 +735,6 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
             state == PointerButtonPressed ? seat->pointerButtonPressed(button) : seat->pointerButtonReleased(button);
         }
     }
-#endif
     if (state == PointerButtonReleased && !areButtonsPressed()) {
         updatePointerWindow();
     }
@@ -820,17 +794,14 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
 
     // TODO: check which part of KWin would like to intercept the event
     // TODO: Axis support for effect redirection
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         seat->pointerAxis(axis == InputRedirection::PointerAxisHorizontal ? Qt::Horizontal : Qt::Vertical, delta);
     }
-#endif
 }
 
 void InputRedirection::updateKeyboardWindow()
 {
-#if HAVE_WAYLAND
     if (!workspace()) {
         return;
     }
@@ -851,7 +822,6 @@ void InputRedirection::updateKeyboardWindow()
             }
         }
     }
-#endif
 }
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
@@ -861,7 +831,6 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     if (oldMods != keyboardModifiers()) {
         emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
     }
-#if HAVE_WAYLAND
     // check for vt-switch
     if (VirtualTerminal::self()) {
         const xkb_keysym_t keysym = m_xkb->toKeysym(key);
@@ -871,7 +840,6 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             return;
         }
     }
-#endif
     // TODO: pass to internal parts of KWin
 #ifdef KWIN_BUILD_TABBOX
     if (TabBox::TabBox::self() && TabBox::TabBox::self()->isGrabbed()) {
@@ -903,12 +871,10 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             return;
         }
     }
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         state == InputRedirection::KeyboardKeyPressed ? seat->keyPressed(key) : seat->keyReleased(key);
     }
-#endif
 }
 
 void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
@@ -930,7 +896,6 @@ void InputRedirection::processKeymapChange(int fd, uint32_t size)
 void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
 {
     // TODO: internal handling?
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         if (!seat->isTouchSequence()) {
@@ -949,11 +914,6 @@ void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 t
         }
         m_touchIdMapper.insert(id, seat->touchDown(pos));
     }
-#else
-    Q_UNUSED(id)
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
-#endif
 }
 
 void InputRedirection::updateTouchWindow(const QPointF &pos)
@@ -964,7 +924,6 @@ void InputRedirection::updateTouchWindow(const QPointF &pos)
     if (!oldWindow.isNull() && t == oldWindow.data()) {
         return;
     }
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         // disconnect old surface
         if (oldWindow) {
@@ -978,7 +937,6 @@ void InputRedirection::updateTouchWindow(const QPointF &pos)
             t = nullptr;
         }
     }
-#endif
     if (!t) {
         m_touchWindow.clear();
         return;
@@ -990,7 +948,6 @@ void InputRedirection::updateTouchWindow(const QPointF &pos)
 void InputRedirection::processTouchUp(qint32 id, quint32 time)
 {
     // TODO: internal handling?
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         auto it = m_touchIdMapper.constFind(id);
         if (it != m_touchIdMapper.constEnd()) {
@@ -998,16 +955,11 @@ void InputRedirection::processTouchUp(qint32 id, quint32 time)
             seat->touchUp(it.value());
         }
     }
-#else
-    Q_UNUSED(id)
-    Q_UNUSED(time)
-#endif
 }
 
 void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32 time)
 {
     // TODO: internal handling?
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
         auto it = m_touchIdMapper.constFind(id);
@@ -1016,29 +968,20 @@ void InputRedirection::processTouchMotion(qint32 id, const QPointF &pos, quint32
             seat->touchMove(it.value(), pos);
         }
     }
-#else
-    Q_UNUSED(id)
-    Q_UNUSED(pos)
-    Q_UNUSED(time)
-#endif
 }
 
 void InputRedirection::cancelTouch()
 {
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->cancelTouchSequence();
     }
-#endif
 }
 
 void InputRedirection::touchFrame()
 {
-#if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->touchFrame();
     }
-#endif
 }
 
 QEvent::Type InputRedirection::buttonStateToEvent(InputRedirection::PointerButtonState state)
@@ -1257,22 +1200,18 @@ void InputRedirection::updatePointerAfterScreenChange()
 void InputRedirection::warpPointer(const QPointF &pos)
 {
     if (supportsPointerWarping()) {
-#if HAVE_WAYLAND
         if (waylandServer()) {
             waylandServer()->backend()->warpPointer(pos);
         }
-#endif
         updatePointerPosition(pos);
     }
 }
 
 bool InputRedirection::supportsPointerWarping() const
 {
-#if HAVE_WAYLAND
     if (waylandServer() && waylandServer()->backend()->supportsPointerWarping()) {
         return true;
     }
-#endif
     return m_pointerWarping;
 }
 

@@ -25,10 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "effects.h"
 #include "workspace.h"
 #include "composite.h"
-#if HAVE_WAYLAND
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 // Qt
 #include <QDebug>
 #include <QPainter>
@@ -143,11 +141,9 @@ void WindowThumbnailItem::setWId(qulonglong wId)
     m_wId = wId;
     if (m_wId != 0) {
         AbstractClient *c = Workspace::self()->findClient(Predicate::WindowMatch, m_wId);
-#if HAVE_WAYLAND
         if (!c && waylandServer()) {
             c = waylandServer()->findClient(m_wId);
         }
-#endif
         setClient(c);
     } else if (m_client) {
         m_client = NULL;

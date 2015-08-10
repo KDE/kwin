@@ -27,7 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QElapsedTimer>
 
-#if HAVE_WAYLAND
 namespace KWayland
 {
 namespace Server
@@ -35,7 +34,6 @@ namespace Server
 class BufferInterface;
 }
 }
-#endif
 
 namespace KWin
 {
@@ -353,12 +351,10 @@ public:
      * @return The native X11 pixmap handle
      */
     xcb_pixmap_t pixmap() const;
-#if HAVE_WAYLAND
     /**
      * @return The Wayland BufferInterface for this WindowPixmap.
      **/
     QPointer<KWayland::Server::BufferInterface> buffer() const;
-#endif
     /**
      * @brief Whether this WindowPixmap is considered as discarded. This means the window has changed in a way that a new
      * WindowPixmap should have been created already.
@@ -397,22 +393,18 @@ protected:
      */
     Scene::Window *window();
 
-#if HAVE_WAYLAND
     /**
      * Should be called by the implementing subclasses when the Wayland Buffer changed and needs
      * updating.
      **/
     void updateBuffer();
-#endif
 private:
     Scene::Window *m_window;
     xcb_pixmap_t m_pixmap;
     QSize m_pixmapSize;
     bool m_discarded;
     QRect m_contentsRect;
-#if HAVE_WAYLAND
     QPointer<KWayland::Server::BufferInterface> m_buffer;
-#endif
 };
 
 class Scene::EffectFrame
@@ -516,13 +508,11 @@ Shadow* Scene::Window::shadow()
     return m_shadow;
 }
 
-#if HAVE_WAYLAND
 inline
 QPointer<KWayland::Server::BufferInterface> WindowPixmap::buffer() const
 {
     return m_buffer;
 }
-#endif
 
 template <typename T>
 inline

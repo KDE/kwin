@@ -91,11 +91,9 @@ protected:
 
 private:
     bool loadTexture(xcb_pixmap_t pix, const QSize &size);
-#if HAVE_WAYLAND
     bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
-#endif
     SceneOpenGL::Texture *q;
     AbstractEglBackend *m_backend;
     EGLImageKHR m_image;

@@ -25,10 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "client.h"
 #include "screens.h"
 #include "workspace.h"
-#if HAVE_WAYLAND
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 
 namespace KWin {
 namespace ScriptingClientModel {
@@ -44,11 +42,9 @@ ClientLevel::ClientLevel(ClientModel *model, AbstractLevel *parent)
     connect(Workspace::self(), &Workspace::clientAdded, this, &ClientLevel::clientAdded);
     connect(Workspace::self(), &Workspace::clientRemoved, this, &ClientLevel::clientRemoved);
     connect(model, SIGNAL(exclusionsChanged()), SLOT(reInit()));
-#if HAVE_WAYLAND
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::shellClientAdded, this, &ClientLevel::clientAdded);
     }
-#endif
 }
 
 ClientLevel::~ClientLevel()
@@ -227,14 +223,12 @@ void ClientLevel::reInit()
     for (ClientList::const_iterator it = clients.begin(); it != clients.end(); ++it) {
         checkClient((*it));
     }
-#if HAVE_WAYLAND
     if (waylandServer()) {
         const auto &clients = waylandServer()->clients();
         for (auto *c : clients) {
             checkClient(c);
         }
     }
-#endif
 }
 
 quint32 ClientLevel::idForRow(int row) const

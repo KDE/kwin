@@ -37,16 +37,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "useractions.h"
 #include "compositingprefs.h"
 #include "xcbutils.h"
-#if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 #include "decorations/decoratedclient.h"
 
-#if HAVE_WAYLAND
 #include <KWayland/Server/surface_interface.h>
-#endif
 
 #include <stdio.h>
 
@@ -118,7 +114,6 @@ Compositor::Compositor(QObject* workspace)
     m_unusedSupportPropertyTimer.setInterval(compositorLostMessageDelay);
     m_unusedSupportPropertyTimer.setSingleShot(true);
     connect(&m_unusedSupportPropertyTimer, SIGNAL(timeout()), SLOT(deleteUnusedSupportProperties()));
-#if HAVE_WAYLAND
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         if (waylandServer()->backend()->isReady()) {
             QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
@@ -132,15 +127,12 @@ Compositor::Compositor(QObject* workspace)
                 }
             }, Qt::QueuedConnection
         );
-    } else
-#endif
-
-    {
-    // delay the call to setup by one event cycle
-    // The ctor of this class is invoked from the Workspace ctor, that means before
-    // Workspace is completely constructed, so calling Workspace::self() would result
-    // in undefined behavior. This is fixed by using a delayed invocation.
-    QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
+    } else {
+        // delay the call to setup by one event cycle
+        // The ctor of this class is invoked from the Workspace ctor, that means before
+        // Workspace is completely constructed, so calling Workspace::self() would result
+        // in undefined behavior. This is fixed by using a delayed invocation.
+        QMetaObject::invokeMethod(this, "setup", Qt::QueuedConnection);
     }
 
     // register DBus
@@ -712,7 +704,6 @@ void Compositor::performCompositing()
     m_timeSinceLastVBlank = m_scene->paint(repaints, windows);
     m_timeSinceStart += m_timeSinceLastVBlank;
 
-#if HAVE_WAYLAND
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         for (Toplevel *win : damaged) {
             if (auto surface = win->surface()) {
@@ -720,7 +711,6 @@ void Compositor::performCompositing()
             }
         }
     }
-#endif
 
     compositeTimer.stop(); // stop here to ensure *we* cause the next repaint schedule - not some effect through m_scene->paint()
 
@@ -749,7 +739,6 @@ bool Compositor::windowRepaintsPending() const
     foreach (Toplevel * c, Workspace::self()->deletedList())
     if (!c->repaints().isEmpty())
         return true;
-#if HAVE_WAYLAND
     if (auto w = waylandServer()) {
         const auto &clients = w->clients();
         for (auto c : clients) {
@@ -764,7 +753,6 @@ bool Compositor::windowRepaintsPending() const
             }
         }
     }
-#endif
     return false;
 }
 

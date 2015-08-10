@@ -27,10 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tabgroup.h"
 #include "workspace.h"
 
-#if HAVE_WAYLAND
 #include "wayland_server.h"
 #include <KWayland/Server/plasmawindowmanagement_interface.h>
-#endif
 
 namespace KWin
 {
@@ -518,7 +516,6 @@ bool AbstractClient::hasStrut() const
 
 void AbstractClient::setupWindowManagementInterface()
 {
-#if HAVE_WAYLAND
     if (m_windowManagementInterface) {
         // already setup
         return;
@@ -629,15 +626,12 @@ void AbstractClient::setupWindowManagementInterface()
         }
     );
     m_windowManagementInterface = w;
-#endif
 }
 
 void AbstractClient::destroyWindowManagementInterface()
 {
-#if HAVE_WAYLAND
     delete m_windowManagementInterface;
     m_windowManagementInterface = nullptr;
-#endif
 }
 
 Options::MouseCommand AbstractClient::getMouseCommand(Qt::MouseButton button, bool *handled) const

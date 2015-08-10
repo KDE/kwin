@@ -41,7 +41,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // c++
 #include <functional>
 
-#if HAVE_WAYLAND
 namespace KWayland
 {
 namespace Server
@@ -49,7 +48,6 @@ namespace Server
 class SurfaceInterface;
 }
 }
-#endif
 
 namespace KWin
 {
@@ -355,10 +353,8 @@ public:
     void setSkipCloseAnimation(bool set);
 
     quint32 surfaceId() const;
-#if HAVE_WAYLAND
     KWayland::Server::SurfaceInterface *surface() const;
     void setSurface(KWayland::Server::SurfaceInterface *surface);
-#endif
 
     /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
@@ -498,9 +494,7 @@ private:
     int m_screen;
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
-#if HAVE_WAYLAND
     KWayland::Server::SurfaceInterface *m_surface = nullptr;
-#endif
     // when adding new data members, check also copyToDeleted()
 };
 
@@ -732,12 +726,10 @@ inline quint32 Toplevel::surfaceId() const
     return m_surfaceId;
 }
 
-#if HAVE_WAYLAND
 inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
 {
     return m_surface;
 }
-#endif
 
 template <class T, class U>
 inline T *Toplevel::findInList(const QList<T*> &list, std::function<bool (const U*)> func)

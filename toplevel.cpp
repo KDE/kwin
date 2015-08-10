@@ -31,9 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shadow.h"
 #include "xcbutils.h"
 
-#if HAVE_WAYLAND
 #include <KWayland/Server/surface_interface.h>
-#endif
 
 #include <QDebug>
 
@@ -454,7 +452,6 @@ void Toplevel::setSkipCloseAnimation(bool set)
     emit skipCloseAnimationChanged();
 }
 
-#if HAVE_WAYLAND
 void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
 {
     if (m_surface == surface) {
@@ -472,7 +469,6 @@ void Toplevel::setSurface(KWayland::Server::SurfaceInterface *surface)
         }
     );
 }
-#endif
 
 void Toplevel::addDamage(const QRegion &damage)
 {
@@ -503,13 +499,12 @@ void Toplevel::setDepth(int depth)
 
 QRegion Toplevel::inputShape() const
 {
-#if HAVE_WAYLAND
     if (m_surface) {
         return m_surface->input();
-    } else
-#endif
-    // TODO: maybe also for X11?
-    return QRegion();
+    } else {
+        // TODO: maybe also for X11?
+        return QRegion();
+    }
 }
 
 } // namespace

@@ -24,18 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "composite.h"
 #include "effects.h"
 #include "toplevel.h"
-#if HAVE_WAYLAND
 #include "wayland_server.h"
-#endif
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
 
-#if HAVE_WAYLAND
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/shadow_interface.h>
 #include <KWayland/Server/surface_interface.h>
-#endif
 
 namespace KWin
 {
@@ -58,11 +54,9 @@ Shadow *Shadow::createShadow(Toplevel *toplevel)
         return NULL;
     }
     Shadow *shadow = crateShadowFromDecoration(toplevel);
-#if HAVE_WAYLAND
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(toplevel);
     }
-#endif
     if (!shadow) {
         shadow = createShadowFromX11(toplevel);
     }
@@ -114,7 +108,6 @@ Shadow *Shadow::crateShadowFromDecoration(Toplevel *toplevel)
 
 Shadow *Shadow::createShadowFromWayland(Toplevel *toplevel)
 {
-#if HAVE_WAYLAND
     auto surface = toplevel->surface();
     if (!surface) {
         return nullptr;
@@ -129,9 +122,6 @@ Shadow *Shadow::createShadowFromWayland(Toplevel *toplevel)
         return nullptr;
     }
     return shadow;
-#else
-    return nullptr;
-#endif
 }
 
 QVector< uint32_t > Shadow::readX11ShadowProperty(xcb_window_t id)
@@ -225,7 +215,6 @@ bool Shadow::init(KDecoration2::Decoration *decoration)
 
 bool Shadow::init(const QPointer< KWayland::Server::ShadowInterface > &shadow)
 {
-#if HAVE_WAYLAND
     if (!shadow) {
         return false;
     }
@@ -250,9 +239,6 @@ bool Shadow::init(const QPointer< KWayland::Server::ShadowInterface > &shadow)
     }
     buildQuads();
     return true;
-#else
-    return false;
-#endif
 }
 
 void Shadow::updateShadowRegion()
@@ -367,7 +353,6 @@ bool Shadow::updateShadow()
         clear();
         return false;
     }
-#if HAVE_WAYLAND
     if (waylandServer()) {
         if (m_topLevel && m_topLevel->surface()) {
             if (const auto &s = m_topLevel->surface()->shadow()) {
@@ -380,7 +365,6 @@ bool Shadow::updateShadow()
             }
         }
     }
-#endif
     auto data = Shadow::readX11ShadowProperty(m_topLevel->window());
     if (data.isEmpty()) {
         clear();

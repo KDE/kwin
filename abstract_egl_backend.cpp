@@ -19,11 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_egl_backend.h"
 #include "options.h"
-#if HAVE_WAYLAND
 #include "wayland_server.h"
 #include <KWayland/Server/buffer_interface.h>
 #include <KWayland/Server/display.h>
-#endif
 // kwin libs
 #include <kwinglplatform.h>
 // Qt
@@ -32,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-#if HAVE_WAYLAND
 typedef GLboolean(*eglBindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
 typedef GLboolean(*eglUnbindWaylandDisplayWL_func)(EGLDisplay dpy, wl_display *display);
 typedef GLboolean(*eglQueryWaylandBufferWL_func)(EGLDisplay dpy, struct wl_resource *buffer, EGLint attribute, EGLint *value);
@@ -49,7 +46,6 @@ eglQueryWaylandBufferWL_func eglQueryWaylandBufferWL = nullptr;
 #ifndef EGL_WAYLAND_Y_INVERTED_WL
 #define EGL_WAYLAND_Y_INVERTED_WL               0x31DB
 #endif
-#endif
 
 AbstractEglBackend::AbstractEglBackend()
     : OpenGLBackend()
@@ -60,11 +56,9 @@ AbstractEglBackend::~AbstractEglBackend() = default;
 
 void AbstractEglBackend::cleanup()
 {
-#if HAVE_WAYLAND
     if (eglUnbindWaylandDisplayWL && eglDisplay() != EGL_NO_DISPLAY) {
         eglUnbindWaylandDisplayWL(eglDisplay(), *(WaylandServer::self()->display()));
     }
-#endif
     cleanupGL();
     doneCurrent();
     eglDestroyContext(m_display, m_context);
@@ -133,7 +127,6 @@ void AbstractEglBackend::initBufferAge()
 
 void AbstractEglBackend::initWayland()
 {
-#if HAVE_WAYLAND
     if (!WaylandServer::self()) {
         return;
     }
@@ -148,7 +141,6 @@ void AbstractEglBackend::initWayland()
             waylandServer()->display()->setEglDisplay(eglDisplay());
         }
     }
-#endif
 }
 
 void AbstractEglBackend::initClientExtensions()
@@ -207,7 +199,6 @@ OpenGLBackend *AbstractEglTexture::backend()
 
 bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
 {
-#if HAVE_WAYLAND
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
         // try X11 loading
@@ -219,9 +210,6 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
     } else {
         return loadEglTexture(buffer);
     }
-#else
-    return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
-#endif
 }
 
 bool AbstractEglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
@@ -256,7 +244,6 @@ bool AbstractEglTexture::loadTexture(xcb_pixmap_t pix, const QSize &size)
 
 void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
-#if HAVE_WAYLAND
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
         return;
@@ -303,10 +290,8 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
         }
     }
     q->unbind();
-#endif
 }
 
-#if HAVE_WAYLAND
 bool AbstractEglTexture::loadShmTexture(const QPointer< KWayland::Server::BufferInterface > &buffer)
 {
     const QImage &image = buffer->data();
@@ -407,7 +392,6 @@ EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferI
     }
     return image;
 }
-#endif
 
 }
 

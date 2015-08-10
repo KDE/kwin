@@ -55,11 +55,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include "composite.h"
 #include "xcbutils.h"
-#if HAVE_WAYLAND
 #include "abstract_backend.h"
 #include "shell_client.h"
 #include "wayland_server.h"
-#endif
 
 #include "decorations/decorationbridge.h"
 #include <KDecoration2/DecorationSettings>
@@ -303,7 +301,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
     for (Unmanaged *u : ws->unmanagedList()) {
         setupUnmanagedConnections(u);
     }
-#if HAVE_WAYLAND
     if (auto w = waylandServer()) {
         connect(w, &WaylandServer::shellClientAdded, this,
             [this](ShellClient *c) {
@@ -314,7 +311,6 @@ EffectsHandlerImpl::EffectsHandlerImpl(Compositor *compositor, Scene *scene)
             }
         );
     }
-#endif
     reconfigure();
 }
 
@@ -585,14 +581,12 @@ void EffectsHandlerImpl::slotClientShown(KWin::Toplevel *t)
 
 void EffectsHandlerImpl::slotShellClientShown(Toplevel *t)
 {
-#if HAVE_WAYLAND
     ShellClient *c = static_cast<ShellClient*>(t);
     connect(c, &ShellClient::windowClosed, this, &EffectsHandlerImpl::slotWindowClosed);
     connect(c, &ShellClient::geometryShapeChanged, this, &EffectsHandlerImpl::slotGeometryShapeChanged);
     connect(c, static_cast<void (ShellClient::*)(KWin::AbstractClient*, MaximizeMode)>(&Client::clientMaximizedStateChanged),
             this, &EffectsHandlerImpl::slotClientMaximized);
     emit windowAdded(t->effectWindow());
-#endif
 }
 
 void EffectsHandlerImpl::slotUnmanagedShown(KWin::Toplevel *t)
@@ -705,11 +699,9 @@ void EffectsHandlerImpl::startMouseInterception(Effect *effect, Qt::CursorShape 
         return;
     }
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
-#if HAVE_WAYLAND
         if (AbstractBackend *w = waylandServer()->backend()) {
             w->installCursorImage(shape);
         }
-#endif
         return;
     }
     // NOTE: it is intended to not perform an XPointerGrab on X11. See documentation in kwineffects.h
@@ -1038,13 +1030,11 @@ EffectWindow* EffectsHandlerImpl::findWindow(WId id) const
         return w->effectWindow();
     if (Unmanaged* w = Workspace::self()->findUnmanaged(id))
         return w->effectWindow();
-#if HAVE_WAYLAND
     if (waylandServer()) {
         if (ShellClient *w = waylandServer()->findClient(id)) {
             return w->effectWindow();
         }
     }
-#endif
     return NULL;
 }
 
@@ -1212,13 +1202,11 @@ QSize EffectsHandlerImpl::virtualScreenSize() const
 void EffectsHandlerImpl::defineCursor(Qt::CursorShape shape)
 {
     if (!m_mouseInterceptionWindow.isValid()) {
-#if HAVE_WAYLAND
         if (waylandServer()) {
             if (AbstractBackend *w = waylandServer()->backend()) {
                 w->installCursorImage(shape);
             }
         }
-#endif
         return;
     }
     const xcb_cursor_t c = Cursor::x11Cursor(shape);
