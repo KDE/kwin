@@ -204,9 +204,7 @@ private:
     void setupWorkspace();
     QPointF m_globalPointer;
     QHash<uint32_t, PointerButtonState> m_pointerButtons;
-#if HAVE_XKB
     QScopedPointer<Xkb> m_xkb;
-#endif
     /**
      * @brief The Toplevel which currently receives pointer events
      */
@@ -236,7 +234,6 @@ private:
     friend InputRedirection *input();
 };
 
-#if HAVE_XKB
 class Xkb
 {
 public:
@@ -266,7 +263,6 @@ private:
     xkb_mod_index_t m_metaModifier;
     Qt::KeyboardModifiers m_modifiers;
 };
-#endif
 
 inline
 InputRedirection *input()
@@ -298,13 +294,11 @@ void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *a
     connect(action, &QAction::triggered, receiver, slot);
 }
 
-#if HAVE_XKB
 inline
 Qt::KeyboardModifiers Xkb::modifiers() const
 {
     return m_modifiers;
 }
-#endif
 
 } // namespace KWin
 

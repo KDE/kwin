@@ -11,7 +11,6 @@
 #cmakedefine01 HAVE_WAYLAND
 #cmakedefine01 HAVE_WAYLAND_EGL
 #cmakedefine01 HAVE_WAYLAND_CURSOR
-#cmakedefine01 HAVE_XKB
 #cmakedefine01 HAVE_INPUT
 #cmakedefine01 HAVE_X11_XCB
 #cmakedefine01 HAVE_DRM

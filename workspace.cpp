@@ -1375,12 +1375,6 @@ QString Workspace::supportInformation() const
 #else
     support.append(no);
 #endif
-    support.append(QStringLiteral("HAVE_XKB: "));
-#if HAVE_XKB
-    support.append(yes);
-#else
-    support.append(no);
-#endif
     support.append(QStringLiteral("HAVE_INPUT: "));
 #if HAVE_INPUT
     support.append(yes);

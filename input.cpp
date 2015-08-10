@@ -49,10 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QTemporaryFile>
 // KDE
 #include <kkeyserver.h>
-#if HAVE_XKB
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
-#endif
 // system
 #include <linux/input.h>
 #include <sys/mman.h>
@@ -61,7 +59,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace KWin
 {
 
-#if HAVE_XKB
 Xkb::Xkb(InputRedirection *input)
     : m_input(input)
     , m_context(xkb_context_new(static_cast<xkb_context_flags>(0)))
@@ -254,15 +251,11 @@ quint32 Xkb::getGroup()
     return xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
-#endif
-
 KWIN_SINGLETON_FACTORY(InputRedirection)
 
 InputRedirection::InputRedirection(QObject *parent)
     : QObject(parent)
-#if HAVE_XKB
     , m_xkb(new Xkb(this))
-#endif
     , m_pointerWindow()
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
@@ -343,7 +336,6 @@ void InputRedirection::setupWorkspace()
                 );
             }
         );
-#if HAVE_XKB
         connect(this, &InputRedirection::keyboardModifiersChanged, waylandServer(),
             [this] {
                 if (!waylandServer()->seat()) {
@@ -355,7 +347,6 @@ void InputRedirection::setupWorkspace()
                                                                  m_xkb->getGroup());
             }
         );
-#endif
     }
 #endif
 }
@@ -719,13 +710,11 @@ void InputRedirection::processPointerButton(uint32_t button, InputRedirection::P
         // an effect grabbed the pointer, we do not forward the event to surfaces
         return;
     }
-#if HAVE_XKB
     if (state == KWin::InputRedirection::PointerButtonPressed) {
         if (m_shortcuts->processPointerPressed(m_xkb->modifiers(), qtButtonStates())) {
             return;
         }
     }
-#endif
     if (m_pointerInternalWindow) {
         // send mouse move
         QMouseEvent event(buttonStateToEvent(state),
@@ -783,7 +772,6 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
         return;
     }
     emit pointerAxisChanged(axis, delta);
-#if HAVE_XKB
     if (m_xkb->modifiers() != Qt::NoModifier) {
         PointerAxisDirection direction = PointerAxisUp;
         if (axis == PointerAxisHorizontal) {
@@ -803,7 +791,6 @@ void InputRedirection::processPointerAxis(InputRedirection::PointerAxis axis, qr
             return;
         }
     }
-#endif
 
     auto sendWheelEvent = [this, delta, axis] (const QPoint targetPos, QObject *target) -> bool {
         const QPointF localPos = m_globalPointer - targetPos;
@@ -869,7 +856,6 @@ void InputRedirection::updateKeyboardWindow()
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
-#if HAVE_XKB
     const Qt::KeyboardModifiers oldMods = keyboardModifiers();
     m_xkb->updateKey(key, state);
     if (oldMods != keyboardModifiers()) {
@@ -917,7 +903,6 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
             return;
         }
     }
-#endif
 #if HAVE_WAYLAND
     if (auto seat = findSeat()) {
         seat->setTimestamp(time);
@@ -929,29 +914,17 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
 void InputRedirection::processKeyboardModifiers(uint32_t modsDepressed, uint32_t modsLatched, uint32_t modsLocked, uint32_t group)
 {
     // TODO: send to proper Client and also send when active Client changes
-#if HAVE_XKB
     Qt::KeyboardModifiers oldMods = keyboardModifiers();
     m_xkb->updateModifiers(modsDepressed, modsLatched, modsLocked, group);
     if (oldMods != keyboardModifiers()) {
         emit keyboardModifiersChanged(keyboardModifiers(), oldMods);
     }
-#else
-    Q_UNUSED(modsDepressed)
-    Q_UNUSED(modsLatched)
-    Q_UNUSED(modsLocked)
-    Q_UNUSED(group)
-#endif
 }
 
 void InputRedirection::processKeymapChange(int fd, uint32_t size)
 {
     // TODO: should we pass the keymap to our Clients? Or only to the currently active one and update
-#if HAVE_XKB
     m_xkb->installKeymap(fd, size);
-#else
-    Q_UNUSED(fd)
-    Q_UNUSED(size)
-#endif
 }
 
 void InputRedirection::processTouchDown(qint32 id, const QPointF &pos, quint32 time)
@@ -1206,11 +1179,7 @@ uint8_t InputRedirection::toXPointerButton(InputRedirection::PointerAxis axis, q
 
 Qt::KeyboardModifiers InputRedirection::keyboardModifiers() const
 {
-#if HAVE_XKB
     return m_xkb->modifiers();
-#else
-    return Qt::NoModifier;
-#endif
 }
 
 void InputRedirection::registerShortcut(const QKeySequence &shortcut, QAction *action)
