@@ -111,11 +111,10 @@ set_package_properties(KF5DocTools PROPERTIES
 add_feature_info("KF5DocTools" KF5DocTools_FOUND "Enable building documentation")
 
 find_package(KDecoration2 CONFIG REQUIRED)
-find_package(KF5Wayland CONFIG)
+find_package(KF5Wayland CONFIG REQUIRED)
 set_package_properties(KF5Wayland PROPERTIES
-                       TYPE OPTIONAL
+                       TYPE REQUIRED
                       )
-add_feature_info("KF5Wayland" KF5Wayland_FOUND "Required for Wayland Compositor Information Module")
 
 find_package(EGL)
 set_package_properties(EGL PROPERTIES
@@ -130,17 +129,15 @@ set_package_properties(epoxy PROPERTIES DESCRIPTION "libepoxy"
                        PURPOSE "OpenGL dispatch library"
                       )
 
-find_package(Wayland 1.2 COMPONENTS Egl Cursor)
+find_package(Wayland 1.2 REQUIRED COMPONENTS Egl Cursor)
 set_package_properties(Wayland PROPERTIES
-                       TYPE OPTIONAL
+                       TYPE REQUIRED
                        PURPOSE "Required for building KWin with Wayland support"
                       )
-add_feature_info("Wayland-Cursor" Wayland_Cursor_FOUND "Required for cursor support in Wayland backend of kwin_wayland")
-add_feature_info("Wayland-EGL" Wayland_Egl_FOUND "Required for building the Wayland EGL compositing backend in KWin")
 
 find_package(XKB 0.4.1)
 set_package_properties(XKB PROPERTIES
-                       TYPE OPTIONAL
+                       TYPE REQUIRED
                        PURPOSE "Required for building KWin with Wayland support"
                       )
 
@@ -257,30 +254,18 @@ if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif()
 
-if (XKB_FOUND)
-  include_directories(${XKB_INCLUDE_DIR})
-endif()
+include_directories(${XKB_INCLUDE_DIR})
 
 include_directories(${epoxy_INCLUDE_DIR})
 
 # for things that are also used by kwin libraries
 configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkwineffects/kwinconfig.h )
 # for kwin internal things
-if(XKB_FOUND AND KF5Wayland_FOUND)
-    set(HAVE_WAYLAND TRUE)
-    set(HAVE_XKB ${XKB_FOUND})
-    set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
-    set(HAVE_WAYLAND_CURSOR ${Wayland_Cursor_FOUND})
-    set(HAVE_X11_XCB ${X11_XCB_FOUND})
-else()
-    set(HAVE_WAYLAND FALSE)
-    set(HAVE_XKB FALSE)
-    set(HAVE_WAYLAND_EGL FALSE)
-    set(HAVE_WAYLAND_CURSOR FALSE)
-    set(HAVE_X11_XCB FALSE)
-    set(HAVE_DRM FALSE)
-    set(HAVE_GBM FALSE)
-endif()
+set(HAVE_WAYLAND TRUE)
+set(HAVE_XKB ${XKB_FOUND})
+set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
+set(HAVE_WAYLAND_CURSOR TRUE)
+set(HAVE_X11_XCB ${X11_XCB_FOUND})
 
 include(CheckIncludeFiles)
 check_include_files(unistd.h HAVE_UNISTD_H)
@@ -389,6 +374,11 @@ set(kwin_KDEINIT_SRCS
     decorations/decorations_logging.cpp
     abstract_egl_backend.cpp
     eglonxbackend.cpp
+    abstract_backend.cpp
+    virtual_terminal.cpp
+    shell_client.cpp
+    wayland_server.cpp
+    wayland_cursor_theme.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
@@ -410,22 +400,6 @@ if(KWIN_BUILD_ACTIVITIES)
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         activities.cpp
     )
-endif()
-
-if(HAVE_WAYLAND)
-    set(kwin_KDEINIT_SRCS
-            ${kwin_KDEINIT_SRCS}
-            abstract_backend.cpp
-            virtual_terminal.cpp
-            shell_client.cpp
-            wayland_server.cpp
-       )
-    if(HAVE_WAYLAND_CURSOR)
-        set(kwin_KDEINIT_SRCS
-                ${kwin_KDEINIT_SRCS}
-                wayland_cursor_theme.cpp
-            )
-    endif()
 endif()
 
 if(UDEV_FOUND)
@@ -516,12 +490,9 @@ set(kwin_WAYLAND_LIBS
     XKB::XKB
     KF5::WaylandClient
     KF5::WaylandServer
+    Wayland::Cursor
     ${CMAKE_THREAD_LIBS_INIT}
 )
-
-if(Wayland_Cursor_FOUND)
-    set(kwin_WAYLAND_LIBS ${kwin_WAYLAND_LIBS} Wayland::Cursor)
-endif()
 
 if(KWIN_BUILD_ACTIVITIES)
     set(kwin_KDE_LIBS ${kwin_KDE_LIBS} KF5::Activities)
@@ -533,11 +504,8 @@ set(kwinLibs
     ${kwin_KDE_LIBS}
     ${kwin_XLIB_LIBS}
     ${kwin_XCB_LIBS}
+    ${kwin_WAYLAND_LIBS}
 )
-
-if(HAVE_WAYLAND)
-    set(kwinLibs ${kwinLibs} ${kwin_WAYLAND_LIBS})
-endif()
 
 if(UDEV_FOUND)
     set(kwinLibs ${kwinLibs} ${UDEV_LIBS})
@@ -576,17 +544,15 @@ install(TARGETS kwin             ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELIN
 install(TARGETS kdeinit_kwin_x11 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install(TARGETS kwin_x11         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-if(HAVE_WAYLAND)
-    include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
-    include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
-    add_executable(kwin_wayland main_wayland.cpp)
-    target_link_libraries(kwin_wayland kwin)
+include_directories(${Qt5Core_PRIVATE_INCLUDE_DIRS})
+include_directories(${Qt5Gui_PRIVATE_INCLUDE_DIRS})
+add_executable(kwin_wayland main_wayland.cpp)
+target_link_libraries(kwin_wayland kwin)
 
-    install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwin_wayland         ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-    add_subdirectory(backends)
-    add_subdirectory(plugins)
-endif()
+add_subdirectory(backends)
+add_subdirectory(plugins)
 
 ########### install files ###############
 
