@@ -32,9 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/surface_interface.h>
 // Wayland
-#if HAVE_WAYLAND_CURSOR
 #include <wayland-cursor.h>
-#endif
 
 namespace KWin
 {
@@ -91,7 +89,6 @@ void AbstractBackend::installCursorImage(Qt::CursorShape shape)
 
 void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
 {
-#if HAVE_WAYLAND_CURSOR
     if (!m_cursorTheme) {
         // check whether we can create it
         if (waylandServer() && waylandServer()->internalShmPool()) {
@@ -112,9 +109,6 @@ void AbstractBackend::updateCursorImage(Qt::CursorShape shape)
     waylandServer()->internalClientConection()->flush();
     waylandServer()->dispatch();
     installThemeCursor(KWayland::Client::Buffer::getId(b), QPoint(cursor->hotspot_x, cursor->hotspot_y));
-#else
-    Q_UNUSED(shape)
-#endif
 }
 
 void AbstractBackend::installThemeCursor(quint32 id, const QPoint &hotspot)

@@ -26,9 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "scene_qpainter_wayland_backend.h"
 #include "screens_wayland.h"
 #include "wayland_server.h"
-#if HAVE_WAYLAND_CURSOR
 #include "wayland_cursor_theme.h"
-#endif
 #if HAVE_WAYLAND_EGL
 #include "egl_wayland_backend.h"
 #endif
@@ -56,9 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QMetaMethod>
 #include <QThread>
 // Wayland
-#if HAVE_WAYLAND_CURSOR
 #include <wayland-cursor.h>
-#endif
 
 namespace KWin
 {
@@ -74,9 +70,7 @@ WaylandSeat::WaylandSeat(wl_seat *seat, WaylandBackend *backend)
     , m_keyboard(NULL)
     , m_touch(nullptr)
     , m_cursor(NULL)
-#if HAVE_WAYLAND_CURSOR
     , m_theme(new WaylandCursorTheme(backend->shmPool(), this))
-#endif
     , m_enteredSerial(0)
     , m_backend(backend)
     , m_installCursor(false)
@@ -256,7 +250,6 @@ void WaylandSeat::installCursorImage(wl_buffer *image, const QSize &size, const 
 
 void WaylandSeat::installCursorImage(Qt::CursorShape shape)
 {
-#if HAVE_WAYLAND_CURSOR
     wl_cursor_image *image = m_theme->get(shape);
     if (!image) {
         return;
@@ -264,7 +257,6 @@ void WaylandSeat::installCursorImage(Qt::CursorShape shape)
     installCursorImage(wl_cursor_image_get_buffer(image),
                        QSize(image->width, image->height),
                        QPoint(image->hotspot_x, image->hotspot_y));
-#endif
 }
 
 void WaylandSeat::installCursorImage(const QImage &image, const QPoint &hotSpot)
@@ -281,9 +273,7 @@ void WaylandSeat::setInstallCursor(bool install)
 WaylandCursor::WaylandCursor(Surface *parentSurface, WaylandBackend *backend)
     : QObject(backend)
     , m_backend(backend)
-#if HAVE_WAYLAND_CURSOR
     , m_theme(new WaylandCursorTheme(backend->shmPool(), this))
-#endif
 {
     auto surface = backend->compositor()->createSurface(this);
     m_subSurface = backend->subCompositor()->createSubSurface(QPointer<Surface>(surface), QPointer<Surface>(parentSurface), this);
@@ -338,7 +328,6 @@ void WaylandCursor::setCursorImage(const QImage &image, const QPoint &hotspot)
 
 void WaylandCursor::setCursorImage(Qt::CursorShape shape)
 {
-#if HAVE_WAYLAND_CURSOR
     wl_cursor_image *image = m_theme->get(shape);
     if (!image) {
         return;
@@ -346,7 +335,6 @@ void WaylandCursor::setCursorImage(Qt::CursorShape shape)
     setCursorImage(wl_cursor_image_get_buffer(image),
                    QSize(image->width, image->height),
                    QPoint(image->hotspot_x, image->hotspot_y));
-#endif
 }
 
 WaylandBackend::WaylandBackend(QObject *parent)

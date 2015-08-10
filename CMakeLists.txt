@@ -263,7 +263,6 @@ configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib
 # for kwin internal things
 set(HAVE_WAYLAND TRUE)
 set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
-set(HAVE_WAYLAND_CURSOR TRUE)
 set(HAVE_X11_XCB ${X11_XCB_FOUND})
 
 include(CheckIncludeFiles)
