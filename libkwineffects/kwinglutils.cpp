@@ -91,7 +91,6 @@ void initGLX()
 
 void initEGL()
 {
-#ifdef KWIN_HAVE_EGL
     EGLDisplay dpy = eglGetCurrentDisplay();
     int major, minor;
     eglInitialize(dpy, &major, &minor);
@@ -99,7 +98,6 @@ void initEGL()
     const QByteArray string = eglQueryString(dpy, EGL_EXTENSIONS);
     eglExtensions = string.split(' ');
     eglResolveFunctions();
-#endif
 }
 
 void initGL(OpenGLPlatformInterface platformInterface)

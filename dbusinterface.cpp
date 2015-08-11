@@ -248,9 +248,7 @@ QStringList CompositorDBusInterface::supportedOpenGLPlatformInterfaces() const
     if (supportsGlx) {
         interfaces << QStringLiteral("glx");
     }
-#ifdef KWIN_HAVE_EGL
     interfaces << QStringLiteral("egl");
-#endif
     return interfaces;
 }
 

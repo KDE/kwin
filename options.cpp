@@ -767,11 +767,6 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
 #ifdef KWIN_HAVE_OPENGLES
     qCDebug(KWIN_CORE) << "Forcing EGL native interface as compiled against OpenGL ES";
     interface = EglPlatformInterface;
-#else
-#ifndef KWIN_HAVE_EGL
-    qCDebug(KWIN_CORE) << "Forcing GLX native interface as compiled without EGL support";
-    interface = GlxPlatformInterface;
-#endif
 #endif
 
     if (m_glPlatformInterface == interface) {

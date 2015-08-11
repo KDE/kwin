@@ -223,7 +223,6 @@ option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
 option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
-option(KWIN_BUILD_EGL "Enables building the EGL backend in KWin" ON)
 
 option(KWIN_BUILD_COVERAGE "Build KWin with gcov support" OFF)
 
@@ -267,8 +266,6 @@ if( KWIN_BUILD_XRENDER_COMPOSITING )
     set( KWIN_HAVE_XRENDER_COMPOSITING 1 )
 endif()
 
-set(KWIN_HAVE_EGL ${KWIN_BUILD_EGL})
-
 if (XKB_FOUND)
   include_directories(${XKB_INCLUDE_DIR})
 endif()
@@ -281,11 +278,7 @@ configure_file(libkwineffects/kwinconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/lib
 if(XKB_FOUND AND KF5Wayland_FOUND)
     set(HAVE_WAYLAND TRUE)
     set(HAVE_XKB ${XKB_FOUND})
-    if (KWIN_HAVE_EGL)
-        set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
-    else()
-        set(HAVE_WAYLAND_EGL FALSE)
-    endif()
+    set(HAVE_WAYLAND_EGL ${Wayland_Egl_FOUND})
     set(HAVE_WAYLAND_CURSOR ${Wayland_Cursor_FOUND})
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
 else()
@@ -295,10 +288,6 @@ else()
     set(HAVE_WAYLAND_CURSOR FALSE)
     set(HAVE_X11_XCB FALSE)
     set(HAVE_DRM FALSE)
-    set(HAVE_GBM FALSE)
-endif()
-
-if(NOT KWIN_HAVE_EGL)
     set(HAVE_GBM FALSE)
 endif()
 
@@ -407,6 +396,8 @@ set(kwin_KDEINIT_SRCS
     decorations/settings.cpp
     decorations/decorationrenderer.cpp
     decorations/decorations_logging.cpp
+    abstract_egl_backend.cpp
+    eglonxbackend.cpp
    )
 
 if(KWIN_BUILD_TABBOX)
@@ -428,10 +419,6 @@ if(KWIN_BUILD_ACTIVITIES)
         kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS}
         activities.cpp
     )
-endif()
-
-if(KWIN_HAVE_EGL)
-    set(kwin_KDEINIT_SRCS ${kwin_KDEINIT_SRCS} abstract_egl_backend.cpp eglonxbackend.cpp)
 endif()
 
 if(HAVE_WAYLAND)

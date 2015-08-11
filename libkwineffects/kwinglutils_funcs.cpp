@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 // Resolves given function, using getProcAddress
-#ifdef KWIN_HAVE_EGL
 #define GL_RESOLVE( function ) \
     if (platformInterface == GlxPlatformInterface) \
         function = (function ## _func)getProcAddress( #function ); \
@@ -38,13 +37,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } else if (platformInterface == EglPlatformInterface) { \
         function = (function ## _func)eglGetProcAddress( #symbolName ); \
     }
-#else
-// same without the switch to egl
-#define GL_RESOLVE( function ) function = (function ## _func)getProcAddress( #function );
-
-#define GL_RESOLVE_WITH_EXT( function, symbolName ) \
-    function = (function ## _func)getProcAddress( #symbolName );
-#endif
 
 namespace KWin
 {
@@ -82,11 +74,9 @@ void glxResolveFunctions()
 }
 #endif
 
-#ifdef KWIN_HAVE_EGL
 void eglResolveFunctions()
 {
 }
-#endif
 
 void glResolveFunctions(OpenGLPlatformInterface platformInterface)
 {

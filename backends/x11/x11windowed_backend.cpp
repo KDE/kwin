@@ -23,10 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
-#ifdef KWIN_HAVE_EGL
 #if HAVE_X11_XCB
 #include "eglonxbackend.h"
-#endif
 #endif
 #include <kwinxrenderutils.h>
 #include <QAbstractEventDispatcher>
@@ -327,10 +325,8 @@ Screens *X11WindowedBackend::createScreens(QObject *parent)
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
-#ifdef KWIN_HAVE_EGL
 #if HAVE_X11_XCB
     return  new EglOnXBackend(connection(), display(), rootWindow(), screenNumer(), window());
-#endif
 #endif
     return nullptr;
 }

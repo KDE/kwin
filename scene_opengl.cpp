@@ -27,9 +27,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "scene_opengl.h"
-#ifdef KWIN_HAVE_EGL
 #include "eglonxbackend.h"
-#endif // KWIN_HAVE_EGL
 #ifndef KWIN_HAVE_OPENGLES
 #include "glxbackend.h"
 #endif // KWIN_HAVE_OPENGLES
@@ -548,7 +546,6 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
 #endif
         break;
     case EglPlatformInterface:
-#ifdef KWIN_HAVE_EGL
 #if HAVE_WAYLAND
         if (kwinApp()->shouldUseWaylandForCompositing()) {
             backend = waylandServer()->backend()->createOpenGLBackend();
@@ -557,7 +554,6 @@ SceneOpenGL *SceneOpenGL::createScene(QObject *parent)
         {
             backend = new EglOnXBackend();
         }
-#endif // KWIN_HAVE_EGL
         break;
     default:
         // no backend available

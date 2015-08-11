@@ -25,9 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinconfig.h>
 #include <kwinglobals.h>
 
-#ifdef KWIN_HAVE_EGL
 #include <epoxy/egl.h>
-#endif
 
 #ifndef KWIN_HAVE_OPENGLES
 #include <epoxy/glx.h>
@@ -57,9 +55,7 @@ namespace KWin
 void KWINGLUTILS_EXPORT glxResolveFunctions();
 #endif
 
-#ifdef KWIN_HAVE_EGL
 void KWINGLUTILS_EXPORT eglResolveFunctions();
-#endif
 
 void KWINGLUTILS_EXPORT glResolveFunctions(OpenGLPlatformInterface platformInterface);
 
