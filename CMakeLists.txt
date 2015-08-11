@@ -222,7 +222,6 @@ option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_XRENDER_COMPOSITING "Enable building of KWin with XRender Compositing support" ON)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "KF5Activities_FOUND" OFF)
-option(KWIN_PLASMA_ACTIVE "Enable building KWin for Plasma Active." OFF)
 
 option(KWIN_BUILD_COVERAGE "Build KWin with gcov support" OFF)
 
@@ -236,14 +235,6 @@ set(KWIN_NAME "kwin")
 set(KWIN_INTERNAL_NAME_X11 "kwin_x11")
 set(KWIN_INTERNAL_NAME_WAYLAND "kwin_wayland")
 set(KWIN_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-
-if(KWIN_PLASMA_ACTIVE)
-    set(KWIN_BUILD_DECORATIONS OFF)
-    set(KWIN_BUILD_KCMS OFF)
-    set(KWIN_BUILD_XRENDER_COMPOSITING OFF)
-    set(KWIN_BUILD_WITH_OPENGLES ON)
-    set(KWIN_NAME "kwinactive")
-endif()
 
 set(KWIN_BUILD_OPENGL FALSE)
 set(KWIN_BUILD_OPENGLES FALSE)
