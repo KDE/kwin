@@ -208,7 +208,7 @@ add_feature_info("XCB-ICCCM" XCB_ICCCM_FOUND "Required for building test applica
 
 find_package(X11_XCB)
 set_package_properties(X11_XCB PROPERTIES
-                       PURPOSE "Required for OpenGL support in X11 windowed backend of kwin_wayland"
+                       PURPOSE "Required for building X11 windowed backend of kwin_wayland"
                        TYPE OPTIONAL)
 
 ########### configure tests ###############

@@ -6,10 +6,7 @@ set(X11BACKEND_SOURCES
 )
 
 add_library(KWinWaylandX11Backend MODULE ${X11BACKEND_SOURCES})
-target_link_libraries(KWinWaylandX11Backend kwin)
-if(X11_XCB_FOUND)
-    target_link_libraries(KWinWaylandX11Backend X11::XCB)
-endif()
+target_link_libraries(KWinWaylandX11Backend kwin X11::XCB)
 
 install(
     TARGETS

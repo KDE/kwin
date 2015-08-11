@@ -23,9 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "logging.h"
 #include "wayland_server.h"
 #include "xcbutils.h"
-#if HAVE_X11_XCB
 #include "eglonxbackend.h"
-#endif
 #include <kwinxrenderutils.h>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
@@ -36,9 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/surface_interface.h>
 // system
 #include <linux/input.h>
-#if HAVE_X11_XCB
 #include <X11/Xlib-xcb.h>
-#endif
 
 namespace KWin
 {
@@ -67,22 +63,16 @@ void X11WindowedBackend::init()
 {
     int screen = 0;
     xcb_connection_t *c = nullptr;
-#if HAVE_X11_XCB
     Display *xDisplay = XOpenDisplay(deviceIdentifier().constData());
     if (xDisplay) {
         c = XGetXCBConnection(xDisplay);
         XSetEventQueueOwner(xDisplay, XCBOwnsEventQueue);
         screen = XDefaultScreen(xDisplay);
     }
-#else
-    c = xcb_connect(deviceIdentifier().constData(), &screen);
-#endif
     if (c && !xcb_connection_has_error(c)) {
         m_connection = c;
         m_screenNumber = screen;
-#if HAVE_X11_XCB
         m_display = xDisplay;
-#endif
         for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
             it.rem;
             --screen, xcb_screen_next(&it)) {
@@ -325,10 +315,7 @@ Screens *X11WindowedBackend::createScreens(QObject *parent)
 
 OpenGLBackend *X11WindowedBackend::createOpenGLBackend()
 {
-#if HAVE_X11_XCB
     return  new EglOnXBackend(connection(), display(), rootWindow(), screenNumer(), window());
-#endif
-    return nullptr;
 }
 
 QPainterBackend *X11WindowedBackend::createQPainterBackend()
