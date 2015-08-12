@@ -63,6 +63,7 @@ FlipSwitchEffectConfig::FlipSwitchEffectConfig(QWidget* parent, const QVariantLi
     b->setText(i18n("Toggle Flip Switch (All desktops)"));
     KGlobalAccel::self()->setShortcut(b, QList<QKeySequence>());
 
+    m_actionCollection->setComponentDisplayName(i18n("KWin"));
     m_actionCollection->setConfigGroup(QStringLiteral("FlipSwitch"));
     m_actionCollection->setConfigGlobal(true);
 

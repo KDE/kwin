@@ -61,6 +61,7 @@ CubeEffectConfig::CubeEffectConfig(QWidget* parent, const QVariantList& args) :
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    m_actionCollection->setComponentDisplayName(i18n("KWin"));
 
     m_actionCollection->setConfigGroup(QStringLiteral("Cube"));
     m_actionCollection->setConfigGlobal(true);

@@ -58,6 +58,7 @@ PresentWindowsEffectConfig::PresentWindowsEffectConfig(QWidget* parent, const QV
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
+    m_actionCollection->setComponentDisplayName(i18n("KWin"));
     m_actionCollection->setConfigGroup(QStringLiteral("PresentWindows"));
     m_actionCollection->setConfigGlobal(true);
 
