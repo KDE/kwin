@@ -56,6 +56,7 @@ DecorationBridge::DecorationBridge(QObject *parent)
     , m_factory(nullptr)
     , m_blur(false)
     , m_settings()
+    , m_noPlugin(false)
 {
 }
 
@@ -69,6 +70,11 @@ static QString readPlugin()
     return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("library", s_defaultPlugin);
 }
 
+static bool readNoPlugin()
+{
+    return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("NoPlugin", false);
+}
+
 QString DecorationBridge::readTheme() const
 {
     return KSharedConfig::openConfig(KWIN_CONFIG)->group(s_pluginName).readEntry("theme", m_defaultTheme);
@@ -76,6 +82,10 @@ QString DecorationBridge::readTheme() const
 
 void DecorationBridge::init()
 {
+    m_noPlugin = readNoPlugin();
+    if (m_noPlugin) {
+        return;
+    }
     m_plugin = readPlugin();
     m_settings = QSharedPointer<KDecoration2::DecorationSettings>::create(this);
     initPlugin();
@@ -118,6 +128,23 @@ static void recreateDecorations()
 
 void DecorationBridge::reconfigure()
 {
+    if (m_noPlugin != readNoPlugin()) {
+        m_noPlugin = !m_noPlugin;
+        // no plugin setting changed
+        if (m_noPlugin) {
+            // decorations disabled now
+            m_plugin = QString();
+            delete m_factory;
+            m_factory = nullptr;
+            m_settings.clear();
+        } else {
+            // decorations enabled now
+            init();
+        }
+        recreateDecorations();
+        return;
+    }
+
     const QString newPlugin = readPlugin();
     if (newPlugin != m_plugin) {
         // plugin changed, recreate everything
@@ -200,6 +227,9 @@ void DecorationBridge::update(KDecoration2::Decoration *decoration, const QRect 
 
 KDecoration2::Decoration *DecorationBridge::createDecoration(Client *client)
 {
+    if (m_noPlugin) {
+        return nullptr;
+    }
     if (!m_factory) {
         return nullptr;
     }

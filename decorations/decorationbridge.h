@@ -78,6 +78,7 @@ private:
     QString m_defaultTheme;
     QString m_theme;
     QSharedPointer<KDecoration2::DecorationSettings> m_settings;
+    bool m_noPlugin;
     KWIN_SINGLETON(DecorationBridge)
 };
 } // Decoration
