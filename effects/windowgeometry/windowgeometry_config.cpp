@@ -51,6 +51,7 @@ WindowGeometryConfig::WindowGeometryConfig(QWidget* parent, const QVariantList& 
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     myActionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    myActionCollection->setComponentDisplayName(i18n("KWin"));
     QAction* a = myActionCollection->addAction(QStringLiteral("WindowGeometry"));
     a->setText(i18n("Toggle KWin composited geometry display"));
     a->setProperty("isConfigurationAction", true);

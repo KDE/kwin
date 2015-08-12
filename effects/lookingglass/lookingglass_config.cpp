@@ -64,6 +64,7 @@ LookingGlassEffectConfig::LookingGlassEffectConfig(QWidget* parent, const QVaria
     // Shortcut config. The shortcut belongs to the component "kwin"!
     m_actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
 
+    m_actionCollection->setComponentDisplayName(i18n("KWin"));
     m_actionCollection->setConfigGroup(QStringLiteral("LookingGlass"));
     m_actionCollection->setConfigGlobal(true);
 

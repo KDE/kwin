@@ -46,6 +46,7 @@ InvertEffectConfig::InvertEffectConfig(QWidget* parent, const QVariantList& args
 
     // Shortcut config. The shortcut belongs to the component "kwin"!
     KActionCollection *actionCollection = new KActionCollection(this, QStringLiteral("kwin"));
+    actionCollection->setComponentDisplayName(i18n("KWin"));
 
     QAction* a = actionCollection->addAction(QStringLiteral("Invert"));
     a->setText(i18n("Toggle Invert Effect"));
