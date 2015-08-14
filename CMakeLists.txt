@@ -211,6 +211,21 @@ set_package_properties(X11_XCB PROPERTIES
                        PURPOSE "Required for building X11 windowed backend of kwin_wayland"
                        TYPE OPTIONAL)
 
+# dependencies for QPA plugin
+find_package(Qt5PlatformSupport REQUIRED)
+find_package(Freetype REQUIRED)
+set_package_properties(Freetype PROPERTIES DESCRIPTION "A font rendering engine"
+                       URL "http://www.freetype.org"
+                       TYPE REQUIRED
+                       PURPOSE "Needed for KWin's QPA plugin."
+                      )
+find_package(Fontconfig REQUIRED)
+set_package_properties(Fontconfig PROPERTIES DESCRIPTION "Font access configuration library"
+                       URL "http://www.freedesktop.org/wiki/Software/fontconfig"
+                       TYPE REQUIRED
+                       PURPOSE "Needed for KWin's QPA plugin."
+                      )
+
 ########### configure tests ###############
 include(CMakeDependentOption)
 
