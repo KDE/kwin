@@ -274,9 +274,10 @@ void WaylandServer::createInternalConnection()
         [this] {
             Registry *registry = new Registry(m_internalConnection.client);
             registry->create(m_internalConnection.client);
+            m_internalConnection.registry = registry;
             connect(registry, &Registry::shmAnnounced, this,
-                [this, registry] (quint32 name, quint32 version) {
-                    m_internalConnection.shm = registry->createShmPool(name, version, m_internalConnection.client);
+                [this] (quint32 name, quint32 version) {
+                    m_internalConnection.shm = m_internalConnection.registry->createShmPool(name, version, m_internalConnection.client);
                 }
             );
             registry->setup();

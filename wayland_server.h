@@ -31,6 +31,7 @@ namespace KWayland
 namespace Client
 {
 class ConnectionThread;
+class Registry;
 class ShmPool;
 class Surface;
 }
@@ -131,6 +132,9 @@ public:
     KWayland::Client::ConnectionThread *internalClientConection() {
         return m_internalConnection.client;
     }
+    KWayland::Client::Registry *internalClientRegistry() {
+        return m_internalConnection.registry;
+    }
     void dispatch();
     quint32 createWindowId(KWayland::Server::SurfaceInterface *surface);
 
@@ -155,6 +159,7 @@ private:
     struct {
         KWayland::Server::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;
+        KWayland::Client::Registry *registry = nullptr;
         KWayland::Client::ShmPool *shm = nullptr;
 
     } m_internalConnection;
