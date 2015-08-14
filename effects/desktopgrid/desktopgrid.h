@@ -40,9 +40,16 @@ public:
     void windowInputMouseEvent(QMouseEvent* e);
     void setAddDesktopEnabled(bool enable);
     void setRemoveDesktopEnabled(bool enable);
+    bool isVisible() const;
+    void show();
+    void hide();
 Q_SIGNALS:
     void addDesktop();
     void removeDesktop();
+private:
+    bool m_visible;
+    QPoint m_pos;
+    bool m_posIsValid;
 };
 
 class DesktopGridEffect

@@ -278,8 +278,16 @@ void DesktopGridEffect::paintWindow(EffectWindow* w, int mask, QRegion region, W
         if (isUsingPresentWindows() && w == windowMove && wasWindowMove) {
             return; // will be painted on top of all other windows
         }
-        if (m_desktopButtonsViews.values().contains(w))
-            return; // will be painted on top of all other windows
+        for (QHash< DesktopButtonsView*, EffectWindow*>::const_iterator it = m_desktopButtonsViews.constBegin(),
+                    end = m_desktopButtonsViews.constEnd();
+                    it != end; ++it) {
+            if (it.value() == w) {
+                if (!activated && timeline.currentValue() < 0.05) {
+                    it.key()->hide();
+                }
+                return; // will be painted on top of all other windows
+            }
+        }
 
         qreal xScale = data.xScale();
         qreal yScale = data.yScale();
@@ -416,13 +424,6 @@ void DesktopGridEffect::slotWindowClosed(EffectWindow* w)
             }
         }
     }
-    for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
-            it != m_desktopButtonsViews.end(); ++it) {
-        if (it.value() && it.value() == w) {
-            w->refWindow();
-            break;
-        }
-    }
     effects->addRepaintFull();
 }
 
@@ -433,8 +434,7 @@ void DesktopGridEffect::slotWindowDeleted(EffectWindow* w)
     for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
             it != m_desktopButtonsViews.end(); ++it) {
         if (it.value() && it.value() == w) {
-            it.key()->deleteLater();
-            m_desktopButtonsViews.erase(it);
+            it.value() = nullptr;
             break;
         }
     }
@@ -1053,10 +1053,6 @@ void DesktopGridEffect::setActive(bool active)
             }
         }
         setHighlightedDesktop(effects->currentDesktop());   // Ensure selected desktop is highlighted
-        for (QHash< DesktopButtonsView*, EffectWindow*>::iterator it = m_desktopButtonsViews.begin();
-                it != m_desktopButtonsViews.end(); ++it) {
-            it.key()->hide();
-        }
     }
     effects->addRepaintFull();
 }
@@ -1134,14 +1130,12 @@ void DesktopGridEffect::setup()
         view->setAddDesktopEnabled(enableAdd);
         view->setRemoveDesktopEnabled(enableRemove);
         const QRect screenRect = effects->clientArea(FullScreenArea, i, 1);
+        view->show(); // pseudo show must happen before geometry changes
         view->setGeometry(screenRect.right() + 1 - view->width(),
                           screenRect.bottom() + 1 - view->height(),
                           view->width(), view->height());
-        view->show();
     }
     while (it != m_desktopButtonsViews.end()) {
-        if (*it && (*it)->isDeleted())
-            (*it)->unrefWindow();
         DesktopButtonsView *view = it.key();
         it = m_desktopButtonsViews.erase(it);
         view->deleteLater();
@@ -1402,6 +1396,8 @@ bool DesktopGridEffect::isRelevantWithPresentWindows(EffectWindow *w) const
 ************************************************/
 DesktopButtonsView::DesktopButtonsView(QWindow *parent)
     : QQuickView(parent)
+    , m_visible(false)
+    , m_posIsValid(false)
 {
     setFlags(Qt::X11BypassWindowManagerHint);
     setColor(Qt::transparent);
@@ -1438,6 +1434,31 @@ void DesktopButtonsView::setAddDesktopEnabled(bool enable)
 void DesktopButtonsView::setRemoveDesktopEnabled(bool enable)
 {
     rootContext()->setContextProperty(QStringLiteral("remove"), QVariant(enable));
+}
+
+bool DesktopButtonsView::isVisible() const
+{
+    return m_visible;
+}
+
+void DesktopButtonsView::show()
+{
+    if (!m_visible && m_posIsValid) {
+        setPosition(m_pos);
+        m_posIsValid = false;
+    }
+    m_visible = true;
+    QQuickView::show();
+}
+
+void DesktopButtonsView::hide()
+{
+    if (!m_posIsValid) {
+        m_pos = position();
+        m_posIsValid = true;
+        setPosition(-width(), -height());
+    }
+    m_visible = false;
 }
 
 } // namespace
