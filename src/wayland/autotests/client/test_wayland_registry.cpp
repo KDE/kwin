@@ -54,6 +54,7 @@ private Q_SLOTS:
     void testGlobalSyncThreaded();
     void testRemoval();
     void testDestroy();
+    void testAnnounceMultiple();
 
 private:
     KWayland::Server::Display *m_display;
@@ -121,7 +122,7 @@ void TestWaylandRegistry::testCreate()
     QVERIFY(!registry.isValid());
 }
 
-#define TEST_BIND(interface, signalName, bindMethod, destroyFunction) \
+#define TEST_BIND(iface, signalName, bindMethod, destroyFunction) \
     KWayland::Client::ConnectionThread connection; \
     QSignalSpy connectedSpy(&connection, SIGNAL(connected())); \
     connection.setSocketName(s_socketName); \
@@ -137,6 +138,10 @@ void TestWaylandRegistry::testCreate()
     QVERIFY(registry.isValid()); \
     /* created but not yet connected still results in no bind */ \
     QVERIFY(!registry.bindMethod(0, 0)); \
+    /* interface information should be empty */ \
+    QVERIFY(registry.interfaces(iface).isEmpty()); \
+    QCOMPARE(registry.interface(iface).name, 0u); \
+    QCOMPARE(registry.interface(iface).version, 0u); \
     \
     /* now lets register */ \
     QSignalSpy announced(&registry, signalName); \
@@ -146,9 +151,14 @@ void TestWaylandRegistry::testCreate()
     QVERIFY(announced.wait()); \
     const quint32 name = announced.first().first().value<quint32>(); \
     const quint32 version = announced.first().last().value<quint32>(); \
+    QCOMPARE(registry.interfaces(iface).count(), 1); \
+    QCOMPARE(registry.interfaces(iface).first().name, name); \
+    QCOMPARE(registry.interfaces(iface).first().version, version); \
+    QCOMPARE(registry.interface(iface).name, name); \
+    QCOMPARE(registry.interface(iface).version, version); \
     \
     /* registry should now about the interface now */ \
-    QVERIFY(registry.hasInterface(interface)); \
+    QVERIFY(registry.hasInterface(iface)); \
     QVERIFY(!registry.bindMethod(name+1, version)); \
     QVERIFY(registry.bindMethod(name, version+1)); \
     auto *c = registry.bindMethod(name, version); \
@@ -238,6 +248,14 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(registry.hasInterface(KWayland::Client::Registry::Interface::SubCompositor));
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::FullscreenShell));
 
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Compositor).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Seat).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Shell).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::Shm).isEmpty());
+    QVERIFY(!registry.interfaces(KWayland::Client::Registry::Interface::SubCompositor).isEmpty());
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::FullscreenShell).isEmpty());
+
     QSignalSpy seatRemovedSpy(&registry, SIGNAL(seatRemoved(quint32)));
     QVERIFY(seatRemovedSpy.isValid());
 
@@ -245,6 +263,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(seatRemovedSpy.wait());
     QCOMPARE(seatRemovedSpy.first().first(), seatAnnouncedSpy.first().first());
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Seat));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Seat).isEmpty());
 
     QSignalSpy shellRemovedSpy(&registry, SIGNAL(shellRemoved(quint32)));
     QVERIFY(shellRemovedSpy.isValid());
@@ -253,6 +272,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(shellRemovedSpy.wait());
     QCOMPARE(shellRemovedSpy.first().first(), shellAnnouncedSpy.first().first());
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Shell));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Shell).isEmpty());
 
     QSignalSpy outputRemovedSpy(&registry, SIGNAL(outputRemoved(quint32)));
     QVERIFY(outputRemovedSpy.isValid());
@@ -261,6 +281,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(outputRemovedSpy.wait());
     QCOMPARE(outputRemovedSpy.first().first(), outputAnnouncedSpy.first().first());
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Output));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Output).isEmpty());
 
     QSignalSpy compositorRemovedSpy(&registry, SIGNAL(compositorRemoved(quint32)));
     QVERIFY(compositorRemovedSpy.isValid());
@@ -269,6 +290,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(compositorRemovedSpy.wait());
     QCOMPARE(compositorRemovedSpy.first().first(), compositorAnnouncedSpy.first().first());
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::Compositor));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::Compositor).isEmpty());
 
     QSignalSpy subCompositorRemovedSpy(&registry, SIGNAL(subCompositorRemoved(quint32)));
     QVERIFY(subCompositorRemovedSpy.isValid());
@@ -277,6 +299,7 @@ void TestWaylandRegistry::testRemoval()
     QVERIFY(subCompositorRemovedSpy.wait());
     QCOMPARE(subCompositorRemovedSpy.first().first(), subCompositorAnnouncedSpy.first().first());
     QVERIFY(!registry.hasInterface(KWayland::Client::Registry::Interface::SubCompositor));
+    QVERIFY(registry.interfaces(KWayland::Client::Registry::Interface::SubCompositor).isEmpty());
 
     // cannot test shmRemoved as there is no functionality for it
 }
@@ -361,6 +384,65 @@ void TestWaylandRegistry::testGlobalSyncThreaded()
 
     thread.quit();
     thread.wait();
+}
+
+void TestWaylandRegistry::testAnnounceMultiple()
+{
+    using namespace KWayland::Client;
+    ConnectionThread connection;
+    connection.setSocketName(s_socketName);
+    QSignalSpy connectedSpy(&connection, &ConnectionThread::connected);
+    QVERIFY(connectedSpy.isValid());
+    connection.initConnection();
+    QVERIFY(connectedSpy.wait());
+    connect(QCoreApplication::eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, &connection,
+        [&connection] {
+            wl_display_flush(connection.display());
+        }
+    );
+
+    Registry registry;
+    QSignalSpy syncSpy(&registry, &Registry::interfacesAnnounced);
+    QVERIFY(syncSpy.isValid());
+    // Most simple case: don't even use the ConnectionThread,
+    // just its display.
+    registry.create(connection.display());
+    registry.setup();
+    QVERIFY(syncSpy.wait());
+    QCOMPARE(syncSpy.count(), 1);
+
+    // we should have one output now
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).count(), 1);
+
+    QSignalSpy outputAnnouncedSpy(&registry, &Registry::outputAnnounced);
+    QVERIFY(outputAnnouncedSpy.isValid());
+    m_display->createOutput()->create();
+    QVERIFY(outputAnnouncedSpy.wait());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).count(), 2);
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().name, outputAnnouncedSpy.first().first().value<quint32>());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().version, outputAnnouncedSpy.first().last().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).name, outputAnnouncedSpy.first().first().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).version, outputAnnouncedSpy.first().last().value<quint32>());
+
+    auto output = m_display->createOutput();
+    output->create();
+    QVERIFY(outputAnnouncedSpy.wait());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).count(), 3);
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().name, outputAnnouncedSpy.last().first().value<quint32>());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().version, outputAnnouncedSpy.last().last().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).name, outputAnnouncedSpy.last().first().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).version, outputAnnouncedSpy.last().last().value<quint32>());
+
+    QSignalSpy outputRemovedSpy(&registry, &Registry::outputRemoved);
+    QVERIFY(outputRemovedSpy.isValid());
+    delete output;
+    QVERIFY(outputRemovedSpy.wait());
+    QCOMPARE(outputRemovedSpy.first().first().value<quint32>(), outputAnnouncedSpy.last().first().value<quint32>());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).count(), 2);
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().name, outputAnnouncedSpy.first().first().value<quint32>());
+    QCOMPARE(registry.interfaces(Registry::Interface::Output).last().version, outputAnnouncedSpy.first().last().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).name, outputAnnouncedSpy.first().first().value<quint32>());
+    QCOMPARE(registry.interface(Registry::Interface::Output).version, outputAnnouncedSpy.first().last().value<quint32>());
 }
 
 QTEST_GUILESS_MAIN(TestWaylandRegistry)
