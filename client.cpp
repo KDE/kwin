@@ -413,6 +413,7 @@ void Client::createDecoration(const QRect& oldgeom)
         connect(m_decoration, &KDecoration2::Decoration::resizeOnlyBordersChanged, this, &Client::updateInputWindow);
         connect(m_decoration, &KDecoration2::Decoration::bordersChanged, this,
             [this]() {
+                updateFrameExtents();
                 GeometryUpdatesBlocker blocker(this);
                 // TODO: this is obviously idempotent
                 // calculateGravitation(true) would have to operate on the old border sizes
