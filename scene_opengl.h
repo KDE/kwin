@@ -77,6 +77,10 @@ public:
      **/
     Texture *createTexture();
 
+    OpenGLBackend *backend() const {
+        return m_backend;
+    }
+
 #ifndef KWIN_HAVE_OPENGLES
     /**
      * Copy a region of pixels from the current read to the current draw buffer
