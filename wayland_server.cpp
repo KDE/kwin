@@ -422,6 +422,22 @@ ShellClient *WaylandServer::findClient(SurfaceInterface *surface) const
     return nullptr;
 }
 
+ShellClient *WaylandServer::findClient(QWindow *w) const
+{
+    if (!w) {
+        return nullptr;
+    }
+    auto it = std::find_if(m_internalClients.constBegin(), m_internalClients.constEnd(),
+        [w] (const ShellClient *c) {
+            return c->internalWindow() == w;
+        }
+    );
+    if (it != m_internalClients.constEnd()) {
+        return *it;
+    }
+    return nullptr;
+}
+
 quint32 WaylandServer::createWindowId(SurfaceInterface *surface)
 {
     auto it = m_clientIds.constFind(surface->client());
