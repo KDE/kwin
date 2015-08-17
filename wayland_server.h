@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 
+class QThread;
 class QWindow;
 
 namespace KWayland
@@ -159,6 +160,7 @@ private:
     struct {
         KWayland::Server::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;
+        QThread *clientThread = nullptr;
         KWayland::Client::Registry *registry = nullptr;
         KWayland::Client::ShmPool *shm = nullptr;
 

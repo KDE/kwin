@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Client
 #include <KWayland/Client/connection_thread.h>
+#include <KWayland/Client/event_queue.h>
 #include <KWayland/Client/registry.h>
 #include <KWayland/Client/surface.h>
 // Server
@@ -43,6 +44,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/shell_interface.h>
 
 // Qt
+#include <QThread>
 #include <QWindow>
 
 // system
@@ -61,7 +63,14 @@ WaylandServer::WaylandServer(QObject *parent)
 {
 }
 
-WaylandServer::~WaylandServer() = default;
+WaylandServer::~WaylandServer()
+{
+    if (m_internalConnection.client) {
+        m_internalConnection.client->deleteLater();
+        m_internalConnection.clientThread->quit();
+        m_internalConnection.clientThread->wait();
+    }
+}
 
 void WaylandServer::init(const QByteArray &socketName)
 {
@@ -268,16 +277,23 @@ void WaylandServer::createInternalConnection()
     }
     m_internalConnection.server = m_display->createClient(sx[0]);
     using namespace KWayland::Client;
-    m_internalConnection.client = new ConnectionThread(this);
+    m_internalConnection.client = new ConnectionThread();
     m_internalConnection.client->setSocketFd(sx[1]);
+    m_internalConnection.clientThread = new QThread;
+    m_internalConnection.client->moveToThread(m_internalConnection.clientThread);
+    m_internalConnection.clientThread->start();
+
     connect(m_internalConnection.client, &ConnectionThread::connected, this,
         [this] {
-            Registry *registry = new Registry(m_internalConnection.client);
+            Registry *registry = new Registry(this);
+            EventQueue *eventQueue = new EventQueue(this);
+            eventQueue->setup(m_internalConnection.client);
+            registry->setEventQueue(eventQueue);
             registry->create(m_internalConnection.client);
             m_internalConnection.registry = registry;
             connect(registry, &Registry::shmAnnounced, this,
                 [this] (quint32 name, quint32 version) {
-                    m_internalConnection.shm = m_internalConnection.registry->createShmPool(name, version, m_internalConnection.client);
+                    m_internalConnection.shm = m_internalConnection.registry->createShmPool(name, version, this);
                 }
             );
             registry->setup();
