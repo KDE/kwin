@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define KWIN_ABSTRACT_EGL_BACKEND_H
 #include "scene_opengl.h"
 
+class QOpenGLFramebufferObject;
+
 namespace KWin
 {
 
@@ -94,6 +96,7 @@ private:
     bool loadShmTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     bool loadEglTexture(const QPointer<KWayland::Server::BufferInterface> &buffer);
     EGLImageKHR attach(const QPointer<KWayland::Server::BufferInterface> &buffer);
+    bool updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
     SceneOpenGL::Texture *q;
     AbstractEglBackend *m_backend;
     EGLImageKHR m_image;

@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <KDesktopFile>
 
+#include <QOpenGLFramebufferObject>
 #include <QWindow>
 
 using namespace KWayland::Server;
@@ -227,6 +228,19 @@ void ShellClient::addDamage(const QRegion &damage)
     markAsMapped();
     setDepth(m_shellSurface->surface()->buffer()->hasAlphaChannel() ? 32 : 24);
     Toplevel::addDamage(damage);
+}
+
+void ShellClient::setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo)
+{
+    if (fbo.isNull()) {
+        unmap();
+        return;
+    }
+    markAsMapped();
+    m_clientSize = fbo->size();
+    setGeometry(QRect(geom.topLeft(), m_clientSize));
+    Toplevel::setInternalFramebufferObject(fbo);
+    Toplevel::addDamage(QRegion(0, 0, width(), height()));
 }
 
 void ShellClient::markAsMapped()

@@ -130,6 +130,7 @@ void Toplevel::copyToDeleted(Toplevel* c)
     opaque_region = c->opaqueRegion();
     m_screen = c->m_screen;
     m_skipCloseAnimation = c->m_skipCloseAnimation;
+    m_internalFBO = c->m_internalFBO;
 }
 
 // before being deleted, remove references to everything that's now
@@ -505,6 +506,15 @@ QRegion Toplevel::inputShape() const
         // TODO: maybe also for X11?
         return QRegion();
     }
+}
+
+void Toplevel::setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo)
+{
+    if (m_internalFBO != fbo) {
+        discardWindowPixmap();
+        m_internalFBO = fbo;
+    }
+    setDepth(32);
 }
 
 } // namespace

@@ -96,6 +96,8 @@ public:
     void resizeWithChecks(int w, int h, ForceGeometry_t force = NormalGeometrySet) override;
     bool hasStrut() const override;
 
+    void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo) override;
+
     quint32 windowId() const {
         return m_windowId;
     }

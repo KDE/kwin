@@ -950,7 +950,7 @@ void WindowPixmap::create()
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         // use Buffer
         updateBuffer();
-        if (m_buffer) {
+        if (m_buffer || !m_fbo.isNull()) {
             m_window->unreferencePreviousPixmap();
         }
         return;
@@ -987,7 +987,7 @@ void WindowPixmap::create()
 bool WindowPixmap::isValid() const
 {
     if (kwinApp()->shouldUseWaylandForCompositing()) {
-        return !m_buffer.isNull();
+        return !m_buffer.isNull() || !m_fbo.isNull();
     }
     return m_pixmap != XCB_PIXMAP_NONE;
 }
@@ -1004,6 +1004,12 @@ void WindowPixmap::updateBuffer()
             m_buffer = b;
             m_buffer->ref();
             QObject::connect(m_buffer.data(), &BufferInterface::aboutToBeDestroyed, m_buffer.data(), &BufferInterface::unref);
+        } else {
+            // might be an internal window
+            const auto &fbo = toplevel()->internalFramebufferObject();
+            if (!fbo.isNull()) {
+                m_fbo = fbo;
+            }
         }
     }
 }

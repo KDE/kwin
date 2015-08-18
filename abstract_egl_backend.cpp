@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <kwinglplatform.h>
 // Qt
 #include <QOpenGLContext>
+#include <QOpenGLFramebufferObject>
 
 namespace KWin
 {
@@ -201,6 +202,9 @@ bool AbstractEglTexture::loadTexture(WindowPixmap *pixmap)
 {
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
+        if (updateFromFBO(pixmap->fbo())) {
+            return true;
+        }
         // try X11 loading
         return loadTexture(pixmap->pixmap(), pixmap->toplevel()->size());
     }
@@ -246,6 +250,13 @@ void AbstractEglTexture::updateTexture(WindowPixmap *pixmap)
 {
     const auto &buffer = pixmap->buffer();
     if (buffer.isNull()) {
+        const auto &fbo = pixmap->fbo();
+        if (!fbo.isNull()) {
+            if (m_texture != fbo->texture()) {
+                updateFromFBO(fbo);
+            }
+            return;
+        }
         return;
     }
     if (!buffer->shmBuffer()) {
@@ -391,6 +402,20 @@ EGLImageKHR AbstractEglTexture::attach(const QPointer< KWayland::Server::BufferI
         q->setYInverted(yInverted);
     }
     return image;
+}
+
+bool AbstractEglTexture::updateFromFBO(const QSharedPointer<QOpenGLFramebufferObject> &fbo)
+{
+    if (fbo.isNull()) {
+        return false;
+    }
+    m_texture = fbo->texture();
+    m_size = fbo->size();
+    q->setWrapMode(GL_CLAMP_TO_EDGE);
+    q->setFilter(GL_LINEAR);
+    q->setYInverted(false);
+    updateMatrix();
+    return true;
 }
 
 }

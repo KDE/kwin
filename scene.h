@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QElapsedTimer>
 
+class QOpenGLFramebufferObject;
+
 namespace KWayland
 {
 namespace Server
@@ -355,6 +357,7 @@ public:
      * @return The Wayland BufferInterface for this WindowPixmap.
      **/
     QPointer<KWayland::Server::BufferInterface> buffer() const;
+    const QSharedPointer<QOpenGLFramebufferObject> &fbo() const;
     /**
      * @brief Whether this WindowPixmap is considered as discarded. This means the window has changed in a way that a new
      * WindowPixmap should have been created already.
@@ -405,6 +408,7 @@ private:
     bool m_discarded;
     QRect m_contentsRect;
     QPointer<KWayland::Server::BufferInterface> m_buffer;
+    QSharedPointer<QOpenGLFramebufferObject> m_fbo;
 };
 
 class Scene::EffectFrame
@@ -512,6 +516,12 @@ inline
 QPointer<KWayland::Server::BufferInterface> WindowPixmap::buffer() const
 {
     return m_buffer;
+}
+
+inline
+const QSharedPointer<QOpenGLFramebufferObject> &WindowPixmap::fbo() const
+{
+    return m_fbo;
 }
 
 template <typename T>

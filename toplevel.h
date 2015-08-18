@@ -41,6 +41,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // c++
 #include <functional>
 
+class QOpenGLFramebufferObject;
+
 namespace KWayland
 {
 namespace Server
@@ -356,6 +358,9 @@ public:
     KWayland::Server::SurfaceInterface *surface() const;
     void setSurface(KWayland::Server::SurfaceInterface *surface);
 
+    virtual void setInternalFramebufferObject(const QSharedPointer<QOpenGLFramebufferObject> &fbo);
+    const QSharedPointer<QOpenGLFramebufferObject> &internalFramebufferObject() const;
+
     /**
      * @brief Finds the Toplevel matching the condition expressed in @p func in @p list.
      *
@@ -495,6 +500,10 @@ private:
     bool m_skipCloseAnimation;
     quint32 m_surfaceId = 0;
     KWayland::Server::SurfaceInterface *m_surface = nullptr;
+    /**
+     * An FBO object KWin internal windows might render to.
+     **/
+    QSharedPointer<QOpenGLFramebufferObject> m_internalFBO;
     // when adding new data members, check also copyToDeleted()
 };
 
@@ -729,6 +738,11 @@ inline quint32 Toplevel::surfaceId() const
 inline KWayland::Server::SurfaceInterface *Toplevel::surface() const
 {
     return m_surface;
+}
+
+inline const QSharedPointer<QOpenGLFramebufferObject> &Toplevel::internalFramebufferObject() const
+{
+    return m_internalFBO;
 }
 
 template <class T, class U>
