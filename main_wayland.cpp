@@ -255,16 +255,6 @@ bool ApplicationWayland::notify(QObject *o, QEvent *e)
             // as it waits for the callback of the last frame
             waylandServer()->dispatch();
         }
-        if (e->type() == QEvent::Show) {
-            // on QtWayland windows with X11BypassWindowManagerHint are not shown, thus we need to remove it
-            // as the flag is interpreted only before the PlatformWindow is created we need to destroy the window first
-            if (w->flags() & Qt::X11BypassWindowManagerHint) {
-                w->setFlags(w->flags() & ~Qt::X11BypassWindowManagerHint);
-                w->destroy();
-                w->show();
-                return false;
-            }
-        }
     }
     return Application::notify(o, e);
 }
