@@ -113,7 +113,7 @@ void WaylandServer::init(const QByteArray &socketName)
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
             }
-            if (surface->client() == m_qtConnection) {
+            if (surface->client() == m_internalConnection.server) {
                 // one of Qt's windows
                 if (m_dummyWindowSurface && (m_dummyWindowSurface->id() == surface->surface()->id())) {
                     fakeDummyQtWindowInput();
@@ -124,7 +124,7 @@ void WaylandServer::init(const QByteArray &socketName)
                 auto s = surface->surface();
                 connect(s, &SurfaceInterface::damaged, this, [this, s] {
                     s->frameRendered(0);
-                    m_qtConnection->flush();
+                    m_internalConnection.client->flush();
                 });
             }
             auto client = new ShellClient(surface);
@@ -257,17 +257,6 @@ int WaylandServer::createInputMethodConnection()
     return sx[1];
 }
 
-int WaylandServer::createQtConnection()
-{
-    int sx[2];
-    if (socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) < 0) {
-        qCWarning(KWIN_CORE) << "Could not create socket";
-        return -1;
-    }
-    m_qtConnection = m_display->createClient(sx[0]);
-    return sx[1];
-}
-
 void WaylandServer::createInternalConnection()
 {
     int sx[2];
@@ -337,7 +326,7 @@ void WaylandServer::fakeDummyQtWindowInput()
     // we need to fake Qt into believing it has got any seat events
     // this is done only when receiving either a key press or button.
     // we simulate by sending a button press and release
-    auto surface = KWayland::Server::SurfaceInterface::get(m_dummyWindowSurface->id(), m_qtConnection);
+    auto surface = KWayland::Server::SurfaceInterface::get(m_dummyWindowSurface->id(), m_internalConnection.server);
     if (!surface) {
         return;
     }
@@ -347,7 +336,7 @@ void WaylandServer::fakeDummyQtWindowInput()
     m_seat->setPointerPos(QPointF(0, 0));
     m_seat->pointerButtonPressed(Qt::LeftButton);
     m_seat->pointerButtonReleased(Qt::LeftButton);
-    m_qtConnection->flush();
+    m_internalConnection.server->flush();
     m_dummyWindow->hide();
     m_seat->setFocusedPointerSurface(oldSeatSurface, oldPos);
 }
@@ -357,13 +346,8 @@ void WaylandServer::dispatch()
     if (!m_display) {
         return;
     }
-    if (!m_qtClientConnection) {
-        if (m_qtConnection && QGuiApplication::instance()) {
-            m_qtClientConnection = KWayland::Client::ConnectionThread::fromApplication(this);
-        }
-    }
-    if (m_qtClientConnection) {
-        m_qtClientConnection->flush();
+    if (m_internalConnection.server) {
+        m_internalConnection.server->flush();
     }
     m_display->dispatchEvents(0);
 }

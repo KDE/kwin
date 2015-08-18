@@ -108,19 +108,12 @@ public:
      **/
     int createInputMethodConnection();
 
-    /**
-     * @returns file descriptor for QtWayland
-     **/
-    int createQtConnection();
     void createInternalConnection();
     void createDummyQtWindow();
     void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
         return m_xwaylandConnection;
-    }
-    KWayland::Server::ClientConnection *qtConnection() const {
-        return m_qtConnection;
     }
     KWayland::Server::ClientConnection *inputMethodConnection() const {
         return m_inputMethodServerConnection;
@@ -156,8 +149,6 @@ private:
     KWayland::Server::QtSurfaceExtensionInterface *m_qtExtendedSurface = nullptr;
     KWayland::Server::ClientConnection *m_xwaylandConnection = nullptr;
     KWayland::Server::ClientConnection *m_inputMethodServerConnection = nullptr;
-    KWayland::Server::ClientConnection *m_qtConnection = nullptr;
-    KWayland::Client::ConnectionThread *m_qtClientConnection = nullptr;
     struct {
         KWayland::Server::ClientConnection *server = nullptr;
         KWayland::Client::ConnectionThread *client = nullptr;

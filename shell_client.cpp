@@ -514,7 +514,7 @@ void ShellClient::createWindowId()
 
 void ShellClient::findInternalWindow()
 {
-    if (m_shellSurface->client() != waylandServer()->qtConnection()) {
+    if (m_shellSurface->client() != waylandServer()->internalConnection()) {
         return;
     }
     const QWindowList windows = kwinApp()->topLevelWindows();
@@ -550,8 +550,7 @@ void ShellClient::updateInternalWindowGeometry()
 
 bool ShellClient::isInternal() const
 {
-    return m_shellSurface->client() == waylandServer()->internalConnection() ||
-           m_shellSurface->client() == waylandServer()->qtConnection();
+    return m_shellSurface->client() == waylandServer()->internalConnection();
 }
 
 xcb_window_t ShellClient::window() const
