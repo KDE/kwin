@@ -34,12 +34,12 @@ public:
     EGLDisplay eglDisplay() const {
         return m_display;
     }
-
-protected:
-    AbstractEglBackend();
     EGLContext context() const {
         return m_context;
     }
+
+protected:
+    AbstractEglBackend();
     EGLSurface surface() const {
         return m_surface;
     }

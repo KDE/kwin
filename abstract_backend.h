@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef KWIN_ABSTRACT_BACKEND_H
 #define KWIN_ABSTRACT_BACKEND_H
 #include <kwin_export.h>
+#include <epoxy/egl.h>
+#include <fixx11h.h>
 #include <QImage>
 #include <QObject>
 
@@ -44,6 +46,14 @@ public:
     virtual OpenGLBackend *createOpenGLBackend();
     virtual QPainterBackend *createQPainterBackend();
     virtual void warpPointer(const QPointF &globalPos);
+    /**
+     * The EGLDisplay used by the compositing scene.
+     **/
+    virtual EGLDisplay sceneEglDisplay() const;
+    /**
+     * The EGLContext used by the compositing scene.
+     **/
+    virtual EGLContext sceneEglContext() const;
 
     bool usesSoftwareCursor() const {
         return m_softWareCursor;

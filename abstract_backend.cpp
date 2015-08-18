@@ -19,9 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *********************************************************************/
 #include "abstract_backend.h"
 #include <config-kwin.h>
+#include "abstract_egl_backend.h"
 #include "composite.h"
 #include "cursor.h"
 #include "input.h"
+#include "scene_opengl.h"
 #include "wayland_server.h"
 #include "wayland_cursor_theme.h"
 // KWayland
@@ -301,6 +303,26 @@ void AbstractBackend::setReady(bool ready)
 void AbstractBackend::warpPointer(const QPointF &globalPos)
 {
     Q_UNUSED(globalPos)
+}
+
+EGLDisplay AbstractBackend::sceneEglDisplay() const
+{
+    if (Compositor *c = Compositor::self()) {
+        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
+            return static_cast<AbstractEglBackend*>(s->backend())->eglDisplay();
+        }
+    }
+    return EGL_NO_DISPLAY;
+}
+
+EGLContext AbstractBackend::sceneEglContext() const
+{
+    if (Compositor *c = Compositor::self()) {
+        if (SceneOpenGL *s = dynamic_cast<SceneOpenGL*>(c->scene())) {
+            return static_cast<AbstractEglBackend*>(s->backend())->context();
+        }
+    }
+    return EGL_NO_CONTEXT;
 }
 
 }
