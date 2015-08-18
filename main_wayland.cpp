@@ -201,29 +201,12 @@ void ApplicationWayland::continueStartupWithX()
         }
     }
 
-    // HACK: create a QWindow in a thread to force QtWayland to create the client buffer integration
-    // this performs an eglInitialize which would block as it does a roundtrip to the Wayland server
-    // in the main thread. By moving into a thread we get the initialize without hitting the problem
-    // This needs to be done before creating the Workspace as from inside Workspace the dangerous code
-    // gets hit in the main thread
-    QFutureWatcher<void> *eglInitWatcher = new QFutureWatcher<void>(this);
-    connect(eglInitWatcher, &QFutureWatcher<void>::finished, this,
-        [this, eglInitWatcher] {
-            eglInitWatcher->deleteLater();
+    createWorkspace();
 
-            createWorkspace();
+    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
-            Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
-            notifyKSplash();
-            waylandServer()->createDummyQtWindow();
-        }
-    );
-    eglInitWatcher->setFuture(QtConcurrent::run([] {
-        QWindow w;
-        w.setSurfaceType(QSurface::RasterGLSurface);
-        w.create();
-    }));
+    notifyKSplash();
+    waylandServer()->createDummyQtWindow();
 }
 
 void ApplicationWayland::createX11Connection()
