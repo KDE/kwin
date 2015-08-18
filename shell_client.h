@@ -35,7 +35,7 @@ class QtExtendedSurfaceInterface;
 namespace KWin
 {
 
-class ShellClient : public AbstractClient
+class KWIN_EXPORT ShellClient : public AbstractClient
 {
     Q_OBJECT
 public:
