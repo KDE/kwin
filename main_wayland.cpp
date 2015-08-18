@@ -449,8 +449,8 @@ int main(int argc, char * argv[])
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
     environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());
 
-    // enforce wayland plugin, unfortunately command line switch has precedence
-    setenv("QT_QPA_PLATFORM", "wayland", true);
+    // enforce our internal qpa plugin, unfortunately command line switch has precedence
+    setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 #if (QT_VERSION < QT_VERSION_CHECK(5, 4, 2))
     // TODO: remove warning once we depend on Qt 5.5
     qWarning() << "QtWayland 5.4.2 required, application might freeze if not present!";
