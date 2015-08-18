@@ -305,6 +305,11 @@ void AbstractBackend::warpPointer(const QPointF &globalPos)
     Q_UNUSED(globalPos)
 }
 
+bool AbstractBackend::supportsQpaContext() const
+{
+    return hasGLExtension(QByteArrayLiteral("EGL_KHR_surfaceless_context"));
+}
+
 EGLDisplay AbstractBackend::sceneEglDisplay() const
 {
     if (Compositor *c = Compositor::self()) {

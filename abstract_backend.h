@@ -47,6 +47,11 @@ public:
     virtual QPainterBackend *createQPainterBackend();
     virtual void warpPointer(const QPointF &globalPos);
     /**
+     * Whether our Compositing EGL display allows a surface less context
+     * so that a sharing context could be created.
+     **/
+    virtual bool supportsQpaContext() const;
+    /**
      * The EGLDisplay used by the compositing scene.
      **/
     virtual EGLDisplay sceneEglDisplay() const;
