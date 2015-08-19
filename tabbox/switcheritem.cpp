@@ -43,7 +43,6 @@ SwitcherItem::SwitcherItem(QObject *parent)
         }
     });
     connect(screens(), &Screens::changed, this, &SwitcherItem::screenGeometryChanged);
-    connect(screens(), &Screens::currentChanged, this, &SwitcherItem::screenGeometryChanged);
 }
 
 SwitcherItem::~SwitcherItem()
@@ -71,6 +70,8 @@ void SwitcherItem::setVisible(bool visible)
     if (m_visible == visible) {
         return;
     }
+    if (visible)
+        emit screenGeometryChanged();
     m_visible = visible;
     emit visibleChanged();
 }
