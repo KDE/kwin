@@ -143,7 +143,7 @@ void TestWaylandRegistry::testCreate()
     QCOMPARE(registry.interface(iface).name, 0u); \
     QCOMPARE(registry.interface(iface).version, 0u); \
     \
-    /* now lets register */ \
+    /* now let's register */ \
     QSignalSpy announced(&registry, signalName); \
     QVERIFY(announced.isValid()); \
     registry.setup(); \
@@ -157,7 +157,7 @@ void TestWaylandRegistry::testCreate()
     QCOMPARE(registry.interface(iface).name, name); \
     QCOMPARE(registry.interface(iface).version, version); \
     \
-    /* registry should now about the interface now */ \
+    /* registry should know about the interface now */ \
     QVERIFY(registry.hasInterface(iface)); \
     QVERIFY(!registry.bindMethod(name+1, version)); \
     QVERIFY(registry.bindMethod(name, version+1)); \
