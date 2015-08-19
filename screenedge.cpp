@@ -1077,9 +1077,11 @@ void ScreenEdges::unreserve(ElectricBorder border, QObject *object)
 
 void ScreenEdges::reserve(Client *client, ElectricBorder border)
 {
+    bool hadBorder = false;
     auto it = m_edges.begin();
     while (it != m_edges.end()) {
         if ((*it)->client() == client) {
+            hadBorder = true;
             if ((*it)->border() == border) {
                 if (client->isHiddenInternal() && !(*it)->isReserved()) {
                     (*it)->reserve();
@@ -1093,9 +1095,15 @@ void ScreenEdges::reserve(Client *client, ElectricBorder border)
             it++;
         }
     }
-    createEdgeForClient(client, border);
 
-    connect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged);
+    if (border != ElectricNone) {
+        connect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged, Qt::UniqueConnection);
+        createEdgeForClient(client, border);
+    } else {
+        disconnect(client, &Client::geometryChanged, this, &ScreenEdges::handleClientGeometryChanged);
+        if (hadBorder) // show again
+            client->showOnScreenEdge();
+    }
 }
 
 void ScreenEdges::createEdgeForClient(Client *client, ElectricBorder border)
