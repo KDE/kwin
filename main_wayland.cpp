@@ -431,7 +431,6 @@ int main(int argc, char * argv[])
 
     qunsetenv("QT_DEVICE_PIXEL_RATIO");
     qunsetenv("QT_IM_MODULE");
-    qputenv("QT_WAYLAND_DISABLE_WINDOWDECORATION", "1");
     qputenv("QSG_RENDER_LOOP", "basic");
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
