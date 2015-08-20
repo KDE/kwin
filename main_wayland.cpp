@@ -228,19 +228,6 @@ void ApplicationWayland::createX11Connection()
     setX11RootWindow(defaultScreen()->root);
 }
 
-bool ApplicationWayland::notify(QObject *o, QEvent *e)
-{
-    if (QWindow *w = qobject_cast< QWindow* >(o)) {
-        if (e->type() == QEvent::Expose) {
-            // ensure all Wayland events both on client and server side are dispatched
-            // otherwise it is possible that Qt starts rendering and blocks the main gui thread
-            // as it waits for the callback of the last frame
-            waylandServer()->dispatch();
-        }
-    }
-    return Application::notify(o, e);
-}
-
 void ApplicationWayland::startXwaylandServer()
 {
     int pipeFds[2];
