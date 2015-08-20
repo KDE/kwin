@@ -34,11 +34,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KPluginMetaData>
 // Qt
 #include <qplatformdefs.h>
+#include <QAbstractEventDispatcher>
 #include <QCommandLineParser>
 #include <QtConcurrentRun>
 #include <QFile>
 #include <QFutureWatcher>
-#include <qpa/qwindowsysteminterface.h>
 #include <QProcess>
 #include <QSocketNotifier>
 #include <QThread>
@@ -316,25 +316,6 @@ static void readDisplay(int pipe)
     close(pipe);
 }
 
-EventDispatcher::EventDispatcher(QObject *parent)
-    : QEventDispatcherUNIX(parent)
-{
-}
-
-EventDispatcher::~EventDispatcher() = default;
-
-bool EventDispatcher::processEvents(QEventLoop::ProcessEventsFlags flags)
-{
-    waylandServer()->dispatch();
-    const bool didSendEvents = QEventDispatcherUNIX::processEvents(flags);
-    return QWindowSystemInterface::sendWindowSystemEvents(flags) || didSendEvents;
-}
-
-bool EventDispatcher::hasPendingEvents()
-{
-    return QEventDispatcherUNIX::hasPendingEvents() || QWindowSystemInterface::windowSystemEventsQueued();
-}
-
 static const QString s_waylandPlugin = QStringLiteral("KWinWaylandWaylandBackend");
 static const QString s_x11Plugin = QStringLiteral("KWinWaylandX11Backend");
 static const QString s_fbdevPlugin = QStringLiteral("KWinWaylandFbdevBackend");
@@ -368,10 +349,6 @@ static QString automaticBackendSelection()
 
 int main(int argc, char * argv[])
 {
-    // set our own event dispatcher to be able to dispatch events before the event loop is started
-    QAbstractEventDispatcher *eventDispatcher = new KWin::EventDispatcher();
-    QCoreApplication::setEventDispatcher(eventDispatcher);
-
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
 

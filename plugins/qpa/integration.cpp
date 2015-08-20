@@ -43,6 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/private/qeventdispatcher_unix_p.h>
 #include <QtPlatformSupport/private/qgenericunixfontdatabase_p.h>
 #include <QtPlatformSupport/private/qgenericunixthemes_p.h>
+#include <QtPlatformSupport/private/qunixeventdispatcher_qpa_p.h>
 
 namespace KWin
 {
@@ -90,8 +91,7 @@ void Integration::initialize()
 
 QAbstractEventDispatcher *Integration::createEventDispatcher() const
 {
-    // TODO: add our own event dispatcher
-    return new QEventDispatcherUNIX;
+    return new QUnixEventDispatcherQPA;
 }
 
 QPlatformBackingStore *Integration::createPlatformBackingStore(QWindow *window) const
