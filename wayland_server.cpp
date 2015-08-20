@@ -113,16 +113,6 @@ void WaylandServer::init(const QByteArray &socketName)
                 // skip Xwayland clients, those are created using standard X11 way
                 return;
             }
-            if (surface->client() == m_internalConnection.server) {
-                // one of Qt's windows
-                // HACK: in order to get Qt to not block for frame rendered, we immediatelly emit the
-                // frameRendered once we get a new damage event.
-                auto s = surface->surface();
-                connect(s, &SurfaceInterface::damaged, this, [this, s] {
-                    s->frameRendered(0);
-                    m_internalConnection.client->flush();
-                });
-            }
             auto client = new ShellClient(surface);
             if (auto c = Compositor::self()) {
                 connect(client, &Toplevel::needsRepaint, c, &Compositor::scheduleRepaint);
