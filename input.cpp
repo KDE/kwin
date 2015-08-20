@@ -547,7 +547,8 @@ void InputRedirection::updatePointerInternalWindow()
     if (waylandServer()) {
         bool found = false;
         const auto &internalClients = waylandServer()->internalClients();
-        if (!internalClients.isEmpty()) {
+        const bool change = m_pointerInternalWindow.isNull() || !(m_pointerInternalWindow->flags().testFlag(Qt::Popup) && m_pointerInternalWindow->isVisible());
+        if (!internalClients.isEmpty() && change) {
             auto it = internalClients.end();
             do {
                 it--;
