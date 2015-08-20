@@ -368,26 +368,9 @@ static QString automaticBackendSelection()
 
 int main(int argc, char * argv[])
 {
-    // process command line arguments to figure out whether we have to start Xwayland and the Wayland socket
-    QByteArray waylandSocket;
-    for (int i = 1; i < argc; ++i) {
-        QByteArray arg = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
-        if (arg == "--socket" || arg == "-s") {
-            if (++i < argc) {
-                waylandSocket = QByteArray::fromRawData(argv[i], qstrlen(argv[i]));
-            }
-            continue;
-        }
-        if (arg.startsWith("--socket=")) {
-            waylandSocket = arg.mid(9);
-        }
-    }
-
     // set our own event dispatcher to be able to dispatch events before the event loop is started
     QAbstractEventDispatcher *eventDispatcher = new KWin::EventDispatcher();
     QCoreApplication::setEventDispatcher(eventDispatcher);
-    KWin::WaylandServer *server = KWin::WaylandServer::create(nullptr);
-    server->init(waylandSocket);
 
     KWin::Application::setupMalloc();
     KWin::Application::setupLocalizedString();
@@ -406,7 +389,6 @@ int main(int argc, char * argv[])
     pthread_sigmask(SIG_BLOCK, &userSiganls, nullptr);
 
     QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-    environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());
 
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
@@ -420,9 +402,6 @@ int main(int argc, char * argv[])
     qputenv("QSG_RENDER_LOOP", "basic");
     KWin::ApplicationWayland a(argc, argv);
     a.setupTranslator();
-    a.setProcessStartupEnvironment(environment);
-
-    server->setParent(&a);
 
     KWin::Application::createAboutData();
 
@@ -569,6 +548,11 @@ int main(int argc, char * argv[])
         std::cerr << "FATAL ERROR: could not find a backend" << std::endl;
         return 1;
     }
+
+    // TODO: create backend without having the server running
+    KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
+    server->init(parser.value(waylandSocketOption).toUtf8());
+
     for (const auto &candidate: pluginCandidates) {
         if (qobject_cast<KWin::AbstractBackend*>(candidate.instantiate())) {
 #if HAVE_INPUT
@@ -600,6 +584,8 @@ int main(int argc, char * argv[])
     }
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
+    environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->display()->socketName());
+    a.setProcessStartupEnvironment(environment);
     a.setStartXwayland(parser.isSet(xwaylandOption));
     a.setApplicationsToStart(parser.positionalArguments());
     a.setInputMethodServerToStart(parser.value(inputMethodOption));
