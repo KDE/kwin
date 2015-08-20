@@ -849,12 +849,16 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
         return;
     }
 #endif
-    if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
+    auto toKeyEvent = [&] {
         const xkb_keysym_t keysym = m_xkb->toKeysym(key);
         // TODO: start auto-repeat
         // TODO: add modifiers to the event
         const QEvent::Type type = (state == KeyboardKeyPressed) ? QEvent::KeyPress : QEvent::KeyRelease;
         QKeyEvent event(type, m_xkb->toQtKey(keysym), m_xkb->modifiers(), m_xkb->toString(keysym));
+        return event;
+    };
+    if (effects && static_cast< EffectsHandlerImpl* >(effects)->hasKeyboardGrab()) {
+        QKeyEvent event = toKeyEvent();
         static_cast< EffectsHandlerImpl* >(effects)->grabbedKeyboardEvent(&event);
         return;
     }
@@ -865,6 +869,13 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
                 // only update if mode didn't end
                 c->updateMoveResize(m_globalPointer);
             }
+            return;
+        }
+        // TODO: Maybe it's better to select the top most visible internal window?
+        if (m_pointerInternalWindow) {
+            QKeyEvent event = toKeyEvent();
+            event.setAccepted(false);
+            QCoreApplication::sendEvent(m_pointerInternalWindow.data(), &event);
             return;
         }
     }
