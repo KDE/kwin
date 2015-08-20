@@ -258,8 +258,14 @@ void ShellClient::setGeometry(const QRect &rect)
     if (geom == rect) {
         return;
     }
+    if (!m_unmapped) {
+        addWorkspaceRepaint(visibleRect());
+    }
     const QRect old = geom;
     geom = rect;
+    if (!m_unmapped) {
+        addWorkspaceRepaint(visibleRect());
+    }
     emit geometryChanged();
     emit geometryShapeChanged(this, old);
 }
