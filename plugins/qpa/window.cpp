@@ -144,6 +144,7 @@ void Window::createFBO()
 ShellClient *Window::shellClient()
 {
     if (!m_shellClient) {
+        waylandServer()->dispatch();
         m_shellClient = waylandServer()->findClient(window());
     }
     return m_shellClient;
