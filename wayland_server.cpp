@@ -115,10 +115,6 @@ void WaylandServer::init(const QByteArray &socketName)
             }
             if (surface->client() == m_internalConnection.server) {
                 // one of Qt's windows
-                if (m_dummyWindowSurface && (m_dummyWindowSurface->id() == surface->surface()->id())) {
-                    fakeDummyQtWindowInput();
-                    return;
-                }
                 // HACK: in order to get Qt to not block for frame rendered, we immediatelly emit the
                 // frameRendered once we get a new damage event.
                 auto s = surface->surface();
@@ -308,37 +304,6 @@ void WaylandServer::removeClient(ShellClient *c)
     m_clients.removeAll(c);
     m_internalClients.removeAll(c);
     emit shellClientRemoved(c);
-}
-
-void WaylandServer::createDummyQtWindow()
-{
-    if (m_dummyWindow) {
-        return;
-    }
-    m_dummyWindow.reset(new QWindow());
-    m_dummyWindow->setSurfaceType(QSurface::RasterSurface);
-    m_dummyWindow->show();
-    m_dummyWindowSurface = KWayland::Client::Surface::fromWindow(m_dummyWindow.data());
-}
-
-void WaylandServer::fakeDummyQtWindowInput()
-{
-    // we need to fake Qt into believing it has got any seat events
-    // this is done only when receiving either a key press or button.
-    // we simulate by sending a button press and release
-    auto surface = KWayland::Server::SurfaceInterface::get(m_dummyWindowSurface->id(), m_internalConnection.server);
-    if (!surface) {
-        return;
-    }
-    const auto oldSeatSurface = m_seat->focusedPointerSurface();
-    const auto oldPos = m_seat->focusedPointerSurfacePosition();
-    m_seat->setFocusedPointerSurface(surface, QPoint(0, 0));
-    m_seat->setPointerPos(QPointF(0, 0));
-    m_seat->pointerButtonPressed(Qt::LeftButton);
-    m_seat->pointerButtonReleased(Qt::LeftButton);
-    m_internalConnection.server->flush();
-    m_dummyWindow->hide();
-    m_seat->setFocusedPointerSurface(oldSeatSurface, oldPos);
 }
 
 void WaylandServer::dispatch()

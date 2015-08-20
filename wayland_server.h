@@ -109,7 +109,6 @@ public:
     int createInputMethodConnection();
 
     void createInternalConnection();
-    void createDummyQtWindow();
     void initWorkspace();
 
     KWayland::Server::ClientConnection *xWaylandConnection() const {
@@ -138,7 +137,6 @@ Q_SIGNALS:
     void shellClientRemoved(ShellClient*);
 
 private:
-    void fakeDummyQtWindowInput();
     quint16 createClientId(KWayland::Server::ClientConnection *c);
     KWayland::Server::Display *m_display = nullptr;
     KWayland::Server::CompositorInterface *m_compositor = nullptr;
@@ -160,8 +158,6 @@ private:
     AbstractBackend *m_backend = nullptr;
     QList<ShellClient*> m_clients;
     QList<ShellClient*> m_internalClients;
-    QScopedPointer<QWindow> m_dummyWindow;
-    KWayland::Client::Surface *m_dummyWindowSurface = nullptr;
     QHash<KWayland::Server::ClientConnection*, quint16> m_clientIds;
     KWIN_SINGLETON(WaylandServer)
 };
