@@ -35,7 +35,6 @@ Context::Context(const Udev &udev)
     : m_libinput(libinput_udev_create_context(&Context::s_interface, this, udev))
     , m_suspended(false)
 {
-    libinput_log_set_priority(m_libinput, LIBINPUT_LOG_PRIORITY_DEBUG);
 }
 
 Context::~Context()
