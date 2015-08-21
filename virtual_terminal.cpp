@@ -96,10 +96,6 @@ void VirtualTerminal::setup(int vtNr)
     }
     QString ttyName = QStringLiteral("/dev/tty%1").arg(vtNr);
 
-    m_vt = LogindIntegration::self()->takeDevice(ttyName.toUtf8().constData());
-    if (m_vt < 0) {
-        qCWarning(KWIN_CORE) << "Failed to open tty through logind, trying without";
-    }
     m_vt = open(ttyName.toUtf8().constData(), O_RDWR|O_CLOEXEC|O_NONBLOCK);
     if (m_vt < 0) {
         qCWarning(KWIN_CORE) << "Failed to open tty" << vtNr;
