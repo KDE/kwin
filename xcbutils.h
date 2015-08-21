@@ -1420,11 +1420,11 @@ public:
     void kill();
     operator xcb_window_t() const;
 private:
-    QRect m_logicGeometry;
     xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = NULL, xcb_window_t parent = rootWindow());
     void destroy();
     xcb_window_t m_window;
     bool m_destroy;
+    QRect m_logicGeometry;
 };
 
 inline
