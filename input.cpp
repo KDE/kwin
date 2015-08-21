@@ -860,8 +860,11 @@ void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::Keyboa
     }
     if (workspace()) {
         if (Client *c = dynamic_cast<Client*>(workspace()->getMovingClient())) {
-            c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)));
-            c->updateMoveResize(m_globalPointer);
+            c->keyPressEvent(m_xkb->toQtKey(m_xkb->toKeysym(key)) | m_xkb->modifiers());
+            if (c->isMove() || c->isResize()) {
+                // only update if mode didn't end
+                c->updateMoveResize(m_globalPointer);
+            }
             return;
         }
     }
