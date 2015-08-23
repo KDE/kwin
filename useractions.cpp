@@ -314,7 +314,7 @@ void UserActionsMenu::init()
                 p->setArguments(args);
                 p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
                 p->setProgram(QStringLiteral("kcmshell5"));
-                connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &QProcess::deleteLater);
+                connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
                 connect(p, static_cast<void (QProcess::*)(QProcess::ProcessError)>(&QProcess::error), this,
                     [p] (QProcess::ProcessError e) {
                         if (e == QProcess::FailedToStart) {
