@@ -978,11 +978,10 @@ static bool areKeySymXsDepressed(bool bAll, const uint keySyms[], int nKeySyms) 
     return bAll;
 }
 
-static bool areModKeysDepressed(const QKeySequence& seq) {
+static bool areModKeysDepressedX11(const QKeySequence &seq)
+{
     uint rgKeySyms[10];
     int nKeySyms = 0;
-    if (seq.isEmpty())
-        return false;
     int mod = seq[seq.count()-1] & Qt::KeyboardModifierMask;
 
     if (mod & Qt::SHIFT) {
@@ -1008,6 +1007,35 @@ static bool areModKeysDepressed(const QKeySequence& seq) {
     }
 
     return areKeySymXsDepressed(false, rgKeySyms, nKeySyms);
+}
+
+static bool areModKeysDepressedWayland(const QKeySequence &seq)
+{
+    const int mod = seq[seq.count()-1] & Qt::KeyboardModifierMask;
+    const Qt::KeyboardModifiers mods = input()->keyboardModifiers();
+    if ((mod & Qt::SHIFT) && mods.testFlag(Qt::ShiftModifier)) {
+        return true;
+    }
+    if ((mod & Qt::CTRL) && mods.testFlag(Qt::ControlModifier)) {
+        return true;
+    }
+    if ((mod & Qt::ALT) && mods.testFlag(Qt::AltModifier)) {
+        return true;
+    }
+    if ((mod & Qt::META) && mods.testFlag(Qt::MetaModifier)) {
+        return true;
+    }
+    return false;
+}
+
+static bool areModKeysDepressed(const QKeySequence& seq) {
+    if (seq.isEmpty())
+        return false;
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        return areModKeysDepressedWayland(seq);
+    } else {
+        return areModKeysDepressedX11(seq);
+    }
 }
 
 void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode)
