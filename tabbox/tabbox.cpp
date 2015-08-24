@@ -1613,6 +1613,10 @@ Client* TabBox::previousClientStatic(Client* c) const
 
 bool TabBox::establishTabBoxGrab()
 {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        m_forcedGlobalMouseGrab = true;
+        return true;
+    }
     updateXTime();
     if (!grabXKeyboard())
         return false;
@@ -1630,6 +1634,10 @@ bool TabBox::establishTabBoxGrab()
 
 void TabBox::removeTabBoxGrab()
 {
+    if (kwinApp()->shouldUseWaylandForCompositing()) {
+        m_forcedGlobalMouseGrab = false;
+        return;
+    }
     updateXTime();
     ungrabXKeyboard();
     assert(m_forcedGlobalMouseGrab);
