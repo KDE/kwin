@@ -33,6 +33,8 @@ namespace KWayland
 {
 namespace Server
 {
+class BlurManagerInterface;
+class BlurInterface;
 class BufferInterface;
 class CompositorInterface;
 class ShadowManagerInterface;
@@ -82,6 +84,12 @@ public:
      **/
     QPointer<ShadowInterface> shadow() const;
 
+    /**
+     * @returns The Blur for this Surface.
+     * @since 5.5
+     **/
+    QPointer<BlurInterface> blur() const;
+
     static SurfaceInterface *get(wl_resource *native);
     /**
      * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
@@ -107,11 +115,16 @@ Q_SIGNALS:
      * @since 5.4
      **/
     void shadowChanged();
+    /**
+     * @since 5.5
+     **/
+    void blurChanged();
 
 private:
     friend class CompositorInterface;
     friend class SubSurfaceInterface;
     friend class ShadowManagerInterface;
+    friend class BlurManagerInterface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 
     class Private;

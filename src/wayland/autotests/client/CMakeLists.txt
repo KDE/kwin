@@ -136,6 +136,17 @@ add_test(kwayland-testRegion testRegion)
 ecm_mark_as_test(testRegion)
 
 ########################################################
+# Test Blur
+########################################################
+set( testBlur_SRCS
+        test_wayland_blur.cpp
+    )
+add_executable(testBlur ${testBlur_SRCS})
+target_link_libraries( testBlur Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+add_test(kwayland-testBlur testBlur)
+ecm_mark_as_test(testBlur)
+
+########################################################
 # Test DataSource
 ########################################################
 set( testDataSource_SRCS

@@ -46,6 +46,7 @@ class PlasmaWindowManagementInterface;
 class QtSurfaceExtensionInterface;
 class SeatInterface;
 class ShadowManagerInterface;
+class BlurManagerInterface;
 class ShellInterface;
 class SubCompositorInterface;
 
@@ -126,6 +127,7 @@ public:
     IdleInterface *createIdle(QObject *parent = nullptr);
     FakeInputInterface *createFakeInput(QObject *parent = nullptr);
     ShadowManagerInterface *createShadowManager(QObject *parent = nullptr);
+    BlurManagerInterface *createBlurManager(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

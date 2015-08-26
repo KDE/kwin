@@ -34,6 +34,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/output_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
+#include "../../src/server/blur_interface.h"
 #include "../../src/server/subcompositor_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -55,6 +56,7 @@ private Q_SLOTS:
     void testBindSeat();
     void testBindSubCompositor();
     void testBindDataDeviceManager();
+    void testBindBlurManager();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -103,6 +105,7 @@ void TestWaylandRegistry::init()
     m_subcompositor->create();
     m_dataDeviceManager = m_display->createDataDeviceManager();
     m_dataDeviceManager->create();
+    m_display->createBlurManager(this)->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -203,6 +206,11 @@ void TestWaylandRegistry::testBindSubCompositor()
 void TestWaylandRegistry::testBindDataDeviceManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::DataDeviceManager, SIGNAL(dataDeviceManagerAnnounced(quint32,quint32)), bindDataDeviceManager, wl_data_device_manager_destroy)
+}
+
+void TestWaylandRegistry::testBindBlurManager()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::Blur, SIGNAL(blurAnnounced(quint32,quint32)), bindBlurManager, free)
 }
 
 #undef TEST_BIND
