@@ -262,6 +262,10 @@ private:
     xkb_mod_index_t m_altModifier;
     xkb_mod_index_t m_metaModifier;
     Qt::KeyboardModifiers m_modifiers;
+    struct {
+        uint pressCount = 0;
+        Qt::KeyboardModifier modifier = Qt::NoModifier;
+    } m_modOnlyShortcut;
 };
 
 inline

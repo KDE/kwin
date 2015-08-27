@@ -838,6 +838,22 @@ void Options::loadConfig()
     setMaxFpsInterval(1 * 1000 * 1000 * 1000 / config.readEntry("MaxFPS", Options::defaultMaxFps()));
     setRefreshRate(config.readEntry("RefreshRate", Options::defaultRefreshRate()));
     setVBlankTime(config.readEntry("VBlankTime", Options::defaultVBlankTime()) * 1000); // config in micro, value in nano resolution
+
+    // Modifier Only Shortcuts
+    config = KConfigGroup(m_settings->config(), "ModifierOnlyShortcuts");
+    m_modifierOnlyShortcuts.clear();
+    if (config.hasKey("Shift")) {
+        m_modifierOnlyShortcuts.insert(Qt::ShiftModifier, config.readEntry("Shift", QStringList()));
+    }
+    if (config.hasKey("Control")) {
+        m_modifierOnlyShortcuts.insert(Qt::ControlModifier, config.readEntry("Control", QStringList()));
+    }
+    if (config.hasKey("Alt")) {
+        m_modifierOnlyShortcuts.insert(Qt::AltModifier, config.readEntry("Alt", QStringList()));
+    }
+    if (config.hasKey("Meta")) {
+        m_modifierOnlyShortcuts.insert(Qt::MetaModifier, config.readEntry("Meta", QStringList()));
+    }
 }
 
 void Options::syncFromKcfgc()
@@ -1122,6 +1138,11 @@ Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons butto
     return button == Qt::RightButton ? opMaxButtonRightClick :
            button == Qt::MidButton ?   opMaxButtonMiddleClick :
            opMaxButtonLeftClick;
+}
+
+QStringList Options::modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const
+{
+    return m_modifierOnlyShortcuts.value(mod);
 }
 
 } // namespace

@@ -589,6 +589,8 @@ public:
         return m_glPreferBufferSwap;
     }
 
+    QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
+
     // setters
     void setFocusPolicy(FocusPolicy focusPolicy);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
@@ -928,6 +930,8 @@ private:
     bool show_geometry_tip;
     bool condensed_title;
     int animationSpeed; // 0 - instant, 5 - very slow
+
+    QHash<Qt::KeyboardModifier, QStringList> m_modifierOnlyShortcuts;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };

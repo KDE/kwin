@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <decorations/decoratedclient.h>
 #include <KDecoration2/Decoration>
 // Qt
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QTemporaryFile>
@@ -183,6 +185,32 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     }
     xkb_state_update_key(m_state, key + 8, static_cast<xkb_key_direction>(state));
     updateModifiers();
+    if (state == InputRedirection::KeyboardKeyPressed) {
+        m_modOnlyShortcut.pressCount++;
+        if (m_modOnlyShortcut.pressCount == 1) {
+            m_modOnlyShortcut.modifier = Qt::KeyboardModifier(int(m_modifiers));
+        } else {
+            m_modOnlyShortcut.modifier = Qt::NoModifier;
+        }
+    } else {
+        m_modOnlyShortcut.pressCount--;
+        // TODO: ignore on lock screen
+        if (m_modOnlyShortcut.pressCount == 0) {
+            if (m_modOnlyShortcut.modifier != Qt::NoModifier) {
+                const auto list = options->modifierOnlyDBusShortcut(m_modOnlyShortcut.modifier);
+                if (list.size() >= 4) {
+                    auto call = QDBusMessage::createMethodCall(list.at(0), list.at(1), list.at(2), list.at(3));
+                    QVariantList args;
+                    for (int i = 4; i < list.size(); ++i) {
+                        args << list.at(i);
+                    }
+                    call.setArguments(args);
+                    QDBusConnection::sessionBus().asyncCall(call);
+                }
+            }
+        }
+        m_modOnlyShortcut.modifier = Qt::NoModifier;
+    }
 }
 
 void Xkb::updateModifiers()
