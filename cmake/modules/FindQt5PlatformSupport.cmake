@@ -76,7 +76,7 @@ find_path(Qt5PlatformSupport_INCLUDE_DIR
     NAMES
         QtPlatformSupport/private/qfontconfigdatabase_p.h
     HINTS
-        ${PKG_Qt5PlatformSupport_INCLUDE_DIRS}/QtPlatformSupport/${PKG_Qt5PlatformSupport_VERSION}/
+        ${PKG_Qt5PlatformSupport_INCLUDEDIR}/QtPlatformSupport/${PKG_Qt5PlatformSupport_VERSION}/
 )
 find_library(Qt5PlatformSupport_LIBRARY
     NAMES
