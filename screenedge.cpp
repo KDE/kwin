@@ -137,6 +137,10 @@ bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
     if (!triggersFor(cursorPos)) {
         return false;
     }
+    if (m_lastTrigger.isValid() && // still in cooldown
+        m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold()) {
+        return false;
+    }
     // no pushback so we have to activate at once
     bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull() || m_client;
     if (directActivate || canActivate(cursorPos, triggerTime)) {

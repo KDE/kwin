@@ -298,7 +298,8 @@ void TestXcbWrapper::testTransientFor()
 
     // Create a Window with a transient for hint
     Window transientWindow(createWindow());
-    transientWindow.changeProperty(XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 32, 1, &m_testWindow);
+    xcb_window_t testWindowId = m_testWindow;
+    transientWindow.changeProperty(XCB_ATOM_WM_TRANSIENT_FOR, XCB_ATOM_WINDOW, 32, 1, &testWindowId);
 
     // let's get another transient object
     TransientFor realTransient(transientWindow);
