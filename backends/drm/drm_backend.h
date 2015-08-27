@@ -46,6 +46,16 @@ class UdevMonitor;
 class DrmBuffer;
 class DrmOutput;
 
+template <typename Pointer, void (*cleanupFunc)(Pointer*)>
+struct DrmCleanup
+{
+    static inline void cleanup(Pointer *ptr)
+    {
+        cleanupFunc(ptr);
+    }
+};
+template <typename T, void (*cleanupFunc)(T*)> using ScopedDrmPointer = QScopedPointer<T, DrmCleanup<T, cleanupFunc>>;
+
 class KWIN_EXPORT DrmBackend : public AbstractBackend
 {
     Q_OBJECT
@@ -132,6 +142,13 @@ public:
     QRect geometry() const;
     QString name() const;
     int currentRefreshRate() const;
+    enum class DpmsMode {
+        On = DRM_MODE_DPMS_ON,
+        Standby = DRM_MODE_DPMS_STANDBY,
+        Suspend = DRM_MODE_DPMS_SUSPEND,
+        Off = DRM_MODE_DPMS_OFF
+    };
+    void setDpms(DpmsMode mode);
 
 private:
     friend class DrmBackend;
@@ -139,6 +156,7 @@ private:
     void cleanupBlackBuffer();
     bool setMode(DrmBuffer *buffer);
     void initEdid(drmModeConnector *connector);
+    void initDpms(drmModeConnector *connector);
     bool isCurrentMode(const drmModeModeInfo *mode) const;
 
     DrmBackend *m_backend;
@@ -157,6 +175,8 @@ private:
     Edid m_edid;
     QScopedPointer<_drmModeCrtc, CrtcCleanup> m_savedCrtc;
     QPointer<KWayland::Server::OutputInterface> m_waylandOutput;
+    ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> m_dpms;
+    DpmsMode m_dpmsMode = DpmsMode::On;
 };
 
 class DrmBuffer

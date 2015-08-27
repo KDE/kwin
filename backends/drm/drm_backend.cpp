@@ -237,16 +237,6 @@ void DrmBackend::openDrm()
     initCursor();
 }
 
-template <typename Pointer, void (*cleanupFunc)(Pointer*)>
-struct DrmCleanup
-{
-    static inline void cleanup(Pointer *ptr)
-    {
-        cleanupFunc(ptr);
-    }
-};
-template <typename T, void (*cleanupFunc)(T*)> using ScopedDrmPointer = QScopedPointer<T, DrmCleanup<T, cleanupFunc>>;
-
 void DrmBackend::queryResources()
 {
     if (m_fd < 0) {
@@ -607,8 +597,10 @@ void DrmOutput::cleanupBlackBuffer()
 void DrmOutput::init(drmModeConnector *connector)
 {
     initEdid(connector);
+    initDpms(connector);
     m_savedCrtc.reset(drmModeGetCrtc(m_backend->fd(), m_crtcId));
     blank();
+    setDpms(DpmsMode::On);
     if (!m_waylandOutput.isNull()) {
         delete m_waylandOutput.data();
         m_waylandOutput.clear();
@@ -873,6 +865,32 @@ void DrmOutput::initEdid(drmModeConnector *connector)
     extractMonitorDescriptorDescription(edid.data(), m_edid);
 
     m_edid.physicalSize = extractPhysicalSize(edid.data());
+}
+
+void DrmOutput::initDpms(drmModeConnector *connector)
+{
+    for (int i = 0; i < connector->count_props; ++i) {
+        ScopedDrmPointer<_drmModeProperty, &drmModeFreeProperty> property(drmModeGetProperty(m_backend->fd(), connector->props[i]));
+        if (!property) {
+            continue;
+        }
+        if (qstrcmp(property->name, "DPMS") == 0) {
+            m_dpms.swap(property);
+            break;
+        }
+    }
+}
+
+void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
+{
+    if (m_dpms.isNull()) {
+        return;
+    }
+    if (drmModeConnectorSetProperty(m_backend->fd(), m_connector, m_dpms->prop_id, uint64_t(mode)) != 0) {
+        qCWarning(KWIN_DRM) << "Setting DPMS failed";
+        return;
+    }
+    m_dpmsMode = mode;
 }
 
 QString DrmOutput::name() const
