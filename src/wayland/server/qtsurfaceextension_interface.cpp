@@ -151,15 +151,13 @@ const struct qt_extended_surface_interface QtExtendedSurfaceInterface::Private::
 void QtExtendedSurfaceInterface::Private::lowerCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    // ignore
+    emit cast<Private>(resource)->q_func()->lowerRequested();
 }
 
 void QtExtendedSurfaceInterface::Private::raiseCallback(wl_client *client, wl_resource *resource)
 {
     Q_UNUSED(client)
-    Q_UNUSED(resource)
-    // ignore
+    emit cast<Private>(resource)->q_func()->raiseRequested();
 }
 
 void QtExtendedSurfaceInterface::Private::setContentOrientationMaskCallback(wl_client *client, wl_resource *resource, int32_t orientation)

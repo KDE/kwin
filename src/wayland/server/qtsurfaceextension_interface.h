@@ -65,6 +65,18 @@ public:
 
     void close();
 
+Q_SIGNALS:
+    /**
+     * Requests that the window be raised to appear above other windows.
+     * @since 5.5
+     **/
+    void raiseRequested();
+    /**
+     * Requests that the window be lowered to appear below other windows.
+     * @since 5.5
+     **/
+    void lowerRequested();
+
 private:
     friend class QtSurfaceExtensionInterface;
     explicit QtExtendedSurfaceInterface(QtSurfaceExtensionInterface *shell, SurfaceInterface *parent, wl_resource *parentResource);
