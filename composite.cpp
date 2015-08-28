@@ -864,12 +864,14 @@ void Compositor::delayedCheckUnredirect()
     ToplevelList list;
     bool changed = forceUnredirectCheck;
     foreach (Client * c, Workspace::self()->clientList())
-    list.append(c);
+        list.append(c);
     foreach (Unmanaged * c, Workspace::self()->unmanagedList())
-    list.append(c);
+        list.append(c);
     foreach (Toplevel * c, list) {
-        if (c->updateUnredirectedState())
+        if (c->updateUnredirectedState()) {
             changed = true;
+            break;
+        }
     }
     // no desktops, no Deleted ones
     if (!changed)
@@ -884,6 +886,7 @@ void Compositor::delayedCheckUnredirect()
             reg -= c->geometry();
     }
     m_scene->overlayWindow()->setShape(reg);
+    addRepaint(reg);
 }
 
 bool Compositor::checkForOverlayWindow(WId w) const
