@@ -36,6 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <netwm_def.h>
 #include <QEvent>
 #include <QMouseEvent>
+#include <QTimer>
 #include <QtGui/QVector2D>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -1052,6 +1053,15 @@ void DesktopGridEffect::setActive(bool active)
                 }
             }
         }
+        QTimer::singleShot(zoomDuration + 1, this,
+            [this] {
+                if (activated)
+                    return;
+                foreach (DesktopButtonsView *view, m_desktopButtonsViews.keys()) {
+                    view->hide();
+                }
+            }
+        );
         setHighlightedDesktop(effects->currentDesktop());   // Ensure selected desktop is highlighted
     }
     effects->addRepaintFull();
