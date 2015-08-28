@@ -1098,6 +1098,7 @@ void DesktopGridEffect::setup()
     if (m_usePresentWindows)
         m_proxy = static_cast<PresentWindowsEffectProxy*>(effects->getProxy(BuiltInEffects::nameForEffect(BuiltInEffect::PresentWindows)));
     if (isUsingPresentWindows()) {
+        m_proxy->reCreateGrids(); // revalidation on multiscreen, bug #351724
         for (int i = 1; i <= effects->numberOfDesktops(); i++) {
             for (int j = 0; j < effects->numScreens(); j++) {
                 WindowMotionManager manager;

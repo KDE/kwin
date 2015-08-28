@@ -225,11 +225,11 @@ public Q_SLOTS:
 private Q_SLOTS:
     void closeWindow();
     void elevateCloseWindow();
-    void screenCountChanged();
 
 protected:
     // Window rearranging
     void rearrangeWindows();
+    void reCreateGrids();
     void calculateWindowTransformations(EffectWindowList windowlist, int screen,
                                         WindowMotionManager& motionManager, bool external = false);
     void calculateWindowTransformationsClosest(EffectWindowList windowlist, int screen,

@@ -35,6 +35,8 @@ public:
 
     void calculateWindowTransformations(EffectWindowList windows, int screen, WindowMotionManager& manager);
 
+    void reCreateGrids();
+
 private:
     PresentWindowsEffect* m_effect;
 };

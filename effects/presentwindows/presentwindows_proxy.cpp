@@ -39,4 +39,9 @@ void PresentWindowsEffectProxy::calculateWindowTransformations(EffectWindowList 
     return m_effect->calculateWindowTransformations(windows, screen, manager, true);
 }
 
+void PresentWindowsEffectProxy::reCreateGrids()
+{
+    m_effect->reCreateGrids();
+}
+
 } // namespace
