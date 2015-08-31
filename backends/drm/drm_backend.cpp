@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "drm_backend.h"
 #include "composite.h"
 #include "cursor.h"
+#include "input.h"
 #include "logging.h"
 #include "logind.h"
 #include "scene_qpainter_drm_backend.h"
@@ -895,6 +896,26 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         return;
     }
     m_dpmsMode = mode;
+    if (m_dpmsMode != DpmsMode::On) {
+        connect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
+        connect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
+        connect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
+        connect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+    } else {
+        disconnect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
+        disconnect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);
+        disconnect(input(), &InputRedirection::pointerAxisChanged, this, &DrmOutput::reenableDpms);
+        disconnect(input(), &InputRedirection::keyStateChanged, this, &DrmOutput::reenableDpms);
+        blank();
+        if (Compositor *compositor = Compositor::self()) {
+            compositor->addRepaintFull();
+        }
+    }
+}
+
+void DrmOutput::reenableDpms()
+{
+    setDpms(DpmsMode::On);
 }
 
 QString DrmOutput::name() const

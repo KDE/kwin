@@ -159,6 +159,7 @@ private:
     void initEdid(drmModeConnector *connector);
     void initDpms(drmModeConnector *connector);
     bool isCurrentMode(const drmModeModeInfo *mode) const;
+    void reenableDpms();
 
     DrmBackend *m_backend;
     QPoint m_globalPos;
