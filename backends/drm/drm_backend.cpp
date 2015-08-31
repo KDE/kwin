@@ -276,6 +276,7 @@ void DrmBackend::queryResources()
             continue;
         }
         DrmOutput *drmOutput = new DrmOutput(this);
+        connect(drmOutput, &DrmOutput::dpmsChanged, this, &DrmBackend::outputDpmsChanged);
         drmOutput->m_crtcId = crtcId;
         if (crtc->mode_valid) {
             drmOutput->m_mode = crtc->mode;
@@ -500,6 +501,18 @@ DrmBuffer *DrmBackend::createBuffer(gbm_surface *surface)
 void DrmBackend::bufferDestroyed(DrmBuffer *b)
 {
     m_buffers.removeAll(b);
+}
+
+void DrmBackend::outputDpmsChanged()
+{
+    if (m_outputs.isEmpty()) {
+        return;
+    }
+    bool enabled = false;
+    for (auto it = m_outputs.constBegin(); it != m_outputs.constEnd(); ++it) {
+        enabled = enabled || (*it)->isDpmsEnabled();
+    }
+    setOutputsEnabled(enabled);
 }
 
 DrmOutput::DrmOutput(DrmBackend *backend)
@@ -896,6 +909,7 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         return;
     }
     m_dpmsMode = mode;
+    emit dpmsChanged();
     if (m_dpmsMode != DpmsMode::On) {
         connect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);
         connect(input(), &InputRedirection::pointerButtonStateChanged, this, &DrmOutput::reenableDpms);

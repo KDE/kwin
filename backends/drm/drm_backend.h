@@ -106,6 +106,7 @@ private:
     void initCursor();
     quint32 findCrtc(drmModeRes *res, drmModeConnector *connector, bool *ok = nullptr);
     bool crtcIsUsed(quint32 crtc);
+    void outputDpmsChanged();
     DrmOutput *findOutput(quint32 connector);
     QScopedPointer<Udev> m_udev;
     QScopedPointer<UdevMonitor> m_udevMonitor;
@@ -150,6 +151,12 @@ public:
         Off = DRM_MODE_DPMS_OFF
     };
     void setDpms(DpmsMode mode);
+    bool isDpmsEnabled() const {
+        return m_dpmsMode == DpmsMode::On;
+    }
+
+Q_SIGNALS:
+    void dpmsChanged();
 
 private:
     friend class DrmBackend;
