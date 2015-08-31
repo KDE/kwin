@@ -557,6 +557,9 @@ bool DrmOutput::present(DrmBuffer *buffer)
         m_currentBuffer = buffer;
         return false;
     }
+    if (m_dpmsMode != DpmsMode::On) {
+        return false;
+    }
     if (m_currentBuffer) {
         return false;
     }
