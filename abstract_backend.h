@@ -86,6 +86,9 @@ public:
     bool supportsPointerWarping() const {
         return m_pointerWarping;
     }
+    bool areOutputsEnabled() const {
+        return m_outputsEnabled;
+    }
 
 public Q_SLOTS:
     void pointerMotion(const QPointF &position, quint32 time);
@@ -128,6 +131,9 @@ protected:
     void setSupportsPointerWarping(bool set) {
         m_pointerWarping = set;
     }
+    void setOutputsEnabled(bool enabled) {
+        m_outputsEnabled = enabled;
+    }
 
 private:
     void triggerCursorRepaint();
@@ -144,6 +150,7 @@ private:
     QSize m_initialWindowSize;
     QByteArray m_deviceIdentifier;
     bool m_pointerWarping = false;
+    bool m_outputsEnabled = true;
 };
 
 }
