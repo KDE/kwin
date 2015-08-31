@@ -855,6 +855,7 @@ void InputRedirection::updateKeyboardWindow()
 
 void InputRedirection::processKeyboardKey(uint32_t key, InputRedirection::KeyboardKeyState state, uint32_t time)
 {
+    emit keyStateChanged(key, state);
     const Qt::KeyboardModifiers oldMods = keyboardModifiers();
     m_xkb->updateKey(key, state);
     if (oldMods != keyboardModifiers()) {

@@ -182,6 +182,13 @@ Q_SIGNALS:
      * @param oldMods The previous modifiers state
      */
     void keyboardModifiersChanged(Qt::KeyboardModifiers newMods, Qt::KeyboardModifiers oldMods);
+    /**
+     * @brief Emitted when the state of a key changed.
+     *
+     * @param keyCode The keycode of the key which changed
+     * @param oldMods The new key state
+     */
+    void keyStateChanged(quint32 keyCode, InputRedirection::KeyboardKeyState state);
 
 private:
     static QEvent::Type buttonStateToEvent(PointerButtonState state);
