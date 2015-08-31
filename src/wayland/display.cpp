@@ -20,6 +20,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "display.h"
 #include "compositor_interface.h"
 #include "datadevicemanager_interface.h"
+#include "dpms_interface.h"
 #include "idle_interface.h"
 #include "fakeinput_interface.h"
 #include "logging_p.h"
@@ -293,6 +294,13 @@ SlideManagerInterface *Display::createSlideManager(QObject *parent)
     auto b = new SlideManagerInterface(this, parent);
     connect(this, &Display::aboutToTerminate, b, [this, b] { delete b; });
     return b;
+}
+
+DpmsManagerInterface *Display::createDpmsManager(QObject *parent)
+{
+    auto d = new DpmsManagerInterface(this, parent);
+    connect(this, &Display::aboutToTerminate, d, [this, d] { delete d; });
+    return d;
 }
 
 void Display::createShm()

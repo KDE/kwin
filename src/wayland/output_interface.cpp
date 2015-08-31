@@ -55,6 +55,10 @@ public:
     Transform transform = Transform::Normal;
     QList<Mode> modes;
     QList<ResourceData> resources;
+    struct {
+        DpmsMode mode = DpmsMode::On;
+        bool supported = false;
+    } dpms;
 
     static OutputInterface *get(wl_resource *native);
 
@@ -456,6 +460,38 @@ QList< OutputInterface::Mode > OutputInterface::modes() const
 {
     Q_D();
     return d->modes;
+}
+
+void OutputInterface::setDpmsMode(OutputInterface::DpmsMode mode)
+{
+    Q_D();
+    if (d->dpms.mode == mode) {
+        return;
+    }
+    d->dpms.mode = mode;
+    emit dpmsModeChanged();
+}
+
+void OutputInterface::setDpmsSupported(bool supported)
+{
+    Q_D();
+    if (d->dpms.supported == supported) {
+        return;
+    }
+    d->dpms.supported = supported;
+    emit dpmsSupportedChanged();
+}
+
+OutputInterface::DpmsMode OutputInterface::dpmsMode() const
+{
+    Q_D();
+    return d->dpms.mode;
+}
+
+bool OutputInterface::isDpmsSupported() const
+{
+    Q_D();
+    return d->dpms.supported;
 }
 
 OutputInterface *OutputInterface::get(wl_resource* native)

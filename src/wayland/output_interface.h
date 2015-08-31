@@ -77,6 +77,12 @@ public:
         int refreshRate = 60000;
         ModeFlags flags;
     };
+    enum class DpmsMode {
+        On,
+        Standby,
+        Suspend,
+        Off
+    };
     virtual ~OutputInterface();
 
     QSize physicalSize() const;
@@ -89,6 +95,8 @@ public:
     SubPixel subPixel() const;
     Transform transform() const;
     QList<Mode> modes() const;
+    bool isDpmsSupported() const;
+    DpmsMode dpmsMode() const;
 
     void setPhysicalSize(const QSize &size);
     void setGlobalPosition(const QPoint &pos);
@@ -99,6 +107,19 @@ public:
     void setTransform(Transform transform);
     void addMode(const QSize &size, ModeFlags flags = ModeFlags(), int refreshRate = 60000);
     void setCurrentMode(const QSize &size, int refreshRate = 60000);
+
+    /**
+     * Sets whether Dpms is supported for this output.
+     * Default is @c false.
+     * @since 5.5
+     **/
+    void setDpmsSupported(bool supported);
+    /**
+     * Sets the currently used dpms mode.
+     * Default is @c DpmsMode::On.
+     * @since 5.5
+     **/
+    void setDpmsMode(DpmsMode mode);
 
     static OutputInterface *get(wl_resource *native);
 
@@ -114,6 +135,15 @@ Q_SIGNALS:
     void transformChanged(Transform);
     void modesChanged();
     void currentModeChanged();
+    void dpmsModeChanged();
+    void dpmsSupportedChanged();
+
+    /**
+     * Change of dpms @p mode is requested.
+     * A server is free to ignore this request.
+     * @since 5.5
+     **/
+    void dpmsModeRequested(KWayland::Server::OutputInterface::DpmsMode mode);
 
 private:
     friend class Display;
@@ -128,5 +158,6 @@ private:
 Q_DECLARE_OPERATORS_FOR_FLAGS(KWayland::Server::OutputInterface::ModeFlags)
 Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::SubPixel)
 Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::Transform)
+Q_DECLARE_METATYPE(KWayland::Server::OutputInterface::DpmsMode)
 
 #endif

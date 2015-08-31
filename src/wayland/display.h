@@ -38,6 +38,7 @@ namespace Server
 
 class CompositorInterface;
 class DataDeviceManagerInterface;
+class DpmsManagerInterface;
 class IdleInterface;
 class FakeInputInterface;
 class OutputInterface;
@@ -137,6 +138,7 @@ public:
     BlurManagerInterface *createBlurManager(QObject *parent = nullptr);
     ContrastManagerInterface *createContrastManager(QObject *parent = nullptr);
     SlideManagerInterface *createSlideManager(QObject *parent = nullptr);
+    DpmsManagerInterface *createDpmsManager(QObject *parent = nullptr);
 
     /**
      * Gets the ClientConnection for the given @p client.

@@ -7,6 +7,7 @@ set(SERVER_LIB_SRCS
     dataoffer_interface.cpp
     datasource_interface.cpp
     display.cpp
+    dpms_interface.cpp
     global.cpp
     idle_interface.cpp
     fakeinput_interface.cpp
@@ -58,6 +59,10 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/shadow.xml
     BASENAME shadow
+)
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/dpms.xml
+    BASENAME dpms
 )
 
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
@@ -120,6 +125,7 @@ install(FILES
   dataoffer_interface.h
   datasource_interface.h
   display.h
+  dpms_interface.h
   fakeinput_interface.h
   global.h
   idle_interface.h
