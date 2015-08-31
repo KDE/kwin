@@ -119,8 +119,9 @@ private:
     QVector<DrmBuffer*> m_buffers;
 };
 
-class DrmOutput
+class DrmOutput : public QObject
 {
+    Q_OBJECT
 public:
     struct Edid {
         QByteArray eisaId;

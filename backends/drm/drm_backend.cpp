@@ -502,7 +502,8 @@ void DrmBackend::bufferDestroyed(DrmBuffer *b)
 }
 
 DrmOutput::DrmOutput(DrmBackend *backend)
-    : m_backend(backend)
+    : QObject()
+    , m_backend(backend)
 {
 }
 
