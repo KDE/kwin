@@ -1006,6 +1006,11 @@ void Client::leaveNotifyEvent(xcb_leave_notify_event_t *e)
                 shadeHoverTimer->setSingleShot(true);
                 shadeHoverTimer->start(options->shadeHoverInterval());
             }
+            if (m_decoration) {
+                // sending a move instead of a leave. With leave we need to send proper coords, with move it's handled internally
+                QHoverEvent leaveEvent(QEvent::HoverMove, QPointF(-1, -1), QPointF(-1, -1), Qt::NoModifier);
+                QCoreApplication::sendEvent(m_decoration, &leaveEvent);
+            }
         }
         if (options->focusPolicy() == Options::FocusStrictlyUnderMouse && isActive() && lostMouse) {
             workspace()->requestDelayFocus(0);
@@ -1343,7 +1348,7 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 // return value matters only when filtering events before decoration gets them
 bool Client::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x_root, int y_root)
 {
-    if (w == frameId() && m_decoration) {
+    if (w == frameId() && m_decoration && !isMinimized()) {
         // TODO Mouse move event dependent on state
         QHoverEvent event(QEvent::HoverMove, QPointF(x, y), QPointF(x, y));
         QCoreApplication::instance()->sendEvent(m_decoration, &event);
