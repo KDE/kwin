@@ -21,6 +21,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "global_p.h"
 #include "display.h"
 
+#include <QVector>
+
 #include <wayland-server.h>
 
 namespace KWayland
@@ -38,6 +40,7 @@ public:
         uint32_t version;
     };
     Private(OutputInterface *q, Display *d);
+    ~Private();
     void sendMode(wl_resource *resource, const Mode &mode);
     void sendDone(const ResourceData &data);
     void updateGeometry();
@@ -53,6 +56,8 @@ public:
     QList<Mode> modes;
     QList<ResourceData> resources;
 
+    static OutputInterface *get(wl_resource *native);
+
 private:
     static void unbind(wl_resource *resource);
     void bind(wl_client *client, uint32_t version, uint32_t id) override;
@@ -62,12 +67,33 @@ private:
     void sendScale(const ResourceData &data);
 
     OutputInterface *q;
+    static QVector<Private*> s_privates;
 };
+
+QVector<OutputInterface::Private*> OutputInterface::Private::s_privates;
 
 OutputInterface::Private::Private(OutputInterface *q, Display *d)
     : Global::Private(d, &wl_output_interface, s_version)
     , q(q)
 {
+    s_privates << this;
+}
+
+OutputInterface::Private::~Private()
+{
+    s_privates.removeAll(this);
+}
+
+OutputInterface *OutputInterface::Private::get(wl_resource *native)
+{
+    for (auto it = s_privates.constBegin(); it != s_privates.constEnd(); ++it) {
+        const auto &resources = (*it)->resources;
+        auto rit = std::find_if(resources.begin(), resources.end(), [native] (const ResourceData &data) { return data.resource == native; });
+        if (rit != resources.end()) {
+            return (*it)->q;
+        }
+    }
+    return nullptr;
 }
 
 OutputInterface::OutputInterface(Display *display, QObject *parent)
@@ -430,6 +456,11 @@ QList< OutputInterface::Mode > OutputInterface::modes() const
 {
     Q_D();
     return d->modes;
+}
+
+OutputInterface *OutputInterface::get(wl_resource* native)
+{
+    return Private::get(native);
 }
 
 OutputInterface::Private *OutputInterface::d_func() const

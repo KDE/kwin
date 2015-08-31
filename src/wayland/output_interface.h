@@ -100,6 +100,8 @@ public:
     void addMode(const QSize &size, ModeFlags flags = ModeFlags(), int refreshRate = 60000);
     void setCurrentMode(const QSize &size, int refreshRate = 60000);
 
+    static OutputInterface *get(wl_resource *native);
+
 Q_SIGNALS:
     void physicalSizeChanged(const QSize&);
     void globalPositionChanged(const QPoint&);
