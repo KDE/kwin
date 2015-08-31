@@ -640,6 +640,13 @@ void Compositor::performCompositing()
         return;
     }
 
+    // If outputs are disabled, we return to the event loop and
+    // continue processing events until the outputs are enabled again
+    if (waylandServer() && !waylandServer()->backend()->areOutputsEnabled()) {
+        compositeTimer.stop();
+        return;
+    }
+
     // Create a list of all windows in the stacking order
     ToplevelList windows = Workspace::self()->xStackingOrder();
     ToplevelList damaged;
@@ -772,6 +779,11 @@ void Compositor::setCompositeTimer()
     // Don't start the timer if we're waiting for a swap event
     if (m_bufferSwapPending && m_composeAtSwapCompletion)
         return;
+
+    // Don't start the timer if all outputs are disabled
+    if (waylandServer() && !waylandServer()->backend()->areOutputsEnabled()) {
+        return;
+    }
 
     uint waitTime = 1;
 
