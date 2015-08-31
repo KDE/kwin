@@ -19,12 +19,18 @@
  */
 
 #include "blur.h"
+#include "effects.h"
 #include "blurshader.h"
 // KConfigSkeleton
 #include "blurconfig.h"
 
 #include <QMatrix4x4>
 #include <QLinkedList>
+
+#include <KWayland/Server/surface_interface.h>
+#include <KWayland/Server/blur_interface.h>
+#include <KWayland/Server/shadow_interface.h>
+#include <KWayland/Server/display.h>
 
 namespace KWin
 {
@@ -33,6 +39,11 @@ static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEH
 
 BlurEffect::BlurEffect()
 {
+    KWayland::Server::Display *display = effects->waylandDisplay();
+    if (display) {
+        display->createBlurManager(this)->create();
+    }
+
     shader = BlurShader::create();
 
     // Offscreen texture that's used as the target for the horizontal blur pass
@@ -109,7 +120,15 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
         }
     }
 
-    if (region.isEmpty() && !value.isNull()) {
+    KWayland::Server::SurfaceInterface *surf = w->surface();
+
+    if (surf && surf->blur()) {
+        region = surf->blur()->region();
+    }
+
+    //!value.isNull() full window in X11 case, surf->blur()
+    //valid, full window in wayland case
+    if (region.isEmpty() && (!value.isNull() || (surf && surf->blur()))) {
         // Set the data to a dummy value.
         // This is needed to be able to distinguish between the value not
         // being set, and being set to an empty region.
@@ -120,12 +139,23 @@ void BlurEffect::updateBlurRegion(EffectWindow *w) const
 
 void BlurEffect::slotWindowAdded(EffectWindow *w)
 {
+    KWayland::Server::SurfaceInterface *surf = w->surface();
+
+    if (surf) {
+        windows[w].blurChangedConnection = connect(surf, &KWayland::Server::SurfaceInterface::blurChanged, this, [this, w] () {
+
+            if (w) {
+                updateBlurRegion(w);
+            }
+        });
+    }
     updateBlurRegion(w);
 }
 
 void BlurEffect::slotWindowDeleted(EffectWindow *w)
 {
     if (windows.contains(w)) {
+        disconnect(windows[w].blurChangedConnection);
         windows.remove(w);
     }
 }

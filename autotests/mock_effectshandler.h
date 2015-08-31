@@ -223,5 +223,8 @@ public:
     xcb_window_t x11RootWindow() const override {
         return QX11Info::appRootWindow();
     }
+    KWayland::Server::Display *waylandDisplay() const override {
+        return nullptr;
+    }
 };
 #endif

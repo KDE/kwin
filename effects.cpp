@@ -1477,6 +1477,14 @@ QStringList EffectsHandlerImpl::activeEffects() const
     return ret;
 }
 
+KWayland::Server::Display *EffectsHandlerImpl::waylandDisplay() const
+{
+    if (waylandServer()) {
+        return waylandServer()->display();
+    }
+    return nullptr;
+}
+
 EffectFrame* EffectsHandlerImpl::effectFrame(EffectFrameStyle style, bool staticSize, const QPoint& position, Qt::Alignment alignment) const
 {
     return new EffectFrameImpl(style, staticSize, position, alignment);

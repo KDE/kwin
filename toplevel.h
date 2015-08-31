@@ -202,6 +202,13 @@ class Toplevel
      * On X11 only setups the value is @c 0.
      **/
     Q_PROPERTY(quint32 surfaceId READ surfaceId NOTIFY surfaceIdChanged)
+
+    /**
+     * Interface to the Wayland Surface.
+     * Relevant only in Wayland, in X11 it will be nullptr
+     */
+    Q_PROPERTY(KWayland::Server::SurfaceInterface *surface READ surface)
+
 public:
     explicit Toplevel();
     virtual xcb_window_t frameId() const;

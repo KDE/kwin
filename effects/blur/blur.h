@@ -93,6 +93,7 @@ private:
         QRegion damagedRegion;
         QPoint windowPos;
         bool dropCache;
+        QMetaObject::Connection blurChangedConnection;
     };
 
     QHash< const EffectWindow*, BlurWindowInfo > windows;

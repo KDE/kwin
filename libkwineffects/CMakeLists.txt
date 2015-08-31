@@ -5,7 +5,7 @@ ecm_setup_version(${PROJECT_VERSION}
                   VARIABLE_PREFIX KWINEFFECTS
                   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kwineffects_version.h"
                   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KWinEffectsConfigVersion.cmake"
-                  SOVERSION 6
+                  SOVERSION 7
 )
 
 ### xrenderutils lib ###
@@ -23,6 +23,7 @@ target_link_libraries(kwinxrenderutils
         XCB::XCB
         XCB::XFIXES
         XCB::RENDER
+        KF5::WaylandServer
     )
 
 set_target_properties(kwinxrenderutils PROPERTIES

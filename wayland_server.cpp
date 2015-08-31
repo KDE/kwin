@@ -41,6 +41,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/qtsurfaceextension_interface.h>
 #include <KWayland/Server/seat_interface.h>
 #include <KWayland/Server/shadow_interface.h>
+#include <KWayland/Server/blur_interface.h>
 #include <KWayland/Server/shell_interface.h>
 
 // Qt
@@ -61,6 +62,7 @@ KWIN_SINGLETON_FACTORY(WaylandServer)
 WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
 {
+    qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
 }
 
 WaylandServer::~WaylandServer()

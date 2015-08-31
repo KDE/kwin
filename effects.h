@@ -35,6 +35,14 @@ namespace Plasma {
 class Theme;
 }
 
+namespace KWayland
+{
+namespace Server
+{
+class Display;
+}
+}
+
 class QDBusPendingCallWatcher;
 class QDBusServiceWatcher;
 class OrgFreedesktopScreenSaverInterface;
@@ -213,6 +221,8 @@ public:
     int currentRenderedDesktop() const {
         return m_currentRenderedDesktop;
     }
+
+    KWayland::Server::Display *waylandDisplay() const override;
 
 public Q_SLOTS:
     void slotCurrentTabAboutToChange(EffectWindow* from, EffectWindow* to);
