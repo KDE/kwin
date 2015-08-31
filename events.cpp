@@ -909,7 +909,6 @@ void Client::propertyNotifyEvent(xcb_property_notify_event_t *e)
         break;
     default:
         if (e->atom == atoms->motif_wm_hints) {
-            m_motif.fetch();
             getMotifHints();
         } else if (e->atom == atoms->net_wm_sync_request_counter)
             getSyncCounter();
