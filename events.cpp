@@ -1317,17 +1317,22 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
 
     QuickTileMode mode = QuickTileNone;
-    for (int i=0; i<screens()->count(); ++i) {
+    const QRect rootRect = screens()->geometry();
+    bool innerBorder = false;
+    for (int i=0; i < screens()->count(); ++i) {
 
         if (!screens()->geometry(i).contains(QPoint(xroot, yroot)))
             continue;
 
         QRect area = workspace()->clientArea(MaximizeArea, QPoint(xroot, yroot), desktop());
         if (options->electricBorderTiling()) {
-        if (xroot <= area.x() + 20)
-            mode |= QuickTileLeft;
-        else if (xroot >= area.x() + area.width() - 20)
-            mode |= QuickTileRight;
+            if (xroot <= area.x() + 20) {
+                mode |= QuickTileLeft;
+                innerBorder = rootRect.x() != area.x();
+            } else if (xroot >= area.x() + area.width() - 20) {
+                mode |= QuickTileRight;
+                innerBorder = rootRect.right() != area.right();
+            }
         }
 
         if (mode != QuickTileNone) {
@@ -1335,12 +1340,28 @@ void Client::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 mode |= QuickTileTop;
             else if (yroot >= area.y() + area.height() - area.height()  * options->electricBorderCornerRatio())
                 mode |= QuickTileBottom;
-        } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable())
+        } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable()) {
             mode = QuickTileMaximize;
+            innerBorder = rootRect.y() != area.y();
+        }
         break; // no point in checking other screens to contain this... "point"...
     }
-    setElectricBorderMode(mode);
-    setElectricBorderMaximizing(mode != QuickTileNone);
+    if (mode != electricMode) {
+        setElectricBorderMode(mode);
+        if (innerBorder) {
+            if (!m_electricMaximizingDelay) {
+                m_electricMaximizingDelay = new QTimer(this);
+                m_electricMaximizingDelay->setInterval(250);
+                m_electricMaximizingDelay->setSingleShot(true);
+                connect(m_electricMaximizingDelay, &QTimer::timeout, [this]() {
+                    setElectricBorderMaximizing(electricMode != QuickTileNone);
+                });
+            }
+            m_electricMaximizingDelay->start();
+        } else {
+            setElectricBorderMaximizing(mode != QuickTileNone);
+        }
+    }
 }
 
 // return value matters only when filtering events before decoration gets them

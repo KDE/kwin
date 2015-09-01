@@ -792,6 +792,7 @@ private:
 
     bool electricMaximizing;
     QuickTileMode electricMode;
+    QTimer* m_electricMaximizingDelay;
 
     friend bool performTransiencyCheck();
 
