@@ -22,6 +22,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/compositor.h"
 #include "../../src/client/connection_thread.h"
+#include "../../src/client/dpms.h"
 #include "../../src/client/event_queue.h"
 #include "../../src/client/registry.h"
 #include "../../src/client/output.h"
@@ -31,6 +32,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/compositor_interface.h"
 #include "../../src/server/datadevicemanager_interface.h"
 #include "../../src/server/display.h"
+#include "../../src/server/dpms_interface.h"
 #include "../../src/server/output_interface.h"
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
@@ -40,6 +42,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/subcompositor_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
+#include <wayland-dpms-client-protocol.h>
 
 class TestWaylandRegistry : public QObject
 {
@@ -61,6 +64,7 @@ private Q_SLOTS:
     void testBindBlurManager();
     void testBindContrastManager();
     void testBindSlideManager();
+    void testBindDpmsManager();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -112,6 +116,7 @@ void TestWaylandRegistry::init()
     m_display->createBlurManager(this)->create();
     m_display->createContrastManager(this)->create();
     m_display->createSlideManager(this)->create();
+    m_display->createDpmsManager()->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -227,6 +232,11 @@ void TestWaylandRegistry::testBindContrastManager()
 void TestWaylandRegistry::testBindSlideManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::Slide, SIGNAL(slideAnnounced(quint32,quint32)), bindSlideManager, free)
+}
+
+void TestWaylandRegistry::testBindDpmsManager()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::Dpms, SIGNAL(dpmsAnnounced(quint32,quint32)), bindDpmsManager, org_kde_kwin_dpms_manager_destroy)
 }
 
 #undef TEST_BIND

@@ -22,9 +22,11 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 // KWin
 #include "../../src/client/connection_thread.h"
 #include "../../src/client/event_queue.h"
+#include "../../src/client/dpms.h"
 #include "../../src/client/output.h"
 #include "../../src/client/registry.h"
 #include "../../src/server/display.h"
+#include "../../src/server/dpms_interface.h"
 #include "../../src/server/output_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -47,6 +49,9 @@ private Q_SLOTS:
 
     void testTransform_data();
     void testTransform();
+
+    void testDpms_data();
+    void testDpms();
 
 private:
     KWayland::Server::Display *m_display;
@@ -82,6 +87,8 @@ void TestWaylandOutput::init()
     m_serverOutput->addMode(QSize(1280, 1024), OutputInterface::ModeFlags(), 90000);
     m_serverOutput->setCurrentMode(QSize(1024, 768));
     m_serverOutput->create();
+    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
+    QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::On);
 
     // setup connection
     m_connection = new KWayland::Client::ConnectionThread;
@@ -391,6 +398,80 @@ void TestWaylandOutput::testTransform()
         QVERIFY(outputChanged.wait());
     }
     QCOMPARE(output->transform(), Output::Transform::Normal);
+}
+
+void TestWaylandOutput::testDpms_data()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    QTest::addColumn<KWayland::Client::Dpms::Mode>("client");
+    QTest::addColumn<KWayland::Server::OutputInterface::DpmsMode>("server");
+
+    QTest::newRow("Standby") << Dpms::Mode::Standby << OutputInterface::DpmsMode::Standby;
+    QTest::newRow("Suspend") << Dpms::Mode::Suspend << OutputInterface::DpmsMode::Suspend;
+    QTest::newRow("Off") << Dpms::Mode::Off << OutputInterface::DpmsMode::Off;
+}
+
+void TestWaylandOutput::testDpms()
+{
+    using namespace KWayland::Client;
+    using namespace KWayland::Server;
+
+    m_display->createDpmsManager()->create();
+
+    // set Dpms on the Output
+    QSignalSpy serverDpmsSupportedChangedSpy(m_serverOutput, &OutputInterface::dpmsSupportedChanged);
+    QVERIFY(serverDpmsSupportedChangedSpy.isValid());
+    QCOMPARE(m_serverOutput->isDpmsSupported(), false);
+    m_serverOutput->setDpmsSupported(true);
+    QCOMPARE(serverDpmsSupportedChangedSpy.count(), 1);
+    QCOMPARE(m_serverOutput->isDpmsSupported(), true);
+
+    KWayland::Client::Registry registry;
+    registry.setEventQueue(m_queue);
+    QSignalSpy announced(&registry, &Registry::interfacesAnnounced);
+    QVERIFY(announced.isValid());
+    QSignalSpy dpmsAnnouncedSpy(&registry, &Registry::dpmsAnnounced);
+    QVERIFY(dpmsAnnouncedSpy.isValid());
+    registry.create(m_connection->display());
+    QVERIFY(registry.isValid());
+    registry.setup();
+    m_connection->flush();
+    QVERIFY(announced.wait());
+    QCOMPARE(dpmsAnnouncedSpy.count(), 1);
+
+    Output *output = registry.createOutput(registry.interface(Registry::Interface::Output).name, registry.interface(Registry::Interface::Output).version, &registry);
+
+    DpmsManager *dpmsManager = registry.createDpmsManager(dpmsAnnouncedSpy.first().first().value<quint32>(), dpmsAnnouncedSpy.first().last().value<quint32>(), &registry);
+    QVERIFY(dpmsManager->isValid());
+
+    Dpms *dpms = dpmsManager->getDpms(output, &registry);
+    QSignalSpy clientDpmsSupportedChangedSpy(dpms, &Dpms::supportedChanged);
+    QVERIFY(clientDpmsSupportedChangedSpy.isValid());
+    QVERIFY(dpms->isValid());
+    QCOMPARE(dpms->isSupported(), false);
+    QCOMPARE(dpms->mode(), Dpms::Mode::On);
+    m_connection->flush();
+    QVERIFY(clientDpmsSupportedChangedSpy.wait());
+    QCOMPARE(clientDpmsSupportedChangedSpy.count(), 1);
+    QCOMPARE(dpms->isSupported(), true);
+
+    // and let's change to suspend
+    QSignalSpy serverDpmsModeChangedSpy(m_serverOutput, &OutputInterface::dpmsModeChanged);
+    QVERIFY(serverDpmsModeChangedSpy.isValid());
+    QSignalSpy clientDpmsModeChangedSpy(dpms, &Dpms::modeChanged);
+    QVERIFY(clientDpmsModeChangedSpy.isValid());
+
+    QCOMPARE(m_serverOutput->dpmsMode(), OutputInterface::DpmsMode::On);
+    QFETCH(OutputInterface::DpmsMode, server);
+    m_serverOutput->setDpmsMode(server);
+    QCOMPARE(m_serverOutput->dpmsMode(), server);
+    QCOMPARE(serverDpmsModeChangedSpy.count(), 1);
+
+    QVERIFY(clientDpmsModeChangedSpy.wait());
+    QCOMPARE(clientDpmsModeChangedSpy.count(), 1);
+    QTEST(dpms->mode(), "client");
 }
 
 QTEST_GUILESS_MAIN(TestWaylandOutput)
