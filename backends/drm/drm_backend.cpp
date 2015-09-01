@@ -612,6 +612,40 @@ void DrmOutput::cleanupBlackBuffer()
     }
 }
 
+static KWayland::Server::OutputInterface::DpmsMode toWaylandDpmsMode(DrmOutput::DpmsMode mode)
+{
+    using namespace KWayland::Server;
+    switch (mode) {
+    case DrmOutput::DpmsMode::On:
+        return OutputInterface::DpmsMode::On;
+    case DrmOutput::DpmsMode::Standby:
+        return OutputInterface::DpmsMode::Standby;
+    case DrmOutput::DpmsMode::Suspend:
+        return OutputInterface::DpmsMode::Suspend;
+    case DrmOutput::DpmsMode::Off:
+        return OutputInterface::DpmsMode::Off;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+static DrmOutput::DpmsMode fromWaylandDpmsMode(KWayland::Server::OutputInterface::DpmsMode wlMode)
+{
+    using namespace KWayland::Server;
+    switch (wlMode) {
+    case OutputInterface::DpmsMode::On:
+        return DrmOutput::DpmsMode::On;
+    case OutputInterface::DpmsMode::Standby:
+        return DrmOutput::DpmsMode::Standby;
+    case OutputInterface::DpmsMode::Suspend:
+        return DrmOutput::DpmsMode::Suspend;
+    case OutputInterface::DpmsMode::Off:
+        return DrmOutput::DpmsMode::Off;
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 void DrmOutput::init(drmModeConnector *connector)
 {
     initEdid(connector);
@@ -681,6 +715,17 @@ void DrmOutput::init(drmModeConnector *connector)
             refreshRate /= m->vscan;
         }
         m_waylandOutput->addMode(QSize(m->hdisplay, m->vdisplay), flags, refreshRate);
+    }
+
+    // set dpms
+    if (!m_dpms.isNull()) {
+        m_waylandOutput->setDpmsSupported(true);
+        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
+        connect(m_waylandOutput, &KWayland::Server::OutputInterface::dpmsModeRequested, this,
+            [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
+                setDpms(fromWaylandDpmsMode(mode));
+            }, Qt::QueuedConnection
+        );
     }
 
     m_waylandOutput->create();
@@ -909,6 +954,9 @@ void DrmOutput::setDpms(DrmOutput::DpmsMode mode)
         return;
     }
     m_dpmsMode = mode;
+    if (m_waylandOutput) {
+        m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
+    }
     emit dpmsChanged();
     if (m_dpmsMode != DpmsMode::On) {
         connect(input(), &InputRedirection::globalPointerChanged, this, &DrmOutput::reenableDpms);

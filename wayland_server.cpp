@@ -34,6 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <KWayland/Server/compositor_interface.h>
 #include <KWayland/Server/datadevicemanager_interface.h>
 #include <KWayland/Server/display.h>
+#include <KWayland/Server/dpms_interface.h>
 #include <KWayland/Server/idle_interface.h>
 #include <KWayland/Server/output_interface.h>
 #include <KWayland/Server/plasmashell_interface.h>
@@ -63,6 +64,7 @@ WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
 {
     qRegisterMetaType<KWayland::Server::SurfaceInterface *>("KWayland::Server::SurfaceInterface *");
+    qRegisterMetaType<KWayland::Server::OutputInterface::DpmsMode>();
 }
 
 WaylandServer::~WaylandServer()
@@ -186,6 +188,8 @@ void WaylandServer::init(const QByteArray &socketName)
     );
     auto shadowManager = m_display->createShadowManager(m_display);
     shadowManager->create();
+
+    m_display->createDpmsManager(m_display)->create();
 }
 
 void WaylandServer::initWorkspace()
