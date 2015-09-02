@@ -103,7 +103,7 @@ void CompositorInterface::Private::createSurface(wl_client *client, wl_resource 
         return;
     }
     QObject::connect(surface->client(), &ClientConnection::disconnected, surface,
-        [surface] (ClientConnection *c) {
+        [surface] {
             if (surface->resource()) {
                 wl_resource_destroy(surface->resource());
                 delete surface;
@@ -128,7 +128,7 @@ void CompositorInterface::Private::createRegion(wl_client *client, wl_resource *
         return;
     }
     QObject::connect(region->client(), &ClientConnection::disconnected, region,
-        [region] (ClientConnection *c) {
+        [region] {
             if (region->resource()) {
                 wl_resource_destroy(region->resource());
                 delete region;

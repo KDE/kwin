@@ -552,7 +552,7 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
         // further mapping not possible, 0x120 is BTN_JOYSTICK
     });
     return s_buttons.value(button, 0);
-};
+}
 
 bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
 {
