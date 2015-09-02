@@ -136,6 +136,12 @@ void SurfaceInterface::Private::setBlur(const QPointer<BlurInterface> &blur)
     pending.blurIsSet = true;
 }
 
+void SurfaceInterface::Private::setContrast(const QPointer<ContrastInterface> &contrast)
+{
+    pending.contrast = contrast;
+    pending.contrastIsSet = true;
+}
+
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     destroyCallback,
     attachCallback,
@@ -193,6 +199,7 @@ void SurfaceInterface::Private::commit()
     const bool transformFactorChanged = current.transform != pending.transform;
     const bool shadowChanged = pending.shadowIsSet;
     const bool blurChanged = pending.blurIsSet;
+    const bool contrastChanged = pending.contrastIsSet;
     bool sizeChanged = false;
     auto buffer = current.buffer;
     if (bufferChanged) {
@@ -218,6 +225,10 @@ void SurfaceInterface::Private::commit()
     if (blurChanged) {
         blur = pending.blur;
     }
+    auto contrast = current.contrast;
+    if (contrastChanged) {
+        contrast = pending.contrast;
+    }
     QList<wl_resource*> callbacks = current.callbacks;
     callbacks.append(pending.callbacks);
     // copy values
@@ -226,6 +237,7 @@ void SurfaceInterface::Private::commit()
     current.callbacks = callbacks;
     current.shadow = shadow;
     current.blur = blur;
+    current.contrast = contrast;
     pending = State{};
     pending.children = current.children;
     pending.input = current.input;
@@ -269,6 +281,9 @@ void SurfaceInterface::Private::commit()
     }
     if (blurChanged) {
         emit q->blurChanged();
+    }
+    if (contrastChanged) {
+        emit q->contrastChanged();
     }
 }
 
@@ -499,6 +514,12 @@ QPointer< BlurInterface > SurfaceInterface::blur() const
 {
     Q_D();
     return d->current.blur;
+}
+
+QPointer< ContrastInterface > SurfaceInterface::contrast() const
+{
+    Q_D();
+    return d->current.contrast;
 }
 
 SurfaceInterface::Private *SurfaceInterface::d_func() const

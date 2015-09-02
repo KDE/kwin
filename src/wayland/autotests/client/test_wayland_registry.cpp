@@ -35,6 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "../../src/server/seat_interface.h"
 #include "../../src/server/shell_interface.h"
 #include "../../src/server/blur_interface.h"
+#include "../../src/server/contrast_interface.h"
 #include "../../src/server/subcompositor_interface.h"
 // Wayland
 #include <wayland-client-protocol.h>
@@ -57,6 +58,7 @@ private Q_SLOTS:
     void testBindSubCompositor();
     void testBindDataDeviceManager();
     void testBindBlurManager();
+    void testBindContrastManager();
     void testGlobalSync();
     void testGlobalSyncThreaded();
     void testRemoval();
@@ -106,6 +108,7 @@ void TestWaylandRegistry::init()
     m_dataDeviceManager = m_display->createDataDeviceManager();
     m_dataDeviceManager->create();
     m_display->createBlurManager(this)->create();
+    m_display->createContrastManager(this)->create();
 }
 
 void TestWaylandRegistry::cleanup()
@@ -211,6 +214,11 @@ void TestWaylandRegistry::testBindDataDeviceManager()
 void TestWaylandRegistry::testBindBlurManager()
 {
     TEST_BIND(KWayland::Client::Registry::Interface::Blur, SIGNAL(blurAnnounced(quint32,quint32)), bindBlurManager, free)
+}
+
+void TestWaylandRegistry::testBindContrastManager()
+{
+    TEST_BIND(KWayland::Client::Registry::Interface::Contrast, SIGNAL(contrastAnnounced(quint32,quint32)), bindContrastManager, free)
 }
 
 #undef TEST_BIND

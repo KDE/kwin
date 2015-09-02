@@ -42,6 +42,7 @@ public:
         bool bufferIsSet = false;
         bool shadowIsSet = false;
         bool blurIsSet = false;
+        bool contrastIsSet = false;
         bool inputIsInfinite = true;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
@@ -52,6 +53,7 @@ public:
         QList<QPointer<SubSurfaceInterface>> children;
         QPointer<ShadowInterface> shadow;
         QPointer<BlurInterface> blur;
+        QPointer<ContrastInterface> contrast;
     };
     Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource);
     ~Private();
@@ -64,6 +66,7 @@ public:
     bool lowerChild(QPointer<SubSurfaceInterface> subsurface, SurfaceInterface *sibling);
     void setShadow(const QPointer<ShadowInterface> &shadow);
     void setBlur(const QPointer<BlurInterface> &blur);
+    void setContrast(const QPointer<ContrastInterface> &contrast);
 
     State current;
     State pending;
