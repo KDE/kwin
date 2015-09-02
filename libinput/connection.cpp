@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "../udev.h"
 #include "libinput_logging.h"
 
+#include <QMutexLocker>
 #include <QSocketNotifier>
 #include <QThread>
 
@@ -83,6 +84,7 @@ Connection::Connection(Context *input, QObject *parent)
     : QObject(parent)
     , m_input(input)
     , m_notifier(nullptr)
+    , m_mutex(QMutex::Recursive)
 {
     Q_ASSERT(m_input);
 }
@@ -96,6 +98,11 @@ Connection::~Connection()
 
 void Connection::setup()
 {
+    QMetaObject::invokeMethod(this, "doSetup", Qt::QueuedConnection);
+}
+
+void Connection::doSetup()
+{
     Q_ASSERT(!m_notifier);
     m_notifier = new QSocketNotifier(m_input->fileDescriptor(), QSocketNotifier::Read, this);
     connect(m_notifier, &QSocketNotifier::activated, this, &Connection::handleEvent);
@@ -108,16 +115,7 @@ void Connection::setup()
                     return;
                 }
                 m_input->resume();
-                handleEvent();
-                if (m_keyboardBeforeSuspend && !m_keyboard) {
-                    emit hasKeyboardChanged(false);
-                }
-                if (m_pointerBeforeSuspend && !m_pointer) {
-                    emit hasPointerChanged(false);
-                }
-                if (m_touchBeforeSuspend && !m_touch) {
-                    emit hasTouchChanged(false);
-                }
+                wasSuspended = true;
             } else {
                 deactivate();
             }
@@ -140,12 +138,26 @@ void Connection::deactivate()
 
 void Connection::handleEvent()
 {
+    QMutexLocker locker(&m_mutex);
+    const bool wasEmpty = m_eventQueue.isEmpty();
     do {
         m_input->dispatch();
-        QScopedPointer<Event> event(m_input->event());
-        if (event.isNull()) {
+        Event *event = m_input->event();
+        if (!event) {
             break;
         }
+        m_eventQueue << event;
+    } while (true);
+    if (wasEmpty && !m_eventQueue.isEmpty()) {
+        emit eventsRead();
+    }
+}
+
+void Connection::processEvents()
+{
+    QMutexLocker locker(&m_mutex);
+    while (!m_eventQueue.isEmpty()) {
+        QScopedPointer<Event> event(m_eventQueue.takeFirst());
         switch (event->type()) {
             case LIBINPUT_EVENT_DEVICE_ADDED:
                 if (libinput_device_has_capability(event->device(), LIBINPUT_DEVICE_CAP_KEYBOARD)) {
@@ -242,7 +254,19 @@ void Connection::handleEvent()
                 // nothing
                 break;
         }
-    } while (true);
+    }
+    if (wasSuspended) {
+        if (m_keyboardBeforeSuspend && !m_keyboard) {
+            emit hasKeyboardChanged(false);
+        }
+        if (m_pointerBeforeSuspend && !m_pointer) {
+            emit hasPointerChanged(false);
+        }
+        if (m_touchBeforeSuspend && !m_touch) {
+            emit hasTouchChanged(false);
+        }
+        wasSuspended = false;
+    }
 }
 
 void Connection::setScreenSize(const QSize &size)

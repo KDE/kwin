@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QObject>
 #include <QSize>
+#include <QMutex>
+#include <QVector>
 
 class QSocketNotifier;
 class QThread;
@@ -34,6 +36,7 @@ namespace KWin
 namespace LibInput
 {
 
+class Event;
 class Context;
 
 class Connection : public QObject
@@ -63,6 +66,8 @@ public:
 
     void deactivate();
 
+    void processEvents();
+
 Q_SIGNALS:
     void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time);
     void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time);
@@ -78,6 +83,11 @@ Q_SIGNALS:
     void hasPointerChanged(bool);
     void hasTouchChanged(bool);
 
+    void eventsRead();
+
+private Q_SLOTS:
+    void doSetup();
+
 private:
     Connection(Context *input, QObject *parent = nullptr);
     void handleEvent();
@@ -90,6 +100,9 @@ private:
     bool m_keyboardBeforeSuspend = false;
     bool m_pointerBeforeSuspend = false;
     bool m_touchBeforeSuspend = false;
+    QMutex m_mutex;
+    QVector<Event*> m_eventQueue;
+    bool wasSuspended = false;
 
     KWIN_SINGLETON(Connection)
     static QThread *s_thread;

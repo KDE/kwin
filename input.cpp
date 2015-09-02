@@ -415,6 +415,11 @@ void InputRedirection::setupLibInput()
     if (conn) {
         conn->setup();
         m_pointerWarping = true;
+        connect(conn, &LibInput::Connection::eventsRead, this,
+            [this] {
+                m_libInput->processEvents();
+            }, Qt::QueuedConnection
+        );
         connect(conn, &LibInput::Connection::pointerButtonChanged, this, &InputRedirection::processPointerButton);
         connect(conn, &LibInput::Connection::pointerAxisChanged, this, &InputRedirection::processPointerAxis);
         connect(conn, &LibInput::Connection::keyChanged, this, &InputRedirection::processKeyboardKey);
