@@ -206,9 +206,31 @@ void Connection::processEvents()
             }
             case LIBINPUT_EVENT_POINTER_AXIS: {
                 PointerEvent *pe = static_cast<PointerEvent*>(event.data());
-                const auto axis = pe->axis();
-                for (auto it = axis.begin(); it != axis.end(); ++it) {
-                    emit pointerAxisChanged(*it, pe->axisValue(*it), pe->time());
+                struct Axis {
+                    qreal delta = 0.0;
+                    quint32 time = 0;
+                };
+                QMap<InputRedirection::PointerAxis, Axis> deltas;
+                auto update = [&deltas] (PointerEvent *pe) {
+                    const auto axis = pe->axis();
+                    for (auto it = axis.begin(); it != axis.end(); ++it) {
+                        deltas[*it].delta += pe->axisValue(*it);
+                        deltas[*it].time = pe->time();
+                    }
+                };
+                update(pe);
+                auto it = m_eventQueue.begin();
+                while (it != m_eventQueue.end()) {
+                    if ((*it)->type() == LIBINPUT_EVENT_POINTER_AXIS) {
+                        QScopedPointer<PointerEvent> p(static_cast<PointerEvent*>(*it));
+                        update(p.data());
+                        it = m_eventQueue.erase(it);
+                    } else {
+                        break;
+                    }
+                }
+                for (auto it = deltas.constBegin(); it != deltas.constEnd(); ++it) {
+                    emit pointerAxisChanged(it.key(), it.value().delta, it.value().time);
                 }
                 break;
             }
