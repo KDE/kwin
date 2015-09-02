@@ -642,11 +642,31 @@ void TestWaylandSeat::testKeyboard()
     QVERIFY(!m_seatInterface->focusedKeyboard());
 
     Keyboard *keyboard = m_seat->createKeyboard(m_seat);
+    QSignalSpy repeatInfoSpy(keyboard, &Keyboard::keyRepeatChanged);
+    QVERIFY(repeatInfoSpy.isValid());
     const Keyboard &ckeyboard = *keyboard;
     QVERIFY(keyboard->isValid());
+    QCOMPARE(keyboard->isKeyRepeatEnabled(), false);
+    QCOMPARE(keyboard->keyRepeatDelay(), 0);
+    QCOMPARE(keyboard->keyRepeatRate(), 0);
     wl_display_flush(m_connection->display());
     QTest::qWait(100);
     QVERIFY(m_seatInterface->focusedKeyboard());
+
+    // we should get the repeat info announced
+    QCOMPARE(repeatInfoSpy.count(), 1);
+    QCOMPARE(keyboard->isKeyRepeatEnabled(), false);
+    QCOMPARE(keyboard->keyRepeatDelay(), 0);
+    QCOMPARE(keyboard->keyRepeatRate(), 0);
+
+    // let's change repeat in server
+    m_seatInterface->setKeyRepeatInfo(25, 660);
+    m_seatInterface->focusedKeyboard()->client()->flush();
+    QVERIFY(repeatInfoSpy.wait());
+    QCOMPARE(repeatInfoSpy.count(), 2);
+    QCOMPARE(keyboard->isKeyRepeatEnabled(), true);
+    QCOMPARE(keyboard->keyRepeatRate(), 25);
+    QCOMPARE(keyboard->keyRepeatDelay(), 660);
 
     m_seatInterface->setTimestamp(1);
     m_seatInterface->keyPressed(KEY_K);
@@ -745,6 +765,20 @@ void TestWaylandSeat::testKeyboard()
     QTest::qWait(100);
     QVERIFY(!m_seatInterface->focusedKeyboardSurface());
     QVERIFY(!m_seatInterface->focusedKeyboard());
+
+    // create a second Keyboard to verify that repeat info is announced properly
+    Keyboard *keyboard2 = m_seat->createKeyboard(m_seat);
+    QSignalSpy repeatInfoSpy2(keyboard2, &Keyboard::keyRepeatChanged);
+    QVERIFY(repeatInfoSpy2.isValid());
+    QVERIFY(keyboard2->isValid());
+    QCOMPARE(keyboard2->isKeyRepeatEnabled(), false);
+    QCOMPARE(keyboard2->keyRepeatDelay(), 0);
+    QCOMPARE(keyboard2->keyRepeatRate(), 0);
+    wl_display_flush(m_connection->display());
+    QVERIFY(repeatInfoSpy2.wait());
+    QCOMPARE(keyboard2->isKeyRepeatEnabled(), true);
+    QCOMPARE(keyboard2->keyRepeatRate(), 25);
+    QCOMPARE(keyboard2->keyRepeatDelay(), 660);
 }
 
 void TestWaylandSeat::testCast()

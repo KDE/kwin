@@ -46,6 +46,7 @@ private:
     void updateModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);
     void keyPressed(quint32 key, quint32 serial);
     void keyReleased(quint32 key, quint32 serial);
+    void repeatInfo(qint32 charactersPerSecond, qint32 delay);
     friend class SeatInterface;
     explicit KeyboardInterface(SeatInterface *parent, wl_resource *parentResource);
 

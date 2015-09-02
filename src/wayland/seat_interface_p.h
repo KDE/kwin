@@ -112,6 +112,10 @@ public:
         };
         Focus focus;
         quint32 lastStateSerial = 0;
+        struct {
+            qint32 charactersPerSecond = 0;
+            qint32 delay = 0;
+        } keyRepeat;
     };
     Keyboard keys;
     void updateKey(quint32 key, Keyboard::State state);

@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testPointerButton();
     void testPointerPos();
     void testDestroyThroughTerminate();
+    void testRepeatInfo();
 };
 
 static const QString s_socketName = QStringLiteral("kwin-wayland-server-seat-test-0");
@@ -177,6 +178,23 @@ void TestWaylandServerSeat::testDestroyThroughTerminate()
     QVERIFY(destroyedSpy.isValid());
     display.terminate();
     QVERIFY(!destroyedSpy.isEmpty());
+}
+
+void TestWaylandServerSeat::testRepeatInfo()
+{
+    Display display;
+    display.setSocketName(s_socketName);
+    display.start();
+    SeatInterface *seat = display.createSeat();
+    QCOMPARE(seat->keyRepeatRate(), 0);
+    QCOMPARE(seat->keyRepeatDelay(), 0);
+    seat->setKeyRepeatInfo(25, 660);
+    QCOMPARE(seat->keyRepeatRate(), 25);
+    QCOMPARE(seat->keyRepeatDelay(), 660);
+    // setting negative values should result in 0
+    seat->setKeyRepeatInfo(-25, -660);
+    QCOMPARE(seat->keyRepeatRate(), 0);
+    QCOMPARE(seat->keyRepeatDelay(), 0);
 }
 
 QTEST_GUILESS_MAIN(TestWaylandServerSeat)

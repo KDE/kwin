@@ -38,7 +38,10 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 3;
+static const quint32 s_version = 4;
+static const qint32 s_pointerVersion = 3;
+static const qint32 s_touchVersion = 3;
+static const qint32 s_keyboardVersion = 4;
 
 SeatInterface::Private::Private(SeatInterface *q, Display *display)
     : Global::Private(display, &wl_seat_interface, s_version)
@@ -303,7 +306,7 @@ void SeatInterface::Private::getPointer(wl_client *client, wl_resource *resource
 {
     // TODO: only create if seat has pointer?
     PointerInterface *pointer = new PointerInterface(q, resource);
-    pointer->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    pointer->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_pointerVersion), id);
     if (!pointer->resource()) {
         wl_resource_post_no_memory(resource);
         delete pointer;
@@ -337,12 +340,13 @@ void SeatInterface::Private::getKeyboard(wl_client *client, wl_resource *resourc
 {
     // TODO: only create if seat has keyboard?
     KeyboardInterface *keyboard = new KeyboardInterface(q, resource);
-    keyboard->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    keyboard->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_keyboardVersion) , id);
     if (!keyboard->resource()) {
         wl_resource_post_no_memory(resource);
         delete keyboard;
         return;
     }
+    keyboard->repeatInfo(keys.keyRepeat.charactersPerSecond, keys.keyRepeat.delay);
     if (keys.keymap.xkbcommonCompatible) {
         keyboard->setKeymap(keys.keymap.fd, keys.keymap.size);
     }
@@ -374,7 +378,7 @@ void SeatInterface::Private::getTouch(wl_client *client, wl_resource *resource, 
 {
     // TODO: only create if seat has touch?
     TouchInterface *touch = new TouchInterface(q, resource);
-    touch->create(display->getConnection(client), wl_resource_get_version(resource), id);
+    touch->create(display->getConnection(client), qMin(wl_resource_get_version(resource), s_touchVersion), id);
     if (!touch->resource()) {
         wl_resource_post_no_memory(resource);
         delete touch;
@@ -716,6 +720,28 @@ void SeatInterface::updateKeyboardModifiers(quint32 depressed, quint32 latched, 
     if (d->keys.focus.keyboard && d->keys.focus.surface) {
         d->keys.focus.keyboard->updateModifiers(depressed, latched, locked, group, serial);
     }
+}
+
+void SeatInterface::setKeyRepeatInfo(qint32 charactersPerSecond, qint32 delay)
+{
+    Q_D();
+    d->keys.keyRepeat.charactersPerSecond = qMax(charactersPerSecond, 0);
+    d->keys.keyRepeat.delay = qMax(delay, 0);
+    for (auto it = d->keyboards.constBegin(); it != d->keyboards.constEnd(); ++it) {
+        (*it)->repeatInfo(d->keys.keyRepeat.charactersPerSecond, d->keys.keyRepeat.delay);
+    }
+}
+
+qint32 SeatInterface::keyRepeatDelay() const
+{
+    Q_D();
+    return d->keys.keyRepeat.delay;
+}
+
+qint32 SeatInterface::keyRepeatRate() const
+{
+    Q_D();
+    return d->keys.keyRepeat.charactersPerSecond;
 }
 
 bool SeatInterface::isKeymapXkbCompatible() const

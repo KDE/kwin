@@ -169,6 +169,16 @@ void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quin
     d->sendModifiers(depressed, latched, locked, group, serial);
 }
 
+void KeyboardInterface::repeatInfo(qint32 charactersPerSecond, qint32 delay)
+{
+    Q_D();
+    if (wl_resource_get_version(d->resource) < 4) {
+        // only supported since version 4
+        return;
+    }
+    wl_keyboard_send_repeat_info(d->resource, charactersPerSecond, delay);
+}
+
 SurfaceInterface *KeyboardInterface::focusedSurface() const
 {
     Q_D();
