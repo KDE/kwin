@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QSize>
 
 class QSocketNotifier;
+class QThread;
 
 namespace KWin
 {
@@ -91,6 +92,7 @@ private:
     bool m_touchBeforeSuspend = false;
 
     KWIN_SINGLETON(Connection)
+    static QThread *s_thread;
 };
 
 }

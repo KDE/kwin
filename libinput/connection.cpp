@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "libinput_logging.h"
 
 #include <QSocketNotifier>
+#include <QThread>
 
 #include <libinput.h>
 
@@ -34,6 +35,7 @@ namespace LibInput
 {
 
 Connection *Connection::s_self = nullptr;
+QThread *Connection::s_thread = nullptr;
 
 static Context *s_context = nullptr;
 
@@ -67,7 +69,13 @@ Connection *Connection::create(QObject *parent)
             return nullptr;
         }
     }
-    s_self = new Connection(s_context, parent);
+    s_thread = new QThread();
+    s_self = new Connection(s_context);
+    s_self->moveToThread(s_thread);
+    s_thread->start();
+    QObject::connect(s_thread, &QThread::finished, s_self, &QObject::deleteLater);
+    QObject::connect(s_thread, &QThread::finished, s_thread, &QObject::deleteLater);
+    QObject::connect(parent, &QObject::destroyed, s_thread, &QThread::quit);
     return s_self;
 }
 
