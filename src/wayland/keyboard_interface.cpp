@@ -172,7 +172,7 @@ void KeyboardInterface::updateModifiers(quint32 depressed, quint32 latched, quin
 void KeyboardInterface::repeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     Q_D();
-    if (wl_resource_get_version(d->resource) < 4) {
+    if (wl_resource_get_version(d->resource) < WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
         // only supported since version 4
         return;
     }
