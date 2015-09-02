@@ -63,11 +63,11 @@ public:
     void deactivate();
 
 Q_SIGNALS:
-    void keyChanged(uint32_t key, InputRedirection::KeyboardKeyState, uint32_t time);
-    void pointerButtonChanged(uint32_t button, InputRedirection::PointerButtonState state, uint32_t time);
-    void pointerMotionAbsolute(QPointF orig, QPointF screen, uint32_t time);
-    void pointerMotion(QPointF delta, uint32_t time);
-    void pointerAxisChanged(InputRedirection::PointerAxis axis, qreal delta, uint32_t time);
+    void keyChanged(quint32 key, KWin::InputRedirection::KeyboardKeyState, quint32 time);
+    void pointerButtonChanged(quint32 button, KWin::InputRedirection::PointerButtonState state, quint32 time);
+    void pointerMotionAbsolute(QPointF orig, QPointF screen, quint32 time);
+    void pointerMotion(QPointF delta, quint32 time);
+    void pointerAxisChanged(KWin::InputRedirection::PointerAxis axis, qreal delta, quint32 time);
     void touchFrame();
     void touchCanceled();
     void touchDown(qint32 id, const QPointF &absolutePos, quint32 time);

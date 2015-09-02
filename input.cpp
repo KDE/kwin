@@ -283,6 +283,9 @@ InputRedirection::InputRedirection(QObject *parent)
     , m_pointerWindow()
     , m_shortcuts(new GlobalShortcutsManager(this))
 {
+    qRegisterMetaType<KWin::InputRedirection::KeyboardKeyState>();
+    qRegisterMetaType<KWin::InputRedirection::PointerButtonState>();
+    qRegisterMetaType<KWin::InputRedirection::PointerAxis>();
 #if HAVE_INPUT
     if (Application::usesLibinput()) {
         if (VirtualTerminal::self()) {

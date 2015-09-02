@@ -314,4 +314,8 @@ Qt::KeyboardModifiers Xkb::modifiers() const
 
 } // namespace KWin
 
+Q_DECLARE_METATYPE(KWin::InputRedirection::KeyboardKeyState)
+Q_DECLARE_METATYPE(KWin::InputRedirection::PointerButtonState)
+Q_DECLARE_METATYPE(KWin::InputRedirection::PointerAxis)
+
 #endif // KWIN_INPUT_H
