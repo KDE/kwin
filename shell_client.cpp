@@ -648,6 +648,9 @@ void ShellClient::installPlasmaShellSurface(PlasmaShellSurfaceInterface *surface
         case PlasmaShellSurfaceInterface::Role::Panel:
             type = NET::Dock;
             break;
+        case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
+            type = NET::OnScreenDisplay;
+            break;
         case PlasmaShellSurfaceInterface::Role::Normal:
         default:
             type = NET::Normal;
