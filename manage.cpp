@@ -418,7 +418,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
             const QSize ss = workspace()->clientArea(ScreenArea, area.center(), desktop()).size();
             const QRect fsa = workspace()->clientArea(FullArea, geom.center(), desktop());
             const QSize cs = clientSize();
-            int pseudo_max = MaximizeRestore;
+            int pseudo_max = ((info->state() & NET::MaxVert) ? MaximizeVertical : 0) |
+                             ((info->state() & NET::MaxHoriz) ? MaximizeHorizontal : 0);
             if (width() >= area.width())
                 pseudo_max |=  MaximizeHorizontal;
             if (height() >= area.height())
