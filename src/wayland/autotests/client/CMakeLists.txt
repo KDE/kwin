@@ -153,7 +153,7 @@ set( testContrast_SRCS
         test_wayland_contrast.cpp
     )
 add_executable(testContrast ${testContrast_SRCS})
-target_link_libraries( testContrast Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer)
+target_link_libraries( testContrast Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
 add_test(kwayland-testContrast testContrast)
 ecm_mark_as_test(testContrast)
 
