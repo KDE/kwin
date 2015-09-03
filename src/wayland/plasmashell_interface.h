@@ -69,7 +69,8 @@ public:
     enum class Role {
         Normal,
         Desktop,
-        Panel
+        Panel,
+        OnScreenDisplay
     };
     Role role() const;
     enum class PanelBehavior {

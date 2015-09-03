@@ -227,6 +227,9 @@ void PlasmaShellSurfaceInterface::Private::setRole(uint32_t role)
     case ORG_KDE_PLASMA_SURFACE_ROLE_PANEL:
         r = Role::Panel;
         break;
+    case ORG_KDE_PLASMA_SURFACE_ROLE_ONSCREENDISPLAY:
+        r = Role::OnScreenDisplay;
+        break;
     case ORG_KDE_PLASMA_SURFACE_ROLE_NORMAL:
     default:
         r = Role::Normal;
