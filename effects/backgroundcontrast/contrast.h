@@ -58,6 +58,7 @@ public:
 
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
+    void slotWindowDeleted(KWin::EffectWindow *w);
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
     void slotScreenGeometryChanged();
 
@@ -74,6 +75,7 @@ private:
     long net_wm_contrast_region;
     QRegion m_paintedArea; // actually painted area which is greater than m_damagedArea
     QRegion m_currentContrast; // keeps track of the currently contrasted area of non-caching windows(from bottom to top)
+    QHash< const EffectWindow*, QMetaObject::Connection > m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
 };
 
 inline
