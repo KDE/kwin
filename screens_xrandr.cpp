@@ -42,6 +42,10 @@ void XRandRScreens::update()
     };
     m_geometries.clear();
     m_names.clear();
+    if (!Xcb::Extensions::self()->isRandrAvailable()) {
+        fallback();
+        return;
+    }
     T resources(rootWindow());
     if (resources.isNull()) {
         fallback();

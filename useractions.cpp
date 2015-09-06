@@ -1746,33 +1746,34 @@ void Workspace::slotInvertScreen()
     using namespace Xcb::RandR;
     bool succeeded = false;
 
-    //BEGIN Xrandr inversion - does atm NOT work with the nvidia blob
-    ScreenResources res(active_client ? active_client->window() : rootWindow());
+    if (Xcb::Extensions::self()->isRandrAvailable()) {
+        ScreenResources res(active_client ? active_client->window() : rootWindow());
 
-    if (!res.isNull()) {
-        for (int j = 0; j < res->num_crtcs; ++j) {
-            auto crtc = res.crtcs()[j];
-            CrtcGamma gamma(crtc);
-            if (gamma.isNull()) {
-                continue;
-            }
-            if (gamma->size) {
-                qCDebug(KWIN_CORE) << "inverting screen using XRRSetCrtcGamma";
-                const int half = gamma->size / 2 + 1;
-
-                uint16_t *red = gamma.red();
-                uint16_t *green = gamma.green();
-                uint16_t *blue = gamma.blue();
-                for (int i = 0; i < half; ++i) {
-                    auto invert = [&gamma, i](uint16_t *ramp) {
-                        qSwap(ramp[i], ramp[gamma->size - 1 - i]);
-                    };
-                    invert(red);
-                    invert(green);
-                    invert(blue);
+        if (!res.isNull()) {
+            for (int j = 0; j < res->num_crtcs; ++j) {
+                auto crtc = res.crtcs()[j];
+                CrtcGamma gamma(crtc);
+                if (gamma.isNull()) {
+                    continue;
                 }
-                xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
-                succeeded = true;
+                if (gamma->size) {
+                    qCDebug(KWIN_CORE) << "inverting screen using xcb_randr_set_crtc_gamma";
+                    const int half = gamma->size / 2 + 1;
+
+                    uint16_t *red = gamma.red();
+                    uint16_t *green = gamma.green();
+                    uint16_t *blue = gamma.blue();
+                    for (int i = 0; i < half; ++i) {
+                        auto invert = [&gamma, i](uint16_t *ramp) {
+                            qSwap(ramp[i], ramp[gamma->size - 1 - i]);
+                        };
+                        invert(red);
+                        invert(green);
+                        invert(blue);
+                    }
+                    xcb_randr_set_crtc_gamma(connection(), crtc, gamma->size, red, green, blue);
+                    succeeded = true;
+                }
             }
         }
     }
