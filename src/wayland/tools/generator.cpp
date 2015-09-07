@@ -51,6 +51,22 @@ static QString toQtInterfaceName(const QString &wlInterface)
     return wlInterface;
 }
 
+static QString toCamelCase(const QString &underscoreName)
+{
+    const QStringList parts = underscoreName.split(QStringLiteral("_"));
+    if (parts.count() < 2) {
+        return underscoreName;
+    }
+    auto it = parts.constBegin();
+    QString camelCase = (*it);
+    it++;
+    for (; it != parts.constEnd(); ++it) {
+        camelCase.append((*it).left(1).toUpper());
+        camelCase.append((*it).mid(1));
+    }
+    return camelCase;
+}
+
 Argument::Argument()
 {
 }
@@ -798,19 +814,19 @@ void Generator::generateClientClassRequests(const Interface &interface)
                 first = false;
             }
             if (a.type() == Argument::Type::Object) {
-                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(a.name()));
+                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
             } else {
-                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(a.name()));
+                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
             }
         }
         if (factored.isEmpty()) {
-            *m_stream.localData() << templateString.arg(r.name()).arg(arguments);
+            *m_stream.localData() << templateString.arg(toCamelCase((r.name()))).arg(arguments);
         } else {
             if (!first) {
                 arguments.append(QStringLiteral(", "));
             }
             arguments.append(QStringLiteral("QObject *parent = nullptr"));
-            *m_stream.localData() << factoryTemplateString.arg(toQtInterfaceName(factored)).arg(r.name()).arg(arguments);
+            *m_stream.localData() << factoryTemplateString.arg(toQtInterfaceName(factored)).arg(toCamelCase(r.name())).arg(arguments);
         }
     }
 }
@@ -838,19 +854,19 @@ void Generator::generateClientCppRequests(const Interface &interface)
                 first = false;
             }
             if (a.type() == Argument::Type::Object) {
-                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(a.name()));
+                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
             } else {
-                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(a.name()));
+                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(toCamelCase(a.name())));
             }
         }
         if (factored.isEmpty()) {
-            *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(r.name()).arg(arguments);
+            *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(toCamelCase(r.name())).arg(arguments);
         } else {
             if (!first) {
                 arguments.append(QStringLiteral(", "));
             }
             arguments.append(QStringLiteral("QObject *parent"));
-            *m_stream.localData() << factoryTemplateString.arg(interface.kwaylandClientName()).arg(toQtInterfaceName(factored)).arg(r.name()).arg(arguments);
+            *m_stream.localData() << factoryTemplateString.arg(interface.kwaylandClientName()).arg(toQtInterfaceName(factored)).arg(toCamelCase(r.name())).arg(arguments);
         }
         *m_stream.localData() << QStringLiteral("{\n}\n\n");
     }
