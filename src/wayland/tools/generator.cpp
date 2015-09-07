@@ -40,6 +40,17 @@ namespace Tools
 
 static QMap<QString, QString> s_clientClassNameMapping;
 
+static QString toQtInterfaceName(const QString &wlInterface)
+{
+    auto it = s_clientClassNameMapping.constFind(wlInterface);
+    if (it != s_clientClassNameMapping.constEnd()) {
+        return it.value();
+    } else {
+        qWarning() << "Cannot find mapping for " << wlInterface;
+    }
+    return wlInterface;
+}
+
 Argument::Argument()
 {
 }
@@ -84,6 +95,31 @@ Argument::Type Argument::parseType(const QStringRef &type)
     return Type::Unknown;
 }
 
+QString Argument::typeAsQt() const
+{
+    switch (m_type) {
+    case Type::Destructor:
+        return QString();
+    case Type::FileDescriptor:
+        return QStringLiteral("int");
+    case Type::Fixed:
+        return QStringLiteral("qreal");
+    case Type::Int:
+        return QStringLiteral("qint32");
+    case Type::NewId:
+    case Type::Object:
+        return toQtInterfaceName(m_inteface);
+    case Type::String:
+        return QStringLiteral("const QString &");
+    case Type::Uint:
+        return QStringLiteral("quint32");
+    case Type::Unknown:
+        return QString();
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 Request::Request()
 {
 }
@@ -94,6 +130,26 @@ Request::Request(const QString &name)
 }
 
 Request::~Request() = default;
+
+bool Request::isDestructor() const
+{
+    for (const auto a: m_arguments) {
+        if (a.type() == Argument::Type::Destructor) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Request::isFactory() const
+{
+    for (const auto a: m_arguments) {
+        if (a.type() == Argument::Type::NewId) {
+            return true;
+        }
+    }
+    return false;
+}
 
 Event::Event()
 {
@@ -303,6 +359,7 @@ void Generator::startGenerateCppFile()
         for (auto it = m_interfaces.constBegin(); it != m_interfaces.constEnd(); ++it) {
             generatePrivateClass(*it);
             generateClientCpp(*it);
+            generateClientCppRequests(*it);
         }
 
         generateEndNamespace();
@@ -478,6 +535,7 @@ void Generator::generateClientGlobalClass(const Interface &interface)
     generateClientGlobalClassSetup(interface);
     generateClientClassReleaseDestroy(interface);
     generateClientClassStart(interface);
+    generateClientClassRequests(interface);
     generateClientClassCasts(interface);
     generateClientClassSignals(interface);
     generateClientGlobalClassEnd(interface);
@@ -489,6 +547,7 @@ void Generator::generateClientResourceClass(const Interface &interface)
     generateClientClassDtor(interface);
     generateClientResourceClassSetup(interface);
     generateClientClassReleaseDestroy(interface);
+    generateClientClassRequests(interface);
     generateClientClassCasts(interface);
     generateClientResourceClassEnd(interface);
 }
@@ -716,6 +775,87 @@ void Generator::generateClientClassStart(const Interface &interface)
     *m_stream.localData() << templateString.arg(interface.kwaylandClientName());
 }
 
+void Generator::generateClientClassRequests(const Interface &interface)
+{
+    const auto requests = interface.requests();
+    const QString templateString = QStringLiteral("    void %1(%2);\n\n");
+    const QString factoryTemplateString = QStringLiteral("    %1 *%2(%3);\n\n");
+    for (const auto &r: requests) {
+        if (r.isDestructor()) {
+            continue;
+        }
+        QString arguments;
+        bool first = true;
+        QString factored;
+        for (const auto &a: r.arguments()) {
+            if (a.type() == Argument::Type::NewId) {
+                factored = a.interface();
+                continue;
+            }
+            if (!first) {
+                arguments.append(QStringLiteral(", "));
+            } else {
+                first = false;
+            }
+            if (a.type() == Argument::Type::Object) {
+                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(a.name()));
+            } else {
+                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(a.name()));
+            }
+        }
+        if (factored.isEmpty()) {
+            *m_stream.localData() << templateString.arg(r.name()).arg(arguments);
+        } else {
+            if (!first) {
+                arguments.append(QStringLiteral(", "));
+            }
+            arguments.append(QStringLiteral("QObject *parent = nullptr"));
+            *m_stream.localData() << factoryTemplateString.arg(toQtInterfaceName(factored)).arg(r.name()).arg(arguments);
+        }
+    }
+}
+
+void Generator::generateClientCppRequests(const Interface &interface)
+{
+    const auto requests = interface.requests();
+    const QString templateString = QStringLiteral("void %1::%2(%3)\n");
+    const QString factoryTemplateString = QStringLiteral("%2 *%1::%3(%4)\n");
+    for (const auto &r: requests) {
+        if (r.isDestructor()) {
+            continue;
+        }
+        QString arguments;
+        bool first = true;
+        QString factored;
+        for (const auto &a: r.arguments()) {
+            if (a.type() == Argument::Type::NewId) {
+                factored = a.interface();
+                continue;
+            }
+            if (!first) {
+                arguments.append(QStringLiteral(", "));
+            } else {
+                first = false;
+            }
+            if (a.type() == Argument::Type::Object) {
+                arguments.append(QStringLiteral("%1 *%2").arg(a.typeAsQt()).arg(a.name()));
+            } else {
+                arguments.append(QStringLiteral("%1 %2").arg(a.typeAsQt()).arg(a.name()));
+            }
+        }
+        if (factored.isEmpty()) {
+            *m_stream.localData() << templateString.arg(interface.kwaylandClientName()).arg(r.name()).arg(arguments);
+        } else {
+            if (!first) {
+                arguments.append(QStringLiteral(", "));
+            }
+            arguments.append(QStringLiteral("QObject *parent"));
+            *m_stream.localData() << factoryTemplateString.arg(interface.kwaylandClientName()).arg(toQtInterfaceName(factored)).arg(r.name()).arg(arguments);
+        }
+        *m_stream.localData() << QStringLiteral("{\n}\n\n");
+    }
+}
+
 void Generator::generateClientClassCasts(const Interface &interface)
 {
     const QString templateString = QStringLiteral(
@@ -793,7 +933,7 @@ void Generator::generateNamespaceForwardDeclarations()
             if (it != s_clientClassNameMapping.constEnd()) {
                 *m_stream.localData() << QStringLiteral("class %1;\n").arg(it.value());
             } else {
-                qWarning() << "Cannot forward declare KWayland class for interface " << it.key();
+                qWarning() << "Cannot forward declare KWayland class for interface " << o;
             }
         }
         *m_stream.localData() << QStringLiteral("\n");

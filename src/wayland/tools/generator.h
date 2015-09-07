@@ -65,6 +65,7 @@ public:
     QString interface() const {
         return m_inteface;
     }
+    QString typeAsQt() const;
 
 private:
     Type parseType(const QStringRef &type);
@@ -92,6 +93,9 @@ public:
     QVector<Argument> arguments() const {
         return m_arguments;
     }
+
+    bool isDestructor() const;
+    bool isFactory() const;
 
 private:
     QString m_name;
@@ -227,6 +231,8 @@ private:
     void generateClientClassDptr(const Interface &interface);
     void generateClientGlobalClassEnd(const Interface &interface);
     void generateClientResourceClassEnd(const Interface &interface);
+    void generateClientClassRequests(const Interface &interface);
+    void generateClientCppRequests(const Interface &interface);
     void generateWaylandForwardDeclarations();
     void generateNamespaceForwardDeclarations();
     void startParseXml();
