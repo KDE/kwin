@@ -25,18 +25,14 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "resource.h"
 
 #include <QObject>
-#include <QMarginsF>
 
 #include <KWayland/Server/kwaylandserver_export.h>
-
-struct wl_region;
 
 namespace KWayland
 {
 namespace Server
 {
 
-class BufferInterface;
 class Display;
 
 class KWAYLANDSERVER_EXPORT ContrastManagerInterface : public Global
