@@ -136,6 +136,31 @@ QString Argument::typeAsQt() const
     }
 }
 
+QString Argument::typeAsServerWl() const
+{
+    switch (m_type) {
+    case Type::Destructor:
+        return QString();
+    case Type::FileDescriptor:
+        return QStringLiteral("int32_t");
+    case Type::Fixed:
+        return QStringLiteral("wl_fixed");
+    case Type::Int:
+        return QStringLiteral("int32_t");
+    case Type::Object:
+        return QStringLiteral("wl_resource *");
+    case Type::String:
+        return QStringLiteral("const char *");
+    case Type::Uint:
+    case Type::NewId:
+        return QStringLiteral("uint32_t");
+    case Type::Unknown:
+        return QString();
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 Request::Request()
 {
 }
@@ -210,6 +235,8 @@ void Generator::start()
 
     startGenerateHeaderFile();
     startGenerateCppFile();
+    startGenerateServerHeaderFile();
+    startGenerateServerCppFile();
 }
 
 void Generator::startParseXml()
@@ -343,6 +370,7 @@ void Generator::startGenerateHeaderFile()
         QFile file(QStringLiteral("%1.h").arg(m_baseFileName));
         file.open(QIODevice::WriteOnly);
         m_stream.setLocalData(new QTextStream(&file));
+        m_project.setLocalData(Project::Client);
         generateCopyrightHeader();
         generateStartIncludeGuard();
         generateHeaderIncludes();
@@ -369,6 +397,7 @@ void Generator::startGenerateCppFile()
         QFile file(QStringLiteral("%1.cpp").arg(m_baseFileName));
         file.open(QIODevice::WriteOnly);
         m_stream.setLocalData(new QTextStream(&file));
+        m_project.setLocalData(Project::Client);
         generateCopyrightHeader();
         generateCppIncludes();
         generateStartNamespace();
@@ -376,6 +405,58 @@ void Generator::startGenerateCppFile()
             generatePrivateClass(*it);
             generateClientCpp(*it);
             generateClientCppRequests(*it);
+        }
+
+        generateEndNamespace();
+
+        m_stream.setLocalData(nullptr);
+        file.close();
+    }));
+}
+
+void Generator::startGenerateServerHeaderFile()
+{
+    QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+    connect(watcher, &QFutureWatcher<void>::finished, this, &Generator::checkEnd);
+    m_finishedCounter++;
+    watcher->setFuture(QtConcurrent::run([this] {
+        QFile file(QStringLiteral("%1_interface.h").arg(m_baseFileName));
+        file.open(QIODevice::WriteOnly);
+        m_stream.setLocalData(new QTextStream(&file));
+        m_project.setLocalData(Project::Server);
+        generateCopyrightHeader();
+        generateStartIncludeGuard();
+        generateHeaderIncludes();
+        generateStartNamespace();
+        generateNamespaceForwardDeclarations();
+        for (auto it = m_interfaces.constBegin(); it != m_interfaces.constEnd(); ++it) {
+            generateClass(*it);
+        }
+        generateEndNamespace();
+        generateEndIncludeGuard();
+
+        m_stream.setLocalData(nullptr);
+        file.close();
+    }));
+}
+
+void Generator::startGenerateServerCppFile()
+{
+    QFutureWatcher<void> *watcher = new QFutureWatcher<void>(this);
+    connect(watcher, &QFutureWatcher<void>::finished, this, &Generator::checkEnd);
+    m_finishedCounter++;
+    watcher->setFuture(QtConcurrent::run([this] {
+        QFile file(QStringLiteral("%1_interface.cpp").arg(m_baseFileName));
+        file.open(QIODevice::WriteOnly);
+        m_stream.setLocalData(new QTextStream(&file));
+        m_project.setLocalData(Project::Server);
+        generateCopyrightHeader();
+        generateCppIncludes();
+        generateStartNamespace();
+        for (auto it = m_interfaces.constBegin(); it != m_interfaces.constEnd(); ++it) {
+            generatePrivateClass(*it);
+//             generateClientCpp(*it);
+//             generateClientCppRequests(*it);
         }
 
         generateEndNamespace();
@@ -496,12 +577,14 @@ void Generator::generateEndNamespace()
 
 void Generator::generateHeaderIncludes()
 {
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
         *m_stream.localData() << QStringLiteral("#include <QObject>\n\n");
         break;
     case Project::Server:
-        // TODO: implement
+        *m_stream.localData() << QStringLiteral(
+"#include \"global.h\"\n"
+"#include \"resource.h\"\n\n");
         break;
     default:
         Q_UNREACHABLE();
@@ -511,13 +594,17 @@ void Generator::generateHeaderIncludes()
 
 void Generator::generateCppIncludes()
 {
-    *m_stream.localData() << QStringLiteral("#include \"%1.h\"\n").arg(m_baseFileName.toLower());
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
+        *m_stream.localData() << QStringLiteral("#include \"%1.h\"\n").arg(m_baseFileName.toLower());
         *m_stream.localData() << QStringLiteral("#include \"event_queue.h\"\n\n");
         break;
     case Project::Server:
-        // TODO: implement
+        *m_stream.localData() << QStringLiteral("#include \"%1_interface.h\"\n").arg(m_baseFileName.toLower());
+        *m_stream.localData() << QStringLiteral(
+"#include \"display.h\"\n"
+"#include \"global_p.h\"\n"
+"#include \"resource_p.h\"\n\n");
         break;
     default:
         Q_UNREACHABLE();
@@ -526,7 +613,7 @@ void Generator::generateCppIncludes()
 
 void Generator::generateClass(const Interface &interface)
 {
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
         if (interface.isGlobal()) {
             generateClientGlobalClass(interface);
@@ -535,7 +622,11 @@ void Generator::generateClass(const Interface &interface)
         }
         break;
     case Project::Server:
-        // TODO: implement
+        if (interface.isGlobal()) {
+            generateServerGlobalClass(interface);
+        } else {
+            generateServerResourceClass(interface);
+        }
         break;
     default:
         Q_UNREACHABLE();
@@ -568,18 +659,212 @@ void Generator::generateClientResourceClass(const Interface &interface)
     generateClientResourceClassEnd(interface);
 }
 
+void Generator::generateServerGlobalClass(const Interface &interface)
+{
+    const QString templateString = QStringLiteral(
+"class KWAYLANDSERVER_EXPORT %1 : public Global\n"
+"{\n"
+"    Q_OBJECT\n"
+"public:\n"
+"    virtual ~%1();\n"
+"\n"
+"private:\n"
+"    explicit %1(Display *display, QObject *parent = nullptr);\n"
+"    friend class Display;\n"
+"    class Private;\n"
+"}\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName());
+}
+
+void Generator::generateServerResourceClass(const Interface &interface)
+{
+    const QString templateString = QStringLiteral(
+"class KWAYLANDSERVER_EXPORT %1 : public Resource\n"
+"{\n"
+"    Q_OBJECT\n"
+"public:\n"
+"    virtual ~%1();\n"
+"\n"
+"private:\n"
+"    explicit %1(%2 *parent, wl_resource *parentResource);\n"
+"    friend class %2;\n"
+"\n"
+"    class Private;\n"
+"    Private *d_func() const;\n"
+"}\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.factory()->kwaylandServerName());
+}
+
 void Generator::generatePrivateClass(const Interface &interface)
 {
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
         generateClientPrivateClass(interface);
         break;
     case Project::Server:
-        // TODO: implement
+        if (interface.isGlobal()) {
+            generateServerPrivateGlobalClass(interface);
+        } else {
+            generateServerPrivateResourceClass(interface);
+        }
         break;
     default:
         Q_UNREACHABLE();
     }
+}
+
+void Generator::generateServerPrivateGlobalClass(const Interface &interface)
+{
+    QString templateString = QStringLiteral(
+"class %1::Private : public Global::Private\n"
+"{\n"
+"public:\n"
+"    Private(%1 *q, Display *d);\n"
+"\n"
+"private:\n"
+"    void bind(wl_client *client, uint32_t version, uint32_t id) override;\n"
+"\n"
+"    static void unbind(wl_resource *resource);\n"
+"    static Private *cast(wl_resource *r) {\n"
+"        return reinterpret_cast<Private*>(wl_resource_get_user_data(r));\n"
+"    }\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName());
+
+    generateServerPrivateCallbackDefinitions(interface);
+
+    templateString = QStringLiteral(
+"    %1 *q;\n"
+"    static const struct %2_interface s_interface;\n"
+"    static const quint32 s_version = %3;\n"
+"};\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.name()).arg(interface.version());
+    generateServerPrivateInterfaceClass(interface);
+    generateServerPrivateCallbackImpl(interface);
+    generateServerPrivateGlobalCtorBindClass(interface);
+}
+
+void Generator::generateServerPrivateCallbackDefinitions(const Interface &interface)
+{
+    for (const auto &r: interface.requests()) {
+        *m_stream.localData() << QStringLiteral("    static void %1Callback(wl_client *client, wl_resource *resource").arg(toCamelCase(r.name()));
+        for (const auto &a: r.arguments()) {
+            *m_stream.localData() << QStringLiteral(", %1 %2").arg(a.typeAsServerWl()).arg(a.name());
+        }
+        *m_stream.localData() << QStringLiteral(");\n");
+    }
+    *m_stream.localData() << QStringLiteral("\n");
+}
+
+void Generator::generateServerPrivateCallbackImpl(const Interface &interface)
+{
+    for (const auto &r: interface.requests()) {
+        *m_stream.localData() << QStringLiteral("void %2::Private::%1Callback(wl_client *client, wl_resource *resource").arg(toCamelCase(r.name())).arg(interface.kwaylandServerName());
+        for (const auto &a: r.arguments()) {
+            *m_stream.localData() << QStringLiteral(", %1 %2").arg(a.typeAsServerWl()).arg(a.name());
+        }
+        *m_stream.localData() << QStringLiteral(
+")\n"
+"{\n"
+"    // TODO: implement\n"
+"}\n"
+"\n");
+    }
+}
+
+void Generator::generateServerPrivateGlobalCtorBindClass(const Interface &interface)
+{
+    QString templateString = QStringLiteral(
+"%1::Private::Private(%1 *q, Display *d)\n"
+"    : Global::Private(d, &org_kde_kwin_blur_manager_interface, s_version)\n"
+"    , q(q)\n"
+"{\n"
+"}\n"
+"\n"
+"void %1::Private::bind(wl_client *client, uint32_t version, uint32_t id)\n"
+"{\n"
+"    auto c = display->getConnection(client);\n"
+"    wl_resource *resource = c->createResource(&%2_interface, qMin(version, s_version), id);\n"
+"    if (!resource) {\n"
+"        wl_client_post_no_memory(client);\n"
+"        return;\n"
+"    }\n"
+"    wl_resource_set_implementation(resource, &s_interface, this, unbind);\n"
+"    // TODO: should we track?\n"
+"}\n"
+"\n"
+"void %1::Private::unbind(wl_resource *resource)\n"
+"{\n"
+"    Q_UNUSED(resource)\n"
+"    // TODO: implement?\n"
+"}\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.name());
+}
+
+void Generator::generateServerPrivateResourceClass(const Interface &interface)
+{
+    QString templateString = QStringLiteral(
+"class %1::Private : public Resource::Private\n"
+"{\n"
+"public:\n"
+"    Private(%1 *q, %2 *c, wl_resource *parentResource);\n"
+"    ~Private();\n"
+"\n"
+"private:\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.factory()->kwaylandServerName());
+
+    generateServerPrivateCallbackDefinitions(interface);
+
+    templateString = QStringLiteral(
+"    %1 *q_func() {\n"
+"        return reinterpret_cast<%1 *>(q);\n"
+"    }\n"
+"\n"
+"    static const struct %2_interface s_interface;\n"
+"}\n"
+"\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.name());
+
+    generateServerPrivateInterfaceClass(interface);
+    generateServerPrivateCallbackImpl(interface);
+    generateServerPrivateResourceCtorDtorClass(interface);
+}
+
+void Generator::generateServerPrivateInterfaceClass(const Interface &interface)
+{
+    *m_stream.localData() << QStringLiteral("const struct %2_interface %1::Private::s_interface = {\n").arg(interface.kwaylandServerName()).arg(interface.name());
+    bool first = true;
+    for (auto r: interface.requests()) {
+        if (!first) {
+            *m_stream.localData() << QStringLiteral(",\n");
+        } else {
+            first = false;
+        }
+        *m_stream.localData() << QStringLiteral("    %1Callback").arg(toCamelCase(r.name()));
+    }
+    *m_stream.localData() << QStringLiteral("\n};\n\n");
+}
+
+void Generator::generateServerPrivateResourceCtorDtorClass(const Interface &interface)
+{
+    QString templateString = QStringLiteral(
+"%1::Private::Private(%1 *q, %2 *c, wl_resource *parentResource)\n"
+"    : Resource::Private(q, c, parentResource, &%3_interface, &s_interface)\n"
+"{\n"
+"}\n"
+"\n"
+"%1::Private::~Private()\n"
+"{\n"
+"    if (resource) {\n"
+"        wl_resource_destroy(resource);\n"
+"        resource = nullptr;\n"
+"    }\n"
+"}\n");
+    *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.factory()->kwaylandServerName()).arg(interface.name());
 }
 
 void Generator::generateClientPrivateClass(const Interface &interface)
@@ -941,7 +1226,7 @@ void Generator::generateNamespaceForwardDeclarations()
         }
     }
 
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
         *m_stream.localData() << QStringLiteral("class EventQueue;\n");
         for (const auto &o : referencedObjects) {
@@ -955,7 +1240,7 @@ void Generator::generateNamespaceForwardDeclarations()
         *m_stream.localData() << QStringLiteral("\n");
         break;
     case Project::Server:
-        // TODO: implement
+        *m_stream.localData() << QStringLiteral("class Display;\n\n");
         break;
     default:
         Q_UNREACHABLE();
@@ -978,7 +1263,7 @@ void Generator::generateClientClassSignals(const Interface &interface)
 
 QString Generator::projectToName() const
 {
-    switch (m_project) {
+    switch (m_project.localData()) {
     case Project::Client:
         return QStringLiteral("Client");
     case Project::Server:
@@ -1035,7 +1320,6 @@ int main(int argc, char **argv)
     Generator generator(&app);
     generator.setXmlFileName(parser.value(xmlFile));
     generator.setBaseFileName(parser.value(fileName));
-    generator.setProject(Generator::Project::Client);
     generator.start();
 
     return app.exec();

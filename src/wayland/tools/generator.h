@@ -66,6 +66,7 @@ public:
         return m_inteface;
     }
     QString typeAsQt() const;
+    QString typeAsServerWl() const;
 
 private:
     Type parseType(const QStringRef &type);
@@ -149,6 +150,9 @@ public:
     QString kwaylandClientName() const {
         return m_clientName;
     }
+    QString kwaylandServerName() const {
+        return m_clientName + QStringLiteral("Interface");
+    }
 
     QVector<Request> requests() const {
         return m_requests;
@@ -195,13 +199,6 @@ public:
     void setBaseFileName(const QString &name) {
         m_baseFileName = name;
     }
-    enum class Project {
-        Client,
-        Server
-    };
-    void setProject(Project project) {
-        m_project = project;
-    }
     void start();
 
 private:
@@ -214,10 +211,19 @@ private:
     void generateCppIncludes();
     void generatePrivateClass(const Interface &interface);
     void generateClientPrivateClass(const Interface &interface);
+    void generateServerPrivateGlobalClass(const Interface &interface);
+    void generateServerPrivateResourceClass(const Interface &interface);
+    void generateServerPrivateInterfaceClass(const Interface &interface);
+    void generateServerPrivateGlobalCtorBindClass(const Interface &interface);
+    void generateServerPrivateResourceCtorDtorClass(const Interface &interface);
+    void generateServerPrivateCallbackDefinitions(const Interface &interface);
+    void generateServerPrivateCallbackImpl(const Interface &interface);
     void generateClientCpp(const Interface &interface);
     void generateClass(const Interface &interface);
     void generateClientGlobalClass(const Interface &interface);
     void generateClientResourceClass(const Interface &interface);
+    void generateServerGlobalClass(const Interface &interface);
+    void generateServerResourceClass(const Interface &interface);
     void generateClientClassQObjectDerived(const Interface &interface);
     void generateClientGlobalClassDoxy(const Interface &interface);
     void generateClientGlobalClassCtor(const Interface &interface);
@@ -240,6 +246,8 @@ private:
     void startAuthorEmailProcess();
     void startGenerateHeaderFile();
     void startGenerateCppFile();
+    void startGenerateServerHeaderFile();
+    void startGenerateServerCppFile();
 
     void checkEnd();
 
@@ -252,7 +260,11 @@ private:
 
     QThreadStorage<QTextStream*> m_stream;
     QString m_xmlFileName;
-    Project m_project;
+    enum class Project {
+        Client,
+        Server
+    };
+    QThreadStorage<Project> m_project;
     QString m_authorName;
     QString m_authorEmail;
     QString m_baseFileName;
