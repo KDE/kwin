@@ -154,7 +154,7 @@ void TestSlide::testCreate()
     QVERIFY(serverSurfaceCreated.wait());
 
     auto serverSurface = serverSurfaceCreated.first().first().value<KWayland::Server::SurfaceInterface*>();
-    QSignalSpy slideChanged(serverSurface, SIGNAL(slideChanged()));
+    QSignalSpy slideChanged(serverSurface, SIGNAL(slideOnShowHideChanged()));
 
     auto slide = m_slideManager->createSlide(surface.data(), surface.data());
     slide->setLocation(KWayland::Client::Slide::Location::Top);
