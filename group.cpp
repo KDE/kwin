@@ -672,6 +672,7 @@ void Client::cleanGrouping()
 //         it != group_members.end();
 //         ++it )
 //        qDebug() << "CL4:" << *it;
+    m_transientForId = XCB_WINDOW_NONE;
 }
 
 // Make sure that no group transient is considered transient
@@ -886,6 +887,7 @@ ClientList Client::mainClients() const
     if (transientFor() != NULL)
         return ClientList() << const_cast< Client* >(transientFor());
     ClientList result;
+    Q_ASSERT(group());
     for (ClientList::ConstIterator it = group()->members().constBegin();
             it != group()->members().constEnd();
             ++it)
