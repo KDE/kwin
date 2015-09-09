@@ -36,6 +36,10 @@ namespace Server
 class Display;
 class SurfaceInterface;
 
+/**
+ * @brief Represents the Global for wl_compositor interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT CompositorInterface : public Global
 {
     Q_OBJECT
@@ -43,7 +47,13 @@ public:
     virtual ~CompositorInterface();
 
 Q_SIGNALS:
+    /**
+     * Emitted whenever this CompositorInterface created a SurfaceInterface.
+     **/
     void surfaceCreated(KWayland::Server::SurfaceInterface*);
+    /**
+     * Emitted whenever this CompositorInterface created a RegionInterface.
+     **/
     void regionCreated(KWayland::Server::RegionInterface*);
 
 private:

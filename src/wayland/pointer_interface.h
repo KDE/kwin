@@ -36,6 +36,7 @@ class SurfaceInterface;
 /**
  * @brief Resource for the wl_pointer interface.
  *
+ * @see SeatInterface
  **/
 class KWAYLANDSERVER_EXPORT PointerInterface : public Resource
 {
