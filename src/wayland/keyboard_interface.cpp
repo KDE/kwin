@@ -62,9 +62,11 @@ KeyboardInterface::Private::Private(SeatInterface *s, wl_resource *parentResourc
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_keyboard_interface KeyboardInterface::Private::s_interface {
     releaseCallback
 };
+#endif
 
 KeyboardInterface::KeyboardInterface(SeatInterface *parent, wl_resource *parentResource)
     : Resource(new Private(parent, parentResource, this), parent)

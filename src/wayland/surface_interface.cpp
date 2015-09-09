@@ -142,6 +142,7 @@ void SurfaceInterface::Private::setContrast(const QPointer<ContrastInterface> &c
     pending.contrastIsSet = true;
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     destroyCallback,
     attachCallback,
@@ -153,6 +154,7 @@ const struct wl_surface_interface SurfaceInterface::Private::s_interface = {
     bufferTransformCallback,
     bufferScaleCallback
 };
+#endif
 
 SurfaceInterface::SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, parent, parentResource))

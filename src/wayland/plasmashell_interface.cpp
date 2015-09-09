@@ -57,10 +57,11 @@ PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_shell_interface PlasmaShellInterface::Private::s_interface = {
     createSurfaceCallback
 };
-
+#endif
 
 
 class PlasmaShellSurfaceInterface::Private : public Resource::Private
@@ -148,6 +149,7 @@ PlasmaShellSurfaceInterface::Private::Private(PlasmaShellSurfaceInterface *q, Pl
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Private::s_interface = {
     destroyCallback,
     setOutputCallback,
@@ -155,6 +157,7 @@ const struct org_kde_plasma_surface_interface PlasmaShellSurfaceInterface::Priva
     setRoleCallback,
     setPanelBehaviorCallback
 };
+#endif
 
 PlasmaShellSurfaceInterface::PlasmaShellSurfaceInterface(PlasmaShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, shell, parent, parentResource), parent)

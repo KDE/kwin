@@ -55,10 +55,12 @@ private:
     static const struct org_kde_kwin_contrast_manager_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_contrast_manager_interface ContrastManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
 };
+#endif
 
 ContrastManagerInterface::Private::Private(ContrastManagerInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_contrast_manager_interface, s_version)
@@ -164,6 +166,7 @@ private:
     static const struct org_kde_kwin_contrast_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_contrast_interface ContrastInterface::Private::s_interface = {
     commitCallback,
     setRegionCallback,
@@ -172,6 +175,7 @@ const struct org_kde_kwin_contrast_interface ContrastInterface::Private::s_inter
     setSaturationCallback,
     releaseCallback
 };
+#endif
 
 void ContrastInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
 {

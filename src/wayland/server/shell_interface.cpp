@@ -56,10 +56,11 @@ ShellInterface::Private::Private(ShellInterface *q, Display *d)
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_shell_interface ShellInterface::Private::s_interface = {
     createSurfaceCallback
 };
-
+#endif
 
 
 class ShellSurfaceInterface::Private : public Resource::Private
@@ -166,6 +167,7 @@ ShellSurfaceInterface::Private::Private(ShellSurfaceInterface *q, ShellInterface
     pingTimer->setInterval(1000);
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interface = {
     pongCallback,
     moveCallback,
@@ -178,6 +180,7 @@ const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interf
     setTitleCallback,
     setClassCallback
 };
+#endif
 
 ShellSurfaceInterface::ShellSurfaceInterface(ShellInterface *shell, SurfaceInterface *parent, wl_resource *parentResource)
     : Resource(new Private(this, shell, parent, parentResource), parent)

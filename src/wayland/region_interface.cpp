@@ -49,11 +49,13 @@ private:
     static const struct wl_region_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_region_interface RegionInterface::Private::s_interface = {
     destroyCallback,
     addCallback,
     subtractCallback
 };
+#endif
 
 RegionInterface::Private::Private(CompositorInterface *compositor, RegionInterface *q, wl_resource *parentResource)
     : Resource::Private(q, compositor, parentResource, &wl_region_interface, &s_interface)

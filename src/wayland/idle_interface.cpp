@@ -72,9 +72,11 @@ private:
     static const struct org_kde_kwin_idle_timeout_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_idle_interface IdleInterface::Private::s_interface = {
     getIdleTimeoutCallback
 };
+#endif
 
 IdleInterface::Private::Private(IdleInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_idle_interface, s_version)
@@ -121,10 +123,12 @@ IdleInterface::IdleInterface(Display *display, QObject *parent)
 
 IdleInterface::~IdleInterface() = default;
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_idle_timeout_interface IdleTimeoutInterface::Private::s_interface = {
     releaseCallback,
     simulateUserActivityCallback
 };
+#endif
 
 IdleTimeoutInterface::Private::Private(SeatInterface *seat, IdleTimeoutInterface *q, IdleInterface *manager, wl_resource *parentResource)
     : Resource::Private(q, manager, parentResource, &org_kde_kwin_idle_timeout_interface, &s_interface)

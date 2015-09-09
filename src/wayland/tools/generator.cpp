@@ -836,6 +836,7 @@ void Generator::generateServerPrivateResourceClass(const Interface &interface)
 
 void Generator::generateServerPrivateInterfaceClass(const Interface &interface)
 {
+    *m_stream.localData() << QStringLiteral("#ifndef DOXYGEN_SHOULD_SKIP_THIS\n");
     *m_stream.localData() << QStringLiteral("const struct %2_interface %1::Private::s_interface = {\n").arg(interface.kwaylandServerName()).arg(interface.name());
     bool first = true;
     for (auto r: interface.requests()) {
@@ -846,7 +847,7 @@ void Generator::generateServerPrivateInterfaceClass(const Interface &interface)
         }
         *m_stream.localData() << QStringLiteral("    %1Callback").arg(toCamelCase(r.name()));
     }
-    *m_stream.localData() << QStringLiteral("\n};\n\n");
+    *m_stream.localData() << QStringLiteral("\n};\n#endif\n\n");
 }
 
 void Generator::generateServerPrivateResourceCtorDtorClass(const Interface &interface)

@@ -106,10 +106,12 @@ PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterfac
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_window_management_interface PlasmaWindowManagementInterface::Private::s_interface = {
     showDesktopCallback,
     getWindowCallback
 };
+#endif
 
 void PlasmaWindowManagementInterface::Private::sendShowingDesktopState()
 {
@@ -234,11 +236,13 @@ PlasmaWindowInterface *PlasmaWindowManagementInterface::createWindow(QObject *pa
     return window;
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_plasma_window_interface PlasmaWindowInterface::Private::s_interface = {
     setStateCallback,
     setVirtualDesktopCallback,
     closeCallback
 };
+#endif
 
 PlasmaWindowInterface::Private::Private(PlasmaWindowManagementInterface *wm, PlasmaWindowInterface *q)
     : q(q)

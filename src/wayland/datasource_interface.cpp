@@ -52,10 +52,12 @@ private:
     const static struct wl_data_source_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_source_interface DataSourceInterface::Private::s_interface = {
     offerCallback,
     destroyCallack
 };
+#endif
 
 DataSourceInterface::Private::Private(DataSourceInterface *q, DataDeviceManagerInterface *parent, wl_resource *parentResource)
     : Resource::Private(q, parent, parentResource, &wl_data_source_interface, &s_interface)

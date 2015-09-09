@@ -91,10 +91,12 @@ void PointerInterface::Private::setCursor(quint32 serial, SurfaceInterface *surf
     }
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_pointer_interface PointerInterface::Private::s_interface = {
     setCursorCallback,
     releaseCallback
 };
+#endif
 
 PointerInterface::PointerInterface(SeatInterface *parent, wl_resource *parentResource)
     : Resource(new Private(parent, parentResource, this), parent)

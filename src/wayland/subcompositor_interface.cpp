@@ -53,10 +53,12 @@ private:
     static const struct wl_subcompositor_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_subcompositor_interface SubCompositorInterface::Private::s_interface = {
     destroyCallback,
     subsurfaceCallback
 };
+#endif
 
 SubCompositorInterface::Private::Private(SubCompositorInterface *q, Display *d)
     : Global::Private(d, &wl_subcompositor_interface, s_version)
@@ -124,6 +126,7 @@ SubCompositorInterface::SubCompositorInterface(Display *display, QObject *parent
 
 SubCompositorInterface::~SubCompositorInterface() = default;
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface = {
     destroyCallback,
     setPositionCallback,
@@ -132,6 +135,7 @@ const struct wl_subsurface_interface SubSurfaceInterface::Private::s_interface =
     setSyncCallback,
     setDeSyncCallback
 };
+#endif
 
 SubSurfaceInterface::Private::Private(SubSurfaceInterface *q, SubCompositorInterface *compositor, wl_resource *parentResource)
     : Resource::Private(q, compositor, parentResource, &wl_subsurface_interface, &s_interface)

@@ -68,12 +68,14 @@ private:
     FakeInputDevice *q;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_interface = {
     authenticateCallback,
     pointerMotionCallback,
     buttonCallback,
     axisCallback
 };
+#endif
 
 FakeInputInterface::Private::Private(FakeInputInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_fake_input_interface, s_version)

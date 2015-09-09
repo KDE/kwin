@@ -55,10 +55,12 @@ private:
     static const struct org_kde_kwin_blur_manager_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_blur_manager_interface BlurManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
 };
+#endif
 
 BlurManagerInterface::Private::Private(BlurManagerInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_blur_manager_interface, s_version)
@@ -155,11 +157,13 @@ private:
     static const struct org_kde_kwin_blur_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_blur_interface BlurInterface::Private::s_interface = {
     commitCallback,
     setRegionCallback,
     releaseCallback
 };
+#endif
 
 void BlurInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
 {

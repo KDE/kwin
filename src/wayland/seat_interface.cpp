@@ -49,11 +49,13 @@ SeatInterface::Private::Private(SeatInterface *q, Display *display)
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_seat_interface SeatInterface::Private::s_interface = {
     getPointerCallback,
     getKeyboardCallback,
     getTouchCallback
 };
+#endif
 
 SeatInterface::SeatInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)

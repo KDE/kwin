@@ -51,9 +51,11 @@ private:
     static const struct wl_touch_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_touch_interface TouchInterface::Private::s_interface = {
     releaseCallback
 };
+#endif
 
 TouchInterface::Private::Private(SeatInterface *parent, wl_resource *parentResource, TouchInterface *q)
     : Resource::Private(q, parent, parentResource, &wl_touch_interface, &s_interface)

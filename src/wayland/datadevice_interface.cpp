@@ -62,11 +62,13 @@ private:
     static const struct wl_data_device_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_device_interface DataDeviceInterface::Private::s_interface = {
     startDragCallback,
     setSelectionCallback,
     releaseCallback
 };
+#endif
 
 DataDeviceInterface::Private::Private(SeatInterface *seat, DataDeviceInterface *q, DataDeviceManagerInterface *manager, wl_resource *parentResource)
     : Resource::Private(q, manager, parentResource, &wl_data_device_interface, &s_interface)

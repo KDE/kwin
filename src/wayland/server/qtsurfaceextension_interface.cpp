@@ -57,10 +57,11 @@ QtSurfaceExtensionInterface::Private::Private(QtSurfaceExtensionInterface *q, Di
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct qt_surface_extension_interface QtSurfaceExtensionInterface::Private::s_interface = {
     createSurfaceCallback
 };
-
+#endif
 
 
 class QtExtendedSurfaceInterface::Private : public Resource::Private
@@ -140,6 +141,7 @@ QtExtendedSurfaceInterface::Private::Private(QtExtendedSurfaceInterface *q, QtSu
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct qt_extended_surface_interface QtExtendedSurfaceInterface::Private::s_interface = {
     updateGenericPropertyCallback,
     setContentOrientationMaskCallback,
@@ -147,6 +149,7 @@ const struct qt_extended_surface_interface QtExtendedSurfaceInterface::Private::
     raiseCallback,
     lowerCallback
 };
+#endif
 
 void QtExtendedSurfaceInterface::Private::lowerCallback(wl_client *client, wl_resource *resource)
 {

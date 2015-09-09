@@ -54,10 +54,12 @@ private:
     static const struct org_kde_kwin_shadow_manager_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_shadow_manager_interface ShadowManagerInterface::Private::s_interface = {
     createCallback,
     unsetCallback
 };
+#endif
 
 ShadowManagerInterface::Private::Private(ShadowManagerInterface *q, Display *d)
     : Global::Private(d, &org_kde_kwin_shadow_manager_interface, s_version)
@@ -188,6 +190,7 @@ private:
     static const struct org_kde_kwin_shadow_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_shadow_interface ShadowInterface::Private::s_interface = {
     commitCallback,
     attachLeftCallback,
@@ -203,6 +206,7 @@ const struct org_kde_kwin_shadow_interface ShadowInterface::Private::s_interface
     offsetRightCallback,
     offsetBottomCallback,
 };
+#endif
 
 void ShadowInterface::Private::commitCallback(wl_client *client, wl_resource *resource)
 {

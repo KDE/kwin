@@ -52,10 +52,12 @@ private:
     static const struct wl_data_device_manager_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_device_manager_interface DataDeviceManagerInterface::Private::s_interface = {
     createDataSourceCallback,
     getDataDeviceCallback
 };
+#endif
 
 DataDeviceManagerInterface::Private::Private(DataDeviceManagerInterface *q, Display *d)
     : Global::Private(d, &wl_data_device_manager_interface, s_version)

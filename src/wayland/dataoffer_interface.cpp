@@ -51,11 +51,13 @@ private:
     static const struct wl_data_offer_interface s_interface;
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_offer_interface DataOfferInterface::Private::s_interface = {
     acceptCallback,
     receiveCallback,
     destroyCallback
 };
+#endif
 
 DataOfferInterface::Private::Private(DataSourceInterface *source, DataDeviceInterface *parentInterface, DataOfferInterface *q, wl_resource *parentResource)
     : Resource::Private(q, nullptr, parentResource, &wl_data_offer_interface, &s_interface)

@@ -58,10 +58,12 @@ CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
 {
 }
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_compositor_interface CompositorInterface::Private::s_interface = {
     createSurfaceCallback,
     createRegionCallback
 };
+#endif
 
 CompositorInterface::CompositorInterface(Display *display, QObject *parent)
     : Global(new Private(this, display), parent)
