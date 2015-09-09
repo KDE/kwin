@@ -33,6 +33,19 @@ struct wl_event_loop;
 
 namespace KWayland
 {
+/**
+ * @short KWayland Server.
+ *
+ * This namespace groups all classes related to the Server module.
+ *
+ * The main entry point into the KWayland::Server API is the Display class.
+ * It allows to create a Wayland server and create various global objects on it.
+ *
+ * KWayland::Server is an API to easily create a head-less Wayland server with a
+ * Qt style API.
+ *
+ * @see Display
+ **/
 namespace Server
 {
 
