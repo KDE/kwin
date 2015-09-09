@@ -672,7 +672,7 @@ void Generator::generateServerGlobalClass(const Interface &interface)
 "    explicit %1(Display *display, QObject *parent = nullptr);\n"
 "    friend class Display;\n"
 "    class Private;\n"
-"}\n"
+"};\n"
 "\n");
     *m_stream.localData() << templateString.arg(interface.kwaylandServerName());
 }
@@ -692,7 +692,7 @@ void Generator::generateServerResourceClass(const Interface &interface)
 "\n"
 "    class Private;\n"
 "    Private *d_func() const;\n"
-"}\n"
+"};\n"
 "\n");
     *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.factory()->kwaylandServerName());
 }
@@ -779,7 +779,7 @@ void Generator::generateServerPrivateGlobalCtorBindClass(const Interface &interf
 {
     QString templateString = QStringLiteral(
 "%1::Private::Private(%1 *q, Display *d)\n"
-"    : Global::Private(d, &org_kde_kwin_blur_manager_interface, s_version)\n"
+"    : Global::Private(d, &%2_interface, s_version)\n"
 "    , q(q)\n"
 "{\n"
 "}\n"
@@ -825,7 +825,7 @@ void Generator::generateServerPrivateResourceClass(const Interface &interface)
 "    }\n"
 "\n"
 "    static const struct %2_interface s_interface;\n"
-"}\n"
+"};\n"
 "\n");
     *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.name());
 
