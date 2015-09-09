@@ -20,6 +20,7 @@ set(SERVER_LIB_SRCS
     region_interface.cpp
     resource.cpp
     seat_interface.cpp
+    slide_interface.cpp
     shadow_interface.cpp
     blur_interface.cpp
     contrast_interface.cpp
@@ -67,6 +68,11 @@ ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
 ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
     PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/contrast.xml
     BASENAME contrast
+)
+
+ecm_add_wayland_server_protocol(SERVER_LIB_SRCS
+    PROTOCOL ${KWAYLAND_SOURCE_DIR}/src/client/protocols/slide.xml
+    BASENAME slide
 )
 
 add_library(KF5WaylandServer ${SERVER_LIB_SRCS})

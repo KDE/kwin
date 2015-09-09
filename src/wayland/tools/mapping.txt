@@ -22,6 +22,10 @@ wl_touch;Touch
 _wl_fullscreen_shell;FullscreenShell
 org_kde_kwin_blur;Blur
 org_kde_kwin_blur_manager;BlurManager
+org_kde_kwin_contrast;Contrast
+org_kde_kwin_contrast_manager;ContrastManager
+org_kde_kwin_slide;Slide
+org_kde_kwin_slide_manager;SlideManager
 org_kde_kwin_fake_input;FakeInput
 org_kde_kwin_idle;Idle
 org_kde_kwin_idle_timeout;IdleTimeout

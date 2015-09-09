@@ -41,6 +41,7 @@ class ContrastManagerInterface;
 class CompositorInterface;
 class ShadowManagerInterface;
 class ShadowInterface;
+class SlideInterface;
 class SubSurfaceInterface;
 
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
@@ -93,6 +94,12 @@ public:
     QPointer<BlurInterface> blur() const;
 
     /**
+     * @returns The Slide for this Surface.
+     * @since 5.5
+     **/
+    QPointer<SlideInterface> slideOnShowHide() const;
+
+    /**
      * @returns The Contrast for this Surface.
      * @since 5.5
      **/
@@ -130,6 +137,10 @@ Q_SIGNALS:
     /**
      * @since 5.5
      **/
+    void slideOnShowHideChanged();
+    /**
+     * @since 5.5
+     **/
     void contrastChanged();
 
 private:
@@ -137,6 +148,7 @@ private:
     friend class SubSurfaceInterface;
     friend class ShadowManagerInterface;
     friend class BlurManagerInterface;
+    friend class SlideManagerInterface;
     friend class ContrastManagerInterface;
     explicit SurfaceInterface(CompositorInterface *parent, wl_resource *parentResource);
 

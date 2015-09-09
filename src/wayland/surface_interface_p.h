@@ -43,6 +43,7 @@ public:
         bool shadowIsSet = false;
         bool blurIsSet = false;
         bool contrastIsSet = false;
+        bool slideIsSet = false;
         bool inputIsInfinite = true;
         qint32 scale = 1;
         OutputInterface::Transform transform = OutputInterface::Transform::Normal;
@@ -54,6 +55,7 @@ public:
         QPointer<ShadowInterface> shadow;
         QPointer<BlurInterface> blur;
         QPointer<ContrastInterface> contrast;
+        QPointer<SlideInterface> slide;
     };
     Private(SurfaceInterface *q, CompositorInterface *c, wl_resource *parentResource);
     ~Private();
@@ -67,6 +69,7 @@ public:
     void setShadow(const QPointer<ShadowInterface> &shadow);
     void setBlur(const QPointer<BlurInterface> &blur);
     void setContrast(const QPointer<ContrastInterface> &contrast);
+    void setSlide(const QPointer<SlideInterface> &slide);
 
     State current;
     State pending;

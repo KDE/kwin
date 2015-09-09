@@ -158,6 +158,17 @@ add_test(kwayland-testContrast testContrast)
 ecm_mark_as_test(testContrast)
 
 ########################################################
+# Test Slide
+########################################################
+set( testSlide_SRCS
+        test_wayland_slide.cpp
+    )
+add_executable(testSlide ${testSlide_SRCS})
+target_link_libraries( testSlide Qt5::Test Qt5::Gui KF5::WaylandClient KF5::WaylandServer Wayland::Client)
+add_test(kwayland-testSlide testSlide)
+ecm_mark_as_test(testSlide)
+
+########################################################
 # Test DataSource
 ########################################################
 set( testDataSource_SRCS
