@@ -33,11 +33,19 @@ class Cursor;
 class SeatInterface;
 class SurfaceInterface;
 
+/**
+ * @brief Resource for the wl_pointer interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT PointerInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~PointerInterface();
+
+    /**
+     * @returns the focused SurfaceInterface on this pointer resource, if any.
+     **/
     SurfaceInterface *focusedSurface() const;
 
     /**

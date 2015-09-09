@@ -35,13 +35,35 @@ namespace Server
 
 class Display;
 
+/**
+ * @brief Convenient Class which represents a wl_client.
+ *
+ * The ClientConnection gets automatically created for a wl_client when a wl_client is
+ * first used in the context of KWayland::Server. In particular the signal
+ * @link Display::clientConnected @endlink will be emitted.
+ *
+ * @see Display
+ **/
 class KWAYLANDSERVER_EXPORT ClientConnection : public QObject
 {
     Q_OBJECT
 public:
     virtual ~ClientConnection();
 
+    /**
+     * Flushes the connection to this client. Ensures that all events are pushed to the client.
+     **/
     void flush();
+    /**
+     * Creates a new wl_resource for the provided @p interface.
+     *
+     * Thus a convenient wrapper around wl_resource_create
+     *
+     * @param interface
+     * @param version
+     * @param id
+     * @returns the created native wl_resource
+     **/
     wl_resource *createResource(const wl_interface *interface, quint32 version, quint32 id);
     /**
      * Get the wl_resource associated with the given @p id.
@@ -49,17 +71,56 @@ public:
      **/
     wl_resource *getResource(quint32 id);
 
+    /**
+     * @returns the native wl_client this ClientConnection represents.
+     **/
     wl_client *client();
+    /**
+     * @returns The Display this ClientConnection is connected to
+     **/
     Display *display();
 
+    /**
+     * The pid of the ClientConnection endpoint.
+     *
+     * Please note: if the ClientConnection got created with @link Display::createClient @endlink
+     * the pid will be identical to the process running the KWayland::Server::Display.
+     *
+     * @returns The pid of the connection.
+     **/
     pid_t processId() const;
+    /**
+     * The uid of the ClientConnection endpoint.
+     *
+     * Please note: if the ClientConnection got created with @link Display::createClient @endlink
+     * the uid will be identical to the process running the KWayland::Server::Display.
+     *
+     * @returns The uid of the connection.
+     **/
     uid_t userId() const;
+    /**
+     * The gid of the ClientConnection endpoint.
+     *
+     * Please note: if the ClientConnection got created with @link Display::createClient @endlink
+     * the gid will be identical to the process running the KWayland::Server::Display.
+     *
+     * @returns The gid of the connection.
+     **/
     gid_t groupId() const;
 
+    /**
+     * Cast operator the native wl_client this ClientConnection represents.
+     **/
     operator wl_client*();
+    /**
+     * Cast operator the native wl_client this ClientConnection represents.
+     **/
     operator wl_client*() const;
 
 Q_SIGNALS:
+    /**
+     * Signal emitted when the ClientConnection got disconnected from the server.
+     **/
     void disconnected(KWayland::Server::ClientConnection*);
 
 private:

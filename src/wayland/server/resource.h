@@ -35,6 +35,14 @@ namespace Server
 class ClientConnection;
 class Global;
 
+/**
+ * @brief Represents a bound Resource.
+ *
+ * A Resource normally gets created by a @link Global @endlink.
+ *
+ * The Resource is a base class for all specific resources and provides
+ * access to various common aspects.
+ **/
 class KWAYLANDSERVER_EXPORT Resource : public QObject
 {
     Q_OBJECT
@@ -42,9 +50,21 @@ public:
     virtual ~Resource();
     void create(ClientConnection *client, quint32 version, quint32 id);
 
+    /**
+     * @returns the native wl_resource this Resource was created for.
+     **/
     wl_resource *resource();
+    /**
+     * @returns The ClientConnection for which the Resource was created.
+     **/
     ClientConnection *client();
+    /**
+     * @returns The Global which created the Resource.
+     **/
     Global *global();
+    /**
+     * @returns the native parent wl_resource, e.g. the wl_resource bound on the Global
+     **/
     wl_resource *parentResource() const;
     /**
      * @returns The id of this Resource if it is created, otherwise @c 0.

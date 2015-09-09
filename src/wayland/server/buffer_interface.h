@@ -35,17 +35,78 @@ namespace Server
 class SurfaceInterface;
 
 
+/**
+ * @brief Reference counted representation of a Wayland buffer on Server side.
+ *
+ * This class encapsulates a rendering buffer which is normally attached to a SurfaceInterface.
+ * A client should not render to a Wayland buffer as long as the buffer gets used by the server.
+ * The server signals whether it's still used. This class provides a convenience access for this
+ * functionality by performing reference counting and deleting the BufferInterface instance
+ * automatically once it is no longer accessed.
+ *
+ * The BufferInterface is referenced as long as it is attached to a SurfaceInterface. If one wants
+ * to keep access to the BufferInterface for a longer time ensure to call ref on first usage and
+ * unref again once access to it is no longer needed.
+ *
+ * In Wayland the buffer is an abstract concept and a buffer might represent multiple different
+ * concrete buffer techniques. This class has direct support for shared memory buffers built and
+ * provides access to the native buffer for different (e.g. EGL/drm) buffers.
+ *
+ * If the EGL display has been registered in the Display the BufferInterface can also provide
+ * some information about an EGL/drm buffer.
+ *
+ * For shared memory buffers a direct conversion to a memory-mapped QImage possible using the
+ * data method. Please refer to the documentation for notes on the restrictions when using the
+ * shared memory-mapped QImages.
+ *
+ * @see Display
+ * @see SurfaceInterace
+ **/
 class KWAYLANDSERVER_EXPORT BufferInterface : public QObject
 {
     Q_OBJECT
 public:
     virtual ~BufferInterface();
+    /**
+     * Reference the BufferInterface.
+     *
+     * As long as the reference counting has not reached @c 0 the BufferInterface is valid
+     * and blocked for usage by the client.
+     *
+     * @see unref
+     * @see isReferenced
+     **/
     void ref();
+    /**
+     * Unreference the BufferInterface.
+     *
+     * If the reference counting reached @c 0 the BufferInterface is released, so that the
+     * client can use it again. The instance of this BufferInterface will be automatically
+     * deleted.
+     *
+     * @see ref
+     * @see isReferenced
+     **/
     void unref();
+    /**
+     * @returns whether the BufferInterface is currently referenced
+     *
+     * @see ref
+     * @see unref
+     **/
     bool isReferenced() const;
 
+    /**
+     * @returns The SurfaceInterface this BufferInterface is attached to.
+     **/
     SurfaceInterface *surface() const;
+    /**
+     * @returns The native wl_shm_buffer if the BufferInterface represents a shared memory buffer, otherwise @c nullptr.
+     **/
     wl_shm_buffer *shmBuffer();
+    /**
+     * @returns the native wl_resource wrapped by this BufferInterface.
+     **/
     wl_resource *resource() const;
 
     /**

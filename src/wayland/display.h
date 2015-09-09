@@ -51,6 +51,11 @@ class ContrastManagerInterface;
 class ShellInterface;
 class SubCompositorInterface;
 
+/**
+ * @brief Class holding the Wayland server display loop.
+ *
+ * @todo Improve documentation
+ **/
 class KWAYLANDSERVER_EXPORT Display : public QObject
 {
     Q_OBJECT

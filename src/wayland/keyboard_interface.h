@@ -32,12 +32,19 @@ namespace Server
 class SeatInterface;
 class SurfaceInterface;
 
+/**
+ * @brief Resource for the wl_keyboard interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT KeyboardInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~KeyboardInterface();
 
+    /**
+     * @returns the focused SurfaceInterface on this keyboard resource, if any.
+     **/
     SurfaceInterface *focusedSurface() const;
 
 private:

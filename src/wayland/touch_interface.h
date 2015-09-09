@@ -31,6 +31,10 @@ namespace Server
 
 class SeatInterface;
 
+/**
+ * @brief Resource for the wl_touch interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT TouchInterface : public Resource
 {
     Q_OBJECT
