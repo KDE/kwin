@@ -164,6 +164,7 @@ SeatInterface::Private *SeatInterface::Private::cast(wl_resource *r)
     return r ? reinterpret_cast<SeatInterface::Private*>(wl_resource_get_user_data(r)) : nullptr;
 }
 
+namespace {
 template <typename T>
 static
 T *interfaceForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
@@ -178,6 +179,7 @@ T *interfaceForSurface(SurfaceInterface *surface, const QVector<T*> &interfaces)
         }
     }
     return nullptr;
+}
 }
 
 PointerInterface *SeatInterface::Private::pointerForSurface(SurfaceInterface *surface) const
@@ -532,6 +534,7 @@ QPointF SeatInterface::focusedPointerSurfacePosition() const
     return d->globalPointer.focus.offset;
 }
 
+namespace {
 static quint32 qtToWaylandButton(Qt::MouseButton button)
 {
     static const QHash<Qt::MouseButton, quint32> s_buttons({
@@ -554,6 +557,7 @@ static quint32 qtToWaylandButton(Qt::MouseButton button)
         // further mapping not possible, 0x120 is BTN_JOYSTICK
     });
     return s_buttons.value(button, 0);
+}
 }
 
 bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
