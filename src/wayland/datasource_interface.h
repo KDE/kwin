@@ -32,6 +32,9 @@ namespace Server
 {
 class DataDeviceManagerInterface;
 
+/**
+ * @brief Represents the Resource for the wl_data_source interface.
+ **/
 class KWAYLANDSERVER_EXPORT DataSourceInterface : public Resource
 {
     Q_OBJECT

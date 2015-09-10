@@ -44,11 +44,45 @@ class ShadowInterface;
 class SlideInterface;
 class SubSurfaceInterface;
 
+/**
+ * @brief Resource representing a wl_surface.
+ *
+ * The SurfaceInterface gets created by the CompositorInterface. A SurfaceInterface normally
+ * takes up a role by being "attached" to either a ShellSurfaceInterface, a SubSurfaceInterface
+ * or a Cursor.
+ *
+ * The implementation of the SurfaceInterface does not only wrap the features exposed by wl_surface,
+ * but goes further by integrating the information added to a SurfaceInterface by other interfaces.
+ * This should make interacting from the server easier, it only needs to monitor the SurfaceInterface
+ * and does not need to track each specific interface.
+ *
+ * The SurfaceInterface takes care of reference/unreferencing the BufferInterface attached to it.
+ * As long as a BufferInterface is attached, the released signal won't be sent. If the BufferInterface
+ * is no longer needed by the SurfaceInterface, it will get unreferenced and might be automatically
+ * deleted (if it's no longer referenced).
+ *
+ * @see CompositorInterface
+ * @see BufferInterface
+ * @see SubSurfaceInterface
+ * @see BlurInterface
+ * @see ContrastInterface
+ * @see ShadowInterface
+ * @see SlideInterface
+ **/
 class KWAYLANDSERVER_EXPORT SurfaceInterface : public Resource
 {
     Q_OBJECT
+    /**
+     * The current damage region.
+     **/
     Q_PROPERTY(QRegion damage READ damage NOTIFY damaged)
+    /**
+     * The opaque region for a translucent buffer.
+     **/
     Q_PROPERTY(QRegion opaque READ opaque NOTIFY opaqueChanged)
+    /**
+     * The current input region.
+     **/
     Q_PROPERTY(QRegion input READ input NOTIFY inputChanged)
     Q_PROPERTY(qint32 scale READ scale NOTIFY scaleChanged)
     Q_PROPERTY(KWayland::Server::OutputInterface::Transform transform READ transform NOTIFY transformChanged)
@@ -64,6 +98,9 @@ public:
     bool inputIsInfitine() const;
     qint32 scale() const;
     OutputInterface::Transform transform() const;
+    /**
+     * @returns the current BufferInterface, might be @c nullptr.
+     **/
     BufferInterface *buffer();
     QPoint offset() const;
     /**
@@ -105,6 +142,9 @@ public:
      **/
     QPointer<ContrastInterface> contrast() const;
 
+    /**
+     * @returns The SurfaceInterface for the @p native resource.
+     **/
     static SurfaceInterface *get(wl_resource *native);
     /**
      * @returns The SurfaceInterface with given @p id for @p client, if it exists, otherwise @c nullptr.
@@ -113,6 +153,14 @@ public:
     static SurfaceInterface *get(quint32 id, const ClientConnection *client);
 
 Q_SIGNALS:
+    /**
+     * Emitted whenever the SurfaceInterface got damaged.
+     * The signal is only emitted during the commit of state.
+     * A damage means that a new BufferInterface got attached.
+     *
+     * @see buffer
+     * @see damage
+     **/
     void damaged(const QRegion&);
     void opaqueChanged(const QRegion&);
     void inputChanged(const QRegion&);

@@ -36,6 +36,12 @@ class DataSourceInterface;
 class SeatInterface;
 class SurfaceInterface;
 
+/**
+ * @brief Represents the Resource for the wl_data_device interface.
+ *
+ * @see SeatInterface
+ * @see DataSourceInterface
+ **/
 class KWAYLANDSERVER_EXPORT DataDeviceInterface : public Resource
 {
     Q_OBJECT

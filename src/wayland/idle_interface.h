@@ -32,6 +32,26 @@ namespace Server
 class Display;
 class SeatInterface;
 
+/**
+ * @brief Global representing the org_kde_kwin_idle interface.
+ *
+ * The IdleInterface allows to register callbacks which are invoked if there has
+ * not been any user activity (no input) for a specified time span on a seat.
+ *
+ * A client can bind an idle timeout for a SeatInterface and through that register
+ * an idle timeout. The complete interaction is handled internally, thus the API
+ * user only needs to create the IdleInterface in order to provide this feature.
+ *
+ * This interface is useful for clients as it allows them to perform power management,
+ * chat applications might want to set to away after no user input for some time, etc.
+ *
+ * Of course this exposes the global input usage to all clients. Normally clients don't
+ * know whether the input devices are used, only if their surfaces have focus. With this
+ * interface it is possible to notice that there are input events. A server should consider
+ * this to decide whether it wants to provide this feature!
+ *
+ * @since 5.4
+ **/
 class KWAYLANDSERVER_EXPORT IdleInterface : public Global
 {
     Q_OBJECT
@@ -44,6 +64,7 @@ private:
     class Private;
 };
 
+// TODO: KF6 make private class
 class KWAYLANDSERVER_EXPORT IdleTimeoutInterface : public Resource
 {
     Q_OBJECT

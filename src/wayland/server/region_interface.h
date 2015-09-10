@@ -33,17 +33,34 @@ namespace Server
 {
 class CompositorInterface;
 
+/**
+ * @brief Resource for the wl_region.
+ *
+ * A RegionInterface gets created by the CompositorInterface and represents
+ * a QRegion.
+ *
+ * @see CompositorInterface
+ **/
 class KWAYLANDSERVER_EXPORT RegionInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~RegionInterface();
 
+    /**
+     * @returns the data of the region as a QRegion.
+     **/
     QRegion region() const;
 
+    /**
+     * @returns The RegionInterface for the @p native resource.
+     **/
     static RegionInterface *get(wl_resource *native);
 
 Q_SIGNALS:
+    /**
+     * Emitted whenever the region changes.
+     **/
     void regionChanged(const QRegion&);
 
 private:

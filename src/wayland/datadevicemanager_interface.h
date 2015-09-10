@@ -34,6 +34,10 @@ namespace Server
 
 class Display;
 
+/**
+ * @brief Represents the Global for wl_data_device_manager interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT DataDeviceManagerInterface : public Global
 {
     Q_OBJECT

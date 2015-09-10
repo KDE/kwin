@@ -62,6 +62,7 @@ class Display;
  *
  * @see Display
  * @see OutputInterface
+ * @since 5.5
  **/
 class KWAYLANDSERVER_EXPORT DpmsManagerInterface : public Global
 {

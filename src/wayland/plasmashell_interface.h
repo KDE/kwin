@@ -39,6 +39,18 @@ class Display;
 class SurfaceInterface;
 class PlasmaShellSurfaceInterface;
 
+/**
+ * @brief Global for the org_kde_plasma_shell interface.
+ *
+ * The PlasmaShellInterface allows to add additional information to a SurfaceInterface.
+ * It goes beyond what a ShellSurfaceInterface provides and is adjusted toward the needs
+ * of the Plasma desktop.
+ *
+ * A server providing this interface should think about how to restrict access to it as
+ * it allows to perform absolute window positioning.
+ *
+ * @since 5.4
+ **/
 class KWAYLANDSERVER_EXPORT PlasmaShellInterface : public Global
 {
     Q_OBJECT
@@ -46,6 +58,9 @@ public:
     virtual ~PlasmaShellInterface();
 
 Q_SIGNALS:
+    /**
+     * Emitted whenever a PlasmaShellSurfaceInterface got created.
+     **/
     void surfaceCreated(KWayland::Server::PlasmaShellSurfaceInterface*);
 
 private:
@@ -54,36 +69,78 @@ private:
     class Private;
 };
 
+/**
+ * @brief Resource for the org_kde_plasma_shell_surface interface.
+ *
+ * PlasmaShellSurfaceInterface gets created by PlasmaShellInterface.
+ *
+ * @since 5.4
+ **/
 class KWAYLANDSERVER_EXPORT PlasmaShellSurfaceInterface : public Resource
 {
     Q_OBJECT
 public:
     virtual ~PlasmaShellSurfaceInterface();
 
+    /**
+     * @returns the SurfaceInterface this PlasmaShellSurfaceInterface got created for
+     **/
     SurfaceInterface *surface() const;
+    /**
+     * @returns The PlasmaShellInterface which created this PlasmaShellSurfaceInterface.
+     **/
     PlasmaShellInterface *shell() const;
 
+    /**
+     * @returns the requested position in global coordinates.
+     **/
     QPoint position() const;
+    /**
+     * @returns Whether a global position has been requested.
+     **/
     bool isPositionSet() const;
 
+    /**
+     * Describes possible roles this PlasmaShellSurfaceInterface can have.
+     * The role can be used by the server to e.g. change the stacking order accordingly.
+     **/
     enum class Role {
-        Normal,
-        Desktop,
-        Panel,
-        OnScreenDisplay
+        Normal, ///< A normal surface
+        Desktop, ///< The surface represents a desktop, normally stacked below all other surfaces
+        Panel, ///< The surface represents a panel (dock), normally stacked above normal surfaces
+        OnScreenDisplay ///< The surface represents an on screen display, like a volume changed notification
     };
+    /**
+     * @returns The requested role, default value is @c Role::Normal.
+     **/
     Role role() const;
+    /**
+     * Describes how a PlasmaShellSurfaceInterface with role @c Role::Panel should behave.
+     **/
     enum class PanelBehavior {
-        AlwaysVisible,
-        AutoHide,
-        WindowsCanCover,
-        WindowsGoBelow
+        AlwaysVisible, ///< The panel should be always visible
+        AutoHide, ///< The panel auto hides at a screen edge and returns on mouse press against edge
+        WindowsCanCover, ///< Windows are allowed to go above the panel, it raises on mouse press against screen edge
+        WindowsGoBelow ///< Window are allowed to go below the panel
     };
+    /**
+     * @returns The PanelBehavior for a PlasmaShellSurfaceInterface with role @c Role::Panel
+     * @see role
+     **/
     PanelBehavior panelBehavior() const;
 
 Q_SIGNALS:
+    /**
+     * A change of global position has been requested.
+     **/
     void positionChanged();
+    /**
+     * A change of the role has been requested.
+     **/
     void roleChanged();
+    /**
+     * A change of the panel behavior has been requested.
+     **/
     void panelBehaviorChanged();
 
 private:

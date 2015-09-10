@@ -38,6 +38,10 @@ namespace Server
 
 class Display;
 
+/**
+ * @brief Global for the wl_output interface.
+ *
+ **/
 class KWAYLANDSERVER_EXPORT OutputInterface : public Global
 {
     Q_OBJECT
