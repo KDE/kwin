@@ -138,7 +138,7 @@ bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
         return false;
     }
     if (m_lastTrigger.isValid() && // still in cooldown
-        m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold()) {
+        m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold() - edges()->timeThreshold()) {
         return false;
     }
     // no pushback so we have to activate at once
@@ -171,7 +171,7 @@ bool Edge::canActivate(const QPoint &cursorPos, const QDateTime &triggerTime)
         m_lastReset = triggerTime;
         return false;
     }
-    if (m_lastTrigger.isValid() && m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold()) {
+    if (m_lastTrigger.isValid() && m_lastTrigger.msecsTo(triggerTime) < edges()->reActivationThreshold() - edges()->timeThreshold()) {
         return false;
     }
     if (m_lastReset.msecsTo(triggerTime) < edges()->timeThreshold()) {
