@@ -94,7 +94,7 @@ private:
                                      int32_t x, int32_t y, uint32_t flags);
     static void setFullscreenCallback(wl_client *client, wl_resource *resource, uint32_t method,
                                       uint32_t framerate, wl_resource *output);
-    static void setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
+    static void setPopupCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
                                 wl_resource *parent, int32_t x, int32_t y, uint32_t flags);
     static void setMaximizedCallback(wl_client *client, wl_resource *resource, wl_resource *output);
     static void setTitleCallback(wl_client *client, wl_resource *resource, const char *title);
@@ -176,7 +176,7 @@ const struct wl_shell_surface_interface ShellSurfaceInterface::Private::s_interf
     setToplevelCallback,
     setTransientCallback,
     setFullscreenCallback,
-    setPopupCalback,
+    setPopupCallback,
     setMaximizedCallback,
     setTitleCallback,
     setClassCallback
@@ -314,7 +314,7 @@ void ShellSurfaceInterface::Private::setWindowMode(WindowMode newWindowMode)
     }
 }
 
-void ShellSurfaceInterface::Private::setPopupCalback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
+void ShellSurfaceInterface::Private::setPopupCallback(wl_client *client, wl_resource *resource, wl_resource *seat, uint32_t serial,
                                             wl_resource *parent, int32_t x, int32_t y, uint32_t flags)
 {
     Q_UNUSED(seat)
