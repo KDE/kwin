@@ -96,6 +96,9 @@ void SlideManagerInterface::Private::createSlide(wl_client *client, wl_resource 
 
 void SlideManagerInterface::Private::unsetCallback(wl_client *client, wl_resource *resource, wl_resource * surface)
 {
+    Q_UNUSED(client)
+    Q_UNUSED(resource)
+    Q_UNUSED(surface)
     // TODO: implement
 }
 
@@ -180,12 +183,15 @@ void SlideInterface::Private::setLocationCallback(wl_client *client, wl_resource
 
 void SlideInterface::Private::setOffsetCallback(wl_client *client, wl_resource *resource, int32_t offset)
 {
+    Q_UNUSED(client)
     Private *p = cast<Private>(resource);
     p->pendingOffset = offset;
 }
 
 void SlideInterface::Private::releaseCallback(wl_client *client, wl_resource *resource)
 {
+    Q_UNUSED(client)
+    Q_UNUSED(resource)
     // TODO: implement
 }
 
