@@ -29,8 +29,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class DataDeviceManagerInterface::Private : public Global::Private
 {
 public:
@@ -50,7 +48,10 @@ private:
 
     DataDeviceManagerInterface *q;
     static const struct wl_data_device_manager_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 DataDeviceManagerInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_data_device_manager_interface DataDeviceManagerInterface::Private::s_interface = {

@@ -33,8 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class PlasmaWindowManagementInterface::Private : public Global::Private
 {
 public:
@@ -56,6 +54,7 @@ private:
 
     PlasmaWindowManagementInterface *q;
     static const struct org_kde_plasma_window_management_interface s_interface;
+    static const quint32 s_version;
 };
 
 class PlasmaWindowInterface::Private
@@ -99,6 +98,8 @@ private:
     wl_listener listener;
     static const struct org_kde_plasma_window_interface s_interface;
 };
+
+const quint32 PlasmaWindowManagementInterface::Private::s_version = 1;
 
 PlasmaWindowManagementInterface::Private::Private(PlasmaWindowManagementInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_window_management_interface, s_version)

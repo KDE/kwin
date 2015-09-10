@@ -33,8 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class ContrastManagerInterface::Private : public Global::Private
 {
 public:
@@ -53,7 +51,10 @@ private:
 
     ContrastManagerInterface *q;
     static const struct org_kde_kwin_contrast_manager_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 ContrastManagerInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_contrast_manager_interface ContrastManagerInterface::Private::s_interface = {

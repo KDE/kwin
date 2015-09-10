@@ -30,8 +30,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 2;
-
 class OutputInterface::Private : public Global::Private
 {
 public:
@@ -72,9 +70,11 @@ private:
 
     OutputInterface *q;
     static QVector<Private*> s_privates;
+    static const quint32 s_version;
 };
 
 QVector<OutputInterface::Private*> OutputInterface::Private::s_privates;
+const quint32 OutputInterface::Private::s_version = 2;
 
 OutputInterface::Private::Private(OutputInterface *q, Display *d)
     : Global::Private(d, &wl_output_interface, s_version)

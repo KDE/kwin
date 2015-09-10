@@ -31,8 +31,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class FakeInputInterface::Private : public Global::Private
 {
 public:
@@ -54,6 +52,7 @@ private:
 
     FakeInputInterface *q;
     static const struct org_kde_kwin_fake_input_interface s_interface;
+    static const quint32 s_version;
 };
 
 class FakeInputDevice::Private
@@ -67,6 +66,8 @@ public:
 private:
     FakeInputDevice *q;
 };
+
+const quint32 FakeInputInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_fake_input_interface FakeInputInterface::Private::s_interface = {

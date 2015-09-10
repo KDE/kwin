@@ -738,8 +738,10 @@ void Generator::generateServerPrivateGlobalClass(const Interface &interface)
     templateString = QStringLiteral(
 "    %1 *q;\n"
 "    static const struct %2_interface s_interface;\n"
-"    static const quint32 s_version = %3;\n"
+"    static const quint32 s_version;\n"
 "};\n"
+"\n"
+"const quint32 %1::Private::s_version = %3;\n"
 "\n");
     *m_stream.localData() << templateString.arg(interface.kwaylandServerName()).arg(interface.name()).arg(interface.version());
     generateServerPrivateInterfaceClass(interface);

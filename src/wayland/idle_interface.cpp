@@ -33,8 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class IdleInterface::Private : public Global::Private
 {
 public:
@@ -51,6 +49,7 @@ private:
 
     IdleInterface *q;
     static const struct org_kde_kwin_idle_interface s_interface;
+    static const quint32 s_version;
 };
 
 class IdleTimeoutInterface::Private : public Resource::Private
@@ -71,6 +70,8 @@ private:
     }
     static const struct org_kde_kwin_idle_timeout_interface s_interface;
 };
+
+const quint32 IdleInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_idle_interface IdleInterface::Private::s_interface = {

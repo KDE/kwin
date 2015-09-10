@@ -26,7 +26,7 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
+const quint32 DpmsManagerInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_dpms_manager_interface DpmsManagerInterface::Private::s_interface = {

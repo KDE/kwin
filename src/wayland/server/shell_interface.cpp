@@ -32,8 +32,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class ShellInterface::Private : public Global::Private
 {
 public:
@@ -48,7 +46,10 @@ private:
 
     ShellInterface *q;
     static const struct wl_shell_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 ShellInterface::Private::s_version = 1;
 
 ShellInterface::Private::Private(ShellInterface *q, Display *d)
     : Global::Private(d, &wl_shell_interface, s_version)

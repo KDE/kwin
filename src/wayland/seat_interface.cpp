@@ -38,10 +38,10 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 4;
-static const qint32 s_pointerVersion = 3;
-static const qint32 s_touchVersion = 3;
-static const qint32 s_keyboardVersion = 4;
+const quint32 SeatInterface::Private::s_version = 4;
+const qint32 SeatInterface::Private::s_pointerVersion = 3;
+const qint32 SeatInterface::Private::s_touchVersion = 3;
+const qint32 SeatInterface::Private::s_keyboardVersion = 4;
 
 SeatInterface::Private::Private(SeatInterface *q, Display *display)
     : Global::Private(display, &wl_seat_interface, s_version)

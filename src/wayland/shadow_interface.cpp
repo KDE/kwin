@@ -32,8 +32,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class ShadowManagerInterface::Private : public Global::Private
 {
 public:
@@ -52,7 +50,10 @@ private:
 
     ShadowManagerInterface *q;
     static const struct org_kde_kwin_shadow_manager_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 ShadowManagerInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct org_kde_kwin_shadow_manager_interface ShadowManagerInterface::Private::s_interface = {

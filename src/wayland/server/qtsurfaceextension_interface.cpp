@@ -33,8 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class QtSurfaceExtensionInterface::Private : public Global::Private
 {
 public:
@@ -49,7 +47,10 @@ private:
 
     QtSurfaceExtensionInterface *q;
     static const struct qt_surface_extension_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 QtSurfaceExtensionInterface::Private::s_version = 1;
 
 QtSurfaceExtensionInterface::Private::Private(QtSurfaceExtensionInterface *q, Display *d)
     : Global::Private(d, &qt_surface_extension_interface, s_version)

@@ -29,8 +29,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 3;
-
 class CompositorInterface::Private : public Global::Private
 {
 public:
@@ -50,7 +48,10 @@ private:
 
     CompositorInterface *q;
     static const struct wl_compositor_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 CompositorInterface::Private::s_version = 3;
 
 CompositorInterface::Private::Private(CompositorInterface *q, Display *d)
     : Global::Private(d, &wl_compositor_interface, s_version)

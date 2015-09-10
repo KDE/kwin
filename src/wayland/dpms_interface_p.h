@@ -47,6 +47,7 @@ private:
 
     DpmsManagerInterface *q;
     static const struct org_kde_kwin_dpms_manager_interface s_interface;
+    static const quint32 s_version;
 };
 
 class DpmsInterface : public Resource

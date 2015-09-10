@@ -33,8 +33,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class PlasmaShellInterface::Private : public Global::Private
 {
 public:
@@ -49,7 +47,10 @@ private:
 
     PlasmaShellInterface *q;
     static const struct org_kde_plasma_shell_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 PlasmaShellInterface::Private::s_version = 1;
 
 PlasmaShellInterface::Private::Private(PlasmaShellInterface *q, Display *d)
     : Global::Private(d, &org_kde_plasma_shell_interface, s_version)

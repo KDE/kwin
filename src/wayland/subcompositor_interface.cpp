@@ -30,8 +30,6 @@ namespace KWayland
 namespace Server
 {
 
-static const quint32 s_version = 1;
-
 class SubCompositorInterface::Private : public Global::Private
 {
 public:
@@ -51,7 +49,10 @@ private:
 
     SubCompositorInterface *q;
     static const struct wl_subcompositor_interface s_interface;
+    static const quint32 s_version;
 };
+
+const quint32 SubCompositorInterface::Private::s_version = 1;
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 const struct wl_subcompositor_interface SubCompositorInterface::Private::s_interface = {
