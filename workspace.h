@@ -485,7 +485,7 @@ private:
     void raiseClientWithinApplication(Client* c);
     void lowerClientWithinApplication(Client* c);
     bool allowFullClientRaising(const AbstractClient* c, xcb_timestamp_t timestamp);
-    bool keepTransientAbove(const Client* mainwindow, const Client* transient);
+    bool keepTransientAbove(const AbstractClient* mainwindow, const AbstractClient* transient);
     void blockStackingUpdates(bool block);
     void updateToolWindows(bool also_hide);
     void fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_reply_t *geom);

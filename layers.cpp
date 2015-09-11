@@ -567,7 +567,7 @@ ToplevelList Workspace::constrainedStackingOrder()
             for (i2 = stacking.size() - 1;
                     i2 >= 0;
                     --i2) {
-                Client *c2 = qobject_cast<Client*>(stacking[ i2 ]);
+                AbstractClient *c2 = qobject_cast<AbstractClient*>(stacking[ i2 ]);
                 if (!c2) {
                     continue;
                 }
@@ -640,7 +640,7 @@ ClientList Workspace::ensureStackingOrder(const ClientList& list) const
 
 // check whether a transient should be actually kept above its mainwindow
 // there may be some special cases where this rule shouldn't be enfored
-bool Workspace::keepTransientAbove(const Client* mainwindow, const Client* transient)
+bool Workspace::keepTransientAbove(const AbstractClient* mainwindow, const AbstractClient* transient)
 {
     // #93832 - don't keep splashscreens above dialogs
     if (transient->isSplash() && mainwindow->isDialog())
@@ -649,8 +649,10 @@ bool Workspace::keepTransientAbove(const Client* mainwindow, const Client* trans
     // the mainwindow, but only if they're group transient (since only such dialogs
     // have taskbar entry in Kicker). A proper way of doing this (both kwin and kicker)
     // needs to be found.
-    if (transient->isDialog() && !transient->isModal() && transient->groupTransient())
-        return false;
+    if (const Client *ct = dynamic_cast<const Client*>(transient)) {
+        if (ct->isDialog() && !ct->isModal() && ct->groupTransient())
+            return false;
+    }
     // #63223 - don't keep transients above docks, because the dock is kept high,
     // and e.g. dialogs for them would be too high too
     if (mainwindow->isDock())
