@@ -101,6 +101,9 @@ ShellClient::ShellClient(ShellSurfaceInterface *surface)
             setResourceClass(m_shellSurface->windowClass());
         }
     );
+
+    setTransient();
+    connect(surface, &ShellSurfaceInterface::transientForChanged, this, &ShellClient::setTransient);
 }
 
 ShellClient::~ShellClient() = default;
@@ -710,6 +713,17 @@ void ShellClient::updateIcon()
     }
     KDesktopFile df(desktopFile);
     setIcon(QIcon::fromTheme(df.readIcon()));
+}
+
+bool ShellClient::isTransient() const
+{
+    return m_shellSurface->isTransient();
+}
+
+void ShellClient::setTransient()
+{
+    const auto s = m_shellSurface->transientFor();
+    setTransientFor(waylandServer()->findClient(s.data()));
 }
 
 }

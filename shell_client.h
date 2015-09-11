@@ -111,6 +111,8 @@ public:
 
     bool isInitialPositionSet() const;
 
+    bool isTransient() const override;
+
 protected:
     void addDamage(const QRegion &damage) override;
     bool belongsToSameApplication(const AbstractClient *other, bool active_hack) const override;
@@ -129,6 +131,7 @@ private:
     void updateInternalWindowGeometry();
     void updateIcon();
     void markAsMapped();
+    void setTransient();
     static void deleteClient(ShellClient *c);
 
     KWayland::Server::ShellSurfaceInterface *m_shellSurface;
