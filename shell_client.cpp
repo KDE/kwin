@@ -508,6 +508,9 @@ bool ShellClient::wantsInput() const
     if (waylandServer()->inputMethodConnection() == m_shellSurface->client()) {
         return false;
     }
+    if (m_shellSurface->isPopup()) {
+        return false;
+    }
     // if the window is not visible it doesn't get input
     return isShown(true);
 }
