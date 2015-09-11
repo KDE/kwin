@@ -554,7 +554,7 @@ ToplevelList Workspace::constrainedStackingOrder()
                         i2 = -1; // don't reorder, already the topmost in the group
                         break;
                     }
-                    Client *c2 = qobject_cast<Client*>(stacking[ i2 ]);
+                    AbstractClient *c2 = qobject_cast<AbstractClient*>(stacking[ i2 ]);
                     if (!c2) {
                         continue;
                     }

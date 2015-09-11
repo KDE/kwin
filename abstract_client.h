@@ -259,6 +259,12 @@ public:
     const AbstractClient* transientFor() const;
     AbstractClient* transientFor();
     /**
+     * @returns @c true if c is the transient_for window for this client,
+     *  or recursively the transient_for window
+     * @todo: remove boolean trap
+     **/
+    virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
+    /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
      * true for Desktop, Dock, Splash, Override and TopMenu (and Toolbar??? - for now)

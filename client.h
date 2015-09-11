@@ -179,7 +179,7 @@ public:
     bool wasOriginallyGroupTransient() const;
     ClientList mainClients() const; // Call once before loop , is not indirect
     ClientList allMainClients() const; // Call once before loop , is indirect
-    bool hasTransient(const Client* c, bool indirect) const;
+    bool hasTransient(const AbstractClient* c, bool indirect) const override;
     const ClientList& transients() const; // Is not indirect
     void checkTransient(xcb_window_t w);
     AbstractClient* findModal(bool allow_itself = false) override;

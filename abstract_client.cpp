@@ -822,4 +822,10 @@ QPoint AbstractClient::transientPlacementHint() const
     return QPoint();
 }
 
+bool AbstractClient::hasTransient(const AbstractClient *c, bool indirect) const
+{
+    Q_UNUSED(indirect);
+    return c->transientFor() == this;
+}
+
 }

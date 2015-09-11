@@ -842,11 +842,14 @@ void Client::checkTransient(xcb_window_t w)
 
 // returns true if cl is the transient_for window for this client,
 // or recursively the transient_for window
-bool Client::hasTransient(const Client* cl, bool indirect) const
+bool Client::hasTransient(const AbstractClient* cl, bool indirect) const
 {
-    // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
-    ConstClientList set;
-    return hasTransientInternal(cl, indirect, set);
+    if (const Client *c = dynamic_cast<const Client*>(cl)) {
+        // checkGroupTransients() uses this to break loops, so hasTransient() must detect them
+        ConstClientList set;
+        return hasTransientInternal(c, indirect, set);
+    }
+    return false;
 }
 
 bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientList& set) const
