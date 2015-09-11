@@ -721,7 +721,7 @@ void DrmOutput::init(drmModeConnector *connector)
     if (!m_dpms.isNull()) {
         m_waylandOutput->setDpmsSupported(true);
         m_waylandOutput->setDpmsMode(toWaylandDpmsMode(m_dpmsMode));
-        connect(m_waylandOutput, &KWayland::Server::OutputInterface::dpmsModeRequested, this,
+        connect(m_waylandOutput.data(), &KWayland::Server::OutputInterface::dpmsModeRequested, this,
             [this] (KWayland::Server::OutputInterface::DpmsMode mode) {
                 setDpms(fromWaylandDpmsMode(mode));
             }, Qt::QueuedConnection
