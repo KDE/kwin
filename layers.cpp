@@ -853,7 +853,7 @@ void Client::updateLayer()
         return;
     StackingUpdatesBlocker blocker(workspace());
     invalidateLayer(); // invalidate, will be updated when doing restacking
-    for (ClientList::ConstIterator it = transients().constBegin(),
+    for (auto it = transients().constBegin(),
                                   end = transients().constEnd(); it != end; ++it)
         (*it)->updateLayer();
 }

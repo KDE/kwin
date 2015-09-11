@@ -346,7 +346,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
 {
     // if mainwindow is minimized or shaded, minimize transients too
     if (c->isMinimized()) {
-        for (ClientList::ConstIterator it = c->transients().constBegin();
+        for (auto it = c->transients().constBegin();
                 it != c->transients().constEnd();
                 ++it) {
             if ((*it)->isModal())
@@ -363,7 +363,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
         }
     } else {
         // else unmiminize the transients
-        for (ClientList::ConstIterator it = c->transients().constBegin();
+        for (auto it = c->transients().constBegin();
                 it != c->transients().constEnd();
                 ++it) {
             if ((*it)->isMinimized()) {
@@ -384,7 +384,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
  */
 void Workspace::updateOnAllDesktopsOfTransients(Client* c)
 {
-    for (ClientList::ConstIterator it = c->transients().constBegin();
+    for (auto it = c->transients().constBegin();
             it != c->transients().constEnd();
             ++it) {
         if ((*it)->isOnAllDesktops() != c->isOnAllDesktops())
@@ -876,7 +876,7 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     if (set.contains(this))
         return false;
     set.append(this);
-    for (ClientList::ConstIterator it = transients().constBegin();
+    for (auto it = transients().constBegin();
             it != transients().constEnd();
             ++it)
         if ((*it)->hasTransientInternal(cl, indirect, set))
@@ -910,7 +910,7 @@ ClientList Client::allMainClients() const
 
 AbstractClient* Client::findModal(bool allow_itself)
 {
-    for (ClientList::ConstIterator it = transients().constBegin();
+    for (auto it = transients().constBegin();
             it != transients().constEnd();
             ++it)
         if (AbstractClient* ret = (*it)->findModal(true))
