@@ -661,7 +661,7 @@ void Workspace::updateToolWindows(bool also_hide)
             group = client->group();
             break;
         }
-        client = client->transientFor();
+        client = dynamic_cast<const Client*>(client->transientFor());
     }
     // Use stacking order only to reduce flicker, it doesn't matter if block_stacking_updates == 0,
     // I.e. if it's not up to date

@@ -793,4 +793,23 @@ bool AbstractClient::performMouseCommand(Options::MouseCommand cmd, const QPoint
     return replay;
 }
 
+void AbstractClient::setTransientFor(AbstractClient *transientFor)
+{
+    if (m_transientFor == transientFor) {
+        return;
+    }
+    m_transientFor = transientFor;
+    emit transientChanged();
+}
+
+const AbstractClient *AbstractClient::transientFor() const
+{
+    return m_transientFor;
+}
+
+AbstractClient *AbstractClient::transientFor()
+{
+    return m_transientFor;
+}
+
 }

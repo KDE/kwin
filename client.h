@@ -114,10 +114,6 @@ class Client
      **/
     Q_PROPERTY(bool resizeable READ isResizable)
     /**
-     * The Client to which this Client is a transient if any.
-     **/
-    Q_PROPERTY(KWin::Client *transientFor READ transientFor NOTIFY transientChanged)
-    /**
      * By how much the window wishes to grow/shrink at least. Usually QSize(1,1).
      * MAY BE DISOBEYED BY THE WM! It's only for information, do NOT rely on it at all.
      * The value is evaluated each time the getter is called.
@@ -178,8 +174,6 @@ public:
     xcb_window_t inputId() const { return m_decoInputExtent; }
     virtual xcb_window_t frameId() const override;
 
-    const Client* transientFor() const;
-    Client* transientFor();
     bool isTransient() const override;
     bool groupTransient() const;
     bool wasOriginallyGroupTransient() const;
@@ -721,7 +715,6 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
-    Client* transient_for;
     xcb_window_t m_transientForId;
     xcb_window_t m_originalTransientForId;
     ClientList transients_list; // SELI TODO: Make this ordered in stacking order?
@@ -833,16 +826,6 @@ inline xcb_window_t Client::wrapperId() const
 inline bool Client::isClientSideDecorated() const
 {
     return m_clientSideDecorated;
-}
-
-inline const Client* Client::transientFor() const
-{
-    return transient_for;
-}
-
-inline Client* Client::transientFor()
-{
-    return transient_for;
 }
 
 inline bool Client::groupTransient() const

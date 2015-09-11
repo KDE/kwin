@@ -368,8 +368,8 @@ void Workspace::raiseClient(AbstractClient* c, bool nogroup)
     StackingUpdatesBlocker blocker(this);
 
     if (!nogroup && c->isTransient()) {
-        ClientList transients;
-        Client *transient_parent = static_cast<Client*>(c);
+        QList<AbstractClient*> transients;
+        AbstractClient *transient_parent = c;
         while ((transient_parent = transient_parent->transientFor()))
             transients << transient_parent;
         foreach (transient_parent, transients)

@@ -471,8 +471,8 @@ bool Client::belongToSameApplication(const Client* c1, const Client* c2, bool ac
 bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool active_hack)
 {
     if (c1->isTransient()) {
-        while (c1->transientFor() != NULL)
-            c1 = c1->transientFor();
+        while (const Client *t = dynamic_cast<const Client*>(c1->transientFor()))
+            c1 = t;
         if (c1->groupTransient())
             return c1->group() == c2->group();
 #if 0
@@ -483,8 +483,8 @@ bool Client::sameAppWindowRoleMatch(const Client* c1, const Client* c2, bool act
 #endif
     }
     if (c2->isTransient()) {
-        while (c2->transientFor() != NULL)
-            c2 = c2->transientFor();
+        while (const Client *t = dynamic_cast<const Client*>(c2->transientFor()))
+            c2 = t;
         if (c2->groupTransient())
             return c1->group() == c2->group();
 #if 0
@@ -580,13 +580,14 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
     TRANSIENCY_CHECK(this);
     if (new_transient_for_id != m_transientForId) {
         removeFromMainClients();
-        transient_for = NULL;
+        Client *transient_for = nullptr;
         m_transientForId = new_transient_for_id;
         if (m_transientForId != XCB_WINDOW_NONE && !groupTransient()) {
             transient_for = workspace()->findClient(Predicate::WindowMatch, m_transientForId);
             assert(transient_for != NULL);   // verifyTransient() had to check this
             transient_for->addTransient(this);
         } // checkGroup() will check 'check_active_modal'
+        setTransientFor(transient_for);
         checkGroup(NULL, true);   // force, because transiency has changed
         workspace()->updateClientLayer(this);
         workspace()->resetUpdateToolWindowsTimer();
@@ -597,8 +598,8 @@ void Client::setTransient(xcb_window_t new_transient_for_id)
 void Client::removeFromMainClients()
 {
     TRANSIENCY_CHECK(this);
-    if (transientFor() != NULL)
-        transientFor()->removeTransient(this);
+    if (Client *t = dynamic_cast<Client*>(transientFor()))
+        t->removeTransient(this);
     if (groupTransient()) {
         for (ClientList::ConstIterator it = group()->members().constBegin();
                 it != group()->members().constEnd();
@@ -693,7 +694,7 @@ void Client::checkGroupTransients()
             // so don't make them transient for the ones that are transient for it
             if (*it1 == *it2)
                 continue;
-            for (Client* cl = (*it2)->transientFor();
+            for (AbstractClient* cl = (*it2)->transientFor();
                     cl != NULL;
                     cl = cl->transientFor()) {
                 if (cl == *it1) {
@@ -823,7 +824,7 @@ void Client::removeTransient(Client* cl)
     // make cl group transient
     if (cl->transientFor() == this) {
         cl->m_transientForId = XCB_WINDOW_NONE;
-        cl->transient_for = NULL; // SELI
+        cl->setTransientFor(nullptr); // SELI
 // SELI       cl->setTransient( rootWindow());
         cl->setTransient(XCB_WINDOW_NONE);
     }
@@ -850,15 +851,15 @@ bool Client::hasTransient(const Client* cl, bool indirect) const
 
 bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientList& set) const
 {
-    if (cl->transientFor() != NULL) {
-        if (cl->transientFor() == this)
+    if (const Client *t = dynamic_cast<const Client*>(cl->transientFor())) {
+        if (t == this)
             return true;
         if (!indirect)
             return false;
         if (set.contains(cl))
             return false;
         set.append(cl);
-        return hasTransientInternal(cl->transientFor(), indirect, set);
+        return hasTransientInternal(t, indirect, set);
     }
     if (!cl->isTransient())
         return false;
@@ -884,8 +885,8 @@ ClientList Client::mainClients() const
 {
     if (!isTransient())
         return ClientList();
-    if (transientFor() != NULL)
-        return ClientList() << const_cast< Client* >(transientFor());
+    if (const Client *t = qobject_cast<const Client*>(transientFor()))
+        return ClientList() << const_cast< Client* >(t);
     ClientList result;
     Q_ASSERT(group());
     for (ClientList::ConstIterator it = group()->members().constBegin();
@@ -934,10 +935,11 @@ void Client::checkGroup(Group* set_group, bool force)
         }
     } else if (info->groupLeader() != XCB_WINDOW_NONE) {
         Group* new_group = workspace()->findGroup(info->groupLeader());
-        if (transientFor() != NULL && transientFor()->group() != new_group) {
+        Client *t = qobject_cast<Client*>(transientFor());
+        if (t != NULL && t->group() != new_group) {
             // move the window to the right group (e.g. a dialog provided
             // by different app, but transient for this one, so make it part of that group)
-            new_group = transientFor()->group();
+            new_group = t->group();
         }
         if (new_group == NULL)   // doesn't exist yet
             new_group = new Group(info->groupLeader());
@@ -948,14 +950,14 @@ void Client::checkGroup(Group* set_group, bool force)
             in_group->addMember(this);
         }
     } else {
-        if (transientFor() != NULL) {
+        if (Client *t = qobject_cast<Client*>(transientFor())) {
             // doesn't have window group set, but is transient for something
             // so make it part of that group
-            Group* new_group = transientFor()->group();
+            Group* new_group = t->group();
             if (new_group != in_group) {
                 if (in_group != NULL)
                     in_group->removeMember(this);
-                in_group = transientFor()->group();
+                in_group = t->group();
                 in_group->addMember(this);
             }
         } else if (groupTransient()) {

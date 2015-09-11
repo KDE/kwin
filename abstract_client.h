@@ -166,6 +166,10 @@ class AbstractClient : public Toplevel
      * @see transientFor
      **/
     Q_PROPERTY(bool transient READ isTransient NOTIFY transientChanged)
+    /**
+     * The Client to which this Client is a transient if any.
+     **/
+    Q_PROPERTY(KWin::AbstractClient *transientFor READ transientFor NOTIFY transientChanged)
 public:
     virtual ~AbstractClient();
 
@@ -243,6 +247,8 @@ public:
     // TODO: remove boolean trap
     virtual AbstractClient *findModal(bool allow_itself = false) = 0;
     virtual bool isTransient() const;
+    const AbstractClient* transientFor() const;
+    AbstractClient* transientFor();
     /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)
@@ -465,6 +471,8 @@ protected:
 
     void updateColorScheme(QString path);
 
+    void setTransientFor(AbstractClient *transientFor);
+
 private:
     void handlePaletteChange();
     QSharedPointer<TabBox::TabBoxClientImpl> m_tabBoxClient;
@@ -491,6 +499,8 @@ private:
     static std::shared_ptr<Decoration::DecorationPalette> s_defaultPalette;
 
     KWayland::Server::PlasmaWindowInterface *m_windowManagementInterface = nullptr;
+
+    AbstractClient *m_transientFor = nullptr;
 };
 
 inline void AbstractClient::move(const QPoint& p, ForceGeometry_t force)
