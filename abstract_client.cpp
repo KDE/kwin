@@ -828,4 +828,21 @@ bool AbstractClient::hasTransient(const AbstractClient *c, bool indirect) const
     return c->transientFor() == this;
 }
 
+QList< AbstractClient* > AbstractClient::mainClients() const
+{
+    if (const AbstractClient *t = transientFor()) {
+        return QList<AbstractClient*>{const_cast< AbstractClient* >(t)};
+    }
+    return QList<AbstractClient*>();
+}
+
+QList<AbstractClient*> AbstractClient::allMainClients() const
+{
+    auto result = mainClients();
+    foreach (const auto *cl, result) {
+        result += cl->allMainClients();
+    }
+    return result;
+}
+
 }

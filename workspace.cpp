@@ -693,12 +693,12 @@ void Workspace::updateToolWindows(bool also_hide)
                     show = false;
             }
             if (!show && also_hide) {
-                const ClientList mainclients = c->mainClients();
+                const auto mainclients = c->mainClients();
                 // Don't hide utility windows which are standalone(?) or
                 // have e.g. kicker as mainwindow
                 if (mainclients.isEmpty())
                     show = true;
-                for (ClientList::ConstIterator it2 = mainclients.constBegin();
+                for (auto it2 = mainclients.constBegin();
                         it2 != mainclients.constEnd();
                         ++it2) {
                     if ((*it2)->isSpecialWindow())

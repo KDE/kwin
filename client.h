@@ -177,8 +177,7 @@ public:
     bool isTransient() const override;
     bool groupTransient() const;
     bool wasOriginallyGroupTransient() const;
-    ClientList mainClients() const; // Call once before loop , is not indirect
-    ClientList allMainClients() const; // Call once before loop , is indirect
+    QList<AbstractClient*> mainClients() const override; // Call once before loop , is not indirect
     bool hasTransient(const AbstractClient* c, bool indirect) const override;
     const ClientList& transients() const; // Is not indirect
     void checkTransient(xcb_window_t w);

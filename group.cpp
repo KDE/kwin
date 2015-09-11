@@ -358,7 +358,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
             }
         }
         if (c->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
-            foreach (Client * c2, c->mainClients())
+            foreach (AbstractClient * c2, c->mainClients())
             c2->minimize();
         }
     } else {
@@ -372,7 +372,7 @@ void Workspace::updateMinimizedOfTransients(Client* c)
             }
         }
         if (c->isModal()) {
-            foreach (Client * c2, c->mainClients())
+            foreach (AbstractClient * c2, c->mainClients())
             c2->unminimize();
         }
     }
@@ -884,27 +884,19 @@ bool Client::hasTransientInternal(const Client* cl, bool indirect, ConstClientLi
     return false;
 }
 
-ClientList Client::mainClients() const
+QList<AbstractClient*> Client::mainClients() const
 {
     if (!isTransient())
-        return ClientList();
-    if (const Client *t = qobject_cast<const Client*>(transientFor()))
-        return ClientList() << const_cast< Client* >(t);
-    ClientList result;
+        return QList<AbstractClient*>();
+    if (const AbstractClient *t = transientFor())
+        return QList<AbstractClient*>{const_cast< AbstractClient* >(t)};
+    QList<AbstractClient*> result;
     Q_ASSERT(group());
     for (ClientList::ConstIterator it = group()->members().constBegin();
             it != group()->members().constEnd();
             ++it)
         if ((*it)->hasTransient(this, false))
             result.append(*it);
-    return result;
-}
-
-ClientList Client::allMainClients() const
-{
-    ClientList result = mainClients();
-    foreach (const Client * cl, result)
-    result += cl->allMainClients();
     return result;
 }
 

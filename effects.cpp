@@ -1668,8 +1668,8 @@ EffectWindowList getMainWindows(Toplevel *toplevel)
 {
     T *c = static_cast<T*>(toplevel);
     EffectWindowList ret;
-    ClientList mainclients = c->mainClients();
-    for (Client * tmp : mainclients)
+    const auto mainclients = c->mainClients();
+    for (auto tmp : mainclients)
         ret.append(tmp->effectWindow());
     return ret;
 }

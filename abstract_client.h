@@ -264,6 +264,8 @@ public:
      * @todo: remove boolean trap
      **/
     virtual bool hasTransient(const AbstractClient* c, bool indirect) const;
+    virtual QList<AbstractClient*> mainClients() const; // Call once before loop , is not indirect
+    QList<AbstractClient*> allMainClients() const; // Call once before loop , is indirect
     /**
      * Returns true for "special" windows and false for windows which are "normal"
      * (normal=window which has a border, can be moved by the user, can be closed, etc.)

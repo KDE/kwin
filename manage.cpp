@@ -188,12 +188,12 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         // same window as its parent.  this is necessary when an application
         // starts up on a different desktop than is currently displayed
         if (isTransient()) {
-            ClientList mainclients = mainClients();
+            auto mainclients = mainClients();
             bool on_current = false;
             bool on_all = false;
-            Client* maincl = NULL;
+            AbstractClient* maincl = nullptr;
             // This is slightly duplicated from Placement::placeOnMainWindow()
-            for (ClientList::ConstIterator it = mainclients.constBegin();
+            for (auto it = mainclients.constBegin();
                     it != mainclients.constEnd();
                     ++it) {
                 if (mainclients.count() > 1 && (*it)->isSpecialWindow())
@@ -470,8 +470,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
     // if client has initial state set to Iconic and is transient with a parent
     // window that is not Iconic, set init_state to Normal
     if (init_minimize && isTransient()) {
-        ClientList mainclients = mainClients();
-        for (ClientList::ConstIterator it = mainclients.constBegin();
+        auto mainclients = mainClients();
+        for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
             if ((*it)->isShown(true))
@@ -482,8 +482,8 @@ bool Client::manage(xcb_window_t w, bool isMapped)
         bool visible_parent = false;
         // Use allMainClients(), to include also main clients of group transients
         // that have been optimized out in Client::checkGroupTransients()
-        ClientList mainclients = allMainClients();
-        for (ClientList::ConstIterator it = mainclients.constBegin();
+        auto mainclients = allMainClients();
+        for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
             if ((*it)->isShown(true))
@@ -591,10 +591,12 @@ bool Client::manage(xcb_window_t w, bool isMapped)
                  */
                 needsSessionInteract = true;
                 //show the parent too
-                ClientList mainclients = mainClients();
-                for (ClientList::ConstIterator it = mainclients.constBegin();
+                auto mainclients = mainClients();
+                for (auto it = mainclients.constBegin();
                         it != mainclients.constEnd(); ++it) {
-                    (*it)->setSessionInteract(true);
+                    if (Client *mc = dynamic_cast<Client*>((*it))) {
+                        mc->setSessionInteract(true);
+                    }
                     (*it)->unminimize();
                 }
             } else if (allow) {

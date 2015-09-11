@@ -521,14 +521,11 @@ void Placement::placeOnMainWindow(AbstractClient* c, QRect& area, Policy nextPla
     if (nextPlacement == Maximizing)   // maximize if needed
         placeMaximizing(c, area, NoPlacement);
     area = checkArea(c, area);
-    ClientList mainwindows;
-    if (Client *client = qobject_cast<Client*>(c)) {
-        mainwindows = client->mainClients();
-    }
+    auto mainwindows = c->mainClients();
     AbstractClient* place_on = nullptr;
     AbstractClient* place_on2 = nullptr;
     int mains_count = 0;
-    for (ClientList::ConstIterator it = mainwindows.constBegin();
+    for (auto it = mainwindows.constBegin();
             it != mainwindows.constEnd();
             ++it) {
         if (mainwindows.count() > 1 && (*it)->isSpecialWindow())

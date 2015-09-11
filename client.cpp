@@ -706,8 +706,8 @@ bool Client::isMinimizable() const
     if (isTransient()) {
         // #66868 - Let other xmms windows be minimized when the mainwindow is minimized
         bool shown_mainwindow = false;
-        ClientList mainclients = mainClients();
-        for (ClientList::ConstIterator it = mainclients.constBegin();
+        auto mainclients = mainClients();
+        for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd();
                 ++it)
             if ((*it)->isShown(true))
@@ -747,7 +747,11 @@ QRect Client::iconGeometry() const
         return geom;
     else {
         // Check all mainwindows of this window (recursively)
-        foreach (Client * mainwin, mainClients()) {
+        foreach (AbstractClient * amainwin, mainClients()) {
+            Client *mainwin = dynamic_cast<Client*>(amainwin);
+            if (!mainwin) {
+                continue;
+            }
             geom = mainwin->iconGeometry();
             if (geom.isValid())
                 return geom;
@@ -1235,7 +1239,7 @@ void Client::doSetDesktop(int desktop, int was_desk)
         // the (just moved) modal dialog will confusingly return to the mainwindow with
         // the next desktop change
     {
-        foreach (Client * c2, mainClients())
+        foreach (AbstractClient * c2, mainClients())
         c2->setDesktop(desktop);
     }
     updateVisibility();
@@ -1754,8 +1758,8 @@ void Client::getIcons()
     }
     if (icon.isNull() && isTransient()) {
         // Then mainclients
-        ClientList mainclients = mainClients();
-        for (ClientList::ConstIterator it = mainclients.constBegin();
+        auto mainclients = mainClients();
+        for (auto it = mainclients.constBegin();
                 it != mainclients.constEnd() && icon.isNull();
                 ++it) {
             if (!(*it)->icon().isNull()) {

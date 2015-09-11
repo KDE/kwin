@@ -102,9 +102,11 @@ void Deleted::copyToDeleted(Toplevel* c)
         }
         m_minimized = client->isMinimized();
         m_modal = client->isModal();
+    }
+    if (AbstractClient *client = dynamic_cast<AbstractClient*>(c)) {
         m_mainClients = client->mainClients();
-        foreach (Client *c, m_mainClients) {
-            connect(c, SIGNAL(windowClosed(KWin::Toplevel*,KWin::Deleted*)), SLOT(mainClientClosed(KWin::Toplevel*)));
+        foreach (AbstractClient *c, m_mainClients) {
+            connect(c, &AbstractClient::windowClosed, this, &Deleted::mainClientClosed);
         }
     }
 }

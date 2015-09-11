@@ -483,13 +483,11 @@ bool Workspace::activateNextClient(AbstractClient* c)
 
     if (!get_focus) { // no suitable window under the mouse -> find sth. else
         // first try to pass the focus to the (former) active clients leader
-        if (Client *client = qobject_cast<Client*>(c)) {
-            if (client->isTransient()) {
-                ClientList leaders = client->mainClients();
-                if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
-                    get_focus = leaders.at(0);
-                    raiseClient(get_focus);   // also raise - we don't know where it came from
-                }
+        if (c->isTransient()) {
+            auto leaders = c->mainClients();
+            if (leaders.count() == 1 && FocusChain::self()->isUsableFocusCandidate(leaders.at(0), c)) {
+                get_focus = leaders.at(0);
+                raiseClient(get_focus);   // also raise - we don't know where it came from
             }
         }
         if (!get_focus) {
@@ -730,11 +728,21 @@ xcb_timestamp_t Client::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, c
                         && cl != this && Client::belongToSameApplication(cl, this, true);
             };
             if (isTransient()) {
+                auto clientMainClients = [this] () -> ClientList {
+                    ClientList ret;
+                    const auto mcs = mainClients();
+                    for (auto mc: mcs) {
+                        if (Client *c  = dynamic_cast<Client*>(mc)) {
+                            ret << c;
+                        }
+                    }
+                    return ret;
+                };
                 if (act->hasTransient(this, true))
                     ; // is transient for currently active window, even though it's not
                 // the same app (e.g. kcookiejar dialog) -> allow activation
                 else if (groupTransient() &&
-                        findInList<Client, Client>(mainClients(), sameApplicationActiveHackPredicate) == NULL)
+                        findInList<Client, Client>(clientMainClients(), sameApplicationActiveHackPredicate) == NULL)
                     ; // standalone transient
                 else
                     first_window = false;
@@ -782,8 +790,8 @@ void Client::doSetActive()
 {
     StackingUpdatesBlocker blocker(workspace());
     workspace()->updateClientLayer(this);   // active windows may get different layer
-    ClientList mainclients = mainClients();
-    for (ClientList::ConstIterator it = mainclients.constBegin();
+    auto mainclients = mainClients();
+    for (auto it = mainclients.constBegin();
             it != mainclients.constEnd();
             ++it)
         if ((*it)->isFullScreen())  // fullscreens go high even if their transient is active
